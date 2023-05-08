@@ -6,7 +6,7 @@ import os
 
 from PySide6.QtGui import QGuiApplication, QIcon
 from PySide6.QtQml import QQmlApplicationEngine
-from PySide6.QtCore import Qt, QObject
+from PySide6.QtCore import Qt, QObject, QStandardPaths
 from pathlib import Path
 
 from module.gui.utils import get_work_path
@@ -25,10 +25,9 @@ class FluentApp():
         QGuiApplication.setApplicationName("oas")
         QGuiApplication.setOrganizationName("oas")
 
-
     def run(self):
         FluentApp.engine = QQmlApplicationEngine()
-        # FluentApp.engine.rootContext().setContextProperty("bridge", bridge)
+        FluentApp.engine.addImportPath(os.fspath(Path(__file__).resolve().parent ))
         FluentApp.engine.load(os.fspath(Path(get_work_path() / 'module' / 'gui' / 'qml' / 'app.qml')))
         if not FluentApp.engine.rootObjects():
             sys.exit(-1)
