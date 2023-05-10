@@ -20,6 +20,25 @@ config/reloadalas
 test.py
 test/
 
+# OnmyojiAutoScript
+*.user
+!module/gui/FluentUI/fluentuiplugin.dll
+build-fluentui-Desktop_*/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 # Created by .ignore support plugin (hsz.mobi)
 
 ### JetBrains template
