@@ -6,8 +6,8 @@ import FluentUI
 
 FluWindow {
     id:app
-    width: 640
-    height: 480
+    width: 1440
+    height: 810
 
     FluAppBar{
         id:appbar
