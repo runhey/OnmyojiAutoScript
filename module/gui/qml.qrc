@@ -1,0 +1,12 @@
+<RCC>
+    <qresource prefix="/">
+        <file>qml/app.qml</file>
+        <file>qml/MainWindow.qml</file>
+        <file>qml/Page/O_Settings.qml</file>
+        <file>qml/Page/O_Home.qml</file>
+        <file>qml/Page/O_Add.qml</file>
+        <file>qml/Global/ItemsFooter.qml</file>
+        <file>qml/Global/ItemsOriginal.qml</file>
+        <file>qml/Global/MainEvent.qml</file>
+    </qresource>
+</RCC>

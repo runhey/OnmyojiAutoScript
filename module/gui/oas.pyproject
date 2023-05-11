@@ -1,5 +1,6 @@
 {
     "files": [
-    "./oas.qrc",
+    "./qml.qrc",
+    "./res.qrc",
     "../../gui.py"]
 }

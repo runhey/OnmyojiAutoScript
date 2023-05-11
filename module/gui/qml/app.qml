@@ -5,7 +5,6 @@ import FluentUI
 
 Window {
     id:app
-    color: "#00000000"
     Component.onCompleted: {
         FluApp.init(app)
         FluTheme.frameless = ("windows" === Qt.platform.os)

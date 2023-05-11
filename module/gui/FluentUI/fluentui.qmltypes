@@ -162,6 +162,30 @@ Module {
         Signal { name: "GreenChanged" }
     }
     Component {
+        file: "FluTextStyle.h"
+        name: "FluTextStyle"
+        accessSemantics: "reference"
+        prototype: "QObject"
+        exports: ["FluentUI/FluTextStyle 1.0"]
+        isCreatable: false
+        isSingleton: true
+        exportMetaObjectRevisions: [256]
+        Property { name: "Caption"; type: "QFont"; notify: "CaptionChanged"; index: 0 }
+        Property { name: "Body"; type: "QFont"; notify: "BodyChanged"; index: 1 }
+        Property { name: "BodyStrong"; type: "QFont"; notify: "BodyStrongChanged"; index: 2 }
+        Property { name: "Subtitle"; type: "QFont"; notify: "SubtitleChanged"; index: 3 }
+        Property { name: "Title"; type: "QFont"; notify: "TitleChanged"; index: 4 }
+        Property { name: "TitleLarge"; type: "QFont"; notify: "TitleLargeChanged"; index: 5 }
+        Property { name: "Display"; type: "QFont"; notify: "DisplayChanged"; index: 6 }
+        Signal { name: "CaptionChanged" }
+        Signal { name: "BodyChanged" }
+        Signal { name: "BodyStrongChanged" }
+        Signal { name: "SubtitleChanged" }
+        Signal { name: "TitleChanged" }
+        Signal { name: "TitleLargeChanged" }
+        Signal { name: "DisplayChanged" }
+    }
+    Component {
         file: "FluTheme.h"
         name: "FluTheme"
         accessSemantics: "reference"
@@ -188,12 +212,10 @@ Module {
         Property { name: "frameless"; type: "bool"; notify: "framelessChanged"; index: 2 }
         Property { name: "darkMode"; type: "int"; notify: "darkModeChanged"; index: 3 }
         Property { name: "nativeText"; type: "bool"; notify: "nativeTextChanged"; index: 4 }
-        Property { name: "textSize"; type: "int"; notify: "textSizeChanged"; index: 5 }
         Signal { name: "primaryColorChanged" }
         Signal { name: "framelessChanged" }
         Signal { name: "darkModeChanged" }
         Signal { name: "nativeTextChanged" }
-        Signal { name: "textSizeChanged" }
         Signal { name: "darkChanged" }
     }
     Component {

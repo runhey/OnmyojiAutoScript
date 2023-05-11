@@ -25,6 +25,7 @@ FluColorView 1.0 Controls/FluColorView.qml
 FluComboBox 1.0 Controls/FluComboBox.qml
 FluContentDialog 1.0 Controls/FluContentDialog.qml
 FluContentPage 1.0 Controls/FluContentPage.qml
+FluCopyableText 1.0 Controls/FluCopyableText.qml
 FluDatePicker 1.0 Controls/FluDatePicker.qml
 FluDivider 1.0 Controls/FluDivider.qml
 FluDropDownButton 1.0 Controls/FluDropDownButton.qml

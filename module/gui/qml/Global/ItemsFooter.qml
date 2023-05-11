@@ -1,4 +1,4 @@
-﻿pragma Singleton
+pragma Singleton
 
 import QtQuick
 import FluentUI
@@ -12,18 +12,19 @@ FluObject{
     FluPaneItemSeparator{}
 
     FluPaneItem{
-        title:lang.about
+        title: "关于"
         icon:FluentIcons.Contact
         tapFunc:function(){
-//            FluApp.navigate("/about")
+            console.debug("this click about")
         }
     }
 
     FluPaneItem{
-        title:lang.settings
+        title: "settings"
         icon:FluentIcons.Settings
         onTap:{
-            navigationView.push("qrc:/example/qml/page/T_Settings.qml")
+            Qt.Pa
+            navigationView.push(Qt.resolvedUrl("../../qml/Page/O_Settings.qml"))
         }
     }
 

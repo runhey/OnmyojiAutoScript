@@ -1,0 +1,3 @@
+﻿singleton ItemsOriginal 1.0 ItemsOriginal.qml
+singleton ItemsFooter 1.0 ItemsFooter.qml
+singleton MainEvent 1.0 MainEvent.qml
