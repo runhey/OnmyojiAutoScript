@@ -540,7 +540,7 @@ Item {
                 Layout.alignment: Qt.AlignVCenter
                 text:control.title
                 Layout.leftMargin: 12
-                font: FluTextStyle.Body
+                font: FluTextStyle.BodyStrong
             }
             FluText{
                 Layout.alignment: Qt.AlignVCenter
