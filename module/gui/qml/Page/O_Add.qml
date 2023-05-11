@@ -10,8 +10,9 @@ FluScrollablePage{
     bottomPadding:20
     spacing: 0
 
-    FluText{
-        anchors.top: parent.top
-        text: "this add"
+    FluProgressRing{
+        z: 888
+        width: 44
+        height: 44
     }
 }

@@ -16,6 +16,7 @@ FluObject{
         icon:FluentIcons.Contact
         tapFunc:function(){
             console.debug("this click about")
+            MainEvent.runStatus = MainEvent.RunStatus.Error
         }
     }
 

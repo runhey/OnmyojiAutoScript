@@ -6,6 +6,7 @@ import Qt.labs.platform
 
 import FluentUI
 import "./Global/"
+import "./Component/"
 
 FluWindow {
     id:window
@@ -17,22 +18,21 @@ FluWindow {
     minimumHeight: 460
     launchMode: FluWindow.SingleTask
 
-//    Connections{
-//        target: appInfo
-//        function onActiveWindow(){
-//            window.show()
-//            window.raise()
-//            window.requestActivate()
-//        }
-//    }
 
     FluAppBar{
        id:appbar
        z:9
        width: parent.width
     }
+    OverStatus{
+        anchors{
+            top: parent.top
+            horizontalCenter: parent.horizontalCenter
+        }
+    }
 
-// 任务栏的左边系统图标
+
+// 任务栏的右边边系统图标
     SystemTrayIcon {
         id:system_tray
         visible: true

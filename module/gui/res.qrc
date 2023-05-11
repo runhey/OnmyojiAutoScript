@@ -1,5 +1,6 @@
 <RCC>
     <qresource prefix="/">
         <file>res/icon.ico</file>
+        <file>res/exclamation-triangle-fill.svg</file>
     </qresource>
 </RCC>

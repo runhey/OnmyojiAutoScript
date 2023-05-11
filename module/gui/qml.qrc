@@ -8,5 +8,8 @@
         <file>qml/Global/ItemsFooter.qml</file>
         <file>qml/Global/ItemsOriginal.qml</file>
         <file>qml/Global/MainEvent.qml</file>
+        <file>qml/Component/SplitPanel.qml</file>
+        <file>qml/Component/OverStatus.qml</file>
+        <file>qml/Component/RunStatusIcon.qml</file>
     </qresource>
 </RCC>
