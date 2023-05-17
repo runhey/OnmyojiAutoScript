@@ -13,7 +13,7 @@ set "_GitBin=%_root%\toolkit\Git\mingw64\bin"
 set "_adbBin=%_root%\toolkit\Lib\site-packages\adbutils\binaries"
 set "PATH=%_root%\toolkit\alias;%_root%\toolkit\command;%_pyBin%;%_pyBin%\Scripts;%_GitBin%;%_adbBin%;%PATH%"
 
-title Oas Updater
+title oas Updater
 python -m deploy.installer
 if %errorlevel% neq 0 (
     pause > nul
