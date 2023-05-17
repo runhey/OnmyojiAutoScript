@@ -371,6 +371,7 @@ Item {
                                 }
                             }
                         }
+                    nav_app_bar_pane_title.text = model.title
                     }
                 }
                 color: {
@@ -471,34 +472,34 @@ Item {
     Item {
         id:nav_app_bar
         width: parent.width
-        height: 50
+        height: 40
         z:999
         RowLayout{
             height:parent.height
             spacing: 0
-            FluIconButton{
-                iconSource: FluentIcons.ChromeBack
-                Layout.leftMargin: 5
-                Layout.preferredWidth: 40
-                Layout.preferredHeight: 40
-                Layout.alignment: Qt.AlignVCenter
-                disabled:  nav_swipe.depth === 1
-                iconSize: 13
-                onClicked: {
-                    nav_swipe.pop()
-                    d.stackItems.pop()
-                    var item = d.stackItems[d.stackItems.length-1]
-                    d.enableStack = false
-                    if(item.idx<(nav_list.count - layout_footer.count)){
-                        layout_footer.currentIndex = -1
-                    }else{
-                        console.debug(item.idx-(nav_list.count-layout_footer.count))
-                        layout_footer.currentIndex = item.idx-(nav_list.count-layout_footer.count)
-                    }
-                    nav_list.currentIndex = item.idx
-                    d.enableStack = true
-                }
-            }
+//            FluIconButton{
+//                iconSource: FluentIcons.ChromeBack
+//                Layout.leftMargin: 5
+//                Layout.preferredWidth: 40
+//                Layout.preferredHeight: 40
+//                Layout.alignment: Qt.AlignVCenter
+//                disabled:  nav_swipe.depth === 1
+//                iconSize: 13
+//                onClicked: {
+//                    nav_swipe.pop()
+//                    d.stackItems.pop()
+//                    var item = d.stackItems[d.stackItems.length-1]
+//                    d.enableStack = false
+//                    if(item.idx<(nav_list.count - layout_footer.count)){
+//                        layout_footer.currentIndex = -1
+//                    }else{
+//                        console.debug(item.idx-(nav_list.count-layout_footer.count))
+//                        layout_footer.currentIndex = item.idx-(nav_list.count-layout_footer.count)
+//                    }
+//                    nav_list.currentIndex = item.idx
+//                    d.enableStack = true
+//                }
+//            }
             FluIconButton{
                 id:btn_nav
                 iconSource: FluentIcons.GlobalNavButton
@@ -518,23 +519,40 @@ Item {
                     }
                 }
             }
-            Image{
-                id:image_logo
-                Layout.preferredHeight: 20
-                Layout.preferredWidth: 20
-                source: control.logo
-                Layout.leftMargin: {
-                    if(btn_nav.visible){
-                        return 12
-                    }
-                    return 5
-                }
+            Item{
+                Layout.preferredHeight: 40
+                Layout.preferredWidth: 40
                 Layout.alignment: Qt.AlignVCenter
+                Layout.leftMargin: 5
+                Image{
+                    width: 20
+                    height: 20
+                    anchors.centerIn: parent
+                    id:image_logo
+                    source: control.logo
+                }
+                MouseArea{
+                    anchors.fill: parent
+                    onClicked: Qt.openUrlExternally("https://github.com/runhey/OnmyojiAutoScript")
+                }
             }
             FluText{
                 Layout.alignment: Qt.AlignVCenter
                 text:control.title
                 Layout.leftMargin: 12
+                font: FluTextStyle.BodyStrong
+            }
+            FluText{
+                Layout.alignment: Qt.AlignVCenter
+                text: ">"
+                Layout.leftMargin: 2
+                font: FluTextStyle.Body
+            }
+            FluText{
+                id: nav_app_bar_pane_title
+                Layout.alignment: Qt.AlignVCenter
+                text:"主页"
+                Layout.leftMargin: 2
                 font: FluTextStyle.Body
             }
         }
@@ -593,7 +611,7 @@ Item {
             if(d.isCompactAndNotPanel){
                 return 50
             }
-            return 300
+            return 200
         }
         Behavior on width{
             NumberAnimation{
@@ -719,7 +737,7 @@ Item {
             currentIndex: -1
             anchors{
                 top: layout_header.bottom
-                topMargin: 6
+                topMargin: 0
                 left: parent.left
                 right: parent.right
                 bottom: layout_footer.top
@@ -910,5 +928,4 @@ Item {
             }
         }
     }
-
 }

@@ -86,6 +86,20 @@ Rectangle{
         FluIconButton{
             width: 40
             height: 30
+            iconSource : FluentIcons.Down
+            Layout.alignment: Qt.AlignVCenter
+            iconSize: 11
+            text: "隐藏到系统托盘"
+            radius: 0
+            iconColor: root.textColor
+            color: hovered ? minimizeHoverColor : minimizeNormalColor
+            onClicked: {
+                d.win.hide()
+            }
+        }
+        FluIconButton{
+            width: 40
+            height: 30
             iconSource : FluentIcons.ChromeMinimize
             Layout.alignment: Qt.AlignVCenter
             iconSize: 11

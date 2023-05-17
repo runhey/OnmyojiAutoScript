@@ -222,6 +222,8 @@ Item {
                         iconSource:item_layout.expanded?FluentIcons.ChevronDown:FluentIcons.ChevronRight
                         opacity: item_layout.hasChild
                         iconSize: 15
+                        width: 20
+                        height: 20
                         onClicked: {
                             if(!item_layout.hasChild){
                                 item_layout_rect.onClickItem()

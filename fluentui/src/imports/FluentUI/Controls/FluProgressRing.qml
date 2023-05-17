@@ -4,7 +4,7 @@ import FluentUI
 
 Rectangle {
 
-    property real linWidth : 5
+    property real linWidth : width/8
     property real progress: 0.25
     property bool indeterminate: true
     readonly property real radius2 : radius - linWidth/2
@@ -13,7 +13,7 @@ Rectangle {
     id: control
     width: 44
     height: 44
-    radius: 22
+    radius: width/2
     border.width: linWidth
     color: "#00000000"
     border.color: FluTheme.dark ? Qt.rgba(99/255,99/255,99/255,1) : Qt.rgba(214/255,214/255,214/255,1)

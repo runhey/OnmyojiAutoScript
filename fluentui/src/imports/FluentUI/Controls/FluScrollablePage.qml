@@ -43,7 +43,7 @@ Item {
         }
         contentWidth: parent.width
         contentHeight: container.height
-        ScrollBar.vertical: FluScrollBar {
+        ScrollBar.vertical: FluScrollBar{
         }
         anchors{
             top: text_title.bottom

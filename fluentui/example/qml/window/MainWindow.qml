@@ -91,17 +91,17 @@ FluWindow {
         displayMode:MainEvent.displayMode
         logo: "qrc:/example/res/image/favicon.ico"
         title:"FluentUI"
-        autoSuggestBox:FluAutoSuggestBox{
-            width: 280
-            anchors.centerIn: parent
-            iconSource: FluentIcons.Search
-            items: ItemsOriginal.getSearchData()
-            placeholderText: lang.search
-            onItemClicked:
-                (data)=>{
-                    ItemsOriginal.startPageByItem(data)
-                }
-        }
+//        autoSuggestBox:FluAutoSuggestBox{
+//            width: 200
+//            anchors.centerIn: parent
+//            iconSource: FluentIcons.Search
+//            items: ItemsOriginal.getSearchData()
+//            placeholderText: lang.search
+//            onItemClicked:
+//                (data)=>{
+//                    ItemsOriginal.startPageByItem(data)
+//                }
+//        }
         Component.onCompleted: {
             ItemsOriginal.navigationView = nav_view
             ItemsFooter.navigationView = nav_view
