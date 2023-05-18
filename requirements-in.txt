@@ -3,3 +3,4 @@ adbutils==1.2.9
 uiautomator2==2.16.23
 
 rich==13.3.5
+pyyaml==6.0

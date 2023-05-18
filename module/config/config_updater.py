@@ -22,10 +22,40 @@ class ConfigUpdater:
         pass
 
     @timer
-    def update_config(self, config_name: str ) -> None:
+    def update_config(self, config_name: str) -> None:
         """
         更新配置文件.从template更新
         :param config_name:
         :return:
         """
         pass
+
+    def read_file(self, config_name, is_template=False):
+        """
+        Read and update config file.
+
+        Args:
+            config_name (str): ./config/{file}.json
+            is_template (bool):
+
+        Returns:
+            dict:
+        """
+        old = read_file(filepath_config(config_name))
+        # new = self.config_update(old, is_template=is_template)
+        # The updated config did not write into file, although it doesn't matters.
+        # Commented for performance issue
+        # self.write_file(config_name, new)
+        return old
+
+    @staticmethod
+    def write_file(config_name, data, mod_name='alas'):
+        """
+        Write config file.
+
+        Args:
+            config_name (str): ./config/{file}.json
+            data (dict):
+            mod_name (str):
+        """
+        write_file(filepath_config(config_name, mod_name), data)

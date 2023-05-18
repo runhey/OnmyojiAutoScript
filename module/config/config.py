@@ -17,4 +17,23 @@ class Config(ConfigManual, ConfigWatcher, ConfigUpdater):
     """
     一个配置文件的集成类
     """
-    pass
+    def __init__(self, config_name: str, task=None) -> None:
+        """
+
+        :param config_name:
+        :param task:
+        """
+        self.config_name = config_name
+        self.data: dict = {}
+
+        self.load()
+
+
+    def load(self) -> None:
+        self.data = self.read_file(self.config_name)
+
+
+
+if __name__ == '__main__':
+    config = Config(config_name='oas1')
+    logger.info(config.data)
