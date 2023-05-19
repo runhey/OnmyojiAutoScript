@@ -22,7 +22,7 @@ from module.device.method.utils import (
     random_port, get_serial_pair)
 from module.exception import RequestHumanTakeover, EmulatorNotRunningError
 from module.logger import logger
-
+from module.map.map_grids import SelectedGrids
 
 def retry(func):
     @wraps(func)
@@ -709,7 +709,7 @@ class Connection(ConnectionAttr):
             if '强迫关闭' in str(e):
                 logger.critical('无法连接至ADB服务，请关闭UU加速器、原神私服、以及一些劣质代理软件。'
                                 '它们会劫持电脑上所有的网络连接，包括Alas与模拟器之间的本地连接。')
-        return devices
+        return SelectedGrids(devices)
 
     def detect_device(self):
         """
@@ -800,7 +800,7 @@ class Connection(ConnectionAttr):
         packages = re.findall(r'package:([^\s]+)', output)
         return packages
 
-    def list_azurlane_packages(self, keywords=('azurlane', 'blhx'), show_log=True):
+    def list_app_packages(self, keywords=('onmyoji', 'yys'), show_log=True):
         """
         Args:
             keywords:
@@ -813,12 +813,12 @@ class Connection(ConnectionAttr):
         packages = [p for p in packages if any([k in p.lower() for k in keywords])]
         return packages
 
-    def detect_package(self, keywords=('azurlane', 'blhx'), set_config=True):
+    def detect_package(self, keywords=('onmyoji', 'yys'), set_config=True):
         """
         Show all possible packages with the given keyword on this device.
         """
         logger.hr('Detect package')
-        packages = self.list_azurlane_packages(keywords=keywords)
+        packages = self.list_app_packages(keywords=keywords)
 
         # Show packages
         logger.info(f'Here are the available packages in device "{self.serial}", '

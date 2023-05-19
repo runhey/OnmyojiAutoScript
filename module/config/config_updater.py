@@ -12,6 +12,10 @@ from module.config.utils import *
 
 class ConfigUpdater:
 
+    @cached_property
+    def args(self):
+        return read_file(filepath_args(filename='args'))
+
     @timer
     def update_template(self, template_name: str = "template") -> None:
         """
