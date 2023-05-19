@@ -92,3 +92,24 @@ def write_file(file: str, data):
         else:
             print(f'Unsupported config file extension: {ext}')
 
+
+def deep_iter(data, depth=0, current_depth=1):
+    """
+    Iter a dictionary safely.
+
+    Args:
+        data (dict):
+        depth (int): Maximum depth to iter
+        current_depth (int):
+
+    Returns:
+        list: Key path
+        Any:
+    """
+    if isinstance(data, dict) \
+            and (depth and current_depth <= depth):
+        for key, value in data.items():
+            for child_path, child_value in deep_iter(value, depth=depth, current_depth=current_depth + 1):
+                yield [key] + child_path, child_value
+    else:
+        yield [], data

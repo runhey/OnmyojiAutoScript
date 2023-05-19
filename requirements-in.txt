@@ -4,3 +4,5 @@ uiautomator2==2.16.23
 
 rich==13.3.5
 pyyaml==6.0
+numpy==1.24.3
+opencv-python==4.7.0.72

@@ -24,8 +24,6 @@ test/
 *.user
 !module/gui/FluentUI/fluentuiplugin.dll
 build-fluentui-Desktop_*/
-!console.bat
-!oas.exe
 
 
 

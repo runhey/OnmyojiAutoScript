@@ -33,7 +33,21 @@ class Config(ConfigManual, ConfigWatcher, ConfigUpdater):
         self.data = self.read_file(self.config_name)
 
 
+    def get_arg(self, task: str, group: str, argument: str):
+        """
+
+        :param task:
+        :param group:
+        :param argument:
+        :return: str/int/float
+        """
+        try:
+            return self.data[task][group][argument]
+        except:
+            logger.exception(f'have no arg {task}.{group}.{argument}')
+
 
 if __name__ == '__main__':
     config = Config(config_name='oas1')
     logger.info(config.data)
+    logger.info(config.get_arg("Script", "Device", "Serial"))
