@@ -1,1 +1,9 @@
 pyside6==6.4.3
+adbutils==0.11.0
+uiautomator2==2.16.17
+
+rich==13.3.5
+pyyaml==6.0
+numpy==1.24.3
+opencv-python==4.7.0.72
+websockets==11.0.3
