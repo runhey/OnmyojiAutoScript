@@ -20,6 +20,7 @@ from module.device.method.utils import (
     handle_adb_error, PackageNotInstalled,
     recv_all, possible_reasons,
     random_port, get_serial_pair)
+from module.config.server import set_server
 from module.exception import RequestHumanTakeover, EmulatorNotRunningError
 from module.logger import logger
 from module.map.map_grids import SelectedGrids
@@ -108,7 +109,7 @@ class Connection(ConnectionAttr):
             self.detect_package()
         else:
             pass
-            # set_server(self.package)
+            set_server(self.package)
         logger.attr('PackageName', self.package)
         # logger.attr('Server', self.config.SERVER)
 
@@ -842,7 +843,7 @@ class Connection(ConnectionAttr):
                 self.config.Emulator_PackageName = self.package
             # Set server
             logger.info('Server changed, release resources')
-            # set_server(self.package)
+            set_server(self.package)
         else:
             logger.critical(
                 f'Multiple {keywords[0]} packages found, auto package detection cannot decide which to choose, '
