@@ -252,7 +252,10 @@ class Handle:
                         return node.num
         # 夜神
         elif self.emulator_family == 'nox_player_family':
-            return self.root_node.children[1].children[1].num
+            try:
+                return self.root_node.children[1].children[1].num
+            except:
+                return self.root_node.children[2].children[1].num
 
         elif self.emulator_family == 'ld_player_family':
             for node in PreOrderIter(self.root_node):
@@ -280,6 +283,22 @@ class Handle:
         width: int = winRect[2] - winRect[0]  # 右x-左x
         height: int = winRect[3] - winRect[1]  # 下y - 上y 计算高度
         return width, height
+
+    @cached_property
+    def window_scale_rate(self) -> float:
+        """
+        获取window的系统缩放 一般是1
+        :return:
+        """
+        hDC = GetDC(0)
+        # 物理上（真实的）的 横纵向分辨率
+        wReal = GetDeviceCaps(hDC, DESKTOPHORZRES)
+        hReal = GetDeviceCaps(hDC, DESKTOPVERTRES)
+        # 缩放后的 分辨率
+        wAfter = GetSystemMetrics(0)
+        hAfter = GetSystemMetrics(1)
+        # print(wReal, wAfter)
+        return round(wReal / wAfter, 2)
 
 if __name__ == '__main__':
     h = Handle(config='oas1')
