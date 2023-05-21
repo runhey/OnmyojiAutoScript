@@ -120,3 +120,38 @@ def deep_iter(data, depth=0, current_depth=1):
                 yield [key] + child_path, child_value
     else:
         yield [], data
+
+def server_timezone() -> timedelta:
+    return timedelta(hours=8)
+
+def server_time_offset() -> timedelta:
+    """
+    To convert local time to server time:
+        server_time = local_time + server_time_offset()
+    To convert server time to local time:
+        local_time = server_time - server_time_offset()
+    """
+    return datetime.now(timezone.utc).astimezone().utcoffset() - server_timezone()
+
+def get_server_next_update(daily_trigger):
+    """
+    Args:
+        daily_trigger (list[str], str): [ "00:00", "12:00", "18:00",]
+
+    Returns:
+        datetime.datetime
+    """
+    if isinstance(daily_trigger, str):
+        daily_trigger = daily_trigger.replace(' ', '').split(',')
+
+    diff = server_time_offset()
+    local_now = datetime.now()
+    trigger = []
+    for t in daily_trigger:
+        h, m = [int(x) for x in t.split(':')]
+        future = local_now.replace(hour=h, minute=m, second=0, microsecond=0) + diff
+        s = (future - local_now).total_seconds() % 86400
+        future = local_now + timedelta(seconds=s)
+        trigger.append(future)
+    update = sorted(trigger)[0]
+    return update

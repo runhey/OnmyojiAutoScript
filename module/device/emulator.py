@@ -309,7 +309,8 @@ class EmulatorManager(Connection):
             return False
 
         logger.hr('Emulator restart')
-        if self.config.RestartEmulator_EmulatorType == 'auto':
+        # if self.config.RestartEmulator_EmulatorType == 'auto':
+        if self.config.get_arg('Restart', '') == 'auto':
             emulator, multi_id = self.detect_emulator(serial)
         else:
             emulator = self.SUPPORTED_EMULATORS[self.config.RestartEmulator_EmulatorType]
