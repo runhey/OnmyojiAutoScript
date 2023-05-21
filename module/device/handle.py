@@ -4,13 +4,17 @@
 import re
 
 from cached_property import cached_property
-from anytree import NodeMixin, RenderTree
+from anytree import NodeMixin, RenderTree, PreOrderIter
+from win32api import GetSystemMetrics, SendMessage, MAKELONG, PostMessage
+from win32print import GetDeviceCaps
 from win32process import GetWindowThreadProcessId
 from win32gui import (GetWindowText, EnumWindows, FindWindow, FindWindowEx,
                       IsWindow, GetWindowRect, GetWindowDC, DeleteObject,
                       SetForegroundWindow, IsWindowVisible, GetDC, GetParent,
                       EnumChildWindows)
-
+from win32con import (SRCCOPY, DESKTOPHORZRES, DESKTOPVERTRES, WM_LBUTTONUP,
+                      WM_LBUTTONDOWN, WM_ACTIVATE, WA_ACTIVE, MK_LBUTTON,
+                      WM_NCHITTEST, WM_SETCURSOR, HTCLIENT, WM_MOUSEMOVE)
 from module.config.config import Config
 from module.exception import RequestHumanTakeover, EmulatorNotRunningError
 from module.logger import logger
@@ -50,6 +54,20 @@ def handle_num2pid(num :int) -> int:
     """
     return 0 if num is None or num == 0 or num == '' else GetWindowThreadProcessId(num)[1]
 
+def window_scale_rate() -> float:
+    """
+    获取window的系统缩放 一遍是1
+    :return:
+    """
+    hDC = GetDC(0)
+    # 物理上（真实的）的 横纵向分辨率
+    wReal = GetDeviceCaps(hDC, DESKTOPHORZRES)
+    hReal = GetDeviceCaps(hDC, DESKTOPVERTRES)
+    # 缩放后的 分辨率
+    wAfter = GetSystemMetrics(0)
+    hAfter = GetSystemMetrics(1)
+    # print(wReal, wAfter)
+    return round(wReal / wAfter, 2)
 
 class WindowNode(NodeMixin):
     def __init__(self, name, num, parent=None):
@@ -127,6 +145,18 @@ class Handle:
         logger.info('the emulator handle structure is')
         for pre, fill, node in RenderTree(self.root_node):
             logger.info("%s%s" % (pre, node.name))
+        for pre, fill, node in RenderTree(self.root_node):
+            logger.info("%s%s" % (pre, node.num))
+
+        # 判断是哪一个模拟器
+        logger.info(f'the emulator family is {self.emulator_family}')
+
+        # window系统的缩放
+        logger.info(f'your window screen scale rate is {window_scale_rate()}')
+        _ = self.screenshot_handle_num
+        logger.info(f'screenshot handle num is {self.screenshot_handle_num}')
+        logger.info(f'the emulator screenshot size is {self.screenshot_size}')
+
 
     @staticmethod
     def all_windows() -> list:
@@ -202,6 +232,54 @@ class Handle:
                     return 'bluestacks_player_family'
                 elif emu == '逍遥':
                     return 'memu_player_family'
+
+    @cached_property
+    def screenshot_handle_num(self) -> int:
+        """
+        截屏的句柄其实并不是根句柄
+        :return:  出错返回None
+        """
+        if self.emulator_family == 'mumu_player_family':
+            if re.match(string=self.root_handle_title, pattern=r".*12$"):
+                logger.info('is mumu12')
+                for node in PreOrderIter(self.root_node):
+                    if node.name == Handle.emulator_handle['mumu_player_12'][1]:
+                        return node.num
+            else:
+                logger.info('is mumu')
+                for node in PreOrderIter(self.root_node):
+                    if node.name == Handle.emulator_handle['mumu_player'][1]:
+                        return node.num
+        # 夜神
+        elif self.emulator_family == 'nox_player_family':
+            return self.root_node.children[1].children[1].num
+
+        elif self.emulator_family == 'ld_player_family':
+            for node in PreOrderIter(self.root_node):
+                if node.name == Handle.emulator_handle['ld_player_family'][0]:
+                    return node.num
+
+        elif self.emulator_family == 'memu_player_family':
+            for node in PreOrderIter(self.root_node):
+                if node.name == Handle.emulator_handle['memu_player_family']:
+                    return node.num
+
+        elif self.emulator_family == 'bluestacks_family':
+            for node in PreOrderIter(self.root_node):
+                if node.name == Handle.emulator_handle['bluestacks_family']:
+                    return node.num
+        return None
+
+    @cached_property
+    def screenshot_size(self) -> tuple:
+        """
+        第一个是width 第二个是heigth
+        :return:
+        """
+        winRect = GetWindowRect(self.screenshot_handle_num)
+        width: int = winRect[2] - winRect[0]  # 右x-左x
+        height: int = winRect[3] - winRect[1]  # 下y - 上y 计算高度
+        return width, height
 
 if __name__ == '__main__':
     h = Handle(config='oas1')
