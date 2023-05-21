@@ -3,6 +3,7 @@ import json
 import re
 import socket
 import time
+import numpy as np
 from functools import wraps
 from typing import List
 
@@ -12,7 +13,7 @@ from uiautomator2 import _Service
 
 from module.base.decorator import Config, cached_property, del_cached_property
 from module.base.timer import Timer
-from module.base.utils import *
+from module.base.utils import random_rectangle_point
 from module.device.connection import Connection
 from module.device.method.utils import RETRY_TRIES, retry_sleep, handle_adb_error
 from module.exception import RequestHumanTakeover, ScriptError
@@ -568,3 +569,7 @@ class Minitouch(Connection):
 
         builder.up().commit()
         self.minitouch_send()
+
+if __name__ == '__main__':
+    mm = Minitouch(config='oas1')
+    mm.click_minitouch(200, 150)

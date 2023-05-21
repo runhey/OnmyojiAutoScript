@@ -328,6 +328,5 @@ class Uiautomator2(Connection):
 
 if __name__ == '__main__':
     ui2 = Uiautomator2(config='oas1')
-    ui2.app_start_uiautomator2()
     cv2.imshow("iiii", ui2.screenshot_uiautomator2())
     cv2.waitKey(0)
