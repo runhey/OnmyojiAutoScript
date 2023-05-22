@@ -33,10 +33,23 @@ class FluentApp():
         QGuiApplication.setApplicationName("oas")
         QGuiApplication.setOrganizationName("oas")
 
-    def run(self):
         FluentApp.engine = QQmlApplicationEngine()
-        FluentApp.engine.addImportPath(os.fspath(Path(__file__).resolve().parent ))
+        FluentApp.engine.addImportPath(os.fspath(Path(__file__).resolve().parent))
+
+    @classmethod
+    def run(cls):
         FluentApp.engine.load(os.fspath(Path(get_work_path() / 'module' / 'gui' / 'qml' / 'app.qml')))
         if not FluentApp.engine.rootObjects():
             sys.exit(-1)
         sys.exit(FluentApp.app.exec())
+
+    @classmethod
+    def set_context_property(cls, context, name: str) -> None:
+        """
+        设置上下文
+        :param name:
+        :param context:
+        :return:
+        """
+        FluentApp.engine.rootContext().setContextProperty(name, context)
+
