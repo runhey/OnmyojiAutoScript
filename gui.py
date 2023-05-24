@@ -12,11 +12,11 @@ if __name__ == "__main__":
     # 启动一个UI交互的线程，因为信号槽不可跨进程
     # 后面选择注入上下文快
     app = FluentApp()
-    add = Add()
+    add_config = Add()
     process_manager = ProcessManager()
-    process_manager.create_all()
+    # process_manager.create_all()
 
-    app.set_context_property(add, 'add')
+    app.set_context_property(add_config, 'add_config')
     app.set_context_property(process_manager, 'process_manager')
     # 启动一个GUI
     app.run()

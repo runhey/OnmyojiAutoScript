@@ -57,6 +57,14 @@ FluWindow {
             }
     }
 
+    //添加一份脚本实例的dialog
+    Add{
+        id: add
+        property bool add_open: MainEvent.addOpen
+        onAdd_openChanged: {
+            add.open()
+        }
+    }
 
     FluNavigationView{
         id:nav_view

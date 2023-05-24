@@ -15,4 +15,5 @@ QtObject {
     property int displayMode : FluNavigationView.Compact
     property int runStatus: MainEvent.RunStatus.Empty
     property string menuTitle: "主页"
+    property bool addOpen: false
 }

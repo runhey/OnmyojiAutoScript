@@ -2,6 +2,7 @@ pragma Singleton
 
 import QtQuick
 import FluentUI
+import "../Global/"
 
 FluObject{
     id: itemsOriginal
@@ -18,7 +19,7 @@ FluObject{
         title: "add"
         icon: FluentIcons.Add
         onTap:{
-            navigationView.push(Qt.resolvedUrl("../../qml/Page/O_Add.qml"))
+            MainEvent.addOpen = !MainEvent.addOpen
         }
     }
 

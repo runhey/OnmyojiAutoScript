@@ -4,15 +4,19 @@
 #
 import re
 from pathlib import Path
+from PySide6.QtCore import QObject, Slot, Signal
 
 from module.logger import logger
 
 # 震惊到我姥姥家 除了第一个函数all_script_files是我自己写的
 # 后面的都是github copilot写的
-class Add:
+class Add(QObject):
+    
+    def __init__(self) -> None:
+        super(Add, self).__init__()
 
-    @classmethod
-    def all_script_files(cls) -> list:
+    @Slot(result="QVariantList")
+    def all_script_files(self) -> list:
         """
         获取所有的脚本文件 除了tmplate
         :return: ['oas1', 'oas2']
@@ -27,8 +31,8 @@ class Add:
             result.append(json.stem)
         return result
 
-    @classmethod
-    def all_json_file(cls) -> list:
+    @Slot(result="QVariantList")
+    def all_json_file(self) -> list:
         """
         获取所有的json文件
         :return: ['oas1', 'oas2']
@@ -38,11 +42,15 @@ class Add:
         json_files = config_path.glob('*.json')
         result = []
         for json in json_files:
-            result.append(json.stem)
+            if json.stem == 'template':
+                result.insert(0, json.stem)
+            else:
+                result.append(json.stem)
         return result
 
-    @classmethod
-    def copy(cls, file: str, template: str = 'template') -> None:
+
+    @Slot(str, str)
+    def copy(self, file: str, template: str = 'template') -> None:
         """
         复制一个配置文件
         :param file:  不带json后缀
@@ -61,13 +69,14 @@ class Add:
             f.write(template_content)
         logger.info(f'copy {template_path} to {file_path}')
 
-    @classmethod
-    def generate_script_name(cls) -> str:
+
+    @Slot(result="QString")
+    def generate_script_name(self) -> str:
         """
         生成一个新的配置的名字
         :return:
         """
-        all_script_files = cls.all_script_files()
+        all_script_files = self.all_script_files()
         if not all_script_files:
             return 'oas1'
         all_script_files.sort()
