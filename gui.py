@@ -3,6 +3,7 @@
 # github https://github.com/runhey
 
 from module.gui.context.add import Add
+from module.gui.context.settings import Setting
 from module.gui.context.process_manager import ProcessManager
 from module.gui.fluent_app import FluentApp
 
@@ -13,9 +14,10 @@ if __name__ == "__main__":
     # 后面选择注入上下文快
     app = FluentApp()
     add_config = Add()
+    setting = Setting()
     process_manager = ProcessManager()
-    # process_manager.create_all()
 
+    app.set_context_property(setting, 'setting')
     app.set_context_property(add_config, 'add_config')
     app.set_context_property(process_manager, 'process_manager')
     # 启动一个GUI

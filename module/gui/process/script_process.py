@@ -9,13 +9,15 @@ from module.logger import logger
 
 class ScriptProcess(Process):
 
-    def __init__(self, config: str) -> None:
+    def __init__(self, config: str, port: int) -> None:
         """
 
+        :param port: 端口 tcp 127.0.0.1:port
         :param config: 如oas1
         """
         super().__init__()
         self.config = config
+        self.port = port
         self.name = config
         self.daemon = True  # 设置为守护进程，主进程结束，子进程也结束
 
@@ -35,6 +37,8 @@ class ScriptProcess(Process):
         try:
             from script import Script
             script = Script(config_name=self.config)
+            script.init_server(self.port)
+            script.run_server()
         except:
             logger.exception(f'run script {self.config} error')
             raise

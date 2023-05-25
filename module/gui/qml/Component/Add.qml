@@ -9,6 +9,8 @@ FluContentDialog{
     id:dialog
     title:"Add new config"
 
+    signal updateScriptItems
+
     contentItem: Rectangle {
         id:layout_content
         implicitWidth:minWidth
@@ -125,6 +127,7 @@ FluContentDialog{
     onPositiveClicked:{
         showSuccess("已创建")
         add_config.copy(newNameBox.text, copyConfig.currentText)
+        dialog.updateScriptItems()
     }
 
     onOpened: {

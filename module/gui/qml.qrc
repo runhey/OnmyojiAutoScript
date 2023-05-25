@@ -15,5 +15,8 @@
         <file>qml/Component/FluDialog.qml</file>
         <file>qml/Component/FComboBox.qml</file>
         <file>qml/Component/FItemDelegate.qml</file>
+        <file>qml/Page/ScriptView.qml</file>
+        <file>qml/Component/ScriptItem.qml</file>
+        <file>qml/Component/OverView.qml</file>
     </qresource>
 </RCC>

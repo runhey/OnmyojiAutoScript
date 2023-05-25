@@ -2,6 +2,7 @@ pragma Singleton
 
 import QtQuick
 import FluentUI
+import "../Global/"
 
 FluObject{
 
@@ -12,7 +13,14 @@ FluObject{
     FluPaneItemSeparator{}
 
     FluPaneItem{
-        title: "关于"
+        title: "add"
+        icon: FluentIcons.Add
+        onTap:{
+            MainEvent.addOpen = !MainEvent.addOpen
+        }
+    }
+    FluPaneItem{
+        title: "about"
         icon:FluentIcons.Contact
         tapFunc:function(){
             console.debug("this click about")

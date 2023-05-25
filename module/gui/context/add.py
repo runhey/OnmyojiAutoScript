@@ -15,6 +15,7 @@ class Add(QObject):
     def __init__(self) -> None:
         super(Add, self).__init__()
 
+
     @Slot(result="QVariantList")
     def all_script_files(self) -> list:
         """

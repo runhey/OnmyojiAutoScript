@@ -145,17 +145,17 @@ class Screenshot(Adb, DroidCast, Scrcpy, Window):
                 Or None for Optimization_ScreenshotInterval, 'combat' for Optimization_CombatScreenshotInterval
         """
         if interval is None:
-            origin = self.config.Optimization_ScreenshotInterval
+            origin = self.config.get_arg('Script', 'Optimization', 'ScreenshotInterval')
             interval = limit_in(origin, 0.1, 0.3)
             if interval != origin:
                 logger.warning(f'Optimization.ScreenshotInterval {origin} is revised to {interval}')
-                self.config.Optimization_ScreenshotInterval = interval
+                self.config.set_arg('Script', 'Optimization', 'ScreenshotInterval', interval)
         elif interval == 'combat':
-            origin = self.config.Optimization_CombatScreenshotInterval
+            origin = self.config.get_arg('Script', 'Optimization', 'CombatScreenshotInterval')
             interval = limit_in(origin, 0.3, 1.0)
             if interval != origin:
                 logger.warning(f'Optimization.CombatScreenshotInterval {origin} is revised to {interval}')
-                self.config.Optimization_CombatScreenshotInterval = interval
+                self.config.set_arg('Script', 'Optimization', 'CombatScreenshotInterval', interval)
         elif isinstance(interval, (int, float)):
             # No limitation for manual set in code
             pass

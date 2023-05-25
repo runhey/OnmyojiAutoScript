@@ -18,7 +18,6 @@ FluWindow {
     minimumHeight: 460
     launchMode: FluWindow.SingleTask
 
-
     FluAppBar{
        id:appbar
        z:9
@@ -64,6 +63,10 @@ FluWindow {
         onAdd_openChanged: {
             add.open()
         }
+        onUpdateScriptItems: {
+            nav_view.items.addFluPaneItems()
+            process_manager.create_all()
+        }
     }
 
     FluNavigationView{
@@ -79,9 +82,11 @@ FluWindow {
             items.navigationView = nav_view
             footerItems.navigationView = nav_view
             nav_view.setCurrentIndex(0)
+            items.addFluPaneItems()
         }
     }
-
-
+    Component.onCompleted:{
+        process_manager.create_all()
+    }
 
 }

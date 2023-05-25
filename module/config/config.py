@@ -25,6 +25,7 @@ class Config(ConfigManual, ConfigWatcher, ConfigUpdater):
         """
         self.config_name = config_name
         self.data: dict = {}
+        self.is_template_config = config_name.startswith("template")
 
         self.load()
 
@@ -46,6 +47,19 @@ class Config(ConfigManual, ConfigWatcher, ConfigUpdater):
         except:
             logger.exception(f'have no arg {task}.{group}.{argument}')
 
+    def set_arg(self, task: str, group: str, argument: str, value) -> None:
+        """
+
+        :param task:
+        :param group:
+        :param argument:
+        :param value:
+        :return:
+        """
+        try:
+            self.data[task][group][argument] = value
+        except:
+            logger.exception(f'have no arg {task}.{group}.{argument}')
 
 if __name__ == '__main__':
     config = Config(config_name='oas1')
