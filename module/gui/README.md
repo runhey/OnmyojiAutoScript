@@ -6,7 +6,7 @@
 where python
 cd module/gui
 pyside6-rcc -o qml_rcc.py qml.qrc
-pyside6-rcc -o rec_rcc.py res.qrc
+pyside6-rcc -o res_rcc.py res.qrc
 ```
 
 即可生成rcc文件。当然当你每修改一次qrc指向的资源文件时候就需要运行一次

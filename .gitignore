@@ -24,6 +24,7 @@ test/
 *.user
 !module/gui/FluentUI/fluentuiplugin.dll
 build-fluentui-Desktop_*/
+module/config/argument/setting.json
 
 
 

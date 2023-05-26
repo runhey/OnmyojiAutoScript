@@ -11,7 +11,7 @@ from module.device.method.window import Window
 from module.logger import logger
 
 
-class Control(Minitouch, Scrcpy, Window, Adb):
+class Control(Minitouch, Scrcpy, Window):
     def handle_control_check(self, button):
         # Will be overridden in Device
         pass

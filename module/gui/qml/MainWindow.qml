@@ -11,13 +11,12 @@ import "./Component/"
 FluWindow {
     id:window
     title: "oas"
-    width: 1000
+    width: 1100
     height: 720
     closeDestory:false
     minimumWidth: 520
     minimumHeight: 460
     launchMode: FluWindow.SingleTask
-
 
     FluAppBar{
        id:appbar
@@ -57,6 +56,18 @@ FluWindow {
             }
     }
 
+    //添加一份脚本实例的dialog
+    Add{
+        id: add
+        property bool add_open: MainEvent.addOpen
+        onAdd_openChanged: {
+            add.open()
+        }
+        onUpdateScriptItems: {
+            nav_view.items.addFluPaneItems()
+            process_manager.create_all()
+        }
+    }
 
     FluNavigationView{
         id:nav_view
@@ -71,9 +82,11 @@ FluWindow {
             items.navigationView = nav_view
             footerItems.navigationView = nav_view
             nav_view.setCurrentIndex(0)
+            items.addFluPaneItems()
         }
     }
-
-
+    Component.onCompleted:{
+        process_manager.create_all()
+    }
 
 }

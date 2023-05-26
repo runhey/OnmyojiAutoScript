@@ -32,10 +32,10 @@ FluScrollablePage{
             Repeater{
                 model: [{title:"System",mode:FluDarkMode.System},{title:"Light",mode:FluDarkMode.Light},{title:"Dark",mode:FluDarkMode.Dark}]
                 delegate:  FluRadioButton{
-                    selected : FluTheme.darkMode === modelData.mode
+                    selected : MainEvent.darkMode === modelData.mode
                     text:modelData.title
                     onClicked:{
-                        FluTheme.darkMode = modelData.mode
+                        MainEvent.darkMode = modelData.mode
                     }
                 }
             }
@@ -107,7 +107,7 @@ FluScrollablePage{
                             anchors.fill: parent
                             hoverEnabled: true
                             onClicked: {
-                                FluTheme.primaryColor = modelData
+                                MainEvent.primaryColor = modelData
                             }
                         }
                     }
@@ -119,9 +119,9 @@ FluScrollablePage{
             }
             FluToggleSwitch{
                 Layout.topMargin: 5
-                selected: FluTheme.nativeText
+                selected: MainEvent.nativeText
                 clickFunc:function(){
-                    FluTheme.nativeText = !FluTheme.nativeText
+                    MainEvent.nativeText = !MainEvent.nativeText
                 }
             }
         }
