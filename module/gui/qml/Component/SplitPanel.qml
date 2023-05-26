@@ -1,9 +1,11 @@
 import QtQuick
 import QtQuick.Controls
 import FluentUI
+import "../Global"
 
 Item {
-    signal clickMessage(string text)
+    id: splitPanel
+    property string title: ""
 
     // 左边菜单
     FluArea{
@@ -17,7 +19,8 @@ Item {
             selectionMode: FluTabView.SizeToContent
 
             onItemClicked:(model)=>{
-                    clickMessage(model.text)
+                    MainEvent.menuTitle = model.text
+                    splitPanel.title = model.text
                     showSuccess(model.text)
                 }
         }
@@ -67,19 +70,6 @@ Item {
             }
         }
         menu_tree.updateData(datas)
-
-//        for(let items of data){
-//        if(items.length === 'string'){
-//            datas.push(menu_tree.createItem(items,false))
-//        }else{
-//            var da = []
-//            for(let item of items){
-//                da.push(menu_tree.createItem(item,false))
-//            }
-//            datas.push(menu_tree.createItem(items, true, da))
-//        }
-
-//        }
     }
 
     //右侧的分为两个部分一个部分是contentDefalut表示固定的不动的

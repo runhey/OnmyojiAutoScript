@@ -17,6 +17,10 @@
         <file>qml/Component/FItemDelegate.qml</file>
         <file>qml/Page/ScriptView.qml</file>
         <file>qml/Component/ScriptItem.qml</file>
-        <file>qml/Component/OverView.qml</file>
+        <file>qml/Component/Overview.qml</file>
+        <file>qml/Page/Home.qml</file>
+        <file>qml/Page/Update.qml</file>
+        <file>qml/Component/Args.qml</file>
+        <file>qml/Component/Taskmini.qml</file>
     </qresource>
 </RCC>

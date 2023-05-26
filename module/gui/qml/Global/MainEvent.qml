@@ -39,7 +39,6 @@ QtObject {
                 "language": "zh-CN"}
         }
 
-        console.debug(displayMode, darkMode, primaryColor, nativeText, language)
         mainEvent.displayMode = set["displayMode"]
         mainEvent.darkMode = set["darkMode"]
         mainEvent.nativeText = set["nativeText"]
@@ -54,7 +53,6 @@ QtObject {
         else if(primary_color === "Blue"){mainEvent.primaryColor = FluColors.Blue}
         else if(primary_color === "Teal"){mainEvent.primaryColor = FluColors.Teal}
         else if(primary_color === "Green"){mainEvent.primaryColor = FluColors.Green}
-        console.debug(displayMode, darkMode, primaryColor, nativeText, language)
     }
     onDisplayModeChanged: {
         if(mainEvent.settings === ""){

@@ -11,7 +11,7 @@ import "./Component/"
 FluWindow {
     id:window
     title: "oas"
-    width: 1000
+    width: 1100
     height: 720
     closeDestory:false
     minimumWidth: 520
