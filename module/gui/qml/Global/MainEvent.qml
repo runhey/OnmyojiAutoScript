@@ -20,12 +20,17 @@ QtObject {
     property int darkMode: FluDarkMode.System
     property QtObject primaryColor: FluColors.Orange
     property bool nativeText: true
-    property string language: "zh-CN"
+    property string language: ""
 
     property int runStatus: MainEvent.RunStatus.Empty
-    property string menuTitle: "主页"
+    property string menuTitle: ""
     property bool addOpen: false
     property string scriptName: ""
+
+    //切换语言中文是"zh_CN" 英文是"en_US"
+    function switchLocale(locale) {
+
+    }
 
     Component.onCompleted:{
         var set = JSON.parse(setting.read())
@@ -36,13 +41,14 @@ QtObject {
                 "darkMode": 2,
                 "primaryColor": "Orange",
                 "nativeText": true,
-                "language": "zh-CN"}
+                "language": "简体中文"}
         }
 
         mainEvent.displayMode = set["displayMode"]
         mainEvent.darkMode = set["darkMode"]
         mainEvent.nativeText = set["nativeText"]
         mainEvent.language = set["language"]
+        switchLocale("zh_CN")
 
         var primary_color = set["primaryColor"]
         if(primary_color === "Yellow"){mainEvent.primaryColor = FluColors.Yellow}
@@ -112,6 +118,6 @@ QtObject {
 
         mainEvent.settings["language"] = mainEvent.language
         setting.update(JSON.stringify(mainEvent.settings))
-//        showSuccess('update language' + mainEvent.language)
+        translator.set_language(mainEvent.language)
     }
 }

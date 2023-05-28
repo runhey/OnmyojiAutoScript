@@ -47,26 +47,19 @@ Item {
         anchors.bottomMargin: 12
     }
 
-    Component.onCompleted: {
-        var datas = []
-        datas.push(menu_tree.createItem("Home",false))
-        datas.push(menu_tree.createItem("Update",false))
-//        datas.push(menu_tree.createItem("Node2",true,[createItem("Node2-1",false),createItem("Node2-2",false)]))
-        menu_tree.updateData(datas)
-    }
     //创建左边的菜单，最多两级
-    //['home', 'xxx':['x1', 'x2']]
+    //['home', 'xxx':['x1', 'x2']]  是英文的
     function create(data){
         var datas = []
         for(var items in data){
             if(items.length === 0){
-                datas.push(menu_tree.createItem(items,false))
+                datas.push(menu_tree.createItem(qsTr(items),false))
             }else{
                 var da = []
                 for(var item in data[items]){
-                    da.push(menu_tree.createItem(data[items][item], false))
+                    da.push(menu_tree.createItem(qsTr(data[items][item]), false))
                 }
-                datas.push(menu_tree.createItem(items, true, da))
+                datas.push(menu_tree.createItem(qsTr(items), true, da))
             }
         }
         menu_tree.updateData(datas)

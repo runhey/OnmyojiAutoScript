@@ -8,7 +8,7 @@ SplitPanel{
 
     property string configName: ""
     onTitleChanged: {
-        if(title === "Overview"){
+        if(title === qsTr("Overview")){
             showDefalut()
         }
         else{

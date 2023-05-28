@@ -13,23 +13,22 @@ FluObject{
     FluPaneItemSeparator{}
 
     FluPaneItem{
-        title: "add"
+        title: qsTr("add")
         icon: FluentIcons.Add
         onTap:{
             MainEvent.addOpen = !MainEvent.addOpen
         }
     }
     FluPaneItem{
-        title: "about"
+        title: qsTr("about")
         icon:FluentIcons.Contact
         tapFunc:function(){
-            console.debug("this click about")
             MainEvent.runStatus = MainEvent.RunStatus.Error
         }
     }
 
     FluPaneItem{
-        title: "settings"
+        title: qsTr("settings")
         icon:FluentIcons.Settings
         onTap:{
             Qt.Pa
