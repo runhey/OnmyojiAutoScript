@@ -58,25 +58,6 @@ class FluentApp():
         """
         FluentApp.engine.rootContext().setContextProperty(name, context)
 
-#     @classmethod
-#     def init_translator(cls) -> None:
-#         """
-#         初始化翻译
-#         :return:
-#         """
-#         path_en_US = Path.cwd() / "module" / "config" / "i18n" / "en_US.qm"
-#         path_zh_CN = Path.cwd() / "module" / "config" / "i18n" / "zh_CN.qm"
-#         FluentApp.translator = QTranslator()
-#         # FluentApp.translator.load(str(path_en_US.resolve()))
-#         print(FluentApp.translator.load(str(path_zh_CN.resolve())))
-#         QGuiApplication.installTranslator(FluentApp.translator)
-#         FluentApp.engine.retranslate()
-#         print(FluentApp.translator.language())
-# #        # locale = QLocale("en_US")  # 设置英文
-# #        locale = QLocale("zh_CN")  # 设置中文
-# #        FluentApp.app.setApplicationLocale(locale)
-
-
 class Translator(QObject):
 
     def __init__(self, engine, app) -> None:
