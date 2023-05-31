@@ -9,6 +9,8 @@ import "../Component"
 
 SplitPanel{
 
+    property string configName: ""
+
     onTitleChanged: {
         if(title === qsTr("Home")){
             var comp = Qt.createComponent("../../qml/Page/Home.qml")

@@ -12,7 +12,8 @@ FluObject{
         title: qsTr("home")
         icon:FluentIcons.Home
         onTap:{
-            navigationView.push(Qt.resolvedUrl("../../qml/Page/O_Home.qml"))
+//            navigationView.push(Qt.resolvedUrl("../../qml/Page/O_Home.qml"))
+            navigationView.pushScript(Qt.resolvedUrl("../../qml/Page/O_Home.qml"), "home")
         }
     }
     function getRecentlyAddedData(){

@@ -17,9 +17,7 @@ from module.config.utils import *
 from module.logger import logger
 
 class Config(ConfigState, ConfigManual, ConfigWatcher, ConfigMenu):
-    """
-    一个配置文件的集成类
-    """
+
     def __init__(self, config_name: str, task=None) -> None:
         """
 
@@ -45,12 +43,12 @@ class Config(ConfigState, ConfigManual, ConfigWatcher, ConfigMenu):
             logger.error(f'can not ask this variable {name}')
             return None  # 或者抛出异常，或者返回其他默认值
 
-    def gui_args(self) -> str:
+    def gui_args(self, task: str) -> str:
         """
         获取给gui显示的参数
         :return:
         """
-        return self.model.gui_task()
+        return self.model.gui_task(task=task)
 
     def get_arg(self, task: str, group: str, argument: str):
         """
@@ -83,5 +81,7 @@ if __name__ == '__main__':
     config = Config(config_name='pydantic')
     print(config.menu)
     print(config.config_name)
+
+    config.script.device.serial = 123
     print(config.script.device.serial)
 

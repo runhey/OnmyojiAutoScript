@@ -32,7 +32,8 @@ FluObject{
         icon:FluentIcons.Settings
         onTap:{
             Qt.Pa
-            navigationView.push(Qt.resolvedUrl("../../qml/Page/O_Settings.qml"))
+//            navigationView.push(Qt.resolvedUrl("../../qml/Page/O_Settings.qml"))
+            navigationView.pushScript(Qt.resolvedUrl("../../qml/Page/O_Settings.qml"), "settings")
         }
     }
 

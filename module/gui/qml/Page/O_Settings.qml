@@ -12,6 +12,8 @@ FluScrollablePage{
     bottomPadding:20
     spacing: 0
 
+    property string configName: ""
+
     FluArea{
         Layout.fillWidth: true
         Layout.topMargin: 0

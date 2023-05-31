@@ -16,11 +16,11 @@
     </message>
     <message>
         <source>about</source>
-        <translation>关于</translation>
+        <translation>about</translation>
     </message>
     <message>
         <source>settings</source>
-        <translation>about</translation>
+        <translation>settings</translation>
     </message>
 </context>
 <context>

@@ -61,3 +61,18 @@ class Script:
         """
         self.server.run()
 
+    def gui_args(self, task: str) -> str:
+        """
+        获取给gui显示的参数
+        :return:
+        """
+        return self.config.gui_args(task=task)
+
+    def gui_menu(self) -> str:
+        """
+        获取给gui显示的菜单
+        :return:
+        """
+        return self.config.gui_menu
+
+

@@ -4,6 +4,7 @@ import FluentUI
 
 FluScrollablePage{
     spacing: 6
+
     Image {
         id: name
         Layout.preferredHeight: 40

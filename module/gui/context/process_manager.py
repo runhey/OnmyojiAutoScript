@@ -125,3 +125,44 @@ class ProcessManager(QObject):
         for config in self.processes:
             self.processes[config].restart()
         logger.info(f'restart all script')
+
+    def get_client(self, config: str) -> zerorpc.Client:
+        """
+        get_client
+        :param config:
+        :return:
+        """
+        if config in self.clients:
+            return self.clients[config]
+        else:
+            logger.info(f'script {config} is not running')
+            return None
+
+    @Slot(str, result="QString")
+    def gui_menu(self, config: str) -> str:
+        """
+        get_gui_menu
+        :param config:
+        :return:
+        """
+        if config in self.clients:
+            return self.clients[config].gui_menu()
+        else:
+            logger.info(self.clients)
+            logger.info(f'script {config} is not running')
+            return None
+
+    @Slot(str, str, result="QString")
+    def gui_args(self, config: str, task: str) -> str:
+        """
+        获取显示task的gui参数
+        :param config:
+        :param task:
+        :return:
+        """
+        if config in self.clients:
+            return self.clients[config].gui_args(task)
+        else:
+            logger.info(f'script {config} is not running')
+            return None
+

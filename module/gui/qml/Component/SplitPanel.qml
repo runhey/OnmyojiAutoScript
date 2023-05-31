@@ -57,6 +57,9 @@ Item {
             }else{
                 var da = []
                 for(var item in data[items]){
+                    if (typeof data[items][item] !== "string") {
+                      continue
+                    }
                     da.push(menu_tree.createItem(qsTr(data[items][item]), false))
                 }
                 datas.push(menu_tree.createItem(qsTr(items), true, da))

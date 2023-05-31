@@ -78,4 +78,4 @@ if __name__ == "__main__":
         print(e)
         c = ConfigModel()
     print(c.json())
-    # c.write_json('pydantic', json.loads(c.gui_task('Script')))
+    # c.write_json('pydantic', c.schema())
