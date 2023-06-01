@@ -146,6 +146,7 @@ class ProcessManager(QObject):
         :return:
         """
         if config in self.clients:
+            logger.info(f'gui get menu of {config}')
             return self.clients[config].gui_menu()
         else:
             logger.info(self.clients)
@@ -161,6 +162,7 @@ class ProcessManager(QObject):
         :return:
         """
         if config in self.clients:
+            logger.info(f'gui get args of {config} {task}')
             return self.clients[config].gui_args(task)
         else:
             logger.info(f'script {config} is not running')
@@ -175,6 +177,7 @@ class ProcessManager(QObject):
         :return:
         """
         if config in self.clients:
+            logger.info(f'gui get value of {config} {task}')
             return self.clients[config].gui_task(task)
         else:
             logger.info(f'script {config} is not running')

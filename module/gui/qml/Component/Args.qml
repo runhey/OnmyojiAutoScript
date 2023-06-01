@@ -1,105 +1,410 @@
 import QtQuick
 import QtQuick.Controls
 import FluentUI
+import QtQuick.Layouts
 import "./ModelParse.js" as MP
 
 Item {
     property string argsData: ""
     property string valueData: ""
     signal updataData
-
-    FluText{
-        text: 'this args '
-    }
     FluScrollablePage{
         id: contentScrollable
         width: 700
         height: parent.height
+        spacing: 12
         anchors.horizontalCenter: parent.horizontalCenter
     }
 
     Component{
         id: group_item
-        property string groupName: ""
-        property string groupTitle: ""
-        property var argumentValue: {""}
         FluExpander{
-            headerText: group_item.groupTitle
+            id: expander
+            property string groupName: ""
+            property string groupTitle: ""
+            property var argumentValue: {""}
+            headerText: qsTr(groupTitle) +" "+ qsTr("Setting")
             width: contentScrollable.width
+            contentHeight: group_column.height
             Column{
                 id: group_column
-                anchors.fill: parent
                 spacing: 4
-
-                FluTextBox{
-                    placeholderText:"单行输入框"
+                clip: true
+                anchors{
+                    top: parent.top
+                    topMargin: 12
+                    left: parent.left
+                    leftMargin: 15
+                    right: parent.right
+                    rightMargin: 15
+                    bottomMargin: 12
+                }
+            }
+            onArgumentValueChanged: {
+                for(let index in argumentValue){
+                    const arg = argumentValue[index]
+                    createItem(arg)
+//                    expander.contentHeight = group_column.height
+                }
+            }
+            /**
+             * 创建某个具体的字段
+             * @param {Object} arg 打包的变量大概长这样的：
+                {
+                    "name": "handle_error",
+                    "title": "Handle Error",
+                    "description": "none",
+                    "default": false,
+                    "type": "boolean",
+                    "value": false
+                }
+             * @returns {Object}
+             */
+            function createItem(arg){
+                if(arg === null){
+                    console.error("it is emtry when create arg")
+                    return
                 }
 
-                FluTextBox{
-                    placeholderText:"单行输入框"
+                var object = null
+                if(arg.type === "string"){
+                    object = string_item.createObject(group_column)
+                    if(object === null){
+                        console.error("can not create component string_item", arg.title)
+                        return
+                    }
+                }
+                else if(arg.type === "integer"){
+                    object = int_item.createObject(group_column)
+                    if(object === null){
+                        console.error("can not create component integer_item", arg.title)
+                        return
+                    }
+                }
+                else if(arg.type === "number"){
+                    object = float_item.createObject(group_column)
+                    if(object === null){
+                        console.error("can not create component float_item", arg.title)
+                        return
+                    }
+                }
+                else if(arg.type === "boolean"){
+                    object = bool_item.createObject(group_column)
+                    if(object === null){
+                        console.error("can not create component boolean_item", arg.title)
+                        return
+                    }
+                }
+                else if(arg.type === "enum"){
+                    object = enum_item.createObject(group_column)
+                    if(object === null){
+                        console.error("can not create component enum_item", arg.title)
+                        return
+                    }
                 }
 
-                FluTextBox{
-                    placeholderText:"单行输入框"
+                if(object === null){
+                    console.error("can not create component ", arg.title)
+                    return
                 }
-
+                object.modelData = arg
+                group_column.data.push(object)
             }
         }
 
     }
 
-//    Component{
-//        id: string_item
-//        property var modelData: {""}
+    Component{
+        id: string_item
+        Item{
+            id: stringItem
+            property var modelData: null
+            width: parent.width
+            implicitHeight: string_title.implicitHeight + string_description.implicitHeight
+            Layout.fillHeight: true
+            FluTextBox{
+                id: string_text
+                anchors{
+                    top: parent.top
+                    topMargin: 2
+                    right: parent.right
+                }
+                placeholderText: ""
+            }
 
-//        Item{
-//            width: contentScrollable.width
-//            FluTextBox{
-//                id: string_text
-//                anchors{
-//                    top: parent.top
-//                    right: parent.right
-//                }
-//                placeholderText: modelData.default
-//            }
+            FluText{
+                id: string_title
+                anchors{
+                    top: parent.top
+                    left: parent.left
+                    right: string_text.left
+                }
+                text: ""
+                font: FluTextStyle.BodyStrong
+                wrapMode: Text.WrapAnywhere
+                topPadding: 6
+            }
+            FluText{
+                id: string_description
+                anchors{
+                    top: string_title.bottom
+                    left: parent.left
+                }
+                width: string_title.width
+                text: ""
+                font: FluTextStyle.Caption
+                wrapMode: Text.WrapAnywhere
+                topPadding: 6
+                rightPadding: 6
+            }
+            onModelDataChanged: {
+                if(modelData === null){
+                    console.error("string model is null")
+                    return
+                }
+                string_text.text = modelData.value
+                string_text.placeholderText = modelData["default"]
+                string_title.text = modelData.title
+                if( typeof modelData.description === 'undefined'){
+                    return
+                }
+                string_description.text = modelData.description
+            }
+        }
+    }
+    Component{
+        id: int_item
+        Item{
+            id: itemArg
+            property var modelData: null
+            width: parent.width
+            implicitHeight: itemArg_title.implicitHeight + itemArg_description.implicitHeight
+            Layout.fillHeight: true
+            FluTextBox{
+                id: itemArg_text
+                anchors{
+                    top: parent.top
+                    topMargin: 2
+                    right: parent.right
+                }
+                placeholderText: ""
+            }
 
-//            FluText{
-//                id: string_title
-//                anchors{
-//                    top: parent.top
-//                    left: parent.left
-//                    right: string_text.left
-//                }
-//                text: modelData.title
-//                font: FluTextStyle.BodyStrong
-//                wrapMode: Text.WrapAnywhere
-//                padding: 6
-//            }
-//            FluText{
-//                id: string_description
-//                anchors{
-//                    top: string_title.bottom
-//                }
-//                width: string_title.width
-//                text: modelData.description
-//                font: FluTextStyle.Caption
-//                wrapMode: Text.WrapAnywhere
-//                padding: 6
-//            }
-//        }
-//    }
-//    Component{
-//        id: int_item
-//    }
-//    Component{
-//        id: float_item
-//    }
-//    Component{
-//        id: bool_item
-//    }
-//    Compoenent{
-//        id: enum_item
-//    }
+            FluText{
+                id: itemArg_title
+                anchors{
+                    top: parent.top
+                    left: parent.left
+                    right: itemArg_text.left
+                }
+                text: ""
+                font: FluTextStyle.BodyStrong
+                wrapMode: Text.WrapAnywhere
+                topPadding: 6
+            }
+            FluText{
+                id: itemArg_description
+                anchors{
+                    top: itemArg_title.bottom
+                    left: parent.left
+                }
+                width: itemArg_title.width
+                text: ""
+                font: FluTextStyle.Caption
+                wrapMode: Text.WrapAnywhere
+                topPadding: 6
+                rightPadding: 6
+            }
+            onModelDataChanged: {
+                if(modelData === null){
+                    console.error("int model is null")
+                    return
+                }
+                itemArg_text.text = modelData.value
+                itemArg_text.placeholderText = modelData["default"]
+                itemArg_title.text = modelData.title
+                if( typeof modelData.description === 'undefined'){
+                    return
+                }
+                itemArg_description.text = modelData.description
+            }
+        }
+    }
+    Component{
+        id: float_item
+        Item{
+            id: itemArg
+            property var modelData: null
+            width: parent.width
+            implicitHeight: itemArg_title.implicitHeight + itemArg_description.implicitHeight
+            Layout.fillHeight: true
+            FluTextBox{
+                id: itemArg_text
+                anchors{
+                    top: parent.top
+                    topMargin: 2
+                    right: parent.right
+                }
+                placeholderText: ""
+            }
+
+            FluText{
+                id: itemArg_title
+                anchors{
+                    top: parent.top
+                    left: parent.left
+                    right: itemArg_text.left
+                }
+                text: ""
+                font: FluTextStyle.BodyStrong
+                wrapMode: Text.WrapAnywhere
+                topPadding: 6
+            }
+            FluText{
+                id: itemArg_description
+                anchors{
+                    top: itemArg_title.bottom
+                    left: parent.left
+                }
+                width: itemArg_title.width
+                text: ""
+                font: FluTextStyle.Caption
+                wrapMode: Text.WrapAnywhere
+                topPadding: 6
+                rightPadding: 6
+            }
+            onModelDataChanged: {
+                if(modelData === null){
+                    console.error("float model is null")
+                    return
+                }
+                itemArg_text.text = modelData.value
+                itemArg_text.placeholderText = modelData["default"]
+                itemArg_title.text = modelData.title
+                if( typeof modelData.description === 'undefined'){
+                    return
+                }
+                itemArg_description.text = modelData.description
+            }
+        }
+    }
+    Component{
+        id: bool_item
+        Item{
+            id: itemArg
+            property var modelData: null
+            width: parent.width
+            implicitHeight: itemArg_title.implicitHeight + itemArg_description.implicitHeight
+            Layout.fillHeight: true
+            FluCheckBox{
+                id: itemArg_text
+                anchors{
+                    top: parent.top
+                    topMargin: 2
+                    right: parent.right
+                    rightMargin: 300 - 24
+                }
+                selected: true
+            }
+
+            FluText{
+                id: itemArg_title
+                anchors{
+                    top: parent.top
+                    left: parent.left
+                    right: itemArg_text.left
+                }
+                text: ""
+                font: FluTextStyle.BodyStrong
+                wrapMode: Text.WrapAnywhere
+                topPadding: 6
+            }
+            FluText{
+                id: itemArg_description
+                anchors{
+                    top: itemArg_title.bottom
+                    left: parent.left
+                }
+                width: itemArg_title.width
+                text: ""
+                font: FluTextStyle.Caption
+                wrapMode: Text.WrapAnywhere
+                topPadding: 6
+                rightPadding: 6
+            }
+            onModelDataChanged: {
+                if(modelData === null){
+                    console.error("bool model is null")
+                    return
+                }
+                itemArg_text.selected = modelData.value
+                itemArg_title.text = modelData.title
+                if( typeof modelData.description === 'undefined'){
+                    return
+                }
+                itemArg_description.text = modelData.description
+            }
+        }
+    }
+    Component{
+        id: enum_item
+        Item{
+            id: itemArg
+            property var modelData: null
+            width: parent.width
+            implicitHeight: itemArg_title.implicitHeight + itemArg_description.implicitHeight
+            Layout.fillHeight: true
+            FComboBox{
+                id: itemArg_text
+                width: 300
+                anchors{
+                    top: parent.top
+                    topMargin: 2
+                    right: parent.right
+                }
+                model: ["0", "1", "2"]
+            }
+
+            FluText{
+                id: itemArg_title
+                anchors{
+                    top: parent.top
+                    left: parent.left
+                    right: itemArg_text.left
+                }
+                text: ""
+                font: FluTextStyle.BodyStrong
+                wrapMode: Text.WrapAnywhere
+                topPadding: 6
+            }
+            FluText{
+                id: itemArg_description
+                anchors{
+                    top: itemArg_title.bottom
+                    left: parent.left
+                }
+                width: itemArg_title.width
+                text: ""
+                font: FluTextStyle.Caption
+                wrapMode: Text.WrapAnywhere
+                topPadding: 6
+                rightPadding: 6
+            }
+            onModelDataChanged: {
+                if(modelData === null){
+                    console.error("enum model is null")
+                    return
+                }
+                itemArg_text.model = modelData.options
+                itemArg_text.show(modelData.value)
+                itemArg_title.text = modelData.title
+                if( typeof modelData.description === 'undefined'){
+                    return
+                }
+                itemArg_description.text = modelData.description
+            }
+        }
+    }
 
     onArgsDataChanged: {
 
@@ -125,9 +430,9 @@ Item {
             var argument = MP.parseArgument(args.definitions, group[task])
             const groupLetter = groups[group[task]]
             var argumentVuale = MP.mergeArgument(argument, values[groupLetter])
-            console.debug(JSON.stringify( argumentVuale ))
-            console.debug("---------------------------------------------------------------")
-//            createGroup(groupLetter, group[task], argumentVuale)
+//            console.debug(JSON.stringify( argumentVuale ))
+//            console.debug("---------------------------------------------------------------")
+            createGroup(groupLetter, group[task], argumentVuale)
         }
     }
 
@@ -138,12 +443,28 @@ Item {
      * @param {Object} argumentVaule 总的显示的参数
      * @returns {Object}
      */
-//    function createGroup(groupName, groupTitle, argumentValue){
-//        var object = group_item.createObject(contentScrollable)
-//        if(object !== null){
-//            object.groupName = groupName
-//            object.groupTitle = groupTitle
-//            object.argumentVale = argumentValue
-//        }
-//    }
+    function createGroup(groupName, groupTitle, argumentValue){
+        if(!groupName){
+            console.error("no group name")
+            return
+        }
+        if(!groupTitle){
+            console.error("no group title")
+            return
+        }
+
+        var object = group_item.createObject()
+        if(object !== null){
+            object.groupName = groupName
+            object.groupTitle = groupTitle
+            object.argumentValue = argumentValue
+
+            contentScrollable.content.push(object)
+        }
+        else{
+            console.error('create group item failed!')
+        }
+    }
+
+
 }

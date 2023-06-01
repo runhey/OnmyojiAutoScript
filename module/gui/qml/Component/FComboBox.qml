@@ -125,4 +125,8 @@ ComboBox {
             }
         }
     }
+    // show your selectd value
+    function show(name){
+        currentIndex = find(name)
+    }
 }
