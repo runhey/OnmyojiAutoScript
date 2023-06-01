@@ -19,6 +19,7 @@ SplitPanel{
                 var args = process_manager.gui_args(configName, title)
                 var value = process_manager.gui_task(configName, title)
                 setLoaderData(args, value)
+                setLoaderContext(configName, title)
             }else{
                 // 组件加载失败
             }

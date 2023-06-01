@@ -7,6 +7,9 @@ import "./ModelParse.js" as MP
 Item {
     property string argsData: ""
     property string valueData: ""
+    // 存入 配置名和 任务名两个 上下文
+    property string configName: ""
+    property string taskName: ""
     signal updataData
     FluScrollablePage{
         id: contentScrollable
@@ -23,6 +26,7 @@ Item {
             property string groupName: ""
             property string groupTitle: ""
             property var argumentValue: {""}
+            expand: true
             headerText: qsTr(groupTitle) +" "+ qsTr("Setting")
             width: contentScrollable.width
             contentHeight: group_column.height
@@ -130,6 +134,11 @@ Item {
                     right: parent.right
                 }
                 placeholderText: ""
+                onEditingFinished: {
+                    if(set_task(stringItem.parent.parent.parent.groupName, modelData.name, text)){
+                        showSuccess( qsTr("Successful setting"))
+                    }
+                }
             }
 
             FluText{
@@ -144,7 +153,7 @@ Item {
                 wrapMode: Text.WrapAnywhere
                 topPadding: 6
             }
-            FluText{
+            FluCopyableText{
                 id: string_description
                 anchors{
                     top: string_title.bottom
@@ -187,7 +196,13 @@ Item {
                     topMargin: 2
                     right: parent.right
                 }
+                validator: IntValidator {}
                 placeholderText: ""
+                onEditingFinished: {
+                    if(set_task(itemArg.parent.parent.parent.groupName, modelData.name, parseInt(text))){
+                        showSuccess( qsTr("Successful setting"))
+                    }
+                }
             }
 
             FluText{
@@ -202,7 +217,7 @@ Item {
                 wrapMode: Text.WrapAnywhere
                 topPadding: 6
             }
-            FluText{
+            FluCopyableText{
                 id: itemArg_description
                 anchors{
                     top: itemArg_title.bottom
@@ -245,7 +260,13 @@ Item {
                     topMargin: 2
                     right: parent.right
                 }
+                validator: DoubleValidator {}
                 placeholderText: ""
+                onEditingFinished: {
+                    if(set_task(itemArg.parent.parent.parent.groupName, modelData.name, parseFloat(text))){
+                        showSuccess( qsTr("Successful setting"))
+                    }
+                }
             }
 
             FluText{
@@ -260,7 +281,7 @@ Item {
                 wrapMode: Text.WrapAnywhere
                 topPadding: 6
             }
-            FluText{
+            FluCopyableText{
                 id: itemArg_description
                 anchors{
                     top: itemArg_title.bottom
@@ -305,6 +326,12 @@ Item {
                     rightMargin: 300 - 24
                 }
                 selected: true
+                clickFunc: function click_func(){
+                    selected = !selected
+                    if(set_task(itemArg.parent.parent.parent.groupName, modelData.name, selected)){
+                        showSuccess( qsTr("Successful setting"))
+                    }
+                }
             }
 
             FluText{
@@ -319,7 +346,7 @@ Item {
                 wrapMode: Text.WrapAnywhere
                 topPadding: 6
             }
-            FluText{
+            FluCopyableText{
                 id: itemArg_description
                 anchors{
                     top: itemArg_title.bottom
@@ -363,6 +390,11 @@ Item {
                     right: parent.right
                 }
                 model: ["0", "1", "2"]
+                onActivated: {
+                    if(set_task(itemArg.parent.parent.parent.groupName, modelData.name, currentText)){
+                        showSuccess( qsTr("Successful setting"))
+                    }
+                }
             }
 
             FluText{
@@ -377,7 +409,7 @@ Item {
                 wrapMode: Text.WrapAnywhere
                 topPadding: 6
             }
-            FluText{
+            FluCopyableText{
                 id: itemArg_description
                 anchors{
                     top: itemArg_title.bottom
@@ -466,5 +498,35 @@ Item {
         }
     }
 
+    function set_task(group, arg, value){
+        //如果是字符串
+        if( typeof value == "string" ){
+        if(process_manager.gui_set_task(configName, taskName, group, arg, value)){
+            return true
+        }
+        else{
+            return false
+        }}
 
+        //如果是整形的
+        else if(typeof value == "number"){
+        if(process_manager.gui_set_task_number(configName, taskName, group, arg, value)){
+            return true
+        }
+        else{
+            return false
+        }}
+
+
+        //如果是bool的
+        else if(typeof value == "boolean"){
+        if(process_manager.gui_set_task_bool(configName, taskName, group, arg, value)){
+            return true
+        }
+        else{
+            return false
+        }}
+
+
+    }
 }

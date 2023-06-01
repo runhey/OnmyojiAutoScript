@@ -77,6 +77,13 @@ class Config(ConfigState, ConfigManual, ConfigWatcher, ConfigMenu):
         except:
             logger.exception(f'have no arg {task}.{group}.{argument}')
 
+    def save(self) -> None:
+        """
+        保存配置文件
+        :return:
+        """
+        self.model.write_json(self.config_name, self.model.dict())
+
 if __name__ == '__main__':
     config = Config(config_name='pydantic')
     print(config.menu)

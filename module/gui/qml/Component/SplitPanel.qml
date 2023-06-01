@@ -107,5 +107,11 @@ Item {
         contentLoader.item.updataData()
     }
 
+    //设置上下文
+    function setLoaderContext(configName, taskName){
+        contentLoader.item.configName = configName
+        contentLoader.item.taskName = taskName
+    }
+
 
 }

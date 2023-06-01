@@ -4,7 +4,7 @@
 import json
 
 from pathlib import Path
-from pydantic import BaseModel, ValidationError, validator, Field
+from pydantic import BaseModel, ValidationError, validator, Field, root_validator
 
 from module.config.utils import *
 from module.logger import logger
@@ -19,6 +19,7 @@ from module.tasks.Restart.config import Restart
 
 
 class ConfigModel(BaseModel):
+    config_name: str = "oas"
     script: Script = Field(default_factory=Script)
     restart: Restart = Field(default_factory=Restart)
 
@@ -33,7 +34,19 @@ class ConfigModel(BaseModel):
         :param config_name:
         """
         data = self.read_json(config_name)
+        data["config_name"] = config_name
         super().__init__(**data)
+
+    def __setattr__(self, key, value):
+        """
+        只要修改属性就会触发这个函数 自动保存
+        :param key:
+        :param value:
+        :return:
+        """
+        super().__setattr__(key, value)
+        logger.info("auto save config")
+        self.save()
 
 
 
@@ -84,11 +97,31 @@ class ConfigModel(BaseModel):
             return ''
         return task.json()
 
+    def save(self) -> None:
+        """
+
+        :return:
+        """
+        self.write_json(self.config_name, self.dict())
+
+
+    # @root_validator
+    # def on_on_property_change(cls, values):
+    #     """
+    #     当属性改变时保存
+    #     :param values:
+    #     :return:
+    #     """
+    #     logger.info(f'property change auto save')
+    #     cls.save()
+
+
 if __name__ == "__main__":
     try:
-        c = ConfigModel("oas3")
+        c = ConfigModel("oas1")
     except ValidationError as e:
         print(e)
         c = ConfigModel()
-    print(c.json())
-    # c.write_json('pydantic', c.schema())
+    # c.write_json('oas1', c.dict())
+    # c.write_json('oas1', c.schema())
+    c.script.device.serial = "5555"
