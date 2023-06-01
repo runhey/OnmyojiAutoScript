@@ -53,16 +53,16 @@ Item {
         var datas = []
         for(var items in data){
             if(items.length === 0){
-                datas.push(menu_tree.createItem(qsTr(items),false))
+                datas.push(menu_tree.createItem(items,false))
             }else{
                 var da = []
                 for(var item in data[items]){
                     if (typeof data[items][item] !== "string") {
                       continue
                     }
-                    da.push(menu_tree.createItem(qsTr(data[items][item]), false))
+                    da.push(menu_tree.createItem(data[items][item], false))
                 }
-                datas.push(menu_tree.createItem(qsTr(items), true, da))
+                datas.push(menu_tree.createItem(items, true, da))
             }
         }
         menu_tree.updateData(datas)
@@ -96,10 +96,16 @@ Item {
 //    function getDefalut(){
 //        return contentDefalut.item
 //    }
-//    //方便更改属性
+    //方便更改属性
 //    function getDefalut(){
 //        return contentLoader.item
 //    }
+    //设置右边显示的参数项，输入的序列的字符串
+    function setLoaderData(args, value){
+        contentLoader.item.argsData = args
+        contentLoader.item.valueData = value
+        contentLoader.item.updataData()
+    }
 
 
 }

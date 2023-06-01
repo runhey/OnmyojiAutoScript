@@ -9,13 +9,16 @@ SplitPanel{
     property string configName: ""
 
     onTitleChanged: {
-        if(title === qsTr("Overview")){
+        if(title === "Overview"){
             showDefalut()
         }
         else{
             var component = Qt.createComponent("../../qml/Component/Args.qml")
             if (component.status === Component.Ready) {
                 setLoader(component)
+                var args = process_manager.gui_args(configName, title)
+                var value = process_manager.gui_task(configName, title)
+                setLoaderData(args, value)
             }else{
                 // 组件加载失败
             }

@@ -93,7 +93,7 @@
     </message>
 </context>
 <context>
-    <name>SplitPanel</name>
+    <name>FluTreeView</name>
     <message>
         <source>Home</source>
         <translation>主页</translation>

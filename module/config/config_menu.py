@@ -17,7 +17,7 @@ class ConfigMenu:
         # 脚本设置
         self.menu['Script'] = ['Script', 'General', 'Restart']
         # 日常的任务
-        self.menu["DailyTask"] = ['TerritorialDemon', 'CoinChallenge']
+        self.menu["Daily Task"] = ['Territorial Demon', 'Coin Challenge']
 
     @cached_property
     def gui_menu(self) -> str:

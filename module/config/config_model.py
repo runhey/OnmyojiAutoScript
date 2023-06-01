@@ -58,7 +58,7 @@ class ConfigModel(BaseModel):
         filepath = Path.cwd() / "config" / f"{config_name}.json"
         write_file(filepath, data)
 
-    def gui_task(self, task: str) -> str:
+    def gui_args(self, task: str) -> str:
         """
         返回提供给gui显示的参数
         :param task: 输入的是任务的名称英文 如'Script' 或者是'script'都是可以的
@@ -70,6 +70,19 @@ class ConfigModel(BaseModel):
             logger.error(f'{task} is no inexistence')
             return ''
         return task_gui.schema_json()
+
+    def gui_task(self, task: str) -> str:
+        """
+        返回提供给gui显示的参数
+        :param task:
+        :return:
+        """
+        task_name = convert_to_underscore(task)
+        task = getattr(self, task_name, None)
+        if task is None:
+            logger.error(f'{task_name} is no inexistence')
+            return ''
+        return task.json()
 
 if __name__ == "__main__":
     try:

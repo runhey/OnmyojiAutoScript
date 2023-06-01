@@ -48,7 +48,7 @@ class Config(ConfigState, ConfigManual, ConfigWatcher, ConfigMenu):
         获取给gui显示的参数
         :return:
         """
-        return self.model.gui_task(task=task)
+        return self.model.gui_args(task=task)
 
     def get_arg(self, task: str, group: str, argument: str):
         """

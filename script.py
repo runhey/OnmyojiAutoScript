@@ -75,4 +75,11 @@ class Script:
         """
         return self.config.gui_menu
 
+    def gui_task(self, task: str) -> str:
+        """
+        获取给gui显示的任务 的参数的具体值
+        :return:
+        """
+        return self.config.model.gui_task(task=task)
+
 

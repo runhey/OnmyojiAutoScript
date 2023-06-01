@@ -166,3 +166,16 @@ class ProcessManager(QObject):
             logger.info(f'script {config} is not running')
             return None
 
+    @Slot(str, str, result="QString")
+    def gui_task(self, config: str, task: str) -> str:
+        """
+        获取显示task的gui
+        :param config:
+        :param task:
+        :return:
+        """
+        if config in self.clients:
+            return self.clients[config].gui_task(task)
+        else:
+            logger.info(f'script {config} is not running')
+            return None
