@@ -1,47 +1,33 @@
 {
-    "Script":{
-        "Device":{
-            "Serial": "127.0.0.1:7555",
-            "Handle":"auto",
-            "PackageName":"auto",
-            "ScreenshotMethod": "ADB",
-            "ControlMethod": "minitouch",
-            "AdbRestart": false
-        },
-        "Error": {
-            "HandleError": true,
-            "SaveError": true,
-            "ScreenshotLength": 1
-          },
-        "Optimization": {
-              "ScreenshotInterval": 0.3,
-              "CombatScreenshotInterval": 1.0,
-              "TaskHoardingDuration": 0,
-              "WhenTaskQueueEmpty": "goto_home"
-    	}
+  "script": {
+    "device": {
+      "serial": "127.0.0.1:7555",
+      "handle": "auto",
+      "package_name": "auto",
+      "screenshot_method": "window_background",
+      "control_method": "window_message",
+      "adb_restart": false
     },
-    "General": {
-        "Retirement": {
-          "Enable": true,
-          "RetireMode": "one_click_retire",
-          "RetireAmount": "retire_all",
-          "EnhanceFavourite": false,
-          "EnhanceFilter": null,
-          "EnhanceCheckPerCategory": 2,
-          "OldRetireN": true,
-          "OldRetireR": true,
-          "OldRetireSR": false,
-          "OldRetireSSR": false
-        }
-      },
-    "Restart": {
-        "Scheduler": {
-            "Enable": false,
-            "NextRun": "2021-01-01 00:00:00",
-            "Command": "Restart",
-            "SuccessInterval": 0,
-            "FailureInterval": 0,
-            "ServerUpdate": "00:00"
-        }
+    "error": {
+      "handle_error": false,
+      "save_error": false,
+      "screenshot_length": 1
+    },
+    "optimization": {
+      "screenshot_interval": 0.3,
+      "combat_screenshot_interval": 1.0,
+      "task_hoarding_duration": 0,
+      "when_task_queue_empty": "goto_home"
     }
+  },
+  "restart": {
+    "scheduler": {
+      "enable": false,
+      "next_run": "2023-01-01 00:00:00",
+      "command": "Restart",
+      "success_interval": 0,
+      "failure_interval": 0,
+      "server_update": "00:00"
+    }
+  }
 }

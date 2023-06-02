@@ -5,7 +5,9 @@ import zerorpc
 import zmq
 import random
 from cached_property import cached_property
+from pydantic import BaseModel, ValidationError
 
+from module.config.utils import convert_to_underscore
 from module.logger import logger
 from module.exception import *
 
@@ -27,18 +29,18 @@ class Script:
             logger.exception(e)
             exit(1)
 
-    @cached_property
-    def device(self) -> "Device":
-        try:
-            from module.device.device import Device
-            device = Device(config=self.config)
-            return device
-        except RequestHumanTakeover:
-            logger.critical('Request human takeover')
-            exit(1)
-        except Exception as e:
-            logger.exception(e)
-            exit(1)
+    # @cached_property
+    # def device(self) -> "Device":
+    #     try:
+    #         from module.device.device import Device
+    #         device = Device(config=self.config)
+    #         return device
+    #     except RequestHumanTakeover:
+    #         logger.critical('Request human takeover')
+    #         exit(1)
+    #     except Exception as e:
+    #         logger.exception(e)
+    #         exit(1)
 
     def init_server(self, port: int) -> int:
         """
@@ -61,3 +63,58 @@ class Script:
         """
         self.server.run()
 
+    def gui_args(self, task: str) -> str:
+        """
+        获取给gui显示的参数
+        :return:
+        """
+        return self.config.gui_args(task=task)
+
+    def gui_menu(self) -> str:
+        """
+        获取给gui显示的菜单
+        :return:
+        """
+        return self.config.gui_menu
+
+    def gui_task(self, task: str) -> str:
+        """
+        获取给gui显示的任务 的参数的具体值
+        :return:
+        """
+        return self.config.model.gui_task(task=task)
+
+    def gui_set_task(self, task: str, group: str, argument: str, value) -> bool:
+        """
+        设置给gui显示的任务 的参数的具体值
+        :return:
+        """
+        task = convert_to_underscore(task)
+        group = convert_to_underscore(group)
+        argument = convert_to_underscore(argument)
+
+        path = f'{task}.{group}.{argument}'
+        task_object = getattr(self.config.model, task, None)
+        group_object = getattr(task_object, group, None)
+        argument_object = getattr(group_object, argument, None)
+
+        if argument_object is None:
+            logger.error(f'gui_set_task {task}.{group}.{argument}.{value} failed')
+            return False
+
+        try:
+            setattr(group_object, argument, value)
+            argument_object = getattr(group_object, argument, None)
+            logger.info(f'gui_set_task {task}.{group}.{argument}.{argument_object}')
+            self.config.save()  # 我是没有想到什么方法可以使得属性改变自动保存的
+            return True
+        except ValidationError as e:
+            logger.error(e)
+            return False
+
+
+if __name__ == "__main__":
+    script = Script("oas1")
+    print(script.config.model.json())
+    script.gui_set_task("Script", "device", "serial", "175")
+    print(script.config.script.device.serial)

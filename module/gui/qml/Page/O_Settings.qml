@@ -12,6 +12,8 @@ FluScrollablePage{
     bottomPadding:20
     spacing: 0
 
+    property string configName: ""
+
     FluArea{
         Layout.fillWidth: true
         Layout.topMargin: 0
@@ -25,12 +27,12 @@ FluScrollablePage{
                 left: parent.left
             }
             FluText{
-                text: "Dark Mode"
+                text: qsTr("Dark Mode")
                 font: FluTextStyle.BodyStrong
                 Layout.bottomMargin: 4
             }
             Repeater{
-                model: [{title:"System",mode:FluDarkMode.System},{title:"Light",mode:FluDarkMode.Light},{title:"Dark",mode:FluDarkMode.Dark}]
+                model: [{title:qsTr("System"),mode:FluDarkMode.System},{title:qsTr("Light"),mode:FluDarkMode.Light},{title:qsTr("Dark"),mode:FluDarkMode.Dark}]
                 delegate:  FluRadioButton{
                     selected : MainEvent.darkMode === modelData.mode
                     text:modelData.title
@@ -59,12 +61,12 @@ FluScrollablePage{
             }
 
             FluText{
-                text: "navigation_view_display_mode"
+                text: qsTr("navigation_view_display_mode")
                 font: FluTextStyle.BodyStrong
                 Layout.bottomMargin: 4
             }
             Repeater{
-                model: [{title:"Open",mode:FluNavigationView.Open},{title:"Compact",mode:FluNavigationView.Compact},{title:"Minimal",mode:FluNavigationView.Minimal},{title:"Auto",mode:FluNavigationView.Auto}]
+                model: [{title:qsTr("Open"),mode:FluNavigationView.Open},{title:qsTr("Compact"),mode:FluNavigationView.Compact},{title:qsTr("Minimal"),mode:FluNavigationView.Minimal},{title:qsTr("Auto"),mode:FluNavigationView.Auto}]
                 delegate:  FluRadioButton{
                     selected : MainEvent.displayMode===modelData.mode
                     text:modelData.title
@@ -79,12 +81,17 @@ FluScrollablePage{
     FluArea{
         Layout.fillWidth: true
         Layout.topMargin: 20
-        height: 210
+        height: 160
         paddings: 10
         ColumnLayout{
             spacing:0
             anchors{
                 left: parent.left
+            }
+            FluText{
+                text: qsTr("Theme color")
+                font: FluTextStyle.BodyStrong
+                Layout.bottomMargin: 4
             }
             RowLayout{
                 Layout.topMargin: 10
@@ -114,7 +121,8 @@ FluScrollablePage{
                 }
             }
             FluText{
-                text:"native文本渲染"
+                text:qsTr("Native text rendering")
+                font: FluTextStyle.BodyStrong
                 Layout.topMargin: 20
             }
             FluToggleSwitch{
@@ -122,6 +130,41 @@ FluScrollablePage{
                 selected: MainEvent.nativeText
                 clickFunc:function(){
                     MainEvent.nativeText = !MainEvent.nativeText
+                }
+            }
+        }
+    }
+
+    FluArea{
+        Layout.fillWidth: true
+        Layout.topMargin: 20
+        height: 80
+        paddings: 10
+
+        ColumnLayout{
+            spacing: 10
+            anchors{
+                top: parent.top
+                left: parent.left
+            }
+
+            FluText{
+                text:qsTr("Locale")
+                font: FluTextStyle.BodyStrong
+                Layout.bottomMargin: 4
+            }
+
+            Flow{
+                spacing: 5
+                Repeater{
+                    model: ["简体中文","English"]
+                    delegate:  FluRadioButton{
+                        selected : MainEvent.language === modelData
+                        text:modelData
+                        onClicked:{
+                            MainEvent.language = modelData
+                        }
+                    }
                 }
             }
         }

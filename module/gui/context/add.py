@@ -80,10 +80,18 @@ class Add(QObject):
         all_script_files = self.all_script_files()
         if not all_script_files:
             return 'oas1'
-        all_script_files.sort()
-        last_script = all_script_files[-1]
-        last_script_number = re.findall(r'\d+', last_script)[0]
-        new_script_number = int(last_script_number) + 1
+
+        script_numbers = []
+        for script_file in all_script_files:
+            match = re.search(r'\d+', script_file)
+            if match:
+                script_number = int(match.group())
+                script_numbers.append(script_number)
+
+        if not script_numbers:
+            return 'oas1'
+        script_numbers.sort()
+        new_script_number = script_numbers[-1] + 1
         return f'oas{new_script_number}'
 
 if __name__ == "__main__":

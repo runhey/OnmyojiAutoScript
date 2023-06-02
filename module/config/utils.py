@@ -155,3 +155,32 @@ def get_server_next_update(daily_trigger):
         trigger.append(future)
     update = sorted(trigger)[0]
     return update
+
+
+def convert_to_underscore(text: str) -> str:
+    """
+    大驼峰形式的字符串转换为下划线形式的字符串，并在数字前插入下划线。如果字符串中已经包含下划线，则会直接返回原始字符串。
+    :param text:
+    :return:
+    """
+    if '_' in text:
+        # If text already contains underscore, assume it's in the correct format
+        return text
+
+    result = ''
+    for i, char in enumerate(text):
+        if char.isupper():
+            if i > 0 and (text[i-1].islower() or (i < len(text) - 1 and text[i+1].islower())):
+                # Insert underscore before uppercase letter, except at the beginning
+                result += '_'
+            result += char.lower()
+        elif char.isdigit():
+            if i > 0 and (text[i-1].isalpha() or (i < len(text) - 1 and text[i+1].isalpha())):
+                # Insert underscore before digit, except at the beginning
+                result += '_'
+            result += char
+        else:
+            result += char
+
+    return result
+

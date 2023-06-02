@@ -22,5 +22,6 @@
         <file>qml/Page/Update.qml</file>
         <file>qml/Component/Args.qml</file>
         <file>qml/Component/Taskmini.qml</file>
+        <file>qml/Component/ModelParse.js</file>
     </qresource>
 </RCC>

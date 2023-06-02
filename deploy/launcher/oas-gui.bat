@@ -51,5 +51,18 @@ python -m deploy.installer
 if %errorlevel% neq 0 (
     pause > nul
 ) else (
-    python gui.py
+    REM 检查管理员权限
+    >nul 2>&1 "%SYSTEMROOT%\system32\cacls.exe" "%SYSTEMROOT%\system32\config\system"
+    
+    REM 如果上一条命令的返回值为0，则表示具有管理员权�?
+    if "%errorlevel%"=="0" (
+        REM 以管理员身份运行 Python 脚本
+        start /B pythonw gui.py
+    ) else (
+        REM 如果没有管理员权限，则使�?PowerShell 提升为管理员身份并运行脚�?
+        PowerShell -Command "Start-Process -Verb RunAs pythonw  -ArgumentList gui.py"
 )
+)
+
+REM 关闭自身窗口
+taskkill /F /PID %PPID%

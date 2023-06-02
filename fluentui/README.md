@@ -63,7 +63,7 @@ FluText{
 FluText{
     id: nav_app_bar_pane_title
     Layout.alignment: Qt.AlignVCenter
-    text:lang.home
+    text: ''
     Layout.leftMargin: 2
     font: FluTextStyle.Body
 }

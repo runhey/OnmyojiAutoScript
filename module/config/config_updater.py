@@ -63,3 +63,4 @@ class ConfigUpdater:
             mod_name (str):
         """
         write_file(filepath_config(config_name, mod_name), data)
+

@@ -47,15 +47,8 @@ Item {
         anchors.bottomMargin: 12
     }
 
-    Component.onCompleted: {
-        var datas = []
-        datas.push(menu_tree.createItem("Home",false))
-        datas.push(menu_tree.createItem("Update",false))
-//        datas.push(menu_tree.createItem("Node2",true,[createItem("Node2-1",false),createItem("Node2-2",false)]))
-        menu_tree.updateData(datas)
-    }
     //创建左边的菜单，最多两级
-    //['home', 'xxx':['x1', 'x2']]
+    //['home', 'xxx':['x1', 'x2']]  是英文的
     function create(data){
         var datas = []
         for(var items in data){
@@ -64,6 +57,9 @@ Item {
             }else{
                 var da = []
                 for(var item in data[items]){
+                    if (typeof data[items][item] !== "string") {
+                      continue
+                    }
                     da.push(menu_tree.createItem(data[items][item], false))
                 }
                 datas.push(menu_tree.createItem(items, true, da))
@@ -100,10 +96,22 @@ Item {
 //    function getDefalut(){
 //        return contentDefalut.item
 //    }
-//    //方便更改属性
+    //方便更改属性
 //    function getDefalut(){
 //        return contentLoader.item
 //    }
+    //设置右边显示的参数项，输入的序列的字符串
+    function setLoaderData(args, value){
+        contentLoader.item.argsData = args
+        contentLoader.item.valueData = value
+        contentLoader.item.updataData()
+    }
+
+    //设置上下文
+    function setLoaderContext(configName, taskName){
+        contentLoader.item.configName = configName
+        contentLoader.item.taskName = taskName
+    }
 
 
 }

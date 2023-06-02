@@ -6,11 +6,12 @@ import os
 
 from PySide6.QtGui import QGuiApplication, QIcon
 from PySide6.QtQml import QQmlApplicationEngine
-from PySide6.QtCore import Qt, QObject, QStandardPaths, QCoreApplication
+from PySide6.QtCore import Qt, QObject, QTranslator, QLocale, Slot
 from pathlib import Path
 
 from module.gui.utils import get_work_path
 from module.gui.Bridge import bridge
+from module.logger import logger
 
 # import module.gui.qml_rcc
 import module.gui.res_rcc
@@ -18,6 +19,7 @@ import module.gui.res_rcc
 class FluentApp():
     app = None
     engine = None
+    translator = None
 
     def __init__(self):
         super().__init__()
@@ -36,6 +38,9 @@ class FluentApp():
         FluentApp.engine = QQmlApplicationEngine()
         FluentApp.engine.addImportPath(os.fspath(Path(__file__).resolve().parent))
 
+        FluentApp.translator = Translator(engine=FluentApp.engine, app=FluentApp.app)
+        self.set_context_property(context=FluentApp.translator, name='translator')
+
     @classmethod
     def run(cls):
         FluentApp.engine.load(os.fspath(Path(get_work_path() / 'module' / 'gui' / 'qml' / 'app.qml')))
@@ -52,4 +57,38 @@ class FluentApp():
         :return:
         """
         FluentApp.engine.rootContext().setContextProperty(name, context)
+
+class Translator(QObject):
+
+    def __init__(self, engine, app) -> None:
+        super(Translator, self).__init__()
+        self._engine = engine
+        self._app = app
+        self.path_en_US = str((Path.cwd() / "module" / "config" / "i18n" / "en_US.qm").resolve())
+        self.path_zh_CN = str((Path.cwd() / "module" / "config" / "i18n" / "zh_CN.qm").resolve())
+
+        self.translator = QTranslator()
+
+    @Slot(str)
+    def set_language(self, language: str) -> None:
+        """
+        设置语言
+        :param language:
+        :return:
+        """
+        if language == "简体中文":
+            if not self.translator.load(self.path_zh_CN):
+                logger.error("load language 简体中文 failed!")
+            QGuiApplication.installTranslator(self.translator)
+            self._engine.retranslate()
+            return
+
+        if language == "English":
+            if not self.translator.load(self.path_en_US):
+                logger.error("load language English failed!")
+            QGuiApplication.installTranslator(self.translator)
+            self._engine.retranslate()
+            return
+
+
 

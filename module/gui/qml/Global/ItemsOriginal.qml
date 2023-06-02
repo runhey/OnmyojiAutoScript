@@ -9,10 +9,11 @@ FluObject{
 
     property var navigationView
     FluPaneItem{
-        title: "home"
+        title: qsTr("home")
         icon:FluentIcons.Home
         onTap:{
-            navigationView.push(Qt.resolvedUrl("../../qml/Page/O_Home.qml"))
+//            navigationView.push(Qt.resolvedUrl("../../qml/Page/O_Home.qml"))
+            navigationView.pushScript(Qt.resolvedUrl("../../qml/Page/O_Home.qml"), "home")
         }
     }
     function getRecentlyAddedData(){
@@ -102,7 +103,6 @@ FluObject{
         var exists = allPaneItems()
         for(var i=0; i<configs.length; i++){
             if(exists.includes(configs[i])){
-                console.debug('已经存在了:'+configs[i])
             }else{
             createPaneItem(configs[i])
             }

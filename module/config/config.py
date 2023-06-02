@@ -9,30 +9,46 @@ import threading
 from module.config.config_updater import ConfigUpdater
 from module.config.config_manual import ConfigManual
 from module.config.config_watcher import ConfigWatcher
+from module.config.config_menu import ConfigMenu
+from module.config.config_model import ConfigModel
+from module.config.config_state import ConfigState
 from module.config.utils import *
 
 from module.logger import logger
 
-class Config(ConfigManual, ConfigWatcher, ConfigUpdater):
-    """
-    一个配置文件的集成类
-    """
+class Config(ConfigState, ConfigManual, ConfigWatcher, ConfigMenu):
+
     def __init__(self, config_name: str, task=None) -> None:
         """
 
         :param config_name:
         :param task:
         """
-        self.config_name = config_name
-        self.data: dict = {}
-        self.is_template_config = config_name.startswith("template")
+        super().__init__(config_name)  # 调用 ConfigState 的初始化方法
+        super(ConfigManual, self).__init__()
+        super(ConfigWatcher, self).__init__()
+        super(ConfigMenu, self).__init__()
+        self.model = ConfigModel(config_name=config_name)
 
-        self.load()
+    def __getattr__(self, name):
+        """
+        一开始是打算直接继承ConfigModel的，但是pydantic会接管所有的变量
+        故而选择持有ConfigModel
+        :param name:
+        :return:
+        """
+        try:
+            return getattr(self.model, name)
+        except AttributeError:
+            logger.error(f'can not ask this variable {name}')
+            return None  # 或者抛出异常，或者返回其他默认值
 
-
-    def load(self) -> None:
-        self.data = self.read_file(self.config_name)
-
+    def gui_args(self, task: str) -> str:
+        """
+        获取给gui显示的参数
+        :return:
+        """
+        return self.model.gui_args(task=task)
 
     def get_arg(self, task: str, group: str, argument: str):
         """
@@ -61,7 +77,18 @@ class Config(ConfigManual, ConfigWatcher, ConfigUpdater):
         except:
             logger.exception(f'have no arg {task}.{group}.{argument}')
 
+    def save(self) -> None:
+        """
+        保存配置文件
+        :return:
+        """
+        self.model.write_json(self.config_name, self.model.dict())
+
 if __name__ == '__main__':
-    config = Config(config_name='oas1')
-    logger.info(config.data)
-    logger.info(config.get_arg("Script", "Device", "Serial"))
+    config = Config(config_name='pydantic')
+    print(config.menu)
+    print(config.config_name)
+
+    config.script.device.serial = 123
+    print(config.script.device.serial)
+

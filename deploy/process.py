@@ -62,7 +62,7 @@ class ProcessManager(DeployConfig):
 
     def process_kill(self):
         logger.hr(f'Kill existing Alas', 0)
-        self.kill_by_name('alas.exe')
+        self.kill_by_name('oas.exe')
         self.kill_by_name('python.exe')
 
 

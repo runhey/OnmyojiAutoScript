@@ -5,6 +5,7 @@ import socket
 import random
 import zerorpc
 
+from typing import Union, Any
 from PySide6.QtCore import QObject, Slot, Signal
 
 from module.gui.process.script_process import ScriptProcess
@@ -125,3 +126,123 @@ class ProcessManager(QObject):
         for config in self.processes:
             self.processes[config].restart()
         logger.info(f'restart all script')
+
+    def get_client(self, config: str) -> zerorpc.Client:
+        """
+        get_client
+        :param config:
+        :return:
+        """
+        if config in self.clients:
+            return self.clients[config]
+        else:
+            logger.info(f'script {config} is not running')
+            return None
+
+    @Slot(str, result="QString")
+    def gui_menu(self, config: str) -> str:
+        """
+        get_gui_menu
+        :param config:
+        :return:
+        """
+        if config in self.clients:
+            logger.info(f'gui get menu of {config}')
+            return self.clients[config].gui_menu()
+        else:
+            logger.info(self.clients)
+            logger.info(f'script {config} is not running')
+            return None
+
+    @Slot(str, str, result="QString")
+    def gui_args(self, config: str, task: str) -> str:
+        """
+        获取显示task的gui参数
+        :param config:
+        :param task:
+        :return:
+        """
+        if config in self.clients:
+            logger.info(f'gui get args of {config} {task}')
+            return self.clients[config].gui_args(task)
+        else:
+            logger.info(f'script {config} is not running')
+            return None
+
+    @Slot(str, str, result="QString")
+    def gui_task(self, config: str, task: str) -> str:
+        """
+        获取显示task的gui
+        :param config:
+        :param task:
+        :return:
+        """
+        if config in self.clients:
+            logger.info(f'gui get value of {config} {task}')
+            return self.clients[config].gui_task(task)
+        else:
+            logger.info(f'script {config} is not running')
+            return None
+
+    @Slot(str, str, str, str, str, result="bool")
+    def gui_set_task(self, config: str, task: str, group: str, arg: str, value) -> bool:
+        """
+        设置task的gui   是string类型的
+        :param config:
+        :param task:
+        :param group:
+        :param arg:
+        :param value:
+        :return:
+        """
+        if config in self.clients:
+            logger.info(f'gui set value of {config} {task}')
+            if self.clients[config].gui_set_task(task, group, arg, value):
+                return True
+            else:
+                return False
+        else:
+            logger.info(f'script {config} is not running')
+            return False
+
+    @Slot(str, str, str, str, bool, result="bool")
+    def gui_set_task_bool(self, config: str, task: str, group: str, arg: str, value: bool) -> bool:
+        """
+        设置task的gui   是bool类型的
+        :param config:
+        :param task:
+        :param group:
+        :param arg:
+        :param value:
+        :return:
+        """
+        if config in self.clients:
+            logger.info(f'gui set value of {config} {task}')
+            if self.clients[config].gui_set_task(task, group, arg, value):
+                return True
+            else:
+                return False
+        else:
+            logger.info(f'script {config} is not running')
+            return False
+
+    @Slot(str, str, str, str, float, result="bool")
+    def gui_set_task_number(self, config: str, task: str, group: str, arg: str, value) -> bool:
+        """
+        设置task的gui   是float类型的或者是int
+        :param config:
+        :param task:
+        :param group:
+        :param arg:
+        :param value:
+        :return:
+        """
+        if config in self.clients:
+            logger.info(f'gui set value of {config} {task}')
+            if self.clients[config].gui_set_task(task, group, arg, value):
+                return True
+            else:
+                return False
+        else:
+            logger.info(f'script {config} is not running')
+            return False
