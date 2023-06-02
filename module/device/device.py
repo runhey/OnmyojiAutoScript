@@ -32,7 +32,7 @@ class Device(Screenshot, Control, AppControl, EmulatorManager):
         self.screenshot_interval_set()
 
         # Auto-select the fastest screenshot method
-        if not self.config.is_template_config and self.config.get_arg("Script", 'Device', 'ScreenshotMethod') == 'auto':
+        if not self.config.is_template_config and self.config.script.device.screenshot_method == 'auto':
             self.run_simple_screenshot_benchmark()
 
     def run_simple_screenshot_benchmark(self):
@@ -213,3 +213,7 @@ class Device(Screenshot, Control, AppControl, EmulatorManager):
         super().app_stop()
         self.stuck_record_clear()
         self.click_record_clear()
+
+
+if __name__ == "__main__":
+    device = Device(config_name="oas1")

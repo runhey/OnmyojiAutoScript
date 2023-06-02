@@ -50,7 +50,7 @@ class Screenshot(Adb, DroidCast, Scrcpy, Window):
 
         for _ in range(2):
             method = self.screenshot_methods.get(
-                self.config.get_arg('Script', 'Device', 'ScreenshotMethod'),
+                self.config.script.device.screen_method,
                 self.screenshot_adb  # 第二个参数默认的是screenshot_adb
             )
             self.image = method()
@@ -61,7 +61,7 @@ class Screenshot(Adb, DroidCast, Scrcpy, Window):
             # self.image = self._handle_orientated_image(self.image)
 
             # if self.config.Error_SaveError:
-            if self.config.get_arg('Script', 'Error', 'SaveError'):
+            if self.config.script.error.save_error:
                 self.screenshot_deque.append({'time': datetime.now(), 'image': self.image})
 
             if self.check_screen_size() and self.check_screen_black():
@@ -100,7 +100,7 @@ class Screenshot(Adb, DroidCast, Scrcpy, Window):
     @cached_property
     def screenshot_deque(self):
         # return deque(maxlen=int(self.config.Error_ScreenshotLength))
-        return deque(maxlen=int(self.config.get_arg("Script", "Error", "ScreenshotLength")))
+        return deque(maxlen=int(self.config.script.error.screenshot_length))
 
     def save_screenshot(self, genre='items', interval=None, to_base_folder=False):
         """Save a screenshot. Use millisecond timestamp as file name.
@@ -145,17 +145,17 @@ class Screenshot(Adb, DroidCast, Scrcpy, Window):
                 Or None for Optimization_ScreenshotInterval, 'combat' for Optimization_CombatScreenshotInterval
         """
         if interval is None:
-            origin = self.config.get_arg('Script', 'Optimization', 'ScreenshotInterval')
+            origin = self.config.script.optimization.screenshot_interval
             interval = limit_in(origin, 0.1, 0.3)
             if interval != origin:
                 logger.warning(f'Optimization.ScreenshotInterval {origin} is revised to {interval}')
-                self.config.set_arg('Script', 'Optimization', 'ScreenshotInterval', interval)
+                self.config.script.optimization.screenshot_interval = interval
         elif interval == 'combat':
-            origin = self.config.get_arg('Script', 'Optimization', 'CombatScreenshotInterval')
+            origin = self.config.script.optimization.combat_screenshot_interval
             interval = limit_in(origin, 0.3, 1.0)
             if interval != origin:
                 logger.warning(f'Optimization.CombatScreenshotInterval {origin} is revised to {interval}')
-                self.config.set_arg('Script', 'Optimization', 'CombatScreenshotInterval', interval)
+                self.config.script.optimization.combat_screenshot_interval = interval
         elif isinstance(interval, (int, float)):
             # No limitation for manual set in code
             pass
@@ -165,7 +165,7 @@ class Screenshot(Adb, DroidCast, Scrcpy, Window):
         # Screenshot interval in scrcpy is meaningless,
         # video stream is received continuously no matter you use it or not.
         # if self.config.Emulator_ScreenshotMethod == 'scrcpy':
-        if self.config.get_arg('Script', 'Device', 'ScreenshotMethod') == 'scrcpy':
+        if self.config.script.device.screenshot_method == 'scrcpy':
             interval = 0.1
 
         if interval != self._screenshot_interval.limit:
@@ -234,7 +234,7 @@ class Screenshot(Adb, DroidCast, Scrcpy, Window):
             #     logger.warning('Game not running on display 0, will be restarted')
             #     self.app_stop_uiautomator2()
             #     return False
-            if self.config.get_arg('Script', 'Device', 'ScreenshotMethod') == 'uiautomator2':
+            if self.config.script.device.screenshot_method == 'uiautomator2':
                 logger.warning(f'Received pure black screenshots from emulator, color: {color}')
                 logger.warning('Uninstall minicap and retry')
                 self.uninstall_minicap()
@@ -242,10 +242,10 @@ class Screenshot(Adb, DroidCast, Scrcpy, Window):
                 return False
             else:
                 logger.warning(f'Received pure black screenshots from emulator, color: {color}')
-                logger.warning(f'Screenshot method {self.config.get_arg("Script", "Device", "ScreenshotMethod")}'
+                logger.warning(f'Screenshot method {self.config.script.device.screenshot_method}'
                                f'may not work on emulator `{self.serial}`, or the emulator is not fully started')
                 if self.is_mumu_family:
-                    if self.config.get_arg('Script', 'Device', 'ScreenshotMethod') == 'DroidCast':
+                    if self.config.script.device.screenshot_method == 'DroidCast':
                         self.droidcast_stop()
                     else:
                         logger.warning('If you are using MuMu X, please upgrade to version >= 12.1.5.0')

@@ -48,12 +48,12 @@ oas目前还在开发中，我们期待你的加入，Q群: 465946275
 
 1. 打开本项目[主仓库](https://github.com/runhey/OnmyojiAutoScript/tree/master), 点击右上角的 `Fork`，然后点击下面绿色的 `Create fork`
 
-2. 进入自己账号下的 Alas 仓库，并 `clone` 其中的 `dev` 分支到本地
+2. 进入自己账号下的 oas仓库，并 `clone` 其中的 `dev` 分支到本地
 	```
 	git clone url -b dev
 	```
 
-3. 下载[最新环境包](https://github.com/runhey/OnmyojiAutoScript/releases), 解压复制`toolkit`，`deploy`两个文件夹和`consloe.bat`到本地的仓库根目录，`toolkit`里面包含python最小环境、git环境和GUI启动环境。
+3. 下载[最新环境包](https://github.com/runhey/OnmyojiAutoScript/releases), 解压复制`toolkit`，`deploy`两个文件夹和`console.bat`到本地的仓库根目录，`toolkit`里面包含python最小环境、git环境和GUI启动环境。
 
 3. 安装pip库, 安装后你可以执行`gui.py`启动进行测试
 

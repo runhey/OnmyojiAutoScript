@@ -41,7 +41,8 @@ class ConnectionAttr:
         # Remove global proxies, or uiautomator2 will go through it
         count = 0
         d = dict(**os.environ)
-        d.update(self.config.args)
+        #----------------------------------------------------------------------------------下面的是我注释掉的
+        # d.update(self.config.args)
         for _, v in deep_iter(d, depth=3):
             if not isinstance(v, dict):
                 continue
@@ -64,7 +65,7 @@ class ConnectionAttr:
 
         # Parse custom serial
         # self.serial = str(self.config.Emulator_Serial)
-        self.serial = str(self.config.get_arg('Script', 'Device', 'Serial'))
+        self.serial = str(self.config.script.device.serial)
         self.serial_check()
         self.config.DEVICE_OVER_HTTP = self.is_over_http
 

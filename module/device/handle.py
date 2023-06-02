@@ -120,7 +120,7 @@ class Handle:
         # 获取根的句柄
         self.root_handle_title = ''
         self.root_handle_num = 0
-        self.root_handle = self.config.get_arg('Script', 'Device', 'Handle')
+        self.root_handle = self.config.script.device.handle
         if self.root_handle == "auto":
             logger.info('handle is auto. oas will find window emulator')
             window_list = Handle.all_windows()
@@ -134,7 +134,7 @@ class Handle:
                 self.root_handle_num = self.root_handle
         elif isinstance(self.root_handle, str):
             logger.info('handle is handle string. oas use it as root handle title')
-            if handle_title2num(self.root_handle) !=0:
+            if handle_title2num(self.root_handle) != 0:
                 self.root_handle_num = handle_title2num(self.root_handle)
                 self.root_handle_title = self.root_handle
         logger.info(f'the root handle title is {self.root_handle_title} and num is {self.root_handle_num}')

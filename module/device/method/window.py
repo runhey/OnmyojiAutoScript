@@ -275,5 +275,6 @@ class Window(Handle):
 
 if __name__ == "__main__":
     w = Window(config='oas1')
+    # w.screenshot_window_background()
     # w.click_window_message(x=350, y=220)
     w.swipe_window_message(startPos=[200, 5], endPos=[300, 300])

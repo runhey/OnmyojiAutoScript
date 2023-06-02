@@ -29,18 +29,18 @@ class Script:
             logger.exception(e)
             exit(1)
 
-    # @cached_property
-    # def device(self) -> "Device":
-    #     try:
-    #         from module.device.device import Device
-    #         device = Device(config=self.config)
-    #         return device
-    #     except RequestHumanTakeover:
-    #         logger.critical('Request human takeover')
-    #         exit(1)
-    #     except Exception as e:
-    #         logger.exception(e)
-    #         exit(1)
+    @cached_property
+    def device(self) -> "Device":
+        try:
+            from module.device.device import Device
+            device = Device(config=self.config)
+            return device
+        except RequestHumanTakeover:
+            logger.critical('Request human takeover')
+            exit(1)
+        except Exception as e:
+            logger.exception(e)
+            exit(1)
 
     def init_server(self, port: int) -> int:
         """
