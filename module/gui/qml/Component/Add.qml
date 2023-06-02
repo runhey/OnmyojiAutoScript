@@ -50,6 +50,8 @@ FluContentDialog{
             FluTextBox{
                 id: newNameBox
                 placeholderText:"推荐:oas+number"
+//                maxLength: 20
+                validator: RegularExpressionValidator { regularExpression: /^[a-zA-Z0-9]*$/ }
             }
             FluText{
                 text: 'Copy from existing config'
