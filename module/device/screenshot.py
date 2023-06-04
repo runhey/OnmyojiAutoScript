@@ -26,6 +26,10 @@ class Screenshot(Adb, DroidCast, Scrcpy, Window):
     _last_save_time = {}
     image: np.ndarray
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        super(Window, self).__init__(*args, **kwargs)
+
     @cached_property
     def screenshot_methods(self):
         return {
@@ -50,7 +54,7 @@ class Screenshot(Adb, DroidCast, Scrcpy, Window):
 
         for _ in range(2):
             method = self.screenshot_methods.get(
-                self.config.script.device.screen_method,
+                self.config.script.device.screenshot_method,
                 self.screenshot_adb  # 第二个参数默认的是screenshot_adb
             )
             self.image = method()
@@ -254,3 +258,9 @@ class Screenshot(Adb, DroidCast, Scrcpy, Window):
         else:
             self._screen_black_checked = True
             return True
+
+
+if __name__ == "__main__":
+    s = Screenshot(config="oas1")
+    s.screenshot()
+    s.image_show()

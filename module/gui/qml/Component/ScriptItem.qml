@@ -23,5 +23,6 @@ FluPaneItem{
 //            // 组件加载失败
 //        }
     navigationView.pushScript(Qt.resolvedUrl("../../qml/Page/ScriptView.qml"), title)
+        MainEvent.scriptName = title
     }
 }

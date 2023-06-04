@@ -3,9 +3,13 @@
 # github https://github.com/runhey
 import zerorpc
 import zmq
+import msgpack
 import random
+import cv2
 from cached_property import cached_property
 from pydantic import BaseModel, ValidationError
+from PySide6.QtGui import QImage
+
 
 from module.config.utils import convert_to_underscore
 from module.logger import logger
@@ -15,6 +19,8 @@ class Script:
     def __init__(self, config_name: str ='oas') -> None:
         self.server = None
         self.config_name = config_name
+
+
 
     @cached_property
     def config(self) -> "Config":
@@ -112,9 +118,17 @@ class Script:
             logger.error(e)
             return False
 
+    @zerorpc.stream
+    def gui_mirror_image(self):
+        """
+        获取给gui显示的镜像
+        :return: cv2的对象将 numpy 数组转换为字节串。接下来MsgPack 进行序列化发送方将图像数据转换为字节串
+        """
+        # return msgpack.packb(cv2.imencode('.jpg', self.device.screenshot())[1].tobytes())
+        ret, buffer = cv2.imencode('.jpg', self.device.screenshot())
+        yield buffer.tobytes()
+
+
 
 if __name__ == "__main__":
     script = Script("oas1")
-    print(script.config.model.json())
-    script.gui_set_task("Script", "device", "serial", "175")
-    print(script.config.script.device.serial)

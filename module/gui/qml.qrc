@@ -23,5 +23,11 @@
         <file>qml/Component/Args.qml</file>
         <file>qml/Component/Taskmini.qml</file>
         <file>qml/Component/ModelParse.js</file>
+        <file>qml/Content/ImageRule.qml</file>
+        <file>qml/Content/ClickRule.qml</file>
+        <file>qml/Content/LongClickRule.qml</file>
+        <file>qml/Content/SwipeRule.qml</file>
+        <file>qml/Content/OcrRule.qml</file>
+        <file>qml/Component/MirrorImage.qml</file>
     </qresource>
 </RCC>

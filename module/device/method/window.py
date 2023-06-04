@@ -29,6 +29,10 @@ from module.device.handle import Handle, window_scale_rate
 
 class Window(Handle):
 
+    def __init__(self):
+        logger.info("Window init")
+        super().__init__()
+
     def screenshot_window_background(self):
         """
         后台截屏
@@ -58,13 +62,14 @@ class Window(Handle):
         imgSrceen = frombuffer(signedIntsArray, dtype='uint8')
         imgSrceen.shape = (heightScreen, widthScreen, 4)
         # imgSrceen = cv2.cvtColor(imgSrceen, cv2.COLOR_BGRA2GRAY)
-        imgSrceen = cv2.resize(imgSrceen, (win_size[0], win_size[1]))
+        # imgSrceen = cv2.resize(imgSrceen, (win_size[0], win_size[1]))
+        # 很奇怪的
 
         # 测试显示截图图片
-        cv2.namedWindow('imgSrceen')  # 命名窗口
-        cv2.imshow("imgSrceen", imgSrceen)  # 显示
-        cv2.waitKey(0)
-        cv2.destroyAllWindows()
+        # cv2.namedWindow('imgSrceen')  # 命名窗口
+        # cv2.imshow("imgSrceen", imgSrceen)  # 显示
+        # cv2.waitKey(0)
+        # cv2.destroyAllWindows()
 
         # 内存释放
         DeleteObject(saveBitMap.GetHandle())
@@ -275,6 +280,7 @@ class Window(Handle):
 
 if __name__ == "__main__":
     w = Window(config='oas1')
-    # w.screenshot_window_background()
+    img = w.screenshot_window_background()
+    logger.info(img.shape)
     # w.click_window_message(x=350, y=220)
-    w.swipe_window_message(startPos=[200, 5], endPos=[300, 300])
+    # w.swipe_window_message(startPos=[200, 5], endPos=[300, 300])

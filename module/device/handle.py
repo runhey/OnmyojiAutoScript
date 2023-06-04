@@ -112,10 +112,11 @@ class Handle:
         :param config:
         """
         logger.hr('Handle')
-        if isinstance(config, str):
-            self.config = Config(config, task=None)
-        else:
-            self.config = config
+        if self.config is None:
+            if isinstance(config, str):
+                self.config = Config(config, task=None)
+            else:
+                self.config = config
 
         # 获取根的句柄
         self.root_handle_title = ''
