@@ -74,7 +74,8 @@ SplitPanel{
             console.info('configname is emtry')
             return
         }
-        const data = JSON.parse(process_manager.gui_menu(configName))
+        console.debug(process_manager.gui_menu)
+        const data = JSON.parse(process_manager.gui_menu())
         create(data)
     }
 

@@ -10,10 +10,12 @@ import numpy as np
 import io
 
 from typing import Union, Any
-from PySide6.QtCore import QObject, Slot, Signal, QByteArray, QBuffer
+from cached_property import cached_property
+from PySide6.QtCore import QObject, Slot, Signal, Property
 from PySide6.QtGui import QImage
 
 from module.gui.process.script_process import ScriptProcess
+from module.config.config_menu import ConfigMenu
 from module.gui.context.add import Add
 from module.logger import logger
 
@@ -144,20 +146,15 @@ class ProcessManager(QObject):
             logger.info(f'script {config} is not running')
             return None
 
-    @Slot(str, result="QString")
-    def gui_menu(self, config: str) -> str:
+    @Slot(result="QString")
+    def gui_menu(self) -> str:
         """
         get_gui_menu
         :param config:
         :return:
         """
-        if config in self.clients:
-            logger.info(f'gui get menu of {config}')
-            return self.clients[config].gui_menu()
-        else:
-            logger.info(self.clients)
-            logger.info(f'script {config} is not running')
-            return None
+        menu = ConfigMenu()
+        return menu.gui_menu
 
     @Slot(str, str, result="QString")
     def gui_args(self, config: str, task: str) -> str:
