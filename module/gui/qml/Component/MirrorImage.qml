@@ -6,18 +6,29 @@ import Oas
 import "../Global"
 
 Item {
+    id: imageItem
     implicitWidth: 1280
     implicitHeight: 720 + 50
+
     property alias imageWidth: paintImage.width
     property alias imageHeight: paintImage.height
-
+    enum RoiMode {
+        None,
+        Same,
+        Include
+    }
+    property int roi_mode: MirrorImage.RoiMode.None
 
     Item{
-        anchors{
-            left: parent.left
-            top: parent.top
-            topMargin: 45
-        }
+
+    anchors{
+        left: parent.left
+        top: parent.top
+        topMargin: 45
+    }
+    width: imageWidth
+    height: imageHeight
+
     PaintImage{
         id: paintImage
         width: 1280
@@ -27,7 +38,7 @@ Item {
             repeat: true
             running: if(imageSoucre.currentText === "Device Image"){return true}
                      else{ return false}
-            interval: 500
+            interval: 1000
 
             onTriggered: {
                 paintImage.update_image()
@@ -50,7 +61,80 @@ Item {
         Component.onCompleted:{
             timerImage.start()
         }
-    }}
+    }
+
+
+    Rectangle{
+        id: roi_Green // 默认第二个是 back
+        width: 100
+        height: 100
+        color: "transparent"
+        border.width: 1
+        border.color: "green"
+        ResizableRectangle{
+            resizeTarget: roi_Green//设置调整目标ID
+        }
+    }
+
+    Rectangle{
+        id: roi_Red // 默认第一个是红色的front
+        width: 100
+        height: 100
+        color: "transparent"
+        border.width: 1
+        border.color: "red"
+
+        ResizableRectangle{
+            resizeTarget: roi_Red//设置调整目标ID
+        }
+        onXChanged: {
+            if(roi_mode ===  MirrorImage.RoiMode.Include){
+                if(roi_Red.x < roi_Green.x || roi_Red.x+roi_Red.width > roi_Green.x+roi_Green.width){
+                    roi_Red.x = roi_Green.x + roi_Green.width/2 - roi_Red.width/2
+
+                }
+            }
+            else if(roi_mode ===  MirrorImage.RoiMode.Same){
+                roi_Green.x = roi_Red.x
+            }
+        }
+        onYChanged: {
+            if(roi_mode ===  MirrorImage.RoiMode.Include){
+                if(roi_Red.y < roi_Green.y || roi_Red.y+roi_Red.height > roi_Green.y+roi_Green.height){
+                    roi_Red.y = roi_Green.y + roi_Green.height/2 - roi_Red.height/2
+
+                }
+            }
+            else if(roi_mode ===  MirrorImage.RoiMode.Same){
+                roi_Green.y = roi_Red.y
+            }
+        }
+        onWidthChanged: {
+            if(roi_mode ===  MirrorImage.RoiMode.Include){
+                if(roi_Red.width > roi_Green.width){
+                    roi_Red.width = roi_Green.width - 5
+                }
+            }
+            else if(roi_mode ===  MirrorImage.RoiMode.Same){
+                roi_Green.width = roi_Red.width
+            }
+        }
+        onHeightChanged: {
+            if(roi_mode ===  MirrorImage.RoiMode.Include){
+                if(roi_Red.height > roi_Green.height){
+                    roi_Red.height = roi_Green.height - 5
+                }
+            }
+            else if(roi_mode ===  MirrorImage.RoiMode.Same){
+                roi_Green.height = roi_Red.height
+            }
+        }
+    }
+    }
+
+
+
+
 
     FluExpander{
         id: imageExpander
@@ -142,7 +226,40 @@ Item {
                     leftMargin: 150
                 }
                 width: 200
-                model: ["Same Size", "Include", "None"]
+                model: ["None", "Same Size", "Include", ]
+
+                function setMode(){
+                    if(currentText === "None"){
+                        imageItem.roi_mode = MirrorImage.RoiMode.None
+                    }
+                    else if(currentText === "Same Size"){
+                        imageItem.roi_mode = MirrorImage.RoiMode.Same
+                    }
+                    else{
+                        imageItem.roi_mode = MirrorImage.RoiMode.Include
+                    }
+                }
+
+                function updateRoi(){
+                    if(roi_mode ===  MirrorImage.RoiMode.Include){
+                        roi_Red.x = roi_Green.x + 5
+                        roi_Red.y = roi_Green.y + 5
+                        roi_Red.width = roi_Green.width - 5
+                        roi_Red.height = roi_Green.height - 5
+
+                    }
+                    else if(roi_mode ===  MirrorImage.RoiMode.Same){
+                        roi_Red.x = roi_Green.x
+                        roi_Red.y = roi_Green.y
+                        roi_Red.width = roi_Green.width
+                        roi_Red.height = roi_Green.height
+                    }
+                }
+
+                onActivated: {
+                    setMode()
+                    updateRoi()
+                }
             }
         }
         // 设置显示的帧率

@@ -29,5 +29,6 @@
         <file>qml/Content/SwipeRule.qml</file>
         <file>qml/Content/OcrRule.qml</file>
         <file>qml/Component/MirrorImage.qml</file>
+        <file>qml/Component/ResizableRectangle.qml</file>
     </qresource>
 </RCC>
