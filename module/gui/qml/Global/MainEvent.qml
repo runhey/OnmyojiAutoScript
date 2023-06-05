@@ -16,11 +16,13 @@ QtObject {
 
     // 界面的自定义设置
     property var settings: {""}
+    property bool settingInit: true  // 表示这个时候是初始化的，初始化后变为false
     property int displayMode : FluNavigationView.Compact
     property int darkMode: FluDarkMode.System
     property QtObject primaryColor: FluColors.Orange
     property bool nativeText: true
     property string language: ""
+    property string dpiStrategy: ""
 
     property int runStatus: MainEvent.RunStatus.Empty
     property string menuTitle: ""
@@ -41,14 +43,15 @@ QtObject {
                 "darkMode": 2,
                 "primaryColor": "Orange",
                 "nativeText": true,
-                "language": "简体中文"}
+                "language": "简体中文",
+                "dpiStrategy": ""}
         }
 
         mainEvent.displayMode = set["displayMode"]
         mainEvent.darkMode = set["darkMode"]
         mainEvent.nativeText = set["nativeText"]
         mainEvent.language = set["language"]
-        switchLocale("zh_CN")
+        mainEvent.dpiStrategy = set["dpiStrategy"]
 
         var primary_color = set["primaryColor"]
         if(primary_color === "Yellow"){mainEvent.primaryColor = FluColors.Yellow}
@@ -59,24 +62,32 @@ QtObject {
         else if(primary_color === "Blue"){mainEvent.primaryColor = FluColors.Blue}
         else if(primary_color === "Teal"){mainEvent.primaryColor = FluColors.Teal}
         else if(primary_color === "Green"){mainEvent.primaryColor = FluColors.Green}
+
+        settingInit = false
     }
     onDisplayModeChanged: {
+
         if(mainEvent.settings === ""){
             console.debug('display mode and is none')
         }
 
         mainEvent.settings["displayMode"] = mainEvent.displayMode
+        if(settingInit){
+            return
+        }
         setting.update(JSON.stringify(mainEvent.settings))
-//        showSuccess('update dark mode')
     }
     onDarkModeChanged: {
+
         if(mainEvent.settings === ""){
             console.debug('darkMode and is none')
         }
         FluTheme.darkMode = mainEvent.darkMode
         mainEvent.settings["darkMode"] = FluTheme.darkMode
+        if(settingInit){
+            return
+        }
         setting.update(JSON.stringify(mainEvent.settings))
-//        showSuccess('update dark mode' + FluTheme.darkMode)
     }
     onPrimaryColorChanged: {
         if(mainEvent.settings === ""){
@@ -97,19 +108,23 @@ QtObject {
         else if(FluTheme.primaryColor === FluColors.Teal){primary_color="Teal"}
         else if(FluTheme.primaryColor === FluColors.Green){primary_color="Green"}
         mainEvent.settings["primaryColor"] = primary_color
+        if(settingInit){
+            return
+        }
         setting.update(JSON.stringify(mainEvent.settings))
-//        showSuccess('update primary color' + FluTheme.primaryColor)
     }
     onNativeTextChanged: {
+
         if(mainEvent.settings === ""){
             console.debug('nativeText and is none')
         }
 
         FluTheme.nativeText = mainEvent.nativeText
         mainEvent.settings["nativeText"] = FluTheme.nativeText
+        if(settingInit){
+            return
+        }
         setting.update(JSON.stringify(mainEvent.settings))
-//        var message = 'update native text' + FluTheme.nativeText
-//        showSuccess(message)
     }
     onLanguageChanged: {
         if(mainEvent.settings === ""){
@@ -117,7 +132,22 @@ QtObject {
         }
 
         mainEvent.settings["language"] = mainEvent.language
-        setting.update(JSON.stringify(mainEvent.settings))
         translator.set_language(mainEvent.language)
+        if(settingInit){
+            return
+        }
+        setting.update(JSON.stringify(mainEvent.settings))
+
+    }
+    onDpiStrategyChanged: {
+        if(mainEvent.settings === ""){
+            console.debug('dpiStrategy and is none')
+        }
+        mainEvent.settings["dpiStrategy"] = mainEvent.dpiStrategy
+        dpi.set_dpi_scale(mainEvent.dpiStrategy)
+        if(settingInit){
+            return
+        }
+        setting.update(JSON.stringify(mainEvent.settings))
     }
 }

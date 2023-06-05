@@ -73,6 +73,30 @@
         <source>Locale</source>
         <translation>语言环境</translation>
     </message>
+	<message>
+        <source>Dpi Strategy</source>
+        <translation>分辨率DPI缩放策略</translation>
+    </message>
+	<message>
+        <source>default</source>
+        <translation>默认不缩放</translation>
+    </message>
+	<message>
+        <source>floor</source>
+        <translation>始终不缩放</translation>
+    </message>
+	<message>
+        <source>ceil</source>
+        <translation>始终缩放</translation>
+    </message>
+	<message>
+        <source>round</source>
+        <translation>设备像素比0.5及以上的，进行缩放</translation>
+    </message>
+	<message>
+        <source>round_prefer_floor</source>
+        <translation>设备像素比0.75及以上的，进行缩放</translation>
+    </message>
 </context>
 <context>
     <name>O_Home</name>

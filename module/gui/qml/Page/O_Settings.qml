@@ -171,4 +171,41 @@ FluScrollablePage{
     }
 
 
+    FluArea{
+        Layout.fillWidth: true
+        Layout.topMargin: 20
+        height: 200
+        paddings: 10
+
+        ColumnLayout{
+            spacing: 10
+            anchors{
+                top: parent.top
+                left: parent.left
+            }
+
+            FluText{
+                text: qsTr("Dpi Strategy")
+                font: FluTextStyle.BodyStrong
+                Layout.bottomMargin: 4
+            }
+            Repeater{
+                model: [{title:qsTr("default"),mode:"default"},  // 默认不缩放
+                        {title:qsTr("floor"),mode:"floor"},  // 始终不缩放
+                        {title:qsTr("ceil"),mode:"ceil"},  // 始终缩放
+                        {title:qsTr("round"),mode:"round"}, // 设备像素比0.5及以上的，进行缩放
+                        {title:qsTr("round_prefer_floor"),mode:"round_prefer_floor"} // 设备像素比0.75及以上的，进行缩放
+                        ]
+                delegate:  FluRadioButton{
+                    selected : MainEvent.dpiStrategy===modelData.mode
+                    text:modelData.title
+                    onClicked:{
+                        MainEvent.dpiStrategy = modelData.mode
+                    }
+                }
+            }
+        }
+    }
+
+
 }
