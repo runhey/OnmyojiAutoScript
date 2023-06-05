@@ -453,15 +453,15 @@ Item {
             console.debug("没有数据")
         }
 
-        var args = JSON.parse(argsData)
-        var values = JSON.parse(valueData)
-        var group = MP.parseGroup(args["properties"])
-        var groups = MP.parseGroups(args["properties"])
+        const args = JSON.parse(argsData)
+        const values = JSON.parse(valueData)
+        const group = MP.parseGroup(args["properties"])
+        const groups = MP.parseGroups(args["properties"])
 
         for(let task in group){
-            var argument = MP.parseArgument(args.definitions, group[task])
+            const argument = MP.parseArgument(args.definitions, group[task])
             const groupLetter = groups[group[task]]
-            var argumentVuale = MP.mergeArgument(argument, values[groupLetter])
+            const argumentVuale = MP.mergeArgument(argument, values[groupLetter])
 //            console.debug(JSON.stringify( argumentVuale ))
 //            console.debug("---------------------------------------------------------------")
             createGroup(groupLetter, group[task], argumentVuale)
@@ -485,7 +485,7 @@ Item {
             return
         }
 
-        var object = group_item.createObject()
+        const object = group_item.createObject(contentScrollable)
         if(object !== null){
             object.groupName = groupName
             object.groupTitle = groupTitle

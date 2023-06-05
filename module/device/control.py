@@ -42,7 +42,7 @@ class Control(Minitouch, Scrcpy, Window):
             'Click %s @ %s' % (point2str(x, y), button)
         )
         method = self.click_methods.get(
-            self.config.get_arg("Script", 'Emulator', 'ControlMethod'),
+            self.config.script.emulator.control_method,
             self.click_adb
         )
         method(x, y)
@@ -79,7 +79,7 @@ class Control(Minitouch, Scrcpy, Window):
         logger.info(
             'Click %s @ %s, %s' % (point2str(x, y), button, duration)
         )
-        method = self.config.get_arg("Script", 'Emulator', 'ControlMethod')
+        method = self.config.script.emulator.control_method
         if method == 'minitouch':
             self.long_click_minitouch(x, y, duration)
         elif method == 'window_message':
@@ -97,7 +97,7 @@ class Control(Minitouch, Scrcpy, Window):
         self.handle_control_check(name)
         p1, p2 = ensure_int(p1, p2)
         duration = ensure_time(duration)
-        method = self.config.get_arg("Script", 'Emulator', 'ControlMethod')
+        method = self.config.script.emulator.control_method
         if method == 'minitouch':
             logger.info('Swipe %s -> %s' % (point2str(*p1), point2str(*p2)))
         elif method == 'window_message':
@@ -168,7 +168,7 @@ class Control(Minitouch, Scrcpy, Window):
         logger.info(
             'Drag %s -> %s' % (point2str(*p1), point2str(*p2))
         )
-        method = self.config.get_arg("Script", 'Emulator', 'ControlMethod')
+        method = self.config.script.emulator.control_method
         if method == 'minitouch':
             self.drag_minitouch(p1, p2, point_random=point_random)
         elif method == 'uiautomator2':

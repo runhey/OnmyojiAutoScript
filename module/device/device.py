@@ -1,4 +1,5 @@
 import sys
+import cv2
 from collections import deque
 from datetime import datetime
 
@@ -6,6 +7,7 @@ from module.base.timer import Timer
 from module.config.utils import get_server_next_update
 from module.device.app_control import AppControl
 from module.device.control import Control
+from module.device.method.window import Window
 from module.device.screenshot import Screenshot
 from module.exception import (GameNotRunningError, GameStuckError,
                               GameTooManyClickError, RequestHumanTakeover)
@@ -30,9 +32,10 @@ class Device(Screenshot, Control, AppControl, EmulatorManager):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.screenshot_interval_set()
+        # 我不能接受为什么继承了Window但是不会自动初始化
 
         # Auto-select the fastest screenshot method
-        if not self.config.is_template_config and self.config.get_arg("Script", 'Device', 'ScreenshotMethod') == 'auto':
+        if self.config.script.device.screenshot_method == 'auto':
             self.run_simple_screenshot_benchmark()
 
     def run_simple_screenshot_benchmark(self):
@@ -213,3 +216,10 @@ class Device(Screenshot, Control, AppControl, EmulatorManager):
         super().app_stop()
         self.stuck_record_clear()
         self.click_record_clear()
+
+
+if __name__ == "__main__":
+    device = Device(config="oas1")
+    cv2.imshow("imgSrceen", device.screenshot())  # 显示
+    cv2.waitKey(0)
+    cv2.destroyAllWindows()

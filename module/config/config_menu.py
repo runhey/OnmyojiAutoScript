@@ -16,6 +16,8 @@ class ConfigMenu:
         self.menu["Overview"] = []
         # 脚本设置
         self.menu['Script'] = ['Script', 'General', 'Restart']
+        # 开发工具
+        self.menu["Tools"] = ['Image Rule', 'Ocr Rule', 'Click Rule', 'Long Click Rule', 'Swipe Rule']
         # 日常的任务
         self.menu["Daily Task"] = ['Territorial Demon', 'Coin Challenge']
 

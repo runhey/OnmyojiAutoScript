@@ -42,18 +42,18 @@ oas目前还在开发中，我们期待你的加入，Q群: 465946275
 
 如果单纯了解本项目，你可以下载[最新发布](https://github.com/runhey/OnmyojiAutoScript/releases)，会自动安装环境。
 
-具体是：下载->解压->打开'oas.exe'， 稍等一两分钟待环境安装好后即可启动
+具体为：下载->解压->打开`oas.exe`， 稍等一两分钟待环境安装好后即可启动
 
 ### 参与开发
 
 1. 打开本项目[主仓库](https://github.com/runhey/OnmyojiAutoScript/tree/master), 点击右上角的 `Fork`，然后点击下面绿色的 `Create fork`
 
-2. 进入自己账号下的 Alas 仓库，并 `clone` 其中的 `dev` 分支到本地
+2. 进入自己账号下的 oas仓库，并 `clone` 其中的 `dev` 分支到本地
 	```
 	git clone url -b dev
 	```
 
-3. 下载[最新环境包](https://github.com/runhey/OnmyojiAutoScript/releases), 解压复制`toolkit`，`deploy`两个文件夹和`consloe.bat`到本地的仓库根目录，`toolkit`里面包含python最小环境、git环境和GUI启动环境。
+3. 下载[最新环境包](https://github.com/runhey/OnmyojiAutoScript/releases), 解压复制`toolkit`，`deploy`两个文件夹和`console.bat`到本地的仓库根目录，`toolkit`里面包含python最小环境、git环境和GUI启动环境。
 
 3. 安装pip库, 安装后你可以执行`gui.py`启动进行测试
 
@@ -96,9 +96,9 @@ oas目前还在开发中，我们期待你的加入，Q群: 465946275
 | ✔自动化部署                                                  |
 | ✔GUI引入工程                                                 |
 | ✔config读写参数字段                                          |
-| 🔨优化window截图+控制                                         |
-| 🔨投屏到OAS                                                   |
-| 🔨操作格式化json生成工具：可以从用户界面简单操作生成维护数据（包括图片匹配，点击操作，滑动操作，ocr识别等等） |
+| ✔优化window截图+控制                                         |
+| ✔投屏到OAS                                                   |
+| 🔨操作格式化json生成工具：可以从用户界面简单操作生成维护数据（包括✔图片匹配，点击操作，长按操作，滑动操作，ocr识别等等） |
 | 📆Atom: 对于上一条数据的接口                                  |
 | 📆实现ocr单独进程                                             |
 | 📆到此我们可以（读参数）、（对游戏截屏控制）、（操控数据）。实现第一个脚本任务如挖土 |
@@ -110,4 +110,3 @@ oas目前还在开发中，我们期待你的加入，Q群: 465946275
 | 📆实现更多的任务 | 如何输出Log到GUI |
 | 📆建立任务调度   | 优化速度         |
 |                 |                  |
-

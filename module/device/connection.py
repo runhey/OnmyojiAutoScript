@@ -104,7 +104,7 @@ class Connection(ConnectionAttr):
 
         # Package
         # self.package = self.config.Emulator_PackageName
-        self.package = self.config.get_arg('Script', 'Device', 'PackageName')
+        self.package = self.config.script.device.package_name
         if self.package == 'auto':
             self.detect_package()
         else:
@@ -576,7 +576,7 @@ class Connection(ConnectionAttr):
            Reboot adb client if no device found, otherwise try reconnecting device.
         """
         # if self.config.Emulator_AdbRestart and len(self.list_device()) == 0:
-        if self.config.get_arg('Script', 'Device', 'AdbRestart') and len(self.list_device()) == 0:
+        if self.config.script.device.adb_restart and len(self.list_device()) == 0:
             # Restart Adb
             self.adb_restart()
             # Connect to device
@@ -737,7 +737,7 @@ class Connection(ConnectionAttr):
                 logger.info(f'{device.serial} ({device.status})')
 
         # Auto device detection
-        if self.config.get_arg('Script', 'Device', 'Serial') == 'auto':
+        if self.config.script.device.serial == 'auto':
         # if self.config.Emulator_Serial == 'auto':
             if available.count == 0:
                 logger.critical('No available device found, auto device detection cannot work, '

@@ -5,7 +5,7 @@ import sys
 import os
 
 from PySide6.QtGui import QGuiApplication, QIcon
-from PySide6.QtQml import QQmlApplicationEngine
+from PySide6.QtQml import QQmlApplicationEngine, qmlRegisterType
 from PySide6.QtCore import Qt, QObject, QTranslator, QLocale, Slot
 from pathlib import Path
 
@@ -24,7 +24,7 @@ class FluentApp():
     def __init__(self):
         super().__init__()
         # 适配高分辨率、声明、设置Logo、设置软件名字
-        # QGuiApplication.setHighDpiScaleFactorRoundingPolicy(Qt.HighDpiScaleFactorRoundingPolicy.Round)
+        QGuiApplication.setHighDpiScaleFactorRoundingPolicy(Qt.HighDpiScaleFactorRoundingPolicy.Round)
         QGuiApplication.setAttribute(Qt.AA_EnableHighDpiScaling)
         QGuiApplication.setAttribute(Qt.AA_UseHighDpiPixmaps)
         QGuiApplication.setAttribute(Qt.AA_ShareOpenGLContexts)
@@ -57,6 +57,18 @@ class FluentApp():
         :return:
         """
         FluentApp.engine.rootContext().setContextProperty(name, context)
+
+
+
+    def qml_register_type(self, Class, qml_class: str) -> None:
+        """
+        注册qml类型
+        :param Class:
+        :param qml_class:
+        :return:
+        """
+        qmlRegisterType(Class, "Oas", 1, 0, qml_class)
+
 
 class Translator(QObject):
 

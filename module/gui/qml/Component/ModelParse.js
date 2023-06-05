@@ -62,11 +62,11 @@ function parseArgument(definitions, group){
     if(!(group in definitions)){
         return null
     }
-    var result = []
-    var pro = definitions[group]["properties"]
+    const result = []
+    const pro = definitions[group]["properties"]
     for(const key in pro){
-        var arg = {}
-        var argName = pro[key]
+        const arg = {}
+        const argName = pro[key]
 
         arg["name"] = key
 
@@ -116,13 +116,6 @@ function parseArgument(definitions, group){
  * @returns {Object} - 就是添加了value这个一个值
  */
 function mergeArgument(argument, values){
-//    for(let arg in argument){
-//        for(let vname in values){
-//            if(arg.name === vname){
-//                arg["value"] = values[vname]
-//            }
-//        }
-//    }
     for(let key in argument){
         const name = argument[key].name
         if(name in values){

@@ -6,6 +6,8 @@ from module.gui.utils import check_admin
 from module.gui.context.add import Add
 from module.gui.context.settings import Setting
 from module.gui.context.process_manager import ProcessManager
+from module.gui.register_type.paint_image import PaintImage
+from module.gui.register_type.rule_file import RuleFile
 from module.gui.fluent_app import FluentApp
 
 if __name__ == "__main__":
@@ -22,5 +24,7 @@ if __name__ == "__main__":
     app.set_context_property(setting, 'setting')
     app.set_context_property(add_config, 'add_config')
     app.set_context_property(process_manager, 'process_manager')
+    app.qml_register_type(PaintImage, 'PaintImage')
+    app.qml_register_type(RuleFile, 'RuleFile')
     # 启动一个GUI
     app.run()

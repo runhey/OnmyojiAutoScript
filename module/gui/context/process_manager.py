@@ -4,11 +4,18 @@
 import socket
 import random
 import zerorpc
+import cv2
+import msgpack
+import numpy as np
+import io
 
 from typing import Union, Any
-from PySide6.QtCore import QObject, Slot, Signal
+from cached_property import cached_property
+from PySide6.QtCore import QObject, Slot, Signal, Property
+from PySide6.QtGui import QImage
 
 from module.gui.process.script_process import ScriptProcess
+from module.config.config_menu import ConfigMenu
 from module.gui.context.add import Add
 from module.logger import logger
 
@@ -139,20 +146,15 @@ class ProcessManager(QObject):
             logger.info(f'script {config} is not running')
             return None
 
-    @Slot(str, result="QString")
-    def gui_menu(self, config: str) -> str:
+    @Slot(result="QString")
+    def gui_menu(self) -> str:
         """
         get_gui_menu
         :param config:
         :return:
         """
-        if config in self.clients:
-            logger.info(f'gui get menu of {config}')
-            return self.clients[config].gui_menu()
-        else:
-            logger.info(self.clients)
-            logger.info(f'script {config} is not running')
-            return None
+        menu = ConfigMenu()
+        return menu.gui_menu
 
     @Slot(str, str, result="QString")
     def gui_args(self, config: str, task: str) -> str:
@@ -246,3 +248,32 @@ class ProcessManager(QObject):
         else:
             logger.info(f'script {config} is not running')
             return False
+
+    @Slot(str, result="QImage")
+    def gui_mirror_image(self, config: str) -> QImage:
+        """
+        :param config:
+        :return:
+        """
+        if config in self.clients:
+            logger.info(f'gui get mirror image of {config}')
+            # 接收流对象
+            stream = self.clients[config].gui_mirror_image()
+            # 创建 BytesIO 对象来存储图像数据
+            buffer = io.BytesIO()
+            for data in stream:
+                buffer.write(data)
+            # 将 BytesIO 对象的内容作为字节流解码为 cv2 图像
+            buffer.seek(0)  # 将读取位置重置为起始位置
+            image_data = np.frombuffer(buffer.getvalue(), dtype=np.uint8)
+            image = cv2.imdecode(image_data, cv2.IMREAD_COLOR)
+
+            height, width, _ = image.shape
+            image_qt = QImage(image.data, width, height, QImage.Format_RGB888).rgbSwapped()
+            return image_qt
+
+
+
+        else:
+            logger.info(f'script {config} is not running')
+            return None
