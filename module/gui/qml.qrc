@@ -30,5 +30,6 @@
         <file>qml/Content/OcrRule.qml</file>
         <file>qml/Component/MirrorImage.qml</file>
         <file>qml/Component/ResizableRectangle.qml</file>
+        <file>qml/Component/RuleFile.qml</file>
     </qresource>
 </RCC>

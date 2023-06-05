@@ -50,3 +50,25 @@ class PaintImage(QQuickPaintedItem):
             return None
 
     image = Property(QImage, fget=image, fset=set_image, notify=logger.info)
+
+    @Slot(str, str)
+    def save_target_image(self, roi: str, file: str) -> None:
+        """
+        保存目标图片
+        :param file: 保存的文件名
+        :param roi: 截图的范围 文本如"0,0,100,100"
+        :return:
+        """
+        if not roi:
+            return
+        if not isinstance(roi, str):
+            logger.error("roi must be str")
+        if not file:
+            return
+        if not isinstance(file, str):
+            logger.error("file must be str")
+            return
+        x, y, width, height = map(int, roi.split(','))
+        roi_image = self._image.copy(x, y, width, height)
+        roi_image.save(file)
+        logger.info(f"save target image {file}success")

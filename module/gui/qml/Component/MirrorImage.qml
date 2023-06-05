@@ -12,6 +12,47 @@ Item {
 
     property alias imageWidth: paintImage.width
     property alias imageHeight: paintImage.height
+
+    property alias roiRed_x: roi_Red.x
+    property alias roiRed_y: roi_Red.y
+    property alias roiRed_width: roi_Red.width
+    property alias roiRed_height: roi_Red.height
+    property alias roiGreen_x: roi_Green.x
+    property alias roiGreen_y: roi_Green.y
+    property alias roiGreen_width: roi_Green.width
+    property alias roiGreen_height: roi_Green.height
+
+    signal roi_red_changed(string roi)
+    signal roi_green_changed(string roi)
+
+    onRoiRed_xChanged: {
+//        roi_red_changed( '${roiRed_x},${roiRed_y},${roiRed_width},${roiRed_height}' )
+        roi_red_changed( roiRed_x + "," +  roiRed_y + "," + roiRed_width + "," + roiRed_height)
+    }
+    onRoiRed_yChanged: {
+        roi_red_changed( roiRed_x + "," +  roiRed_y + "," + roiRed_width + "," + roiRed_height)
+    }
+    onRoiRed_widthChanged: {
+        roi_red_changed( roiRed_x + "," +  roiRed_y + "," + roiRed_width + "," + roiRed_height)
+    }
+    onRoiRed_heightChanged: {
+        roi_red_changed( roiRed_x + "," +  roiRed_y + "," + roiRed_width + "," + roiRed_height)
+    }
+
+
+    onRoiGreen_xChanged: {
+        roi_green_changed( roiGreen_x + "," +  roiGreen_y + "," + roiGreen_width + "," + roiGreen_height )
+    }
+    onRoiGreen_yChanged: {
+        roi_green_changed( roiGreen_x + "," +  roiGreen_y + "," + roiGreen_width + "," + roiGreen_height )
+    }
+    onRoiGreen_widthChanged: {
+        roi_green_changed( roiGreen_x + "," +  roiGreen_y + "," + roiGreen_width + "," + roiGreen_height )
+    }
+    onRoiGreen_heightChanged: {
+        roi_green_changed( roiGreen_x + "," +  roiGreen_y + "," + roiGreen_width + "," + roiGreen_height )
+    }
+
     enum RoiMode {
         None,
         Same,
@@ -69,7 +110,7 @@ Item {
         width: 100
         height: 100
         color: "transparent"
-        border.width: 1
+        border.width: 3
         border.color: "green"
         ResizableRectangle{
             resizeTarget: roi_Green//设置调整目标ID
@@ -288,7 +329,21 @@ Item {
                 }
             }
         }
+        // 帮助
+        Item{
+            width: imageExpander.width
+            height: 50
+            FluText{
+                anchors.left: parent.left
+                anchors.verticalCenter: parent.verticalCenter
+                text: "python+qml 就别想着高帧率了，而且是以截图方式而不是视频流"
+            }
+        }
 
         }
+    }
+
+    function save_target_image(roi, file){
+        paintImage.save_target_image(roi, file)
     }
 }
