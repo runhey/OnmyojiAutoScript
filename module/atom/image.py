@@ -1,0 +1,142 @@
+# This Python file uses the following encoding: utf-8
+# @author runhey
+# github https://github.com/runhey
+import cv2
+import numpy as np
+
+from numpy import float32, int32, uint8, fromfile
+from pathlib import Path
+
+from module.base.decorator import cached_property
+from module.logger import logger
+
+class RuleImage:
+
+    def __init__(self, roi_front: tuple, roi_back: tuple, method: str, threshold: float, file: str) -> None:
+        """
+        初始化
+        :param roi_front: 前置roi
+        :param roi_back: 后置roi 用于匹配的区域
+        :param method: 匹配方法
+        :param threshold: 阈值
+        :param file: 相对路径, 带后缀
+        """
+        self.roi_front = roi_front
+        self.roi_back = roi_back
+        self.method = method
+        self.threshold = threshold
+        self.file = file
+
+        self._image = None  # 这个是匹配的目标
+
+    @cached_property
+    def name(self) -> str:
+        """
+
+        :return:
+        """
+        return Path(self.file).stem
+
+    def __str__(self):
+        return self.name
+
+    __repr__ = __str__
+
+    def __eq__(self, other):
+        return str(self) == str(other)
+
+    def __hash__(self):
+        return hash(self.name)
+
+    def __bool__(self):
+        return True
+
+
+
+    def load_image(self) -> None:
+        """
+        加载图片
+        :return:
+        """
+        if self._image is not None:
+            return
+        img = cv2.imdecode(fromfile(self.file, dtype=uint8), -1)
+        # self._image = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+        self._image = img
+
+        height, width, channels = self._image.shape
+        if height != self.roi_front[3] or width != self.roi_front[2]:
+            self.roi_front[2] = width
+            self.roi_front[3] = height
+            logger.info(f"roi_front size changed to {width}x{height}")
+
+    @property
+    def image(self):
+        """
+        获取图片
+        :return:
+        """
+        if self._image is None:
+            self.load_image()
+        return self._image
+
+    @cached_property
+    def is_template_match(self) -> bool:
+        """
+        是否是模板匹配
+        :return:
+        """
+        return self.method == "Template matching"
+
+
+    def corp(self, image: np.array) -> np.array:
+        """
+        截取图片
+        :param image:
+        :return:
+        """
+        x, y, w, h = self.roi_back
+        return image[y:y + h, x:x + w]
+
+
+    def match(self, image: np.array, threshold: float = None) -> bool:
+        """
+
+        :param threshold:
+        :param image:
+        :return:
+        """
+        if threshold is None:
+            threshold = self.threshold
+
+        if not self.is_template_match:
+            raise Exception(f"unknown method {self.method}")
+
+        source = self.corp(image)
+        mat = self.image
+        res = cv2.matchTemplate(source, mat, cv2.TM_CCOEFF_NORMED)
+        min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(res)  # 最小匹配度，最大匹配度，最小匹配度的坐标，最大匹配度的坐标
+        if max_val > threshold:
+            return True
+        else:
+            return False
+
+    def coord(self) -> tuple:
+        """
+        获取roi_front的随机的点击的坐标
+        :return:
+        """
+        x, y, w, h = self.roi_front
+        return x + np.random.randint(0, w), y + np.random.randint(0, h)
+
+    def coord_more(self) -> tuple:
+        """
+         获取roi_back的随机的点击的坐标
+        :return:
+        """
+        x, y, w, h = self.roi_back
+        return x + np.random.randint(0, w), y + np.random.randint(0, h)
+
+
+if __name__ == "__main__":
+    pass

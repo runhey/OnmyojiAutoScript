@@ -1,1 +1,23 @@
-[{"itemName":"new1","roiFront":"208,151,100,100","roiBack":"542,279,100,100","duration":1500,"description":"description"},{"itemName":"new2","roiFront":"355,191,100,100","roiBack":"526,323,100,100","duration":1500,"description":"description"},{"itemName":"new3","roiFront":"112,156,100,100","roiBack":"469,200,100,100","duration":1000,"description":"de66666n"}]
+[
+    {
+        "itemName": "new1",
+        "roiFront": "208,151,100,100",
+        "roiBack": "542,279,100,100",
+        "duration": 1500,
+        "description": "description"
+    },
+    {
+        "itemName": "new2",
+        "roiFront": "355,191,100,100",
+        "roiBack": "526,323,100,100",
+        "duration": 1500,
+        "description": "description"
+    },
+    {
+        "itemName": "new3",
+        "roiFront": "112,156,100,100",
+        "roiBack": "469,200,100,100",
+        "duration": 1000,
+        "description": "de66666n"
+    }
+]
