@@ -1,17 +1,16 @@
 # This Python file uses the following encoding: utf-8
 # @author runhey
 # github https://github.com/runhey
-import json
 
 from pathlib import Path
-from pydantic import BaseModel, ValidationError, validator, Field, root_validator
+from pydantic import BaseModel, ValidationError, Field
 
 from module.config.utils import *
 from module.logger import logger
 
 # 导入配置的Python文件
-from module.tasks.Script.config import Script
-from module.tasks.Restart.config import Restart
+from tasks.Script.config import Script
+from tasks.Restart.config import Restart
 
 
 

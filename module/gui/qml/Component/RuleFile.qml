@@ -209,7 +209,6 @@ FluArea {
             // 如果是空的表示这个是一个刚刚建立的rule文件
             return
         }
-        console.debug('加载文件的数据', getData)
         data = JSON.parse(getData)
         for(let item of data){
             listModel.append(item)
