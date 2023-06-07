@@ -303,7 +303,7 @@ Item {
             onClicked: {
                 const i = ruleFile.file.lastIndexOf("/")
                 const imagepath = ruleFile.file.substring(0, i)
-                mirrorImage.save_target_image(ruleFile.currentItem.roiFront, imagepath +"/"+ruleFile.currentItem.imageName + ".png")
+                mirrorImage.save_target_image(ruleFile.currentItem.roiFront, imagepath +"/"+ruleFile.currentItem.imageName)
                 showSuccess("Save target image")
             }
         }
@@ -312,7 +312,7 @@ Item {
     function add(){
         const item ={}
         item["itemName"] = "new"
-        item["imageName"] = "image name"
+        item["imageName"] = "image_name.png"
         item["roiFront"] = "0,0,100,100"
         item["roiBack"] = "0,0,100,100"
         item["method"] = "Template matching"
@@ -323,7 +323,7 @@ Item {
     }
 
     function edit(model){
-        model.imageName = ruleFile.folder +"_"+ model.itemName
+        model.imageName = ruleFile.folder +"_"+ model.itemName + ".png"
     }
 
     function save(){

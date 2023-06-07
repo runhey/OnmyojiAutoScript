@@ -1,12 +1,12 @@
 # This Python file uses the following encoding: utf-8
 # @author runhey
 # github https://github.com/runhey
-from pydantic import BaseModel, ValidationError, validator, Field
+from pydantic import BaseModel, Field
 
-from module.tasks.Script.config_device import Device
-from module.tasks.Script.config_error import Error
-from module.tasks.Script.config_optimization import Optimization
-from module.logger import logger
+from tasks.Script.config_device import Device
+from tasks.Script.config_error import Error
+from tasks.Script.config_optimization import Optimization
+
 
 class Script(BaseModel):
     device: Device = Field(default_factory=Device)
