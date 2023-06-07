@@ -1,0 +1,30 @@
+[
+    {
+        "itemName": "new1",
+        "roiFront": "253,212,100,100",
+        "roiBack": "652,292,100,100",
+        "mode": "default",
+        "description": "description"
+    },
+    {
+        "itemName": "new2",
+        "roiFront": "265,272,100,100",
+        "roiBack": "622,338,100,100",
+        "mode": "default",
+        "description": "description"
+    },
+    {
+        "itemName": "new3",
+        "roiFront": "198,160,100,100",
+        "roiBack": "626,305,100,100",
+        "mode": "default",
+        "description": "description"
+    },
+    {
+        "itemName": "new4",
+        "roiFront": "150,145,100,100",
+        "roiBack": "535,199,100,100",
+        "mode": "vector",
+        "description": "description"
+    }
+]
