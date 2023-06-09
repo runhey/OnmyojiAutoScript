@@ -29,7 +29,7 @@ Item {
             expand: true
             headerText: qsTr(groupTitle) +" "+ qsTr("Setting")
             width: contentScrollable.width
-            contentHeight: group_column.height
+            contentHeight: group_column.height + 20
             Column{
                 id: group_column
                 spacing: 4
@@ -123,6 +123,7 @@ Item {
         Item{
             id: stringItem
             property var modelData: null
+            property bool isDateTime: false
             width: parent.width
             implicitHeight: string_title.implicitHeight + string_description.implicitHeight
             Layout.fillHeight: true
@@ -135,6 +136,12 @@ Item {
                 }
                 placeholderText: ""
                 onEditingFinished: {
+                    if(stringItem.isDateTime){
+                        if(string_text.text === ""){
+                            string_text.text = utils.current_datetime()
+                        }
+                    }
+
                     if(set_task(stringItem.parent.parent.parent.groupName, modelData.name, text)){
                         showSuccess( qsTr("Successful setting"))
                     }
@@ -173,6 +180,10 @@ Item {
                 }
                 string_text.text = modelData.value
                 string_text.placeholderText = modelData["default"]
+                if(string_text.placeholderText.startsWith("2023-01-01")){
+                    //判断是不是时间类型的变量2023-01-01
+                    stringItem.isDateTime = true
+                }
                 string_title.text = modelData.title
                 if( typeof modelData.description === 'undefined'){
                     return

@@ -3,8 +3,9 @@
 # github https://github.com/runhey
 from pydantic import BaseModel, Field
 
-from tasks.Restart.config_scheduler import Scheduler
+from tasks.OrochiMoans.config_scheduler import Scheduler
 
-class Restart(BaseModel):
+
+class OrochiMoans(BaseModel):
     scheduler: Scheduler = Field(default_factory=Scheduler)
 

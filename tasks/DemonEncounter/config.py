@@ -3,8 +3,4 @@
 # github https://github.com/runhey
 from pydantic import BaseModel, Field
 
-from tasks.Restart.config_scheduler import Scheduler
-
-class Restart(BaseModel):
-    scheduler: Scheduler = Field(default_factory=Scheduler)
-
+from tasks.DemonEncounter.config_scheduler import Scheduler

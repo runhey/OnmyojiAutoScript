@@ -1,7 +1,9 @@
 import re
 
 import cv2
+import sys
 import numpy as np
+import importlib
 from PIL import Image
 
 REGEX_NODE = re.compile(r'(-?[A-Za-z]+)(-?\d+)')
@@ -884,3 +886,17 @@ def color_bar_percentage(image, area, prev_color, reverse=False, starter=0, thre
         prev_color = np.mean(image[:, prev_index], axis=0)
 
     return 0.
+
+
+def load_module(moduleName :str, moduleFile :str):
+    """
+    加载模块
+    :param moduleName:
+    :param moduleFile: 文件路径带py
+    :return:
+    """
+    spec = importlib.util.spec_from_file_location(moduleName, moduleFile)
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    sys.modules[moduleName] = module
+    return module

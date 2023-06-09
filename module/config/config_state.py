@@ -11,3 +11,4 @@ class ConfigState:
         self.config_name = config_name
         self.pending_task = []
         self.waiting_task = []
+        self.task = None

@@ -6,6 +6,13 @@ class ConfigManual:
     """
     module.device
     """
+
+    SCHEDULER_PRIORITY = """
+        Restart
+        > AreaBoss > GoldYoukai > ExperienceYoukai > Nian
+        > Orochi > OrochiMoans > OrochiJudgement > Sougenbi > FallenSun > EternitySea
+        """
+
     DEVICE_OVER_HTTP = False
     FORWARD_PORT_RANGE = (20000, 21000)
     REVERSE_SERVER_PORT = 7903

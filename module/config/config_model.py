@@ -1,6 +1,7 @@
 # This Python file uses the following encoding: utf-8
 # @author runhey
 # github https://github.com/runhey
+import re
 
 from pathlib import Path
 from pydantic import BaseModel, ValidationError, Field
@@ -11,7 +12,16 @@ from module.logger import logger
 # 导入配置的Python文件
 from tasks.Script.config import Script
 from tasks.Restart.config import Restart
-
+from tasks.AreaBoss.config import AreaBoss
+from tasks.ExperienceYoukai.config import ExperienceYoukai
+from tasks.GoldYoukai.config import GoldYoukai
+from tasks.Nian.config import Nian
+from tasks.Orochi.config import Orochi
+from tasks.OrochiMoans.config import OrochiMoans
+from tasks.OrochiJudgement.config import OrochiJudgement
+from tasks.Sougenbi.config import Sougenbi
+from tasks.FallenSun.config import FallenSun
+from tasks.EternitySea.config import EternitySea
 
 
 
@@ -21,6 +31,21 @@ class ConfigModel(BaseModel):
     config_name: str = "oas"
     script: Script = Field(default_factory=Script)
     restart: Restart = Field(default_factory=Restart)
+
+    # 这些是每日人物的
+    area_boss: AreaBoss = Field(default_factory=AreaBoss)
+    experience_youkai: ExperienceYoukai = Field(default_factory=ExperienceYoukai)
+    gold_youkai: GoldYoukai = Field(default_factory=GoldYoukai)
+    nian: Nian = Field(default_factory=Nian)
+
+    # 这些是刷御魂的
+    orochi: Orochi = Field(default_factory=Orochi)
+    orochi_moans: OrochiMoans = Field(default_factory=OrochiMoans)
+    orochi_judgement: OrochiJudgement = Field(default_factory=OrochiJudgement)
+    sougenbi: Sougenbi = Field(default_factory=Sougenbi)
+    fallen_sun: FallenSun = Field(default_factory=FallenSun)
+    eternity_sea: EternitySea = Field(default_factory=EternitySea)
+
 
     # @validator('script')
     # def script_validator(cls, v):
@@ -103,6 +128,21 @@ class ConfigModel(BaseModel):
         """
         self.write_json(self.config_name, self.dict())
 
+    @staticmethod
+    def type(key: str) -> str:
+        """
+        输入模型的键值，获取这个字段对象的类型 比如输入是orochi输出是Orochi
+        :param key:
+        :return:
+        """
+        field_type: str = str(ConfigModel.__annotations__[key])
+        # return field_type
+        if '.' in field_type:
+            classname = field_type.split('.')[-1][:-2]
+            return classname
+        else:
+            classname = re.findall(r"'([^']*)'", field_type)[0]
+            return classname
 
     # @root_validator
     # def on_on_property_change(cls, values):
@@ -123,4 +163,7 @@ if __name__ == "__main__":
         c = ConfigModel()
     # c.write_json('oas1', c.dict())
     # c.write_json('oas1', c.schema())
-    c.script.device.serial = "5555"
+    # for key, value in c.dict().items():
+    #     print(ConfigModel.type(key))
+
+
