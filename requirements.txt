@@ -24,6 +24,7 @@ future==0.18.3            # via zerorpc
 gevent==22.10.2           # via zerorpc
 greenlet==2.0.2           # via gevent
 idna==3.4                 # via requests
+inflection==0.5.1         # via -r requirements-in.txt
 logzero==1.7.0            # via uiautomator2
 lxml==4.9.2               # via uiautomator2
 markdown-it-py==2.2.0     # via rich

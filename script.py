@@ -177,7 +177,8 @@ class Script:
         :return: cv2的对象将 numpy 数组转换为字节串。接下来MsgPack 进行序列化发送方将图像数据转换为字节串
         """
         # return msgpack.packb(cv2.imencode('.jpg', self.device.screenshot())[1].tobytes())
-        ret, buffer = cv2.imencode('.jpg', self.device.screenshot())
+        img = cv2.cvtColor(self.device.screenshot(), cv2.COLOR_RGB2BGR)
+        ret, buffer = cv2.imencode('.jpg', img)
         yield buffer.tobytes()
 
     def wait_until(self, future):

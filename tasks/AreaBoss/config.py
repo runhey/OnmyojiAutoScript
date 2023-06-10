@@ -4,7 +4,11 @@
 from pydantic import BaseModel, Field
 
 from tasks.AreaBoss.config_scheduler import Scheduler
+from tasks.GeneralBattle.config_general_battle import GeneralBattleConfig
+from tasks.AreaBoss.config_boss import Boss
 
 
 class AreaBoss(BaseModel):
     scheduler: Scheduler = Field(default_factory=Scheduler)
+    general_battle: GeneralBattleConfig = Field(default_factory=GeneralBattleConfig)
+    boss: Boss = Field(default_factory=Boss)

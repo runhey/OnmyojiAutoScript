@@ -11,5 +11,5 @@ class Scheduler(BaseModel):
     next_run: datetime = Field(default="2023-01-01 00:00:00",
                                description='none')
     priority: int = Field(default=3,
-                          description='default 3')
+                          description='已经弃置，不生效')
 

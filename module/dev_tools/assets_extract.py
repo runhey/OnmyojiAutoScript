@@ -168,10 +168,12 @@ class AssetsExtractor:
         self.task_path = Path.cwd() / MODULE_FOLDER / task_name
         self.assets_file = Path.cwd() / MODULE_FOLDER / task_name / ASSETS_FILE
 
+        self.class_name = f'\nclass {task_name}Assets: \n'
+
         self._result = ''
         for import_exp in IMPORT_EXP:
             self._result += import_exp
-        self._result += ASSETS_CLASS
+        self._result += self.class_name
 
 
     def all_json_file(self) -> list:
@@ -276,7 +278,8 @@ class AllAssetsExtractor:
 
 
 if __name__ == "__main__":
-    c = AssetsExtractor('CoinChallenge')
+    c = AssetsExtractor('GeneralBattle')
+    # c = AssetsExtractor('AreaBoss')
     # print(c.assets_file)
     # print(c.task_path)
     # print(c.all_json_file())

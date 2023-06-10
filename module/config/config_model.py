@@ -12,6 +12,7 @@ from module.logger import logger
 # 导入配置的Python文件
 from tasks.Script.config import Script
 from tasks.Restart.config import Restart
+from tasks.GlobalGame.config import GlobalGame
 from tasks.AreaBoss.config import AreaBoss
 from tasks.ExperienceYoukai.config import ExperienceYoukai
 from tasks.GoldYoukai.config import GoldYoukai
@@ -31,6 +32,7 @@ class ConfigModel(BaseModel):
     config_name: str = "oas"
     script: Script = Field(default_factory=Script)
     restart: Restart = Field(default_factory=Restart)
+    global_game: GlobalGame = Field(default_factory=GlobalGame)
 
     # 这些是每日人物的
     area_boss: AreaBoss = Field(default_factory=AreaBoss)

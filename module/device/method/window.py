@@ -29,9 +29,9 @@ from module.device.handle import Handle, window_scale_rate
 
 class Window(Handle):
 
-    def __init__(self):
+    def __init__(self, *args, **kwargs):
         logger.info("Window init")
-        super().__init__()
+        super().__init__(*args, **kwargs)
 
     def screenshot_window_background(self):
         """
@@ -61,11 +61,12 @@ class Window(Handle):
         signedIntsArray = saveBitMap.GetBitmapBits(True)
         imgSrceen = frombuffer(signedIntsArray, dtype='uint8')
         imgSrceen.shape = (heightScreen, widthScreen, 4)
-        # imgSrceen = cv2.cvtColor(imgSrceen, cv2.COLOR_BGRA2GRAY)
+        # 这点很重要 在alas中图片以np.ndarray（RGB）的顺序存储。但是opencv是以BGR
+        imgSrceen = cv2.cvtColor(imgSrceen, cv2.COLOR_BGR2RGB)
         # imgSrceen = cv2.resize(imgSrceen, (win_size[0], win_size[1]))
         # 很奇怪的
 
-        # 测试显示截图图片
+        # # 测试显示截图图片
         # cv2.namedWindow('imgSrceen')  # 命名窗口
         # cv2.imshow("imgSrceen", imgSrceen)  # 显示
         # cv2.waitKey(0)
@@ -127,9 +128,11 @@ class Window(Handle):
         #     y = 0
         # 我不知道为什么的使用的pywin32==306的版本会导致获取的图片的是(1024, 576)
         # 所有我在点击的时候会除以这个缩放比例
+        # 但是后面发现又不是影响的很奇怪
+
         x = int(x / self.window_scale_rate)
         y = int(y / self.window_scale_rate)
-        logger.info(self.control_handle_list)
+        # print(f"我点击的x:{x}, y:{y}")
         emulator_type = len(self.control_handle_list)
         if emulator_type == 2:  # mumu模拟器
             SendMessage(self.control_handle_list[0], WM_LBUTTONDOWN, 0, MAKELONG(x, y))  # 模拟鼠标按下 先是父窗口 上面的框高度是57
@@ -282,5 +285,5 @@ if __name__ == "__main__":
     w = Window(config='oas1')
     img = w.screenshot_window_background()
     logger.info(img.shape)
-    # w.click_window_message(x=350, y=220)
+    w.click_window_message(x=759, y=184)
     # w.swipe_window_message(startPos=[200, 5], endPos=[300, 300])
