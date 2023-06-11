@@ -4,7 +4,7 @@
 import json
 import numpy as np
 
-# from tqdm.contrib.concurrent import process_map
+from tqdm.contrib.concurrent import process_map
 from pathlib import Path
 
 from module.logger import logger
@@ -97,7 +97,8 @@ class ClickExtractor:
         description: str = f'\t# {item["description"]} \n'
         name: str = f'\tC_{name_transform(item["itemName"])} = RuleClick(' \
                     f'roi_front=({item["roiFront"]}), ' \
-                    f'roi_back=({item["roiBack"]}))\n'
+                    f'roi_back=({item["roiBack"]}), ' \
+                    f'name="{item["itemName"]}")\n'
         return description + name
 
 class LongClickExtractor:
@@ -125,7 +126,8 @@ class LongClickExtractor:
         name: str = f'\tL_{name_transform(item["itemName"])} = RuleLongClick(' \
                     f'roi_front=({item["roiFront"]}), ' \
                     f'roi_back=({item["roiBack"]}), ' \
-                    f'duration={item["duration"]})\n'
+                    f'duration={item["duration"]}, ' \
+                    f'name="{item["itemName"]}")\n'
         return description + name
 
 class SwipeExtractor:
@@ -153,7 +155,8 @@ class SwipeExtractor:
         name: str = f'\tS_{name_transform(item["itemName"])} = RuleSwipe(' \
                     f'roi_front=({item["roiFront"]}), ' \
                     f'roi_back=({item["roiBack"]}), ' \
-                    f'mode="{item["mode"]}")\n'
+                    f'mode="{item["mode"]}", ' \
+                    f'name="{item["itemName"]}")\n'
         return description + name
 
 
@@ -274,14 +277,23 @@ class AssetsExtractor:
 
 
 class AllAssetsExtractor:
-    pass
+    def __init__(self):
+        """
+        获取./tasks目录下的所有任务文件夹，遍历每一个任务文件夹提取assets
+        """
+        logger.info('All assets extract')
+        self.task_path = Path.cwd() / MODULE_FOLDER
+        self.task_list = [x.name for x in self.task_path.iterdir() if x.is_dir()]
+        process_map(self.work, self.task_list, max_workers=4)
+
+    @staticmethod
+    def work(task_name: str):
+        me = AssetsExtractor(task_name)
+        me.extract()
+
 
 
 if __name__ == "__main__":
-    c = AssetsExtractor('GeneralBattle')
-    # c = AssetsExtractor('AreaBoss')
-    # print(c.assets_file)
-    # print(c.task_path)
-    # print(c.all_json_file())
-
-    c.extract()
+    # c = AssetsExtractor('GeneralBattle')
+    # c.extract()
+    AllAssetsExtractor()

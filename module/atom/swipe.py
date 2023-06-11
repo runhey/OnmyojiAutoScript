@@ -13,7 +13,7 @@ from module.logger import logger
 
 class RuleSwipe:
 
-    def __init__(self, roi_front: tuple, roi_back: tuple, mode: str) -> None:
+    def __init__(self, roi_front: tuple, roi_back: tuple, mode: str, name: str =None) -> None:
         """
         初始化
         :param roi_front:
@@ -23,6 +23,10 @@ class RuleSwipe:
         self.roi_front = roi_front
         self.roi_back = roi_back
         self.mode = mode
+        if name:
+            self.name = name
+        else:
+            self.name = 'swipe'
 
         self.interval: int = 8  # 每次移动的间隔时间
 

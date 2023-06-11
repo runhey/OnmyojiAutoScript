@@ -8,45 +8,45 @@ from module.atom.swipe import RuleSwipe
 class GeneralBattleAssets: 
 	# Click Rule Assets
 	# 预设队伍1 
-	C_PRESET_TEAM_1 = RuleClick(roi_front=(196,234,464,114), roi_back=(196,234,464,114))
+	C_PRESET_TEAM_1 = RuleClick(roi_front=(196,234,464,114), roi_back=(196,234,464,114), name="preset_team_1")
 	# 预设队伍2 
-	C_PRESET_TEAM_2 = RuleClick(roi_front=(197,358,465,103), roi_back=(197,358,465,103))
+	C_PRESET_TEAM_2 = RuleClick(roi_front=(197,358,465,103), roi_back=(197,358,465,103), name="preset_team_2")
 	# 预设队伍3 
-	C_PRESET_TEAM_3 = RuleClick(roi_front=(195,480,462,100), roi_back=(195,480,462,100))
+	C_PRESET_TEAM_3 = RuleClick(roi_front=(195,480,462,100), roi_back=(195,480,462,100), name="preset_team_3")
 	# 预设队伍4 
-	C_PRESET_TEAM_4 = RuleClick(roi_front=(193,596,464,35), roi_back=(193,596,464,35))
+	C_PRESET_TEAM_4 = RuleClick(roi_front=(193,596,464,35), roi_back=(193,596,464,35), name="preset_team_4")
 	# 预设组1 
-	C_PRESET_GROUP_1 = RuleClick(roi_front=(28,238,134,56), roi_back=(28,238,134,56))
+	C_PRESET_GROUP_1 = RuleClick(roi_front=(28,238,134,56), roi_back=(28,238,134,56), name="preset_group_1")
 	# 预设组2 
-	C_PRESET_GROUP_2 = RuleClick(roi_front=(31,298,132,60), roi_back=(31,298,132,60))
+	C_PRESET_GROUP_2 = RuleClick(roi_front=(31,298,132,60), roi_back=(31,298,132,60), name="preset_group_2")
 	# 预设组3 
-	C_PRESET_GROUP_3 = RuleClick(roi_front=(31,362,135,59), roi_back=(31,362,135,59))
+	C_PRESET_GROUP_3 = RuleClick(roi_front=(31,362,135,59), roi_back=(31,362,135,59), name="preset_group_3")
 	# 预设组4 
-	C_PRESET_GROUP_4 = RuleClick(roi_front=(29,427,133,57), roi_back=(29,427,133,57))
+	C_PRESET_GROUP_4 = RuleClick(roi_front=(29,427,133,57), roi_back=(29,427,133,57), name="preset_group_4")
 	# 预设组5 
-	C_PRESET_GROUP_5 = RuleClick(roi_front=(31,489,133,60), roi_back=(31,489,133,60))
+	C_PRESET_GROUP_5 = RuleClick(roi_front=(31,489,133,60), roi_back=(31,489,133,60), name="preset_group_5")
 	# 预设组6 
-	C_PRESET_GROUP_6 = RuleClick(roi_front=(31,549,132,63), roi_back=(31,549,132,63))
+	C_PRESET_GROUP_6 = RuleClick(roi_front=(31,549,132,63), roi_back=(31,549,132,63), name="preset_group_6")
 	# 预设组7 
-	C_PRESET_GROUP_7 = RuleClick(roi_front=(29,615,137,63), roi_back=(29,615,137,63))
+	C_PRESET_GROUP_7 = RuleClick(roi_front=(29,615,137,63), roi_back=(29,615,137,63), name="preset_group_7")
 	# 从左开始第一个绿标 
-	C_GREEN_LEFT_1 = RuleClick(roi_front=(128,433,90,150), roi_back=(128,433,90,150))
+	C_GREEN_LEFT_1 = RuleClick(roi_front=(128,433,90,150), roi_back=(128,433,90,150), name="green_left_1")
 	# 从左开始第二个绿标 
-	C_GREEN_LEFT_2 = RuleClick(roi_front=(371,385,81,145), roi_back=(371,385,81,145))
+	C_GREEN_LEFT_2 = RuleClick(roi_front=(371,385,81,145), roi_back=(371,385,81,145), name="green_left_2")
 	# 从左开始第三个绿标 
-	C_GREEN_LEFT_3 = RuleClick(roi_front=(586,328,100,76), roi_back=(586,328,100,76))
+	C_GREEN_LEFT_3 = RuleClick(roi_front=(586,328,100,76), roi_back=(586,328,100,76), name="green_left_3")
 	# 从左开始第四个绿标 
-	C_GREEN_LEFT_4 = RuleClick(roi_front=(817,379,77,133), roi_back=(817,379,77,133))
+	C_GREEN_LEFT_4 = RuleClick(roi_front=(817,379,77,133), roi_back=(817,379,77,133), name="green_left_4")
 	# 从左开始第五个绿标 
-	C_GREEN_LEFT_5 = RuleClick(roi_front=(1059,416,85,145), roi_back=(1059,416,85,145))
+	C_GREEN_LEFT_5 = RuleClick(roi_front=(1059,416,85,145), roi_back=(1059,416,85,145), name="green_left_5")
 	# 绿标阴阳师 
-	C_GREEN_MAIN = RuleClick(roi_front=(590,454,88,178), roi_back=(590,454,88,178))
+	C_GREEN_MAIN = RuleClick(roi_front=(590,454,88,178), roi_back=(590,454,88,178), name="green_main")
 	# 战斗的时候有一定的概率随机点击 
-	C_RANDOM_CLICK = RuleClick(roi_front=(104,79,1050,507), roi_back=(255,65,100,100))
+	C_RANDOM_CLICK = RuleClick(roi_front=(104,79,1050,507), roi_back=(255,65,100,100), name="random_click")
 
 	# Image Rule Assets
 	# 奖励，就是那个魂 
-	I_REWARD = RuleImage(roi_front=(579,514,100,100), roi_back=(579,514,100,100), threshold=0.8, method="Template matching", file="./tasks/GeneralBattle/res/res_reward.png")
+	I_REWARD = RuleImage(roi_front=(547,518,172,96), roi_back=(547,518,172,96), threshold=0.8, method="Template matching", file="./tasks/GeneralBattle/res/res_reward.png")
 	# 预设的小图标 
 	I_PRESET = RuleImage(roi_front=(32,650,47,45), roi_back=(32,650,47,45), threshold=0.8, method="Template matching", file="./tasks/GeneralBattle/res/res_preset.png")
 	# 准备 
@@ -75,10 +75,12 @@ class GeneralBattleAssets:
 	I_BUFF_EXP_100 = RuleImage(roi_front=(372,463,386,50), roi_back=(372,463,386,50), threshold=0.8, method="Template matching", file="./tasks/GeneralBattle/res/res_buff_exp_100.png")
 	# 左下角的位置指针 
 	I_LOCAL = RuleImage(roi_front=(25,563,30,34), roi_back=(25,563,30,34), threshold=0.8, method="Template matching", file="./tasks/GeneralBattle/res/res_local.png")
+	# description 
+	I_STATISTICS = RuleImage(roi_front=(61,644,33,28), roi_back=(61,644,33,28), threshold=0.8, method="Template matching", file="./tasks/GeneralBattle/res/res_statistics.png")
 	# Swipe Rule Assets
 	# description 
-	S_BATTLE_RANDOM_LEFT = RuleSwipe(roi_front=(122,155,480,426), roi_back=(667,147,461,427), mode="default")
+	S_BATTLE_RANDOM_LEFT = RuleSwipe(roi_front=(122,155,480,426), roi_back=(667,147,461,427), mode="default", name="battle_random_left")
 	# description 
-	S_BATTLE_RANDOM_RIGHT = RuleSwipe(roi_front=(719,138,417,392), roi_back=(237,163,387,394), mode="default")
+	S_BATTLE_RANDOM_RIGHT = RuleSwipe(roi_front=(719,138,417,392), roi_back=(237,163,387,394), mode="default", name="battle_random_right")
 
 

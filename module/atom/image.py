@@ -63,7 +63,7 @@ class RuleImage:
         if self._image is not None:
             return
         img = cv2.imdecode(fromfile(self.file, dtype=uint8), -1)
-        # self._image = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+        img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
         self._image = img
 
         height, width, channels = self._image.shape

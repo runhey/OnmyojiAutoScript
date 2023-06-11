@@ -63,7 +63,6 @@ class BaseTask:
         appear = target.match(self.device.image, threshold=threshold)
 
         if appear and interval:
-            logger.info(f'Image matches to {target.name}')
             self.interval_timer[target.name].reset()
 
         return appear
@@ -186,3 +185,57 @@ class BaseTask:
         :param swipe:
         :return:
         """
+        if not isinstance(swipe, RuleSwipe):
+            return
+
+        if interval:
+            if swipe.name in self.interval_timer:
+                # 如果传入的限制时间不一样，则替换限制新的传入的时间
+                if self.interval_timer[swipe.name].limit != interval:
+                    self.interval_timer[swipe.name] = Timer(interval)
+            else:
+                # 如果没有限制时间，则创建限制时间
+                self.interval_timer[swipe.name] = Timer(interval)
+            # 如果时间还没到达，则不执行
+            if not self.interval_timer[swipe.name].reached():
+                return
+
+        x1, y1, x2, y2 = swipe.coord()
+        self.device.swipe(p1=(x1, y1), p2=(x2, y2), control_name=swipe.name)
+
+        # 执行后，如果有限制时间，则重置限制时间
+        if interval:
+            # logger.info(f'Swipe {swipe.name}')
+            self.interval_timer[swipe.name].reset()
+
+    def click(self, click: Union[RuleClick, RuleLongClick]=None, interval: float =None) -> None:
+        """
+        点击或者长按
+        :param interval:
+        :param click:
+        :return:
+        """
+        if not click:
+            return
+
+        if interval:
+            if click.name in self.interval_timer:
+                # 如果传入的限制时间不一样，则替换限制新的传入的时间
+                if self.interval_timer[click.name].limit != interval:
+                    self.interval_timer[click.name] = Timer(interval)
+            else:
+                # 如果没有限制时间，则创建限制时间
+                self.interval_timer[click.name] = Timer(interval)
+            # 如果时间还没到达，则不执行
+            if not self.interval_timer[click.name].reached():
+                return
+
+        x, y = click.coord()
+        if isinstance(click, RuleLongClick):
+            self.device.long_click(x=x, y=y, duration=click.duration/1000, control_name=click.name)
+        elif isinstance(click, RuleClick):
+            self.device.click(x=x, y=y, control_name=click.name)
+
+        # 执行后，如果有限制时间，则重置限制时间
+        if interval:
+            self.interval_timer[click.name].reset()
