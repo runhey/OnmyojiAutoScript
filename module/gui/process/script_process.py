@@ -89,5 +89,5 @@ class ScriptProcess(Process):
         """
         msg = {self.config: data}
         self.update_queue.put(msg)
-        logger.info(f'update tasks {self.config}')
+        logger.info(f'Update tasks {self.config}')
 

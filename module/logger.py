@@ -47,6 +47,9 @@ class LogStream(TextIOBase):
             msg = msg.decode("utf-8")
         self._func(msg)
         return len(msg)
+    
+class RichStreamHandler(RichHandler):
+    pass
 
 
 class RichRenderableHandler(RichHandler):
@@ -279,7 +282,7 @@ def set_func_logger(func):
         highlight=False,
         width=160,
     )
-    hdlr = RichFileHandler(
+    hdlr = RichStreamHandler(
         console=file_console,
         show_path=False,
         show_time=False,

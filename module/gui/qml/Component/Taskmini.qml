@@ -5,8 +5,14 @@ import FluentUI
 // 任务的名称 + 时间 以及一个设置的入口
 
 Item {
+    id: root
     width: 225
     height: 40
+    visible: true
+
+    property alias name: taskName.text
+    property alias nextRun: taskTime.text
+
     FluText{
         id: taskName
         anchors{
@@ -40,5 +46,16 @@ Item {
         onClicked: {
              showSuccess("setting")
         }
+    }
+    // 使用这个的前提是 data 是字符串
+    function  setData(data){
+        if(data === "{}"){  // 这个表示没有数据，是空的
+            root.visible = false
+            return
+        }
+        root.visible = true
+        const d = JSON.parse(data)
+        task_running.name = d["name"]
+        task_running.nextRun = d["next_run"]
     }
 }

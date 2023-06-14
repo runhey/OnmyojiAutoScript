@@ -10,6 +10,7 @@ import cv2
 import time
 import os
 import inflection
+import asyncio
 
 from typing import Callable
 from datetime import datetime, timedelta
@@ -17,10 +18,11 @@ from pathlib import Path
 from cached_property import cached_property
 from pydantic import BaseModel, ValidationError
 from PySide6.QtGui import QImage
+from threading import Thread
 
 
 from module.config.utils import convert_to_underscore
-from module.config.config import Config, TaskEnd
+from module.config.config import Config
 from module.device.device import Device
 from module.base.utils import load_module
 from module.base.decorator import del_cached_property
@@ -38,6 +40,8 @@ class Script:
         # Failure count of tasks
         # Key: str, task name, value: int, failure count
         self.failure_record = {}
+        # 运行loop的线程
+        self.loop_thread: Thread = None
 
     @cached_property
     def config(self) -> "Config":
@@ -123,8 +127,6 @@ class Script:
         启动zerorpc服务
         :return:
         """
-        if self.gui_update_task:
-            self.gui_update_task("yyyy")
         self.server.run()
 
     def gui_args(self, task: str) -> str:
@@ -187,6 +189,38 @@ class Script:
         ret, buffer = cv2.imencode('.jpg', img)
         yield buffer.tobytes()
 
+    def _gui_update_tasks(self) -> None:
+        """
+        获取更新任务后 pending waiting 的任务 和 当前的任务的数据。打包给gui显示
+        :return:
+        """
+        data = {}
+        pending = []
+        waiting = []
+        task = {}
+        if self.config.task is not None and self.config.task.next_run < datetime.now():
+            task["name"] = self.config.task.command
+            task["next_run"] = str(self.config.task.next_run)
+        data["task"] = task
+
+        for p in self.config.pending_task:
+            item = {"name": p.command, "next_run": str(p.next_run)}
+            pending.append(item)
+
+        for w in self.config.waiting_task:
+            item = {"name": w.command, "next_run": str(w.next_run)}
+            waiting.append(item)
+
+
+        data["pending"] = pending
+        data["waiting"] = waiting
+
+        if self.gui_update_task is not None:
+            self.gui_update_task(data)
+
+
+
+
     def wait_until(self, future):
         """
         Wait until a specific time.
@@ -221,6 +255,7 @@ class Script:
         while 1:
             task = self.config.get_next()
             self.config.task = task
+            self._gui_update_tasks()
 
             # from module.base.resource import release_resources
             # if self.config.task.command != 'Alas':
@@ -344,6 +379,7 @@ class Script:
 
             # Get task
             task = self.get_next_task()
+            # 更新 gui的任务
             # Init device and change server
             _ = self.device
             # Skip first restart
@@ -358,7 +394,7 @@ class Script:
             self.device.stuck_record_clear()
             self.device.click_record_clear()
             logger.hr(task, level=0)
-            success = self.run(inflection.underscore(task))
+            success = self.run(inflection.camelize(task))
             logger.info(f'Scheduler: End task `{task}`')
             self.is_first_task = False
 
@@ -387,6 +423,16 @@ class Script:
                 continue
             else:
                 break
+
+    def start_loop(self) -> None:
+        """
+        创建一个线程，运行loop
+        :return:
+        """
+        if self.loop_thread is None:
+            self.loop_thread = Thread(target=self.loop, name='Script_loop')
+            self.loop_thread.start()
+
 
 if __name__ == "__main__":
     script = Script("oas1")

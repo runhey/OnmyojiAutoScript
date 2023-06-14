@@ -60,6 +60,10 @@ Item {
             runError.visible = true
             runProgress.visible = false
             runProgress.progress = 0
+        }else if(runStatus === MainEvent.RunStatus.Init){
+            runError.visible = false
+            runProgress.visible = true
+            runProgress.progress = 0.25
         }
     }
 

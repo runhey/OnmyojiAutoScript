@@ -20,8 +20,7 @@ from module.config.utils import *
 from module.exception import RequestHumanTakeover, ScriptError
 from module.logger import logger
 
-class TaskEnd(Exception):
-    pass
+
 
 class Function:
     def __init__(self, key: str, data: dict):

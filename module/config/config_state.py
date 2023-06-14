@@ -9,6 +9,6 @@ class ConfigState:
     """
     def __init__(self, config_name: str) -> None:
         self.config_name = config_name
-        self.pending_task = []
-        self.waiting_task = []
-        self.task = None
+        self.pending_task: list["Function"] = []
+        self.waiting_task: list["Function"] = []
+        self.task: str = None  # 任务名大驼峰

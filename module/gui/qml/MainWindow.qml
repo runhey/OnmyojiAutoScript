@@ -23,12 +23,12 @@ FluWindow {
        z:9
        width: parent.width
     }
-    OverStatus{
-        anchors{
-            top: parent.top
-            horizontalCenter: parent.horizontalCenter
-        }
-    }
+//    OverStatus{
+//        anchors{
+//            top: parent.top
+//            horizontalCenter: parent.horizontalCenter
+//        }
+//    }
 
 
 // 任务栏的右边边系统图标

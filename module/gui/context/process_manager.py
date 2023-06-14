@@ -4,10 +4,12 @@
 import socket
 import random
 import zerorpc
+import asyncio
 import cv2
 import msgpack
 import numpy as np
 import io
+import json
 
 from typing import Union, Any, Dict
 from cached_property import cached_property
@@ -50,6 +52,9 @@ class ProcessManager(QObject):
     进程管理
     """
     log_signal = Signal(str, str)  # 日志信号
+    sig_update_task = Signal(str, str)  # 更新当前运行的任务任务信号
+    sig_update_pending = Signal(str, str)  # 更新等待运行的任务信号
+    sig_update_waiting = Signal(str, str)  # 更新等待运行的任务信号
 
     def __init__(self) -> None:
         """
@@ -68,6 +73,8 @@ class ProcessManager(QObject):
         self.update_queue: Queue = None  # 每次更新任务的时候push进来给gui显示
         self.update_thread: Thread = None  # 更新线程
         self.start_update_tasks()  # 启动更新线程
+
+        self.event_loop = asyncio.get_event_loop()  # 事件循环
 
     @Slot()
     def create_all(self) -> None:
@@ -136,10 +143,9 @@ class ProcessManager(QObject):
         :return:
         """
         if config in self.processes:
-            if not self.processes[config].is_alive():
-                self.processes[config].start()
+            if not self.processes[config].is_alive():  # 如果进程已经死亡，那么就重新启动
                 logger.info(f'restart script {config}')
-                return None
+
 
             self.processes[config].terminate()  # 强制结束进程
             if self.ports[config] is None:
@@ -355,9 +361,8 @@ class ProcessManager(QObject):
             logger.info(f'Script {config_name} is not running')
             return
 
-        console = Console()
         # while self.processes[config_name].is_alive():
-        while True:
+        while self.log_thread[config_name].is_alive():
             try:
                 log = q.get(timeout=1)
                 if log is None:
@@ -369,7 +374,6 @@ class ProcessManager(QObject):
             except Exception as e:
                 logger.error(f'Log thread of {config_name} error: {e}')
                 break
-
 
     def start_update_tasks(self) -> None:
         """
@@ -383,7 +387,6 @@ class ProcessManager(QObject):
         self.update_thread = Thread(target=self.update_thread_func, daemon=True)
         self.update_thread.start()
 
-
     def update_thread_func(self) -> None:
         """
         更新 任务的 线程函数
@@ -396,7 +399,16 @@ class ProcessManager(QObject):
                 update = self.update_queue.get(timeout=1)
                 if update is None:
                     continue
+                if not isinstance(update, dict):
+                    continue
+
                 logger.info(f'Update thread get')
+                print(update)
+                for key, value in update.items():
+                    if "task" and "pending" and "waiting" in value:
+                        self.sig_update_task.emit(key, json.dumps(value["task"]))
+                        self.sig_update_pending.emit(key, json.dumps(value["pending"]))
+                        self.sig_update_waiting.emit(key, json.dumps(value["waiting"]))
 
             except Empty:
                 continue
@@ -404,6 +416,31 @@ class ProcessManager(QObject):
                 logger.error(f'Update thread error: {e}')
                 break
 
+    @Slot(str)
+    def start_script(self, config: str) -> None:
+        """
+        启动脚本的loop
+        :param config:
+        :return:
+        """
+        if not self.processes[config].is_alive():
+            logger.info(f'Start script {config}')
+            return self.restart(config)
 
+        logger.info(f'Script {config} is already running')
 
+        self.clients[config].start_loop()
+
+    @Slot(str)
+    def stop_script(self, config: str) -> None:
+        """
+        停止脚本的loop
+        :param config:
+        :return:
+        """
+        if config in self.processes:
+            logger.info(f'Stop script {config}')
+            self.processes[config].stop()
+        else:
+            logger.info(f'Script {config} is not running')
 

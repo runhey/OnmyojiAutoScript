@@ -49,9 +49,11 @@ Item {
                         if(selected){
                             text = "Start"
                             textLog.text = ""
+                            process_manager.stop_script(root.configName)
                         }else{
+                            // 如果按键颜色变灰色
                             text = "Stop"
-
+                            process_manager.start_script(root.configName)
                         }
                     }
                 }
@@ -80,6 +82,7 @@ Item {
                     radius: 2
                 }
                 Taskmini{
+                    id: task_running
                     Layout.leftMargin: 16
                 }
             }
@@ -169,6 +172,9 @@ Item {
                 font: FluTextStyle.Subtitle
                 Layout.alignment: Qt.AlignVCenter | Qt.AlignLeft
             }
+            OverStatus{
+                Layout.alignment: Qt.AlignVCenter | Qt.AlignRight
+            }
             FluToggleButton{
                 Layout.alignment: Qt.AlignVCenter | Qt.AlignRight
                 Layout.rightMargin: 16
@@ -218,4 +224,38 @@ Item {
         }}
     }
 
+    Component.onCompleted:{
+        process_manager.sig_update_task.connect(update_task)
+        process_manager.sig_update_pending.connect(update_pending)
+        process_manager.sig_update_waiting.connect(update_waiting)
+    }
+    function update_task(config, data){
+        if(typeof data !== "string"){
+            console.error("Pass an incorrect type")
+            return
+        }
+
+        if(config !== configName){
+            return
+        }
+        task_running.setData(data)
+    }
+    function update_pending(config, data){
+        if(typeof data !== "string"){
+            console.error("Pass an incorrect type")
+            return
+        }
+        if(config !== configName){
+            return
+        }
+    }
+    function update_waiting(config, data){
+        if(typeof data !== "string"){
+            console.error("Pass an incorrect type")
+            return
+        }
+        if(config !== configName){
+            return
+        }
+    }
 }

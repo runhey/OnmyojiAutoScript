@@ -7,6 +7,7 @@ from tasks.base_task import BaseTask
 from tasks.GeneralBattle.general_battle import GeneralBattle
 from tasks.AreaBoss.assets import AreaBossAssets
 from module.logger import logger
+from module.exception import TaskEnd
 
 
 class ScriptTask(GeneralBattle, AreaBossAssets):
@@ -165,7 +166,9 @@ class ScriptTask(GeneralBattle, AreaBossAssets):
 
         # 退出
         self.go_back()
-        return True
+
+        # 以抛出异常的形式结束
+        raise TaskEnd
 
     def go_back(self) -> None:
         """

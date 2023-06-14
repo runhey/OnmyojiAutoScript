@@ -11,7 +11,8 @@ QtObject {
         Error,
         Run,
         Free, //空闲
-        Empty //不显示
+        Empty, //不显示
+        Init  //初始化
     }
 
     // 界面的自定义设置
