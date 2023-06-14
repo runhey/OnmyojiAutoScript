@@ -11,6 +11,7 @@ import time
 import os
 import inflection
 
+from typing import Callable
 from datetime import datetime, timedelta
 from pathlib import Path
 from cached_property import cached_property
@@ -30,6 +31,7 @@ class Script:
     def __init__(self, config_name: str ='oas') -> None:
         logger.hr('Start', level=0)
         self.server = None
+        self.gui_update_task: Callable = None  # 回调函数, gui进程注册当每次config更新任务的时候更新gui的信息
         self.config_name = config_name
         # Skip first restart
         self.is_first_task = True
@@ -62,6 +64,8 @@ class Script:
         except Exception as e:
             logger.exception(e)
             exit(1)
+
+
 
     @cached_property
     def checker(self):
@@ -119,6 +123,8 @@ class Script:
         启动zerorpc服务
         :return:
         """
+        if self.gui_update_task:
+            self.gui_update_task("yyyy")
         self.server.run()
 
     def gui_args(self, task: str) -> str:

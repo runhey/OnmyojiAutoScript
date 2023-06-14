@@ -5,8 +5,20 @@ import "../Component"
 import "../Global"
 
 SplitPanel{
+    id: root
 
-    property string configName: ""
+    property string configName: ""  //这个东西会在Nav内部赋值
+
+    Timer{
+        id: startPython
+        interval: 400 // 定时器间隔为一秒
+        repeat: false // 设置为一次性定时器
+        onTriggered: {
+            // 停止定时器
+            process_manager.add(root.configName)
+            startPython.stop()
+        }
+    }
 
     onTitleChanged: {
         // 如果是总览
@@ -74,21 +86,23 @@ SplitPanel{
             console.info('configname is emtry')
             return
         }
-        console.debug(process_manager.gui_menu)
+
+        //创建左边的菜单
         const data = JSON.parse(process_manager.gui_menu())
         create(data)
+
+        // 点击的时候顺带创建 python 进程
+        setDefalutConfig(configName)
+        startPython.start()
     }
 
 
     Component.onCompleted:{
 
-
-//        var data = {'Overview':[], 'Script': ['Script', 'General', 'Restart']}
-
-
         const component = Qt.createComponent("../../qml/Component/Overview.qml")
         if (component.status === Component.Ready) {
             setDefalut(component)
+
         } else {
             // 组件加载失败
             console.debug('组件!加载失败')

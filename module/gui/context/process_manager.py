@@ -9,10 +9,15 @@ import msgpack
 import numpy as np
 import io
 
-from typing import Union, Any
+from typing import Union, Any, Dict
 from cached_property import cached_property
 from PySide6.QtCore import QObject, Slot, Signal, Property
 from PySide6.QtGui import QImage
+from queue import Queue, Empty
+from rich.console import Console
+from multiprocessing.managers import SyncManager
+# from multiprocessing import Queue
+from threading import Thread
 
 from module.gui.process.script_process import ScriptProcess
 from module.config.config_menu import ConfigMenu
@@ -44,15 +49,25 @@ class ProcessManager(QObject):
     """
     进程管理
     """
+    log_signal = Signal(str, str)  # 日志信号
 
     def __init__(self) -> None:
         """
         init
         """
         super().__init__()
-        self.processes = {}  # 持有所有的进程
-        self.ports = {}  # 持有所有的端口
+        self.processes: Dict[str, ScriptProcess] = {}  # 持有所有的进程
+        self.ports: Dict[str, int] = {}  # 持有所有的端口
         self.clients = {}  # zerorpc连接的客户端
+
+        self.manager = SyncManager()  # 管理器
+        self.manager.start()
+        self.log_queue: Dict[str, Queue] = {}  # 日志队列
+        self.log_thread: Dict[str, Thread] = {}  # 日志线程
+
+        self.update_queue: Queue = None  # 每次更新任务的时候push进来给gui显示
+        self.update_thread: Thread = None  # 更新线程
+        self.start_update_tasks()  # 启动更新线程
 
     @Slot()
     def create_all(self) -> None:
@@ -64,18 +79,27 @@ class ProcessManager(QObject):
         for config in configs:
             self.add(config)
 
+    @Slot(str)
     def add(self, config: str) -> None:
         """
         add
-        :param config:
+        :param config: 如oas1
         :return:
         """
         if config not in self.processes:
+            # 初始化端口
             port = 40000 + random.randint(0, 200)
             while is_port_in_use('127.0.0.1', port):
                 port = 40000 + random.randint(0, 200)
             self.ports[config] = port
-            self.processes[config] = ScriptProcess(config, port)
+            # 初始化日志队列
+            q = self.start_log(config)
+
+            # 初始化启动进程
+            self.processes[config] = ScriptProcess(config, port, q, update_queue=self.update_queue)
+            self.log_thread[config].start()
+
+            # 下面是启动 zerorpc 客户端
             logger.info(f'create script {config} on port {port}')
             try:
                 self.clients[config] = zerorpc.Client()
@@ -104,14 +128,35 @@ class ProcessManager(QObject):
         else:
             logger.info(f'script {config} is not running')
 
+    @Slot(str)
     def restart(self, config: str) -> None:
         """
-        restart
+        restart  重启某个进程（会重启zerorpc），但是ports、clients、log_queue、log_thread不会重启
         :param config:
         :return:
         """
         if config in self.processes:
-            self.processes[config].restart()
+            if not self.processes[config].is_alive():
+                self.processes[config].start()
+                logger.info(f'restart script {config}')
+                return None
+
+            self.processes[config].terminate()  # 强制结束进程
+            if self.ports[config] is None:
+                logger.error(f'{config} port {config} is None')
+            if self.clients[config] is None:
+                logger.error(f'{config} client {config} is None')
+            if self.log_queue[config] is None:
+                logger.info(f'{config} log_queue {config} is None')
+                self.log_queue[config] = self.manager.Queue()
+            if self.log_thread[config] is None or self.log_thread[config].is_alive() is False:
+                logger.info(f'{config} log_thread {config} is None')
+
+            self.processes[config] = ScriptProcess(config=config,
+                                                   port=self.ports[config],
+                                                   log_queue=self.log_queue[config],
+                                                   update_queue=self.update_queue)
+            self.processes[config].start()
             logger.info(f'restart script {config}')
         else:
             logger.info(f'script {config} is not running')
@@ -277,3 +322,88 @@ class ProcessManager(QObject):
         else:
             logger.info(f'script {config} is not running')
             return None
+
+    def start_log(self, config_name: str) -> Queue:
+        """
+        启动某个脚本实例config_name的log: 具体为创建一个queue信息队列，然后创建一个log线程，将queue传入log线程
+        :param config_name:
+        :return:
+        """
+        # if config_name not in self.processes:
+        #     logger.error(f'Process manager has no config {config_name}')
+        #     logger.info(f'Script {config_name} is not running')
+        #     return None
+
+        if config_name not in self.log_queue:
+            self.log_queue[config_name] = self.manager.Queue()
+
+
+        if config_name not in self.log_thread:
+            self.log_thread[config_name] = Thread(target=self.log_thread_func, args=(config_name,), daemon=True)
+
+        return self.log_queue[config_name]
+
+    def log_thread_func(self, config_name: str) -> None:
+        """
+        log线程函数，将queue中的信息解析
+        :param config_name:
+        :return:
+        """
+        q = self.log_queue[config_name] if config_name in self.log_queue else None
+        if q is None:
+            logger.error(f'Process manager has no config {config_name}')
+            logger.info(f'Script {config_name} is not running')
+            return
+
+        console = Console()
+        # while self.processes[config_name].is_alive():
+        while True:
+            try:
+                log = q.get(timeout=1)
+                if log is None:
+                    continue
+                self.log_signal.emit(config_name, str(log))
+
+            except Empty:
+                continue
+            except Exception as e:
+                logger.error(f'Log thread of {config_name} error: {e}')
+                break
+
+
+    def start_update_tasks(self) -> None:
+        """
+        启动更新任务的线程
+        :return:
+        """
+        if self.update_queue is not None and self.update_thread is not None:
+            logger.error(f'Update thread has already started')
+
+        self.update_queue = self.manager.Queue()
+        self.update_thread = Thread(target=self.update_thread_func, daemon=True)
+        self.update_thread.start()
+
+
+    def update_thread_func(self) -> None:
+        """
+        更新 任务的 线程函数
+        从self.update_queue中获取信息，然后解析, 推送到gui
+        :return:
+        """
+        logger.info(f'Update thread start')
+        while self.update_thread.is_alive():
+            try:
+                update = self.update_queue.get(timeout=1)
+                if update is None:
+                    continue
+                logger.info(f'Update thread get')
+
+            except Empty:
+                continue
+            except Exception as e:
+                logger.error(f'Update thread error: {e}')
+                break
+
+
+
+

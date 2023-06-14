@@ -27,7 +27,7 @@ class ControlMethod(str, Enum):
 
 
 class Device(BaseModel):
-    serial: str = Field(default="127.0.0.1:7555",
+    serial: str = Field(default="auto",
                         description='Common emulator Serial can be queried in the list belowUse "auto" to auto-detect emulators, but if multiple emulators are running or use emulators that do not support auto-detect, "auto" cannot be used and serial must be filled in manually')
     handle: str = Field(default='auto',
                         description='you can use auto or your emulator title')

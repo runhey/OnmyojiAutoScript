@@ -65,7 +65,7 @@ FluWindow {
         }
         onUpdateScriptItems: {
             nav_view.items.addFluPaneItems()
-            process_manager.create_all()
+//            process_manager.create_all()
         }
     }
 
@@ -86,7 +86,7 @@ FluWindow {
         }
     }
     Component.onCompleted:{
-        process_manager.create_all()
+//        process_manager.create_all()
     }
 
 }

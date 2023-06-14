@@ -1,9 +1,11 @@
 import QtQuick
+import QtQuick.Controls
 import QtQuick.Layouts
 import FluentUI
 
 Item {
-
+    id: root
+    property string configName: ""
 
 
     Item{
@@ -27,16 +29,29 @@ Item {
                     font: FluTextStyle.Subtitle
                     Layout.alignment: Qt.AlignVCenter | Qt.AlignLeft
                 }
+                FluIconButton{
+                     Layout.alignment: Qt.AlignVCenter | Qt.AlignRight
+                    text: "Restart"
+                    iconSource: FluentIcons.RepeatAll
+                    onClicked: {
+                        showSuccess("Restart"+" "+configName)
+                        process_manager.restart(configName)
+                        textLog.text = ""
+                    }
+                }
                 FluToggleButton{
                     Layout.alignment: Qt.AlignVCenter | Qt.AlignRight
                     Layout.rightMargin: 16
                     text:"Start"
+                    selected: true
                     onClicked: {
                         selected = !selected
                         if(selected){
                             text = "Start"
+                            textLog.text = ""
                         }else{
                             text = "Stop"
+
                         }
                     }
                 }
@@ -137,10 +152,70 @@ Item {
             }
         }
     }
+
     FluArea{
+        id: logHeader
+        anchors.top: parent.top
         anchors.left: leftScheduler.right
         anchors.leftMargin: 10
-        height: parent.height
         anchors.right: parent.right
+        height: 50
+        RowLayout{
+            anchors.fill: parent
+            RowLayout.alignment: Qt.AlignRight | Qt.AlignVCenter
+            FluText{
+                text: 'Log'
+                Layout.leftMargin: 16
+                font: FluTextStyle.Subtitle
+                Layout.alignment: Qt.AlignVCenter | Qt.AlignLeft
+            }
+            FluToggleButton{
+                Layout.alignment: Qt.AlignVCenter | Qt.AlignRight
+                Layout.rightMargin: 16
+                text:"Auto Scroll On"
+                selected: true
+                onClicked: {
+                    selected = !selected
+                    if(selected){
+                        text = "Auto Scroll On"
+                    }else{
+                        text = "Auto Scroll Off"
+                    }
+                }
+            }
+        }
     }
+
+    FluArea{
+        anchors.top: logHeader.bottom
+        anchors.topMargin: 10
+        anchors.bottom: parent.bottom
+        anchors.left: leftScheduler.right
+        anchors.leftMargin: 10
+        anchors.right: parent.right
+        FluScrollablePage{
+            anchors.fill: parent
+        FluText{
+            id: textLog
+            width: parent.width
+            padding: 10
+            clip: true
+            wrapMode: Text.WordWrap // 设置自动换行模式
+            text: ""
+
+            function add_log(config, log){
+                if(config !== root.configName){
+                    return
+                }
+                textLog.text += log
+            }
+
+            Component.onCompleted:{
+                process_manager.log_signal.connect(textLog.add_log)
+            }
+
+
+        }}
+    }
+
 }

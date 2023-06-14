@@ -54,11 +54,14 @@ class ConfigModel(BaseModel):
     #     if v is None:
     #         return Script()
 
-    def __init__(self, config_name: str) -> None:
+    def __init__(self, config_name: str=None) -> None:
         """
 
         :param config_name:
         """
+        if not config_name:
+            super().__init__()
+            return
         data = self.read_json(config_name)
         data["config_name"] = config_name
         super().__init__(**data)

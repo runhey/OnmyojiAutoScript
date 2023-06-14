@@ -259,19 +259,25 @@ class AssetsExtractor:
         生成一个assets.py文件
         :return:
         """
+        result = ''
         for file in self.all_json_file():
             data = self.read_file(file)
             if not data:
                 continue
             if self.is_image_file(data):
-                self._result += ImageExtractor(file, data).result
+                result += ImageExtractor(file, data).result
             elif self.is_click_file(data):
-                self._result += ClickExtractor(file, data).result
+                result += ClickExtractor(file, data).result
             elif self.is_long_click_file(data):
-                self._result += LongClickExtractor(file, data).result
+                result += LongClickExtractor(file, data).result
             elif self.is_swipe_file(data):
-                self._result += SwipeExtractor(file, data).result
+                result += SwipeExtractor(file, data).result
 
+        if result == '':
+            logger.error(f'There are no resource files under the {self.task_name} task')
+            self._result += '\tpass'
+        else:
+            self._result += result
         self._result += '\n\n'
         self.write_file()
 

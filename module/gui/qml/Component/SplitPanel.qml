@@ -113,5 +113,10 @@ Item {
         contentLoader.item.taskName = taskName
     }
 
+    //设置配置的名称
+    function setDefalutConfig(name){
+        contentDefalut.item.configName = name
+    }
+
 
 }
