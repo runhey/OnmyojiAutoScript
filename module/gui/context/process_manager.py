@@ -21,6 +21,7 @@ from multiprocessing.managers import SyncManager
 # from multiprocessing import Queue
 from threading import Thread
 
+from module.base.log_highlighter import highlight_text
 from module.gui.process.script_process import ScriptProcess
 from module.config.config_menu import ConfigMenu
 from module.gui.context.add import Add
@@ -361,13 +362,13 @@ class ProcessManager(QObject):
             logger.info(f'Script {config_name} is not running')
             return
 
-        # while self.processes[config_name].is_alive():
         while self.log_thread[config_name].is_alive():
             try:
                 log = q.get(timeout=1)
                 if log is None:
                     continue
-                self.log_signal.emit(config_name, str(log))
+                log = highlight_text(str(log))
+                self.log_signal.emit(config_name, log)
 
             except Empty:
                 continue
@@ -403,7 +404,6 @@ class ProcessManager(QObject):
                     continue
 
                 logger.info(f'Update thread get')
-                print(update)
                 for key, value in update.items():
                     if "task" and "pending" and "waiting" in value:
                         self.sig_update_task.emit(key, json.dumps(value["task"]))

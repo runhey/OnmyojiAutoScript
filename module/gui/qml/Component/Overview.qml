@@ -2,10 +2,22 @@ import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
 import FluentUI
+import "../Global"
 
 Item {
     id: root
     property string configName: ""
+    property var splitPanel: null  // 传入一个主控制的引用
+
+    Timer{
+        id: startInit
+        interval: 2500 // 定时器间隔为一秒
+        repeat: false // 设置为一次性定时器
+        onTriggered: {
+            // 停止定时器
+            setStatus(MainEvent.RunStatus.Free)
+        }
+    }
 
 
     Item{
@@ -36,10 +48,12 @@ Item {
                     onClicked: {
                         showSuccess("Restart"+" "+configName)
                         process_manager.restart(configName)
+                        startStart.selected = true
                         textLog.text = ""
                     }
                 }
                 FluToggleButton{
+                    id: startStart
                     Layout.alignment: Qt.AlignVCenter | Qt.AlignRight
                     Layout.rightMargin: 16
                     text:"Start"
@@ -47,8 +61,7 @@ Item {
                     onClicked: {
                         selected = !selected
                         if(selected){
-                            text = "Start"
-                            textLog.text = ""
+                            text = "Start"                          
                             process_manager.stop_script(root.configName)
                         }else{
                             // 如果按键颜色变灰色
@@ -64,7 +77,7 @@ Item {
             anchors.top: schedulerOpen.bottom
             anchors.topMargin: 10
             width: parent.width
-            height: 120
+            height: 100
             ColumnLayout{
                 width: parent.width
                 spacing: 8
@@ -83,7 +96,11 @@ Item {
                 }
                 Taskmini{
                     id: task_running
+                    visible: false
                     Layout.leftMargin: 16
+                    onClick: {
+                        root.splitPanel.title = task_running.name
+                    }
                 }
             }
         }
@@ -93,35 +110,93 @@ Item {
             anchors.topMargin: 10
             width: parent.width
             height: 240
-            ColumnLayout{
+            FluText{
+                id: pendingText
+                anchors{
+                    top: parent.top
+                    topMargin: 6
+
+                }
                 width: parent.width
+                text: 'Pending'
+                leftPadding: 16
+                font: FluTextStyle.Subtitle
+            }
+            Rectangle{
+                // 这个是一条横线
+                id: linePending
+                anchors{
+                    top: pendingText.bottom
+                    topMargin: 8
+                    horizontalCenter: parent.horizontalCenter
+                }
+                width: schedulerRunning.width - 20
+                height: 2
+                color: FluTheme.dark ? Qt.rgba(64/255, 68/255, 75/255, 1) : Qt.rgba(234/255, 236/255, 239/255, 1)
+                radius: 2
+            }
+            ListView{
+                id: pendingListView
+                anchors{
+                    top: linePending.bottom
+                    topMargin: 8
+                    bottom: parent.bottom
+                    bottomMargin: 8
+                    horizontalCenter: parent.horizontalCenter
+                }
+
+                width: 225
+                height: 200
+                clip: true
                 spacing: 8
-                FluText{
-                    text: 'Pending'
-                    Layout.leftMargin: 16
-                    Layout.topMargin: 6
-                    font: FluTextStyle.Subtitle
+                model: ListModel{
+                    id: pendingListModel
                 }
-                Rectangle{
-                    width: schedulerRunning.width - 20
-                    height: 2
-                    Layout.alignment: Qt.AlignHCenter
-                    color: FluTheme.dark ? Qt.rgba(64/255, 68/255, 75/255, 1) : Qt.rgba(234/255, 236/255, 239/255, 1)
-                    radius: 2
-                }
-                Taskmini{
-                    Layout.leftMargin: 16
-                }
-                Taskmini{
-                    Layout.leftMargin: 16
-                }
-                Taskmini{
-                    Layout.leftMargin: 16
-                }
-                Taskmini{
-                    Layout.leftMargin: 16
+                delegate: Component{
+                    Taskmini{
+                        name: model.name
+                        nextRun: model.next_run
+                        onClick: {
+                            root.splitPanel.title = model.name
+                        }
+                    }
                 }
             }
+
+//            ColumnLayout{
+//                width: parent.width
+//                spacing: 8
+//                FluText{
+//                    text: 'Pending'
+//                    Layout.leftMargin: 16
+//                    Layout.topMargin: 6
+//                    font: FluTextStyle.Subtitle
+//                }
+//                Rectangle{
+//                    // 这个是一条横线
+//                    width: schedulerRunning.width - 20
+//                    height: 2
+//                    Layout.alignment: Qt.AlignHCenter
+//                    color: FluTheme.dark ? Qt.rgba(64/255, 68/255, 75/255, 1) : Qt.rgba(234/255, 236/255, 239/255, 1)
+//                    radius: 2
+//                }
+//                ListView{
+//                    id: pendingListView
+//                    Layout.alignment: Qt.AlignHCenter
+//                    width: 225
+//                    height: 200
+//                    spacing: 8
+//                    model: ListModel{
+//                        id: pendingListModel
+//                    }
+//                    delegate: Component{
+//                        Taskmini{
+//                            name: model.name
+//                            nextRun: model.next_run
+//                        }
+//                    }
+//                }
+//            }
         }
         FluArea{
             id: schedulerWaiting
@@ -129,7 +204,8 @@ Item {
             anchors.topMargin: 10
             anchors.bottom: parent.bottom
             anchors.bottomMargin: 0
-            width: parent.width
+            width: parent.width                  
+
             ColumnLayout{
                 width: parent.width
                 spacing: 8
@@ -148,9 +224,25 @@ Item {
                     color: FluTheme.dark ? Qt.rgba(64/255, 68/255, 75/255, 1) : Qt.rgba(234/255, 236/255, 239/255, 1)
                     radius: 2
                 }
-                Taskmini{
-                    Layout.leftMargin: 16
-                    Layout.fillHeight: false
+                ListView{
+                    id: waitingListView
+                    Layout.fillHeight: true
+                    Layout.alignment: Qt.AlignHCenter
+                    width: 225
+                    clip: true
+                    spacing: 8
+                    model: ListModel{
+                        id: waitingListModel
+                    }
+                    delegate: Component{
+                        Taskmini{
+                            name: model.name
+                            nextRun: model.next_run
+                            onClick: {
+                                root.splitPanel.title = model.name
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -173,6 +265,7 @@ Item {
                 Layout.alignment: Qt.AlignVCenter | Qt.AlignLeft
             }
             OverStatus{
+                id: overStatus
                 Layout.alignment: Qt.AlignVCenter | Qt.AlignRight
             }
             FluToggleButton{
@@ -207,7 +300,8 @@ Item {
             padding: 10
             clip: true
             wrapMode: Text.WordWrap // 设置自动换行模式
-            text: ""
+            textFormat: Text.RichText
+            text: ''
 
             function add_log(config, log){
                 if(config !== root.configName){
@@ -228,6 +322,7 @@ Item {
         process_manager.sig_update_task.connect(update_task)
         process_manager.sig_update_pending.connect(update_pending)
         process_manager.sig_update_waiting.connect(update_waiting)
+        startInit.start()
     }
     function update_task(config, data){
         if(typeof data !== "string"){
@@ -248,6 +343,15 @@ Item {
         if(config !== configName){
             return
         }
+        if(data === "[]"){
+            pendingListModel.clear()
+            return
+        }
+        pendingListModel.clear()
+        const d = JSON.parse(data)
+        for(var item of d){
+            pendingListModel.append(item)
+        }
     }
     function update_waiting(config, data){
         if(typeof data !== "string"){
@@ -257,5 +361,17 @@ Item {
         if(config !== configName){
             return
         }
+        if(data === "[]"){
+            waitingListModel.clear()
+            return
+        }
+        waitingListModel.clear()
+        const d = JSON.parse(data)
+        for(var item of d){
+            waitingListModel.append(item)
+        }
+    }
+    function setStatus(s){
+        overStatus.runStatus = s
     }
 }

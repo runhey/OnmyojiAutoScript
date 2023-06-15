@@ -35,6 +35,15 @@ Item {
         anchors.top: parent.top
         anchors.bottom: parent.bottom
         anchors.bottomMargin: 12
+
+        onLoaded: {
+            if(typeof contentDefalut.item.splitPanel === "undefined"){
+                console.debug('还没有属性')
+                return
+            }
+
+            contentDefalut.item.splitPanel = menuArea.parent
+        }
     }
     Loader{
         id: contentLoader
@@ -83,8 +92,9 @@ Item {
 
     //设置固定的部分的具体内容  主要是传一个组件
     function setDefalut(component){
-        contentDefalut.sourceComponent = component
+        contentDefalut.sourceComponent = component 
         showDefalut()
+
     }
     //
     function setLoader(component){

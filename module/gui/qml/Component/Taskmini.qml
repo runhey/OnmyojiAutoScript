@@ -12,6 +12,7 @@ Item {
 
     property alias name: taskName.text
     property alias nextRun: taskTime.text
+    signal click(string title)
 
     FluText{
         id: taskName
@@ -44,7 +45,8 @@ Item {
         }
         text:"setting"
         onClicked: {
-             showSuccess("setting")
+            showSuccess(name)
+            root.click(configName)
         }
     }
     // 使用这个的前提是 data 是字符串

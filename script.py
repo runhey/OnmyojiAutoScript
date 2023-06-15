@@ -218,8 +218,15 @@ class Script:
         if self.gui_update_task is not None:
             self.gui_update_task(data)
 
-
-
+    def _gui_set_status(self, status: str) -> None:
+        """
+        设置给gui显示的状态
+        :param status: 可以在gui中显示的状态 有 "Init", "Empty"(不显示), "Run"(运行中), "Error", "Free"(空闲)
+        :return:
+        """
+        data = {"status": status}
+        if self.gui_update_task is not None:
+            self.gui_update_task(data)
 
     def wait_until(self, future):
         """
