@@ -24,6 +24,7 @@ from threading import Thread
 from module.base.log_highlighter import highlight_text
 from module.gui.process.script_process import ScriptProcess
 from module.config.config_menu import ConfigMenu
+from module.config.config_modify import ConfigModify
 from module.gui.context.add import Add
 from module.logger import logger
 
@@ -63,6 +64,7 @@ class ProcessManager(QObject):
         """
         super().__init__()
         self.processes: Dict[str, ScriptProcess] = {}  # 持有所有的进程
+        self.configs: Dict[str, ConfigModify] = {}  # 持有所有的配置, 权宜之计
         self.ports: Dict[str, int] = {}  # 持有所有的端口
         self.clients = {}  # zerorpc连接的客户端
 
@@ -145,7 +147,7 @@ class ProcessManager(QObject):
         """
         if config in self.processes:
             if not self.processes[config].is_alive():  # 如果进程已经死亡，那么就重新启动
-                logger.info(f'restart script {config}')
+                logger.info(f'{config} process is dead, restart it')
 
 
             self.processes[config].terminate()  # 强制结束进程
@@ -208,6 +210,21 @@ class ProcessManager(QObject):
         menu = ConfigMenu()
         return menu.gui_menu
 
+    def check_script(self, config: str):
+        """
+        检查脚本是否存在
+        :param config:
+        :return:
+        """
+        if config in self.processes and self.processes[config].is_alive():  # 如果脚本进程存在
+            if config in self.configs:
+                del self.configs[config]
+            return self.clients[config]
+        else:
+            if config not in self.configs:
+                self.configs[config] = ConfigModify(config)  # 初始化一个
+            return self.configs[config]
+
     @Slot(str, str, result="QString")
     def gui_args(self, config: str, task: str) -> str:
         """
@@ -218,7 +235,7 @@ class ProcessManager(QObject):
         """
         if config in self.clients:
             logger.info(f'gui get args of {config} {task}')
-            return self.clients[config].gui_args(task)
+            return self.check_script(config).gui_args(task)
         else:
             logger.info(f'script {config} is not running')
             return None
@@ -233,7 +250,7 @@ class ProcessManager(QObject):
         """
         if config in self.clients:
             logger.info(f'gui get value of {config} {task}')
-            return self.clients[config].gui_task(task)
+            return self.check_script(config).gui_task(task)
         else:
             logger.info(f'script {config} is not running')
             return None
@@ -251,7 +268,7 @@ class ProcessManager(QObject):
         """
         if config in self.clients:
             logger.info(f'gui set value of {config} {task}')
-            if self.clients[config].gui_set_task(task, group, arg, value):
+            if self.check_script(config).gui_set_task(task, group, arg, value):
                 return True
             else:
                 return False
