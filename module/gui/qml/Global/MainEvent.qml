@@ -11,7 +11,8 @@ QtObject {
         Error,
         Run,
         Free, //空闲
-        Empty //不显示
+        Empty, //不显示
+        Init  //初始化
     }
 
     // 界面的自定义设置
@@ -27,7 +28,7 @@ QtObject {
     property int runStatus: MainEvent.RunStatus.Empty
     property string menuTitle: ""
     property bool addOpen: false
-    property string scriptName: ""
+    property string scriptName: ""  // 是设置脚本的名字
 
     //切换语言中文是"zh_CN" 英文是"en_US"
     function switchLocale(locale) {

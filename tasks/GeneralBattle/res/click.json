@@ -1,0 +1,110 @@
+[
+    {
+        "itemName": "preset_team_1",
+        "roiFront": "196,234,464,114",
+        "roiBack": "196,234,464,114",
+        "description": "预设队伍1"
+    },
+    {
+        "itemName": "preset_team_2",
+        "roiFront": "197,358,465,103",
+        "roiBack": "197,358,465,103",
+        "description": "预设队伍2"
+    },
+    {
+        "itemName": "preset_team_3",
+        "roiFront": "195,480,462,100",
+        "roiBack": "195,480,462,100",
+        "description": "预设队伍3"
+    },
+    {
+        "itemName": "preset_team_4",
+        "roiFront": "193,596,464,35",
+        "roiBack": "193,596,464,35",
+        "description": "预设队伍4"
+    },
+    {
+        "itemName": "preset_group_1",
+        "roiFront": "28,238,134,56",
+        "roiBack": "28,238,134,56",
+        "description": "预设组1"
+    },
+    {
+        "itemName": "preset_group_2",
+        "roiFront": "31,298,132,60",
+        "roiBack": "31,298,132,60",
+        "description": "预设组2"
+    },
+    {
+        "itemName": "preset_group_3",
+        "roiFront": "31,362,135,59",
+        "roiBack": "31,362,135,59",
+        "description": "预设组3"
+    },
+    {
+        "itemName": "preset_group_4",
+        "roiFront": "29,427,133,57",
+        "roiBack": "29,427,133,57",
+        "description": "预设组4"
+    },
+    {
+        "itemName": "preset_group_5",
+        "roiFront": "31,489,133,60",
+        "roiBack": "31,489,133,60",
+        "description": "预设组5"
+    },
+    {
+        "itemName": "preset_group_6",
+        "roiFront": "31,549,132,63",
+        "roiBack": "31,549,132,63",
+        "description": "预设组6"
+    },
+    {
+        "itemName": "preset_group_7",
+        "roiFront": "29,615,137,63",
+        "roiBack": "29,615,137,63",
+        "description": "预设组7"
+    },
+    {
+        "itemName": "green_left_1",
+        "roiFront": "128,433,90,150",
+        "roiBack": "128,433,90,150",
+        "description": "从左开始第一个绿标"
+    },
+    {
+        "itemName": "green_left_2",
+        "roiFront": "371,385,81,145",
+        "roiBack": "371,385,81,145",
+        "description": "从左开始第二个绿标"
+    },
+    {
+        "itemName": "green_left_3",
+        "roiFront": "586,328,100,76",
+        "roiBack": "586,328,100,76",
+        "description": "从左开始第三个绿标"
+    },
+    {
+        "itemName": "green_left_4",
+        "roiFront": "817,379,77,133",
+        "roiBack": "817,379,77,133",
+        "description": "从左开始第四个绿标"
+    },
+    {
+        "itemName": "green_left_5",
+        "roiFront": "1059,416,85,145",
+        "roiBack": "1059,416,85,145",
+        "description": "从左开始第五个绿标"
+    },
+    {
+        "itemName": "green_main",
+        "roiFront": "590,454,88,178",
+        "roiBack": "590,454,88,178",
+        "description": "绿标阴阳师"
+    },
+    {
+        "itemName": "random_click",
+        "roiFront": "104,79,1050,507",
+        "roiBack": "255,65,100,100",
+        "description": "战斗的时候有一定的概率随机点击"
+    }
+]

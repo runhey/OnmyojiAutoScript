@@ -21,11 +21,13 @@ class RuleImage:
         :param threshold: 阈值
         :param file: 相对路径, 带后缀
         """
-        self.roi_front = roi_front
+        self.roi_front: list = list(roi_front)
         self.roi_back = roi_back
         self.method = method
         self.threshold = threshold
         self.file = file
+
+        self._match_init = False  # 这个是给后面的 等待图片稳定
 
         self._image = None  # 这个是匹配的目标
 
@@ -61,7 +63,7 @@ class RuleImage:
         if self._image is not None:
             return
         img = cv2.imdecode(fromfile(self.file, dtype=uint8), -1)
-        # self._image = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+        img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
         self._image = img
 
         height, width, channels = self._image.shape
@@ -117,6 +119,8 @@ class RuleImage:
         res = cv2.matchTemplate(source, mat, cv2.TM_CCOEFF_NORMED)
         min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(res)  # 最小匹配度，最大匹配度，最小匹配度的坐标，最大匹配度的坐标
         if max_val > threshold:
+            self.roi_front[0] = max_loc[0] + self.roi_back[0]
+            self.roi_front[1] = max_loc[1] + self.roi_back[1]
             return True
         else:
             return False
@@ -139,4 +143,6 @@ class RuleImage:
 
 
 if __name__ == "__main__":
-    pass
+    image = cv2.imread("D:/4713.jpg")
+    mat = RuleImage(roi_front=(758,122,66,77), roi_back=(339,104,836,120), threshold=0.8, method="Template matching", file="./tasks/AreaBoss/res/res_explore.png")
+    print(mat.match(image))

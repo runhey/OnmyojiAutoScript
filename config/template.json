@@ -1,0 +1,129 @@
+{
+  "config_name": "oas",
+  "script": {
+    "device": {
+      "serial": "auto",
+      "handle": "auto",
+      "package_name": "auto",
+      "screenshot_method": "window_background",
+      "control_method": "window_message",
+      "adb_restart": false
+    },
+    "error": {
+      "handle_error": false,
+      "save_error": false,
+      "screenshot_length": 1
+    },
+    "optimization": {
+      "screenshot_interval": 0.3,
+      "combat_screenshot_interval": 1.0,
+      "task_hoarding_duration": 0,
+      "when_task_queue_empty": "goto_home"
+    }
+  },
+  "restart": {
+    "scheduler": {
+      "enable": false,
+      "next_run": "2023-01-01 00:00:00",
+      "priority": 0,
+      "command": "Restart",
+      "success_interval": 0,
+      "failure_interval": 0,
+      "server_update": "00:00"
+    }
+  },
+  "global_game": {
+    "emergency": {
+      "accept_friend_invitation": true
+    }
+  },
+  "area_boss": {
+    "scheduler": {
+      "enable": false,
+      "next_run": "2023-01-01 00:00:00",
+      "priority": 3
+    },
+    "general_battle": {
+      "lock_team_enable": false,
+      "preset_enable": false,
+      "preset_group": 1,
+      "preset_team": 1,
+      "buff_enable": false,
+      "buff_awake_click": false,
+      "buff_soul_click": false,
+      "buff_gold_50_click": false,
+      "buff_gold_100_click": false,
+      "buff_exp_50_click": false,
+      "buff_exp_100_click": false,
+      "green_enable": false,
+      "green_mark": "green_left1",
+      "random_click_swipt_enable": false
+    },
+    "boss": {
+      "boss_number": 3
+    }
+  },
+  "experience_youkai": {
+    "scheduler": {
+      "enable": false,
+      "next_run": "2023-01-01 00:00:00",
+      "priority": 3
+    }
+  },
+  "gold_youkai": {
+    "scheduler": {
+      "enable": false,
+      "next_run": "2023-01-01 00:00:00",
+      "priority": 3
+    }
+  },
+  "nian": {
+    "scheduler": {
+      "enable": false,
+      "next_run": "2023-01-01 00:00:00",
+      "priority": 3
+    }
+  },
+  "orochi": {
+    "scheduler": {
+      "enable": false,
+      "next_run": "2023-01-01 00:00:00",
+      "priority": 3
+    }
+  },
+  "orochi_moans": {
+    "scheduler": {
+      "enable": false,
+      "next_run": "2023-01-01 00:00:00",
+      "priority": 3
+    }
+  },
+  "orochi_judgement": {
+    "scheduler": {
+      "enable": false,
+      "next_run": "2023-01-01 00:00:00",
+      "priority": 3
+    }
+  },
+  "sougenbi": {
+    "scheduler": {
+      "enable": false,
+      "next_run": "2023-01-01 00:00:00",
+      "priority": 3
+    }
+  },
+  "fallen_sun": {
+    "scheduler": {
+      "enable": false,
+      "next_run": "2023-01-01 00:00:00",
+      "priority": 3
+    }
+  },
+  "eternity_sea": {
+    "scheduler": {
+      "enable": false,
+      "next_run": "2023-01-01 00:00:00",
+      "priority": 3
+    }
+  }
+}

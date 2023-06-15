@@ -4,7 +4,7 @@
 import json
 import numpy as np
 
-# from tqdm.contrib.concurrent import process_map
+from tqdm.contrib.concurrent import process_map
 from pathlib import Path
 
 from module.logger import logger
@@ -97,7 +97,8 @@ class ClickExtractor:
         description: str = f'\t# {item["description"]} \n'
         name: str = f'\tC_{name_transform(item["itemName"])} = RuleClick(' \
                     f'roi_front=({item["roiFront"]}), ' \
-                    f'roi_back=({item["roiBack"]}))\n'
+                    f'roi_back=({item["roiBack"]}), ' \
+                    f'name="{item["itemName"]}")\n'
         return description + name
 
 class LongClickExtractor:
@@ -125,7 +126,8 @@ class LongClickExtractor:
         name: str = f'\tL_{name_transform(item["itemName"])} = RuleLongClick(' \
                     f'roi_front=({item["roiFront"]}), ' \
                     f'roi_back=({item["roiBack"]}), ' \
-                    f'duration={item["duration"]})\n'
+                    f'duration={item["duration"]}, ' \
+                    f'name="{item["itemName"]}")\n'
         return description + name
 
 class SwipeExtractor:
@@ -153,7 +155,8 @@ class SwipeExtractor:
         name: str = f'\tS_{name_transform(item["itemName"])} = RuleSwipe(' \
                     f'roi_front=({item["roiFront"]}), ' \
                     f'roi_back=({item["roiBack"]}), ' \
-                    f'mode="{item["mode"]}")\n'
+                    f'mode="{item["mode"]}", ' \
+                    f'name="{item["itemName"]}")\n'
         return description + name
 
 
@@ -168,10 +171,12 @@ class AssetsExtractor:
         self.task_path = Path.cwd() / MODULE_FOLDER / task_name
         self.assets_file = Path.cwd() / MODULE_FOLDER / task_name / ASSETS_FILE
 
+        self.class_name = f'\nclass {task_name}Assets: \n'
+
         self._result = ''
         for import_exp in IMPORT_EXP:
             self._result += import_exp
-        self._result += ASSETS_CLASS
+        self._result += self.class_name
 
 
     def all_json_file(self) -> list:
@@ -254,31 +259,47 @@ class AssetsExtractor:
         生成一个assets.py文件
         :return:
         """
+        result = ''
         for file in self.all_json_file():
             data = self.read_file(file)
             if not data:
                 continue
             if self.is_image_file(data):
-                self._result += ImageExtractor(file, data).result
+                result += ImageExtractor(file, data).result
             elif self.is_click_file(data):
-                self._result += ClickExtractor(file, data).result
+                result += ClickExtractor(file, data).result
             elif self.is_long_click_file(data):
-                self._result += LongClickExtractor(file, data).result
+                result += LongClickExtractor(file, data).result
             elif self.is_swipe_file(data):
-                self._result += SwipeExtractor(file, data).result
+                result += SwipeExtractor(file, data).result
 
+        if result == '':
+            logger.error(f'There are no resource files under the {self.task_name} task')
+            self._result += '\tpass'
+        else:
+            self._result += result
         self._result += '\n\n'
         self.write_file()
 
 
 class AllAssetsExtractor:
-    pass
+    def __init__(self):
+        """
+        获取./tasks目录下的所有任务文件夹，遍历每一个任务文件夹提取assets
+        """
+        logger.info('All assets extract')
+        self.task_path = Path.cwd() / MODULE_FOLDER
+        self.task_list = [x.name for x in self.task_path.iterdir() if x.is_dir()]
+        process_map(self.work, self.task_list, max_workers=4)
+
+    @staticmethod
+    def work(task_name: str):
+        me = AssetsExtractor(task_name)
+        me.extract()
+
 
 
 if __name__ == "__main__":
-    c = AssetsExtractor('CoinChallenge')
-    # print(c.assets_file)
-    # print(c.task_path)
-    # print(c.all_json_file())
-
-    c.extract()
+    # c = AssetsExtractor('GeneralBattle')
+    # c.extract()
+    AllAssetsExtractor()

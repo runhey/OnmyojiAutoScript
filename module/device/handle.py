@@ -105,6 +105,7 @@ class Handle:
         'bluestacks_5': ['root_handle_title'],
         'bluestacks_family': ['root_handle_title']
     }
+    config: Config = None
 
     def __init__(self, config) -> None:
         """

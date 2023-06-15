@@ -12,6 +12,8 @@ class Scheduler(BaseModel):
                          description='none')
     next_run: datetime = Field(default="2023-01-01 00:00:00",
                                description='none')
+    priority: int = Field(default=0,
+                          description='default 0')
     command: str = Field(default='Restart',
                          description='none')
     success_interval: float = Field(default=0,

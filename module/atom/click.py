@@ -8,7 +8,7 @@ from module.logger import logger
 
 class RuleClick:
 
-    def __init__(self, roi_front: tuple, roi_back: tuple) -> None:
+    def __init__(self, roi_front: tuple, roi_back: tuple, name: str=None) -> None:
         """
         初始化
         :param roi_front:
@@ -16,6 +16,10 @@ class RuleClick:
         """
         self.roi_front = roi_front
         self.roi_back = roi_back
+        if name:
+            self.name = name
+        else:
+            self.name = 'click'
 
     def coord(self) -> tuple:
         """

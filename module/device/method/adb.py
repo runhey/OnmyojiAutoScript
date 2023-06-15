@@ -186,6 +186,18 @@ class Adb(Connection):
         duration = int(duration * 1000)
         self.adb_shell(['input', 'swipe', *p1, *p2, duration])
 
+    def long_click_adb(self, x: float, y: float, duration: float):
+        """
+
+        :param x:
+        :param y:
+        :param duration: 单位是s
+        :return:
+        """
+        if not 0 < duration < 3:
+            duration = duration / 1000
+        self.adb_shell(['input', 'swipe', x, y, x, y, int(duration*1000)])
+
     @retry
     def app_current_adb(self):
         """

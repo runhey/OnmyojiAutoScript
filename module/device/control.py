@@ -11,7 +11,7 @@ from module.device.method.window import Window
 from module.logger import logger
 
 
-class Control(Minitouch, Scrcpy, Window):
+class Control(Minitouch, Adb, Scrcpy, Window):
     def handle_control_check(self, button):
         # Will be overridden in Device
         pass
@@ -27,25 +27,59 @@ class Control(Minitouch, Scrcpy, Window):
             # 'MaaTouch': self.click_maatouch,
         }
 
-    def click(self, button, control_check=True):
+    @cached_property
+    def long_click_methods(self):
+        return {
+            'ADB': self.long_click_adb,
+            'uiautomator2': self.long_click_uiautomator2,
+            'minitouch': self.long_click_minitouch,
+            'window_message': self.long_click_window_message,
+            'scrcpy': self.long_click_scrcpy
+            # 'Hermit': self.click_hermit,
+            # 'MaaTouch': self.click_maatouch,
+        }
+
+    # def click(self, button, control_check=True):
+    #     """
+    #     后面改一改  不用用button的逻辑
+    #     :param button:
+    #     :param control_check:
+    #     :return:
+    #     """
+    #     if control_check:
+    #         self.handle_control_check(button)
+    #     x, y = random_rectangle_point(button.button)
+    #     x, y = ensure_int(x, y)
+    #     logger.info(
+    #         'Click %s @ %s' % (point2str(x, y), button)
+    #     )
+    #     method = self.click_methods.get(
+    #         self.config.script.emulator.control_method,
+    #         self.click_adb
+    #     )
+    #     method(x, y)
+
+    def click(self, x: int, y: int, control_check=True, control_name='Click') -> None:
         """
-        后面改一改  不用用button的逻辑
-        :param button:
+
+        :param control_name:
+        :param x:
+        :param y:
         :param control_check:
         :return:
         """
         if control_check:
-            self.handle_control_check(button)
-        x, y = random_rectangle_point(button.button)
+            self.handle_control_check(control_name)
         x, y = ensure_int(x, y)
         logger.info(
-            'Click %s @ %s' % (point2str(x, y), button)
+            'Click %s ' % (point2str(x, y))
         )
         method = self.click_methods.get(
-            self.config.script.emulator.control_method,
+            self.config.script.device.control_method,
             self.click_adb
         )
         method(x, y)
+
 
     def multi_click(self, button, n, interval=(0.1, 0.2)):
         """
@@ -65,39 +99,61 @@ class Control(Minitouch, Scrcpy, Window):
 
             self.click(button, control_check=False)
 
-    def long_click(self, button, duration=(1, 1.2)):
+    # def long_click(self, button, duration=(1, 1.2)):
+    #     """
+    #
+    #     :param button:
+    #     :param duration:
+    #     :return:
+    #     """
+    #     self.handle_control_check(button)
+    #     x, y = random_rectangle_point(button.button)
+    #     x, y = ensure_int(x, y)
+    #     duration = ensure_time(duration)
+    #     logger.info(
+    #         'Click %s @ %s, %s' % (point2str(x, y), button, duration)
+    #     )
+    #     method = self.config.script.emulator.control_method
+    #     if method == 'minitouch':
+    #         self.long_click_minitouch(x, y, duration)
+    #     elif method == 'window_message':
+    #         self.long_click_window_message(x, y, duration)
+    #     elif method == 'uiautomator2':
+    #         self.long_click_uiautomator2(x, y, duration)
+    #     elif method == 'scrcpy':
+    #         self.long_click_scrcpy(x, y, duration)
+    #     # elif method == 'MaaTouch':
+    #     #     self.long_click_maatouch(x, y, duration)
+    #     else:
+    #         self.swipe_adb((x, y), (x, y), duration)
+
+    def long_click(self, x: int, y: int, duration=(0.5, 2), control_name='LongClick') -> None:
         """
 
-        :param button:
-        :param duration:
+        :param control_name:
+        :param x:
+        :param y:
+        :param duration: 单位是s
         :return:
         """
-        self.handle_control_check(button)
-        x, y = random_rectangle_point(button.button)
+        self.handle_control_check(control_name)
         x, y = ensure_int(x, y)
+        if duration is None:
+            duration = 0.8
         duration = ensure_time(duration)
         logger.info(
-            'Click %s @ %s, %s' % (point2str(x, y), button, duration)
+            'Click %s @ %s' % (point2str(x, y), duration)
         )
-        method = self.config.script.emulator.control_method
-        if method == 'minitouch':
-            self.long_click_minitouch(x, y, duration)
-        elif method == 'window_message':
-            self.long_click_window_message(x, y, duration)
-        elif method == 'uiautomator2':
-            self.long_click_uiautomator2(x, y, duration)
-        elif method == 'scrcpy':
-            self.long_click_scrcpy(x, y, duration)
-        # elif method == 'MaaTouch':
-        #     self.long_click_maatouch(x, y, duration)
-        else:
-            self.swipe_adb((x, y), (x, y), duration)
+        method = self.long_click_methods.get(
+            self.config.script.emulator.control_method,
+            self.long_click_adb)
+        method(x, y, duration)
 
-    def swipe(self, p1, p2, duration=(0.1, 0.2), name='SWIPE', distance_check=True):
-        self.handle_control_check(name)
+    def swipe(self, p1, p2, duration=(0.1, 0.2), control_name='SWIPE', distance_check=True):
+        self.handle_control_check(control_name)
         p1, p2 = ensure_int(p1, p2)
         duration = ensure_time(duration)
-        method = self.config.script.emulator.control_method
+        method = self.config.script.device.control_method
         if method == 'minitouch':
             logger.info('Swipe %s -> %s' % (point2str(*p1), point2str(*p2)))
         elif method == 'window_message':

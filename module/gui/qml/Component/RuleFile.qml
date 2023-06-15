@@ -181,7 +181,7 @@ FluArea {
                     }
                     placeholderText:"item name"
                     text: model.itemName
-                    validator: RegularExpressionValidator { regularExpression: /^[a-zA-Z0-9]*$/ }
+                    validator: RegularExpressionValidator { regularExpression: /^[a-z0-9_]*$/ }
                     onActiveFocusChanged: {
                         if(activeFocus){
                             currentItem = listModel.get(index)

@@ -7,3 +7,4 @@ from tasks.Restart.config_scheduler import Scheduler
 
 class Restart(BaseModel):
     scheduler: Scheduler = Field(default_factory=Scheduler)
+

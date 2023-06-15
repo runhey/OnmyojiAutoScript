@@ -1,0 +1,16 @@
+[
+    {
+        "itemName": "battle_random_left",
+        "roiFront": "122,155,480,426",
+        "roiBack": "667,147,461,427",
+        "mode": "default",
+        "description": "description"
+    },
+    {
+        "itemName": "battle_random_right",
+        "roiFront": "719,138,417,392",
+        "roiBack": "237,163,387,394",
+        "mode": "default",
+        "description": "description"
+    }
+]

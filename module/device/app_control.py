@@ -12,7 +12,7 @@ class AppControl(Adb, Uiautomator2):
     _app_u2_family = ['uiautomator2', 'minitouch', 'scrcpy']
 
     def app_is_running(self) -> bool:
-        method = self.config.script.emulator.control_method
+        method = self.config.script.device.control_method
         # if self.is_wsa:
         #     package = self.app_current_wsa()
         if method in AppControl._app_u2_family:

@@ -15,12 +15,13 @@ class ConfigMenu:
         # 总览
         self.menu["Overview"] = []
         # 脚本设置
-        self.menu['Script'] = ['Script', 'General', 'Restart']
+        self.menu['Script'] = ['Script', 'General', 'Restart', 'GlobalGame']
         # 开发工具
         self.menu["Tools"] = ['Image Rule', 'Ocr Rule', 'Click Rule', 'Long Click Rule', 'Swipe Rule']
+        # 刷御魂
+        self.menu["Soul Zones"] = ['Orochi', 'OrochiMoans', 'OrochiJudgement', 'Sougenbi', 'FallenSun', 'EternitySea']
         # 日常的任务
-        self.menu["Daily Task"] = ['Territorial Demon', 'Coin Challenge']
-
+        self.menu["Daily Task"] = ['AreaBoss', 'GoldYoukai', 'ExperienceYoukai', 'Nian']
     @cached_property
     def gui_menu(self) -> str:
         """

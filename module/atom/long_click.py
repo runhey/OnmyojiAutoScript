@@ -10,14 +10,16 @@ from module.atom.click import RuleClick
 
 class RuleLongClick(RuleClick):
 
-    def __init__(self, roi_front: tuple, roi_back: tuple, duration: int = 1000) -> None:
+    def __init__(self, roi_front: tuple, roi_back: tuple, duration: int = 1000, name: str=None) -> None:
         """
         初始化
         :param roi_front:
         :param roi_back:
         :param duration:
         """
-        super().__init__(roi_front, roi_back)
+        if not name:
+            name = 'long_click'
+        super().__init__(roi_front, roi_back, name=name)
         self.duration = duration
 
 

@@ -1,9 +1,23 @@
 import QtQuick
+import QtQuick.Controls
 import QtQuick.Layouts
 import FluentUI
+import "../Global"
 
 Item {
+    id: root
+    property string configName: ""
+    property var splitPanel: null  // 传入一个主控制的引用
 
+    Timer{
+        id: startInit
+        interval: 2500 // 定时器间隔为一秒
+        repeat: false // 设置为一次性定时器
+        onTriggered: {
+            // 停止定时器
+            setStatus(MainEvent.RunStatus.Free)
+        }
+    }
 
 
     Item{
@@ -27,16 +41,32 @@ Item {
                     font: FluTextStyle.Subtitle
                     Layout.alignment: Qt.AlignVCenter | Qt.AlignLeft
                 }
+                FluIconButton{
+                     Layout.alignment: Qt.AlignVCenter | Qt.AlignRight
+                    text: "Restart"
+                    iconSource: FluentIcons.RepeatAll
+                    onClicked: {
+                        showSuccess("Restart"+" "+configName)
+                        process_manager.restart(configName)
+                        startStart.selected = true
+                        textLog.text = ""
+                    }
+                }
                 FluToggleButton{
+                    id: startStart
                     Layout.alignment: Qt.AlignVCenter | Qt.AlignRight
                     Layout.rightMargin: 16
                     text:"Start"
+                    selected: true
                     onClicked: {
                         selected = !selected
                         if(selected){
-                            text = "Start"
+                            text = "Start"                          
+                            process_manager.stop_script(root.configName)
                         }else{
+                            // 如果按键颜色变灰色
                             text = "Stop"
+                            process_manager.start_script(root.configName)
                         }
                     }
                 }
@@ -47,7 +77,7 @@ Item {
             anchors.top: schedulerOpen.bottom
             anchors.topMargin: 10
             width: parent.width
-            height: 120
+            height: 100
             ColumnLayout{
                 width: parent.width
                 spacing: 8
@@ -65,7 +95,12 @@ Item {
                     radius: 2
                 }
                 Taskmini{
+                    id: task_running
+                    visible: false
                     Layout.leftMargin: 16
+                    onClick: {
+                        root.splitPanel.title = task_running.name
+                    }
                 }
             }
         }
@@ -75,35 +110,93 @@ Item {
             anchors.topMargin: 10
             width: parent.width
             height: 240
-            ColumnLayout{
+            FluText{
+                id: pendingText
+                anchors{
+                    top: parent.top
+                    topMargin: 6
+
+                }
                 width: parent.width
+                text: 'Pending'
+                leftPadding: 16
+                font: FluTextStyle.Subtitle
+            }
+            Rectangle{
+                // 这个是一条横线
+                id: linePending
+                anchors{
+                    top: pendingText.bottom
+                    topMargin: 8
+                    horizontalCenter: parent.horizontalCenter
+                }
+                width: schedulerRunning.width - 20
+                height: 2
+                color: FluTheme.dark ? Qt.rgba(64/255, 68/255, 75/255, 1) : Qt.rgba(234/255, 236/255, 239/255, 1)
+                radius: 2
+            }
+            ListView{
+                id: pendingListView
+                anchors{
+                    top: linePending.bottom
+                    topMargin: 8
+                    bottom: parent.bottom
+                    bottomMargin: 8
+                    horizontalCenter: parent.horizontalCenter
+                }
+
+                width: 225
+                height: 200
+                clip: true
                 spacing: 8
-                FluText{
-                    text: 'Pending'
-                    Layout.leftMargin: 16
-                    Layout.topMargin: 6
-                    font: FluTextStyle.Subtitle
+                model: ListModel{
+                    id: pendingListModel
                 }
-                Rectangle{
-                    width: schedulerRunning.width - 20
-                    height: 2
-                    Layout.alignment: Qt.AlignHCenter
-                    color: FluTheme.dark ? Qt.rgba(64/255, 68/255, 75/255, 1) : Qt.rgba(234/255, 236/255, 239/255, 1)
-                    radius: 2
-                }
-                Taskmini{
-                    Layout.leftMargin: 16
-                }
-                Taskmini{
-                    Layout.leftMargin: 16
-                }
-                Taskmini{
-                    Layout.leftMargin: 16
-                }
-                Taskmini{
-                    Layout.leftMargin: 16
+                delegate: Component{
+                    Taskmini{
+                        name: model.name
+                        nextRun: model.next_run
+                        onClick: {
+                            root.splitPanel.title = model.name
+                        }
+                    }
                 }
             }
+
+//            ColumnLayout{
+//                width: parent.width
+//                spacing: 8
+//                FluText{
+//                    text: 'Pending'
+//                    Layout.leftMargin: 16
+//                    Layout.topMargin: 6
+//                    font: FluTextStyle.Subtitle
+//                }
+//                Rectangle{
+//                    // 这个是一条横线
+//                    width: schedulerRunning.width - 20
+//                    height: 2
+//                    Layout.alignment: Qt.AlignHCenter
+//                    color: FluTheme.dark ? Qt.rgba(64/255, 68/255, 75/255, 1) : Qt.rgba(234/255, 236/255, 239/255, 1)
+//                    radius: 2
+//                }
+//                ListView{
+//                    id: pendingListView
+//                    Layout.alignment: Qt.AlignHCenter
+//                    width: 225
+//                    height: 200
+//                    spacing: 8
+//                    model: ListModel{
+//                        id: pendingListModel
+//                    }
+//                    delegate: Component{
+//                        Taskmini{
+//                            name: model.name
+//                            nextRun: model.next_run
+//                        }
+//                    }
+//                }
+//            }
         }
         FluArea{
             id: schedulerWaiting
@@ -111,7 +204,8 @@ Item {
             anchors.topMargin: 10
             anchors.bottom: parent.bottom
             anchors.bottomMargin: 0
-            width: parent.width
+            width: parent.width                  
+
             ColumnLayout{
                 width: parent.width
                 spacing: 8
@@ -130,17 +224,154 @@ Item {
                     color: FluTheme.dark ? Qt.rgba(64/255, 68/255, 75/255, 1) : Qt.rgba(234/255, 236/255, 239/255, 1)
                     radius: 2
                 }
-                Taskmini{
-                    Layout.leftMargin: 16
-                    Layout.fillHeight: false
+                ListView{
+                    id: waitingListView
+                    Layout.fillHeight: true
+                    Layout.alignment: Qt.AlignHCenter
+                    width: 225
+                    clip: true
+                    spacing: 8
+                    model: ListModel{
+                        id: waitingListModel
+                    }
+                    delegate: Component{
+                        Taskmini{
+                            name: model.name
+                            nextRun: model.next_run
+                            onClick: {
+                                root.splitPanel.title = model.name
+                            }
+                        }
+                    }
                 }
             }
         }
     }
+
     FluArea{
+        id: logHeader
+        anchors.top: parent.top
         anchors.left: leftScheduler.right
         anchors.leftMargin: 10
-        height: parent.height
         anchors.right: parent.right
+        height: 50
+        RowLayout{
+            anchors.fill: parent
+            RowLayout.alignment: Qt.AlignRight | Qt.AlignVCenter
+            FluText{
+                text: 'Log'
+                Layout.leftMargin: 16
+                font: FluTextStyle.Subtitle
+                Layout.alignment: Qt.AlignVCenter | Qt.AlignLeft
+            }
+            OverStatus{
+                id: overStatus
+                Layout.alignment: Qt.AlignVCenter | Qt.AlignRight
+            }
+            FluToggleButton{
+                Layout.alignment: Qt.AlignVCenter | Qt.AlignRight
+                Layout.rightMargin: 16
+                text:"Auto Scroll On"
+                selected: true
+                onClicked: {
+                    selected = !selected
+                    if(selected){
+                        text = "Auto Scroll On"
+                    }else{
+                        text = "Auto Scroll Off"
+                    }
+                }
+            }
+        }
+    }
+
+    FluArea{
+        anchors.top: logHeader.bottom
+        anchors.topMargin: 10
+        anchors.bottom: parent.bottom
+        anchors.left: leftScheduler.right
+        anchors.leftMargin: 10
+        anchors.right: parent.right
+        FluScrollablePage{
+            anchors.fill: parent
+        FluText{
+            id: textLog
+            width: parent.width
+            padding: 10
+            clip: true
+            wrapMode: Text.WordWrap // 设置自动换行模式
+            textFormat: Text.RichText
+            text: ''
+
+            function add_log(config, log){
+                if(config !== root.configName){
+                    return
+                }
+                textLog.text += log
+            }
+
+            Component.onCompleted:{
+                process_manager.log_signal.connect(textLog.add_log)
+            }
+
+
+        }}
+    }
+
+    Component.onCompleted:{
+        process_manager.sig_update_task.connect(update_task)
+        process_manager.sig_update_pending.connect(update_pending)
+        process_manager.sig_update_waiting.connect(update_waiting)
+        startInit.start()
+    }
+    function update_task(config, data){
+        if(typeof data !== "string"){
+            console.error("Pass an incorrect type")
+            return
+        }
+
+        if(config !== configName){
+            return
+        }
+        task_running.setData(data)
+    }
+    function update_pending(config, data){
+        if(typeof data !== "string"){
+            console.error("Pass an incorrect type")
+            return
+        }
+        if(config !== configName){
+            return
+        }
+        if(data === "[]"){
+            pendingListModel.clear()
+            return
+        }
+        pendingListModel.clear()
+        const d = JSON.parse(data)
+        for(var item of d){
+            pendingListModel.append(item)
+        }
+    }
+    function update_waiting(config, data){
+        if(typeof data !== "string"){
+            console.error("Pass an incorrect type")
+            return
+        }
+        if(config !== configName){
+            return
+        }
+        if(data === "[]"){
+            waitingListModel.clear()
+            return
+        }
+        waitingListModel.clear()
+        const d = JSON.parse(data)
+        for(var item of d){
+            waitingListModel.append(item)
+        }
+    }
+    function setStatus(s){
+        overStatus.runStatus = s
     }
 }

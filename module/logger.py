@@ -5,11 +5,15 @@ import datetime
 import logging
 import os
 import sys
+import traceback
+
+from io import TextIOBase
 from typing import Callable, List
 
 from rich.console import Console, ConsoleOptions, ConsoleRenderable, NewLine
 from rich.highlighter import RegexHighlighter, NullHighlighter
 from rich.logging import RichHandler
+from rich.text import Text
 from rich.rule import Rule
 from rich.style import Style
 from rich.theme import Theme
@@ -33,10 +37,25 @@ class RichFileHandler(RichHandler):
     # Rename
     pass
 
+class LogStream(TextIOBase):
+    def __init__(self, *args, func: Callable[[ConsoleRenderable], None] = None, **kwargs):
+        super().__init__(*args, **kwargs)
+        self._func = func
+
+    def write(self, msg: str) -> int:
+        if isinstance(msg, bytes):
+            msg = msg.decode("utf-8")
+        self._func(msg)
+        return len(msg)
+    
+class RichStreamHandler(RichHandler):
+    pass
+
 
 class RichRenderableHandler(RichHandler):
     """
     Pass renderable into a function
+    主要是传入一个回调函数
     """
 
     def __init__(self, *args, func: Callable[[ConsoleRenderable], None] = None, **kwargs):
@@ -45,16 +64,18 @@ class RichRenderableHandler(RichHandler):
 
     def emit(self, record: logging.LogRecord) -> None:
         message = self.format(record)
-        traceback = None
+        tb = None
         if (
             self.rich_tracebacks
             and record.exc_info
             and record.exc_info != (None, None, None)
         ):
             exc_type, exc_value, exc_traceback = record.exc_info
+            traceback.print_tb(exc_traceback)
+            self._func(exc_traceback)
             assert exc_type is not None
             assert exc_value is not None
-            traceback = Traceback.from_exception(
+            tb = Traceback.from_exception(
                 exc_type,
                 exc_value,
                 exc_traceback,
@@ -66,6 +87,7 @@ class RichRenderableHandler(RichHandler):
                 locals_max_length=self.locals_max_length,
                 locals_max_string=self.locals_max_string,
             )
+            # 这个好理解转化为特定格式， getMessage()返回寸str
             message = record.getMessage()
             if self.formatter:
                 record.message = record.getMessage()
@@ -75,13 +97,18 @@ class RichRenderableHandler(RichHandler):
                         record, formatter.datefmt)
                 message = formatter.formatMessage(record)
 
+        # 这个message_renderable是一个Text对象
         message_renderable = self.render_message(record, message)
-        log_renderable = self.render(
-            record=record, traceback=traceback, message_renderable=message_renderable
+        log_renderable: ConsoleRenderable = self.render(
+            record=record, traceback=tb, message_renderable=message_renderable
         )
 
+        # msg2 = Text.from_markup(message).markup
+
+        # 这个message_renderable是一个Text对象
+        # traceback是表示异常的对象
         # Directly put renderable into function
-        self._func(log_renderable)
+        self._func(message_renderable)
 
     def handle(self, record: logging.LogRecord) -> bool:
         if not self._func:
@@ -135,9 +162,32 @@ WEB_THEME = Theme({
 })
 
 
+
+
+def show_handlers(handlers):
+    # 获取并打印日志记录器中处理器的信息
+    for handler in logger.handlers:
+        # 获取处理器的类名
+        handler_class = handler.__class__.__name__
+        print(f"Handler class: {handler_class}")
+
+        # 获取处理器的级别
+        handler_level = logging.getLevelName(handler.level)
+        print(f"Handler level: {handler_level}")
+
+        # 获取处理器的格式化器
+        formatter = handler.formatter
+        if formatter is not None:
+            formatter_class = formatter.__class__.__name__
+            print(f"Formatter class: {formatter_class}")
+
+        # 其他处理器的属性和方法，根据需要进行获取和打印
+
+        print()  # 打印空行，用于分隔处理器的信息
+
 # Logger init
 logger_debug = False
-logger = logging.getLogger('alas')
+logger = logging.getLogger('oas')
 logger.setLevel(logging.DEBUG if logger_debug else logging.INFO)
 file_formatter = logging.Formatter(
     fmt='%(asctime)s.%(msecs)03d | %(levelname)s | %(message)s', datefmt='%Y-%m-%d %H:%M:%S')
@@ -170,7 +220,7 @@ os.chdir(os.path.join(os.path.dirname(__file__), '../'))
 # Add file logger
 pyw_name = os.path.splitext(os.path.basename(sys.argv[0]))[0]
 
-
+# 这个函数貌似没有用到
 def _set_file_logger(name=pyw_name):
     if '_' in name:
         name = name.split('_', 1)[0]
@@ -222,32 +272,27 @@ def set_file_logger(name=pyw_name):
     logger.addHandler(hdlr)
     logger.log_file = log_file
 
-
+# 给web设置
 def set_func_logger(func):
-    console = HTMLConsole(
-        force_terminal=False,
-        force_interactive=False,
-        width=80,
-        color_system='truecolor',
-        markup=False,
-        safe_box=False,
-        highlighter=Highlighter(),
-        theme=WEB_THEME
+
+    stream = LogStream(func=func)
+    file_console = Console(
+        file=stream,
+        no_color=True,
+        highlight=False,
+        width=160,
     )
-    hdlr = RichRenderableHandler(
-        func=func,
-        console=console,
+    hdlr = RichStreamHandler(
+        console=file_console,
         show_path=False,
         show_time=False,
         show_level=True,
         rich_tracebacks=True,
         tracebacks_show_locals=True,
-        tracebacks_extra_lines=2,
-        highlighter=Highlighter(),
+        tracebacks_extra_lines=3,
+        highlighter=NullHighlighter(),
     )
     hdlr.setFormatter(web_formatter)
-    logger.handlers = [h for h in logger.handlers if not isinstance(
-        h, RichRenderableHandler)]
     logger.addHandler(hdlr)
 
 
@@ -358,3 +403,4 @@ logger.log_file: str
 
 logger.set_file_logger()
 logger.hr('Start', level=0)
+

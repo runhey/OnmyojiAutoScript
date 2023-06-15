@@ -142,5 +142,77 @@
         <source>Restart</source>
         <translation>重启</translation>
     </message>
+	<message>
+        <source>Tools</source>
+        <translation>工具</translation>
+    </message>
+	<message>
+        <source>Image Rule</source>
+        <translation>截图规范</translation>
+    </message>
+	<message>
+        <source>Ocr Rule</source>
+        <translation>OCR规范</translation>
+    </message>
+	<message>
+        <source>Click Rule</source>
+        <translation>点击规范</translation>
+    </message>
+	<message>
+        <source>Long Click Rule</source>
+        <translation>长按规范</translation>
+    </message>
+	<message>
+        <source>Swipe Rule</source>
+        <translation>滑动规范</translation>
+    </message>
+	<message>
+        <source>Daily Task</source>
+        <translation>日常任务</translation>
+    </message>
+	<message>
+        <source>AreaBoss</source>
+        <translation>地狱鬼王</translation>
+    </message>
+	<message>
+        <source>GoldYoukai</source>
+        <translation>金币妖怪</translation>
+    </message>
+	<message>
+        <source>ExperienceYoukai</source>
+        <translation>经验妖怪</translation>
+    </message>
+	<message>
+        <source>Nian</source>
+        <translation>年兽</translation>
+    </message>
+	<message>
+        <source>Soul Zones</source>
+        <translation>御魂副本</translation>
+    </message>
+	<message>
+        <source>Orochi</source>
+        <translation>八岐大蛇</translation>
+    </message>
+	<message>
+        <source>OrochiMoans</source>
+        <translation>御魂悲鸣</translation>
+    </message>
+	<message>
+        <source>OrochiJudgement</source>
+        <translation>御魂神罚</translation>
+    </message>
+	<message>
+        <source>Sougenbi</source>
+        <translation>业原火</translation>
+    </message>
+	<message>
+        <source>FallenSun</source>
+        <translation>日轮之城</translation>
+    </message>
+	<message>
+        <source>EternitySea</source>
+        <translation>永生之海</translation>
+    </message>
 </context>
 </TS>
