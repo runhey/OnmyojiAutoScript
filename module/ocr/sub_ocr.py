@@ -3,26 +3,185 @@
 # github https://github.com/runhey
 
 import cv2
+import re
+
+from datetime import timedelta
+
 from module.ocr.ppocr import TextSystem
 from module.exception import ScriptError
+from module.base.utils import area_pad, crop, float2str
 from module.ocr.base_ocr import BaseCor, OcrMode, OcrMethod
+from module.ocr.utils import merge_area
 from module.logger import logger
 
 
 class Full(BaseCor):
-    pass
+    """
+    这个类适用于大ROI范围的文本识别。可以支持多条文本识别， 默认不支持竖方向的文本识别
+    """
+    def after_process(self, result):
+        return result
+
+    def ocr_full(self, image, keyword: str=None) -> tuple:
+        """
+        检测整个图片的文本,并对结果进行过滤。返回的是匹配到的keyword的左边。如果没有匹配到返回(0, 0, 0, 0)
+        :param image:
+        :param keyword:
+        :return:
+        """
+        boxed_results = self.detect_and_ocr(image)
+        if not boxed_results:
+            return 0, 0, 0, 0
+
+        index_list = self.filter(boxed_results, keyword)
+        # 如果一个都没有匹配到
+        if not index_list:
+            return 0, 0, 0, 0
+
+        # 如果匹配到了多个,则合并所有的坐标，返回合并后的坐标
+        if len(index_list) > 1:
+            area_list = [(
+                boxed_results[index].box[0, 0],  # x
+                boxed_results[index].box[0, 1],  # y
+                boxed_results[index].box[1, 0] - boxed_results[index].box[0, 0],     # width
+                boxed_results[index].box[2, 1] - boxed_results[index].box[0, 1],     # height
+            ) for index in index_list]
+            box = merge_area(area_list)
+            return box
+        else:
+            box = boxed_results[index_list[0]].box
+            return box[0, 0], box[0, 1], box[1, 0] - box[0, 0], box[2, 1] - box[0, 1]
+
+class Single(BaseCor):
+    """
+    这个类使用于单行文本识别（所识别的ROI不会动）
+    """
+    def after_process(self, result):
+        return result
+
+    def ocr_single(self, image) -> str:
+        """
+        检测某个固定位置的roi的文本。可以是横方向也可以是竖方向
+        :param image:
+        :return:
+        """
+        if self.roi:
+            result = self.ocr_single_line(image)
+            if result != "":
+                return result
+
+            # 如果没有识别到，就尝试逆时针旋转90度再识别一次。这个时候考虑到可能是竖方向的文本
+            image = cv2.rotate(image, cv2.ROTATE_90_COUNTERCLOCKWISE)
+            result = self.ocr_single_line(image)
+            if result != "":
+                return result
+
+            # 如果还是没有识别到。那可能就是真的没有识别到了
+            return ""
+        else:
+            raise ScriptError("Roi is empty")
+
+class Digit(Single):
+
+    def after_process(self, result):
+        print('this is digit after_process')
+        result = super().after_process(result)
+        result = result.replace('I', '1').replace('D', '0').replace('S', '5')
+        result = result.replace('B', '8')
+
+        prev = result
+        result = int(result) if result else 0
+        if str(result) != prev:
+            logger.warning(f'OCR {self.name}: Result "{prev}" is revised to "{result}"')
+
+        return result
+
+    def ocr_digit(self, image) -> int:
+        """
+        返回数字
+        :param image:
+        :return:
+        """
+        result = self.ocr_single(image)
+
+        if result == "":
+            return 0
+        else:
+            return int(result)
+
+class DigitCounter(Single):
+    def after_process(self, result):
+        result = super().after_process(result)
+        result = result.replace('I', '1').replace('D', '0').replace('S', '5')
+        result = result.replace('B', '8')
+        return result
+
+    @classmethod
+    def ocr_str_digit_counter(cls, result: str) -> tuple[int, int, int]:
+        result = re.search(r'(\d+)/(\d+)', result)
+        if result:
+            result = [int(s) for s in result.groups()]
+            current, total = int(result[0]), int(result[1])
+            current = min(current, total)
+            return current, total - current, total
+        else:
+            logger.warning(f'Unexpected ocr result: {result}')
+            return 0, 0, 0
 
 
-class SingleLine(BaseCor):
-    pass
+    def ocr_digit_counter(self, image) -> tuple[int, int, int]:
+        """
+        获取计数的结果
+        :param image:
+        :return: 例如 14/15，返回 (14, 1, 15) 。如果没有识别到，返回 (0, 0, 0)
+        """
+        result = self.ocr_single(image)
+        if result == "":
+            return 0, 0, 0
+        return self.ocr_str_digit_counter(result)
 
-class Digit(BaseCor):
-    pass
+class Duration(Single):
+    def after_process(self, result):
+        result = super().after_process(result)
+        result = result.replace('I', '1').replace('D', '0').replace('S', '5')
+        result = result.replace('B', '8')
+        return result
 
-class DigitCounter(BaseCor):
-    pass
+    @staticmethod
+    def parse_time(string):
+        """
+        Args:
+            string (str): `01:30:00`
 
-class Duration(BaseCor):
-    pass
+        Returns:
+            datetime.timedelta:
+        """
+        result = re.search(r'(\d{1,2}):?(\d{2}):?(\d{2})', string)
+        if result:
+            result = [int(s) for s in result.groups()]
+            return timedelta(hours=result[0], minutes=result[1], seconds=result[2])
+        else:
+            logger.warning(f'Invalid duration: {string}')
+            return timedelta(hours=0, minutes=0, seconds=0)
 
+    def ocr_duration(self, image) -> timedelta:
+        """
+
+        :param image:
+        :return:
+        """
+        result = self.ocr_single(image)
+
+        if result == "":
+            return timedelta(hours=0, minutes=0, seconds=0)
+
+        return self.parse_time(result)
+
+
+if __name__ == '__main__':
+    d = DigitCounter.ocr_str_digit_counter('14/77')
+    print(d)
+
+    u = Duration.parse_time('01:30:00')
+    print(u)
 

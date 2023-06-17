@@ -16,7 +16,7 @@ from module.logger import logger
 
 class OcrMode(Enum):
     FULL = 1  # str: "Full"
-    SINGLE_LINE = 2  # str: "SingleLine"
+    SINGLE = 2  # str: "Single"
     DIGIT = 3  # str: "Digit"
     DIGIT_COUNTER = 4  # str: "DigitCounter"
     DURATION = 5  # str: "Duration"
@@ -27,7 +27,7 @@ class OcrMethod(Enum):
 class BaseCor:
 
     lang: str = "cn"
-    score: float = 0.5  # 阈值默认为0.5
+    score: float = 0.6  # 阈值默认为0.5
 
     name: str = "ocr"
     mode: OcrMode = OcrMode.FULL
@@ -35,6 +35,36 @@ class BaseCor:
     roi: list = []  # [x, y, width, height]
     area: list = []  # [x, y, width, height]
     keyword: str = ""  # 默认为空
+
+
+    def __init__(self,
+                 name: str,
+                 mode: str,
+                 method: str,
+                 roi: tuple,
+                 area: tuple,
+                 keyword: str) -> None:
+        """
+
+        :param name:
+        :param mode:
+        :param method:
+        :param roi:
+        :param area:
+        :param keyword:
+        """
+        self.name = name
+        if isinstance(mode, str):
+            self.mode = OcrMode[mode.upper()]
+        elif isinstance(mode, OcrMode):
+            self.mode = mode
+        if isinstance(method, str):
+            self.method = OcrMethod[method.upper()]
+        elif isinstance(method, OcrMethod):
+            self.method = method
+        self.roi: list = list(roi)
+        self.area: list = list(area)
+        self.keyword = keyword
 
     @cached_property
     def model(self) -> TextSystem:
@@ -68,7 +98,9 @@ class BaseCor:
         image = crop(image, self.roi, copy=False)
         image = self.pre_process(image)
         # ocr
-        result, _ = self.model.ocr_single_line(image)
+        result, score = self.model.ocr_single_line(image)
+        if score < self.score:
+            result = ""
         # after proces
         result = self.after_process(result)
         logger.attr(name='%s %ss' % (self.name, float2str(time.time() - start_time)),
@@ -85,10 +117,14 @@ class BaseCor:
         start_time = time.time()
         image = self.pre_process(image)
         # ocr
-        results: list[BoxedResult] = self.model.detect_and_ocr(image)
+        boxed_results: list[BoxedResult] = self.model.detect_and_ocr(image)
+        results = []
         # after proces
-        for result in results:
-            result.ocr_text = self.after_process(result.ocr_text)
+        for result in boxed_results:
+            if result.score < self.score:
+                continue
+            boxed_results.ocr_text = self.after_process(boxed_results.ocr_text)
+            results.append(result)
 
         logger.attr(name='%s %ss' % (self.name, float2str(time.time() - start_time)),
                     text=str([result.ocr_text for result in results]))
@@ -105,5 +141,42 @@ class BaseCor:
             return self.keyword in result
         else:
             return self.keyword == result
+
+
+    def filter(self, boxed_results: list[BoxedResult], keyword: str=None) -> list:
+        """
+        使用ocr获取结果后和keyword进行匹配. 返回匹配的index list
+        :param keyword: 如果不指定默认适用对象的keyword
+        :param boxed_results:
+        :return:
+        """
+        # 首先先将所有的ocr的str顺序拼接起来, 然后再进行匹配
+        result = None
+        strings = [boxed_result.ocr_text for boxed_result in boxed_results]
+        concatenated_string = "".join(strings)
+        if keyword is None:
+            keyword = self.keyword
+        if keyword in concatenated_string:
+            result = [index for index, _ in enumerate(strings)]
+        else:
+            result = None
+
+        if result is not None:
+            # logger.info("Filter result: %s" % result)
+            return result
+
+        # 如果适用顺序拼接还是没有匹配到，那可能是竖排的，使用单个字节的keyword进行匹配
+        indices = []
+        for index, char in enumerate(keyword):
+            for i, string in enumerate(strings):
+                if char not in string:
+                    break
+                if i == len(strings) - 1:
+                    indices.append(index)
+        if indices:
+            return indices
+        else:
+            indices = None
+            return indices
 
 

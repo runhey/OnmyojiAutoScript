@@ -14,7 +14,7 @@ if __name__ == "__main__":
     text_sys = TextSystem()
 
     # 检测并识别文本
-    img = cv2.imread('D:/33357.jpg')
+    img = cv2.imread('D:/test_single1.jpg')
     if img is None:
         print("Error: img is None")
         exit(1)
@@ -28,5 +28,5 @@ if __name__ == "__main__":
         print("{}, {:.3f}".format(boxed_result.ocr_text, boxed_result.score))
         print(boxed_result.box)
 
-    # res = text_sys.ocr_single_line(img)
-    # print(res)
+    res = text_sys.ocr_single_line(img)
+    print(res)
