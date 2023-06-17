@@ -163,7 +163,7 @@ Item {
 
                 }
             }
-            //长按的时间间隔
+            //滑动模式
             Item{
                 width: coi.width
                 height: 40
@@ -282,7 +282,7 @@ Item {
             data.push(itemData)
         }
 
-        ruleFile.rule_file.write_file(ruleFile.file, JSON.stringify(data))
+        ruleFile.rule_file.write_file(ruleFile.file, JSON.stringify(data, null, "  "))
         showSuccess("Save file")
 
     }
