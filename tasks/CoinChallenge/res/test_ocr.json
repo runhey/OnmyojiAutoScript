@@ -28,9 +28,9 @@
   },
   {
     "itemName": "digit",
-    "roiFront": "408,173,51,43",
+    "roiFront": "434,173,25,43",
     "roiBack": "0,0,100,100",
-    "mode": "Single",
+    "mode": "Digit",
     "method": "Default",
     "keyword": "",
     "description": "Ocr-description"
@@ -39,7 +39,7 @@
     "itemName": "digit_counter",
     "roiFront": "1134,6,100,56",
     "roiBack": "0,0,100,100",
-    "mode": "Single",
+    "mode": "DigitCounter",
     "method": "Default",
     "keyword": "",
     "description": "Ocr-description"
@@ -48,9 +48,18 @@
     "itemName": "duration",
     "roiFront": "923,256,100,46",
     "roiBack": "0,0,100,100",
-    "mode": "Single",
+    "mode": "Duration",
     "method": "Default",
     "keyword": "育成_结界卡剩余时间",
+    "description": "Ocr-description"
+  },
+  {
+    "itemName": "new_dur_00",
+    "roiFront": "848,624,76,37",
+    "roiBack": "0,0,100,100",
+    "mode": "Duration",
+    "method": "Default",
+    "keyword": "",
     "description": "Ocr-description"
   }
 ]

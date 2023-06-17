@@ -3,8 +3,11 @@
 # github https://github.com/runhey
 import time
 import cv2
+import numpy as np
+
 from ppocronnx.predict_system import BoxedResult
 from enum import Enum
+
 
 from module.base.decorator import cached_property
 from module.base.utils import area_pad, crop, float2str
@@ -18,7 +21,7 @@ class OcrMode(Enum):
     FULL = 1  # str: "Full"
     SINGLE = 2  # str: "Single"
     DIGIT = 3  # str: "Digit"
-    DIGIT_COUNTER = 4  # str: "DigitCounter"
+    DIGITCOUNTER = 4  # str: "DigitCounter"
     DURATION = 5  # str: "Duration"
 
 class OcrMethod(Enum):
@@ -26,7 +29,7 @@ class OcrMethod(Enum):
 
 class BaseCor:
 
-    lang: str = "cn"
+    lang: str = "ch"
     score: float = 0.6  # 阈值默认为0.5
 
     name: str = "ocr"
@@ -86,6 +89,37 @@ class BaseCor:
         """
         return result
 
+    @classmethod
+    def crop(cls, image: np.array, roi: tuple) -> np.array:
+        """
+        截取图片
+        :param roi:
+        :param image:
+        :return:
+        """
+        x, y, w, h = roi
+        return image[y:y + h, x:x + w]
+
+    def ocr_item(self, image):
+        """
+        这个函数区别于ocr_single_line，这个函数不对图片进行裁剪，是什么就是什么的
+        :param image:
+        :return:
+        """
+        # pre process
+        start_time = time.time()
+        image = self.pre_process(image)
+        # ocr
+        result, score = self.model.ocr_single_line(image)
+        if score < self.score:
+            result = ""
+        # after proces
+        result = self.after_process(result)
+        logger.info("ocr result score: %s%s" % (result,score))
+        logger.attr(name='%s %ss' % (self.name, float2str(time.time() - start_time)),
+                    text=f'[{result}]')
+        return result
+
     def ocr_single_line(self, image):
         """
         只支持横方向的单行ocr，不支持竖方向的单行ocr
@@ -95,7 +129,7 @@ class BaseCor:
         """
         # pre process
         start_time = time.time()
-        image = crop(image, self.roi, copy=False)
+        image = self.crop(image, self.roi)
         image = self.pre_process(image)
         # ocr
         result, score = self.model.ocr_single_line(image)
@@ -103,8 +137,9 @@ class BaseCor:
             result = ""
         # after proces
         result = self.after_process(result)
+        logger.info("ocr result score: %s" % score)
         logger.attr(name='%s %ss' % (self.name, float2str(time.time() - start_time)),
-                    text=str(result))
+                    text=f'[{result}]')
         return result
 
     def detect_and_ocr(self, image) -> list[BoxedResult]:
@@ -115,15 +150,18 @@ class BaseCor:
         """
         # pre process
         start_time = time.time()
+        image = self.crop(image, self.roi)
         image = self.pre_process(image)
+
         # ocr
         boxed_results: list[BoxedResult] = self.model.detect_and_ocr(image)
         results = []
         # after proces
         for result in boxed_results:
+            logger.info("ocr result score: %s" % result.score)
             if result.score < self.score:
                 continue
-            boxed_results.ocr_text = self.after_process(boxed_results.ocr_text)
+            result.ocr_text = self.after_process(result.ocr_text)
             results.append(result)
 
         logger.attr(name='%s %ss' % (self.name, float2str(time.time() - start_time)),

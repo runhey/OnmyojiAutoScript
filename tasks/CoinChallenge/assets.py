@@ -44,11 +44,13 @@ class CoinChallengeAssets:
 	# Ocr-description 
 	S_NEW_SINGLE_H = RuleOcr(roi=(78,19,143,63), area=(314,169,100,100), mode="Single", method="Default", keyword="式神育成", name="new_single_h")
 	# Ocr-description 
-	S_DIGIT = RuleOcr(roi=(408,173,51,43), area=(0,0,100,100), mode="Single", method="Default", keyword="", name="digit")
+	S_DIGIT = RuleOcr(roi=(434,173,25,43), area=(0,0,100,100), mode="Digit", method="Default", keyword="", name="digit")
 	# Ocr-description 
-	S_DIGIT_COUNTER = RuleOcr(roi=(1134,6,100,56), area=(0,0,100,100), mode="Single", method="Default", keyword="", name="digit_counter")
+	S_DIGIT_COUNTER = RuleOcr(roi=(1134,6,100,56), area=(0,0,100,100), mode="DigitCounter", method="Default", keyword="", name="digit_counter")
 	# Ocr-description 
-	S_DURATION = RuleOcr(roi=(923,256,100,46), area=(0,0,100,100), mode="Single", method="Default", keyword="育成_结界卡剩余时间", name="duration")
+	S_DURATION = RuleOcr(roi=(923,256,100,46), area=(0,0,100,100), mode="Duration", method="Default", keyword="育成_结界卡剩余时间", name="duration")
+	# Ocr-description 
+	S_NEW_DUR_00 = RuleOcr(roi=(848,624,76,37), area=(0,0,100,100), mode="Duration", method="Default", keyword="", name="new_dur_00")
 
 
 	# Swipe Rule Assets

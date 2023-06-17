@@ -29,6 +29,9 @@ class Full(BaseCor):
         :param keyword:
         :return:
         """
+        if keyword is None:
+            keyword = self.keyword
+
         boxed_results = self.detect_and_ocr(image)
         if not boxed_results:
             return 0, 0, 0, 0
@@ -47,10 +50,12 @@ class Full(BaseCor):
                 boxed_results[index].box[2, 1] - boxed_results[index].box[0, 1],     # height
             ) for index in index_list]
             box = merge_area(area_list)
+            self.area = box
             return box
         else:
             box = boxed_results[index_list[0]].box
-            return box[0, 0], box[0, 1], box[1, 0] - box[0, 0], box[2, 1] - box[0, 1]
+            self.area = box[0, 0]+self.roi[0], box[0, 1]+self.roi[1], box[1, 0] - box[0, 0], box[2, 1] - box[0, 1]
+            return self.area
 
 class Single(BaseCor):
     """
@@ -70,11 +75,11 @@ class Single(BaseCor):
             if result != "":
                 return result
 
-            # 如果没有识别到，就尝试逆时针旋转90度再识别一次。这个时候考虑到可能是竖方向的文本
-            image = cv2.rotate(image, cv2.ROTATE_90_COUNTERCLOCKWISE)
-            result = self.ocr_single_line(image)
-            if result != "":
-                return result
+            # 如果没有识别到，这个时候考虑到可能是竖方向的文本, 使用detect_and_ocr来进行识别
+            logger.info(f"OCR {self.name}: No text detected in ROI, try to detect vertically")
+            result = self.detect_and_ocr(image)
+            if result[0].ocr_text != "" and result[0].score > self.score:
+                return result[0].ocr_text
 
             # 如果还是没有识别到。那可能就是真的没有识别到了
             return ""
@@ -84,7 +89,6 @@ class Single(BaseCor):
 class Digit(Single):
 
     def after_process(self, result):
-        print('this is digit after_process')
         result = super().after_process(result)
         result = result.replace('I', '1').replace('D', '0').replace('S', '5')
         result = result.replace('B', '8')

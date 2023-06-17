@@ -200,13 +200,13 @@ Item {
                         else if(currentIndex === 1){
                             ruleFile.currentItem.mode = "Full"
                         }
-                        else if(currentIndex === 1){
+                        else if(currentIndex === 2){
                             ruleFile.currentItem.mode = "Digit"
                         }
-                        else if(currentIndex === 1){
+                        else if(currentIndex === 3){
                             ruleFile.currentItem.mode = "DigitCounter"
                         }
-                        else if(currentIndex === 1){
+                        else if(currentIndex === 4){
                             ruleFile.currentItem.mode = "Duration"
                         }
                     }
@@ -319,7 +319,7 @@ Item {
 
     function add(){
         const item ={}
-        item["itemName"] = "new-ocr-item"
+        item["itemName"] = "new"
         item["roiFront"] = "0,0,100,100"
         item["roiBack"] = "0,0,100,100"
         item["mode"] = "Single"
