@@ -166,6 +166,7 @@ class ScriptTask(GeneralBattle, AreaBossAssets):
 
         # 退出
         self.go_back()
+        self.set_next_run(task='AreaBoss')
 
         # 以抛出异常的形式结束
         raise TaskEnd
