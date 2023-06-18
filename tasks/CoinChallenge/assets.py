@@ -36,21 +36,21 @@ class CoinChallengeAssets:
 	L_NEW3 = RuleLongClick(roi_front=(112,156,100,100), roi_back=(469,200,100,100), duration=1000, name="new3")
 
 
-	# Swipe Rule Assets
+	# Ocr Rule Assets
 	# Ocr-description 
-	S_NEW_FULL = RuleOcr(roi=(255,129,628,100), area=(637,418,100,100), mode="Full", method="Default", keyword="探索", name="new_full")
+	O_NEW_FULL = RuleOcr(roi=(255,129,628,100), area=(637,418,100,100), mode="Full", method="Default", keyword="探索", name="new_full")
 	# Ocr-description 
-	S_NEW_SINGLE_V = RuleOcr(roi=(564,255,105,159), area=(0,0,100,100), mode="Single", method="Default", keyword="式神育成", name="new_single_v")
+	O_NEW_SINGLE_V = RuleOcr(roi=(564,255,105,159), area=(0,0,100,100), mode="Single", method="Default", keyword="式神育成", name="new_single_v")
 	# Ocr-description 
-	S_NEW_SINGLE_H = RuleOcr(roi=(78,19,143,63), area=(314,169,100,100), mode="Single", method="Default", keyword="式神育成", name="new_single_h")
+	O_NEW_SINGLE_H = RuleOcr(roi=(78,19,143,63), area=(314,169,100,100), mode="Single", method="Default", keyword="式神育成", name="new_single_h")
 	# Ocr-description 
-	S_DIGIT = RuleOcr(roi=(434,173,25,43), area=(0,0,100,100), mode="Digit", method="Default", keyword="", name="digit")
+	O_DIGIT = RuleOcr(roi=(434,173,25,43), area=(0,0,100,100), mode="Digit", method="Default", keyword="", name="digit")
 	# Ocr-description 
-	S_DIGIT_COUNTER = RuleOcr(roi=(1134,6,100,56), area=(0,0,100,100), mode="DigitCounter", method="Default", keyword="", name="digit_counter")
+	O_DIGIT_COUNTER = RuleOcr(roi=(1134,6,100,56), area=(0,0,100,100), mode="DigitCounter", method="Default", keyword="", name="digit_counter")
 	# Ocr-description 
-	S_DURATION = RuleOcr(roi=(923,256,100,46), area=(0,0,100,100), mode="Duration", method="Default", keyword="育成_结界卡剩余时间", name="duration")
+	O_DURATION = RuleOcr(roi=(923,256,100,46), area=(0,0,100,100), mode="Duration", method="Default", keyword="育成_结界卡剩余时间", name="duration")
 	# Ocr-description 
-	S_NEW_DUR_00 = RuleOcr(roi=(848,624,76,37), area=(0,0,100,100), mode="Duration", method="Default", keyword="", name="new_dur_00")
+	O_NEW_DUR_00 = RuleOcr(roi=(848,624,76,37), area=(0,0,100,100), mode="Duration", method="Default", keyword="", name="new_dur_00")
 
 
 	# Swipe Rule Assets

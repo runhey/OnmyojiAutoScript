@@ -50,12 +50,13 @@ class Full(BaseCor):
                 boxed_results[index].box[2, 1] - boxed_results[index].box[0, 1],     # height
             ) for index in index_list]
             box = merge_area(area_list)
-            self.area = box
-            return box
+            self.area = box[0]+self.roi[0], box[1]+self.roi[1], box[2], box[3]
         else:
             box = boxed_results[index_list[0]].box
             self.area = box[0, 0]+self.roi[0], box[0, 1]+self.roi[1], box[1, 0] - box[0, 0], box[2, 1] - box[0, 1]
-            return self.area
+
+        logger.info(f"OCR [{self.name}: {keyword}] detected in {self.area}")
+        return self.area
 
 class Single(BaseCor):
     """

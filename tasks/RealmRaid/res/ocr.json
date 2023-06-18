@@ -1,0 +1,20 @@
+[
+  {
+    "itemName": "fresh_time",
+    "roiFront": "1042,582,85,36",
+    "roiBack": "0,0,100,100",
+    "mode": "Duration",
+    "method": "Default",
+    "keyword": "",
+    "description": "刷新的时间"
+  },
+  {
+    "itemName": "number",
+    "roiFront": "1139,13,91,39",
+    "roiBack": "0,0,100,100",
+    "mode": "DigitCounter",
+    "method": "Default",
+    "keyword": "",
+    "description": "右上角 突破卷的数量"
+  }
+]

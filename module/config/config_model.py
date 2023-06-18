@@ -23,6 +23,7 @@ from tasks.OrochiJudgement.config import OrochiJudgement
 from tasks.Sougenbi.config import Sougenbi
 from tasks.FallenSun.config import FallenSun
 from tasks.EternitySea.config import EternitySea
+from tasks.RealmRaid.config import RealmRaid
 
 
 
@@ -39,6 +40,7 @@ class ConfigModel(BaseModel):
     experience_youkai: ExperienceYoukai = Field(default_factory=ExperienceYoukai)
     gold_youkai: GoldYoukai = Field(default_factory=GoldYoukai)
     nian: Nian = Field(default_factory=Nian)
+    realm_raid: RealmRaid = Field(default_factory=RealmRaid)
 
     # 这些是刷御魂的
     orochi: Orochi = Field(default_factory=Orochi)

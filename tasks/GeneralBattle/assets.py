@@ -81,6 +81,10 @@ class GeneralBattleAssets:
 	I_LOCAL = RuleImage(roi_front=(25,563,30,34), roi_back=(25,563,30,34), threshold=0.8, method="Template matching", file="./tasks/GeneralBattle/res/res_local.png")
 	# description 
 	I_STATISTICS = RuleImage(roi_front=(61,644,33,28), roi_back=(61,644,33,28), threshold=0.8, method="Template matching", file="./tasks/GeneralBattle/res/res_statistics.png")
+	# 左上角的退出 
+	I_EXIT = RuleImage(roi_front=(14,12,43,41), roi_back=(14,12,43,41), threshold=0.8, method="Template matching", file="./tasks/GeneralBattle/res/res_exit.png")
+	# 退出确认 
+	I_EXIT_ENSURE = RuleImage(roi_front=(674,388,135,63), roi_back=(674,388,135,63), threshold=0.8, method="Template matching", file="./tasks/GeneralBattle/res/res_exit_ensure.png")
 
 
 	# Swipe Rule Assets

@@ -166,7 +166,7 @@ class OcrExtractor:
         swipe rule 提取
         :param data:  json解析后的数据
         """
-        self._result = '\n\n\t# Swipe Rule Assets\n'
+        self._result = '\n\n\t# Ocr Rule Assets\n'
         for item in data:
             self._result += self.extract_item(item)
 
@@ -182,7 +182,7 @@ class OcrExtractor:
         :return:
         """
         description: str = f'\t# {item["description"]} \n'
-        name: str = f'\tS_{name_transform(item["itemName"])} = RuleOcr(' \
+        name: str = f'\tO_{name_transform(item["itemName"])} = RuleOcr(' \
                     f'roi=({item["roiFront"]}), ' \
                     f'area=({item["roiBack"]}), ' \
                     f'mode="{item["mode"]}", ' \

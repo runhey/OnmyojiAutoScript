@@ -3,9 +3,10 @@
 # github https://github.com/runhey
 import numpy as np
 
-from datetime import datetime
+from datetime import datetime, timedelta
 from typing import Union
 
+from module.config.utils import convert_to_underscore
 from module.atom.image import RuleImage
 from module.atom.click import RuleClick
 from module.atom.long_click import RuleLongClick
@@ -34,6 +35,8 @@ class BaseTask:
         self.device = device
 
         self.interval_timer = {}  # 这个是用来记录每个匹配的运行间隔的，用于控制运行频率
+
+        self.start_time = datetime.now()  # 启动的时间
 
 
 
@@ -245,12 +248,13 @@ class BaseTask:
         if interval:
             self.interval_timer[click.name].reset()
 
-    def ocr(self, target: RuleOcr, interval: float=None):
+    def ocr_appear(self, target: RuleOcr, interval: float=None) -> bool:
         """
-        ocr识别目标  根据不同的target的类型返回不同的数据
+        ocr识别目标
         :param interval:
         :param target:
-        :return:
+        :return: 如果target有keyword或者是keyword存在，返回是True，否则返回False
+                 但是没有指定keyword，返回的是匹配到的值，具体取决于target的mode
         """
         if not isinstance(target, RuleOcr):
             return None
@@ -267,36 +271,28 @@ class BaseTask:
             if not self.interval_timer[target.name].reached():
                 return None
 
-        result = target.ocr(self.device.image, target.keyword)
+        result = target.ocr(self.device.image)
+        appear = False
 
-        # 执行后，如果有限制时间，则重置限制时间
-        if interval:
-            self.interval_timer[target.name].reset()
 
-        return result
-
-    def ocr_appear(self, target: RuleOcr, interval: float=None) -> bool:
-        """
-        ocr识别目标
-        :param interval:
-        :param target:
-        :return: 如果target有keyword或者是keyword存在，返回是True，否则返回False
-                 但是没有指定keyword，返回的是匹配到的值，具体取决于target的mode
-        """
-        result = self.ocr(target, interval)
         if not target.keyword or target.keyword == '':
-            return False
+            appear = False
         match target.mode:
             case OcrMode.FULL:  # 全匹配
-                return result != (0, 0, 0, 0)
+                appear = result != (0, 0, 0, 0)
             case OcrMode.SINGLE:
-                return result == target.keyword
+                appear = result == target.keyword
             case OcrMode.DIGIT:
-                return result == int(target.keyword)
+                appear = result == int(target.keyword)
             case OcrMode.DIGITCOUNTER:
-                return result == target.ocr_str_digit_counter(target.keyword)
+                appear = result == target.ocr_str_digit_counter(target.keyword)
             case OcrMode.DURATION:
-                return result == target.parse_time(target.keyword)
+                appear = result == target.parse_time(target.keyword)
+
+        if interval and appear:
+            self.interval_timer[target.name].reset()
+
+        return appear
 
     def ocr_appear_click(self,
                          target: RuleOcr,
@@ -324,4 +320,28 @@ class BaseTask:
             self.device.click(x=x, y=y, control_name=target.name)
 
 
+    def set_next_run(self, task: str, finish: bool=False) -> None:
+        """
+        设置下次运行时间  当然这个也是可以重写的
+        :param task: 任务名称，大驼峰的
+        :param finish: 是完成任务后的时间为基准还是开始任务的时间为基准
+        :return:
+        """
+        task = convert_to_underscore(task)
+        task_object = getattr(self.config.model, task, None)
+        if not task_object:
+            logger.warning(f'No task named {task}')
+            return
+
+        if finish:
+            start_time = datetime.now()
+        else:
+            start_time = self.start_time
+        delta = timedelta(days=task_object.scheduler.interval_days,
+                          hours=task_object.scheduler.interval_hours,
+                          minutes=task_object.scheduler.interval_minutes,)
+        next_run = start_time + delta
+
+        task_object.scheduler.next_run = next_run
+        self.config.save()
 
