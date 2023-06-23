@@ -4,7 +4,7 @@
 from pydantic import BaseModel, Field
 from enum import Enum
 
-from tasks.RealmRaid.config_scheduler import Scheduler
+from tasks.Utils.config_scheduler import Scheduler
 from tasks.GeneralBattle.config_general_battle import GeneralBattleConfig
 
 

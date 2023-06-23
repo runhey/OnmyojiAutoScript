@@ -35,6 +35,7 @@ Item {
             height: 50
             RowLayout{
                 anchors.fill: parent
+                property int scriptState: 0  // 0是
                 FluText{
                     text: 'Scheduler'
                     Layout.leftMargin: 16
@@ -48,27 +49,36 @@ Item {
                     onClicked: {
                         showSuccess("Restart"+" "+configName)
                         process_manager.restart(configName)
-                        startStart.selected = true
-                        textLog.text = ""
+                        setStatus(MainEvent.RunStatus.Free)
                     }
                 }
                 FluToggleButton{
                     id: startStart
                     Layout.alignment: Qt.AlignVCenter | Qt.AlignRight
                     Layout.rightMargin: 16
-                    text:"Start"
-                    selected: true
+                    text: {if(overStatus.runStatus === MainEvent.RunStatus.Stop){return "Stop"}
+                           else{return "Start"}}
+                    selected: {if(overStatus.runStatus === MainEvent.RunStatus.Free){return true}
+                                else{return false}}
+                    disabled: {if(overStatus.runStatus === MainEvent.RunStatus.Error ||
+                                  overStatus.runStatus === MainEvent.RunStatus.Empty){return true}
+                               else{return false}
+                    }
                     onClicked: {
-                        selected = !selected
-                        if(selected){
-                            text = "Start"                          
-                            process_manager.stop_script(root.configName)
-                        }else{
-                            // 如果按键颜色变灰色
-                            text = "Stop"
+                        if(overStatus.runStatus === MainEvent.RunStatus.Free){
+                            //如果这个时候初始化好了但是还没有运行脚本
+                            setStatus(MainEvent.RunStatus.Run)
                             process_manager.start_script(root.configName)
+                            return
+                        }
+                        if(overStatus.runStatus === MainEvent.RunStatus.Run){
+                            // 如果这个时候运行中
+                            setStatus(MainEvent.RunStatus.Emtpy)
+                            process_manager.stop_script(root.configName)
+                            return
                         }
                     }
+
                 }
             }
         }
@@ -300,6 +310,8 @@ Item {
             padding: 10
             clip: true
             wrapMode: Text.WordWrap // 设置自动换行模式
+            maximumLineCount: 100
+            property int currentLine: 0
             textFormat: Text.RichText
             text: ''
 
@@ -307,7 +319,21 @@ Item {
                 if(config !== root.configName){
                     return
                 }
+                if(log.includes('ERROR') || log.includes('CRITICAL')){
+                    setStatus(MainEvent.RunStatus.Error)
+                }
+
+
+                if (currentLine > maximumLineCount) {
+                    var index = textLog.text.indexOf("<br>"); //找到第一个<br>的位置
+                    if (index !== -1) {
+                        textLog.text = textLog.text.substring(index + 4); //从<br>之后开始截取字符串
+                        currentLine -= 1
+                    }
+                }
+                currentLine += 1
                 textLog.text += log
+
             }
 
             Component.onCompleted:{

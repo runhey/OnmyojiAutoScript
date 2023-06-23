@@ -203,7 +203,7 @@ class Script:
             task["next_run"] = str(self.config.task.next_run)
         data["task"] = task
 
-        for p in self.config.pending_task:
+        for p in self.config.pending_task[1:]:
             item = {"name": p.command, "next_run": str(p.next_run)}
             pending.append(item)
 
