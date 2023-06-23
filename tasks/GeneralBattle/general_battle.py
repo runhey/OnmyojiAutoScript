@@ -30,12 +30,12 @@ class GeneralBattle(BaseTask, GeneralBattleAssets):
 
         # 如果没有锁定队伍。那么可以根据配置设定队伍
         if not config.lock_team_enable:
-            logger.info("lock team is not enable")
+            logger.info("Lock team is not enable")
             # 如果启动更换队伍
             if config.preset_enable:
-                logger.info("preset is enable")
+                logger.info("Preset is enable")
                 # 点击预设按钮
-                logger.info("click preset button")
+                logger.info("Click preset button")
                 while 1:
                     self.screenshot()
                     if self.appear_then_click(self.I_PRESET, threshold=0.8):
@@ -90,20 +90,20 @@ class GeneralBattle(BaseTask, GeneralBattleAssets):
 
             # 点击准备按钮
             self.wait_until_appear(self.I_PREPARE_HIGHLIGHT)
-            logger.info("click prepare button")
             while 1:
                 self.screenshot()
                 if self.appear_then_click(self.I_PREPARE_HIGHLIGHT, interval=1.5):
                     continue
-                if not self.appear(self.I_PRESET):
+                if not self.appear(self.I_BUFF):
                     break
+            logger.info("Click prepare ensure button")
 
             # 照顾一下某些模拟器慢的
             time.sleep(0.1)
 
         # 绿标
         if config.green_enable:
-            logger.info("green is enable")
+            logger.info("Green is enable")
             x, y = None, None
             match config.green_mark:
                 case GreenMarkType.GREEN_LEFT1: x, y = self.C_GREEN_LEFT_1.coord()
@@ -184,4 +184,54 @@ class GeneralBattle(BaseTask, GeneralBattleAssets):
             return True
         else:
             return False
+
+
+    def run_general_battle_back(self, config: dict=None) -> bool:
+        """
+        进入挑战然后直接返回
+        :param config:
+        :return:
+        """
+        # 如果没有锁定队伍那么在点击准备后才退出的
+        if not config.lock_team_enable:
+            # 点击准备按钮
+            self.wait_until_appear(self.I_PREPARE_HIGHLIGHT)
+            while 1:
+                self.screenshot()
+                if self.appear_then_click(self.I_PREPARE_HIGHLIGHT, interval=1.5):
+                    continue
+                if not self.appear(self.I_PRESET):
+                    break
+            logger.info(f"Click {self.I_PREPARE_HIGHLIGHT.name}")
+
+        # 点击返回
+        while 1:
+            self.screenshot()
+            if self.appear_then_click(self.I_EXIT, interval=1.5):
+                continue
+            if self.appear(self.I_EXIT_ENSURE):
+                break
+        logger.info(f"Click {self.I_EXIT.name}")
+
+        # 点击返回确认
+        while 1:
+            self.screenshot()
+            if self.appear_then_click(self.I_EXIT_ENSURE, interval=1.5):
+                continue
+            if self.appear(self.I_FALSE):
+                break
+        logger.info(f"Click {self.I_EXIT_ENSURE.name}")
+
+        # 点击失败确认
+        self.wait_until_appear(self.I_FALSE)
+        while 1:
+            self.screenshot()
+            if self.appear_then_click(self.I_FALSE, interval=1.5):
+                continue
+            if not self.appear(self.I_FALSE):
+                break
+        logger.info(f"Click {self.I_FALSE.name}")
+
+        return True
+
 

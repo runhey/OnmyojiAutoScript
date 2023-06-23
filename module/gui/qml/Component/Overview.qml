@@ -296,7 +296,7 @@ Item {
             anchors.fill: parent
         FluText{
             id: textLog
-            width: parent.width
+            width: parent.width-10
             padding: 10
             clip: true
             wrapMode: Text.WordWrap // 设置自动换行模式

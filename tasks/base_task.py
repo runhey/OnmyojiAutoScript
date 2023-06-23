@@ -1,17 +1,23 @@
 # This Python file uses the following encoding: utf-8
 # @author runhey
 # github https://github.com/runhey
-from datetime import datetime
+import numpy as np
+
+from datetime import datetime, timedelta
 from typing import Union
 
+from module.config.utils import convert_to_underscore
 from module.atom.image import RuleImage
 from module.atom.click import RuleClick
 from module.atom.long_click import RuleLongClick
 from module.atom.swipe import RuleSwipe
+from module.atom.ocr import RuleOcr
+from module.ocr.base_ocr import OcrMode, OcrMethod
 from module.logger import logger
 from module.base.timer import Timer
 from module.config.config import Config
 from module.device.device import Device
+
 
 class BaseTask:
     config: Config = None
@@ -29,6 +35,8 @@ class BaseTask:
         self.device = device
 
         self.interval_timer = {}  # 这个是用来记录每个匹配的运行间隔的，用于控制运行频率
+
+        self.start_time = datetime.now()  # 启动的时间
 
 
 
@@ -239,3 +247,101 @@ class BaseTask:
         # 执行后，如果有限制时间，则重置限制时间
         if interval:
             self.interval_timer[click.name].reset()
+
+    def ocr_appear(self, target: RuleOcr, interval: float=None) -> bool:
+        """
+        ocr识别目标
+        :param interval:
+        :param target:
+        :return: 如果target有keyword或者是keyword存在，返回是True，否则返回False
+                 但是没有指定keyword，返回的是匹配到的值，具体取决于target的mode
+        """
+        if not isinstance(target, RuleOcr):
+            return None
+
+        if interval:
+            if target.name in self.interval_timer:
+                # 如果传入的限制时间不一样，则替换限制新的传入的时间
+                if self.interval_timer[target.name].limit != interval:
+                    self.interval_timer[target.name] = Timer(interval)
+            else:
+                # 如果没有限制时间，则创建限制时间
+                self.interval_timer[target.name] = Timer(interval)
+            # 如果时间还没到达，则不执行
+            if not self.interval_timer[target.name].reached():
+                return None
+
+        result = target.ocr(self.device.image)
+        appear = False
+
+
+        if not target.keyword or target.keyword == '':
+            appear = False
+        match target.mode:
+            case OcrMode.FULL:  # 全匹配
+                appear = result != (0, 0, 0, 0)
+            case OcrMode.SINGLE:
+                appear = result == target.keyword
+            case OcrMode.DIGIT:
+                appear = result == int(target.keyword)
+            case OcrMode.DIGITCOUNTER:
+                appear = result == target.ocr_str_digit_counter(target.keyword)
+            case OcrMode.DURATION:
+                appear = result == target.parse_time(target.keyword)
+
+        if interval and appear:
+            self.interval_timer[target.name].reset()
+
+        return appear
+
+    def ocr_appear_click(self,
+                         target: RuleOcr,
+                         action: Union[RuleClick, RuleLongClick]=None,
+                         interval: float=None,
+                         duration: float = None) -> bool:
+        """
+        ocr识别目标，如果目标存在，则触发动作
+        :param target:
+        :param action:
+        :param interval:
+        :param duration:
+        :return:
+        """
+        appear = self.ocr_appear(target, interval)
+
+        if not appear:
+            return False
+
+        if action:
+            x, y = action.coord()
+            self.click(action, interval)
+        else:
+            x, y = target.coord()
+            self.device.click(x=x, y=y, control_name=target.name)
+
+
+    def set_next_run(self, task: str, finish: bool=False) -> None:
+        """
+        设置下次运行时间  当然这个也是可以重写的
+        :param task: 任务名称，大驼峰的
+        :param finish: 是完成任务后的时间为基准还是开始任务的时间为基准
+        :return:
+        """
+        task = convert_to_underscore(task)
+        task_object = getattr(self.config.model, task, None)
+        if not task_object:
+            logger.warning(f'No task named {task}')
+            return
+
+        if finish:
+            start_time = datetime.now()
+        else:
+            start_time = self.start_time
+        delta = timedelta(days=task_object.scheduler.interval_days,
+                          hours=task_object.scheduler.interval_hours,
+                          minutes=task_object.scheduler.interval_minutes,)
+        next_run = start_time + delta
+
+        task_object.scheduler.next_run = next_run
+        self.config.save()
+

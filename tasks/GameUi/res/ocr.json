@@ -1,0 +1,20 @@
+[
+  {
+    "itemName": "home_explore",
+    "roiFront": "310,105,858,194",
+    "roiBack": "0,0,100,100",
+    "mode": "Full",
+    "method": "Default",
+    "keyword": "探索",
+    "description": "庭院到探索"
+  },
+  {
+    "itemName": "new",
+    "roiFront": "0,0,100,100",
+    "roiBack": "0,0,100,100",
+    "mode": "Single",
+    "method": "Default",
+    "keyword": "",
+    "description": "Ocr-description"
+  }
+]

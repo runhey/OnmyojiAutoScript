@@ -38,7 +38,6 @@ Item {
 
         onLoaded: {
             if(typeof contentDefalut.item.splitPanel === "undefined"){
-                console.debug('还没有属性')
                 return
             }
 
