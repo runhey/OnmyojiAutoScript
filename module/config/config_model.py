@@ -35,7 +35,7 @@ class ConfigModel(BaseModel):
     restart: Restart = Field(default_factory=Restart)
     global_game: GlobalGame = Field(default_factory=GlobalGame)
 
-    # 这些是每日人物的
+    # 这些是每日任务的
     area_boss: AreaBoss = Field(default_factory=AreaBoss)
     experience_youkai: ExperienceYoukai = Field(default_factory=ExperienceYoukai)
     gold_youkai: GoldYoukai = Field(default_factory=GoldYoukai)
