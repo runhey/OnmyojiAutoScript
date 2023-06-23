@@ -44,12 +44,12 @@ This project is licensed under the GNU General Public License v3.0.
 
 [![Contributors](https://contributors-img.web.app/image?repo=runhey/OnmyojiAutoScript)](https://github.com/runhey/OnmyojiAutoScript/graphs/contributors)
 
+<div align="center">
 
 ## Star History
 
 [![Star History Chart](https://api.star-history.com/svg?repos=runhey/OnmyojiAutoScript&type=Date)](https://star-history.com/#runhey/OnmyojiAutoScript&Date)
 
-<div align="center">
 
 ## ⚡ Visitor count
 
