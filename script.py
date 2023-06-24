@@ -271,7 +271,7 @@ class Script:
             if task.next_run > datetime.now():
                 logger.info(f'Wait until {task.next_run} for task `{task.command}`')
                 # self.is_first_task = False
-                method = self.config.optimization.when_task_queue_empty
+                method = self.config.script.optimization.when_task_queue_empty
                 if method == 'close_game':
                     logger.info('Close game during wait')
                     self.device.app_stop()
@@ -443,6 +443,6 @@ class Script:
 
 if __name__ == "__main__":
     script = Script("oas1")
-    print(script.get_next_task())
+    # print(script.get_next_task())
     script.run("AreaBoss")
     # script.run('RealmRaid')

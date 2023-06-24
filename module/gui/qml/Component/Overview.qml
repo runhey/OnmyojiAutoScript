@@ -50,13 +50,15 @@ Item {
                         showSuccess("Restart"+" "+configName)
                         process_manager.restart(configName)
                         setStatus(MainEvent.RunStatus.Free)
+                        textLog.text = ''
+                        textLog.currentLine = 0
                     }
                 }
                 FluToggleButton{
                     id: startStart
                     Layout.alignment: Qt.AlignVCenter | Qt.AlignRight
                     Layout.rightMargin: 16
-                    text: {if(overStatus.runStatus === MainEvent.RunStatus.Stop){return "Stop"}
+                    text: {if(overStatus.runStatus === MainEvent.RunStatus.Run){return "Stop"}
                            else{return "Start"}}
                     selected: {if(overStatus.runStatus === MainEvent.RunStatus.Free){return true}
                                 else{return false}}
@@ -65,6 +67,7 @@ Item {
                                else{return false}
                     }
                     onClicked: {
+                        console.debug(overStatus.runStatus)
                         if(overStatus.runStatus === MainEvent.RunStatus.Free){
                             //如果这个时候初始化好了但是还没有运行脚本
                             setStatus(MainEvent.RunStatus.Run)
@@ -73,7 +76,7 @@ Item {
                         }
                         if(overStatus.runStatus === MainEvent.RunStatus.Run){
                             // 如果这个时候运行中
-                            setStatus(MainEvent.RunStatus.Emtpy)
+                            setStatus(MainEvent.RunStatus.Empty)
                             process_manager.stop_script(root.configName)
                             return
                         }

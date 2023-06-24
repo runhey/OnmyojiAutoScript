@@ -72,7 +72,7 @@ class Control(Minitouch, Adb, Scrcpy, Window):
             self.handle_control_check(control_name)
         x, y = ensure_int(x, y)
         logger.info(
-            'Click %s ' % (point2str(x, y))
+            'Click %s , name: %s' % (point2str(x, y), control_name)
         )
         method = self.click_methods.get(
             self.config.script.device.control_method,
