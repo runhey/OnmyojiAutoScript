@@ -31,5 +31,7 @@
         <file>qml/Component/MirrorImage.qml</file>
         <file>qml/Component/ResizableRectangle.qml</file>
         <file>qml/Component/RuleFile.qml</file>
+        <file>qml/Content/ListRule.qml</file>
+        <file>qml/Component/RuleFile2.qml</file>
     </qresource>
 </RCC>

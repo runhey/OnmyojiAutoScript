@@ -15,6 +15,14 @@ FluArea {
     property var addFunc: function(){}
     property var editFunc: function(){}
     property var saveFunc: function(){}
+
+    // 这些是针对ruleList的
+    property string name: ""
+    property string direction: ""
+    property string type: ""
+    property string roiBack: ""
+    property string description: ""
+
     ListModel{
         id: listModel
     }
@@ -191,9 +199,6 @@ FluArea {
                         model.itemName = text
                         root.editFunc(model)
                     }
-                    onAccepted: {
-
-                    }
                 }
                 }
             }
@@ -203,14 +208,33 @@ FluArea {
     // 加载文件，前提是文件的路径是加载好的
     function loadFile(){
         const getData = ruleFile.read_file(file)
-        var data = []
+        var data = {}
         if (getData === "" || typeof getData === "undefined") {
             console.log("String is empty or undefined.")
             // 如果是空的表示这个是一个刚刚建立的rule文件
+            data["name"] = "name"
+            data["direction"] = "vertical"
+            data["type"] = "image"
+            data["roiBack"] = "0,0,100,100"
+            data["description"] = "description"
+            data["list"] = []
+        }else{
+            data = JSON.parse(getData)
+        }
+
+        if (!'name' in data){
             return
         }
-        data = JSON.parse(getData)
-        for(let item of data){
+        if(!'list' in data){
+            return
+        }
+        root.name = data["name"]
+        root.direction = data["direction"]
+        root.type = data["type"]
+        root.roiBack = data["roiBack"]
+        root.description = data["description"]
+
+        for(let item of data["list"]){
             listModel.append(item)
         }
     }
