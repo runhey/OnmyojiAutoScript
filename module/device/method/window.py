@@ -111,6 +111,26 @@ class Window(Handle):
         elif self.emulator_family == 'bluestacks_family':
             pass
 
+    @cached_property
+    def mumu_head_height(self):
+        """
+        不同mumu模拟器的头部高度不同
+        :return:
+        """
+        father_win_Rect = GetWindowRect(self.control_handle_list[0])
+        father_height: int = father_win_Rect[3] - father_win_Rect[1]  # 下y - 上y 计算高度
+        children_win_Rect = GetWindowRect(self.control_handle_list[1])
+        children_height: int = children_win_Rect[3] - children_win_Rect[1]  # 下y - 上y 计算高度
+        height = father_height - children_height
+        if int(height * self.window_scale_rate) == 37:
+            # 说明是mumu模拟器 不做处理
+            pass
+        if int(height * self.window_scale_rate) == 45:
+            # 说明是mumu12模拟器 不做处理
+            pass
+        logger.info(f"Mumu emulator head height: {height}")
+        return height
+
     def click_window_message(self, x: int, y: int):
         """
 
@@ -118,25 +138,16 @@ class Window(Handle):
         :param y:
         :return:
         """
-        # if x >= 1280:
-        #     x = 1280
-        # if x <= 0:
-        #     x = 0
-        # if y >= 720:
-        #     y = 720
-        # if y <= 0:
-        #     y = 0
         # 我不知道为什么的使用的pywin32==306的版本会导致获取的图片的是(1024, 576)
         # 所有我在点击的时候会除以这个缩放比例
         # 但是后面发现又不是影响的很奇怪
 
         x = int(x / self.window_scale_rate)
         y = int(y / self.window_scale_rate)
-        mumu_head_height = int(36/self.window_scale_rate)
         # print(f"我点击的x:{x}, y:{y}")
         emulator_type = len(self.control_handle_list)
         if emulator_type == 2:  # mumu模拟器
-            SendMessage(self.control_handle_list[0], WM_LBUTTONDOWN, 0, MAKELONG(x, y+mumu_head_height))  # 模拟鼠标按下 先是父窗口 上面的框高度是57
+            SendMessage(self.control_handle_list[0], WM_LBUTTONDOWN, 0, MAKELONG(x, y+self.mumu_head_height))  # 模拟鼠标按下 先是父窗口 上面的框高度是57
             time.sleep((random.randint(100, 200)) / 1000.0)  # 点击弹起改为随机,时间100ms-200ms
             SendMessage(self.control_handle_list[1], WM_LBUTTONUP, 0, MAKELONG(x, y))  # 模拟鼠标弹起 后是子窗口
         elif emulator_type > 2:  # 夜神模拟器

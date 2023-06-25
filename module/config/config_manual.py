@@ -9,7 +9,7 @@ class ConfigManual:
 
     SCHEDULER_PRIORITY = """
         Restart
-        > AreaBoss > GoldYoukai > ExperienceYoukai > Nian
+        > AreaBoss > GoldYoukai > ExperienceYoukai > Nian > RealmRaid
         > Orochi > OrochiMoans > OrochiJudgement > Sougenbi > FallenSun > EternitySea
         """
 

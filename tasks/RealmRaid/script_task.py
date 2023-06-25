@@ -36,6 +36,10 @@ class ScriptTask(GeneralBattle, GameUi, RealmRaidAssets):
                 self.screenshot()
                 if self.appear_then_click(self.I_UNLOCK, interval=1):
                     continue
+                if self.appear_then_click(self.I_UNLOCK_2, interval=1):
+                    continue
+                if self.appear(self.I_LOCK_2, threshold=0.9):
+                    break
                 if self.appear(self.I_LOCK, threshold=0.9):
                     break
             logger.info(f'Click {self.I_UNLOCK.name}')
@@ -44,6 +48,10 @@ class ScriptTask(GeneralBattle, GameUi, RealmRaidAssets):
                 self.screenshot()
                 if self.appear_then_click(self.I_LOCK, interval=1):
                     continue
+                if self.appear_then_click(self.I_LOCK_2, interval=1):
+                    continue
+                if self.appear(self.I_UNLOCK_2, threshold=0.9):
+                    break
                 if self.appear(self.I_UNLOCK, threshold=0.9):
                     break
             logger.info(f'Click {self.I_LOCK.name}')

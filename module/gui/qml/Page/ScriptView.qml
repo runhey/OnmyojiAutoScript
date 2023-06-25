@@ -66,6 +66,14 @@ SplitPanel{
             }
             setLoader(component)
         }
+        else if(title === "List Rule"){
+            const component = Qt.createComponent("../../qml/Content/ListRule.qml")
+            if(component.status !== Component.Ready){
+                console.error("ListRule rule component is not ready")
+                return
+            }
+            setLoader(component)
+        }
         //最后才是一般的参数页面
         else{
             const component = Qt.createComponent("../../qml/Component/Args.qml")

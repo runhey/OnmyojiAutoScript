@@ -17,8 +17,8 @@ class RuleImage:
         初始化
         :param roi_front: 前置roi
         :param roi_back: 后置roi 用于匹配的区域
-        :param method: 匹配方法
-        :param threshold: 阈值
+        :param method: 匹配方法 "Template matching"
+        :param threshold: 阈值  0.8
         :param file: 相对路径, 带后缀
         """
         self.roi_front: list = list(roi_front)

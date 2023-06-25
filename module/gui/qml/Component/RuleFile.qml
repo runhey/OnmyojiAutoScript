@@ -157,7 +157,7 @@ FluArea {
         //表格视图
         Item{
             width: coi.width
-            height: 400
+            height: 370
             ListView{
                 id: listView
                 width: 200
@@ -213,7 +213,6 @@ FluArea {
         for(let item of data){
             listModel.append(item)
         }
-
     }
 
 }

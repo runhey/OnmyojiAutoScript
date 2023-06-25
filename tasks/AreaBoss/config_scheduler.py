@@ -13,3 +13,12 @@ class Scheduler(BaseModel):
     interval_hours: int = Field(default=0, description='[间隔小时]:默认为0\n 可选0-23')
     interval_minutes: int = Field(default=0, description='[间隔分钟]:默认为0\n 可选0-59')
 
+    @validator('next_run')
+    def parse_next_run(cls, value):
+        if isinstance(value, str):
+            try:
+                return datetime.fromisoformat(value)
+            except ValueError:
+                raise ValueError('Invalid next_run value. Expected format: YYYY-MM-DD HH:MM:SS')
+        return value
+

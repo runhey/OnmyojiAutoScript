@@ -78,7 +78,8 @@ class WindowNode(NodeMixin):
 
 
 class Handle:
-    emulator_list = ['MuMu',
+    emulator_list = ['MuMu12',
+                     'MuMu',
                      '雷电',
                      '夜神',
                      '蓝叠',
@@ -186,13 +187,31 @@ class Handle:
         if windows is None:
             logger.error("handle_auto not get all wnidow")
 
+        emu_list = []
         for window_title in windows:
             for item in Handle.emulator_list:
                 if window_title.find(item) != -1:
-                    logger.info(f'handle auto seclect to find {window_title} and use it as root_title')
-                    return window_title
+                    emu_list.append(window_title)
 
-        return None
+        if not len(emu_list):
+            logger.error('Can not find emulator handle, please check your emulator is running')
+            return None
+
+        emulator_title = ''
+        # 测试mumu12的时候发现 获取的全部的窗体标题有这样的: 'MuMuPlayer', 'MuMuPlayer', 'MuMuPlayer', 'MuMu模拟器12'
+        # 事实上 我们只需要最后一个 'MuMu模拟器12'，其他的不重要
+        if 'MuMu模拟器12' in emu_list and 'MuMuPlayer' in emu_list:
+            emulator_title = 'MuMu模拟器12'
+
+        if len(emu_list) > 1 and emulator_title == '':
+            logger.warning(f'Find more than one emulator handle, oas will use the first one {emu_list[0]}')
+            emulator_title = emu_list[0]
+
+        if len(emu_list) == 1:
+            emulator_title = emu_list[0]
+
+        logger.info(f'Handle auto seclect to find {emulator_title} and use it as root_title')
+        return emulator_title
 
     @staticmethod
     def handle_tree(hwnd, node: WindowNode, level: int =0) -> None:

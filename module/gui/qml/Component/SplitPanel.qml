@@ -82,11 +82,13 @@ Item {
     function showDefalut(){
         contentDefalut.visible = true
         contentLoader.visible = false
+        contentDefalut.focus = true
     }
     //显示不固定的
     function showLoader(){
         contentDefalut.visible = false
         contentLoader.visible = true
+        contentLoader.focus = true
     }
 
     //设置固定的部分的具体内容  主要是传一个组件
