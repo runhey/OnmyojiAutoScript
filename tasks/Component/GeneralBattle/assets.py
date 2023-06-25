@@ -51,41 +51,41 @@ class GeneralBattleAssets:
 
 	# Image Rule Assets
 	# 奖励，就是那个魂 
-	I_REWARD = RuleImage(roi_front=(547,518,172,96), roi_back=(547,518,172,96), threshold=0.8, method="Template matching", file="./tasks/GeneralBattle/res/res_reward.png")
+	I_REWARD = RuleImage(roi_front=(547,518,172,96), roi_back=(547,518,172,96), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralBattle/res_reward.png")
 	# 预设的小图标 
-	I_PRESET = RuleImage(roi_front=(32,650,47,45), roi_back=(32,650,47,45), threshold=0.8, method="Template matching", file="./tasks/GeneralBattle/res/res_preset.png")
+	I_PRESET = RuleImage(roi_front=(32,650,47,45), roi_back=(32,650,47,45), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralBattle/res_preset.png")
 	# 准备 
-	I_PREPARE_HIGHLIGHT = RuleImage(roi_front=(1128,536,100,100), roi_back=(1128,536,100,100), threshold=0.8, method="Template matching", file="./tasks/GeneralBattle/res/res_prepare_highlight.png")
+	I_PREPARE_HIGHLIGHT = RuleImage(roi_front=(1128,536,100,100), roi_back=(1128,536,100,100), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralBattle/res_prepare_highlight.png")
 	# 战斗胜利 
-	I_WIN = RuleImage(roi_front=(427,135,100,100), roi_back=(427,135,100,100), threshold=0.8, method="Template matching", file="./tasks/GeneralBattle/res/res_win.png")
+	I_WIN = RuleImage(roi_front=(427,135,100,100), roi_back=(427,135,100,100), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralBattle/res_win.png")
 	# 准备但是界面还未加载这个时候是黑色的 
-	I_PREPARE_DARK = RuleImage(roi_front=(1131,538,100,100), roi_back=(1131,538,100,100), threshold=0.8, method="Template matching", file="./tasks/GeneralBattle/res/res_prepare_dark.png")
+	I_PREPARE_DARK = RuleImage(roi_front=(1131,538,100,100), roi_back=(1131,538,100,100), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralBattle/res_prepare_dark.png")
 	# 失败 
-	I_FALSE = RuleImage(roi_front=(413,124,100,100), roi_back=(413,124,100,100), threshold=0.8, method="Template matching", file="./tasks/GeneralBattle/res/res_false.png")
+	I_FALSE = RuleImage(roi_front=(413,124,100,100), roi_back=(413,124,100,100), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralBattle/res_false.png")
 	# 确认预设的队伍 
-	I_PRESET_ENSURE = RuleImage(roi_front=(354,641,141,50), roi_back=(354,641,141,50), threshold=0.8, method="Template matching", file="./tasks/GeneralBattle/res/res_preset_ensure.png")
+	I_PRESET_ENSURE = RuleImage(roi_front=(354,641,141,50), roi_back=(354,641,141,50), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralBattle/res_preset_ensure.png")
 	# 选择buff 
-	I_BUFF = RuleImage(roi_front=(113,653,44,62), roi_back=(113,653,44,62), threshold=0.8, method="Template matching", file="./tasks/GeneralBattle/res/res_buff.png")
+	I_BUFF = RuleImage(roi_front=(113,653,44,62), roi_back=(113,653,44,62), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralBattle/res_buff.png")
 	# 觉醒加成 
-	I_BUFF_AWAKEN = RuleImage(roi_front=(373,126,383,53), roi_back=(373,126,383,53), threshold=0.8, method="Template matching", file="./tasks/GeneralBattle/res/res_buff_awaken.png")
+	I_BUFF_AWAKEN = RuleImage(roi_front=(373,126,383,53), roi_back=(373,126,383,53), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralBattle/res_buff_awaken.png")
 	# 御魂加成 
-	I_BUFF_SOUL = RuleImage(roi_front=(377,192,371,56), roi_back=(377,192,371,56), threshold=0.8, method="Template matching", file="./tasks/GeneralBattle/res/res_buff_soul.png")
+	I_BUFF_SOUL = RuleImage(roi_front=(377,192,371,56), roi_back=(377,192,371,56), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralBattle/res_buff_soul.png")
 	# 金币加成50 
-	I_BUFF_GOLD_50 = RuleImage(roi_front=(375,259,373,56), roi_back=(375,259,373,56), threshold=0.8, method="Template matching", file="./tasks/GeneralBattle/res/res_buff_gold_50.png")
+	I_BUFF_GOLD_50 = RuleImage(roi_front=(375,259,373,56), roi_back=(375,259,373,56), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralBattle/res_buff_gold_50.png")
 	# 金币加成100 
-	I_BUFF_GOLD_100 = RuleImage(roi_front=(371,329,389,54), roi_back=(371,329,389,54), threshold=0.8, method="Template matching", file="./tasks/GeneralBattle/res/res_buff_gold_100.png")
+	I_BUFF_GOLD_100 = RuleImage(roi_front=(371,329,389,54), roi_back=(371,329,389,54), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralBattle/res_buff_gold_100.png")
 	# 经验加成50 
-	I_BUFF_EXP_50 = RuleImage(roi_front=(378,400,370,50), roi_back=(378,400,370,50), threshold=0.8, method="Template matching", file="./tasks/GeneralBattle/res/res_buff_exp_50.png")
+	I_BUFF_EXP_50 = RuleImage(roi_front=(378,400,370,50), roi_back=(378,400,370,50), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralBattle/res_buff_exp_50.png")
 	# 经验加成100 
-	I_BUFF_EXP_100 = RuleImage(roi_front=(372,463,386,50), roi_back=(372,463,386,50), threshold=0.8, method="Template matching", file="./tasks/GeneralBattle/res/res_buff_exp_100.png")
+	I_BUFF_EXP_100 = RuleImage(roi_front=(372,463,386,50), roi_back=(372,463,386,50), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralBattle/res_buff_exp_100.png")
 	# 左下角的位置指针 
-	I_LOCAL = RuleImage(roi_front=(25,563,30,34), roi_back=(25,563,30,34), threshold=0.8, method="Template matching", file="./tasks/GeneralBattle/res/res_local.png")
+	I_LOCAL = RuleImage(roi_front=(25,563,30,34), roi_back=(25,563,30,34), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralBattle/res_local.png")
 	# description 
-	I_STATISTICS = RuleImage(roi_front=(61,644,33,28), roi_back=(61,644,33,28), threshold=0.8, method="Template matching", file="./tasks/GeneralBattle/res/res_statistics.png")
+	I_STATISTICS = RuleImage(roi_front=(61,644,33,28), roi_back=(61,644,33,28), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralBattle/res_statistics.png")
 	# 左上角的退出 
-	I_EXIT = RuleImage(roi_front=(14,12,43,41), roi_back=(14,12,43,41), threshold=0.8, method="Template matching", file="./tasks/GeneralBattle/res/res_exit.png")
+	I_EXIT = RuleImage(roi_front=(14,12,43,41), roi_back=(14,12,43,41), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralBattle/res_exit.png")
 	# 退出确认 
-	I_EXIT_ENSURE = RuleImage(roi_front=(674,388,135,63), roi_back=(674,388,135,63), threshold=0.8, method="Template matching", file="./tasks/GeneralBattle/res/res_exit_ensure.png")
+	I_EXIT_ENSURE = RuleImage(roi_front=(674,388,135,63), roi_back=(674,388,135,63), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralBattle/res_exit_ensure.png")
 
 
 	# Swipe Rule Assets

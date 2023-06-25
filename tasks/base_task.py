@@ -12,6 +12,7 @@ from module.atom.click import RuleClick
 from module.atom.long_click import RuleLongClick
 from module.atom.swipe import RuleSwipe
 from module.atom.ocr import RuleOcr
+from module.atom.list import RuleList
 from module.ocr.base_ocr import OcrMode, OcrMethod
 from module.logger import logger
 from module.base.timer import Timer
@@ -29,7 +30,6 @@ class BaseTask:
 
     limit_time: datetime  # 限制运行的时间，是软时间，不是硬时间
 
-
     def __init__(self, config: Config, device: Device) -> None:
         self.config = config
         self.device = device
@@ -38,9 +38,6 @@ class BaseTask:
 
         self.start_time = datetime.now()  # 启动的时间
 
-
-
-
     def screenshot(self):
         """
         截图 引入中间函数的目的是 为了解决如协作的这类突发的事件
@@ -48,7 +45,7 @@ class BaseTask:
         """
         return self.device.screenshot()
 
-    def appear(self, target: RuleImage, interval: float =None, threshold: float =None):
+    def appear(self, target: RuleImage, interval: float = None, threshold: float = None):
         """
 
         :param target: 匹配的目标可以是RuleImage, 也可以是RuleOcr
@@ -77,10 +74,10 @@ class BaseTask:
 
     def appear_then_click(self,
                           target: RuleImage,
-                          action: Union[RuleClick, RuleLongClick]=None,
-                          interval: float=None,
-                          threshold: float=None,
-                          duration: float=None):
+                          action: Union[RuleClick, RuleLongClick] = None,
+                          interval: float = None,
+                          threshold: float = None,
+                          duration: float = None):
         """
         出现了就点击，默认点击图片的位置，如果添加了click参数，就点击click的位置
         :param duration: 如果是长按，可以手动指定duration，不指定默认.单位是ms！！！！
@@ -102,9 +99,9 @@ class BaseTask:
             x, y = action.coord()
             if isinstance(action, RuleLongClick):
                 if duration is None:
-                    self.device.long_click(x, y, duration=action.duration/1000, control_name=target.name)
+                    self.device.long_click(x, y, duration=action.duration / 1000, control_name=target.name)
                 else:
-                    self.device.long_click(x, y, duration=duration/1000, control_name=target.name)
+                    self.device.long_click(x, y, duration=duration / 1000, control_name=target.name)
             elif isinstance(action, RuleClick):
                 self.device.click(x, y, control_name=target.name)
 
@@ -129,7 +126,7 @@ class BaseTask:
 
     def wait_until_appear_then_click(self,
                                      target: RuleImage,
-                                     action: Union[RuleClick, RuleLongClick]=None) -> None:
+                                     action: Union[RuleClick, RuleLongClick] = None) -> None:
         """
         等待直到出现目标，然后点击
         :param action:
@@ -140,7 +137,7 @@ class BaseTask:
         if action is None:
             self.device.click(target.coord(), control_name=target.name)
         elif isinstance(action, RuleLongClick):
-            self.device.long_click(target.coord(), duration=action.duration/1000, control_name=target.name)
+            self.device.long_click(target.coord(), duration=action.duration / 1000, control_name=target.name)
         elif isinstance(action, RuleClick):
             self.device.click(target.coord(), control_name=target.name)
 
@@ -186,7 +183,7 @@ class BaseTask:
                 logger.warning(f'wait_until_stable({target}) timeout')
                 break
 
-    def swipe(self, swipe: RuleSwipe, interval: float =None) -> None:
+    def swipe(self, swipe: RuleSwipe, interval: float = None) -> None:
         """
 
         :param interval:
@@ -216,7 +213,7 @@ class BaseTask:
             # logger.info(f'Swipe {swipe.name}')
             self.interval_timer[swipe.name].reset()
 
-    def click(self, click: Union[RuleClick, RuleLongClick]=None, interval: float =None) -> None:
+    def click(self, click: Union[RuleClick, RuleLongClick] = None, interval: float = None) -> None:
         """
         点击或者长按
         :param interval:
@@ -240,7 +237,7 @@ class BaseTask:
 
         x, y = click.coord()
         if isinstance(click, RuleLongClick):
-            self.device.long_click(x=x, y=y, duration=click.duration/1000, control_name=click.name)
+            self.device.long_click(x=x, y=y, duration=click.duration / 1000, control_name=click.name)
         elif isinstance(click, RuleClick):
             self.device.click(x=x, y=y, control_name=click.name)
 
@@ -248,7 +245,7 @@ class BaseTask:
         if interval:
             self.interval_timer[click.name].reset()
 
-    def ocr_appear(self, target: RuleOcr, interval: float=None) -> bool:
+    def ocr_appear(self, target: RuleOcr, interval: float = None) -> bool:
         """
         ocr识别目标
         :param interval:
@@ -274,7 +271,6 @@ class BaseTask:
         result = target.ocr(self.device.image)
         appear = False
 
-
         if not target.keyword or target.keyword == '':
             appear = False
         match target.mode:
@@ -296,8 +292,8 @@ class BaseTask:
 
     def ocr_appear_click(self,
                          target: RuleOcr,
-                         action: Union[RuleClick, RuleLongClick]=None,
-                         interval: float=None,
+                         action: Union[RuleClick, RuleLongClick] = None,
+                         interval: float = None,
                          duration: float = None) -> bool:
         """
         ocr识别目标，如果目标存在，则触发动作
@@ -319,8 +315,41 @@ class BaseTask:
             x, y = target.coord()
             self.device.click(x=x, y=y, control_name=target.name)
 
+    def list_find(self, target: RuleList, name: str | list[str]) -> bool:
+        """
+        会一致在列表寻找目标，找到了就退出。
+        如果是图片列表会一直往下找
+        如果是纯文字的，会自动识别自己的位置，根据位置选择向前还是向后翻
+        :param target:
+        :param name:
+        :return:
+        """
+        if target.is_image:
+            while True:
+                self.screenshot()
+                result = target.image_appear(self.device.image, name=name)
+                if result is not None:
+                    return result
+                x1, y1, x2, y2 = target.swipe_pos()
+                self.device.swipe(p1=(x1, y1), p2=(x2, y2))
 
-    def set_next_run(self, task: str, finish: bool=False) -> None:
+        elif target.is_ocr:
+            while True:
+                self.screenshot()
+                result = target.ocr_appear(self.device.image, name=name)
+                if isinstance(result, tuple):
+                    return result
+
+                after = True
+                if isinstance(result, int) and result > 0:
+                    after = True
+                elif isinstance(result, int) and result < 0:
+                    after = False
+
+                x1, y1, x2, y2 = target.swipe_pos(after=after)
+                self.device.swipe(p1=(x1, y1), p2=(x2, y2))
+
+    def set_next_run(self, task: str, finish: bool = False) -> None:
         """
         设置下次运行时间  当然这个也是可以重写的
         :param task: 任务名称，大驼峰的
@@ -339,9 +368,8 @@ class BaseTask:
             start_time = self.start_time
         delta = timedelta(days=task_object.scheduler.interval_days,
                           hours=task_object.scheduler.interval_hours,
-                          minutes=task_object.scheduler.interval_minutes,)
+                          minutes=task_object.scheduler.interval_minutes, )
         next_run = start_time + delta
 
         task_object.scheduler.next_run = next_run
         self.config.save()
-
