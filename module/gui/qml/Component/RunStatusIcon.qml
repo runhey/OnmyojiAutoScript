@@ -24,22 +24,25 @@ Item {
         color: root.color
         radius: radius
 
-        Behavior on radius {
-            NumberAnimation {
-                duration: root.animationDuration
-                easing.type: Easing.OutQuad
-            }
-        }
+//        Behavior on radius {
+//            enabled: false
+//            NumberAnimation {
+//                duration: root.animationDuration
+//                easing.type: Easing.OutQuad
+//            }
+//        }
 
-        SequentialAnimation on radius {
-            loops: Animation.Infinite
-            PropertyAnimation { to: root.maxRadius; duration: root.animationDuration }
-        }
+//        SequentialAnimation on radius {
+//            enabled: false
+//            loops: Animation.Infinite
+//            PropertyAnimation { to: root.maxRadius; duration: root.animationDuration }
+//        }
     }
 
     FluProgressRing{
         id: runProgress
         anchors.centerIn: parent
+        indeterminate: false
         width: parent.width/2
         height: parent.height/2
     }
