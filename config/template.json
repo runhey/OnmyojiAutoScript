@@ -34,14 +34,21 @@
   },
   "global_game": {
     "emergency": {
-      "accept_friend_invitation": true
+      "friend_invitation": "accept",
+      "invitation_detect_interval": 10,
+      "when_network_abnormal": "wait_10s",
+      "when_network_error": "restart",
+      "home_client_clear": true
     }
   },
   "area_boss": {
     "scheduler": {
       "enable": false,
       "next_run": "2023-01-01 00:00:00",
-      "priority": 3
+      "priority": 5,
+      "interval_days": 1,
+      "interval_hours": 0,
+      "interval_minutes": 0
     },
     "general_battle": {
       "lock_team_enable": false,
@@ -67,63 +74,110 @@
     "scheduler": {
       "enable": false,
       "next_run": "2023-01-01 00:00:00",
-      "priority": 3
+      "priority": 5,
+      "interval_days": 1,
+      "interval_hours": 0,
+      "interval_minutes": 0
     }
   },
   "gold_youkai": {
     "scheduler": {
       "enable": false,
       "next_run": "2023-01-01 00:00:00",
-      "priority": 3
+      "priority": 5,
+      "interval_days": 1,
+      "interval_hours": 0,
+      "interval_minutes": 0
     }
   },
   "nian": {
     "scheduler": {
       "enable": false,
       "next_run": "2023-01-01 00:00:00",
-      "priority": 3
+      "priority": 5,
+      "interval_days": 1,
+      "interval_hours": 0,
+      "interval_minutes": 0
+    }
+  },
+  "realm_raid": {
+    "scheduler": {
+      "enable": false,
+      "next_run": "2023-01-01 00:00:00",
+      "priority": 5,
+      "interval_days": 1,
+      "interval_hours": 0,
+      "interval_minutes": 0
+    },
+    "raid_config": {
+      "raid_mode": "retreat_four_attack_nine",
+      "attack_number": "all"
+    },
+    "general_battle_config": {
+      "lock_team_enable": false,
+      "preset_enable": false,
+      "preset_group": 1,
+      "preset_team": 1,
+      "buff_enable": false,
+      "buff_awake_click": false,
+      "buff_soul_click": false,
+      "buff_gold_50_click": false,
+      "buff_gold_100_click": false,
+      "buff_exp_50_click": false,
+      "buff_exp_100_click": false,
+      "green_enable": false,
+      "green_mark": "green_left1",
+      "random_click_swipt_enable": false
     }
   },
   "orochi": {
     "scheduler": {
       "enable": false,
       "next_run": "2023-01-01 00:00:00",
-      "priority": 3
+      "priority": 5,
+      "interval_days": 1,
+      "interval_hours": 0,
+      "interval_minutes": 0
     }
   },
   "orochi_moans": {
     "scheduler": {
       "enable": false,
       "next_run": "2023-01-01 00:00:00",
-      "priority": 3
-    }
-  },
-  "orochi_judgement": {
-    "scheduler": {
-      "enable": false,
-      "next_run": "2023-01-01 00:00:00",
-      "priority": 3
+      "priority": 5,
+      "interval_days": 1,
+      "interval_hours": 0,
+      "interval_minutes": 0
     }
   },
   "sougenbi": {
     "scheduler": {
       "enable": false,
       "next_run": "2023-01-01 00:00:00",
-      "priority": 3
+      "priority": 5,
+      "interval_days": 1,
+      "interval_hours": 0,
+      "interval_minutes": 0
     }
   },
   "fallen_sun": {
     "scheduler": {
       "enable": false,
       "next_run": "2023-01-01 00:00:00",
-      "priority": 3
+      "priority": 5,
+      "interval_days": 1,
+      "interval_hours": 0,
+      "interval_minutes": 0
     }
   },
   "eternity_sea": {
     "scheduler": {
       "enable": false,
       "next_run": "2023-01-01 00:00:00",
-      "priority": 3
+      "priority": 5,
+      "interval_days": 1,
+      "interval_hours": 0,
+      "interval_minutes": 0
     }
   }
 }

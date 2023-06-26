@@ -42,3 +42,4 @@ def check_admin():
         ctypes.windll.shell32.ShellExecuteW(None, "runas", sys.executable, __file__, None, 1)
         sys.exit(0)
     logger.log('管理员身份运行')
+

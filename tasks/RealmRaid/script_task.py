@@ -4,7 +4,7 @@
 import time
 
 from tasks.base_task import BaseTask
-from tasks.GeneralBattle.general_battle import GeneralBattle
+from tasks.Component.GeneralBattle.general_battle import GeneralBattle
 from tasks.GameUi.game_ui import GameUi
 from tasks.RealmRaid.assets import RealmRaidAssets
 from tasks.RealmRaid.config import RealmRaid, RaidMode, AttackNumber
@@ -100,6 +100,7 @@ class ScriptTask(GeneralBattle, GameUi, RealmRaidAssets):
         :return:
         """
         # 点击勋章的挑战 和挑战
+        time.sleep(0.2)
         is_click = False
         while 1:
             self.screenshot()
@@ -117,6 +118,9 @@ class ScriptTask(GeneralBattle, GameUi, RealmRaidAssets):
                 continue
 
             if is_click:
+                continue
+            if self.appear_then_click(self.I_MEDAL_5_FROG, interval=1.5):
+                is_click = True
                 continue
             if self.appear_then_click(self.I_MEDAL_5, interval=1.5):
                 is_click = True

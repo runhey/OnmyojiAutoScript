@@ -15,9 +15,9 @@ class ConfigMenu:
         # 总览
         self.menu["Overview"] = []
         # 脚本设置
-        self.menu['Script'] = ['Script', 'General', 'Restart', 'GlobalGame']
+        self.menu['Script'] = ['Script', 'Restart', 'GlobalGame']
         # 刷御魂
-        self.menu["Soul Zones"] = ['Orochi', 'OrochiMoans', 'OrochiJudgement', 'Sougenbi', 'FallenSun', 'EternitySea']
+        self.menu["Soul Zones"] = ['Orochi', 'Sougenbi', 'FallenSun', 'EternitySea']
         # 日常的任务
         self.menu["Daily Task"] = ['AreaBoss', 'GoldYoukai', 'ExperienceYoukai', 'Nian', 'RealmRaid']
 

@@ -151,5 +151,14 @@
     "method": "Template matching",
     "threshold": 0.9,
     "description": "以锁图片，适配呱太"
+  },
+  {
+    "itemName": "medal_5_frog",
+    "imageName": "res_medal_5_frog.png",
+    "roiFront": "903,479,201,49",
+    "roiBack": "189,182,967,376",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
   }
 ]

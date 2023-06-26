@@ -5,8 +5,8 @@ import time
 import random
 
 from tasks.base_task import BaseTask
-from tasks.GeneralBattle.config_general_battle import GreenMarkType, GeneralBattleConfig
-from tasks.GeneralBattle.assets import GeneralBattleAssets
+from tasks.Component.GeneralBattle.config_general_battle import GreenMarkType, GeneralBattleConfig
+from tasks.Component.GeneralBattle.assets import GeneralBattleAssets
 from module.logger import logger
 
 
@@ -43,7 +43,7 @@ class GeneralBattle(BaseTask, GeneralBattleAssets):
                     if self.appear(self.I_PRESET_ENSURE):
                         break
                 # 选择预设组
-                logger.info("select preset group")
+                logger.info("Select preset group")
                 x, y = None, None
                 match config.preset_group:
                     case 1: x, y = self.C_PRESET_GROUP_1.coord()

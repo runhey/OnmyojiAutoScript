@@ -160,7 +160,7 @@ Item {
                 wrapMode: Text.WrapAnywhere
                 topPadding: 6
             }
-            FluCopyableText{
+            FluText{
                 id: string_description
                 anchors{
                     top: string_title.bottom
@@ -169,7 +169,8 @@ Item {
                 width: string_title.width
                 text: ""
                 font: FluTextStyle.Caption
-                wrapMode: Text.WrapAnywhere
+                wrapMode: Text.WordWrap
+//                textFormat: Text.PlainText
                 topPadding: 6
                 rightPadding: 6
             }
@@ -184,11 +185,11 @@ Item {
                     //判断是不是时间类型的变量2023-01-01
                     stringItem.isDateTime = true
                 }
-                string_title.text = modelData.title
+                string_title.text = qsTr(modelData.title)
                 if( typeof modelData.description === 'undefined'){
                     return
                 }
-                string_description.text = modelData.description
+                string_description.text = qsTr(modelData.description.replace("\\n","\n"))
             }
         }
     }
@@ -228,7 +229,7 @@ Item {
                 wrapMode: Text.WrapAnywhere
                 topPadding: 6
             }
-            FluCopyableText{
+            FluText{
                 id: itemArg_description
                 anchors{
                     top: itemArg_title.bottom
@@ -238,6 +239,7 @@ Item {
                 text: ""
                 font: FluTextStyle.Caption
                 wrapMode: Text.WrapAnywhere
+//                textFormat: Text.PlainText
                 topPadding: 6
                 rightPadding: 6
             }
@@ -248,11 +250,11 @@ Item {
                 }
                 itemArg_text.text = modelData.value
                 itemArg_text.placeholderText = modelData["default"]
-                itemArg_title.text = modelData.title
+                itemArg_title.text = qsTr(modelData.title)
                 if( typeof modelData.description === 'undefined'){
                     return
                 }
-                itemArg_description.text = modelData.description
+                itemArg_description.text = qsTr(modelData.description)
             }
         }
     }
@@ -292,7 +294,7 @@ Item {
                 wrapMode: Text.WrapAnywhere
                 topPadding: 6
             }
-            FluCopyableText{
+            FluText{
                 id: itemArg_description
                 anchors{
                     top: itemArg_title.bottom
@@ -302,6 +304,7 @@ Item {
                 text: ""
                 font: FluTextStyle.Caption
                 wrapMode: Text.WrapAnywhere
+//                textFormat: Text.PlainText
                 topPadding: 6
                 rightPadding: 6
             }
@@ -312,11 +315,11 @@ Item {
                 }
                 itemArg_text.text = modelData.value
                 itemArg_text.placeholderText = modelData["default"]
-                itemArg_title.text = modelData.title
+                itemArg_title.text = qsTr(modelData.title)
                 if( typeof modelData.description === 'undefined'){
                     return
                 }
-                itemArg_description.text = modelData.description
+                itemArg_description.text = qsTr(modelData.description)
             }
         }
     }
@@ -357,7 +360,7 @@ Item {
                 wrapMode: Text.WrapAnywhere
                 topPadding: 6
             }
-            FluCopyableText{
+            FluText{
                 id: itemArg_description
                 anchors{
                     top: itemArg_title.bottom
@@ -376,11 +379,11 @@ Item {
                     return
                 }
                 itemArg_text.selected = modelData.value
-                itemArg_title.text = modelData.title
+                itemArg_title.text = qsTr(modelData.title)
                 if( typeof modelData.description === 'undefined'){
                     return
                 }
-                itemArg_description.text = modelData.description
+                itemArg_description.text = qsTr(modelData.description)
             }
         }
     }
@@ -420,7 +423,7 @@ Item {
                 wrapMode: Text.WrapAnywhere
                 topPadding: 6
             }
-            FluCopyableText{
+            FluText{
                 id: itemArg_description
                 anchors{
                     top: itemArg_title.bottom
@@ -430,6 +433,7 @@ Item {
                 text: ""
                 font: FluTextStyle.Caption
                 wrapMode: Text.WrapAnywhere
+//                textFormat: Text.PlainText
                 topPadding: 6
                 rightPadding: 6
             }
@@ -440,11 +444,11 @@ Item {
                 }
                 itemArg_text.model = modelData.options
                 itemArg_text.show(modelData.value)
-                itemArg_title.text = modelData.title
+                itemArg_title.text = qsTr(modelData.title)
                 if( typeof modelData.description === 'undefined'){
                     return
                 }
-                itemArg_description.text = modelData.description
+                itemArg_description.text = qsTr(modelData.description)
             }
         }
     }
@@ -499,7 +503,7 @@ Item {
         const object = group_item.createObject(contentScrollable)
         if(object !== null){
             object.groupName = groupName
-            object.groupTitle = groupTitle
+            object.groupTitle = qsTr(groupTitle)
             object.argumentValue = argumentValue
 
             contentScrollable.content.push(object)

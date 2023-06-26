@@ -3,8 +3,8 @@
 # github https://github.com/runhey
 from pydantic import BaseModel, Field
 
-from tasks.Utils.config_scheduler import Scheduler
-from tasks.GeneralBattle.config_general_battle import GeneralBattleConfig
+from tasks.Component.GeneralBattle.config_general_battle import GeneralBattleConfig
+from tasks.Component.config_scheduler import Scheduler
 from tasks.AreaBoss.config_boss import Boss
 
 

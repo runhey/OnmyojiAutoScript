@@ -9,3 +9,19 @@ class OcrModel:
 
 
 OCR_MODEL = OcrModel()
+
+
+
+if __name__ == "__main__":
+    model = OCR_MODEL.ch
+    import cv2
+    import time
+    image = cv2.imread(r"D:\ocr_test_5.png")
+
+    for i in range(10):
+        start_time = time.time()
+        result = model.detect_and_ocr(image)
+        print(result)
+        end_time = time.time()
+        print(f'耗时：{end_time-start_time}')
+

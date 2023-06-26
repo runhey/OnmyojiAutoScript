@@ -4,7 +4,7 @@
 import time
 
 from tasks.base_task import BaseTask
-from tasks.GeneralBattle.general_battle import GeneralBattle
+from tasks.Component.GeneralBattle.general_battle import GeneralBattle
 from tasks.AreaBoss.assets import AreaBossAssets
 from module.logger import logger
 from module.exception import TaskEnd

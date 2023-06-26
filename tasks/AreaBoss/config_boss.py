@@ -8,5 +8,5 @@ from pydantic import BaseModel, ValidationError, validator, Field
 class Boss(BaseModel):
     boss_number: int = Field(title='Boss Number',
                              default=3,
-                             description='[Boss数量]:默认为3\n 可选[1-3]',
+                             description='默认为3 可选[1-3]',
                              ge=1, le=3)
