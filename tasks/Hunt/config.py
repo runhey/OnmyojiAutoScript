@@ -3,5 +3,5 @@
 # github https://github.com/runhey
 from pydantic import BaseModel, Field
 
-from tasks.Hunt.config_scheduler import Scheduler
+from tasks.Component.config_scheduler import Scheduler
 

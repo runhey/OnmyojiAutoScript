@@ -4,8 +4,8 @@
 from pydantic import BaseModel, Field
 from enum import Enum
 
-from tasks.Utils.config_scheduler import Scheduler
-from tasks.GeneralBattle.config_general_battle import GeneralBattleConfig
+from tasks.Component.config_scheduler import Scheduler
+from tasks.Component.GeneralBattle.config_general_battle import GeneralBattleConfig
 
 
 class RaidMode(str, Enum):

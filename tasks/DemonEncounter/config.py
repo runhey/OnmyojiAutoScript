@@ -3,4 +3,3 @@
 # github https://github.com/runhey
 from pydantic import BaseModel, Field
 
-from tasks.DemonEncounter.config_scheduler import Scheduler
