@@ -34,13 +34,18 @@
   },
   "global_game": {
     "emergency": {
-      "accept_friend_invitation": true
+      "friend_invitation": "accept",
+      "invitation_detect_interval": 10,
+      "when_network_abnormal": "wait_10s",
+      "when_network_error": "restart",
+      "home_client_clear": true
     }
   },
   "area_boss": {
     "scheduler": {
       "enable": false,
       "next_run": "2023-01-01 00:00:00",
+      "priority": 5,
       "interval_days": 1,
       "interval_hours": 0,
       "interval_minutes": 0
@@ -69,6 +74,7 @@
     "scheduler": {
       "enable": false,
       "next_run": "2023-01-01 00:00:00",
+      "priority": 5,
       "interval_days": 1,
       "interval_hours": 0,
       "interval_minutes": 0
@@ -78,6 +84,7 @@
     "scheduler": {
       "enable": false,
       "next_run": "2023-01-01 00:00:00",
+      "priority": 5,
       "interval_days": 1,
       "interval_hours": 0,
       "interval_minutes": 0
@@ -87,6 +94,7 @@
     "scheduler": {
       "enable": false,
       "next_run": "2023-01-01 00:00:00",
+      "priority": 5,
       "interval_days": 1,
       "interval_hours": 0,
       "interval_minutes": 0
@@ -96,6 +104,7 @@
     "scheduler": {
       "enable": false,
       "next_run": "2023-01-01 00:00:00",
+      "priority": 5,
       "interval_days": 1,
       "interval_hours": 0,
       "interval_minutes": 0
@@ -125,6 +134,7 @@
     "scheduler": {
       "enable": false,
       "next_run": "2023-01-01 00:00:00",
+      "priority": 5,
       "interval_days": 1,
       "interval_hours": 0,
       "interval_minutes": 0
@@ -134,6 +144,7 @@
     "scheduler": {
       "enable": false,
       "next_run": "2023-01-01 00:00:00",
+      "priority": 5,
       "interval_days": 1,
       "interval_hours": 0,
       "interval_minutes": 0
@@ -143,6 +154,7 @@
     "scheduler": {
       "enable": false,
       "next_run": "2023-01-01 00:00:00",
+      "priority": 5,
       "interval_days": 1,
       "interval_hours": 0,
       "interval_minutes": 0
@@ -152,6 +164,7 @@
     "scheduler": {
       "enable": false,
       "next_run": "2023-01-01 00:00:00",
+      "priority": 5,
       "interval_days": 1,
       "interval_hours": 0,
       "interval_minutes": 0
@@ -161,6 +174,7 @@
     "scheduler": {
       "enable": false,
       "next_run": "2023-01-01 00:00:00",
+      "priority": 5,
       "interval_days": 1,
       "interval_hours": 0,
       "interval_minutes": 0

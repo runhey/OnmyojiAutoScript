@@ -18,9 +18,14 @@ from module.logger import logger
 from module.base.timer import Timer
 from module.config.config import Config
 from module.device.device import Device
+from tasks.GlobalGame.assets import GlobalGameAssets
+from tasks.GlobalGame.config_emergency import FriendInvitation, WhenNetworkAbnormal, WhenNetworkError
+
+from module.exception import GameStuckError
 
 
-class BaseTask:
+
+class BaseTask(GlobalGameAssets):
     config: Config = None
     device: Device = None
 
@@ -38,12 +43,53 @@ class BaseTask:
 
         self.start_time = datetime.now()  # 启动的时间
 
+        self.friend_timer = None
+        if self.config.global_game.emergency.invitation_detect_interval:
+            self.interval_time = self.config.global_game.emergency.invitation_detect_interval
+            self.friend_timer = Timer(self.interval_time)
+
     def screenshot(self):
         """
         截图 引入中间函数的目的是 为了解决如协作的这类突发的事件
         :return:
         """
-        return self.device.screenshot()
+        self.device.screenshot()
+        # 判断勾协
+        if self.friend_timer and self.friend_timer.reached():
+            self.friend_timer.reset()
+            invite = self.appear(self.I_ACCEPT)
+            # 如果是全部接受
+            if invite and self.config.global_game.emergency.friend_invitation == FriendInvitation.ACCEPT:
+                # 如果是接受邀请
+                while 1:
+                    if self.appear_then_click(self.I_ACCEPT):
+                        continue
+                    if not self.appear(self.I_ACCEPT):
+                        break
+            # 如果是全部拒绝
+            elif invite and self.config.global_game.emergency.friend_invitation == FriendInvitation.REJECT:
+                while 1:
+                    if self.appear_then_click(self.I_REJECT):
+                        continue
+                    if not self.appear(self.I_REJECT):
+                        break
+            # 最后一个是仅仅接受勾协
+            elif invite and self.config.global_game.emergency.friend_invitation == FriendInvitation.ONLY_JADE:
+                while 1:
+                    if self.appear_then_click(self.I_ACCEPT):
+                        continue
+                    if not self.appear(self.I_ACCEPT):
+                        break
+            # 判断网络异常
+            if self.appear(self.I_NETWORK_ABNORMAL):
+                raise GameStuckError
+
+            # 判断网络错误
+            if self.appear(self.I_NETWORK_ERROR):
+                raise GameStuckError
+
+        return self.device.image
+        # 返回截图
 
     def appear(self, target: RuleImage, interval: float = None, threshold: float = None):
         """

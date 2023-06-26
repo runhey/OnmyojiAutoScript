@@ -357,4 +357,18 @@
 	<message><source>AttackNumber</source><translation>挑战次数</translation></message>
 	<message><source>raid_mode_help</source><translation>默认为退四打九，退四打九指每次执行前都会退出四次，然后在进攻九次</translation></message>
 </context>
+<context>
+    <name>Args</name>
+	<message><source>Emergency</source><translation>突发检测</translation></message>
+	<message><source>FriendInvitation</source><translation>当出现协作邀请时</translation></message>
+	<message><source>Invitation Detect Interval</source><translation>检测间隔</translation></message>
+	<message><source>WhenNetworkAbnormal</source><translation>当网络异常时</translation></message>
+	<message><source>WhenNetworkError</source><translation>当网络出错需要重新连接服务器时</translation></message>
+	<message><source>Home Client Clear</source><translation>启用庭院客户端清空缓存</translation></message>
+	<message><source>friend_invitation_help</source><translation>默认全部接受</translation></message>
+	<message><source>invitation_detect_interval_help</source><translation>默认每隔10秒检测一次是否有协作</translation></message>
+	<message><source>when_network_abnormal_help</source><translation>默认会先等待10S</translation></message>
+	<message><source>when_network_error_help</source><translation>重启游戏</translation></message>
+	<message><source>home_client_clear_help</source><translation>有时会出现进入庭院要求清理缓存</translation></message>
+</context>
 </TS>
