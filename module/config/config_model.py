@@ -19,7 +19,6 @@ from tasks.GoldYoukai.config import GoldYoukai
 from tasks.Nian.config import Nian
 from tasks.Orochi.config import Orochi
 from tasks.OrochiMoans.config import OrochiMoans
-from tasks.OrochiJudgement.config import OrochiJudgement
 from tasks.Sougenbi.config import Sougenbi
 from tasks.FallenSun.config import FallenSun
 from tasks.EternitySea.config import EternitySea
@@ -45,7 +44,6 @@ class ConfigModel(BaseModel):
     # 这些是刷御魂的
     orochi: Orochi = Field(default_factory=Orochi)
     orochi_moans: OrochiMoans = Field(default_factory=OrochiMoans)
-    orochi_judgement: OrochiJudgement = Field(default_factory=OrochiJudgement)
     sougenbi: Sougenbi = Field(default_factory=Sougenbi)
     fallen_sun: FallenSun = Field(default_factory=FallenSun)
     eternity_sea: EternitySea = Field(default_factory=EternitySea)

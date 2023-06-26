@@ -18,9 +18,9 @@ class AttackNumber(str, Enum):
 
 class RaidConfig(BaseModel):
     raid_mode: RaidMode = Field(title='Raid Mode', default=RaidMode.NORMAL,
-                                description='[挑战模式]:默认为退四打九\n 退四打九指每次执行前都会退出四次，然后在进攻九次')
+                                description='raid_mode_help')
     attack_number: AttackNumber = Field(title='Attack Number', default=AttackNumber.ALL,
-                                        description='[挑战次数]:默认为all，一直打到没有\n nine为打九次')
+                                        description='')
 
 class RealmRaid(BaseModel):
     scheduler: Scheduler = Field(default_factory=Scheduler)

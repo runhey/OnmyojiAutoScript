@@ -5,8 +5,6 @@ import time
 
 from tasks.GameUi.assets import GameUiAssets
 from tasks.base_task import BaseTask
-from tasks.GeneralBattle.general_battle import GeneralBattle
-from tasks.AreaBoss.assets import AreaBossAssets
 from module.logger import logger
 
 

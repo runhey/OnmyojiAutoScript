@@ -87,7 +87,7 @@ class Script:
         from module.base.utils import save_image
         from module.handler.sensitive_info import (handle_sensitive_image,
                                                    handle_sensitive_logs)
-        if self.config.Error_SaveError:
+        if self.config.script.error.save_error:
             if not os.path.exists('./log/error'):
                 os.mkdir('./log/error')
             folder = f'./log/error/{int(time.time() * 1000)}'

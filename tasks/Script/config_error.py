@@ -8,8 +8,10 @@ from module.logger import logger
 
 class Error(BaseModel):
     handle_error: bool = Field(default=False,
-                               description='none')
+                               description='handle_error_help')
     save_error: bool = Field(default=False,
-                             description='none')
+                             description='')
     screenshot_length: int = Field(default=1,
-                                   description='The number of recent screenshots to save when something goes wrong')
+                                   description='')
+
+

@@ -370,6 +370,7 @@ class BaseTask:
                           hours=task_object.scheduler.interval_hours,
                           minutes=task_object.scheduler.interval_minutes, )
         next_run = start_time + delta
+        next_run.replace(microsecond=0)
 
         task_object.scheduler.next_run = next_run
         self.config.save()
