@@ -41,7 +41,11 @@ class Function:
 
         self.enable: bool = data['scheduler']['enable']
         self.command: str = ConfigModel.type(key)
-        self.next_run: datetime = data['scheduler']['next_run']
+        next_run = data['scheduler']['next_run']
+        if isinstance(next_run, str):
+            next_run = datetime.strptime(next_run, "%Y-%m-%d %H:%M:%S")
+        self.next_run: datetime = next_run
+
         # self.enable = deep_get(data, keys="Scheduler.Enable", default=False)
         # self.command = deep_get(data, keys="Scheduler.Command", default="Unknown")
         # self.next_run = deep_get(data, keys="Scheduler.NextRun", default=DEFAULT_TIME)
