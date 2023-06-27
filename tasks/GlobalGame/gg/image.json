@@ -1,0 +1,56 @@
+[
+  {
+    "itemName": "accept",
+    "imageName": "gg_accept.png",
+    "roiFront": "825,395,56,46",
+    "roiBack": "825,395,56,46",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "reject",
+    "imageName": "gg_reject.png",
+    "roiFront": "825,493,53,51",
+    "roiBack": "825,493,53,51",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "jade",
+    "imageName": "gg_jade.png",
+    "roiFront": "661,466,43,46",
+    "roiBack": "661,466,43,46",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "勾玉"
+  },
+  {
+    "itemName": "network_abnormal",
+    "imageName": "gg_network_abnormal.png",
+    "roiFront": "583,330,221,67",
+    "roiBack": "583,330,221,67",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "网络异常"
+  },
+  {
+    "itemName": "network_error",
+    "imageName": "gg_network_error.png",
+    "roiFront": "431,253,416,208",
+    "roiBack": "431,253,416,208",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "已端口游戏服务器，需要重新连接，这种情况一般是断开很久了"
+  },
+  {
+    "itemName": "client_clear",
+    "imageName": "gg_client_clear.png",
+    "roiFront": "578,369,151,72",
+    "roiBack": "578,369,151,72",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "我还没有碰到这个情况没能截图"
+  }
+]
