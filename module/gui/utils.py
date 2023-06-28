@@ -22,7 +22,8 @@ def is_admin():
     Check if the program is running as an admin.
     """
     try:
-        return ctypes.windll.shell32.IsUserAnAdmin()
+        result = ctypes.windll.shell32.IsUserAnAdmin()
+        return result == 1
     except:
         return False
 

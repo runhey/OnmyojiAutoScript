@@ -7,9 +7,9 @@ from module.logger import logger
 
 
 class Error(BaseModel):
-    handle_error: bool = Field(default=False,
+    handle_error: bool = Field(default=True,
                                description='handle_error_help')
-    save_error: bool = Field(default=False,
+    save_error: bool = Field(default=True,
                              description='')
     screenshot_length: int = Field(default=1,
                                    description='')
