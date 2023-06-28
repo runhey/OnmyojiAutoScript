@@ -104,6 +104,12 @@ class Device(Screenshot, Control, AppControl, EmulatorManager):
             self._scrcpy_server_stop()
 
     def stuck_record_add(self, button):
+        """
+        当你要设置这个时候检测为长时间的时候，你需要在这里添加
+        如果取消后，需要在`stuck_record_clear`中清除
+        :param button:
+        :return:
+        """
         self.detect_record.add(str(button))
 
     def stuck_record_clear(self):

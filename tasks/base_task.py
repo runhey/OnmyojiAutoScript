@@ -58,9 +58,11 @@ class BaseTask(GlobalGameAssets):
         if self.friend_timer and self.friend_timer.reached():
             self.friend_timer.reset()
             invite = self.appear(self.I_ACCEPT)
+            logger.info(f"Find friend invitation")
             # 如果是全部接受
             if invite and self.config.global_game.emergency.friend_invitation == FriendInvitation.ACCEPT:
                 # 如果是接受邀请
+                logger.info(f"Accept friend invitation")
                 while 1:
                     if self.appear_then_click(self.I_ACCEPT):
                         continue
@@ -68,6 +70,7 @@ class BaseTask(GlobalGameAssets):
                         break
             # 如果是全部拒绝
             elif invite and self.config.global_game.emergency.friend_invitation == FriendInvitation.REJECT:
+                logger.info(f"Reject friend invitation")
                 while 1:
                     if self.appear_then_click(self.I_REJECT):
                         continue
@@ -75,6 +78,7 @@ class BaseTask(GlobalGameAssets):
                         break
             # 最后一个是仅仅接受勾协
             elif invite and self.config.global_game.emergency.friend_invitation == FriendInvitation.ONLY_JADE:
+                logger.info(f"Accept jade invitation")
                 while 1:
                     if self.appear_then_click(self.I_ACCEPT):
                         continue
@@ -82,10 +86,12 @@ class BaseTask(GlobalGameAssets):
                         break
             # 判断网络异常
             if self.appear(self.I_NETWORK_ABNORMAL):
+                logger.warning(f"Network abnormal")
                 raise GameStuckError
 
             # 判断网络错误
             if self.appear(self.I_NETWORK_ERROR):
+                logger.warning(f"Network error")
                 raise GameStuckError
 
         return self.device.image

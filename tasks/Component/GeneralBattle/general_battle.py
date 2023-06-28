@@ -57,7 +57,7 @@ class GeneralBattle(BaseTask, GeneralBattleAssets):
                 self.device.click(x, y)
 
                 # 选择预设的队伍
-                logger.info("select preset team")
+                logger.info("Select preset team")
                 time.sleep(0.5)
                 match config.preset_team:
                     case 1: x, y = self.C_PRESET_TEAM_1.coord()
@@ -68,7 +68,7 @@ class GeneralBattle(BaseTask, GeneralBattleAssets):
                 self.device.click(x, y)
 
                 # 点击预设确认
-                logger.info("click preset ensure")
+                logger.info("Click preset ensure")
                 while 1:
                     self.screenshot()
                     if self.appear_then_click(self.I_PRESET_ENSURE, threshold=0.8):
@@ -78,8 +78,8 @@ class GeneralBattle(BaseTask, GeneralBattleAssets):
 
             # 点击buff按钮
             if config.buff_enable:
-                logger.info("buff is enable")
-                logger.info("click buff button")
+                logger.info("Buff is enable")
+                logger.info("Click buff button")
                 while 1:
                     self.screenshot()
                     if self.appear_then_click(self.I_BUFF, interval=1.5):
@@ -119,8 +119,12 @@ class GeneralBattle(BaseTask, GeneralBattleAssets):
             # 点击绿标
             self.device.click(x, y)
 
+        # 有的时候是长战斗，需要在设置stuck检测为长战斗
+        # 但是无需取消设置，因为如果有点击或者滑动的话 handle_control_check会自行取消掉
+        self.device.stuck_record_add('BATTLE_STATUS_S')
+
         # 战斗过程 随机点击和滑动 防封
-        logger.info("battle process")
+        logger.hr("Battle process", 2)
         win: bool = False
         while 1:
             self.screenshot()
@@ -152,9 +156,11 @@ class GeneralBattle(BaseTask, GeneralBattleAssets):
                             self.swipe(self.S_BATTLE_RANDOM_LEFT, interval=20)
                         case 2:
                             self.swipe(self.S_BATTLE_RANDOM_RIGHT, interval=20)
+                    # 重新设置为长战斗
+                    self.device.stuck_record_add('BATTLE_STATUS_S')
 
         # 再次确认战斗结果
-        logger.info("reconfirm the results of the battle")
+        logger.info("Reconfirm the results of the battle")
         while 1:
             self.screenshot()
             if win:
@@ -171,7 +177,7 @@ class GeneralBattle(BaseTask, GeneralBattleAssets):
                     return False
         # 最后保证能点击 获得奖励
         self.wait_until_appear(self.I_REWARD)
-        logger.info("get reward")
+        logger.info("Get reward")
         while 1:
             self.screenshot()
             # 如果出现领奖励
