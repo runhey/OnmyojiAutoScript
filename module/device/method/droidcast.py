@@ -65,7 +65,7 @@ def retry(func):
                     self.droidcast_init()
             # DroidCastVersionIncompatible
             except DroidCastVersionIncompatible as e:
-                logger.error(e)
+                logger.warning(e)
 
                 def init():
                     self.droidcast_init()

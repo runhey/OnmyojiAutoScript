@@ -311,9 +311,9 @@
 	<message><source>Enable</source><translation>启用该功能</translation></message>
 	<message><source>Next Run</source><translation>下一次运行时间</translation></message>
 	<message><source>Priority</source><translation>任务优先级</translation></message>
-	<message><source>Interval Days</source><translation>下次执行的间隔天数</translation></message>
-	<message><source>Interval Hours</source><translation>下次执行的间隔小时</translation></message>
-	<message><source>Interval Minutes</source><translation>下次执行的间隔分钟</translation></message>
+	<message><source>Success Interval</source><translation>执行任务成功后设定下次执行的间隔时间</translation></message>
+	<message><source>Failure Interval</source><translation>执行任务失败后设定下次执行的间隔时间</translation></message>
+	<message><source>Server Update</source><translation>服务器更新时间</translation></message>
 	<message><source>enable_help</source><translation>将这个任务加入调度器</translation></message>
 	<message><source>next_run_help</source><translation>会根据下面的间隔时间自动计算时间，清空后回车即可设置为当前</translation></message>
 	<message><source>priority_help</source><translation>如果设置调度规则为基于优先级，则该选项有效
@@ -321,6 +321,9 @@
 	<message><source>interval_days_help</source><translation>可取[0~7]</translation></message>
 	<message><source>interval_hours_help</source><translation>可取[0~24]</translation></message>
 	<message><source>interval_minutes_help</source><translation>可取[0~60]</translation></message>
+	<message><source>success_interval_help</source><translation>一般默认，时间格式:"[days] [hours]:[minutes]:[seconds]"</translation></message>
+	<message><source>failure_interval_help</source><translation>一般默认即可，时间格式同上，不按照格式输入会无法正确设置</translation></message>
+	<message><source>server_update_help</source><translation>服务器更新时间，占位符，还没想好怎么用</translation></message>
 </context>
 <context>
     <name>Args</name>
@@ -370,5 +373,13 @@
 	<message><source>when_network_abnormal_help</source><translation>默认会先等待10S</translation></message>
 	<message><source>when_network_error_help</source><translation>重启游戏</translation></message>
 	<message><source>home_client_clear_help</source><translation>有时会出现进入庭院要求清理缓存</translation></message>
+</context>
+<context>
+    <name>Args</name>
+	<message><source>ShikigamiConfig</source><translation>活动</translation></message>
+	<message><source>Limit Time</source><translation>限制运行时间</translation></message>
+	<message><source>Limit Count</source><translation>限制挑战次数</translation></message>
+	<message><source>limit_time_help</source><translation>单位秒</translation></message>
+	<message><source>limit_count_help</source><translation>两个限制需要同时设置，最先达到就会退出</translation></message>
 </context>
 </TS>

@@ -3,7 +3,7 @@
 # github https://github.com/runhey
 import numpy as np
 
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, time
 from typing import Union
 
 from module.config.utils import convert_to_underscore
@@ -17,11 +17,12 @@ from module.ocr.base_ocr import OcrMode, OcrMethod
 from module.logger import logger
 from module.base.timer import Timer
 from module.config.config import Config
+from module.config.utils import get_server_next_update, nearest_future, dict_to_kv
 from module.device.device import Device
 from tasks.GlobalGame.assets import GlobalGameAssets
 from tasks.GlobalGame.config_emergency import FriendInvitation, WhenNetworkAbnormal, WhenNetworkError
 
-from module.exception import GameStuckError
+from module.exception import GameStuckError, ScriptError
 
 
 
@@ -33,7 +34,9 @@ class BaseTask(GlobalGameAssets):
     name: str
     stage: str
 
-    limit_time: datetime  # 限制运行的时间，是软时间，不是硬时间
+    limit_time: timedelta = None  # 限制运行的时间，是软时间，不是硬时间
+    limit_count: int = None  # 限制运行的次数
+    current_count: int = None  # 当前运行的次数
 
     def __init__(self, config: Config, device: Device) -> None:
         self.config = config
@@ -43,10 +46,13 @@ class BaseTask(GlobalGameAssets):
 
         self.start_time = datetime.now()  # 启动的时间
 
-        self.friend_timer = None
+        self.friend_timer = None  # 这个是用来记录勾协的时间的
         if self.config.global_game.emergency.invitation_detect_interval:
             self.interval_time = self.config.global_game.emergency.invitation_detect_interval
             self.friend_timer = Timer(self.interval_time)
+
+        # 战斗次数相关
+        self.current_count = 0  # 战斗次数
 
     def screenshot(self):
         """
@@ -61,6 +67,7 @@ class BaseTask(GlobalGameAssets):
             # 如果是全部接受
             if invite and self.config.global_game.emergency.friend_invitation == FriendInvitation.ACCEPT:
                 # 如果是接受邀请
+                logger.info(f"Accept friend invitation")
                 while 1:
                     if self.appear_then_click(self.I_ACCEPT):
                         continue
@@ -68,6 +75,7 @@ class BaseTask(GlobalGameAssets):
                         break
             # 如果是全部拒绝
             elif invite and self.config.global_game.emergency.friend_invitation == FriendInvitation.REJECT:
+                logger.info(f"Reject friend invitation")
                 while 1:
                     if self.appear_then_click(self.I_REJECT):
                         continue
@@ -75,6 +83,7 @@ class BaseTask(GlobalGameAssets):
                         break
             # 最后一个是仅仅接受勾协
             elif invite and self.config.global_game.emergency.friend_invitation == FriendInvitation.ONLY_JADE:
+                logger.info(f"Accept jade invitation")
                 while 1:
                     if self.appear_then_click(self.I_ACCEPT):
                         continue
@@ -82,10 +91,12 @@ class BaseTask(GlobalGameAssets):
                         break
             # 判断网络异常
             if self.appear(self.I_NETWORK_ABNORMAL):
+                logger.warning(f"Network abnormal")
                 raise GameStuckError
 
             # 判断网络错误
             if self.appear(self.I_NETWORK_ERROR):
+                logger.warning(f"Network error")
                 raise GameStuckError
 
         return self.device.image
@@ -395,28 +406,69 @@ class BaseTask(GlobalGameAssets):
                 x1, y1, x2, y2 = target.swipe_pos(after=after)
                 self.device.swipe(p1=(x1, y1), p2=(x2, y2))
 
-    def set_next_run(self, task: str, finish: bool = False) -> None:
+    def set_next_run(self, task: str, finish: bool = False,
+                     success: bool=None, server: bool=None, target: timedelta=None) -> None:
         """
         设置下次运行时间  当然这个也是可以重写的
+        :param target: 可以自定义的下次运行时间
+        :param server: delay to nearest Scheduler.ServerUpdate
+        :param success: 判断是成功的还是失败的时间间隔
         :param task: 任务名称，大驼峰的
         :param finish: 是完成任务后的时间为基准还是开始任务的时间为基准
         :return:
         """
+
+        # 任务预处理
+        if not task:
+            task = self.config.task.command
         task = convert_to_underscore(task)
         task_object = getattr(self.config.model, task, None)
         if not task_object:
             logger.warning(f'No task named {task}')
             return
+        scheduler = getattr(task_object, 'scheduler', None)
+        if not scheduler:
+            logger.warning(f'No scheduler in {task}')
+            return
 
+        # 任务开始时间
         if finish:
             start_time = datetime.now()
         else:
             start_time = self.start_time
-        delta = timedelta(days=task_object.scheduler.interval_days,
-                          hours=task_object.scheduler.interval_hours,
-                          minutes=task_object.scheduler.interval_minutes, )
-        next_run = start_time + delta
-        next_run.replace(microsecond=0)
 
-        task_object.scheduler.next_run = next_run
-        self.config.save()
+        # 依次判断是否有自定义的下次运行时间
+        run = []
+        if success is not None:
+            interval = (
+                scheduler.success_interval
+                if success
+                else scheduler.failure_interval
+            )
+            run.append(start_time + interval)
+        if server is not None:
+            if server:
+                server = scheduler.server_update
+                run.append(get_server_next_update(server))
+        if target is not None:
+            target = [target] if not isinstance(target, list) else target
+            target = nearest_future(target)
+            run.append(target)
+        # 排序
+        if len(run):
+            run = min(run).replace(microsecond=0)
+            kv = dict_to_kv(
+                {
+                    "success": success,
+                    "server_update": server,
+                    "target": target,
+                },
+                allow_none=False,
+            )
+            logger.info(f"Delay task `{task}` to {run} ({kv})")
+            scheduler.next_run = run
+            self.config.save()
+        else:
+            raise ScriptError(
+                "Missing argument in delay_next_run, should set at least one"
+            )

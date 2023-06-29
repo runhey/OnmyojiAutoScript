@@ -45,13 +45,14 @@ class Device(Screenshot, Control, AppControl, EmulatorManager):
         """
         logger.info('run_simple_screenshot_benchmark')
         # Check resolution first
-        self.resolution_check_uiautomator2()
+        # self.resolution_check_uiautomator2()
         # Perform benchmark
-        # from module.daemon.benchmark import Benchmark
-        # bench = Benchmark(config=self.config, device=self)
-        # method = bench.run_simple_screenshot_benchmark()
-        # # Set
-        # self.config.Emulator_ScreenshotMethod = method
+        from module.daemon.benchmark import Benchmark
+        bench = Benchmark(config=self.config, device=self)
+        method = bench.run_simple_screenshot_benchmark()
+        # Set
+        self.config.script.device.screenshot_method = method
+        self.config.save()
 
     def handle_night_commission(self, daily_trigger='21:00', threshold=30):
         """
@@ -104,6 +105,12 @@ class Device(Screenshot, Control, AppControl, EmulatorManager):
             self._scrcpy_server_stop()
 
     def stuck_record_add(self, button):
+        """
+        当你要设置这个时候检测为长时间的时候，你需要在这里添加
+        如果取消后，需要在`stuck_record_clear`中清除
+        :param button:
+        :return:
+        """
         self.detect_record.add(str(button))
 
     def stuck_record_clear(self):
@@ -220,6 +227,6 @@ class Device(Screenshot, Control, AppControl, EmulatorManager):
 
 if __name__ == "__main__":
     device = Device(config="oas1")
-    cv2.imshow("imgSrceen", device.screenshot())  # 显示
-    cv2.waitKey(0)
-    cv2.destroyAllWindows()
+    # cv2.imshow("imgSrceen", device.screenshot())  # 显示
+    # cv2.waitKey(0)
+    # cv2.destroyAllWindows()

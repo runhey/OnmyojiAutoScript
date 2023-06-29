@@ -1,0 +1,65 @@
+[
+  {
+    "itemName": "shi",
+    "imageName": "as_shi.png",
+    "roiFront": "455,346,29,53",
+    "roiBack": "122,333,1029,76",
+    "method": "Template matching",
+    "threshold": 0.7,
+    "description": "进入活动"
+  },
+  {
+    "itemName": "back_green",
+    "imageName": "as_back_green.png",
+    "roiFront": "23,18,49,49",
+    "roiBack": "23,18,49,49",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "左上角返回"
+  },
+  {
+    "itemName": "battle",
+    "imageName": "as_battle.png",
+    "roiFront": "1037,330,52,57",
+    "roiBack": "1037,330,52,57",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "drum",
+    "imageName": "as_drum.png",
+    "roiFront": "902,379,41,43",
+    "roiBack": "902,379,41,43",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "归鹿之途"
+  },
+  {
+    "itemName": "lock",
+    "imageName": "as_lock.png",
+    "roiFront": "794,653,30,32",
+    "roiBack": "794,653,30,32",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "上锁图标"
+  },
+  {
+    "itemName": "unlock",
+    "imageName": "as_unlock.png",
+    "roiFront": "796,653,27,35",
+    "roiBack": "796,653,27,35",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "还未上锁图片"
+  },
+  {
+    "itemName": "fire",
+    "imageName": "as_fire.png",
+    "roiFront": "1140,585,75,73",
+    "roiBack": "1140,585,75,73",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "点击战斗"
+  }
+]

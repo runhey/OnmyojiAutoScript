@@ -10,6 +10,7 @@ from module.config.utils import *
 from module.logger import logger
 
 # 导入配置的Python文件
+from tasks.Component.config_base import ConfigBase
 from tasks.Script.config import Script
 from tasks.Restart.config import Restart
 from tasks.GlobalGame.config import GlobalGame
@@ -24,11 +25,13 @@ from tasks.FallenSun.config import FallenSun
 from tasks.EternitySea.config import EternitySea
 from tasks.RealmRaid.config import RealmRaid
 
+# 这一部分是活动的配置-----------------------------------------------------------------------------------------------------
+from tasks.ActivityShikigami.config import ActivityShikigami
+# ----------------------------------------------------------------------------------------------------------------------
 
 
 
-
-class ConfigModel(BaseModel):
+class ConfigModel(ConfigBase):
     config_name: str = "oas"
     script: Script = Field(default_factory=Script)
     restart: Restart = Field(default_factory=Restart)
@@ -47,6 +50,9 @@ class ConfigModel(BaseModel):
     sougenbi: Sougenbi = Field(default_factory=Sougenbi)
     fallen_sun: FallenSun = Field(default_factory=FallenSun)
     eternity_sea: EternitySea = Field(default_factory=EternitySea)
+
+    # 这些是活动的
+    activity_shikigami: ActivityShikigami = Field(default_factory=ActivityShikigami)
 
 
     # @validator('script')
@@ -111,7 +117,18 @@ class ConfigModel(BaseModel):
         if task_gui is None:
             logger.error(f'{task} is no inexistence')
             return ''
-        return task_gui.schema_json()
+
+        schema2 = task_gui.schema()
+        # https://github.com/pydantic/pydantic/discussions/5687
+        if 'definitions' in schema2:
+            if 'Scheduler' in schema2['definitions']:
+                if 'properties' in schema2['definitions']['Scheduler']:
+                    properties = schema2['definitions']['Scheduler']['properties']
+                    if 'success_interval' in properties:
+                        properties['success_interval']['type'] = 'string'
+                    if 'failure_interval' in properties:
+                        properties['failure_interval']['type'] = 'string'
+        return json.dumps(schema2)
 
     def gui_task(self, task: str) -> str:
         """
@@ -166,9 +183,11 @@ if __name__ == "__main__":
     except ValidationError as e:
         print(e)
         c = ConfigModel()
-    # c.write_json('oas1', c.dict())
-    # c.write_json('oas1', c.schema())
-    # for key, value in c.dict().items():
-    #     print(ConfigModel.type(key))
+
+    c.gui_args('Nian')
+    print(c.gui_task('Nian'))
+    print(c.gui_task('AreaBoss'))
+    print(c.dict()['nian']['scheduler']['success_interval'])
+    c.save()
 
 

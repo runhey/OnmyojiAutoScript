@@ -1,7 +1,7 @@
 ::[Bat To Exe Converter]
 ::
 ::YAwzoRdxOk+EWAjk
-::fBw5plQjdCyDJGyX8VAjFJOkoIxy0O5J9Ik47fvw++WXnkESU+1xcYzUug==
+::fBw5plQjdCqDJGuB5E0jIQ9bXh2+M2qpS7wS+/z64+a7pkgNWO0mRIPaz7qNKOUB1knrcplj33lV+A==
 ::YAwzuBVtJxjWCl3EqQJgSA==
 ::ZR4luwNxJguZRRnk
 ::Yhs/ulQjdF+5
@@ -26,7 +26,7 @@
 ::ZQ0/vhVqMQ3MEVWAtB9wSA==
 ::Zg8zqx1/OA3MEVWAtB9wSA==
 ::dhA7pRFwIByZRRnk
-::Zh4grVQjdCyDJGyX8VAjFJOkoIxy0O5J9Ik47fvw++WXnkIcR6w6YIq7
+::Zh4grVQjdCqDJGuB5E0jIQ9bXh2+M2qpS7wS+/z64+a7rUwOGucnfe8=
 ::YB416Ek+ZG8=
 ::
 ::
@@ -34,34 +34,40 @@
 @rem
 @echo off
 
+color F0
+title oas Updater
+
+
+
+:: 检查管理员权限
+>nul 2>&1 "%SYSTEMROOT%\system32\cacls.exe" "%SYSTEMROOT%\system32\config\system"
+
+:: 如果返回值不等于 0，则重新启动脚本以获取管理员权限
+if %errorlevel% neq 0 (
+    echo Set UAC = CreateObject^("Shell.Application"^) > "%temp%\getadmin.vbs"
+    echo UAC.ShellExecute "%~s0", "", "", "runas", 1 >> "%temp%\getadmin.vbs"
+    "%temp%\getadmin.vbs"
+    del "%temp%\getadmin.vbs"
+    exit /B
+)
+
+cd /d "%~dp0"
 set "_root=%~dp0"
 set "_root=%_root:~0,-1%"
 cd "%_root%"
 echo "%_root%
-
-color F0
 
 set "_pyBin=%_root%\toolkit"
 set "_GitBin=%_root%\toolkit\Git\mingw64\bin"
 set "_adbBin=%_root%\toolkit\Lib\site-packages\adbutils\binaries"
 set "PATH=%_root%\toolkit\alias;%_root%\toolkit\command;%_pyBin%;%_pyBin%\Scripts;%_GitBin%;%_adbBin%;%PATH%"
 
-title oas Updater
+
 python -m deploy.installer
 if %errorlevel% neq 0 (
     pause > nul
 ) else (
-    REM 检查管理员权限
-    >nul 2>&1 "%SYSTEMROOT%\system32\cacls.exe" "%SYSTEMROOT%\system32\config\system"
-    
-    REM 如果上一条命令的返回值为0，则表示具有管理员权�?
-    if "%errorlevel%"=="0" (
-        REM 以管理员身份运行 Python 脚本
-        start /B pythonw gui.py
-    ) else (
-        REM 如果没有管理员权限，则使�?PowerShell 提升为管理员身份并运行脚�?
-        PowerShell -Command "Start-Process -Verb RunAs pythonw  -ArgumentList gui.py"
-)
+    start /B pythonw gui.py
 )
 
 REM 关闭自身窗口

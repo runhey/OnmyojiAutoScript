@@ -78,7 +78,7 @@ class ScriptTask(GeneralBattle, GameUi, RealmRaidAssets):
         # 点击左上角的关闭
         self.explore_home()
 
-        self.set_next_run(task='RealmRaid')
+        self.set_next_run(task='RealmRaid', success=True)
         raise TaskEnd
 
 
