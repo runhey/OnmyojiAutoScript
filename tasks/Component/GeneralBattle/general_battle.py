@@ -21,6 +21,10 @@ class GeneralBattle(BaseTask, GeneralBattleAssets):
         运行脚本
         :return:
         """
+        # 本人选择的策略是只要进来了就算一次，不管是不是打完了
+        logger.hr("General battle start", 2)
+        self.current_count += 1
+        logger.info(f"Current count: {self.current_count}")
         if config is None:
             config = GeneralBattleConfig().dict()
 
@@ -32,7 +36,7 @@ class GeneralBattle(BaseTask, GeneralBattleAssets):
         if not config.lock_team_enable:
             logger.info("Lock team is not enable")
             # 如果启动更换队伍
-            if config.preset_enable:
+            if config.preset_enable and self.current_count == 1:
                 logger.info("Preset is enable")
                 # 点击预设按钮
                 logger.info("Click preset button")
@@ -77,7 +81,7 @@ class GeneralBattle(BaseTask, GeneralBattleAssets):
                         break
 
             # 点击buff按钮
-            if config.buff_enable:
+            if config.buff_enable and self.current_count == 1:
                 logger.info("Buff is enable")
                 logger.info("Click buff button")
                 while 1:
@@ -124,7 +128,7 @@ class GeneralBattle(BaseTask, GeneralBattleAssets):
         self.device.stuck_record_add('BATTLE_STATUS_S')
 
         # 战斗过程 随机点击和滑动 防封
-        logger.hr("Battle process", 2)
+        logger.info("Start battle process")
         win: bool = False
         while 1:
             self.screenshot()

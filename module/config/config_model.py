@@ -25,7 +25,9 @@ from tasks.FallenSun.config import FallenSun
 from tasks.EternitySea.config import EternitySea
 from tasks.RealmRaid.config import RealmRaid
 
-
+# 这一部分是活动的配置-----------------------------------------------------------------------------------------------------
+from tasks.ActivityShikigami.config import ActivityShikigami
+# ----------------------------------------------------------------------------------------------------------------------
 
 
 
@@ -48,6 +50,9 @@ class ConfigModel(ConfigBase):
     sougenbi: Sougenbi = Field(default_factory=Sougenbi)
     fallen_sun: FallenSun = Field(default_factory=FallenSun)
     eternity_sea: EternitySea = Field(default_factory=EternitySea)
+
+    # 这些是活动的
+    activity_shikigami: ActivityShikigami = Field(default_factory=ActivityShikigami)
 
 
     # @validator('script')

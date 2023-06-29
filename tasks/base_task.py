@@ -3,7 +3,7 @@
 # github https://github.com/runhey
 import numpy as np
 
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, time
 from typing import Union
 
 from module.config.utils import convert_to_underscore
@@ -34,7 +34,9 @@ class BaseTask(GlobalGameAssets):
     name: str
     stage: str
 
-    limit_time: datetime  # 限制运行的时间，是软时间，不是硬时间
+    limit_time: timedelta = None  # 限制运行的时间，是软时间，不是硬时间
+    limit_count: int = None  # 限制运行的次数
+    current_count: int = None  # 当前运行的次数
 
     def __init__(self, config: Config, device: Device) -> None:
         self.config = config
@@ -44,10 +46,13 @@ class BaseTask(GlobalGameAssets):
 
         self.start_time = datetime.now()  # 启动的时间
 
-        self.friend_timer = None
+        self.friend_timer = None  # 这个是用来记录勾协的时间的
         if self.config.global_game.emergency.invitation_detect_interval:
             self.interval_time = self.config.global_game.emergency.invitation_detect_interval
             self.friend_timer = Timer(self.interval_time)
+
+        # 战斗次数相关
+        self.current_count = 0  # 战斗次数
 
     def screenshot(self):
         """

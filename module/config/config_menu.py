@@ -20,6 +20,8 @@ class ConfigMenu:
         self.menu["Soul Zones"] = ['Orochi', 'Sougenbi', 'FallenSun', 'EternitySea']
         # 日常的任务
         self.menu["Daily Task"] = ['AreaBoss', 'GoldYoukai', 'ExperienceYoukai', 'Nian', 'RealmRaid']
+        # 活动的任务
+        self.menu["Activity Task"] = ['ActivityShikigami']
 
         # 开发工具
         self.menu["Tools"] = ['Image Rule', 'Ocr Rule', 'Click Rule', 'Long Click Rule', 'Swipe Rule', 'List Rule']
