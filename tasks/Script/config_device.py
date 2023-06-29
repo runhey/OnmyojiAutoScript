@@ -11,11 +11,12 @@ class PackageName(str, Enum):
     NETEASE_ONMYOJI = 'com.netease.onmyoji.wyzymnqsd_cps'  # 网易自家的阴阳师
 
 class ScreenshotMethod(str, Enum):
-    ADB = 'adb'
-    ADB_NC = 'adb_nc'
+    AUTO = 'auto'
+    ADB = 'ADB'
+    ADB_NC = 'ADB_nc'
     UIAUTOMATOR2 = 'uiautomator2'
-    DROIDCAST = 'droidcast'
-    DROIDCAST_RAW = 'droidcast_raw'
+    DROIDCAST = 'Droidcast'
+    DROIDCAST_RAW = 'Droidcast_raw'
     SCRCPY = 'scrcpy'
     WINDOW_BACKGROUND = 'window_background'
 

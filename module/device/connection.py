@@ -697,6 +697,7 @@ class Connection(ConnectionAttr):
                 c.send_command("host:devices")
                 c.check_okay()
                 output = c.read_string_block()
+                logger.debug(output)
                 for line in output.splitlines():
                     parts = line.strip().split("\t")
                     if len(parts) != 2:
