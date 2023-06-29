@@ -184,3 +184,61 @@ def convert_to_underscore(text: str) -> str:
 
     return result
 
+def get_server_last_update(daily_trigger):
+    """
+    Args:
+        daily_trigger (list[str], str): [ "00:00", "12:00", "18:00",]
+
+    Returns:
+        datetime.datetime
+    """
+    if isinstance(daily_trigger, str):
+        daily_trigger = daily_trigger.replace(' ', '').split(',')
+
+    diff = server_time_offset()
+    local_now = datetime.now()
+    trigger = []
+    for t in daily_trigger:
+        h, m = [int(x) for x in t.split(':')]
+        future = local_now.replace(hour=h, minute=m, second=0, microsecond=0) + diff
+        s = (future - local_now).total_seconds() % 86400 - 86400
+        future = local_now + timedelta(seconds=s)
+        trigger.append(future)
+    update = sorted(trigger)[-1]
+    return update
+
+
+def nearest_future(future, interval=120):
+    """
+    Get the neatest future time.
+    Return the last one if two things will finish within `interval`.
+
+    Args:
+        future (list[datetime.datetime]):
+        interval (int): Seconds
+
+    Returns:
+        datetime.datetime:
+    """
+    future = [datetime.fromisoformat(f) if isinstance(f, str) else f for f in future]
+    future = sorted(future)
+    next_run = future[0]
+    for finish in future:
+        if finish - next_run < timedelta(seconds=interval):
+            next_run = finish
+
+    return next_run
+
+
+
+def dict_to_kv(dictionary, allow_none=True):
+    """
+    Args:
+        dictionary: Such as `{'path': 'Scheduler.ServerUpdate', 'value': True}`
+        allow_none (bool):
+
+    Returns:
+        str: Such as `path='Scheduler.ServerUpdate', value=True`
+    """
+    return ', '.join([f'{k}={repr(v)}' for k, v in dictionary.items() if allow_none or v is not None])
+

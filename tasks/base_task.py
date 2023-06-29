@@ -17,11 +17,12 @@ from module.ocr.base_ocr import OcrMode, OcrMethod
 from module.logger import logger
 from module.base.timer import Timer
 from module.config.config import Config
+from module.config.utils import get_server_next_update, nearest_future, dict_to_kv
 from module.device.device import Device
 from tasks.GlobalGame.assets import GlobalGameAssets
 from tasks.GlobalGame.config_emergency import FriendInvitation, WhenNetworkAbnormal, WhenNetworkError
 
-from module.exception import GameStuckError
+from module.exception import GameStuckError, ScriptError
 
 
 
@@ -58,7 +59,6 @@ class BaseTask(GlobalGameAssets):
         if self.friend_timer and self.friend_timer.reached():
             self.friend_timer.reset()
             invite = self.appear(self.I_ACCEPT)
-            logger.info(f"Find friend invitation")
             # 如果是全部接受
             if invite and self.config.global_game.emergency.friend_invitation == FriendInvitation.ACCEPT:
                 # 如果是接受邀请
@@ -401,28 +401,69 @@ class BaseTask(GlobalGameAssets):
                 x1, y1, x2, y2 = target.swipe_pos(after=after)
                 self.device.swipe(p1=(x1, y1), p2=(x2, y2))
 
-    def set_next_run(self, task: str, finish: bool = False) -> None:
+    def set_next_run(self, task: str, finish: bool = False,
+                     success: bool=None, server: bool=None, target: timedelta=None) -> None:
         """
         设置下次运行时间  当然这个也是可以重写的
+        :param target: 可以自定义的下次运行时间
+        :param server: delay to nearest Scheduler.ServerUpdate
+        :param success: 判断是成功的还是失败的时间间隔
         :param task: 任务名称，大驼峰的
         :param finish: 是完成任务后的时间为基准还是开始任务的时间为基准
         :return:
         """
+
+        # 任务预处理
+        if not task:
+            task = self.config.task.command
         task = convert_to_underscore(task)
         task_object = getattr(self.config.model, task, None)
         if not task_object:
             logger.warning(f'No task named {task}')
             return
+        scheduler = getattr(task_object, 'scheduler', None)
+        if not scheduler:
+            logger.warning(f'No scheduler in {task}')
+            return
 
+        # 任务开始时间
         if finish:
             start_time = datetime.now()
         else:
             start_time = self.start_time
-        delta = timedelta(days=task_object.scheduler.interval_days,
-                          hours=task_object.scheduler.interval_hours,
-                          minutes=task_object.scheduler.interval_minutes, )
-        next_run = start_time + delta
-        next_run.replace(microsecond=0)
 
-        task_object.scheduler.next_run = next_run
-        self.config.save()
+        # 依次判断是否有自定义的下次运行时间
+        run = []
+        if success is not None:
+            interval = (
+                scheduler.success_interval
+                if success
+                else scheduler.failure_interval
+            )
+            run.append(start_time + interval)
+        if server is not None:
+            if server:
+                server = scheduler.server_update
+                run.append(get_server_next_update(server))
+        if target is not None:
+            target = [target] if not isinstance(target, list) else target
+            target = nearest_future(target)
+            run.append(target)
+        # 排序
+        if len(run):
+            run = min(run).replace(microsecond=0)
+            kv = dict_to_kv(
+                {
+                    "success": success,
+                    "server_update": server,
+                    "target": target,
+                },
+                allow_none=False,
+            )
+            logger.info(f"Delay task `{task}` to {run} ({kv})")
+            scheduler.next_run = run
+            self.config.save()
+        else:
+            raise ScriptError(
+                "Missing argument in delay_next_run, should set at least one"
+            )
