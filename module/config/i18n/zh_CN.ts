@@ -379,7 +379,18 @@
 	<message><source>ShikigamiConfig</source><translation>活动</translation></message>
 	<message><source>Limit Time</source><translation>限制运行时间</translation></message>
 	<message><source>Limit Count</source><translation>限制挑战次数</translation></message>
-	<message><source>limit_time_help</source><translation>单位秒</translation></message>
-	<message><source>limit_count_help</source><translation>两个限制需要同时设置，最先达到就会退出</translation></message>
+	<message><source>limit_time_help</source><translation>时间格式:"[days] [hours]:[minutes]:[seconds]"
+注意天数和小时之间有一个空格，不按照格式输入会无法正确设置</translation></message>
+	<message><source>limit_count_help</source><translation>两个限制需要同时设置，最先达到就会退出。
+建议执行时间设置成一个小时足够长，此时基于次数来判定设置为100次</translation></message>
+	<message><source>GeneralClimb</source><translation>通用爬塔</translation></message>
+	<message><source>Ap Game Max</source><translation>活动每日使用体力挑战的最大次数</translation></message>
+	<message><source>ap_game_max_help</source><translation>保持默认300即可</translation></message>
+	<message><source>ApMode</source><translation>挂体力模式</translation></message>
+	<message><source>ap_mode_help</source><translation>设置是挂活动的次数(ap_activity)还是游戏的体力(ap_game)</translation></message>
+	<message><source>Activity Toggle</source><translation>挂完活动次数后切换到体力模式</translation></message>
+	<message><source>Buy Ap Activity</source><translation>游戏体力不足是否需要话勾玉购买</translation></message>
+	<message><source>buy_ap_activity_help</source><translation>该设置只有是设定为活动次数时有效</translation></message>
+	<message><source>activity_toggle_help</source><translation>该设置只有是设定为活动次数时有效</translation></message>
 </context>
 </TS>

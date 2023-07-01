@@ -61,5 +61,59 @@
     "method": "Template matching",
     "threshold": 0.8,
     "description": "点击战斗"
+  },
+  {
+    "itemName": "ap",
+    "imageName": "as_ap.png",
+    "roiFront": "1126,510,27,37",
+    "roiBack": "1126,510,27,37",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "体力按钮"
+  },
+  {
+    "itemName": "ap_activity",
+    "imageName": "as_ap_activity.png",
+    "roiFront": "1125,516,27,27",
+    "roiBack": "1125,516,27,27",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "活动体力"
+  },
+  {
+    "itemName": "switch",
+    "imageName": "as_switch.png",
+    "roiFront": "1207,514,33,30",
+    "roiBack": "1207,514,33,30",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "切换按键"
+  },
+  {
+    "itemName": "buy_jade",
+    "imageName": "as_buy_jade.png",
+    "roiFront": "836,619,38,42",
+    "roiBack": "789,614,143,52",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "购买活动的体力"
+  },
+  {
+    "itemName": "add_max",
+    "imageName": "as_add_max.png",
+    "roiFront": "974,524,57,54",
+    "roiBack": "974,524,57,54",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "增加到最大"
+  },
+  {
+    "itemName": "new",
+    "imageName": "as_new.png",
+    "roiFront": "0,0,100,100",
+    "roiBack": "0,0,100,100",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
   }
 ]

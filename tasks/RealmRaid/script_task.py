@@ -87,6 +87,7 @@ class ScriptTask(GeneralBattle, GameUi, RealmRaidAssets):
         如果没有票了，那么就返回False
         :return:
         """
+        self.wait_until_appear(self.I_BACK_RED)
         self.screenshot()
         cu, res, total = self.O_NUMBER.ocr(self.device.image)
         if cu == 0 and cu+res == total:
