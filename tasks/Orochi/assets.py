@@ -12,7 +12,7 @@ class OrochiAssets:
 
 	# List Rule Assets
 	# 这个是御魂界面选择不同层数的 
-	L_N33AME = RuleList(folder="./tasks/Orochi/res", direction="vertical", mode="ocr", roi_back=(160,130,317,500), size=(301, 86), 
-					 array=["壹层", "贰层", "叁层", "肆层", "伍层", "陆层", "柒层", "捌层", "玖层", "拾层", "悲鸣", "神罚"])
+	L_LAYER_LIST = RuleList(folder="./tasks/Orochi/res", direction="vertical", mode="ocr", roi_back=(276,130,52,500), size=(45, 88), 
+					 array=["壹", "贰", "叁", "肆", "伍", "陆", "柒", "捌", "玖", "拾", "悲", "神"])
 
 

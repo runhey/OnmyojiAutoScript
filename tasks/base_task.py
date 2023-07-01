@@ -3,6 +3,7 @@
 # github https://github.com/runhey
 import numpy as np
 
+from time import sleep
 from datetime import datetime, timedelta, time
 from typing import Union
 
@@ -403,8 +404,9 @@ class BaseTask(GlobalGameAssets):
                 elif isinstance(result, int) and result < 0:
                     after = False
 
-                x1, y1, x2, y2 = target.swipe_pos(after=after)
+                x1, y1, x2, y2 = target.swipe_pos(number=1, after=after)
                 self.device.swipe(p1=(x1, y1), p2=(x2, y2))
+                sleep(1)  # 等待滑动完成， 还没想好如何优化
 
     def set_next_run(self, task: str, finish: bool = False,
                      success: bool=None, server: bool=None, target: timedelta=None) -> None:

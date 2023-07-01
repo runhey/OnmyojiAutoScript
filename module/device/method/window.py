@@ -234,13 +234,20 @@ class Window(Handle):
         SendMessage(handleNum, WM_SETCURSOR, handleNum, MAKELONG(HTCLIENT, WM_LBUTTONDOWN))
         PostMessage(handleNum, WM_LBUTTONDOWN, MK_LBUTTON, tmpPos)
         # 一点一点移动鼠标
-        for pos in trace:
+        for pos in trace[:-3]:
             tmpPos = MAKELONG(pos[0], pos[1])
             PostMessage(handleNum, WM_MOUSEMOVE, MK_LBUTTON, tmpPos)
             time.sleep((interval + random.randint(-2, 2)) / 1000.0)
         # 最后释放鼠标
-        tmpPos = MAKELONG(trace[-1][0], trace[-1][1])
-        PostMessage(handleNum, WM_LBUTTONUP, 0, tmpPos)
+        end_pos_3 = MAKELONG(trace[-3][0], trace[-3][1])
+        end_pos_2 = MAKELONG(trace[-2][0], trace[-2][1])
+        end_pos_1 = MAKELONG(trace[-1][0], trace[-1][1])
+        PostMessage(handleNum, WM_MOUSEMOVE, MK_LBUTTON, end_pos_3)
+        time.sleep(0.08)
+        PostMessage(handleNum, WM_MOUSEMOVE, MK_LBUTTON, end_pos_2)
+        time.sleep(0.08)
+        PostMessage(handleNum, WM_MOUSEMOVE, MK_LBUTTON, end_pos_1)
+        PostMessage(handleNum, WM_LBUTTONUP, 0, end_pos_1)
 
     def swipe_vector_window_message2(self, startPos: list, endPos: list) -> None:
         """
