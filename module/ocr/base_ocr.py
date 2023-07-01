@@ -195,7 +195,7 @@ class BaseCor:
         if keyword is None:
             keyword = self.keyword
         if keyword in concatenated_string:
-            result = [index for index, _ in enumerate(strings)]
+            result = [index for index, word in enumerate(strings) if keyword in word]
         else:
             result = None
 

@@ -344,7 +344,7 @@
 	<message><source>Random Click Swipt Enable</source><translation>战斗时随机点击或者随机滑动</translation></message>
 	
 	<message><source>lock_team_enable_help</source><translation>如果锁定阵容将无法启用预设队伍、加成功能</translation></message>
-	<message><source>preset_enable_help</source><translation> </translation></message>
+	<message><source>preset_enable_help</source><translation>将会在第一次战斗的时候切换队伍预设</translation></message>
 	<message><source>preset_group_help</source><translation>可选[1~7]</translation></message>
 	<message><source>preset_team_help</source><translation>可选[1~5]</translation></message>
 	<message><source>buff_enable_help</source><translation>在准备阶段开启加成不太符合直觉，暂时还未实现，而且挺多的战斗是不允许准备阶段开启加成的</translation></message>
@@ -393,4 +393,28 @@
 	<message><source>buy_ap_activity_help</source><translation>该设置只有是设定为活动次数时有效</translation></message>
 	<message><source>activity_toggle_help</source><translation>该设置只有是设定为活动次数时有效</translation></message>
 </context>
+<context>
+    <name>Args</name>
+	<message><source>InviteConfig</source><translation>邀请</translation></message>
+	<message><source>InviteNumber</source><translation>邀请人数</translation></message>
+	<message><source>Friend 1</source><translation>第一个队友名字</translation></message>
+	<message><source>Friend 2</source><translation>第二个队友名字</translation></message>
+	<message><source>Auto Find</source><translation>自动切换好友列表选中队友</translation></message>
+	<message><source>Wait Time</source><translation>等待时间</translation></message>
+	<message><source>invite_number_help</source><translation>可选1或者2，为1时只会邀请第一个队友</translation></message>
+	<message><source>friend_name_help</source><translation>输入队友的名字必须是全称，这一项是基于OCR来识别，如果名字过于离谱建议画200勾玉改一个正常点的名字</translation></message>
+	<message><source>friend_2_name_help</source><translation>同上</translation></message>
+	<message><source>auto_find_help</source><translation>首先会在第一个好友列表寻找，如果没有找到则跳转到"最近" -> "寮友" -> "跨区"</translation></message>
+	<message><source>wait_time_help</source><translation>保持默认一分钟就好，期间每隔15s邀请一次</translation></message>
+</context>
+<context>
+    <name>Args</name>
+	<message><source>OrochiConfig</source><translation>副本</translation></message>
+	<message><source>UserStatus</source><translation>身份</translation></message>
+	<message><source>Layer</source><translation>挑战层数</translation></message>
+	<message><source>Soul Buff Enable</source><translation>开启御魂加成</translation></message>
+	<message><source>user_status_help</source><translation>可选队长、队员、单独刷（野队还不打算实现）</translation></message>
+	<message><source>layer_help</source><translation> </translation></message>
+	<message><source>soul_buff_enable_help</source><translation>会在庭院开始的时候设置加成</translation></message>
+</context>	
 </TS>
