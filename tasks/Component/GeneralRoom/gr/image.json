@@ -1,0 +1,65 @@
+[
+  {
+    "itemName": "create_room",
+    "imageName": "gr_create_room.png",
+    "roiFront": "985,600,177,58",
+    "roiBack": "396,569,813,100",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "create_ensure",
+    "imageName": "gr_create_ensure.png",
+    "roiFront": "813,560,129,63",
+    "roiBack": "813,560,129,63",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "ensure_private",
+    "imageName": "gr_ensure_private.png",
+    "roiFront": "748,489,36,40",
+    "roiBack": "748,489,36,40",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "勾选不公开的图"
+  },
+  {
+    "itemName": "ensure_private_false",
+    "imageName": "gr_ensure_private_false.png",
+    "roiFront": "747,489,37,40",
+    "roiBack": "747,489,37,40",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "这个是还没勾选的图"
+  },
+  {
+    "itemName": "ensure_private_2",
+    "imageName": "gr_ensure_private_2.png",
+    "roiFront": "401,409,34,40",
+    "roiBack": "401,409,34,40",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "ensure_private_false_2",
+    "imageName": "gr_ensure_private_false_2.png",
+    "roiFront": "400,408,36,38",
+    "roiBack": "400,408,36,38",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "create_ensure_2",
+    "imageName": "gr_create_ensure_2.png",
+    "roiFront": "552,489,42,55",
+    "roiBack": "552,489,42,55",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  }
+]
