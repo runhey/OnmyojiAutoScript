@@ -10,8 +10,11 @@ from tasks.RealmRaid.assets import RealmRaidAssets
 from tasks.RealmRaid.config import RealmRaid, RaidMode, AttackNumber
 from module.logger import logger
 from module.exception import TaskEnd
+from module.atom.image_grid import ImageGrid
 
 class ScriptTask(GeneralBattle, GameUi, RealmRaidAssets):
+
+    medal_grid: ImageGrid = None
 
     def run(self):
         """
@@ -19,6 +22,8 @@ class ScriptTask(GeneralBattle, GameUi, RealmRaidAssets):
         :return:
         """
         config = self.config.realm_raid
+        self.medal_grid = ImageGrid([self.I_MEDAL_5, self.I_MEDAL_4, self.I_MEDAL_3,
+                                     self.I_MEDAL_2, self.I_MEDAL_1, self.I_MEDAL_0])
         self.home_explore()
 
         # 点击突破
@@ -118,28 +123,12 @@ class ScriptTask(GeneralBattle, GameUi, RealmRaidAssets):
                         break
                 continue
 
+            target = self.medal_grid.find_anyone(self.device.image)
+            if target:
+                self.appear_then_click(target, interval=2)  # 点击勋章,但是设置为两秒的间隔，适应不同的模拟器速度
+                is_click = not is_click
+
             if is_click:
-                continue
-            if self.appear_then_click(self.I_MEDAL_5_FROG, interval=1.5):
-                is_click = True
-                continue
-            if self.appear_then_click(self.I_MEDAL_5, interval=1.5):
-                is_click = True
-                continue
-            if self.appear_then_click(self.I_MEDAL_4, interval=1.5):
-                is_click = True
-                continue
-            if self.appear_then_click(self.I_MEDAL_3, interval=1.5):
-                is_click = True
-                continue
-            if self.appear_then_click(self.I_MEDAL_2, interval=1.5):
-                is_click = True
-                continue
-            if self.appear_then_click(self.I_MEDAL_1, interval=1.5):
-                is_click = True
-                continue
-            if self.appear_then_click(self.I_MEDAL_0, interval=1.5):
-                is_click = True
                 continue
         logger.info(f'Click Medal')
 
