@@ -372,6 +372,7 @@ class BaseTask(GlobalGameAssets):
         else:
             x, y = target.coord()
             self.device.click(x=x, y=y, control_name=target.name)
+        return True
 
     def list_find(self, target: RuleList, name: str | list[str]) -> bool:
         """

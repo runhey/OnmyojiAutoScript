@@ -28,6 +28,19 @@ class GeneralBuff(BaseTask, GeneralBuffAssets):
             if self.appear_then_click(self.I_BUFF_1, interval=2):
                 continue
 
+    def close_buff(self):
+        """
+        关闭buff的总界面, 但是要确保buff界面已经打开了
+        :return:
+        """
+        logger.info('Close buff')
+        while 1:
+            self.screenshot()
+            if not self.appear(self.I_CLOUD):
+                break
+            if self.appear_then_click(self.I_BUFF_1, interval=2):
+                continue
+
     @staticmethod
     def get_area(image: np.array, buff: RuleOcr) -> tuple:
         """
