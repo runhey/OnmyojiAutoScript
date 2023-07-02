@@ -38,10 +38,7 @@ class Window(Handle):
         后台截屏
         :return:
         """
-        win_size = self.screenshot_size
-        scale_rate = window_scale_rate()
-        widthScreen = int(win_size[0] * scale_rate)
-        heightScreen = int(win_size[1] * scale_rate)
+        widthScreen, heightScreen = self.screenshot_size
         # 返回句柄窗口的设备环境，覆盖整个窗口，包括非客户区，标题栏，菜单，边框
         hwndDc = GetWindowDC(self.screenshot_handle_num)
         # 创建设备描述表
