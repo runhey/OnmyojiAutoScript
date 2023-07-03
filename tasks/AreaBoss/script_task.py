@@ -5,12 +5,14 @@ import time
 
 from tasks.base_task import BaseTask
 from tasks.Component.GeneralBattle.general_battle import GeneralBattle
+from tasks.GameUi.game_ui import GameUi
+from tasks.GameUi.page import page_area_boss
 from tasks.AreaBoss.assets import AreaBossAssets
 from module.logger import logger
 from module.exception import TaskEnd
 
 
-class ScriptTask(GeneralBattle, AreaBossAssets):
+class ScriptTask(GeneralBattle, GameUi, AreaBossAssets):
 
     def run(self) -> bool:
         """
@@ -20,23 +22,26 @@ class ScriptTask(GeneralBattle, AreaBossAssets):
         # 直接手动关闭这个锁定阵容的设置
         self.config.area_boss.general_battle.lock_team_enable = False
 
-        # 点击探索
-        logger.info("Click explore")
-        while 1:
-            self.screenshot()
-            if self.appear_then_click(self.I_EXPLORE, threshold=0.6, interval=2):
-                continue
-            if self.appear(self.I_AREA_BOSS, threshold=0.6):
-                break
+        self.ui_get_current_page()
+        self.ui_goto(page_area_boss)
 
-        # 点击地狱鬼王
-        logger.info("Click area boss")
-        while 1:
-            self.screenshot()
-            if self.appear_then_click(self.I_AREA_BOSS, threshold=0.6, interval=2):
-                continue
-            if self.appear(self.I_FILTER, threshold=0.6):
-                break
+        # # 点击探索
+        # logger.info("Click explore")
+        # while 1:
+        #     self.screenshot()
+        #     if self.appear_then_click(self.I_EXPLORE, threshold=0.6, interval=2):
+        #         continue
+        #     if self.appear(self.I_AREA_BOSS, threshold=0.6):
+        #         break
+        #
+        # # 点击地狱鬼王
+        # logger.info("Click area boss")
+        # while 1:
+        #     self.screenshot()
+        #     if self.appear_then_click(self.I_AREA_BOSS, threshold=0.6, interval=2):
+        #         continue
+        #     if self.appear(self.I_FILTER, threshold=0.6):
+        #         break
 
         # 点击右上角的鬼王选择
         logger.info("Click filter")

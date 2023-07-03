@@ -6,6 +6,7 @@ import time
 from tasks.base_task import BaseTask
 from tasks.Component.GeneralBattle.general_battle import GeneralBattle
 from tasks.GameUi.game_ui import GameUi
+from tasks.GameUi.page import page_realm_raid, page_main
 from tasks.RealmRaid.assets import RealmRaidAssets
 from tasks.RealmRaid.config import RealmRaid, RaidMode, AttackNumber
 from module.logger import logger
@@ -24,7 +25,8 @@ class ScriptTask(GeneralBattle, GameUi, RealmRaidAssets):
         config = self.config.realm_raid
         self.medal_grid = ImageGrid([self.I_MEDAL_5, self.I_MEDAL_4, self.I_MEDAL_3,
                                      self.I_MEDAL_2, self.I_MEDAL_1, self.I_MEDAL_0])
-        self.home_explore()
+        self.ui_get_current_page()
+        self.ui_goto(page_realm_raid)
 
         # 点击突破
         while 1:
@@ -72,16 +74,18 @@ class ScriptTask(GeneralBattle, GameUi, RealmRaidAssets):
                     break
 
         # 点击 右上角的关闭
-        while 1:
-            self.screenshot()
-            if self.appear_then_click(self.I_BACK_RED, interval=1):
-                continue
-            if self.appear(self.I_REALM_RAID, threshold=0.6):
-                break
-        logger.info(f'Click {self.I_BACK_RED.name}')
-
-        # 点击左上角的关闭
-        self.explore_home()
+        # while 1:
+        #     self.screenshot()
+        #     if self.appear_then_click(self.I_BACK_RED, interval=1):
+        #         continue
+        #     if self.appear(self.I_REALM_RAID, threshold=0.6):
+        #         break
+        # logger.info(f'Click {self.I_BACK_RED.name}')
+        #
+        # # 点击左上角的关闭
+        # self.explore_home()
+        self.ui_current = page_realm_raid
+        self.ui_goto(page_main)
 
         self.set_next_run(task='RealmRaid', success=True)
         raise TaskEnd
