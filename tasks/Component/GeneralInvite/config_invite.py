@@ -20,6 +20,7 @@ class InviteConfig(BaseModel):
     friend_2: str = Field(default='', description='friend_2_name_help')
     find_mode: FindMode = Field(default=FindMode.AUTO_FIND, description='find_mode_help')
     wait_time: time = Field(default=time(minute=1), description='wait_time_help')
+    default_invite: bool = Field(default=True, description='default_invite_help')
 
     # recent_friend, guild_friend, friend, other_friend
 

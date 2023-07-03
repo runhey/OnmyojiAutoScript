@@ -277,5 +277,50 @@
     "method": "Template matching",
     "threshold": 0.8,
     "description": "队员默认接受邀请"
+  },
+  {
+    "itemName": "i_no_default",
+    "imageName": "gi_i_no_default.png",
+    "roiFront": "542,343,36,35",
+    "roiBack": "542,343,36,35",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "不勾选 默认邀请"
+  },
+  {
+    "itemName": "i_default",
+    "imageName": "gi_i_default.png",
+    "roiFront": "541,342,41,39",
+    "roiBack": "541,342,41,39",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "勾选 默认邀请"
+  },
+  {
+    "itemName": "cancel",
+    "imageName": "gi_cancel.png",
+    "roiFront": "435,404,171,65",
+    "roiBack": "435,404,171,65",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "sure",
+    "imageName": "gi_sure.png",
+    "roiFront": "668,401,175,60",
+    "roiBack": "668,401,175,60",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "队长邀请 确定"
+  },
+  {
+    "itemName": "buff",
+    "imageName": "gi_buff.png",
+    "roiFront": "794,38,46,42",
+    "roiBack": "794,38,46,42",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "所有的组队界面都有加成"
   }
 ]

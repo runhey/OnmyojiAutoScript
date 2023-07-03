@@ -3,6 +3,8 @@
 # github https://github.com/runhey
 from pydantic import BaseModel, Field
 from enum import Enum
+from datetime import datetime, time
+
 from tasks.Component.config_scheduler import Scheduler
 from tasks.Component.config_base import ConfigBase, TimeDelta
 from tasks.Component.GeneralInvite.config_invite import InviteConfig
@@ -35,7 +37,7 @@ class OrochiConfig(ConfigBase):
     # 层数
     layer: Layer = Field(default=Layer.ELEVEN, description='layer_help')
     # 限制时间
-    limit_time: TimeDelta = Field(default=TimeDelta(minutes=30), description='limit_time_help')
+    limit_time: time = Field(default=time(minute=30), description='limit_time_help')
     # 限制次数
     limit_count: int = Field(default=30, description='limit_count_help')
     # 是否开启御魂加成

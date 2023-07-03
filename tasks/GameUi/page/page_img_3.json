@@ -1,0 +1,191 @@
+[
+  {
+    "itemName": "main_goto_shikigami_records",
+    "imageName": "page_main_goto_shikigami_records.png",
+    "roiFront": "1097,612,56,64",
+    "roiBack": "1097,612,56,64",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "式神录"
+  },
+  {
+    "itemName": "main_goto_onmyodo",
+    "imageName": "page_main_goto_onmyodo.png",
+    "roiFront": "992,614,51,60",
+    "roiBack": "992,614,51,60",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "main_goto_friends",
+    "imageName": "page_main_goto_friends.png",
+    "roiFront": "878,623,55,55",
+    "roiBack": "878,623,55,55",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "main_goto_daily",
+    "imageName": "page_main_goto_daily.png",
+    "roiFront": "769,623,52,54",
+    "roiBack": "769,623,52,54",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "main_goto_mall",
+    "imageName": "page_main_goto_mall.png",
+    "roiFront": "657,624,47,52",
+    "roiBack": "657,624,47,52",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "main_goto_guild",
+    "imageName": "page_main_goto_guild.png",
+    "roiFront": "540,611,50,54",
+    "roiBack": "540,611,50,54",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "main_goto_team",
+    "imageName": "page_main_goto_team.png",
+    "roiFront": "429,622,53,51",
+    "roiBack": "429,622,53,51",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "main_goto_collection",
+    "imageName": "page_main_goto_collection.png",
+    "roiFront": "92,611,51,64",
+    "roiBack": "92,611,51,64",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "check_records",
+    "imageName": "page_check_records.png",
+    "roiFront": "269,71,55,50",
+    "roiBack": "269,71,55,50",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "check_onmyodo",
+    "imageName": "page_check_onmyodo.png",
+    "roiFront": "1166,117,84,547",
+    "roiBack": "1166,117,84,547",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "check_friends",
+    "imageName": "page_check_friends.png",
+    "roiFront": "1011,592,133,60",
+    "roiBack": "1011,592,133,60",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "check_daily",
+    "imageName": "page_check_daily.png",
+    "roiFront": "28,510,69,87",
+    "roiBack": "28,510,69,87",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "check_mall",
+    "imageName": "page_check_mall.png",
+    "roiFront": "7,503,100,100",
+    "roiBack": "7,503,100,100",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "check_guild",
+    "imageName": "page_check_guild.png",
+    "roiFront": "1072,630,49,46",
+    "roiBack": "1072,630,49,46",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "check_team",
+    "imageName": "page_check_team.png",
+    "roiFront": "1209,108,41,119",
+    "roiBack": "1209,108,41,119",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "check_collection",
+    "imageName": "page_check_collection.png",
+    "roiFront": "471,618,100,100",
+    "roiBack": "471,618,100,100",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "back_y",
+    "imageName": "page_back_y.png",
+    "roiFront": "15,4,57,52",
+    "roiBack": "1,2,100,91",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "back_mall",
+    "imageName": "page_back_mall.png",
+    "roiFront": "28,33,50,51",
+    "roiBack": "28,33,50,51",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "back_friends",
+    "imageName": "page_back_friends.png",
+    "roiFront": "1152,87,53,52",
+    "roiBack": "1152,87,53,52",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "back_daily",
+    "imageName": "page_back_daily.png",
+    "roiFront": "33,13,39,50",
+    "roiBack": "33,13,39,50",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "new",
+    "imageName": "image_name.png",
+    "roiFront": "0,0,100,100",
+    "roiBack": "0,0,100,100",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  }
+]

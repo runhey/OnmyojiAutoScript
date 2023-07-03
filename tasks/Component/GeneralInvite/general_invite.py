@@ -37,6 +37,13 @@ class GeneralInvite(BaseTask, GeneralInviteAssets):
     timer_invite = None
     timer_wait = None
 
+    """
+    这个类就三个api
+    1. run_invite
+    2. invite_again
+    3. accept_invite
+    """
+
     def run_invite(self, config: InviteConfig, is_first: bool = False) -> bool:
         """
         队长！！身份。。。在组件界面邀请好友（ 如果开启is_first） 等待队员进入开启挑战
@@ -430,6 +437,59 @@ class GeneralInvite(BaseTask, GeneralInviteAssets):
             if not success:
                 logger.warning('Invite friend 2 failed')
         time.sleep(0.5)
+
+    def invite_again(self, default_invite: bool=True) -> bool:
+        """
+        作为队长战斗胜利后再次邀请队友，
+        :param default_invite:  是否勾选默认
+        :return:
+        """
+        logger.info('Invite again')
+        # 判断是否进入界面
+        while 1:
+            self.screenshot()
+            if self.appear(self.I_SURE):
+                break
+        # 如果勾选了默认邀请
+        if default_invite:
+            logger.info('Click default invite')
+            while 1:
+                self.screenshot()
+                if self.appear(self.I_I_DEFAULT):
+                    break
+                if self.appear_then_click(self.I_I_NO_DEFAULT, interval=1):
+                    continue
+        else:
+            logger.info('Click no default invite')
+            while 1:
+                self.screenshot()
+                if self.appear(self.I_I_NO_DEFAULT):
+                    break
+                if self.appear_then_click(self.I_I_DEFAULT, interval=1):
+                    continue
+
+        # 点击确认
+        logger.info('Click invite ensure')
+        while 1:
+            self.screenshot()
+            if not self.appear(self.I_SURE):
+                break
+            if self.appear_then_click(self.I_SURE):
+                continue
+
+    def accept_invite(self) -> bool:
+        """
+        队员接受邀请, 保持在庭院界面
+        :return:
+        """
+        while 1:
+            self.screenshot()
+            if self.appear(self.I_BUFF):
+                break
+            if self.appear_then_click(self.I_I_ACCEPT_DEFAULT, interval=1):
+                continue
+            if self.appear_then_click(self.I_I_ACCEPT, interval=1):
+                continue
 
 if __name__ == '__main__':
     from module.config.config import Config

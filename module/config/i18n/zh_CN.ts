@@ -379,8 +379,8 @@
 	<message><source>ShikigamiConfig</source><translation>活动</translation></message>
 	<message><source>Limit Time</source><translation>限制运行时间</translation></message>
 	<message><source>Limit Count</source><translation>限制挑战次数</translation></message>
-	<message><source>limit_time_help</source><translation>时间格式:"[days] [hours]:[minutes]:[seconds]"
-注意天数和小时之间有一个空格，不按照格式输入会无法正确设置</translation></message>
+	<message><source>limit_time_help</source><translation>时间格式:"[hours]:[minutes]:[seconds]"
+注意没有空格，使用英文的冒号 : 不按照格式输入会无法正确设置</translation></message>
 	<message><source>limit_count_help</source><translation>两个限制需要同时设置，最先达到就会退出。
 建议执行时间设置成一个小时足够长，此时基于次数来判定设置为100次</translation></message>
 	<message><source>GeneralClimb</source><translation>通用爬塔</translation></message>
@@ -399,13 +399,16 @@
 	<message><source>InviteNumber</source><translation>邀请人数</translation></message>
 	<message><source>Friend 1</source><translation>第一个队友名字</translation></message>
 	<message><source>Friend 2</source><translation>第二个队友名字</translation></message>
-	<message><source>Auto Find</source><translation>自动切换好友列表选中队友</translation></message>
+	<message><source>FindMode</source><translation>寻找队友模式</translation></message>
 	<message><source>Wait Time</source><translation>等待时间</translation></message>
 	<message><source>invite_number_help</source><translation>可选1或者2，为1时只会邀请第一个队友</translation></message>
 	<message><source>friend_name_help</source><translation>输入队友的名字必须是全称，这一项是基于OCR来识别，如果名字过于离谱建议画200勾玉改一个正常点的名字</translation></message>
 	<message><source>friend_2_name_help</source><translation>同上</translation></message>
-	<message><source>auto_find_help</source><translation>首先会在第一个好友列表寻找，如果没有找到则跳转到"最近" -> "寮友" -> "跨区"</translation></message>
-	<message><source>wait_time_help</source><translation>保持默认一分钟就好，期间每隔15s邀请一次</translation></message>
+	<message><source>find_mode_help</source><translation>默认会从上方列表自动寻找
+顺序是'好友' -> '最近' -> '聊友' -> '跨区'，当然建议选择‘recent_friend’这样会快点</translation></message>
+	<message><source>wait_time_help</source><translation>保持默认一分钟就好，期间每隔20s邀请一次</translation></message>
+	<message><source>Default Invite</source><translation>战斗结束后勾选默认邀请</translation></message>
+	<message><source>default_invite_help</source><translation> </translation></message>
 </context>
 <context>
     <name>Args</name>

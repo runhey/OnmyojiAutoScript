@@ -188,9 +188,6 @@ class Duration(Single):
 
 
 if __name__ == '__main__':
-    d = DigitCounter.ocr_str_digit_counter('14/77')
-    print(d)
-
-    u = Duration.parse_time('01:30:00')
-    print(u)
+    import cv2
+    image = cv2.imread(r'E:\Project\OnmyojiAutoScript-assets\jade.png')
 
