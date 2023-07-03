@@ -83,8 +83,8 @@
   {
     "itemName": "check_demon_encounter",
     "imageName": "page_check_demon_encounter.png",
-    "roiFront": "0,0,100,100",
-    "roiBack": "0,0,100,100",
+    "roiFront": "26,658,42,43",
+    "roiBack": "2,619,100,100",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"
@@ -92,8 +92,8 @@
   {
     "itemName": "check_hunt",
     "imageName": "page_check_hunt.png",
-    "roiFront": "0,0,100,100",
-    "roiBack": "0,0,100,100",
+    "roiFront": "1071,605,81,85",
+    "roiBack": "1026,558,152,156",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"
@@ -121,6 +121,15 @@
     "imageName": "page_back_yollow.png",
     "roiFront": "24,16,48,55",
     "roiBack": "0,0,100,100",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "demon_encounter_goto_town",
+    "imageName": "page_demon_encounter_goto_town.png",
+    "roiFront": "28,20,56,52",
+    "roiBack": "3,4,100,100",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"

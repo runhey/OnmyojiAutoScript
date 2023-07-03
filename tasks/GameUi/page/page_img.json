@@ -2,8 +2,8 @@
   {
     "itemName": "check_main",
     "imageName": "page_check_main.png",
-    "roiFront": "355,47,48,43",
-    "roiBack": "355,47,48,43",
+    "roiFront": "54,228,38,37",
+    "roiBack": "30,205,1033,96",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"
@@ -11,8 +11,8 @@
   {
     "itemName": "main_goto_exploration",
     "imageName": "page_main_goto_exploration.png",
-    "roiFront": "475,104,45,66",
-    "roiBack": "475,104,45,66",
+    "roiFront": "493,116,45,75",
+    "roiBack": "243,100,933,211",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"

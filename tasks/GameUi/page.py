@@ -6,9 +6,11 @@ from tasks.GameUi.assets import GameUiAssets as G
 class Page:
     parent = None
 
+
     def __init__(self, check_button):
         self.check_button = check_button
         self.links = {}
+        self.additional: list = None  # 附加按钮或者是ocr检测按钮
         (filename, line_number, function_name, text) = traceback.extract_stack()[-2]
         self.name = text[:text.find('=')].strip()
 
@@ -41,8 +43,8 @@ page_town.link(button=G.I_TOWN_GOTO_MAIN, destination=page_main)
 page_main.link(button=G.I_MAIN_GOTO_TOWN, destination=page_town)
 
 # Unknown
-page_unknown = Page(None)
-page_unknown.link(button=G.I_CHECK_MAIN, destination=page_main)
+# page_unknown = Page(None)
+# page_unknown.link(button=G.I_CHECK_MAIN, destination=page_main)
 
 # ************************************* 探索部分 *****************************************#
 # 觉醒 awake zones
@@ -94,11 +96,11 @@ page_duel.link(button=G.I_BACK_YOLLOW, destination=page_town)
 page_town.link(button=G.I_TOWN_GOTO_DUEL, destination=page_duel)
 # 封魔之时 demon_encounter
 page_demon_encounter = Page(G.I_CHECK_DEMON_ENCOUNTER)
-page_demon_encounter.link(button=G.I_BACK_YOLLOW, destination=page_town)
+page_demon_encounter.link(button=G.I_DEMON_ENCOUNTER_GOTO_TOWN, destination=page_town)
 page_town.link(button=G.I_TOWN_GOTO_DEMON_ENCOUNTER, destination=page_demon_encounter)
 # 狩猎战 hunt
 page_hunt = Page(G.I_CHECK_HUNT)
-page_hunt.link(button=G.I_BACK_YOLLOW, destination=page_town)
+page_hunt.link(button=G.I_BACK_BL, destination=page_town)
 page_town.link(button=G.I_TOWN_GOTO_HUNT, destination=page_hunt)
 # 协同斗技 draft_duel
 page_draft_duel = Page(G.I_CHECK_DRAFT_DUEL)
