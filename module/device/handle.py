@@ -295,14 +295,24 @@ class Handle:
         return None
 
     @cached_property
-    def screenshot_size(self) -> tuple:
+    def screenshot_size(self) -> tuple or None:
         """
         第一个是width 第二个是heigth
+        2023.7.1 在高缩放的设备上应该输出1280X720
         :return:
         """
         winRect = GetWindowRect(self.screenshot_handle_num)
-        width: int = winRect[2] - winRect[0]  # 右x-左x
-        height: int = winRect[3] - winRect[1]  # 下y - 上y 计算高度
+        scale_rate = window_scale_rate()
+        width_before: int = winRect[2] - winRect[0]  # 右x-左x
+        height_before: int = winRect[3] - winRect[1]  # 下y - 上y 计算高度
+        width, height = None, None
+        if abs((width_before * scale_rate) - 1280) < 5:
+            width = 1280
+        if abs((height_before * scale_rate) - 720) < 5:
+            height = 720
+        if width is None or height is None:
+            logger.error(f'Get screenshot size error, width={width}, height={height}')
+            return None
         return width, height
 
     @cached_property

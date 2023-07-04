@@ -1,0 +1,83 @@
+[
+  {
+    "itemName": "time_1",
+    "roiFront": "541,12,96,33",
+    "roiBack": "541,12,96,33",
+    "mode": "Single",
+    "method": "Default",
+    "keyword": "",
+    "description": "Ocr-description"
+  },
+  {
+    "itemName": "time_2",
+    "roiFront": "538,70,100,34",
+    "roiBack": "538,70,100,34",
+    "mode": "Single",
+    "method": "Default",
+    "keyword": "",
+    "description": "永生之海判断时间"
+  },
+  {
+    "itemName": "f_list_1",
+    "roiFront": "346,94,98,41",
+    "roiBack": "346,94,98,41",
+    "mode": "Single",
+    "method": "Default",
+    "keyword": "",
+    "description": "上方好友列表的左边第一个（一般是好友）"
+  },
+  {
+    "itemName": "f_list_2",
+    "roiFront": "463,94,97,43",
+    "roiBack": "463,94,97,43",
+    "mode": "Single",
+    "method": "Default",
+    "keyword": "",
+    "description": "Ocr-description"
+  },
+  {
+    "itemName": "f_list_3",
+    "roiFront": "580,87,91,51",
+    "roiBack": "580,87,91,51",
+    "mode": "Single",
+    "method": "Default",
+    "keyword": "",
+    "description": "Ocr-description"
+  },
+  {
+    "itemName": "f_list_4",
+    "roiFront": "688,91,74,45",
+    "roiBack": "688,91,74,45",
+    "mode": "Single",
+    "method": "Default",
+    "keyword": "",
+    "description": "Ocr-description"
+  },
+  {
+    "itemName": "friend_name_1",
+    "roiFront": "434,185,189,345",
+    "roiBack": "434,185,189,345",
+    "mode": "Full",
+    "method": "Default",
+    "keyword": "",
+    "description": "寻找左侧的好友"
+  },
+  {
+    "itemName": "friend_name_2",
+    "roiFront": "729,184,196,346",
+    "roiBack": "729,184,196,346",
+    "mode": "Full",
+    "method": "Default",
+    "keyword": "",
+    "description": "寻找右侧的好友"
+  },
+  {
+    "itemName": "online",
+    "roiFront": "790,102,124,42",
+    "roiBack": "0,0,100,100",
+    "mode": "Single",
+    "method": "Default",
+    "keyword": "",
+    "description": "Ocr-description"
+  }
+]

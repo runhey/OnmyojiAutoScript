@@ -110,12 +110,24 @@ class GeneralBattle(BaseTask, GeneralBattleAssets):
             logger.info("Green is enable")
             x, y = None, None
             match config.green_mark:
-                case GreenMarkType.GREEN_LEFT1: x, y = self.C_GREEN_LEFT_1.coord()
-                case GreenMarkType.GREEN_LEFT2: x, y = self.C_GREEN_LEFT_2.coord()
-                case GreenMarkType.GREEN_LEFT3: x, y = self.C_GREEN_LEFT_3.coord()
-                case GreenMarkType.GREEN_LEFT4: x, y = self.C_GREEN_LEFT_4.coord()
-                case GreenMarkType.GREEN_LEFT5: x, y = self.C_GREEN_LEFT_5.coord()
-                case GreenMarkType.GREEN_MAIN: x, y = self.C_GREEN_MAIN.coord()
+                case GreenMarkType.GREEN_LEFT1:
+                    x, y = self.C_GREEN_LEFT_1.coord()
+                    logger.info("Green left 1")
+                case GreenMarkType.GREEN_LEFT2:
+                    x, y = self.C_GREEN_LEFT_2.coord()
+                    logger.info("Green left 2")
+                case GreenMarkType.GREEN_LEFT3:
+                    x, y = self.C_GREEN_LEFT_3.coord()
+                    logger.info("Green left 3")
+                case GreenMarkType.GREEN_LEFT4:
+                    x, y = self.C_GREEN_LEFT_4.coord()
+                    logger.info("Green left 4")
+                case GreenMarkType.GREEN_LEFT5:
+                    x, y = self.C_GREEN_LEFT_5.coord()
+                    logger.info("Green left 5")
+                case GreenMarkType.GREEN_MAIN:
+                    x, y = self.C_GREEN_MAIN.coord()
+                    logger.info("Green main")
 
             # 判断有无坐标的偏移
             self.appear_then_click(self.I_LOCAL)
@@ -241,6 +253,39 @@ class GeneralBattle(BaseTask, GeneralBattleAssets):
             if not self.appear(self.I_FALSE):
                 break
         logger.info(f"Click {self.I_FALSE.name}")
+
+        return True
+
+
+    def exit_battle(self, skip_first: bool=False) -> bool:
+        """
+        在战斗的时候强制退出战斗
+        :return:
+        """
+        if skip_first:
+            self.screenshot()
+
+        if not self.appear(self.I_EXIT):
+            return False
+
+        # 点击返回
+        logger.info(f"Click {self.I_EXIT.name}")
+        while 1:
+            self.screenshot()
+            if self.appear_then_click(self.I_EXIT, interval=1.5):
+                continue
+            if self.appear(self.I_EXIT_ENSURE):
+                break
+
+        # 点击返回确认
+        while 1:
+            self.screenshot()
+            if self.appear_then_click(self.I_EXIT_ENSURE, interval=1.5):
+                continue
+            if self.appear_then_click(self.I_FALSE, interval=1.5):
+                continue
+            if not self.appear(self.I_EXIT):
+                break
 
         return True
 

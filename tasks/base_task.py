@@ -3,6 +3,7 @@
 # github https://github.com/runhey
 import numpy as np
 
+from time import sleep
 from datetime import datetime, timedelta, time
 from typing import Union
 
@@ -17,7 +18,7 @@ from module.ocr.base_ocr import OcrMode, OcrMethod
 from module.logger import logger
 from module.base.timer import Timer
 from module.config.config import Config
-from module.config.utils import get_server_next_update, nearest_future, dict_to_kv
+from module.config.utils import get_server_next_update, nearest_future, dict_to_kv, parse_tomorrow_server
 from module.device.device import Device
 from tasks.GlobalGame.assets import GlobalGameAssets
 from tasks.GlobalGame.config_emergency import FriendInvitation, WhenNetworkAbnormal, WhenNetworkError
@@ -69,7 +70,7 @@ class BaseTask(GlobalGameAssets):
                 # 如果是接受邀请
                 logger.info(f"Accept friend invitation")
                 while 1:
-                    if self.appear_then_click(self.I_ACCEPT):
+                    if self.appear_then_click(self.I_ACCEPT, interval=1):
                         continue
                     if not self.appear(self.I_ACCEPT):
                         break
@@ -77,7 +78,7 @@ class BaseTask(GlobalGameAssets):
             elif invite and self.config.global_game.emergency.friend_invitation == FriendInvitation.REJECT:
                 logger.info(f"Reject friend invitation")
                 while 1:
-                    if self.appear_then_click(self.I_REJECT):
+                    if self.appear_then_click(self.I_REJECT, interval=1):
                         continue
                     if not self.appear(self.I_REJECT):
                         break
@@ -85,7 +86,7 @@ class BaseTask(GlobalGameAssets):
             elif invite and self.config.global_game.emergency.friend_invitation == FriendInvitation.ONLY_JADE:
                 logger.info(f"Accept jade invitation")
                 while 1:
-                    if self.appear_then_click(self.I_ACCEPT):
+                    if self.appear_then_click(self.I_ACCEPT, interval=1):
                         continue
                     if not self.appear(self.I_ACCEPT):
                         break
@@ -371,6 +372,7 @@ class BaseTask(GlobalGameAssets):
         else:
             x, y = target.coord()
             self.device.click(x=x, y=y, control_name=target.name)
+        return True
 
     def list_find(self, target: RuleList, name: str | list[str]) -> bool:
         """
@@ -403,11 +405,12 @@ class BaseTask(GlobalGameAssets):
                 elif isinstance(result, int) and result < 0:
                     after = False
 
-                x1, y1, x2, y2 = target.swipe_pos(after=after)
+                x1, y1, x2, y2 = target.swipe_pos(number=1, after=after)
                 self.device.swipe(p1=(x1, y1), p2=(x2, y2))
+                sleep(1)  # 等待滑动完成， 还没想好如何优化
 
     def set_next_run(self, task: str, finish: bool = False,
-                     success: bool=None, server: bool=None, target: timedelta=None) -> None:
+                     success: bool=None, server: bool=True, target: timedelta=None) -> None:
         """
         设置下次运行时间  当然这个也是可以重写的
         :param target: 可以自定义的下次运行时间
@@ -446,29 +449,42 @@ class BaseTask(GlobalGameAssets):
                 else scheduler.failure_interval
             )
             run.append(start_time + interval)
-        if server is not None:
-            if server:
-                server = scheduler.server_update
-                run.append(get_server_next_update(server))
+        # if server is not None:
+        #     if server:
+        #         server = scheduler.server_update
+        #         run.append(get_server_next_update(server))
         if target is not None:
             target = [target] if not isinstance(target, list) else target
             target = nearest_future(target)
             run.append(target)
+
+
+        next_run = None
         # 排序
-        if len(run):
-            run = min(run).replace(microsecond=0)
-            kv = dict_to_kv(
-                {
-                    "success": success,
-                    "server_update": server,
-                    "target": target,
-                },
-                allow_none=False,
-            )
-            logger.info(f"Delay task `{task}` to {run} ({kv})")
-            scheduler.next_run = run
-            self.config.save()
-        else:
+        if not len(run):
             raise ScriptError(
                 "Missing argument in delay_next_run, should set at least one"
             )
+
+        run = min(run).replace(microsecond=0)
+        next_run = run
+        # 将这些连接起来，方便日志输出
+        kv = dict_to_kv(
+            {
+                "success": success,
+                "server_update": server,
+                "target": target,
+            },
+            allow_none=False,
+        )
+        logger.info(f"Delay task `{task}` to {next_run} ({kv})")
+
+        # 强制设定下一次的运行时间
+        if server and scheduler.server_update != time(hour=9):
+            next_run = parse_tomorrow_server(scheduler.server_update)
+
+        # 设置
+        scheduler.next_run = next_run
+        self.config.save()
+
+

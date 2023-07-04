@@ -1,6 +1,6 @@
 [
   {
-    "itemName": "back_blue",
+    "itemName": "back_bl",
     "imageName": "res_back_blue.png",
     "roiFront": "32,31,50,53",
     "roiBack": "1,2,139,120",

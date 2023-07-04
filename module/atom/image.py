@@ -141,6 +141,14 @@ class RuleImage:
         x, y, w, h = self.roi_back
         return x + np.random.randint(0, w), y + np.random.randint(0, h)
 
+    def front_center(self) -> tuple:
+        """
+        获取roi_front的中心坐标
+        :return:
+        """
+        x, y, w, h = self.roi_front
+        return int(x + w//2), int(y + h//2)
+
 
 if __name__ == "__main__":
     image = cv2.imread("D:/4713.jpg")

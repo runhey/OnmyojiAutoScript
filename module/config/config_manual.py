@@ -11,6 +11,7 @@ class ConfigManual:
         Restart
         > AreaBoss > GoldYoukai > ExperienceYoukai > Nian > RealmRaid
         > Orochi > OrochiMoans > OrochiJudgement > Sougenbi > FallenSun > EternitySea
+        > ActivityShikigami
         """
 
     DEVICE_OVER_HTTP = False

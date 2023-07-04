@@ -38,10 +38,7 @@ class Window(Handle):
         后台截屏
         :return:
         """
-        win_size = self.screenshot_size
-        scale_rate = window_scale_rate()
-        widthScreen = int(win_size[0] * scale_rate)
-        heightScreen = int(win_size[1] * scale_rate)
+        widthScreen, heightScreen = self.screenshot_size
         # 返回句柄窗口的设备环境，覆盖整个窗口，包括非客户区，标题栏，菜单，边框
         hwndDc = GetWindowDC(self.screenshot_handle_num)
         # 创建设备描述表
@@ -148,6 +145,7 @@ class Window(Handle):
         emulator_type = len(self.control_handle_list)
         if emulator_type == 2:  # mumu模拟器
             SendMessage(self.control_handle_list[0], WM_ACTIVATE, WA_ACTIVE, 0)  # 激活窗口
+            SendMessage(self.control_handle_list[1], WM_ACTIVATE, WA_ACTIVE, 0)  # 激活窗口
             SendMessage(self.control_handle_list[0], WM_LBUTTONDOWN, 0, MAKELONG(x, y+self.mumu_head_height))  # 模拟鼠标按下 先是父窗口 上面的框高度是57
             time.sleep((random.randint(100, 200)) / 1000.0)  # 点击弹起改为随机,时间100ms-200ms
             SendMessage(self.control_handle_list[1], WM_LBUTTONUP, 0, MAKELONG(x, y))  # 模拟鼠标弹起 后是子窗口
@@ -234,13 +232,20 @@ class Window(Handle):
         SendMessage(handleNum, WM_SETCURSOR, handleNum, MAKELONG(HTCLIENT, WM_LBUTTONDOWN))
         PostMessage(handleNum, WM_LBUTTONDOWN, MK_LBUTTON, tmpPos)
         # 一点一点移动鼠标
-        for pos in trace:
+        for pos in trace[:-3]:
             tmpPos = MAKELONG(pos[0], pos[1])
             PostMessage(handleNum, WM_MOUSEMOVE, MK_LBUTTON, tmpPos)
             time.sleep((interval + random.randint(-2, 2)) / 1000.0)
         # 最后释放鼠标
-        tmpPos = MAKELONG(trace[-1][0], trace[-1][1])
-        PostMessage(handleNum, WM_LBUTTONUP, 0, tmpPos)
+        end_pos_3 = MAKELONG(trace[-3][0], trace[-3][1])
+        end_pos_2 = MAKELONG(trace[-2][0], trace[-2][1])
+        end_pos_1 = MAKELONG(trace[-1][0], trace[-1][1])
+        PostMessage(handleNum, WM_MOUSEMOVE, MK_LBUTTON, end_pos_3)
+        time.sleep(0.08)
+        PostMessage(handleNum, WM_MOUSEMOVE, MK_LBUTTON, end_pos_2)
+        time.sleep(0.08)
+        PostMessage(handleNum, WM_MOUSEMOVE, MK_LBUTTON, end_pos_1)
+        PostMessage(handleNum, WM_LBUTTONUP, 0, end_pos_1)
 
     def swipe_vector_window_message2(self, startPos: list, endPos: list) -> None:
         """

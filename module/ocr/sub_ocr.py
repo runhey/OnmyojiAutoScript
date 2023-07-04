@@ -37,6 +37,7 @@ class Full(BaseCor):
             return 0, 0, 0, 0
 
         index_list = self.filter(boxed_results, keyword)
+        logger.info(f"OCR [{self.name}] detected in {index_list}")
         # 如果一个都没有匹配到
         if not index_list:
             return 0, 0, 0, 0
@@ -49,13 +50,13 @@ class Full(BaseCor):
                 boxed_results[index].box[1, 0] - boxed_results[index].box[0, 0],     # width
                 boxed_results[index].box[2, 1] - boxed_results[index].box[0, 1],     # height
             ) for index in index_list]
-            box = merge_area(area_list)
-            self.area = box[0]+self.roi[0], box[1]+self.roi[1], box[2], box[3]
+            area = merge_area(area_list)
+            self.area = area[0]+self.roi[0], area[1]+self.roi[1], area[2], area[3]
         else:
             box = boxed_results[index_list[0]].box
             self.area = box[0, 0]+self.roi[0], box[0, 1]+self.roi[1], box[1, 0] - box[0, 0], box[2, 1] - box[0, 1]
 
-        logger.info(f"OCR [{self.name}: {keyword}] detected in {self.area}")
+        logger.info(f"OCR [{self.name}] detected in {self.area}")
         return self.area
 
 class Single(BaseCor):
@@ -69,7 +70,7 @@ class Single(BaseCor):
         """
         检测某个固定位置的roi的文本。可以是横方向也可以是竖方向
         :param image:
-        :return:
+        :return: 返回到识别的文字
         """
         if self.roi:
             result = self.ocr_single_line(image)
@@ -79,6 +80,9 @@ class Single(BaseCor):
             # 如果没有识别到，这个时候考虑到可能是竖方向的文本, 使用detect_and_ocr来进行识别
             logger.info(f"OCR {self.name}: No text detected in ROI, try to detect vertically")
             result = self.detect_and_ocr(image)
+            if not result:
+                logger.info(f"OCR {self.name}: No text detected in ROI")
+                return ""
             if result[0].ocr_text != "" and result[0].score > self.score:
                 return result[0].ocr_text
 
@@ -184,9 +188,6 @@ class Duration(Single):
 
 
 if __name__ == '__main__':
-    d = DigitCounter.ocr_str_digit_counter('14/77')
-    print(d)
-
-    u = Duration.parse_time('01:30:00')
-    print(u)
+    import cv2
+    image = cv2.imread(r'E:\Project\OnmyojiAutoScript-assets\jade.png')
 

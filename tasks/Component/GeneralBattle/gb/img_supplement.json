@@ -1,0 +1,11 @@
+[
+  {
+    "itemName": "greed_ghost",
+    "imageName": "gb_greed_ghost.png",
+    "roiFront": "49,29,56,65",
+    "roiBack": "49,29,56,65",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  }
+]

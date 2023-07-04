@@ -115,7 +115,7 @@ class ConfigModel(ConfigBase):
         task = convert_to_underscore(task)
         task_gui = getattr(self, task, None)
         if task_gui is None:
-            logger.error(f'{task} is no inexistence')
+            logger.warning(f'{task} is no inexistence')
             return ''
 
         schema2 = task_gui.schema()
@@ -139,7 +139,7 @@ class ConfigModel(ConfigBase):
         task_name = convert_to_underscore(task)
         task = getattr(self, task_name, None)
         if task is None:
-            logger.error(f'{task_name} is no inexistence')
+            logger.warning(f'{task_name} is no inexistence')
             return ''
         return task.json()
 

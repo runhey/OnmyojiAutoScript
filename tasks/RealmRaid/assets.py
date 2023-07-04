@@ -53,6 +53,6 @@ class RealmRaidAssets:
 	# 刷新的时间 
 	O_FRESH_TIME = RuleOcr(roi=(1042,582,85,36), area=(0,0,100,100), mode="Duration", method="Default", keyword="", name="fresh_time")
 	# 右上角 突破卷的数量 
-	O_NUMBER = RuleOcr(roi=(1139,13,91,39), area=(0,0,100,100), mode="DigitCounter", method="Default", keyword="", name="number")
+	O_NUMBER = RuleOcr(roi=(1143,13,80,39), area=(0,0,100,100), mode="DigitCounter", method="Default", keyword="", name="number")
 
 

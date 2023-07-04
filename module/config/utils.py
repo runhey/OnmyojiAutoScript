@@ -6,7 +6,7 @@ import json
 import yaml
 
 from filelock import FileLock
-from datetime import datetime, timedelta, timezone
+from datetime import datetime, timedelta, timezone, time
 
 from module.config.atomicwrites import atomic_write
 
@@ -242,3 +242,18 @@ def dict_to_kv(dictionary, allow_none=True):
     """
     return ', '.join([f'{k}={repr(v)}' for k, v in dictionary.items() if allow_none or v is not None])
 
+
+def parse_tomorrow_server(server_update: time) -> datetime:
+    """
+    获取明天的日期，给这个日期加上server_update的时间，返回datetime
+    :param server_update:
+    :return:
+    """
+    if isinstance(server_update, str):
+        server_update = time.fromisoformat(server_update)
+    now = datetime.now()
+    tomorrow = now + timedelta(days=1)
+    return datetime.combine(tomorrow, server_update)
+
+if __name__ == '__main__':
+    print(parse_tomorrow_server("09:01:00"))

@@ -313,7 +313,7 @@
 	<message><source>Priority</source><translation>任务优先级</translation></message>
 	<message><source>Success Interval</source><translation>执行任务成功后设定下次执行的间隔时间</translation></message>
 	<message><source>Failure Interval</source><translation>执行任务失败后设定下次执行的间隔时间</translation></message>
-	<message><source>Server Update</source><translation>服务器更新时间</translation></message>
+	<message><source>Server Update</source><translation>强制设定服务时间</translation></message>
 	<message><source>enable_help</source><translation>将这个任务加入调度器</translation></message>
 	<message><source>next_run_help</source><translation>会根据下面的间隔时间自动计算时间，清空后回车即可设置为当前</translation></message>
 	<message><source>priority_help</source><translation>如果设置调度规则为基于优先级，则该选项有效
@@ -323,7 +323,8 @@
 	<message><source>interval_minutes_help</source><translation>可取[0~60]</translation></message>
 	<message><source>success_interval_help</source><translation>一般默认，时间格式:"[days] [hours]:[minutes]:[seconds]"</translation></message>
 	<message><source>failure_interval_help</source><translation>一般默认即可，时间格式同上，不按照格式输入会无法正确设置</translation></message>
-	<message><source>server_update_help</source><translation>服务器更新时间，占位符，还没想好怎么用</translation></message>
+	<message><source>server_update_help</source><translation>如果设定不是默认的 "09:00:00",该任务每次执行完毕后会强制设定下次运行时间为第二天的设定值
+格式 hh:mm:ss </translation></message>
 </context>
 <context>
     <name>Args</name>
@@ -344,7 +345,7 @@
 	<message><source>Random Click Swipt Enable</source><translation>战斗时随机点击或者随机滑动</translation></message>
 	
 	<message><source>lock_team_enable_help</source><translation>如果锁定阵容将无法启用预设队伍、加成功能</translation></message>
-	<message><source>preset_enable_help</source><translation> </translation></message>
+	<message><source>preset_enable_help</source><translation>将会在第一次战斗的时候切换队伍预设</translation></message>
 	<message><source>preset_group_help</source><translation>可选[1~7]</translation></message>
 	<message><source>preset_team_help</source><translation>可选[1~5]</translation></message>
 	<message><source>buff_enable_help</source><translation>在准备阶段开启加成不太符合直觉，暂时还未实现，而且挺多的战斗是不允许准备阶段开启加成的</translation></message>
@@ -379,7 +380,45 @@
 	<message><source>ShikigamiConfig</source><translation>活动</translation></message>
 	<message><source>Limit Time</source><translation>限制运行时间</translation></message>
 	<message><source>Limit Count</source><translation>限制挑战次数</translation></message>
-	<message><source>limit_time_help</source><translation>单位秒</translation></message>
-	<message><source>limit_count_help</source><translation>两个限制需要同时设置，最先达到就会退出</translation></message>
+	<message><source>limit_time_help</source><translation>时间格式:"[hours]:[minutes]:[seconds]"
+注意没有空格，使用英文的冒号 : 不按照格式输入会无法正确设置</translation></message>
+	<message><source>limit_count_help</source><translation>两个限制需要同时设置，最先达到就会退出。
+建议执行时间设置成一个小时足够长，此时基于次数来判定设置为100次</translation></message>
+	<message><source>GeneralClimb</source><translation>通用爬塔</translation></message>
+	<message><source>Ap Game Max</source><translation>活动每日使用体力挑战的最大次数</translation></message>
+	<message><source>ap_game_max_help</source><translation>保持默认300即可</translation></message>
+	<message><source>ApMode</source><translation>挂体力模式</translation></message>
+	<message><source>ap_mode_help</source><translation>设置是挂活动的次数(ap_activity)还是游戏的体力(ap_game)</translation></message>
+	<message><source>Activity Toggle</source><translation>挂完活动次数后切换到体力模式</translation></message>
+	<message><source>Buy Ap Activity</source><translation>游戏体力不足是否需要话勾玉购买</translation></message>
+	<message><source>buy_ap_activity_help</source><translation>该设置只有是设定为活动次数时有效</translation></message>
+	<message><source>activity_toggle_help</source><translation>该设置只有是设定为活动次数时有效</translation></message>
 </context>
+<context>
+    <name>Args</name>
+	<message><source>InviteConfig</source><translation>邀请</translation></message>
+	<message><source>InviteNumber</source><translation>邀请人数</translation></message>
+	<message><source>Friend 1</source><translation>第一个队友名字</translation></message>
+	<message><source>Friend 2</source><translation>第二个队友名字</translation></message>
+	<message><source>FindMode</source><translation>寻找队友模式</translation></message>
+	<message><source>Wait Time</source><translation>等待时间</translation></message>
+	<message><source>invite_number_help</source><translation>可选1或者2，为1时只会邀请第一个队友</translation></message>
+	<message><source>friend_name_help</source><translation>输入队友的名字必须是全称，这一项是基于OCR来识别，如果名字过于离谱建议画200勾玉改一个正常点的名字</translation></message>
+	<message><source>friend_2_name_help</source><translation>同上</translation></message>
+	<message><source>find_mode_help</source><translation>默认会从上方列表自动寻找
+顺序是'好友' -> '最近' -> '聊友' -> '跨区'，当然建议选择‘recent_friend’这样会快点</translation></message>
+	<message><source>wait_time_help</source><translation>保持默认一分钟就好，期间每隔20s邀请一次</translation></message>
+	<message><source>Default Invite</source><translation>战斗结束后勾选默认邀请</translation></message>
+	<message><source>default_invite_help</source><translation> </translation></message>
+</context>
+<context>
+    <name>Args</name>
+	<message><source>OrochiConfig</source><translation>副本</translation></message>
+	<message><source>UserStatus</source><translation>身份</translation></message>
+	<message><source>Layer</source><translation>挑战层数</translation></message>
+	<message><source>Soul Buff Enable</source><translation>开启御魂加成</translation></message>
+	<message><source>user_status_help</source><translation>可选队长、队员、单独刷（野队还不打算实现）</translation></message>
+	<message><source>layer_help</source><translation> </translation></message>
+	<message><source>soul_buff_enable_help</source><translation>会在庭院开始的时候设置加成</translation></message>
+</context>	
 </TS>

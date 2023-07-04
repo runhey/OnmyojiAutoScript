@@ -77,7 +77,7 @@ class RuleList:
 
         if x1 is None or y1 is None or x2 is None or y2 is None:
             raise Exception("滑动位置计算错误")
-        return x1, y1, x2, y2
+        return int(x1), int(y1), int(x2), int(y2)
 
     def target_check(self, name: str) -> bool:
         """
@@ -184,8 +184,9 @@ class RuleList:
                 break
         if box is not None:
             rec_x, rec_y, rec_w, rec_h = box[0, 0], box[0, 1], box[1, 0] - box[0, 0], box[2, 1] - box[0, 1]
-            x = rec_x + rec_w // 2
-            y = rec_y + rec_h // 2
+            x = rec_x + rec_w // 2 + self.roi_back[0]
+            y = rec_y + rec_h // 2 + self.roi_back[1]
+            logger.info(f'Ocr {name} appear in current screen, do not need to scroll')
             return x, y
 
         # if index_list and len(index_list) >= 1:
@@ -196,6 +197,13 @@ class RuleList:
         # 如果没有找到，那么应该不是在当前的页面，需要获取当前的信息判断是往前滑动还是往后滑动
         else:
             keyword_list: list = [item.ocr_text for item in boxed_results if item.score > RuleOcr.score]
+
+            # 判断识别处理的文字是否属于要验证识别的文字（array）
+            keyword_list = [keyword for keyword in keyword_list if keyword in self.array]
+            logger.info(f'After list: {keyword_list}')
+            if not keyword_list:
+                logger.warning(f'Not found {name} in {self.array}')
+                return 2
 
             start_index = self.array.index(keyword_list[0])
             end_index = self.array.index(keyword_list[-1])

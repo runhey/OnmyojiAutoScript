@@ -25,10 +25,26 @@ class ActivityShikigamiAssets:
 	I_UNLOCK = RuleImage(roi_front=(796,653,27,35), roi_back=(796,653,27,35), threshold=0.8, method="Template matching", file="./tasks/ActivityShikigami/as/as_unlock.png")
 	# 点击战斗 
 	I_FIRE = RuleImage(roi_front=(1140,585,75,73), roi_back=(1140,585,75,73), threshold=0.8, method="Template matching", file="./tasks/ActivityShikigami/as/as_fire.png")
+	# 体力按钮 
+	I_AP = RuleImage(roi_front=(1126,510,27,37), roi_back=(1126,510,27,37), threshold=0.8, method="Template matching", file="./tasks/ActivityShikigami/as/as_ap.png")
+	# 活动体力 
+	I_AP_ACTIVITY = RuleImage(roi_front=(1125,516,27,27), roi_back=(1125,516,27,27), threshold=0.8, method="Template matching", file="./tasks/ActivityShikigami/as/as_ap_activity.png")
+	# 切换按键 
+	I_SWITCH = RuleImage(roi_front=(1207,514,33,30), roi_back=(1207,514,33,30), threshold=0.8, method="Template matching", file="./tasks/ActivityShikigami/as/as_switch.png")
+	# 购买活动的体力 
+	I_BUY_JADE = RuleImage(roi_front=(836,619,38,42), roi_back=(789,614,143,52), threshold=0.8, method="Template matching", file="./tasks/ActivityShikigami/as/as_buy_jade.png")
+	# 增加到最大 
+	I_ADD_MAX = RuleImage(roi_front=(974,524,57,54), roi_back=(974,524,57,54), threshold=0.8, method="Template matching", file="./tasks/ActivityShikigami/as/as_add_max.png")
+	# description 
+	I_NEW = RuleImage(roi_front=(0,0,100,100), roi_back=(0,0,100,100), threshold=0.8, method="Template matching", file="./tasks/ActivityShikigami/as/as_new.png")
 
 
 	# Ocr Rule Assets
-	# Ocr-description 
-	O_NUMBER = RuleOcr(roi=(1180,678,86,30), area=(1180,678,86,30), mode="DigitCounter", method="Default", keyword="", name="number")
+	# 体力的数量检测 
+	O_REMAIN_AP = RuleOcr(roi=(1180,678,82,30), area=(1180,678,86,30), mode="DigitCounter", method="Default", keyword="", name="remain_ap")
+	# 活动体力的剩余检测 
+	O_REMAIN_AP_ACTIVITY = RuleOcr(roi=(722,23,87,34), area=(722,23,96,34), mode="DigitCounter", method="Default", keyword="", name="remain_ap_activity")
+	# 还有多少次购买体力的机会 
+	O_REMAIN_BUY = RuleOcr(roi=(808,531,39,42), area=(808,531,39,42), mode="DigitCounter", method="Default", keyword="", name="remain_buy")
 
 

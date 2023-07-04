@@ -1,0 +1,38 @@
+[
+  {
+    "itemName": "gi_emoji_1",
+    "imageName": "gi_gi_emoji_1.png",
+    "roiFront": "25,538,50,56",
+    "roiBack": "25,538,50,56",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "gi_emoji_2",
+    "imageName": "gi_gi_emoji_2.png",
+    "roiFront": "21,632,53,64",
+    "roiBack": "21,632,53,64",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "gi_home",
+    "imageName": "gi_gi_home.png",
+    "roiFront": "359,44,34,46",
+    "roiBack": "359,44,34,46",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "判断是不是在庭院界面"
+  },
+  {
+    "itemName": "gi_explore",
+    "imageName": "gi_gi_explore.png",
+    "roiFront": "1138,119,41,48",
+    "roiBack": "1138,119,41,48",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "判断是不是在探索界面"
+  }
+]

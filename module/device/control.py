@@ -167,9 +167,16 @@ class Control(Minitouch, Adb, Scrcpy, Window):
         else:
             # ADB needs to be slow, or swipe doesn't work
             duration *= 2.5
-            logger.info('Swipe %s -> %s, %s' % (point2str(*p1), point2str(*p2), duration))
+            logger.info('Swipe %s -> %s, %s ' % (point2str(*p1), point2str(*p2), duration))
 
         if distance_check:
+            if p1[0] == p2[0]:
+                logger.info('Swipe x distance is 0')
+                p1[0] += 1
+            if p1[1] == p2[1]:
+                logger.info('Swipe y distance is 0')
+                p1[1] += 1
+
             if np.linalg.norm(np.subtract(p1, p2)) < 10:
                 # Should swipe a certain distance, otherwise AL will treat it as click.
                 # uiautomator2 should >= 6px, minitouch should >= 5px

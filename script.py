@@ -423,7 +423,7 @@ class Script:
             if success:
                 del_cached_property(self, 'config')
                 continue
-            elif self.config.error.handle.error:
+            elif self.config.script.error.handle_error:
                 # self.config.task_delay(success=False)
                 del_cached_property(self, 'config')
                 self.checker.check_now()
@@ -444,5 +444,5 @@ class Script:
 if __name__ == "__main__":
     script = Script("oas1")
     # print(script.get_next_task())
-    script.run("ActivityShikigami")
-    # script.run('RealmRaid')
+    # script.run("ActivityShikigami")
+    script.run('RealmRaid')
