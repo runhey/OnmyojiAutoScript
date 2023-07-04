@@ -313,7 +313,7 @@
 	<message><source>Priority</source><translation>任务优先级</translation></message>
 	<message><source>Success Interval</source><translation>执行任务成功后设定下次执行的间隔时间</translation></message>
 	<message><source>Failure Interval</source><translation>执行任务失败后设定下次执行的间隔时间</translation></message>
-	<message><source>Server Update</source><translation>服务器更新时间</translation></message>
+	<message><source>Server Update</source><translation>强制设定服务时间</translation></message>
 	<message><source>enable_help</source><translation>将这个任务加入调度器</translation></message>
 	<message><source>next_run_help</source><translation>会根据下面的间隔时间自动计算时间，清空后回车即可设置为当前</translation></message>
 	<message><source>priority_help</source><translation>如果设置调度规则为基于优先级，则该选项有效
@@ -323,7 +323,8 @@
 	<message><source>interval_minutes_help</source><translation>可取[0~60]</translation></message>
 	<message><source>success_interval_help</source><translation>一般默认，时间格式:"[days] [hours]:[minutes]:[seconds]"</translation></message>
 	<message><source>failure_interval_help</source><translation>一般默认即可，时间格式同上，不按照格式输入会无法正确设置</translation></message>
-	<message><source>server_update_help</source><translation>服务器更新时间，占位符，还没想好怎么用</translation></message>
+	<message><source>server_update_help</source><translation>如果设定不是默认的 "09:00:00",该任务每次执行完毕后会强制设定下次运行时间为第二天的设定值
+格式 hh:mm:ss </translation></message>
 </context>
 <context>
     <name>Args</name>

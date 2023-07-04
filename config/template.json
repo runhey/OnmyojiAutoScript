@@ -28,7 +28,7 @@
       "priority": 5,
       "success_interval": "01 00:00:00",
       "failure_interval": "01 00:00:00",
-      "server_update": "06:00:00"
+      "server_update": "09:00:00"
     }
   },
   "global_game": {
@@ -47,7 +47,7 @@
       "priority": 5,
       "success_interval": "01 00:00:00",
       "failure_interval": "01 00:00:00",
-      "server_update": "06:00:00"
+      "server_update": "09:00:00"
     },
     "general_battle": {
       "lock_team_enable": false,
@@ -76,7 +76,7 @@
       "priority": 5,
       "success_interval": "01 00:00:00",
       "failure_interval": "01 00:00:00",
-      "server_update": "06:00:00"
+      "server_update": "09:00:00"
     }
   },
   "gold_youkai": {
@@ -86,7 +86,7 @@
       "priority": 5,
       "success_interval": "01 00:00:00",
       "failure_interval": "01 00:00:00",
-      "server_update": "06:00:00"
+      "server_update": "09:00:00"
     }
   },
   "nian": {
@@ -96,7 +96,7 @@
       "priority": 5,
       "success_interval": "01 00:00:00",
       "failure_interval": "01 00:00:00",
-      "server_update": "06:00:00"
+      "server_update": "09:00:00"
     }
   },
   "realm_raid": {
@@ -106,7 +106,7 @@
       "priority": 5,
       "success_interval": "01 00:00:00",
       "failure_interval": "01 00:00:00",
-      "server_update": "06:00:00"
+      "server_update": "09:00:00"
     },
     "raid_config": {
       "raid_mode": "retreat_four_attack_nine",
@@ -136,7 +136,38 @@
       "priority": 5,
       "success_interval": "01 00:00:00",
       "failure_interval": "01 00:00:00",
-      "server_update": "06:00:00"
+      "server_update": "09:00:00"
+    },
+    "orochi_config": {
+      "user_status": "leader",
+      "layer": "悲鸣",
+      "limit_time": "00:30:00",
+      "limit_count": 30,
+      "soul_buff_enable": false
+    },
+    "invite_config": {
+      "invite_number": "one",
+      "friend_1": "",
+      "friend_2": "",
+      "find_mode": "auto_find",
+      "wait_time": "00:01:00",
+      "default_invite": true
+    },
+    "general_battle_config": {
+      "lock_team_enable": false,
+      "preset_enable": false,
+      "preset_group": 1,
+      "preset_team": 1,
+      "buff_enable": false,
+      "buff_awake_click": false,
+      "buff_soul_click": false,
+      "buff_gold_50_click": false,
+      "buff_gold_100_click": false,
+      "buff_exp_50_click": false,
+      "buff_exp_100_click": false,
+      "green_enable": false,
+      "green_mark": "green_left1",
+      "random_click_swipt_enable": false
     }
   },
   "orochi_moans": {
@@ -146,7 +177,7 @@
       "priority": 5,
       "success_interval": "01 00:00:00",
       "failure_interval": "01 00:00:00",
-      "server_update": "06:00:00"
+      "server_update": "09:00:00"
     }
   },
   "sougenbi": {
@@ -156,7 +187,7 @@
       "priority": 5,
       "success_interval": "01 00:00:00",
       "failure_interval": "01 00:00:00",
-      "server_update": "06:00:00"
+      "server_update": "09:00:00"
     }
   },
   "fallen_sun": {
@@ -166,7 +197,7 @@
       "priority": 5,
       "success_interval": "01 00:00:00",
       "failure_interval": "01 00:00:00",
-      "server_update": "06:00:00"
+      "server_update": "09:00:00"
     }
   },
   "eternity_sea": {
@@ -176,7 +207,7 @@
       "priority": 5,
       "success_interval": "01 00:00:00",
       "failure_interval": "01 00:00:00",
-      "server_update": "06:00:00"
+      "server_update": "09:00:00"
     }
   },
   "activity_shikigami": {
@@ -186,7 +217,7 @@
       "priority": 5,
       "success_interval": "01 00:00:00",
       "failure_interval": "01 00:00:00",
-      "server_update": "06:00:00"
+      "server_update": "09:00:00"
     },
     "general_climb": {
       "limit_time": "00 01:00:00",
