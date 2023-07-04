@@ -1,7 +1,7 @@
 # This Python file uses the following encoding: utf-8
 # @author runhey
 # github https://github.com/runhey
-import time
+from time import sleep
 import numpy as np
 
 from enum import Enum
@@ -397,11 +397,11 @@ class GeneralInvite(BaseTask, GeneralInviteAssets):
                     continue
 
             logger.info(f'Now find friend in ”最近“')
-            time.sleep(1)
+            sleep(1)
             if not is_select:
                 if self.detect_select(name):
                     is_select = True
-            time.sleep(1)
+            sleep(1)
             if not is_select:
                 if self.detect_select(name):
                     is_select = True
@@ -442,11 +442,11 @@ class GeneralInvite(BaseTask, GeneralInviteAssets):
             # 选中好友， 在这里游戏获取在线的好友并不是很快，根据不同的设备会有不同的时间，而且没有什么元素提供我们来判断
             # 所以这里就直接等待一段时间
             logger.info(f'Now find friend in {friend_class[index]}')
-            time.sleep(1)
+            sleep(1)
             if not is_select:
                 if self.detect_select(name):
                     is_select = True
-            time.sleep(1)
+            sleep(1)
             if not is_select:
                 if self.detect_select(name):
                     is_select = True
@@ -483,7 +483,7 @@ class GeneralInvite(BaseTask, GeneralInviteAssets):
             success = self.invite_friend(config.friend_2, config.find_mode)
             if not success:
                 logger.warning('Invite friend 2 failed')
-        time.sleep(0.5)
+        sleep(0.5)
 
     def invite_again(self, default_invite: bool=True) -> bool:
         """

@@ -13,6 +13,7 @@ from tasks.GameUi.page import page_main, page_soul_zones
 from tasks.Orochi.assets import OrochiAssets
 from tasks.Orochi.config import Orochi, UserStatus
 from module.logger import logger
+from module.exception import TaskEnd
 
 class ScriptTask(GeneralBattle, GeneralInvite, GeneralBuff, GeneralRoom, GameUi, OrochiAssets):
 
@@ -50,6 +51,8 @@ class ScriptTask(GeneralBattle, GeneralInvite, GeneralBuff, GeneralRoom, GameUi,
             self.set_next_run('Orochi', finish=True, success=True)
         else:
             self.set_next_run('Orochi', finish=False, success=False)
+
+        raise TaskEnd
 
 
 
@@ -137,6 +140,7 @@ class ScriptTask(GeneralBattle, GeneralInvite, GeneralBuff, GeneralRoom, GameUi,
         is_first = True
         # 这个时候我已经进入房间了哦
         while 1:
+            self.screenshot()
             # 无论胜利与否, 都会出现是否邀请一次队友
             # 区别在于，失败的话不会出现那个勾选默认邀请的框
             if self.check_and_invite(self.config.orochi.invite_config.default_invite):
