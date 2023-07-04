@@ -2,11 +2,11 @@
 # @author runhey
 # github https://github.com/runhey
 import time
-
 import numpy as np
 
 from enum import Enum
 from cached_property import cached_property
+from datetime import timedelta, time
 
 from module.base.timer import Timer
 from tasks.base_task import BaseTask
@@ -175,12 +175,13 @@ class GeneralInvite(BaseTask, GeneralInviteAssets):
                 return False
 
     # 判断是否在房间里面
-    def is_in_room(self) -> bool:
+    def is_in_room(self, is_screenshot: bool = True) -> bool:
         """
         判断是否在房间里面
         :return:
         """
-        self.screenshot()
+        if is_screenshot:
+            self.screenshot()
         if self.appear(self.I_GI_EMOJI_1):
             return True
         if self.appear(self.I_GI_EMOJI_2):
@@ -555,19 +556,86 @@ class GeneralInvite(BaseTask, GeneralInviteAssets):
 
 
 
-    def accept_invite(self) -> bool:
+    def check_then_accept(self) -> bool:
         """
-        队员接受邀请, 保持在庭院界面
+        队员接受邀请
         :return:
         """
+        if not self.appear(self.I_I_ACCEPT):
+            return False
+        logger.info('Click accept')
         while 1:
             self.screenshot()
-            if self.appear(self.I_GI_BUFF):
-                break
+            if self.is_in_room():
+                return True
+            if self.appear_then_click(self.I_I_NO_DEFAULT, interval=1):
+                continue
+            if self.appear_then_click(self.I_GI_SURE, interval=1):
+                continue
             if self.appear_then_click(self.I_I_ACCEPT_DEFAULT, interval=1):
                 continue
             if self.appear_then_click(self.I_I_ACCEPT, interval=1):
                 continue
+        return True
+
+    def wait_battle(self, wait_time: time) -> bool:
+        """
+        在房间等待,(要求保证在房间里面) 队长开启战斗
+        如果队长跑路了，或者的等待了很久还没开始
+        :return: 如果成功进入战斗（反正就是不在房间 ）返回 True
+                 如果失败了，（退出房间）返回 False
+        """
+        self.timer_emoji = Timer(15)
+        self.timer_emoji.start()
+        wait_second = wait_time.second + wait_time.minute * 60
+        self.timer_wait = Timer(wait_second)
+        self.timer_wait.start()
+        logger.info(f'Wait battle {wait_second} seconds')
+        success = True
+        while 1:
+            self.screenshot()
+
+            # 如果自己在探索界面或者是庭院，那就是房间已经被销毁了
+            if self.appear(self.I_GI_HOME) or self.appear(self.I_GI_EXPLORE):
+                logger.warning('Room destroyed')
+                success = False
+                break
+
+
+            if self.timer_wait.reached():
+                logger.warning('Wait battle time out')
+                success = False
+                break
+
+            # 如果队长跑路了，自己变成了队长: 自己也要跑路
+            if self.appear(self.I_FIRE) or self.appear(self.I_FIRE_SEA):
+                logger.warning('Leader run away while wait battle and become leader now')
+                success = False
+                break
+
+            # 判断是否进入战斗
+            if self.is_in_room(is_screenshot=False):
+                if self.timer_emoji.reached():
+                    self.timer_emoji.reset()
+                    self.appear_then_click(self.I_GI_EMOJI_1)
+                    self.appear_then_click(self.I_GI_EMOJI_2)
+            else:
+                break
+
+
+        # 调出循环只有这些可能性：
+        # 1. 进入战斗（ui是战斗）
+        # 2. 队长跑路（自己还是在房间里面）
+        # 3. 等待时间到没有开始（还是在房间里面）
+        # 4. 房间的时间到了被迫提出房间（这个时候来到了探索界面）
+        if not success:
+            logger.info('Leave room')
+            self.exit_room()
+
+        return success
+
+
+
 
 if __name__ == '__main__':
     from module.config.config import Config

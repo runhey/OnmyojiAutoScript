@@ -257,3 +257,36 @@ class GeneralBattle(BaseTask, GeneralBattleAssets):
         return True
 
 
+    def exit_battle(self, skip_first: bool=False) -> bool:
+        """
+        在战斗的时候强制退出战斗
+        :return:
+        """
+        if skip_first:
+            self.screenshot()
+
+        if not self.appear(self.I_EXIT):
+            return False
+
+        # 点击返回
+        logger.info(f"Click {self.I_EXIT.name}")
+        while 1:
+            self.screenshot()
+            if self.appear_then_click(self.I_EXIT, interval=1.5):
+                continue
+            if self.appear(self.I_EXIT_ENSURE):
+                break
+
+        # 点击返回确认
+        while 1:
+            self.screenshot()
+            if self.appear_then_click(self.I_EXIT_ENSURE, interval=1.5):
+                continue
+            if self.appear_then_click(self.I_FALSE, interval=1.5):
+                continue
+            if not self.appear(self.I_EXIT):
+                break
+
+        return True
+
+

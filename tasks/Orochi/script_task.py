@@ -35,7 +35,7 @@ class ScriptTask(GeneralBattle, GeneralInvite, GeneralBuff, GeneralRoom, GameUi,
         success = True
         match config.orochi_config.user_status:
             case UserStatus.LEADER: success = self.run_leader()
-            case UserStatus.MEMBER: self.run_member()
+            case UserStatus.MEMBER: success = self.run_member()
             case UserStatus.ALONE: self.run_alone()
             case UserStatus.WILD: self.run_wild()
             case _: logger.error('Unknown user status')
@@ -196,7 +196,47 @@ class ScriptTask(GeneralBattle, GeneralInvite, GeneralBuff, GeneralRoom, GameUi,
         return True
 
     def run_member(self):
-        pass
+        logger.info('Start run member')
+        self.ui_get_current_page()
+        self.ui_goto(page_soul_zones)
+        self.orochi_enter()
+        self.check_lock(self.config.orochi.general_battle_config.lock_team_enable)
+
+        # 进入战斗流程
+        while 1:
+            self.screenshot()
+
+            if self.current_count >= self.limit_count:
+                logger.info('Orochi count limit out')
+                break
+            if datetime.now() - self.start_time >= self.limit_time:
+                logger.info('Orochi time limit out')
+                break
+
+            if self.check_then_accept():
+                continue
+
+            if self.is_in_room():
+                if self.wait_battle(wait_time=self.config.orochi.invite_config.wait_time):
+                    self.run_general_battle(config=self.config.orochi.general_battle_config)
+                else:
+                    break
+
+        while 1:
+            # 有一种情况是本来要退出的，但是队长邀请了进入的战斗的加载界面
+            if self.appear(self.I_GI_HOME) or self.appear(self.I_GI_EXPLORE):
+                break
+            # 如果可能在房间就退出
+            if self.exit_room():
+                pass
+            # 如果还在战斗中，就退出战斗
+            if self.exit_battle():
+                pass
+
+
+        self.ui_get_current_page()
+        self.ui_goto(page_main)
+        return True
 
     def run_alone(self):
         logger.info('Start run alone')
