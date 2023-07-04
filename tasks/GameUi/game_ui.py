@@ -177,8 +177,6 @@ class GameUi(BaseTask, GameUiAssets):
 
 
         logger.hr(f"UI goto {destination}")
-        for page in visited:
-            logger.info(f"visited: {page}")
         confirm_timer = Timer(confirm_wait, count=int(confirm_wait // 0.5)).start()
         while 1:
             if skip_first_screenshot:

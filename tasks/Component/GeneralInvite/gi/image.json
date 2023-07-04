@@ -297,26 +297,26 @@
     "description": "勾选 默认邀请"
   },
   {
-    "itemName": "cancel",
-    "imageName": "gi_cancel.png",
-    "roiFront": "435,404,171,65",
-    "roiBack": "435,404,171,65",
+    "itemName": "gi_cancel",
+    "imageName": "gi_gi_cancel.png",
+    "roiFront": "438,407,171,55",
+    "roiBack": "438,407,171,55",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"
   },
   {
-    "itemName": "sure",
-    "imageName": "gi_sure.png",
-    "roiFront": "668,401,175,60",
-    "roiBack": "668,401,175,60",
+    "itemName": "gi_sure",
+    "imageName": "gi_gi_sure.png",
+    "roiFront": "670,402,175,60",
+    "roiBack": "670,402,175,60",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "队长邀请 确定"
   },
   {
-    "itemName": "buff",
-    "imageName": "gi_buff.png",
+    "itemName": "gi_buff",
+    "imageName": "gi_gi_buff.png",
     "roiFront": "794,38,46,42",
     "roiBack": "794,38,46,42",
     "method": "Template matching",

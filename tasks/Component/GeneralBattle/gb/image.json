@@ -1,7 +1,7 @@
 [
   {
     "itemName": "reward",
-    "imageName": "res_reward.png",
+    "imageName": "gb_reward.png",
     "roiFront": "547,518,172,96",
     "roiBack": "547,518,172,96",
     "method": "Template matching",
@@ -10,7 +10,7 @@
   },
   {
     "itemName": "preset",
-    "imageName": "res_preset.png",
+    "imageName": "gb_preset.png",
     "roiFront": "32,650,47,45",
     "roiBack": "32,650,47,45",
     "method": "Template matching",
@@ -19,7 +19,7 @@
   },
   {
     "itemName": "prepare_highlight",
-    "imageName": "res_prepare_highlight.png",
+    "imageName": "gb_prepare_highlight.png",
     "roiFront": "1128,536,100,100",
     "roiBack": "1128,536,100,100",
     "method": "Template matching",
@@ -28,16 +28,16 @@
   },
   {
     "itemName": "win",
-    "imageName": "res_win.png",
-    "roiFront": "427,135,100,100",
-    "roiBack": "427,135,100,100",
+    "imageName": "gb_win.png",
+    "roiFront": "425,141,100,100",
+    "roiBack": "296,41,414,216",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "战斗胜利"
   },
   {
     "itemName": "prepare_dark",
-    "imageName": "res_prepare_dark.png",
+    "imageName": "gb_prepare_dark.png",
     "roiFront": "1131,538,100,100",
     "roiBack": "1131,538,100,100",
     "method": "Template matching",
@@ -46,7 +46,7 @@
   },
   {
     "itemName": "false",
-    "imageName": "res_false.png",
+    "imageName": "gb_false.png",
     "roiFront": "413,124,100,100",
     "roiBack": "413,124,100,100",
     "method": "Template matching",
@@ -55,7 +55,7 @@
   },
   {
     "itemName": "preset_ensure",
-    "imageName": "res_preset_ensure.png",
+    "imageName": "gb_preset_ensure.png",
     "roiFront": "354,641,141,50",
     "roiBack": "354,641,141,50",
     "method": "Template matching",
@@ -64,7 +64,7 @@
   },
   {
     "itemName": "buff",
-    "imageName": "res_buff.png",
+    "imageName": "gb_buff.png",
     "roiFront": "113,653,44,62",
     "roiBack": "113,653,44,62",
     "method": "Template matching",
@@ -73,7 +73,7 @@
   },
   {
     "itemName": "buff_awaken",
-    "imageName": "res_buff_awaken.png",
+    "imageName": "gb_buff_awaken.png",
     "roiFront": "373,126,383,53",
     "roiBack": "373,126,383,53",
     "method": "Template matching",
@@ -82,7 +82,7 @@
   },
   {
     "itemName": "buff_soul",
-    "imageName": "res_buff_soul.png",
+    "imageName": "gb_buff_soul.png",
     "roiFront": "377,192,371,56",
     "roiBack": "377,192,371,56",
     "method": "Template matching",
@@ -91,7 +91,7 @@
   },
   {
     "itemName": "buff_gold_50",
-    "imageName": "res_buff_gold_50.png",
+    "imageName": "gb_buff_gold_50.png",
     "roiFront": "375,259,373,56",
     "roiBack": "375,259,373,56",
     "method": "Template matching",
@@ -100,7 +100,7 @@
   },
   {
     "itemName": "buff_gold_100",
-    "imageName": "res_buff_gold_100.png",
+    "imageName": "gb_buff_gold_100.png",
     "roiFront": "371,329,389,54",
     "roiBack": "371,329,389,54",
     "method": "Template matching",
@@ -109,7 +109,7 @@
   },
   {
     "itemName": "buff_exp_50",
-    "imageName": "res_buff_exp_50.png",
+    "imageName": "gb_buff_exp_50.png",
     "roiFront": "378,400,370,50",
     "roiBack": "378,400,370,50",
     "method": "Template matching",
@@ -118,7 +118,7 @@
   },
   {
     "itemName": "buff_exp_100",
-    "imageName": "res_buff_exp_100.png",
+    "imageName": "gb_buff_exp_100.png",
     "roiFront": "372,463,386,50",
     "roiBack": "372,463,386,50",
     "method": "Template matching",
@@ -127,7 +127,7 @@
   },
   {
     "itemName": "local",
-    "imageName": "res_local.png",
+    "imageName": "gb_local.png",
     "roiFront": "25,563,30,34",
     "roiBack": "25,563,30,34",
     "method": "Template matching",
@@ -136,7 +136,7 @@
   },
   {
     "itemName": "statistics",
-    "imageName": "res_statistics.png",
+    "imageName": "gb_statistics.png",
     "roiFront": "61,644,33,28",
     "roiBack": "61,644,33,28",
     "method": "Template matching",
@@ -145,7 +145,7 @@
   },
   {
     "itemName": "exit",
-    "imageName": "res_exit.png",
+    "imageName": "gb_exit.png",
     "roiFront": "14,12,43,41",
     "roiBack": "14,12,43,41",
     "method": "Template matching",
@@ -154,7 +154,7 @@
   },
   {
     "itemName": "exit_ensure",
-    "imageName": "res_exit_ensure.png",
+    "imageName": "gb_exit_ensure.png",
     "roiFront": "674,388,135,63",
     "roiBack": "674,388,135,63",
     "method": "Template matching",

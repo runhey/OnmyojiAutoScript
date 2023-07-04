@@ -61,5 +61,23 @@
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"
+  },
+  {
+    "itemName": "gr_matching_new",
+    "imageName": "gr_gr_matching_new.png",
+    "roiFront": "1204,102,42,121",
+    "roiBack": "1204,102,42,121",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "gr_back_yellow",
+    "imageName": "gr_gr_back_yellow.png",
+    "roiFront": "19,13,53,53",
+    "roiBack": "19,13,53,53",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
   }
 ]

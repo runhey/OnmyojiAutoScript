@@ -36,6 +36,7 @@ class RoomType(str, Enum):
 class GeneralInvite(BaseTask, GeneralInviteAssets):
     timer_invite = None
     timer_wait = None
+    timer_emoji = None  # 等待期间如果没有操作的话，可能会导致长时间无响应报错
 
     """
     这个类就三个api
@@ -47,6 +48,8 @@ class GeneralInvite(BaseTask, GeneralInviteAssets):
     def run_invite(self, config: InviteConfig, is_first: bool = False) -> bool:
         """
         队长！！身份。。。在组件界面邀请好友（ 如果开启is_first） 等待队员进入开启挑战
+        请注意，返回的时候成功时是进入战斗了！！！
+        如果是失败，那就是没有队友进入，然后会退出房间的界面
         :param config:
         :param is_first: 如果是第一次开房间的那就要邀请队员，其他情况等待队员进入
         :return:
@@ -61,6 +64,10 @@ class GeneralInvite(BaseTask, GeneralInviteAssets):
             self.timer_invite.start()
             self.ensure_room_type(config.invite_number)
             self.invite_friends(config)
+        else:
+            self.timer_invite = None
+            self.timer_emoji = Timer(20)
+            self.timer_emoji.start()
         wait_second = config.wait_time.second + config.wait_time.minute * 60
         self.timer_wait = Timer(wait_second)
         self.timer_wait.start()
@@ -77,6 +84,11 @@ class GeneralInvite(BaseTask, GeneralInviteAssets):
             if self.appear(self.I_MATCHING):
                 logger.warning('Timeout, now is no room')
                 return False
+
+            if self.timer_emoji and self.timer_emoji.reached():
+                self.timer_emoji.reset()
+                self.appear_then_click(self.I_GI_EMOJI_1)
+                self.appear_then_click(self.I_GI_EMOJI_2)
 
 
             # 如果这个房间最多只容纳两个人（意思是只可以邀请一个人），且已经邀请一个人了，那就开启挑战
@@ -161,6 +173,40 @@ class GeneralInvite(BaseTask, GeneralInviteAssets):
                 return True
             if self.appear(self.I_MATCHING):
                 return False
+
+    # 判断是否在房间里面
+    def is_in_room(self) -> bool:
+        """
+        判断是否在房间里面
+        :return:
+        """
+        self.screenshot()
+        if self.appear(self.I_GI_EMOJI_1):
+            return True
+        if self.appear(self.I_GI_EMOJI_2):
+            return True
+        if self.appear(self.I_MATCHING):
+            return False
+        return False
+
+    def exit_room(self) -> bool:
+        """
+        退出房间
+        :return:
+        """
+        if not self.is_in_room():
+            return False
+        logger.info('Exit room')
+        while 1:
+            self.screenshot()
+            if not self.is_in_room():
+                break
+            if self.appear_then_click(self.I_GI_SURE, interval=0.5):
+                continue
+            if self.appear_then_click(self.I_BACK_YELLOW, interval=0.5):
+                continue
+        return True
+
 
     @cached_property
     def room_type(self) -> RoomType:
@@ -448,7 +494,7 @@ class GeneralInvite(BaseTask, GeneralInviteAssets):
         # 判断是否进入界面
         while 1:
             self.screenshot()
-            if self.appear(self.I_SURE):
+            if self.appear(self.I_GI_SURE):
                 break
         # 如果勾选了默认邀请
         if default_invite:
@@ -472,10 +518,42 @@ class GeneralInvite(BaseTask, GeneralInviteAssets):
         logger.info('Click invite ensure')
         while 1:
             self.screenshot()
-            if not self.appear(self.I_SURE):
+            if not self.appear(self.I_GI_SURE):
                 break
-            if self.appear_then_click(self.I_SURE):
+            if self.appear_then_click(self.I_GI_SURE):
                 continue
+
+    def check_and_invite(self, default_invite: bool=True) -> bool:
+        """
+        队长战斗后 邀请队友
+        :param default_invite:
+        :return:
+        """
+        if not self.appear(self.I_GI_SURE):
+            return False
+
+        if default_invite:
+            # 有可能是挑战失败的
+            if self.appear(self.I_I_DEFAULT) or self.appear(self.I_I_NO_DEFAULT):
+                logger.info('Click default invite')
+                while 1:
+                    self.screenshot()
+                    if self.appear(self.I_I_DEFAULT):
+                        break
+                    if self.appear_then_click(self.I_I_NO_DEFAULT, interval=1):
+                        continue
+        # 点击确认
+        while 1:
+            self.screenshot()
+            if not self.appear(self.I_GI_SURE):
+                break
+            if self.appear_then_click(self.I_GI_SURE, interval=1):
+                continue
+
+        return True
+
+
+
 
     def accept_invite(self) -> bool:
         """
@@ -484,7 +562,7 @@ class GeneralInvite(BaseTask, GeneralInviteAssets):
         """
         while 1:
             self.screenshot()
-            if self.appear(self.I_BUFF):
+            if self.appear(self.I_GI_BUFF):
                 break
             if self.appear_then_click(self.I_I_ACCEPT_DEFAULT, interval=1):
                 continue
@@ -499,5 +577,8 @@ if __name__ == '__main__':
     c = Config('oas1')
     d = Device(c)
     t = GeneralInvite(c, d)
-    # t.invite_friend('城凉文月', FindMode.RECENT_FRIEND)
-    t.run_invite(c.orochi.invite_config, is_first=True)
+
+    # t.run_invite(c.orochi.invite_config, is_first=True)
+    t.screenshot()
+    print(t.check_and_invite(True))
+

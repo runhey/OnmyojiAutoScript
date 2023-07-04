@@ -78,11 +78,18 @@ class GeneralInviteAssets:
 	# 勾选 默认邀请 
 	I_I_DEFAULT = RuleImage(roi_front=(541,342,41,39), roi_back=(541,342,41,39), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralInvite/gi/gi_i_default.png")
 	# description 
-	I_CANCEL = RuleImage(roi_front=(435,404,171,65), roi_back=(435,404,171,65), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralInvite/gi/gi_cancel.png")
+	I_GI_CANCEL = RuleImage(roi_front=(438,407,171,55), roi_back=(438,407,171,55), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralInvite/gi/gi_gi_cancel.png")
 	# 队长邀请 确定 
-	I_SURE = RuleImage(roi_front=(668,401,175,60), roi_back=(668,401,175,60), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralInvite/gi/gi_sure.png")
+	I_GI_SURE = RuleImage(roi_front=(670,402,175,60), roi_back=(670,402,175,60), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralInvite/gi/gi_gi_sure.png")
 	# 所有的组队界面都有加成 
-	I_BUFF = RuleImage(roi_front=(794,38,46,42), roi_back=(794,38,46,42), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralInvite/gi/gi_buff.png")
+	I_GI_BUFF = RuleImage(roi_front=(794,38,46,42), roi_back=(794,38,46,42), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralInvite/gi/gi_gi_buff.png")
+
+
+	# Image Rule Assets
+	# description 
+	I_GI_EMOJI_1 = RuleImage(roi_front=(25,538,50,56), roi_back=(25,538,50,56), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralInvite/gi/gi_gi_emoji_1.png")
+	# description 
+	I_GI_EMOJI_2 = RuleImage(roi_front=(21,632,53,64), roi_back=(21,632,53,64), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralInvite/gi/gi_gi_emoji_2.png")
 
 
 	# Ocr Rule Assets

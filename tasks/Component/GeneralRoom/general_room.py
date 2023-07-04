@@ -74,3 +74,16 @@ class GeneralRoom(BaseTask, GeneralRoomAssets):
             if not self.appear(target):
                 return True
 
+    def exit_team(self) -> bool:
+        """
+        在组队界面 退出组队的界面， 返回到庭院或者是你一开始进入的入口
+        :return:
+        """
+        if self.appear(self.I_GR_MATCHING_NEW):
+            logger.info('Exit team ui')
+            while 1:
+                self.screenshot()
+                if not self.appear(self.I_GR_MATCHING_NEW):
+                    return True
+                if self.appear_then_click(self.I_GR_BACK_YELLOW, interval=0.5):
+                    continue

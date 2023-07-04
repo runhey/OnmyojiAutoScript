@@ -10,6 +10,23 @@ from module.atom.list import RuleList
 class OrochiAssets: 
 
 
+	# Image Rule Assets
+	# 八级大蛇进入 
+	I_OROCHI = RuleImage(roi_front=(55,104,295,406), roi_back=(55,104,295,406), threshold=0.8, method="Template matching", file="./tasks/Orochi/o/o_orochi.png")
+	# 组队 
+	I_FORM_TEAM = RuleImage(roi_front=(937,591,100,100), roi_back=(937,591,100,100), threshold=0.8, method="Template matching", file="./tasks/Orochi/o/o_form_team.png")
+	# description 
+	I_OROCHI_LOCK = RuleImage(roi_front=(558,562,31,33), roi_back=(558,562,31,33), threshold=0.8, method="Template matching", file="./tasks/Orochi/o/o_lock.png")
+	# description 
+	I_OROCHI_UNLOCK = RuleImage(roi_front=(560,564,26,29), roi_back=(560,564,26,29), threshold=0.8, method="Template matching", file="./tasks/Orochi/o/o_unlock.png")
+	# 点击挑战 
+	I_OROCHI_FIRE = RuleImage(roi_front=(1095,577,131,124), roi_back=(1095,577,131,124), threshold=0.6, method="Template matching", file="./tasks/Orochi/o/o_fire.png")
+	# 式神录 
+	I_SHI_RECORDS = RuleImage(roi_front=(821,638,48,45), roi_back=(821,638,48,45), threshold=0.8, method="Template matching", file="./tasks/Orochi/o/o_shi_records.png")
+	# description 
+	I_OROCHI_MATCHING = RuleImage(roi_front=(1205,106,44,114), roi_back=(1205,106,44,114), threshold=0.8, method="Template matching", file="./tasks/Orochi/o/o_matching.png")
+
+
 	# List Rule Assets
 	# 这个是御魂界面选择不同层数的 
 	L_LAYER_LIST = RuleList(folder="./tasks/Orochi/res", direction="vertical", mode="ocr", roi_back=(276,130,52,500), size=(45, 88), 

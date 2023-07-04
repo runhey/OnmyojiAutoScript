@@ -110,12 +110,24 @@ class GeneralBattle(BaseTask, GeneralBattleAssets):
             logger.info("Green is enable")
             x, y = None, None
             match config.green_mark:
-                case GreenMarkType.GREEN_LEFT1: x, y = self.C_GREEN_LEFT_1.coord()
-                case GreenMarkType.GREEN_LEFT2: x, y = self.C_GREEN_LEFT_2.coord()
-                case GreenMarkType.GREEN_LEFT3: x, y = self.C_GREEN_LEFT_3.coord()
-                case GreenMarkType.GREEN_LEFT4: x, y = self.C_GREEN_LEFT_4.coord()
-                case GreenMarkType.GREEN_LEFT5: x, y = self.C_GREEN_LEFT_5.coord()
-                case GreenMarkType.GREEN_MAIN: x, y = self.C_GREEN_MAIN.coord()
+                case GreenMarkType.GREEN_LEFT1:
+                    x, y = self.C_GREEN_LEFT_1.coord()
+                    logger.info("Green left 1")
+                case GreenMarkType.GREEN_LEFT2:
+                    x, y = self.C_GREEN_LEFT_2.coord()
+                    logger.info("Green left 2")
+                case GreenMarkType.GREEN_LEFT3:
+                    x, y = self.C_GREEN_LEFT_3.coord()
+                    logger.info("Green left 3")
+                case GreenMarkType.GREEN_LEFT4:
+                    x, y = self.C_GREEN_LEFT_4.coord()
+                    logger.info("Green left 4")
+                case GreenMarkType.GREEN_LEFT5:
+                    x, y = self.C_GREEN_LEFT_5.coord()
+                    logger.info("Green left 5")
+                case GreenMarkType.GREEN_MAIN:
+                    x, y = self.C_GREEN_MAIN.coord()
+                    logger.info("Green main")
 
             # 判断有无坐标的偏移
             self.appear_then_click(self.I_LOCAL)

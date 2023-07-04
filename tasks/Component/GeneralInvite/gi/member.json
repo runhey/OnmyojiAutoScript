@@ -1,0 +1,20 @@
+[
+  {
+    "itemName": "gi_emoji_1",
+    "imageName": "gi_gi_emoji_1.png",
+    "roiFront": "25,538,50,56",
+    "roiBack": "25,538,50,56",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "gi_emoji_2",
+    "imageName": "gi_gi_emoji_2.png",
+    "roiFront": "21,632,53,64",
+    "roiBack": "21,632,53,64",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  }
+]
