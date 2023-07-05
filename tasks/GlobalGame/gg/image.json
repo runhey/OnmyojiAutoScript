@@ -2,8 +2,8 @@
   {
     "itemName": "accept",
     "imageName": "gg_accept.png",
-    "roiFront": "825,395,56,46",
-    "roiBack": "825,395,56,46",
+    "roiFront": "830,403,56,46",
+    "roiBack": "798,369,117,110",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"
@@ -11,8 +11,8 @@
   {
     "itemName": "reject",
     "imageName": "gg_reject.png",
-    "roiFront": "825,493,53,51",
-    "roiBack": "825,493,53,51",
+    "roiFront": "830,504,53,51",
+    "roiBack": "808,480,108,101",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"
