@@ -214,18 +214,13 @@
         <source>EternitySea</source>
         <translation>永生之海</translation>
     </message>
-	<message>
-        <source>GlobalGame</source>
-        <translation>全局游戏设置</translation>
-    </message>
-	<message>
-        <source>RealmRaid</source>
-        <translation>个人突破</translation>
-    </message>
-	<message>
-        <source>List Rule</source>
-        <translation>列表规则</translation>
-    </message>
+	<message><source>GlobalGame</source><translation>全局游戏设置</translation></message>
+	<message><source>RealmRaid</source><translation>个人突破</translation></message>
+	<message><source>List Rule</source><translation>列表规则</translation></message>
+	<message><source>Activity Task</source><translation>限时活动</translation></message>
+	<message><source>ActivityShikigami</source><translation>当期式神爬塔</translation></message>
+	<message><source>Liver Emperor Exclusive</source><translation>肝帝专属</translation></message>
+	<message><source>BondlingFairyland</source><translation>契灵之境</translation></message>
 </context>
 <context>
     <name>Args</name>
@@ -420,5 +415,32 @@
 	<message><source>user_status_help</source><translation>可选队长、队员、单独刷（野队还不打算实现）</translation></message>
 	<message><source>layer_help</source><translation> </translation></message>
 	<message><source>soul_buff_enable_help</source><translation>会在庭院开始的时候设置加成</translation></message>
+</context>	
+<context>
+    <name>Args</name>
+	<message><source>BondlingConfig</source><translation>契灵</translation></message>
+	<message><source>BondlingMode</source><translation>设置战斗策略</translation></message>
+	<message><source>Bondling Stone Enable</source><translation>是否使用契石召唤契灵</translation></message>
+	<message><source>BondlingClass</source><translation>使用契石时选择召唤类型</translation></message>
+	<message><source>bondling_mode_help</source><translation>mode_1是指进行探查，刷到五个契灵后结束
+mode_2策略是刷到五个契灵后一直进行结契战斗，但是选择低级盘来结契失败获取材料
+mode_3策略是刷到五个契灵后开始结契，选择高级、中级盘来进行捕获</translation></message>
+	<message><source>bondling_stone_enable_help</source><translation>会优先开启契石，之后才是探查</translation></message>
+	<message><source>BondlingSwitchSoul</source><translation>自动切换御魂</translation></message>
+	<message><source>Auto Switch Soul</source><translation>是否启用</translation></message>
+	<message><source>Tomb Guard Switch</source><translation>设置镇墓兽的御魂装配分组</translation></message>
+	<message><source>Snowball Switch</source><translation>设置茨球的御魂装配分组</translation></message>
+	<message><source>Little Kuro Switch</source><translation>设置小黑的御魂装配分组</translation></message>
+	<message><source>Azure Basan Switch</source><translation>设置火灵的御魂装配分组</translation></message>
+	<message><source>auto_switch_soul_help</source><translation>如果你有5套独立阵容，那么这一项无需开启
+否则你可以开启这一项御魂轮换（探查是默认不需要轮换的）</translation></message>
+	<message><source>tomb_guard_switch_help</source><translation>初始值是不合适的，你需要根据自己的情况设置
+"1,2"表示第一个预设组，第二个队伍
+请使用英文输入法下的逗号
+预设组支持[1-7], 预设队伍支持[1-4]</translation></message>
+	<message><source>snowball_switch_help</source><translation> </translation></message>
+	<message><source>little_kuro_switch_help</source><translation> </translation></message>
+	<message><source>azure_basan_switch_help</source><translation> </translation></message>
+	<message><source>bondling_stone_class_help</source><translation> </translation></message>
 </context>	
 </TS>

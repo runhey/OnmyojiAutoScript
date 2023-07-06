@@ -12,6 +12,7 @@ class ConfigManual:
         > AreaBoss > GoldYoukai > ExperienceYoukai > Nian > RealmRaid
         > Orochi > OrochiMoans > OrochiJudgement > Sougenbi > FallenSun > EternitySea
         > ActivityShikigami
+        > BondlingFairyland
         """
 
     DEVICE_OVER_HTTP = False

@@ -29,7 +29,9 @@ from tasks.RealmRaid.config import RealmRaid
 from tasks.ActivityShikigami.config import ActivityShikigami
 # ----------------------------------------------------------------------------------------------------------------------
 
-
+# 肝帝专属---------------------------------------------------------------------------------------------------------------
+from tasks.BondlingFairyland.config import BondlingFairyland
+# ----------------------------------------------------------------------------------------------------------------------
 
 class ConfigModel(ConfigBase):
     config_name: str = "oas"
@@ -53,6 +55,9 @@ class ConfigModel(ConfigBase):
 
     # 这些是活动的
     activity_shikigami: ActivityShikigami = Field(default_factory=ActivityShikigami)
+
+    # 这些是肝帝专属
+    bondling_fairyland: BondlingFairyland = Field(default_factory=BondlingFairyland)
 
 
     # @validator('script')
