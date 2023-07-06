@@ -12,11 +12,11 @@ class GlobalGameAssets:
 
 	# Image Rule Assets
 	# description 
-	I_ACCEPT = RuleImage(roi_front=(825,395,56,46), roi_back=(825,395,56,46), threshold=0.8, method="Template matching", file="./tasks/GlobalGame/gg/gg_accept.png")
+	I_G_ACCEPT = RuleImage(roi_front=(830,407,56,46), roi_back=(798,369,117,110), threshold=0.8, method="Template matching", file="./tasks/GlobalGame/gg/gg_g_accept.png")
 	# description 
-	I_REJECT = RuleImage(roi_front=(825,493,53,51), roi_back=(825,493,53,51), threshold=0.8, method="Template matching", file="./tasks/GlobalGame/gg/gg_reject.png")
+	I_G_REJECT = RuleImage(roi_front=(832,508,53,51), roi_back=(808,480,108,101), threshold=0.8, method="Template matching", file="./tasks/GlobalGame/gg/gg_g_reject.png")
 	# 勾玉 
-	I_JADE = RuleImage(roi_front=(661,466,43,46), roi_back=(661,466,43,46), threshold=0.8, method="Template matching", file="./tasks/GlobalGame/gg/gg_jade.png")
+	I_G_JADE = RuleImage(roi_front=(661,466,43,46), roi_back=(661,466,43,46), threshold=0.8, method="Template matching", file="./tasks/GlobalGame/gg/gg_g_jade.png")
 	# 网络异常 
 	I_NETWORK_ABNORMAL = RuleImage(roi_front=(583,330,221,67), roi_back=(583,330,221,67), threshold=0.8, method="Template matching", file="./tasks/GlobalGame/gg/gg_network_abnormal.png")
 	# 已端口游戏服务器，需要重新连接，这种情况一般是断开很久了 

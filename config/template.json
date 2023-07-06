@@ -103,7 +103,7 @@
     "scheduler": {
       "enable": false,
       "next_run": "2023-01-01 00:00:00",
-      "priority": 5,
+      "priority": 6,
       "success_interval": "01 00:00:00",
       "failure_interval": "01 00:00:00",
       "server_update": "09:00:00"
