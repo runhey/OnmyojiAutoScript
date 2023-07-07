@@ -7,6 +7,7 @@ from datetime import datetime, time
 
 from tasks.Component.config_scheduler import Scheduler
 from tasks.Component.config_base import ConfigBase
+from tasks.BondlingFairyland.config_battle import BattleConfig
 
 class BondlingMode(str, Enum):
     MODE1 = 'mode_1'
@@ -37,18 +38,19 @@ class BondlingConfig(ConfigBase):
 class BondlingSwitchSoul(ConfigBase):
     auto_switch_soul: bool = Field(default=False, description='auto_switch_soul_help')
     # 镇墓兽 config
-    tomb_guard_switch: str = Field(default='1,1', description='tomb_guard_switch_help')
+    tomb_guard_switch: str = Field(default='-1,-1', description='tomb_guard_switch_help')
     # 茨球 config
-    snowball_switch: str = Field(default='1,1', description='snowball_switch_help')
+    snowball_switch: str = Field(default='-1,-1', description='snowball_switch_help')
     # 小黑 config
-    little_kuro_switch: str = Field(default='1,1', description='little_kuro_switch_help')
+    little_kuro_switch: str = Field(default='-1,-1', description='little_kuro_switch_help')
     # 火灵 config
-    azure_basan_switch: str = Field(default='1,1', description='azure_basan_switch_help')
+    azure_basan_switch: str = Field(default='-1,-1', description='azure_basan_switch_help')
 
 class BondlingFairyland(ConfigBase):
     scheduler: Scheduler = Field(default_factory=Scheduler)
     bondling_config: BondlingConfig = Field(default_factory=BondlingConfig)
     bondling_switch_soul: BondlingSwitchSoul = Field(default_factory=BondlingSwitchSoul)
+    battle_config: BattleConfig = Field(default_factory=BattleConfig)
 
 
 

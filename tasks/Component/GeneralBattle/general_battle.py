@@ -173,18 +173,8 @@ class GeneralBattle(BaseTask, GeneralBattleAssets):
                 break
             # 如果开启战斗过程随机滑动
             if random_click_swipt_enable:
-                time.sleep(0.4)  # 这样的好像不对
-                if 0 <= random.randint(0, 500) <= 3:  # 百分之4的概率
-                    rand_type = random.randint(0, 2)
-                    match rand_type:
-                        case 0:
-                            self.click(self.C_RANDOM_CLICK, interval=20)
-                        case 1:
-                            self.swipe(self.S_BATTLE_RANDOM_LEFT, interval=20)
-                        case 2:
-                            self.swipe(self.S_BATTLE_RANDOM_RIGHT, interval=20)
-                    # 重新设置为长战斗
-                    self.device.stuck_record_add('BATTLE_STATUS_S')
+                self.random_click_swipt()
+
 
         # 再次确认战斗结果
         logger.info("Reconfirm the results of the battle")
@@ -328,6 +318,19 @@ class GeneralBattle(BaseTask, GeneralBattleAssets):
                 break
         logger.info("Click preset ensure")
 
+    def random_click_swipt(self):
+        time.sleep(0.4)  # 这样的好像不对
+        if 0 <= random.randint(0, 500) <= 3:  # 百分之4的概率
+            rand_type = random.randint(0, 2)
+            match rand_type:
+                case 0:
+                    self.click(self.C_RANDOM_CLICK, interval=20)
+                case 1:
+                    self.swipe(self.S_BATTLE_RANDOM_LEFT, interval=20)
+                case 2:
+                    self.swipe(self.S_BATTLE_RANDOM_RIGHT, interval=20)
+            # 重新设置为长战斗
+            self.device.stuck_record_add('BATTLE_STATUS_S')
 
 
 

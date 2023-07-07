@@ -21,6 +21,8 @@ class BondlingFairylandAssets:
 	C_STONE_4 = RuleClick(roi_front=(911,487,27,24), roi_back=(0,0,100,100), name="stone_4")
 	# description 
 	C_STONE_5 = RuleClick(roi_front=(1041,494,25,25), roi_back=(0,0,100,100), name="stone_5")
+	# description 
+	C_CAP_SUCCESS = RuleClick(roi_front=(317,102,378,363), roi_back=(0,0,100,100), name="cap_success")
 
 
 	# Ocr Rule Assets
@@ -81,6 +83,10 @@ class BondlingFairylandAssets:
 	I_LITTLE_KURO = RuleImage(roi_front=(478,334,77,70), roi_back=(462,318,108,102), threshold=0.8, method="Template matching", file="./tasks/BondlingFairyland/capture/capture_little_kuro.png")
 	# 火灵 
 	I_AZURE_BASAN = RuleImage(roi_front=(654,260,48,46), roi_back=(631,235,91,92), threshold=0.8, method="Template matching", file="./tasks/BondlingFairyland/capture/capture_azure_basan.png")
+	# description 
+	I_CAP_SUCCESS = RuleImage(roi_front=(210,445,22,21), roi_back=(210,445,22,21), threshold=0.8, method="Template matching", file="./tasks/BondlingFairyland/capture/capture_cap_success.png")
+	# description 
+	I_CAP_FAILURE = RuleImage(roi_front=(1192,608,30,39), roi_back=(1192,608,30,39), threshold=0.8, method="Template matching", file="./tasks/BondlingFairyland/capture/capture_cap_failure.png")
 
 
 	# Image Rule Assets
@@ -110,8 +116,21 @@ class BondlingFairylandAssets:
 	I_CLICK_CAPTION = RuleImage(roi_front=(177,625,59,51), roi_back=(177,625,59,51), threshold=0.8, method="Template matching", file="./tasks/BondlingFairyland/capture/capture_click_caption.png")
 
 
+	# Click Rule Assets
+	# description 
+	C_LEFT_1 = RuleClick(roi_front=(167,198,128,265), roi_back=(167,198,128,265), name="left_1")
+	# description 
+	C_LEFT_2 = RuleClick(roi_front=(423,190,139,277), roi_back=(423,190,139,277), name="left_2")
+	# description 
+	C_LEFT_3 = RuleClick(roi_front=(676,176,159,307), roi_back=(676,176,159,307), name="left_3")
+	# description 
+	C_LEFT_4 = RuleClick(roi_front=(923,198,155,279), roi_back=(923,198,155,279), name="left_4")
+
+
 	# Image Rule Assets
 	# description 
 	I_STONE_ENTER = RuleImage(roi_front=(1167,472,38,41), roi_back=(1167,472,38,41), threshold=0.8, method="Template matching", file="./tasks/BondlingFairyland/stone/stone_stone_enter.png")
+	# description 
+	I_STONE_SURE = RuleImage(roi_front=(1152,601,75,70), roi_back=(1152,601,75,70), threshold=0.8, method="Template matching", file="./tasks/BondlingFairyland/stone/stone_stone_sure.png")
 
 

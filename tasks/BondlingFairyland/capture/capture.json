@@ -34,5 +34,23 @@
     "method": "Template matching",
     "threshold": 0.8,
     "description": "火灵"
+  },
+  {
+    "itemName": "cap_success",
+    "imageName": "capture_cap_success.png",
+    "roiFront": "210,445,22,21",
+    "roiBack": "210,445,22,21",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "cap_failure",
+    "imageName": "capture_cap_failure.png",
+    "roiFront": "1192,608,30,39",
+    "roiBack": "1192,608,30,39",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
   }
 ]

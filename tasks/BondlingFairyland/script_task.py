@@ -1,22 +1,27 @@
 # This Python file uses the following encoding: utf-8
 # @author runhey
 # github https://github.com/runhey
+
 import numpy as np
+from time import sleep
 from cached_property import cached_property
+from datetime import datetime, timedelta
 
 from tasks.base_task import BaseTask
-from tasks.Component.GeneralBattle.general_battle import GeneralBattle
 from tasks.GameUi.game_ui import GameUi
 from tasks.BondlingFairyland.config import (BondlingFairyland, BondlingMode,
                                             BondlingClass,
                                             BondlingSwitchSoul, BondlingConfig)
 from tasks.BondlingFairyland.assets import BondlingFairylandAssets
+from tasks.BondlingFairyland.battle import BondlingBattle
+from tasks.BondlingFairyland.config_battle import BattleConfig
 from tasks.Component.SwitchSoul.switch_soul import SwitchSoul, switch_parser
+from tasks.Component.GeneralBattle.config_general_battle import GeneralBattleConfig
 
 from module.atom.image import RuleImage
 from module.logger import logger
 
-class ScriptTask(GameUi, GeneralBattle, SwitchSoul, BondlingFairylandAssets):
+class ScriptTask(GameUi, BondlingBattle, SwitchSoul, BondlingFairylandAssets):
 
     ball_pos_list = [None, None, None, None, None]  # 用于记录每一个位置的球是否出现
     first_catch = True  # 用于记录是否是第一次捕捉
@@ -24,12 +29,92 @@ class ScriptTask(GameUi, GeneralBattle, SwitchSoul, BondlingFairylandAssets):
     def run(self):
         pass
 
-    def run_search(self):
+    def run_stone(self, bondling_stone_enable: bool, bondling_stone_class: BondlingClass):
+        """
+        使用结契石 进行召唤 契灵
+        :param bondling_stone_class:
+        :return:
+        (0) 不开启使用结契石，(探查界面)返回False
+        (1) 五个球满了，(探查界面)返回True
+        (2) 没有结契石了，(探查界面)返回False
+        """
+        if not bondling_stone_enable:
+            return False
+
+        while 1:
+            self.screenshot()
+            # 检查是不是在探查界面，
+            if not self.in_search_ui(screenshot=False):
+                continue
+            # 如果没有石头了
+            cu, res, total = self.O_B_STONE_NUMBER.ocr(self.device.image)
+            if cu == 0 and cu + res == total:
+                logger.warning(f'No bondling stone')
+                return False
+            # 如果五个球满了
+            click_count = 0
+            while 1:
+                self.screenshot()
+                if click_count >= 2:
+                    logger.info(f'Ball is full')
+                    return True
+                if not self.appear(self.I_STONE_ENTER):
+                    # 这时进入到了召唤的界面
+                    self.wait_until_appear(self.I_STONE_SURE)
+                    action_click = None
+                    match bondling_stone_class:
+                        case BondlingClass.LITTLE_KURO: action_click = self.C_LEFT_1
+                        case BondlingClass.SNOWBALL: action_click = self.C_LEFT_2
+                        case BondlingClass.AZURE_BASAN: action_click = self.C_LEFT_3
+                        case BondlingClass.TOMB_GUARD: action_click = self.C_LEFT_4
+                    sleep(0.5)
+                    self.click(action_click)
+
+                    # 点击召唤
+                    while 1:
+                        self.screenshot()
+                        if not self.appear(self.I_STONE_SURE):
+                            break
+                        if self.appear_then_click(self.I_STONE_SURE, interval=1):
+                            continue
+                    break
+
+
+
+                if self.appear_then_click(self.I_STONE_ENTER, interval=1):
+                    click_count += 1
+                    continue
+
+    def run_search(self, bondling_config: BondlingConfig):
         """
         运行探查
         :return:
+        (1) 超出战斗的次数的了，(探查页面)返回False
+        (2) 超过时间限制了，(探查页面)返回False
+        (3) 打满五只球了，(探查界面)返回True
         """
-    def run_catch(self, bondling_config: BondlingConfig, bondling_switch_soul: BondlingSwitchSoul):
+        while 1:
+            # 检查是不是在探查界面，
+            if not self.in_search_ui(screenshot=True):
+                continue
+            # 检查是否有挑战次数
+            if self.current_count >= bondling_config.limit_count:
+                logger.warning(f'No challenge count, exit')
+                return False
+            # 检查是否到了限制时间
+            if datetime.now() - self.start_time >= self.limit_time:
+                logger.warning(f'No time, exit')
+                return False
+
+            if self.click_search():
+                self.run_general_battle(self.general_battle_config)
+            else:
+                logger.warning(f'Full five ball')
+                return True
+
+    def run_catch(self, bondling_config: BondlingConfig,
+                        bondling_switch_soul: BondlingSwitchSoul,
+                        battle_config: BattleConfig):
         """
         执行捕捉的(确保进入了结契界面)
         :return:
@@ -79,6 +164,33 @@ class ScriptTask(GameUi, GeneralBattle, SwitchSoul, BondlingFairylandAssets):
         if bondling_switch_soul.auto_switch_soul:
             first_switch_soul = False
             switch_soul(bondling_class)
+
+
+        # 开始执行循环
+        while 1:
+            self.screenshot()
+
+            # 如果不在结契界面，就等待
+            if not self.in_catch_ui():
+                continue
+
+            # 检查是否有盘子
+            if not check_plate_number(target_plate):
+                logger.warning(f'No plate number, exit')
+                return False
+            # 检查是否有挑战次数
+            if self.current_count >= bondling_config.limit_count:
+                logger.warning(f'No challenge count, exit')
+                return False
+            # 检查是否到了限制时间
+            if datetime.now() - self.start_time >= self.limit_time:
+                logger.warning(f'No time, exit')
+                return False
+            # ok 就进行挑战
+            self.click_fire()
+            if self.run_battle(battle_config):
+                return True
+
 
 
 
@@ -149,13 +261,6 @@ class ScriptTask(GameUi, GeneralBattle, SwitchSoul, BondlingFairylandAssets):
         :return: 如果使用成功，那就返回True 如果已经有五个了返回False
         """
 
-        return False
-
-    def click_search(self) -> bool:
-        """
-        点击探查
-        :return: 如果进入战斗返回True，如果五个球满了返回False
-        """
         return False
 
     def ball_click(self, index: int) -> bool:
@@ -290,7 +395,67 @@ class ScriptTask(GameUi, GeneralBattle, SwitchSoul, BondlingFairylandAssets):
             return BondlingClass.AZURE_BASAN
         return None
 
+    @cached_property
+    def limit_time(self) -> timedelta:
+        if not self.config.bondling_fairyland.bondling_config.limit_time:
+            return timedelta(minutes=20)
+        limit_time = self.config.bondling_fairyland.bondling_config.limit_time
+        return timedelta(hours=limit_time.hour, minutes=limit_time.minute, seconds=limit_time.second)
 
+    def click_fire(self):
+        """
+        点击 挑战， 主要是结契时的挑战
+        """
+        while 1:
+            self.screenshot()
+            if not self.appear(self.I_BALL_FIRE):
+                break
+            if self.appear_then_click(self.I_BALL_FIRE, interval=1):
+                continue
+
+    def in_catch_ui(self, screenshot=False) -> bool:
+        """
+        判断是否在结契的总界面
+        :return:
+        """
+        if screenshot:
+            self.screenshot()
+        return self.appear(self.I_BALL_FIRE)
+
+    def in_search_ui(self, screenshot=False) -> bool:
+        """
+        判断是否在探查的总界面
+        :return:
+        """
+        if screenshot:
+            self.screenshot()
+        return self.appear(self.I_BF_STORE)
+
+    def click_search(self) -> bool:
+        """
+        点击探查
+        :return: 如果五个球满了 就返回False。如果进入战斗不出现点击按钮那就是返回True
+        """
+        count = 0
+        while 1:
+            self.screenshot()
+            if count >= 3:
+                return False
+            if not self.appear(self.I_BF_SEARSH):
+                return True
+            if self.appear_then_click(self.I_BF_SEARSH, interval=2):
+                count += 1
+                continue
+        return False
+
+    @cached_property
+    def general_battle_config(self):
+        gbc = GeneralBattleConfig()
+        gbc.lock_team_enable = True
+        gbc.preset_enable = False
+        gbc.green_enable = False
+        gbc.random_click_swipt_enable = False
+        return gbc
 
 if __name__ == '__main__':
     from module.config.config import Config
@@ -304,5 +469,7 @@ if __name__ == '__main__':
     # print(task.roi_appear_ball(task.I_BF_LOCAL_3_LITTLE_KURO.roi_back, image))
     # print(task.ball_number())
     con = config.bondling_fairyland
-    task.run_catch(con.bondling_config, con.bondling_switch_soul)
+    # task.run_catch(con.bondling_config, con.bondling_switch_soul, con.battle_config)
+    # task.run_stone(True, con.bondling_config.bondling_stone_class)
+    task.run_search(con.bondling_config)
 

@@ -28,5 +28,11 @@
     "roiFront": "1041,494,25,25",
     "roiBack": "0,0,100,100",
     "description": "description"
+  },
+  {
+    "itemName": "cap_success",
+    "roiFront": "317,102,378,363",
+    "roiBack": "0,0,100,100",
+    "description": "description"
   }
 ]

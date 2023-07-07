@@ -7,5 +7,14 @@
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"
+  },
+  {
+    "itemName": "stone_sure",
+    "imageName": "stone_stone_sure.png",
+    "roiFront": "1152,601,75,70",
+    "roiBack": "1152,601,75,70",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
   }
 ]
