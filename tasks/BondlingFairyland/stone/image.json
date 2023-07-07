@@ -1,0 +1,11 @@
+[
+  {
+    "itemName": "stone_enter",
+    "imageName": "stone_stone_enter.png",
+    "roiFront": "1167,472,38,41",
+    "roiBack": "1167,472,38,41",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  }
+]

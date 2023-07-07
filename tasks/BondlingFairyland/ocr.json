@@ -1,0 +1,47 @@
+[
+  {
+    "itemName": "b_bondling_class",
+    "roiFront": "266,271,79,112",
+    "roiBack": "287,271,36,112",
+    "mode": "Single",
+    "method": "Default",
+    "keyword": "",
+    "description": "Ocr-description"
+  },
+  {
+    "itemName": "b_low_number",
+    "roiFront": "490,24,98,36",
+    "roiBack": "490,24,98,36",
+    "mode": "DigitCounter",
+    "method": "Default",
+    "keyword": "",
+    "description": "Ocr-description"
+  },
+  {
+    "itemName": "b_medium_number",
+    "roiFront": "687,21,101,36",
+    "roiBack": "687,21,101,36",
+    "mode": "DigitCounter",
+    "method": "Default",
+    "keyword": "",
+    "description": "Ocr-description"
+  },
+  {
+    "itemName": "b_high_number",
+    "roiFront": "883,23,100,32",
+    "roiBack": "883,23,100,32",
+    "mode": "DigitCounter",
+    "method": "Default",
+    "keyword": "",
+    "description": "Ocr-description"
+  },
+  {
+    "itemName": "b_stone_number",
+    "roiFront": "858,22,82,40",
+    "roiBack": "858,22,82,40",
+    "mode": "DigitCounter",
+    "method": "Default",
+    "keyword": "",
+    "description": "Ocr-description"
+  }
+]

@@ -12,10 +12,10 @@ class BondlingMode(str, Enum):
     MODE1 = 'mode_1'
     MODE2 = 'mode_2'
     MODE3 = 'mode_3'
-# 镇墓兽 Tomb Guard
-# 茨球 Snowball
-# 小黑 Little Kuro
-# 火灵 Azure Basan
+# 镇墓兽 Tomb Guard  tomb_guard
+# 茨球 Snowball       snowball
+# 小黑 Little Kuro  little_kuro
+# 火灵 Azure Basan azure_basan
 class BondlingClass(str, Enum):
     TOMB_GUARD = '镇墓兽'
     SNOWBALL = '茨球'
@@ -49,5 +49,9 @@ class BondlingFairyland(ConfigBase):
     scheduler: Scheduler = Field(default_factory=Scheduler)
     bondling_config: BondlingConfig = Field(default_factory=BondlingConfig)
     bondling_switch_soul: BondlingSwitchSoul = Field(default_factory=BondlingSwitchSoul)
+
+
+
+
 
 

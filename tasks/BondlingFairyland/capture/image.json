@@ -1,0 +1,110 @@
+[
+  {
+    "itemName": "c_auto_true",
+    "imageName": "capture_c_auto_true.png",
+    "roiFront": "524,175,38,35",
+    "roiBack": "524,175,38,35",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "c_auto_false",
+    "imageName": "capture_c_auto_false.png",
+    "roiFront": "524,174,38,37",
+    "roiBack": "524,174,38,37",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "c_low_true",
+    "imageName": "capture_c_low_true.png",
+    "roiFront": "543,271,30,32",
+    "roiBack": "543,271,30,32",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "c_low_false",
+    "imageName": "capture_c_low_false.png",
+    "roiFront": "539,269,37,35",
+    "roiBack": "539,269,37,35",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "c_midum_true",
+    "imageName": "capture_c_midum_true.png",
+    "roiFront": "680,277,35,27",
+    "roiBack": "680,277,35,27",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "c_midum_false",
+    "imageName": "capture_c_midum_false.png",
+    "roiFront": "681,272,31,32",
+    "roiBack": "681,272,31,32",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "c_high_true",
+    "imageName": "capture_c_high_true.png",
+    "roiFront": "819,272,37,31",
+    "roiBack": "819,272,37,31",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "c_high_false",
+    "imageName": "capture_c_high_false.png",
+    "roiFront": "818,272,36,34",
+    "roiBack": "818,272,36,34",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "c_first_enable",
+    "imageName": "capture_c_first_enable.png",
+    "roiFront": "524,472,33,31",
+    "roiBack": "524,472,33,31",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "c_first_disable",
+    "imageName": "capture_c_first_disable.png",
+    "roiFront": "713,469,38,34",
+    "roiBack": "713,469,38,34",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "caption_ensure",
+    "imageName": "capture_caption_ensure.png",
+    "roiFront": "690,532,129,56",
+    "roiBack": "690,532,129,56",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "click_caption",
+    "imageName": "capture_click_caption.png",
+    "roiFront": "177,625,59,51",
+    "roiBack": "177,625,59,51",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  }
+]
