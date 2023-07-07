@@ -37,7 +37,7 @@ class RuleImage:
 
         :return:
         """
-        return Path(self.file).stem
+        return Path(self.file).stem.upper()
 
     def __str__(self):
         return self.name

@@ -11,6 +11,21 @@ class GeneralBattleAssets:
 
 
 	# Click Rule Assets
+	# description 
+	C_WIN_1 = RuleClick(roi_front=(175,40,1054,161), roi_back=(175,40,1054,161), name="win_1")
+	# description 
+	C_WIN_2 = RuleClick(roi_front=(22,112,210,496), roi_back=(22,112,210,496), name="win_2")
+	# description 
+	C_WIN_3 = RuleClick(roi_front=(1059,114,206,468), roi_back=(1059,114,206,468), name="win_3")
+	# description 
+	C_REWARD_1 = RuleClick(roi_front=(546,546,385,144), roi_back=(546,546,385,144), name="reward_1")
+	# description 
+	C_REWARD_2 = RuleClick(roi_front=(25,134,224,472), roi_back=(25,134,224,472), name="reward_2")
+	# description 
+	C_REWARD_3 = RuleClick(roi_front=(1092,156,168,437), roi_back=(1092,156,168,437), name="reward_3")
+
+
+	# Click Rule Assets
 	# 预设队伍1 
 	C_PRESET_TEAM_1 = RuleClick(roi_front=(196,234,464,114), roi_back=(196,234,464,114), name="preset_team_1")
 	# 预设队伍2 
