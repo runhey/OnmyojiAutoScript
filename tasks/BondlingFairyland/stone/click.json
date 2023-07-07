@@ -1,0 +1,26 @@
+[
+  {
+    "itemName": "left_1",
+    "roiFront": "167,198,128,265",
+    "roiBack": "167,198,128,265",
+    "description": "description"
+  },
+  {
+    "itemName": "left_2",
+    "roiFront": "423,190,139,277",
+    "roiBack": "423,190,139,277",
+    "description": "description"
+  },
+  {
+    "itemName": "left_3",
+    "roiFront": "676,176,159,307",
+    "roiBack": "676,176,159,307",
+    "description": "description"
+  },
+  {
+    "itemName": "left_4",
+    "roiFront": "923,198,155,279",
+    "roiBack": "923,198,155,279",
+    "description": "description"
+  }
+]
