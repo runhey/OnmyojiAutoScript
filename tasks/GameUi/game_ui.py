@@ -2,6 +2,7 @@
 # @author runhey
 # github https://github.com/runhey
 import time
+from time import sleep
 
 from module.base.decorator import run_once
 from module.base.timer import Timer
@@ -197,6 +198,18 @@ class GameUi(BaseTask, GameUiAssets):
             for page in visited:
                 if page.parent is None or page.check_button is None:
                     continue
+                # 如果当前页面不出现可以检测当前按键的按钮，那可能是有一些弹窗，广告，这个时候额外处理
+                if page.additional:
+                    if not isinstance(page.additional, list):
+                        page.additional = [page.additional]
+                    for button in page.additional:
+                        if isinstance(button, RuleImage) and self.appear_then_click(button, interval=1):
+                            sleep(0.4)
+                            logger.info(f'Page {page} additional button {button} clicked')
+                        if isinstance(button, RuleOcr) and self.ocr_appear_click(button, interval=1):
+                            sleep(0.4)
+                            logger.info(f'Page {page} additional button {button} clicked')
+
                 # 获取当前页面的要点击的按钮
                 if self.appear(page.check_button, interval=4):
                     logger.info(f'Page switch: {page} -> {page.parent}')
@@ -206,13 +219,7 @@ class GameUi(BaseTask, GameUiAssets):
                         confirm_timer.reset()
                         clicked = True
                         break
-                # 如果当前页面不出现可以检测当前按键的按钮，那可能是有一些弹窗，广告，这个时候额外处理
-                elif page.additional:
-                    for button in page.additional:
-                        if isinstance(button, RuleImage) and self.appear_then_click(button, interval=1):
-                            logger.info(f'Page {page} additional button {button} clicked')
-                        if isinstance(button, RuleOcr) and self.ocr_appear_click(button, interval=1):
-                            logger.info(f'Page {page} additional button {button} clicked')
+
             if clicked:
                 continue
 
@@ -232,4 +239,4 @@ if __name__ == '__main__':
     d = Device(c)
     game = GameUi(config=c, device=d)
     game.ui_get_current_page(skip_first_screenshot=True)
-    game.ui_goto(page_delegation)
+    game.ui_goto(page_shikigami_records)

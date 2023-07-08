@@ -115,6 +115,7 @@ page_town.link(button=G.I_TOWN_GOTO_HYAKKISEN, destination=page_hyakkisen)
 # ************************************* 庭院部分 *****************************************#
 # 式神录 shikigami_records
 page_shikigami_records = Page(G.I_CHECK_RECORDS)
+page_shikigami_records.additional = [G.I_AD_DISAPPEAR, G.I_RECORDS_CLOSE]
 page_shikigami_records.link(button=G.I_BACK_Y, destination=page_main)
 page_main.link(button=G.I_MAIN_GOTO_SHIKIGAMI_RECORDS, destination=page_shikigami_records)
 # 阴阳术 onmyodo
