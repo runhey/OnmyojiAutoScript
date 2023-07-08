@@ -1,0 +1,56 @@
+[
+  {
+    "itemName": "tomb_guard",
+    "imageName": "capture_tomb_guard.png",
+    "roiFront": "847,518,30,31",
+    "roiBack": "832,501,64,60",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "镇墓兽"
+  },
+  {
+    "itemName": "snowball",
+    "imageName": "capture_snowball.png",
+    "roiFront": "532,375,44,48",
+    "roiBack": "512,353,94,93",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "茨球"
+  },
+  {
+    "itemName": "little_kuro",
+    "imageName": "capture_little_kuro.png",
+    "roiFront": "478,334,77,70",
+    "roiBack": "462,318,108,102",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "小黑"
+  },
+  {
+    "itemName": "azure_basan",
+    "imageName": "capture_azure_basan.png",
+    "roiFront": "654,260,48,46",
+    "roiBack": "631,235,91,92",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "火灵"
+  },
+  {
+    "itemName": "cap_success",
+    "imageName": "capture_cap_success.png",
+    "roiFront": "210,445,22,21",
+    "roiBack": "210,445,22,21",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "cap_failure",
+    "imageName": "capture_cap_failure.png",
+    "roiFront": "1192,608,30,39",
+    "roiBack": "1192,608,30,39",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  }
+]

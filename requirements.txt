@@ -66,6 +66,7 @@ sympy==1.12               # via onnxruntime
 tqdm==4.65.0              # via -r requirements-in.txt
 typing-extensions==4.5.0  # via pydantic
 uiautomator2==2.16.17     # via -r requirements-in.txt
+uiautomator2cache==0.3.0.1  # via -r requirements-in.txt
 urllib3==2.0.2            # via requests
 websockets==11.0.3        # via -r requirements-in.txt
 whichcraft==0.6.1         # via adbutils, uiautomator2

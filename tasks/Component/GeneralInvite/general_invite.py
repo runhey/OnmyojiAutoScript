@@ -39,15 +39,12 @@ class GeneralInvite(BaseTask, GeneralInviteAssets):
     timer_emoji = None  # 等待期间如果没有操作的话，可能会导致长时间无响应报错
 
     """
-    这个类就三个api
-    1. run_invite
-    2. invite_again
-    3. accept_invite
+
     """
 
     def run_invite(self, config: InviteConfig, is_first: bool = False) -> bool:
         """
-        队长！！身份。。。在组件界面邀请好友（ 如果开启is_first） 等待队员进入开启挑战
+        队长！！身份。。。在组队界面邀请好友（ 如果开启is_first） 等待队员进入开启挑战
         请注意，返回的时候成功时是进入战斗了！！！
         如果是失败，那就是没有队友进入，然后会退出房间的界面
         :param config:

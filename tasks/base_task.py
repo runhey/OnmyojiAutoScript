@@ -51,6 +51,7 @@ class BaseTask(GlobalGameAssets):
         if self.config.global_game.emergency.invitation_detect_interval:
             self.interval_time = self.config.global_game.emergency.invitation_detect_interval
             self.friend_timer = Timer(self.interval_time)
+            self.friend_timer.start()
 
         # 战斗次数相关
         self.current_count = 0  # 战斗次数
@@ -64,31 +65,31 @@ class BaseTask(GlobalGameAssets):
         # 判断勾协
         if self.friend_timer and self.friend_timer.reached():
             self.friend_timer.reset()
-            invite = self.appear(self.I_ACCEPT)
+            invite = self.appear(self.I_G_ACCEPT)
             # 如果是全部接受
             if invite and self.config.global_game.emergency.friend_invitation == FriendInvitation.ACCEPT:
                 # 如果是接受邀请
                 logger.info(f"Accept friend invitation")
                 while 1:
-                    if self.appear_then_click(self.I_ACCEPT, interval=1):
+                    if self.appear_then_click(self.I_G_ACCEPT, interval=1):
                         continue
-                    if not self.appear(self.I_ACCEPT):
+                    if not self.appear(self.I_G_ACCEPT):
                         break
             # 如果是全部拒绝
             elif invite and self.config.global_game.emergency.friend_invitation == FriendInvitation.REJECT:
                 logger.info(f"Reject friend invitation")
                 while 1:
-                    if self.appear_then_click(self.I_REJECT, interval=1):
+                    if self.appear_then_click(self.I_G_REJECT, interval=1):
                         continue
-                    if not self.appear(self.I_REJECT):
+                    if not self.appear(self.I_G_REJECT):
                         break
             # 最后一个是仅仅接受勾协
             elif invite and self.config.global_game.emergency.friend_invitation == FriendInvitation.ONLY_JADE:
                 logger.info(f"Accept jade invitation")
                 while 1:
-                    if self.appear_then_click(self.I_ACCEPT, interval=1):
+                    if self.appear_then_click(self.I_G_ACCEPT, interval=1):
                         continue
-                    if not self.appear(self.I_ACCEPT):
+                    if not self.appear(self.I_G_ACCEPT):
                         break
             # 判断网络异常
             if self.appear(self.I_NETWORK_ABNORMAL):
@@ -414,7 +415,7 @@ class BaseTask(GlobalGameAssets):
         """
         设置下次运行时间  当然这个也是可以重写的
         :param target: 可以自定义的下次运行时间
-        :param server: delay to nearest Scheduler.ServerUpdate
+        :param server: True
         :param success: 判断是成功的还是失败的时间间隔
         :param task: 任务名称，大驼峰的
         :param finish: 是完成任务后的时间为基准还是开始任务的时间为基准

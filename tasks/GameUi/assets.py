@@ -12,11 +12,18 @@ class GameUiAssets:
 
 	# Image Rule Assets
 	# description 
+	I_AD_DISAPPEAR = RuleImage(roi_front=(412,405,37,40), roi_back=(412,405,37,40), threshold=0.9, method="Template matching", file="./tasks/GameUi/additional/additional_ad_disappear.png")
+	# description 
+	I_RECORDS_CLOSE = RuleImage(roi_front=(914,143,30,30), roi_back=(914,143,30,30), threshold=0.8, method="Template matching", file="./tasks/GameUi/additional/additional_records_close.png")
+
+
+	# Image Rule Assets
+	# description 
 	I_CHECK_MAIN = RuleImage(roi_front=(801,109,38,37), roi_back=(49,98,1033,61), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_check_main.png")
 	# description 
 	I_MAIN_GOTO_EXPLORATION = RuleImage(roi_front=(493,116,45,75), roi_back=(243,100,933,211), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_main_goto_exploration.png")
 	# description 
-	I_CHECK_EXPLORATION = RuleImage(roi_front=(1130,120,61,55), roi_back=(1130,120,61,55), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_check_exploration.png")
+	I_CHECK_EXPLORATION = RuleImage(roi_front=(1146,175,21,22), roi_back=(1146,175,21,22), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_check_exploration.png")
 	# description 
 	I_EXPLORATION_GOTO_AWAKE_ZONE = RuleImage(roi_front=(50,637,57,61), roi_back=(50,637,57,61), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_exploration_goto_awake_zone.png")
 	# description 

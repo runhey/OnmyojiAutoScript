@@ -445,4 +445,4 @@ if __name__ == "__main__":
     script = Script("oas1")
     # print(script.get_next_task())
     # script.run("ActivityShikigami")
-    script.run('RealmRaid')
+    script.run('AreaBoss')
