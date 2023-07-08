@@ -17,9 +17,11 @@ from tasks.BondlingFairyland.battle import BondlingBattle
 from tasks.BondlingFairyland.config_battle import BattleConfig
 from tasks.Component.SwitchSoul.switch_soul import SwitchSoul, switch_parser
 from tasks.Component.GeneralBattle.config_general_battle import GeneralBattleConfig
+from tasks.GameUi.page import page_main, page_bondling_fairyland
 
 from module.atom.image import RuleImage
 from module.logger import logger
+from module.exception import TaskEnd
 
 class ScriptTask(GameUi, BondlingBattle, SwitchSoul, BondlingFairylandAssets):
 
@@ -27,7 +29,66 @@ class ScriptTask(GameUi, BondlingBattle, SwitchSoul, BondlingFairylandAssets):
     first_catch = True  # 用于记录是否是第一次捕捉
 
     def run(self):
-        pass
+        self.ui_get_current_page()
+        self.ui_goto(page_bondling_fairyland)
+        # 引用配置
+        cong = self.config.bondling_fairyland
+        bondling_config = cong.bondling_config
+        bondling_switch_soul = cong.bondling_switch_soul
+        battle_config = cong.battle_config
+
+        current_ball = 0  # 用于记录当前捕捉的球的位置
+        while 1:
+
+            if not self.in_search_ui(screenshot=True):
+                sleep(0.4)
+                continue
+
+            if current_ball == 0:
+                if self.run_stone(bondling_config.bondling_stone_enable, bondling_config.bondling_stone_class):
+                    current_ball = 5
+                    logger.info(f'Current ball number: {current_ball} ')
+
+                if current_ball == 5:
+                    continue
+                if self.run_search(bondling_config):
+                    current_ball = 5
+                    logger.info(f'Current ball number: {current_ball} ')
+                else:
+                    break
+
+            if bondling_config.bondling_mode != BondlingMode.MODE1:
+                if self.ball_click(current_ball):
+                    pass
+                else:
+                    # 如果点击了四次还是没有进去，那可能说明这个位置没有球
+                    current_ball -= 1
+                    logger.info(f'Current ball number: {current_ball} ')
+                    continue
+                if self.run_catch(bondling_config, bondling_switch_soul, battle_config):
+                    current_ball -= 1
+                    logger.info(f'Catch successful and current ball number: {current_ball} ')
+                else:
+                    break
+            else:
+                # 否则就是模式1
+                break
+
+        # 退出的时候如果是在结契的界面，要退回到探查界面
+        while 1:
+            self.screenshot()
+            if self.in_search_ui():
+                break
+            if self.in_catch_ui():
+                self.appear_then_click(self.I_BACK_Y, interval=1)
+        logger.info('BondlingFairyland task finished')
+
+        self.ui_get_current_page()
+        self.ui_goto(page_main)
+
+        self.set_next_run(task='BondlingFairyland', finish=True, success=True)
+        raise TaskEnd
+
 
     def run_stone(self, bondling_stone_enable: bool, bondling_stone_class: BondlingClass):
         """
@@ -121,8 +182,10 @@ class ScriptTask(GameUi, BondlingBattle, SwitchSoul, BondlingFairylandAssets):
         (1) 盘子没了，返回False (退出页面是结契界面)
         (2) 时间到了，返回False (退出页面是结契界面)
         (3) 挑战次数到了，返回False (退出页面是结契界面)
-        (4) 捕获成功，返回True (退出页面是结契界面)
+        (4) 捕获成功，返回True (退出页面是捕获的页面)
         """
+
+
         self.lock_team()
         if self.first_catch:
             self.first_catch = False
@@ -283,6 +346,7 @@ class ScriptTask(GameUi, BondlingBattle, SwitchSoul, BondlingFairylandAssets):
 
         click_target = get_click_target(index)
         click_count = 0
+        logger.info(f'Click ball {index}')
         while 1:
             self.screenshot()
             if self.appear(self.I_CLICK_CAPTION):
@@ -292,6 +356,7 @@ class ScriptTask(GameUi, BondlingBattle, SwitchSoul, BondlingFairylandAssets):
             # 点击
             self.click(click_target, interval=1)
             click_count += 1
+
 
     def capture_setting(self, mode: BondlingMode) -> None:
         """
@@ -471,5 +536,5 @@ if __name__ == '__main__':
     con = config.bondling_fairyland
     # task.run_catch(con.bondling_config, con.bondling_switch_soul, con.battle_config)
     # task.run_stone(True, con.bondling_config.bondling_stone_class)
-    task.run_search(con.bondling_config)
-
+    # task.run_search(con.bondling_config)
+    task.run()
