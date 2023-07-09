@@ -255,5 +255,63 @@ def parse_tomorrow_server(server_update: time) -> datetime:
     tomorrow = now + timedelta(days=1)
     return datetime.combine(tomorrow, server_update)
 
+def deep_get(d, keys, default=None):
+    """
+    Get values in dictionary safely.
+    https://stackoverflow.com/questions/25833613/safe-method-to-get-value-of-nested-dictionary
+
+    Args:
+        d (dict):
+        keys (str, list): Such as `Scheduler.NextRun.value`
+        default: Default return if key not found.
+
+    Returns:
+
+    """
+    if isinstance(keys, str):
+        keys = keys.split('.')
+    assert type(keys) is list
+    if d is None:
+        return default
+    if not keys:
+        return d
+    return deep_get(d.get(keys[0]), keys[1:], default)
+
+
+def deep_set(d, keys, value):
+    """
+    Set value into dictionary safely, imitating deep_get().
+    """
+    if isinstance(keys, str):
+        keys = keys.split('.')
+    assert type(keys) is list
+    if not keys:
+        return value
+    if not isinstance(d, dict):
+        d = {}
+    d[keys[0]] = deep_set(d.get(keys[0], {}), keys[1:], value)
+    return d
+
+
+def deep_pop(d, keys, default=None):
+    """
+    Pop value from dictionary safely, imitating deep_get().
+    """
+    if isinstance(keys, str):
+        keys = keys.split('.')
+    assert type(keys) is list
+    if not isinstance(d, dict):
+        return default
+    if not keys:
+        return default
+    elif len(keys) == 1:
+        return d.pop(keys[0], default)
+    return deep_pop(d.get(keys[0]), keys[1:], default)
+
+
+
+
+
+
 if __name__ == '__main__':
     print(parse_tomorrow_server("09:01:00"))

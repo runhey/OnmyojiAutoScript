@@ -488,4 +488,11 @@ class BaseTask(GlobalGameAssets):
         scheduler.next_run = next_run
         self.config.save()
 
-
+    def ui_reward_appear_click(self, screenshot=False) -> bool:
+        """
+        如果出现 ‘获得奖励’ 就点击
+        :return:
+        """
+        if screenshot:
+            self.screenshot()
+        return self.appear_then_click(self.I_UI_REWARD, action=self.C_UI_REWARD, interval=1)

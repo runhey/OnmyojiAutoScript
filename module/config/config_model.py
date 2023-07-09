@@ -181,6 +181,38 @@ class ConfigModel(ConfigBase):
     #     logger.info(f'property change auto save')
     #     cls.save()
 
+    @staticmethod
+    def deep_get(obj, keys: str, default=None):
+        """
+        递归获取模型的值
+        :param obj:
+        :param keys:
+        :param default:
+        :return:
+        """
+        if not isinstance(keys, list):
+            keys = keys.split('.')
+        value = obj
+        try:
+            for key in keys:
+                value = getattr(value, key)
+        except AttributeError:
+            return default
+        return value
+
+    @staticmethod
+    def deep_set(obj, keys: str, value) -> bool:
+        if not isinstance(keys, list):
+            keys = keys.split('.')
+        current_obj = obj
+        try:
+            for key in keys[:-1]:
+                current_obj = getattr(current_obj, key)
+            setattr(current_obj, keys[-1], value)
+            return True
+        except (AttributeError, KeyError):
+            return False
+
 
 if __name__ == "__main__":
     try:
@@ -189,10 +221,7 @@ if __name__ == "__main__":
         print(e)
         c = ConfigModel()
 
-    c.gui_args('Nian')
-    print(c.gui_task('Nian'))
-    print(c.gui_task('AreaBoss'))
-    print(c.dict()['nian']['scheduler']['success_interval'])
-    c.save()
+    # c.save()
+    print(c.deep_get(c, 'area_boss.scheduler.success_interval'))
 
 

@@ -78,10 +78,10 @@ class Single(BaseCor):
                 return result
 
             # 如果没有识别到，这个时候考虑到可能是竖方向的文本, 使用detect_and_ocr来进行识别
-            logger.info(f"OCR {self.name}: No text detected in ROI, try to detect vertically")
+            logger.info(f"[{self.name}] Try to detect vertically")
             result = self.detect_and_ocr(image)
             if not result:
-                logger.info(f"OCR {self.name}: No text detected in ROI")
+                logger.info(f"[{self.name}]: No text detected in ROI")
                 return ""
             if result[0].ocr_text != "" and result[0].score > self.score:
                 return result[0].ocr_text

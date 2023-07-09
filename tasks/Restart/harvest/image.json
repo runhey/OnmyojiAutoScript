@@ -1,0 +1,83 @@
+[
+  {
+    "itemName": "harvest_jade",
+    "imageName": "harvest_harvest_jade.png",
+    "roiFront": "732,489,34,33",
+    "roiBack": "177,451,963,100",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "点击勾玉"
+  },
+  {
+    "itemName": "harvest_sign",
+    "imageName": "harvest_harvest_sign.png",
+    "roiFront": "295,496,32,43",
+    "roiBack": "70,481,889,71",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "签到小图标"
+  },
+  {
+    "itemName": "harvest_sign_2",
+    "imageName": "harvest_harvest_sign_2.png",
+    "roiFront": "592,135,100,252",
+    "roiBack": "592,135,100,252",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "harvest_sign_999",
+    "imageName": "harvest_harvest_sign_999.png",
+    "roiFront": "345,494,23,29",
+    "roiBack": "51,459,888,92",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "999签到福袋"
+  },
+  {
+    "itemName": "harvest_mail",
+    "imageName": "harvest_harvest_mail.png",
+    "roiFront": "337,505,37,25",
+    "roiBack": "38,476,880,78",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "邮件小图标"
+  },
+  {
+    "itemName": "harvest_mail_all",
+    "imageName": "harvest_harvest_mail_all.png",
+    "roiFront": "80,622,75,64",
+    "roiBack": "80,622,75,64",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "全部收取"
+  },
+  {
+    "itemName": "harvest_mail_open",
+    "imageName": "harvest_harvest_mail_open.png",
+    "roiFront": "157,122,66,62",
+    "roiBack": "139,86,100,487",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "有些邮件需要点击一次"
+  },
+  {
+    "itemName": "harvest_mail_confirm",
+    "imageName": "harvest_harvest_mail_confirm.png",
+    "roiFront": "687,543,168,64",
+    "roiBack": "687,543,168,64",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "确认收取邮件"
+  },
+  {
+    "itemName": "harvest_soul",
+    "imageName": "harvest_harvest_soul.png",
+    "roiFront": "241,497,38,36",
+    "roiBack": "68,480,930,72",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  }
+]

@@ -1,0 +1,47 @@
+[
+  {
+    "itemName": "login_scrooll_open",
+    "imageName": "login_login_scrooll_open.png",
+    "roiFront": "1208,609,33,83",
+    "roiBack": "1208,609,33,83",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "庭院卷轴打开"
+  },
+  {
+    "itemName": "login_scrooll_close",
+    "imageName": "login_login_scrooll_close.png",
+    "roiFront": "1184,628,35,45",
+    "roiBack": "1184,628,35,45",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "庭院卷轴关闭"
+  },
+  {
+    "itemName": "login_red_close",
+    "imageName": "login_login_red_close.png",
+    "roiFront": "1158,62,39,37",
+    "roiBack": "912,42,309,281",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "login_yellow_close",
+    "imageName": "login_login_yellow_close.png",
+    "roiFront": "29,17,46,44",
+    "roiBack": "0,0,94,86",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "login_8",
+    "imageName": "login_login_8.png",
+    "roiFront": "19,572,53,60",
+    "roiBack": "19,572,53,60",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "用于判断是否出现登录选区的"
+  }
+]

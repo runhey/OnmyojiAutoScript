@@ -206,11 +206,42 @@ class Config(ConfigState, ConfigManual, ConfigWatcher, ConfigMenu):
             logger.critical("Please enable at least one task")
             raise RequestHumanTakeover
 
+    def task_call(self, task: str=None, force_call=True):
+        """
+        回调任务，这会是在任务结束后调用
+        :param task: 调用的任务的大写名称
+        :param force_call:
+        :return:
+        """
+        task = convert_to_underscore(task)
+        if self.model.deep_get(self.model, keys=f'{task}.scheduler.next_run') is None:
+            raise ScriptError(f"Task to call: `{task}` does not exist in user config")
 
+        task_enable = self.model.deep_get(self.model, keys=f'{task}.scheduler.enable')
+        if force_call or task_enable:
+            logger.info(f"Task call: {task}")
+            next_run = datetime.now().replace(
+                microsecond=0
+            )
+            self.model.deep_set(self.model, keys=f'{task}.scheduler.next_run', value=next_run)
+            self.save()
+            return True
+        else:
+            logger.info(f"Task call: {task} (skipped because disabled by user)")
+            return False
 
 if __name__ == '__main__':
-    config = Config(config_name='oas1')
-    print(config.get_next())
+    # config = Config(config_name='oas1')
+    # print(config.get_next())
+
+    test = {}
+    test['ww1'] = {}
+    test['ww1']['ww2'] = 3
+
+    print(deep_get(test, 'ww1.ww2'))
+    print(test)
+    deep_set(test, 'ww1.ww2', 4)
+    print(deep_get(test, 'ww1.ww2'))
 
 
 

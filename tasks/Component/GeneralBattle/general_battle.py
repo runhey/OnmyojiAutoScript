@@ -156,13 +156,13 @@ class GeneralBattle(BaseTask, GeneralBattleAssets):
         while 1:
             self.screenshot()
             # 如果出现赢 就点击
-            if self.appear(self.I_WIN, threshold=0.6):
+            if self.appear(self.I_WIN, threshold=0.8):
                 logger.info("Battle result is win")
                 win = True
                 break
 
             # 如果出现失败 就点击，返回False
-            if self.appear(self.I_FALSE, threshold=0.6):
+            if self.appear(self.I_FALSE, threshold=0.8):
                 logger.info("Battle result is false")
                 win = False
                 break

@@ -298,7 +298,7 @@
 	<message><source>screenshot_interval_help</source><translation>执行两次截图之间的最小间隔，限制在 0.1 ~ 0.3，对于高配置电脑能降低 CPU 占用</translation></message>
 	<message><source>combat_screenshot_interval_help</source><translation>执行两次截图之间的最小间隔，限制在 0.1 ~ 1.0，能降低战斗时的 CPU 占用</translation></message>
 	<message><source>task_hoarding_duration_help</source><translation>能在收菜期间降低操作游戏的频率,任务触发后，等待 X 分钟，再一次性执行囤积的任务</translation></message>
-	<message><source>when_task_queue_empty_help</source><translation>无任务时关闭游戏，能在收菜期间降低 CPU 占用</translation></message>
+	<message><source>when_task_queue_empty_help</source><translation>无任务时关闭游戏，能在收菜期间降低 CPU 占用，'goto_home'不可选，这项是为了兼容老代码</translation></message>
 </context>
 <context>
     <name>Args</name>
@@ -442,5 +442,15 @@ mode_3策略是刷到五个契灵后开始结契，选择高级、中级盘来�
 	<message><source>little_kuro_switch_help</source><translation> </translation></message>
 	<message><source>azure_basan_switch_help</source><translation> </translation></message>
 	<message><source>bondling_stone_class_help</source><translation> </translation></message>
+</context>	
+<context>
+    <name>Args</name>
+	<message><source>HarvestConfig</source><translation>收获奖励</translation></message>
+	<message><source>harvest_enable_help</source><translation>这个一个部分是为了在登录游戏时，自动点击赠送的奖励。是必选项，列出来是给各位阴阳师大大知道有这个东西。欢迎补充如果缺少</translation></message>
+	<message><source>Enable Jade</source><translation>永久勾玉卡</translation></message>
+	<message><source>Enable Sign</source><translation>每日签到</translation></message>
+	<message><source>Enable Sign 999</source><translation>签到999天后的签到福袋</translation></message>
+	<message><source>Enable Mail</source><translation>邮件</translation></message>
+	<message><source>Enable Soul</source><translation>御魂或者觉醒加成</translation></message>
 </context>	
 </TS>
