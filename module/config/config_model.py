@@ -14,10 +14,15 @@ from tasks.Component.config_base import ConfigBase
 from tasks.Script.config import Script
 from tasks.Restart.config import Restart
 from tasks.GlobalGame.config import GlobalGame
+# 每日任务-----------------------------------------------------------------------------------------------------
 from tasks.AreaBoss.config import AreaBoss
 from tasks.ExperienceYoukai.config import ExperienceYoukai
 from tasks.GoldYoukai.config import GoldYoukai
 from tasks.Nian.config import Nian
+from tasks.KekkaiUtilize.config import KekkaiUtilize
+from tasks.KekkaiActivation.config import KekkaiActivation
+from tasks.DemonEncounter.config import DemonEncounter
+# ----------------------------------------------------------------------------------------------------------------------
 from tasks.Orochi.config import Orochi
 from tasks.OrochiMoans.config import OrochiMoans
 from tasks.Sougenbi.config import Sougenbi
@@ -45,6 +50,9 @@ class ConfigModel(ConfigBase):
     gold_youkai: GoldYoukai = Field(default_factory=GoldYoukai)
     nian: Nian = Field(default_factory=Nian)
     realm_raid: RealmRaid = Field(default_factory=RealmRaid)
+    kekkai_utilize: KekkaiUtilize = Field(default_factory=KekkaiUtilize)
+    kekkai_activation: KekkaiActivation = Field(default_factory=KekkaiActivation)
+    demon_encounter: DemonEncounter = Field(default_factory=DemonEncounter)
 
     # 这些是刷御魂的
     orochi: Orochi = Field(default_factory=Orochi)
@@ -181,6 +189,38 @@ class ConfigModel(ConfigBase):
     #     logger.info(f'property change auto save')
     #     cls.save()
 
+    @staticmethod
+    def deep_get(obj, keys: str, default=None):
+        """
+        递归获取模型的值
+        :param obj:
+        :param keys:
+        :param default:
+        :return:
+        """
+        if not isinstance(keys, list):
+            keys = keys.split('.')
+        value = obj
+        try:
+            for key in keys:
+                value = getattr(value, key)
+        except AttributeError:
+            return default
+        return value
+
+    @staticmethod
+    def deep_set(obj, keys: str, value) -> bool:
+        if not isinstance(keys, list):
+            keys = keys.split('.')
+        current_obj = obj
+        try:
+            for key in keys[:-1]:
+                current_obj = getattr(current_obj, key)
+            setattr(current_obj, keys[-1], value)
+            return True
+        except (AttributeError, KeyError):
+            return False
+
 
 if __name__ == "__main__":
     try:
@@ -189,10 +229,7 @@ if __name__ == "__main__":
         print(e)
         c = ConfigModel()
 
-    c.gui_args('Nian')
-    print(c.gui_task('Nian'))
-    print(c.gui_task('AreaBoss'))
-    print(c.dict()['nian']['scheduler']['success_interval'])
-    c.save()
+    # c.save()
+    print(c.deep_get(c, 'area_boss.scheduler.success_interval'))
 
 

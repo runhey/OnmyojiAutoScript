@@ -199,7 +199,7 @@ class Benchmark(DaemonBase):
 
     def run(self):
         try:
-            self.config.override(Emulator_ScreenshotMethod='ADB')
+            self.config.override(script.device.screenshot_method='ADB')
             self.device.uninstall_minicap()
 
         except RequestHumanTakeover:

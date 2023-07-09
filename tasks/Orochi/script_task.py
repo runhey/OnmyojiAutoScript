@@ -263,10 +263,14 @@ class ScriptTask(GeneralBattle, GeneralInvite, GeneralBuff, GeneralRoom, GameUi,
             while 1:
                 self.screenshot()
                 if not self.appear(self.I_OROCHI_FIRE):
+                    continue
+
+                if self.appear_then_click(self.I_OROCHI_FIRE, interval=1):
+                    pass
+
+                if not self.appear(self.I_OROCHI_FIRE):
                     self.run_general_battle(config=self.config.orochi.general_battle_config)
                     break
-                if self.appear_then_click(self.I_OROCHI_FIRE, interval=1):
-                    continue
 
         # 回去
         while 1:

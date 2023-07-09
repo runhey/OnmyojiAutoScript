@@ -7,6 +7,7 @@ from pydantic import BaseModel, ValidationError, validator, Field
 from module.logger import logger
 
 class WhenTaskQueueEmpty(str, Enum):
+    GOTO_MAIN = 'goto_main'
     GOTO_HOME = 'goto_home'
     CLOSE_GAME = 'close_game'
 
@@ -17,6 +18,6 @@ class Optimization(BaseModel):
                                               description='combat_screenshot_interval_help')
     task_hoarding_duration: float = Field(default=0,
                                           description='task_hoarding_duration_help')
-    when_task_queue_empty: WhenTaskQueueEmpty = Field(default=WhenTaskQueueEmpty.GOTO_HOME,
+    when_task_queue_empty: WhenTaskQueueEmpty = Field(default=WhenTaskQueueEmpty.GOTO_MAIN,
                                                       description='when_task_queue_empty_help')
 

@@ -56,7 +56,7 @@ class BaseCor:
         :param area:
         :param keyword:
         """
-        self.name = name
+        self.name = name.upper()
         if isinstance(mode, str):
             self.mode = OcrMode[mode.upper()]
         elif isinstance(mode, OcrMode):
@@ -115,7 +115,7 @@ class BaseCor:
             result = ""
         # after proces
         result = self.after_process(result)
-        logger.info("ocr result score: %s%s" % (result,score))
+        # logger.info("ocr result score: %s%s" % (result,score))
         logger.attr(name='%s %ss' % (self.name, float2str(time.time() - start_time)),
                     text=f'[{result}]')
         return result
@@ -137,7 +137,7 @@ class BaseCor:
             result = ""
         # after proces
         result = self.after_process(result)
-        logger.info("ocr result score: %s" % score)
+        # logger.info("ocr result score: %s" % score)
         logger.attr(name='%s %ss' % (self.name, float2str(time.time() - start_time)),
                     text=f'[{result}]')
         return result
@@ -158,7 +158,7 @@ class BaseCor:
         results = []
         # after proces
         for result in boxed_results:
-            logger.info("ocr result score: %s" % result.score)
+            # logger.info("ocr result score: %s" % result.score)
             if result.score < self.score:
                 continue
             result.ocr_text = self.after_process(result.ocr_text)
@@ -216,5 +216,7 @@ class BaseCor:
         else:
             indices = None
             return indices
+
+
 
 

@@ -88,14 +88,14 @@ class ConnectionAttr:
             raise RequestHumanTakeover
         if self.is_wsa:
             self.serial = '127.0.0.1:58526'
-            if self.config.Emulator_ScreenshotMethod != 'uiautomator2' \
-                    or self.config.Emulator_ControlMethod != 'uiautomator2':
+            if self.config.script.device.screenshot_method != 'uiautomator2' \
+                    or self.config.script.device.control_method != 'uiautomator2':
                 with self.config.multi_set():
-                    self.config.Emulator_ScreenshotMethod = 'uiautomator2'
-                    self.config.Emulator_ControlMethod = 'uiautomator2'
+                    self.config.script.device.screenshot_method = 'uiautomator2'
+                    self.config.script.device.control_method = 'uiautomator2'
         if self.is_over_http:
-            if self.config.Emulator_ScreenshotMethod not in ["ADB", "uiautomator2", "aScreenCap"] \
-                    or self.config.Emulator_ControlMethod not in ["ADB", "uiautomator2", "minitouch"]:
+            if self.config.script.device.screenshot_method not in ["ADB", "uiautomator2", "aScreenCap"] \
+                    or self.config.script.device.control_method not in ["ADB", "uiautomator2", "minitouch"]:
                 logger.warning(
                     f'When connecting to a device over http: {self.serial} '
                     f'ScreenshotMethod can only use ["ADB", "uiautomator2", "aScreenCap"], '

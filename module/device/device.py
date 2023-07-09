@@ -101,7 +101,8 @@ class Device(Screenshot, Control, AppControl, EmulatorManager):
     def release_during_wait(self):
         # Scrcpy server is still sending video stream,
         # stop it during wait
-        if self.config.Emulator_ScreenshotMethod == 'scrcpy':
+        # self.config.script.device.screenshot_method = 'scrcpy'
+        if self.config.script.device.screenshot_method == 'scrcpy':
             self._scrcpy_server_stop()
 
     def stuck_record_add(self, button):
@@ -207,7 +208,7 @@ class Device(Screenshot, Control, AppControl, EmulatorManager):
         self.stuck_record_check = empty_function
 
     def app_start(self):
-        if not self.config.Error_HandleError:
+        if not self.config.script.error.handle_error:
             logger.critical('No app stop/start, because HandleError disabled')
             logger.critical('Please enable Alas.Error.HandleError or manually login to AzurLane')
             raise RequestHumanTakeover
@@ -216,7 +217,7 @@ class Device(Screenshot, Control, AppControl, EmulatorManager):
         self.click_record_clear()
 
     def app_stop(self):
-        if not self.config.Error_HandleError:
+        if not self.config.script.error.handle_error:
             logger.critical('No app stop/start, because HandleError disabled')
             logger.critical('Please enable Alas.Error.HandleError or manually login to AzurLane')
             raise RequestHumanTakeover

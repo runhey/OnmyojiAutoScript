@@ -282,7 +282,7 @@ class Script:
                     self.run('start')
                 elif method == 'goto_main':
                     logger.info('Goto main page during wait')
-                    self.run('goto_main')
+                    self.run('GotoMain')
                     self.device.release_during_wait()
                     if not self.wait_until(task.next_run):
                         del_cached_property(self, 'config')
@@ -300,10 +300,10 @@ class Script:
     def run(self, command: str) -> bool:
         """
 
-        :param command:
+        :param command:  大写驼峰命名的任务名字
         :return:
         """
-        if command == 'start' and command == 'goto_main':
+        if command == 'start' or command == 'goto_main':
             logger.error(f'Invalid command `{command}`')
 
         try:
@@ -392,7 +392,7 @@ class Script:
             # Skip first restart
             if self.is_first_task and task == 'Restart':
                 logger.info('Skip task `Restart` at scheduler start')
-                self.config.task_delay(server_update=True)
+                self.config.task_delay(task='Restart', finish=True, success=True, server=True)
                 del_cached_property(self, 'config')
                 continue
 
