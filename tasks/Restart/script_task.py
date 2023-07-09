@@ -21,7 +21,7 @@ class ScriptTask(LoginHandler):
         主要就是登录的模块
         :return:
         """
-        self.app_start()
+        self.app_restart()
         raise TaskEnd('ScriptTask end')
 
 

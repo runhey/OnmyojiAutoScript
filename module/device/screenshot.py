@@ -168,7 +168,7 @@ class Screenshot(Adb, DroidCast, Scrcpy, Window):
             raise ScriptError(f'Unknown screenshot interval: {interval}')
         # Screenshot interval in scrcpy is meaningless,
         # video stream is received continuously no matter you use it or not.
-        # if self.config.Emulator_ScreenshotMethod == 'scrcpy':
+        # if self.config.script.device.screenshot_method == 'scrcpy':
         if self.config.script.device.screenshot_method == 'scrcpy':
             interval = 0.1
 

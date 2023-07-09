@@ -421,72 +421,11 @@ class BaseTask(GlobalGameAssets):
         :param finish: 是完成任务后的时间为基准还是开始任务的时间为基准
         :return:
         """
-
-        # 任务预处理
-        if not task:
-            task = self.config.task.command
-        task = convert_to_underscore(task)
-        task_object = getattr(self.config.model, task, None)
-        if not task_object:
-            logger.warning(f'No task named {task}')
-            return
-        scheduler = getattr(task_object, 'scheduler', None)
-        if not scheduler:
-            logger.warning(f'No scheduler in {task}')
-            return
-
-        # 任务开始时间
         if finish:
-            start_time = datetime.now()
+            start_time = datetime.now().replace(microsecond=0)
         else:
             start_time = self.start_time
-
-        # 依次判断是否有自定义的下次运行时间
-        run = []
-        if success is not None:
-            interval = (
-                scheduler.success_interval
-                if success
-                else scheduler.failure_interval
-            )
-            run.append(start_time + interval)
-        # if server is not None:
-        #     if server:
-        #         server = scheduler.server_update
-        #         run.append(get_server_next_update(server))
-        if target is not None:
-            target = [target] if not isinstance(target, list) else target
-            target = nearest_future(target)
-            run.append(target)
-
-
-        next_run = None
-        # 排序
-        if not len(run):
-            raise ScriptError(
-                "Missing argument in delay_next_run, should set at least one"
-            )
-
-        run = min(run).replace(microsecond=0)
-        next_run = run
-        # 将这些连接起来，方便日志输出
-        kv = dict_to_kv(
-            {
-                "success": success,
-                "server_update": server,
-                "target": target,
-            },
-            allow_none=False,
-        )
-        logger.info(f"Delay task `{task}` to {next_run} ({kv})")
-
-        # 强制设定下一次的运行时间
-        if server and scheduler.server_update != time(hour=9):
-            next_run = parse_tomorrow_server(scheduler.server_update)
-
-        # 设置
-        scheduler.next_run = next_run
-        self.config.save()
+        self.config.task_delay(task, start_time=start_time, success=success, server=server, target=target)
 
     def ui_reward_appear_click(self, screenshot=False) -> bool:
         """

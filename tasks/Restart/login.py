@@ -69,9 +69,11 @@ class LoginHandler(BaseTask, RestartAssets):
             if self.ocr_appear_click(self.O_LOGIN_ENTER_GAME, interval=2.5):
                 continue
 
+        return login_success
+
 
     def app_handle_login(self) -> bool:
-        for _ in range(3):
+        for _ in range(2):
             self.device.stuck_record_clear()
             self.device.click_record_clear()
             try:

@@ -9,6 +9,7 @@ from tasks.Component.config_scheduler import Scheduler
 from module.logger import logger
 
 class RestartScheduler(Scheduler):
+    enable: bool = Field(default=True, description='enable_help')
     priority: int = Field(default=0, description='priority_help')
     server_update: time = Field(default=time(hour=9, minute=5, second=0), description='server_update_help')
 

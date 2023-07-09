@@ -230,6 +230,81 @@ class Config(ConfigState, ConfigManual, ConfigWatcher, ConfigMenu):
             logger.info(f"Task call: {task} (skipped because disabled by user)")
             return False
 
+    def task_delay(self, task: str, start_time: datetime = None,
+                   success: bool=None, server: bool=True, target: timedelta=None) -> None:
+        """
+        设置下次运行时间  当然这个也是可以重写的
+        :param target: 可以自定义的下次运行时间
+        :param server: True
+        :param success: 判断是成功的还是失败的时间间隔
+        :param task: 任务名称，大驼峰的
+        :param finish: 是完成任务后的时间为基准还是开始任务的时间为基准
+        :return:
+        """
+        # 任务预处理
+        if not task:
+            task = self.task.command
+        task = convert_to_underscore(task)
+        task_object = getattr(self.model, task, None)
+        if not task_object:
+            logger.warning(f'No task named {task}')
+            return
+        scheduler = getattr(task_object, 'scheduler', None)
+        if not scheduler:
+            logger.warning(f'No scheduler in {task}')
+            return
+
+        # 任务开始时间
+        if not start_time:
+            start_time = datetime.now().replace(microsecond=0)
+
+        # 依次判断是否有自定义的下次运行时间
+        run = []
+        if success is not None:
+            interval = (
+                scheduler.success_interval
+                if success
+                else scheduler.failure_interval
+            )
+            run.append(start_time + interval)
+        # if server is not None:
+        #     if server:
+        #         server = scheduler.server_update
+        #         run.append(get_server_next_update(server))
+        if target is not None:
+            target = [target] if not isinstance(target, list) else target
+            target = nearest_future(target)
+            run.append(target)
+
+        next_run = None
+        # 排序
+        if not len(run):
+            raise ScriptError(
+                "Missing argument in delay_next_run, should set at least one"
+            )
+
+        run = min(run).replace(microsecond=0)
+        next_run = run
+        # 将这些连接起来，方便日志输出
+        kv = dict_to_kv(
+            {
+                "success": success,
+                "server_update": server,
+                "target": target,
+            },
+            allow_none=False,
+        )
+        logger.info(f"Delay task `{task}` to {next_run} ({kv})")
+
+        # 强制设定下一次的运行时间
+        if server and scheduler.server_update != time(hour=9):
+            next_run = parse_tomorrow_server(scheduler.server_update)
+
+        # 设置
+        logger.attr(f'{task}.scheduler.next_run', next_run)
+        scheduler.next_run = next_run
+        self.save()
+
 if __name__ == '__main__':
     # config = Config(config_name='oas1')
     # print(config.get_next())
