@@ -150,6 +150,7 @@ class GeneralBattle(BaseTask, GeneralBattleAssets):
         # 有的时候是长战斗，需要在设置stuck检测为长战斗
         # 但是无需取消设置，因为如果有点击或者滑动的话 handle_control_check会自行取消掉
         self.device.stuck_record_add('BATTLE_STATUS_S')
+        self.device.click_record_clear()
         # 战斗过程 随机点击和滑动 防封
         logger.info("Start battle process")
         win: bool = False
