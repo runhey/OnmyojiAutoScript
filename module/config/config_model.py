@@ -14,10 +14,15 @@ from tasks.Component.config_base import ConfigBase
 from tasks.Script.config import Script
 from tasks.Restart.config import Restart
 from tasks.GlobalGame.config import GlobalGame
+# 每日任务-----------------------------------------------------------------------------------------------------
 from tasks.AreaBoss.config import AreaBoss
 from tasks.ExperienceYoukai.config import ExperienceYoukai
 from tasks.GoldYoukai.config import GoldYoukai
 from tasks.Nian.config import Nian
+from tasks.KekkaiUtilize.config import KekkaiUtilize
+from tasks.KekkaiActivation.config import KekkaiActivation
+from tasks.DemonEncounter.config import DemonEncounter
+# ----------------------------------------------------------------------------------------------------------------------
 from tasks.Orochi.config import Orochi
 from tasks.OrochiMoans.config import OrochiMoans
 from tasks.Sougenbi.config import Sougenbi
@@ -45,6 +50,9 @@ class ConfigModel(ConfigBase):
     gold_youkai: GoldYoukai = Field(default_factory=GoldYoukai)
     nian: Nian = Field(default_factory=Nian)
     realm_raid: RealmRaid = Field(default_factory=RealmRaid)
+    kekkai_utilize: KekkaiUtilize = Field(default_factory=KekkaiUtilize)
+    kekkai_activation: KekkaiActivation = Field(default_factory=KekkaiActivation)
+    demon_encounter: DemonEncounter = Field(default_factory=DemonEncounter)
 
     # 这些是刷御魂的
     orochi: Orochi = Field(default_factory=Orochi)
