@@ -485,5 +485,17 @@ mode_3策略是刷到五个契灵后开始结契，选择高级、中级盘来�
 	<message><source>card_rule_help</source><translation>规则还没想好</translation></message>
 	<message><source>exchange_before_help</source><translation>必选项</translation></message>
 	<message><source>exchange_max_help</source><translation>必选项</translation></message>
+</context>	
+<context>
+    <name>Args</name>
+	<message><source>TrueOrochiScheduler</source><translation>任务调度</translation></message>
+	<message><source>TrueOrochiConfig</source><translation>任务</translation></message>
+	<message><source>Find True Orochi</source><translation>挑战御魂十层触发真蛇</translation></message>
+	<message><source>Green Mark Type</source><translation>绿标哪一个</translation></message>
+	<message><source>find_true_orochi_help</source><translation>启用这一项，没有出现八岐大蛇时会单独挑战十层十次，如果还不出现判断失败，将会设置失败时的间隔到下一次来进行开启任务
+如果不启用这一项，没有发现真蛇时直接判定运行失败</translation></message>
+	<message><source>green_mark_type_help</source><translation> </translation></message>
+	<message><source>Current Success</source><translation>本周已经挑战成功的次数</translation></message>
+	<message><source>current_success_help</source><translation>请不要手动修改这一项，是为了给机器计数的，机器会自动修改</translation></message>
 </context>		
 </TS>

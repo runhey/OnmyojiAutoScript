@@ -292,7 +292,7 @@ class Handle:
             for node in PreOrderIter(self.root_node):
                 if node.name == Handle.emulator_handle['bluestacks_family']:
                     return node.num
-        return None
+        return self.root_node.num
 
     @cached_property
     def screenshot_size(self) -> tuple or None:
