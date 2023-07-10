@@ -3,6 +3,7 @@
 # github https://github.com/runhey
 import re
 
+from enum import Enum
 from cached_property import cached_property
 from anytree import NodeMixin, RenderTree, PreOrderIter
 from win32api import GetSystemMetrics, SendMessage, MAKELONG, PostMessage
@@ -46,13 +47,15 @@ def is_handle_valid(num: int) -> bool:
     """
     return IsWindow(num)
 
-def handle_num2pid(num :int) -> int:
+
+def handle_num2pid(num: int) -> int:
     """
     通过句柄号获取句柄进程id，如果句柄号非法则返回0
     :param num:
     :return:
     """
     return 0 if num is None or num == 0 or num == '' else GetWindowThreadProcessId(num)[1]
+
 
 def window_scale_rate() -> float:
     """
@@ -69,6 +72,7 @@ def window_scale_rate() -> float:
     # print(wReal, wAfter)
     return round(wReal / wAfter, 2)
 
+
 class WindowNode(NodeMixin):
     def __init__(self, name, num, parent=None):
         super().__init__()
@@ -76,6 +80,46 @@ class WindowNode(NodeMixin):
         self.num = num
         self.parent = parent
 
+
+class EmulatorFamily(Enum):
+    FAMILY_MUMU = 10  # mumu模拟器
+    FAMILY_NOX = 20  # 夜神模拟器
+    FAMILY_LD = 30  # 雷电模拟器
+    FAMILY_MEMU = 40  # 逍遥模拟器
+    FAMILY_BLUESTACKS = 50  # 蓝叠模拟器
+    FAMILY_OTHER = 60  # 其他模拟器 待定
+
+
+# 各个模拟器的句柄树*******************************************************************************************************
+""""
+<MuMu>系列
+模拟器的窗口名字
+----MuMuPlayer      (!如果是mumu12是MuMuPlayer, 否则是NemuPlayer)
+--------nemudisplay
+
+<雷电模拟器系列>
+雷电模拟器的窗口名字
+----TheRender
+--------sub
+
+<夜神模拟器系列>  =====> 这个模拟器窗口很复杂，而且有的时候还会变化
+夜神模拟器的窗口名字
+----Nox
+----Nox
+--------toolbar_nox
+--------Nox
+------------Nox
+----------------sub
+---Nox
+--------Nox
+--------Nox    ==> 妈的太多了自己用spy++看吧
+
+<蓝叠模拟器>
+蓝叠模拟器的窗口名字
+----HD-Player
+--------_ctl.W
+"""""
+# **********************************************************************************************************************
 
 class Handle:
     emulator_list = ['MuMu12',
@@ -89,7 +133,7 @@ class Handle:
         # 夜神
         'nox_player': ['root_handle_title', 'Nox'],
         'nox_player_64': ['root_handle_title', 'Nox'],
-        'nox_player_family':['root_handle_title', 'Nox'],
+        'nox_player_family': ['root_handle_title', 'Nox'],
         # 雷电
         'ld_player': ['TheRender'],
         'ld_player_4': ['TheRender'],
@@ -119,47 +163,52 @@ class Handle:
                 self.config = Config(config, task=None)
             else:
                 self.config = config
+        if not self.config.script.device.handle:
+            logger.info('Handle is empty. oas not use handle')
+            return
+        if self.config.script.device.handle == '':
+            logger.info('Handle is empty. oas not use handle')
+            return
 
         # 获取根的句柄
         self.root_handle_title = ''
         self.root_handle_num = 0
         self.root_handle = self.config.script.device.handle
         if self.root_handle == "auto":
-            logger.info('handle is auto. oas will find window emulator')
+            logger.info('Handle is auto. oas will find window emulator')
             window_list = Handle.all_windows()
             self.root_handle_title = self.auto_handle_title(window_list)
             self.root_handle_num = handle_title2num(self.root_handle_title)
         elif isinstance(self.root_handle, int):
-            logger.info('handle is handle num. oas use it as root handle num')
+            logger.info('Handle is handle num. oas use it as root handle num')
             if is_handle_valid(self.root_handle):
                 logger.info(f'handle number {self.root_handle} is valid')
                 self.root_handle_title = handle_num2title(self.root_handle)
                 self.root_handle_num = self.root_handle
         elif isinstance(self.root_handle, str):
-            logger.info('handle is handle string. oas use it as root handle title')
+            logger.info('Handle is handle string. oas use it as root handle title')
             if handle_title2num(self.root_handle) != 0:
                 self.root_handle_num = handle_title2num(self.root_handle)
                 self.root_handle_title = self.root_handle
-        logger.info(f'the root handle title is {self.root_handle_title} and num is {self.root_handle_num}')
+        logger.info(f'The root handle title is {self.root_handle_title} and num is {self.root_handle_num}')
 
         # 获取句柄树
         self.root_node = WindowNode(name=self.root_handle_title, num=self.root_handle_num)
         Handle.handle_tree(self.root_handle_num, self.root_node)
-        logger.info('the emulator handle structure is')
+        logger.info('Emulator handle structure:')
         for pre, fill, node in RenderTree(self.root_node):
             logger.info("%s%s" % (pre, node.name))
         for pre, fill, node in RenderTree(self.root_node):
             logger.info("%s%s" % (pre, node.num))
 
-        # 判断是哪一个模拟器
-        logger.info(f'the emulator family is {self.emulator_family}')
+        # 判断是哪一个模拟器 通过句柄树结构
+        logger.info(f'Emulator family: {self.emulator_family}')
 
         # window系统的缩放
-        logger.info(f'your window screen scale rate is {window_scale_rate()}')
+        logger.info(f'Your window screen scale rate: {window_scale_rate()}')
         _ = self.screenshot_handle_num
-        logger.info(f'screenshot handle num is {self.screenshot_handle_num}')
-        logger.info(f'the emulator screenshot size is {self.screenshot_size}')
-
+        logger.info(f'Screenshot handle num: {self.screenshot_handle_num}')
+        logger.info(f'Emulator screenshot size: {self.screenshot_size}')
 
     @staticmethod
     def all_windows() -> list:
@@ -214,7 +263,7 @@ class Handle:
         return emulator_title
 
     @staticmethod
-    def handle_tree(hwnd, node: WindowNode, level: int =0) -> None:
+    def handle_tree(hwnd, node: WindowNode, level: int = 0) -> None:
         """
         生成一个窗口的句柄树
         :param hwnd:
@@ -236,23 +285,41 @@ class Handle:
                 Handle.handle_tree(child_hwnd, child_node, level + 1)
 
     @cached_property
-    def emulator_family(self) -> str:
+    def emulator_family(self) -> EmulatorFamily:
         """
-        通过句柄标题来判断这个是那个模拟器大类
+        通过句柄树来判断这个是那个模拟器大类
         :return:
         """
+        children_num = len(self.root_node.children)
+        if children_num == 1:  #
+            name = self.root_node.children[0].name
+            if name == 'MuMuPlayer':
+                return EmulatorFamily.FAMILY_MUMU
+            elif name == 'NemuPlayer':
+                return EmulatorFamily.FAMILY_MUMU
+            elif name == 'TheRender':
+                return EmulatorFamily.FAMILY_LD
+            elif name == 'HD-Player':
+                return EmulatorFamily.FAMILY_BLUESTACKS
+        elif children_num >= 3:
+            name = self.root_node.children[0].name
+            if name == 'Nox':
+                return EmulatorFamily.FAMILY_NOX
+
+        # 基于句柄标题的判定
         for emu in Handle.emulator_list:
             if self.root_handle_title.find(emu) != -1:
                 if emu == 'MuMu':
-                    return 'mumu_player_family'
+                    return EmulatorFamily.FAMILY_MUMU
                 elif emu == '雷电':
-                    return 'ld_player_family'
+                    return EmulatorFamily.FAMILY_LD
                 elif emu == '夜神':
-                    return 'nox_player_family'
+                    return EmulatorFamily.FAMILY_NOX
                 elif emu == '蓝叠':
-                    return 'bluestacks_player_family'
+                    return EmulatorFamily.FAMILY_BLUESTACKS
                 elif emu == '逍遥':
-                    return 'memu_player_family'
+                    return EmulatorFamily.FAMILY_MEMU
+        return EmulatorFamily.FAMILY_OTHER
 
     @cached_property
     def screenshot_handle_num(self) -> int:
@@ -260,35 +327,34 @@ class Handle:
         截屏的句柄其实并不是根句柄
         :return:  出错返回None
         """
-        if self.emulator_family == 'mumu_player_family':
-            if re.match(string=self.root_handle_title, pattern=r".*12$"):
-                logger.info('is mumu12')
-                for node in PreOrderIter(self.root_node):
-                    if node.name == Handle.emulator_handle['mumu_player_12'][1]:
-                        return node.num
-            else:
-                logger.info('is mumu')
-                for node in PreOrderIter(self.root_node):
-                    if node.name == Handle.emulator_handle['mumu_player'][1]:
-                        return node.num
+        if self.emulator_family == EmulatorFamily.FAMILY_MUMU:
+            # 使用正则匹配12 来判定是不是mumu12这并不是一个好的方法
+            name = self.root_node.children[0].name
+            num = self.root_node.children[0].num
+            if name == 'MuMuPlayer':
+                logger.info('The emulator is MuMu模拟器12')
+                return num
+            elif name == 'NemuPlayer':
+                logger.info('The emulator is MuMu模拟器')
+                return num
         # 夜神
-        elif self.emulator_family == 'nox_player_family':
+        elif self.emulator_family == EmulatorFamily.FAMILY_NOX:
             try:
                 return self.root_node.children[1].children[1].num
             except:
                 return self.root_node.children[2].children[1].num
 
-        elif self.emulator_family == 'ld_player_family':
+        elif self.emulator_family == EmulatorFamily.FAMILY_LD:
             for node in PreOrderIter(self.root_node):
                 if node.name == Handle.emulator_handle['ld_player_family'][0]:
                     return node.num
 
-        elif self.emulator_family == 'memu_player_family':
+        elif self.emulator_family == EmulatorFamily.FAMILY_MEMU:
             for node in PreOrderIter(self.root_node):
                 if node.name == Handle.emulator_handle['memu_player_family']:
                     return node.num
 
-        elif self.emulator_family == 'bluestacks_family':
+        elif self.emulator_family == EmulatorFamily.FAMILY_BLUESTACKS:
             for node in PreOrderIter(self.root_node):
                 if node.name == Handle.emulator_handle['bluestacks_family']:
                     return node.num
@@ -331,9 +397,9 @@ class Handle:
         # print(wReal, wAfter)
         return round(wReal / wAfter, 2)
 
+
 if __name__ == '__main__':
     h = Handle(config='oas1')
-    logger.info(h.auto_handle_title(h.all_windows()))
-    logger.info(h.root_handle_num)
-    logger.info(h.emulator_family)
-
+    # logger.info(h.auto_handle_title(h.all_windows()))
+    # logger.info(h.root_handle_num)
+    # logger.info(h.emulator_family)
