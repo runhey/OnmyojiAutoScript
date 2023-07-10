@@ -79,5 +79,23 @@
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"
+  },
+  {
+    "itemName": "harvest_mail_title",
+    "imageName": "harvest_harvest_mail_title.png",
+    "roiFront": "520,48,245,41",
+    "roiBack": "520,48,245,41",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "harvest_ap",
+    "imageName": "harvest_harvest_ap.png",
+    "roiFront": "721,486,31,38",
+    "roiBack": "206,462,999,81",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
   }
 ]

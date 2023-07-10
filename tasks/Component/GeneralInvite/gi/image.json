@@ -56,8 +56,8 @@
   {
     "itemName": "matching",
     "imageName": "gi_matching.png",
-    "roiFront": "1200,110,52,114",
-    "roiBack": "1200,110,52,114",
+    "roiFront": "51,574,52,114",
+    "roiBack": "51,574,52,114",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "如果是到时间会退出房间，这个右边显示一个匹配的图片"

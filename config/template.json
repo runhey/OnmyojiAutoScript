@@ -36,7 +36,8 @@
       "enable_sign": true,
       "enable_sign_999": true,
       "enable_mail": true,
-      "enable_soul": true
+      "enable_soul": true,
+      "enable_ap": true
     }
   },
   "global_game": {
@@ -112,6 +113,61 @@
     "raid_config": {
       "raid_mode": "retreat_four_attack_nine",
       "attack_number": "all"
+    },
+    "general_battle_config": {
+      "lock_team_enable": false,
+      "preset_enable": false,
+      "preset_group": 1,
+      "preset_team": 1,
+      "green_enable": false,
+      "green_mark": "green_left1",
+      "random_click_swipt_enable": false
+    }
+  },
+  "kekkai_utilize": {
+    "scheduler": {
+      "enable": false,
+      "next_run": "2023-01-01 00:00:00",
+      "priority": 2,
+      "success_interval": "00 06:00:00",
+      "failure_interval": "00 06:00:00",
+      "server_update": "09:00:00"
+    },
+    "utilize_config": {
+      "utilize_rule": "auto",
+      "auto_switch_sort": true,
+      "shikigami_class": "N",
+      "shikigami_order": 4,
+      "guild_ap_enable": true,
+      "guild_assets_enable": true,
+      "box_ap_enable": true,
+      "box_exp_enable": true
+    }
+  },
+  "kekkai_activation": {
+    "scheduler": {
+      "enable": false,
+      "next_run": "2023-01-01 00:00:00",
+      "priority": 2,
+      "success_interval": "00 10:00:00",
+      "failure_interval": "00 10:00:00",
+      "server_update": "09:00:00"
+    },
+    "activation_config": {
+      "card_rule": "auto",
+      "exchange_before": true,
+      "exchange_max": true,
+      "shikigami_class": "N"
+    }
+  },
+  "demon_encounter": {
+    "scheduler": {
+      "enable": false,
+      "next_run": "2023-01-01 00:00:00",
+      "priority": 2,
+      "success_interval": "01 00:00:00",
+      "failure_interval": "01 00:00:00",
+      "server_update": "09:00:00"
     },
     "general_battle_config": {
       "lock_team_enable": false,

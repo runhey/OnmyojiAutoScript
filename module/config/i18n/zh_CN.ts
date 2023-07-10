@@ -455,7 +455,7 @@ mode_3策略是刷到五个契灵后开始结契，选择高级、中级盘来�
 </context>	
 <context>
     <name>Args</name>
-	<message><source>UtilizeScheduler</source><translation>调度</translation></message>
+	<message><source>UtilizeScheduler</source><translation>任务调度</translation></message>
 	<message><source>UtilizeConfig</source><translation>寄养</translation></message>
 	<message><source>Utilize Rule</source><translation>寄养规则</translation></message>
 	<message><source>Auto Switch Sort</source><translation>切换好友列表以游戏刷新高星排序</translation></message>
@@ -477,7 +477,7 @@ mode_3策略是刷到五个契灵后开始结契，选择高级、中级盘来�
 </context>	
 <context>
     <name>Args</name>
-	<message><source>ActivationScheduler</source><translation>调度</translation></message>
+	<message><source>ActivationScheduler</source><translation>任务调度</translation></message>
 	<message><source>ActivationConfig</source><translation>寄养</translation></message>
 	<message><source>Card Rule</source><translation>放卡规则</translation></message>
 	<message><source>Exchange Max</source><translation>收取经验后更换下来满级的式神</translation></message>

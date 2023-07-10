@@ -392,7 +392,7 @@ class Script:
             # Skip first restart
             if self.is_first_task and task == 'Restart':
                 logger.info('Skip task `Restart` at scheduler start')
-                self.config.task_delay(task='Restart', finish=True, success=True, server=True)
+                self.config.task_delay(task='Restart', success=True, server=True)
                 del_cached_property(self, 'config')
                 continue
 
