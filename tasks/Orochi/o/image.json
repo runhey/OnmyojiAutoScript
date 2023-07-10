@@ -56,8 +56,8 @@
   {
     "itemName": "orochi_matching",
     "imageName": "o_matching.png",
-    "roiFront": "1205,106,44,114",
-    "roiBack": "1205,106,44,114",
+    "roiFront": "985,598,174,58",
+    "roiBack": "985,598,174,58",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"

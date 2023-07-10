@@ -24,7 +24,7 @@ class OrochiAssets:
 	# 式神录 
 	I_SHI_RECORDS = RuleImage(roi_front=(821,638,48,45), roi_back=(821,638,48,45), threshold=0.8, method="Template matching", file="./tasks/Orochi/o/o_shi_records.png")
 	# description 
-	I_OROCHI_MATCHING = RuleImage(roi_front=(1205,106,44,114), roi_back=(1205,106,44,114), threshold=0.8, method="Template matching", file="./tasks/Orochi/o/o_matching.png")
+	I_OROCHI_MATCHING = RuleImage(roi_front=(985,598,174,58), roi_back=(985,598,174,58), threshold=0.8, method="Template matching", file="./tasks/Orochi/o/o_matching.png")
 
 
 	# List Rule Assets
