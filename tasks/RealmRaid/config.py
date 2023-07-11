@@ -7,6 +7,7 @@ from enum import Enum
 from tasks.Component.config_scheduler import Scheduler
 from tasks.Component.GeneralBattle.config_general_battle import GeneralBattleConfig
 from tasks.Component.config_base import ConfigBase
+from tasks.Component.SwitchSoul.switch_soul_config import SwitchSoulConfig
 
 class RaidMode(str, Enum):
     NORMAL = 'retreat_four_attack_nine'
@@ -26,6 +27,7 @@ class RealmRaid(ConfigBase):
     scheduler: Scheduler = Field(default_factory=Scheduler)
     raid_config: RaidConfig = Field(default_factory=RaidConfig)
     general_battle_config: GeneralBattleConfig = Field(default_factory=GeneralBattleConfig)
+    switch_soul_config: SwitchSoulConfig = Field(default_factory=SwitchSoulConfig)
 
 
 

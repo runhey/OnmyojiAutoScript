@@ -19,7 +19,7 @@
   },
   {
     "itemName": "orochi_lock",
-    "imageName": "o_lock.png",
+    "imageName": "o_orochi_lock.png",
     "roiFront": "558,562,31,33",
     "roiBack": "558,562,31,33",
     "method": "Template matching",
@@ -37,7 +37,7 @@
   },
   {
     "itemName": "orochi_fire",
-    "imageName": "o_fire.png",
+    "imageName": "o_orochi_fire.png",
     "roiFront": "1095,577,131,124",
     "roiBack": "1095,577,131,124",
     "method": "Template matching",
