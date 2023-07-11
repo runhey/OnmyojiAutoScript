@@ -1,0 +1,56 @@
+[
+  {
+    "itemName": "shikigami_switch_1",
+    "roiFront": "31,618,66,64",
+    "roiBack": "31,618,66,64",
+    "description": "description"
+  },
+  {
+    "itemName": "shikigami_left_1",
+    "roiFront": "163,487,100,179",
+    "roiBack": "163,487,100,179",
+    "description": "description"
+  },
+  {
+    "itemName": "shikigami_left_2",
+    "roiFront": "295,487,100,178",
+    "roiBack": "295,487,100,178",
+    "description": "description"
+  },
+  {
+    "itemName": "shikigami_left_3",
+    "roiFront": "436,492,100,178",
+    "roiBack": "436,492,100,178",
+    "description": "description"
+  },
+  {
+    "itemName": "shikigami_left_4",
+    "roiFront": "571,493,100,174",
+    "roiBack": "571,493,100,174",
+    "description": "description"
+  },
+  {
+    "itemName": "shikigami_left_5",
+    "roiFront": "704,492,100,176",
+    "roiBack": "704,492,100,176",
+    "description": "description"
+  },
+  {
+    "itemName": "shikigami_left_6",
+    "roiFront": "839,487,100,182",
+    "roiBack": "839,487,100,182",
+    "description": "description"
+  },
+  {
+    "itemName": "shikigami_left_7",
+    "roiFront": "977,493,100,171",
+    "roiBack": "977,493,100,171",
+    "description": "description"
+  },
+  {
+    "itemName": "shikigami_left_8",
+    "roiFront": "1033,490,100,180",
+    "roiBack": "1033,490,100,180",
+    "description": "description"
+  }
+]

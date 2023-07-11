@@ -24,7 +24,7 @@ from module.exception import RequestHumanTakeover, ScriptError
 from module.base.decorator import Config
 from module.base.timer import timer
 from module.logger import logger
-from module.device.handle import Handle, window_scale_rate
+from module.device.handle import Handle, window_scale_rate, EmulatorFamily
 
 
 class Window(Handle):
@@ -85,11 +85,11 @@ class Window(Handle):
         :return:
         """
         result = []
-        if self.emulator_family == "mumu_player_family":
+        if self.emulator_family == EmulatorFamily.FAMILY_MUMU:
             result.append(self.root_node.num)
             result.append(self.root_node.children[0].num)
             return result
-        elif self.emulator_family == 'nox_player_family':
+        elif self.emulator_family == EmulatorFamily.FAMILY_NOX:
             result.append(self.root_node.num)
             try:
                 result.append(self.root_node.children[1].num)
@@ -100,12 +100,12 @@ class Window(Handle):
                 result.append(self.root_node.children[2].children[1].num)
                 result.append(self.root_node.children[2].children[1].children[0].num)
             return result
-        elif self.emulator_family == 'ld_player_family':
+        elif self.emulator_family == EmulatorFamily.FAMILY_LD:
             result.append(self.root_node.children[0].num)
             return result
-        elif self.emulator_family == 'memu_player_family':
+        elif self.emulator_family == EmulatorFamily.FAMILY_MEMU:
             pass
-        elif self.emulator_family == 'bluestacks_family':
+        elif self.emulator_family == EmulatorFamily.FAMILY_BLUESTACKS:
             pass
 
     @cached_property

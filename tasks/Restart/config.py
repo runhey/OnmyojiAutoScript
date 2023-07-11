@@ -21,6 +21,8 @@ class HarvestConfig(BaseModel):
     enable_mail: bool = Field(default=True)
     # 御魂加成
     enable_soul: bool = Field(default=True)
+    # 体力
+    enable_ap: bool = Field(default=True)
 
 
 

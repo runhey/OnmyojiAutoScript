@@ -263,23 +263,27 @@
 	<message>
         <source>handle_help</source>
         <translation>填 "auto" 自动检测模拟器，多个模拟器正在运行或使用不支持自动检测的模拟器时无法使用 "auto"，必须手动填写
-输入为句柄标题或者是句柄号，每次启动模拟器时句柄号会变化
+输入为句柄标题或者是句柄号，每次启动模拟器时句柄号会变化。清空表示不使用window的操作方式。
 
 句柄标题 Handle:
 [MuMu模拟器12]: "MuMu模拟器12"
-[MuMu模拟器]: "MuMu模拟器" "\n"
+[MuMu模拟器]: "MuMu模拟器" 
 [雷电模拟器](全系列通用): "雷电模拟器"
 
 句柄号 Handle:
-！！！占位符</translation>
+某些模拟器多开时具有相同的句柄标题（说的就是MuMu），此时需要手动获取模拟器的句柄号手动设置。
+获取工具请查阅文档：[模拟器支持] </translation>
     </message>
 	<message>
         <source>screenshot_method_help</source>
-        <translation>目前只支持window_background, 其他还未完整的测试</translation>
+        <translation>使用自动选择时，将执行一次性能测试并自动更改为最快的截图方案。一般情况下的速度: 
+window_background >>> DroidCast_raw >  ADB_nc >> DroidCast > uiautomator2 ~= ADB
+使用window_background来截图是10ms左右，对比DroidCast_raw是100ms左右（仅限作者的电脑）。但是window_background有一个致命的缺点是模拟器不可以最小化，望周知</translation>
     </message>
 	<message>
         <source>control_method_help</source>
-        <translation>目前只支持window_message, 其他还未完整的测试</translation>
+        <translation>速度: window_message ~= minitouch > Hermit >>> uiautomator2 ~= ADB
+控制方式是模拟人类的速度，也不是越快越好 使用(window_message)会偶尔出现失效的情况</translation>
     </message>
 	<message>
         <source>Adb Restart</source>
@@ -455,7 +459,7 @@ mode_3策略是刷到五个契灵后开始结契，选择高级、中级盘来�
 </context>	
 <context>
     <name>Args</name>
-	<message><source>UtilizeScheduler</source><translation>调度</translation></message>
+	<message><source>UtilizeScheduler</source><translation>任务调度</translation></message>
 	<message><source>UtilizeConfig</source><translation>寄养</translation></message>
 	<message><source>Utilize Rule</source><translation>寄养规则</translation></message>
 	<message><source>Auto Switch Sort</source><translation>切换好友列表以游戏刷新高星排序</translation></message>
@@ -477,7 +481,7 @@ mode_3策略是刷到五个契灵后开始结契，选择高级、中级盘来�
 </context>	
 <context>
     <name>Args</name>
-	<message><source>ActivationScheduler</source><translation>调度</translation></message>
+	<message><source>ActivationScheduler</source><translation>任务调度</translation></message>
 	<message><source>ActivationConfig</source><translation>寄养</translation></message>
 	<message><source>Card Rule</source><translation>放卡规则</translation></message>
 	<message><source>Exchange Max</source><translation>收取经验后更换下来满级的式神</translation></message>
@@ -485,5 +489,17 @@ mode_3策略是刷到五个契灵后开始结契，选择高级、中级盘来�
 	<message><source>card_rule_help</source><translation>规则还没想好</translation></message>
 	<message><source>exchange_before_help</source><translation>必选项</translation></message>
 	<message><source>exchange_max_help</source><translation>必选项</translation></message>
+</context>	
+<context>
+    <name>Args</name>
+	<message><source>TrueOrochiScheduler</source><translation>任务调度</translation></message>
+	<message><source>TrueOrochiConfig</source><translation>任务</translation></message>
+	<message><source>Find True Orochi</source><translation>挑战御魂十层触发真蛇</translation></message>
+	<message><source>Green Mark Type</source><translation>绿标哪一个</translation></message>
+	<message><source>find_true_orochi_help</source><translation>启用这一项，没有出现八岐大蛇时会单独挑战十层十次，如果还不出现判断失败，将会设置失败时的间隔到下一次来进行开启任务
+如果不启用这一项，没有发现真蛇时直接判定运行失败</translation></message>
+	<message><source>green_mark_type_help</source><translation> </translation></message>
+	<message><source>Current Success</source><translation>本周已经挑战成功的次数</translation></message>
+	<message><source>current_success_help</source><translation>请不要手动修改这一项，是为了给机器计数的，机器会自动修改</translation></message>
 </context>		
 </TS>

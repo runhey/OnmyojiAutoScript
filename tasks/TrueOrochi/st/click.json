@@ -1,0 +1,50 @@
+[
+  {
+    "itemName": "st_green_1",
+    "roiFront": "210,395,46,66",
+    "roiBack": "210,395,46,66",
+    "description": "description"
+  },
+  {
+    "itemName": "st_green_2",
+    "roiFront": "291,481,46,63",
+    "roiBack": "291,481,46,63",
+    "description": "description"
+  },
+  {
+    "itemName": "st_green_3",
+    "roiFront": "459,426,53,59",
+    "roiBack": "459,426,53,59",
+    "description": "description"
+  },
+  {
+    "itemName": "st_green_4",
+    "roiFront": "687,391,43,57",
+    "roiBack": "687,391,43,57",
+    "description": "description"
+  },
+  {
+    "itemName": "st_green_5",
+    "roiFront": "814,490,41,60",
+    "roiBack": "814,490,41,60",
+    "description": "description"
+  },
+  {
+    "itemName": "st_green_6",
+    "roiFront": "921,386,48,59",
+    "roiBack": "921,386,48,59",
+    "description": "description"
+  },
+  {
+    "itemName": "st_green_7",
+    "roiFront": "0,0,100,100",
+    "roiBack": "0,0,100,100",
+    "description": "description"
+  },
+  {
+    "itemName": "st_green_main",
+    "roiFront": "611,541,40,66",
+    "roiBack": "611,541,40,66",
+    "description": "description"
+  }
+]

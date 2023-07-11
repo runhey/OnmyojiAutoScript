@@ -1,6 +1,7 @@
 # This Python file uses the following encoding: utf-8
 # @author runhey
 # github https://github.com/runhey
+from time import sleep
 from datetime import time, datetime, timedelta
 
 from tasks.base_task import BaseTask
@@ -149,7 +150,11 @@ class ScriptTask(GeneralBattle, GeneralInvite, GeneralBuff, GeneralRoom, GameUi,
             # 如果在探索界面或者是出现在组队界面， 那就是可能房间死了
             # 要结束任务
             if self.appear(self.I_MATCHING) or self.appear(self.I_CHECK_EXPLORATION):
-                break
+                sleep(0.5)
+                if self.appear(self.I_MATCHING) or self.appear(self.I_CHECK_EXPLORATION):
+                    logger.warning('Orochi task failed')
+                    success = False
+                    break
             if self.current_count >= self.limit_count:
                 if self.is_in_room():
                     logger.info('Orochi count limit out')

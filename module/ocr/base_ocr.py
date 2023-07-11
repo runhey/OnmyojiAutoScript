@@ -181,7 +181,7 @@ class BaseCor:
             return self.keyword == result
 
 
-    def filter(self, boxed_results: list[BoxedResult], keyword: str=None) -> list:
+    def filter(self, boxed_results: list[BoxedResult], keyword: str=None) -> list or None:
         """
         使用ocr获取结果后和keyword进行匹配. 返回匹配的index list
         :param keyword: 如果不指定默认适用对象的keyword
@@ -205,18 +205,48 @@ class BaseCor:
 
         # 如果适用顺序拼接还是没有匹配到，那可能是竖排的，使用单个字节的keyword进行匹配
         indices = []
+        # 对于keyword中的每一个字符，都要在strings中进行匹配
+        # 如果这个字符在strings中的某一个string中，那么就记录这个string的index
+        max_index = len(strings) - 1
         for index, char in enumerate(keyword):
             for i, string in enumerate(strings):
                 if char not in string:
+                    continue
+                if i <= max_index:
+                    indices.append(i)
                     break
-                if i == len(strings) - 1:
-                    indices.append(index)
         if indices:
+            # 剔除掉重复的index
+            indices = list(set(indices))
             return indices
         else:
-            indices = None
-            return indices
+            return None
 
 
 
 
+# def test():
+#     # strings = ["探", "索"]
+#     # keyword = "探索"
+#     # strings是截图ocr的结果，keyword是要匹配的关键字
+#     strings = ['123', '456', '789', '101112', '131415', '456']
+#     keyword = '123456'
+#
+#     indices = []
+#     # 对于keyword中的每一个字符，都要在strings中进行匹配
+#     # 如果这个字符在strings中的某一个string中，那么就记录这个string的index
+#     max_index = len(strings) - 1
+#     for index, char in enumerate(keyword):
+#         for i, string in enumerate(strings):
+#             if char not in string:
+#                 continue
+#             if i <= max_index:
+#                 indices.append(i)
+#                 break
+#     if indices:
+#         # 剔除掉重复的index
+#         indices = list(set(indices))
+#         return indices
+#     else:
+#         return None
+# print(test())
