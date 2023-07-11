@@ -26,9 +26,12 @@ test/
 build-fluentui-Desktop_*/
 module/config/argument/setting.json
 !fluentui/*
+*.exe
 !dev_tools/*
-
-
+!dev_tools/Spyxx/spyxx.exe
+!dev_tools/Spyxx/spyxx_amd64.exe
+!dev_tools/ViewWizard2/ViewWizard2.exe
+!dev_tools/ViewWizard3/ViewWizard.exe
 
 
 
@@ -257,7 +260,6 @@ $RECYCLE.BIN/
 *.lnk
 adb_port.txt
 adb_port.ini
-*.exe
 !popup.exe
 *.zip
 console.bat
