@@ -501,5 +501,13 @@ mode_3策略是刷到五个契灵后开始结契，选择高级、中级盘来�
 	<message><source>green_mark_type_help</source><translation> </translation></message>
 	<message><source>Current Success</source><translation>本周已经挑战成功的次数</translation></message>
 	<message><source>current_success_help</source><translation>请不要手动修改这一项，是为了给机器计数的，机器会自动修改</translation></message>
-</context>		
+</context>	
+<context>
+    <name>Args</name>
+	<message><source>ScheduleRule</source><translation>选择任务调度规则</translation></message>	
+	<message><source>schedule_rule_help</source><translation>这里所指的调度的对象是指Pending中的，Waiting中的任务不属于。
+基于过滤器(Filter)的调度：默认的选项，任务的执行顺序会根据开发时所确定的顺序来调度，一般是最优解
+基于先来后到(FIFO)的调度：是会按照下次执行时间进行排序，靠前的先执行
+基于优先级(Priority)的调度：高优先级先于低优先级执行，同优先级按照先来后到顺序</translation></message>	
+</context>	
 </TS>

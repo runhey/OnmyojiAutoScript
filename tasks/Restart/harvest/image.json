@@ -56,10 +56,10 @@
   {
     "itemName": "harvest_mail_open",
     "imageName": "harvest_harvest_mail_open.png",
-    "roiFront": "157,122,66,62",
+    "roiFront": "163,367,45,48",
     "roiBack": "139,86,100,487",
     "method": "Template matching",
-    "threshold": 0.8,
+    "threshold": 0.9,
     "description": "有些邮件需要点击一次"
   },
   {

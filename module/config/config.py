@@ -15,6 +15,7 @@ from module.config.config_watcher import ConfigWatcher
 from module.config.config_menu import ConfigMenu
 from module.config.config_model import ConfigModel
 from module.config.config_state import ConfigState
+from module.config.scheduler import TaskScheduler
 from module.config.utils import *
 
 from module.exception import RequestHumanTakeover, ScriptError
@@ -45,6 +46,12 @@ class Function:
         if isinstance(next_run, str):
             next_run = datetime.strptime(next_run, "%Y-%m-%d %H:%M:%S")
         self.next_run: datetime = next_run
+        priority = data['scheduler']['priority']
+        if isinstance(priority, str):
+            priority = int(priority)
+        self.priority: int = priority
+        if not isinstance(self.priority, int):
+            logger.error(f"Invalid priority: {self.priority}")
 
         # self.enable = deep_get(data, keys="Scheduler.Enable", default=False)
         # self.command = deep_get(data, keys="Scheduler.Command", default="Unknown")
@@ -52,7 +59,7 @@ class Function:
 
     def __str__(self):
         enable = "Enable" if self.enable else "Disable"
-        return f"{self.command} ({enable}, {str(self.next_run)})"
+        return f"{self.command} ({enable}, {self.priority}, {str(self.next_run)})"
 
     __repr__ = __str__
 
@@ -168,12 +175,13 @@ class Config(ConfigState, ConfigManual, ConfigWatcher, ConfigMenu):
             else:
                 waiting_task.append(func)
 
-        f = Filter(regex=r"(.*)", attr=["command"])
-        f.load(self.SCHEDULER_PRIORITY)
+        # f = Filter(regex=r"(.*)", attr=["command"])
+        # f.load(self.SCHEDULER_PRIORITY)
         if pending_task:
-            pending_task = f.apply(pending_task)
+            pending_task = TaskScheduler.schedule(rule=self.model.script.optimization.schedule_rule,
+                                                  pending=pending_task)
         if waiting_task:
-            waiting_task = f.apply(waiting_task)
+            # waiting_task = f.apply(waiting_task)
             waiting_task = sorted(waiting_task, key=operator.attrgetter("next_run"))
         if error:
             pending_task = error + pending_task
@@ -306,17 +314,14 @@ class Config(ConfigState, ConfigManual, ConfigWatcher, ConfigMenu):
         self.save()
 
 if __name__ == '__main__':
-    # config = Config(config_name='oas1')
+    config = Config(config_name='oas1')
+    config.update_scheduler()
+    print(config.pending_task)
+    print(config.waiting_task)
+    config.update_scheduler()
+    print(config.pending_task)
     # print(config.get_next())
 
-    test = {}
-    test['ww1'] = {}
-    test['ww1']['ww2'] = 3
-
-    print(deep_get(test, 'ww1.ww2'))
-    print(test)
-    deep_set(test, 'ww1.ww2', 4)
-    print(deep_get(test, 'ww1.ww2'))
 
 
 

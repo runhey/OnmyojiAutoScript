@@ -24,7 +24,7 @@ class RestartAssets:
 	# 全部收取 
 	I_HARVEST_MAIL_ALL = RuleImage(roi_front=(80,622,75,64), roi_back=(80,622,75,64), threshold=0.8, method="Template matching", file="./tasks/Restart/harvest/harvest_harvest_mail_all.png")
 	# 有些邮件需要点击一次 
-	I_HARVEST_MAIL_OPEN = RuleImage(roi_front=(157,122,66,62), roi_back=(139,86,100,487), threshold=0.8, method="Template matching", file="./tasks/Restart/harvest/harvest_harvest_mail_open.png")
+	I_HARVEST_MAIL_OPEN = RuleImage(roi_front=(163,367,45,48), roi_back=(139,86,100,487), threshold=0.9, method="Template matching", file="./tasks/Restart/harvest/harvest_harvest_mail_open.png")
 	# 确认收取邮件 
 	I_HARVEST_MAIL_CONFIRM = RuleImage(roi_front=(687,543,168,64), roi_back=(687,543,168,64), threshold=0.8, method="Template matching", file="./tasks/Restart/harvest/harvest_harvest_mail_confirm.png")
 	# description 
