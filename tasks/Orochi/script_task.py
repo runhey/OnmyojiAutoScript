@@ -256,7 +256,14 @@ class ScriptTask(GeneralBattle, GeneralInvite, GeneralBuff, GeneralRoom, GameUi,
         self.check_layer(layer)
         self.check_lock(self.config.orochi.general_battle_config.lock_team_enable)
 
+        def is_in_orochi(screenshot=False) -> bool:
+            if screenshot:
+                self.screenshot()
+            return self.appear(self.I_OROCHI_FIRE)
+
         while 1:
+            self.screenshot()
+
             if self.current_count >= self.limit_count:
                 logger.info('Orochi count limit out')
                 break
@@ -264,12 +271,12 @@ class ScriptTask(GeneralBattle, GeneralInvite, GeneralBuff, GeneralRoom, GameUi,
                 logger.info('Orochi time limit out')
                 break
 
+            if not is_in_orochi():
+                continue
+
             # 点击挑战
             while 1:
                 self.screenshot()
-                if not self.appear(self.I_OROCHI_FIRE):
-                    continue
-
                 if self.appear_then_click(self.I_OROCHI_FIRE, interval=1):
                     pass
 
