@@ -179,17 +179,18 @@ class Handle:
             window_list = Handle.all_windows()
             self.root_handle_title = self.auto_handle_title(window_list)
             self.root_handle_num = handle_title2num(self.root_handle_title)
-        elif isinstance(self.root_handle, int):
-            logger.info('Handle is handle num. oas use it as root handle num')
-            if is_handle_valid(self.root_handle):
-                logger.info(f'handle number {self.root_handle} is valid')
-                self.root_handle_title = handle_num2title(self.root_handle)
-                self.root_handle_num = self.root_handle
-        elif isinstance(self.root_handle, str):
-            logger.info('Handle is handle string. oas use it as root handle title')
-            if handle_title2num(self.root_handle) != 0:
-                self.root_handle_num = handle_title2num(self.root_handle)
-                self.root_handle_title = self.root_handle
+        if isinstance(self.root_handle, str):
+            try:
+                self.root_handle_num = int(self.root_handle)
+                logger.info('Handle is handle num. oas use it as root handle num')
+                if is_handle_valid(self.root_handle_num):
+                    logger.info(f'Handle number {self.root_handle_num} is valid')
+                    self.root_handle_title = handle_num2title(self.root_handle_num)
+            except ValueError:
+                logger.info('Handle is handle string. oas use it as root handle title')
+                if handle_title2num(self.root_handle) != 0:
+                    self.root_handle_num = handle_title2num(self.root_handle)
+                    self.root_handle_title = self.root_handle
         logger.info(f'The root handle title is {self.root_handle_title} and num is {self.root_handle_num}')
 
         # 获取句柄树

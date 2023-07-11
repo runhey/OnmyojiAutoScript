@@ -263,23 +263,27 @@
 	<message>
         <source>handle_help</source>
         <translation>填 "auto" 自动检测模拟器，多个模拟器正在运行或使用不支持自动检测的模拟器时无法使用 "auto"，必须手动填写
-输入为句柄标题或者是句柄号，每次启动模拟器时句柄号会变化
+输入为句柄标题或者是句柄号，每次启动模拟器时句柄号会变化。清空表示不使用window的操作方式。
 
 句柄标题 Handle:
 [MuMu模拟器12]: "MuMu模拟器12"
-[MuMu模拟器]: "MuMu模拟器" "\n"
+[MuMu模拟器]: "MuMu模拟器" 
 [雷电模拟器](全系列通用): "雷电模拟器"
 
 句柄号 Handle:
-！！！占位符</translation>
+某些模拟器多开时具有相同的句柄标题（说的就是MuMu），此时需要手动获取模拟器的句柄号手动设置。
+获取工具请查阅文档：[模拟器支持] </translation>
     </message>
 	<message>
         <source>screenshot_method_help</source>
-        <translation>目前只支持window_background, 其他还未完整的测试</translation>
+        <translation>使用自动选择时，将执行一次性能测试并自动更改为最快的截图方案。一般情况下的速度: 
+window_background >>> DroidCast_raw >  ADB_nc >> DroidCast > uiautomator2 ~= ADB
+使用window_background来截图是10ms左右，对比DroidCast_raw是100ms左右（仅限作者的电脑）。但是window_background有一个致命的缺点是模拟器不可以最小化，望周知</translation>
     </message>
 	<message>
         <source>control_method_help</source>
-        <translation>目前只支持window_message, 其他还未完整的测试</translation>
+        <translation>速度: window_message ~= minitouch > Hermit >>> uiautomator2 ~= ADB
+控制方式是模拟人类的速度，也不是越快越好 使用(window_message)会偶尔出现失效的情况</translation>
     </message>
 	<message>
         <source>Adb Restart</source>

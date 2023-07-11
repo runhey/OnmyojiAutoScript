@@ -26,7 +26,7 @@ test/
 build-fluentui-Desktop_*/
 module/config/argument/setting.json
 !fluentui/*
-
+!dev_tools/*
 
 
 
