@@ -216,6 +216,7 @@
     </message>
 	<message><source>GlobalGame</source><translation>全局游戏设置</translation></message>
 	<message><source>RealmRaid</source><translation>个人突破</translation></message>
+	<message><source>RyouToppa</source><translation>寮突破</translation></message>
 	<message><source>List Rule</source><translation>列表规则</translation></message>
 	<message><source>Activity Task</source><translation>限时活动</translation></message>
 	<message><source>ActivityShikigami</source><translation>当期式神爬塔</translation></message>
