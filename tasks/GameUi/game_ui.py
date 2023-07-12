@@ -26,7 +26,10 @@ class GameUi(BaseTask, GameUiAssets):
                 # 庭院里面的
                 page_shikigami_records, page_onmyodo, page_friends, page_daily, page_mall, page_guild, page_team, page_collection
                 ]
-
+    ui_close = [GameUiAssets.I_BACK_BLUE, GameUiAssets.I_BACK_YOLLOW, GameUiAssets.I_BACK_Y, GameUiAssets.I_BACK_MALL,
+                GameUiAssets.I_BACK_FRIENDS, GameUiAssets.I_BACK_DAILY, GameUiAssets.I_BACK_BL,
+                GameUiAssets.I_BONDLING_GOTO_EXPLORATION, GameUiAssets.I_REALM_RAID_GOTO_EXPLORATION, GameUiAssets.I_SIX_GATES_GOTO_EXPLORATION, GameUiAssets.page_summon_goto_main
+                ]
     def home_explore(self) -> bool:
         """
         使用ocr识别到探索按钮并点击
@@ -116,7 +119,11 @@ class GameUi(BaseTask, GameUiAssets):
                     logger.attr("UI", page.name)
                     self.ui_current = page
                     return page
-
+            # Try to close unknown page
+            for close in self.ui_close:
+                if self.appear_then_click(self.I_FORM_TEAM, interval=1):
+                    logger.info('Trying to switch to supported page')
+                    timeout = Timer(10, count=20).start()
             # Unknown page but able to handle
             # logger.info("Unknown ui page")
             # if self.appear_then_click(GOTO_MAIN, offset=(30, 30), interval=2) or self.ui_additional():

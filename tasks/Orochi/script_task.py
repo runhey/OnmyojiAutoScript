@@ -149,7 +149,7 @@ class ScriptTask(GeneralBattle, GeneralInvite, GeneralBuff, GeneralRoom, GameUi,
             # 如果在探索界面或者是出现在组队界面， 那就是可能房间死了
             # 要结束任务
             if self.appear(self.I_MATCHING) or self.appear(self.I_CHECK_EXPLORATION):
-                break
+                continue
             if self.current_count >= self.limit_count:
                 if self.is_in_room():
                     logger.info('Orochi count limit out')

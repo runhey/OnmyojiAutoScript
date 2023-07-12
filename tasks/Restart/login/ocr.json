@@ -16,5 +16,14 @@
     "method": "Default",
     "keyword": "进入游戏",
     "description": "Ocr-description"
+  },
+  {
+    "itemName": "login_skip_1",
+    "roiFront": "1046,35,130,37",
+    "roiBack": "1046,35,130,37",
+    "mode": "Single",
+    "method": "Default",
+    "keyword": "点击屏幕跳过",
+    "description": "点击屏幕跳过"
   }
 ]
