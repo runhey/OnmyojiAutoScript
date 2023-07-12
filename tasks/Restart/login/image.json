@@ -38,10 +38,19 @@
   {
     "itemName": "login_8",
     "imageName": "login_login_8.png",
-    "roiFront": "19,572,53,60",
-    "roiBack": "19,572,53,60",
+    "roiFront": "178,572,53,60",
+    "roiBack": "19,547,223,105",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "用于判断是否出现登录选区的"
+  },
+  {
+    "itemName": "watch_video_cancel",
+    "imageName": "login_watch_video_cancel.png",
+    "roiFront": "466,396,130,61",
+    "roiBack": "466,396,130,61",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "登录时候不观看CG视频"
   }
 ]

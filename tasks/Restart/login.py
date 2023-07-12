@@ -18,6 +18,7 @@ class LoginHandler(BaseTask, RestartAssets):
         :return:
         """
         logger.hr('App login')
+        self.device.stuck_record_add('LOGIN_CHECK')
 
         confirm_timer = Timer(1.5, count=2).start()
         orientation_timer = Timer(10)
@@ -54,6 +55,14 @@ class LoginHandler(BaseTask, RestartAssets):
             #     logger.error('Network error')
             #     raise RequestHumanTakeover('Network error')
 
+
+            # 跳过观看视频
+            # if self.ocr_appear_click(self.O_LOGIN_SKIP_1, interval=1):
+            #     continue
+            # 不观看视频
+            if self.appear_then_click(self.I_WATCH_VIDEO_CANCEL, interval=0.6):
+                logger.info('Close video')
+                continue
             # 右上角的红色的关闭
             if self.appear_then_click(self.I_LOGIN_RED_CLOSE, interval=0.6):
                 logger.info('Close red close')
