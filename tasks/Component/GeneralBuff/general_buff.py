@@ -48,7 +48,7 @@ class GeneralBuff(BaseTask, GeneralBuffAssets):
         :param cls:
         :param image:
         :param buff:
-        :return:
+        :return:  如果没有就返回None
         """
         area = buff.ocr(image)
         if area == tuple([0, 0, 0, 0]):
@@ -169,6 +169,9 @@ class GeneralBuff(BaseTask, GeneralBuffAssets):
         while 1:
             self.screenshot()
             area = self.get_area(self.device.image, self.O_EXP_100)
+            if not area:
+                logger.warning('No gold 100 buff')
+                continue
             self.set_switch_area(area)
 
             if not self.appear(self.I_OPEN_YELLOW) and not self.appear(self.I_CLOSE_RED):
@@ -222,10 +225,10 @@ class GeneralBuff(BaseTask, GeneralBuffAssets):
         logger.info('Awake buff')
         self.screenshot()
         area = self.get_area_image(self.device.image, self.I_AWAKE)
-        self.set_switch_area(area)
         if not area:
             logger.warning('No awake buff')
             return None
+        self.set_switch_area(area)
         if is_open:
             while 1:
                 self.screenshot()
@@ -250,10 +253,10 @@ class GeneralBuff(BaseTask, GeneralBuffAssets):
         logger.info('Soul buff')
         self.screenshot()
         area = self.get_area_image(self.device.image, self.I_SOUL)
-        self.set_switch_area(area)
         if not area:
             logger.warning('No soul buff')
             return None
+        self.set_switch_area(area)
         if is_open:
             while 1:
                 self.screenshot()

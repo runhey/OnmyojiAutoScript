@@ -15,8 +15,8 @@ from tasks.Script.config_optimization import ScheduleRule
 
 
 class TaskScheduler:
-    filter = Filter(regex=r"(.*)", attr=["command"]).load(ConfigManual.SCHEDULER_PRIORITY)
-
+    filter = Filter(regex=r"(.*)", attr=["command"])
+    filter.load(ConfigManual.SCHEDULER_PRIORITY)
 
     @staticmethod
     def schedule(rule: ScheduleRule, pending: list["Function"]) -> list["Function"]:
@@ -35,7 +35,7 @@ class TaskScheduler:
 
         # 第一种
         if rule == ScheduleRule.FILTER:
-            pending_task = filter.apply(pending)
+            pending_task = TaskScheduler.filter.apply(pending)
             return pending_task
 
         # 第二种
