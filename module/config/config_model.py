@@ -11,6 +11,7 @@ from module.logger import logger
 
 # 导入配置的Python文件
 from tasks.Component.config_base import ConfigBase
+from tasks.RyouToppa.config import RyouToppa
 from tasks.Script.config import Script
 from tasks.Restart.config import Restart
 from tasks.GlobalGame.config import GlobalGame
@@ -38,6 +39,10 @@ from tasks.ActivityShikigami.config import ActivityShikigami
 from tasks.BondlingFairyland.config import BondlingFairyland
 # ----------------------------------------------------------------------------------------------------------------------
 
+# 每周任务---------------------------------------------------------------------------------------------------------------
+from tasks.TrueOrochi.config import TrueOrochi
+# ----------------------------------------------------------------------------------------------------------------------
+
 class ConfigModel(ConfigBase):
     config_name: str = "oas"
     script: Script = Field(default_factory=Script)
@@ -50,6 +55,7 @@ class ConfigModel(ConfigBase):
     gold_youkai: GoldYoukai = Field(default_factory=GoldYoukai)
     nian: Nian = Field(default_factory=Nian)
     realm_raid: RealmRaid = Field(default_factory=RealmRaid)
+    ryou_toppa: RyouToppa = Field(default_factory=RyouToppa)
     kekkai_utilize: KekkaiUtilize = Field(default_factory=KekkaiUtilize)
     kekkai_activation: KekkaiActivation = Field(default_factory=KekkaiActivation)
     demon_encounter: DemonEncounter = Field(default_factory=DemonEncounter)
@@ -67,6 +73,8 @@ class ConfigModel(ConfigBase):
     # 这些是肝帝专属
     bondling_fairyland: BondlingFairyland = Field(default_factory=BondlingFairyland)
 
+    # 这些是每周任务
+    true_orochi: TrueOrochi = Field(default_factory=TrueOrochi)
 
     # @validator('script')
     # def script_validator(cls, v):

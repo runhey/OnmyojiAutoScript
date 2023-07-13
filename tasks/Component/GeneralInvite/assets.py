@@ -24,7 +24,7 @@ class GeneralInviteAssets:
 	# 还没有锁定阵容 
 	I_UNLOCK = RuleImage(roi_front=(30,647,23,30), roi_back=(30,647,23,30), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralInvite/gi/gi_unlock.png")
 	# 如果是到时间会退出房间，这个右边显示一个匹配的图片 
-	I_MATCHING = RuleImage(roi_front=(1200,110,52,114), roi_back=(1200,110,52,114), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralInvite/gi/gi_matching.png")
+	I_MATCHING = RuleImage(roi_front=(51,574,52,114), roi_back=(51,574,52,114), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralInvite/gi/gi_matching.png")
 	# 永生之海挑战（还未有队友的图片） 
 	I_FIRE_FAIL_SEA = RuleImage(roi_front=(1160,585,100,100), roi_back=(1160,585,100,100), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralInvite/gi/gi_fire_fail_sea.png")
 	# description 

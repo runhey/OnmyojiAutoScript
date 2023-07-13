@@ -56,10 +56,10 @@
   {
     "itemName": "harvest_mail_open",
     "imageName": "harvest_harvest_mail_open.png",
-    "roiFront": "157,122,66,62",
+    "roiFront": "163,367,45,48",
     "roiBack": "139,86,100,487",
     "method": "Template matching",
-    "threshold": 0.8,
+    "threshold": 0.9,
     "description": "有些邮件需要点击一次"
   },
   {
@@ -76,6 +76,24 @@
     "imageName": "harvest_harvest_soul.png",
     "roiFront": "241,497,38,36",
     "roiBack": "68,480,930,72",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "harvest_mail_title",
+    "imageName": "harvest_harvest_mail_title.png",
+    "roiFront": "520,48,245,41",
+    "roiBack": "520,48,245,41",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "harvest_ap",
+    "imageName": "harvest_harvest_ap.png",
+    "roiFront": "721,486,31,38",
+    "roiBack": "206,462,999,81",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"

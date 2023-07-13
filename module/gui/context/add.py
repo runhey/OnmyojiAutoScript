@@ -64,9 +64,10 @@ class Add(QObject):
         if file_path.exists():
             logger.error(f'{file_path} is exists')
             return
-        with open(template_path, 'r') as f:
+
+        with open(template_path, 'r', encoding='utf-8') as f:
             template_content = f.read()
-        with open(file_path, 'w') as f:
+        with open(file_path, 'w', encoding='utf-8') as f:
             f.write(template_content)
         logger.info(f'copy {template_path} to {file_path}')
 

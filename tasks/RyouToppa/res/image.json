@@ -1,0 +1,56 @@
+[
+  {
+    "itemName": "ryou_toppa",
+    "imageName": "res_ryou_toppa.png",
+    "roiFront": "1191,352,78,116",
+    "roiBack": "1191,352,78,116",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "寮突"
+  },
+  {
+    "itemName": "select_ryou_button",
+    "imageName": "res_select_ryou_button.png",
+    "roiFront": "560,577,156,46",
+    "roiBack": "560,577,156,46",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "寮突选择阴阳寮按钮"
+  },
+  {
+    "itemName": "start_toppa_button",
+    "imageName": "res_start_toppa_button.png",
+    "roiFront": "812,497,171,55",
+    "roiBack": "812,497,171,55",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "开始寮突按钮"
+  },
+  {
+    "itemName": "ryou_reward",
+    "imageName": "res_ryou_reward.png",
+    "roiFront": "134,417,241,40",
+    "roiBack": "134,417,241,40",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "寮击破奖励"
+  },
+  {
+    "itemName": "guild_orders_rewards",
+    "imageName": "res_guild_orders_rewards.png",
+    "roiFront": "1123,31,115,56",
+    "roiBack": "1123,31,115,56",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "勋章奖励标题"
+  },
+  {
+    "itemName": "success_penetration",
+    "imageName": "res_success_penetration.png",
+    "roiFront": "206,149,100,100",
+    "roiBack": "206,149,100,100",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "攻破阴阳寮"
+  }
+]

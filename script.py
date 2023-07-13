@@ -186,6 +186,7 @@ class Script:
         """
         # return msgpack.packb(cv2.imencode('.jpg', self.device.screenshot())[1].tobytes())
         img = cv2.cvtColor(self.device.screenshot(), cv2.COLOR_RGB2BGR)
+        self.device.stuck_record_clear()
         ret, buffer = cv2.imencode('.jpg', img)
         yield buffer.tobytes()
 
@@ -392,7 +393,7 @@ class Script:
             # Skip first restart
             if self.is_first_task and task == 'Restart':
                 logger.info('Skip task `Restart` at scheduler start')
-                self.config.task_delay(task='Restart', finish=True, success=True, server=True)
+                self.config.task_delay(task='Restart', success=True, server=True)
                 del_cached_property(self, 'config')
                 continue
 

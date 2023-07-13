@@ -19,7 +19,7 @@
   },
   {
     "itemName": "orochi_lock",
-    "imageName": "o_lock.png",
+    "imageName": "o_orochi_lock.png",
     "roiFront": "558,562,31,33",
     "roiBack": "558,562,31,33",
     "method": "Template matching",
@@ -28,7 +28,7 @@
   },
   {
     "itemName": "orochi_unlock",
-    "imageName": "o_unlock.png",
+    "imageName": "o_orochi_unlock.png",
     "roiFront": "560,564,26,29",
     "roiBack": "560,564,26,29",
     "method": "Template matching",
@@ -37,7 +37,7 @@
   },
   {
     "itemName": "orochi_fire",
-    "imageName": "o_fire.png",
+    "imageName": "o_orochi_fire.png",
     "roiFront": "1095,577,131,124",
     "roiBack": "1095,577,131,124",
     "method": "Template matching",
@@ -55,9 +55,9 @@
   },
   {
     "itemName": "orochi_matching",
-    "imageName": "o_matching.png",
-    "roiFront": "985,598,174,58",
-    "roiBack": "985,598,174,58",
+    "imageName": "o_orochi_matching.png",
+    "roiFront": "62,568,44,114",
+    "roiBack": "62,568,44,114",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"

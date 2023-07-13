@@ -1,6 +1,7 @@
 # This Python file uses the following encoding: utf-8
 # @author runhey
 # github https://github.com/runhey
+from time import sleep
 from datetime import time, datetime, timedelta
 
 from tasks.base_task import BaseTask
@@ -52,7 +53,7 @@ class ScriptTask(GeneralBattle, GeneralInvite, GeneralBuff, GeneralRoom, GameUi,
         else:
             self.set_next_run('Orochi', finish=False, success=False)
 
-        raise TaskEnd
+        # raise TaskEnd
 
 
 
@@ -149,7 +150,11 @@ class ScriptTask(GeneralBattle, GeneralInvite, GeneralBuff, GeneralRoom, GameUi,
             # 如果在探索界面或者是出现在组队界面， 那就是可能房间死了
             # 要结束任务
             if self.appear(self.I_MATCHING) or self.appear(self.I_CHECK_EXPLORATION):
-                continue
+                sleep(0.5)
+                if self.appear(self.I_MATCHING) or self.appear(self.I_CHECK_EXPLORATION):
+                    logger.warning('Orochi task failed')
+                    success = False
+                    break
             if self.current_count >= self.limit_count:
                 if self.is_in_room():
                     logger.info('Orochi count limit out')
@@ -251,7 +256,17 @@ class ScriptTask(GeneralBattle, GeneralInvite, GeneralBuff, GeneralRoom, GameUi,
         self.check_layer(layer)
         self.check_lock(self.config.orochi.general_battle_config.lock_team_enable)
 
+        def is_in_orochi(screenshot=False) -> bool:
+            if screenshot:
+                self.screenshot()
+            return self.appear(self.I_OROCHI_FIRE)
+
         while 1:
+            self.screenshot()
+
+            if not is_in_orochi():
+                continue
+
             if self.current_count >= self.limit_count:
                 logger.info('Orochi count limit out')
                 break
@@ -262,9 +277,6 @@ class ScriptTask(GeneralBattle, GeneralInvite, GeneralBuff, GeneralRoom, GameUi,
             # 点击挑战
             while 1:
                 self.screenshot()
-                if not self.appear(self.I_OROCHI_FIRE):
-                    continue
-
                 if self.appear_then_click(self.I_OROCHI_FIRE, interval=1):
                     pass
 

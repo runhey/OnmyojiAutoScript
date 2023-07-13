@@ -645,5 +645,5 @@ if __name__ == '__main__':
 
     # t.run_invite(c.orochi.invite_config, is_first=True)
     t.screenshot()
-    print(t.check_and_invite(True))
+    print(t.detect_select('我是真的天秀'))
 
