@@ -19,7 +19,7 @@ class ConfigMenu:
         # 刷御魂
         self.menu["Soul Zones"] = ['Orochi', 'Sougenbi', 'FallenSun', 'EternitySea']
         # 日常的任务
-        self.menu["Daily Task"] = ['AreaBoss', 'GoldYoukai', 'ExperienceYoukai', 'Nian', 'RealmRaid',
+        self.menu["Daily Task"] = ['AreaBoss', 'GoldYoukai', 'ExperienceYoukai', 'Nian', 'RealmRaid', 'RyouToppa',
                                    'KekkaiUtilize', 'KekkaiActivation', 'DemonEncounter']
         # 活动的任务
         self.menu["Activity Task"] = ['ActivityShikigami']
