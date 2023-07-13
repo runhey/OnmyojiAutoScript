@@ -28,7 +28,7 @@ class GameUi(BaseTask, GameUiAssets):
                 ]
     ui_close = [GameUiAssets.I_BACK_BLUE, GameUiAssets.I_BACK_YOLLOW, GameUiAssets.I_BACK_Y, GameUiAssets.I_BACK_MALL,
                 GameUiAssets.I_BACK_FRIENDS, GameUiAssets.I_BACK_DAILY, GameUiAssets.I_BACK_BL,
-                GameUiAssets.I_BONDLING_GOTO_EXPLORATION, GameUiAssets.I_REALM_RAID_GOTO_EXPLORATION, GameUiAssets.I_SIX_GATES_GOTO_EXPLORATION, GameUiAssets.page_summon_goto_main
+                GameUiAssets.I_BONDLING_GOTO_EXPLORATION, GameUiAssets.I_REALM_RAID_GOTO_EXPLORATION, GameUiAssets.I_SIX_GATES_GOTO_EXPLORATION, GameUiAssets.I_SUMMON_GOTO_MAIN
                 ]
     def home_explore(self) -> bool:
         """
