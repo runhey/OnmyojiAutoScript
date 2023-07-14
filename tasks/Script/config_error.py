@@ -2,6 +2,7 @@
 # @author runhey
 # github https://github.com/runhey
 from pydantic import BaseModel, ValidationError, validator, Field
+from tasks.Component.config_base import MultiLine
 
 from module.logger import logger
 
@@ -13,5 +14,8 @@ class Error(BaseModel):
                              description='')
     screenshot_length: int = Field(default=1,
                                    description='')
+    notify_enable: bool = Field(default=False,
+                                description='')
+    notify_config: MultiLine = Field(default='provider: null', description='notify_config_help')
 
 

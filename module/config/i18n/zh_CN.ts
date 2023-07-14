@@ -519,5 +519,11 @@ mode_3策略是刷到五个契灵后开始结契，选择高级、中级盘来�
 "1,2"表示第一个预设组，第二个队伍
 请使用英文输入法下的逗号
 预设组支持[1-7], 预设队伍支持[1-4]</translation></message>	
-</context>	
+</context>
+<context>
+    <name>Args</name>
+	<message><source>Notify Enable</source><translation>启用消息推送</translation></message>	
+	<message><source>Notify Config</source><translation>推送配置</translation></message>	
+	<message><source>notify_config_help</source><translation>输入为yaml格式，":"冒号后有一个空格，具体请翻阅文档[消息推送]</translation></message>	
+</context>		
 </TS>
