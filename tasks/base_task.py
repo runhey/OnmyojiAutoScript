@@ -71,6 +71,7 @@ class BaseTask(GlobalGameAssets):
                 # 如果是接受邀请
                 logger.info(f"Accept friend invitation")
                 while 1:
+                    self.device.screenshot()
                     if self.appear_then_click(self.I_G_ACCEPT, interval=1):
                         continue
                     if not self.appear(self.I_G_ACCEPT):
@@ -79,6 +80,7 @@ class BaseTask(GlobalGameAssets):
             elif invite and self.config.global_game.emergency.friend_invitation == FriendInvitation.REJECT:
                 logger.info(f"Reject friend invitation")
                 while 1:
+                    self.device.screenshot()
                     if self.appear_then_click(self.I_G_REJECT, interval=1):
                         continue
                     if not self.appear(self.I_G_REJECT):
@@ -87,6 +89,7 @@ class BaseTask(GlobalGameAssets):
             elif invite and self.config.global_game.emergency.friend_invitation == FriendInvitation.ONLY_JADE:
                 logger.info(f"Accept jade invitation")
                 while 1:
+                    self.device.screenshot()
                     if self.appear_then_click(self.I_G_ACCEPT, interval=1):
                         continue
                     if not self.appear(self.I_G_ACCEPT):
