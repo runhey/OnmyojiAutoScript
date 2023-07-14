@@ -121,7 +121,7 @@ class GameUi(BaseTask, GameUiAssets):
                     return page
             # Try to close unknown page
             for close in self.ui_close:
-                if self.appear_then_click(self.I_FORM_TEAM, interval=1):
+                if self.appear_then_click(close, interval=1):
                     logger.info('Trying to switch to supported page')
                     timeout = Timer(10, count=20).start()
             # Unknown page but able to handle

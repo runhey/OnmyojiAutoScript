@@ -97,5 +97,14 @@
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"
+  },
+  {
+    "itemName": "harvest_chat_close",
+    "imageName": "harvest_harvest_chat_close.png",
+    "roiFront": "639,309,35,100",
+    "roiBack": "639,309,35,100",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "打开聊天频道会自动关闭"
   }
 ]

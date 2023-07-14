@@ -117,7 +117,11 @@ class LoginHandler(BaseTask, RestartAssets):
                 timer_harvest.reset()
                 continue
             # 获得奖励
-            if self.appear_then_click(self.I_UI_AWARD, interval=1):
+            if self.appear_then_click(self.I_UI_AWARD, interval=0.2):
+                timer_harvest.reset()
+                continue
+            # 偶尔会打开到聊天频道
+            if self.appear_then_click(self.I_HARVEST_CHAT_CLOSE, interval=1):
                 timer_harvest.reset()
                 continue
 

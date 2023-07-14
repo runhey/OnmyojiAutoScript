@@ -33,6 +33,8 @@ class RestartAssets:
 	I_HARVEST_MAIL_TITLE = RuleImage(roi_front=(520,48,245,41), roi_back=(520,48,245,41), threshold=0.8, method="Template matching", file="./tasks/Restart/harvest/harvest_harvest_mail_title.png")
 	# description 
 	I_HARVEST_AP = RuleImage(roi_front=(721,486,31,38), roi_back=(206,462,999,81), threshold=0.8, method="Template matching", file="./tasks/Restart/harvest/harvest_harvest_ap.png")
+	# 打开聊天频道会自动关闭 
+	I_HARVEST_CHAT_CLOSE = RuleImage(roi_front=(639,309,35,100), roi_back=(639,309,35,100), threshold=0.8, method="Template matching", file="./tasks/Restart/harvest/harvest_harvest_chat_close.png")
 
 
 	# Image Rule Assets
