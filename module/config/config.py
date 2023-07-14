@@ -317,7 +317,10 @@ class Config(ConfigState, ConfigManual, ConfigWatcher, ConfigMenu):
 
     @cached_property
     def notifier(self):
-        return Notifier(self.model.script.error.notify_config)
+        notifier = Notifier(self.model.script.error.notify_config, enable=self.model.script.error.notify_enable)
+        notifier.config_name = self.config_name.upper()
+        logger.info(f'Notifier: {notifier.config_name}')
+        return notifier
 
 if __name__ == '__main__':
     config = Config(config_name='oas1')

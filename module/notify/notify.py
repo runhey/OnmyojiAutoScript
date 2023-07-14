@@ -15,7 +15,12 @@ onepush.core.log = logger
 
 
 class Notifier:
-    def __init__(self, _config: str) -> None:
+    def __init__(self, _config: str, enable: bool=False) -> None:
+        self.config_name: str = ""
+        self.enable: bool = enable
+
+        if not self.enable:
+            return
         try:
             config = {}
             for item in yaml.safe_load_all(_config):
@@ -42,14 +47,18 @@ class Notifier:
             return
 
     def push(self, **kwargs) -> bool:
+        if not self.enable:
+            return False
         # 更新配置
+        kwargs["title"] = f"{self.config_name} {kwargs['title']}"
         self.config.update(kwargs)
         # pre check
         for key in self.required:
             if key not in self.config:
                 logger.warning(
-                    f"Notifier {self.notifier.name} require param '{key}' but not provided"
+                    f"Notifier {self.notifier} require param '{key}' but not provided"
                 )
+
 
         if isinstance(self.notifier, Custom):
             if "method" not in self.config or self.config["method"] == "post":
