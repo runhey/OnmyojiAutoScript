@@ -69,8 +69,6 @@ class Script:
             logger.exception(e)
             exit(1)
 
-
-
     @cached_property
     def checker(self):
         """

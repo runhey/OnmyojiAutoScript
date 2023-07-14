@@ -11,69 +11,86 @@ from onepush.providers.custom import Custom
 from requests import Response
 
 from module.logger import logger
-
 onepush.core.log = logger
 
 
-def handle_notify(_config: str, **kwargs) -> bool:
-    try:
-        config = {}
-        for item in yaml.safe_load_all(_config):
-            config.update(item)
-    except Exception:
-        logger.error("Fail to load onepush config, skip sending")
-        return False
-    try:
-        provider_name: str = config.pop("provider", None)
-        if provider_name is None:
-            logger.info("No provider specified, skip sending")
-            return False
-        notifier: Provider = get_notifier(provider_name)
-        required: list[str] = notifier.params["required"]
-        config.update(kwargs)
+class Notifier:
+    def __init__(self, _config: str) -> None:
+        try:
+            config = {}
+            for item in yaml.safe_load_all(_config):
+                config.update(item)
+        except Exception:
+            logger.error("Fail to load onepush config, skip sending")
+            return
+        self.config = config
+        try:
+            # 获取provider
+            self.provider_name: str = self.config.pop("provider", None)
+            if self.provider_name is None:
+                logger.info("No provider specified, skip sending")
+                return
+            # 获取notifier
+            self.notifier: Provider = get_notifier(self.provider_name)
+            # 获取notifier的必填参数
+            self.required: list[str] = self.notifier.params["required"]
+        except OnePushException:
+            logger.exception("Init notifier failed")
+            return
+        except Exception as e:
+            logger.exception(e)
+            return
 
+    def push(self, **kwargs) -> bool:
+        # 更新配置
+        self.config.update(kwargs)
         # pre check
-        for key in required:
-            if key not in config:
+        for key in self.required:
+            if key not in self.config:
                 logger.warning(
-                    f"Notifier {notifier.name} require param '{key}' but not provided"
+                    f"Notifier {self.notifier.name} require param '{key}' but not provided"
                 )
 
-        if isinstance(notifier, Custom):
-            if "method" not in config or config["method"] == "post":
-                config["datatype"] = "json"
-            if not ("data" in config or isinstance(config["data"], dict)):
-                config["data"] = {}
+        if isinstance(self.notifier, Custom):
+            if "method" not in self.config or self.config["method"] == "post":
+                self.config["datatype"] = "json"
+            if not ("data" in self.config or isinstance(self.config["data"], dict)):
+                self.config["data"] = {}
             if "title" in kwargs:
-                config["data"]["title"] = kwargs["title"]
+                self.config["data"]["title"] = kwargs["title"]
             if "content" in kwargs:
-                config["data"]["content"] = kwargs["content"]
+                self.config["data"]["content"] = kwargs["content"]
 
-        if provider_name.lower() == "gocqhttp":
-            access_token = config.get("access_token")
+        if self.provider_name.lower() == "gocqhttp":
+            access_token = self.config.get("access_token")
             if access_token:
-                config["token"] = access_token
+                self.config["token"] = access_token
 
-        resp = notifier.notify(**config)
-        if isinstance(resp, Response):
-            if resp.status_code != 200:
-                logger.warning("Push notify failed!")
-                logger.warning(f"HTTP Code:{resp.status_code}")
-                return False
-            else:
-                if provider_name.lower() == "gocqhttp":
-                    return_data: dict = resp.json()
-                    if return_data["status"] == "failed":
-                        logger.warning("Push notify failed!")
-                        logger.warning(
-                            f"Return message:{return_data['wording']}")
-                        return False
-    except OnePushException:
-        logger.exception("Push notify failed")
-        return False
-    except Exception as e:
-        logger.exception(e)
-        return False
 
-    logger.info("Push notify success")
-    return True
+        try:
+            resp = self.notifier.notify(**self.config)
+            if isinstance(resp, Response):
+                if resp.status_code != 200:
+                    logger.warning("Push notify failed!")
+                    logger.warning(f"HTTP Code:{resp.status_code}")
+                    return False
+                else:
+                    if self.provider_name.lower() == "gocqhttp":
+                        return_data: dict = resp.json()
+                        if return_data["status"] == "failed":
+                            logger.warning("Push notify failed!")
+                            logger.warning(
+                                f"Return message:{return_data['wording']}")
+                            return False
+        except OnePushException:
+            logger.exception("Push notify failed")
+            return False
+        except Exception as e:
+            logger.exception(e)
+            return False
+
+        logger.info("Push notify success")
+        return True
+
+
+
