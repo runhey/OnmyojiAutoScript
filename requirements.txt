@@ -4,8 +4,6 @@
 #
 #    pip-compile --annotation-style=line --output-file=requirements.txt requirements-in.txt
 #
---index-url https://pypi.tuna.tsinghua.edu.cn/simple
---trusted-host pypi.tuna.tsinghua.edu.cn
 
 adbutils==0.11.0          # via -r requirements-in.txt, uiautomator2
 anytree==2.8.0            # via -r requirements-in.txt

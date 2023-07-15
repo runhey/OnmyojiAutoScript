@@ -12,9 +12,18 @@ from tasks.Component.ReplaceShikigami.assets import ReplaceShikigamiAssets
 
 class ReplaceShikigami(BaseTask, ReplaceShikigamiAssets):
 
-    def run_replace(self, shikigami_class: ShikigamiClass = ShikigamiClass.N, shikigami_order: int = 7):
+
+    def in_shikigami_growth(self, screenshot=False) -> bool:
+        # 判定是否在式神育成界面
+        # 判定的依据是是否出现了 式神录 这个图片
+        if screenshot:
+            self.screenshot()
+        return self.appear(self.I_RS_RECORDS_SHIKI, interval=0.5)
+
+    def switch_shikigami_class(self, shikigami_class: ShikigamiClass = ShikigamiClass.N):
         """
         要求在式神育成的界面
+        切换分类
         :param shikigami_class:
         :param shikigami_order:
         :return:
@@ -45,4 +54,42 @@ class ReplaceShikigami(BaseTask, ReplaceShikigamiAssets):
                 continue
         logger.info('Select shikigami class: %s' % shikigami_class)
 
-        #
+    def unset_shikigami_max_lv(self):
+        """
+        要求在式神育成的界面
+        拉下满级的式神，留空位置
+        :return:
+        """
+        while 1:
+            self.screenshot()
+            if not self.appear(self.I_RS_LEVEL_MAX):
+                break
+            else:
+                self.appear_then_click(self.I_RS_LEVEL_MAX, interval=0.5)
+        logger.info('Unset all shikigami max lv')
+
+    def set_shikigami(self, shikigami_order: int = 7, stop_image: RuleImage = None):
+        """
+        要求在式神育成的界面
+        选择式神 1-7
+        :param stop_image:  结束的图片，如果不出现就结束
+        :param shikigami_order:
+        :return:
+        """
+        # 选择式神
+        click_match = {1: self.C_SHIKIGAMI_LEFT_1,
+                       2: self.C_SHIKIGAMI_LEFT_2,
+                       3: self.C_SHIKIGAMI_LEFT_3,
+                       4: self.C_SHIKIGAMI_LEFT_4,
+                       5: self.C_SHIKIGAMI_LEFT_5,
+                       6: self.C_SHIKIGAMI_LEFT_6,
+                       7: self.C_SHIKIGAMI_LEFT_7}
+        click_match = click_match[shikigami_order]
+        while 1:
+            self.screenshot()
+
+            if not self.appear(stop_image):
+                break
+            if self.click(click_match, interval=1.5):
+                continue
+        logger.info('Set shikigami: %d' % shikigami_order)
