@@ -22,7 +22,18 @@ class Utils(QObject):
         """
         return datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
-
+    @Slot(str, str, str, result="QString")
+    def test_notify(self, _config: str, title: str, content: str) -> bool:
+        from module.notify.notify import Notifier
+        try:
+            notifier = Notifier(_config)
+            if notifier.push(title=title, content=content):
+                return "true"
+            else:
+                return "false"
+        except Exception as e:
+            logger.exception(e)
+            return "false"
 
 
 

@@ -106,6 +106,14 @@ Item {
                         return
                     }
                 }
+                else if(arg.type === "multi_line"){
+                    object = multi_line_item.createObject(group_column)
+                    if(object === null){
+                        console.error("can not create component multi_line_item", arg.title)
+                        return
+                    }
+                }
+
 
                 if(object === null){
                     console.error("can not create component ", arg.title)
@@ -452,7 +460,83 @@ Item {
             }
         }
     }
+    Component{
+        id: multi_line_item
+        Item{
+            id: multiLineItem
+            property var modelData: null
+            width: parent.width
+            implicitHeight: string_title.implicitHeight + string_description.implicitHeight
+            height: if(string_text.height > (string_title.implicitHeight + string_description.implicitHeight)){
+                        return string_text.height
+                    }else{
+                        return string_title.implicitHeight + string_description.implicitHeight
+                    }
 
+            Layout.fillHeight: true
+            FluMultilineTextBox{
+                id: string_text
+                anchors{
+                    top: parent.top
+                    topMargin: 2
+                    right: parent.right
+                }
+                placeholderText: ""
+                onEditingFinished: {
+                    if(set_task(multiLineItem.parent.parent.parent.groupName, modelData.name, text)){
+                        showSuccess( qsTr("Successful setting"))
+                    }
+                }
+//                onTextChanged: {
+//                    if(set_task(multiLineItem.parent.parent.parent.groupName, modelData.name, text)){
+//                        showSuccess( qsTr("Successful setting"))
+//                    }
+//                }
+            }
+
+            FluText{
+                // 设置的名称
+                id: string_title
+                anchors{
+                    top: parent.top
+                    left: parent.left
+                    right: string_text.left
+                }
+                text: ""
+                font: FluTextStyle.BodyStrong
+                wrapMode: Text.WrapAnywhere
+                topPadding: 6
+            }
+            FluText{
+                //描述
+                id: string_description
+                anchors{
+                    top: string_title.bottom
+                    left: parent.left
+                }
+                width: string_title.width
+                text: ""
+                font: FluTextStyle.Caption
+                wrapMode: Text.WordWrap
+                topPadding: 6
+                rightPadding: 6
+            }
+            onModelDataChanged: {
+                if(modelData === null){
+                    console.error("string model is null")
+                    return
+                }
+                string_text.text = modelData.value
+                string_text.placeholderText = modelData["default"]
+
+                string_title.text = qsTr(modelData.title)
+                if( typeof modelData.description === 'undefined'){
+                    return
+                }
+                string_description.text = qsTr(modelData.description.replace("\\n","\n"))
+            }
+        }
+    }
     onArgsDataChanged: {
 
     }

@@ -124,5 +124,14 @@
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"
+  },
+  {
+    "itemName": "rs_level_max",
+    "imageName": "rs_rs_level_max.png",
+    "roiFront": "487,248,23,21",
+    "roiBack": "52,238,1118,37",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "检测到已经满级了"
   }
 ]

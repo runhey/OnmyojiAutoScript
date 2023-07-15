@@ -28,6 +28,14 @@ class GeneralBuff(BaseTask, GeneralBuffAssets):
             if self.appear_then_click(self.I_BUFF_1, interval=2):
                 continue
 
+        check_image = self.I_AWAKE
+        while 1:
+            self.screenshot()
+            if self.appear(check_image):
+                break
+
+            self.swipe(self.S_BUFF_UP, interval=2)
+
     def close_buff(self):
         """
         关闭buff的总界面, 但是要确保buff界面已经打开了
@@ -281,10 +289,10 @@ if __name__ == '__main__':
     t = GeneralBuff(c, d)
 
     t.open_buff()
-    t.screenshot()
-
-    t.awake(is_open=True)
-    t.soul(is_open=True)
+    # t.screenshot()
+    #
+    # t.awake(is_open=True)
+    # t.soul(is_open=True)
     # t.gold_50(is_open=False)
     # t.gold_100(is_open=False)
     # t.exp_50(is_open=False)

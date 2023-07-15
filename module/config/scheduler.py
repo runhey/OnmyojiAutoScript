@@ -26,7 +26,7 @@ class TaskScheduler:
         :param pending:
         :return:
         """
-        if isinstance(rule, ScheduleRule) is False:
+        if rule != ScheduleRule.FILTER and rule != ScheduleRule.FIFO and rule != ScheduleRule.PRIORITY:
             logger.error(f"Invalid rule: {rule}")
             return pending
         if isinstance(pending, list) is False:

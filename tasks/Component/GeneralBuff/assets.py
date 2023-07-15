@@ -44,3 +44,8 @@ class GeneralBuffAssets:
 	O_EXP_100 = RuleOcr(roi=(421,127,342,388), area=(0,0,100,100), mode="Full", method="Default", keyword="战斗胜利获得的经验增加100%", name="exp_100")
 
 
+	# Swipe Rule Assets
+	# description 
+	S_BUFF_UP = RuleSwipe(roi_front=(397,124,456,35), roi_back=(447,457,386,37), mode="default", name="buff_up")
+
+

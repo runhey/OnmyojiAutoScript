@@ -1,9 +1,12 @@
 # This Python file uses the following encoding: utf-8
 # @author runhey
 # github https://github.com/runhey
-
+from typing import Any
+from collections.abc import Callable, Generator
 from datetime import timedelta
+
 from pydantic import BaseModel, datetime_parse
+from pydantic.fields import ModelField
 
 
 
@@ -26,5 +29,22 @@ class ConfigBase(BaseModel):
             TimeDelta: format_timedelta
         }
 
+
+
+class MultiLine(str):
+    # @classmethod
+    # def __get_validators__(cls) -> Generator[Callable, None, None]:
+    #     yield cls.validate
+    #
+    # @classmethod
+    # def validate(cls, value: str, field: ModelField):
+    #     return cls(value)
+
+    @classmethod
+    def __modify_schema__(
+        cls, field_schema: dict[str, Any], field: ModelField | None
+    ):
+        if field:
+            field_schema['type'] = 'multi_line'
 
 

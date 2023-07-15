@@ -7,6 +7,7 @@ import operator
 import threading
 
 from datetime import datetime
+from cached_property import cached_property
 
 from module.base.filter import Filter
 from module.config.config_updater import ConfigUpdater
@@ -17,6 +18,7 @@ from module.config.config_model import ConfigModel
 from module.config.config_state import ConfigState
 from module.config.scheduler import TaskScheduler
 from module.config.utils import *
+from module.notify.notify import Notifier
 
 from module.exception import RequestHumanTakeover, ScriptError
 from module.logger import logger
@@ -312,6 +314,13 @@ class Config(ConfigState, ConfigManual, ConfigWatcher, ConfigMenu):
         logger.attr(f'{task}.scheduler.next_run', next_run)
         scheduler.next_run = next_run
         self.save()
+
+    @cached_property
+    def notifier(self):
+        notifier = Notifier(self.model.script.error.notify_config, enable=self.model.script.error.notify_enable)
+        notifier.config_name = self.config_name.upper()
+        logger.info(f'Notifier: {notifier.config_name}')
+        return notifier
 
 if __name__ == '__main__':
     config = Config(config_name='oas1')

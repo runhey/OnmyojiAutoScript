@@ -53,7 +53,7 @@ class ScriptTask(GeneralBattle, GeneralInvite, GeneralBuff, GeneralRoom, GameUi,
         else:
             self.set_next_run('Orochi', finish=False, success=False)
 
-        raise TaskEnd
+        # raise TaskEnd
 
 
 
@@ -264,15 +264,15 @@ class ScriptTask(GeneralBattle, GeneralInvite, GeneralBuff, GeneralRoom, GameUi,
         while 1:
             self.screenshot()
 
+            if not is_in_orochi():
+                continue
+
             if self.current_count >= self.limit_count:
                 logger.info('Orochi count limit out')
                 break
             if datetime.now() - self.start_time >= self.limit_time:
                 logger.info('Orochi time limit out')
                 break
-
-            if not is_in_orochi():
-                continue
 
             # 点击挑战
             while 1:
