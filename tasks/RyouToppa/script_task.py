@@ -52,7 +52,7 @@ class ScriptTask(GeneralBattle, GameUi, RyouToppaAssets):
                 ryou_toppa_start_flag = True
                 break
 
-        # 寮突未开 并且有权限， 开开寮突
+        # 寮突未开 并且有权限， 开开寮突1
         if not ryou_toppa_start_flag and config.raid_config.ryou_access == 'yes':
             # 开寮突
             self.start_ryou_toppa()
