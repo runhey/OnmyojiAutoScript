@@ -225,7 +225,7 @@ class Window(Handle):
             handleNum = self.control_handle_list[1]
         elif emulator_type > 2:  # 夜神模拟器
             handleNum = self.control_handle_list[3]
-        PostMessage(handleNum, WM_ACTIVATE, WA_ACTIVE, 0)  # 激活窗口
+        # PostMessage(handleNum, WM_ACTIVATE, WA_ACTIVE, 0)  # 激活窗口
         # 先移动到第一个点
         tmpPos = MAKELONG(trace[0][0], trace[0][1])
         SendMessage(handleNum, WM_NCHITTEST, 0, tmpPos)

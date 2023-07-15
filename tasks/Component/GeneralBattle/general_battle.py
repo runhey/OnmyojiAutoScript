@@ -266,10 +266,11 @@ class GeneralBattle(BaseTask, GeneralBattleAssets):
         # 点击预设按钮
         while 1:
             self.screenshot()
-            if self.appear_then_click(self.I_PRESET, threshold=0.8):
-                continue
+
             if self.appear(self.I_PRESET_ENSURE):
                 break
+            if self.appear_then_click(self.I_PRESET, threshold=0.8, interval=1):
+                continue
         logger.info("Click preset button")
 
         # 选择预设组

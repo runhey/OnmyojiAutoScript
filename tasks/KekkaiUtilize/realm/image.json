@@ -1,0 +1,92 @@
+[
+  {
+    "itemName": "shi_grown",
+    "imageName": "realm_shi_grown.png",
+    "roiFront": "595,291,35,38",
+    "roiBack": "540,264,155,167",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "育成"
+  },
+  {
+    "itemName": "shi_card",
+    "imageName": "realm_shi_card.png",
+    "roiFront": "886,290,44,56",
+    "roiBack": "806,271,183,128",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "结界卡"
+  },
+  {
+    "itemName": "shi_defense",
+    "imageName": "realm_shi_defense.png",
+    "roiFront": "294,298,49,56",
+    "roiBack": "255,262,131,146",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "card_exp",
+    "imageName": "realm_card_exp.png",
+    "roiFront": "889,151,57,54",
+    "roiBack": "863,118,124,121",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "收取经验（没有满的图）"
+  },
+  {
+    "itemName": "box_ap",
+    "imageName": "realm_box_ap.png",
+    "roiFront": "815,435,57,51",
+    "roiBack": "778,411,130,100",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "收取体力（没有满）"
+  },
+  {
+    "itemName": "box_exp",
+    "imageName": "realm_box_exp.png",
+    "roiFront": "894,433,50,55",
+    "roiBack": "866,407,100,100",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "收取盒子的经验（没有满）"
+  },
+  {
+    "itemName": "realm_shin",
+    "imageName": "realm_realm_shin.png",
+    "roiFront": "175,460,54,58",
+    "roiBack": "147,443,100,100",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "结界皮肤"
+  },
+  {
+    "itemName": "utilize_exp",
+    "imageName": "realm_utilize_exp.png",
+    "roiFront": "583,144,58,43",
+    "roiBack": "531,112,156,123",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "寄养别人的经验"
+  },
+  {
+    "itemName": "ap_extract",
+    "imageName": "realm_ap_extract.png",
+    "roiFront": "592,501,100,75",
+    "roiBack": "592,501,100,75",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "取出"
+  },
+  {
+    "itemName": "exp_extract",
+    "imageName": "realm_exp_extract.png",
+    "roiFront": "592,448,100,73",
+    "roiBack": "592,448,100,73",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "提取"
+  }
+]

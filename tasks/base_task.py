@@ -437,4 +437,26 @@ class BaseTask(GlobalGameAssets):
         """
         if screenshot:
             self.screenshot()
-        return self.appear_then_click(self.I_UI_REWARD, action=self.C_UI_REWARD, interval=1)
+        return self.appear_then_click(self.I_UI_REWARD, action=self.C_UI_REWARD, interval=0.4, threshold=0.6)
+
+    def ui_get_reward(self, click_image: RuleImage):
+        """
+        传进来一个点击图片， 会点击这个图片，然后等待‘获得奖励’，
+        最后当获得奖励消失后 退出
+        :param click_image:
+        :return:
+        """
+        while 1:
+            self.screenshot()
+
+            if self.ui_reward_appear_click():
+                while 1:
+                    # 等待动画结束
+                    if not self.appear(self.I_UI_REWARD):
+                        break
+                break
+
+            if self.appear_then_click(click_image, interval=0.8):
+                continue
+
+        return True
