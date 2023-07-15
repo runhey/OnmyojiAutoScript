@@ -52,14 +52,5 @@
     "method": "Template matching",
     "threshold": 0.8,
     "description": "攻破阴阳寮"
-  },
-  {
-    "itemName": "real_raid_refresh",
-    "imageName": "res_real_raid_refresh.png",
-    "roiFront": "963,569,174,60",
-    "roiBack": "963,569,174,60",
-    "method": "Template matching",
-    "threshold": 0.8,
-    "description": "个人突破刷新按钮"
   }
 ]
