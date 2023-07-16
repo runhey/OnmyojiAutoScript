@@ -1,0 +1,11 @@
+[
+  {
+    "itemName": "number",
+    "roiFront": "271,560,48,31",
+    "roiBack": "271,560,48,31",
+    "mode": "DigitCounter",
+    "method": "Default",
+    "keyword": "",
+    "description": "寮突破进攻机会数"
+  }
+]
