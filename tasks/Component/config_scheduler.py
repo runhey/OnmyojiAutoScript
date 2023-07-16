@@ -45,7 +45,9 @@ class Scheduler(ConfigBase):
 
 
 if __name__ == "__main__":
-    s = Scheduler(success_interval='1 2:3:4')
+    s = Scheduler(success_interval='00 00:00:10')
+    if isinstance(s.success_interval, TimeDelta):
+        print(s.success_interval.seconds)
     print(s.json())
     print(s.dict())
 

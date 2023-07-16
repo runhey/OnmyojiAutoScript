@@ -6,7 +6,7 @@ import datetime
 import operator
 import threading
 
-from datetime import datetime
+from datetime import datetime, timedelta
 from cached_property import cached_property
 
 from module.base.filter import Filter
@@ -22,6 +22,8 @@ from module.notify.notify import Notifier
 
 from module.exception import RequestHumanTakeover, ScriptError
 from module.logger import logger
+
+
 
 
 
@@ -276,6 +278,8 @@ class Config(ConfigState, ConfigManual, ConfigWatcher, ConfigMenu):
                 if success
                 else scheduler.failure_interval
             )
+            if isinstance(interval, str):
+                interval = timedelta(interval)
             run.append(start_time + interval)
         # if server is not None:
         #     if server:
