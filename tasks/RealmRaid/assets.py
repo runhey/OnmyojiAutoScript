@@ -49,6 +49,8 @@ class RealmRaidAssets:
 	I_MEDAL_5_FROG = RuleImage(roi_front=(903,479,201,49), roi_back=(189,182,967,376), threshold=0.8, method="Template matching", file="./tasks/RealmRaid/res/res_medal_5_frog.png")
 	# 3徽章新图2号 
 	I_MEDAL_3_2 = RuleImage(roi_front=(575,489,188,32), roi_back=(575,489,188,32), threshold=0.8, method="Template matching", file="./tasks/RealmRaid/res/res_medal_3_2.png")
+	# description 
+	I_MEDAL_3_3 = RuleImage(roi_front=(902,479,201,50), roi_back=(902,479,201,50), threshold=0.8, method="Template matching", file="./tasks/RealmRaid/res/res_medal_3_3.png")
 
 
 	# Ocr Rule Assets

@@ -2,10 +2,10 @@
   {
     "itemName": "kekkai_toppa",
     "imageName": "page_kekkai_toppa.png",
-    "roiFront": "570,76,129,40",
-    "roiBack": "570,76,129,40",
+    "roiFront": "1065,3,203,61",
+    "roiBack": "1065,3,203,61",
     "method": "Template matching",
     "threshold": 0.8,
-    "description": "结界突破文字"
+    "description": "寮结界突破右上角"
   }
 ]

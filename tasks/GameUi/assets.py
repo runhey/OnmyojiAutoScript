@@ -162,8 +162,8 @@ class GameUiAssets:
 
 
 	# Image Rule Assets
-	# 结界突破文字 
-	I_KEKKAI_TOPPA = RuleImage(roi_front=(570,76,129,40), roi_back=(570,76,129,40), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_kekkai_toppa.png")
+	# 寮结界突破右上角 
+	I_KEKKAI_TOPPA = RuleImage(roi_front=(1065,3,203,61), roi_back=(1065,3,203,61), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_kekkai_toppa.png")
 
 
 	# Image Rule Assets

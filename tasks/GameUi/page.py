@@ -1,6 +1,7 @@
 import traceback
 
 from tasks.GameUi.assets import GameUiAssets as G
+from tasks.RyouToppa.assets import RyouToppaAssets
 
 
 class Page:
@@ -59,10 +60,10 @@ page_exploration.link(button=G.I_EXPLORATION_GOTO_SOUL_ZONE, destination=page_so
 page_realm_raid = Page(G.I_CHECK_REALM_RAID)
 page_realm_raid.link(button=G.I_REALM_RAID_GOTO_EXPLORATION, destination=page_exploration)
 page_exploration.link(button=G.I_EXPLORATION_GOTO_REALM_RAID, destination=page_realm_raid)
-# 结界突破上方文字 kekkai toppa
+# 寮结界突破右上角 kekkai toppa
 page_kekkai_toppa = Page(G.I_KEKKAI_TOPPA)
 page_kekkai_toppa.link(button=G.I_REALM_RAID_GOTO_EXPLORATION, destination=page_exploration)
-page_exploration.link(button=G.I_EXPLORATION_GOTO_REALM_RAID, destination=page_kekkai_toppa)
+page_realm_raid.link(button=RyouToppaAssets.I_RYOU_TOPPA, destination=page_kekkai_toppa)
 # 御灵 goryou realm
 page_goryou_realm = Page(G.I_CHECK_GORYOU)
 page_goryou_realm.link(button=G.I_BACK_BLUE, destination=page_exploration)

@@ -169,5 +169,14 @@
     "method": "Template matching",
     "threshold": 0.8,
     "description": "3徽章新图2号"
+  },
+  {
+    "itemName": "medal_3_3",
+    "imageName": "res_medal_3_3.png",
+    "roiFront": "902,479,201,50",
+    "roiBack": "902,479,201,50",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
   }
 ]
