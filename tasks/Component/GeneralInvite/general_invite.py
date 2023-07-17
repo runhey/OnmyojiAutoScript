@@ -197,11 +197,13 @@ class GeneralInvite(BaseTask, GeneralInviteAssets):
         logger.info('Exit room')
         while 1:
             self.screenshot()
-            if not self.is_in_room():
+            if not self.is_in_room() and \
+                    not self.appear_then_click(self.I_GI_SURE, interval=0.5) and \
+                    not self.appear(self.I_BACK_YELLOW):
                 break
             if self.appear_then_click(self.I_GI_SURE, interval=0.5):
                 continue
-            if self.appear_then_click(self.I_BACK_YELLOW, interval=0.5):
+            if not self.appear(self.I_GI_SURE) and self.appear_then_click(self.I_BACK_YELLOW, interval=0.5):
                 continue
         return True
 
