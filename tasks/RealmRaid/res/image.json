@@ -14,7 +14,7 @@
     "roiFront": "238,205,212,53",
     "roiBack": "216,187,919,364",
     "method": "Template matching",
-    "threshold": 0.9,
+    "threshold": 0.8,
     "description": "五个勋章"
   },
   {
@@ -23,7 +23,7 @@
     "roiFront": "241,483,193,46",
     "roiBack": "228,178,899,362",
     "method": "Template matching",
-    "threshold": 0.9,
+    "threshold": 0.8,
     "description": "description"
   },
   {
@@ -32,7 +32,7 @@
     "roiFront": "240,210,193,41",
     "roiBack": "229,189,894,345",
     "method": "Template matching",
-    "threshold": 0.9,
+    "threshold": 0.8,
     "description": "description"
   },
   {
@@ -41,7 +41,7 @@
     "roiFront": "572,478,198,48",
     "roiBack": "217,193,923,354",
     "method": "Template matching",
-    "threshold": 0.9,
+    "threshold": 0.8,
     "description": "description"
   },
   {
@@ -50,7 +50,7 @@
     "roiFront": "570,206,199,52",
     "roiBack": "237,198,892,336",
     "method": "Template matching",
-    "threshold": 0.9,
+    "threshold": 0.8,
     "description": "description"
   },
   {
@@ -59,7 +59,7 @@
     "roiFront": "510,336,202,51",
     "roiBack": "231,200,898,336",
     "method": "Template matching",
-    "threshold": 0.9,
+    "threshold": 0.8,
     "description": "没有勋章的"
   },
   {
