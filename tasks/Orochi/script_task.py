@@ -233,12 +233,7 @@ class ScriptTask(GeneralBattle, GeneralInvite, GeneralBuff, GeneralRoom, GameUi,
                 else:
                     break
             # 队长秒开的时候，检测是否进入到战斗中
-            elif self.appear(self.I_PREPARE_HIGHLIGHT) or \
-                    self.appear(self.I_PRESET) or \
-                    self.appear(self.I_LOCAL) or \
-                    self.appear(self.I_WIN) or \
-                    self.appear(self.I_FALSE) or \
-                    self.appear(self.I_REWARD):
+            elif self.is_in_battle():
                 self.run_general_battle(config=self.config.orochi.general_battle_config)
 
         while 1:
