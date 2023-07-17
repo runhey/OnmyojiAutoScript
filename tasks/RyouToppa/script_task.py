@@ -6,7 +6,7 @@ import time
 from tasks.RyouToppa.assets import RyouToppaAssets
 from tasks.Component.GeneralBattle.general_battle import GeneralBattle
 from tasks.GameUi.game_ui import GameUi
-from tasks.GameUi.page import page_realm_raid, page_main
+from tasks.GameUi.page import page_realm_raid, page_main, page_kekkai_toppa
 from tasks.RealmRaid.assets import RealmRaidAssets
 from module.logger import logger
 from module.exception import TaskEnd
@@ -27,7 +27,7 @@ class ScriptTask(GeneralBattle, GameUi, RyouToppaAssets):
         self.medal_grid = ImageGrid([RealmRaidAssets.I_MEDAL_5, RealmRaidAssets.I_MEDAL_4, RealmRaidAssets.I_MEDAL_3,
                                      RealmRaidAssets.I_MEDAL_2, RealmRaidAssets.I_MEDAL_1, RealmRaidAssets.I_MEDAL_0])
         self.ui_get_current_page()
-        self.ui_goto(page_realm_raid)
+        self.ui_goto(page_kekkai_toppa)
         ryou_toppa_start_flag = True
         # 点击突破
         while 1:
@@ -191,7 +191,7 @@ class ScriptTask(GeneralBattle, GameUi, RyouToppaAssets):
         #     self.run_general_battle_back(config.general_battle_config)
 
         # 打20次
-        for i in range(20):
+        for i in range(30):
             if not self.is_ticket():
                 return False
             if not self.is_target_available():

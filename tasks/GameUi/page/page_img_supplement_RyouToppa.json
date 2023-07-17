@@ -1,0 +1,11 @@
+[
+  {
+    "itemName": "kekkai_toppa",
+    "imageName": "page_kekkai_toppa.png",
+    "roiFront": "570,76,129,40",
+    "roiBack": "570,76,129,40",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "结界突破文字"
+  }
+]
