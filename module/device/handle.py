@@ -372,7 +372,7 @@ class Handle:
         scale_rate = window_scale_rate()
         width_before: int = winRect[2] - winRect[0]  # 右x-左x
         height_before: int = winRect[3] - winRect[1]  # 下y - 上y 计算高度
-        width, height = None, None
+        width, height = width_before, height_before
         if abs((width_before * scale_rate) - 1280) < 5:
             width = 1280
         if abs((height_before * scale_rate) - 720) < 5:

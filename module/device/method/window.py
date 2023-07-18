@@ -11,10 +11,12 @@ from cached_property import cached_property
 from win32gui import (GetWindowText, EnumWindows, FindWindow, FindWindowEx,
                       IsWindow, GetWindowRect, GetWindowDC, DeleteObject,
                       SetForegroundWindow, IsWindowVisible, GetDC, GetParent,
-                      EnumChildWindows)
+                      EnumChildWindows, SetForegroundWindow)
 from win32con import (SRCCOPY, DESKTOPHORZRES, DESKTOPVERTRES, WM_LBUTTONUP,
                       WM_LBUTTONDOWN, WM_ACTIVATE, WA_ACTIVE, MK_LBUTTON,
-                      WM_NCHITTEST, WM_SETCURSOR, HTCLIENT, WM_MOUSEMOVE)
+                      WM_NCHITTEST, WM_SETCURSOR, HTCLIENT, WM_MOUSEMOVE,
+                      WM_PARENTNOTIFY, WM_MOUSEACTIVATE, WM_MOUSEWHEEL,
+                      WM_SETFOCUS)
 from win32ui import CreateDCFromHandle, CreateBitmap
 from win32api import GetSystemMetrics, SendMessage, MAKELONG, PostMessage
 from win32con import SRCCOPY
@@ -202,8 +204,8 @@ class Window(Handle):
         :return:
         """
         # 生成的坐标点列表
-        interval: int = 8  # 每次移动的间隔时间
-        numberList: int = int(dist(startPos, endPos) / (1.5 * interval))  # 表示每毫秒移动1.5个像素点， 总的时间除以每个点10ms就得到总的点的个数
+        interval: int = 10  # 每次移动的间隔时间
+        numberList: int = int(dist(startPos, endPos) / (1 * interval))  # 表示每毫秒移动1.5个像素点， 总的时间除以每个点10ms就得到总的点的个数
         le = random.randint(2, 4)  #
         deviation = random.randint(20, 40)  # 幅度
         _type: int = 3
@@ -218,38 +220,44 @@ class Window(Handle):
                                                   deviation=deviation, bias=0.5, type=_type, cbb=0, yhh=20)
 
         # 使用生成的点列表进行拖拽
-        emulator_type = len(self.control_handle_list)
-        if emulator_type == 1:  # 雷电模拟器
-            handleNum = self.control_handle_list[0]
-        elif emulator_type == 2:  # mumu模拟器
+        handleNum = None
+        if self.emulator_family == EmulatorFamily.FAMILY_MUMU:  # mumu模拟器
             handleNum = self.control_handle_list[1]
-        elif emulator_type > 2:  # 夜神模拟器
+        elif self.emulator_family == EmulatorFamily.FAMILY_NOX:  # 夜神模拟器
             handleNum = self.control_handle_list[3]
-        # PostMessage(handleNum, WM_ACTIVATE, WA_ACTIVE, 0)  # 激活窗口
+        elif self.emulator_family == EmulatorFamily.FAMILY_LD:  # 雷电模拟器
+            handleNum = self.control_handle_list[0]
+
+        # 激活窗口
+        # SendMessage(self.control_handle_list[0], WM_PARENTNOTIFY, WM_LBUTTONDOWN, tmpPos)
+        # SendMessage(self.control_handle_list[0], WM_MOUSEACTIVATE, WM_LBUTTONDOWN, tmpPos)
+        # PostMessage(handleNum, WM_ACTIVATE, WA_ACTIVE, 0)
+
         # 先移动到第一个点
         tmpPos = MAKELONG(trace[0][0], trace[0][1])
         SendMessage(handleNum, WM_NCHITTEST, 0, tmpPos)
         SendMessage(handleNum, WM_SETCURSOR, handleNum, MAKELONG(HTCLIENT, WM_LBUTTONDOWN))
-        PostMessage(handleNum, WM_LBUTTONDOWN, MK_LBUTTON, tmpPos)
+        PostMessage(handleNum, WM_LBUTTONDOWN, 0, tmpPos)
+
         # 一点一点移动鼠标
-        for pos in trace[:-3]:
-            tmpPos = MAKELONG(pos[0], pos[1])
-            PostMessage(handleNum, WM_MOUSEMOVE, MK_LBUTTON, tmpPos)
-            time.sleep((interval + random.randint(-2, 2)) / 1000.0)
+        manual_control: int = 3  # 手动控制最后几个点的数量
+        total_len: int = len(trace)
+        for index, pos in enumerate(trace):
+            lparam = MAKELONG(pos[0], pos[1])
+            PostMessage(handleNum, WM_MOUSEMOVE, MK_LBUTTON, lparam)
+            if manual_control >= total_len - index:
+                time.sleep(0.08)
+            else:
+                time.sleep((interval + random.randint(-2, 2)) / 1000.0)
+
         # 最后释放鼠标
-        end_pos_3 = MAKELONG(trace[-3][0], trace[-3][1])
-        end_pos_2 = MAKELONG(trace[-2][0], trace[-2][1])
-        end_pos_1 = MAKELONG(trace[-1][0], trace[-1][1])
-        PostMessage(handleNum, WM_MOUSEMOVE, MK_LBUTTON, end_pos_3)
-        time.sleep(0.08)
-        PostMessage(handleNum, WM_MOUSEMOVE, MK_LBUTTON, end_pos_2)
-        time.sleep(0.08)
-        PostMessage(handleNum, WM_MOUSEMOVE, MK_LBUTTON, end_pos_1)
-        PostMessage(handleNum, WM_LBUTTONUP, 0, end_pos_1)
+        time.sleep(0.05)
+        end_lparam = MAKELONG(trace[-1][0], trace[-1][1])
+        PostMessage(handleNum, WM_LBUTTONUP, 0, end_lparam)
 
     def swipe_vector_window_message2(self, startPos: list, endPos: list) -> None:
         """
-        后台滑动
+        后台滑动, 直线滑动
         :param startPos:
         :param endPos:
         :return:
@@ -298,10 +306,60 @@ class Window(Handle):
         tmpPos = MAKELONG(trace[-1][0], trace[-1][1])
         PostMessage(handleNum, WM_LBUTTONUP, 0, tmpPos)
 
+    def scroll_window_message(self, x: int, y: int, delta: int=-120) -> None:
+        """
+        弃置
+        https://github.com/runhey/OnmyojiAutoScript/issues/43
+        :param x:
+        :param y:
+        :param delta:
+        :return:
+        """
+        wparam = MAKELONG(0, delta)
+        lparam = MAKELONG(x, y)
+        handle_num = None
+        if self.emulator_family == EmulatorFamily.FAMILY_MUMU:  # mumu模拟器
+            handle_num = self.control_handle_list[1]
+
+        elif self.emulator_family == EmulatorFamily.FAMILY_NOX:  # 夜神模拟器
+            handle_num = self.control_handle_list[3]
+        elif self.emulator_family == EmulatorFamily.FAMILY_LD:  # 雷电模拟器
+            handle_num = self.control_handle_list[0]
+
+        SetForegroundWindow(handle_num)
+        time.sleep(2)
+        # SendMessage(handle_num, WM_SETFOCUS, 0, 0)
+        # SendMessage(handle_num, WM_ACTIVATE, WA_ACTIVE, 0)
+        # SendMessage(handle_num, WM_MOUSEACTIVATE, WM_LBUTTONDOWN, lparam)
+
+
+        SendMessage(handle_num, WM_NCHITTEST, 0, lparam)
+        SendMessage(handle_num, WM_SETCURSOR, handle_num, lparam)
+        PostMessage(handle_num, WM_MOUSEMOVE, 0, lparam)
+        self.click_window_message(x, y)
+
+        for i in range(5):
+            PostMessage(handle_num, WM_SETCURSOR, handle_num, lparam)
+            PostMessage(handle_num, WM_MOUSEMOVE, 0, lparam)
+            PostMessage(handle_num, WM_MOUSEWHEEL, wparam, lparam)
+            time.sleep(0.5)
+        # 抄网上的
+        # SendMessage(handle_num, WM_NCHITTEST, 0, lparam)
+
+
+
 
 if __name__ == "__main__":
-    w = Window(config='oas1')
-    img = w.screenshot_window_background()
-    logger.info(img.shape)
-    w.click_window_message(x=759, y=184)
-    # w.swipe_window_message(startPos=[200, 5], endPos=[300, 300])
+    # w = Window(config='oas1')
+    # img = w.screenshot_window_background()
+    # handle = 459852
+    # wparam = MAKELONG(0, -120)
+    # lparam = MAKELONG(300, 300)
+    # PostMessage(handle, WM_MOUSEWHEEL, wparam, lparam)
+
+    from pynput.mouse import Button, Controller
+    mouse = Controller()
+    mouse.position = (505, 505)
+    mouse.scroll(0, -3)
+
+

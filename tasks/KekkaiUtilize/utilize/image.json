@@ -56,8 +56,8 @@
   {
     "itemName": "u_taiko_6",
     "imageName": "utilize_u_taiko_6.png",
-    "roiFront": "0,0,100,100",
-    "roiBack": "0,0,100,100",
+    "roiFront": "544,265,60,45",
+    "roiBack": "533,156,87,450",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"
