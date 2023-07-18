@@ -17,24 +17,31 @@ class CardClass(str, Enum):
     TAIKO3 = 'taiko_3'
     TAIKO2 = 'taiko_2'
     TAIKO1 = 'taiko_1'
+    TAIKO = 'taiko'
+
     FISH6 = 'fish_6'  # 斗鱼
     FISH5 = 'fish_5'
     FISH4 = 'fish_4'
     FISH3 = 'fish_3'
     FISH2 = 'fish_2'
     FISH1 = 'fish_1'
+    FISH = 'fish'
+
     ROOM6 = 'room_6'  # 室内伞
     ROOM5 = 'room_5'
     ROOM4 = 'room_4'
     ROOM3 = 'room_3'
     ROOM2 = 'room_2'
     ROOM1 = 'room_1'
+    ROOM = 'room'
+
     MOON6 = 'moon_6'  # 太阴
     MOON5 = 'moon_5'
     MOON4 = 'moon_4'
     MOON3 = 'moon_3'
     MOON2 = 'moon_2'
     MOON1 = 'moon_1'
+    MOON = 'moon'
 
     OBOROGURUMA6 = 'oboroguruma_6'  # 胧车
     OBOROGURUMA5 = 'oboroguruma_5'

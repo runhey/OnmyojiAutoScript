@@ -495,7 +495,7 @@ mode_3策略是刷到五个契灵后开始结契，选择高级、中级盘来�
 	<message><source>Card Rule</source><translation>放卡规则</translation></message>
 	<message><source>Exchange Max</source><translation>收取经验后更换下来满级的式神</translation></message>
 	<message><source>Exchange Before</source><translation>收取经验前更换下来满级的式神</translation></message>
-	<message><source>card_rule_help</source><translation>规则还没想好</translation></message>
+	<message><source>card_rule_help</source><translation>保持默认auto即可，具体的规则请翻阅文档[任务列表]</translation></message>
 	<message><source>exchange_before_help</source><translation>必选项</translation></message>
 	<message><source>exchange_max_help</source><translation>必选项</translation></message>
 </context>	

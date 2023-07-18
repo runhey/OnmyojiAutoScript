@@ -377,6 +377,8 @@ class ScriptTask(GameUi, ReplaceShikigami, KekkaiUtilizeAssets):
             self.screenshot()
 
             if not self.appear(self.I_U_ENTER_REALM):
+                # 用不显示原按键来判断是否进入是很蠢的
+                time.sleep(0.5)
                 break
 
             if self.appear_then_click(self.I_U_ENTER_REALM, interval=1):
