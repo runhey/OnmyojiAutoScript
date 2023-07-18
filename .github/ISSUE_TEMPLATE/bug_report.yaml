@@ -1,4 +1,3 @@
----
 name: 问题反馈
 description: 在使用 oas 过程中遇到了错误
 title: ''
@@ -69,7 +68,3 @@ body:
         任何能让我们对你所遇到的问题有更多了解的东西。
     validations:
       required: false
-
----
-
-
