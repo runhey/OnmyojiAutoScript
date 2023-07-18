@@ -23,7 +23,7 @@ class ScriptTask(GeneralBattle, GameUi, RealmRaidAssets):
         :return:
         """
         config = self.config.realm_raid
-        self.medal_grid = ImageGrid([self.I_MEDAL_5, self.I_MEDAL_4, self.I_MEDAL_3,
+        self.medal_grid = ImageGrid([self.I_MEDAL_5, self.I_MEDAL_4, self.I_MEDAL_3, self.I_MEDAL_3_2, self.I_MEDAL_3_3,
                                      self.I_MEDAL_2, self.I_MEDAL_1, self.I_MEDAL_0])
         self.ui_get_current_page()
         self.ui_goto(page_realm_raid)

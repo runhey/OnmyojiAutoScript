@@ -162,6 +162,11 @@ class GameUiAssets:
 
 
 	# Image Rule Assets
+	# 寮结界突破右上角 
+	I_KEKKAI_TOPPA = RuleImage(roi_front=(1065,3,203,61), roi_back=(1065,3,203,61), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_kekkai_toppa.png")
+
+
+	# Image Rule Assets
 	# 左上角蓝色的返回 
 	I_BACK_BL = RuleImage(roi_front=(32,31,50,53), roi_back=(1,2,139,120), threshold=0.8, method="Template matching", file="./tasks/GameUi/res/res_back_blue.png")
 	# 式神录 

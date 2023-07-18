@@ -122,7 +122,6 @@ class ScriptTask(GeneralBattle, GeneralInvite, GeneralBuff, GeneralRoom, GameUi,
         layer = self.config.orochi.orochi_config.layer[0]
         self.check_layer(layer)
         self.check_lock(self.config.orochi.general_battle_config.lock_team_enable)
-
         # 创建队伍
         logger.info('Create team')
         while 1:
@@ -147,26 +146,29 @@ class ScriptTask(GeneralBattle, GeneralInvite, GeneralBuff, GeneralRoom, GameUi,
             if self.check_and_invite(self.config.orochi.invite_config.default_invite):
                 continue
 
-            # 如果在探索界面或者是出现在组队界面， 那就是可能房间死了
-            # 要结束任务
-            if self.appear(self.I_MATCHING) or self.appear(self.I_CHECK_EXPLORATION):
-                sleep(0.5)
-                if self.appear(self.I_MATCHING) or self.appear(self.I_CHECK_EXPLORATION):
-                    logger.warning('Orochi task failed')
-                    success = False
-                    break
             if self.current_count >= self.limit_count:
                 if self.is_in_room():
                     logger.info('Orochi count limit out')
                     break
+
             if datetime.now() - self.start_time >= self.limit_time:
                 if self.is_in_room():
                     logger.info('Orochi time limit out')
                     break
 
 
+
             # 如果没有进入房间那就不需要后面的邀请
             if not self.is_in_room():
+                # 如果在探索界面或者是出现在组队界面， 那就是可能房间死了
+                # 要结束任务
+                sleep(0.5)
+                if self.appear(self.I_MATCHING) or self.appear(self.I_CHECK_EXPLORATION):
+                    sleep(0.5)
+                    if self.appear(self.I_MATCHING) or self.appear(self.I_CHECK_EXPLORATION):
+                        logger.warning('Orochi task failed')
+                        success = False
+                        break
                 continue
 
             # 点击挑战
@@ -207,9 +209,9 @@ class ScriptTask(GeneralBattle, GeneralInvite, GeneralBuff, GeneralRoom, GameUi,
     def run_member(self):
         logger.info('Start run member')
         self.ui_get_current_page()
-        self.ui_goto(page_soul_zones)
-        self.orochi_enter()
-        self.check_lock(self.config.orochi.general_battle_config.lock_team_enable)
+        # self.ui_goto(page_soul_zones)
+        # self.orochi_enter()
+        # self.check_lock(self.config.orochi.general_battle_config.lock_team_enable)
 
         # 进入战斗流程
         while 1:
@@ -230,6 +232,9 @@ class ScriptTask(GeneralBattle, GeneralInvite, GeneralBuff, GeneralRoom, GameUi,
                     self.run_general_battle(config=self.config.orochi.general_battle_config)
                 else:
                     break
+            # 队长秒开的时候，检测是否进入到战斗中
+            elif self.is_in_battle():
+                self.run_general_battle(config=self.config.orochi.general_battle_config)
 
         while 1:
             # 有一种情况是本来要退出的，但是队长邀请了进入的战斗的加载界面
