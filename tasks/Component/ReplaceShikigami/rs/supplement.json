@@ -1,0 +1,11 @@
+[
+  {
+    "itemName": "u_confirm_small",
+    "imageName": "utilize_u_confirm_small.png",
+    "roiFront": "672,513,131,60",
+    "roiBack": "672,513,131,60",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "小一个尺寸的 确认按钮"
+  }
+]

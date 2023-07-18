@@ -222,6 +222,11 @@
 	<message><source>ActivityShikigami</source><translation>当期式神爬塔</translation></message>
 	<message><source>Liver Emperor Exclusive</source><translation>肝帝专属</translation></message>
 	<message><source>BondlingFairyland</source><translation>契灵之境</translation></message>
+	<message><source>Weekly Task</source><translation>每周任务</translation></message>
+	<message><source>TrueOrochi</source><translation>真·八岐大蛇</translation></message>
+	<message><source>KekkaiUtilize</source><translation>结界蹭卡</translation></message>
+	<message><source>KekkaiActivation</source><translation>结界挂卡</translation></message>
+	<message><source>DemonEncounter</source><translation>封魔之时</translation></message>
 </context>
 <context>
     <name>Args</name>
@@ -457,21 +462,21 @@ mode_3策略是刷到五个契灵后开始结契，选择高级、中级盘来�
 	<message><source>Enable Sign 999</source><translation>签到999天后的签到福袋</translation></message>
 	<message><source>Enable Mail</source><translation>邮件</translation></message>
 	<message><source>Enable Soul</source><translation>御魂或者觉醒加成</translation></message>
+	<message><source>Enable Ap</source><translation>体力</translation></message>
 </context>	
 <context>
     <name>Args</name>
 	<message><source>UtilizeScheduler</source><translation>任务调度</translation></message>
 	<message><source>UtilizeConfig</source><translation>寄养</translation></message>
-	<message><source>Utilize Rule</source><translation>寄养规则</translation></message>
+	<message><source>UtilizeRule</source><translation>寄养规则</translation></message>
 	<message><source>Auto Switch Sort</source><translation>切换好友列表以游戏刷新高星排序</translation></message>
-	<message><source>Shikigami Class</source><translation>寄养式神类型</translation></message>
+	<message><source>ShikigamiClass</source><translation>寄养式神类型</translation></message>
 	<message><source>Shikigami Order</source><translation>选中第几个式神寄养</translation></message>
 	<message><source>Guild Ap Enable</source><translation>顺路收取寮补给</translation></message>
 	<message><source>Guild Assets Enable</source><translation>顺路收取寮资金</translation></message>
 	<message><source>Box Ap Enable</source><translation>顺路收取体力盒子</translation></message>
 	<message><source>Box Exp Enable</source><translation>顺路收取经验盒子</translation></message>
-	<message><source>utilize_rule_help</source><translation>挑选结界卡的规则，使用默认auto即可，当然你也可以使用过滤器自定义:
-以auto为例 "太鼓6>太鼓5>斗鱼6>斗鱼5>太鼓4>太鼓3>斗鱼4>斗鱼3"</translation></message>
+	<message><source>utilize_rule_help</source><translation>挑选结界卡的规则，使用默认default即可，具体规则看文档[任务列表]，不可以选auto,已经弃置了。</translation></message>
 	<message><source>auto_switch_sort_help</source><translation>会自动寻找最优的坑位</translation></message>
 	<message><source>shikigami_class_help</source><translation>选择的式神类别（寄养默认选择N卡，且不建议选别的）</translation></message>
 	<message><source>shikigami_order_help</source><translation>从左开始选第几个式神</translation></message>
@@ -479,6 +484,9 @@ mode_3策略是刷到五个契灵后开始结契，选择高级、中级盘来�
 	<message><source>guild_assets_enable_help</source><translation>必选项</translation></message>
 	<message><source>box_ap_enable_help</source><translation>必选项</translation></message>
 	<message><source>box_exp_enable_help</source><translation>必选项</translation></message>
+	<message><source>SelectFriendList</source><translation>选择同区还是跨区好友</translation></message>
+	<message><source>select_friend_list_help</source><translation>由于该死的游戏制作水准，无论任何方式都不可以稳定的对结界卡进行排序，需要从头到尾遍历一遍。
+且切换好友列表时候会丢失原先选定的好友卡，为此同时选择两个好友列表的最优解是会花费更多的时间，不打算支持</translation></message>
 </context>	
 <context>
     <name>Args</name>

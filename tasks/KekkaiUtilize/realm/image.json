@@ -41,16 +41,16 @@
     "roiFront": "815,435,57,51",
     "roiBack": "778,411,130,100",
     "method": "Template matching",
-    "threshold": 0.8,
+    "threshold": 0.7,
     "description": "收取体力（没有满）"
   },
   {
     "itemName": "box_exp",
     "imageName": "realm_box_exp.png",
-    "roiFront": "894,433,50,55",
+    "roiFront": "894,442,42,46",
     "roiBack": "866,407,100,100",
     "method": "Template matching",
-    "threshold": 0.8,
+    "threshold": 0.7,
     "description": "收取盒子的经验（没有满）"
   },
   {
@@ -59,7 +59,7 @@
     "roiFront": "175,460,54,58",
     "roiBack": "147,443,100,100",
     "method": "Template matching",
-    "threshold": 0.8,
+    "threshold": 0.9,
     "description": "结界皮肤"
   },
   {

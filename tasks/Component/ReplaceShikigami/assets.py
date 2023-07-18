@@ -64,3 +64,8 @@ class ReplaceShikigamiAssets:
 	I_RS_LEVEL_MAX = RuleImage(roi_front=(487,248,23,21), roi_back=(52,238,1118,37), threshold=0.8, method="Template matching", file="./tasks/Component/ReplaceShikigami/rs/rs_rs_level_max.png")
 
 
+	# Image Rule Assets
+	# 小一个尺寸的 确认按钮 
+	I_U_CONFIRM_SMALL = RuleImage(roi_front=(672,513,131,60), roi_back=(672,513,131,60), threshold=0.8, method="Template matching", file="./tasks/Component/ReplaceShikigami/rs/utilize_u_confirm_small.png")
+
+
