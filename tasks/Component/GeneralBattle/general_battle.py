@@ -38,6 +38,12 @@ class GeneralBattle(BaseTask, GeneralBattleAssets):
 
             # 检测是否已经在战斗中
             if self.is_in_battle():
+                while 1:
+                    self.screenshot()
+                    if self.appear_then_click(self.I_PREPARE_HIGHLIGHT, interval=1.5):
+                        continue
+                    if not self.appear(self.I_BUFF):
+                        break
                 win = self.battle_wait(config.random_click_swipt_enable)
                 if win:
                     return True
