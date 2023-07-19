@@ -187,8 +187,8 @@ class GeneralBattle(BaseTask, GeneralBattleAssets):
                 win = True
                 break
 
-            # 如果领奖励出现左下角统计
-            if self.appear(self.I_REWARD_STATISTICS, threshold=0.8):
+            # 如果领奖励出现金币
+            if self.appear(self.I_REWARD_GOLD, threshold=0.8):
                 win = True
                 break
             # 如果开启战斗过程随机滑动
@@ -214,15 +214,16 @@ class GeneralBattle(BaseTask, GeneralBattleAssets):
                 if not self.appear(self.I_FALSE, threshold=0.6):
                     return False
         # 最后保证能点击 获得奖励
-        self.wait_until_appear(self.I_REWARD_STATISTICS)
+        self.wait_until_appear(self.I_REWARD)
         logger.info("Get reward")
         while 1:
             self.screenshot()
             # 如果出现领奖励
             action_click = random.choice([self.C_REWARD_1, self.C_REWARD_2, self.C_REWARD_3])
-            if self.appear_then_click(self.I_REWARD, action=action_click ,interval=1.5):
+            if self.appear_then_click(self.I_REWARD, action=action_click ,interval=1.5) or \
+                    self.appear_then_click(self.I_REWARD_GOLD, action=action_click ,interval=1.5):
                 continue
-            if not self.appear(self.I_REWARD_STATISTICS):
+            if not self.appear(self.I_REWARD) and not self.appear(self.I_REWARD_GOLD):
                 break
 
         return win
