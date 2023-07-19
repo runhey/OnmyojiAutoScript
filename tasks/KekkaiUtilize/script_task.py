@@ -91,7 +91,7 @@ class ScriptTask(GameUi, ReplaceShikigami, KekkaiUtilizeAssets):
                 continue
 
             # 收体力
-            if self.appear_then_click(self.I_GUILD_AP, interval=1.5, threshold=0.7):
+            if self.appear_then_click(self.I_GUILD_AP, interval=1.5):
                 timer_check.reset()
                 continue
             # 收资金

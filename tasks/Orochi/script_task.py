@@ -53,7 +53,7 @@ class ScriptTask(GeneralBattle, GeneralInvite, GeneralBuff, GeneralRoom, GameUi,
         else:
             self.set_next_run('Orochi', finish=False, success=False)
 
-        # raise TaskEnd
+        raise TaskEnd
 
 
 
