@@ -471,6 +471,8 @@ mode_3策略是刷到五个契灵后开始结契，选择高级、中级盘来�
 	<message><source>SelectFriendList</source><translation>选择同区还是跨区好友</translation></message>
 	<message><source>select_friend_list_help</source><translation>由于该死的游戏制作水准，无论任何方式都不可以稳定的对结界卡进行排序，需要从头到尾遍历一遍。
 且切换好友列表时候会丢失原先选定的好友卡，为此同时选择两个好友列表的最优解是会花费更多的时间，不打算支持</translation></message>
+	<message><source>Box Exp Waste</source><translation>从盒子提取经验时浪费一部分</translation></message>
+	<message><source>box_exp_waste_help</source><translation>某些时候寄养上存在满级的式神，收取经验盒子时会有提示，对于挂机玩家这点经验微不足道。如果不使能这一选项，将跳过收取经验盒子</translation></message>
 </context>	
 <context>
     <name>Args</name>

@@ -39,7 +39,7 @@ class KekkaiUtilizeAssets:
 	# 收取体力（没有满） 
 	I_BOX_AP = RuleImage(roi_front=(815,435,57,51), roi_back=(778,411,130,100), threshold=0.7, method="Template matching", file="./tasks/KekkaiUtilize/realm/realm_box_ap.png")
 	# 收取盒子的经验（没有满） 
-	I_BOX_EXP = RuleImage(roi_front=(894,442,42,46), roi_back=(866,407,100,100), threshold=0.7, method="Template matching", file="./tasks/KekkaiUtilize/realm/realm_box_exp.png")
+	I_BOX_EXP = RuleImage(roi_front=(893,440,42,45), roi_back=(866,407,100,100), threshold=0.7, method="Template matching", file="./tasks/KekkaiUtilize/realm/realm_box_exp.png")
 	# 结界皮肤 
 	I_REALM_SHIN = RuleImage(roi_front=(175,460,54,58), roi_back=(147,443,100,100), threshold=0.9, method="Template matching", file="./tasks/KekkaiUtilize/realm/realm_realm_shin.png")
 	# 寄养别人的经验 

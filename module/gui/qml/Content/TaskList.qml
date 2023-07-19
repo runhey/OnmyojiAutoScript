@@ -112,7 +112,7 @@ Item{
 //                }
                 clickFunc: function click_func(){
                     selected = !selected
-                    if(process_manager.gui_set_task_bool(MainEvent.scriptName, task_root.name, 'scheduler', 'enable', selected)){
+                    if(process_manager.gui_set_task_bool(MainEvent.scriptName, model.task, 'scheduler', 'enable', selected)){
                         showSuccess("Enable")
                         return true
                     }

@@ -47,7 +47,7 @@
   {
     "itemName": "box_exp",
     "imageName": "realm_box_exp.png",
-    "roiFront": "894,442,42,46",
+    "roiFront": "893,440,42,45",
     "roiBack": "866,407,100,100",
     "method": "Template matching",
     "threshold": 0.7,

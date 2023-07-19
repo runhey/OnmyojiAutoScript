@@ -33,7 +33,7 @@ class ScriptTask(GameUi, ReplaceShikigami, KekkaiUtilizeAssets):
         self.goto_realm()
         # 顺带收体力盒子或者是经验盒子
         time.sleep(0.5)
-        self.check_box_ap_or_exp(con.box_ap_enable, con.box_exp_enable)
+        self.check_box_ap_or_exp(con.box_ap_enable, con.box_exp_enable, con.box_exp_waste)
 
         # 收菜看看
         self.check_utilize_harvest()
@@ -119,7 +119,7 @@ class ScriptTask(GameUi, ReplaceShikigami, KekkaiUtilizeAssets):
             if self.appear_then_click(self.I_GUILD_REALM, interval=1):
                 continue
 
-    def check_box_ap_or_exp(self, ap_enable: bool=True, exp_enable: bool=True) -> bool:
+    def check_box_ap_or_exp(self, ap_enable: bool=True, exp_enable: bool=True, exp_waste: bool=True) -> bool:
         """
         顺路检查盒子
         :param ap_enable:
@@ -183,16 +183,36 @@ class ScriptTask(GameUi, ReplaceShikigami, KekkaiUtilizeAssets):
                 if self.appear(self.I_REALM_SHIN) and not self.appear(self.I_BOX_EXP):
                     break
 
+                # 如果出现收取确认，表明进入到了有满级的
+                if self.appear(self.I_UI_CONFIRM):
+                    self.screenshot()
+                    if not self.appear(self.I_UI_CANCEL):
+                        logger.info('No cancel button')
+                        continue
+                    if exp_waste:
+                        check_button = self.I_UI_CONFIRM
+                    else:
+                        check_button = self.I_UI_CANCEL
+                    while 1:
+                        self.screenshot()
+                        if not self.appear(check_button):
+                            break
+                        if self.appear_then_click(check_button, interval=1):
+                            continue
+                    break
+
                 if time_exp.reached():
                     logger.warning('Extract exp box timeout')
                     break
             _exit_to_realm()
 
         self.screenshot()
+        box_ap = self.appear(self.I_BOX_AP)
+        box_exp = self.appear(self.I_BOX_EXP, threshold=0.6)
         if ap_enable:
-            _check_ap_box(self.appear(self.I_BOX_AP))
+            _check_ap_box(box_ap)
         if exp_enable:
-            _check_exp_box(self.appear(self.I_BOX_EXP, threshold=0.6))
+            _check_exp_box(box_exp)
 
     def check_utilize_harvest(self) -> bool:
         """
