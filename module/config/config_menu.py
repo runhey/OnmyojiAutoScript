@@ -14,6 +14,7 @@ class ConfigMenu:
         self.menu = {}
         # 总览
         self.menu["Overview"] = []
+        self.menu['TaskList'] = []
         # 脚本设置
         self.menu['Script'] = ['Script', 'Restart', 'GlobalGame']
         # 刷御魂

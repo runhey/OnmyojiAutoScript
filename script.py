@@ -11,6 +11,7 @@ import time
 import os
 import inflection
 import asyncio
+import json
 
 from typing import Callable
 from datetime import datetime, timedelta
@@ -23,6 +24,7 @@ from threading import Thread
 
 from module.config.utils import convert_to_underscore
 from module.config.config import Config
+from module.config.config_model import ConfigModel
 from module.device.device import Device
 from module.base.utils import load_module
 from module.base.decorator import del_cached_property
@@ -226,6 +228,38 @@ class Script:
         data = {"status": status}
         if self.gui_update_task is not None:
             self.gui_update_task(data)
+
+
+    def gui_task_list(self) -> str:
+        """
+        获取给gui显示的任务列表
+        :return:
+        """
+        result = {}
+        for key, value in self.config.model.dict().items():
+            if isinstance(value, str):
+                continue
+            if key == "restart":
+                continue
+            if "scheduler" not in value:
+                continue
+
+            scheduler = value["scheduler"]
+            item = {"enable": scheduler["enable"],
+                    "next_run": str(scheduler["next_run"])}
+            key = self.config.model.type(key)
+            result[key] = item
+        return json.dumps(result)
+
+
+
+
+
+
+
+
+
+
 
     def wait_until(self, future):
         """
@@ -444,6 +478,5 @@ class Script:
 
 if __name__ == "__main__":
     script = Script("oas1")
-    # print(script.get_next_task())
-    # script.run("ActivityShikigami")
-    script.run('AreaBoss')
+    print(script.gui_task_list())
+    print(script.config.gui_menu)

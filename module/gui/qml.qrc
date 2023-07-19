@@ -34,5 +34,6 @@
         <file>qml/Content/ListRule.qml</file>
         <file>qml/Component/RuleFile2.qml</file>
         <file>qml/Content/NotifyTest.qml</file>
+        <file>qml/Content/TaskList.qml</file>
     </qresource>
 </RCC>

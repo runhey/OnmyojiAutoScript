@@ -1,6 +1,9 @@
 # This Python file uses the following encoding: utf-8
 # @author runhey
 # github https://github.com/runhey
+
+import json
+
 from module.config.config import Config
 from module.config.utils import convert_to_underscore
 from module.config.config_model import ConfigModel
@@ -66,3 +69,24 @@ class ConfigModify(Config):
         except ValidationError as e:
             logger.error(e)
             return False
+
+    def gui_task_list(self) -> str:
+        """
+        获取给gui显示的任务列表
+        :return:
+        """
+        result = {}
+        for key, value in self.model.dict().items():
+            if isinstance(value, str):
+                continue
+            if key == "restart":
+                continue
+            if "scheduler" not in value:
+                continue
+
+            scheduler = value["scheduler"]
+            item = {"enable": scheduler["enable"],
+                    "next_run": str(scheduler["next_run"])}
+            key = self.config.model.type(key)
+            result[key] = item
+        return json.dumps(result)

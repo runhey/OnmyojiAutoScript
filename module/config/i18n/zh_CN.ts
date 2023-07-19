@@ -118,18 +118,10 @@
 </context>
 <context>
     <name>FluTreeView</name>
-    <message>
-        <source>Home</source>
-        <translation>主页</translation>
-    </message>
-    <message>
-        <source>Update</source>
-        <translation>更新</translation>
-    </message>
-    <message>
-        <source>Overview</source>
-        <translation>总览</translation>
-    </message>
+    <message><source>Home</source><translation>主页</translation></message>
+    <message><source>Update</source><translation>更新</translation></message>
+    <message><source>Overview</source><translation>总览</translation></message>
+	<message><source>TaskList</source><translation>任务总览</translation></message>
     <message>
         <source>Script</source>
         <translation>脚本</translation>
@@ -166,54 +158,46 @@
         <source>Swipe Rule</source>
         <translation>滑动规范</translation>
     </message>
-    <message>
-        <source>Daily Task</source>
-        <translation>日常任务</translation>
-    </message>
-    <message>
-        <source>AreaBoss</source>
-        <translation>地狱鬼王</translation>
-    </message>
-    <message>
-        <source>GoldYoukai</source>
-        <translation>金币妖怪</translation>
-    </message>
-    <message>
-        <source>ExperienceYoukai</source>
-        <translation>经验妖怪</translation>
-    </message>
-    <message>
-        <source>Nian</source>
-        <translation>年兽</translation>
-    </message>
-    <message>
-        <source>Soul Zones</source>
-        <translation>御魂副本</translation>
-    </message>
-    <message>
-        <source>Orochi</source>
-        <translation>八岐大蛇</translation>
-    </message>
-    <message>
-        <source>OrochiMoans</source>
-        <translation>御魂悲鸣</translation>
-    </message>
-    <message>
-        <source>OrochiJudgement</source>
-        <translation>御魂神罚</translation>
-    </message>
-    <message>
-        <source>Sougenbi</source>
-        <translation>业原火</translation>
-    </message>
-    <message>
-        <source>FallenSun</source>
-        <translation>日轮之城</translation>
-    </message>
-    <message>
-        <source>EternitySea</source>
-        <translation>永生之海</translation>
-    </message>
+    <message><source>Daily Task</source><translation>日常任务</translation></message>
+    <message><source>AreaBoss</source><translation>地狱鬼王</translation></message>
+    <message><source>GoldYoukai</source><translation>金币妖怪</translation></message>
+    <message><source>ExperienceYoukai</source><translation>经验妖怪</translation></message>
+    <message><source>Nian</source><translation>年兽</translation></message>
+    <message><source>Soul Zones</source><translation>御魂副本</translation></message>
+    <message><source>Orochi</source><translation>八岐大蛇</translation></message>
+	<message><source>OrochiMoans</source><translation>御魂悲鸣</translation></message>
+    <message><source>OrochiJudgement</source><translation>御魂神罚</translation></message>
+    <message><source>Sougenbi</source><translation>业原火</translation></message>
+    <message><source>FallenSun</source><translation>日轮之城</translation></message>
+    <message><source>EternitySea</source><translation>永生之海</translation></message>
+	<message><source>GlobalGame</source><translation>全局游戏设置</translation></message>
+	<message><source>RealmRaid</source><translation>个人突破</translation></message>
+	<message><source>RyouToppa</source><translation>寮突破</translation></message>
+	<message><source>List Rule</source><translation>列表规则</translation></message>
+	<message><source>Activity Task</source><translation>限时活动</translation></message>
+	<message><source>ActivityShikigami</source><translation>当期式神爬塔</translation></message>
+	<message><source>Liver Emperor Exclusive</source><translation>肝帝专属</translation></message>
+	<message><source>BondlingFairyland</source><translation>契灵之境</translation></message>
+	<message><source>Weekly Task</source><translation>每周任务</translation></message>
+	<message><source>TrueOrochi</source><translation>真·八岐大蛇</translation></message>
+	<message><source>KekkaiUtilize</source><translation>结界蹭卡</translation></message>
+	<message><source>KekkaiActivation</source><translation>结界挂卡</translation></message>
+	<message><source>DemonEncounter</source><translation>封魔之时</translation></message>
+</context>
+<context>
+    <name>TaskList</name>
+	    <message><source>Daily Task</source><translation>日常任务</translation></message>
+    <message><source>AreaBoss</source><translation>地狱鬼王</translation></message>
+    <message><source>GoldYoukai</source><translation>金币妖怪</translation></message>
+    <message><source>ExperienceYoukai</source><translation>经验妖怪</translation></message>
+    <message><source>Nian</source><translation>年兽</translation></message>
+    <message><source>Soul Zones</source><translation>御魂副本</translation></message>
+    <message><source>Orochi</source><translation>八岐大蛇</translation></message>
+	<message><source>OrochiMoans</source><translation>御魂悲鸣</translation></message>
+    <message><source>OrochiJudgement</source><translation>御魂神罚</translation></message>
+    <message><source>Sougenbi</source><translation>业原火</translation></message>
+    <message><source>FallenSun</source><translation>日轮之城</translation></message>
+    <message><source>EternitySea</source><translation>永生之海</translation></message>
 	<message><source>GlobalGame</source><translation>全局游戏设置</translation></message>
 	<message><source>RealmRaid</source><translation>个人突破</translation></message>
 	<message><source>RyouToppa</source><translation>寮突破</translation></message>
