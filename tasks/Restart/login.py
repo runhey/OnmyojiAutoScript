@@ -168,6 +168,10 @@ class LoginHandler(BaseTask, RestartAssets):
             if self.appear_then_click(self.I_HARVEST_AP, interval=1):
                 timer_harvest.reset()
                 continue
+            # 御魂觉醒加成
+            if self.appear_then_click(self.I_HARVEST_SOUL, interval=1):
+                timer_harvest.reset()
+                continue
 
 
             # 红色的关闭

@@ -1,0 +1,14 @@
+[
+  {
+    "itemName": "a_select_card_list",
+    "roiFront": "352,99,172,53",
+    "roiBack": "352,99,172,53",
+    "description": "切换卡的种类"
+  },
+  {
+    "itemName": "a_select_auto",
+    "roiFront": "173,160,354,127",
+    "roiBack": "173,160,354,127",
+    "description": "description"
+  }
+]

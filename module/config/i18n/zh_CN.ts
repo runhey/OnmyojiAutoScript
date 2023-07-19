@@ -118,18 +118,10 @@
 </context>
 <context>
     <name>FluTreeView</name>
-    <message>
-        <source>Home</source>
-        <translation>主页</translation>
-    </message>
-    <message>
-        <source>Update</source>
-        <translation>更新</translation>
-    </message>
-    <message>
-        <source>Overview</source>
-        <translation>总览</translation>
-    </message>
+    <message><source>Home</source><translation>主页</translation></message>
+    <message><source>Update</source><translation>更新</translation></message>
+    <message><source>Overview</source><translation>总览</translation></message>
+	<message><source>TaskList</source><translation>任务总览</translation></message>
     <message>
         <source>Script</source>
         <translation>脚本</translation>
@@ -166,54 +158,18 @@
         <source>Swipe Rule</source>
         <translation>滑动规范</translation>
     </message>
-    <message>
-        <source>Daily Task</source>
-        <translation>日常任务</translation>
-    </message>
-    <message>
-        <source>AreaBoss</source>
-        <translation>地狱鬼王</translation>
-    </message>
-    <message>
-        <source>GoldYoukai</source>
-        <translation>金币妖怪</translation>
-    </message>
-    <message>
-        <source>ExperienceYoukai</source>
-        <translation>经验妖怪</translation>
-    </message>
-    <message>
-        <source>Nian</source>
-        <translation>年兽</translation>
-    </message>
-    <message>
-        <source>Soul Zones</source>
-        <translation>御魂副本</translation>
-    </message>
-    <message>
-        <source>Orochi</source>
-        <translation>八岐大蛇</translation>
-    </message>
-    <message>
-        <source>OrochiMoans</source>
-        <translation>御魂悲鸣</translation>
-    </message>
-    <message>
-        <source>OrochiJudgement</source>
-        <translation>御魂神罚</translation>
-    </message>
-    <message>
-        <source>Sougenbi</source>
-        <translation>业原火</translation>
-    </message>
-    <message>
-        <source>FallenSun</source>
-        <translation>日轮之城</translation>
-    </message>
-    <message>
-        <source>EternitySea</source>
-        <translation>永生之海</translation>
-    </message>
+    <message><source>Daily Task</source><translation>日常任务</translation></message>
+    <message><source>AreaBoss</source><translation>地狱鬼王</translation></message>
+    <message><source>GoldYoukai</source><translation>金币妖怪</translation></message>
+    <message><source>ExperienceYoukai</source><translation>经验妖怪</translation></message>
+    <message><source>Nian</source><translation>年兽</translation></message>
+    <message><source>Soul Zones</source><translation>御魂副本</translation></message>
+    <message><source>Orochi</source><translation>八岐大蛇</translation></message>
+	<message><source>OrochiMoans</source><translation>御魂悲鸣</translation></message>
+    <message><source>OrochiJudgement</source><translation>御魂神罚</translation></message>
+    <message><source>Sougenbi</source><translation>业原火</translation></message>
+    <message><source>FallenSun</source><translation>日轮之城</translation></message>
+    <message><source>EternitySea</source><translation>永生之海</translation></message>
 	<message><source>GlobalGame</source><translation>全局游戏设置</translation></message>
 	<message><source>RealmRaid</source><translation>个人突破</translation></message>
 	<message><source>RyouToppa</source><translation>寮突破</translation></message>
@@ -222,6 +178,39 @@
 	<message><source>ActivityShikigami</source><translation>当期式神爬塔</translation></message>
 	<message><source>Liver Emperor Exclusive</source><translation>肝帝专属</translation></message>
 	<message><source>BondlingFairyland</source><translation>契灵之境</translation></message>
+	<message><source>Weekly Task</source><translation>每周任务</translation></message>
+	<message><source>TrueOrochi</source><translation>真·八岐大蛇</translation></message>
+	<message><source>KekkaiUtilize</source><translation>结界蹭卡</translation></message>
+	<message><source>KekkaiActivation</source><translation>结界挂卡</translation></message>
+	<message><source>DemonEncounter</source><translation>封魔之时</translation></message>
+</context>
+<context>
+    <name>TaskList</name>
+	    <message><source>Daily Task</source><translation>日常任务</translation></message>
+    <message><source>AreaBoss</source><translation>地狱鬼王</translation></message>
+    <message><source>GoldYoukai</source><translation>金币妖怪</translation></message>
+    <message><source>ExperienceYoukai</source><translation>经验妖怪</translation></message>
+    <message><source>Nian</source><translation>年兽</translation></message>
+    <message><source>Soul Zones</source><translation>御魂副本</translation></message>
+    <message><source>Orochi</source><translation>八岐大蛇</translation></message>
+	<message><source>OrochiMoans</source><translation>御魂悲鸣</translation></message>
+    <message><source>OrochiJudgement</source><translation>御魂神罚</translation></message>
+    <message><source>Sougenbi</source><translation>业原火</translation></message>
+    <message><source>FallenSun</source><translation>日轮之城</translation></message>
+    <message><source>EternitySea</source><translation>永生之海</translation></message>
+	<message><source>GlobalGame</source><translation>全局游戏设置</translation></message>
+	<message><source>RealmRaid</source><translation>个人突破</translation></message>
+	<message><source>RyouToppa</source><translation>寮突破</translation></message>
+	<message><source>List Rule</source><translation>列表规则</translation></message>
+	<message><source>Activity Task</source><translation>限时活动</translation></message>
+	<message><source>ActivityShikigami</source><translation>当期式神爬塔</translation></message>
+	<message><source>Liver Emperor Exclusive</source><translation>肝帝专属</translation></message>
+	<message><source>BondlingFairyland</source><translation>契灵之境</translation></message>
+	<message><source>Weekly Task</source><translation>每周任务</translation></message>
+	<message><source>TrueOrochi</source><translation>真·八岐大蛇</translation></message>
+	<message><source>KekkaiUtilize</source><translation>结界蹭卡</translation></message>
+	<message><source>KekkaiActivation</source><translation>结界挂卡</translation></message>
+	<message><source>DemonEncounter</source><translation>封魔之时</translation></message>
 </context>
 <context>
     <name>Args</name>
@@ -457,21 +446,21 @@ mode_3策略是刷到五个契灵后开始结契，选择高级、中级盘来�
 	<message><source>Enable Sign 999</source><translation>签到999天后的签到福袋</translation></message>
 	<message><source>Enable Mail</source><translation>邮件</translation></message>
 	<message><source>Enable Soul</source><translation>御魂或者觉醒加成</translation></message>
+	<message><source>Enable Ap</source><translation>体力</translation></message>
 </context>	
 <context>
     <name>Args</name>
 	<message><source>UtilizeScheduler</source><translation>任务调度</translation></message>
 	<message><source>UtilizeConfig</source><translation>寄养</translation></message>
-	<message><source>Utilize Rule</source><translation>寄养规则</translation></message>
+	<message><source>UtilizeRule</source><translation>寄养规则</translation></message>
 	<message><source>Auto Switch Sort</source><translation>切换好友列表以游戏刷新高星排序</translation></message>
-	<message><source>Shikigami Class</source><translation>寄养式神类型</translation></message>
+	<message><source>ShikigamiClass</source><translation>寄养式神类型</translation></message>
 	<message><source>Shikigami Order</source><translation>选中第几个式神寄养</translation></message>
 	<message><source>Guild Ap Enable</source><translation>顺路收取寮补给</translation></message>
 	<message><source>Guild Assets Enable</source><translation>顺路收取寮资金</translation></message>
 	<message><source>Box Ap Enable</source><translation>顺路收取体力盒子</translation></message>
 	<message><source>Box Exp Enable</source><translation>顺路收取经验盒子</translation></message>
-	<message><source>utilize_rule_help</source><translation>挑选结界卡的规则，使用默认auto即可，当然你也可以使用过滤器自定义:
-以auto为例 "太鼓6>太鼓5>斗鱼6>斗鱼5>太鼓4>太鼓3>斗鱼4>斗鱼3"</translation></message>
+	<message><source>utilize_rule_help</source><translation>挑选结界卡的规则，使用默认default即可，具体规则看文档[任务列表]，不可以选auto,已经弃置了。</translation></message>
 	<message><source>auto_switch_sort_help</source><translation>会自动寻找最优的坑位</translation></message>
 	<message><source>shikigami_class_help</source><translation>选择的式神类别（寄养默认选择N卡，且不建议选别的）</translation></message>
 	<message><source>shikigami_order_help</source><translation>从左开始选第几个式神</translation></message>
@@ -479,6 +468,11 @@ mode_3策略是刷到五个契灵后开始结契，选择高级、中级盘来�
 	<message><source>guild_assets_enable_help</source><translation>必选项</translation></message>
 	<message><source>box_ap_enable_help</source><translation>必选项</translation></message>
 	<message><source>box_exp_enable_help</source><translation>必选项</translation></message>
+	<message><source>SelectFriendList</source><translation>选择同区还是跨区好友</translation></message>
+	<message><source>select_friend_list_help</source><translation>由于该死的游戏制作水准，无论任何方式都不可以稳定的对结界卡进行排序，需要从头到尾遍历一遍。
+且切换好友列表时候会丢失原先选定的好友卡，为此同时选择两个好友列表的最优解是会花费更多的时间，不打算支持</translation></message>
+	<message><source>Box Exp Waste</source><translation>从盒子提取经验时浪费一部分</translation></message>
+	<message><source>box_exp_waste_help</source><translation>某些时候寄养上存在满级的式神，收取经验盒子时会有提示，对于挂机玩家这点经验微不足道。如果不使能这一选项，将跳过收取经验盒子</translation></message>
 </context>	
 <context>
     <name>Args</name>
@@ -487,7 +481,7 @@ mode_3策略是刷到五个契灵后开始结契，选择高级、中级盘来�
 	<message><source>Card Rule</source><translation>放卡规则</translation></message>
 	<message><source>Exchange Max</source><translation>收取经验后更换下来满级的式神</translation></message>
 	<message><source>Exchange Before</source><translation>收取经验前更换下来满级的式神</translation></message>
-	<message><source>card_rule_help</source><translation>规则还没想好</translation></message>
+	<message><source>card_rule_help</source><translation>保持默认auto即可，具体的规则请翻阅文档[任务列表]</translation></message>
 	<message><source>exchange_before_help</source><translation>必选项</translation></message>
 	<message><source>exchange_max_help</source><translation>必选项</translation></message>
 </context>	

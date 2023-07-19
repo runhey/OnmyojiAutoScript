@@ -20,8 +20,8 @@
   {
     "itemName": "orochi_lock",
     "imageName": "o_orochi_lock.png",
-    "roiFront": "558,562,31,33",
-    "roiBack": "558,562,31,33",
+    "roiFront": "573,559,31,32",
+    "roiBack": "548,554,65,54",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"
@@ -29,8 +29,8 @@
   {
     "itemName": "orochi_unlock",
     "imageName": "o_orochi_unlock.png",
-    "roiFront": "560,564,26,29",
-    "roiBack": "560,564,26,29",
+    "roiFront": "575,558,26,29",
+    "roiBack": "560,553,56,40",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"

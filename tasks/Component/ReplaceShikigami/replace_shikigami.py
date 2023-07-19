@@ -90,6 +90,10 @@ class ReplaceShikigami(BaseTask, ReplaceShikigamiAssets):
 
             if not self.appear(stop_image):
                 break
+
+            if self.appear_then_click(self.I_U_CONFIRM_SMALL, interval=0.5):
+                continue
+
             if self.click(click_match, interval=1.5):
                 continue
         logger.info('Set shikigami: %d' % shikigami_order)

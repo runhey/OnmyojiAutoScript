@@ -36,6 +36,20 @@ class GeneralBattle(BaseTask, GeneralBattleAssets):
             if self.current_count == 1:
                 self.switch_preset_team(config.preset_enable, config.preset_group, config.preset_team)
 
+            # 检测是否已经在战斗中
+            if self.is_in_battle():
+                while 1:
+                    self.screenshot()
+                    if self.appear_then_click(self.I_PREPARE_HIGHLIGHT, interval=1.5):
+                        continue
+                    if not self.appear(self.I_BUFF):
+                        break
+                win = self.battle_wait(config.random_click_swipt_enable)
+                if win:
+                    return True
+                else:
+                    return False
+
             # 点击准备按钮
             self.wait_until_appear(self.I_PREPARE_HIGHLIGHT)
             while 1:
@@ -333,6 +347,23 @@ class GeneralBattle(BaseTask, GeneralBattleAssets):
                     self.swipe(self.S_BATTLE_RANDOM_RIGHT, interval=20)
             # 重新设置为长战斗
             self.device.stuck_record_add('BATTLE_STATUS_S')
+
+    # 判断是否在战斗中
+    def is_in_battle(self, is_screenshot: bool = True) -> bool:
+        """
+        判断是否在战斗中
+        :return:
+        """
+        if is_screenshot:
+            self.screenshot()
+        if self.appear(self.I_FRIENDS) or \
+                        self.appear(self.I_WIN) or \
+                        self.appear(self.I_FALSE) or \
+                        self.appear(self.I_REWARD):
+            return True
+        else:
+            return False
+
 
 
 

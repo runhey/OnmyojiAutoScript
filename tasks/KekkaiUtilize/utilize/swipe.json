@@ -1,0 +1,9 @@
+[
+  {
+    "itemName": "u_up",
+    "roiFront": "235,419,50,21",
+    "roiBack": "225,177,72,21",
+    "mode": "default",
+    "description": "向下滑动"
+  }
+]

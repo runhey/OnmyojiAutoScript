@@ -74,6 +74,16 @@ SplitPanel{
             }
             setLoader(component)
         }
+        else if(title === "TaskList"){
+            const component = Qt.createComponent("../../qml/Content/TaskList.qml")
+            if(component.status !== Component.Ready){
+                console.error("TaskList component is not ready")
+                return
+            }
+            setLoader(component)
+        }
+
+
         //最后才是一般的参数页面
         else{
             const component = Qt.createComponent("../../qml/Component/Args.qml")

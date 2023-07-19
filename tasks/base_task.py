@@ -453,6 +453,7 @@ class BaseTask(GlobalGameAssets):
                 while 1:
                     # 等待动画结束
                     if not self.appear(self.I_UI_REWARD):
+                        logger.info('Get reward success')
                         break
                 break
 

@@ -146,8 +146,8 @@
   {
     "itemName": "check_realm_raid",
     "imageName": "page_check_realm_raid.png",
-    "roiFront": "123,632,57,55",
-    "roiBack": "123,632,57,55",
+    "roiFront": "507,72,261,46",
+    "roiBack": "507,72,261,46",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"

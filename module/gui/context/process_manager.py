@@ -289,7 +289,7 @@ class ProcessManager(QObject):
         """
         if config in self.clients:
             logger.info(f'gui set value of {config} {task}')
-            if self.clients[config].gui_set_task(task, group, arg, value):
+            if self.check_script(config).gui_set_task(task, group, arg, value):
                 return True
             else:
                 return False
@@ -310,7 +310,7 @@ class ProcessManager(QObject):
         """
         if config in self.clients:
             logger.info(f'gui set value of {config} {task}')
-            if self.clients[config].gui_set_task(task, group, arg, value):
+            if self.check_script(config).gui_set_task(task, group, arg, value):
                 return True
             else:
                 return False
@@ -346,6 +346,20 @@ class ProcessManager(QObject):
         else:
             logger.info(f'script {config} is not running')
             return None
+
+
+
+    @Slot(str, result="QString")
+    def gui_task_list(self, config: str) -> str:
+        if config in self.clients:
+            logger.info(f'Gui get {config} task list')
+            return self.check_script(config).gui_task_list()
+        else:
+            logger.info(f'Script {config} is not running')
+            return None
+
+
+
 
     def start_log(self, config_name: str) -> Queue:
         """

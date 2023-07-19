@@ -39,7 +39,7 @@
     "itemName": "guild_ap",
     "imageName": "ku_guild_ap.png",
     "roiFront": "483,314,22,22",
-    "roiBack": "297,232,229,132",
+    "roiBack": "225,224,301,167",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"
@@ -48,7 +48,7 @@
     "itemName": "guild_assets",
     "imageName": "ku_guild_assets.png",
     "roiFront": "315,311,23,28",
-    "roiBack": "304,301,50,50",
+    "roiBack": "227,262,354,136",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"
