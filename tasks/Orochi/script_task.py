@@ -146,6 +146,10 @@ class ScriptTask(GeneralBattle, GeneralInvite, GeneralBuff, GeneralRoom, GameUi,
             if self.check_and_invite(self.config.orochi.invite_config.default_invite):
                 continue
 
+            # 检查猫咪奖励
+            if self.appear_then_click(self.I_PET_PRESENT, action=self.C_WIN_3, interval=1):
+                continue
+
             if self.current_count >= self.limit_count:
                 if self.is_in_room():
                     logger.info('Orochi count limit out')
@@ -217,6 +221,10 @@ class ScriptTask(GeneralBattle, GeneralInvite, GeneralBuff, GeneralRoom, GameUi,
         while 1:
             self.screenshot()
 
+            # 检查猫咪奖励
+            if self.appear_then_click(self.I_PET_PRESENT, action=self.C_WIN_3, interval=1):
+                continue
+
             if self.current_count >= self.limit_count:
                 logger.info('Orochi count limit out')
                 break
@@ -268,6 +276,10 @@ class ScriptTask(GeneralBattle, GeneralInvite, GeneralBuff, GeneralRoom, GameUi,
 
         while 1:
             self.screenshot()
+
+            # 检查猫咪奖励
+            if self.appear_then_click(self.I_PET_PRESENT, action=self.C_WIN_3, interval=1):
+                continue
 
             if not is_in_orochi():
                 continue

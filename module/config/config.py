@@ -115,7 +115,8 @@ class Config(ConfigState, ConfigManual, ConfigWatcher, ConfigMenu):
         try:
             return getattr(self.model, name)
         except AttributeError:
-            logger.error(f'can not ask this variable {name}')
+            # 这个导致 大量的无用log
+            # logger.error(f'can not ask this variable {name}')
             return None  # 或者抛出异常，或者返回其他默认值
 
     def gui_args(self, task: str) -> str:
@@ -329,10 +330,8 @@ class Config(ConfigState, ConfigManual, ConfigWatcher, ConfigMenu):
 if __name__ == '__main__':
     config = Config(config_name='oas1')
     config.update_scheduler()
-    print(config.pending_task)
     print(config.waiting_task)
-    config.update_scheduler()
-    print(config.pending_task)
+
     # print(config.get_next())
 
 
