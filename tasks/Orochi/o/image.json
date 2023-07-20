@@ -61,5 +61,14 @@
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"
+  },
+  {
+    "itemName": "pet_present",
+    "imageName": "o_pet_present.png",
+    "roiFront": "873,184,62,147",
+    "roiBack": "873,184,62,147",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "小小宠物，发现宝藏"
   }
 ]

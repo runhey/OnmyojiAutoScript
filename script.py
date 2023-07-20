@@ -165,13 +165,13 @@ class Script:
         argument_object = getattr(group_object, argument, None)
 
         if argument_object is None:
-            logger.error(f'gui_set_task {task}.{group}.{argument}.{value} failed')
+            logger.error(f'Set arg {task}.{group}.{argument}.{value} failed')
             return False
 
         try:
             setattr(group_object, argument, value)
             argument_object = getattr(group_object, argument, None)
-            logger.info(f'gui_set_task {task}.{group}.{argument}.{argument_object}')
+            logger.info(f'Set arg {task}.{group}.{argument}.{argument_object}')
             self.config.save()  # 我是没有想到什么方法可以使得属性改变自动保存的
             return True
         except ValidationError as e:
