@@ -22,7 +22,7 @@ if __name__ == "__main__":
     # 引入ocr 会导致非常巨大的内存开销
     @profile
     def test_memory():
-        for i in range(10):
+        for i in range(2):
             start_time = time.time()
             result = model.detect_and_ocr(image)
             print(result)

@@ -35,3 +35,8 @@ class OrochiAssets:
 					 array=["壹", "贰", "叁", "肆", "伍", "陆", "柒", "捌", "玖", "拾", "悲", "神"])
 
 
+	# Ocr Rule Assets
+	# Ocr-description 
+	O_O_TEST_OCR = RuleOcr(roi=(126,136,360,491), area=(126,136,360,491), mode="Full", method="Default", keyword="", name="o_test_ocr")
+
+

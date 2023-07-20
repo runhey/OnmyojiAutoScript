@@ -30,25 +30,11 @@ class GeneralBattle(BaseTask, GeneralBattleAssets):
 
 
         # 如果没有锁定队伍。那么可以根据配置设定队伍
-        if not config.lock_team_enable:
+        if not config.lock_team_enable and self.is_in_prepare():
             logger.info("Lock team is not enable")
             # 如果更换队伍
             if self.current_count == 1:
                 self.switch_preset_team(config.preset_enable, config.preset_group, config.preset_team)
-
-            # 检测是否已经在战斗中
-            if self.is_in_battle():
-                while 1:
-                    self.screenshot()
-                    if self.appear_then_click(self.I_PREPARE_HIGHLIGHT, interval=1.5):
-                        continue
-                    if not self.appear(self.I_BUFF):
-                        break
-                win = self.battle_wait(config.random_click_swipt_enable)
-                if win:
-                    return True
-                else:
-                    return False
 
             # 点击准备按钮
             self.wait_until_appear(self.I_PREPARE_HIGHLIGHT)
@@ -64,7 +50,9 @@ class GeneralBattle(BaseTask, GeneralBattleAssets):
             time.sleep(0.1)
 
         # 绿标
-        self.green_mark(config.green_enable, config.green_mark)
+        self.wait_until_disappear(self.I_BUFF)
+        if self.is_in_battle(False):
+            self.green_mark(config.green_enable, config.green_mark)
 
         win = self.battle_wait(config.random_click_swipt_enable)
         if win:
@@ -360,6 +348,24 @@ class GeneralBattle(BaseTask, GeneralBattleAssets):
                         self.appear(self.I_WIN) or \
                         self.appear(self.I_FALSE) or \
                         self.appear(self.I_REWARD):
+            return True
+        else:
+            return False
+
+    def is_in_prepare(self, is_screenshot: bool = True) -> bool:
+        """
+        判断是否在准备中
+        :return:
+        """
+        if is_screenshot:
+            self.screenshot()
+        if self.appear(self.I_BUFF):
+            return True
+        elif self.appear(self.I_PREPARE_HIGHLIGHT):
+            return True
+        elif self.appear(self.I_PREPARE_DARK):
+            return True
+        elif self.appear(self.I_PRESET):
             return True
         else:
             return False

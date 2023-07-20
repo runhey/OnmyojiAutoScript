@@ -26,7 +26,6 @@ from tasks.GlobalGame.config_emergency import FriendInvitation, WhenNetworkAbnor
 from module.exception import GameStuckError, ScriptError
 
 
-
 class BaseTask(GlobalGameAssets):
     config: Config = None
     device: Device = None
@@ -242,7 +241,7 @@ class BaseTask(GlobalGameAssets):
                 target._match_init = True
 
             if timeout.reached():
-                logger.warning(f'wait_until_stable({target}) timeout')
+                logger.warning(f'Wait_until_stable({target}) timeout')
                 break
 
     def swipe(self, swipe: RuleSwipe, interval: float = None) -> None:
@@ -450,7 +449,9 @@ class BaseTask(GlobalGameAssets):
             self.screenshot()
 
             if self.ui_reward_appear_click():
+                self.wait_until_stable(self.I_UI_REWARD)
                 while 1:
+                    self.screenshot()
                     # 等待动画结束
                     if not self.appear(self.I_UI_REWARD):
                         logger.info('Get reward success')

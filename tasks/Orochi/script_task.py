@@ -113,7 +113,6 @@ class ScriptTask(GeneralBattle, GeneralInvite, GeneralBuff, GeneralRoom, GameUi,
 
 
 
-
     def run_leader(self):
         logger.info('Start run leader')
         self.ui_get_current_page()
@@ -326,12 +325,22 @@ class ScriptTask(GeneralBattle, GeneralInvite, GeneralBuff, GeneralRoom, GameUi,
 if __name__ == '__main__':
     from module.config.config import Config
     from module.device.device import Device
+    from memory_profiler import profile
     c = Config('oas1')
     d = Device(c)
     t = ScriptTask(c, d)
 
     # t.run()
-    t.check_layer("拾")
+
+    # t.check_layer('悲')
+
+    @profile
+    def test_memory():
+        t.screenshot()
+        print(t.ocr_appear(t.O_O_TEST_OCR))
+        print(t.L_LAYER_LIST.image_appear(t.device.image, '悲'))
+    test_memory()
+
 
 
 
