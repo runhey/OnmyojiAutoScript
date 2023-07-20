@@ -5,10 +5,8 @@ labels: ['未来可期']
 body:
   - type: textarea
     id: describe
-    attributes:
-      label: 说说你遇到的问题？
     validations:
-      required: false
+      required: true
   - type: textarea
     id: additional
     attributes:
