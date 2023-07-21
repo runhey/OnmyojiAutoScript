@@ -169,5 +169,23 @@
     "method": "Template matching",
     "threshold": 0.8,
     "description": "左上角好友图标"
+  },
+  {
+    "itemName": "reward_statistics",
+    "imageName": "gb_reward_statistics.png",
+    "roiFront": "51,629,54,59",
+    "roiBack": "51,629,54,59",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "结算时左下角统计图标"
+  },
+  {
+    "itemName": "reward_gold",
+    "imageName": "gb_reward_gold.png",
+    "roiFront": "943,312,97,69",
+    "roiBack": "943,312,97,69",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "结算金币"
   }
 ]
