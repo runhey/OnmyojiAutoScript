@@ -33,8 +33,6 @@ class LoginHandler(BaseTask, RestartAssets):
 
             self.screenshot()
 
-
-
             # 确认进入庭院
             if self.appear_then_click(self.I_LOGIN_SCROOLL_CLOSE, interval=2):
                 logger.info('Open scroll')
@@ -71,7 +69,10 @@ class LoginHandler(BaseTask, RestartAssets):
             if self.appear_then_click(self.I_LOGIN_YELLOW_CLOSE, interval=0.6):
                 logger.info('Close yellow close')
                 continue
-
+            # 点击屏幕进入游戏
+            if self.appear(self.I_LOGIN_SPECIFIC_SERVE, interval=0.6) and self.ocr_appear_click(self.O_LOGIN_SPECIFIC_SERVE, interval=0.6):
+                logger.info('login specific user')
+                continue
             # 点击’进入游戏‘
             if not self.appear(self.I_LOGIN_8):
                 continue
