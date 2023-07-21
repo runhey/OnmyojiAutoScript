@@ -413,7 +413,7 @@ class BaseTask(GlobalGameAssets):
                 sleep(1)  # 等待滑动完成， 还没想好如何优化
 
     def set_next_run(self, task: str, finish: bool = False,
-                     success: bool=None, server: bool=True, target: timedelta=None) -> None:
+                     success: bool=None, server: bool=True, target: datetime=None) -> None:
         """
         设置下次运行时间  当然这个也是可以重写的
         :param target: 可以自定义的下次运行时间

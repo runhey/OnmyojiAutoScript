@@ -244,7 +244,7 @@ class Config(ConfigState, ConfigManual, ConfigWatcher, ConfigMenu):
             return False
 
     def task_delay(self, task: str, start_time: datetime = None,
-                   success: bool=None, server: bool=True, target: timedelta=None) -> None:
+                   success: bool=None, server: bool=True, target: datetime=None) -> None:
         """
         设置下次运行时间  当然这个也是可以重写的
         :param target: 可以自定义的下次运行时间

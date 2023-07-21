@@ -56,7 +56,7 @@
   {
     "itemName": "u_taiko_6",
     "imageName": "utilize_u_taiko_6.png",
-    "roiFront": "544,265,60,45",
+    "roiFront": "545,313,60,45",
     "roiBack": "533,156,87,450",
     "method": "Template matching",
     "threshold": 0.8,
@@ -65,7 +65,7 @@
   {
     "itemName": "u_fish_3",
     "imageName": "utilize_u_fish_3.png",
-    "roiFront": "551,325,41,33",
+    "roiFront": "552,216,41,33",
     "roiBack": "543,178,69,412",
     "method": "Template matching",
     "threshold": 0.8,

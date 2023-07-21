@@ -88,5 +88,14 @@
     "method": "Template matching",
     "threshold": 0.8,
     "description": "提取"
+  },
+  {
+    "itemName": "box_exp_max",
+    "imageName": "realm_box_exp_max.png",
+    "roiFront": "886,425,61,64",
+    "roiBack": "886,425,61,64",
+    "method": "Template matching",
+    "threshold": 0.7,
+    "description": "盒子经验满"
   }
 ]

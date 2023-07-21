@@ -48,6 +48,8 @@ class KekkaiUtilizeAssets:
 	I_AP_EXTRACT = RuleImage(roi_front=(592,501,100,75), roi_back=(592,501,100,75), threshold=0.8, method="Template matching", file="./tasks/KekkaiUtilize/realm/realm_ap_extract.png")
 	# 提取 
 	I_EXP_EXTRACT = RuleImage(roi_front=(592,448,100,73), roi_back=(592,448,100,73), threshold=0.8, method="Template matching", file="./tasks/KekkaiUtilize/realm/realm_exp_extract.png")
+	# 盒子经验满 
+	I_BOX_EXP_MAX = RuleImage(roi_front=(886,425,61,64), roi_back=(886,425,61,64), threshold=0.7, method="Template matching", file="./tasks/KekkaiUtilize/realm/realm_box_exp_max.png")
 
 
 	# Image Rule Assets
@@ -64,9 +66,9 @@ class KekkaiUtilizeAssets:
 	# description 
 	I_U_TAIKO_5 = RuleImage(roi_front=(544,201,59,52), roi_back=(538,179,79,426), threshold=0.8, method="Template matching", file="./tasks/KekkaiUtilize/utilize/utilize_u_taiko_5.png")
 	# description 
-	I_U_TAIKO_6 = RuleImage(roi_front=(544,265,60,45), roi_back=(533,156,87,450), threshold=0.8, method="Template matching", file="./tasks/KekkaiUtilize/utilize/utilize_u_taiko_6.png")
+	I_U_TAIKO_6 = RuleImage(roi_front=(545,313,60,45), roi_back=(533,156,87,450), threshold=0.8, method="Template matching", file="./tasks/KekkaiUtilize/utilize/utilize_u_taiko_6.png")
 	# description 
-	I_U_FISH_3 = RuleImage(roi_front=(551,325,41,33), roi_back=(543,178,69,412), threshold=0.8, method="Template matching", file="./tasks/KekkaiUtilize/utilize/utilize_u_fish_3.png")
+	I_U_FISH_3 = RuleImage(roi_front=(552,216,41,33), roi_back=(543,178,69,412), threshold=0.8, method="Template matching", file="./tasks/KekkaiUtilize/utilize/utilize_u_fish_3.png")
 	# description 
 	I_U_FISH_4 = RuleImage(roi_front=(549,310,51,50), roi_back=(542,177,73,401), threshold=0.8, method="Template matching", file="./tasks/KekkaiUtilize/utilize/utilize_u_fish_4.png")
 	# description 
@@ -107,6 +109,8 @@ class KekkaiUtilizeAssets:
 	# Ocr Rule Assets
 	# 这个寄养的剩余时间 
 	O_UTILIZE_RES_TIME = RuleOcr(roi=(1140,117,100,30), area=(1140,117,100,30), mode="Duration", method="Default", keyword="", name="utilize_res_time")
+	# 今日以领取经验 
+	O_BOX_EXP = RuleOcr(roi=(654,538,179,39), area=(654,538,179,39), mode="DigitCounter", method="Default", keyword="", name="box_exp")
 
 
 	# Swipe Rule Assets
