@@ -52,5 +52,14 @@
     "method": "Template matching",
     "threshold": 0.8,
     "description": "登录时候不观看CG视频"
+  },
+  {
+    "itemName": "login_specific_serve",
+    "imageName": "login_login_specific_serve.png",
+    "roiFront": "24,33,52,47",
+    "roiBack": "24,33,52,47",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "指定角色进入游戏,默认第一个"
   }
 ]

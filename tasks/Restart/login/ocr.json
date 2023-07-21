@@ -25,5 +25,14 @@
     "method": "Default",
     "keyword": "点击屏幕跳过",
     "description": "点击屏幕跳过"
+  },
+  {
+    "itemName": "login_specific_serve",
+    "roiFront": "524,600,242,53",
+    "roiBack": "516,75,662,585",
+    "mode": "Single",
+    "method": "Default",
+    "keyword": "点击屏幕进入游戏",
+    "description": "登录指定角色，默认第一个"
   }
 ]
