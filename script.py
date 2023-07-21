@@ -155,9 +155,18 @@ class Script:
         设置给gui显示的任务 的参数的具体值
         :return:
         """
+        # 验证参数
         task = convert_to_underscore(task)
         group = convert_to_underscore(group)
         argument = convert_to_underscore(argument)
+        # pandtic验证
+        if isinstance(value, str):
+            if len(value) == 8:
+                try:
+                    value = datetime.strptime(value, '%H:%M:%S').time()
+                except ValueError:
+                    pass
+
 
         path = f'{task}.{group}.{argument}'
         task_object = getattr(self.config.model, task, None)

@@ -77,7 +77,9 @@ class ProcessManager(QObject):
         self.update_thread: Thread = None  # 更新线程
         self.start_update_tasks()  # 启动更新线程
 
-        self.event_loop = asyncio.get_event_loop()  # 事件循环
+        # self.event_loop = asyncio.get_event_loop()  # 事件循环
+
+
 
     @Slot()
     def create_all(self) -> None:

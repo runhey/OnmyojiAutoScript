@@ -30,7 +30,7 @@ class GeneralBattle(BaseTask, GeneralBattleAssets):
 
 
         # 如果没有锁定队伍。那么可以根据配置设定队伍
-        if not config.lock_team_enable and self.is_in_prepare():
+        if not config.lock_team_enable:
             logger.info("Lock team is not enable")
             # 如果更换队伍
             if self.current_count == 1:
@@ -369,6 +369,31 @@ class GeneralBattle(BaseTask, GeneralBattleAssets):
             return True
         else:
             return False
+
+    def check_take_over_battle(self, is_screenshot: bool, config: GeneralBattleConfig) -> bool or None:
+        """
+        中途接入战斗，并且接管
+        :return:  赢了返回True， 输了返回False, 不是在战斗中返回None
+        """
+        if is_screenshot:
+            self.screenshot()
+        if not self.is_in_battle():
+            return None
+
+        if self.is_in_prepare(False):
+            while 1:
+                self.screenshot()
+                if self.appear_then_click(self.I_PREPARE_HIGHLIGHT, interval=1.5):
+                    continue
+                if not self.appear(self.I_BUFF):
+                    break
+
+            # 被接管的战斗，只有准备阶段才可以点绿标。
+            # 因为如果是战斗中，无法保证点击的时候是否出现动画
+            self.wait_until_disappear(self.I_BUFF)
+            self.green_mark(config.green_enable, config.green_mark)
+
+        return self.battle_wait(config.random_click_swipt_enable)
 
 
 

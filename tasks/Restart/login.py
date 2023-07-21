@@ -141,7 +141,7 @@ class LoginHandler(BaseTask, RestartAssets):
                 timer_harvest.reset()
                 continue
             # 邮件
-            if self.appear_then_click(self.I_HARVEST_MAIL, interval=1):
+            if self.appear_then_click(self.I_HARVEST_MAIL, interval=1.5):
                 timer_harvest.reset()
                 continue
             if self.appear(self.I_HARVEST_MAIL_TITLE, interval=0.2):

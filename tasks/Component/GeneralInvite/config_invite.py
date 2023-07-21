@@ -5,6 +5,8 @@ from enum import Enum
 from datetime import datetime, time
 from pydantic import BaseModel, ValidationError, validator, Field
 
+from tasks.Component.config_base import Time
+
 class InviteNumber(str, Enum):
     ONE = 'one'
     TWO = 'two'
@@ -19,8 +21,23 @@ class InviteConfig(BaseModel):
     friend_1: str = Field(default='', description='friend_name_help')
     friend_2: str = Field(default='', description='friend_2_name_help')
     find_mode: FindMode = Field(default=FindMode.AUTO_FIND, description='find_mode_help')
-    wait_time: time = Field(default=time(minute=1), description='wait_time_help')
+    wait_time: time = Field(default=time(minute=2), description='wait_time_help')
     default_invite: bool = Field(default=True, description='default_invite_help')
 
-    # recent_friend, guild_friend, friend, other_friend
+    # @validator('wait_time', pre=False, always=False)
+    # def parse_time(cls, value):
+    #     print('parse_time', value)
+    #     if isinstance(value, str):
+    #         try:
+    #             return datetime.strptime(value, '%H:%M:%S').time()
+    #         except ValueError:
+    #             raise ValueError('Invalid time value. Expected format: HH:MM:SS')
+    #     return value
+
+if __name__ == "__main__":
+    i = InviteConfig()
+    print(isinstance(i.wait_time, time))
+    i.wait_time = "00:05:00"
+    print(i.wait_time)
+    print(isinstance(i.wait_time, time))
 

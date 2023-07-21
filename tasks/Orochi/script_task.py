@@ -217,6 +217,7 @@ class ScriptTask(GeneralBattle, GeneralInvite, GeneralBuff, GeneralRoom, GameUi,
         # self.check_lock(self.config.orochi.general_battle_config.lock_team_enable)
 
         # 进入战斗流程
+        self.device.stuck_record_add('BATTLE_STATUS_S')
         while 1:
             self.screenshot()
 
@@ -235,13 +236,14 @@ class ScriptTask(GeneralBattle, GeneralInvite, GeneralBuff, GeneralRoom, GameUi,
                 continue
 
             if self.is_in_room():
+                self.device.stuck_record_clear()
                 if self.wait_battle(wait_time=self.config.orochi.invite_config.wait_time):
                     self.run_general_battle(config=self.config.orochi.general_battle_config)
                 else:
                     break
             # 队长秒开的时候，检测是否进入到战斗中
-            elif self.is_in_battle():
-                self.run_general_battle(config=self.config.orochi.general_battle_config)
+            elif self.check_take_over_battle(False, config=self.config.orochi.general_battle_config):
+                continue
 
         while 1:
             # 有一种情况是本来要退出的，但是队长邀请了进入的战斗的加载界面
