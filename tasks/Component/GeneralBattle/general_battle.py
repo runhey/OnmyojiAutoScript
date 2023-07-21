@@ -36,20 +36,6 @@ class GeneralBattle(BaseTask, GeneralBattleAssets):
             if self.current_count == 1:
                 self.switch_preset_team(config.preset_enable, config.preset_group, config.preset_team)
 
-            # 检测是否已经在战斗中
-            if self.is_in_battle():
-                while 1:
-                    self.screenshot()
-                    if self.appear_then_click(self.I_PREPARE_HIGHLIGHT, interval=1.5):
-                        continue
-                    if not self.appear(self.I_BUFF):
-                        break
-                win = self.battle_wait(config.random_click_swipt_enable)
-                if win:
-                    return True
-                else:
-                    return False
-
             # 点击准备按钮
             self.wait_until_appear(self.I_PREPARE_HIGHLIGHT)
             while 1:
@@ -64,7 +50,9 @@ class GeneralBattle(BaseTask, GeneralBattleAssets):
             time.sleep(0.1)
 
         # 绿标
-        self.green_mark(config.green_enable, config.green_mark)
+        self.wait_until_disappear(self.I_BUFF)
+        if self.is_in_battle(False):
+            self.green_mark(config.green_enable, config.green_mark)
 
         win = self.battle_wait(config.random_click_swipt_enable)
         if win:
@@ -369,6 +357,49 @@ class GeneralBattle(BaseTask, GeneralBattleAssets):
             return True
         else:
             return False
+
+    def is_in_prepare(self, is_screenshot: bool = True) -> bool:
+        """
+        判断是否在准备中
+        :return:
+        """
+        if is_screenshot:
+            self.screenshot()
+        if self.appear(self.I_BUFF):
+            return True
+        elif self.appear(self.I_PREPARE_HIGHLIGHT):
+            return True
+        elif self.appear(self.I_PREPARE_DARK):
+            return True
+        elif self.appear(self.I_PRESET):
+            return True
+        else:
+            return False
+
+    def check_take_over_battle(self, is_screenshot: bool, config: GeneralBattleConfig) -> bool or None:
+        """
+        中途接入战斗，并且接管
+        :return:  赢了返回True， 输了返回False, 不是在战斗中返回None
+        """
+        if is_screenshot:
+            self.screenshot()
+        if not self.is_in_battle():
+            return None
+
+        if self.is_in_prepare(False):
+            while 1:
+                self.screenshot()
+                if self.appear_then_click(self.I_PREPARE_HIGHLIGHT, interval=1.5):
+                    continue
+                if not self.appear(self.I_BUFF):
+                    break
+
+            # 被接管的战斗，只有准备阶段才可以点绿标。
+            # 因为如果是战斗中，无法保证点击的时候是否出现动画
+            self.wait_until_disappear(self.I_BUFF)
+            self.green_mark(config.green_enable, config.green_mark)
+
+        return self.battle_wait(config.random_click_swipt_enable)
 
 
 

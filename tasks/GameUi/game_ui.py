@@ -212,10 +212,10 @@ class GameUi(BaseTask, GameUiAssets):
                     for button in page.additional:
                         if isinstance(button, RuleImage) and self.appear_then_click(button, interval=1):
                             sleep(0.4)
-                            logger.info(f'Page {page} additional button {button} clicked')
+                            logger.info(f'Page {page} AB {button} clicked')
                         if isinstance(button, RuleOcr) and self.ocr_appear_click(button, interval=1):
                             sleep(0.4)
-                            logger.info(f'Page {page} additional button {button} clicked')
+                            logger.info(f'Page {page} AB {button} clicked')
 
                 # 获取当前页面的要点击的按钮
                 if self.appear(page.check_button, interval=4):
@@ -245,5 +245,7 @@ if __name__ == '__main__':
     c = Config('oas1')
     d = Device(c)
     game = GameUi(config=c, device=d)
-    game.ui_get_current_page(skip_first_screenshot=True)
-    game.ui_goto(page_shikigami_records)
+
+    game.screenshot()
+    print(game.appear(game.I_CHECK_AREA_BOSS))
+    print(game.appear(game.I_RECORDS_CLOSE))

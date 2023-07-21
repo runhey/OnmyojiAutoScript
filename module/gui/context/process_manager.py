@@ -40,10 +40,10 @@ def is_port_in_use(ip, port) -> bool:
     try:
         s.connect((ip, port))
         s.shutdown(2)
-        logger.info(f'port {port} is in use')
+        logger.info(f'Port {port} is in use')
         return True
     except:
-        logger.info(f'port {port} is not in use')
+        logger.info(f'Port {port} is not in use')
         return False
 
 
@@ -77,7 +77,9 @@ class ProcessManager(QObject):
         self.update_thread: Thread = None  # 更新线程
         self.start_update_tasks()  # 启动更新线程
 
-        self.event_loop = asyncio.get_event_loop()  # 事件循环
+        # self.event_loop = asyncio.get_event_loop()  # 事件循环
+
+
 
     @Slot()
     def create_all(self) -> None:
@@ -110,17 +112,17 @@ class ProcessManager(QObject):
             self.log_thread[config].start()
 
             # 下面是启动 zerorpc 客户端
-            logger.info(f'create script {config} on port {port}')
+            logger.info(f'Create script {config} on port {port}')
             try:
                 self.clients[config] = zerorpc.Client()
                 self.clients[config].connect(f'tcp://127.0.0.1:{self.ports[config]}')
             except:
-                logger.exception(f'connect to script {config} error')
+                logger.exception(f'Connect to script {config} error')
                 raise
             self.processes[config].start()
-            logger.info(f'add script {config}')
+            logger.info(f'Add script {config}')
         else:
-            logger.info(f'script {config} is already running')
+            logger.info(f'Script {config} is already running')
 
     def remove(self, config: str) -> None:
         """
@@ -133,10 +135,10 @@ class ProcessManager(QObject):
             del self.processes[config]
             del self.ports[config]
             del self.clients[config]
-            logger.info(f'remove script {config}')
-            logger.info(f'port {config} is released')
+            logger.info(f'Remove script {config}')
+            logger.info(f'Port {config} is released')
         else:
-            logger.info(f'script {config} is not running')
+            logger.info(f'Script {config} is not running')
 
     @Slot(str)
     def restart(self, config: str) -> None:
@@ -166,9 +168,9 @@ class ProcessManager(QObject):
                                                    log_queue=self.log_queue[config],
                                                    update_queue=self.update_queue)
             self.processes[config].start()
-            logger.info(f'restart script {config}')
+            logger.info(f'Restart script {config}')
         else:
-            logger.info(f'script {config} is not running')
+            logger.info(f'Script {config} is not running')
 
     def stop_all(self) -> None:
         """
@@ -177,7 +179,7 @@ class ProcessManager(QObject):
         """
         for config in self.processes:
             self.processes[config].stop()
-        logger.info(f'stop all script')
+        logger.info(f'Stop all script')
 
     def restart_all(self) -> None:
         """
@@ -186,7 +188,7 @@ class ProcessManager(QObject):
         """
         for config in self.processes:
             self.processes[config].restart()
-        logger.info(f'restart all script')
+        logger.info(f'Restart all script')
 
     def get_client(self, config: str) -> zerorpc.Client:
         """
@@ -197,7 +199,7 @@ class ProcessManager(QObject):
         if config in self.clients:
             return self.clients[config]
         else:
-            logger.info(f'script {config} is not running')
+            logger.info(f'Script {config} is not running')
             return None
 
     @Slot(result="QString")
@@ -234,10 +236,10 @@ class ProcessManager(QObject):
         :return:
         """
         if config in self.clients:
-            logger.info(f'gui get args of {config} {task}')
+            logger.info(f'Gui get args of {config} {task}')
             return self.check_script(config).gui_args(task)
         else:
-            logger.info(f'script {config} is not running')
+            logger.info(f'Script {config} is not running')
             return None
 
     @Slot(str, str, result="QString")
@@ -249,10 +251,10 @@ class ProcessManager(QObject):
         :return:
         """
         if config in self.clients:
-            logger.info(f'gui get value of {config} {task}')
+            logger.info(f'Gui get value of {config} {task}')
             return self.check_script(config).gui_task(task)
         else:
-            logger.info(f'script {config} is not running')
+            logger.info(f'Script {config} is not running')
             return None
 
     @Slot(str, str, str, str, str, result="bool")
@@ -267,13 +269,13 @@ class ProcessManager(QObject):
         :return:
         """
         if config in self.clients:
-            logger.info(f'gui set value of {config} {task}')
+            logger.info(f'Gui set value of {config} {task}')
             if self.check_script(config).gui_set_task(task, group, arg, value):
                 return True
             else:
                 return False
         else:
-            logger.info(f'script {config} is not running')
+            logger.info(f'Script {config} is not running')
             return False
 
     @Slot(str, str, str, str, bool, result="bool")
@@ -288,13 +290,13 @@ class ProcessManager(QObject):
         :return:
         """
         if config in self.clients:
-            logger.info(f'gui set value of {config} {task}')
+            logger.info(f'Gui set value of {config} {task}')
             if self.check_script(config).gui_set_task(task, group, arg, value):
                 return True
             else:
                 return False
         else:
-            logger.info(f'script {config} is not running')
+            logger.info(f'Script {config} is not running')
             return False
 
     @Slot(str, str, str, str, float, result="bool")
@@ -309,13 +311,13 @@ class ProcessManager(QObject):
         :return:
         """
         if config in self.clients:
-            logger.info(f'gui set value of {config} {task}')
+            logger.info(f'Gui set value of {config} {task}')
             if self.check_script(config).gui_set_task(task, group, arg, value):
                 return True
             else:
                 return False
         else:
-            logger.info(f'script {config} is not running')
+            logger.info(f'Script {config} is not running')
             return False
 
     @Slot(str, result="QImage")
@@ -325,7 +327,7 @@ class ProcessManager(QObject):
         :return:
         """
         if config in self.clients:
-            logger.info(f'gui get mirror image of {config}')
+            logger.info(f'Gui get mirror image of {config}')
             # 接收流对象
             stream = self.clients[config].gui_mirror_image()
             # 创建 BytesIO 对象来存储图像数据
@@ -344,7 +346,7 @@ class ProcessManager(QObject):
 
 
         else:
-            logger.info(f'script {config} is not running')
+            logger.info(f'Script {config} is not running')
             return None
 
 

@@ -175,41 +175,6 @@ Item {
                     }
                 }
             }
-
-//            ColumnLayout{
-//                width: parent.width
-//                spacing: 8
-//                FluText{
-//                    text: 'Pending'
-//                    Layout.leftMargin: 16
-//                    Layout.topMargin: 6
-//                    font: FluTextStyle.Subtitle
-//                }
-//                Rectangle{
-//                    // 这个是一条横线
-//                    width: schedulerRunning.width - 20
-//                    height: 2
-//                    Layout.alignment: Qt.AlignHCenter
-//                    color: FluTheme.dark ? Qt.rgba(64/255, 68/255, 75/255, 1) : Qt.rgba(234/255, 236/255, 239/255, 1)
-//                    radius: 2
-//                }
-//                ListView{
-//                    id: pendingListView
-//                    Layout.alignment: Qt.AlignHCenter
-//                    width: 225
-//                    height: 200
-//                    spacing: 8
-//                    model: ListModel{
-//                        id: pendingListModel
-//                    }
-//                    delegate: Component{
-//                        Taskmini{
-//                            name: model.name
-//                            nextRun: model.next_run
-//                        }
-//                    }
-//                }
-//            }
         }
         FluArea{
             id: schedulerWaiting
@@ -219,28 +184,42 @@ Item {
             anchors.bottomMargin: 0
             width: parent.width                  
 
-            ColumnLayout{
-                width: parent.width
-                spacing: 8
-                FluText{
-                    Layout.fillHeight: false
-                    text: 'Waiting'
-                    Layout.leftMargin: 16
-                    Layout.topMargin: 6
-                    font: FluTextStyle.Subtitle
+//            ColumnLayout{
+//                width: parent.width
+//                spacing: 8
+            FluText{
+                id: waitingText
+                anchors{
+                    top: parent.top
+                    topMargin: 6
+
                 }
+                width: parent.width
+                text: 'Waiting'
+                leftPadding: 16
+                font: FluTextStyle.Subtitle
+            }
                 Rectangle{
-                    Layout.fillHeight: false
+                    id: lineWaiting
+                    anchors{
+                        top: waitingText.bottom
+                        topMargin: 8
+                        horizontalCenter: parent.horizontalCenter
+                    }
                     width: schedulerPending.width - 20
                     height: 2
-                    Layout.alignment: Qt.AlignHCenter
                     color: FluTheme.dark ? Qt.rgba(64/255, 68/255, 75/255, 1) : Qt.rgba(234/255, 236/255, 239/255, 1)
                     radius: 2
                 }
                 ListView{
                     id: waitingListView
-                    Layout.fillHeight: true
-                    Layout.alignment: Qt.AlignHCenter
+                    anchors{
+                        top: lineWaiting.bottom
+                        topMargin: 8
+                        bottom: parent.bottom
+                        bottomMargin: 8
+                        horizontalCenter: parent.horizontalCenter
+                    }
                     width: 225
                     clip: true
                     spacing: 8
@@ -257,7 +236,7 @@ Item {
                         }
                     }
                 }
-            }
+//            }
         }
     }
 

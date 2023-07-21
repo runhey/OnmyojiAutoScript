@@ -117,7 +117,7 @@ class ScriptTask(KU, KekkaiActivationAssets):
                 logger.info('Card is selected but not using')
                 while 1:
                     self.screenshot()
-                    if self.appear(self.I_A_INVITE):
+                    if self.appear(self.I_A_INVITE, threshold=0.7):
                         logger.info('Card is activated')
                         break
                     if self.appear_then_click(self.I_UI_CONFIRM, interval=0.6):

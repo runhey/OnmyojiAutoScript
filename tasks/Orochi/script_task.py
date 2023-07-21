@@ -113,7 +113,6 @@ class ScriptTask(GeneralBattle, GeneralInvite, GeneralBuff, GeneralRoom, GameUi,
 
 
 
-
     def run_leader(self):
         logger.info('Start run leader')
         self.ui_get_current_page()
@@ -144,6 +143,10 @@ class ScriptTask(GeneralBattle, GeneralInvite, GeneralBuff, GeneralRoom, GameUi,
             # 无论胜利与否, 都会出现是否邀请一次队友
             # 区别在于，失败的话不会出现那个勾选默认邀请的框
             if self.check_and_invite(self.config.orochi.invite_config.default_invite):
+                continue
+
+            # 检查猫咪奖励
+            if self.appear_then_click(self.I_PET_PRESENT, action=self.C_WIN_3, interval=1):
                 continue
 
             if self.current_count >= self.limit_count:
@@ -214,8 +217,13 @@ class ScriptTask(GeneralBattle, GeneralInvite, GeneralBuff, GeneralRoom, GameUi,
         # self.check_lock(self.config.orochi.general_battle_config.lock_team_enable)
 
         # 进入战斗流程
+        self.device.stuck_record_add('BATTLE_STATUS_S')
         while 1:
             self.screenshot()
+
+            # 检查猫咪奖励
+            if self.appear_then_click(self.I_PET_PRESENT, action=self.C_WIN_3, interval=1):
+                continue
 
             if self.current_count >= self.limit_count:
                 logger.info('Orochi count limit out')
@@ -228,13 +236,14 @@ class ScriptTask(GeneralBattle, GeneralInvite, GeneralBuff, GeneralRoom, GameUi,
                 continue
 
             if self.is_in_room():
+                self.device.stuck_record_clear()
                 if self.wait_battle(wait_time=self.config.orochi.invite_config.wait_time):
                     self.run_general_battle(config=self.config.orochi.general_battle_config)
                 else:
                     break
             # 队长秒开的时候，检测是否进入到战斗中
-            elif self.is_in_battle():
-                self.run_general_battle(config=self.config.orochi.general_battle_config)
+            elif self.check_take_over_battle(False, config=self.config.orochi.general_battle_config):
+                continue
 
         while 1:
             # 有一种情况是本来要退出的，但是队长邀请了进入的战斗的加载界面
@@ -268,6 +277,10 @@ class ScriptTask(GeneralBattle, GeneralInvite, GeneralBuff, GeneralRoom, GameUi,
 
         while 1:
             self.screenshot()
+
+            # 检查猫咪奖励
+            if self.appear_then_click(self.I_PET_PRESENT, action=self.C_WIN_3, interval=1):
+                continue
 
             if not is_in_orochi():
                 continue
@@ -314,12 +327,22 @@ class ScriptTask(GeneralBattle, GeneralInvite, GeneralBuff, GeneralRoom, GameUi,
 if __name__ == '__main__':
     from module.config.config import Config
     from module.device.device import Device
+    from memory_profiler import profile
     c = Config('oas1')
     d = Device(c)
     t = ScriptTask(c, d)
 
     # t.run()
-    t.check_layer("拾")
+
+    # t.check_layer('悲')
+
+    @profile
+    def test_memory():
+        t.screenshot()
+        print(t.ocr_appear(t.O_O_TEST_OCR))
+        print(t.L_LAYER_LIST.image_appear(t.device.image, '悲'))
+    test_memory()
+
 
 
 

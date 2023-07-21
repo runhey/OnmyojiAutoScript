@@ -17,6 +17,7 @@ from module.exception import ScriptError
 from module.logger import logger
 
 
+
 class OcrMode(Enum):
     FULL = 1  # str: "Full"
     SINGLE = 2  # str: "Single"
@@ -141,6 +142,7 @@ class BaseCor:
         logger.attr(name='%s %ss' % (self.name, float2str(time.time() - start_time)),
                     text=f'[{result}]')
         return result
+
 
     def detect_and_ocr(self, image) -> list[BoxedResult]:
         """

@@ -3,7 +3,7 @@
 # github https://github.com/runhey
 from typing import Any
 from collections.abc import Callable, Generator
-from datetime import timedelta
+from datetime import timedelta, time
 
 from pydantic import BaseModel, datetime_parse
 from pydantic.fields import ModelField
@@ -47,4 +47,21 @@ class MultiLine(str):
         if field:
             field_schema['type'] = 'multi_line'
 
+class Time(time):
+    """
+    尝试将字符串转换为time对象， 但是不生效
+    """
+    @classmethod
+    def __get_validators__(cls):
+        yield cls.validate
 
+    @classmethod
+    def validate(cls, value):
+        print('validate', value)
+        if isinstance(value, str):
+            hour, minute, second = map(int, value.split(":"))
+            return cls(hour, minute, second)
+        elif isinstance(value, time):
+            return value
+        else:
+            raise ValueError("Invalid time format")

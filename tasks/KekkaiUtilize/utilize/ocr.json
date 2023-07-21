@@ -7,5 +7,14 @@
     "method": "Default",
     "keyword": "",
     "description": "这个寄养的剩余时间"
+  },
+  {
+    "itemName": "box_exp",
+    "roiFront": "654,538,179,39",
+    "roiBack": "654,538,179,39",
+    "mode": "DigitCounter",
+    "method": "Default",
+    "keyword": "",
+    "description": "今日以领取经验"
   }
 ]
