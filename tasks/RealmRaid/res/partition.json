@@ -1,0 +1,56 @@
+[
+  {
+    "itemName": "partition_1",
+    "roiFront": "220,147,242,120",
+    "roiBack": "220,147,242,120",
+    "description": "用来分割不同的挑战位置"
+  },
+  {
+    "itemName": "partition_2",
+    "roiFront": "554,148,249,115",
+    "roiBack": "554,148,249,115",
+    "description": "用来分割不同的挑战位置"
+  },
+  {
+    "itemName": "partition_3",
+    "roiFront": "885,147,242,116",
+    "roiBack": "885,147,242,116",
+    "description": "用来分割不同的挑战位置"
+  },
+  {
+    "itemName": "partition_4",
+    "roiFront": "220,283,245,124",
+    "roiBack": "220,283,245,124",
+    "description": "用来分割不同的挑战位置"
+  },
+  {
+    "itemName": "partition_5",
+    "roiFront": "564,280,237,120",
+    "roiBack": "564,280,237,120",
+    "description": "用来分割不同的挑战位置"
+  },
+  {
+    "itemName": "partition_6",
+    "roiFront": "894,282,237,120",
+    "roiBack": "894,282,237,120",
+    "description": "用来分割不同的挑战位置"
+  },
+  {
+    "itemName": "partition_7",
+    "roiFront": "225,416,244,121",
+    "roiBack": "225,416,244,121",
+    "description": "用来分割不同的挑战位置"
+  },
+  {
+    "itemName": "partition_8",
+    "roiFront": "560,413,237,124",
+    "roiBack": "560,413,237,124",
+    "description": "用来分割不同的挑战位置"
+  },
+  {
+    "itemName": "partition_9",
+    "roiFront": "893,418,234,116",
+    "roiBack": "893,418,234,116",
+    "description": "用来分割不同的挑战位置"
+  }
+]

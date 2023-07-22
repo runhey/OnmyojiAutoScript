@@ -26,7 +26,7 @@ class GeneralBattle(BaseTask, GeneralBattleAssets):
         self.current_count += 1
         logger.info(f"Current count: {self.current_count}")
         if config is None:
-            config = GeneralBattleConfig().dict()
+            config = GeneralBattleConfig()
 
 
         # 如果没有锁定队伍。那么可以根据配置设定队伍
@@ -61,7 +61,7 @@ class GeneralBattle(BaseTask, GeneralBattleAssets):
             return False
 
 
-    def run_general_battle_back(self, config: dict=None) -> bool:
+    def run_general_battle_back(self, config: GeneralBattleConfig=None) -> bool:
         """
         进入挑战然后直接返回
         :param config:
