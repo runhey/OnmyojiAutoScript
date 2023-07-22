@@ -401,9 +401,30 @@ class GeneralBattle(BaseTask, GeneralBattleAssets):
 
         return self.battle_wait(config.random_click_swipt_enable)
 
-
-
-
+    def check_lock(self, enable: bool, lock_image, unlock_image):
+        """
+        检测是否锁定队伍，
+        :param enable:
+        :param lock_image:
+        :param unlock_image:
+        :return:
+        """
+        if enable:
+            logger.info("Lock team")
+            while 1:
+                self.screenshot()
+                if self.appear(lock_image):
+                    break
+                if self.appear_then_click(unlock_image, interval=1):
+                    continue
+        else:
+            logger.info("Unlock team")
+            while 1:
+                self.screenshot()
+                if self.appear(unlock_image):
+                    break
+                if self.appear_then_click(lock_image, interval=1):
+                    continue
 
 
 

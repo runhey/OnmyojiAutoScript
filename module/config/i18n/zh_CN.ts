@@ -537,4 +537,9 @@ Refresh：直接刷新，如果刷新操作进入CD，将标记为失败并退�
 	<message><source>three_refresh_help</source><translation>挑战进度到三，领取奖励后就刷新，如果刷新操作进入CD，将标记为失败并退出</translation></message>
 	<message><source>number_base_help</source><translation>旨在检查突破卷数量，如果当前的数量没有大于等于这个值，将标记为成功并退出</translation></message>
 </context>	
+<context>
+    <name>Args</name>
+	<message><source>SougenbiConfig</source><translation>业原火</translation></message>	
+	<message><source>SougenbiClass</source><translation>挑战类型</translation></message>	
+</context>	
 </TS>

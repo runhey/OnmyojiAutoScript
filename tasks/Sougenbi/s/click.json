@@ -1,0 +1,20 @@
+[
+  {
+    "itemName": "c_greed",
+    "roiFront": "172,144,299,100",
+    "roiBack": "172,144,299,100",
+    "description": "description"
+  },
+  {
+    "itemName": "c_anger",
+    "roiFront": "165,289,307,100",
+    "roiBack": "165,289,307,100",
+    "description": "description"
+  },
+  {
+    "itemName": "c_foolery",
+    "roiFront": "166,435,303,100",
+    "roiBack": "166,435,303,100",
+    "description": "description"
+  }
+]

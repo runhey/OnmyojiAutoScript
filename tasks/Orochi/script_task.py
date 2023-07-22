@@ -4,7 +4,6 @@
 from time import sleep
 from datetime import time, datetime, timedelta
 
-from tasks.base_task import BaseTask
 from tasks.Component.GeneralBattle.general_battle import GeneralBattle
 from tasks.Component.GeneralInvite.general_invite import GeneralInvite
 from tasks.Component.GeneralBuff.general_buff import GeneralBuff

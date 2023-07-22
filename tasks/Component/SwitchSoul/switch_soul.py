@@ -23,6 +23,12 @@ class SwitchSoul(BaseTask, SwitchSoulAssets):
         保证在式神录的界面
         :return:
         """
+        if isinstance(target, str):
+            try:
+                target = switch_parser(target)
+            except ValueError:
+                logger.error('Switch soul config error')
+                return
         self.click_preset()
         self.switch_souls(target)
 
