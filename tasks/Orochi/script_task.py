@@ -118,7 +118,7 @@ class ScriptTask(GeneralBattle, GeneralInvite, GeneralBuff, GeneralRoom, GameUi,
         self.ui_get_current_page()
         self.ui_goto(page_soul_zones)
         self.orochi_enter()
-        layer = self.config.orochi.orochi_config.layer[0]
+        layer = self.config.orochi.orochi_config.layer
         self.check_layer(layer)
         self.check_lock(self.config.orochi.general_battle_config.lock_team_enable)
         # 创建队伍
@@ -266,7 +266,7 @@ class ScriptTask(GeneralBattle, GeneralInvite, GeneralBuff, GeneralRoom, GameUi,
         self.ui_get_current_page()
         self.ui_goto(page_soul_zones)
         self.orochi_enter()
-        layer = self.config.orochi.orochi_config.layer[0]
+        layer = self.config.orochi.orochi_config.layer
         self.check_layer(layer)
         self.check_lock(self.config.orochi.general_battle_config.lock_team_enable)
 
@@ -332,7 +332,7 @@ if __name__ == '__main__':
     d = Device(c)
     t = ScriptTask(c, d)
 
-    # t.run()
+    t.run()
 
     # t.check_layer('悲')
 
@@ -341,7 +341,7 @@ if __name__ == '__main__':
         t.screenshot()
         print(t.ocr_appear(t.O_O_TEST_OCR))
         print(t.L_LAYER_LIST.image_appear(t.device.image, '悲'))
-    test_memory()
+    # test_memory()
 
 
 
