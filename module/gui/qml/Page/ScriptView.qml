@@ -107,6 +107,12 @@ SplitPanel{
 
         //创建左边的菜单
         const data = JSON.parse(process_manager.gui_menu())
+        if(MainEvent.branch == 'master'){
+            if('Tools' in data){
+                delete data['Tools']
+            }
+        }
+
         create(data)
 
         // 点击的时候顺带创建 python 进程

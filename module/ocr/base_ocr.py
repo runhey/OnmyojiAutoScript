@@ -17,6 +17,22 @@ from module.exception import ScriptError
 from module.logger import logger
 
 
+
+def enlarge_canvas(image):
+    """
+    copy from https://github.com/LmeSzinc/StarRailCopilot
+    Enlarge image into a square fill with black background. In the structure of PaddleOCR,
+    image with w:h=1:1 is the best while 3:1 rectangles takes three times as long.
+    Also enlarge into the integer multiple of 32 cause PaddleOCR will downscale images to 1/32.
+    """
+    height, width = image.shape[:2]
+    length = int(max(width, height) // 32 * 32 + 32)
+    border = (0, length - height, 0, length - width)
+    if sum(border) > 0:
+        image = cv2.copyMakeBorder(image, *border, borderType=cv2.BORDER_CONSTANT, value=(0, 0, 0))
+    return image
+
+
 class OcrMode(Enum):
     FULL = 1  # str: "Full"
     SINGLE = 2  # str: "Single"
@@ -142,6 +158,7 @@ class BaseCor:
                     text=f'[{result}]')
         return result
 
+
     def detect_and_ocr(self, image) -> list[BoxedResult]:
         """
         注意：这里使用了预处理和后处理
@@ -152,6 +169,7 @@ class BaseCor:
         start_time = time.time()
         image = self.crop(image, self.roi)
         image = self.pre_process(image)
+        image = enlarge_canvas(image)
 
         # ocr
         boxed_results: list[BoxedResult] = self.model.detect_and_ocr(image)

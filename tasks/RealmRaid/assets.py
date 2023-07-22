@@ -53,10 +53,60 @@ class RealmRaidAssets:
 	I_MEDAL_3_3 = RuleImage(roi_front=(902,479,201,50), roi_back=(902,479,201,50), threshold=0.8, method="Template matching", file="./tasks/RealmRaid/res/res_medal_3_3.png")
 
 
+	# Image Rule Assets
+	# 出现呱太勋章 
+	I_FROG_MEDAL = RuleImage(roi_front=(912,12,32,35), roi_back=(912,12,32,35), threshold=0.8, method="Template matching", file="./tasks/RealmRaid/res/res_frog_medal.png")
+	# 已经进攻三次了 
+	I_RR_THREE = RuleImage(roi_front=(346,584,42,44), roi_back=(346,584,42,44), threshold=0.8, method="Template matching", file="./tasks/RealmRaid/res/res_rr_three.png")
+	# 呱太入侵， 第一次进入结界时候出现 
+	I_FROG_RAID = RuleImage(roi_front=(511,301,282,100), roi_back=(511,301,282,100), threshold=0.8, method="Template matching", file="./tasks/RealmRaid/res/res_frog_raid.png")
+	# 个人 
+	I_RR_PERSON = RuleImage(roi_front=(1203,236,56,100), roi_back=(1203,236,56,100), threshold=0.8, method="Template matching", file="./tasks/RealmRaid/res/res_rr_person.png")
+
+
 	# Ocr Rule Assets
 	# 刷新的时间 
 	O_FRESH_TIME = RuleOcr(roi=(1042,582,85,36), area=(0,0,100,100), mode="Duration", method="Default", keyword="", name="fresh_time")
 	# 右上角 突破卷的数量 
 	O_NUMBER = RuleOcr(roi=(1143,13,80,39), area=(0,0,100,100), mode="DigitCounter", method="Default", keyword="", name="number")
+	# Ocr-description 
+	O_FROG_1 = RuleOcr(roi=(158,168,42,33), area=(158,168,42,33), mode="Digit", method="Default", keyword="", name="frog_1")
+	# Ocr-description 
+	O_FROG_2 = RuleOcr(roi=(491,170,34,32), area=(491,170,34,32), mode="Digit", method="Default", keyword="", name="frog_2")
+	# Ocr-description 
+	O_FROG_3 = RuleOcr(roi=(824,170,34,32), area=(824,170,34,32), mode="Digit", method="Default", keyword="", name="frog_3")
+	# Ocr-description 
+	O_FROG_4 = RuleOcr(roi=(158,303,38,35), area=(158,303,38,35), mode="Digit", method="Default", keyword="", name="frog_4")
+	# Ocr-description 
+	O_FROG_5 = RuleOcr(roi=(489,304,35,35), area=(489,304,35,35), mode="Digit", method="Default", keyword="", name="frog_5")
+	# Ocr-description 
+	O_FROG_6 = RuleOcr(roi=(824,305,35,33), area=(824,305,35,33), mode="Digit", method="Default", keyword="", name="frog_6")
+	# Ocr-description 
+	O_FROG_7 = RuleOcr(roi=(160,439,31,33), area=(160,439,31,33), mode="Digit", method="Default", keyword="", name="frog_7")
+	# Ocr-description 
+	O_FROG_8 = RuleOcr(roi=(494,441,31,31), area=(494,441,31,31), mode="Digit", method="Default", keyword="", name="frog_8")
+	# Ocr-description 
+	O_FROG_9 = RuleOcr(roi=(825,440,33,33), area=(825,440,33,33), mode="Digit", method="Default", keyword="", name="frog_9")
+
+
+	# Click Rule Assets
+	# 用来分割不同的挑战位置 
+	C_PARTITION_1 = RuleClick(roi_front=(220,147,242,120), roi_back=(220,147,242,120), name="partition_1")
+	# 用来分割不同的挑战位置 
+	C_PARTITION_2 = RuleClick(roi_front=(554,148,249,115), roi_back=(554,148,249,115), name="partition_2")
+	# 用来分割不同的挑战位置 
+	C_PARTITION_3 = RuleClick(roi_front=(885,147,242,116), roi_back=(885,147,242,116), name="partition_3")
+	# 用来分割不同的挑战位置 
+	C_PARTITION_4 = RuleClick(roi_front=(220,283,245,124), roi_back=(220,283,245,124), name="partition_4")
+	# 用来分割不同的挑战位置 
+	C_PARTITION_5 = RuleClick(roi_front=(564,280,237,120), roi_back=(564,280,237,120), name="partition_5")
+	# 用来分割不同的挑战位置 
+	C_PARTITION_6 = RuleClick(roi_front=(894,282,237,120), roi_back=(894,282,237,120), name="partition_6")
+	# 用来分割不同的挑战位置 
+	C_PARTITION_7 = RuleClick(roi_front=(225,416,244,121), roi_back=(225,416,244,121), name="partition_7")
+	# 用来分割不同的挑战位置 
+	C_PARTITION_8 = RuleClick(roi_front=(560,413,237,124), roi_back=(560,413,237,124), name="partition_8")
+	# 用来分割不同的挑战位置 
+	C_PARTITION_9 = RuleClick(roi_front=(893,418,234,116), roi_back=(893,418,234,116), name="partition_9")
 
 

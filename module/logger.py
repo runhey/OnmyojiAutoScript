@@ -10,7 +10,7 @@ import traceback
 from io import TextIOBase
 from typing import Callable, List
 
-from rich.console import Console, ConsoleOptions, ConsoleRenderable, NewLine
+from rich.console import Console, ConsoleOptions, ConsoleRenderable, NewLine, RenderResult
 from rich.highlighter import RegexHighlighter, NullHighlighter
 from rich.logging import RichHandler
 from rich.text import Text
@@ -108,7 +108,7 @@ class RichRenderableHandler(RichHandler):
         # 这个message_renderable是一个Text对象
         # traceback是表示异常的对象
         # Directly put renderable into function
-        self._func(message_renderable)
+        self._func(log_renderable)
 
     def handle(self, record: logging.LogRecord) -> bool:
         if not self._func:
@@ -190,7 +190,7 @@ logger_debug = False
 logger = logging.getLogger('oas')
 logger.setLevel(logging.DEBUG if logger_debug else logging.INFO)
 file_formatter = logging.Formatter(
-    fmt='%(asctime)s.%(msecs)03d | %(levelname)s | %(message)s', datefmt='%Y-%m-%d %H:%M:%S')
+    fmt='%(asctime)s.%(msecs)03d | %(levelname)8s | %(message)s', datefmt='%Y-%m-%d %H:%M:%S')
 console_formatter = logging.Formatter(
     fmt='%(asctime)s.%(msecs)03d │ %(message)s', datefmt='%Y-%m-%d %H:%M:%S')
 web_formatter = logging.Formatter(
@@ -203,6 +203,9 @@ web_formatter = logging.Formatter(
 # logger.addHandler(console)
 
 # Add rich console logger
+# ======================================================================================================================
+#            设置控制台的
+# ======================================================================================================================
 stdout_console = console = Console()
 console_hdlr = RichHandler(
     show_path=False,
@@ -252,7 +255,7 @@ def set_file_logger(name=pyw_name):
         file=file,
         no_color=True,
         highlight=False,
-        width=119,
+        width=120,
     )
 
     hdlr = RichFileHandler(
@@ -263,6 +266,7 @@ def set_file_logger(name=pyw_name):
         rich_tracebacks=True,
         tracebacks_show_locals=True,
         tracebacks_extra_lines=3,
+        tracebacks_width=80,
         highlighter=NullHighlighter(),
     )
     hdlr.setFormatter(file_formatter)
@@ -278,9 +282,11 @@ def set_func_logger(func):
     stream = LogStream(func=func)
     file_console = Console(
         file=stream,
+        force_terminal=False,
+        force_interactive=False,
         no_color=True,
         highlight=False,
-        width=160,
+        width=120,
     )
     hdlr = RichStreamHandler(
         console=file_console,
@@ -329,10 +335,16 @@ def print(*objects: ConsoleRenderable, **kwargs):
         elif isinstance(hdlr, RichHandler):
             hdlr.console.print(*objects)
 
+class GuiRule(Rule):
+    def __rich_console__(
+            self, console: Console, options: ConsoleOptions
+    ) -> RenderResult:
+        options.max_width = 80
+        return super().__rich_console__(console, options)
 
 def rule(title="", *, characters="─", style="rule.line", end="\n", align="center"):
-    rule = Rule(title=title, characters=characters,
-                style=style, end=end, align=align)
+    rule = GuiRule(title=title, characters=characters,
+                style=style, end=end)
     print(rule)
 
 
@@ -348,7 +360,7 @@ def hr(title, level=3):
         logger.info(f"[bold]<<< {title} >>>[/bold]", extra={"markup": True})
     if level == 0:
         logger.rule(characters='═')
-        logger.rule(title, characters=' ')
+        logger.rule(title, characters='-')
         logger.rule(characters='═')
 
 
@@ -403,4 +415,5 @@ logger.log_file: str
 
 logger.set_file_logger()
 logger.hr('Start', level=0)
+
 

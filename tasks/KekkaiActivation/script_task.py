@@ -117,7 +117,7 @@ class ScriptTask(KU, KekkaiActivationAssets):
                 logger.info('Card is selected but not using')
                 while 1:
                     self.screenshot()
-                    if self.appear(self.I_A_INVITE):
+                    if self.appear(self.I_A_INVITE, threshold=0.7):
                         logger.info('Card is activated')
                         break
                     if self.appear_then_click(self.I_UI_CONFIRM, interval=0.6):
@@ -356,6 +356,8 @@ class ScriptTask(KU, KekkaiActivationAssets):
         """
         self.appear_then_click(self.I_A_HARVEST_EXP)
         self.appear_then_click(self.I_A_HARVEST_FISH4)  # 斗鱼的如果一直没有领的话
+        self.appear_then_click(self.I_A_HARVEST_KAIKO_4)
+        self.appear_then_click(self.I_A_HARVEST_KAIKO_3)
 
 if __name__ == "__main__":
     from module.config.config import Config

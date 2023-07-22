@@ -520,4 +520,21 @@ mode_3策略是刷到五个契灵后开始结契，选择高级、中级盘来�
 	<message><source>Notify Config</source><translation>推送配置</translation></message>	
 	<message><source>notify_config_help</source><translation>输入为yaml格式，":"冒号后有一个空格，具体请翻阅文档[消息推送]</translation></message>	
 </context>		
+<context>
+    <name>Args</name>
+	<message><source>Number Attack</source><translation>挑战次数</translation></message>	
+	<message><source>Exit Four</source><translation>当进攻到左上角第一个的时候先退四次再进攻</translation></message>	
+	<message><source>Order Attack</source><translation>挑战顺序</translation></message>
+	<message><source>WhenAttackFail</source><translation>挑战失败时</translation></message>
+	<message><source>Three Refresh</source><translation>每三次就刷新</translation></message>
+	<message><source>Number Base</source><translation>突破卷数量大于等于 X 时才会挑战</translation></message>
+	<message><source>number_attack_help</source><translation>默认30，可选范围[1~30]，没有挑战卷自动退出任务（标记为成功）</translation></message>
+	<message><source>exit_four_help</source><translation>为了支持打九退四，保证稳定57级</translation></message>	
+	<message><source>order_attack_help</source><translation>使用过滤器，保持默认即可</translation></message>
+	<message><source>when_attack_fail_help</source><translation>Exit：直接退出任务，标记为失败
+Continue：挑战其他的直至没有可挑战的才刷新
+Refresh：直接刷新，如果刷新操作进入CD，将标记为失败并退出</translation></message>
+	<message><source>three_refresh_help</source><translation>挑战进度到三，领取奖励后就刷新，如果刷新操作进入CD，将标记为失败并退出</translation></message>
+	<message><source>number_base_help</source><translation>旨在检查突破卷数量，如果当前的数量没有大于等于这个值，将标记为成功并退出</translation></message>
+</context>	
 </TS>

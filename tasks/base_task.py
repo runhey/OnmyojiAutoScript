@@ -26,7 +26,6 @@ from tasks.GlobalGame.config_emergency import FriendInvitation, WhenNetworkAbnor
 from module.exception import GameStuckError, ScriptError
 
 
-
 class BaseTask(GlobalGameAssets):
     config: Config = None
     device: Device = None
@@ -242,7 +241,7 @@ class BaseTask(GlobalGameAssets):
                 target._match_init = True
 
             if timeout.reached():
-                logger.warning(f'wait_until_stable({target}) timeout')
+                logger.warning(f'Wait_until_stable({target}) timeout')
                 break
 
     def swipe(self, swipe: RuleSwipe, interval: float = None) -> None:
@@ -414,7 +413,7 @@ class BaseTask(GlobalGameAssets):
                 sleep(1)  # 等待滑动完成， 还没想好如何优化
 
     def set_next_run(self, task: str, finish: bool = False,
-                     success: bool=None, server: bool=True, target: timedelta=None) -> None:
+                     success: bool=None, server: bool=True, target: datetime=None) -> None:
         """
         设置下次运行时间  当然这个也是可以重写的
         :param target: 可以自定义的下次运行时间
@@ -451,10 +450,15 @@ class BaseTask(GlobalGameAssets):
 
             if self.ui_reward_appear_click():
                 while 1:
+                    self.screenshot()
                     # 等待动画结束
-                    if not self.appear(self.I_UI_REWARD):
+                    if not self.appear(self.I_UI_REWARD, threshold=0.6):
                         logger.info('Get reward success')
                         break
+
+                    # 一直点击
+                    if self.ui_reward_appear_click():
+                        continue
                 break
 
             if self.appear_then_click(click_image, interval=0.8):

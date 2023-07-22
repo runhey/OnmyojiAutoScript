@@ -50,6 +50,8 @@ class RestartAssets:
 	I_LOGIN_8 = RuleImage(roi_front=(178,572,53,60), roi_back=(19,547,223,105), threshold=0.8, method="Template matching", file="./tasks/Restart/login/login_login_8.png")
 	# 登录时候不观看CG视频 
 	I_WATCH_VIDEO_CANCEL = RuleImage(roi_front=(466,396,130,61), roi_back=(466,396,130,61), threshold=0.8, method="Template matching", file="./tasks/Restart/login/login_watch_video_cancel.png")
+	# 指定角色进入游戏,默认第一个 
+	I_LOGIN_SPECIFIC_SERVE = RuleImage(roi_front=(24,33,52,47), roi_back=(24,33,52,47), threshold=0.8, method="Template matching", file="./tasks/Restart/login/login_login_specific_serve.png")
 
 
 	# Ocr Rule Assets
@@ -59,5 +61,7 @@ class RestartAssets:
 	O_LOGIN_ENTER_GAME = RuleOcr(roi=(550,567,176,56), area=(558,574,154,49), mode="Single", method="Default", keyword="进入游戏", name="login_enter_game")
 	# 点击屏幕跳过 
 	O_LOGIN_SKIP_1 = RuleOcr(roi=(1046,35,130,37), area=(1046,35,130,37), mode="Single", method="Default", keyword="点击屏幕跳过", name="login_skip_1")
+	# 登录指定角色，默认第一个 
+	O_LOGIN_SPECIFIC_SERVE = RuleOcr(roi=(524,600,242,53), area=(516,75,662,585), mode="Single", method="Default", keyword="点击屏幕进入游戏", name="login_specific_serve")
 
 

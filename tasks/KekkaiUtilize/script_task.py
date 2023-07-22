@@ -3,7 +3,7 @@
 # github https://github.com/runhey
 import time
 from cached_property import cached_property
-from datetime import timedelta
+from datetime import timedelta, datetime
 
 from module.base.timer import Timer
 from module.atom.image_grid import ImageGrid
@@ -32,7 +32,7 @@ class ScriptTask(GameUi, ReplaceShikigami, KekkaiUtilizeAssets):
         # 进入寮结界
         self.goto_realm()
         # 顺带收体力盒子或者是经验盒子
-        time.sleep(0.5)
+        time.sleep(1)
         self.check_box_ap_or_exp(con.box_ap_enable, con.box_exp_enable, con.box_exp_waste)
 
         # 收菜看看
@@ -43,12 +43,13 @@ class ScriptTask(GameUi, ReplaceShikigami, KekkaiUtilizeAssets):
         if not self.appear(self.I_UTILIZE_ADD):
             remaining_time = self.O_UTILIZE_RES_TIME.ocr(self.device.image)
             if not isinstance(remaining_time, timedelta):
-                logger.warning('ocr remaining time error')
+                logger.warning('Ocr remaining time error')
             logger.info(f'Utilize remaining time: {remaining_time}')
             # 执行失败，推出下一次执行为失败的时间间隔
             logger.info('Utilize failed, exit')
             self.back_guild()
-            self.set_next_run(task='KekkaiUtilize', success=False, finish=True)
+            next_time = datetime.now() + remaining_time
+            self.set_next_run(task='KekkaiUtilize', success=False, finish=True, target=next_time)
             raise TaskEnd
         if not self.grown_goto_utilize():
             logger.info('Utilize failed, exit')
@@ -174,14 +175,15 @@ class ScriptTask(GameUi, ReplaceShikigami, KekkaiUtilizeAssets):
             while 1:
                 self.screenshot()
 
-                if self.appear_then_click(self.I_BOX_EXP, interval=1):
+                if self.appear_then_click(self.I_BOX_EXP, threshold=0.6, interval=1):
                     continue
                 if self.appear_then_click(self.I_EXP_EXTRACT, interval=1):
                     continue
 
                 # 如果出现结界皮肤， 表示收取好了
-                if self.appear(self.I_REALM_SHIN) and not self.appear(self.I_BOX_EXP):
+                if self.appear(self.I_REALM_SHIN) and not self.appear(self.I_BOX_EXP, threshold=0.6):
                     break
+
 
                 # 如果出现收取确认，表明进入到了有满级的
                 if self.appear(self.I_UI_CONFIRM):
@@ -201,6 +203,15 @@ class ScriptTask(GameUi, ReplaceShikigami, KekkaiUtilizeAssets):
                             continue
                     break
 
+                if self.appear(self.I_EXP_EXTRACT):
+                    # 如果达到今日领取的最大，就不领取了
+                    cur, res, totol = self.O_BOX_EXP.ocr(self.device.image)
+                    if cur == res == totol == 0:
+                        continue
+                    if cur == totol and cur + res == totol:
+                        logger.info('Exp box reach max do not collect')
+                        break
+
                 if time_exp.reached():
                     logger.warning('Extract exp box timeout')
                     break
@@ -208,7 +219,7 @@ class ScriptTask(GameUi, ReplaceShikigami, KekkaiUtilizeAssets):
 
         self.screenshot()
         box_ap = self.appear(self.I_BOX_AP)
-        box_exp = self.appear(self.I_BOX_EXP, threshold=0.6)
+        box_exp = self.appear(self.I_BOX_EXP, threshold=0.6) or self.appear(self.I_BOX_EXP_MAX, threshold=0.6)
         if ap_enable:
             _check_ap_box(box_ap)
         if exp_enable:
@@ -450,6 +461,8 @@ if __name__ == "__main__":
     t = ScriptTask(c, d)
 
     t.run()
-
+    # t.screenshot()
+    # print(t.appear(t.I_BOX_EXP, threshold=0.6))
+    # print(t.appear(t.I_BOX_EXP_MAX, threshold=0.6))
 
 
