@@ -24,6 +24,7 @@ QtObject {
     property bool nativeText: true
     property string language: ""
     property string dpiStrategy: ""
+    property string branch: ""
 
     property int runStatus: MainEvent.RunStatus.Empty
     property string menuTitle: ""
@@ -53,6 +54,13 @@ QtObject {
         mainEvent.nativeText = set["nativeText"]
         mainEvent.language = set["language"]
         mainEvent.dpiStrategy = set["dpiStrategy"]
+        if ('branch' in set){
+            mainEvent.branch = set['branch']
+        }else{
+            mainEvent.branch = "master"
+            mainEvent.settings["branch"] = mainEvent.branch
+            setting.update(JSON.stringify(mainEvent.settings, null, "  "))
+        }
 
         var primary_color = set["primaryColor"]
         if(primary_color === "Yellow"){mainEvent.primaryColor = FluColors.Yellow}
@@ -76,7 +84,7 @@ QtObject {
         if(settingInit){
             return
         }
-        setting.update(JSON.stringify(mainEvent.settings))
+        setting.update(JSON.stringify(mainEvent.settings, null, "  "))
     }
     onDarkModeChanged: {
 
@@ -88,7 +96,7 @@ QtObject {
         if(settingInit){
             return
         }
-        setting.update(JSON.stringify(mainEvent.settings))
+        setting.update(JSON.stringify(mainEvent.settings, null, "  "))
     }
     onPrimaryColorChanged: {
         if(mainEvent.settings === ""){
@@ -112,7 +120,7 @@ QtObject {
         if(settingInit){
             return
         }
-        setting.update(JSON.stringify(mainEvent.settings))
+        setting.update(JSON.stringify(mainEvent.settings, null, "  "))
     }
     onNativeTextChanged: {
 
@@ -125,7 +133,7 @@ QtObject {
         if(settingInit){
             return
         }
-        setting.update(JSON.stringify(mainEvent.settings))
+        setting.update(JSON.stringify(mainEvent.settings, null, "  "))
     }
     onLanguageChanged: {
         if(mainEvent.settings === ""){
@@ -137,7 +145,7 @@ QtObject {
         if(settingInit){
             return
         }
-        setting.update(JSON.stringify(mainEvent.settings))
+        setting.update(JSON.stringify(mainEvent.settings, null, "  "))
 
     }
     onDpiStrategyChanged: {
@@ -149,6 +157,6 @@ QtObject {
         if(settingInit){
             return
         }
-        setting.update(JSON.stringify(mainEvent.settings))
+        setting.update(JSON.stringify(mainEvent.settings, null, "  "))
     }
 }
