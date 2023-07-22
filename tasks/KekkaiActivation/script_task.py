@@ -356,6 +356,8 @@ class ScriptTask(KU, KekkaiActivationAssets):
         """
         self.appear_then_click(self.I_A_HARVEST_EXP)
         self.appear_then_click(self.I_A_HARVEST_FISH4)  # 斗鱼的如果一直没有领的话
+        self.appear_then_click(self.I_A_HARVEST_KAIKO_4)
+        self.appear_then_click(self.I_A_HARVEST_KAIKO_3)
 
 if __name__ == "__main__":
     from module.config.config import Config

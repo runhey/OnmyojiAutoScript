@@ -151,5 +151,23 @@
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"
+  },
+  {
+    "itemName": "a_harvest_kaiko_4",
+    "imageName": "a_a_harvest_kaiko_4.png",
+    "roiFront": "894,164,48,41",
+    "roiBack": "867,132,100,100",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "太鼓4"
+  },
+  {
+    "itemName": "a_harvest_kaiko_3",
+    "imageName": "a_a_harvest_kaiko_3.png",
+    "roiFront": "893,163,47,42",
+    "roiBack": "865,136,100,100",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
   }
 ]

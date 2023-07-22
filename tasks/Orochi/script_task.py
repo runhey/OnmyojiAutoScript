@@ -332,16 +332,21 @@ if __name__ == '__main__':
     d = Device(c)
     t = ScriptTask(c, d)
 
-    t.run()
+    # t.run()
 
     # t.check_layer('悲')
 
+    from module.base.timer import timer
+
+    @timer
     @profile
     def test_memory():
         t.screenshot()
         print(t.ocr_appear(t.O_O_TEST_OCR))
         print(t.L_LAYER_LIST.image_appear(t.device.image, '悲'))
-    # test_memory()
+    for i in range(4):
+        test_memory()
+        print('=====================')
 
 
 
