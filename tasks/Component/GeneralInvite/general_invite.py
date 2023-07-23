@@ -62,7 +62,8 @@ class GeneralInvite(BaseTask, GeneralInviteAssets):
             self.ensure_room_type(config.invite_number)
             self.invite_friends(config)
         else:
-            self.timer_invite = None
+            self.timer_invite = Timer(30)
+            self.timer_invite.start()
             self.timer_emoji = Timer(20)
             self.timer_emoji.start()
         wait_second = config.wait_time.second + config.wait_time.minute * 60
@@ -74,13 +75,19 @@ class GeneralInvite(BaseTask, GeneralInviteAssets):
                 logger.warning('Wait timeout')
                 return False
             if self.timer_invite and self.timer_invite.reached():
-                logger.info('Invitation is triggered every 20s')
-                self.timer_invite.reset()
+                if is_first:
+                    logger.info('Invitation is triggered every 20s')
+                    self.timer_invite.reset()
+                else:
+                    logger.info('Wait for 30s and invite again')
+                    self.timer_invite = None
                 self.invite_friends(config)
-
             if self.appear(self.I_MATCHING):
                 logger.warning('Timeout, now is no room')
                 return False
+
+            if not self.is_in_room():
+                continue
 
             if self.timer_emoji and self.timer_emoji.reached():
                 self.timer_emoji.reset()
@@ -88,68 +95,38 @@ class GeneralInvite(BaseTask, GeneralInviteAssets):
                 self.appear_then_click(self.I_GI_EMOJI_2)
 
 
+            fire = False  # 是否开启挑战
             # 如果这个房间最多只容纳两个人（意思是只可以邀请一个人），且已经邀请一个人了，那就开启挑战
             if self.room_type == RoomType.NORMAL_2 and not self.appear(self.I_ADD_2):
                 logger.info('Start challenge and this room can only invite one friend')
-                while 1:
-                    self.screenshot()
-                    if not self.appear(self.I_FIRE):
-                        break
-                    if self.appear_then_click(self.I_FIRE, interval=1):
-                        continue
-                return True
+                fire = True
             # 如果这个房间最多容纳三个人（意思是可以邀请两个人），且设定邀请一个就开启挑战，那就开启挑战
             elif self.room_type == RoomType.NORMAL_3 and config.invite_number == InviteNumber.ONE and not self.appear(self.I_ADD_1):
                 logger.info('Start challenge and user only invite one friend')
-                while 1:
-                    self.screenshot()
-                    if not self.appear(self.I_FIRE):
-                        break
-                    if self.appear_then_click(self.I_FIRE, interval=1):
-                        continue
-                return True
+                fire = True
             # 如果这个房间最多容纳三个人（意思是可以邀请两个人），且设定邀请两个就开启挑战，那就开启挑战
             elif self.room_type == RoomType.NORMAL_3 \
                     and config.invite_number == InviteNumber.TWO and not self.appear(self.I_ADD_2):
                 logger.info('Start challenge and user invite two friends')
-                while 1:
-                    self.screenshot()
-                    if not self.appear(self.I_FIRE):
-                        break
-                    if self.appear_then_click(self.I_FIRE, interval=1):
-                        continue
-                return True
+                fire = True
             # 如果这个房间是五人的，且设定邀请一个就开启挑战，那就开启挑战
             elif self.room_type == RoomType.NORMAL_5 \
                     and config.invite_number == InviteNumber.ONE and not self.appear(self.I_ADD_5_1):
                 logger.info('Start challenge and user only invite one friend')
-                while 1:
-                    self.screenshot()
-                    if not self.appear(self.I_FIRE):
-                        break
-                    if self.appear_then_click(self.I_FIRE, interval=1):
-                        continue
-                return True
+                fire = True
             # 如果这个房间是五人的，且设定邀请两个就开启挑战，那就开启挑战
             elif self.room_type == RoomType.NORMAL_5 \
                     and config.invite_number == InviteNumber.TWO and not self.appear(self.I_ADD_5_2):
                 logger.info('Start challenge and user invite two friends')
-                while 1:
-                    self.screenshot()
-                    if not self.appear(self.I_FIRE):
-                        break
-                    if self.appear_then_click(self.I_FIRE, interval=1):
-                        continue
-                return True
+                fire = True
             # 如果是永生之海
             elif self.room_type == RoomType.ETERNITY_SEA and not self.appear(self.I_ADD_SEA):
                 logger.info('Start challenge and this is lock sea')
-                while 1:
-                    self.screenshot()
-                    if not self.appear(self.I_FIRE_SEA):
-                        break
-                    if self.appear_then_click(self.I_FIRE_SEA, interval=1):
-                        continue
+                fire = True
+
+            # 点击挑战
+            if fire:
+                self.click_fire()
                 return True
 
     def ensure_enter(self) -> bool:
@@ -183,8 +160,8 @@ class GeneralInvite(BaseTask, GeneralInviteAssets):
             return True
         if self.appear(self.I_GI_EMOJI_2):
             return True
-        if self.appear(self.I_MATCHING):
-            return False
+        # if self.appear(self.I_MATCHING):
+        #     return False
         return False
 
     def exit_room(self) -> bool:
@@ -207,6 +184,13 @@ class GeneralInvite(BaseTask, GeneralInviteAssets):
                 continue
         return True
 
+    def click_fire(self):
+        while 1:
+            self.screenshot()
+            if not self.is_in_room(False):
+                break
+            if self.appear_then_click(self.I_FIRE, interval=1):
+                continue
 
     @cached_property
     def room_type(self) -> RoomType:
@@ -647,5 +631,6 @@ if __name__ == '__main__':
 
     # t.run_invite(c.orochi.invite_config, is_first=True)
     t.screenshot()
-    print(t.detect_select('我是真的天秀'))
+    print(t.appear(t.I_FIRE, threshold=0.8))
+
 
