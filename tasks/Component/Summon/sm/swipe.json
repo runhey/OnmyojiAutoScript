@@ -1,0 +1,30 @@
+[
+  {
+    "itemName": "random_swipe_1",
+    "roiFront": "459,136,369,100",
+    "roiBack": "456,448,400,100",
+    "mode": "default",
+    "description": "description"
+  },
+  {
+    "itemName": "random_swipe_2",
+    "roiFront": "433,451,447,100",
+    "roiBack": "411,122,479,100",
+    "mode": "default",
+    "description": "description"
+  },
+  {
+    "itemName": "random_swipe_3",
+    "roiFront": "401,123,100,440",
+    "roiBack": "762,122,100,434",
+    "mode": "default",
+    "description": "description"
+  },
+  {
+    "itemName": "random_swipe_4",
+    "roiFront": "777,128,100,412",
+    "roiBack": "431,120,100,444",
+    "mode": "default",
+    "description": "description"
+  }
+]

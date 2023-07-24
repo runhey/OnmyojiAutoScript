@@ -542,4 +542,13 @@ Refresh：直接刷新，如果刷新操作进入CD，将标记为失败并退�
 	<message><source>SougenbiConfig</source><translation>业原火</translation></message>	
 	<message><source>SougenbiClass</source><translation>挑战类型</translation></message>	
 </context>	
+<context>
+    <name>Args</name>
+	<message><source>DailyTriflesConfig</source><translation>琐事</translation></message>	
+	<message><source>One Summon</source><translation>每日召唤</translation></message>	
+	<message><source>Guild Wish</source><translation>寮祈愿（还不知道可以写什么）</translation></message>	
+	<message><source>Friend Love</source><translation>友情点</translation></message>	
+	<message><source>Store Sign</source><translation>商店签到</translation></message>	
+	<message><source>store_sign_help</source><translation>就那个签到50次得黑蛋的</translation></message>	
+</context>	
 </TS>
