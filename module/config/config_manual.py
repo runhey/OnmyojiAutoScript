@@ -14,7 +14,7 @@ class ConfigManual:
         > Orochi > OrochiMoans > OrochiJudgement > Sougenbi > FallenSun > EternitySea
         > ActivityShikigami
         > BondlingFairyland
-        > TrueOrochi
+        > TrueOrochi > RichMan
         """
 
     DEVICE_OVER_HTTP = False
