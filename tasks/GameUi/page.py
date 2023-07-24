@@ -151,7 +151,10 @@ page_main.link(button=G.I_MAIN_GOTO_TEAM, destination=page_team)
 page_collection = Page(G.I_CHECK_COLLECTION)
 page_collection.link(button=G.I_BACK_Y, destination=page_main)
 page_main.link(button=G.I_MAIN_GOTO_COLLECTION, destination=page_collection)
-
+# 珍旅居
+page_travel = Page(G.I_CHECK_TRAVEL)
+page_travel.link(button=G.I_BACK_Y, destination=page_main)
+page_main.link(button=G.I_MAIN_GOTO_TRAVEL, destination=page_travel)
 
 
 

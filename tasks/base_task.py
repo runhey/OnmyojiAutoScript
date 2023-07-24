@@ -438,9 +438,9 @@ class BaseTask(GlobalGameAssets):
             self.screenshot()
         return self.appear_then_click(self.I_UI_REWARD, action=self.C_UI_REWARD, interval=0.4, threshold=0.6)
 
-    def ui_get_reward(self, click_image: RuleImage):
+    def ui_get_reward(self, click_image: RuleImage or RuleOcr):
         """
-        传进来一个点击图片， 会点击这个图片，然后等待‘获得奖励’，
+        传进来一个点击图片 或是 一个ocr， 会点击这个图片，然后等待‘获得奖励’，
         最后当获得奖励消失后 退出
         :param click_image:
         :return:
@@ -461,7 +461,11 @@ class BaseTask(GlobalGameAssets):
                         continue
                 break
 
-            if self.appear_then_click(click_image, interval=0.8):
-                continue
+            if isinstance(click_image, RuleImage):
+                if self.appear_then_click(click_image, interval=1):
+                    continue
+            elif isinstance(click_image, RuleOcr):
+                if self.ocr_appear_click(click_image, interval=1):
+                    continue
 
         return True
