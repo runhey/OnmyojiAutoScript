@@ -10,6 +10,39 @@ from module.atom.list import RuleList
 class RichManAssets: 
 
 
+	# Image Rule Assets
+	# 神社 
+	I_GUILD_SHRINE = RuleImage(roi_front=(869,623,64,62), roi_back=(869,623,64,62), threshold=0.8, method="Template matching", file="./tasks/RichMan/guild/guild_guild_shrine.png")
+	# 功勋商店 
+	I_GUILD_STORE = RuleImage(roi_front=(651,420,212,161), roi_back=(651,420,212,161), threshold=0.8, method="Template matching", file="./tasks/RichMan/guild/guild_guild_store.png")
+	# description 
+	I_GUILD_CLOSE_RED = RuleImage(roi_front=(1029,120,53,57), roi_back=(1029,120,53,57), threshold=0.8, method="Template matching", file="./tasks/RichMan/guild/guild_guild_close_red.png")
+	# 蓝票 
+	I_GUILD_BLUE = RuleImage(roi_front=(793,179,74,80), roi_back=(793,179,74,80), threshold=0.8, method="Template matching", file="./tasks/RichMan/guild/guild_guild_blue.png")
+	# 黑蛋碎片 
+	I_GUILD_SCRAP = RuleImage(roi_front=(570,442,71,68), roi_back=(570,442,71,68), threshold=0.8, method="Template matching", file="./tasks/RichMan/guild/guild_guild_scrap.png")
+	# 皮肤券 
+	I_GUILD_SKIN = RuleImage(roi_front=(795,436,71,74), roi_back=(795,436,71,74), threshold=0.8, method="Template matching", file="./tasks/RichMan/guild/guild_guild_skin.png")
+	# 购买检查 
+	I_GUILD_CHECK_SCRAP = RuleImage(roi_front=(454,240,90,88), roi_back=(454,240,90,88), threshold=0.8, method="Template matching", file="./tasks/RichMan/guild/guild_guild_check_scrap.png")
+
+
+	# Ocr Rule Assets
+	# 总的功勋 
+	O_GUILD_TOTAL = RuleOcr(roi=(1151,6,100,42), area=(1151,6,100,42), mode="Digit", method="Default", keyword="", name="guild_total")
+	# Ocr-description 
+	O_GUILD_NUMBER_BLUE = RuleOcr(roi=(888,269,25,33), area=(888,269,25,33), mode="Digit", method="Default", keyword="", name="guild_number_blue")
+	# Ocr-description 
+	O_GUILD_NUMBER_BLACK = RuleOcr(roi=(663,520,22,31), area=(663,520,22,31), mode="Digit", method="Default", keyword="", name="guild_number_black")
+	# Ocr-description 
+	O_GUILD_NUMBER_SKIN = RuleOcr(roi=(889,519,21,35), area=(889,519,21,35), mode="Digit", method="Default", keyword="", name="guild_number_skin")
+
+
+	# Swipe Rule Assets
+	# description 
+	S_GUILD_STORE = RuleSwipe(roi_front=(807,460,46,35), roi_back=(720,214,90,34), mode="default", name="guild_store")
+
+
 	# Click Rule Assets
 	# description 
 	C_C_SHRINE = RuleClick(roi_front=(1098,261,56,100), roi_back=(1098,261,56,100), name="c_shrine")
