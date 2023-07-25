@@ -59,7 +59,7 @@ class ThousandThings(GameUi, RichManAssets):
         if not self.appear(self.I_TT_TICKET_BULE):
             logger.info('No mystery amulet')
             return False
-        if not self.tt_check_memory(2000):
+        if not self.tt_check_money(2000):
             return False
         while 1:
             self.screenshot()
@@ -79,7 +79,7 @@ class ThousandThings(GameUi, RichManAssets):
         if not self.appear(self.I_TT_BLACK):
             logger.info('No black daruma scrap')
             return False
-        if not self.tt_check_memory(350):
+        if not self.tt_check_money(350):
             return False
         while 1:
             self.screenshot()
@@ -98,7 +98,7 @@ class ThousandThings(GameUi, RichManAssets):
         if not self.appear(self.I_TT_AP):
             logger.info('No ap')
             return False
-        if not self.tt_check_memory(600):
+        if not self.tt_check_money(600):
             return False
         self.O_TT_NUMBER.keyword = '2'
         while 1:
@@ -115,16 +115,16 @@ class ThousandThings(GameUi, RichManAssets):
         time.sleep(0.5)
         return True
 
-    def tt_check_memory(self, mix: int) -> bool:
+    def tt_check_money(self, mix: int) -> bool:
         self.screenshot()
-        current = self.O_TT_TOTOL.ocr(self.device.image)
+        current = self.O_S_TOTAL.ocr(self.device.image)
         if not isinstance(current, int):
-            logger.warning('OCR current memory failed')
+            logger.warning('OCR current money failed')
             return False
         if current >= mix:
-            logger.info('Memory is enough')
+            logger.info('Money is enough')
             return True
-        logger.info('Memory is not enough')
+        logger.info('Money is not enough')
         return False
 
 
