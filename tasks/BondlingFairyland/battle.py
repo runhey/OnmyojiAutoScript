@@ -50,6 +50,8 @@ class BondlingBattle(GeneralBattle, BondlingFairylandAssets):
         :return: 如果捕获成功返回True，否则返回False
         """
         self.device.stuck_record_add('BATTLE_STATUS_S')
+        self.device.click_record_clear()
+        # 有时候 只会点击 获得奖励和开始战斗
         # 战斗过程 随机点击和滑动 防封
         logger.info("Start battle process")
         win: bool = False

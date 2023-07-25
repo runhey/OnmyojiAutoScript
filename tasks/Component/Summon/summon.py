@@ -50,7 +50,7 @@ class Summon(BaseTask, SummonAssets):
                 break
             if self.appear_then_click(self.I_BLUE_TICKET, interval=1):
                 continue
-        time.sleep(0.5)
+        time.sleep(1)
         self.summon()
         self.wait_until_appear(self.I_SM_CONFIRM)
         while 1:

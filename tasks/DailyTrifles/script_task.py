@@ -54,13 +54,9 @@ class ScriptTask(GameUi, Summon, DailyTriflesAssets):
         if not self.appear(self.I_L_COLLECT):
             logger.warning('There is no any love')
             return
-        while 1:
-            self.screenshot()
-            if self.ui_get_reward():
-                logger.info('Get reward of friend love')
-                break
-            if self.appear_then_click(self.I_L_COLLECT):
-                continue
+        if self.ui_get_reward(self.I_L_COLLECT):
+            logger.info('Get reward of friend love')
+
 
     def run_store_sign(self):
         self.ui_get_current_page()
@@ -82,13 +78,10 @@ class ScriptTask(GameUi, Summon, DailyTriflesAssets):
             self.ui_get_current_page()
             self.ui_goto(page_main)
             return
-        while 1:
-            self.screenshot()
-            if self.ui_get_reward():
-                logger.info('Get reward of gift sign')
-                break
-            if self.appear_then_click(self.I_GIFT_SIGN, interval=1):
-                continue
+
+        if self.ui_get_reward(self.I_GIFT_SIGN):
+            logger.info('Get reward of gift sign')
+
         self.ui_get_current_page()
         self.ui_goto(page_main)
 
