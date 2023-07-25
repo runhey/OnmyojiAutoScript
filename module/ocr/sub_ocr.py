@@ -97,6 +97,8 @@ class Digit(Single):
         result = super().after_process(result)
         result = result.replace('I', '1').replace('D', '0').replace('S', '5')
         result = result.replace('B', '8')
+        result = [char for char in result if char.isdigit()]
+        result = ''.join(result)
 
         prev = result
         result = int(result) if result else 0

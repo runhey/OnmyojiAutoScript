@@ -43,6 +43,79 @@ class RichManAssets:
 	S_GUILD_STORE = RuleSwipe(roi_front=(807,460,46,35), roi_back=(720,214,90,34), mode="default", name="guild_store")
 
 
+	# Image Rule Assets
+	# 进入寄售屋 
+	I_CON_ENTER_CHECK = RuleImage(roi_front=(660,485,393,100), roi_back=(660,485,393,100), threshold=0.8, method="Template matching", file="./tasks/RichMan/mall/consignment/consignment_con_enter_check.png")
+	# 兑换 
+	I_CON_ENTER = RuleImage(roi_front=(1176,304,68,74), roi_back=(1176,304,68,74), threshold=0.8, method="Template matching", file="./tasks/RichMan/mall/consignment/consignment_con_enter.png")
+	# 寄售券 
+	I_CON_TICKET = RuleImage(roi_front=(700,194,100,100), roi_back=(700,194,100,100), threshold=0.8, method="Template matching", file="./tasks/RichMan/mall/consignment/consignment_con_ticket.png")
+
+
+	# Ocr Rule Assets
+	# 寄售券可以购买的数量 
+	O_CON_NUMBER = RuleOcr(roi=(813,140,34,38), area=(813,140,34,38), mode="Digit", method="Default", keyword="", name="con_number")
+
+
+	# Image Rule Assets
+	# 寄售屋 
+	I_MALL_CONSIGNMENT = RuleImage(roi_front=(192,629,63,72), roi_back=(192,629,63,72), threshold=0.8, method="Template matching", file="./tasks/RichMan/mall/navbar/navbar_mall_consignment.png")
+	# 寄售屋 
+	I_MALL_CONSIGNMENT_CHECK = RuleImage(roi_front=(171,83,100,49), roi_back=(171,83,100,49), threshold=0.8, method="Template matching", file="./tasks/RichMan/mall/navbar/navbar_mall_consignment_check.png")
+	# 密卷屋 
+	I_MALL_SCCALES = RuleImage(roi_front=(433,635,100,64), roi_back=(433,635,100,64), threshold=0.8, method="Template matching", file="./tasks/RichMan/mall/navbar/navbar_mall_sccales.png")
+	# 密卷屋 
+	I_MALL_SCCALES_CHECK = RuleImage(roi_front=(409,253,100,100), roi_back=(409,253,100,100), threshold=0.8, method="Template matching", file="./tasks/RichMan/mall/navbar/navbar_mall_sccales_check.png")
+	# description 
+	I_MALL_SCALES_SURE = RuleImage(roi_front=(1195,100,62,85), roi_back=(1195,100,62,85), threshold=0.8, method="Template matching", file="./tasks/RichMan/mall/navbar/navbar_mall_scales_sure.png")
+	# 契灵商店 
+	I_MALL_BONDLINGS_SURE = RuleImage(roi_front=(1194,421,69,74), roi_back=(1194,421,69,74), threshold=0.8, method="Template matching", file="./tasks/RichMan/mall/navbar/navbar_mall_bondlings_sure.png")
+	# 契灵商店 
+	I_MALL_BONDLINGS_CHECK = RuleImage(roi_front=(646,421,191,37), roi_back=(646,421,191,37), threshold=0.8, method="Template matching", file="./tasks/RichMan/mall/navbar/navbar_mall_bondlings_check.png")
+	# 杂货铺 
+	I_MALL_SUNDRY = RuleImage(roi_front=(854,623,74,61), roi_back=(854,623,74,61), threshold=0.8, method="Template matching", file="./tasks/RichMan/mall/navbar/navbar_mall_sundry.png")
+	# 杂货铺 
+	I_MALL_SUNDRY_CHECK = RuleImage(roi_front=(1169,95,72,440), roi_back=(1169,95,72,440), threshold=0.7, method="Template matching", file="./tasks/RichMan/mall/navbar/navbar_mall_sundry_check.png")
+
+
+	# Image Rule Assets
+	# 特殊 
+	I_SIDE_SURE_SPECIAL = RuleImage(roi_front=(1172,91,70,74), roi_back=(1172,91,70,74), threshold=0.8, method="Template matching", file="./tasks/RichMan/mall/navbar/navbar_side_sure_special.png")
+	# 特殊 
+	I_SIDE_CHECK_SPECIAL = RuleImage(roi_front=(102,7,42,42), roi_back=(102,7,42,42), threshold=0.8, method="Template matching", file="./tasks/RichMan/mall/navbar/navbar_side_check_special.png")
+	# 荣誉 
+	I_SIDE_SUER_HONOR = RuleImage(roi_front=(1171,185,72,74), roi_back=(1171,185,72,74), threshold=0.8, method="Template matching", file="./tasks/RichMan/mall/navbar/navbar_side_suer_honor.png")
+	# 荣誉 
+	I_SIDE_CHECK_HONOR = RuleImage(roi_front=(694,12,41,42), roi_back=(694,12,41,42), threshold=0.8, method="Template matching", file="./tasks/RichMan/mall/navbar/navbar_side_check_honor.png")
+	# 友情点 
+	I_SIDE_SURE_FRIENDS = RuleImage(roi_front=(1174,279,68,70), roi_back=(1174,279,68,70), threshold=0.8, method="Template matching", file="./tasks/RichMan/mall/navbar/navbar_side_sure_friends.png")
+	# 友情点 
+	I_SIDE_CHECK_FRIENDS = RuleImage(roi_front=(890,8,39,43), roi_back=(890,8,39,43), threshold=0.8, method="Template matching", file="./tasks/RichMan/mall/navbar/navbar_side_check_friends.png")
+	# 勋章 
+	I_SIDE_SURE_MEDAL = RuleImage(roi_front=(1175,370,72,73), roi_back=(1175,370,72,73), threshold=0.8, method="Template matching", file="./tasks/RichMan/mall/navbar/navbar_side_sure_medal.png")
+	# 勋章 
+	I_SIDE_CHECK_MEDAL = RuleImage(roi_front=(889,11,40,44), roi_back=(889,11,40,44), threshold=0.8, method="Template matching", file="./tasks/RichMan/mall/navbar/navbar_side_check_medal.png")
+	# 魅力值 
+	I_SIDE_SURE_CHARISMA = RuleImage(roi_front=(1175,464,72,74), roi_back=(1175,464,72,74), threshold=0.8, method="Template matching", file="./tasks/RichMan/mall/navbar/navbar_side_sure_charisma.png")
+	# 魅力值 
+	I_SIDE_CHECK_CHARISMA = RuleImage(roi_front=(886,4,48,46), roi_back=(886,4,48,46), threshold=0.8, method="Template matching", file="./tasks/RichMan/mall/navbar/navbar_side_check_charisma.png")
+
+
+	# Ocr Rule Assets
+	# 左数第一个 
+	O_MALL_RESOURCE_1 = RuleOcr(roi=(144,7,100,43), area=(144,7,100,43), mode="Digit", method="Default", keyword="", name="mall_resource_1")
+	# 左数第二个 
+	O_MALL_RESOURCE_2 = RuleOcr(roi=(326,8,124,39), area=(326,8,124,39), mode="Digit", method="Default", keyword="", name="mall_resource_2")
+	# 左数第二个 
+	O_MALL_RESOURCE_3 = RuleOcr(roi=(533,9,107,38), area=(533,9,107,38), mode="Digit", method="Default", keyword="", name="mall_resource_3")
+	# 左数第二个 
+	O_MALL_RESOURCE_4 = RuleOcr(roi=(739,8,100,39), area=(739,8,100,39), mode="Digit", method="Default", keyword="", name="mall_resource_4")
+	# 左数第二个 
+	O_MALL_RESOURCE_5 = RuleOcr(roi=(935,11,100,37), area=(935,11,100,37), mode="Digit", method="Default", keyword="", name="mall_resource_5")
+	# 左数第二个 
+	O_MALL_RESOURCE_6 = RuleOcr(roi=(1129,6,100,41), area=(1129,6,100,41), mode="Digit", method="Default", keyword="", name="mall_resource_6")
+
+
 	# Click Rule Assets
 	# description 
 	C_C_SHRINE = RuleClick(roi_front=(1098,261,56,100), roi_back=(1098,261,56,100), name="c_shrine")

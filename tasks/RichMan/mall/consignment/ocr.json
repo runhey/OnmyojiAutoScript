@@ -1,0 +1,11 @@
+[
+  {
+    "itemName": "con_number",
+    "roiFront": "813,140,34,38",
+    "roiBack": "813,140,34,38",
+    "mode": "Digit",
+    "method": "Default",
+    "keyword": "",
+    "description": "寄售券可以购买的数量"
+  }
+]

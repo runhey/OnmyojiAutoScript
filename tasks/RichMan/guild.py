@@ -14,6 +14,7 @@ from tasks.RichMan.config import GuildStore
 class Guild(GameUi, Buy, RichManAssets):
 
     def execute_guild(self, con: GuildStore=None):
+        logger.hr('Start guild', 1)
         self.ui_get_current_page()
         self.ui_goto(page_guild)
         while 1:
