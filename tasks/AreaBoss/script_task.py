@@ -171,7 +171,7 @@ class ScriptTask(GeneralBattle, GameUi, AreaBossAssets):
 
         # 退出
         self.go_back()
-        self.set_next_run(task='AreaBoss', success=True)
+        self.set_next_run(task='AreaBoss', success=True, finish=False)
 
         # 以抛出异常的形式结束
         raise TaskEnd

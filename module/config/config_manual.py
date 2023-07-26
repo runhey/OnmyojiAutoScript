@@ -10,11 +10,11 @@ class ConfigManual:
     SCHEDULER_PRIORITY = """
         Restart
         >KekkaiUtilize > KekkaiActivation > DemonEncounter
-        > AreaBoss > GoldYoukai > ExperienceYoukai > Nian > RealmRaid > RyouToppa
+        > AreaBoss > GoldYoukai > ExperienceYoukai > Nian > RealmRaid > RyouToppa > DailyTrifles
         > Orochi > OrochiMoans > OrochiJudgement > Sougenbi > FallenSun > EternitySea
         > ActivityShikigami
         > BondlingFairyland
-        > TrueOrochi
+        > TrueOrochi > RichMan
         """
 
     DEVICE_OVER_HTTP = False

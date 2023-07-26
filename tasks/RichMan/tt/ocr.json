@@ -1,0 +1,56 @@
+[
+  {
+    "itemName": "tt_totol",
+    "roiFront": "1121,10,116,35",
+    "roiBack": "1121,10,116,35",
+    "mode": "Digit",
+    "method": "Default",
+    "keyword": "",
+    "description": "Ocr-description"
+  },
+  {
+    "itemName": "tt_blue_ticket",
+    "roiFront": "509,307,531,92",
+    "roiBack": "509,307,531,92",
+    "mode": "Full",
+    "method": "Default",
+    "keyword": "2000",
+    "description": "Ocr-description"
+  },
+  {
+    "itemName": "tt_black",
+    "roiFront": "498,313,528,89",
+    "roiBack": "498,313,528,89",
+    "mode": "Full",
+    "method": "Default",
+    "keyword": "350",
+    "description": "Ocr-description"
+  },
+  {
+    "itemName": "tt_ap",
+    "roiFront": "502,311,535,91",
+    "roiBack": "502,311,535,91",
+    "mode": "Full",
+    "method": "Default",
+    "keyword": "300",
+    "description": "Ocr-description"
+  },
+  {
+    "itemName": "tt_buy",
+    "roiFront": "602,509,104,61",
+    "roiBack": "602,509,104,61",
+    "mode": "Full",
+    "method": "Default",
+    "keyword": "",
+    "description": "Ocr-description"
+  },
+  {
+    "itemName": "tt_number",
+    "roiFront": "576,415,58,49",
+    "roiBack": "576,415,58,49",
+    "mode": "Digit",
+    "method": "Default",
+    "keyword": "",
+    "description": "Ocr-description"
+  }
+]

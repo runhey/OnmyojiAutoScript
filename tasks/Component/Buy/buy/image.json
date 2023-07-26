@@ -1,0 +1,29 @@
+[
+  {
+    "itemName": "buy_plus",
+    "imageName": "buy_buy_plus.png",
+    "roiFront": "762,410,50,58",
+    "roiBack": "762,410,50,58",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "拉满"
+  },
+  {
+    "itemName": "buy_add",
+    "imageName": "buy_buy_add.png",
+    "roiFront": "686,411,51,54",
+    "roiBack": "686,411,51,54",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "加一个"
+  },
+  {
+    "itemName": "buy_sub",
+    "imageName": "buy_buy_sub.png",
+    "roiFront": "471,416,50,48",
+    "roiBack": "471,416,50,48",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "减"
+  }
+]

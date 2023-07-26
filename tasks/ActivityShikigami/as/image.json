@@ -2,8 +2,8 @@
   {
     "itemName": "shi",
     "imageName": "as_shi.png",
-    "roiFront": "455,346,29,53",
-    "roiBack": "122,333,1029,76",
+    "roiFront": "135,146,64,53",
+    "roiBack": "80,132,1029,76",
     "method": "Template matching",
     "threshold": 0.7,
     "description": "进入活动"
@@ -20,11 +20,11 @@
   {
     "itemName": "battle",
     "imageName": "as_battle.png",
-    "roiFront": "1037,330,52,57",
-    "roiBack": "1037,330,52,57",
+    "roiFront": "568,171,52,177",
+    "roiBack": "568,171,52,177",
     "method": "Template matching",
     "threshold": 0.8,
-    "description": "description"
+    "description": "进入爬塔"
   },
   {
     "itemName": "drum",
@@ -38,8 +38,8 @@
   {
     "itemName": "lock",
     "imageName": "as_lock.png",
-    "roiFront": "794,653,30,32",
-    "roiBack": "794,653,30,32",
+    "roiFront": "806,642,30,32",
+    "roiBack": "806,642,30,32",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "上锁图标"
@@ -47,8 +47,8 @@
   {
     "itemName": "unlock",
     "imageName": "as_unlock.png",
-    "roiFront": "796,653,27,35",
-    "roiBack": "796,653,27,35",
+    "roiFront": "807,640,27,35",
+    "roiBack": "807,640,27,35",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "还未上锁图片"
@@ -56,8 +56,8 @@
   {
     "itemName": "fire",
     "imageName": "as_fire.png",
-    "roiFront": "1140,585,75,73",
-    "roiBack": "1140,585,75,73",
+    "roiFront": "1123,563,106,116",
+    "roiBack": "1123,563,106,116",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "点击战斗"
@@ -65,8 +65,8 @@
   {
     "itemName": "ap",
     "imageName": "as_ap.png",
-    "roiFront": "1126,510,27,37",
-    "roiBack": "1126,510,27,37",
+    "roiFront": "1116,498,27,37",
+    "roiBack": "1116,498,27,37",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "体力按钮"
@@ -74,8 +74,8 @@
   {
     "itemName": "ap_activity",
     "imageName": "as_ap_activity.png",
-    "roiFront": "1125,516,27,27",
-    "roiBack": "1125,516,27,27",
+    "roiFront": "1109,502,27,27",
+    "roiBack": "1109,502,27,27",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "活动体力"
@@ -83,8 +83,8 @@
   {
     "itemName": "switch",
     "imageName": "as_switch.png",
-    "roiFront": "1207,514,33,30",
-    "roiBack": "1207,514,33,30",
+    "roiFront": "1207,505,33,30",
+    "roiBack": "1207,505,33,30",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "切换按键"

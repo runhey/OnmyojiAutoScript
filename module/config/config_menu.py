@@ -21,13 +21,13 @@ class ConfigMenu:
         self.menu["Soul Zones"] = ['Orochi', 'Sougenbi', 'FallenSun', 'EternitySea']
         # 日常的任务
         self.menu["Daily Task"] = ['AreaBoss', 'GoldYoukai', 'ExperienceYoukai', 'Nian', 'RealmRaid', 'RyouToppa',
-                                   'KekkaiUtilize', 'KekkaiActivation', 'DemonEncounter']
+                                   'KekkaiUtilize', 'KekkaiActivation', 'DemonEncounter', 'DailyTrifles']
         # 活动的任务
         self.menu["Activity Task"] = ['ActivityShikigami']
         # 很肝的任务
         self.menu["Liver Emperor Exclusive"] = ['BondlingFairyland']
         # 每周任务
-        self.menu["Weekly Task"] = ['TrueOrochi']
+        self.menu["Weekly Task"] = ['TrueOrochi', 'RichMan']
         # 开发工具
         self.menu["Tools"] = ['Image Rule', 'Ocr Rule', 'Click Rule', 'Long Click Rule', 'Swipe Rule', 'List Rule']
 

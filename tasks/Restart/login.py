@@ -57,6 +57,10 @@ class LoginHandler(BaseTask, RestartAssets):
             # 跳过观看视频
             # if self.ocr_appear_click(self.O_LOGIN_SKIP_1, interval=1):
             #     continue
+            # 下载插画
+            if self.appear_then_click(self.I_LOGIN_LOAD_DOWN, interval=1):
+                logger.info('Download inbetweening')
+                continue
             # 不观看视频
             if self.appear_then_click(self.I_WATCH_VIDEO_CANCEL, interval=0.6):
                 logger.info('Close video')

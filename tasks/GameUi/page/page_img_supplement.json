@@ -34,5 +34,23 @@
     "method": "Template matching",
     "threshold": 0.8,
     "description": "就是一个红叉"
+  },
+  {
+    "itemName": "main_goto_travel",
+    "imageName": "page_main_goto_travel.png",
+    "roiFront": "202,619,64,61",
+    "roiBack": "202,619,64,61",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "check_travel",
+    "imageName": "page_check_travel.png",
+    "roiFront": "1134,583,78,77",
+    "roiBack": "1134,583,78,77",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "珍旅居"
   }
 ]

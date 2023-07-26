@@ -2,8 +2,10 @@
 # @author runhey
 # github https://github.com/runhey
 from datetime import time, timedelta
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, validator
 from enum import Enum
+
+from module.logger import logger
 
 from tasks.Component.config_base import ConfigBase, TimeDelta
 
@@ -14,7 +16,7 @@ class ApMode(str, Enum):
 
 class GeneralClimb(ConfigBase):
     # 限制执行的时间
-    limit_time: TimeDelta = Field(default=TimeDelta(hours=1), description='limit_time_help')
+    limit_time: time = Field(default=time(minute=30), description='limit_time_help')
     # 限制执行的次数
     limit_count: int = Field(default=50, description='limit_count_help')
     # 每日使用体力挑战的最大次数，默认是300
@@ -27,4 +29,22 @@ class GeneralClimb(ConfigBase):
     # 在我的设计理念中：活动体力>游戏体力。所以不提供从300挂满然后才到挂活动币
     activity_toggle: bool = Field(default=False, description='activity_toggle_help')
 
+    @validator('limit_time', pre=True, always=True)
+    def parse_limit_time(cls, value):
+        if isinstance(value, str):
+            if value.isdigit():
+                try:
+                    value = int(value)
+                except ValueError:
+                    logger.warning('Invalid limit_time value. Expected format: seconds')
+                    return time(hour=0, minute=30, second=0)
+                delta = timedelta(seconds=value)
+                return time(hour=delta.seconds // 3600, minute=delta.seconds // 60 % 60, second=delta.seconds % 60)
+            else:
+                try:
+                    return time.fromisoformat(value)
+                except ValueError:
+                    logger.warning('Invalid limit_time value. Expected format: HH:MM:SS')
+                    return time(hour=0, minute=30, second=0)
+        return value
 

@@ -52,6 +52,8 @@ class RestartAssets:
 	I_WATCH_VIDEO_CANCEL = RuleImage(roi_front=(466,396,130,61), roi_back=(466,396,130,61), threshold=0.8, method="Template matching", file="./tasks/Restart/login/login_watch_video_cancel.png")
 	# 指定角色进入游戏,默认第一个 
 	I_LOGIN_SPECIFIC_SERVE = RuleImage(roi_front=(24,33,52,47), roi_back=(24,33,52,47), threshold=0.8, method="Template matching", file="./tasks/Restart/login/login_login_specific_serve.png")
+	# 下载插画 
+	I_LOGIN_LOAD_DOWN = RuleImage(roi_front=(711,450,153,58), roi_back=(711,450,153,58), threshold=0.8, method="Template matching", file="./tasks/Restart/login/login_login_load_down.png")
 
 
 	# Ocr Rule Assets

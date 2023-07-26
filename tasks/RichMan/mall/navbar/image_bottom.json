@@ -1,0 +1,83 @@
+[
+  {
+    "itemName": "mall_consignment",
+    "imageName": "navbar_mall_consignment.png",
+    "roiFront": "192,629,63,72",
+    "roiBack": "192,629,63,72",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "寄售屋"
+  },
+  {
+    "itemName": "mall_consignment_check",
+    "imageName": "navbar_mall_consignment_check.png",
+    "roiFront": "171,83,100,49",
+    "roiBack": "171,83,100,49",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "寄售屋"
+  },
+  {
+    "itemName": "mall_sccales",
+    "imageName": "navbar_mall_sccales.png",
+    "roiFront": "433,635,100,64",
+    "roiBack": "433,635,100,64",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "密卷屋"
+  },
+  {
+    "itemName": "mall_sccales_check",
+    "imageName": "navbar_mall_sccales_check.png",
+    "roiFront": "409,253,100,100",
+    "roiBack": "409,253,100,100",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "密卷屋"
+  },
+  {
+    "itemName": "mall_scales_sure",
+    "imageName": "navbar_mall_scales_sure.png",
+    "roiFront": "1195,100,62,85",
+    "roiBack": "1195,100,62,85",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "mall_bondlings_sure",
+    "imageName": "navbar_mall_bondlings_sure.png",
+    "roiFront": "1194,421,69,74",
+    "roiBack": "1194,421,69,74",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "契灵商店"
+  },
+  {
+    "itemName": "mall_bondlings_check",
+    "imageName": "navbar_mall_bondlings_check.png",
+    "roiFront": "646,421,191,37",
+    "roiBack": "646,421,191,37",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "契灵商店"
+  },
+  {
+    "itemName": "mall_sundry",
+    "imageName": "navbar_mall_sundry.png",
+    "roiFront": "854,623,74,61",
+    "roiBack": "854,623,74,61",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "杂货铺"
+  },
+  {
+    "itemName": "mall_sundry_check",
+    "imageName": "navbar_mall_sundry_check.png",
+    "roiFront": "1169,95,72,440",
+    "roiBack": "1169,95,72,440",
+    "method": "Template matching",
+    "threshold": 0.7,
+    "description": "杂货铺"
+  }
+]

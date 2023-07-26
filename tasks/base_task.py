@@ -429,6 +429,9 @@ class BaseTask(GlobalGameAssets):
             start_time = self.start_time
         self.config.task_delay(task, start_time=start_time, success=success, server=server, target=target)
 
+    #  ---------------------------------------------------------------------------------------------------------------
+    #
+    #  ---------------------------------------------------------------------------------------------------------------
     def ui_reward_appear_click(self, screenshot=False) -> bool:
         """
         如果出现 ‘获得奖励’ 就点击
@@ -438,9 +441,9 @@ class BaseTask(GlobalGameAssets):
             self.screenshot()
         return self.appear_then_click(self.I_UI_REWARD, action=self.C_UI_REWARD, interval=0.4, threshold=0.6)
 
-    def ui_get_reward(self, click_image: RuleImage):
+    def ui_get_reward(self, click_image: RuleImage or RuleOcr):
         """
-        传进来一个点击图片， 会点击这个图片，然后等待‘获得奖励’，
+        传进来一个点击图片 或是 一个ocr， 会点击这个图片，然后等待‘获得奖励’，
         最后当获得奖励消失后 退出
         :param click_image:
         :return:
@@ -452,7 +455,7 @@ class BaseTask(GlobalGameAssets):
                 while 1:
                     self.screenshot()
                     # 等待动画结束
-                    if not self.appear(self.I_UI_REWARD, threshold=0.6):
+                    if not self.appear(self.I_UI_REWARD, threshold=1):
                         logger.info('Get reward success')
                         break
 
@@ -461,7 +464,41 @@ class BaseTask(GlobalGameAssets):
                         continue
                 break
 
-            if self.appear_then_click(click_image, interval=0.8):
-                continue
+            if isinstance(click_image, RuleImage):
+                if self.appear_then_click(click_image, interval=1):
+                    continue
+            elif isinstance(click_image, RuleOcr):
+                if self.ocr_appear_click(click_image, interval=1):
+                    continue
 
         return True
+
+
+    def ui_click(self, click, stop):
+        """
+        循环的一个操作，直到出现stop
+        :param click:
+        :param stop:
+        :return:
+        """
+        while 1:
+            self.screenshot()
+            if self.appear(stop):
+                break
+            if self.appear_then_click(click, interval=1):
+                continue
+
+    def ui_click_until_disappear(self, click):
+        """
+        点击一个按钮直到消失
+        :param click:
+        :return:
+        """
+        while 1:
+            self.screenshot()
+            if not self.appear(click):
+                break
+            elif self.appear_then_click(click, interval=1):
+                continue
+
+

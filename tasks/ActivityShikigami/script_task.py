@@ -1,8 +1,7 @@
 # This Python file uses the following encoding: utf-8
 # @author runhey
 # github https://github.com/runhey
-from datetime import datetime, timedelta
-import time
+from datetime import datetime, timedelta, time
 
 from tasks.base_task import BaseTask
 from tasks.Component.GeneralBattle.general_battle import GeneralBattle
@@ -20,12 +19,14 @@ class ScriptTask(BaseActivity, ActivityShikigamiAssets):
 
         config = self.config.activity_shikigami
         self.limit_time: timedelta = config.general_climb.limit_time
+        if isinstance(self.limit_time, time):
+            self.limit_time = timedelta(hours=self.limit_time.hour, minutes=self.limit_time.minute,
+                                        seconds=self.limit_time.second)
         self.limit_count = config.general_climb.limit_count
 
         self.home_main()
 
         # 设定是否锁定阵容
-        self.wait_until_appear(self.I_BACK_GREEN)
         if config.general_battle.lock_team_enable:
             logger.info("Lock team")
             while 1:
@@ -100,14 +101,15 @@ class ScriptTask(BaseActivity, ActivityShikigamiAssets):
         logger.hr("Enter Shikigami", 2)
         while 1:
             self.screenshot()
+            if self.appear(self.I_FIRE):
+                break
             if self.appear_then_click(self.I_SHI, interval=1):
                 continue
             if self.appear_then_click(self.I_DRUM, interval=1):
                 continue
             if self.appear_then_click(self.I_BATTLE, interval=1):
                 continue
-            if self.appear(self.I_FIRE):
-                break
+
 
 
     def main_home(self) -> bool:
@@ -118,10 +120,13 @@ class ScriptTask(BaseActivity, ActivityShikigamiAssets):
         logger.hr("Exit Shikigami", 2)
         while 1:
             self.screenshot()
-            if self.appear_then_click(self.I_BACK_GREEN, interval=1):
-                continue
             if self.appear(self.I_SHI):
                 break
+            if self.appear_then_click(self.I_UI_BACK_YELLOW, interval=1):
+                continue
+            if self.appear_then_click(self.I_BACK_GREEN, interval=1):
+                continue
+
 
     def check_ap_remain(self, current_ap: ApMode) -> bool:
         """
@@ -139,8 +144,12 @@ class ScriptTask(BaseActivity, ActivityShikigamiAssets):
         elif current_ap == ApMode.AP_GAME:
             cu, res, total = self.O_REMAIN_AP.ocr(image=self.device.image)
             if cu == total and cu + res == total:
-                logger.warning("Game ap not enough")
+                if cu > total:
+                    logger.warning(f'Game ap {cu} more than total {total}')
+                    return True
+                logger.warning(f'Game ap not enough: {cu}')
                 return False
+
             return True
 
     def switch(self, current_ap: ApMode) -> None:
@@ -165,3 +174,15 @@ class ScriptTask(BaseActivity, ActivityShikigamiAssets):
                     break
                 if self.appear(self.I_AP_ACTIVITY, interval=1):
                     self.appear_then_click(self.I_SWITCH, interval=2)
+
+
+
+if __name__ == '__main__':
+    from module.config.config import Config
+    from module.device.device import Device
+    from memory_profiler import profile
+    c = Config('oas1')
+    d = Device(c)
+    t = ScriptTask(c, d)
+
+    t.run()

@@ -1,0 +1,11 @@
+[
+  {
+    "itemName": "buy_number",
+    "roiFront": "578,416,52,46",
+    "roiBack": "578,416,52,46",
+    "mode": "Digit",
+    "method": "Default",
+    "keyword": "",
+    "description": "Ocr-description"
+  }
+]

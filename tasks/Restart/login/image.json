@@ -61,5 +61,14 @@
     "method": "Template matching",
     "threshold": 0.8,
     "description": "指定角色进入游戏,默认第一个"
+  },
+  {
+    "itemName": "login_load_down",
+    "imageName": "login_login_load_down.png",
+    "roiFront": "711,450,153,58",
+    "roiBack": "711,450,153,58",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "下载插画"
   }
 ]

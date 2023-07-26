@@ -537,4 +537,76 @@ Refresh：直接刷新，如果刷新操作进入CD，将标记为失败并退�
 	<message><source>three_refresh_help</source><translation>挑战进度到三，领取奖励后就刷新，如果刷新操作进入CD，将标记为失败并退出</translation></message>
 	<message><source>number_base_help</source><translation>旨在检查突破卷数量，如果当前的数量没有大于等于这个值，将标记为成功并退出</translation></message>
 </context>	
+<context>
+    <name>Args</name>
+	<message><source>SougenbiConfig</source><translation>业原火</translation></message>	
+	<message><source>SougenbiClass</source><translation>挑战类型</translation></message>	
+</context>	
+<context>
+    <name>Args</name>
+	<message><source>DailyTriflesConfig</source><translation>琐事</translation></message>	
+	<message><source>One Summon</source><translation>每日召唤</translation></message>	
+	<message><source>Guild Wish</source><translation>寮祈愿（还不知道可以写什么）</translation></message>	
+	<message><source>Friend Love</source><translation>友情点</translation></message>	
+	<message><source>Store Sign</source><translation>商店签到</translation></message>	
+	<message><source>store_sign_help</source><translation>就那个签到50次得黑蛋的</translation></message>	
+</context>	
+<context>
+    <name>Args</name>
+	<message><source>ThousandThings</source><translation>千物宝箱</translation></message>	
+	<message><source>Mystery Amulet</source><translation>神秘咒符</translation></message>
+	<message><source>Black Daruma Fragment</source><translation>御行达摩碎片</translation></message>	
+	<message><source>AP</source><translation>体力</translation></message>
+	<message><source>ap_help</source><translation>默认买两次不够就不买</translation></message>
+	<message><source>Consignment</source><translation>寄售屋</translation></message>
+	<message><source>Buy Sale Ticket</source><translation>兑换一百张寄售券</translation></message>
+	<message><source>buy_sale_ticket_help</source><translation>等凑够了再去换</translation></message>
+	<message><source>Scales</source><translation>御魂礼盒</translation></message>
+	<message><source>Orochi Scales</source><translation>朴素御魂</translation></message>
+	<message><source>orochi_scales_help</source><translation>可选[0~40]</translation></message>
+	<message><source>Demon Souls</source><translation>首领御魂</translation></message>
+	<message><source>demon_souls_help</source><translation>可选[0~50]</translation></message>
+	<message><source>DemonClass</source><translation>首领御魂类型</translation></message>
+	<message><source>demon_class_help</source><translation>不支持多个首领</translation></message>
+	<message><source>Demon Position</source><translation>首领御魂号位</translation></message>
+	<message><source>demon_position_help</source><translation>不支持多号位</translation></message>
+	<message><source>Picture Book Scrap</source><translation>海汐御魂</translation></message>
+	<message><source>picture_book_scrap_help</source><translation>可选[0~30]</translation></message>
+	<message><source>Picture Book Rule</source><translation>选择御魂优先级</translation></message>
+	<message><source>picture_book_rule_help</source><translation>使用auto即可</translation></message>
+	<message><source>SpecialRoom</source><translation>[杂货铺]特殊购买</translation></message>
+	<message><source>Totem Pass</source><translation>御灵券(40张)</translation></message>
+	<message><source>Low Bondling Discs</source><translation>百物式盘</translation></message>
+	<message><source>low_bondling_discs_special</source><translation>契灵低级盘，可选[0~100]</translation></message>
+	<message><source>Medium Bondling Discs</source><translation>千咒式盘</translation></message>
+	<message><source>medium_bondling_discs_special</source><translation>契灵中级盘，可选[0~100]</translation></message>
+	<message><source>mystery_amulet_help_honor</source><translation>默认买两个</translation></message>
+	<message><source>black_daruma_scrap_help_honor</source><translation>默认买两个</translation></message>
+	<message><source>HonorRoom</source><translation>[杂货铺]荣誉购买</translation></message>
+	<message><source>FriendshipPoints</source><translation>[杂货铺]友情点购买</translation></message>
+	<message><source>White Daruma</source><translation>奉为达摩</translation></message>
+	<message><source>Red Daruma</source><translation>招福达摩</translation></message>
+	<message><source>Broken Amulet</source><translation>破碎的咒符</translation></message>
+	<message><source>MedalRoom</source><translation>[杂货铺]勋章购买</translation></message>
+	<message><source>AP 100</source><translation>体力100</translation></message>
+	<message><source>Random Soul</source><translation>随机御魂</translation></message>
+	<message><source>Challenge Pass</source><translation>挑战券</translation></message>
+	<message><source>challenge_pass_help</source><translation>可选[0~10]</translation></message>
+	<message><source>Charisma</source><translation>[杂货铺]魅力值购买</translation></message>
+	<message><source>Shrine</source><translation>神龛</translation></message>
+	<message><source>White Daruma Five</source><translation>五星奉为达摩</translation></message>
+	<message><source>White Daruma Four</source><translation>四星奉为达摩</translation></message>
+	<message><source>Bondlings</source><translation>契忆商店</translation></message>
+	<message><source>random_soul_help</source><translation>可选[0~100]</translation></message>
+	<message><source>Bondling Stone</source><translation>鸣契石</translation></message>
+	<message><source>bondling_stone_help</source><translation>可选[0~10]</translation></message>
+	<message><source>high_bondling_discs_help</source><translation>可选[0~50]</translation></message>
+	<message><source>High Bondling Discs</source><translation>万象式盘</translation></message>
+	<message><source>medium_bondling_discs_help</source><translation>可选[0~20]</translation></message>
+	<message><source>GuildStore</source><translation>{寮]功勋商店</translation></message>
+	<message><source>Skin Ticket</source><translation>皮肤券</translation></message>
+	<message><source>skin_ticket_help</source><translation>可选[0~5]</translation></message>
+	<message><source>Black Daruma Scrap</source><translation>御行达摩碎片</translation></message>
+	<message><source>Black Daruma</source><translation>御行达摩</translation></message>
+</context>	
 </TS>

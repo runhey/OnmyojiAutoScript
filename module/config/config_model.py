@@ -23,6 +23,7 @@ from tasks.Nian.config import Nian
 from tasks.KekkaiUtilize.config import KekkaiUtilize
 from tasks.KekkaiActivation.config import KekkaiActivation
 from tasks.DemonEncounter.config import DemonEncounter
+from tasks.DailyTrifles.config import DailyTrifles
 # ----------------------------------------------------------------------------------------------------------------------
 from tasks.Orochi.config import Orochi
 from tasks.OrochiMoans.config import OrochiMoans
@@ -41,6 +42,7 @@ from tasks.BondlingFairyland.config import BondlingFairyland
 
 # 每周任务---------------------------------------------------------------------------------------------------------------
 from tasks.TrueOrochi.config import TrueOrochi
+from tasks.RichMan.config import RichMan
 # ----------------------------------------------------------------------------------------------------------------------
 
 class ConfigModel(ConfigBase):
@@ -59,6 +61,7 @@ class ConfigModel(ConfigBase):
     kekkai_utilize: KekkaiUtilize = Field(default_factory=KekkaiUtilize)
     kekkai_activation: KekkaiActivation = Field(default_factory=KekkaiActivation)
     demon_encounter: DemonEncounter = Field(default_factory=DemonEncounter)
+    daily_trifles: DailyTrifles = Field(default_factory=DailyTrifles)
 
     # 这些是刷御魂的
     orochi: Orochi = Field(default_factory=Orochi)
@@ -75,6 +78,7 @@ class ConfigModel(ConfigBase):
 
     # 这些是每周任务
     true_orochi: TrueOrochi = Field(default_factory=TrueOrochi)
+    rich_man: RichMan = Field(default_factory=RichMan)
 
     # @validator('script')
     # def script_validator(cls, v):
