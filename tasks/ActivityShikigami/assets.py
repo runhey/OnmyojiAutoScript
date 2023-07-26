@@ -41,7 +41,7 @@ class ActivityShikigamiAssets:
 
 	# Ocr Rule Assets
 	# 体力的数量检测 
-	O_REMAIN_AP = RuleOcr(roi=(1113,671,97,30), area=(1113,671,97,30), mode="DigitCounter", method="Default", keyword="", name="remain_ap")
+	O_REMAIN_AP = RuleOcr(roi=(1120,671,90,30), area=(1120,671,90,30), mode="DigitCounter", method="Default", keyword="", name="remain_ap")
 	# 活动体力的剩余检测 
 	O_REMAIN_AP_ACTIVITY = RuleOcr(roi=(884,20,106,34), area=(884,20,106,34), mode="DigitCounter", method="Default", keyword="", name="remain_ap_activity")
 	# 还有多少次购买体力的机会 

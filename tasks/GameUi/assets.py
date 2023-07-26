@@ -11,6 +11,11 @@ class GameUiAssets:
 
 
 	# Image Rule Assets
+	# 商店弹窗红色关闭 
+	I_AD_CLOSE_RED = RuleImage(roi_front=(994,128,33,36), roi_back=(994,128,33,36), threshold=0.8, method="Template matching", file="./tasks/GameUi/additional/additional_ad_close_red.png")
+
+
+	# Image Rule Assets
 	# description 
 	I_AD_DISAPPEAR = RuleImage(roi_front=(412,405,37,40), roi_back=(412,405,37,40), threshold=0.9, method="Template matching", file="./tasks/GameUi/additional/additional_ad_disappear.png")
 	# description 
@@ -131,7 +136,7 @@ class GameUiAssets:
 	# description 
 	I_CHECK_DAILY = RuleImage(roi_front=(28,510,69,87), roi_back=(28,510,69,87), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_check_daily.png")
 	# description 
-	I_CHECK_MALL = RuleImage(roi_front=(7,503,100,100), roi_back=(7,503,100,100), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_check_mall.png")
+	I_CHECK_MALL = RuleImage(roi_front=(239,502,100,100), roi_back=(239,502,100,100), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_check_mall.png")
 	# description 
 	I_CHECK_GUILD = RuleImage(roi_front=(1072,630,49,46), roi_back=(1072,630,49,46), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_check_guild.png")
 	# description 
