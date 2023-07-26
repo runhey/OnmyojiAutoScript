@@ -15,7 +15,7 @@ body:
       - label: 我已经阅读了文档中的 常见问题(FAQ)
         required: true
       - label: 这个问题出现了至少三次，不是偶发的
-        required: true
+        required: false
   - type: textarea
     id: describe
     attributes:
