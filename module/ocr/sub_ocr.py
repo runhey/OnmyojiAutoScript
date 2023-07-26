@@ -133,7 +133,10 @@ class DigitCounter(Single):
         if result:
             result = [int(s) for s in result.groups()]
             current, total = int(result[0]), int(result[1])
-            current = min(current, total)
+            # 不知道为什么加了这一句，妈的
+            # current = min(current, total)
+            if current > total:
+                logger.warning(f'[{cls.name}]: Current {current} is greater than total {total}')
             return current, total - current, total
         else:
             logger.warning(f'Unexpected ocr result: {result}')
