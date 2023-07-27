@@ -26,7 +26,6 @@ class FriendshipPoints(Special):
             self.buy_mall_one(buy_button=self.I_FS_WHITE_CLICK, buy_check=self.I_FS_WHITE_CHECK,
                               money_ocr=self.O_MALL_RESOURCE_5, buy_money=1000)
         if con.red_daruma != 0:
-            logger.warning('进入')
             self.buy_mall_more(buy_button=self.I_FS_RED, remain_number=False, money_ocr=self.O_MALL_RESOURCE_5,
                                  buy_number=con.red_daruma, buy_max=99, buy_money=150)
         if con.broken_amulet != 0:
