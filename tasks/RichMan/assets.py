@@ -209,6 +209,27 @@ class RichManAssets:
 	O_SCA_RES_SEA = RuleOcr(roi=(1142,11,100,38), area=(1142,11,100,38), mode="Digit", method="Default", keyword="", name="sca_res_sea")
 
 
+	# Image Rule Assets
+	# 购买御灵 
+	I_SP_BUY_TOTEM = RuleImage(roi_front=(398,299,148,113), roi_back=(160,121,880,487), threshold=0.8, method="Template matching", file="./tasks/RichMan/mall/special/special_sp_buy_totem.png")
+	# 购买中级盘 
+	I_SP_BUY_MEDIUM = RuleImage(roi_front=(392,150,150,108), roi_back=(144,113,908,501), threshold=0.8, method="Template matching", file="./tasks/RichMan/mall/special/special_sp_buy_medium.png")
+	# 购买低级盘 
+	I_SP_BUY_LOW = RuleImage(roi_front=(176,148,144,108), roi_back=(128,142,902,449), threshold=0.8, method="Template matching", file="./tasks/RichMan/mall/special/special_sp_buy_low.png")
+	# 判断是否滑动到底 
+	I_SP_SWIPE_CHECK = RuleImage(roi_front=(866,445,103,96), roi_back=(829,424,164,143), threshold=0.8, method="Template matching", file="./tasks/RichMan/mall/special/special_sp_swipe_check.png")
+
+
+	# Ocr Rule Assets
+	# 本周剩余数量xx 
+	O_SP_RES_NUMBER = RuleOcr(roi=(376,183,192,40), area=(376,183,192,40), mode="Single", method="Default", keyword="", name="sp_res_number")
+
+
+	# Swipe Rule Assets
+	# 向下滑动 
+	S_SP_DOWN = RuleSwipe(roi_front=(249,419,486,22), roi_back=(339,300,301,22), mode="default", name="sp_down")
+
+
 	# Click Rule Assets
 	# description 
 	C_C_SHRINE = RuleClick(roi_front=(1098,261,56,100), roi_back=(1098,261,56,100), name="c_shrine")
