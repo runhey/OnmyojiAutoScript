@@ -85,6 +85,7 @@ class ScriptTask(GeneralBattle, GameUi, AreaBossAssets):
         # 只挑战一只， 退出
         if self.config.area_boss.boss.boss_number == 1:
             self.go_back()
+            self.set_next_run(task="AreaBoss", success=True, finish=False)
             return True
 
         # 点击右上角的鬼王选择
@@ -129,6 +130,7 @@ class ScriptTask(GeneralBattle, GameUi, AreaBossAssets):
         # 只挑战2只， 退出
         if self.config.area_boss.boss.boss_number == 2:
             self.go_back()
+            self.set_next_run(task="AreaBoss", success=True, finish=False)
             return True
 
 
