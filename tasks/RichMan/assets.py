@@ -117,6 +117,75 @@ class RichManAssets:
 
 
 	# Click Rule Assets
+	# 一号位 
+	C_SCA_DEMON_1 = RuleClick(roi_front=(255,158,100,100), roi_back=(255,158,100,100), name="sca_demon_1")
+	# 二号位 
+	C_SCA_DEMON_2 = RuleClick(roi_front=(181,318,100,100), roi_back=(181,318,100,100), name="sca_demon_2")
+	# 三号位 
+	C_SCA_DEMON_3 = RuleClick(roi_front=(257,476,100,100), roi_back=(257,476,100,100), name="sca_demon_3")
+	# 四号位 
+	C_SCA_DEMON_4 = RuleClick(roi_front=(553,478,100,100), roi_back=(553,478,100,100), name="sca_demon_4")
+	# 五号位 
+	C_SCA_DEMON_5 = RuleClick(roi_front=(639,316,100,100), roi_back=(639,316,100,100), name="sca_demon_5")
+	# 六号位 
+	C_SCA_DEMON_6 = RuleClick(roi_front=(560,155,100,100), roi_back=(560,155,100,100), name="sca_demon_6")
+	# 点击魂外部 
+	C_SCA_SOULS_GET = RuleClick(roi_front=(116,70,952,100), roi_back=(116,70,952,100), name="sca_souls_get")
+	# 点击外部的区域返回到御魂礼盒主界面 
+	C_SCA_SOULS_BACK = RuleClick(roi_front=(118,14,503,51), roi_back=(118,14,503,51), name="sca_souls_back")
+
+
+	# Image Rule Assets
+	# 蛇皮 
+	I_SCA_OROCHI_SCALES = RuleImage(roi_front=(110,261,100,100), roi_back=(110,261,100,100), threshold=0.8, method="Template matching", file="./tasks/RichMan/mall/scales/scales_sca_orochi_scales.png")
+	# 首领御魂 
+	I_SCA_DEMON_SOULS = RuleImage(roi_front=(707,260,100,100), roi_back=(707,260,100,100), threshold=0.8, method="Template matching", file="./tasks/RichMan/mall/scales/scales_sca_demon_souls.png")
+	# 永生之海 
+	I_SCA_PICTURE_BOOK = RuleImage(roi_front=(995,258,100,100), roi_back=(995,258,100,100), threshold=0.8, method="Template matching", file="./tasks/RichMan/mall/scales/scales_sca_picture_book.png")
+	# 土蜘蛛 
+	I_SCA_DEMON_BOSS_1 = RuleImage(roi_front=(225,169,192,193), roi_back=(225,169,192,193), threshold=0.8, method="Template matching", file="./tasks/RichMan/mall/scales/scales_sca_demon_boss_1.png")
+	# 胧车 
+	I_SCA_DEMON_BOSS_2 = RuleImage(roi_front=(539,161,180,198), roi_back=(539,161,180,198), threshold=0.8, method="Template matching", file="./tasks/RichMan/mall/scales/scales_sca_demon_boss_2.png")
+	# 荒骷髅 
+	I_SCA_DEMON_BOSS_3 = RuleImage(roi_front=(864,180,181,175), roi_back=(864,180,181,175), threshold=0.8, method="Template matching", file="./tasks/RichMan/mall/scales/scales_sca_demon_boss_3.png")
+	# 地震鲶 
+	I_SCA_DEMON_BOSS_4 = RuleImage(roi_front=(228,412,188,211), roi_back=(228,412,188,211), threshold=0.8, method="Template matching", file="./tasks/RichMan/mall/scales/scales_sca_demon_boss_4.png")
+	# 蜃气楼 
+	I_SCA_DEMON_BOSS_5 = RuleImage(roi_front=(534,414,211,218), roi_back=(534,414,211,218), threshold=0.8, method="Template matching", file="./tasks/RichMan/mall/scales/scales_sca_demon_boss_5.png")
+	# 歌姬 
+	I_SCA_DEMON_BOSS_6 = RuleImage(roi_front=(862,432,178,189), roi_back=(862,432,178,189), threshold=0.8, method="Template matching", file="./tasks/RichMan/mall/scales/scales_sca_demon_boss_6.png")
+	# 永生之海第一个选择 
+	I_SCA_SELECT_1 = RuleImage(roi_front=(189,519,113,51), roi_back=(189,519,113,51), threshold=0.8, method="Template matching", file="./tasks/RichMan/mall/scales/scales_sca_select_1.png")
+	# description 
+	I_SCA_SELECT_2 = RuleImage(roi_front=(583,519,116,54), roi_back=(583,519,116,54), threshold=0.8, method="Template matching", file="./tasks/RichMan/mall/scales/scales_sca_select_2.png")
+	# description 
+	I_SCA_SELECT_3 = RuleImage(roi_front=(972,517,123,50), roi_back=(972,517,123,50), threshold=0.8, method="Template matching", file="./tasks/RichMan/mall/scales/scales_sca_select_3.png")
+	# 获得的六星 
+	I_SCA_SIX_STAR = RuleImage(roi_front=(119,259,100,22), roi_back=(119,259,100,22), threshold=0.8, method="Template matching", file="./tasks/RichMan/mall/scales/scales_sca_six_star.png")
+	# 点击屏幕继续 
+	I_SCA_REWARD = RuleImage(roi_front=(584,503,100,100), roi_back=(584,503,100,100), threshold=0.8, method="Template matching", file="./tasks/RichMan/mall/scales/scales_sca_reward.png")
+	# 点击兑换 
+	I_SCA_DEMON_BUY = RuleImage(roi_front=(861,572,180,62), roi_back=(861,572,180,62), threshold=0.8, method="Template matching", file="./tasks/RichMan/mall/scales/scales_sca_demon_buy.png")
+
+
+	# Ocr Rule Assets
+	# 蛇皮剩余可买的 
+	O_SCA_NUMBER_OROCHI = RuleOcr(roi=(46,318,27,25), area=(46,318,27,25), mode="Digit", method="Default", keyword="", name="sca_number_orochi")
+	# 首领御魂剩余可买的 
+	O_SCA_NUMBER_DEMON = RuleOcr(roi=(627,319,30,25), area=(627,319,30,25), mode="Digit", method="Default", keyword="", name="sca_number_demon")
+	# 永生之海 
+	O_SCA_NUMBER_SEA = RuleOcr(roi=(926,321,30,23), area=(926,321,30,23), mode="Digit", method="Default", keyword="", name="sca_number_sea")
+	# 多少号位 
+	O_SCA_DEMON_POSTION = RuleOcr(roi=(960,244,88,41), area=(960,244,88,41), mode="Single", method="Default", keyword="", name="sca_demon_postion")
+	# 朴素的御魂 
+	O_SCA_RES_OROCHI = RuleOcr(roi=(531,9,127,37), area=(531,9,127,37), mode="DigitCounter", method="Default", keyword="", name="sca_res_orochi")
+	# 首领御魂数量 
+	O_SCA_RES_DEMON = RuleOcr(roi=(943,10,100,35), area=(943,10,100,35), mode="Digit", method="Default", keyword="", name="sca_res_demon")
+	# 永生之海 
+	O_SCA_RES_SEA = RuleOcr(roi=(1142,11,100,38), area=(1142,11,100,38), mode="Digit", method="Default", keyword="", name="sca_res_sea")
+
+
+	# Click Rule Assets
 	# description 
 	C_C_SHRINE = RuleClick(roi_front=(1098,261,56,100), roi_back=(1098,261,56,100), name="c_shrine")
 

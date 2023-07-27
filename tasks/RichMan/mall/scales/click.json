@@ -1,0 +1,50 @@
+[
+  {
+    "itemName": "sca_demon_1",
+    "roiFront": "255,158,100,100",
+    "roiBack": "255,158,100,100",
+    "description": "一号位"
+  },
+  {
+    "itemName": "sca_demon_2",
+    "roiFront": "181,318,100,100",
+    "roiBack": "181,318,100,100",
+    "description": "二号位"
+  },
+  {
+    "itemName": "sca_demon_3",
+    "roiFront": "257,476,100,100",
+    "roiBack": "257,476,100,100",
+    "description": "三号位"
+  },
+  {
+    "itemName": "sca_demon_4",
+    "roiFront": "553,478,100,100",
+    "roiBack": "553,478,100,100",
+    "description": "四号位"
+  },
+  {
+    "itemName": "sca_demon_5",
+    "roiFront": "639,316,100,100",
+    "roiBack": "639,316,100,100",
+    "description": "五号位"
+  },
+  {
+    "itemName": "sca_demon_6",
+    "roiFront": "560,155,100,100",
+    "roiBack": "560,155,100,100",
+    "description": "六号位"
+  },
+  {
+    "itemName": "sca_souls_get",
+    "roiFront": "116,70,952,100",
+    "roiBack": "116,70,952,100",
+    "description": "点击魂外部"
+  },
+  {
+    "itemName": "sca_souls_back",
+    "roiFront": "118,14,503,51",
+    "roiBack": "118,14,503,51",
+    "description": "点击外部的区域返回到御魂礼盒主界面"
+  }
+]
