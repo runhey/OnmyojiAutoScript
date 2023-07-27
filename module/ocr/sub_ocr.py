@@ -96,7 +96,7 @@ class Digit(Single):
     def after_process(self, result):
         result = super().after_process(result)
         result = result.replace('I', '1').replace('D', '0').replace('S', '5')
-        result = result.replace('B', '8')
+        result = result.replace('B', '8').replace('？', '2').replace('?', '2')
         result = [char for char in result if char.isdigit()]
         result = ''.join(result)
 

@@ -161,6 +161,7 @@ class Special(MallNavbar, Buy):
         # logger.info(f'上中点是：{upper_midpoint}')
         # logger.info(f'数字的ROI是: {self.O_SP_RES_NUMBER.roi}')
         result = self.O_SP_RES_NUMBER.ocr(self.device.image)
+        result = result.replace('？', '2').replace('?', '2')
         try:
             result = re.findall(r'\d+', result)[0]
             result = int(result)
