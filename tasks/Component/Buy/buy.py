@@ -9,6 +9,7 @@ from module.atom.image import RuleImage
 from module.atom.ocr import RuleOcr
 from module.atom.click import RuleClick
 from module.logger import logger
+from module.base.timer import Timer
 
 from tasks.base_task import BaseTask
 from tasks.Component.Buy.assets import BuyAssets
@@ -45,7 +46,7 @@ class Buy(BaseTask, BuyAssets):
                 while 1:
                     self.screenshot()
                     # 等待动画结束
-                    if not self.appear(self.I_UI_REWARD, threshold=1):
+                    if not self.appear(self.I_UI_REWARD):
                         logger.info('Get reward success')
                         break
                     # 一直点击
@@ -90,8 +91,17 @@ class Buy(BaseTask, BuyAssets):
         else:
             # 四次截图数字都一样，就可以退出了
             number_record = []
+            ocr_timer = Timer(0.8)
+            ocr_timer.start()
             while 1:
                 self.screenshot()
+
+                if self.appear_then_click(self.I_BUY_ADD, interval=0.8):
+                    continue
+
+                if not ocr_timer.reached():
+                    continue
+                ocr_timer.reset()
                 current = self.O_BUY_NUMBER.ocr(self.device.image)
                 if current >= number:
                     break
@@ -101,8 +111,7 @@ class Buy(BaseTask, BuyAssets):
                         break
                     number_record.pop(0)
 
-                if self.appear_then_click(self.I_BUY_ADD, interval=1):
-                    continue
+
         # 购买确认
         while 1:
             self.screenshot()
