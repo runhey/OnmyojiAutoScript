@@ -82,6 +82,24 @@ class RichManAssets:
 
 
 	# Image Rule Assets
+	# 蓝票 
+	I_HONOR_BLUE = RuleImage(roi_front=(868,152,100,100), roi_back=(154,113,864,476), threshold=0.8, method="Template matching", file="./tasks/RichMan/mall/honor/honor_honor_blue.png")
+	# 黑蛋碎片 
+	I_HONOR_BLACK = RuleImage(roi_front=(645,406,100,100), roi_back=(145,96,883,491), threshold=0.8, method="Template matching", file="./tasks/RichMan/mall/honor/honor_honor_black.png")
+	# 三星白蛋 
+	I_HONOR_WHITE = RuleImage(roi_front=(424,399,100,100), roi_back=(155,127,841,388), threshold=0.8, method="Template matching", file="./tasks/RichMan/mall/honor/honor_honor_white.png")
+
+
+	# Ocr Rule Assets
+	# Ocr-description 
+	O_HONOR_BLUE = RuleOcr(roi=(973,113,22,26), area=(973,113,22,26), mode="Digit", method="Default", keyword="", name="honor_blue")
+	# Ocr-description 
+	O_HONOR_BLACK = RuleOcr(roi=(749,358,24,34), area=(749,358,24,34), mode="Digit", method="Default", keyword="", name="honor_black")
+	# 三星白蛋 
+	O_HONOR_WHITE = RuleOcr(roi=(527,359,25,28), area=(527,359,25,28), mode="Digit", method="Default", keyword="", name="honor_white")
+
+
+	# Image Rule Assets
 	# 寄售屋 
 	I_MALL_CONSIGNMENT = RuleImage(roi_front=(192,629,63,72), roi_back=(192,629,63,72), threshold=0.8, method="Template matching", file="./tasks/RichMan/mall/navbar/navbar_mall_consignment.png")
 	# 寄售屋 

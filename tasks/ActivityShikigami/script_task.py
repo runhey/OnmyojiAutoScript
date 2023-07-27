@@ -70,9 +70,13 @@ class ScriptTask(BaseActivity, ActivityShikigamiAssets):
                 break
             # 如果不是那就切换到体力
             elif not is_remain and current_ap == ApMode.AP_ACTIVITY:
-                logger.info("Activity ap out and switch to game ap")
-                current_ap = ApMode.AP_GAME
-                self.switch(current_ap)
+                if config.general_climb.activity_toggle:
+                    logger.info("Activity ap out and switch to game ap")
+                    current_ap = ApMode.AP_GAME
+                    self.switch(current_ap)
+                else:
+                    logger.info("Activity ap out")
+                    break
 
 
             # 点击战斗

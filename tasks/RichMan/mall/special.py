@@ -157,9 +157,9 @@ class Special(MallNavbar, Buy):
         roi = self.O_SP_RES_NUMBER.roi
         self.O_SP_RES_NUMBER.roi[0] = upper_midpoint[0] - roi[2]//2
         self.O_SP_RES_NUMBER.roi[1] = upper_midpoint[1] - roi[3]
-        logger.info(f'图片的ROI是: {target.roi_front}')
-        logger.info(f'上中点是：{upper_midpoint}')
-        logger.info(f'数字的ROI是: {self.O_SP_RES_NUMBER.roi}')
+        # logger.info(f'图片的ROI是: {target.roi_front}')
+        # logger.info(f'上中点是：{upper_midpoint}')
+        # logger.info(f'数字的ROI是: {self.O_SP_RES_NUMBER.roi}')
         result = self.O_SP_RES_NUMBER.ocr(self.device.image)
         try:
             result = re.findall(r'\d+', result)[0]
