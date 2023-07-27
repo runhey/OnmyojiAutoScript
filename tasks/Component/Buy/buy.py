@@ -101,17 +101,18 @@ class Buy(BaseTask, BuyAssets):
                         break
                     number_record.pop(0)
 
-                if self.appear_then_click(self.I_BUY_ADD, interval=0.6):
+                if self.appear_then_click(self.I_BUY_ADD, interval=1):
                     continue
         # 购买确认
         while 1:
             self.screenshot()
 
             if self.ui_reward_appear_click():
+                time.sleep(0.5)
                 while 1:
                     self.screenshot()
                     # 等待动画结束
-                    if not self.appear(self.I_UI_REWARD, threshold=1):
+                    if not self.appear(self.I_UI_REWARD):
                         logger.info('Get reward success')
                         break
                     # 一直点击

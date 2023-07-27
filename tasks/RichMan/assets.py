@@ -44,6 +44,30 @@ class RichManAssets:
 
 
 	# Image Rule Assets
+	# 兑换随机御魂 
+	I_BL_BUY_SOULS = RuleImage(roi_front=(197,476,90,38), roi_back=(197,476,90,38), threshold=0.8, method="Template matching", file="./tasks/RichMan/mall/bondlings/bondlings_bl_buy_souls.png")
+	# 兑换契灵石头 
+	I_BL_BUY_STONE = RuleImage(roi_front=(493,472,89,42), roi_back=(493,472,89,42), threshold=0.8, method="Template matching", file="./tasks/RichMan/mall/bondlings/bondlings_bl_buy_stone.png")
+	# 兑换高级盘 
+	I_BL_BUY_HIGH = RuleImage(roi_front=(779,473,89,42), roi_back=(779,473,89,42), threshold=0.8, method="Template matching", file="./tasks/RichMan/mall/bondlings/bondlings_bl_buy_high.png")
+	# 兑换中级盘 
+	I_BL_BUY_MEDIUM = RuleImage(roi_front=(1079,476,93,40), roi_back=(1079,476,93,40), threshold=0.8, method="Template matching", file="./tasks/RichMan/mall/bondlings/bondlings_bl_buy_medium.png")
+
+
+	# Ocr Rule Assets
+	# 御魂剩余 
+	O_BL_RES_SOULS = RuleOcr(roi=(90,281,31,34), area=(90,281,31,34), mode="Digit", method="Default", keyword="", name="bl_res_souls")
+	# 石头剩余 
+	O_BL_RES_STONE = RuleOcr(roi=(357,284,29,34), area=(357,284,29,34), mode="Digit", method="Default", keyword="", name="bl_res_stone")
+	# 高级盘剩余 
+	O_BL_RES_HIGH = RuleOcr(roi=(642,284,29,31), area=(642,284,29,31), mode="Digit", method="Default", keyword="", name="bl_res_high")
+	# 中级盘剩余 
+	O_BL_RES_MEDIUM = RuleOcr(roi=(918,285,28,27), area=(918,285,28,27), mode="Digit", method="Default", keyword="", name="bl_res_medium")
+	# 检查契灵的钱是否够 
+	O_BL_CHECK_MONEY = RuleOcr(roi=(1123,12,127,33), area=(1123,12,127,33), mode="DigitCounter", method="Default", keyword="", name="bl_check_money")
+
+
+	# Image Rule Assets
 	# 进入寄售屋 
 	I_CON_ENTER_CHECK = RuleImage(roi_front=(660,485,393,100), roi_back=(660,485,393,100), threshold=0.8, method="Template matching", file="./tasks/RichMan/mall/consignment/consignment_con_enter_check.png")
 	# 兑换 

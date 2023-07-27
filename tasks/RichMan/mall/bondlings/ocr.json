@@ -1,0 +1,47 @@
+[
+  {
+    "itemName": "bl_res_souls",
+    "roiFront": "90,281,31,34",
+    "roiBack": "90,281,31,34",
+    "mode": "Digit",
+    "method": "Default",
+    "keyword": "",
+    "description": "御魂剩余"
+  },
+  {
+    "itemName": "bl_res_stone",
+    "roiFront": "357,284,29,34",
+    "roiBack": "357,284,29,34",
+    "mode": "Digit",
+    "method": "Default",
+    "keyword": "",
+    "description": "石头剩余"
+  },
+  {
+    "itemName": "bl_res_high",
+    "roiFront": "642,284,29,31",
+    "roiBack": "642,284,29,31",
+    "mode": "Digit",
+    "method": "Default",
+    "keyword": "",
+    "description": "高级盘剩余"
+  },
+  {
+    "itemName": "bl_res_medium",
+    "roiFront": "918,285,28,27",
+    "roiBack": "918,285,28,27",
+    "mode": "Digit",
+    "method": "Default",
+    "keyword": "",
+    "description": "中级盘剩余"
+  },
+  {
+    "itemName": "bl_check_money",
+    "roiFront": "1123,12,127,33",
+    "roiBack": "1123,12,127,33",
+    "mode": "DigitCounter",
+    "method": "Default",
+    "keyword": "",
+    "description": "检查契灵的钱是否够"
+  }
+]
