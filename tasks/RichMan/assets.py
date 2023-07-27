@@ -82,6 +82,17 @@ class RichManAssets:
 
 
 	# Image Rule Assets
+	# 红蛋 
+	I_FS_RED = RuleImage(roi_front=(423,158,100,100), roi_back=(423,158,100,100), threshold=0.8, method="Template matching", file="./tasks/RichMan/mall/friendship_points/friendship_points_fs_red.png")
+	# 破碎的咒符 
+	I_FS_BROKEN = RuleImage(roi_front=(200,153,100,100), roi_back=(200,153,100,100), threshold=0.8, method="Template matching", file="./tasks/RichMan/mall/friendship_points/friendship_points_fs_broken.png")
+	# description 
+	I_FS_WHITE_CLICK = RuleImage(roi_front=(647,157,100,100), roi_back=(647,157,100,100), threshold=0.8, method="Template matching", file="./tasks/RichMan/mall/friendship_points/friendship_points_fs_white_click.png")
+	# 白蛋确认 
+	I_FS_WHITE_CHECK = RuleImage(roi_front=(452,229,100,100), roi_back=(452,229,100,100), threshold=0.8, method="Template matching", file="./tasks/RichMan/mall/friendship_points/friendship_points_fs_white_check.png")
+
+
+	# Image Rule Assets
 	# 蓝票 
 	I_HONOR_BLUE = RuleImage(roi_front=(868,152,100,100), roi_back=(154,113,864,476), threshold=0.8, method="Template matching", file="./tasks/RichMan/mall/honor/honor_honor_blue.png")
 	# 黑蛋碎片 
