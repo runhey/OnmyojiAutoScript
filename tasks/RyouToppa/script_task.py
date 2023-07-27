@@ -3,10 +3,11 @@
 # github https://github.com/runhey
 import time
 
+from tasks.Component.SwitchSoul.switch_soul import SwitchSoul
 from tasks.RyouToppa.assets import RyouToppaAssets
 from tasks.Component.GeneralBattle.general_battle import GeneralBattle
 from tasks.GameUi.game_ui import GameUi
-from tasks.GameUi.page import page_realm_raid, page_main, page_kekkai_toppa
+from tasks.GameUi.page import page_realm_raid, page_main, page_kekkai_toppa, page_shikigami_records
 from tasks.RealmRaid.assets import RealmRaidAssets
 from module.logger import logger
 from module.exception import TaskEnd
@@ -15,7 +16,8 @@ from module.base.timer import Timer
 from module.exception import GamePageUnknownError
 from tasks.RyouToppa.config import RaidMode, AttackNumber, HaveManageAccess, RaidConfig, RyouToppa
 
-class ScriptTask(GeneralBattle, GameUi, RyouToppaAssets):
+
+class ScriptTask(GeneralBattle, GameUi, SwitchSoul, RyouToppaAssets):
     medal_grid: ImageGrid = None
 
     def run(self):
@@ -26,6 +28,12 @@ class ScriptTask(GeneralBattle, GameUi, RyouToppaAssets):
         config = self.config.ryou_toppa
         self.medal_grid = ImageGrid([RealmRaidAssets.I_MEDAL_5, RealmRaidAssets.I_MEDAL_4, RealmRaidAssets.I_MEDAL_3,
                                      RealmRaidAssets.I_MEDAL_2, RealmRaidAssets.I_MEDAL_1, RealmRaidAssets.I_MEDAL_0])
+
+        if config.switch_soul_config.enable:
+            self.ui_get_current_page()
+            self.ui_goto(page_shikigami_records)
+            self.run_switch_soul(config.switch_soul_config.switch_group_team)
+
         self.ui_get_current_page()
         self.ui_goto(page_kekkai_toppa)
         ryou_toppa_start_flag = True
@@ -66,12 +74,11 @@ class ScriptTask(GeneralBattle, GameUi, RyouToppaAssets):
             else:
                 break
 
-
         # 回 page_main 失败
         # self.ui_current = page_ryou_toppa
         # self.ui_goto(page_main)
 
-        self.set_next_run(task='RyouToppa', success=True)
+        self.set_next_run(task='RyouToppa', finish=True, success=True)
         raise TaskEnd
 
     def start_ryou_toppa(self):
@@ -83,20 +90,13 @@ class ScriptTask(GeneralBattle, GameUi, RyouToppaAssets):
         while 1:
             self.screenshot()
             if self.appear_then_click(self.I_SELECT_RYOU_BUTTON, interval=1):
-                continue
-            # 出现勋章奖励标题,说明已进入，则退出
-            if self.appear(self.I_GUILD_ORDERS_REWARDS, threshold=0.8):
                 break
         logger.info(f'Click {self.I_SELECT_RYOU_BUTTON.name}')
 
         # 选择第一个寮
         while 1:
             self.screenshot()
-            if self.appear(self.I_RYOU_TOPPA, interval=1):
-                self.click(self.C_SELECT_FIRST_RYOU)
-                continue
-            # 出现突入开始，则退出
-            if self.appear(self.I_START_TOPPA_BUTTON, threshold=0.8):
+            if self.appear_then_click(self.I_GUILD_ORDERS_REWARDS, action=self.C_SELECT_FIRST_RYOU, interval=1):
                 break
         logger.info(f'Click {self.C_SELECT_FIRST_RYOU.name}')
 
@@ -119,7 +119,7 @@ class ScriptTask(GeneralBattle, GameUi, RyouToppaAssets):
         self.screenshot()
         cu, res, total = self.O_NUMBER.ocr(self.device.image)
         logger.info(f"cu = {cu}, res = {res}, total = {total}")
-        if cu == 0 and cu+res == total:
+        if cu == 0 and cu + res == total:
             logger.warning(f'Execute round failed, no chance to attack')
             return False
         return True
@@ -220,3 +220,12 @@ class ScriptTask(GeneralBattle, GameUi, RyouToppaAssets):
         else:
             raise GamePageUnknownError
 
+
+if __name__ == "__main__":
+    from module.config.config import Config
+    from module.device.device import Device
+
+    config = Config('oas1')
+    device = Device(config)
+    t = ScriptTask(config, device)
+    t.run()
