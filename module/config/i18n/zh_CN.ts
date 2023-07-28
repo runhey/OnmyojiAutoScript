@@ -201,6 +201,7 @@
 	<message><source>GlobalGame</source><translation>全局游戏设置</translation></message>
 	<message><source>RealmRaid</source><translation>个人突破</translation></message>
 	<message><source>RyouToppa</source><translation>寮突破</translation></message>
+	<message><source>Exploration</source><translation>探索</translation></message>
 	<message><source>List Rule</source><translation>列表规则</translation></message>
 	<message><source>Activity Task</source><translation>限时活动</translation></message>
 	<message><source>ActivityShikigami</source><translation>当期式神爬塔</translation></message>
@@ -512,7 +513,9 @@ mode_3策略是刷到五个契灵后开始结契，选择高级、中级盘来�
 	<message><source>switch_group_team_help</source><translation>初始值是不合适的，你需要根据自己的情况设置
 "1,2"表示第一个预设组，第二个队伍
 请使用英文输入法下的逗号
-预设组支持[1-7], 预设队伍支持[1-4]</translation></message>	
+预设组支持[1-7], 预设队伍支持[1-4]</translation></message>
+	<message><source>group_name</source><translation>御魂分组名</translation></message>
+	<message><source>team_name</source><translation>队伍名</translation></message>
 </context>
 <context>
     <name>Args</name>
