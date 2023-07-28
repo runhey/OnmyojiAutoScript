@@ -105,6 +105,8 @@ class Buy(BaseTask, BuyAssets):
                 current = self.O_BUY_NUMBER.ocr(self.device.image)
                 if current >= number:
                     break
+                if current == 0:
+                    logger.warning(f'OCR current number failed {current}')
                 number_record.append(current)
                 if len(number_record) >= 4:
                     if number_record[0] == number_record[1] == number_record[2] == number_record[3]:
