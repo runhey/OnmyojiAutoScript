@@ -10,6 +10,13 @@ from module.atom.list import RuleList
 class GameUiAssets: 
 
 
+	# Ocr Rule Assets
+	# 点击空白处关闭此界面 
+	O_CLICK_CLOSE_1 = RuleOcr(roi=(521,659,232,32), area=(521,659,232,32), mode="Single", method="Default", keyword="点击空白处关闭此界面", name="click_close_1")
+	# 点击空白处关闭弹窗 
+	O_CLICK_CLOSE_2 = RuleOcr(roi=(508,584,214,40), area=(508,584,214,40), mode="Single", method="Default", keyword="点击空白处关闭弹窗", name="click_close_2")
+
+
 	# Image Rule Assets
 	# 商店弹窗红色关闭 
 	I_AD_CLOSE_RED = RuleImage(roi_front=(994,128,33,36), roi_back=(994,128,33,36), threshold=0.8, method="Template matching", file="./tasks/GameUi/additional/additional_ad_close_red.png")

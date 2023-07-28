@@ -1,0 +1,38 @@
+[
+  {
+    "itemName": "tp_get_all",
+    "imageName": "tp_tp_get_all.png",
+    "roiFront": "903,599,70,71",
+    "roiBack": "903,599,70,71",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "领取全部"
+  },
+  {
+    "itemName": "red_point_task",
+    "imageName": "tp_red_point_task.png",
+    "roiFront": "1226,312,23,24",
+    "roiBack": "1226,312,23,24",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "任务 的右上方红点"
+  },
+  {
+    "itemName": "red_point_day",
+    "imageName": "tp_red_point_day.png",
+    "roiFront": "632,157,23,26",
+    "roiBack": "632,157,23,26",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "今日 的右上方红点"
+  },
+  {
+    "itemName": "red_point_week",
+    "imageName": "tp_red_point_week.png",
+    "roiFront": "795,156,24,25",
+    "roiBack": "795,156,24,25",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "本周 的右上方红点"
+  }
+]
