@@ -40,6 +40,9 @@ class GeneralBattle(GeneralBuff, GeneralBattleAssets):
             if self.current_count == 1:
                 self.switch_preset_team(config.preset_enable, config.preset_group, config.preset_team)
 
+            # 打开buff
+            self.check_buff(buff)
+
             # 点击准备按钮
             self.wait_until_appear(self.I_PREPARE_HIGHLIGHT)
             while 1:
