@@ -63,7 +63,7 @@ class ScriptTask(GameUi, Summon, DailyTriflesAssets):
 
     def run_store_sign(self):
         self.ui_get_current_page()
-        self.ui_goto(page_mall)
+        self.ui_goto(page_mall, confirm_wait=3)
 
         while 1:
             self.screenshot()
@@ -103,5 +103,5 @@ if __name__ == '__main__':
     d = Device(c)
     t = ScriptTask(c, d)
 
-    t.run_friend_love()
+    t.run_store_sign()
 
