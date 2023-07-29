@@ -79,5 +79,23 @@
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"
+  },
+  {
+    "itemName": "gr_auto_match",
+    "imageName": "gr_gr_auto_match.png",
+    "roiFront": "697,598,181,63",
+    "roiBack": "697,598,181,63",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "自动匹配"
+  },
+  {
+    "itemName": "gr_refresh",
+    "imageName": "gr_gr_refresh.png",
+    "roiFront": "417,595,176,65",
+    "roiBack": "417,595,176,65",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "刷新"
   }
 ]

@@ -2,15 +2,18 @@
 # @author runhey
 # github https://github.com/runhey
 import time
-
+import random
 import cv2
 import numpy as np
+
+from random import randint
 
 from tasks.Component.GeneralRoom.assets import GeneralRoomAssets
 from module.atom.ocr import RuleOcr
 from module.atom.image import RuleImage
 from tasks.base_task import BaseTask
 from module.logger import logger
+from module.base.timer import Timer
 
 
 class GeneralRoom(BaseTask, GeneralRoomAssets):
@@ -87,3 +90,28 @@ class GeneralRoom(BaseTask, GeneralRoomAssets):
                     return True
                 if self.appear_then_click(self.I_GR_BACK_YELLOW, interval=0.5):
                     continue
+
+    def check_zones(self, name: str) -> bool:
+        """
+        确认副本的名称，并选中
+        :param name:
+        :return:
+        """
+        pos = self.list_find(self.L_TEAM_LIST, name)
+        if not pos:
+            return False
+
+        self.O_GR_ZONES_NAME.keyword = name
+        click_timer = Timer(1.1)
+        click_timer.start()
+        while 1:
+            self.screenshot()
+
+            if self.ocr_appear(self.O_GR_ZONES_NAME):
+                break
+            if click_timer.reached():
+                click_timer.reset()
+                self.device.click(x=pos[0] + randint(-5, 5), y=pos[1] + randint(-5, 5))
+
+        return True
+

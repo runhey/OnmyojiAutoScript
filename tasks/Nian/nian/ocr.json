@@ -1,0 +1,20 @@
+[
+  {
+    "itemName": "n_battle_again",
+    "roiFront": "612,251,123,37",
+    "roiBack": "612,251,123,37",
+    "mode": "Single",
+    "method": "Default",
+    "keyword": "再次挑战",
+    "description": "再次挑战"
+  },
+  {
+    "itemName": "n_cd",
+    "roiFront": "578,218,172,41",
+    "roiBack": "578,218,172,41",
+    "mode": "Single",
+    "method": "Default",
+    "keyword": "",
+    "description": "冷却的时间"
+  }
+]
