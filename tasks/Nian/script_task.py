@@ -85,6 +85,7 @@ class ScriptTask(GameUi, GeneralBattle, GeneralRoom, GeneralInvite, NianAssets):
                         self.gold_50(False)
                     if con.buff_gold_100_click:
                         self.gold_100(False)
+                    self.close_buff()
                     break
                 else:
                     break
