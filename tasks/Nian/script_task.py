@@ -78,7 +78,7 @@ class ScriptTask(GameUi, GeneralBattle, GeneralRoom, GeneralInvite, NianAssets):
                         buff.append(BuffClass.gold_100)
                     if buff is []:
                         buff = None
-                    self.run_general_battle(config=self.config.orochi.general_battle_config, buff=buff)
+                    self.run_general_battle(config=self.battle_config, buff=buff)
                     break
                 else:
                     break

@@ -165,8 +165,8 @@ class GeneralBattle(GeneralBuff, GeneralBattleAssets):
         win: bool = False
         while 1:
             self.screenshot()
-            # 如果出现赢 就点击
-            if self.appear(self.I_WIN, threshold=0.8):
+            # 如果出现赢 就点击, 第二个是针对封魔的图片
+            if self.appear(self.I_WIN, threshold=0.8) or self.appear(self.I_DE_WIN):
                 logger.info("Battle result is win")
                 win = True
                 break
