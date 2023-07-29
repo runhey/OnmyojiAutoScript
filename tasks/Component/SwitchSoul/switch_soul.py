@@ -47,6 +47,8 @@ class SwitchSoul(BaseTask, SwitchSoulAssets):
                 break
             if self.appear(self.I_SOU_SWITCH_4):
                 break
+            if self.appear(self.I_SOU_TEAM_PRESENT):
+                break
             if self.appear_then_click(self.I_SOUL_PRESET, interval=1):
                 continue
         logger.info('Click preset in switch soul')
@@ -102,7 +104,6 @@ class SwitchSoul(BaseTask, SwitchSoulAssets):
                 logger.warning(f'Click team {team} failed in group {group}')
         logger.info(f'Switch soul_one group {group} team {team}')
 
-
     def switch_souls(self, target: tuple or list[tuple]) -> None:
         """
         切换御魂
@@ -129,8 +130,95 @@ class SwitchSoul(BaseTask, SwitchSoulAssets):
                 continue
         logger.info('Exit shikigami records')
 
+    def run_switch_soul_by_name(self, groupName, teamName):
+        """
+        保证在式神录的界面
+        :return:
+        """
+        if isinstance(groupName, str) and isinstance(teamName, str):
+            self.click_preset()
+            self.switch_soul_by_name(groupName, teamName)
 
+    def switch_soul_by_name(self, groupName, teamName):
+        """
+        保证在式神录的界面
+        :return:
+        """
+        # 滑动至分组最上层
+        while 1:
+            self.screenshot()
+            compare1 = self.O_SS_GROUP_NAME.detect_and_ocr(self.device.image)
+            text1 = str([result.ocr_text for result in compare1])
+            # 向上滑动
+            self.swipe(self.S_SS_GROUP_SWIPE_UP, 6)
+            self.screenshot()
+            compare2 = self.O_SS_GROUP_NAME.detect_and_ocr(self.device.image)
+            text2 = str([result.ocr_text for result in compare2])
+            # 相等时 滑动到最上层
+            if text1 == text2:
+                break
 
+        # 判断有无目标分组
+        while 1:
+            self.screenshot()
+            # 获取当前分组名
+            results = self.O_SS_GROUP_NAME.detect_and_ocr(self.device.image)
+            text1 = [result.ocr_text for result in results]
+            # 判断当前分组有无目标分组
+            result = set(text1).intersection({groupName})
+            # 有则跳出检测
+            if result and len(result) > 0:
+                break
+            self.swipe(self.S_SS_GROUP_SWIPE_DOWN)
+
+        # 选中分组
+        while 1:
+            self.screenshot()
+            self.O_SS_GROUP_NAME.keyword = groupName
+            if self.ocr_appear_click(self.O_SS_GROUP_NAME):
+                break
+
+        # 滑动至阵容最上层
+        while 1:
+            self.screenshot()
+            compare1 = self.O_SS_TEAM_NAME.detect_and_ocr(self.device.image)
+            text1 = str([result.ocr_text for result in compare1])
+            # 向上滑动
+            self.swipe(self.S_SS_TEAM_SWIPE_DOWN, 6)
+            self.screenshot()
+            compare2 = self.O_SS_TEAM_NAME.detect_and_ocr(self.device.image)
+            text2 = str([result.ocr_text for result in compare2])
+            # 相等时 说明滑动到最上层
+            if text1 == text2:
+                break
+        # 判断当前分组有无目标阵容
+        while 1:
+            self.screenshot()
+            # 获取当前阵容名
+            results = self.O_SS_TEAM_NAME.detect_and_ocr(self.device.image)
+            text1 = [result.ocr_text for result in results]
+            # 判断当前分组有无目标阵容
+            result = set(text1).intersection({teamName})
+            # 有则跳出检测
+            if result and len(result) > 0:
+                break
+            self.swipe(self.S_SS_TEAM_SWIPE_UP)
+
+        # 选中分组
+        while 1:
+            self.screenshot()
+            self.O_SS_TEAM_NAME.keyword = teamName
+            if self.ocr_appear_click(self.O_SS_TEAM_NAME):
+                break
+        # 切换御魂
+        for i in range(6):
+            sleep(0.8)
+            self.screenshot()
+            if self.appear_then_click(self.I_SOU_CLICK_PRESENT, interval=1):
+                continue
+            if self.appear_then_click(self.I_SOU_SWITCH_SURE, interval=1):
+                break
+        logger.info(f'Switch soul_one group {groupName} team {teamName}')
 
 if __name__ == '__main__':
     from module.config.config import Config

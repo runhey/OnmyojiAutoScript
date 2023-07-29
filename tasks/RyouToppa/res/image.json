@@ -20,8 +20,8 @@
   {
     "itemName": "start_toppa_button",
     "imageName": "res_start_toppa_button.png",
-    "roiFront": "812,497,171,55",
-    "roiBack": "812,497,171,55",
+    "roiFront": "834,504,127,38",
+    "roiBack": "4,3,1056,716",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "开始寮突按钮"

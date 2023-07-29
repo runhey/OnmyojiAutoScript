@@ -58,5 +58,27 @@ class SwitchSoulAssets:
 	I_SOU_CHECK_GROUP_6 = RuleImage(roi_front=(1085,443,23,54), roi_back=(1085,443,23,54), threshold=0.8, method="Template matching", file="./tasks/Component/SwitchSoul/ss/ss_sou_check_group_6.png")
 	# description 
 	I_SOU_CHECK_GROUP_7 = RuleImage(roi_front=(1088,512,21,54), roi_back=(1088,512,21,54), threshold=0.8, method="Template matching", file="./tasks/Component/SwitchSoul/ss/ss_sou_check_group_7.png")
+	# 匹配队伍预设 
+	I_SOU_TEAM_PRESENT = RuleImage(roi_front=(737,82,148,43), roi_back=(727,71,165,63), threshold=0.8, method="Template matching", file="./tasks/Component/SwitchSoul/ss/ss_sou_team_present.png")
+	# 需要切换的预设按钮(颜色深一点) 
+	I_SOU_CLICK_PRESENT = RuleImage(roi_front=(967,305,43,22), roi_back=(965,142,48,480), threshold=0.9, method="Template matching", file="./tasks/Component/SwitchSoul/ss/ss_sou_click_present.png")
+
+
+	# Ocr Rule Assets
+	# 队伍预设分组 
+	O_SS_GROUP_NAME = RuleOcr(roi=(1087,91,155,566), area=(1110,94,116,533), mode="Full", method="Default", keyword="", name="ss_group_name")
+	# 阵容匹配 
+	O_SS_TEAM_NAME = RuleOcr(roi=(573,140,277,481), area=(667,144,32,475), mode="Full", method="Default", keyword="", name="ss_team_name")
+
+
+	# Swipe Rule Assets
+	# 列表的向上滑动 
+	S_SS_GROUP_SWIPE_UP = RuleSwipe(roi_front=(1154,180,23,21), roi_back=(1153,322,21,21), mode="default", name="ss_group_swipe_up")
+	# 列表的向下滑动 
+	S_SS_GROUP_SWIPE_DOWN = RuleSwipe(roi_front=(1155,388,21,22), roi_back=(1152,177,22,24), mode="default", name="ss_group_swipe_down")
+	# 阵容向上滑动 
+	S_SS_TEAM_SWIPE_UP = RuleSwipe(roi_front=(720,439,21,21), roi_back=(717,308,21,21), mode="default", name="ss_team_swipe_up")
+	# 阵容向上滑动 
+	S_SS_TEAM_SWIPE_DOWN = RuleSwipe(roi_front=(709,308,21,21), roi_back=(709,449,21,21), mode="default", name="ss_team_swipe_down")
 
 
