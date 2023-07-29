@@ -73,12 +73,18 @@ class ScriptTask(GameUi, GeneralBattle, GeneralRoom, GeneralInvite, NianAssets):
                 if self.wait_battle(wait_time=time(minute=1)):
                     buff = []
                     if con.buff_gold_50_click:
-                        buff.append(BuffClass.gold_50)
+                        buff.append(BuffClass.GOLD_50)
                     if con.buff_gold_100_click:
-                        buff.append(BuffClass.gold_100)
+                        buff.append(BuffClass.GOLD_100)
                     if buff is []:
                         buff = None
                     self.run_general_battle(config=self.battle_config, buff=buff)
+                    # 打完后返回庭院，记得关闭buff
+                    self.open_buff()
+                    if con.buff_gold_50_click:
+                        self.gold_50(False)
+                    if con.buff_gold_100_click:
+                        self.gold_100(False)
                     break
                 else:
                     break
