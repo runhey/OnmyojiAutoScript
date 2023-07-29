@@ -7,16 +7,20 @@ import random
 from tasks.base_task import BaseTask
 from tasks.Component.GeneralBattle.config_general_battle import GreenMarkType, GeneralBattleConfig
 from tasks.Component.GeneralBattle.assets import GeneralBattleAssets
+from tasks.Component.GeneralBuff.config_buff import BuffClass
+from tasks.Component.GeneralBuff.general_buff import GeneralBuff
+
+
 from module.logger import logger
 
 
 
-class GeneralBattle(BaseTask, GeneralBattleAssets):
+class GeneralBattle(GeneralBuff, GeneralBattleAssets):
     """
     使用这个通用的战斗必须要求这个任务的config有config_general_battle
     """
 
-    def run_general_battle(self, config: dict=None) -> bool:
+    def run_general_battle(self, config: dict=None, buff: BuffClass or list[BuffClass]=None) -> bool:
         """
         运行脚本
         :return:
@@ -425,6 +429,47 @@ class GeneralBattle(BaseTask, GeneralBattleAssets):
                     break
                 if self.appear_then_click(lock_image, interval=1):
                     continue
+
+    def check_buff(self, buff: BuffClass or list[BuffClass]=None):
+        """
+        检测是否开启buff
+        :param buff:
+        :return:
+        """
+        if not buff:
+            return
+        logger.info(f'Open buff {buff}')
+        self.ui_click(self.I_BUFF, self.I_CLOUD)
+        if isinstance(buff, BuffClass):
+            buff = [buff]
+        match_method = {
+            BuffClass.AWAKE: self.awake,
+            BuffClass.SOUL: self.soul,
+            BuffClass.GOLD_50: self.gold_50,
+            BuffClass.GOLD_100: self.gold_100,
+            BuffClass.EXP_50: self.exp_50,
+            BuffClass.EXP_100: self.exp_100,
+        }
+        for b in buff:
+            match_method[b]()
+            time.sleep(0.1)
+        logger.info(f'Open buff success')
+        while 1:
+            self.screenshot()
+            if not self.appear(self.I_CLOUD):
+                break
+            if self.appear_then_click(self.I_BUFF, interval=1):
+                continue
+
+
+if __name__ == '__main__':
+    from module.config.config import Config
+    from module.device.device import Device
+    c = Config('oas1')
+    d = Device(c)
+    t = GeneralBattle(c, d)
+
+    t.check_buff([BuffClass.EXP_50, BuffClass.GOLD_50])
 
 
 
