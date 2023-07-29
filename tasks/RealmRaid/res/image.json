@@ -68,7 +68,7 @@
     "roiFront": "1178,101,57,64",
     "roiBack": "1178,101,57,64",
     "method": "Template matching",
-    "threshold": 0.8,
+    "threshold": 0.7,
     "description": "右上角红色的关闭"
   },
   {
