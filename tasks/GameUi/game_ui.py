@@ -20,16 +20,21 @@ class GameUi(BaseTask, GameUiAssets):
     ui_current: Page = None
     ui_pages = [page_main, page_summon, page_exploration, page_town,
                 # 探索的
-                page_awake_zones, page_soul_zones, page_realm_raid, page_goryou_realm, page_delegation, page_secret_zones, page_area_boss, page_heian_kitan, page_six_gates, page_bondling_fairyland, page_kekkai_toppa,
+                page_awake_zones, page_soul_zones, page_realm_raid, page_goryou_realm, page_delegation,
+                page_secret_zones, page_area_boss, page_heian_kitan, page_six_gates, page_bondling_fairyland,
+                page_kekkai_toppa,
                 # 町中的
                 page_duel, page_demon_encounter, page_hunt, page_draft_duel, page_hyakkisen,
                 # 庭院里面的
-                page_shikigami_records, page_onmyodo, page_friends, page_daily, page_mall, page_guild, page_team, page_collection
+                page_shikigami_records, page_onmyodo, page_friends, page_daily, page_mall, page_guild, page_team,
+                page_collection
                 ]
     ui_close = [GameUiAssets.I_BACK_BLUE, GameUiAssets.I_BACK_Y, GameUiAssets.I_BACK_MALL,
                 GameUiAssets.I_BACK_FRIENDS, GameUiAssets.I_BACK_DAILY,
-                GameUiAssets.I_BONDLING_GOTO_EXPLORATION, GameUiAssets.I_REALM_RAID_GOTO_EXPLORATION, GameUiAssets.I_SIX_GATES_GOTO_EXPLORATION, GameUiAssets.I_SUMMON_GOTO_MAIN
+                GameUiAssets.I_BONDLING_GOTO_EXPLORATION, GameUiAssets.I_REALM_RAID_GOTO_EXPLORATION,
+                GameUiAssets.I_SIX_GATES_GOTO_EXPLORATION, GameUiAssets.I_SUMMON_GOTO_MAIN
                 ]
+
     def home_explore(self) -> bool:
         """
         使用ocr识别到探索按钮并点击
@@ -144,7 +149,6 @@ class GameUi(BaseTask, GameUiAssets):
         logger.critical("Please switch to a supported page before starting oas")
         raise GamePageUnknownError
 
-
     def ui_button_interval_reset(self, button):
         """
         Reset interval of some button to avoid mistaken clicks
@@ -182,7 +186,6 @@ class GameUi(BaseTask, GameUiAssets):
             if len(new) == len(visited):
                 break
             visited = new
-
 
         logger.hr(f"UI goto {destination}")
         confirm_timer = Timer(confirm_wait, count=int(confirm_wait // 0.5)).start()
@@ -238,10 +241,33 @@ class GameUi(BaseTask, GameUiAssets):
         for page in self.ui_pages:
             page.parent = None
 
+    # ------------------------------------------------------------------------------------------------------------------
+    # 下面的这些是一些特殊的页面，需要额外处理
+    # ------------------------------------------------------------------------------------------------------------------
+
+    def main_goto_daily(self):
+        """
+        无法直接一步到花合战，需要先到主页，然后再到花合战
+        :return:
+        """
+        while 1:
+            self.screenshot()
+            if self.appear(self.I_CHECK_DAILY):
+                break
+            if self.appear_then_click(self.I_MAIN_GOTO_DAILY, interval=1):
+                continue
+            if self.ocr_appear_click(self.O_CLICK_CLOSE_1, interval=1):
+                continue
+            if self.ocr_appear_click(self.O_CLICK_CLOSE_2, interval=1):
+                continue
+        logger.info('Page arrive: Daily')
+        return
+
 
 if __name__ == '__main__':
     from module.config.config import Config
     from module.device.device import Device
+
     c = Config('oas1')
     d = Device(c)
     game = GameUi(config=c, device=d)

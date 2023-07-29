@@ -14,7 +14,8 @@ class ScriptTask(GameUi, TalismanPassAssets):
 
     def run(self):
         self.ui_get_current_page()
-        self.ui_goto(page_daily)
+        self.ui_goto(page_main)
+        self.main_goto_daily()
 
         # 收取全部奖励
         self.get_all()
