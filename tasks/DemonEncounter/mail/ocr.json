@@ -1,0 +1,47 @@
+[
+  {
+    "itemName": "letter_count",
+    "roiFront": "480,133,55,34",
+    "roiBack": "480,133,55,34",
+    "mode": "DigitCounter",
+    "method": "Default",
+    "keyword": "",
+    "description": "1/3"
+  },
+  {
+    "itemName": "letter_question",
+    "roiFront": "427,164,447,100",
+    "roiBack": "427,164,447,100",
+    "mode": "Single",
+    "method": "Default",
+    "keyword": "",
+    "description": "问题"
+  },
+  {
+    "itemName": "letter_answer_1",
+    "roiFront": "424,261,450,74",
+    "roiBack": "424,261,450,74",
+    "mode": "Single",
+    "method": "Default",
+    "keyword": "",
+    "description": "回答一"
+  },
+  {
+    "itemName": "letter_answer_2",
+    "roiFront": "428,350,438,74",
+    "roiBack": "428,350,438,74",
+    "mode": "Single",
+    "method": "Default",
+    "keyword": "",
+    "description": "回答二"
+  },
+  {
+    "itemName": "letter_answer_3",
+    "roiFront": "428,439,443,72",
+    "roiBack": "428,439,443,72",
+    "mode": "Single",
+    "method": "Default",
+    "keyword": "",
+    "description": "回答三"
+  }
+]

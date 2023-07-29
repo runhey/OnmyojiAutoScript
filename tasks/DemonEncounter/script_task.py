@@ -8,11 +8,14 @@ from cached_property import cached_property
 
 from module.logger import logger
 from module.exception import TaskEnd
+from module.base.timer import Timer
 
 from tasks.GameUi.game_ui import GameUi
+from tasks.GameUi.page import page_main, page_demon_encounter
 from tasks.DemonEncounter.assets import DemonEncounterAssets
 from tasks.Component.GeneralBattle.general_battle import GeneralBattle
 from tasks.Component.GeneralBattle.config_general_battle import GeneralBattleConfig
+from tasks.DemonEncounter.data.answer import answer_one
 
 class LanternClass(Enum):
     BATTLE = 0  # 打怪  --> 无法判断因为怪的图片不一样，用排除法
@@ -25,6 +28,8 @@ class LanternClass(Enum):
 class ScriptTask(GameUi, GeneralBattle, DemonEncounterAssets):
 
     def run(self):
+        self.ui_get_current_page()
+        self.ui_goto(page_demon_encounter)
         self.execute_lantern()
         self.execute_boss()
 
@@ -55,7 +60,7 @@ class ScriptTask(GameUi, GeneralBattle, DemonEncounterAssets):
                 continue
             if self.appear_then_click(self.I_BOSS_SONGSTRESS, interval=1):
                 continue
-            if self.appear_then_click(self.I_DE_BOSS, interval=2.5):
+            if self.appear_then_click(self.I_DE_BOSS, interval=4):
                 continue
         logger.info('Boss battle start')
         # 点击集结挑战
@@ -70,7 +75,9 @@ class ScriptTask(GameUi, GeneralBattle, DemonEncounterAssets):
             if self.appear_then_click(self.I_BOSS_FIRE, interval=1):
                 continue
         logger.info('Boss battle confirm and enter')
-        # 等待挑战
+        # 等待挑战, 5秒也是等
+        time.sleep(5)
+        self.device.stuck_record_add('BATTLE_STATUS_S')
         self.wait_until_disappear(self.I_BOSS_GATHER)
         config = self.con
         self.run_general_battle(config)
@@ -93,25 +100,35 @@ class ScriptTask(GameUi, GeneralBattle, DemonEncounterAssets):
         :return:
         """
         # 先点四次
+        ocr_timer = Timer(0.8)
+        ocr_timer.start()
         while 1:
             self.screenshot()
-            cu, re, total = self.O_DE_COUNTER.count(self.device.image)
+            if not ocr_timer.reached():
+                continue
+            else:
+                ocr_timer.reset()
+            cu, re, total = self.O_DE_COUNTER.ocr(self.device.image)
             if cu + re != total:
                 logger.warning('Lantern count error')
                 continue
             if cu == 0 and re == 4:
                 break
+
             if self.appear_then_click(self.I_DE_FIND, interval=1):
                 continue
+        logger.info('Lantern count success')
         # 然后领取红色达摩
-        self.ui_get_reward(self.I_DE_RED_DHARMA)
+        self.screenshot()
+        if not self.appear(self.I_DE_AWARD):
+            self.ui_get_reward(self.I_DE_RED_DHARMA)
         self.wait_until_appear(self.I_DE_AWARD)
         # 然后到四个灯笼
         match_click = {
             1: self.C_DE_1,
-            2: self.C_DE_1,
-            3: self.C_DE_1,
-            4: self.C_DE_1,
+            2: self.C_DE_2,
+            3: self.C_DE_3,
+            4: self.C_DE_4,
         }
         for i in range(1, 5):
             logger.hr(f'Check lantern {i}', 3)
@@ -120,13 +137,13 @@ class ScriptTask(GameUi, GeneralBattle, DemonEncounterAssets):
                 case LanternClass.BOX:
                     self._box()
                 case LanternClass.MAIL:
-                    self._mail()
+                    self._mail(match_click[i])
                 case LanternClass.REALM:
-                    self._realm()
+                    self._realm(match_click[i])
                 case LanternClass.EMPTY:
                     logger.warning(f'Lantern {i} is empty')
                 case LanternClass.BATTLE:
-                    self._battle()
+                    self._battle(match_click[i])
             time.sleep(1)
 
     @cached_property
@@ -177,9 +194,43 @@ class ScriptTask(GameUi, GeneralBattle, DemonEncounterAssets):
         # 宝箱不领
         pass
 
-    def _mail(self):
+    def _mail(self, target_click):
         # 答题，还没有碰到过答题的
-        pass
+        def answer():
+            click_match = {
+                1: self.C_ANSWER_1,
+                2: self.C_ANSWER_2,
+                3: self.C_ANSWER_3,
+            }
+            index = None
+            self.screenshot()
+            question = self.O_LETTER_QUESTION.detect_text(self.device.image)
+            question = question.replace('?', '').replace('？', '')
+            answer_1 = self.O_LETTER_ANSWER_1.detect_text(self.device.image)
+            answer_2 = self.O_LETTER_ANSWER_2.detect_text(self.device.image)
+            answer_3 = self.O_LETTER_ANSWER_3.detect_text(self.device.image)
+            if answer_1 == '其余选项皆对':
+                index = 1
+            elif answer_2 == '其余选项皆对':
+                index = 2
+            elif answer_3 == '其余选项皆对':
+                index = 3
+            if not index:
+                index = answer_one(question=question, options=[answer_1, answer_2, answer_3])
+            logger.info(f'Question: {question}, Answer: {index}')
+            return click_match[index]
+
+        while 1:
+            self.screenshot()
+            if self.appear(self.I_LETTER_CLOSE):
+                break
+            if self.click(target_click, interval=1):
+                continue
+        logger.info('Question answering Start')
+        for i in range(1,4):
+            logger.hr(f'Answer {i}', 3)
+            self.ui_get_reward(answer())
+            time.sleep(0.5)
 
     def _battle(self, target_click):
         config = self.con
@@ -188,14 +239,14 @@ class ScriptTask(GameUi, GeneralBattle, DemonEncounterAssets):
             if not self.appear(self.I_DE_LOCATION):
                 logger.info('Battle Start')
                 break
-            if self.click(target_click, interval=target_click):
+            if self.click(target_click, interval=1):
                 continue
         if self.run_general_battle(config):
             logger.info('Battle End')
 
-    def _realm(self):
+    def _realm(self, target_click):
         # 结界
-        pass
+        self._battle(target_click)
 
 
 if __name__ == '__main__':
@@ -207,4 +258,4 @@ if __name__ == '__main__':
     d = Device(c)
     t = ScriptTask(c, d)
 
-    t.run()
+    t.execute_lantern()
