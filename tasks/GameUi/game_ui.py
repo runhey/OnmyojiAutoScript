@@ -261,6 +261,7 @@ class GameUi(BaseTask, GameUiAssets):
             if self.ocr_appear_click(self.O_CLICK_CLOSE_2, interval=1):
                 continue
         logger.info('Page arrive: Daily')
+        time.sleep(1)
         return
 
 

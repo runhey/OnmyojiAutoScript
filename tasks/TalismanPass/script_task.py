@@ -52,5 +52,5 @@ if __name__ == '__main__':
     t = ScriptTask(c, d)
     t.screenshot()
 
-    t.get_all()
+    t.run()
 

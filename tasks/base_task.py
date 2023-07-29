@@ -452,10 +452,11 @@ class BaseTask(GlobalGameAssets):
             self.screenshot()
 
             if self.ui_reward_appear_click():
+                sleep(0.5)
                 while 1:
                     self.screenshot()
                     # 等待动画结束
-                    if not self.appear(self.I_UI_REWARD, threshold=0.7):
+                    if not self.appear(self.I_UI_REWARD, threshold=0.6):
                         logger.info('Get reward success')
                         break
 
