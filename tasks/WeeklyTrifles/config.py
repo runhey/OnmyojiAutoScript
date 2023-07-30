@@ -11,7 +11,14 @@ class Scheduler(BaseScheduler):
     success_interval: TimeDelta = Field(default=TimeDelta(days=7), description='success_interval_help')
     failure_interval: TimeDelta = Field(default=TimeDelta(days=7), description='failure_interval_help')
 
+class Trifles(BaseModel):
+    share_collect: bool = Field(default=True, description='share_collect_help')
+    share_area_boss: bool = Field(default=True, description='share_area_boss_help')
+    share_secret: bool = Field(default=True, description='share_secret_help')
+    broken_amulet: int = Field(title='Broken Amulet', default=100, description='trifles_broken_amulet_help')
+
 
 class WeeklyTrifles(ConfigBase):
     scheduler: Scheduler = Field(default_factory=Scheduler)
+    trifles: Trifles = Field(default_factory=Trifles)
 

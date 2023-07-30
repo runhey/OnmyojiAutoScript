@@ -612,4 +612,15 @@ Refresh：直接刷新，如果刷新操作进入CD，将标记为失败并退�
 	<message><source>Black Daruma Scrap</source><translation>御行达摩碎片</translation></message>
 	<message><source>Black Daruma</source><translation>御行达摩</translation></message>
 </context>	
+<context>
+    <name>Args</name>
+	<message><source>Share Collect</source><translation>图鉴分享</translation></message>	
+	<message><source>Share Area Boss</source><translation>地鬼分享</translation></message>	
+	<message><source>Share Secret</source><translation>秘闻分享</translation></message>
+	<message><source>share_collect_help</source><translation>每周一张票、不要白不要</translation></message>
+	<message><source>share_area_boss_help</source><translation>没什么建议，勾上就对了</translation></message>
+	<message><source>share_secret_help</source><translation>建议在秘闻结束后再来执行这个任务</translation></message>
+	<message><source>trifles_broken_amulet_help</source><translation>建议设置大点每周清空去</translation></message>
+	<message><source>Trifles</source><translation>启用</translation></message>
+</context>		
 </TS>
