@@ -10,11 +10,11 @@ from tasks.Component.SwitchSoul.assets import SwitchSoulAssets
 from module.logger import logger
 
 
-def switch_parser(switch_str: str):
+def switch_parser(switch_str: str) -> tuple:
     switch_list = switch_str.split(',')
     if len(switch_list) != 2:
         raise ValueError('Switch_str must be 2 length')
-    return [int(switch) for switch in switch_list]
+    return int(switch_list[0]), int(switch_list[1])
 
 class SwitchSoul(BaseTask, SwitchSoulAssets):
 
