@@ -76,7 +76,7 @@ class ConfigModel(ConfigBase):
 
     # 这些是肝帝专属
     bondling_fairyland: BondlingFairyland = Field(default_factory=BondlingFairyland)
-    evozone: EvoZone = Field(default_factory=EvoZone)
+    evo_zone: EvoZone = Field(default_factory=EvoZone)
 
 
     # 这些是每周任务

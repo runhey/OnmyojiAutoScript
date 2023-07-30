@@ -52,7 +52,7 @@ class EvoZoneConfig(ConfigBase):
 
 class EvoZone(ConfigBase):
     scheduler: Scheduler = Field(default_factory=Scheduler)
-    evozone_config: EvoZoneConfig = Field(default_factory=EvoZoneConfig)
+    evo_zone_config: EvoZoneConfig = Field(default_factory=EvoZoneConfig)
     invite_config: InviteConfig = Field(default_factory=InviteConfig)
     general_battle_config: GeneralBattleConfig = Field(default_factory=GeneralBattleConfig)
 
