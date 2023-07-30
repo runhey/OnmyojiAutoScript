@@ -2,10 +2,10 @@
   {
     "itemName": "de_red_dharma",
     "imageName": "demon_de_red_dharma.png",
-    "roiFront": "1209,208,51,50",
+    "roiFront": "1216,215,32,33",
     "roiBack": "1209,208,51,50",
     "method": "Template matching",
-    "threshold": 0.8,
+    "threshold": 0.7,
     "description": "红色达摩"
   },
   {

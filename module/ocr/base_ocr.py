@@ -158,7 +158,6 @@ class BaseCor:
                     text=f'[{result}]')
         return result
 
-
     def detect_and_ocr(self, image) -> list[BoxedResult]:
         """
         注意：这里使用了预处理和后处理
@@ -197,7 +196,6 @@ class BaseCor:
             return self.keyword in result
         else:
             return self.keyword == result
-
 
     def filter(self, boxed_results: list[BoxedResult], keyword: str=None) -> list or None:
         """
@@ -240,7 +238,30 @@ class BaseCor:
         else:
             return None
 
-
+    def detect_text(self, image) -> str:
+        """
+        识别图片中的文字， 会按照顺序拼接起来
+        :param image:
+        :return:
+        """
+        # pre process
+        start_time = time.time()
+        image = self.crop(image, self.roi)
+        image = self.pre_process(image)
+        image = enlarge_canvas(image)
+        # ocr
+        boxed_results: list[BoxedResult] = self.model.detect_and_ocr(image)
+        results = ''
+        # after proces
+        for result in boxed_results:
+            # logger.info("ocr result score: %s" % result.score)
+            if result.score < self.score:
+                continue
+            results += result.ocr_text
+        # logger.info("ocr result score: %s" % score)
+        logger.attr(name='%s %ss' % (self.name, float2str(time.time() - start_time)),
+                    text=f'[{results}]')
+        return results
 
 
 # def test():

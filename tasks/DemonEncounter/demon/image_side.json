@@ -70,5 +70,14 @@
     "method": "Template matching",
     "threshold": 0.8,
     "description": "信"
+  },
+  {
+    "itemName": "letter_close",
+    "imageName": "demon_letter_close.png",
+    "roiFront": "851,43,45,45",
+    "roiBack": "851,43,45,45",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "关闭封魔密信"
   }
 ]

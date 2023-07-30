@@ -52,7 +52,7 @@ class DemonEncounterAssets:
 
 	# Image Rule Assets
 	# 红色达摩 
-	I_DE_RED_DHARMA = RuleImage(roi_front=(1209,208,51,50), roi_back=(1209,208,51,50), threshold=0.8, method="Template matching", file="./tasks/DemonEncounter/demon/demon_de_red_dharma.png")
+	I_DE_RED_DHARMA = RuleImage(roi_front=(1216,215,32,33), roi_back=(1209,208,51,50), threshold=0.7, method="Template matching", file="./tasks/DemonEncounter/demon/demon_de_red_dharma.png")
 	# 点击右下角的寻找封魔 
 	I_DE_FIND = RuleImage(roi_front=(1136,593,100,100), roi_back=(1136,593,100,100), threshold=0.8, method="Template matching", file="./tasks/DemonEncounter/demon/demon_de_find.png")
 	# 点击首领 
@@ -82,10 +82,34 @@ class DemonEncounterAssets:
 	I_DE_AWARD = RuleImage(roi_front=(1214,210,43,41), roi_back=(1214,210,43,41), threshold=0.8, method="Template matching", file="./tasks/DemonEncounter/demon/demon_de_award.png")
 	# 信 
 	I_DE_LETTER = RuleImage(roi_front=(1236,358,33,35), roi_back=(1177,261,100,294), threshold=0.8, method="Template matching", file="./tasks/DemonEncounter/demon/demon_de_letter.png")
+	# 关闭封魔密信 
+	I_LETTER_CLOSE = RuleImage(roi_front=(851,43,45,45), roi_back=(851,43,45,45), threshold=0.8, method="Template matching", file="./tasks/DemonEncounter/demon/demon_letter_close.png")
 
 
 	# Ocr Rule Assets
 	# 计数已经开启多少的 
 	O_DE_COUNTER = RuleOcr(roi=(1204,685,48,34), area=(1204,685,48,34), mode="DigitCounter", method="Default", keyword="", name="de_counter")
+
+
+	# Click Rule Assets
+	# description 
+	C_ANSWER_1 = RuleClick(roi_front=(430,264,440,67), roi_back=(430,264,440,67), name="answer_1")
+	# description 
+	C_ANSWER_2 = RuleClick(roi_front=(428,351,438,70), roi_back=(428,351,438,70), name="answer_2")
+	# description 
+	C_ANSWER_3 = RuleClick(roi_front=(434,435,437,65), roi_back=(434,435,437,65), name="answer_3")
+
+
+	# Ocr Rule Assets
+	# 1/3 
+	O_LETTER_COUNT = RuleOcr(roi=(480,133,55,34), area=(480,133,55,34), mode="DigitCounter", method="Default", keyword="", name="letter_count")
+	# 问题 
+	O_LETTER_QUESTION = RuleOcr(roi=(427,164,447,100), area=(427,164,447,100), mode="Single", method="Default", keyword="", name="letter_question")
+	# 回答一 
+	O_LETTER_ANSWER_1 = RuleOcr(roi=(424,261,450,74), area=(424,261,450,74), mode="Single", method="Default", keyword="", name="letter_answer_1")
+	# 回答二 
+	O_LETTER_ANSWER_2 = RuleOcr(roi=(428,350,438,74), area=(428,350,438,74), mode="Single", method="Default", keyword="", name="letter_answer_2")
+	# 回答三 
+	O_LETTER_ANSWER_3 = RuleOcr(roi=(428,439,443,72), area=(428,439,443,72), mode="Single", method="Default", keyword="", name="letter_answer_3")
 
 

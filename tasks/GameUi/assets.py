@@ -96,7 +96,7 @@ class GameUiAssets:
 	# description 
 	I_TOWN_GOTO_DUEL = RuleImage(roi_front=(756,142,48,68), roi_back=(357,126,657,100), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_town_goto_duel.png")
 	# description 
-	I_TOWN_GOTO_DEMON_ENCOUNTER = RuleImage(roi_front=(617,135,51,75), roi_back=(232,121,873,100), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_town_goto_demon_encounter.png")
+	I_TOWN_GOTO_DEMON_ENCOUNTER = RuleImage(roi_front=(617,135,51,75), roi_back=(232,121,873,100), threshold=0.7, method="Template matching", file="./tasks/GameUi/page/page_town_goto_demon_encounter.png")
 	# description 
 	I_TOWN_GOTO_HUNT = RuleImage(roi_front=(475,138,46,69), roi_back=(275,122,520,100), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_town_goto_hunt.png")
 	# 协同对弈 
