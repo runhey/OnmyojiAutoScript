@@ -70,7 +70,7 @@ class Single(BaseCor):
         """
         检测某个固定位置的roi的文本。可以是横方向也可以是竖方向
         :param image:
-        :return: 返回到识别的文字
+        :return: 返回到识别的文字, 如果没有返回空字符串
         """
         if self.roi:
             result = self.ocr_single_line(image)

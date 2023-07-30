@@ -620,7 +620,18 @@ Refresh：直接刷新，如果刷新操作进入CD，将标记为失败并退�
 	<message><source>share_collect_help</source><translation>每周一张票、不要白不要</translation></message>
 	<message><source>share_area_boss_help</source><translation>没什么建议，勾上就对了</translation></message>
 	<message><source>share_secret_help</source><translation>建议在秘闻结束后再来执行这个任务</translation></message>
-	<message><source>trifles_broken_amulet_help</source><translation>建议设置大点每周清空去</translation></message>
+	<message><source>trifles_broken_amulet_help</source><translation>建议设置较大的数值以每周清空</translation></message>
 	<message><source>Trifles</source><translation>启用</translation></message>
 </context>		
+<context>
+    <name>Args</name>
+	<message><source>SecretConfig</source><translation>秘闻</translation></message>	
+	<message><source>Secret Gold 50</source><translation>金币加成50%</translation></message>	
+	<message><source>Secret Gold 100</source><translation>金币加成100%</translation></message>
+	<message><source>Layer 10</source><translation>挑战十层</translation></message>
+	<message><source>Layer 9</source><translation>挑战九层</translation></message>
+	<message><source>secret_gold_50_help</source><translation>这将会在低层[1-5]自动打开加成并且自动关闭加成</translation></message>
+	<message><source>secret_gold_100_help</source><translation>同上</translation></message>
+	<message><source>layer_10_help</source><translation>考虑到练度，这将不是默认打开的</translation></message>
+</context>	
 </TS>
