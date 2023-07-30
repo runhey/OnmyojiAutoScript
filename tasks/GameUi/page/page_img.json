@@ -232,5 +232,14 @@
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"
+  },
+  {
+    "itemName": "ryoutoppa_goto_realmraid",
+    "imageName": "page_ryoutoppa_goto_realmraid.png",
+    "roiFront": "1201,234,62,105",
+    "roiBack": "1201,234,62,105",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
   }
 ]
