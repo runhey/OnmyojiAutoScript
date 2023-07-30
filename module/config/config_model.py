@@ -38,6 +38,7 @@ from tasks.ActivityShikigami.config import ActivityShikigami
 
 # 肝帝专属---------------------------------------------------------------------------------------------------------------
 from tasks.BondlingFairyland.config import BondlingFairyland
+from tasks.EvoZone.config import EvoZone
 # ----------------------------------------------------------------------------------------------------------------------
 
 # 每周任务---------------------------------------------------------------------------------------------------------------
@@ -75,6 +76,8 @@ class ConfigModel(ConfigBase):
 
     # 这些是肝帝专属
     bondling_fairyland: BondlingFairyland = Field(default_factory=BondlingFairyland)
+    evozone: EvoZone = Field(default_factory=EvoZone)
+
 
     # 这些是每周任务
     true_orochi: TrueOrochi = Field(default_factory=TrueOrochi)

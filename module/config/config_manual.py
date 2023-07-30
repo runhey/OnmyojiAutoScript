@@ -13,7 +13,7 @@ class ConfigManual:
         > AreaBoss > GoldYoukai > ExperienceYoukai > Nian > RealmRaid > RyouToppa > DailyTrifles
         > Orochi > OrochiMoans > OrochiJudgement > Sougenbi > FallenSun > EternitySea
         > ActivityShikigami
-        > BondlingFairyland
+        > BondlingFairyland > EvoZone
         > TrueOrochi > RichMan
         """
 
