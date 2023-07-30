@@ -27,7 +27,7 @@ class ConfigMenu:
         # 阴阳寮
         self.menu["Guild"] = ['KekkaiUtilize', 'KekkaiActivation', 'RealmRaid', 'RyouToppa']
         # 每周任务
-        self.menu["Weekly Task"] = ['TrueOrochi', 'RichMan']
+        self.menu["Weekly Task"] = ['TrueOrochi', 'RichMan', 'Secret', 'WeeklyTrifles']
         # 活动的任务
         self.menu["Activity Task"] = ['ActivityShikigami']
         # 开发工具
