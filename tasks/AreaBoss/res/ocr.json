@@ -1,0 +1,38 @@
+[
+  {
+    "itemName": "ab_kill_best",
+    "roiFront": "942,123,157,52",
+    "roiBack": "942,123,157,52",
+    "mode": "Single",
+    "method": "Default",
+    "keyword": "击杀最多",
+    "description": "击杀最多"
+  },
+  {
+    "itemName": "ab_my_collect",
+    "roiFront": "949,124,129,53",
+    "roiBack": "949,124,129,53",
+    "mode": "Single",
+    "method": "Default",
+    "keyword": "我的收藏",
+    "description": "我的收藏"
+  },
+  {
+    "itemName": "ab_famous",
+    "roiFront": "1188,181,78,82",
+    "roiBack": "1188,181,78,82",
+    "mode": "Single",
+    "method": "Default",
+    "keyword": "热门",
+    "description": "热门"
+  },
+  {
+    "itemName": "ab_collecting",
+    "roiFront": "1163,522,88,100",
+    "roiBack": "1163,522,88,100",
+    "mode": "Single",
+    "method": "Default",
+    "keyword": "收藏",
+    "description": "收藏"
+  }
+]
