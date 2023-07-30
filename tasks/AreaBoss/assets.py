@@ -27,7 +27,20 @@ class AreaBossAssets:
 	I_BATTLE_3 = RuleImage(roi_front=(1071,521,100,100), roi_back=(1071,521,100,100), threshold=0.8, method="Template matching", file="./tasks/AreaBoss/res/res_battle_3.png")
 	# 点击挑战 
 	I_FIRE = RuleImage(roi_front=(1108,492,100,100), roi_back=(1108,492,100,100), threshold=0.8, method="Template matching", file="./tasks/AreaBoss/res/res_fire.png")
-	# 红色的关闭 
+	# 跟buff冲突弃用 
 	I_CLOSE_RED = RuleImage(roi_front=(1190,24,37,38), roi_back=(1190,24,37,38), threshold=0.8, method="Template matching", file="./tasks/AreaBoss/res/res_close_red.png")
+	# 红色关闭 
+	I_AB_CLOSE_RED = RuleImage(roi_front=(1194,24,38,37), roi_back=(1194,24,38,37), threshold=0.8, method="Template matching", file="./tasks/AreaBoss/res/res_ab_close_red.png")
+
+
+	# Ocr Rule Assets
+	# 击杀最多 
+	O_AB_KILL_BEST = RuleOcr(roi=(942,123,157,52), area=(942,123,157,52), mode="Single", method="Default", keyword="击杀最多", name="ab_kill_best")
+	# 我的收藏 
+	O_AB_MY_COLLECT = RuleOcr(roi=(949,124,129,53), area=(949,124,129,53), mode="Single", method="Default", keyword="我的收藏", name="ab_my_collect")
+	# 热门 
+	O_AB_FAMOUS = RuleOcr(roi=(1188,181,78,82), area=(1188,181,78,82), mode="Single", method="Default", keyword="热门", name="ab_famous")
+	# 收藏 
+	O_AB_COLLECTING = RuleOcr(roi=(1163,522,88,100), area=(1163,522,88,100), mode="Single", method="Default", keyword="收藏", name="ab_collecting")
 
 
