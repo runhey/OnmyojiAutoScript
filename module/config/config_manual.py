@@ -15,6 +15,7 @@ class ConfigManual:
         > ActivityShikigami
         > BondlingFairyland
         > TrueOrochi > RichMan
+        > Pets > TalismanPass > SoulsTidy
         """
 
     DEVICE_OVER_HTTP = False

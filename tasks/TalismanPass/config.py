@@ -12,6 +12,6 @@ class Scheduler(BaseScheduler):
     failure_interval: TimeDelta = Field(default=TimeDelta(hours=6), description='failure_interval_help')
 
 
-class TailsmanPass(ConfigBase):
+class TalismanPass(ConfigBase):
     scheduler: Scheduler = Field(default_factory=Scheduler)
 
