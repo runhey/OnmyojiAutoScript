@@ -62,6 +62,8 @@ class ScriptTask(GameUi, GeneralBattle, DemonEncounterAssets):
                 continue
             if self.appear_then_click(self.I_DE_BOSS, interval=4):
                 continue
+            if self.click(self.C_DM_BOSS_CLICK, interval=1.7):
+                continue
         logger.info('Boss battle start')
         # 点击集结挑战
         while 1:
@@ -239,6 +241,17 @@ class ScriptTask(GameUi, GeneralBattle, DemonEncounterAssets):
             if not self.appear(self.I_DE_LOCATION):
                 logger.info('Battle Start')
                 break
+            if self.appear(self.I_DE_SMALL_FIRE):
+                # 小鬼王
+                logger.info('Small Boss')
+                while 1:
+                    self.screenshot()
+                    if not self.appear(self.I_DE_SMALL_FIRE):
+                        break
+                    if self.appear_then_click(self.I_DE_SMALL_FIRE, interval=1):
+                        continue
+                break
+
             if self.click(target_click, interval=1):
                 continue
         if self.run_general_battle(config):
@@ -258,4 +271,4 @@ if __name__ == '__main__':
     d = Device(c)
     t = ScriptTask(c, d)
 
-    t.execute_lantern()
+    t.run()

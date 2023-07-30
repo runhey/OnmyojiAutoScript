@@ -10,6 +10,11 @@ from module.atom.list import RuleList
 class DemonEncounterAssets: 
 
 
+	# Click Rule Assets
+	# description 
+	C_DM_BOSS_CLICK = RuleClick(roi_front=(593,274,100,100), roi_back=(593,274,100,100), name="dm_boss_click")
+
+
 	# Image Rule Assets
 	# 地震鲇 
 	I_BOSS_NAMAZU = RuleImage(roi_front=(589,294,100,100), roi_back=(589,294,100,100), threshold=0.8, method="Template matching", file="./tasks/DemonEncounter/boss/boss_boss_namazu.png")
@@ -84,6 +89,8 @@ class DemonEncounterAssets:
 	I_DE_LETTER = RuleImage(roi_front=(1236,358,33,35), roi_back=(1177,261,100,294), threshold=0.8, method="Template matching", file="./tasks/DemonEncounter/demon/demon_de_letter.png")
 	# 关闭封魔密信 
 	I_LETTER_CLOSE = RuleImage(roi_front=(851,43,45,45), roi_back=(851,43,45,45), threshold=0.8, method="Template matching", file="./tasks/DemonEncounter/demon/demon_letter_close.png")
+	# 小鬼王的挑战 
+	I_DE_SMALL_FIRE = RuleImage(roi_front=(1064,549,100,100), roi_back=(1064,549,100,100), threshold=0.8, method="Template matching", file="./tasks/DemonEncounter/demon/demon_de_small_fire.png")
 
 
 	# Ocr Rule Assets
