@@ -9,7 +9,7 @@ from tasks.Component.GeneralInvite.general_invite import GeneralInvite
 from tasks.Component.GeneralBuff.general_buff import GeneralBuff
 from tasks.Component.GeneralRoom.general_room import GeneralRoom
 from tasks.GameUi.game_ui import GameUi
-from tasks.GameUi.page import page_main, page_soul_zones
+from tasks.GameUi.page import page_main, page_awake_zones
 from tasks.EvoZone.assets import EvoZoneAssets
 from tasks.EvoZone.config import EvoZone, UserStatus, KirinType
 from module.logger import logger
@@ -124,7 +124,7 @@ class ScriptTask(GeneralBattle, GeneralInvite, GeneralBuff, GeneralRoom, GameUi,
         logger.info('Start run leader')
         self.ui_get_current_page()
         # self.ui_goto(page_soul_zones)
-        self.ui_goto(page_evo_zones)
+        self.ui_goto(page_awake_zones)
         self.evozone_enter()
         layer = self.config.evozone.evozone_config.layer
         self.check_layer(layer)
@@ -272,7 +272,7 @@ class ScriptTask(GeneralBattle, GeneralInvite, GeneralBuff, GeneralRoom, GameUi,
     def run_alone(self):
         logger.info('Start run alone')
         self.ui_get_current_page()
-        self.ui_goto(page_soul_zones)
+        self.ui_goto(page_awake_zones)
         self.evozone_enter()
         layer = self.config.evozone.evozone_config.layer
         self.check_layer(layer)
