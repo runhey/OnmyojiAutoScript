@@ -183,6 +183,15 @@
 	<message><source>KekkaiUtilize</source><translation>结界蹭卡</translation></message>
 	<message><source>KekkaiActivation</source><translation>结界挂卡</translation></message>
 	<message><source>DemonEncounter</source><translation>封魔之时</translation></message>
+	<message><source>DailyTrifles</source><translation>每日琐事</translation></message>
+	<message><source>TalismanPass</source><translation>花合战</translation></message>
+	<message><source>SoulsTidy</source><translation>御魂整理</translation></message>
+	<message><source>Pets</source><translation>小猫咪</translation></message>
+	<message><source>EvoZone</source><translation>觉醒副本</translation></message>
+	<message><source>Guild</source><translation>阴阳寮</translation></message>
+	<message><source>RichMan</source><translation>大富翁</translation></message>
+	<message><source>Secret</source><translation>秘闻之境</translation></message>
+	<message><source>WeeklyTrifles</source><translation>每周琐事</translation></message>
 </context>
 <context>
     <name>TaskList</name>
@@ -212,6 +221,15 @@
 	<message><source>KekkaiUtilize</source><translation>结界蹭卡</translation></message>
 	<message><source>KekkaiActivation</source><translation>结界挂卡</translation></message>
 	<message><source>DemonEncounter</source><translation>封魔之时</translation></message>
+	<message><source>DailyTrifles</source><translation>每日琐事</translation></message>
+	<message><source>TalismanPass</source><translation>花合战</translation></message>
+	<message><source>SoulsTidy</source><translation>御魂整理</translation></message>
+	<message><source>Pets</source><translation>小猫咪</translation></message>
+	<message><source>EvoZone</source><translation>觉醒副本</translation></message>
+	<message><source>Guild</source><translation>阴阳寮</translation></message>
+	<message><source>RichMan</source><translation>大富翁</translation></message>
+	<message><source>Secret</source><translation>秘闻之境</translation></message>
+	<message><source>WeeklyTrifles</source><translation>每周琐事</translation></message>
 </context>
 <context>
     <name>Args</name>
