@@ -34,5 +34,50 @@
     "method": "Template matching",
     "threshold": 0.8,
     "description": "本周 的右上方红点"
+  },
+  {
+    "itemName": "red_point_level",
+    "imageName": "tp_red_point_level.png",
+    "roiFront": "1222,174,23,24",
+    "roiBack": "1222,174,23,24",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "等级奖励"
+  },
+  {
+    "itemName": "tp_level_1",
+    "imageName": "tp_tp_level_1.png",
+    "roiFront": "203,435,122,59",
+    "roiBack": "203,435,122,59",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "选择一号奖励"
+  },
+  {
+    "itemName": "tp_level_2",
+    "imageName": "tp_tp_level_2.png",
+    "roiFront": "577,435,122,55",
+    "roiBack": "577,435,122,55",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "选择二号奖励"
+  },
+  {
+    "itemName": "tp_level_3",
+    "imageName": "tp_tp_level_3.png",
+    "roiFront": "967,433,109,61",
+    "roiBack": "967,433,109,61",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "选择三号奖励"
+  },
+  {
+    "itemName": "tp_goto",
+    "imageName": "tp_tp_goto.png",
+    "roiFront": "995,254,85,34",
+    "roiBack": "928,219,206,315",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "前往"
   }
 ]

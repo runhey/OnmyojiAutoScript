@@ -633,5 +633,7 @@ Refresh：直接刷新，如果刷新操作进入CD，将标记为失败并退�
 	<message><source>secret_gold_50_help</source><translation>这将会在低层[1-5]自动打开加成并且自动关闭加成</translation></message>
 	<message><source>secret_gold_100_help</source><translation>同上</translation></message>
 	<message><source>layer_10_help</source><translation>考虑到练度，这将不是默认打开的</translation></message>
+	<message><source>TalismanConfig</source><translation>花合战</translation></message>
+	<message><source>LevelReward</source><translation>选择礼盒</translation></message>
 </context>	
 </TS>

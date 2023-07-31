@@ -6,9 +6,11 @@ import time
 from tasks.GameUi.game_ui import GameUi
 from tasks.GameUi.page import page_main, page_daily
 from tasks.TalismanPass.assets import TalismanPassAssets
+from tasks.TalismanPass.config import TalismanConfig, LevelReward
 
 from module.logger import logger
 from module.exception import TaskEnd
+from module.base.timer import Timer
 
 class ScriptTask(GameUi, TalismanPassAssets):
 
@@ -16,11 +18,13 @@ class ScriptTask(GameUi, TalismanPassAssets):
         self.ui_get_current_page()
         self.ui_goto(page_main)
         self.main_goto_daily()
+        con: TalismanConfig = self.config.talisman_pass.talisman
 
         # 收取全部奖励
-        self.get_all()
+        if self.in_task():
+            self.get_all()
         # 收取花合战等级奖励
-        self.get_flower()
+        self.get_flower(con.level_reward)
 
         self.set_next_run(task='TalismanPass', success=True, finish=True)
         raise TaskEnd('TalismanPass')
@@ -36,13 +40,55 @@ class ScriptTask(GameUi, TalismanPassAssets):
             logger.info('No appear get all button')
         self.ui_get_reward(self.I_TP_GET_ALL)
         logger.info('Get all reward')
+        time.sleep(0.5)
 
-    def get_flower(self):
+    def get_flower(self, level: LevelReward = LevelReward.TWO):
         """
         收取花合战等级奖励
         :return:
         """
-        pass
+        match_level = {
+            LevelReward.ONE: self.I_TP_LEVEL_1,
+            LevelReward.TWO: self.I_TP_LEVEL_2,
+            LevelReward.THREE: self.I_TP_LEVEL_3,
+        }
+        self.screenshot()
+        if not self.appear(self.I_RED_POINT_LEVEL):
+            logger.info('No any level reward')
+            return
+        logger.info('Appear level reward')
+        self.ui_click(self.I_RED_POINT_LEVEL, self.I_TP_GET_ALL)
+        logger.info('Click level reward')
+        check_timer = Timer(2)
+        check_timer.start()
+        while 1:
+            self.screenshot()
+            if self.appear_then_click(match_level[level], interval=0.8):
+                logger.info(f'Select {level} reward')
+                check_timer.reset()
+                continue
+
+            if self.ui_reward_appear_click(False):
+                logger.info('Get reward')
+                check_timer.reset()
+                continue
+            if check_timer.reached():
+                logger.warning('No reward and break')
+                break
+            if self.appear_then_click(self.I_TP_GET_ALL, interval=2.1):
+                logger.info('Get all reward')
+                check_timer.reset()
+                continue
+
+    def in_task(self) -> bool:
+        """
+        判断是否在任务的界面
+        :return:
+        """
+        self.screenshot()
+        return self.appear(self.I_TP_GOTO)
+
+
 
 if __name__ == '__main__':
     from module.config.config import Config

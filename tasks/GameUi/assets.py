@@ -127,7 +127,7 @@ class GameUiAssets:
 	# description 
 	I_MAIN_GOTO_FRIENDS = RuleImage(roi_front=(878,623,55,55), roi_back=(878,623,55,55), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_main_goto_friends.png")
 	# description 
-	I_MAIN_GOTO_DAILY = RuleImage(roi_front=(769,623,52,54), roi_back=(769,623,52,54), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_main_goto_daily.png")
+	I_MAIN_GOTO_DAILY = RuleImage(roi_front=(778,612,52,54), roi_back=(759,595,84,84), threshold=0.7, method="Template matching", file="./tasks/GameUi/page/page_main_goto_daily.png")
 	# description 
 	I_MAIN_GOTO_MALL = RuleImage(roi_front=(657,624,47,52), roi_back=(657,624,47,52), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_main_goto_mall.png")
 	# description 
