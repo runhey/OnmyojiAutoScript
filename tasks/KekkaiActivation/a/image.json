@@ -169,5 +169,32 @@
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"
+  },
+  {
+    "itemName": "a_harvest_kaiko_6",
+    "imageName": "a_a_harvest_kaiko_6.png",
+    "roiFront": "898,160,45,38",
+    "roiBack": "868,129,100,100",
+    "method": "Template matching",
+    "threshold": 0.7,
+    "description": "太鼓6"
+  },
+  {
+    "itemName": "a_harvest_fish_6",
+    "imageName": "a_a_harvest_fish_6.png",
+    "roiFront": "898,159,45,38",
+    "roiBack": "869,131,100,100",
+    "method": "Template matching",
+    "threshold": 0.7,
+    "description": "斗鱼6"
+  },
+  {
+    "itemName": "a_harvest_moon_3",
+    "imageName": "a_a_harvest_moon_3.png",
+    "roiFront": "897,159,46,40",
+    "roiBack": "869,127,100,100",
+    "method": "Template matching",
+    "threshold": 0.7,
+    "description": "太阴3"
   }
 ]
