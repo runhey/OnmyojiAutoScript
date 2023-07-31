@@ -81,6 +81,8 @@ class ScriptTask(GameUi, GeneralBattle, DemonEncounterAssets):
         time.sleep(5)
         self.device.stuck_record_add('BATTLE_STATUS_S')
         self.wait_until_disappear(self.I_BOSS_GATHER)
+        self.device.stuck_record_clear()
+        self.device.stuck_record_add('BATTLE_STATUS_S')
         config = self.con
         self.run_general_battle(config)
 
