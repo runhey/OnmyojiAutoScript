@@ -284,6 +284,9 @@ class GeneralBattle(GeneralBuff, GeneralBattleAssets):
 
             if self.appear(self.I_PRESET_ENSURE):
                 break
+            # 首个队伍没有满足5个式神，未出现预设按钮的情况下跳出循环
+            if self.appear(self.I_PRESENT_LESS_THAN_5):
+                break
             if self.appear_then_click(self.I_PRESET, threshold=0.8, interval=1):
                 continue
         logger.info("Click preset button")

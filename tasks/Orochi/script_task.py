@@ -8,16 +8,29 @@ from tasks.Component.GeneralBattle.general_battle import GeneralBattle
 from tasks.Component.GeneralInvite.general_invite import GeneralInvite
 from tasks.Component.GeneralBuff.general_buff import GeneralBuff
 from tasks.Component.GeneralRoom.general_room import GeneralRoom
+from tasks.Component.SwitchSoul.switch_soul import SwitchSoul
 from tasks.GameUi.game_ui import GameUi
-from tasks.GameUi.page import page_main, page_soul_zones
+from tasks.GameUi.page import page_main, page_soul_zones, page_shikigami_records
 from tasks.Orochi.assets import OrochiAssets
 from tasks.Orochi.config import Orochi, UserStatus
 from module.logger import logger
 from module.exception import TaskEnd
 
-class ScriptTask(GeneralBattle, GeneralInvite, GeneralBuff, GeneralRoom, GameUi, OrochiAssets):
+class ScriptTask(GeneralBattle, GeneralInvite, GeneralBuff, GeneralRoom, GameUi, SwitchSoul, OrochiAssets):
 
     def run(self) -> bool:
+        # 御魂切换方式一
+        if self.config.orochi.switch_soul.enable:
+            self.ui_get_current_page()
+            self.ui_goto(page_shikigami_records)
+            self.run_switch_soul(self.config.orochi.switch_soul.switch_group_team)
+
+        # 御魂切换方式二
+        if self.config.orochi.switch_soul.enable_switch_by_name:
+            self.ui_get_current_page()
+            self.ui_goto(page_shikigami_records)
+            self.run_switch_soul_by_name(self.config.orochi.switch_soul.group_name,
+                                         self.config.orochi.switch_soul.team_name)
 
         limit_count = self.config.orochi.orochi_config.limit_count
         limit_time = self.config.orochi.orochi_config.limit_time

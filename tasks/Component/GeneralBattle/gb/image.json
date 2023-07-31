@@ -192,9 +192,18 @@
     "itemName": "de_win",
     "imageName": "gb_de_win.png",
     "roiFront": "481,47,100,100",
-    "roiBack": "331,40,301,117",
+    "roiBack": "481,47,100,100",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "针对封魔的特殊"
+  },
+  {
+    "itemName": "present_less_than_5",
+    "imageName": "gb_present_less_than_5.png",
+    "roiFront": "222,648,418,43",
+    "roiBack": "222,648,418,43",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
   }
 ]

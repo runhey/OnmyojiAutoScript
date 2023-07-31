@@ -17,7 +17,7 @@ from tasks.BondlingFairyland.battle import BondlingBattle
 from tasks.BondlingFairyland.config_battle import BattleConfig
 from tasks.Component.SwitchSoul.switch_soul import SwitchSoul, switch_parser
 from tasks.Component.GeneralBattle.config_general_battle import GeneralBattleConfig
-from tasks.GameUi.page import page_main, page_bondling_fairyland
+from tasks.GameUi.page import page_main, page_bondling_fairyland, page_shikigami_records
 
 from module.atom.image import RuleImage
 from module.logger import logger
@@ -29,10 +29,17 @@ class ScriptTask(GameUi, BondlingBattle, SwitchSoul, BondlingFairylandAssets):
     first_catch = True  # 用于记录是否是第一次捕捉
 
     def run(self):
-        self.ui_get_current_page()
-        self.ui_goto(page_bondling_fairyland)
         # 引用配置
         cong = self.config.bondling_fairyland
+
+        if cong.switch_soul_config.enable_switch_by_name:
+            self.ui_get_current_page()
+            self.ui_goto(page_shikigami_records)
+            self.run_switch_soul_by_name(cong.switch_soul_config.group_name, cong.switch_soul_config.team_name)
+
+        self.ui_get_current_page()
+        self.ui_goto(page_bondling_fairyland)
+
         bondling_config = cong.bondling_config
         bondling_switch_soul = cong.bondling_switch_soul
         battle_config = cong.battle_config
