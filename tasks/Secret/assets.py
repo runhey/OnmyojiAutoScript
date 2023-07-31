@@ -21,20 +21,22 @@ class SecretAssets:
 	# 秘闻挑战 
 	I_SE_FIRE = RuleImage(roi_front=(1108,551,100,100), roi_back=(1108,551,100,100), threshold=0.8, method="Template matching", file="./tasks/Secret/se/se_se_fire.png")
 	# 排行 
-	I_SE_PLACEMENT = RuleImage(roi_front=(1011,568,50,48), roi_back=(1011,568,50,48), threshold=0.8, method="Template matching", file="./tasks/Secret/se/se_se_placement.png")
+	I_SE_PLACEMENT = RuleImage(roi_front=(1013,570,50,48), roi_back=(996,555,79,81), threshold=0.8, method="Template matching", file="./tasks/Secret/se/se_se_placement.png")
 	# 勾玉 
 	I_SE_JADE = RuleImage(roi_front=(305,208,28,33), roi_back=(305,208,28,33), threshold=0.8, method="Template matching", file="./tasks/Secret/se/se_se_jade.png")
 	# 最后一个的勾玉 
 	I_SE_JADE_LAST = RuleImage(roi_front=(302,565,37,40), roi_back=(302,565,37,40), threshold=0.8, method="Template matching", file="./tasks/Secret/se/se_se_jade_last.png")
 	# 战斗赢 
 	I_SE_BATTLE_WIN = RuleImage(roi_front=(436,62,100,100), roi_back=(436,62,100,100), threshold=0.8, method="Template matching", file="./tasks/Secret/se/se_se_battle_win.png")
+	# 已经完成可以退出 
+	I_SE_FINISHED_1 = RuleImage(roi_front=(441,546,40,43), roi_back=(441,546,40,43), threshold=0.8, method="Template matching", file="./tasks/Secret/se/se_se_finished_1.png")
 
 
 	# Ocr Rule Assets
 	# 未通关 
 	O_SE_NO_PASS = RuleOcr(roi=(428,151,262,248), area=(428,151,262,248), mode="Full", method="Default", keyword="未通关", name="se_no_pass")
 	# 第一个位置的层数 
-	O_SE_LAYER_1 = RuleOcr(roi=(211,149,37,35), area=(211,149,37,35), mode="Single", method="Default", keyword="", name="se_layer_1")
+	O_SE_LAYER_1 = RuleOcr(roi=(208,146,47,46), area=(208,146,47,46), mode="Single", method="Default", keyword="", name="se_layer_1")
 	# Ocr-description 
 	O_SE_LAYER_10 = RuleOcr(roi=(210,507,34,34), area=(210,507,34,34), mode="Single", method="Default", keyword="拾", name="se_layer_10")
 	# Ocr-description 
@@ -42,7 +44,7 @@ class SecretAssets:
 	# Ocr-description 
 	O_SE_LAYER_8 = RuleOcr(roi=(212,237,34,34), area=(212,237,34,34), mode="Single", method="Default", keyword="捌", name="se_layer_8")
 	# 后面的时候识别为通关的 
-	O_SE_NO_PASS_LAST = RuleOcr(roi=(429,381,180,234), area=(429,381,180,234), mode="Full", method="Default", keyword="", name="se_no_pass_last")
+	O_SE_NO_PASS_LAST = RuleOcr(roi=(429,381,180,234), area=(429,381,180,234), mode="Full", method="Default", keyword="未通关", name="se_no_pass_last")
 
 
 	# Swipe Rule Assets

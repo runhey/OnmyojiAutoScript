@@ -48,10 +48,11 @@ class ScriptTask(GameUi, GeneralBattle, SwitchSoul, SecretAssets):
         # 进入
         success = True
         self.ui_click(self.I_SE_ENTER, self.I_SE_FIRE)
+        time.sleep(1)  # 有一个很傻逼的动画
+        self.screenshot()
         if not self.appear(self.I_SE_PLACEMENT):
             logger.warning('Unsuccessful entry. You must have entered the secret zone before.')
             success = False
-        time.sleep(1)   # 有一个很傻逼的动画
 
         # 开始
         logger.info('Start secret zone')
@@ -63,9 +64,14 @@ class ScriptTask(GameUi, GeneralBattle, SwitchSoul, SecretAssets):
                 break
             if not self.appear(self.I_SE_FIRE):
                 continue
+            if self.appear(self.I_SE_FINISHED_1):
+                logger.info('Secret zone finished')
+                break
             layer = self.find_battle()
             if not layer:
                 continue
+            if layer >= 6:
+                first_battle = False
             if first_battle and layer <= 5:
                 first_battle = False
                 buff = []
@@ -97,7 +103,16 @@ class ScriptTask(GameUi, GeneralBattle, SwitchSoul, SecretAssets):
                 success = self.run_general_battle(self.battle_config)
                 continue
 
-
+        self.ui_click(self.I_UI_BACK_BLUE, self.I_CHECK_MAIN)
+        self.ui_get_current_page()
+        self.ui_goto(page_main)
+        if con.secret_gold_50 or con.secret_gold_100:
+            self.open_buff()
+            if con.secret_gold_50:
+                self.gold_50(False)
+            if con.secret_gold_100:
+                self.gold_100(False)
+            self.close_buff()
         self.set_next_run(task='Secret', success=True, finish=True)
         raise TaskEnd('Secret')
 
@@ -115,12 +130,15 @@ class ScriptTask(GameUi, GeneralBattle, SwitchSoul, SecretAssets):
             level = ocr_target.ocr(self.device.image)
             if not isinstance(level, str):
                 logger.warning(f'OCR failed, try again {level}')
+            level = level.replace('·', '').replace(' ', '').replace('。', '')
             if level not in self.lay_list and roi:
                 print(roi)
                 print(ocr_target.roi)
                 set_layer_roi(ocr_target, roi)
                 self.screenshot()
                 level = ocr_target.ocr(self.device.image)
+            if level not in self.lay_list:
+                return None
             try:
                 return self.match_layer[level]
             except KeyError:
@@ -133,8 +151,14 @@ class ScriptTask(GameUi, GeneralBattle, SwitchSoul, SecretAssets):
         text_pos = self.O_SE_NO_PASS.ocr(self.device.image)
         if text_pos != (0, 0, 0, 0):
             # 如果能找得到 未通关 ，那可以挑战
-            layer = check_layer(self.O_SE_LAYER_1, text_pos)
+            layer = check_layer(self.O_SE_LAYER_1, None)
             # 如果第一个文字就找得到的，就点击这个
+            if not layer:
+                layer = check_layer(self.O_SE_LAYER_8, None)
+            if not layer:
+                layer = check_layer(self.O_SE_LAYER_1, text_pos)
+
+            print('识别到的层数：', layer)
             if layer:
                 self.C_SE_CLICK_LAYER.roi_front = text_pos
                 self.click(self.C_SE_CLICK_LAYER, interval=1)
@@ -143,16 +167,20 @@ class ScriptTask(GameUi, GeneralBattle, SwitchSoul, SecretAssets):
                 return None
 
         else:
-            # TODO
             # 如果不是就向下滑动，继续找或者是判断
             last_text_pos = self.O_SE_NO_PASS_LAST.ocr(self.device.image)
             if last_text_pos != (0, 0, 0, 0):
                 # 如果是后面找得到
                 layer = check_layer(self.O_SE_LAYER_10, last_text_pos)
+                if not layer:
+                    layer = check_layer(self.O_SE_LAYER_9, None)
+                if not layer:
+                    layer = check_layer(self.O_SE_LAYER_10, None)
                 # 如果第一个文字就找得到的，就点击这个
                 if layer:
                     self.C_SE_CLICK_LAYER.roi_front = last_text_pos
                     self.click(self.C_SE_CLICK_LAYER, interval=1)
+                    return layer
                 else:
                     return None
 
@@ -180,22 +208,18 @@ class ScriptTask(GameUi, GeneralBattle, SwitchSoul, SecretAssets):
             self.screenshot()
             if self.appear(self.I_SE_BATTLE_WIN):
                 logger.info('Win battle')
-                while 1:
-                    self.screenshot()
-                    if not self.appear(self.I_SE_BATTLE_WIN):
-                        break
-                    if self.appear_then_click(self.I_SE_BATTLE_WIN, interval=1):
-                        continue
+                self.ui_click_until_disappear(self.I_SE_BATTLE_WIN)
+                return True
+            if self.appear_then_click(self.I_WIN, interval=1):
+                continue
+            if self.appear(self.I_REWARD):
+                logger.info('Win battle')
+                self.ui_click_until_disappear(self.I_REWARD)
                 return True
 
             if self.appear(self.I_FALSE):
                 logger.warning('False battle')
-                while 1:
-                    self.screenshot()
-                    if not self.appear(self.I_FALSE):
-                        break
-                    if self.appear_then_click(self.I_FALSE, interval=1):
-                        continue
+                self.ui_click_until_disappear(self.I_FALSE)
                 return False
 
 
