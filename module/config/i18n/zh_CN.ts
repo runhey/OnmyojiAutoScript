@@ -635,5 +635,8 @@ Refresh：直接刷新，如果刷新操作进入CD，将标记为失败并退�
 	<message><source>layer_10_help</source><translation>考虑到练度，这将不是默认打开的</translation></message>
 	<message><source>TalismanConfig</source><translation>花合战</translation></message>
 	<message><source>LevelReward</source><translation>选择礼盒</translation></message>
+	<message><source>PetsConfig</source><translation>宠物</translation></message>
+	<message><source>Pets Happy</source><translation>其乐融融</translation></message>
+	<message><source>Pets Feast</source><translation>饕餮大餐</translation></message>
 </context>	
 </TS>

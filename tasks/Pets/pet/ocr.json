@@ -1,0 +1,20 @@
+[
+  {
+    "itemName": "pet_feed_ap",
+    "roiFront": "730,527,57,33",
+    "roiBack": "730,527,57,33",
+    "mode": "Digit",
+    "method": "Default",
+    "keyword": "",
+    "description": "投喂的体力"
+  },
+  {
+    "itemName": "pet_play_gold",
+    "roiFront": "681,524,74,40",
+    "roiBack": "681,524,74,40",
+    "mode": "Digit",
+    "method": "Default",
+    "keyword": "",
+    "description": "玩耍的体力"
+  }
+]
