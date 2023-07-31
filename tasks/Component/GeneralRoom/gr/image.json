@@ -97,5 +97,41 @@
     "method": "Template matching",
     "threshold": 0.8,
     "description": "刷新"
+  },
+  {
+    "itemName": "ensure_public",
+    "imageName": "gr_ensure_public.png",
+    "roiFront": "400,282,35,37",
+    "roiBack": "400,282,35,37",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "ensure_public_false",
+    "imageName": "gr_ensure_public_false.png",
+    "roiFront": "399,285,37,35",
+    "roiBack": "399,285,37,35",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "ensure_public_2",
+    "imageName": "gr_ensure_public_2.png",
+    "roiFront": "307,490,37,40",
+    "roiBack": "307,490,37,40",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "ensure_public_false_2",
+    "imageName": "gr_ensure_public_false_2.png",
+    "roiFront": "307,491,38,37",
+    "roiBack": "307,491,38,37",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
   }
 ]

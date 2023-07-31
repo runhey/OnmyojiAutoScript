@@ -44,5 +44,13 @@ class GeneralRoomAssets:
 	I_GR_AUTO_MATCH = RuleImage(roi_front=(697,598,181,63), roi_back=(697,598,181,63), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralRoom/gr/gr_gr_auto_match.png")
 	# 刷新 
 	I_GR_REFRESH = RuleImage(roi_front=(417,595,176,65), roi_back=(417,595,176,65), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralRoom/gr/gr_gr_refresh.png")
+	# description 
+	I_ENSURE_PUBLIC = RuleImage(roi_front=(400,282,35,37), roi_back=(400,282,35,37), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralRoom/gr/gr_ensure_public.png")
+	# description 
+	I_ENSURE_PUBLIC_FALSE = RuleImage(roi_front=(399,285,37,35), roi_back=(399,285,37,35), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralRoom/gr/gr_ensure_public_false.png")
+	# description 
+	I_ENSURE_PUBLIC_2 = RuleImage(roi_front=(307,490,37,40), roi_back=(307,490,37,40), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralRoom/gr/gr_ensure_public_2.png")
+	# description 
+	I_ENSURE_PUBLIC_FALSE_2 = RuleImage(roi_front=(307,491,38,37), roi_back=(307,491,38,37), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralRoom/gr/gr_ensure_public_false_2.png")
 
 

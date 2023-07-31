@@ -638,5 +638,6 @@ Refresh：直接刷新，如果刷新操作进入CD，将标记为失败并退�
 	<message><source>PetsConfig</source><translation>宠物</translation></message>
 	<message><source>Pets Happy</source><translation>其乐融融</translation></message>
 	<message><source>Pets Feast</source><translation>饕餮大餐</translation></message>
+	<message><source>GoldYoukaiConfig</source><translation>金币妖怪</translation></message>
 </context>	
 </TS>

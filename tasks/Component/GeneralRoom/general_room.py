@@ -27,9 +27,15 @@ class GeneralRoom(BaseTask, GeneralRoomAssets):
         if not self.appear(self.I_CREATE_ROOM):
             logger.warning('No create room button')
             return False
+        click_number = 0
         while 1:
             self.screenshot()
+            if click_number > 3:
+                logger.warning('Create room button do not take effect')
+                logger.warning('The most possible reason is that there are not challenge tickets')
+                return False
             if self.appear_then_click(self.I_CREATE_ROOM, interval=2):
+                click_number += 1
                 continue
             if self.appear(self.I_CREATE_ENSURE):
                 return True
@@ -48,9 +54,26 @@ class GeneralRoom(BaseTask, GeneralRoomAssets):
                 return True
             if self.appear(self.I_ENSURE_PRIVATE_2):
                 return True
-            if self.appear_then_click(self.I_ENSURE_PRIVATE_FALSE):
+            if self.appear_then_click(self.I_ENSURE_PRIVATE_FALSE, interval=1):
                 continue
-            if self.appear_then_click(self.I_ENSURE_PRIVATE_FALSE_2):
+            if self.appear_then_click(self.I_ENSURE_PRIVATE_FALSE_2, interval=1):
+                continue
+
+    def ensure_public(self) -> bool:
+        """
+        确认公开房间， 允许任何人加入
+        :return:
+        """
+        logger.info('Ensure public')
+        while 1:
+            self.screenshot()
+            if self.appear(self.I_ENSURE_PUBLIC):
+                return True
+            if self.appear(self.I_ENSURE_PUBLIC_2):
+                return True
+            if self.appear_then_click(self.I_ENSURE_PUBLIC_FALSE, interval=1):
+                continue
+            if self.appear_then_click(self.I_ENSURE_PUBLIC_FALSE_2, interval=1):
                 continue
 
     def create_ensure(self) -> bool:
