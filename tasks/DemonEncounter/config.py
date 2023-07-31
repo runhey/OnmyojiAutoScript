@@ -15,6 +15,6 @@ class UtilizeScheduler(Scheduler):
 
 class DemonEncounter(ConfigBase):
     scheduler: UtilizeScheduler = Field(default_factory=UtilizeScheduler)
-    general_battle_config: GeneralBattleConfig = Field(default_factory=GeneralBattleConfig)
+    # general_battle_config: GeneralBattleConfig = Field(default_factory=GeneralBattleConfig)
 
 

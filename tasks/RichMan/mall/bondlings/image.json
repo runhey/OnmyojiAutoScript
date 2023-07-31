@@ -1,0 +1,38 @@
+[
+  {
+    "itemName": "bl_buy_souls",
+    "imageName": "bondlings_bl_buy_souls.png",
+    "roiFront": "197,476,90,38",
+    "roiBack": "197,476,90,38",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "兑换随机御魂"
+  },
+  {
+    "itemName": "bl_buy_stone",
+    "imageName": "bondlings_bl_buy_stone.png",
+    "roiFront": "493,472,89,42",
+    "roiBack": "493,472,89,42",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "兑换契灵石头"
+  },
+  {
+    "itemName": "bl_buy_high",
+    "imageName": "bondlings_bl_buy_high.png",
+    "roiFront": "779,473,89,42",
+    "roiBack": "779,473,89,42",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "兑换高级盘"
+  },
+  {
+    "itemName": "bl_buy_medium",
+    "imageName": "bondlings_bl_buy_medium.png",
+    "roiFront": "1079,476,93,40",
+    "roiBack": "1079,476,93,40",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "兑换中级盘"
+  }
+]

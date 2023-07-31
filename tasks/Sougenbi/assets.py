@@ -36,6 +36,12 @@ class SougenbiAssets:
 	I_S_FIRE = RuleImage(roi_front=(1105,585,100,100), roi_back=(1105,585,100,100), threshold=0.7, method="Template matching", file="./tasks/Sougenbi/s/s_s_fire.png")
 	# 确认进入业原火 
 	I_S_CHECK_SOUGENBI = RuleImage(roi_front=(772,222,307,292), roi_back=(772,222,307,292), threshold=0.8, method="Template matching", file="./tasks/Sougenbi/s/s_s_check_sougenbi.png")
+	# 贪 
+	I_S_FIRE_GREED = RuleImage(roi_front=(1133,641,21,33), roi_back=(1133,641,21,33), threshold=0.8, method="Template matching", file="./tasks/Sougenbi/s/s_s_fire_greed.png")
+	# description 
+	I_S_FIRE_ANGER = RuleImage(roi_front=(1132,643,21,30), roi_back=(1132,643,21,30), threshold=0.8, method="Template matching", file="./tasks/Sougenbi/s/s_s_fire_anger.png")
+	# 痴 
+	I_S_FIRE_FOOLERY = RuleImage(roi_front=(1130,642,22,31), roi_back=(1130,642,22,31), threshold=0.8, method="Template matching", file="./tasks/Sougenbi/s/s_s_fire_foolery.png")
 
 
 	# Ocr Rule Assets

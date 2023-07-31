@@ -208,7 +208,8 @@ class ScriptTask(GeneralBattle, GameUi, RealmRaidAssets):
             if lock_before:
                 con.general_battle_config.lock_team_enable = lock_before
 
-        self.ui_current = page_realm_raid
+        self.ui_click(self.I_BACK_RED, self.I_CHECK_EXPLORATION)
+        self.ui_get_current_page()
         self.ui_goto(page_main)
         self.set_next_run(task='RealmRaid', success=success, finish=True)
         raise TaskEnd

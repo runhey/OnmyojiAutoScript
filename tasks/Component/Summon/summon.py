@@ -45,14 +45,22 @@ class Summon(BaseTask, SummonAssets):
             return
         while 1:
             self.screenshot()
-
-            if self.appear_then_click(self.I_ONE_TICKET):
+            if self.appear(self.I_ONE_TICKET):
                 break
             if self.appear_then_click(self.I_BLUE_TICKET, interval=1):
                 continue
-        time.sleep(1)
-        self.summon()
-        self.wait_until_appear(self.I_SM_CONFIRM)
+
+        # 画一张票
+        time.sleep(0.5)
+        while 1:
+            self.screenshot()
+            if self.appear(self.I_SM_CONFIRM):
+                logger.info('Summon one success')
+                break
+            if self.appear(self.I_ONE_TICKET, interval=1):
+                self.summon()
+                continue
+
         while 1:
             self.screenshot()
             if not self.appear(self.I_SM_CONFIRM):

@@ -64,6 +64,7 @@ page_exploration.link(button=G.I_EXPLORATION_GOTO_REALM_RAID, destination=page_r
 page_kekkai_toppa = Page(G.I_KEKKAI_TOPPA)
 page_kekkai_toppa.link(button=G.I_REALM_RAID_GOTO_EXPLORATION, destination=page_exploration)
 page_realm_raid.link(button=RyouToppaAssets.I_RYOU_TOPPA, destination=page_kekkai_toppa)
+page_kekkai_toppa.link(button=G.I_RYOUTOPPA_GOTO_REALMRAID, destination=page_realm_raid)
 # 御灵 goryou realm
 page_goryou_realm = Page(G.I_CHECK_GORYOU)
 page_goryou_realm.link(button=G.I_BACK_BLUE, destination=page_exploration)
@@ -133,6 +134,7 @@ page_friends.link(button=G.I_BACK_Y, destination=page_main)
 page_main.link(button=G.I_MAIN_GOTO_FRIENDS, destination=page_friends)
 # 花合战 daily
 page_daily = Page(G.I_CHECK_DAILY)
+# page_daily.additional = [G.O_CLICK_CLOSE_1, G.O_CLICK_CLOSE_2]
 page_daily.link(button=G.I_BACK_Y, destination=page_main)
 page_main.link(button=G.I_MAIN_GOTO_DAILY, destination=page_daily)
 # 商店 mall

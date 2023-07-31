@@ -70,7 +70,7 @@ class Single(BaseCor):
         """
         检测某个固定位置的roi的文本。可以是横方向也可以是竖方向
         :param image:
-        :return: 返回到识别的文字
+        :return: 返回到识别的文字, 如果没有返回空字符串
         """
         if self.roi:
             result = self.ocr_single_line(image)
@@ -96,7 +96,7 @@ class Digit(Single):
     def after_process(self, result):
         result = super().after_process(result)
         result = result.replace('I', '1').replace('D', '0').replace('S', '5')
-        result = result.replace('B', '8')
+        result = result.replace('B', '8').replace('？', '2').replace('?', '2')
         result = [char for char in result if char.isdigit()]
         result = ''.join(result)
 

@@ -40,15 +40,15 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, SougenbiAssets):
         number_target = None
         match con.sougenbi_config.sougenbi_class:
             case SougenbiClass.GREED:
-                image_target = self.I_S_GREED
+                image_target = self.I_S_FIRE_GREED
                 click_target = self.C_C_GREED
                 number_target = self.O_S_GREED
             case SougenbiClass.Anger:
-                image_target = self.I_S_ANGER
+                image_target = self.I_S_FIRE_ANGER
                 click_target = self.C_C_ANGER
                 number_target = self.O_S_ANGER
             case SougenbiClass.Foolery:
-                image_target = self.I_S_FOOLERY
+                image_target = self.I_S_FIRE_FOOLERY
                 click_target = self.C_C_FOOLERY
                 number_target = self.O_S_FOOLERY
             case _:
@@ -56,10 +56,10 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, SougenbiAssets):
         self.check_lock(con.general_battle_config.lock_team_enable, self.I_S_TEAM_LOCK, self.I_S_TEAM_UNLOCK)
         while 1:
             self.screenshot()
+            if self.appear(image_target):
+                break
             if self.click(click_target, interval=0.5):
                 pass
-            if self.appear(image_target, threshold=0.97):
-                break
 
         # 开始循环
         while 1:

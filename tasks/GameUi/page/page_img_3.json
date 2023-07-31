@@ -29,10 +29,10 @@
   {
     "itemName": "main_goto_daily",
     "imageName": "page_main_goto_daily.png",
-    "roiFront": "769,623,52,54",
-    "roiBack": "769,623,52,54",
+    "roiFront": "778,612,52,54",
+    "roiBack": "759,595,84,84",
     "method": "Template matching",
-    "threshold": 0.8,
+    "threshold": 0.7,
     "description": "description"
   },
   {
@@ -128,8 +128,8 @@
   {
     "itemName": "check_team",
     "imageName": "page_check_team.png",
-    "roiFront": "1209,108,41,119",
-    "roiBack": "1209,108,41,119",
+    "roiFront": "53,570,41,119",
+    "roiBack": "53,570,41,119",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"

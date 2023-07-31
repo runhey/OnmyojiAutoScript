@@ -1,0 +1,20 @@
+[
+  {
+    "itemName": "ss_group_name",
+    "roiFront": "1087,91,155,566",
+    "roiBack": "1110,94,116,533",
+    "mode": "Full",
+    "method": "Default",
+    "keyword": "",
+    "description": "队伍预设分组"
+  },
+  {
+    "itemName": "ss_team_name",
+    "roiFront": "573,140,277,481",
+    "roiBack": "667,144,32,475",
+    "mode": "Full",
+    "method": "Default",
+    "keyword": "",
+    "description": "阵容匹配"
+  }
+]

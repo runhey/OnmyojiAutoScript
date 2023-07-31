@@ -1,0 +1,26 @@
+[
+  {
+    "itemName": "de_1",
+    "roiFront": "1211,478,61,58",
+    "roiBack": "1211,478,61,58",
+    "description": "从下开始数第一个"
+  },
+  {
+    "itemName": "de_2",
+    "roiFront": "1196,409,55,56",
+    "roiBack": "1196,409,55,56",
+    "description": "2"
+  },
+  {
+    "itemName": "de_3",
+    "roiFront": "1225,344,53,55",
+    "roiBack": "1225,344,53,55",
+    "description": "3"
+  },
+  {
+    "itemName": "de_4",
+    "roiFront": "1200,282,56,53",
+    "roiBack": "1200,282,56,53",
+    "description": "第四个"
+  }
+]

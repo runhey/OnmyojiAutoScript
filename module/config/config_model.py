@@ -24,6 +24,9 @@ from tasks.KekkaiUtilize.config import KekkaiUtilize
 from tasks.KekkaiActivation.config import KekkaiActivation
 from tasks.DemonEncounter.config import DemonEncounter
 from tasks.DailyTrifles.config import DailyTrifles
+from tasks.TalismanPass.config import TalismanPass
+from tasks.Pets.config import Pets
+from tasks.SoulsTidy.config import SoulsTidy
 # ----------------------------------------------------------------------------------------------------------------------
 from tasks.Orochi.config import Orochi
 from tasks.OrochiMoans.config import OrochiMoans
@@ -38,11 +41,14 @@ from tasks.ActivityShikigami.config import ActivityShikigami
 
 # 肝帝专属---------------------------------------------------------------------------------------------------------------
 from tasks.BondlingFairyland.config import BondlingFairyland
+from tasks.EvoZone.config import EvoZone
 # ----------------------------------------------------------------------------------------------------------------------
 
 # 每周任务---------------------------------------------------------------------------------------------------------------
 from tasks.TrueOrochi.config import TrueOrochi
 from tasks.RichMan.config import RichMan
+from tasks.Secret.config import Secret
+from tasks.WeeklyTrifles.config import WeeklyTrifles
 # ----------------------------------------------------------------------------------------------------------------------
 
 class ConfigModel(ConfigBase):
@@ -62,6 +68,9 @@ class ConfigModel(ConfigBase):
     kekkai_activation: KekkaiActivation = Field(default_factory=KekkaiActivation)
     demon_encounter: DemonEncounter = Field(default_factory=DemonEncounter)
     daily_trifles: DailyTrifles = Field(default_factory=DailyTrifles)
+    talisman_pass: TalismanPass = Field(default_factory=TalismanPass)
+    pets: Pets = Field(default_factory=Pets)
+    souls_tidy: SoulsTidy = Field(default_factory=SoulsTidy)
 
     # 这些是刷御魂的
     orochi: Orochi = Field(default_factory=Orochi)
@@ -75,10 +84,14 @@ class ConfigModel(ConfigBase):
 
     # 这些是肝帝专属
     bondling_fairyland: BondlingFairyland = Field(default_factory=BondlingFairyland)
+    evo_zone: EvoZone = Field(default_factory=EvoZone)
+
 
     # 这些是每周任务
     true_orochi: TrueOrochi = Field(default_factory=TrueOrochi)
     rich_man: RichMan = Field(default_factory=RichMan)
+    secret: Secret = Field(default_factory=Secret)
+    weekly_trifles: WeeklyTrifles = Field(default_factory=WeeklyTrifles)
 
     # @validator('script')
     # def script_validator(cls, v):

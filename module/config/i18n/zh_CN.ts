@@ -201,6 +201,7 @@
 	<message><source>GlobalGame</source><translation>全局游戏设置</translation></message>
 	<message><source>RealmRaid</source><translation>个人突破</translation></message>
 	<message><source>RyouToppa</source><translation>寮突破</translation></message>
+	<message><source>Exploration</source><translation>探索</translation></message>
 	<message><source>List Rule</source><translation>列表规则</translation></message>
 	<message><source>Activity Task</source><translation>限时活动</translation></message>
 	<message><source>ActivityShikigami</source><translation>当期式神爬塔</translation></message>
@@ -512,7 +513,9 @@ mode_3策略是刷到五个契灵后开始结契，选择高级、中级盘来�
 	<message><source>switch_group_team_help</source><translation>初始值是不合适的，你需要根据自己的情况设置
 "1,2"表示第一个预设组，第二个队伍
 请使用英文输入法下的逗号
-预设组支持[1-7], 预设队伍支持[1-4]</translation></message>	
+预设组支持[1-7], 预设队伍支持[1-4]</translation></message>
+	<message><source>group_name</source><translation>御魂分组名</translation></message>
+	<message><source>team_name</source><translation>队伍名</translation></message>
 </context>
 <context>
     <name>Args</name>
@@ -608,5 +611,33 @@ Refresh：直接刷新，如果刷新操作进入CD，将标记为失败并退�
 	<message><source>skin_ticket_help</source><translation>可选[0~5]</translation></message>
 	<message><source>Black Daruma Scrap</source><translation>御行达摩碎片</translation></message>
 	<message><source>Black Daruma</source><translation>御行达摩</translation></message>
+</context>	
+<context>
+    <name>Args</name>
+	<message><source>Share Collect</source><translation>图鉴分享</translation></message>	
+	<message><source>Share Area Boss</source><translation>地鬼分享</translation></message>	
+	<message><source>Share Secret</source><translation>秘闻分享</translation></message>
+	<message><source>share_collect_help</source><translation>每周一张票、不要白不要</translation></message>
+	<message><source>share_area_boss_help</source><translation>没什么建议，勾上就对了</translation></message>
+	<message><source>share_secret_help</source><translation>建议在秘闻结束后再来执行这个任务</translation></message>
+	<message><source>trifles_broken_amulet_help</source><translation>建议设置较大的数值以每周清空</translation></message>
+	<message><source>Trifles</source><translation>启用</translation></message>
+</context>		
+<context>
+    <name>Args</name>
+	<message><source>SecretConfig</source><translation>秘闻</translation></message>	
+	<message><source>Secret Gold 50</source><translation>金币加成50%</translation></message>	
+	<message><source>Secret Gold 100</source><translation>金币加成100%</translation></message>
+	<message><source>Layer 10</source><translation>挑战十层</translation></message>
+	<message><source>Layer 9</source><translation>挑战九层</translation></message>
+	<message><source>secret_gold_50_help</source><translation>这将会在低层[1-5]自动打开加成并且自动关闭加成</translation></message>
+	<message><source>secret_gold_100_help</source><translation>同上</translation></message>
+	<message><source>layer_10_help</source><translation>考虑到练度，这将不是默认打开的</translation></message>
+	<message><source>TalismanConfig</source><translation>花合战</translation></message>
+	<message><source>LevelReward</source><translation>选择礼盒</translation></message>
+	<message><source>PetsConfig</source><translation>宠物</translation></message>
+	<message><source>Pets Happy</source><translation>其乐融融</translation></message>
+	<message><source>Pets Feast</source><translation>饕餮大餐</translation></message>
+	<message><source>GoldYoukaiConfig</source><translation>金币妖怪</translation></message>
 </context>	
 </TS>

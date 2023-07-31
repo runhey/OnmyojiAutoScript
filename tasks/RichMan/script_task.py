@@ -7,14 +7,25 @@ from datetime import time, datetime, timedelta
 from module.logger import logger
 from module.exception import TaskEnd
 
-from tasks.base_task import BaseTask
+
 from tasks.RichMan.assets import RichManAssets
+from tasks.RichMan.mall.mall import Mall
+from tasks.RichMan.guild import Guild
+from tasks.RichMan.shrine import Shrine
+from tasks.RichMan.thousand_things import ThousandThings
 
 
-class ScriptTask(BaseTask):
+class ScriptTask(ThousandThings, Shrine, Guild, Mall, RichManAssets):
 
     def run(self):
-        pass
+        self.execute_tt()
+        self.execute_shrine()
+        self.execute_guild()
+        self.execute_mall()
+
+        self.set_next_run(task='RichMan', success=True, finish=False)
+
+        raise TaskEnd('RichMan')
 
 
 

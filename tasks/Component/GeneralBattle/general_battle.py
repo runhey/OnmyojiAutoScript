@@ -7,16 +7,20 @@ import random
 from tasks.base_task import BaseTask
 from tasks.Component.GeneralBattle.config_general_battle import GreenMarkType, GeneralBattleConfig
 from tasks.Component.GeneralBattle.assets import GeneralBattleAssets
+from tasks.Component.GeneralBuff.config_buff import BuffClass
+from tasks.Component.GeneralBuff.general_buff import GeneralBuff
+
+
 from module.logger import logger
 
 
 
-class GeneralBattle(BaseTask, GeneralBattleAssets):
+class GeneralBattle(GeneralBuff, GeneralBattleAssets):
     """
     使用这个通用的战斗必须要求这个任务的config有config_general_battle
     """
 
-    def run_general_battle(self, config: dict=None) -> bool:
+    def run_general_battle(self, config: dict=None, buff: BuffClass or list[BuffClass]=None) -> bool:
         """
         运行脚本
         :return:
@@ -35,6 +39,9 @@ class GeneralBattle(BaseTask, GeneralBattleAssets):
             # 如果更换队伍
             if self.current_count == 1:
                 self.switch_preset_team(config.preset_enable, config.preset_group, config.preset_team)
+
+            # 打开buff
+            self.check_buff(buff)
 
             # 点击准备按钮
             self.wait_until_appear(self.I_PREPARE_HIGHLIGHT)
@@ -158,8 +165,8 @@ class GeneralBattle(BaseTask, GeneralBattleAssets):
         win: bool = False
         while 1:
             self.screenshot()
-            # 如果出现赢 就点击
-            if self.appear(self.I_WIN, threshold=0.8):
+            # 如果出现赢 就点击, 第二个是针对封魔的图片
+            if self.appear(self.I_WIN, threshold=0.8) or self.appear(self.I_DE_WIN):
                 logger.info("Battle result is win")
                 win = True
                 break
@@ -425,6 +432,47 @@ class GeneralBattle(BaseTask, GeneralBattleAssets):
                     break
                 if self.appear_then_click(lock_image, interval=1):
                     continue
+
+    def check_buff(self, buff: BuffClass or list[BuffClass]=None):
+        """
+        检测是否开启buff
+        :param buff:
+        :return:
+        """
+        if not buff:
+            return
+        logger.info(f'Open buff {buff}')
+        self.ui_click(self.I_BUFF, self.I_CLOUD)
+        if isinstance(buff, BuffClass):
+            buff = [buff]
+        match_method = {
+            BuffClass.AWAKE: self.awake,
+            BuffClass.SOUL: self.soul,
+            BuffClass.GOLD_50: self.gold_50,
+            BuffClass.GOLD_100: self.gold_100,
+            BuffClass.EXP_50: self.exp_50,
+            BuffClass.EXP_100: self.exp_100,
+        }
+        for b in buff:
+            match_method[b]()
+            time.sleep(0.1)
+        logger.info(f'Open buff success')
+        while 1:
+            self.screenshot()
+            if not self.appear(self.I_CLOUD):
+                break
+            if self.appear_then_click(self.I_BUFF, interval=1):
+                continue
+
+
+if __name__ == '__main__':
+    from module.config.config import Config
+    from module.device.device import Device
+    c = Config('oas1')
+    d = Device(c)
+    t = GeneralBattle(c, d)
+
+    t.check_buff([BuffClass.EXP_50, BuffClass.GOLD_50])
 
 
 

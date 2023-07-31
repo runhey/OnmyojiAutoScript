@@ -1,0 +1,20 @@
+[
+  {
+    "itemName": "click_close_1",
+    "roiFront": "521,659,232,32",
+    "roiBack": "521,659,232,32",
+    "mode": "Single",
+    "method": "Default",
+    "keyword": "点击空白处关闭此界面",
+    "description": "点击空白处关闭此界面"
+  },
+  {
+    "itemName": "click_close_2",
+    "roiFront": "508,584,214,40",
+    "roiBack": "508,584,214,40",
+    "mode": "Single",
+    "method": "Default",
+    "keyword": "点击空白处关闭弹窗",
+    "description": "点击空白处关闭弹窗"
+  }
+]

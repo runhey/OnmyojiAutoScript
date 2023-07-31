@@ -28,6 +28,7 @@ class ScriptTask(GameUi, Summon, DailyTriflesAssets):
             self.run_friend_love()
         if con.store_sign:
             self.run_store_sign()
+        self.set_next_run('DailyTrifles', success=True, finish=False)
         raise TaskEnd('DailyTrifles')
 
     def run_one_summon(self):
@@ -62,7 +63,7 @@ class ScriptTask(GameUi, Summon, DailyTriflesAssets):
 
     def run_store_sign(self):
         self.ui_get_current_page()
-        self.ui_goto(page_mall)
+        self.ui_goto(page_mall, confirm_wait=3)
 
         while 1:
             self.screenshot()
@@ -77,6 +78,7 @@ class ScriptTask(GameUi, Summon, DailyTriflesAssets):
         self.screenshot()
         if not self.appear(self.I_GIFT_SIGN):
             logger.warning('There is no gift sign')
+            self.ui_click(self.I_UI_BACK_YELLOW, self.I_CHECK_MALL)
             self.ui_get_current_page()
             self.ui_goto(page_main)
             return
@@ -101,5 +103,5 @@ if __name__ == '__main__':
     d = Device(c)
     t = ScriptTask(c, d)
 
-    t.run_friend_love()
+    t.run_store_sign()
 

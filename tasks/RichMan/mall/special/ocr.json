@@ -1,0 +1,11 @@
+[
+  {
+    "itemName": "sp_res_number",
+    "roiFront": "376,183,192,40",
+    "roiBack": "376,183,192,40",
+    "mode": "Single",
+    "method": "Default",
+    "keyword": "",
+    "description": "本周剩余数量xx"
+  }
+]

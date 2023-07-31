@@ -133,5 +133,23 @@
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"
+  },
+  {
+    "itemName": "sou_team_present",
+    "imageName": "ss_sou_team_present.png",
+    "roiFront": "737,82,148,43",
+    "roiBack": "727,71,165,63",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "匹配队伍预设"
+  },
+  {
+    "itemName": "sou_click_present",
+    "imageName": "ss_sou_click_present.png",
+    "roiFront": "967,305,43,22",
+    "roiBack": "965,142,48,480",
+    "method": "Template matching",
+    "threshold": 0.9,
+    "description": "需要切换的预设按钮(颜色深一点)"
   }
 ]

@@ -7,6 +7,14 @@ from pydantic import BaseModel, ValidationError, validator, Field
 
 
 # 这个类是用来 演示的
+class BuffClass(Enum):
+    AWAKE = 10  # 觉醒
+    SOUL = 20  # 御魂
+    GOLD_50 = 30  # 金币50
+    GOLD_100 = 40  # 金币100
+    EXP_50 = 50  # 经验50
+    EXP_100 = 60  # 经验100
+
 
 class BuffConfig(BaseModel):
     # 是否启动buff

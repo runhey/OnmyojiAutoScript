@@ -26,7 +26,7 @@ class RealmRaidAssets:
 	# 没有勋章的 
 	I_MEDAL_0 = RuleImage(roi_front=(510,336,202,51), roi_back=(231,200,898,336), threshold=0.8, method="Template matching", file="./tasks/RealmRaid/res/res_medal_0.png")
 	# 右上角红色的关闭 
-	I_BACK_RED = RuleImage(roi_front=(1178,101,57,64), roi_back=(1178,101,57,64), threshold=0.8, method="Template matching", file="./tasks/RealmRaid/res/res_back_red.png")
+	I_BACK_RED = RuleImage(roi_front=(1178,101,57,64), roi_back=(1178,101,57,64), threshold=0.7, method="Template matching", file="./tasks/RealmRaid/res/res_back_red.png")
 	# 没有锁的状态图标 
 	I_UNLOCK = RuleImage(roi_front=(818,579,38,42), roi_back=(818,579,38,42), threshold=0.8, method="Template matching", file="./tasks/RealmRaid/res/res_unlock.png")
 	# 以锁的状态图片 
@@ -91,22 +91,22 @@ class RealmRaidAssets:
 
 	# Click Rule Assets
 	# 用来分割不同的挑战位置 
-	C_PARTITION_1 = RuleClick(roi_front=(220,147,242,120), roi_back=(220,147,242,120), name="partition_1")
+	C_PARTITION_1 = RuleClick(roi_front=(233,147,229,120), roi_back=(233,147,229,120), name="partition_1")
 	# 用来分割不同的挑战位置 
-	C_PARTITION_2 = RuleClick(roi_front=(554,148,249,115), roi_back=(554,148,249,115), name="partition_2")
+	C_PARTITION_2 = RuleClick(roi_front=(566,148,237,115), roi_back=(566,148,237,115), name="partition_2")
 	# 用来分割不同的挑战位置 
-	C_PARTITION_3 = RuleClick(roi_front=(885,147,242,116), roi_back=(885,147,242,116), name="partition_3")
+	C_PARTITION_3 = RuleClick(roi_front=(895,147,232,116), roi_back=(895,147,232,116), name="partition_3")
 	# 用来分割不同的挑战位置 
-	C_PARTITION_4 = RuleClick(roi_front=(220,283,245,124), roi_back=(220,283,245,124), name="partition_4")
+	C_PARTITION_4 = RuleClick(roi_front=(236,283,229,124), roi_back=(236,283,229,124), name="partition_4")
 	# 用来分割不同的挑战位置 
 	C_PARTITION_5 = RuleClick(roi_front=(564,280,237,120), roi_back=(564,280,237,120), name="partition_5")
 	# 用来分割不同的挑战位置 
-	C_PARTITION_6 = RuleClick(roi_front=(894,282,237,120), roi_back=(894,282,237,120), name="partition_6")
+	C_PARTITION_6 = RuleClick(roi_front=(899,282,232,120), roi_back=(899,282,232,120), name="partition_6")
 	# 用来分割不同的挑战位置 
-	C_PARTITION_7 = RuleClick(roi_front=(225,416,244,121), roi_back=(225,416,244,121), name="partition_7")
+	C_PARTITION_7 = RuleClick(roi_front=(233,416,236,121), roi_back=(233,416,236,121), name="partition_7")
 	# 用来分割不同的挑战位置 
-	C_PARTITION_8 = RuleClick(roi_front=(560,413,237,124), roi_back=(560,413,237,124), name="partition_8")
+	C_PARTITION_8 = RuleClick(roi_front=(567,413,230,124), roi_back=(567,413,230,124), name="partition_8")
 	# 用来分割不同的挑战位置 
-	C_PARTITION_9 = RuleClick(roi_front=(893,418,234,116), roi_back=(893,418,234,116), name="partition_9")
+	C_PARTITION_9 = RuleClick(roi_front=(897,418,230,116), roi_back=(897,418,230,116), name="partition_9")
 
 

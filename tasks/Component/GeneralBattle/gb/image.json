@@ -29,8 +29,8 @@
   {
     "itemName": "win",
     "imageName": "gb_win.png",
-    "roiFront": "425,141,100,100",
-    "roiBack": "296,41,414,216",
+    "roiFront": "385,47,100,100",
+    "roiBack": "296,33,414,224",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "战斗胜利"
@@ -187,5 +187,14 @@
     "method": "Template matching",
     "threshold": 0.8,
     "description": "结算金币"
+  },
+  {
+    "itemName": "de_win",
+    "imageName": "gb_de_win.png",
+    "roiFront": "481,47,100,100",
+    "roiBack": "331,40,301,117",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "针对封魔的特殊"
   }
 ]

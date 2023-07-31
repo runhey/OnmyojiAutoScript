@@ -1,0 +1,20 @@
+[
+  {
+    "itemName": "answer_1",
+    "roiFront": "430,264,440,67",
+    "roiBack": "430,264,440,67",
+    "description": "description"
+  },
+  {
+    "itemName": "answer_2",
+    "roiFront": "428,351,438,70",
+    "roiBack": "428,351,438,70",
+    "description": "description"
+  },
+  {
+    "itemName": "answer_3",
+    "roiFront": "434,435,437,65",
+    "roiBack": "434,435,437,65",
+    "description": "description"
+  }
+]

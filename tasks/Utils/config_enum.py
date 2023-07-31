@@ -14,17 +14,17 @@ class ShikigamiClass(str, Enum):
 
 
 class DemonClass(str, Enum):
-    # Tsuchigumo 土蜘蛛
+    # tsuchigumo 土蜘蛛
     TSUCHIGUMO = '土蜘蛛'
-    # Oboroguruma 胧车
+    # oboroguruma 胧车
     OBOROGURUMA = '胧车'
-    # Odokuro 荒骷髅
+    # odokuro 荒骷髅
     ODOKURO = '荒骷髅'
-    # Namazu 地震鲇
+    # namazu 地震鲇
     NAMAZU = '地震鲇'
-    # Shinkiro 蜃气楼
+    # shinkiro 蜃气楼
     SHINKIRO = '蜃气楼'
-    # Ghostly Songstress 鬼灵歌伎
+    # ghostly songstress 鬼灵歌伎
     GHOSTLY_SONGSTRESS = '鬼灵歌伎'
 
 

@@ -1,0 +1,137 @@
+[
+  {
+    "itemName": "sca_orochi_scales",
+    "imageName": "scales_sca_orochi_scales.png",
+    "roiFront": "110,261,100,100",
+    "roiBack": "110,261,100,100",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "蛇皮"
+  },
+  {
+    "itemName": "sca_demon_souls",
+    "imageName": "scales_sca_demon_souls.png",
+    "roiFront": "707,260,100,100",
+    "roiBack": "707,260,100,100",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "首领御魂"
+  },
+  {
+    "itemName": "sca_picture_book",
+    "imageName": "scales_sca_picture_book.png",
+    "roiFront": "995,258,100,100",
+    "roiBack": "995,258,100,100",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "永生之海"
+  },
+  {
+    "itemName": "sca_demon_boss_1",
+    "imageName": "scales_sca_demon_boss_1.png",
+    "roiFront": "225,169,192,193",
+    "roiBack": "225,169,192,193",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "土蜘蛛"
+  },
+  {
+    "itemName": "sca_demon_boss_2",
+    "imageName": "scales_sca_demon_boss_2.png",
+    "roiFront": "539,161,180,198",
+    "roiBack": "539,161,180,198",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "胧车"
+  },
+  {
+    "itemName": "sca_demon_boss_3",
+    "imageName": "scales_sca_demon_boss_3.png",
+    "roiFront": "864,180,181,175",
+    "roiBack": "864,180,181,175",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "荒骷髅"
+  },
+  {
+    "itemName": "sca_demon_boss_4",
+    "imageName": "scales_sca_demon_boss_4.png",
+    "roiFront": "228,412,188,211",
+    "roiBack": "228,412,188,211",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "地震鲶"
+  },
+  {
+    "itemName": "sca_demon_boss_5",
+    "imageName": "scales_sca_demon_boss_5.png",
+    "roiFront": "534,414,211,218",
+    "roiBack": "534,414,211,218",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "蜃气楼"
+  },
+  {
+    "itemName": "sca_demon_boss_6",
+    "imageName": "scales_sca_demon_boss_6.png",
+    "roiFront": "862,432,178,189",
+    "roiBack": "862,432,178,189",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "歌姬"
+  },
+  {
+    "itemName": "sca_select_1",
+    "imageName": "scales_sca_select_1.png",
+    "roiFront": "189,519,113,51",
+    "roiBack": "189,519,113,51",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "永生之海第一个选择"
+  },
+  {
+    "itemName": "sca_select_2",
+    "imageName": "scales_sca_select_2.png",
+    "roiFront": "583,519,116,54",
+    "roiBack": "583,519,116,54",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "sca_select_3",
+    "imageName": "scales_sca_select_3.png",
+    "roiFront": "972,517,123,50",
+    "roiBack": "972,517,123,50",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "sca_six_star",
+    "imageName": "scales_sca_six_star.png",
+    "roiFront": "119,259,100,22",
+    "roiBack": "119,259,100,22",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "获得的六星"
+  },
+  {
+    "itemName": "sca_reward",
+    "imageName": "scales_sca_reward.png",
+    "roiFront": "584,503,100,100",
+    "roiBack": "584,503,100,100",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "点击屏幕继续"
+  },
+  {
+    "itemName": "sca_demon_buy",
+    "imageName": "scales_sca_demon_buy.png",
+    "roiFront": "861,572,180,62",
+    "roiBack": "861,572,180,62",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "点击兑换"
+  }
+]

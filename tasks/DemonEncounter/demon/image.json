@@ -1,0 +1,56 @@
+[
+  {
+    "itemName": "de_red_dharma",
+    "imageName": "demon_de_red_dharma.png",
+    "roiFront": "1216,215,32,33",
+    "roiBack": "1209,208,51,50",
+    "method": "Template matching",
+    "threshold": 0.7,
+    "description": "红色达摩"
+  },
+  {
+    "itemName": "de_find",
+    "imageName": "demon_de_find.png",
+    "roiFront": "1136,593,100,100",
+    "roiBack": "1136,593,100,100",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "点击右下角的寻找封魔"
+  },
+  {
+    "itemName": "de_boss",
+    "imageName": "demon_de_boss.png",
+    "roiFront": "1001,645,45,45",
+    "roiBack": "1001,645,45,45",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "点击首领"
+  },
+  {
+    "itemName": "de_boss_best",
+    "imageName": "demon_de_boss_best.png",
+    "roiFront": "900,644,45,50",
+    "roiBack": "900,644,45,50",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "点击封魔极"
+  },
+  {
+    "itemName": "de_shi_records",
+    "imageName": "demon_de_shi_records.png",
+    "roiFront": "789,639,48,48",
+    "roiBack": "789,639,48,48",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "式神录"
+  },
+  {
+    "itemName": "de_location",
+    "imageName": "demon_de_location.png",
+    "roiFront": "26,653,44,47",
+    "roiBack": "26,653,44,47",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "左下角小指针"
+  }
+]

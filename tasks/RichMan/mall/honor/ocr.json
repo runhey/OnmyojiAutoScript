@@ -1,0 +1,29 @@
+[
+  {
+    "itemName": "honor_blue",
+    "roiFront": "973,113,22,26",
+    "roiBack": "973,113,22,26",
+    "mode": "Digit",
+    "method": "Default",
+    "keyword": "",
+    "description": "Ocr-description"
+  },
+  {
+    "itemName": "honor_black",
+    "roiFront": "749,358,24,34",
+    "roiBack": "749,358,24,34",
+    "mode": "Digit",
+    "method": "Default",
+    "keyword": "",
+    "description": "Ocr-description"
+  },
+  {
+    "itemName": "honor_white",
+    "roiFront": "527,359,25,28",
+    "roiBack": "527,359,25,28",
+    "mode": "Digit",
+    "method": "Default",
+    "keyword": "",
+    "description": "三星白蛋"
+  }
+]
