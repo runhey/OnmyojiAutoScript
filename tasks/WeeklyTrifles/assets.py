@@ -66,3 +66,14 @@ class WeeklyTriflesAssets:
 	I_WT_QR_CODE = RuleImage(roi_front=(473,160,336,96), roi_back=(473,160,336,96), threshold=0.8, method="Template matching", file="./tasks/WeeklyTrifles/collect/collect_wt_qr_code.png")
 
 
+	# Image Rule Assets
+	# 秘闻进入 
+	I_WT_ENTER_SE = RuleImage(roi_front=(1145,598,100,100), roi_back=(1145,598,100,100), threshold=0.8, method="Template matching", file="./tasks/WeeklyTrifles/secret/secret_wt_enter_se.png")
+	# 秘闻分享 
+	I_WT_SE_SHARE = RuleImage(roi_front=(913,570,46,43), roi_back=(913,570,46,43), threshold=0.8, method="Template matching", file="./tasks/WeeklyTrifles/secret/secret_wt_se_share.png")
+	# 微信 
+	I_WT_SE_WECHAT = RuleImage(roi_front=(1023,630,56,57), roi_back=(1023,630,56,57), threshold=0.8, method="Template matching", file="./tasks/WeeklyTrifles/secret/secret_wt_se_wechat.png")
+	# 勾玉 
+	I_WT_SE_JADE = RuleImage(roi_front=(1129,529,35,39), roi_back=(1129,529,35,39), threshold=0.8, method="Template matching", file="./tasks/WeeklyTrifles/secret/secret_wt_se_jade.png")
+
+

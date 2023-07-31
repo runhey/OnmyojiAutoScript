@@ -16,6 +16,14 @@ class ScriptTask(GameUi, WeeklyTriflesAssets):
 
     def run(self):
         con = self.config.weekly_trifles.trifles
+        if con.share_collect:
+            self._share_collect()
+        if con.share_area_boss:
+            self._share_area_boss()
+        if con.share_secret:
+            self._share_secret()
+        if con.broken_amulet:
+            self._broken_amulet(con.broken_amulet)
 
         self.set_next_run(task='WeeklyTrifles', success=True, finish=True)
         raise TaskEnd('WeeklyTrifles')
@@ -30,7 +38,7 @@ class ScriptTask(GameUi, WeeklyTriflesAssets):
         # 点击分享
         self.ui_click(wechat, self.I_WT_QR_CODE)
         logger.info('Click share')
-        get_timer = Timer(3)
+        get_timer = Timer(2)
         get_timer.start()
         while 1:
             self.screenshot()
@@ -141,20 +149,42 @@ class ScriptTask(GameUi, WeeklyTriflesAssets):
         if not self.appear(self.I_WT_AB_JADE):
             logger.warning('This week has been obtained')
             obtained = True
+        if not obtained:
+            # 点击分享
+            self.click_share(self.I_WT_AB_WECHAT)
+            obtained = True
         if obtained:
             back_boss()
-        # 点击分享
-        self.click_share(self.I_WT_AB_WECHAT)
-        back_boss()
 
     def _share_secret(self):
         """
-        TODO 秘闻分享
+        秘闻分享
         :return:
         """
         logger.hr('Share secret')
         self.ui_get_current_page()
         self.ui_goto(page_secret_zones)
+        # 一路进去
+        while 1:
+            self.screenshot()
+            if self.appear(self.I_WT_SE_WECHAT):
+                break
+            if self.appear_then_click(self.I_WT_ENTER_SE, interval=1):
+                continue
+            if self.appear_then_click(self.I_WT_SE_SHARE, interval=1):
+                continue
+        logger.info('Enter secret')
+        # 判断是否已经领取
+        self.screenshot()
+        obtained = False
+        if not self.appear(self.I_WT_SE_JADE):
+            obtained = True
+            logger.warning('This week has been obtained')
+        # 点击分享
+        if not obtained:
+            self.click_share(self.I_WT_SE_WECHAT)
+        # 返回
+        self.ui_click(self.I_UI_BACK_BLUE, self.I_CHECK_MAIN)
 
     def _broken_amulet(self, num: int):
         """
