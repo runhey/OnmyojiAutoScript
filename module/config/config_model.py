@@ -42,6 +42,7 @@ from tasks.ActivityShikigami.config import ActivityShikigami
 # 肝帝专属---------------------------------------------------------------------------------------------------------------
 from tasks.BondlingFairyland.config import BondlingFairyland
 from tasks.EvoZone.config import EvoZone
+from tasks.GoryouRealm.config import GoryouRealm
 # ----------------------------------------------------------------------------------------------------------------------
 
 # 每周任务---------------------------------------------------------------------------------------------------------------
@@ -86,6 +87,7 @@ class ConfigModel(ConfigBase):
     # 这些是肝帝专属
     bondling_fairyland: BondlingFairyland = Field(default_factory=BondlingFairyland)
     evo_zone: EvoZone = Field(default_factory=EvoZone)
+    goryou_realm: GoryouRealm = Field(default_factory=GoryouRealm)
 
 
     # 这些是每周任务

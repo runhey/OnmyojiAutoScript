@@ -56,10 +56,10 @@
   {
     "itemName": "exploration_goto_goryou_realm",
     "imageName": "page_exploration_goto_goryou_realm.png",
-    "roiFront": "343,629,60,67",
-    "roiBack": "343,629,60,67",
+    "roiFront": "353,639,47,45",
+    "roiBack": "346,626,60,67",
     "method": "Template matching",
-    "threshold": 0.8,
+    "threshold": 0.7,
     "description": "前往御灵"
   },
   {

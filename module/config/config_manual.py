@@ -11,9 +11,9 @@ class ConfigManual:
         Restart
         >KekkaiUtilize > KekkaiActivation > DemonEncounter
         > AreaBoss > GoldYoukai > ExperienceYoukai > Nian > RealmRaid > RyouToppa > DailyTrifles
-        > Orochi > OrochiMoans > OrochiJudgement > Sougenbi > FallenSun > EternitySea
+        > Orochi > OrochiMoans > OrochiJudgement > Sougenbi > FallenSun > EternitySea 
         > ActivityShikigami
-        > BondlingFairyland > EvoZone
+        > BondlingFairyland > EvoZone > GoryouRealm
         > TrueOrochi > RichMan
         > Pets > TalismanPass > SoulsTidy
         > Secret > WeeklyTrifles > MysteryShop

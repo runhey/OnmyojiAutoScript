@@ -1,0 +1,11 @@
+[
+  {
+    "itemName": "gr_ticket",
+    "roiFront": "934,21,84,41",
+    "roiBack": "934,21,84,41",
+    "mode": "Digit",
+    "method": "Default",
+    "keyword": "",
+    "description": "多少张票"
+  }
+]

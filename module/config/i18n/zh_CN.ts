@@ -670,5 +670,8 @@ Refresh：直接刷新，如果刷新操作进入CD，将标记为失败并退�
 	<message><source>Share Friend 3</source><translation>第三个好友名字</translation></message>
 	<message><source>Share Friend 4</source><translation>第四个好友名字</translation></message>
 	<message><source>Share Friend 5</source><translation>第五个好友名字</translation></message>
+	<message><source>GoryouConfig</source><translation>御灵</translation></message>
+	<message><source>GoryouClass</source><translation>御灵类型</translation></message>
+	<message><source>goryou_class_help</source><translation>闭着眼睛选，自动支持到当天的类型。不支持选择层数是因为正常人都会打第三层</translation></message>
 </context>
 </TS>
