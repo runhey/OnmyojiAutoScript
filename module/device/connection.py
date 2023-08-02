@@ -104,12 +104,13 @@ class Connection(ConnectionAttr):
 
         # Package
         # self.package = self.config.Emulator_PackageName
-        self.package = self.config.script.device.package_name
+        self.package = self.config.script.device.package_name.value
         if self.package == 'auto':
             self.detect_package()
         else:
             pass
-            set_server(self.package)
+            # 因为用不到就注释掉了
+            # set_server(self.package)
         logger.attr('PackageName', self.package)
         # logger.attr('Server', self.config.SERVER)
 

@@ -271,12 +271,21 @@ class Adb(Connection):
             # ## Network stats: elapsed time=4ms (0ms mobile, 0ms wifi, 4ms not connected)
             return True
 
+        logger.warning('Fallback to use am start')
         result = self.adb_shell(['dumpsys', 'package', package_name])
         res = re.search(r'android.intent.action.MAIN:\s+\w+ ([\w.\/]+) filter \w+\s+'
                         r'.*\s+Category: "android.intent.category.LAUNCHER"',
                         result)
         if res:
             activity_name = res.group(1)
+            self.adb_shell(['am', 'start', '-a', 'android.intent.action.MAIN', '-c',
+                            'android.intent.category.LAUNCHER', '-n', activity_name])
+        elif 'com.netease.ntunisdk.base.deeplink.UniDeepLinkActivity' in result:
+            activity_name = 'com.netease.ntunisdk.base.deeplink.UniDeepLinkActivity'
+            result = self.adb_shell([
+                'am', 'start', '-n',
+                'com.netease.onmyoji.wyzymnqsd_cps/com.netease.ntunisdk.base.deeplink.UniDeepLinkActivity'
+            ])
         else:
             if allow_failure:
                 return False
