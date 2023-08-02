@@ -16,7 +16,7 @@ class ConfigManual:
         > BondlingFairyland > EvoZone
         > TrueOrochi > RichMan
         > Pets > TalismanPass > SoulsTidy
-        > Secret > WeeklyTrifles
+        > Secret > WeeklyTrifles > MysteryShop
         """
 
     DEVICE_OVER_HTTP = False

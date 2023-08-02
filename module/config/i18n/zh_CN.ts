@@ -658,4 +658,17 @@ Refresh：直接刷新，如果刷新操作进入CD，将标记为失败并退�
 	<message><source>Pets Feast</source><translation>饕餮大餐</translation></message>
 	<message><source>GoldYoukaiConfig</source><translation>金币妖怪</translation></message>
 </context>	
+<context>
+    <name>Args</name>
+	<message><source>ShopConfig</source><translation>购买</translation></message>	
+	<message><source>Shop Kaiko 3</source><translation>三星太鼓</translation></message>	
+	<message><source>Shop Kaiko 4</source><translation>四星太鼓</translation></message>
+	<message><source>ShareConfig</source><translation>分享</translation></message>
+	<message><source>Share Friend 1</source><translation>第一个好友名字</translation></message>
+	<message><source>share_friend_1_help</source><translation>使用OCR来识别，留空表示不使用</translation></message>
+	<message><source>Share Friend 2</source><translation>第二个好友名字</translation></message>
+	<message><source>Share Friend 3</source><translation>第三个好友名字</translation></message>
+	<message><source>Share Friend 4</source><translation>第四个好友名字</translation></message>
+	<message><source>Share Friend 5</source><translation>第五个好友名字</translation></message>
+</context>
 </TS>

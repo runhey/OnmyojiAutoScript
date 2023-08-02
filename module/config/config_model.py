@@ -49,6 +49,7 @@ from tasks.TrueOrochi.config import TrueOrochi
 from tasks.RichMan.config import RichMan
 from tasks.Secret.config import Secret
 from tasks.WeeklyTrifles.config import WeeklyTrifles
+from tasks.MysteryShop.config import MysteryShop
 # ----------------------------------------------------------------------------------------------------------------------
 
 class ConfigModel(ConfigBase):
@@ -92,6 +93,7 @@ class ConfigModel(ConfigBase):
     rich_man: RichMan = Field(default_factory=RichMan)
     secret: Secret = Field(default_factory=Secret)
     weekly_trifles: WeeklyTrifles = Field(default_factory=WeeklyTrifles)
+    mystery_shop: MysteryShop = Field(default_factory=MysteryShop)
 
     # @validator('script')
     # def script_validator(cls, v):

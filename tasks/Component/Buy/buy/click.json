@@ -10,5 +10,11 @@
     "roiFront": "551,510,174,60",
     "roiBack": "551,510,174,60",
     "description": "description"
+  },
+  {
+    "itemName": "buy_cancel",
+    "roiFront": "121,2,100,22",
+    "roiBack": "121,2,100,22",
+    "description": "取消购买"
   }
 ]

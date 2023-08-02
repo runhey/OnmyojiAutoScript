@@ -318,7 +318,7 @@ class GeneralInvite(BaseTask, GeneralInviteAssets):
 
         return True
 
-    def invite_friend(self, name: str = None, find_mode: FindMode = None) -> bool:
+    def invite_friend(self, name: str = None, find_mode: FindMode = FindMode.AUTO_FIND) -> bool:
         """
         邀请好友
         :param find_mode: 寻找的方式
