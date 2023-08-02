@@ -29,10 +29,10 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, RyouToppaAssets):
         self.medal_grid = ImageGrid([RealmRaidAssets.I_MEDAL_5, RealmRaidAssets.I_MEDAL_4, RealmRaidAssets.I_MEDAL_3,
                                      RealmRaidAssets.I_MEDAL_2, RealmRaidAssets.I_MEDAL_1, RealmRaidAssets.I_MEDAL_0])
 
-        # if config.switch_soul_config.enable:
-        #     self.ui_get_current_page()
-        #     self.ui_goto(page_shikigami_records)
-        #     self.run_switch_soul(config.switch_soul_config.switch_group_team)
+        if config.switch_soul_config.enable:
+            self.ui_get_current_page()
+            self.ui_goto(page_shikigami_records)
+            self.run_switch_soul(config.switch_soul_config.switch_group_team)
 
         if config.switch_soul_config.enable_switch_by_name:
             self.ui_get_current_page()
