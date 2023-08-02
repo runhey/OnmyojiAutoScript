@@ -29,5 +29,7 @@ class TalismanPassAssets:
 	I_TP_LEVEL_3 = RuleImage(roi_front=(967,433,109,61), roi_back=(967,433,109,61), threshold=0.8, method="Template matching", file="./tasks/TalismanPass/tp/tp_tp_level_3.png")
 	# 前往 
 	I_TP_GOTO = RuleImage(roi_front=(995,254,85,34), roi_back=(928,219,206,315), threshold=0.8, method="Template matching", file="./tasks/TalismanPass/tp/tp_tp_goto.png")
+	# 经验的 
+	I_TP_EXP = RuleImage(roi_front=(922,254,32,36), roi_back=(884,215,100,331), threshold=0.8, method="Template matching", file="./tasks/TalismanPass/tp/tp_tp_exp.png")
 
 

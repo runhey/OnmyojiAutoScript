@@ -79,5 +79,14 @@
     "method": "Template matching",
     "threshold": 0.8,
     "description": "前往"
+  },
+  {
+    "itemName": "tp_exp",
+    "imageName": "tp_tp_exp.png",
+    "roiFront": "922,254,32,36",
+    "roiBack": "884,215,100,331",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "经验的"
   }
 ]
