@@ -27,6 +27,7 @@ from tasks.DailyTrifles.config import DailyTrifles
 from tasks.TalismanPass.config import TalismanPass
 from tasks.Pets.config import Pets
 from tasks.SoulsTidy.config import SoulsTidy
+from tasks.Delegation.config import Delegation
 # ----------------------------------------------------------------------------------------------------------------------
 from tasks.Orochi.config import Orochi
 from tasks.OrochiMoans.config import OrochiMoans
@@ -74,6 +75,7 @@ class ConfigModel(ConfigBase):
     talisman_pass: TalismanPass = Field(default_factory=TalismanPass)
     pets: Pets = Field(default_factory=Pets)
     souls_tidy: SoulsTidy = Field(default_factory=SoulsTidy)
+    delegation: Delegation = Field(default_factory=Delegation)
 
     # 这些是刷御魂的
     orochi: Orochi = Field(default_factory=Orochi)

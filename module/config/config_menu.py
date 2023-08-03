@@ -21,7 +21,7 @@ class ConfigMenu:
         self.menu["Soul Zones"] = ['Orochi', 'Sougenbi', 'FallenSun', 'EternitySea']
         # 日常的任务
         self.menu["Daily Task"] = ['DailyTrifles', 'AreaBoss', 'GoldYoukai', 'ExperienceYoukai', 'Nian',
-                                   'TalismanPass', 'DemonEncounter', 'Pets', 'SoulsTidy']
+                                   'TalismanPass', 'DemonEncounter', 'Pets', 'SoulsTidy', 'Delegation']
         # 很肝的任务
         self.menu["Liver Emperor Exclusive"] = ['BondlingFairyland', 'EvoZone', 'GoryouRealm']
         # 阴阳寮

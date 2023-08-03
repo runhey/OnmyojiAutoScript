@@ -16,7 +16,7 @@ class ConfigManual:
         > BondlingFairyland > EvoZone > GoryouRealm
         > TrueOrochi > RichMan
         > CollectiveMissions
-        > Pets > TalismanPass > SoulsTidy
+        > Pets > TalismanPass > SoulsTidy > Delegation
         > Secret > WeeklyTrifles > MysteryShop
         """
 
