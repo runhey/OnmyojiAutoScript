@@ -38,8 +38,8 @@
   {
     "itemName": "red_point_level",
     "imageName": "tp_red_point_level.png",
-    "roiFront": "1222,174,23,24",
-    "roiBack": "1222,174,23,24",
+    "roiFront": "1222,174,21,22",
+    "roiBack": "1214,165,40,43",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "等级奖励"
