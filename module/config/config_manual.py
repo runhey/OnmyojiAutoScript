@@ -15,6 +15,7 @@ class ConfigManual:
         > ActivityShikigami
         > BondlingFairyland > EvoZone > GoryouRealm
         > TrueOrochi > RichMan
+        > CollectiveMissions
         > Pets > TalismanPass > SoulsTidy
         > Secret > WeeklyTrifles > MysteryShop
         """

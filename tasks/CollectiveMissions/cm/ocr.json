@@ -1,0 +1,101 @@
+[
+  {
+    "itemName": "cm_1",
+    "roiFront": "217,133,115,43",
+    "roiBack": "217,133,115,43",
+    "mode": "Single",
+    "method": "Default",
+    "keyword": "",
+    "description": "Ocr-description"
+  },
+  {
+    "itemName": "cm_2",
+    "roiFront": "333,135,92,44",
+    "roiBack": "333,135,92,44",
+    "mode": "Single",
+    "method": "Default",
+    "keyword": "",
+    "description": "Ocr-description"
+  },
+  {
+    "itemName": "cm_3",
+    "roiFront": "554,135,113,40",
+    "roiBack": "554,135,113,40",
+    "mode": "Single",
+    "method": "Default",
+    "keyword": "",
+    "description": "Ocr-description"
+  },
+  {
+    "itemName": "cm_4",
+    "roiFront": "667,136,94,41",
+    "roiBack": "667,136,94,41",
+    "mode": "Single",
+    "method": "Default",
+    "keyword": "",
+    "description": "Ocr-description"
+  },
+  {
+    "itemName": "cm_5",
+    "roiFront": "889,133,112,44",
+    "roiBack": "889,133,112,44",
+    "mode": "Single",
+    "method": "Default",
+    "keyword": "",
+    "description": "Ocr-description"
+  },
+  {
+    "itemName": "cm_6",
+    "roiFront": "1002,133,91,42",
+    "roiBack": "1002,133,91,42",
+    "mode": "Single",
+    "method": "Default",
+    "keyword": "",
+    "description": "Ocr-description"
+  },
+  {
+    "itemName": "cm_number",
+    "roiFront": "1097,564,58,28",
+    "roiBack": "1097,564,58,28",
+    "mode": "DigitCounter",
+    "method": "Default",
+    "keyword": "",
+    "description": "记录已完成的数量"
+  },
+  {
+    "itemName": "cm_1_matter",
+    "roiFront": "427,172,100,27",
+    "roiBack": "427,172,100,27",
+    "mode": "DigitCounter",
+    "method": "Default",
+    "keyword": "",
+    "description": "材料的数量"
+  },
+  {
+    "itemName": "cm_2_matter",
+    "roiFront": "429,293,100,31",
+    "roiBack": "429,293,100,31",
+    "mode": "DigitCounter",
+    "method": "Default",
+    "keyword": "",
+    "description": "Ocr-description"
+  },
+  {
+    "itemName": "cm_3_matter",
+    "roiFront": "428,416,100,29",
+    "roiBack": "428,416,100,29",
+    "mode": "DigitCounter",
+    "method": "Default",
+    "keyword": "",
+    "description": "Ocr-description"
+  },
+  {
+    "itemName": "cm_4_matter",
+    "roiFront": "430,536,100,33",
+    "roiBack": "430,536,100,33",
+    "mode": "DigitCounter",
+    "method": "Default",
+    "keyword": "",
+    "description": "Ocr-description"
+  }
+]

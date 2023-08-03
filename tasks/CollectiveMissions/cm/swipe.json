@@ -1,0 +1,30 @@
+[
+  {
+    "itemName": "cm_matter_1",
+    "roiFront": "684,147,41,37",
+    "roiBack": "1060,142,46,41",
+    "mode": "default",
+    "description": "description"
+  },
+  {
+    "itemName": "cm_matter_2",
+    "roiFront": "684,271,40,38",
+    "roiBack": "1066,261,45,49",
+    "mode": "default",
+    "description": "description"
+  },
+  {
+    "itemName": "cm_matter_3",
+    "roiFront": "688,392,35,38",
+    "roiBack": "1117,388,50,45",
+    "mode": "default",
+    "description": "description"
+  },
+  {
+    "itemName": "cm_matter_4",
+    "roiFront": "689,524,21,22",
+    "roiBack": "903,518,46,32",
+    "mode": "default",
+    "description": "description"
+  }
+]

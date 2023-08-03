@@ -34,6 +34,7 @@ from tasks.Sougenbi.config import Sougenbi
 from tasks.FallenSun.config import FallenSun
 from tasks.EternitySea.config import EternitySea
 from tasks.RealmRaid.config import RealmRaid
+from tasks.CollectiveMissions.config import CollectiveMissions
 
 # 这一部分是活动的配置-----------------------------------------------------------------------------------------------------
 from tasks.ActivityShikigami.config import ActivityShikigami
@@ -96,6 +97,9 @@ class ConfigModel(ConfigBase):
     secret: Secret = Field(default_factory=Secret)
     weekly_trifles: WeeklyTrifles = Field(default_factory=WeeklyTrifles)
     mystery_shop: MysteryShop = Field(default_factory=MysteryShop)
+
+    # 阴阳寮
+    collective_missions: CollectiveMissions = Field(default_factory=CollectiveMissions)
 
     # @validator('script')
     # def script_validator(cls, v):

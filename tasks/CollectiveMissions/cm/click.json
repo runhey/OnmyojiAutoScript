@@ -1,0 +1,20 @@
+[
+  {
+    "itemName": "cm_1",
+    "roiFront": "231,468,141,55",
+    "roiBack": "231,468,141,55",
+    "description": "description"
+  },
+  {
+    "itemName": "cm_2",
+    "roiFront": "567,468,143,55",
+    "roiBack": "567,468,143,55",
+    "description": "description"
+  },
+  {
+    "itemName": "cm_3",
+    "roiFront": "903,470,136,58",
+    "roiBack": "903,470,136,58",
+    "description": "description"
+  }
+]
