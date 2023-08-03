@@ -76,15 +76,15 @@ class DemonEncounterAssets:
 	# 右侧的宝箱 
 	I_DE_BOX = RuleImage(roi_front=(1210,295,34,33), roi_back=(1183,278,96,277), threshold=0.8, method="Template matching", file="./tasks/DemonEncounter/demon/demon_de_box.png")
 	# 挑战某一个后的封印图片 
-	I_DE_DEFEAT_2 = RuleImage(roi_front=(1211,422,28,35), roi_back=(1211,422,28,35), threshold=0.8, method="Template matching", file="./tasks/DemonEncounter/demon/demon_de_defeat_2.png")
+	I_DE_DEFEAT_2 = RuleImage(roi_front=(1211,422,28,35), roi_back=(1211,422,28,35), threshold=0.7, method="Template matching", file="./tasks/DemonEncounter/demon/demon_de_defeat_2.png")
 	# description 
-	I_DE_DEFEAT_1 = RuleImage(roi_front=(1223,489,42,41), roi_back=(1223,489,42,41), threshold=0.8, method="Template matching", file="./tasks/DemonEncounter/demon/demon_de_defeat_1.png")
+	I_DE_DEFEAT_1 = RuleImage(roi_front=(1223,489,42,41), roi_back=(1223,489,42,41), threshold=0.7, method="Template matching", file="./tasks/DemonEncounter/demon/demon_de_defeat_1.png")
 	# description 
-	I_DE_DEFEAT_3 = RuleImage(roi_front=(1231,358,38,35), roi_back=(1231,358,38,35), threshold=0.8, method="Template matching", file="./tasks/DemonEncounter/demon/demon_de_defeat_3.png")
+	I_DE_DEFEAT_3 = RuleImage(roi_front=(1231,358,38,35), roi_back=(1231,358,38,35), threshold=0.7, method="Template matching", file="./tasks/DemonEncounter/demon/demon_de_defeat_3.png")
 	# description 
-	I_DE_DEFEAT_4 = RuleImage(roi_front=(1215,295,35,35), roi_back=(1215,295,35,35), threshold=0.8, method="Template matching", file="./tasks/DemonEncounter/demon/demon_de_defeat_4.png")
+	I_DE_DEFEAT_4 = RuleImage(roi_front=(1215,295,35,35), roi_back=(1215,295,35,35), threshold=0.7, method="Template matching", file="./tasks/DemonEncounter/demon/demon_de_defeat_4.png")
 	# 已领取四次的奖励 
-	I_DE_AWARD = RuleImage(roi_front=(1214,210,43,41), roi_back=(1214,210,43,41), threshold=0.8, method="Template matching", file="./tasks/DemonEncounter/demon/demon_de_award.png")
+	I_DE_AWARD = RuleImage(roi_front=(1216,214,42,36), roi_back=(1195,198,74,67), threshold=0.8, method="Template matching", file="./tasks/DemonEncounter/demon/demon_de_award.png")
 	# 信 
 	I_DE_LETTER = RuleImage(roi_front=(1236,358,33,35), roi_back=(1177,261,100,294), threshold=0.8, method="Template matching", file="./tasks/DemonEncounter/demon/demon_de_letter.png")
 	# 关闭封魔密信 

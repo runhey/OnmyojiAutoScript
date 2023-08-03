@@ -232,8 +232,36 @@ class ScriptTask(GameUi, GeneralBattle, DemonEncounterAssets):
                 continue
         logger.info('Question answering Start')
         for i in range(1,4):
+            # 还未测试题库无法识别的情况
             logger.hr(f'Answer {i}', 3)
-            self.ui_get_reward(answer())
+            answer_click = answer()
+            # self.ui_get_reward(answer())
+            while 1:
+                self.screenshot()
+                if self.ui_reward_appear_click():
+                    time.sleep(0.5)
+                    while 1:
+                        self.screenshot()
+                        # 等待动画结束
+                        if not self.appear(self.I_UI_REWARD, threshold=0.6):
+                            logger.info('Get reward success')
+                            break
+                        # 一直点击
+                        if self.ui_reward_appear_click():
+                            continue
+                    break
+                # 如果没有出现红色关闭按钮，说明答题结束
+                if not self.appear(self.I_LETTER_CLOSE):
+                    time.sleep(0.5)
+                    self.screenshot()
+                    if self.appear(self.I_LETTER_CLOSE):
+                        continue
+                    else:
+                        logger.warning('Answer finish')
+                        return
+
+                # 一直点击
+                self.click(answer_click, interval=1)
             time.sleep(0.5)
 
     def _battle(self, target_click):
