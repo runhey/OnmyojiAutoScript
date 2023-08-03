@@ -36,6 +36,7 @@ from tasks.FallenSun.config import FallenSun
 from tasks.EternitySea.config import EternitySea
 from tasks.RealmRaid.config import RealmRaid
 from tasks.CollectiveMissions.config import CollectiveMissions
+from tasks.Hunt.config import Hunt
 
 # 这一部分是活动的配置-----------------------------------------------------------------------------------------------------
 from tasks.ActivityShikigami.config import ActivityShikigami
@@ -102,6 +103,7 @@ class ConfigModel(ConfigBase):
 
     # 阴阳寮
     collective_missions: CollectiveMissions = Field(default_factory=CollectiveMissions)
+    hunt: Hunt = Field(default_factory=Hunt)
 
     # @validator('script')
     # def script_validator(cls, v):
