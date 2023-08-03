@@ -47,8 +47,8 @@
   {
     "itemName": "exploration_goto_realm_raid",
     "imageName": "page_exploration_goto_realm_raid.png",
-    "roiFront": "245,638,67,48",
-    "roiBack": "245,638,67,48",
+    "roiFront": "248,636,67,48",
+    "roiBack": "229,612,102,87",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"

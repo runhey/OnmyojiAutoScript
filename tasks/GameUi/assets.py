@@ -41,7 +41,7 @@ class GameUiAssets:
 	# description 
 	I_EXPLORATION_GOTO_SOUL_ZONE = RuleImage(roi_front=(151,637,55,55), roi_back=(151,637,55,55), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_exploration_goto_soul_zone.png")
 	# description 
-	I_EXPLORATION_GOTO_REALM_RAID = RuleImage(roi_front=(245,638,67,48), roi_back=(245,638,67,48), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_exploration_goto_realm_raid.png")
+	I_EXPLORATION_GOTO_REALM_RAID = RuleImage(roi_front=(248,636,67,48), roi_back=(229,612,102,87), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_exploration_goto_realm_raid.png")
 	# 前往御灵 
 	I_EXPLORATION_GOTO_GORYOU_REALM = RuleImage(roi_front=(353,639,47,45), roi_back=(346,626,60,67), threshold=0.7, method="Template matching", file="./tasks/GameUi/page/page_exploration_goto_goryou_realm.png")
 	# 式神委派 

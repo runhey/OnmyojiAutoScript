@@ -442,7 +442,7 @@ if __name__ == "__main__":
     device = Device(config)
     t = ScriptTask(config, device)
 
-    t.run_2()
+    t.run()
 
     # print(t.find_one())
     # target, order = t.find_one()
