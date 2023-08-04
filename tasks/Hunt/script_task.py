@@ -13,11 +13,11 @@ from tasks.GameUi.game_ui import GameUi
 from tasks.GameUi.page import page_main, page_hunt, page_shikigami_records
 from tasks.Component.GeneralBattle.general_battle import GeneralBattle
 from tasks.Component.GeneralBattle.config_general_battle import GeneralBattleConfig
-from tasks.Component.GeneralRoom.general_room import GeneralRoom
+from tasks.Component.GeneralInvite.general_invite import GeneralInvite
 from tasks.Component.SwitchSoul.switch_soul import SwitchSoul
 from tasks.Hunt.assets import HuntAssets
 
-class ScriptTask(GameUi, GeneralBattle, GeneralRoom, SwitchSoul, HuntAssets):
+class ScriptTask(GameUi, GeneralBattle, GeneralInvite, SwitchSoul, HuntAssets):
     kirin_day = True  # 不是麒麟就是阴界之门
 
     def run(self):
@@ -37,6 +37,12 @@ class ScriptTask(GameUi, GeneralBattle, GeneralRoom, SwitchSoul, HuntAssets):
                 self.run_switch_soul(con.netherworld_group_team)
         self.ui_get_current_page()
         self.ui_goto(page_hunt)
+
+        if self.kirin_day:
+            self.kirin()
+        else:
+            self.netherworld()
+        sleep(1)
 
         self.set_next_run(task='Hunt', success=True, finish=True)
         raise TaskEnd('Hunt')
@@ -61,10 +67,86 @@ class ScriptTask(GameUi, GeneralBattle, GeneralRoom, SwitchSoul, HuntAssets):
             return False
 
     def kirin(self):
-        pass
+        logger.hr('kirin', 2)
+        # TODO: 没有碰到：（1）麒麟未开 （2）麒麟已经挑战完毕
+        while 1:
+            self.screenshot()
+
+            if self.appear(self.I_KIRIN_END):
+                # 你的阴阳寮已经打过的麒麟了
+                logger.warning('Your guild have already challenged the Kirin')
+                self.set_next_run(task='Hunt', success=True, finish=True)
+                raise TaskEnd('Hunt')
+            if self.appear_then_click(self.I_KIRIN_CHALLAGE, interval=0.9):
+                break
+            if self.click(self.C_HUNT_ENTER, interval=2.9):
+                continue
+        logger.info('Arrive the Kirin')
+        self.ui_click(self.I_KIRIN_CHALLAGE, self.I_KIRIN_GATHER)
+        # 等待进入战斗
+        # 等待挑战, 5秒也是等
+        time.sleep(5)
+        self.device.stuck_record_add('BATTLE_STATUS_S')
+        self.wait_until_disappear(self.I_KIRIN_GATHER)
+        self.device.stuck_record_clear()
+        self.device.stuck_record_add('BATTLE_STATUS_S')
+        self.run_general_battle()
+
 
     def netherworld(self):
-        pass
+        logger.hr('netherworld', 2)
+        while 1:
+            self.screenshot()
+            if self.is_in_room(False):
+                self.screenshot()
+                if not self.appear(self.I_FIRE):
+                    continue
+                self.click_fire()
+                break
+
+            if self.appear_then_click(self.I_NW, interval=0.9):
+                continue
+            if self.appear_then_click(self.I_UI_CONFIRM, interval=0.9):
+                continue
+            if self.appear_then_click(self.I_NW_CHALLAGE, interval=1.5):
+                continue
+        logger.info('Start battle')
+        self.run_general_battle()
+
+
+    def battle_wait(self, random_click_swipt_enable: bool) -> bool:
+        """
+        重写，
+        阴界之门： 胜利后回到狩猎战的主界面
+        麒麟： 胜利后回到麒麟的主界面
+        :param random_click_swipt_enable:
+        :return:
+        """
+        # if self.kirin_day:
+        #     return super().battle_wait(random_click_swipt_enable)
+
+        # 阴界之门
+        self.device.stuck_record_add('BATTLE_STATUS_S')
+        self.device.click_record_clear()
+        # 战斗过程 随机点击和滑动 防封
+        logger.info("Start battle process")
+        while 1:
+            self.screenshot()
+            if self.appear(self.I_WIN):
+                logger.info('Battle win')
+                self.ui_click_until_disappear(self.I_WIN)
+                return True
+            # 如果出现失败 就点击，返回False
+            if self.appear(self.I_FALSE, threshold=0.8):
+                logger.info("Battle result is false")
+                self.ui_click_until_disappear(self.I_FALSE)
+                return False
+
+
+
+
+
+
 
 
 if __name__ == '__main__':
