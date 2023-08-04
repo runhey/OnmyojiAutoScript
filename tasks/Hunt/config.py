@@ -15,3 +15,4 @@ class HuntConfig(BaseModel):
 class Hunt(ConfigBase):
     scheduler: Scheduler = Field(default_factory=Scheduler)
     hunt_config: HuntConfig = Field(default_factory=HuntConfig)
+    exit_battle: bool = Field(default=False, description='exit_battle_help')

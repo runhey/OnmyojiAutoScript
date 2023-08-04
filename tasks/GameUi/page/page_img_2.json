@@ -50,7 +50,7 @@
     "roiFront": "475,138,46,69",
     "roiBack": "275,122,520,100",
     "method": "Template matching",
-    "threshold": 0.8,
+    "threshold": 0.7,
     "description": "description"
   },
   {
@@ -92,10 +92,10 @@
   {
     "itemName": "check_hunt",
     "imageName": "page_check_hunt.png",
-    "roiFront": "1071,605,81,85",
-    "roiBack": "1026,558,152,156",
+    "roiFront": "575,30,46,25",
+    "roiBack": "553,1,81,68",
     "method": "Template matching",
-    "threshold": 0.8,
+    "threshold": 0.7,
     "description": "description"
   },
   {
