@@ -86,6 +86,10 @@ class ScriptTask(GameUi, GeneralBattle, GeneralRoom, GeneralInvite, SwitchSoul, 
                 logger.info('Win battle')
                 self.ui_click_until_disappear(self.I_DE_WIN)
                 return True
+            if self.appear(self.I_GOLD_WIN):
+                logger.info('Win battle')
+                self.ui_click_until_disappear(self.I_GOLD_WIN)
+                return True
 
             if self.appear(self.I_FALSE):
                 logger.warning('False battle')

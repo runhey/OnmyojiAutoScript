@@ -65,10 +65,10 @@
   {
     "itemName": "buff",
     "imageName": "gb_buff.png",
-    "roiFront": "113,653,44,62",
-    "roiBack": "113,653,44,62",
+    "roiFront": "115,657,42,50",
+    "roiBack": "106,641,67,77",
     "method": "Template matching",
-    "threshold": 0.8,
+    "threshold": 0.7,
     "description": "选择buff"
   },
   {
@@ -191,8 +191,8 @@
   {
     "itemName": "de_win",
     "imageName": "gb_de_win.png",
-    "roiFront": "481,47,100,100",
-    "roiBack": "481,47,100,100",
+    "roiFront": "472,49,100,100",
+    "roiBack": "447,36,191,133",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "针对封魔的特殊"

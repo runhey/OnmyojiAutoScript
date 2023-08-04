@@ -45,12 +45,13 @@ class GeneralBattle(GeneralBuff, GeneralBattleAssets):
 
             # 点击准备按钮
             self.wait_until_appear(self.I_PREPARE_HIGHLIGHT)
+            self.wait_until_appear(self.I_BUFF)
             while 1:
                 self.screenshot()
-                if self.appear_then_click(self.I_PREPARE_HIGHLIGHT, interval=1.5):
-                    continue
                 if not self.appear(self.I_BUFF):
                     break
+                if self.appear_then_click(self.I_PREPARE_HIGHLIGHT, interval=1.5):
+                    continue
             logger.info("Click prepare ensure button")
 
             # 照顾一下某些模拟器慢的

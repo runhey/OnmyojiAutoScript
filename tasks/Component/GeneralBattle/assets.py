@@ -80,7 +80,7 @@ class GeneralBattleAssets:
 	# 确认预设的队伍 
 	I_PRESET_ENSURE = RuleImage(roi_front=(354,641,141,50), roi_back=(354,641,141,50), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralBattle/gb/gb_preset_ensure.png")
 	# 选择buff 
-	I_BUFF = RuleImage(roi_front=(113,653,44,62), roi_back=(113,653,44,62), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralBattle/gb/gb_buff.png")
+	I_BUFF = RuleImage(roi_front=(115,657,42,50), roi_back=(106,641,67,77), threshold=0.7, method="Template matching", file="./tasks/Component/GeneralBattle/gb/gb_buff.png")
 	# 觉醒加成 
 	I_BUFF_AWAKEN = RuleImage(roi_front=(373,126,383,53), roi_back=(373,126,383,53), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralBattle/gb/gb_buff_awaken.png")
 	# 御魂加成 
@@ -108,7 +108,7 @@ class GeneralBattleAssets:
 	# 结算金币 
 	I_REWARD_GOLD = RuleImage(roi_front=(943,312,97,69), roi_back=(943,312,97,69), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralBattle/gb/gb_reward_gold.png")
 	# 针对封魔的特殊 
-	I_DE_WIN = RuleImage(roi_front=(481,47,100,100), roi_back=(481,47,100,100), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralBattle/gb/gb_de_win.png")
+	I_DE_WIN = RuleImage(roi_front=(472,49,100,100), roi_back=(447,36,191,133), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralBattle/gb/gb_de_win.png")
 	# description 
 	I_PRESENT_LESS_THAN_5 = RuleImage(roi_front=(222,648,418,43), roi_back=(222,648,418,43), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralBattle/gb/gb_present_less_than_5.png")
 
