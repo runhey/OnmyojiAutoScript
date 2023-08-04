@@ -674,4 +674,14 @@ Refresh：直接刷新，如果刷新操作进入CD，将标记为失败并退�
 	<message><source>GoryouClass</source><translation>御灵类型</translation></message>
 	<message><source>goryou_class_help</source><translation>闭着眼睛选，自动支持到当天的类型。不支持选择层数是因为正常人都会打第三层</translation></message>
 </context>
+<context>
+    <name>Args</name>
+	<message><source>DuelConfig</source><translation>自动斗技</translation></message>	
+	<message><source>Switch All Soul</source><translation>一键切换斗技御魂</translation></message>	
+	<message><source>Target Score</source><translation>达到 X 分数后会结束任务</translation></message>
+	<message><source>switch_all_soul_help</source><translation>你应当先进行式神御魂的导入</translation></message>
+	<message><source>Honor Full Exit</source><translation>刷满荣誉就退出</translation></message>
+	<message><source>target_score_help</source><translation>3000以上表示为名士（也是自动斗技的最高）</translation></message>
+	<message><source>honor_full_exit_help</source><translation>这无需关心本周荣誉的上限是什么</translation></message>
+</context>
 </TS>

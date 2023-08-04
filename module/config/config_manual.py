@@ -18,7 +18,7 @@ class ConfigManual:
         > TrueOrochi > RichMan
         > CollectiveMissions
         > Pets > TalismanPass > SoulsTidy > Delegation
-        > Secret > WeeklyTrifles > MysteryShop
+        > Secret > WeeklyTrifles > MysteryShop > Duel
         """
 
     DEVICE_OVER_HTTP = False

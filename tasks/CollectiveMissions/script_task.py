@@ -242,5 +242,5 @@ if __name__ == '__main__':
     t = ScriptTask(c, d)
     t.screenshot()
 
-    t._donate(0)
+    t.run()
 
