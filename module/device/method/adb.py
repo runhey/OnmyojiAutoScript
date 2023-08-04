@@ -284,7 +284,7 @@ class Adb(Connection):
             activity_name = 'com.netease.ntunisdk.base.deeplink.UniDeepLinkActivity'
             result = self.adb_shell([
                 'am', 'start', '-n',
-                'com.netease.onmyoji.wyzymnqsd_cps/com.netease.ntunisdk.base.deeplink.UniDeepLinkActivity'
+                f'{package_name}/com.netease.ntunisdk.base.deeplink.UniDeepLinkActivity'
             ])
         else:
             if allow_failure:
