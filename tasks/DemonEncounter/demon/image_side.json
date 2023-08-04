@@ -88,5 +88,14 @@
     "method": "Template matching",
     "threshold": 0.8,
     "description": "小鬼王的挑战"
+  },
+  {
+    "itemName": "de_mystery",
+    "imageName": "demon_de_mystery.png",
+    "roiFront": "1216,296,27,29",
+    "roiBack": "1192,278,85,261",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "神秘任务"
   }
 ]

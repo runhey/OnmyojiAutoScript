@@ -91,6 +91,8 @@ class DemonEncounterAssets:
 	I_LETTER_CLOSE = RuleImage(roi_front=(851,43,45,45), roi_back=(851,43,45,45), threshold=0.8, method="Template matching", file="./tasks/DemonEncounter/demon/demon_letter_close.png")
 	# 小鬼王的挑战 
 	I_DE_SMALL_FIRE = RuleImage(roi_front=(1064,549,100,100), roi_back=(1064,549,100,100), threshold=0.8, method="Template matching", file="./tasks/DemonEncounter/demon/demon_de_small_fire.png")
+	# 神秘任务 
+	I_DE_MYSTERY = RuleImage(roi_front=(1216,296,27,29), roi_back=(1192,278,85,261), threshold=0.8, method="Template matching", file="./tasks/DemonEncounter/demon/demon_de_mystery.png")
 
 
 	# Ocr Rule Assets
