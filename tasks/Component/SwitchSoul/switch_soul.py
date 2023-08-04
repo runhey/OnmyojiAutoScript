@@ -86,13 +86,15 @@ class SwitchSoul(BaseTask, SwitchSoulAssets):
             raise ValueError('Switch soul_one group must be in [1-7]')
         if team < 1 or team > 4:
             raise ValueError('Switch soul_one team must be in [1-4]')
+        # 这一步是选择组
         target_click, target_check = get_group_assets(group)
         while 1:
             self.screenshot()
+            if self.click(target_click, interval=1):
+                continue
             if self.appear(target_check):
                 break
-            if self.appear_then_click(target_click, interval=1):
-                continue
+
         # 点击队伍
         target_team = get_team_asset(team)
         for i in range(3):
@@ -228,4 +230,4 @@ if __name__ == '__main__':
     s = SwitchSoul(c, d)
 
     s.click_preset()
-    s.switch_soul_one(7, 2)
+    s.switch_soul_one(2, 1)
