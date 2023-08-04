@@ -291,12 +291,12 @@ if __name__ == '__main__':
     t.open_buff()
     # t.screenshot()
     #
-    # t.awake(is_open=True)
-    # t.soul(is_open=True)
-    # t.gold_50(is_open=False)
-    # t.gold_100(is_open=False)
-    # t.exp_50(is_open=False)
-    # t.exp_100(is_open=True)
+    t.awake(is_open=True)
+    t.soul(is_open=True)
+    # t.gold_50(is_open=True)
+    t.gold_100(is_open=True)
+    t.exp_50(is_open=True)
+    t.exp_100(is_open=True)
 
 
 
