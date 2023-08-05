@@ -192,6 +192,12 @@
 	<message><source>RichMan</source><translation>大富翁</translation></message>
 	<message><source>Secret</source><translation>秘闻之境</translation></message>
 	<message><source>WeeklyTrifles</source><translation>每周琐事</translation></message>
+	<message><source>Delegation</source><translation>式神委派</translation></message>
+	<message><source>GoryouRealm</source><translation>御灵之境</translation></message>
+	<message><source>CollectiveMissions</source><translation>集体任务</translation></message>
+	<message><source>Hunt</source><translation>狩猎战</translation></message>
+	<message><source>MysteryShop</source><translation>神秘商店</translation></message>
+	<message><source>Duel</source><translation>斗技</translation></message>
 </context>
 <context>
     <name>TaskList</name>
@@ -230,6 +236,12 @@
 	<message><source>RichMan</source><translation>大富翁</translation></message>
 	<message><source>Secret</source><translation>秘闻之境</translation></message>
 	<message><source>WeeklyTrifles</source><translation>每周琐事</translation></message>
+	<message><source>Delegation</source><translation>式神委派</translation></message>
+	<message><source>GoryouRealm</source><translation>御灵之境</translation></message>
+	<message><source>CollectiveMissions</source><translation>集体任务</translation></message>
+	<message><source>Hunt</source><translation>狩猎战</translation></message>
+	<message><source>MysteryShop</source><translation>神秘商店</translation></message>
+	<message><source>Duel</source><translation>斗技</translation></message>
 </context>
 <context>
     <name>Args</name>
