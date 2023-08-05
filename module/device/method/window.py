@@ -176,11 +176,12 @@ class Window(Handle):
         # 所有我在点击的时候会除以这个缩放比例
         x = int(x / self.window_scale_rate)
         y = int(y / self.window_scale_rate)
-        logger.info(f'点击时间:{duration}')
+
         emulator_type = len(self.control_handle_list)
         if self.emulator_family == EmulatorFamily.FAMILY_MUMU:  # mumu模拟器
-            SendMessage(self.control_handle_list[0], WM_ACTIVATE, WA_ACTIVE, 0)  # 激活窗口
-            SendMessage(self.control_handle_list[0], WM_LBUTTONDOWN, 0, MAKELONG(x, y+self.mumu_head_height))  # 模拟鼠标按下 先是父窗口 上面的框高度是57
+            SendMessage(self.control_handle_list[1], WM_ACTIVATE, WA_ACTIVE, 0)  # 激活窗口
+            # SendMessage(self.control_handle_list[0], WM_LBUTTONDOWN, 0, MAKELONG(x, y+self.mumu_head_height))  # 模拟鼠标按下 先是父窗口 上面的框高度是57
+            SendMessage(self.control_handle_list[1], WM_LBUTTONDOWN, 0, MAKELONG(x, y))
             time.sleep(duration)  # 长按时间1000ms-1500ms
             SendMessage(self.control_handle_list[1], WM_LBUTTONUP, 0, MAKELONG(x, y))  # 模拟鼠标弹起 后是子窗口
         elif emulator_type > 2:  # 夜神模拟器
@@ -351,16 +352,13 @@ class Window(Handle):
 
 
 if __name__ == "__main__":
-    # w = Window(config='oas1')
+    w = Window(config='oas1')
     # img = w.screenshot_window_background()
     # handle = 459852
     # wparam = MAKELONG(0, -120)
     # lparam = MAKELONG(300, 300)
     # PostMessage(handle, WM_MOUSEWHEEL, wparam, lparam)
 
-    from pynput.mouse import Button, Controller
-    mouse = Controller()
-    mouse.position = (505, 505)
-    mouse.scroll(0, -3)
+    w.long_click_window_message(142, 310, 1.5)
 
 

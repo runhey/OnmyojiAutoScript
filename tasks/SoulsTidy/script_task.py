@@ -111,11 +111,15 @@ class ScriptTask(GameUi, SoulsTidyAssets):
                 break
             # !!!!!!  这里没有检查金币是否足够
             # 长按
-            self.click(self.L_ONE, interval=2.5)
-            gold_amount = self.O_ST_GOLD.ocr(self.device.image)
-            if not isinstance(gold_amount, int):
-                logger.warning('Gold amount not int, skip')
-                continue
+            while 1:
+                self.screenshot()
+                self.click(self.L_ONE, interval=2.5)
+                gold_amount = self.O_ST_GOLD.ocr(self.device.image)
+                if not isinstance(gold_amount, int):
+                    logger.warning('Gold amount not int, skip')
+                    continue
+                if gold_amount > 0:
+                    break
             # 点击奉纳收取奖励
             if not self.appear(self.I_ST_DONATE):
                 logger.warning('Donate button not appear, skip')
