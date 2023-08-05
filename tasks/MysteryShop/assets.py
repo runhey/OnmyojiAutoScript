@@ -27,7 +27,7 @@ class MysteryShopAssets:
 	# 好友名字 
 	O_MS_FRIEND = RuleOcr(roi=(1017,660,58,38), area=(1017,660,58,38), mode="Single", method="Default", keyword="", name="ms_friend")
 	# 记录购买多少个的 
-	O_MS_RECORDS = RuleOcr(roi=(336,638,36,36), area=(336,638,36,36), mode="Digit", method="Default", keyword="", name="ms_records")
+	O_MS_RECORDS = RuleOcr(roi=(324,638,44,36), area=(324,638,44,36), mode="Digit", method="Default", keyword="", name="ms_records")
 
 
 	# Image Rule Assets

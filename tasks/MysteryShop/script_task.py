@@ -120,22 +120,22 @@ class ScriptTask(FriendshipPoints, MysteryShopAssets, GeneralInvite):
             logger.warning(f'Share friend 1 {share_config.share_friend_1} is not exist')
 
         if share_config.share_friend_2 != '':
-            self.ui_click(self.I_INVITE_ENSURE)
+            self.ui_click(self.I_MS_SHARE, self.I_INVITE_ENSURE)
             if not self.invite_friend(share_config.share_friend_2):
                 logger.warning(f'Share friend 2 {share_config.share_friend_2} is not exist')
 
         if share_config.share_friend_3 != '':
-            self.ui_click(self.I_INVITE_ENSURE)
+            self.ui_click(self.I_MS_SHARE, self.I_INVITE_ENSURE)
             if not self.invite_friend(share_config.share_friend_3):
                 logger.warning(f'Share friend 3 {share_config.share_friend_3} is not exist')
 
         if share_config.share_friend_4 != '':
-            self.ui_click(self.I_INVITE_ENSURE)
+            self.ui_click(self.I_MS_SHARE, self.I_INVITE_ENSURE)
             if not self.invite_friend(share_config.share_friend_4):
                 logger.warning(f'Share friend 4 {share_config.share_friend_4} is not exist')
 
         if share_config.share_friend_5 != '':
-            self.ui_click(self.I_INVITE_ENSURE)
+            self.ui_click(self.I_MS_SHARE, self.I_INVITE_ENSURE)
             if not self.invite_friend(share_config.share_friend_5):
                 logger.warning(f'Share friend 5 {share_config.share_friend_5} is not exist')
 
@@ -206,5 +206,6 @@ if __name__ == '__main__':
     t.screenshot()
 
     # t.run_shop(t.config.mystery_shop.shop_config)
+    t.shop_reward()
 
 
