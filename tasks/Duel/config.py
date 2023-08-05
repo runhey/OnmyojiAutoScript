@@ -25,5 +25,5 @@ class DuelConfig(ConfigBase):
 
 class Duel(ConfigBase):
     scheduler: Scheduler = Field(default_factory=Scheduler)
-    duel_soul: DuelConfig = Field(default_factory=DuelConfig)
+    duel_config: DuelConfig = Field(default_factory=DuelConfig)
 

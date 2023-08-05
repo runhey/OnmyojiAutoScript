@@ -1,0 +1,137 @@
+[
+  {
+    "itemName": "d_team",
+    "imageName": "duel_d_team.png",
+    "roiFront": "813,284,34,74",
+    "roiBack": "813,284,34,74",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "点击阵容"
+  },
+  {
+    "itemName": "d_team_swtich",
+    "imageName": "duel_d_team_swtich.png",
+    "roiFront": "1082,85,38,41",
+    "roiBack": "1082,85,38,41",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "一键切换所有的御魂"
+  },
+  {
+    "itemName": "d_visit",
+    "imageName": "duel_d_visit.png",
+    "roiFront": "1045,613,53,55",
+    "roiBack": "1045,613,53,55",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "观战"
+  },
+  {
+    "itemName": "d_battle",
+    "imageName": "duel_d_battle.png",
+    "roiFront": "1143,566,100,100",
+    "roiBack": "1143,566,100,100",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "d_battle_protect",
+    "imageName": "duel_d_battle_protect.png",
+    "roiFront": "1145,563,100,100",
+    "roiBack": "1145,563,100,100",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "战斗带保护的"
+  },
+  {
+    "itemName": "d_confirm",
+    "imageName": "duel_d_confirm.png",
+    "roiFront": "1097,517,139,156",
+    "roiBack": "1097,517,139,156",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "预选点击确认"
+  },
+  {
+    "itemName": "d_auto_entry",
+    "imageName": "duel_d_auto_entry.png",
+    "roiFront": "28,127,66,62",
+    "roiBack": "28,127,66,62",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "自动上阵"
+  },
+  {
+    "itemName": "d_hand",
+    "imageName": "duel_d_hand.png",
+    "roiFront": "34,635,55,55",
+    "roiBack": "34,635,55,55",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "手动，弃用"
+  },
+  {
+    "itemName": "d_help",
+    "imageName": "duel_d_help.png",
+    "roiFront": "715,436,32,30",
+    "roiBack": "715,436,32,30",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "主界面的感叹号"
+  },
+  {
+    "itemName": "d_prepare",
+    "imageName": "duel_d_prepare.png",
+    "roiFront": "1127,541,100,100",
+    "roiBack": "1127,541,100,100",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "准备"
+  },
+  {
+    "itemName": "d_prepare_done",
+    "imageName": "duel_d_prepare_done.png",
+    "roiFront": "495,82,75,55",
+    "roiBack": "495,82,75,55",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "准备完毕"
+  },
+  {
+    "itemName": "d_battle_data",
+    "imageName": "duel_d_battle_data.png",
+    "roiFront": "1068,610,38,60",
+    "roiBack": "1068,610,38,60",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "战斗数据"
+  },
+  {
+    "itemName": "d_victory",
+    "imageName": "duel_d_victory.png",
+    "roiFront": "433,76,100,100",
+    "roiBack": "433,76,100,100",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "胜利"
+  },
+  {
+    "itemName": "d_fail",
+    "imageName": "duel_d_fail.png",
+    "roiFront": "422,66,100,100",
+    "roiBack": "422,66,100,100",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "失败"
+  },
+  {
+    "itemName": "d_word_battle",
+    "imageName": "duel_d_word_battle.png",
+    "roiFront": "612,41,54,54",
+    "roiBack": "612,41,54,54",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "战"
+  }
+]
