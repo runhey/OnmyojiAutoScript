@@ -42,6 +42,10 @@ class ScriptTask(GameUi, GeneralBattle, SwitchSoul, SecretAssets):
             self.ui_get_current_page()
             self.ui_goto(page_shikigami_records)
             self.run_switch_soul(secret.switch_soul.switch_group_team)
+        if secret.switch_soul.enable_switch_by_name:
+            self.ui_get_current_page()
+            self.ui_goto(page_shikigami_records)
+            self.run_switch_soul_by_name(secret.switch_soul.group_name, secret.switch_soul.team_name)
         self.ui_get_current_page()
         self.ui_goto(page_secret_zones)
 
