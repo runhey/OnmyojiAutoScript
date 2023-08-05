@@ -225,6 +225,7 @@ class ScriptTask(GameUi, CollectiveMissionsAssets):
                 continue
             if self.appear_then_click(self.I_CM_PRESENT, interval=1):
                 continue
+        self.ui_reward_appear_click(True)
         logger.info('Donate finished')
         return True
 

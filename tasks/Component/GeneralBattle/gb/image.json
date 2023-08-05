@@ -192,7 +192,7 @@
     "itemName": "de_win",
     "imageName": "gb_de_win.png",
     "roiFront": "472,49,100,100",
-    "roiBack": "447,36,191,133",
+    "roiBack": "239,36,399,133",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "针对封魔的特殊"
@@ -205,5 +205,14 @@
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"
+  },
+  {
+    "itemName": "de_gold",
+    "imageName": "gb_de_gold.png",
+    "roiFront": "61,52,30,25",
+    "roiBack": "45,33,65,64",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "封魔的金币"
   }
 ]

@@ -169,6 +169,8 @@ class GeneralBattle(GeneralBuff, GeneralBattleAssets):
             # 如果出现赢 就点击, 第二个是针对封魔的图片
             if self.appear(self.I_WIN, threshold=0.8) or self.appear(self.I_DE_WIN):
                 logger.info("Battle result is win")
+                if self.appear(self.I_DE_WIN):
+                    self.ui_click_until_disappear(self.I_DE_WIN)
                 win = True
                 break
 
