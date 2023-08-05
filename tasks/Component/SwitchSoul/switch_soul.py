@@ -88,13 +88,16 @@ class SwitchSoul(BaseTask, SwitchSoulAssets):
             raise ValueError('Switch soul_one team must be in [1-4]')
         # 这一步是选择组
         target_click, target_check = get_group_assets(group)
-        while 1:
-            self.screenshot()
-            if self.click(target_click, interval=1):
-                continue
-            if self.appear(target_check):
-                break
-
+        # while 1:
+        #     self.screenshot()
+        #     if self.click(target_click, interval=1):
+        #         continue
+        #     if self.appear(target_check):
+        #         break
+        # 2023.8.5 修改为无反馈的点击切换
+        for i in range(2):
+            self.click(target_click)
+            sleep(0.5)
         # 点击队伍
         target_team = get_team_asset(team)
         for i in range(3):
@@ -213,7 +216,7 @@ class SwitchSoul(BaseTask, SwitchSoulAssets):
             if self.ocr_appear_click(self.O_SS_TEAM_NAME):
                 break
         # 切换御魂
-        for i in range(6):
+        for i in range(5):
             sleep(0.8)
             self.screenshot()
             if self.appear_then_click(self.I_SOU_CLICK_PRESENT, interval=1):
@@ -230,4 +233,5 @@ if __name__ == '__main__':
     s = SwitchSoul(c, d)
 
     s.click_preset()
-    s.switch_soul_one(2, 1)
+    # s.switch_soul_one(2, 1)
+    s.switch_soul_by_name('契灵', '茨球')

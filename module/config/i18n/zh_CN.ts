@@ -532,8 +532,10 @@ mode_3策略是刷到五个契灵后开始结契，选择高级、中级盘来�
 "1,2"表示第一个预设组，第二个队伍
 请使用英文输入法下的逗号
 预设组支持[1-7], 预设队伍支持[1-4]</translation></message>
-	<message><source>group_name</source><translation>御魂分组名</translation></message>
-	<message><source>team_name</source><translation>队伍名</translation></message>
+	<message><source>Group Name</source><translation>御魂分组名</translation></message>
+	<message><source>Team Name</source><translation>队伍名</translation></message>
+	<message><source>Enable Switch By Name</source><translation>通过OCR来切换御魂预设</translation></message>
+	<message><source>enable_switch_by_name_help</source><translation>这是切换御魂的另一种方式，对比上方的方式而言支持更多的预设，但是同样的你还确保预设队伍是锁定状态的</translation></message>
 </context>
 <context>
     <name>Args</name>
