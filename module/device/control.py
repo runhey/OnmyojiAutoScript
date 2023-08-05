@@ -145,7 +145,7 @@ class Control(Minitouch, Adb, Scrcpy, Window):
             'Click %s @ %s %s' % (point2str(x, y), control_name, duration)
         )
         method = self.long_click_methods.get(
-            self.config.script.emulator.control_method,
+            self.config.script.device.control_method,
             self.long_click_adb)
         method(x, y, duration)
 

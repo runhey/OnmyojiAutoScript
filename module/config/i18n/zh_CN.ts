@@ -686,4 +686,10 @@ Refresh：直接刷新，如果刷新操作进入CD，将标记为失败并退�
 	<message><source>target_score_help</source><translation>3000以上表示为名士（也是自动斗技的最高）</translation></message>
 	<message><source>honor_full_exit_help</source><translation>这无需关心本周荣誉的上限是什么</translation></message>
 </context>
+<context>
+    <name>Args</name>
+	<message><source>SimpleTidy</source><translation>简易御魂清理</translation></message>	
+	<message><source>Greed Maneki</source><translation>贪吃鬼喂食+未升级的御魂奉纳</translation></message>	
+	<message><source>greed_maneki_help</source><translation>建议四星及一下的吃掉，五星的留给贪吃鬼</translation></message>
+</context>
 </TS>

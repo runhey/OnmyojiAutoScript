@@ -130,6 +130,8 @@ class ScriptTask(GameUi, GeneralBattle, GeneralInvite, SwitchSoul, HuntAssets):
         self.device.click_record_clear()
         # 战斗过程 随机点击和滑动 防封
         logger.info("Start battle process")
+        stuck_timer = Timer(180)
+        stuck_timer.start()
         while 1:
             self.screenshot()
             if self.appear(self.I_WIN):
@@ -141,6 +143,11 @@ class ScriptTask(GameUi, GeneralBattle, GeneralInvite, SwitchSoul, HuntAssets):
                 logger.info("Battle result is false")
                 self.ui_click_until_disappear(self.I_FALSE)
                 return False
+            # 如果三分钟还没打完，再延长五分钟
+            if stuck_timer and stuck_timer.reached():
+                stuck_timer = None
+                self.device.stuck_record_clear()
+                self.device.stuck_record_add('BATTLE_STATUS_S')
 
 
 
