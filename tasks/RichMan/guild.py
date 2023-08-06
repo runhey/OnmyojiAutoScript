@@ -11,7 +11,7 @@ from tasks.Component.Buy.buy import Buy
 from tasks.RichMan.assets import RichManAssets
 from tasks.RichMan.config import GuildStore
 
-class Guild(GameUi, Buy, RichManAssets):
+class Guild(Buy, GameUi, RichManAssets):
 
     def execute_guild(self, con: GuildStore=None):
         logger.hr('Start guild', 1)

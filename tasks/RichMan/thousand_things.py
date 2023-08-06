@@ -101,13 +101,19 @@ class ThousandThings(GameUi, RichManAssets):
         if not self.tt_check_money(600):
             return False
         self.O_TT_NUMBER.keyword = '2'
+        click_count = 0
         while 1:
             self.screenshot()
             if self.ocr_appear(self.O_TT_NUMBER):
                 break
+            appear_max = self.appear(self.I_TT_BUY_UP)
+            if click_count >= 4:
+                logger.warning('Buy ap failed')
+                break
             if self.appear_then_click(self.I_TT_BUY_UP, interval=0.5):
+                click_count += 1
                 continue
-            if self.ocr_appear_click(self.O_TT_AP, interval=1):
+            if not appear_max and self.ocr_appear_click(self.O_TT_AP, interval=2.3):
                 continue
         logger.info('Buy ap')
         self.ui_get_reward(self.I_TT_BUY_CONFIRM)

@@ -56,8 +56,8 @@
   {
     "itemName": "mall_bondlings_check",
     "imageName": "navbar_mall_bondlings_check.png",
-    "roiFront": "646,421,191,37",
-    "roiBack": "646,421,191,37",
+    "roiFront": "355,186,34,104",
+    "roiBack": "355,186,34,104",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "契灵商店"

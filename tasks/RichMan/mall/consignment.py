@@ -11,7 +11,7 @@ from tasks.RichMan.mall.navbar import MallNavbar
 from tasks.RichMan.config import Consignment as ConsignmentStore
 
 
-class Consignment(MallNavbar, Buy):
+class Consignment(Buy, MallNavbar):
 
     def execute_consignment(self, con: ConsignmentStore=None):
         """

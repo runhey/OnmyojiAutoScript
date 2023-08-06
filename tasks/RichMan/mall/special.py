@@ -14,7 +14,7 @@ from tasks.RichMan.assets import RichManAssets
 from tasks.RichMan.config import SpecialRoom
 
 
-class Special(MallNavbar, Buy):
+class Special(Buy, MallNavbar):
 
     def execute_special(self, con: SpecialRoom = None):
         if not con:

@@ -14,7 +14,7 @@ from tasks.RichMan.assets import RichManAssets
 from tasks.RichMan.config import Bondlings as BondlingsConfig
 
 
-class Bondlings(MallNavbar, Buy):
+class Bondlings(Buy, MallNavbar):
 
     def execute_bondlings(self, con: BondlingsConfig = None):
         if not con:

@@ -9,18 +9,20 @@ from module.exception import TaskEnd
 
 
 from tasks.RichMan.assets import RichManAssets
+from tasks.RichMan.config import RichMan
 from tasks.RichMan.mall.mall import Mall
 from tasks.RichMan.guild import Guild
 from tasks.RichMan.shrine import Shrine
 from tasks.RichMan.thousand_things import ThousandThings
 
 
-class ScriptTask(ThousandThings, Shrine, Guild, Mall, RichManAssets):
+class ScriptTask(Mall, Guild, ThousandThings, Shrine):
 
     def run(self):
-        self.execute_tt()
-        self.execute_shrine()
-        self.execute_guild()
+        con: RichMan = self.config.rich_man
+        self.execute_tt(con.thousand_things)
+        self.execute_shrine(con.shrine)
+        self.execute_guild(con.guild_store)
         self.execute_mall()
 
         self.set_next_run(task='RichMan', success=True, finish=False)
@@ -46,5 +48,8 @@ if __name__ == '__main__':
     c = Config('oas1')
     d = Device(c)
     t = ScriptTask(c, d)
+
+    t.execute_mall()
+
 
 
