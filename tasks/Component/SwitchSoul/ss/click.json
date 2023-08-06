@@ -40,5 +40,12 @@
     "roiFront": "1090,505,156,62",
     "roiBack": "1090,505,156,62",
     "description": "description"
+  },
+  {
+    "itemName": "sou_team_select",
+    "imageName": "ss_sou_team_select.png",
+    "roiFront": "977,157,21,21",
+    "roiBack": "977,157,21,21",
+    "description": "阵容选择按钮位置"
   }
 ]
