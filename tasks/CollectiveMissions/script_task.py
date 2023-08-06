@@ -68,6 +68,17 @@ class ScriptTask(GameUi, CollectiveMissionsAssets):
             # TODO
             logger.warning('Not support donate soul')
 
+        # 退出
+        while 1:
+            self.screenshot()
+            if self.appear(self.I_CM_SHRINE) or self.appear(self.I_CHECK_MAIN):
+                break
+            if self.appear_then_click(self.I_UI_BACK_RED, interval=1):
+                continue
+            if self.appear_then_click(self.I_UI_BACK_YELLOW, interval=1):
+                continue
+
+
         self.set_next_run(task='CollectiveMissions', success=True, finish=True)
         raise TaskEnd('CollectiveMissions')
 
