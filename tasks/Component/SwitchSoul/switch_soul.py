@@ -2,6 +2,11 @@
 # @author runhey
 # github https://github.com/runhey
 from time import sleep
+from typing import Union
+
+from module.atom.click import RuleClick
+from module.atom.long_click import RuleLongClick
+from module.atom.ocr import RuleOcr
 from module.base.timer import Timer
 from tasks.base_task import BaseTask
 from tasks.Component.GeneralInvite.assets import GeneralInviteAssets
@@ -81,6 +86,20 @@ class SwitchSoul(BaseTask, SwitchSoulAssets):
                 4: self.I_SOU_SWITCH_4,
             }
             return match[team]
+
+        # 滑动至分组最上层(分組過多, 导致第一个分组显示不全)
+        while 1:
+            self.screenshot()
+            compare1 = self.O_SS_GROUP_NAME.detect_and_ocr(self.device.image)
+            text1 = str([result.ocr_text for result in compare1])
+            # 向上滑动
+            self.swipe(self.S_SS_GROUP_SWIPE_UP, 6)
+            self.screenshot()
+            compare2 = self.O_SS_GROUP_NAME.detect_and_ocr(self.device.image)
+            text2 = str([result.ocr_text for result in compare2])
+            # 相等时 滑动到最上层
+            if text1 == text2:
+                break
 
         if group < 1 or group > 7:
             raise ValueError('Switch soul_one group must be in [1-7]')
@@ -216,14 +235,39 @@ class SwitchSoul(BaseTask, SwitchSoulAssets):
             if self.ocr_appear_click(self.O_SS_TEAM_NAME):
                 break
         # 切换御魂
-        for i in range(5):
+        for i in range(6):
             sleep(0.8)
             self.screenshot()
-            if self.appear_then_click(self.I_SOU_CLICK_PRESENT, interval=1):
+            self.O_SS_TEAM_NAME.keyword = teamName
+            if self.ocr_appear_click_by_rule(self.O_SS_TEAM_NAME, self.I_SOU_CLICK_PRESENT, interval=1):
                 continue
             if self.appear_then_click(self.I_SOU_SWITCH_SURE, interval=1):
                 break
         logger.info(f'Switch soul_one group {groupName} team {teamName}')
+
+    def ocr_appear_click_by_rule(self,
+                         target: RuleOcr,
+                         action: Union[RuleClick, RuleLongClick] = None,
+                         interval: float = None,
+                         duration: float = None) -> bool:
+        """
+        ocr识别目标，如果目标存在，则触发动作
+        :param target:
+        :param action:
+        :param interval:
+        :param duration:
+        :return:
+        """
+        appear = self.ocr_appear(target, interval)
+
+        if not appear:
+            return False
+
+        x1, y1, w1, h1 = target.area
+        x, y, w, h = action.roi_back
+
+        self.device.click(x=x, y=y1, control_name=target.name)
+        return True
 
 if __name__ == '__main__':
     from module.config.config import Config
@@ -233,5 +277,6 @@ if __name__ == '__main__':
     s = SwitchSoul(c, d)
 
     s.click_preset()
-    # s.switch_soul_one(2, 1)
-    s.switch_soul_by_name('契灵', '茨球')
+    s.switch_soul_one(4, 1)
+    # s.switch_soul_by_name('契灵', '茨球')
+    # s.switch_soul_by_name('默认分组', '结界突破2')
