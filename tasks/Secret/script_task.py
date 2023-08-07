@@ -134,7 +134,7 @@ class ScriptTask(GameUi, GeneralBattle, SwitchSoul, SecretAssets):
             level = ocr_target.ocr(self.device.image)
             if not isinstance(level, str):
                 logger.warning(f'OCR failed, try again {level}')
-            level = level.replace('·', '').replace(' ', '').replace('。', '')
+            level = level.replace('·', '').replace(' ', '').replace('。', '').replace('武', '贰')
             if level not in self.lay_list and roi:
                 print(roi)
                 print(ocr_target.roi)

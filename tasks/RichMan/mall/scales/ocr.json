@@ -46,8 +46,8 @@
   },
   {
     "itemName": "sca_res_demon",
-    "roiFront": "943,10,100,35",
-    "roiBack": "943,10,100,35",
+    "roiFront": "949,10,86,35",
+    "roiBack": "949,10,86,35",
     "mode": "Digit",
     "method": "Default",
     "keyword": "",
@@ -55,8 +55,8 @@
   },
   {
     "itemName": "sca_res_sea",
-    "roiFront": "1142,11,100,38",
-    "roiBack": "1142,11,100,38",
+    "roiFront": "1152,11,80,38",
+    "roiBack": "1152,11,80,38",
     "mode": "Digit",
     "method": "Default",
     "keyword": "",

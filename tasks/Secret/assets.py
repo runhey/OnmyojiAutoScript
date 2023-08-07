@@ -36,7 +36,7 @@ class SecretAssets:
 	# 未通关 
 	O_SE_NO_PASS = RuleOcr(roi=(428,151,262,248), area=(428,151,262,248), mode="Full", method="Default", keyword="未通关", name="se_no_pass")
 	# 第一个位置的层数 
-	O_SE_LAYER_1 = RuleOcr(roi=(208,146,47,46), area=(208,146,47,46), mode="Single", method="Default", keyword="", name="se_layer_1")
+	O_SE_LAYER_1 = RuleOcr(roi=(210,150,44,39), area=(210,150,44,39), mode="Single", method="Default", keyword="", name="se_layer_1")
 	# Ocr-description 
 	O_SE_LAYER_10 = RuleOcr(roi=(210,507,34,34), area=(210,507,34,34), mode="Single", method="Default", keyword="拾", name="se_layer_10")
 	# Ocr-description 

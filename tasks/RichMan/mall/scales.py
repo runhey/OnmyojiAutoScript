@@ -307,7 +307,7 @@ class Scales(Buy, MallNavbar):
             for i in range(buy_cycles_number):
                 self._scales_buy_sea_more(self.I_SCA_PICTURE_BOOK)
                 time.sleep(0.5)
-        if buy_res_number and buy_rule >= 2:
+        if buy_res_number and buy_res_number >= 2:
             self._scales_buy_sea_more(self.I_SCA_PICTURE_BOOK, buy_res_number)
             time.sleep(0.5)
 

@@ -21,6 +21,7 @@ class MC(str, Enum):
     BL = '契灵'
     AW1 = '觉醒一'
     AW2 = '觉醒二'
+    AW3 = '觉醒三'
     GR1 = '御灵一'
     GR2 = '御灵二'
     SO4 = '御魂四'
@@ -57,10 +58,12 @@ class ScriptTask(GameUi, CollectiveMissionsAssets):
             raise TaskEnd('CollectiveMissions')
         # 判断最优的任务是哪一个
         mission, index = self.detect_best()
+        logger.info(f'Best mission is {mission}')
+        logger.info(f'Best mission index is {index}')
         if mission == MC.BL:
             # 契灵单独处理
             self._bondling_fairyland()
-        elif mission == MC.AW1 or mission == MC.AW2 or mission == MC.GR1 or mission == MC.GR2:
+        elif mission == MC.AW1 or mission == MC.AW2 or mission == MC.AW3 or mission == MC.GR1 or mission == MC.GR2:
             # 其他就捐材料
             self._donate(index)
         elif mission == MC.SO4 or mission == MC.SO5:
@@ -105,6 +108,8 @@ class ScriptTask(GameUi, CollectiveMissionsAssets):
             return MC.AW1
         elif result_2 == '觉醒二':
             return MC.AW2
+        elif result_2 == '觉醒三':
+            return MC.AW3
         elif result_2 == '御灵一':
             return MC.GR1
         elif result_2 == '御灵二':

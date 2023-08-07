@@ -14,7 +14,7 @@ from tasks.Component.SwitchSoul.switch_soul_config import SwitchSoulConfig
 
 class MissionsConfig(BaseModel):
     # 契灵 > 觉醒二 > 觉醒一 > 御灵二 > 御灵一 > 御魂五 > 御魂四
-    missions_rule: MultiLine = Field(default='契灵 > 觉醒二 > 觉醒一 > 御灵二 > 御灵一 > 御魂五 > 御魂四',
+    missions_rule: MultiLine = Field(default='契灵 > 觉醒三 > 觉醒二 > 觉醒一 > 御灵二 > 御灵一 > 御魂五 > 御魂四',
                                      description='missions_rule_help')
 
 

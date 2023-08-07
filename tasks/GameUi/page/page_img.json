@@ -74,8 +74,8 @@
   {
     "itemName": "exploration_goto_secret_zones",
     "imageName": "page_exploration_goto_secret_zones.png",
-    "roiFront": "542,645,61,55",
-    "roiBack": "542,645,61,55",
+    "roiFront": "546,628,61,55",
+    "roiBack": "524,614,100,87",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "秘闻"
