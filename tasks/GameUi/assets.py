@@ -19,7 +19,7 @@ class GameUiAssets:
 
 	# Image Rule Assets
 	# 商店弹窗红色关闭 
-	I_AD_CLOSE_RED = RuleImage(roi_front=(994,128,33,36), roi_back=(994,128,33,36), threshold=0.8, method="Template matching", file="./tasks/GameUi/additional/additional_ad_close_red.png")
+	I_AD_CLOSE_RED = RuleImage(roi_front=(993,130,33,36), roi_back=(953,91,215,121), threshold=0.8, method="Template matching", file="./tasks/GameUi/additional/additional_ad_close_red.png")
 
 
 	# Image Rule Assets
@@ -41,13 +41,13 @@ class GameUiAssets:
 	# description 
 	I_EXPLORATION_GOTO_SOUL_ZONE = RuleImage(roi_front=(151,637,55,55), roi_back=(151,637,55,55), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_exploration_goto_soul_zone.png")
 	# description 
-	I_EXPLORATION_GOTO_REALM_RAID = RuleImage(roi_front=(245,638,67,48), roi_back=(245,638,67,48), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_exploration_goto_realm_raid.png")
+	I_EXPLORATION_GOTO_REALM_RAID = RuleImage(roi_front=(248,636,67,48), roi_back=(229,612,102,87), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_exploration_goto_realm_raid.png")
 	# 前往御灵 
-	I_EXPLORATION_GOTO_GORYOU_REALM = RuleImage(roi_front=(343,629,60,67), roi_back=(343,629,60,67), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_exploration_goto_goryou_realm.png")
+	I_EXPLORATION_GOTO_GORYOU_REALM = RuleImage(roi_front=(353,639,47,45), roi_back=(346,626,60,67), threshold=0.7, method="Template matching", file="./tasks/GameUi/page/page_exploration_goto_goryou_realm.png")
 	# 式神委派 
 	I_EXPLORATION_GOTO_DELEGATION = RuleImage(roi_front=(445,638,60,50), roi_back=(445,638,60,50), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_exploration_goto_delegation.png")
 	# 秘闻 
-	I_EXPLORATION_GOTO_SECRET_ZONES = RuleImage(roi_front=(542,645,61,55), roi_back=(542,645,61,55), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_exploration_goto_secret_zones.png")
+	I_EXPLORATION_GOTO_SECRET_ZONES = RuleImage(roi_front=(546,628,61,55), roi_back=(524,614,100,87), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_exploration_goto_secret_zones.png")
 	# 地狱鬼王 
 	I_EXPLORATION_GOTO_AREA_BOSS = RuleImage(roi_front=(640,638,51,45), roi_back=(640,638,51,45), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_exploration_goto_area_boss.png")
 	# 平安奇谭 
@@ -71,7 +71,7 @@ class GameUiAssets:
 	# description 
 	I_CHECK_SECRET_ZONES = RuleImage(roi_front=(1145,592,110,119), roi_back=(1145,592,110,119), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_check_secret_zones.png")
 	# description 
-	I_CHECK_AREA_BOSS = RuleImage(roi_front=(41,637,65,62), roi_back=(41,637,65,62), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_check_area_boss.png")
+	I_CHECK_AREA_BOSS = RuleImage(roi_front=(1176,505,65,62), roi_back=(1159,487,101,106), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_check_area_boss.png")
 	# description 
 	I_CHECK_HEIAN_KITAN = RuleImage(roi_front=(27,48,47,39), roi_back=(27,48,47,39), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_check_heian_kitan.png")
 	# description 
@@ -98,7 +98,7 @@ class GameUiAssets:
 	# description 
 	I_TOWN_GOTO_DEMON_ENCOUNTER = RuleImage(roi_front=(617,135,51,75), roi_back=(232,121,873,100), threshold=0.7, method="Template matching", file="./tasks/GameUi/page/page_town_goto_demon_encounter.png")
 	# description 
-	I_TOWN_GOTO_HUNT = RuleImage(roi_front=(475,138,46,69), roi_back=(275,122,520,100), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_town_goto_hunt.png")
+	I_TOWN_GOTO_HUNT = RuleImage(roi_front=(475,138,46,69), roi_back=(275,122,520,100), threshold=0.7, method="Template matching", file="./tasks/GameUi/page/page_town_goto_hunt.png")
 	# 协同对弈 
 	I_TOWN_GOTO_DRAFT_DUEL = RuleImage(roi_front=(335,159,55,72), roi_back=(170,145,567,100), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_town_goto_draft_duel.png")
 	# 百鬼奕 
@@ -108,7 +108,7 @@ class GameUiAssets:
 	# description 
 	I_CHECK_DEMON_ENCOUNTER = RuleImage(roi_front=(26,658,42,43), roi_back=(2,619,100,100), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_check_demon_encounter.png")
 	# description 
-	I_CHECK_HUNT = RuleImage(roi_front=(1071,605,81,85), roi_back=(1026,558,152,156), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_check_hunt.png")
+	I_CHECK_HUNT = RuleImage(roi_front=(575,30,46,25), roi_back=(553,1,81,68), threshold=0.7, method="Template matching", file="./tasks/GameUi/page/page_check_hunt.png")
 	# description 
 	I_CHECK_HYAKKISEN = RuleImage(roi_front=(1014,607,53,55), roi_back=(986,587,100,100), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_check_hyakkisen.png")
 	# description 

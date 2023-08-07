@@ -26,6 +26,13 @@ class ScriptTask(GameUi, GeneralBattle, GeneralRoom, GeneralInvite, SwitchSoul, 
             self.ui_get_current_page()
             self.ui_goto(page_shikigami_records)
             self.run_switch_soul(self.config.gold_youkai.switch_soul.switch_group_team)
+
+        if self.config.gold_youkai.switch_soul.enable_switch_by_name:
+            self.ui_get_current_page()
+            self.ui_goto(page_shikigami_records)
+            self.run_switch_soul_by_name(self.config.gold_youkai.switch_soul.group_name,
+                                         self.config.gold_youkai.switch_soul.team_name)
+
         # 开启加成
         con = self.config.gold_youkai.gold_youkai
         if con.buff_gold_50_click or con.buff_gold_100_click:
@@ -78,6 +85,10 @@ class ScriptTask(GameUi, GeneralBattle, GeneralRoom, GeneralInvite, SwitchSoul, 
             if self.appear(self.I_DE_WIN):
                 logger.info('Win battle')
                 self.ui_click_until_disappear(self.I_DE_WIN)
+                return True
+            if self.appear(self.I_GOLD_WIN):
+                logger.info('Win battle')
+                self.ui_click_until_disappear(self.I_GOLD_WIN)
                 return True
 
             if self.appear(self.I_FALSE):

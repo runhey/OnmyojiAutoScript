@@ -42,6 +42,10 @@ class ScriptTask(GameUi, GeneralBattle, SwitchSoul, SecretAssets):
             self.ui_get_current_page()
             self.ui_goto(page_shikigami_records)
             self.run_switch_soul(secret.switch_soul.switch_group_team)
+        if secret.switch_soul.enable_switch_by_name:
+            self.ui_get_current_page()
+            self.ui_goto(page_shikigami_records)
+            self.run_switch_soul_by_name(secret.switch_soul.group_name, secret.switch_soul.team_name)
         self.ui_get_current_page()
         self.ui_goto(page_secret_zones)
 
@@ -130,7 +134,7 @@ class ScriptTask(GameUi, GeneralBattle, SwitchSoul, SecretAssets):
             level = ocr_target.ocr(self.device.image)
             if not isinstance(level, str):
                 logger.warning(f'OCR failed, try again {level}')
-            level = level.replace('·', '').replace(' ', '').replace('。', '')
+            level = level.replace('·', '').replace(' ', '').replace('。', '').replace('武', '贰')
             if level not in self.lay_list and roi:
                 print(roi)
                 print(ocr_target.roi)

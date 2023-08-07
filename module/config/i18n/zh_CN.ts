@@ -192,6 +192,12 @@
 	<message><source>RichMan</source><translation>大富翁</translation></message>
 	<message><source>Secret</source><translation>秘闻之境</translation></message>
 	<message><source>WeeklyTrifles</source><translation>每周琐事</translation></message>
+	<message><source>Delegation</source><translation>式神委派</translation></message>
+	<message><source>GoryouRealm</source><translation>御灵之境</translation></message>
+	<message><source>CollectiveMissions</source><translation>集体任务</translation></message>
+	<message><source>Hunt</source><translation>狩猎战</translation></message>
+	<message><source>MysteryShop</source><translation>神秘商店</translation></message>
+	<message><source>Duel</source><translation>斗技</translation></message>
 </context>
 <context>
     <name>TaskList</name>
@@ -230,6 +236,12 @@
 	<message><source>RichMan</source><translation>大富翁</translation></message>
 	<message><source>Secret</source><translation>秘闻之境</translation></message>
 	<message><source>WeeklyTrifles</source><translation>每周琐事</translation></message>
+	<message><source>Delegation</source><translation>式神委派</translation></message>
+	<message><source>GoryouRealm</source><translation>御灵之境</translation></message>
+	<message><source>CollectiveMissions</source><translation>集体任务</translation></message>
+	<message><source>Hunt</source><translation>狩猎战</translation></message>
+	<message><source>MysteryShop</source><translation>神秘商店</translation></message>
+	<message><source>Duel</source><translation>斗技</translation></message>
 </context>
 <context>
     <name>Args</name>
@@ -532,8 +544,10 @@ mode_3策略是刷到五个契灵后开始结契，选择高级、中级盘来�
 "1,2"表示第一个预设组，第二个队伍
 请使用英文输入法下的逗号
 预设组支持[1-7], 预设队伍支持[1-4]</translation></message>
-	<message><source>group_name</source><translation>御魂分组名</translation></message>
-	<message><source>team_name</source><translation>队伍名</translation></message>
+	<message><source>Group Name</source><translation>御魂分组名</translation></message>
+	<message><source>Team Name</source><translation>队伍名</translation></message>
+	<message><source>Enable Switch By Name</source><translation>通过OCR来切换御魂预设</translation></message>
+	<message><source>enable_switch_by_name_help</source><translation>这是切换御魂的另一种方式，对比上方的方式而言支持更多的预设，但是同样的你还确保预设队伍是锁定状态的</translation></message>
 </context>
 <context>
     <name>Args</name>
@@ -658,4 +672,36 @@ Refresh：直接刷新，如果刷新操作进入CD，将标记为失败并退�
 	<message><source>Pets Feast</source><translation>饕餮大餐</translation></message>
 	<message><source>GoldYoukaiConfig</source><translation>金币妖怪</translation></message>
 </context>	
+<context>
+    <name>Args</name>
+	<message><source>ShopConfig</source><translation>购买</translation></message>	
+	<message><source>Shop Kaiko 3</source><translation>三星太鼓</translation></message>	
+	<message><source>Shop Kaiko 4</source><translation>四星太鼓</translation></message>
+	<message><source>ShareConfig</source><translation>分享</translation></message>
+	<message><source>Share Friend 1</source><translation>第一个好友名字</translation></message>
+	<message><source>share_friend_1_help</source><translation>使用OCR来识别，留空表示不使用</translation></message>
+	<message><source>Share Friend 2</source><translation>第二个好友名字</translation></message>
+	<message><source>Share Friend 3</source><translation>第三个好友名字</translation></message>
+	<message><source>Share Friend 4</source><translation>第四个好友名字</translation></message>
+	<message><source>Share Friend 5</source><translation>第五个好友名字</translation></message>
+	<message><source>GoryouConfig</source><translation>御灵</translation></message>
+	<message><source>GoryouClass</source><translation>御灵类型</translation></message>
+	<message><source>goryou_class_help</source><translation>闭着眼睛选，自动支持到当天的类型。不支持选择层数是因为正常人都会打第三层</translation></message>
+</context>
+<context>
+    <name>Args</name>
+	<message><source>DuelConfig</source><translation>自动斗技</translation></message>	
+	<message><source>Switch All Soul</source><translation>一键切换斗技御魂</translation></message>	
+	<message><source>Target Score</source><translation>达到 X 分数后会结束任务</translation></message>
+	<message><source>switch_all_soul_help</source><translation>你应当先进行式神御魂的导入</translation></message>
+	<message><source>Honor Full Exit</source><translation>刷满荣誉就退出</translation></message>
+	<message><source>target_score_help</source><translation>3000以上表示为名士（也是自动斗技的最高）</translation></message>
+	<message><source>honor_full_exit_help</source><translation>这无需关心本周荣誉的上限是什么</translation></message>
+</context>
+<context>
+    <name>Args</name>
+	<message><source>SimpleTidy</source><translation>简易御魂清理</translation></message>	
+	<message><source>Greed Maneki</source><translation>贪吃鬼喂食+未升级的御魂奉纳</translation></message>	
+	<message><source>greed_maneki_help</source><translation>建议四星及一下的吃掉，五星的留给贪吃鬼</translation></message>
+</context>
 </TS>

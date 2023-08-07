@@ -45,12 +45,13 @@ class GeneralBattle(GeneralBuff, GeneralBattleAssets):
 
             # 点击准备按钮
             self.wait_until_appear(self.I_PREPARE_HIGHLIGHT)
+            self.wait_until_appear(self.I_BUFF)
             while 1:
                 self.screenshot()
-                if self.appear_then_click(self.I_PREPARE_HIGHLIGHT, interval=1.5):
-                    continue
                 if not self.appear(self.I_BUFF):
                     break
+                if self.appear_then_click(self.I_PREPARE_HIGHLIGHT, interval=1.5):
+                    continue
             logger.info("Click prepare ensure button")
 
             # 照顾一下某些模拟器慢的
@@ -168,6 +169,8 @@ class GeneralBattle(GeneralBuff, GeneralBattleAssets):
             # 如果出现赢 就点击, 第二个是针对封魔的图片
             if self.appear(self.I_WIN, threshold=0.8) or self.appear(self.I_DE_WIN):
                 logger.info("Battle result is win")
+                if self.appear(self.I_DE_WIN):
+                    self.ui_click_until_disappear(self.I_DE_WIN)
                 win = True
                 break
 
@@ -209,7 +212,10 @@ class GeneralBattle(GeneralBuff, GeneralBattleAssets):
                 if not self.appear(self.I_FALSE, threshold=0.6):
                     return False
         # 最后保证能点击 获得奖励
-        self.wait_until_appear(self.I_REWARD)
+        if not self.wait_until_appear(self.I_REWARD):
+            # 有些的战斗没有下面的奖励，所以直接返回
+            logger.info("There is no reward, Exit battle")
+            return win
         logger.info("Get reward")
         while 1:
             self.screenshot()
@@ -283,6 +289,9 @@ class GeneralBattle(GeneralBuff, GeneralBattleAssets):
             self.screenshot()
 
             if self.appear(self.I_PRESET_ENSURE):
+                break
+            # 首个队伍没有满足5个式神，未出现预设按钮的情况下跳出循环
+            if self.appear(self.I_PRESENT_LESS_THAN_5):
                 break
             if self.appear_then_click(self.I_PRESET, threshold=0.8, interval=1):
                 continue

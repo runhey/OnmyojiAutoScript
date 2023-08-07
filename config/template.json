@@ -289,6 +289,26 @@
       "success_interval": "01 00:00:00",
       "failure_interval": "01 00:00:00",
       "server_update": "09:00:00"
+    },
+    "simple_tidy": {
+      "greed_maneki": false
+    }
+  },
+  "delegation": {
+    "scheduler": {
+      "enable": false,
+      "next_run": "2023-01-01 00:00:00",
+      "priority": 5,
+      "success_interval": "01 00:00:00",
+      "failure_interval": "01 00:00:00",
+      "server_update": "09:00:00"
+    },
+    "delegation_config": {
+      "bird_feather": false,
+      "find_earring": false,
+      "cat_boss": false,
+      "miyoshino": false,
+      "strange_trace": false
     }
   },
   "orochi": {
@@ -323,6 +343,13 @@
       "green_enable": false,
       "green_mark": "green_left1",
       "random_click_swipt_enable": false
+    },
+    "switch_soul": {
+      "enable": false,
+      "switch_group_team": "-1,-1",
+      "enable_switch_by_name": false,
+      "group_name": "",
+      "team_name": ""
     }
   },
   "orochi_moans": {
@@ -439,6 +466,13 @@
       "green_enable": false,
       "green_mark": "green_left1",
       "random_click_swipt_enable": false
+    },
+    "switch_soul_config": {
+      "enable": false,
+      "switch_group_team": "-1,-1",
+      "enable_switch_by_name": false,
+      "group_name": "",
+      "team_name": ""
     }
   },
   "evo_zone": {
@@ -474,6 +508,37 @@
       "green_enable": false,
       "green_mark": "green_left1",
       "random_click_swipt_enable": false
+    }
+  },
+  "goryou_realm": {
+    "scheduler": {
+      "enable": false,
+      "next_run": "2023-01-01 00:00:00",
+      "priority": 5,
+      "success_interval": "01 00:00:00",
+      "failure_interval": "01 00:00:00",
+      "server_update": "09:00:00"
+    },
+    "goryou_config": {
+      "limit_time": "00:30:00",
+      "limit_count": 30,
+      "goryou_class": "随机"
+    },
+    "general_battle_config": {
+      "lock_team_enable": false,
+      "preset_enable": false,
+      "preset_group": 1,
+      "preset_team": 1,
+      "green_enable": false,
+      "green_mark": "green_left1",
+      "random_click_swipt_enable": false
+    },
+    "switch_soul_config": {
+      "enable": false,
+      "switch_group_team": "-1,-1",
+      "enable_switch_by_name": false,
+      "group_name": "",
+      "team_name": ""
     }
   },
   "true_orochi": {
@@ -620,5 +685,75 @@
       "share_secret": true,
       "broken_amulet": 100
     }
+  },
+  "mystery_shop": {
+    "scheduler": {
+      "enable": false,
+      "next_run": "2023-01-01 00:00:00",
+      "priority": 5,
+      "success_interval": "01 00:00:00",
+      "failure_interval": "01 00:00:00",
+      "server_update": "09:00:00"
+    },
+    "shop_config": {
+      "mystery_amulet": false,
+      "black_daruma_scrap": false,
+      "shop_kaiko_3": false,
+      "shop_kaiko_4": false
+    },
+    "share_config": {
+      "enable": false,
+      "share_friend_1": "",
+      "share_friend_2": "",
+      "share_friend_3": "",
+      "share_friend_4": "",
+      "share_friend_5": ""
+    }
+  },
+  "duel": {
+    "scheduler": {
+      "enable": false,
+      "next_run": "2023-01-01 00:00:00",
+      "priority": 5,
+      "success_interval": "01 00:00:00",
+      "failure_interval": "01 00:00:00",
+      "server_update": "09:00:00"
+    },
+    "duel_config": {
+      "switch_all_soul": false,
+      "limit_time": "00:30:00",
+      "target_score": 2000,
+      "honor_full_exit": false,
+      "green_enable": false,
+      "green_mark": "green_left1"
+    }
+  },
+  "collective_missions": {
+    "scheduler": {
+      "enable": false,
+      "next_run": "2023-01-01 00:00:00",
+      "priority": 5,
+      "success_interval": "01 00:00:00",
+      "failure_interval": "01 00:00:00",
+      "server_update": "09:00:00"
+    },
+    "missions_config": {
+      "missions_rule": "契灵 > 觉醒二 > 觉醒一 > 御灵二 > 御灵一 > 御魂五 > 御魂四"
+    }
+  },
+  "hunt": {
+    "scheduler": {
+      "enable": false,
+      "next_run": "2023-01-01 00:00:00",
+      "priority": 5,
+      "success_interval": "01 00:00:00",
+      "failure_interval": "01 00:00:00",
+      "server_update": "09:00:00"
+    },
+    "hunt_config": {
+      "kirin_group_team": "-1,-1",
+      "netherworld_group_team": "-1,-1"
+    },
+    "exit_battle": false
   }
 }

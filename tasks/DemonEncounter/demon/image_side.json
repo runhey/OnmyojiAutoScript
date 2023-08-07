@@ -23,7 +23,7 @@
     "roiFront": "1211,422,28,35",
     "roiBack": "1211,422,28,35",
     "method": "Template matching",
-    "threshold": 0.8,
+    "threshold": 0.7,
     "description": "挑战某一个后的封印图片"
   },
   {
@@ -32,7 +32,7 @@
     "roiFront": "1223,489,42,41",
     "roiBack": "1223,489,42,41",
     "method": "Template matching",
-    "threshold": 0.8,
+    "threshold": 0.7,
     "description": "description"
   },
   {
@@ -41,7 +41,7 @@
     "roiFront": "1231,358,38,35",
     "roiBack": "1231,358,38,35",
     "method": "Template matching",
-    "threshold": 0.8,
+    "threshold": 0.7,
     "description": "description"
   },
   {
@@ -50,14 +50,14 @@
     "roiFront": "1215,295,35,35",
     "roiBack": "1215,295,35,35",
     "method": "Template matching",
-    "threshold": 0.8,
+    "threshold": 0.7,
     "description": "description"
   },
   {
     "itemName": "de_award",
     "imageName": "demon_de_award.png",
-    "roiFront": "1214,210,43,41",
-    "roiBack": "1214,210,43,41",
+    "roiFront": "1216,214,42,36",
+    "roiBack": "1195,198,74,67",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "已领取四次的奖励"
@@ -88,5 +88,14 @@
     "method": "Template matching",
     "threshold": 0.8,
     "description": "小鬼王的挑战"
+  },
+  {
+    "itemName": "de_mystery",
+    "imageName": "demon_de_mystery.png",
+    "roiFront": "1216,296,27,29",
+    "roiBack": "1192,278,85,261",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "神秘任务"
   }
 ]

@@ -42,11 +42,23 @@ class Buy(BaseTask, BuyAssets):
         while 1:
             self.screenshot()
 
+            if self.appear(self.I_BUY_RMB):
+                # 用人民币购买的，就取消
+                logger.warning('OAS do not support buy with RMB')
+                while 1:
+                    self.screenshot()
+                    if not self.appear(self.I_BUY_RMB):
+                        break
+                    if self.click(self.C_BUY_CANCEL, interval=1):
+                        continue
+                return False
+
+
             if self.ui_reward_appear_click():
                 while 1:
                     self.screenshot()
                     # 等待动画结束
-                    if not self.appear(self.I_UI_REWARD):
+                    if not self.appear(self.I_UI_REWARD, threshold=0.6):
                         logger.info('Get reward success')
                         break
                     # 一直点击
@@ -54,7 +66,7 @@ class Buy(BaseTask, BuyAssets):
                         continue
                 break
 
-            if self.click(self.C_BUY_ONE, interval=2):
+            if self.click(self.C_BUY_ONE, interval=2.8):
                 continue
 
         return True
@@ -123,7 +135,7 @@ class Buy(BaseTask, BuyAssets):
                 while 1:
                     self.screenshot()
                     # 等待动画结束
-                    if not self.appear(self.I_UI_REWARD):
+                    if not self.appear(self.I_UI_REWARD, threshold=0.6):
                         logger.info('Get reward success')
                         break
                     # 一直点击

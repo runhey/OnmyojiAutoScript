@@ -5,6 +5,7 @@ from pydantic import BaseModel, Field
 from enum import Enum
 from datetime import datetime, time
 
+from tasks.Component.SwitchSoul.switch_soul_config import SwitchSoulConfig
 from tasks.Component.config_scheduler import Scheduler
 from tasks.Component.config_base import ConfigBase
 from tasks.BondlingFairyland.config_battle import BattleConfig
@@ -51,7 +52,7 @@ class BondlingFairyland(ConfigBase):
     bondling_config: BondlingConfig = Field(default_factory=BondlingConfig)
     bondling_switch_soul: BondlingSwitchSoul = Field(default_factory=BondlingSwitchSoul)
     battle_config: BattleConfig = Field(default_factory=BattleConfig)
-
+    switch_soul_config: SwitchSoulConfig = Field(default_factory=SwitchSoulConfig)
 
 
 

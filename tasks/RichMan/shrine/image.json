@@ -14,7 +14,7 @@
     "roiFront": "769,143,77,85",
     "roiBack": "769,143,77,85",
     "method": "Template matching",
-    "threshold": 0.8,
+    "threshold": 0.85,
     "description": "description"
   },
   {
@@ -23,7 +23,7 @@
     "roiFront": "951,144,73,82",
     "roiBack": "951,144,73,82",
     "method": "Template matching",
-    "threshold": 0.8,
+    "threshold": 0.85,
     "description": "description"
   },
   {
@@ -32,7 +32,7 @@
     "roiFront": "588,143,78,83",
     "roiBack": "588,143,78,83",
     "method": "Template matching",
-    "threshold": 0.8,
+    "threshold": 0.9,
     "description": "黑蛋"
   },
   {

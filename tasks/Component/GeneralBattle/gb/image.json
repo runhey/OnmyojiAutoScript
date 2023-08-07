@@ -65,10 +65,10 @@
   {
     "itemName": "buff",
     "imageName": "gb_buff.png",
-    "roiFront": "113,653,44,62",
-    "roiBack": "113,653,44,62",
+    "roiFront": "115,657,42,50",
+    "roiBack": "106,641,67,77",
     "method": "Template matching",
-    "threshold": 0.8,
+    "threshold": 0.7,
     "description": "选择buff"
   },
   {
@@ -191,10 +191,28 @@
   {
     "itemName": "de_win",
     "imageName": "gb_de_win.png",
-    "roiFront": "481,47,100,100",
-    "roiBack": "331,40,301,117",
+    "roiFront": "472,49,100,100",
+    "roiBack": "239,36,399,133",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "针对封魔的特殊"
+  },
+  {
+    "itemName": "present_less_than_5",
+    "imageName": "gb_present_less_than_5.png",
+    "roiFront": "222,648,418,43",
+    "roiBack": "222,648,418,43",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "de_gold",
+    "imageName": "gb_de_gold.png",
+    "roiFront": "61,52,30,25",
+    "roiBack": "45,33,65,64",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "封魔的金币"
   }
 ]

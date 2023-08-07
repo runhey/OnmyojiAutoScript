@@ -46,23 +46,23 @@ class FriendshipPoints(Special):
         # 检查是否出现了购买按钮
         if not self.appear(buy_button):
             logger.warning('Buy button is not appear')
-            return
+            return False
         # 是否检查剩余数量
         _remain = self._special_check_remain(buy_button)
         if _remain == 0:
             logger.warning('Remain number is 0')
-            return
+            return False
         # 检查钱
         current_money = money_ocr.ocr(self.device.image)
         if not isinstance(current_money, int):
             logger.warning('Money ocr failed')
-            return
+            return False
         money_enough = current_money >= buy_money
         if not money_enough:
             logger.warning(f'No enough money {current_money}')
-            return
+            return False
         # 点击购买
-        self.buy_one(buy_button, buy_check)
+        return self.buy_one(buy_button, buy_check)
 
     def buy_mall_more(self, buy_button: RuleImage, remain_number: bool, money_ocr: RuleOcr,
                        buy_number: int, buy_max: int, buy_money: int):

@@ -23,6 +23,7 @@ class LanternClass(Enum):
     MAIL = 2  # 邮件答题
     REALM = 3  # 打结界
     EMPTY = 4  # 空
+    MYSTERY = 5  # 神秘任务
 
 
 class ScriptTask(GameUi, GeneralBattle, DemonEncounterAssets):
@@ -83,8 +84,11 @@ class ScriptTask(GameUi, GeneralBattle, DemonEncounterAssets):
         self.wait_until_disappear(self.I_BOSS_GATHER)
         self.device.stuck_record_clear()
         self.device.stuck_record_add('BATTLE_STATUS_S')
+        # 延长时间并在战斗结束后改回来
+        self.device.stuck_timer_long = Timer(480, count=480).start()
         config = self.con
         self.run_general_battle(config)
+        self.device.stuck_timer_long = Timer(300, count=300).start()
 
         # 等待回到挑战boss主界面
         self.wait_until_appear(self.I_BOSS_GATHER)
@@ -148,6 +152,8 @@ class ScriptTask(GameUi, GeneralBattle, DemonEncounterAssets):
                     logger.warning(f'Lantern {i} is empty')
                 case LanternClass.BATTLE:
                     self._battle(match_click[i])
+                case LanternClass.MYSTERY:
+                    self._mystery(match_click[i])
             time.sleep(1)
 
     @cached_property
@@ -174,8 +180,10 @@ class ScriptTask(GameUi, GeneralBattle, DemonEncounterAssets):
         }
         self.I_DE_BOX.roi_back = match_roi[index]
         self.I_DE_LETTER.roi_back = match_roi[index]
+        self.I_DE_MYSTERY.roi_back = match_roi[index]
         target_box = self.I_DE_BOX
         target_letter = self.I_DE_LETTER
+        target_mystery = self.I_DE_MYSTERY
         target_empty = match_empty[index]
 
         # 开始判断
@@ -186,6 +194,9 @@ class ScriptTask(GameUi, GeneralBattle, DemonEncounterAssets):
         elif self.appear(target_letter):
             logger.info(f'Lantern {index} is letter')
             return LanternClass.MAIL
+        elif self.appear(target_mystery):
+            logger.info(f'Lantern {index} is mystery task')
+            return LanternClass.MYSTERY
         elif self.appear(target_empty):
             logger.info(f'Lantern {index} is empty')
             return LanternClass.EMPTY
@@ -232,8 +243,36 @@ class ScriptTask(GameUi, GeneralBattle, DemonEncounterAssets):
                 continue
         logger.info('Question answering Start')
         for i in range(1,4):
+            # 还未测试题库无法识别的情况
             logger.hr(f'Answer {i}', 3)
-            self.ui_get_reward(answer())
+            answer_click = answer()
+            # self.ui_get_reward(answer())
+            while 1:
+                self.screenshot()
+                if self.ui_reward_appear_click():
+                    time.sleep(0.5)
+                    while 1:
+                        self.screenshot()
+                        # 等待动画结束
+                        if not self.appear(self.I_UI_REWARD, threshold=0.6):
+                            logger.info('Get reward success')
+                            break
+                        # 一直点击
+                        if self.ui_reward_appear_click():
+                            continue
+                    break
+                # 如果没有出现红色关闭按钮，说明答题结束
+                if not self.appear(self.I_LETTER_CLOSE):
+                    time.sleep(0.5)
+                    self.screenshot()
+                    if self.appear(self.I_LETTER_CLOSE):
+                        continue
+                    else:
+                        logger.warning('Answer finish')
+                        return
+
+                # 一直点击
+                self.click(answer_click, interval=1)
             time.sleep(0.5)
 
     def _battle(self, target_click):
@@ -263,6 +302,9 @@ class ScriptTask(GameUi, GeneralBattle, DemonEncounterAssets):
         # 结界
         self._battle(target_click)
 
+    def _mystery(self, target_click):
+        # 神秘任务， 不做
+        pass
 
 if __name__ == '__main__':
     from module.config.config import Config

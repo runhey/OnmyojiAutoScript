@@ -170,20 +170,29 @@ class BaseTask(GlobalGameAssets):
 
     def wait_until_appear(self,
                           target: RuleImage,
-                          skip_first_screenshot=False) -> None:
+                          skip_first_screenshot=False,
+                          wait_time: int=None) -> bool:
         """
         等待直到出现目标
+        :param wait_time: 等待时间，单位秒
         :param target:
         :param skip_first_screenshot:
         :return:
         """
+        wait_timer = None
+        if wait_time:
+            wait_timer = Timer(wait_time)
+            wait_timer.start()
         while 1:
             if skip_first_screenshot:
                 skip_first_screenshot = False
             else:
                 self.screenshot()
+            if wait_timer and wait_timer.reached():
+                logger.warning(f"Wait until appear {target.name} timeout")
+                return False
             if self.appear(target):
-                break
+                return True
 
     def wait_until_appear_then_click(self,
                                      target: RuleImage,

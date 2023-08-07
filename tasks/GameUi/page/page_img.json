@@ -47,8 +47,8 @@
   {
     "itemName": "exploration_goto_realm_raid",
     "imageName": "page_exploration_goto_realm_raid.png",
-    "roiFront": "245,638,67,48",
-    "roiBack": "245,638,67,48",
+    "roiFront": "248,636,67,48",
+    "roiBack": "229,612,102,87",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"
@@ -56,10 +56,10 @@
   {
     "itemName": "exploration_goto_goryou_realm",
     "imageName": "page_exploration_goto_goryou_realm.png",
-    "roiFront": "343,629,60,67",
-    "roiBack": "343,629,60,67",
+    "roiFront": "353,639,47,45",
+    "roiBack": "346,626,60,67",
     "method": "Template matching",
-    "threshold": 0.8,
+    "threshold": 0.7,
     "description": "前往御灵"
   },
   {
@@ -74,8 +74,8 @@
   {
     "itemName": "exploration_goto_secret_zones",
     "imageName": "page_exploration_goto_secret_zones.png",
-    "roiFront": "542,645,61,55",
-    "roiBack": "542,645,61,55",
+    "roiFront": "546,628,61,55",
+    "roiBack": "524,614,100,87",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "秘闻"
@@ -182,8 +182,8 @@
   {
     "itemName": "check_area_boss",
     "imageName": "page_check_area_boss.png",
-    "roiFront": "41,637,65,62",
-    "roiBack": "41,637,65,62",
+    "roiFront": "1176,505,65,62",
+    "roiBack": "1159,487,101,106",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"

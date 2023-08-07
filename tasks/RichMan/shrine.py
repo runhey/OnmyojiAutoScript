@@ -66,9 +66,12 @@ class Shrine(GameUi, RichManAssets):
         self.screenshot()
         if not self.shrine_check_money(1500):
             return
+        if not self.appear(self.I_S_BLACK):
+            logger.info('Already bought black daruma')
+            return
         self.ui_click(self.I_S_BLACK, self.I_S_CHECK_BLACK)
         self.screenshot()
-        if not self.appear(self.I_S_BUY_BLACK, threshold=0.9):
+        if not self.appear(self.I_S_BUY_BLACK, threshold=0.6):
             logger.info('Already bought black daruma')
             self.ui_click_until_disappear(self.I_UI_BACK_RED)
             time.sleep(0.5)
@@ -129,7 +132,8 @@ if __name__ == '__main__':
     d = Device(c)
     t = Shrine(c, d)
 
-    t.shrine_white_four()
+    # t.shrine_white_four()
+    t.execute_shrine(t.config.model.rich_man.shrine)
     # t.screenshot()
     # print(t.appear(t.I_S_BUY_WHITE_FIVE, threshold=0.9))
 

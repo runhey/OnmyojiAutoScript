@@ -27,6 +27,7 @@ from tasks.DailyTrifles.config import DailyTrifles
 from tasks.TalismanPass.config import TalismanPass
 from tasks.Pets.config import Pets
 from tasks.SoulsTidy.config import SoulsTidy
+from tasks.Delegation.config import Delegation
 # ----------------------------------------------------------------------------------------------------------------------
 from tasks.Orochi.config import Orochi
 from tasks.OrochiMoans.config import OrochiMoans
@@ -34,6 +35,8 @@ from tasks.Sougenbi.config import Sougenbi
 from tasks.FallenSun.config import FallenSun
 from tasks.EternitySea.config import EternitySea
 from tasks.RealmRaid.config import RealmRaid
+from tasks.CollectiveMissions.config import CollectiveMissions
+from tasks.Hunt.config import Hunt
 
 # 这一部分是活动的配置-----------------------------------------------------------------------------------------------------
 from tasks.ActivityShikigami.config import ActivityShikigami
@@ -42,6 +45,7 @@ from tasks.ActivityShikigami.config import ActivityShikigami
 # 肝帝专属---------------------------------------------------------------------------------------------------------------
 from tasks.BondlingFairyland.config import BondlingFairyland
 from tasks.EvoZone.config import EvoZone
+from tasks.GoryouRealm.config import GoryouRealm
 # ----------------------------------------------------------------------------------------------------------------------
 
 # 每周任务---------------------------------------------------------------------------------------------------------------
@@ -49,6 +53,8 @@ from tasks.TrueOrochi.config import TrueOrochi
 from tasks.RichMan.config import RichMan
 from tasks.Secret.config import Secret
 from tasks.WeeklyTrifles.config import WeeklyTrifles
+from tasks.MysteryShop.config import MysteryShop
+from tasks.Duel.config import Duel
 # ----------------------------------------------------------------------------------------------------------------------
 
 class ConfigModel(ConfigBase):
@@ -71,6 +77,7 @@ class ConfigModel(ConfigBase):
     talisman_pass: TalismanPass = Field(default_factory=TalismanPass)
     pets: Pets = Field(default_factory=Pets)
     souls_tidy: SoulsTidy = Field(default_factory=SoulsTidy)
+    delegation: Delegation = Field(default_factory=Delegation)
 
     # 这些是刷御魂的
     orochi: Orochi = Field(default_factory=Orochi)
@@ -85,6 +92,7 @@ class ConfigModel(ConfigBase):
     # 这些是肝帝专属
     bondling_fairyland: BondlingFairyland = Field(default_factory=BondlingFairyland)
     evo_zone: EvoZone = Field(default_factory=EvoZone)
+    goryou_realm: GoryouRealm = Field(default_factory=GoryouRealm)
 
 
     # 这些是每周任务
@@ -92,6 +100,12 @@ class ConfigModel(ConfigBase):
     rich_man: RichMan = Field(default_factory=RichMan)
     secret: Secret = Field(default_factory=Secret)
     weekly_trifles: WeeklyTrifles = Field(default_factory=WeeklyTrifles)
+    mystery_shop: MysteryShop = Field(default_factory=MysteryShop)
+    duel: Duel = Field(default_factory=Duel)
+
+    # 阴阳寮
+    collective_missions: CollectiveMissions = Field(default_factory=CollectiveMissions)
+    hunt: Hunt = Field(default_factory=Hunt)
 
     # @validator('script')
     # def script_validator(cls, v):

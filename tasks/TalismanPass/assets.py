@@ -20,7 +20,7 @@ class TalismanPassAssets:
 	# 本周 的右上方红点 
 	I_RED_POINT_WEEK = RuleImage(roi_front=(795,156,24,25), roi_back=(795,156,24,25), threshold=0.8, method="Template matching", file="./tasks/TalismanPass/tp/tp_red_point_week.png")
 	# 等级奖励 
-	I_RED_POINT_LEVEL = RuleImage(roi_front=(1222,174,23,24), roi_back=(1222,174,23,24), threshold=0.8, method="Template matching", file="./tasks/TalismanPass/tp/tp_red_point_level.png")
+	I_RED_POINT_LEVEL = RuleImage(roi_front=(1222,174,21,22), roi_back=(1214,165,40,43), threshold=0.8, method="Template matching", file="./tasks/TalismanPass/tp/tp_red_point_level.png")
 	# 选择一号奖励 
 	I_TP_LEVEL_1 = RuleImage(roi_front=(203,435,122,59), roi_back=(203,435,122,59), threshold=0.8, method="Template matching", file="./tasks/TalismanPass/tp/tp_tp_level_1.png")
 	# 选择二号奖励 
@@ -29,5 +29,7 @@ class TalismanPassAssets:
 	I_TP_LEVEL_3 = RuleImage(roi_front=(967,433,109,61), roi_back=(967,433,109,61), threshold=0.8, method="Template matching", file="./tasks/TalismanPass/tp/tp_tp_level_3.png")
 	# 前往 
 	I_TP_GOTO = RuleImage(roi_front=(995,254,85,34), roi_back=(928,219,206,315), threshold=0.8, method="Template matching", file="./tasks/TalismanPass/tp/tp_tp_goto.png")
+	# 经验的 
+	I_TP_EXP = RuleImage(roi_front=(922,254,32,36), roi_back=(884,215,100,331), threshold=0.8, method="Template matching", file="./tasks/TalismanPass/tp/tp_tp_exp.png")
 
 

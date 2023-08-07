@@ -13,7 +13,7 @@ from tasks.RichMan.config import Scales as ScalesConfig
 from tasks.Utils.config_enum import DemonClass
 
 
-class Scales(MallNavbar, Buy):
+class Scales(Buy, MallNavbar):
 
     def execute_scales(self, con: ScalesConfig=None):
         if not con:
@@ -95,20 +95,20 @@ class Scales(MallNavbar, Buy):
         # 选择魂
         while 1:
             self.screenshot()
-            if self.appear(self.I_SCA_SIX_STAR) or self.appear(self.I_SCA_REWARD):
+            if self.appear(self.I_SCA_SIX_STAR):
                 logger.info('Scales buy success')
-                time.sleep(1)
+                time.sleep(1.8)
                 while 1:
                     self.screenshot()
                     if not self.appear(self.I_SCA_SIX_STAR):
                         break
-                    if self.click(self.C_SCA_SOULS_GET, interval=1):
+                    if self.click(self.C_SCA_SOULS_GET, interval=1.6):
                         continue
                 # 收获购买的东西
                 logger.info('Scales get success')
                 break
 
-            if self.appear_then_click(self.I_SCA_SELECT_1, interval=1):
+            if self.appear_then_click(self.I_SCA_SELECT_1, interval=1.6):
                 continue
 
 
@@ -307,7 +307,7 @@ class Scales(MallNavbar, Buy):
             for i in range(buy_cycles_number):
                 self._scales_buy_sea_more(self.I_SCA_PICTURE_BOOK)
                 time.sleep(0.5)
-        if buy_res_number:
+        if buy_res_number and buy_res_number >= 2:
             self._scales_buy_sea_more(self.I_SCA_PICTURE_BOOK, buy_res_number)
             time.sleep(0.5)
 

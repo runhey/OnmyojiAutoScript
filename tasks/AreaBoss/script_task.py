@@ -30,6 +30,13 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AreaBossAssets):
             self.ui_get_current_page()
             self.ui_goto(page_shikigami_records)
             self.run_switch_soul(self.config.area_boss.switch_soul.switch_group_team)
+
+        if self.config.area_boss.switch_soul.enable_switch_by_name:
+            self.ui_get_current_page()
+            self.ui_goto(page_shikigami_records)
+            self.run_switch_soul_by_name(self.config.area_boss.switch_soul.group_name,
+                                         self.config.area_boss.switch_soul.team_name)
+
         self.ui_get_current_page()
         self.ui_goto(page_area_boss)
 
@@ -105,7 +112,7 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AreaBossAssets):
 if __name__ == '__main__':
     from module.config.config import Config
     from module.device.device import Device
-    from memory_profiler import profile
+
     c = Config('oas1')
     d = Device(c)
     t = ScriptTask(c, d)

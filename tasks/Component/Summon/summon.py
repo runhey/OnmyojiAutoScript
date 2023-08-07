@@ -43,6 +43,11 @@ class Summon(BaseTask, SummonAssets):
         if '1' not in ticket_info:
             logger.warning('There is no any one blue ticket')
             return
+        # 某些情况下滑动异常
+        self.S_RANDOM_SWIPE_1.name = 'S_RANDOM_SWIPE'
+        self.S_RANDOM_SWIPE_2.name = 'S_RANDOM_SWIPE'
+        self.S_RANDOM_SWIPE_3.name = 'S_RANDOM_SWIPE'
+        self.S_RANDOM_SWIPE_4.name = 'S_RANDOM_SWIPE'
         while 1:
             self.screenshot()
             if self.appear(self.I_ONE_TICKET):

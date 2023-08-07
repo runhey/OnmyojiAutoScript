@@ -1,0 +1,65 @@
+[
+  {
+    "itemName": "st_gold",
+    "roiFront": "888,575,105,32",
+    "roiBack": "888,575,105,32",
+    "mode": "Digit",
+    "method": "Default",
+    "keyword": "",
+    "description": "奉纳获得的金币"
+  },
+  {
+    "itemName": "st_firset_level",
+    "roiFront": "91,237,35,28",
+    "roiBack": "91,237,35,28",
+    "mode": "Single",
+    "method": "Default",
+    "keyword": "",
+    "description": "奉纳的御魂等级"
+  },
+  {
+    "itemName": "st_sort_time",
+    "roiFront": "387,118,110,42",
+    "roiBack": "387,118,110,42",
+    "mode": "Single",
+    "method": "Default",
+    "keyword": "入手顺序",
+    "description": "入手顺序"
+  },
+  {
+    "itemName": "st_sort_level_1",
+    "roiFront": "384,115,121,45",
+    "roiBack": "384,115,121,45",
+    "mode": "Single",
+    "method": "Default",
+    "keyword": "等级/星级",
+    "description": "等级/星级 最上边的"
+  },
+  {
+    "itemName": "st_sort_level_2",
+    "roiFront": "400,290,128,42",
+    "roiBack": "400,290,128,42",
+    "mode": "Single",
+    "method": "Default",
+    "keyword": "等级/星级",
+    "description": "等级/星 下边的"
+  },
+  {
+    "itemName": "st_sort_type",
+    "roiFront": "414,118,64,43",
+    "roiBack": "414,118,64,43",
+    "mode": "Single",
+    "method": "Default",
+    "keyword": "类型",
+    "description": "类型"
+  },
+  {
+    "itemName": "st_sort_location",
+    "roiFront": "415,119,61,39",
+    "roiBack": "415,119,61,39",
+    "mode": "Single",
+    "method": "Default",
+    "keyword": "位置",
+    "description": "位置"
+  }
+]

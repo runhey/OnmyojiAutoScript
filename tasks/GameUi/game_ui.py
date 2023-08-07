@@ -29,11 +29,11 @@ class GameUi(BaseTask, GameUiAssets):
                 page_shikigami_records, page_onmyodo, page_friends, page_daily, page_mall, page_guild, page_team,
                 page_collection
                 ]
-    ui_close = [GameUiAssets.I_BACK_BLUE, GameUiAssets.I_BACK_Y, GameUiAssets.I_BACK_MALL,
+    ui_close = [GameUiAssets.I_BACK_MALL,
+                BaseTask.I_UI_BACK_RED, BaseTask.I_UI_BACK_YELLOW, BaseTask.I_UI_BACK_BLUE,
                 GameUiAssets.I_BACK_FRIENDS, GameUiAssets.I_BACK_DAILY,
-                GameUiAssets.I_BONDLING_GOTO_EXPLORATION, GameUiAssets.I_REALM_RAID_GOTO_EXPLORATION,
-                GameUiAssets.I_SIX_GATES_GOTO_EXPLORATION, GameUiAssets.I_SUMMON_GOTO_MAIN
-                ]
+                GameUiAssets.I_REALM_RAID_GOTO_EXPLORATION,
+                GameUiAssets.I_SIX_GATES_GOTO_EXPLORATION]
 
     def home_explore(self) -> bool:
         """
