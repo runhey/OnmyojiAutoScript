@@ -146,7 +146,7 @@ class LoginHandler(BaseTask, RestartAssets):
                 timer_harvest.reset()
                 continue
             # 邮件
-            if self.appear_then_click(self.I_HARVEST_MAIL, interval=1.5):
+            if self.appear_then_click(self.I_HARVEST_MAIL, interval=1.2):
                 timer_harvest.reset()
                 continue
             if self.appear(self.I_HARVEST_MAIL_TITLE, interval=0.2):
@@ -180,7 +180,7 @@ class LoginHandler(BaseTask, RestartAssets):
 
 
             # 红色的关闭
-            if self.appear_then_click(self.I_UI_BACK_RED, interval=1):
+            if self.appear_then_click(self.I_UI_BACK_RED, interval=2.3):
                 timer_harvest.reset()
                 continue
 
