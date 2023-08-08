@@ -23,6 +23,17 @@ class SougenbiConfig(ConfigBase):
     # 限制次数
     limit_count: int = Field(default=30, description='limit_count_help')
 
+    # 加成
+    buff_enable: bool = Field(default=False)
+    # 是否点击金币50buff
+    buff_gold_50_click: bool = Field(default=False, description='')
+    # 是否点击金币100buff
+    buff_gold_100_click: bool = Field(default=False, description='')
+    # 是否点击经验50buff
+    buff_exp_50_click: bool = Field(default=False, description='')
+    # 是否点击经验100buff
+    buff_exp_100_click: bool = Field(default=False, description='')
+
 
 class Sougenbi(ConfigBase):
     scheduler: Scheduler = Field(default_factory=Scheduler)
