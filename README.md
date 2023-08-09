@@ -61,7 +61,7 @@ This project is licensed under the GNU General Public License v3.0.
 
 为此保持较高的入群门槛:  
 - 你的QQ等级必须大于32级(🌞🌞)，注册时间超过一年，低等级账号成分复杂，还请见谅。
-- 你必须拥有一个 Github 账户来点一个 **Star**(这并不影响你入群后取消Star)，同样的要求注册时间过半年。
+- 你必须拥有一个 Github 账户来点一个 **Star** (这并不影响你入群后取消Star)，同样的要求注册时间过半年。
 - 入群验证填入你的 Github 账号名，无需在意问题是什么。
 
 #### 技术/开发群: 207613181
