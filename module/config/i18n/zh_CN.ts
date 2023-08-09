@@ -359,7 +359,7 @@ window_background >>> DroidCast_raw >  ADB_nc >> DroidCast > uiautomator2 ~= ADB
 	<message><source>Buff Gold 50 Click</source><translation>开启金币加成50%</translation></message>
 	<message><source>Buff Gold 100 Click</source><translation>开启金币加成100%</translation></message>
 	<message><source>Buff Exp 50 Click</source><translation>开启经验加成50%</translation></message>
-	<message><source>Buff Exp 100 Click</source><translation>开启金币加成100%</translation></message>
+	<message><source>Buff Exp 100 Click</source><translation>开启经验加成100%</translation></message>
 	<message><source>Green Enable</source><translation>启用我方绿标</translation></message>
 	<message><source>GreenMarkType</source><translation>设置第 X 个式神为绿标</translation></message>
 	<message><source>Random Click Swipt Enable</source><translation>战斗时随机点击或者随机滑动</translation></message>

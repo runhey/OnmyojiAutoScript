@@ -74,8 +74,8 @@
   {
     "itemName": "s_fire_greed",
     "imageName": "s_s_fire_greed.png",
-    "roiFront": "1133,641,21,33",
-    "roiBack": "1133,641,21,33",
+    "roiFront": "1132,640,21,33",
+    "roiBack": "1122,635,41,48",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "贪"
@@ -83,8 +83,8 @@
   {
     "itemName": "s_fire_anger",
     "imageName": "s_s_fire_anger.png",
-    "roiFront": "1132,643,21,30",
-    "roiBack": "1132,643,21,30",
+    "roiFront": "1131,643,21,30",
+    "roiBack": "1122,636,40,42",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"
@@ -92,8 +92,8 @@
   {
     "itemName": "s_fire_foolery",
     "imageName": "s_s_fire_foolery.png",
-    "roiFront": "1130,642,22,31",
-    "roiBack": "1130,642,22,31",
+    "roiFront": "1130,641,22,31",
+    "roiBack": "1117,630,46,52",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "痴"

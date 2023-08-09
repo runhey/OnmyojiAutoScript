@@ -17,9 +17,24 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, SougenbiAssets):
 
     def run(self):
         con = self.config.sougenbi
+        s_con: SougenbiConfig = con.sougenbi_config
         limit_time = con.sougenbi_config.limit_time
         self.limit_time: timedelta = timedelta(hours=limit_time.hour, minutes=limit_time.minute,
                                                seconds=limit_time.second)
+        if s_con.buff_enable:
+            self.ui_get_current_page()
+            self.ui_goto(page_main)
+            self.open_buff()
+            if s_con.buff_gold_50_click:
+                self.gold_50(True)
+            if s_con.buff_gold_100_click:
+                self.gold_100(True)
+            if s_con.buff_exp_50_click:
+                self.exp_50(True)
+            if s_con.buff_exp_100_click:
+                self.exp_100(True)
+            self.close_buff()
+
         if con.switch_soul_config.enable:
             self.ui_get_current_page()
             self.ui_goto(page_shikigami_records)
@@ -98,6 +113,21 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, SougenbiAssets):
             if self.appear_then_click(self.I_UI_BACK_BLUE, interval=1):
                 continue
         logger.info('Back to exploration')
+
+        if s_con.buff_enable:
+            self.ui_get_current_page()
+            self.ui_goto(page_main)
+            self.open_buff()
+            if s_con.buff_gold_50_click:
+                self.gold_50(False)
+            if s_con.buff_gold_100_click:
+                self.gold_100(False)
+            if s_con.buff_exp_50_click:
+                self.exp_50(False)
+            if s_con.buff_exp_100_click:
+                self.exp_100(False)
+            self.close_buff()
+
         self.set_next_run("Sougenbi", success=True, finish=True)
         raise TaskEnd
 
@@ -110,7 +140,7 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, SougenbiAssets):
 if __name__ == '__main__':
     from module.config.config import Config
     from module.device.device import Device
-    c = Config('oas1')
+    c = Config('test')
     d = Device(c)
     t = ScriptTask(c, d)
     t.screenshot()
