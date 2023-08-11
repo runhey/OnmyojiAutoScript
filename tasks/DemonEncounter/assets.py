@@ -44,6 +44,11 @@ class DemonEncounterAssets:
 	I_BOSS_BACK_WHITE = RuleImage(roi_front=(16,12,39,40), roi_back=(16,12,39,40), threshold=0.8, method="Template matching", file="./tasks/DemonEncounter/boss/boss_boss_back_white.png")
 
 
+	# Ocr Rule Assets
+	# 人数 
+	O_DE_BOSS_PEOPLE = RuleOcr(roi=(880,591,100,35), area=(880,591,100,35), mode="DigitCounter", method="Default", keyword="", name="de_boss_people")
+
+
 	# Click Rule Assets
 	# 从下开始数第一个 
 	C_DE_1 = RuleClick(roi_front=(1211,478,61,58), roi_back=(1211,478,61,58), name="de_1")

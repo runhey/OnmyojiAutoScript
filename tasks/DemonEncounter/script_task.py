@@ -47,7 +47,19 @@ class ScriptTask(GameUi, GeneralBattle, DemonEncounterAssets):
         while 1:
             self.screenshot()
             if self.appear(self.I_BOSS_FIRE):
-                break
+                current, remain, total = self.O_DE_BOSS_PEOPLE.ocr(self.device.image)
+                if total == 300 and current >= 290:
+                    logger.info('Boss battle people is full')
+                    if not self.appear(self.I_UI_BACK_RED):
+                        logger.warning('Boss battle people is full but no red back')
+                        continue
+                    self.ui_click_until_disappear(self.I_UI_BACK_RED)
+                    # 退出重新选一个没人慢的boss
+                    logger.info('Exit and reselect')
+                    continue
+                else:
+                    logger.info('Boss battle people is not full')
+                    break
 
             if self.appear_then_click(self.I_BOSS_NAMAZU, interval=1):
                 continue
