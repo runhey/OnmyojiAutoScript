@@ -5,6 +5,7 @@ import time
 
 from enum import Enum
 from cached_property import cached_property
+from datetime import datetime
 
 from module.logger import logger
 from module.exception import TaskEnd
@@ -29,6 +30,9 @@ class LanternClass(Enum):
 class ScriptTask(GameUi, GeneralBattle, DemonEncounterAssets):
 
     def run(self):
+        if not self.check_time():
+            logger.warning('Time is not right')
+            raise TaskEnd('DemonEncounter')
         self.ui_get_current_page()
         self.ui_goto(page_demon_encounter)
         self.execute_lantern()
@@ -193,9 +197,11 @@ class ScriptTask(GameUi, GeneralBattle, DemonEncounterAssets):
         self.I_DE_BOX.roi_back = match_roi[index]
         self.I_DE_LETTER.roi_back = match_roi[index]
         self.I_DE_MYSTERY.roi_back = match_roi[index]
+        self.I_DE_REALM.roi_back = match_roi[index]
         target_box = self.I_DE_BOX
         target_letter = self.I_DE_LETTER
         target_mystery = self.I_DE_MYSTERY
+        target_realm = self.I_DE_REALM
         target_empty = match_empty[index]
 
         # 开始判断
@@ -209,6 +215,9 @@ class ScriptTask(GameUi, GeneralBattle, DemonEncounterAssets):
         elif self.appear(target_mystery):
             logger.info(f'Lantern {index} is mystery task')
             return LanternClass.MYSTERY
+        elif self.appear(target_realm):
+            logger.info(f'Lantern {index} is realm')
+            return LanternClass.REALM
         elif self.appear(target_empty):
             logger.info(f'Lantern {index} is empty')
             return LanternClass.EMPTY
@@ -312,11 +321,47 @@ class ScriptTask(GameUi, GeneralBattle, DemonEncounterAssets):
 
     def _realm(self, target_click):
         # 结界
-        self._battle(target_click)
+        config = self.con
+        while 1:
+            self.screenshot()
+            if not self.appear(self.I_DE_LOCATION):
+                logger.info('Battle Start')
+                break
+            if self.appear_then_click(self.I_DE_REALM_FIRE, interval=0.7):
+                continue
+
+            if self.click(target_click, interval=1):
+                continue
+        if self.run_general_battle(config):
+            logger.info('Battle End')
 
     def _mystery(self, target_click):
         # 神秘任务， 不做
         pass
+
+    def check_time(self):
+        """
+        检查时间是否正确，
+        如果正确就继续
+        如果不在17:00到22:00之间,就推迟到下一个 17:30
+        :return:
+        """
+        now = datetime.datetime.now()
+        if now.hour < 17:
+            # 17点之前，推迟到当天的17点半
+            logger.info('Before 17:00, wait to 17:30')
+            target_time = datetime.datetime(now.year, now.month, now.day, 17, 30, 0)
+            self.set_next_run(task='DemonEncounter', success=False, finish=False, target=target_time)
+            return False
+        elif now.hour >= 22:
+            # 22点之后，推迟到第二天的17:30
+            logger.info('After 22:00, wait to 17:30')
+            target_time = datetime.datetime(now.year, now.month, now.day, 17, 30, 0) + datetime.timedelta(days=1)
+            self.set_next_run(task='DemonEncounter', success=False, finish=False, target=target_time)
+            return False
+        else:
+            return True
+
 
 if __name__ == '__main__':
     from module.config.config import Config

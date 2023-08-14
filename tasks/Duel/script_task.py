@@ -145,6 +145,11 @@ class ScriptTask(GameUi, GeneralBattle, DuelAssets):
                 break
             if self.ocr_appear_click(self.O_D_HAND, interval=1):
                 continue
+            # 如果对方直接秒退，那自己就是赢的
+            if self.appear(self.I_D_VICTORY):
+                logger.info('Duel battle win')
+                self.ui_click_until_disappear(self.I_D_VICTORY)
+                return True
         # 绿标
         self.green_mark(enable, mark_mode)
         # 等待结果
