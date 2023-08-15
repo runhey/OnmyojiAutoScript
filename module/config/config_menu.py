@@ -23,7 +23,7 @@ class ConfigMenu:
         self.menu["Daily Task"] = ['DailyTrifles', 'AreaBoss', 'GoldYoukai', 'ExperienceYoukai', 'Nian',
                                    'TalismanPass', 'DemonEncounter', 'Pets', 'SoulsTidy', 'Delegation']
         # 很肝的任务
-        self.menu["Liver Emperor Exclusive"] = ['BondlingFairyland', 'EvoZone', 'GoryouRealm']
+        self.menu["Liver Emperor Exclusive"] = ['BondlingFairyland', 'EvoZone', 'GoryouRealm', 'ExploreZones']
         # 阴阳寮
         self.menu["Guild"] = ['KekkaiUtilize', 'KekkaiActivation', 'RealmRaid', 'RyouToppa', 'CollectiveMissions',
                               'Hunt']
