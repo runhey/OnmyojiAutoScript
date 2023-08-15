@@ -61,6 +61,9 @@ class ChooseRarity(str, Enum):
 
 
 class ExplorationConfig(BaseModel):
+    buff_gold_50_click: bool = Field(default=False)
+    buff_gold_100_click: bool = Field(default=False)
+
     attack_number: AttackNumber = Field(title='探索次数', default=AttackNumber.SEVEN,
                                         description='默认探索7次')
 
@@ -78,7 +81,6 @@ class ExplorationConfig(BaseModel):
     choose_rarity: ChooseRarity = Field(title='选择狗粮稀有度', default=ChooseRarity.N, description='N')
 
 
-
 class Exploration(ConfigBase):
     scheduler: Scheduler = Field(default_factory=Scheduler)
     exploration_config: ExplorationConfig = Field(default_factory=ExplorationConfig)
@@ -86,4 +88,3 @@ class Exploration(ConfigBase):
     switch_soul_config: SwitchSoulConfig = Field(default_factory=SwitchSoulConfig)
     # auto_rotate_after_times: str = Field(default='30', description='探索30次后, 检测是否需要添加候补式神')
     # go_to_realm_after_times: str = Field(default='5', description='探索5次后, 检测是否需要进行结界突破')
-

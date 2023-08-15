@@ -8,7 +8,7 @@ from tasks.Exploration.assets import ExplorationAssets
 from tasks.Exploration.config import ChooseRarity, AutoRotate, AttackNumber
 from tasks.Component.GeneralBattle.general_battle import GeneralBattle
 from tasks.GameUi.game_ui import GameUi
-from tasks.GameUi.page import page_exploration, page_shikigami_records
+from tasks.GameUi.page import page_exploration, page_shikigami_records, page_main
 
 from module.logger import logger
 from module.exception import RequestHumanTakeover
@@ -24,18 +24,30 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, ExplorationAssets):
         :return:
         """
         # 探索的 config
-        config = self.config.exploration
+        explorationConfig = self.config.exploration
 
         # 切换御魂
-        if config.switch_soul_config.enable:
+        if explorationConfig.switch_soul_config.enable:
             self.ui_get_current_page()
             self.ui_goto(page_shikigami_records)
-            self.run_switch_soul(config.switch_soul_config.switch_group_team)
+            self.run_switch_soul(explorationConfig.switch_soul_config.switch_group_team)
 
-        if config.switch_soul_config.enable_switch_by_name:
+        if explorationConfig.switch_soul_config.enable_switch_by_name:
             self.ui_get_current_page()
             self.ui_goto(page_shikigami_records)
-            self.run_switch_soul_by_name(config.switch_soul_config.group_name, config.switch_soul_config.team_name)
+            self.run_switch_soul_by_name(explorationConfig.switch_soul_config.group_name, explorationConfig.switch_soul_config.team_name)
+
+        # 开启加成
+        con = self.config.exploration.exploration_config
+        if con.buff_gold_50_click or con.buff_gold_100_click:
+            self.ui_get_current_page()
+            self.ui_goto(page_main)
+            self.open_buff()
+            if con.buff_gold_50_click:
+                self.gold_50()
+            if con.buff_gold_100_click:
+                self.gold_100()
+            self.close_buff()
 
         self.ui_get_current_page()
         # 探索页面
@@ -45,12 +57,12 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, ExplorationAssets):
         # 默认全部解锁， 当前处于第二十八章
         # 查找指定的章节：
         if not self.open_expect_level():
-            logger.critical(f'Not find {config.exploration_config.exploration_level} or'
-                            f' Enter {config.exploration_config.exploration_level} failed!')
+            logger.critical(f'Not find {explorationConfig.exploration_config.exploration_level} or'
+                            f' Enter {explorationConfig.exploration_config.exploration_level} failed!')
             raise RequestHumanTakeover
 
         # 只探索7次
-        if config.exploration_config.attack_number == AttackNumber.SEVEN:
+        if explorationConfig.exploration_config.attack_number == AttackNumber.SEVEN:
             count = 0
             while count < 7:
                 self.screenshot()
@@ -65,13 +77,16 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, ExplorationAssets):
     def open_expect_level(self):
         swipeCount = 0
         while 1:
+            # 探索的 config
+            explorationConfig = self.config.exploration
+
             # 判断有无目标章节
             self.screenshot()
             # 获取当前章节名
             results = self.O_E_EXPLORATION_LEVEL_NUMBER.detect_and_ocr(self.device.image)
             text1 = [result.ocr_text for result in results]
             # 判断当前章节有无目标章节
-            result = set(text1).intersection({config.exploration.exploration_config.exploration_level})
+            result = set(text1).intersection({explorationConfig.exploration_config.exploration_level})
             # 有则跳出检测
             if result and len(result) > 0:
                 break
@@ -84,7 +99,7 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, ExplorationAssets):
         # 选中对应章节
         while 1:
             self.screenshot()
-            self.O_E_EXPLORATION_LEVEL_NUMBER.keyword = config.exploration.exploration_config.exploration_level
+            self.O_E_EXPLORATION_LEVEL_NUMBER.keyword = explorationConfig.exploration_config.exploration_level
             if self.ocr_appear_click(self.O_E_EXPLORATION_LEVEL_NUMBER):
                 self.wait_until_appear(self.I_E_EXPLORATION_CLICK)
             if self.appear(self.I_E_EXPLORATION_CLICK):
