@@ -51,6 +51,7 @@ class Host(Mqtt, Player):
         :return:
         """
         for key, value in self.config.model.items():
+            task_name: str = key
             if key == 'orochi':
                 continue
             elif key == 'fallen_sun':
@@ -59,6 +60,12 @@ class Host(Mqtt, Player):
                 continue
             elif key == 'evo_zone':
                 continue
+            elif key == 'soul':
+                continue
+            else:
+                continue
+
+
 
 
 if __name__ == '__main__':
