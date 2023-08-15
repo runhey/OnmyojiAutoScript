@@ -37,6 +37,7 @@ onepush==1.2.0            # via -r requirements-in.txt
 onnxruntime==1.15.0       # via ppocr-onnx
 opencv-python==4.7.0.72   # via -r requirements-in.txt, ppocr-onnx
 packaging==20.9           # via deprecation, onnxruntime, uiautomator2
+paho-mqtt==1.6.1          # via -r requirements-in.txt
 pillow==9.5.0             # via ppocr-onnx, uiautomator2
 ppocr-onnx==0.0.3.9       # via -r requirements-in.txt
 progress==1.6             # via uiautomator2

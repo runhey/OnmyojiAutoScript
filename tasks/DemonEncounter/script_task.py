@@ -346,17 +346,17 @@ class ScriptTask(GameUi, GeneralBattle, DemonEncounterAssets):
         如果不在17:00到22:00之间,就推迟到下一个 17:30
         :return:
         """
-        now = datetime.datetime.now()
+        now = datetime.now()
         if now.hour < 17:
             # 17点之前，推迟到当天的17点半
             logger.info('Before 17:00, wait to 17:30')
-            target_time = datetime.datetime(now.year, now.month, now.day, 17, 30, 0)
+            target_time = datetime(now.year, now.month, now.day, 17, 30, 0)
             self.set_next_run(task='DemonEncounter', success=False, finish=False, target=target_time)
             return False
         elif now.hour >= 22:
             # 22点之后，推迟到第二天的17:30
             logger.info('After 22:00, wait to 17:30')
-            target_time = datetime.datetime(now.year, now.month, now.day, 17, 30, 0) + datetime.timedelta(days=1)
+            target_time = datetime(now.year, now.month, now.day, 17, 30, 0) + datetime.timedelta(days=1)
             self.set_next_run(task='DemonEncounter', success=False, finish=False, target=target_time)
             return False
         else:
