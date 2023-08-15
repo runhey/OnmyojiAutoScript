@@ -1,0 +1,20 @@
+[
+  {
+    "itemName": "e_exploration_level_number",
+    "roiFront": "1079,193,147,467",
+    "roiBack": "1079,193,147,467",
+    "mode": "Full",
+    "method": "Default",
+    "keyword": "",
+    "description": "识别当前显示的章节"
+  },
+  {
+    "itemName": "e_alternate_number",
+    "roiFront": "1092,122,69,32",
+    "roiBack": "1092,122,69,32",
+    "mode": "DigitCounter",
+    "method": "Default",
+    "keyword": "",
+    "description": "候补出战的数量"
+  }
+]

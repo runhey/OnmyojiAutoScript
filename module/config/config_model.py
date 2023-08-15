@@ -11,6 +11,7 @@ from module.logger import logger
 
 # 导入配置的Python文件
 from tasks.Component.config_base import ConfigBase
+from tasks.Exploration.config import Exploration
 from tasks.RyouToppa.config import RyouToppa
 from tasks.Script.config import Script
 from tasks.Restart.config import Restart
@@ -79,6 +80,7 @@ class ConfigModel(ConfigBase):
     pets: Pets = Field(default_factory=Pets)
     souls_tidy: SoulsTidy = Field(default_factory=SoulsTidy)
     delegation: Delegation = Field(default_factory=Delegation)
+    exploration: Exploration = Field(default_factory=Exploration)
 
     # 这些是刷御魂的
     orochi: Orochi = Field(default_factory=Orochi)

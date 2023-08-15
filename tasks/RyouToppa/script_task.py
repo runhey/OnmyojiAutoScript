@@ -25,19 +25,19 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, RyouToppaAssets):
         执行
         :return:
         """
-        config = self.config.ryou_toppa
+        ryou_config = self.config.ryou_toppa
         self.medal_grid = ImageGrid([RealmRaidAssets.I_MEDAL_5, RealmRaidAssets.I_MEDAL_4, RealmRaidAssets.I_MEDAL_3,
                                      RealmRaidAssets.I_MEDAL_2, RealmRaidAssets.I_MEDAL_1, RealmRaidAssets.I_MEDAL_0])
 
-        if config.switch_soul_config.enable:
+        if ryou_config.switch_soul_config.enable:
             self.ui_get_current_page()
             self.ui_goto(page_shikigami_records)
-            self.run_switch_soul(config.switch_soul_config.switch_group_team)
+            self.run_switch_soul(ryou_config.switch_soul_config.switch_group_team)
 
-        if config.switch_soul_config.enable_switch_by_name:
+        if ryou_config.switch_soul_config.enable_switch_by_name:
             self.ui_get_current_page()
             self.ui_goto(page_shikigami_records)
-            self.run_switch_soul_by_name(config.switch_soul_config.group_name, config.switch_soul_config.team_name)
+            self.run_switch_soul_by_name(ryou_config.switch_soul_config.group_name, ryou_config.switch_soul_config.team_name)
 
         self.ui_get_current_page()
         self.ui_goto(page_kekkai_toppa)
@@ -61,20 +61,18 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, RyouToppaAssets):
                 ryou_toppa_start_flag = False
                 break
             # 出现寮奖励， 说明寮突已开
-            elif self.appear(self.I_RYOU_REWARD, threshold=0.8):
+            elif self.appear(self.I_RYOU_REWARD, threshold=0.8) or self.appear(self.I_RYOU_REWARD_90, threshold=0.8):
                 ryou_toppa_start_flag = True
                 break
 
         # 寮突未开 并且有权限， 开开寮突
-        if not ryou_toppa_start_flag and config.raid_config.ryou_access == 'yes':
+        if not ryou_toppa_start_flag and ryou_config.raid_config.ryou_access == 'yes':
             # 开寮突
             self.start_ryou_toppa()
 
-        # 切换阵容 待实现
-
         # 开始突破
         while 1:
-            if self.execute_round(config):
+            if self.execute_round():
                 continue
             else:
                 break
@@ -129,7 +127,7 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, RyouToppaAssets):
             return False
         return True
 
-    def medal_fire(self) -> bool:
+    def medal_fire(self):
         """
         点击勋章
         :return:
@@ -170,30 +168,18 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, RyouToppaAssets):
                 break
         logger.info(f'Click {RealmRaidAssets.I_FIRE.name}')
 
-    def execute_round(self, config: RaidMode) -> bool:
+    def execute_round(self) -> bool:
         """
         执行一轮 除非票不够，一直到到九次
         :return:
         """
+        ryou_config = self.config.ryou_toppa
         # 如果没有票了，就退出
         if not self.is_ticket():
             return False
         if not self.is_target_available():
             return False
-        # # 判断是退四打九还是全部打
-        # if config.raid_config.raid_mode == RaidMode.NORMAL:
-        #     logger.info(f'Execute round, retreat four attack nine')
-        #     self.medal_fire()
-        #     self.run_general_battle_back(config.general_battle_config)
-        #
-        #     self.medal_fire()
-        #     self.run_general_battle_back(config.general_battle_config)
-        #
-        #     self.medal_fire()
-        #     self.run_general_battle_back(config.general_battle_config)
-        #
-        #     self.medal_fire()
-        #     self.run_general_battle_back(config.general_battle_config)
+
 
         # 打20次
         for i in range(30):
@@ -202,7 +188,7 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, RyouToppaAssets):
             if not self.is_target_available():
                 return False
             self.medal_fire()
-            self.run_general_battle(config.general_battle_config)
+            self.run_general_battle(ryou_config.general_battle_config)
             self.wait_until_appear(RealmRaidAssets.I_BACK_RED)
 
         return True
