@@ -20,8 +20,8 @@
   {
     "itemName": "start_toppa_button",
     "imageName": "res_start_toppa_button.png",
-    "roiFront": "834,504,127,38",
-    "roiBack": "4,3,1056,716",
+    "roiFront": "832,279,130,43",
+    "roiBack": "1,1,1055,718",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "开始寮突按钮"
@@ -47,8 +47,8 @@
   {
     "itemName": "success_penetration",
     "imageName": "res_success_penetration.png",
-    "roiFront": "206,149,100,100",
-    "roiBack": "206,149,100,100",
+    "roiFront": "141,374,234,37",
+    "roiBack": "141,374,234,37",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "攻破阴阳寮"
@@ -61,5 +61,14 @@
     "method": "Template matching",
     "threshold": 0.8,
     "description": "个人突破刷新按钮"
+  },
+  {
+    "itemName": "ryou_reward_90",
+    "imageName": "res_ryou_reward_90.png",
+    "roiFront": "134,415,232,38",
+    "roiBack": "134,415,232,38",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "击破后的寮奖励"
   }
 ]

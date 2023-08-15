@@ -1,0 +1,44 @@
+[
+  {
+    "itemName": "swipe_level_up",
+    "roiFront": "1142,328,21,21",
+    "roiBack": "1143,444,21,21",
+    "mode": "default",
+    "description": "向上滑动章节"
+  },
+  {
+    "itemName": "swipe_level_down",
+    "roiFront": "1143,486,21,21",
+    "roiBack": "1143,367,21,23",
+    "mode": "default",
+    "description": "向下滑动章节"
+  },
+  {
+    "itemName": "swipe_background_right",
+    "roiFront": "1093,148,21,21",
+    "roiBack": "397,140,21,21",
+    "mode": "default",
+    "description": "往左滑动"
+  },
+  {
+    "itemName": "swipe_background_left",
+    "roiFront": "420,142,21,21",
+    "roiBack": "1183,146,21,21",
+    "mode": "default",
+    "description": "往右滑动"
+  },
+  {
+    "itemName": "swipe_shiki_to_left",
+    "roiFront": "890,587,21,21",
+    "roiBack": "351,584,21,21",
+    "mode": "default",
+    "description": "滑动狗粮选择界面"
+  },
+  {
+    "itemName": "swipe_shiki_to_left_one",
+    "roiFront": "977,582,21,21",
+    "roiBack": "889,584,21,22",
+    "mode": "default",
+    "description": "滑动一个式神的宽度"
+  }
+]
