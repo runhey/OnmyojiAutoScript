@@ -106,5 +106,23 @@
     "method": "Template matching",
     "threshold": 0.8,
     "description": "打开聊天频道会自动关闭"
+  },
+  {
+    "itemName": "harvest_sign_3",
+    "imageName": "harvest_harvest_sign_3.png",
+    "roiFront": "291,495,33,36",
+    "roiBack": "100,473,1014,70",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "签到"
+  },
+  {
+    "itemName": "harvest_sign_4",
+    "imageName": "harvest_harvest_sign_4.png",
+    "roiFront": "587,151,100,228",
+    "roiBack": "547,123,185,281",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
   }
 ]

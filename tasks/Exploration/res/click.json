@@ -1,0 +1,50 @@
+[
+  {
+    "itemName": "click_settings",
+    "roiFront": "55,662,21,21",
+    "roiBack": "55,662,21,21",
+    "description": "点击设置按钮"
+  },
+  {
+    "itemName": "click_standby_team",
+    "roiFront": "545,222,506,100",
+    "roiBack": "545,222,506,100",
+    "description": "选中候补出战"
+  },
+  {
+    "itemName": "click_all_shiki",
+    "roiFront": "31,623,65,58",
+    "roiBack": "31,623,65,58",
+    "description": "点击全部式神按钮"
+  },
+  {
+    "itemName": "click_n_shiki",
+    "roiFront": "146,301,45,54",
+    "roiBack": "146,301,45,54",
+    "description": "选中n阶式神"
+  },
+  {
+    "itemName": "click_rotate_1",
+    "roiFront": "516,582,22,21",
+    "roiBack": "516,582,22,21",
+    "description": "位置1"
+  },
+  {
+    "itemName": "click_rotate_2",
+    "roiFront": "650,587,21,21",
+    "roiBack": "650,587,21,21",
+    "description": "位置2"
+  },
+  {
+    "itemName": "click_rotate_3",
+    "roiFront": "785,587,21,21",
+    "roiBack": "785,587,21,21",
+    "description": "位置3"
+  },
+  {
+    "itemName": "click_rotate_4",
+    "roiFront": "921,590,21,21",
+    "roiBack": "921,590,21,21",
+    "description": "位置4"
+  }
+]

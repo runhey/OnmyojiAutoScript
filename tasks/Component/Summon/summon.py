@@ -60,18 +60,15 @@ class Summon(BaseTask, SummonAssets):
         while 1:
             self.screenshot()
             if self.appear(self.I_SM_CONFIRM):
-                logger.info('Summon one success')
+                self.ui_click_until_disappear(self.I_SM_CONFIRM)
+                break
+            if self.appear(self.I_SM_CONFIRM_2):
+                self.ui_click_until_disappear(self.I_SM_CONFIRM_2)
                 break
             if self.appear(self.I_ONE_TICKET, interval=1):
                 self.summon()
                 continue
-
-        while 1:
-            self.screenshot()
-            if not self.appear(self.I_SM_CONFIRM):
-                break
-            if self.appear_then_click(self.I_SM_CONFIRM):
-                continue
+        logger.info('Summon one success')
 
 
     def back_summon_main(self):

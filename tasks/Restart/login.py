@@ -138,6 +138,12 @@ class LoginHandler(BaseTask, RestartAssets):
             if self.appear_then_click(self.I_HARVEST_SIGN, interval=1):
                 timer_harvest.reset()
                 continue
+            # 某些活动的特殊签到，有空看到就删掉
+            if self.appear_then_click(self.I_HARVEST_SIGN_3, interval=0.7):
+                continue
+            if self.appear_then_click(self.I_HARVEST_SIGN_4, interval=1):
+                timer_harvest.reset()
+                continue
             if self.appear_then_click(self.I_HARVEST_SIGN_2, interval=1):
                 timer_harvest.reset()
                 continue
@@ -170,7 +176,7 @@ class LoginHandler(BaseTask, RestartAssets):
                         timer_harvest.reset()
                         continue
             # 体力
-            if self.appear_then_click(self.I_HARVEST_AP, interval=1):
+            if self.appear_then_click(self.I_HARVEST_AP, interval=1, threshold=0.7):
                 timer_harvest.reset()
                 continue
             # 御魂觉醒加成

@@ -195,6 +195,16 @@ class GameUi(BaseTask, GameUiAssets):
             else:
                 self.screenshot()
 
+            # Destination additional button
+            if destination.additional and isinstance(destination.additional, list):
+                appear = False
+                for button in destination.additional:
+                    if self.appear_then_click(button, interval=0.6):
+                        appear = True
+                        logger.info(f'Page {destination} AB {button} clicked')
+                if appear:
+                    continue
+
             # Destination page
             if self.appear(destination.check_button):
                 if confirm_timer.reached():
@@ -209,16 +219,15 @@ class GameUi(BaseTask, GameUiAssets):
                 if page.parent is None or page.check_button is None:
                     continue
                 # 如果当前页面不出现可以检测当前按键的按钮，那可能是有一些弹窗，广告，这个时候额外处理
-                if page.additional:
-                    if not isinstance(page.additional, list):
-                        page.additional = [page.additional]
-                    for button in page.additional:
-                        if isinstance(button, RuleImage) and self.appear_then_click(button, interval=1):
-                            sleep(0.4)
-                            logger.info(f'Page {page} AB {button} clicked')
-                        if isinstance(button, RuleOcr) and self.ocr_appear_click(button, interval=1):
-                            sleep(0.4)
-                            logger.info(f'Page {page} AB {button} clicked')
+                # if page.additional:
+                #     if not isinstance(page.additional, list):
+                #         page.additional = [page.additional]
+                #     for button in page.additional:
+                #         logger.info(f'Page {page} AB {button} checking')
+                #         if self.appear_then_click(button, interval=1):
+                #             sleep(0.2)
+                #             logger.info(f'Page {page} AB {button} clicked')
+
 
                 # 获取当前页面的要点击的按钮
                 if self.appear(page.check_button, interval=4):
@@ -232,10 +241,6 @@ class GameUi(BaseTask, GameUiAssets):
 
             if clicked:
                 continue
-
-            # # Additional
-            # if self.ui_additional():
-            #     continue
 
         # Reset connection
         for page in self.ui_pages:

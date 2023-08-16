@@ -24,9 +24,9 @@ class GameUiAssets:
 
 	# Image Rule Assets
 	# description 
-	I_AD_DISAPPEAR = RuleImage(roi_front=(412,405,37,40), roi_back=(412,405,37,40), threshold=0.9, method="Template matching", file="./tasks/GameUi/additional/additional_ad_disappear.png")
+	I_AD_DISAPPEAR = RuleImage(roi_front=(412,405,37,40), roi_back=(412,405,37,40), threshold=0.75, method="Template matching", file="./tasks/GameUi/additional/additional_ad_disappear.png")
 	# description 
-	I_RECORDS_CLOSE = RuleImage(roi_front=(914,143,30,30), roi_back=(914,143,30,30), threshold=0.8, method="Template matching", file="./tasks/GameUi/additional/additional_records_close.png")
+	I_RECORDS_CLOSE = RuleImage(roi_front=(914,143,30,30), roi_back=(914,143,30,30), threshold=0.7, method="Template matching", file="./tasks/GameUi/additional/additional_records_close.png")
 
 
 	# Image Rule Assets

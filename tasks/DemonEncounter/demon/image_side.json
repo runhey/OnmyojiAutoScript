@@ -97,5 +97,23 @@
     "method": "Template matching",
     "threshold": 0.8,
     "description": "神秘任务"
+  },
+  {
+    "itemName": "de_realm",
+    "imageName": "demon_de_realm.png",
+    "roiFront": "1209,431,30,22",
+    "roiBack": "1190,274,88,273",
+    "method": "Template matching",
+    "threshold": 0.75,
+    "description": "打结界的"
+  },
+  {
+    "itemName": "de_realm_fire",
+    "imageName": "demon_de_realm_fire.png",
+    "roiFront": "696,421,129,63",
+    "roiBack": "162,99,1106,610",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "结界-进攻"
   }
 ]

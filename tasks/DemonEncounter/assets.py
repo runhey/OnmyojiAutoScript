@@ -44,6 +44,11 @@ class DemonEncounterAssets:
 	I_BOSS_BACK_WHITE = RuleImage(roi_front=(16,12,39,40), roi_back=(16,12,39,40), threshold=0.8, method="Template matching", file="./tasks/DemonEncounter/boss/boss_boss_back_white.png")
 
 
+	# Ocr Rule Assets
+	# 人数 
+	O_DE_BOSS_PEOPLE = RuleOcr(roi=(880,591,100,35), area=(880,591,100,35), mode="DigitCounter", method="Default", keyword="", name="de_boss_people")
+
+
 	# Click Rule Assets
 	# 从下开始数第一个 
 	C_DE_1 = RuleClick(roi_front=(1211,478,61,58), roi_back=(1211,478,61,58), name="de_1")
@@ -93,6 +98,10 @@ class DemonEncounterAssets:
 	I_DE_SMALL_FIRE = RuleImage(roi_front=(1064,549,100,100), roi_back=(1064,549,100,100), threshold=0.8, method="Template matching", file="./tasks/DemonEncounter/demon/demon_de_small_fire.png")
 	# 神秘任务 
 	I_DE_MYSTERY = RuleImage(roi_front=(1216,296,27,29), roi_back=(1192,278,85,261), threshold=0.8, method="Template matching", file="./tasks/DemonEncounter/demon/demon_de_mystery.png")
+	# 打结界的 
+	I_DE_REALM = RuleImage(roi_front=(1209,431,30,22), roi_back=(1190,274,88,273), threshold=0.75, method="Template matching", file="./tasks/DemonEncounter/demon/demon_de_realm.png")
+	# 结界-进攻 
+	I_DE_REALM_FIRE = RuleImage(roi_front=(696,421,129,63), roi_back=(162,99,1106,610), threshold=0.8, method="Template matching", file="./tasks/DemonEncounter/demon/demon_de_realm_fire.png")
 
 
 	# Ocr Rule Assets

@@ -62,7 +62,7 @@ class ScriptTask(GameUi, CollectiveMissionsAssets):
         logger.info(f'Best mission index is {index}')
         if mission == MC.BL:
             # 契灵单独处理
-            self._bondling_fairyland()
+            self._bondling_fairyland(index)
         elif mission == MC.AW1 or mission == MC.AW2 or mission == MC.AW3 or mission == MC.GR1 or mission == MC.GR2:
             # 其他就捐材料
             self._donate(index)
@@ -123,7 +123,7 @@ class ScriptTask(GameUi, CollectiveMissionsAssets):
     def detect_best(self) -> tuple:
         """
         自动寻找最好的任务并返回，期间记录三个任务的类型
-        :return:
+        :return: 任务类型, 0/1/2
         """
         best_index = 0
         best_class = self.detect_one(self.O_CM_1, self.O_CM_2)
@@ -149,18 +149,41 @@ class ScriptTask(GameUi, CollectiveMissionsAssets):
             best_class = now_class
         return best_class, best_index
 
-    def _bondling_fairyland(self):
+    def _bondling_fairyland(self, index: int):
         """
-        将契灵之境的任务设置为当前，同时两个小时后继续执行当前的任务收菜
+        如果御灵已经做了那么就领取奖励
+        否则将契灵之境的任务设置为当前，同时两个小时后继续执行当前的任务收菜
         :return:
         """
-        self.config.bondling_fairyland.scheduler.next_run = self.start_time
-        if not self.config.bondling_fairyland.scheduler.enable:
-            logger.error('The scheduler of bondling_fairyland is not enable')
-            logger.error('Please enable it in config file')
-            raise RequestHumanTakeover
-        self.set_next_run(task='CollectiveMissions', success=True, finish=True, target=self.start_time+ timedelta(hours=2))
-        return True
+        def bondling_finish():
+            self.screenshot()
+            if self.appear(self.I_CM_REWARDS):
+                return True
+            return False
+        if not bondling_finish():
+            self.config.bondling_fairyland.scheduler.next_run = self.start_time
+            if not self.config.bondling_fairyland.scheduler.enable:
+                logger.error('The scheduler of bondling_fairyland is not enable')
+                logger.error('Please enable it in config file')
+                raise RequestHumanTakeover
+            self.set_next_run(task='CollectiveMissions', success=True, finish=True, target=self.start_time+ timedelta(hours=2))
+            return True
+        # 领取奖励
+        logger.info('Start to collect bondling rewards')
+        check_timer = Timer(3)
+        check_timer.start()
+        while 1:
+            self.screenshot()
+            if self.ui_reward_appear_click(True):
+                check_timer.reset()
+                continue
+            if self.appear_then_click(self.I_CM_REWARDS, interval=1):
+                check_timer.reset()
+                continue
+            if check_timer.reached():
+                break
+        logger.info('Finish to collect bondling rewards')
+
 
     def _donate(self, index: int):
         """

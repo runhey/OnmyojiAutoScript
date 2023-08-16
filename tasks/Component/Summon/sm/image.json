@@ -34,5 +34,14 @@
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"
+  },
+  {
+    "itemName": "sm_confirm_2",
+    "imageName": "sm_sm_confirm_2.png",
+    "roiFront": "377,630,206,62",
+    "roiBack": "377,630,206,62",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "抽到的时候出现的"
   }
 ]
