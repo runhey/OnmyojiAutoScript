@@ -7,27 +7,27 @@ from random import randint
 
 
 from module.config.config import Config
+from module.team_flow.task import Task
 
 class Player:
     def __init__(self, username: str):
         self.username = username
-        self.multi_tasks: list = []  # 缓存多人任务的列表
+        self.multi_tasks: dict[str: Task] = {}  # 缓存多人任务的列表
 
 
-    def publish_data(self) -> list:
+    def publish_data(self) -> dict:
         """
         提取要 发布的数据
         :return:
         """
-        result = []
-        for task in self.multi_tasks:
+        result = {}
+        for name, task in self.multi_tasks.items():
             item = {}
             if not task.team_task:
                 continue
-            item['task_name'] = task.task_name
             item['next_run'] = task.next_run
             item['role'] = task.role
             item['limit_time'] = task.limit_time
             item['limit_count'] = task.limit_count
-            result.append(item)
+            result[name] = item
         return result

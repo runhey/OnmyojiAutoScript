@@ -360,7 +360,7 @@ def hr(title, level=3):
         logger.info(f"[bold]<<< {title} >>>[/bold]", extra={"markup": True})
     if level == 0:
         logger.rule(characters='═')
-        logger.rule(title, characters='-')
+        logger.rule(title, characters='─')
         logger.rule(characters='═')
 
 

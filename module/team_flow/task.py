@@ -11,7 +11,6 @@ from module.config.config import Config
 
 class Task:
     def __init__(self,
-                 task_name: str,  # 任务名称,必须是大写的
                  next_run: datetime,
                  limit_time: time,
                  target_run: datetime = None,
@@ -19,7 +18,6 @@ class Task:
                  role: str = 'leader',
                  limit_count: int = 0,
                  ):
-        self.task_name = task_name
         self.next_run = next_run
         self.target_run = target_run
         self.limit_time = limit_time
