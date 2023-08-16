@@ -2,18 +2,22 @@
 # @author runhey
 # github https://github.com/runhey
 from time import sleep
+
+import json
 from random import randint
 from paho.mqtt import client as mqtt_client
+from threading import Thread
+from queue import Queue
 
 from tasks.GlobalGame.config import TeamFlow, Transport
 
 from module.logger import logger
+from module.base.timer import Timer
 
 
 def on_message(client, userdata, msg):
     if msg.topic == 'FirstNotice':
         return
-
     logger.info(f"Received `{msg.payload}` from `{userdata}` ")
 # ----------------------------------------------------------------------------------------------------------------------
 # 使用MQTT是为了做广播，自己手撸的话太麻烦了
@@ -22,13 +26,31 @@ def on_message(client, userdata, msg):
 # 2. 当一个玩家退出网络后，会向服务器发送LastNotice，这个时候所有的玩家都要更新自己的策略
 # ----------------------------------------------------------------------------------------------------------------------
 class Mqtt:
+    # 队列的结构必须是一个tuple，第一个元素是topic，第二个元素是msg
+    q_publish: Queue = None
 
     def __init__(self, team_flow: TeamFlow):
         def on_connect(client, userdata, flags, rc):
             if rc == 0:
                 logger.info("Connected to MQTT Broker!")
+            elif rc == 1:
+                # 协议版本错误
+                logger.error(f"Connection refused - incorrect protocol version. return code: {rc}")
+            elif rc == 2:
+                # 无效的客户端标识
+                logger.error(f"Connection refused - invalid client identifier. return code: {rc}")
+            elif rc == 3:
+                # 服务器不可用
+                logger.error(f"Connection refused - server unavailable. return code: {rc}")
+            elif rc == 4:
+                # 错误的用户名或密码
+                logger.error(f"Connection refused - bad username or password. return code: {rc}")
+            elif rc == 5:
+                # 未授权
+                logger.error(f"Connection refused - not authorised. return code: {rc}")
             else:
                 logger.info("Failed to connect, return code %d\n", rc)
+        self.q_publish = Queue()
         self.broker = team_flow.broker
         self.port = team_flow.port
         self.protocol = team_flow.transport
@@ -43,16 +65,20 @@ class Mqtt:
         self.client.username_pw_set(self.username, self.password)
         self.client.on_connect = on_connect
         self.client.on_message = on_message
-        self.client.will_set(topic='LastWill', payload=self.username, qos=2)
+        self.client.will_set(topic='LastWill', payload=json.dumps({self.username: ""}), qos=2)
         self.client.connect(self.broker, self.port)
         # 订阅主题: FirstNotice LastWill TaskStart Strategy
         self.client.subscribe(topic='FirstNotice', qos=2)
         self.client.subscribe(topic='LastWill', qos=2)
         self.client.subscribe(topic='TaskStart', qos=0)
         self.client.subscribe(topic='Strategy', qos=0)
-        self.client.loop_start()
         # publish FirstNotice
-        self.publish('FirstNotice', {'player': self.username})
+        self.publish("FirstNotice", {"type": "join"})
+        # 开启一个线程来处理消息
+        self.mqtt_timer = Timer(60)
+        self.mqtt_timer.start()
+        self.mqtt_thread = Thread(target=self.mqtt_loop, name='mqtt_loop', daemon=True)
+        self.mqtt_thread.start()
 
 
 
@@ -69,11 +95,12 @@ class Mqtt:
         if not isinstance(msg, dict):
             logger.warning(f"Msg must be a dict, but got {type(msg)}")
             return False
-        result = self.client.publish(topic, str(msg))
+        msg = {self.username: msg}
+        result = self.client.publish(topic, json.dumps(msg))
         # result: [0, 1]
         status = result[0]
         if status == 0:
-            logger.info(f"Send `{msg}` to topic `{topic}`")
+            logger.info(f"Send `msg` to topic `{topic}`")
             return True
         else:
             logger.info(f"Failed to send message to topic {topic} {status}")
@@ -84,6 +111,25 @@ class Mqtt:
 
     def Strategy(self, msg):
         self.publish('Strategy', msg)
+
+    def mqtt_loop(self):
+        while True:
+            # sleep(5)
+            # 官方超级不推荐这种方式来处理消息。 但是不打算开一个线程来处理这个mqtt_timer
+            try:
+                self.client.loop(timeout=5)
+            except Exception as e:
+                logger.error(e)
+
+            if not self.mqtt_timer.reached():
+                continue
+            self.mqtt_timer.reset()
+            while not self.q_publish.empty():
+                try:
+                    topic, msg = self.q_publish.get(block=False)
+                except Exception as e:
+                    continue
+                self.publish(topic, msg)
 
 
 

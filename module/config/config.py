@@ -317,6 +317,7 @@ class Config(ConfigState, ConfigManual, ConfigWatcher, ConfigMenu):
 
         # 设置
         logger.attr(f'{task}.scheduler.next_run', next_run)
+        # 保证线程安全的
         scheduler.next_run = next_run
         self.save()
 
