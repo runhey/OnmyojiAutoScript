@@ -56,8 +56,8 @@
   {
     "itemName": "d_auto_entry",
     "imageName": "duel_d_auto_entry.png",
-    "roiFront": "28,127,66,62",
-    "roiBack": "28,127,66,62",
+    "roiFront": "42,133,66,62",
+    "roiBack": "20,119,115,111",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "自动上阵"

@@ -29,7 +29,7 @@ class DuelAssets:
 	# 预选点击确认 
 	I_D_CONFIRM = RuleImage(roi_front=(1097,517,139,156), roi_back=(1097,517,139,156), threshold=0.8, method="Template matching", file="./tasks/Duel/duel/duel_d_confirm.png")
 	# 自动上阵 
-	I_D_AUTO_ENTRY = RuleImage(roi_front=(28,127,66,62), roi_back=(28,127,66,62), threshold=0.8, method="Template matching", file="./tasks/Duel/duel/duel_d_auto_entry.png")
+	I_D_AUTO_ENTRY = RuleImage(roi_front=(42,133,66,62), roi_back=(20,119,115,111), threshold=0.8, method="Template matching", file="./tasks/Duel/duel/duel_d_auto_entry.png")
 	# 手动，弃用 
 	I_D_HAND = RuleImage(roi_front=(34,635,55,55), roi_back=(34,635,55,55), threshold=0.8, method="Template matching", file="./tasks/Duel/duel/duel_d_hand.png")
 	# 主界面的感叹号 
