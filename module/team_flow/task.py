@@ -2,11 +2,12 @@
 # @author runhey
 # github https://github.com/runhey
 from time import sleep
-from datetime import datetime, time
+from datetime import datetime, time, timedelta
 from random import randint
 
-
 from module.config.config import Config
+
+from tasks.Component.config_base import TimeDelta
 
 
 class Task:
@@ -57,7 +58,69 @@ class Task:
         else:
             raise TypeError(f'role must be str, not {type(role)}')
 
+    # ----------------------------------------------------------------------------------------------------------------------
+    # 对于host来进行操作的函数
+    def u(self) -> float:
+        """
+        效用函数
+        :return:
+        """
+        if self.role == 'leader':
+            return self.r_leader() - self.r_leader()
+        elif self.role == 'member':
+            return self.r_member() - self.c_member()
+
+    def r_leader(self, tasks: list['Task']) -> float:
+        """
+        收益函数
+        :param tasks: 在小组内的启用的同一任务列表
+        :return:
+        """
+        result = 0
+        for task in tasks:
+            if task.role == 'leader':
+                pass
+
+        return result
+
+    def c_leader(self) -> float:
+        """
+        成本函数
+        :return:
+        """
+
+    def r_member(self) -> float:
+        """
+        收益函数
+        :return:
+        """
+
+    def c_member(self) -> float:
+        """
+        成本函数
+        :return:
+        """
 
 
+def t_diff(before: Task, after: Task) -> timedelta:
+    """
+    计算两个任务之间的时间差
+    :param before:
+    :param after:
+    :return: 单位是秒
+    """
+    return (after.next_run - before.next_run).total_seconds()
 
 
+if __name__ == '__main__':
+    host = Task(next_run=datetime.fromisoformat('2023-09-13 18:46:23'),
+                limit_time=time.fromisoformat('00:30:00'),
+                target_run=datetime.fromisoformat('2023-09-13 18:46:23'),
+                team_task=True, role='leader', limit_count=0)
+
+    test1 = Task(next_run=datetime.fromisoformat('2023-09-13 18:44:23'),
+                 limit_time=time.fromisoformat('00:30:00'),
+                 target_run=datetime.fromisoformat('2023-09-13 18:46:23'),
+                 team_task=True, role='leader', limit_count=0)
+
+    print(t_diff(host, test1))

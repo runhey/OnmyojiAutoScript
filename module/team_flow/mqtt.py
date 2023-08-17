@@ -75,7 +75,7 @@ class Mqtt:
         # publish FirstNotice
         self.publish("FirstNotice", {"type": "join"})
         # 开启一个线程来处理消息
-        self.mqtt_timer = Timer(60)
+        self.mqtt_timer = Timer(30)
         self.mqtt_timer.start()
         self.mqtt_thread = Thread(target=self.mqtt_loop, name='mqtt_loop', daemon=True)
         self.mqtt_thread.start()
@@ -124,12 +124,19 @@ class Mqtt:
             if not self.mqtt_timer.reached():
                 continue
             self.mqtt_timer.reset()
+            publish_strategy_msg = None
             while not self.q_publish.empty():
                 try:
                     topic, msg = self.q_publish.get(block=False)
                 except Exception as e:
                     continue
+                if topic == 'Strategy':
+                    publish_strategy_msg = msg
+                    continue
                 self.publish(topic, msg)
+            if publish_strategy_msg:
+                # 先进先出 保证只发送一次最新的
+                self.publish('Strategy', publish_strategy_msg)
 
 
 

@@ -8,6 +8,7 @@ import threading
 
 from datetime import datetime, timedelta
 from cached_property import cached_property
+from threading import Lock
 
 from module.base.filter import Filter
 from module.config.config_updater import ConfigUpdater
@@ -118,6 +119,10 @@ class Config(ConfigState, ConfigManual, ConfigWatcher, ConfigMenu):
             # 这个导致 大量的无用log
             # logger.error(f'can not ask this variable {name}')
             return None  # 或者抛出异常，或者返回其他默认值
+
+    @cached_property
+    def lock_config(self) -> Lock:
+        return Lock()
 
     def gui_args(self, task: str) -> str:
         """
@@ -315,10 +320,15 @@ class Config(ConfigState, ConfigManual, ConfigWatcher, ConfigMenu):
         if server and scheduler.server_update != time(hour=9):
             next_run = parse_tomorrow_server(scheduler.server_update)
 
+
+        # 保证线程安全的
+        self.lock_config.acquire()
+        try:
+            scheduler.next_run = next_run
+        finally:
+            self.lock_config.release()
         # 设置
         logger.attr(f'{task}.scheduler.next_run', next_run)
-        # 保证线程安全的
-        scheduler.next_run = next_run
         self.save()
 
     @cached_property
