@@ -2,8 +2,8 @@
   {
     "itemName": "pet_house",
     "imageName": "pet_pet_house.png",
-    "roiFront": "1036,420,37,41",
-    "roiBack": "998,393,100,100",
+    "roiFront": "1015,431,27,31",
+    "roiBack": "952,412,144,60",
     "method": "Template matching",
     "threshold": 0.7,
     "description": "宠物小屋"
