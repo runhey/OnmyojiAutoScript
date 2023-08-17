@@ -90,8 +90,15 @@ class ScriptTask(GameUi, GeneralBattle, SwitchSoul, SecretAssets):
                 continue
             if not first_battle and layer == 6:
                 # 第六次关闭加成，但是发现没有这个接口。。。！！！居然没有注意到
+                buff = []
+                if con.secret_gold_50:
+                    buff.append(BuffClass.GOLD_50_CLOSE)
+                if con.secret_gold_100:
+                    buff.append(BuffClass.GOLD_100_CLOSE)
+                if buff is []:
+                    buff = None
                 self.click_battle()
-                success = self.run_general_battle(self.battle_config)
+                success = self.run_general_battle(self.battle_config, buff=buff)
                 continue
             elif not first_battle and layer == 9 and con.layer_9:
                 self.click_battle()
@@ -149,18 +156,51 @@ class ScriptTask(GameUi, GeneralBattle, SwitchSoul, SecretAssets):
                 logger.warning(f'OCR failed, try again {level}')
                 return None
 
+        def confirm_layer(ocr_target: RuleOcr, roi=None) -> int or None:
+            """
+            检查层数， 启用函数check_layer
+            :param ocr_target:
+            :param roi:
+            :return:
+            """
+            ocr_target.roi[0] = int(roi[0]) - 115
+            ocr_target.roi[1] = int(roi[1]) + 37
+            print(f'检测到的未通过ROI: {roi}')
+            print(f'检测到的勾玉数量ROI: {ocr_target.roi}')
+            jade_num = ocr_target.ocr(self.device.image)
+            if isinstance(jade_num, str):
+                logger.warning(f'OCR failed, try again {jade_num}')
+                return None
+            elif not isinstance(jade_num, int):
+                logger.warning(f'OCR failed, try again {jade_num}')
+                return None
+            if jade_num < 7:
+                logger.warning(f'OCR failed, try again {jade_num}')
+                return None
+            elif jade_num > 70:
+                logger.warning(f'OCR failed, try again {jade_num}')
+                return None
+            # 勾玉数量 = 层数 * 7
+            try:
+                lr = jade_num // 7
+                return lr
+            except TypeError:
+                logger.warning(f'OCR failed, try again {jade_num}')
+                return None
+
 
         if screenshot:
             self.screenshot()
         text_pos = self.O_SE_NO_PASS.ocr(self.device.image)
         if text_pos != (0, 0, 0, 0):
             # 如果能找得到 未通关 ，那可以挑战
-            layer = check_layer(self.O_SE_LAYER_1, None)
-            # 如果第一个文字就找得到的，就点击这个
-            if not layer:
-                layer = check_layer(self.O_SE_LAYER_8, None)
-            if not layer:
-                layer = check_layer(self.O_SE_LAYER_1, text_pos)
+            layer = confirm_layer(self.O_SE_JADE, text_pos)
+            # layer = check_layer(self.O_SE_LAYER_1, None)
+            # # 如果第一个文字就找得到的，就点击这个
+            # if not layer:
+            #     layer = check_layer(self.O_SE_LAYER_8, None)
+            # if not layer:
+            #     layer = check_layer(self.O_SE_LAYER_1, text_pos)
 
             print('识别到的层数：', layer)
             if layer:
@@ -175,11 +215,12 @@ class ScriptTask(GameUi, GeneralBattle, SwitchSoul, SecretAssets):
             last_text_pos = self.O_SE_NO_PASS_LAST.ocr(self.device.image)
             if last_text_pos != (0, 0, 0, 0):
                 # 如果是后面找得到
-                layer = check_layer(self.O_SE_LAYER_10, last_text_pos)
-                if not layer:
-                    layer = check_layer(self.O_SE_LAYER_9, None)
-                if not layer:
-                    layer = check_layer(self.O_SE_LAYER_10, None)
+                layer = confirm_layer(self.O_SE_JADE, last_text_pos)
+                # layer = check_layer(self.O_SE_LAYER_10, last_text_pos)
+                # if not layer:
+                #     layer = check_layer(self.O_SE_LAYER_9, None)
+                # if not layer:
+                #     layer = check_layer(self.O_SE_LAYER_10, None)
                 # 如果第一个文字就找得到的，就点击这个
                 if layer:
                     self.C_SE_CLICK_LAYER.roi_front = last_text_pos
@@ -236,3 +277,4 @@ if __name__ == '__main__':
     t.screenshot()
 
     t.run()
+    # t.find_battle(False)

@@ -45,6 +45,8 @@ class SecretAssets:
 	O_SE_LAYER_8 = RuleOcr(roi=(212,237,34,34), area=(212,237,34,34), mode="Single", method="Default", keyword="捌", name="se_layer_8")
 	# 后面的时候识别为通关的 
 	O_SE_NO_PASS_LAST = RuleOcr(roi=(429,381,180,234), area=(429,381,180,234), mode="Full", method="Default", keyword="未通关", name="se_no_pass_last")
+	# 勾玉 
+	O_SE_JADE = RuleOcr(roi=(327,230,23,24), area=(327,230,23,24), mode="Digit", method="Default", keyword="", name="se_jade")
 
 
 	# Swipe Rule Assets

@@ -14,6 +14,12 @@ class BuffClass(Enum):
     GOLD_100 = 40  # 金币100
     EXP_50 = 50  # 经验50
     EXP_100 = 60  # 经验100
+    AWAKE_CLOSE = 70  # 觉醒
+    SOUL_CLOSE = 80  # 御魂
+    GOLD_50_CLOSE = 90  # 金币50
+    GOLD_100_CLOSE = 100  # 金币100
+    EXP_50_CLOSE = 110  # 经验50
+    EXP_100_CLOSE = 120  # 经验100
 
 
 class BuffConfig(BaseModel):
