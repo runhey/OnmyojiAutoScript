@@ -75,5 +75,7 @@ class WeeklyTriflesAssets:
 	I_WT_SE_WECHAT = RuleImage(roi_front=(1023,630,56,57), roi_back=(1023,630,56,57), threshold=0.8, method="Template matching", file="./tasks/WeeklyTrifles/secret/secret_wt_se_wechat.png")
 	# 勾玉 
 	I_WT_SE_JADE = RuleImage(roi_front=(1129,529,35,39), roi_back=(1129,529,35,39), threshold=0.8, method="Template matching", file="./tasks/WeeklyTrifles/secret/secret_wt_se_jade.png")
+	# 排行 
+	I_WT_SE_RANK = RuleImage(roi_front=(1013,571,45,44), roi_back=(1013,571,45,44), threshold=0.8, method="Template matching", file="./tasks/WeeklyTrifles/secret/secret_wt_se_rank.png")
 
 
