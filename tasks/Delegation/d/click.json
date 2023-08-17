@@ -1,0 +1,32 @@
+[
+  {
+    "itemName": "d_1",
+    "roiFront": "162,496,100,166",
+    "roiBack": "162,496,100,166",
+    "description": "description"
+  },
+  {
+    "itemName": "d_2",
+    "roiFront": "293,493,100,170",
+    "roiBack": "293,493,100,170",
+    "description": "description"
+  },
+  {
+    "itemName": "d_3",
+    "roiFront": "427,492,100,170",
+    "roiBack": "427,492,100,170",
+    "description": "description"
+  },
+  {
+    "itemName": "d_4",
+    "roiFront": "563,493,100,174",
+    "roiBack": "563,493,100,174",
+    "description": "description"
+  },
+  {
+    "itemName": "d_5",
+    "roiFront": "695,491,100,178",
+    "roiBack": "695,491,100,178",
+    "description": "description"
+  }
+]

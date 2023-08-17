@@ -704,4 +704,20 @@ Refresh：直接刷新，如果刷新操作进入CD，将标记为失败并退�
 	<message><source>Greed Maneki</source><translation>贪吃鬼喂食+未升级的御魂奉纳</translation></message>	
 	<message><source>greed_maneki_help</source><translation>建议四星及一下的吃掉，五星的留给贪吃鬼</translation></message>
 </context>
+<context>
+    <name>Args</name>
+	<message><source>DelegationConfig</source><translation>委派</translation></message>	
+	<message><source>Bird Feather</source><translation>鸟之羽</translation></message>	
+	<message><source>bird_feather_help</source><translation>50体力->20片大蛇的逆鳞</translation></message>
+	<message><source>Find Earring</source><translation>寻找耳环</translation></message>	
+	<message><source>find_earring_help</source><translation>300体力->金币28万</translation></message>
+	<message><source>Cat Boss</source><translation>猫老大</translation></message>	
+	<message><source>cat_boss_help</source><translation>300体力->四星白蛋</translation></message>
+	<message><source>Miyoshino</source><translation>接送弥助</translation></message>	
+	<message><source>miyoshino_help</source><translation>100体力->三星结界卡</translation></message>
+	<message><source>Strange Trace</source><translation>奇怪的痕迹</translation></message>	
+	<message><source>strange_trace_help</source><translation>100体力->金币九万八</translation></message>
+	<message><source>Miyoshino Painting</source><translation>弥助的画</translation></message>	
+	<message><source>miyoshino_painting_help</source><translation>300体力->六星变异卡</translation></message>
+</context>
 </TS>
