@@ -99,8 +99,12 @@ class ScriptTask(GameUi, GeneralBattle, DuelAssets):
         :param target: 目标分数
         :return:
         """
-        current_score = self.O_D_SCORE.ocr(self.device.image)
-        return current_score if current_score <= target else None
+        while 1:
+            self.screenshot()
+            current_score = self.O_D_SCORE.ocr(self.device.image)
+            if current_score < 1200 or current_score > 3000:
+                continue
+            return current_score if current_score <= target else None
 
     def duel_one(self, current_score: int, enable: bool=False,
                  mark_mode: GreenMarkType=GreenMarkType.GREEN_MAIN) -> bool:
