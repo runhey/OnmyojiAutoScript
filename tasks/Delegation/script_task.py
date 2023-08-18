@@ -6,6 +6,7 @@ from datetime import time, datetime, timedelta
 
 from module.logger import logger
 from module.exception import TaskEnd
+from module.base.timer import Timer
 
 from tasks.GameUi.game_ui import GameUi
 from tasks.GameUi.page import page_main, page_delegation
@@ -18,6 +19,7 @@ class ScriptTask(GameUi, DelegationAssets):
     def run(self):
         self.ui_get_current_page()
         self.ui_goto(page_delegation)
+        self.check_reward()
         con: DelegationConfig = self.config.delegation.delegation_config
         if con.miyoshino_painting:
             self.delegate_one('弥助的画')
@@ -76,6 +78,29 @@ class ScriptTask(GameUi, DelegationAssets):
         logger.info(f'Delegation: {name} start')
         self.ui_click_until_disappear(self.I_D_START)
 
+    def check_reward(self):
+        check_timer = Timer(3)
+        check_timer.start()
+        while 1:
+            self.screenshot()
+            if self.appear_then_click(self.I_REWARDS_GET, interval=1):
+                check_timer.reset()
+                continue
+            if self.appear_then_click(self.I_REWARDS_CHAT, interval=1):
+                check_timer.reset()
+                continue
+            if self.appear_then_click(self.I_REWARDS_DONE, interval=1):
+                check_timer.reset()
+                continue
+
+
+            if not self.appear(self.I_REWARDS_MIN):
+                continue
+            if check_timer.reached():
+                break
+            if self.ocr_appear_click(self.O_D_DONE, interval=1):
+                check_timer.reset()
+                continue
 
 
 if __name__ == '__main__':

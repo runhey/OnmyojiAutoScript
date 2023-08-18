@@ -20,8 +20,8 @@
   {
     "itemName": "main_goto_friends",
     "imageName": "page_main_goto_friends.png",
-    "roiFront": "878,623,55,55",
-    "roiBack": "878,623,55,55",
+    "roiFront": "879,623,55,55",
+    "roiBack": "867,606,79,77",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"
