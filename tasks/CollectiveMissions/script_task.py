@@ -2,6 +2,7 @@
 # @author runhey
 # github https://github.com/runhey
 import time
+import random
 import re
 from cached_property import cached_property
 from enum import Enum
@@ -232,21 +233,30 @@ class ScriptTask(GameUi, CollectiveMissionsAssets):
             3: self.I_CM_ADD_4,
         }
         # 滑动到最多的材料
+        random_click = [self.I_CM_ADD_1, self.I_CM_ADD_2, self.I_CM_ADD_3, self.I_CM_ADD_4]
+        window_control = self.config.script.device.control_method == 'window_message'
         swipe_count = 0
+        click_count = 0
         while 1:
             self.screenshot()
             if self.appear(self.I_CM_MATTER):
                 break
-            if self.swipe(match_swipe[max_index], interval=2.5):
+            if not window_control and self.swipe(match_swipe[max_index], interval=2.5):
                 swipe_count += 1
                 time.sleep(1.5)
                 continue
-            # if self.appear_then_click(match_image[max_index], interval=1):
-            #     self.device.click_record_clear()
-            #     continue
 
             # 为什么使用window_message无法滑动
-            if swipe_count >= 5:
+            if window_control and click_count > 30:
+                logger.info('Swipe to the most matter failed')
+                logger.info('Please check your game resolution')
+                break
+            if window_control and self.click(random.choice(random_click), interval=0.7):
+                click_count += 1
+                continue
+
+
+            if not window_control and swipe_count >= 5:
                 logger.info('Swipe to the most matter failed')
                 logger.info('Please check your game resolution')
                 raise RequestHumanTakeover
