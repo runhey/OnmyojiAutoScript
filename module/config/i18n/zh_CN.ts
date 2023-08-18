@@ -173,6 +173,7 @@
 	<message><source>GlobalGame</source><translation>全局游戏设置</translation></message>
 	<message><source>RealmRaid</source><translation>个人突破</translation></message>
 	<message><source>RyouToppa</source><translation>寮突破</translation></message>
+	<message><source>Exploration</source><translation>探索</translation></message>
 	<message><source>List Rule</source><translation>列表规则</translation></message>
 	<message><source>Activity Task</source><translation>限时活动</translation></message>
 	<message><source>ActivityShikigami</source><translation>当期式神爬塔</translation></message>
@@ -198,6 +199,8 @@
 	<message><source>Hunt</source><translation>狩猎战</translation></message>
 	<message><source>MysteryShop</source><translation>神秘商店</translation></message>
 	<message><source>Duel</source><translation>斗技</translation></message>
+	<message><source>WantedQuests</source><translation>悬赏封印</translation></message>
+	<message><source>Tako</source><translation>石距</translation></message>
 </context>
 <context>
     <name>TaskList</name>
@@ -242,6 +245,8 @@
 	<message><source>Hunt</source><translation>狩猎战</translation></message>
 	<message><source>MysteryShop</source><translation>神秘商店</translation></message>
 	<message><source>Duel</source><translation>斗技</translation></message>
+	<message><source>WantedQuests</source><translation>悬赏封印</translation></message>
+	<message><source>Tako</source><translation>石距</translation></message>
 </context>
 <context>
     <name>Args</name>
@@ -719,5 +724,8 @@ Refresh：直接刷新，如果刷新操作进入CD，将标记为失败并退�
 	<message><source>strange_trace_help</source><translation>100体力->金币九万八</translation></message>
 	<message><source>Miyoshino Painting</source><translation>弥助的画</translation></message>	
 	<message><source>miyoshino_painting_help</source><translation>300体力->六星变异卡</translation></message>
+	<message><source>WantedQuestsConfig</source><translation>悬赏</translation></message>
+	<message><source>Before End</source><translation>强制设定悬赏刷新前 X 分钟执行</translation></message>
+	<message><source>before_end_help</source><translation>默认'00:00:00'表示不使用这个功能，不可取负值，建议最后一小时才执行悬赏'01:00:00'</translation></message>
 </context>
 </TS>
