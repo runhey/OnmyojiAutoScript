@@ -2,6 +2,7 @@
 # @author runhey
 # github https://github.com/runhey
 import re
+import copy
 from time import sleep
 from datetime import timedelta, time, datetime
 from cached_property import cached_property
@@ -25,13 +26,16 @@ class ScriptTask(SecretScriptTask, WantedQuestsAssets):
         self.pre_work()
         self.screenshot()
         number_challenge = self.O_WQ_NUMBER.ocr(self.device.image)
+        O_TEXT_COPY_1 = copy.deepcopy(self.O_WQ_TEXT_1)
+        O_TEXT_COPY_2 = copy.deepcopy(self.O_WQ_TEXT_2)
+        O_TEXT_COPY_1.keyword = '悬贵封印'
+        O_TEXT_COPY_2.keyword = '悬贵封印'
         while 1:
             self.screenshot()
-            if self.appear_then_click(self.I_WQ_BOX, interval=0.6):
+            if self.appear(self.I_WQ_BOX):
+                self.ui_get_reward(self.I_WQ_BOX)
                 continue
-            if self.ui_reward_appear_click(False):
-                continue
-            if self.ocr_appear(self.O_WQ_TEXT_1, interval=0.7):
+            if self.ocr_appear(self.O_WQ_TEXT_1, interval=0.7) or self.ocr_appear(O_TEXT_COPY_1, interval=0.7):
                 cu, re, total = self.O_WQ_NUM_1.ocr(self.device.image)
                 if cu > total:
                     logger.warning('Current number of wanted quests is greater than total number')
@@ -39,7 +43,7 @@ class ScriptTask(SecretScriptTask, WantedQuestsAssets):
                 if cu < total and re != 0:
                     self.execute_mission(self.O_WQ_TEXT_1, total, number_challenge)
                 continue
-            if self.ocr_appear(self.O_WQ_TEXT_2, interval=0.7):
+            if self.ocr_appear(self.O_WQ_TEXT_2, interval=0.7) or self.ocr_appear(O_TEXT_COPY_1, interval=0.7):
                 cu, re, total = self.O_WQ_NUM_2.ocr(self.device.image)
                 if cu > total:
                     logger.warning('Current number of wanted quests is greater than total number')
@@ -65,17 +69,16 @@ class ScriptTask(SecretScriptTask, WantedQuestsAssets):
         now_time = now_datetime.time()
         if time(hour=6) <= now_time < time(hour=18):
             # 如果是在6点到18点之间，那就设定下一次运行的时间为第二天的6点 + before_end
-            next_run_datetime = datetime.combine(now_datetime.date() +
-                                                 timedelta(days=1), time(hour=6) +
-                                                 time_delta)
+            next_run_datetime = datetime.combine(now_datetime.date() + timedelta(days=1), time(hour=6))
+            next_run_datetime = next_run_datetime + time_delta
         elif time(hour=18) <= now_time < time(hour=23, minute=59, second=59):
             # 如果是在18点到23点59分59秒之间，那就设定下一次运行的时间为第二天的18点 + before_end
-            next_run_datetime = datetime.combine(now_datetime.date() +
-                                                    timedelta(days=1), time(hour=18) +
-                                                    time_delta)
+            next_run_datetime = datetime.combine(now_datetime.date() + timedelta(days=1), time(hour=18))
+            next_run_datetime = next_run_datetime + time_delta
         else:
             # 如果是在0点到6点之间，那就设定下一次运行的时间为今天的18点 + before_end
-            next_run_datetime = datetime.combine(now_datetime.date(), time(hour=18) + time_delta)
+            next_run_datetime = datetime.combine(now_datetime.date(), time(hour=18))
+            next_run_datetime = next_run_datetime + time_delta
         self.set_next_run(task='WantedQuests', target=next_run_datetime)
 
     def pre_work(self):
@@ -113,7 +116,7 @@ class ScriptTask(SecretScriptTask, WantedQuestsAssets):
             self.screenshot()
             if self.appear(self.I_TRACE_TRUE):
                 break
-            if self.ocr_appear_click(ocr, interval=1):
+            if self.click(ocr, interval=1):
                 continue
         if not self.appear(self.I_GOTO_1):
             # 如果没有出现 '前往'按钮， 那就是这个可能是神秘任务但是没有解锁
