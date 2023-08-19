@@ -30,6 +30,7 @@ from tasks.Pets.config import Pets
 from tasks.SoulsTidy.config import SoulsTidy
 from tasks.Delegation.config import Delegation
 from tasks.WantedQuests.config import WantedQuests
+from tasks.Tako.config import Tako
 # ----------------------------------------------------------------------------------------------------------------------
 from tasks.Orochi.config import Orochi
 from tasks.OrochiMoans.config import OrochiMoans
@@ -82,6 +83,7 @@ class ConfigModel(ConfigBase):
     delegation: Delegation = Field(default_factory=Delegation)
     exploration: Exploration = Field(default_factory=Exploration)
     wanted_quests: WantedQuests = Field(default_factory=WantedQuests)
+    tako: Tako = Field(default_factory=Tako)
 
     # 这些是刷御魂的
     orochi: Orochi = Field(default_factory=Orochi)
