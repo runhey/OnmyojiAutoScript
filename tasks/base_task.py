@@ -500,7 +500,11 @@ class BaseTask(GlobalGameAssets):
             self.screenshot()
             if self.appear(stop):
                 break
-            if self.appear_then_click(click, interval=1):
+            if isinstance(click, RuleImage) and self.appear_then_click(click, interval=1):
+                continue
+            if isinstance(click, RuleClick) and self.click(click, interval=1):
+                continue
+            elif isinstance(click, RuleOcr) and self.ocr_appear_click(click, interval=1):
                 continue
 
     def ui_click_until_disappear(self, click):

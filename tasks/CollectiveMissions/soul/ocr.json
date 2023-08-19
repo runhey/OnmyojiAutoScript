@@ -1,0 +1,20 @@
+[
+  {
+    "itemName": "sl_level",
+    "roiFront": "174,139,30,24",
+    "roiBack": "174,139,30,24",
+    "mode": "Single",
+    "method": "Default",
+    "keyword": "古",
+    "description": "+0 级"
+  },
+  {
+    "itemName": "sl_number",
+    "roiFront": "813,94,187,39",
+    "roiBack": "813,94,187,39",
+    "mode": "Single",
+    "method": "Default",
+    "keyword": "",
+    "description": "将提交xx次任务"
+  }
+]

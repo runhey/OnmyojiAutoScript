@@ -78,3 +78,20 @@ class CollectiveMissionsAssets:
 	S_CM_MATTER_4 = RuleSwipe(roi_front=(689,524,21,22), roi_back=(903,518,46,32), mode="default", name="cm_matter_4")
 
 
+	# Image Rule Assets
+	# 提交 
+	I_SL_SUBMIT = RuleImage(roi_front=(835,588,145,61), roi_back=(835,588,145,61), threshold=0.8, method="Template matching", file="./tasks/CollectiveMissions/soul/soul_sl_submit.png")
+
+
+	# Long Click Rule Assets
+	# 长按 
+	L_SL_LONG = RuleLongClick(roi_front=(178,194,58,49), roi_back=(178,194,58,49), duration=1500, name="sl_long")
+
+
+	# Ocr Rule Assets
+	# +0 级 
+	O_SL_LEVEL = RuleOcr(roi=(174,139,30,24), area=(174,139,30,24), mode="Single", method="Default", keyword="古", name="sl_level")
+	# 将提交xx次任务 
+	O_SL_NUMBER = RuleOcr(roi=(813,94,187,39), area=(813,94,187,39), mode="Single", method="Default", keyword="", name="sl_number")
+
+

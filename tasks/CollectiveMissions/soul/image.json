@@ -1,0 +1,11 @@
+[
+  {
+    "itemName": "sl_submit",
+    "imageName": "soul_sl_submit.png",
+    "roiFront": "835,588,145,61",
+    "roiBack": "835,588,145,61",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "提交"
+  }
+]
