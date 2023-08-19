@@ -727,5 +727,7 @@ Refresh：直接刷新，如果刷新操作进入CD，将标记为失败并退�
 	<message><source>WantedQuestsConfig</source><translation>悬赏</translation></message>
 	<message><source>Before End</source><translation>强制设定悬赏刷新前 X 分钟执行</translation></message>
 	<message><source>before_end_help</source><translation>默认'00:00:00'表示不使用这个功能，不可取负值，建议最后一小时才执行悬赏'01:00:00'</translation></message>
+	<message><source>Time Of Mystery</source><translation>强制设定出现神秘商店当天的执行时间</translation></message>
+	<message><source>time_of_mystery_help</source><translation>限定[00:00:01-23:30:00],这将使你无视掉调度器的Interval。保持默认'00:00:00'表示不使用</translation></message>
 </context>
 </TS>
