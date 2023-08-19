@@ -15,11 +15,12 @@ from tasks.GameUi.game_ui import GameUi
 from tasks.GameUi.page import page_main, page_exploration
 from tasks.Component.GeneralBattle.general_battle import GeneralBattle
 from tasks.Component.GeneralBattle.config_general_battle import GeneralBattleConfig
+from tasks.Component.GeneralInvite.general_invite import GeneralInvite
 from tasks.Secret.script_task import ScriptTask as SecretScriptTask
 from tasks.WantedQuests.config import WantedQuestsConfig
 from tasks.WantedQuests.assets import WantedQuestsAssets
 
-class ScriptTask(SecretScriptTask, WantedQuestsAssets):
+class ScriptTask(SecretScriptTask, GeneralInvite, WantedQuestsAssets):
 
     def run(self):
         con = self.config
@@ -28,15 +29,22 @@ class ScriptTask(SecretScriptTask, WantedQuestsAssets):
         number_challenge = self.O_WQ_NUMBER.ocr(self.device.image)
         O_TEXT_COPY_1 = copy.deepcopy(self.O_WQ_TEXT_1)
         O_TEXT_COPY_2 = copy.deepcopy(self.O_WQ_TEXT_2)
-        O_TEXT_COPY_1.keyword = '悬贵封印'
-        O_TEXT_COPY_2.keyword = '悬贵封印'
+        O_TEXT_COPY_1.keyword = '封印'
+        O_TEXT_COPY_2.keyword = '封印'
+        ocr_error_count = 0
         while 1:
             self.screenshot()
             if self.appear(self.I_WQ_BOX):
                 self.ui_get_reward(self.I_WQ_BOX)
                 continue
+            if ocr_error_count > 10:
+                logger.warning('OCR failed too many times, exit')
+                break
             if self.ocr_appear(self.O_WQ_TEXT_1, interval=0.7) or self.ocr_appear(O_TEXT_COPY_1, interval=0.7):
                 cu, re, total = self.O_WQ_NUM_1.ocr(self.device.image)
+                if cu == re == total == 0:
+                    logger.warning('OCR failed and skip this round')
+                    ocr_error_count += 1
                 if cu > total:
                     logger.warning('Current number of wanted quests is greater than total number')
                     cu = cu % 10
@@ -45,13 +53,21 @@ class ScriptTask(SecretScriptTask, WantedQuestsAssets):
                 continue
             if self.ocr_appear(self.O_WQ_TEXT_2, interval=0.7) or self.ocr_appear(O_TEXT_COPY_1, interval=0.7):
                 cu, re, total = self.O_WQ_NUM_2.ocr(self.device.image)
+                if cu == re == total == 0:
+                    logger.warning('OCR failed and skip this round')
+                    ocr_error_count += 1
                 if cu > total:
                     logger.warning('Current number of wanted quests is greater than total number')
                     cu = cu % 10
                 if cu < total and re != 0:
                     self.execute_mission(self.O_WQ_TEXT_2, total, number_challenge)
                 continue
-            if not self.appear(self.I_WQ_CHECK_TASK, interval=2.5):
+
+            if self.appear(self.I_WQ_CHECK_TASK):
+                continue
+            sleep(1.5)
+            self.screenshot()
+            if not self.appear(self.I_WQ_CHECK_TASK):
                 logger.info('No wanted quests')
                 break
 
@@ -100,6 +116,7 @@ class ScriptTask(SecretScriptTask, WantedQuestsAssets):
                 continue
         # 已追踪所有任务
         logger.info('All wanted quests are traced')
+        self.invite_five()
         self.ui_click_until_disappear(self.I_UI_BACK_RED)
         self.ui_goto(page_exploration)
 
@@ -197,6 +214,38 @@ class ScriptTask(SecretScriptTask, WantedQuestsAssets):
                 continue
         logger.info('Secret mission finished')
 
+    def invite_five(self):
+        """
+        邀请好友，默认点五个
+        :return:
+        """
+        def invite(add_button):
+            self.screenshot()
+            if not self.appear(add_button):
+                return False
+            self.ui_click(add_button, self.I_INVITE_ENSURE)
+            sleep(1)
+            self.click(self.I_WQ_FIREND_1)
+            sleep(0.4)
+            self.click(self.I_WQ_FIREND_2)
+            sleep(0.4)
+            self.click(self.I_WQ_FIREND_3)
+            sleep(0.4)
+            self.click(self.I_WQ_FIREND_4)
+            sleep(0.4)
+            self.click(self.I_WQ_FIREND_5)
+            sleep(0.2)
+            self.screenshot()
+            if not self.appear(self.I_SELECTED):
+                logger.warning('No friend selected')
+                return False
+            self.ui_click_until_disappear(self.I_INVITE_ENSURE)
+            sleep(0.5)
+
+        logger.hr('Invite friends')
+        invite(self.I_WQ_INVITE_1)
+        invite(self.I_WQ_INVITE_2)
+        invite(self.I_WQ_INVITE_3)
 
 if __name__ == '__main__':
     from module.config.config import Config
@@ -207,5 +256,7 @@ if __name__ == '__main__':
     t.screenshot()
 
     t.run()
+    # print(t.appear(t.I_WQ_CHECK_TASK))
+
 
 

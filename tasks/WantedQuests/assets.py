@@ -16,9 +16,9 @@ class WantedQuestsAssets:
 	# 悬赏封印 
 	O_WQ_WANTED = RuleOcr(roi=(9,145,123,381), area=(9,145,123,381), mode="Full", method="Default", keyword="", name="wq_wanted")
 	# Ocr-description 
-	O_WQ_TEXT_1 = RuleOcr(roi=(19,233,100,32), area=(19,233,100,32), mode="Single", method="Default", keyword="悬赏封印", name="wq_text_1")
+	O_WQ_TEXT_1 = RuleOcr(roi=(67,233,52,32), area=(67,233,52,32), mode="Single", method="Default", keyword="封印", name="wq_text_1")
 	# Ocr-description 
-	O_WQ_TEXT_2 = RuleOcr(roi=(20,377,98,32), area=(20,377,98,32), mode="Single", method="Default", keyword="悬赏封印", name="wq_text_2")
+	O_WQ_TEXT_2 = RuleOcr(roi=(66,377,52,32), area=(66,377,52,32), mode="Single", method="Default", keyword="封印", name="wq_text_2")
 	# Ocr-description 
 	O_WQ_NUM_1 = RuleOcr(roi=(32,260,72,27), area=(32,260,72,27), mode="DigitCounter", method="Default", keyword="", name="wq_num_1")
 	# Ocr-description 
@@ -51,6 +51,25 @@ class WantedQuestsAssets:
 
 
 	# Image Rule Assets
+	# description 
+	I_WQ_INVITE_1 = RuleImage(roi_front=(137,361,39,47), roi_back=(108,338,100,100), threshold=0.8, method="Template matching", file="./tasks/WantedQuests/invite/invite_wq_invite_1.png")
+	# description 
+	I_WQ_INVITE_2 = RuleImage(roi_front=(462,361,37,47), roi_back=(435,336,100,100), threshold=0.8, method="Template matching", file="./tasks/WantedQuests/invite/invite_wq_invite_2.png")
+	# description 
+	I_WQ_INVITE_3 = RuleImage(roi_front=(754,366,39,42), roi_back=(728,339,100,100), threshold=0.8, method="Template matching", file="./tasks/WantedQuests/invite/invite_wq_invite_3.png")
+	# description 
+	I_WQ_FIREND_1 = RuleImage(roi_front=(449,191,172,70), roi_back=(449,191,172,70), threshold=0.8, method="Template matching", file="./tasks/WantedQuests/invite/invite_wq_firend_1.png")
+	# description 
+	I_WQ_FIREND_2 = RuleImage(roi_front=(743,192,172,69), roi_back=(743,192,172,69), threshold=0.8, method="Template matching", file="./tasks/WantedQuests/invite/invite_wq_firend_2.png")
+	# description 
+	I_WQ_FIREND_3 = RuleImage(roi_front=(453,281,175,71), roi_back=(453,281,175,71), threshold=0.8, method="Template matching", file="./tasks/WantedQuests/invite/invite_wq_firend_3.png")
+	# description 
+	I_WQ_FIREND_4 = RuleImage(roi_front=(743,280,171,76), roi_back=(743,280,171,76), threshold=0.8, method="Template matching", file="./tasks/WantedQuests/invite/invite_wq_firend_4.png")
+	# description 
+	I_WQ_FIREND_5 = RuleImage(roi_front=(479,376,148,56), roi_back=(479,376,148,56), threshold=0.8, method="Template matching", file="./tasks/WantedQuests/invite/invite_wq_firend_5.png")
+
+
+	# Image Rule Assets
 	# 封印 
 	I_WQ_SEAL = RuleImage(roi_front=(244,181,40,40), roi_back=(56,152,664,396), threshold=0.8, method="Template matching", file="./tasks/WantedQuests/wq/wq_wq_seal.png")
 	# 勾号 
@@ -74,7 +93,7 @@ class WantedQuestsAssets:
 	# description 
 	I_GOTO_4 = RuleImage(roi_front=(979,447,87,42), roi_back=(979,447,87,42), threshold=0.8, method="Template matching", file="./tasks/WantedQuests/wq/wq_goto_4.png")
 	# 判断是否还有任务 
-	I_WQ_CHECK_TASK = RuleImage(roi_front=(106,296,24,113), roi_back=(73,122,69,427), threshold=0.85, method="Template matching", file="./tasks/WantedQuests/wq/wq_wq_check_task.png")
+	I_WQ_CHECK_TASK = RuleImage(roi_front=(110,154,21,125), roi_back=(73,122,69,459), threshold=0.8, method="Template matching", file="./tasks/WantedQuests/wq/wq_wq_check_task.png")
 
 
 	# Image Rule Assets

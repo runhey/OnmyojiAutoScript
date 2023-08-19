@@ -101,10 +101,10 @@
   {
     "itemName": "wq_check_task",
     "imageName": "wq_wq_check_task.png",
-    "roiFront": "106,296,24,113",
-    "roiBack": "73,122,69,427",
+    "roiFront": "110,154,21,125",
+    "roiBack": "73,122,69,459",
     "method": "Template matching",
-    "threshold": 0.85,
+    "threshold": 0.8,
     "description": "判断是否还有任务"
   }
 ]
