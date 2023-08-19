@@ -19,7 +19,7 @@ class SecretAssets:
 	# 进入 
 	I_SE_ENTER = RuleImage(roi_front=(1145,593,100,100), roi_back=(1145,593,100,100), threshold=0.8, method="Template matching", file="./tasks/Secret/se/se_se_enter.png")
 	# 秘闻挑战 
-	I_SE_FIRE = RuleImage(roi_front=(1108,551,100,100), roi_back=(1108,551,100,100), threshold=0.8, method="Template matching", file="./tasks/Secret/se/se_se_fire.png")
+	I_SE_FIRE = RuleImage(roi_front=(1108,551,100,100), roi_back=(1100,541,120,120), threshold=0.7, method="Template matching", file="./tasks/Secret/se/se_se_fire.png")
 	# 排行 
 	I_SE_PLACEMENT = RuleImage(roi_front=(1013,570,50,48), roi_back=(996,555,79,81), threshold=0.8, method="Template matching", file="./tasks/Secret/se/se_se_placement.png")
 	# 勾玉 
@@ -45,6 +45,8 @@ class SecretAssets:
 	O_SE_LAYER_8 = RuleOcr(roi=(212,237,34,34), area=(212,237,34,34), mode="Single", method="Default", keyword="捌", name="se_layer_8")
 	# 后面的时候识别为通关的 
 	O_SE_NO_PASS_LAST = RuleOcr(roi=(429,381,180,234), area=(429,381,180,234), mode="Full", method="Default", keyword="未通关", name="se_no_pass_last")
+	# 勾玉 
+	O_SE_JADE = RuleOcr(roi=(327,230,23,24), area=(327,230,23,24), mode="Digit", method="Default", keyword="", name="se_jade")
 
 
 	# Swipe Rule Assets

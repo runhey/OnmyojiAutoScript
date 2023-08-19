@@ -1,0 +1,128 @@
+[
+  {
+    "itemName": "wq_number",
+    "roiFront": "569,13,50,32",
+    "roiBack": "569,13,50,32",
+    "mode": "Digit",
+    "method": "Default",
+    "keyword": "",
+    "description": "挑战券的数量"
+  },
+  {
+    "itemName": "wq_wanted",
+    "roiFront": "9,145,123,381",
+    "roiBack": "9,145,123,381",
+    "mode": "Full",
+    "method": "Default",
+    "keyword": "",
+    "description": "悬赏封印"
+  },
+  {
+    "itemName": "wq_text_1",
+    "roiFront": "67,233,52,32",
+    "roiBack": "67,233,52,32",
+    "mode": "Single",
+    "method": "Default",
+    "keyword": "封印",
+    "description": "Ocr-description"
+  },
+  {
+    "itemName": "wq_text_2",
+    "roiFront": "66,377,52,32",
+    "roiBack": "66,377,52,32",
+    "mode": "Single",
+    "method": "Default",
+    "keyword": "封印",
+    "description": "Ocr-description"
+  },
+  {
+    "itemName": "wq_num_1",
+    "roiFront": "32,260,72,27",
+    "roiBack": "32,260,72,27",
+    "mode": "DigitCounter",
+    "method": "Default",
+    "keyword": "",
+    "description": "Ocr-description"
+  },
+  {
+    "itemName": "wq_num_2",
+    "roiFront": "34,406,65,24",
+    "roiBack": "34,406,65,24",
+    "mode": "DigitCounter",
+    "method": "Default",
+    "keyword": "",
+    "description": "Ocr-description"
+  },
+  {
+    "itemName": "wq_type_1",
+    "roiFront": "544,238,55,36",
+    "roiBack": "544,238,55,36",
+    "mode": "Single",
+    "method": "Default",
+    "keyword": "",
+    "description": "Ocr-description"
+  },
+  {
+    "itemName": "wq_type_2",
+    "roiFront": "544,311,55,30",
+    "roiBack": "544,311,55,30",
+    "mode": "Single",
+    "method": "Default",
+    "keyword": "",
+    "description": "Ocr-description"
+  },
+  {
+    "itemName": "wq_type_3",
+    "roiFront": "544,382,54,30",
+    "roiBack": "544,382,54,30",
+    "mode": "Single",
+    "method": "Default",
+    "keyword": "",
+    "description": "Ocr-description"
+  },
+  {
+    "itemName": "wq_type_4",
+    "roiFront": "545,452,52,32",
+    "roiBack": "545,452,52,32",
+    "mode": "Single",
+    "method": "Default",
+    "keyword": "",
+    "description": "Ocr-description"
+  },
+  {
+    "itemName": "wq_info_1",
+    "roiFront": "609,236,309,45",
+    "roiBack": "609,236,309,45",
+    "mode": "Single",
+    "method": "Default",
+    "keyword": "",
+    "description": "Ocr-description"
+  },
+  {
+    "itemName": "wq_info_2",
+    "roiFront": "612,308,298,41",
+    "roiBack": "612,308,298,41",
+    "mode": "Single",
+    "method": "Default",
+    "keyword": "",
+    "description": "Ocr-description"
+  },
+  {
+    "itemName": "wq_info_3",
+    "roiFront": "612,376,305,44",
+    "roiBack": "612,376,305,44",
+    "mode": "Single",
+    "method": "Default",
+    "keyword": "",
+    "description": "Ocr-description"
+  },
+  {
+    "itemName": "wq_info_4",
+    "roiFront": "613,446,315,44",
+    "roiBack": "613,446,315,44",
+    "mode": "Single",
+    "method": "Default",
+    "keyword": "",
+    "description": "Ocr-description"
+  }
+]

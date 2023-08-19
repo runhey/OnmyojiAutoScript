@@ -110,6 +110,7 @@ class ScriptTask(GameUi, GeneralBattle, GeneralRoom, GeneralInvite, SwitchSoul, 
         self.set_next_run(task='GoldYoukai', success=True, finish=False)
         raise TaskEnd('GoldYoukai')
 
+
 if __name__ == '__main__':
     from module.config.config import Config
     from module.device.device import Device

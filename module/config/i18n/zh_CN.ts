@@ -173,6 +173,7 @@
 	<message><source>GlobalGame</source><translation>全局游戏设置</translation></message>
 	<message><source>RealmRaid</source><translation>个人突破</translation></message>
 	<message><source>RyouToppa</source><translation>寮突破</translation></message>
+	<message><source>Exploration</source><translation>探索</translation></message>
 	<message><source>List Rule</source><translation>列表规则</translation></message>
 	<message><source>Activity Task</source><translation>限时活动</translation></message>
 	<message><source>ActivityShikigami</source><translation>当期式神爬塔</translation></message>
@@ -198,6 +199,8 @@
 	<message><source>Hunt</source><translation>狩猎战</translation></message>
 	<message><source>MysteryShop</source><translation>神秘商店</translation></message>
 	<message><source>Duel</source><translation>斗技</translation></message>
+	<message><source>WantedQuests</source><translation>悬赏封印</translation></message>
+	<message><source>Tako</source><translation>石距</translation></message>
 </context>
 <context>
     <name>TaskList</name>
@@ -242,6 +245,8 @@
 	<message><source>Hunt</source><translation>狩猎战</translation></message>
 	<message><source>MysteryShop</source><translation>神秘商店</translation></message>
 	<message><source>Duel</source><translation>斗技</translation></message>
+	<message><source>WantedQuests</source><translation>悬赏封印</translation></message>
+	<message><source>Tako</source><translation>石距</translation></message>
 </context>
 <context>
     <name>Args</name>
@@ -703,5 +708,27 @@ Refresh：直接刷新，如果刷新操作进入CD，将标记为失败并退�
 	<message><source>SimpleTidy</source><translation>简易御魂清理</translation></message>	
 	<message><source>Greed Maneki</source><translation>贪吃鬼喂食+未升级的御魂奉纳</translation></message>	
 	<message><source>greed_maneki_help</source><translation>建议四星及一下的吃掉，五星的留给贪吃鬼</translation></message>
+</context>
+<context>
+    <name>Args</name>
+	<message><source>DelegationConfig</source><translation>委派</translation></message>	
+	<message><source>Bird Feather</source><translation>鸟之羽</translation></message>	
+	<message><source>bird_feather_help</source><translation>50体力->20片大蛇的逆鳞</translation></message>
+	<message><source>Find Earring</source><translation>寻找耳环</translation></message>	
+	<message><source>find_earring_help</source><translation>300体力->金币28万</translation></message>
+	<message><source>Cat Boss</source><translation>猫老大</translation></message>	
+	<message><source>cat_boss_help</source><translation>300体力->四星白蛋</translation></message>
+	<message><source>Miyoshino</source><translation>接送弥助</translation></message>	
+	<message><source>miyoshino_help</source><translation>100体力->三星结界卡</translation></message>
+	<message><source>Strange Trace</source><translation>奇怪的痕迹</translation></message>	
+	<message><source>strange_trace_help</source><translation>100体力->金币九万八</translation></message>
+	<message><source>Miyoshino Painting</source><translation>弥助的画</translation></message>	
+	<message><source>miyoshino_painting_help</source><translation>300体力->六星变异卡</translation></message>
+	<message><source>WantedQuestsConfig</source><translation>悬赏</translation></message>
+	<message><source>Before End</source><translation>强制设定悬赏刷新前 X 分钟执行</translation></message>
+	<message><source>before_end_help</source><translation>默认'00:00:00'表示不使用这个功能，不可取负值，建议最后一小时才执行悬赏'01:00:00'</translation></message>
+	<message><source>Time Of Mystery</source><translation>强制设定出现神秘商店当天的执行时间</translation></message>
+	<message><source>time_of_mystery_help</source><translation>限定[00:00:01-23:30:00],这将使你无视掉调度器的Interval。保持默认'00:00:00'表示不使用</translation></message>
+	<message><source>TakoConfig</source><translation>石距加成</translation></message>
 </context>
 </TS>

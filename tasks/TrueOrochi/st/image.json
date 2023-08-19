@@ -106,5 +106,23 @@
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"
+  },
+  {
+    "itemName": "st_create_room",
+    "imageName": "st_st_create_room.png",
+    "roiFront": "528,482,223,62",
+    "roiBack": "528,482,223,62",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "60体力创建"
+  },
+  {
+    "itemName": "st_frame",
+    "imageName": "st_st_frame.png",
+    "roiFront": "574,441,130,63",
+    "roiBack": "574,441,130,63",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "头像框"
   }
 ]

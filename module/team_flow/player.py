@@ -25,9 +25,9 @@ class Player:
             item = {}
             if not task.team_task:
                 continue
-            item['next_run'] = task.next_run
-            item['role'] = task.role
-            item['limit_time'] = task.limit_time
-            item['limit_count'] = task.limit_count
+            item['next_run'] = str(task.next_run)
+            item['role'] = str(task.role)
+            item['limit_time'] = str(task.limit_time)
+            item['limit_count'] = int(task.limit_count)
             result[name] = item
         return result

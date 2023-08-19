@@ -455,15 +455,22 @@ class GeneralBattle(GeneralBuff, GeneralBattleAssets):
         if isinstance(buff, BuffClass):
             buff = [buff]
         match_method = {
-            BuffClass.AWAKE: self.awake,
-            BuffClass.SOUL: self.soul,
-            BuffClass.GOLD_50: self.gold_50,
-            BuffClass.GOLD_100: self.gold_100,
-            BuffClass.EXP_50: self.exp_50,
-            BuffClass.EXP_100: self.exp_100,
+            BuffClass.AWAKE: (self.awake, True),
+            BuffClass.SOUL: (self.soul, True),
+            BuffClass.GOLD_50: (self.gold_50, True),
+            BuffClass.GOLD_100: (self.gold_100, True),
+            BuffClass.EXP_50: (self.exp_50, True),
+            BuffClass.EXP_100: (self.exp_100, True),
+            BuffClass.AWAKE_CLOSE: (self.awake, False),
+            BuffClass.SOUL_CLOSE: (self.soul, False),
+            BuffClass.GOLD_50_CLOSE: (self.gold_50, False),
+            BuffClass.GOLD_100_CLOSE: (self.gold_100, False),
+            BuffClass.EXP_50_CLOSE: (self.exp_50, False),
+            BuffClass.EXP_100_CLOSE: (self.exp_100, False),
         }
         for b in buff:
-            match_method[b]()
+            func, is_open = match_method[b]
+            func(is_open)
             time.sleep(0.1)
         logger.info(f'Open buff success')
         while 1:

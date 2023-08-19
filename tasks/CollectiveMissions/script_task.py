@@ -2,6 +2,7 @@
 # @author runhey
 # github https://github.com/runhey
 import time
+import random
 import re
 from cached_property import cached_property
 from enum import Enum
@@ -24,8 +25,8 @@ class MC(str, Enum):
     AW3 = '觉醒三'
     GR1 = '御灵一'
     GR2 = '御灵二'
-    SO4 = '御魂四'
-    SO5 = '御魂五'
+    SO1 = '御魂一'
+    SO2 = '御魂二'
     FRIEND = '好友'
     UNKNOWN = '未知'
 
@@ -66,10 +67,9 @@ class ScriptTask(GameUi, CollectiveMissionsAssets):
         elif mission == MC.AW1 or mission == MC.AW2 or mission == MC.AW3 or mission == MC.GR1 or mission == MC.GR2:
             # 其他就捐材料
             self._donate(index)
-        elif mission == MC.SO4 or mission == MC.SO5:
+        elif mission == MC.SO1 or mission == MC.SO2:
             # 御魂就捐御魂
-            # TODO
-            logger.warning('Not support donate soul')
+            self._soul(index)
 
         # 退出
         while 1:
@@ -114,10 +114,10 @@ class ScriptTask(GameUi, CollectiveMissionsAssets):
             return MC.GR1
         elif result_2 == '御灵二':
             return MC.GR2
-        elif result_2 == '御魂四':
-            return MC.SO4
-        elif result_2 == '御魂五':
-            return MC.SO5
+        elif result_2 == '御魂一':
+            return MC.SO1
+        elif result_2 == '御魂二':
+            return MC.SO2
         return MC.UNKNOWN
 
     def detect_best(self) -> tuple:
@@ -184,7 +184,6 @@ class ScriptTask(GameUi, CollectiveMissionsAssets):
                 break
         logger.info('Finish to collect bondling rewards')
 
-
     def _donate(self, index: int):
         """
         捐赠材料
@@ -232,21 +231,30 @@ class ScriptTask(GameUi, CollectiveMissionsAssets):
             3: self.I_CM_ADD_4,
         }
         # 滑动到最多的材料
+        random_click = [self.I_CM_ADD_1, self.I_CM_ADD_2, self.I_CM_ADD_3, self.I_CM_ADD_4]
+        window_control = self.config.script.device.control_method == 'window_message'
         swipe_count = 0
+        click_count = 0
         while 1:
             self.screenshot()
             if self.appear(self.I_CM_MATTER):
                 break
-            if self.swipe(match_swipe[max_index], interval=2.5):
+            if not window_control and self.swipe(match_swipe[max_index], interval=2.5):
                 swipe_count += 1
                 time.sleep(1.5)
                 continue
-            # if self.appear_then_click(match_image[max_index], interval=1):
-            #     self.device.click_record_clear()
-            #     continue
 
             # 为什么使用window_message无法滑动
-            if swipe_count >= 5:
+            if window_control and click_count > 30:
+                logger.info('Swipe to the most matter failed')
+                logger.info('Please check your game resolution')
+                break
+            if window_control and self.click(random.choice(random_click), interval=0.7):
+                click_count += 1
+                continue
+
+
+            if not window_control and swipe_count >= 5:
                 logger.info('Swipe to the most matter failed')
                 logger.info('Please check your game resolution')
                 raise RequestHumanTakeover
@@ -268,6 +276,50 @@ class ScriptTask(GameUi, CollectiveMissionsAssets):
         logger.info('Donate finished')
         return True
 
+    def _soul(self, index: int):
+        """
+        搞收御魂的任务
+        :param index:
+        :return:
+        """
+        match_click = {
+            0: self.C_CM_1,
+            1: self.C_CM_2,
+            2: self.C_CM_3,
+        }
+        self.ui_click(match_click[index], self.I_SL_SUBMIT)
+        while 1:
+            self.screenshot()
+            number_text = self.O_SL_NUMBER.ocr(self.device.image)
+            submit_number = int(re.findall(r'\d+', number_text)[-1])
+            if submit_number > 0:
+                break
+
+            if self.ocr_appear(self.O_SL_LEVEL):
+                # 如果没有识别到这个，那就说明没有御魂可以提交了，要退出
+                logger.warning('No soul can be submit')
+                self.ui_click(self.I_UI_BACK_RED, self.I_CM_RECORDS)
+                return False
+
+            if self.click(self.L_SL_LONG, interval=2.5):
+                time.sleep(1)
+                continue
+        # 领取奖励
+        logger.info('Start to collect soul rewards')
+        check_timer = Timer(3)
+        check_timer.start()
+        while 1:
+            self.screenshot()
+            if self.ui_reward_appear_click(True):
+                check_timer.reset()
+                continue
+            if self.appear_then_click(self.I_SL_SUBMIT, interval=1):
+                check_timer.reset()
+                continue
+            if check_timer.reached():
+                break
+        logger.info('Finish to collect soul rewards')
+        self.wait_until_appear(self.I_CM_RECORDS)
 
 
 

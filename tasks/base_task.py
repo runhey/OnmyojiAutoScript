@@ -283,7 +283,7 @@ class BaseTask(GlobalGameAssets):
             # logger.info(f'Swipe {swipe.name}')
             self.interval_timer[swipe.name].reset()
 
-    def click(self, click: Union[RuleClick, RuleLongClick] = None, interval: float = None) -> None:
+    def click(self, click: Union[RuleClick, RuleLongClick] = None, interval: float = None) -> bool:
         """
         点击或者长按
         :param interval:
@@ -291,7 +291,7 @@ class BaseTask(GlobalGameAssets):
         :return:
         """
         if not click:
-            return
+            return False
 
         if interval:
             if click.name in self.interval_timer:
@@ -303,17 +303,19 @@ class BaseTask(GlobalGameAssets):
                 self.interval_timer[click.name] = Timer(interval)
             # 如果时间还没到达，则不执行
             if not self.interval_timer[click.name].reached():
-                return
+                return False
 
         x, y = click.coord()
         if isinstance(click, RuleLongClick):
             self.device.long_click(x=x, y=y, duration=click.duration / 1000, control_name=click.name)
-        elif isinstance(click, RuleClick):
+        elif isinstance(click, RuleClick) or isinstance(click, RuleImage) or isinstance(click, RuleOcr):
             self.device.click(x=x, y=y, control_name=click.name)
 
         # 执行后，如果有限制时间，则重置限制时间
         if interval:
             self.interval_timer[click.name].reset()
+            return True
+        return False
 
     def ocr_appear(self, target: RuleOcr, interval: float = None) -> bool:
         """
@@ -498,7 +500,11 @@ class BaseTask(GlobalGameAssets):
             self.screenshot()
             if self.appear(stop):
                 break
-            if self.appear_then_click(click, interval=1):
+            if isinstance(click, RuleImage) and self.appear_then_click(click, interval=1):
+                continue
+            if isinstance(click, RuleClick) and self.click(click, interval=1):
+                continue
+            elif isinstance(click, RuleOcr) and self.ocr_appear_click(click, interval=1):
                 continue
 
     def ui_click_until_disappear(self, click):

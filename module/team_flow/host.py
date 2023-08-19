@@ -1,6 +1,8 @@
 # This Python file uses the following encoding: utf-8
 # @author runhey
 # github https://github.com/runhey
+import json
+from time import sleep
 from datetime import datetime, time
 from cached_property import cached_property
 
@@ -13,7 +15,17 @@ from module.team_flow.task import Task
 from module.logger import logger
 
 def on_message(client, userdata, msg):
-    userdata.match_topic[msg.topic](msg.payload)
+    try:
+        data = json.loads(msg.payload)
+    except json.JSONDecodeError:
+        logger.error(f'Get [{msg.topic}]: {msg.payload}')
+        return
+    logger.info(f'Get {msg.topic}: {data}')
+    for username, data in data.items():
+        # 反正只有一项
+        if username == userdata.username:
+            continue
+        userdata.match_topic[msg.topic](username, data)
 
 class Host(Mqtt, Player):
 
@@ -33,25 +45,45 @@ class Host(Mqtt, Player):
             'Strategy': self.on_strategy
         }
 
-    def on_first_notice(self, payload):
+    def on_first_notice(self, player: str, data: dict):
+        # 其他人上线，就广播自己的策略出去
+        if 'type' in data:
+            logger.info(f'Player {player} is online')
+            self.q_publish.put(['Strategy', self.publish_data()])
+        else:
+            # 如果是其他人像
+            pass
+
+    def on_last_will(self, player: str, data: dict):
+        if player not in self.players:
+            logger.warning(f'Player {player} is not in players')
+            return
+        self.players.remove(player)
+        logger.info(f'Player {player} is offline')
+        self._config_to_player()
+        self._update_strategy()
+        self._player_to_config()
+        self.q_publish.put(['Strategy', self.publish_data()])
+
+    def on_task_start(self, player: str, data: dict):
         pass
 
-    def on_last_will(self, payload):
+    def on_strategy(self, player: str, data: dict):
         pass
 
-    def on_task_start(self, payload):
-        pass
-
-    def on_strategy(self, payload):
-        pass
-
-    def update_multi_tasks(self):
+    def _config_to_player(self):
         """
         作为主角， 更新自身的多人任务的缓存
         也就是从  config -> multi_tasks
         :return:
         """
-        for key, value in self.config.model.items():
+        tasks = {'orochi': self.config.model.orochi,
+                 'fallen_sun': self.config.model.fallen_sun,
+                 'eternity_sea': self.config.model.eternity_sea,
+                 'evo_zone': self.config.model.evo_zone,
+                 'exploration': self.config.model.exploration
+                 }
+        for key, value in tasks.items():
             task_name: str = key
             limit_time: time = None
             limit_count: int = None
@@ -76,7 +108,7 @@ class Host(Mqtt, Player):
                 # TODO 等待探索完成
                 limit_time = time(minute=30)
                 limit_count = 50
-                role = str(value.evo_zone_config.user_status)
+                role = 'leader'
                 continue
             else:
                 continue
@@ -84,10 +116,10 @@ class Host(Mqtt, Player):
                 continue
             if task_name not in self.multi_tasks:
                 # 第一次
-                logger.info(f'First time to add {task_name} to multi_tasks')
+                logger.info(f'First time to add [{task_name}] to multi_tasks')
                 self.multi_tasks[task_name] = Task(
                     next_run=value.scheduler.next_run,
-                    target_run=value.scheduler.target_run,
+                    target_run=value.scheduler.next_run,
                     limit_time=limit_time,
                     team_task=True,
                     role=role,
@@ -96,14 +128,44 @@ class Host(Mqtt, Player):
             else:
                 # 更新
                 logger.info(f'Update {task_name} to multi_tasks')
-                self.multi_tasks[task_name].next_run = value.scheduler.next_run
-                self.multi_tasks[task_name].limit_time = limit_time
-                self.multi_tasks[task_name].role = role
-                self.multi_tasks[task_name].limit_count = limit_count
+                self.multi_tasks[task_name].update_info(next_run=value.scheduler.next_run,
+                                                        limit_time=limit_time,
+                                                        role=role,
+                                                        limit_count=limit_count)
 
+    def _player_to_config(self):
+        for key, value in self.multi_tasks.items():
+            if key == 'orochi':
+                self.config.task_delay(task='Orochi', target=value.next_run)
+            elif key == 'fallen_sun':
+                self.config.task_delay(task='FallenSun', target=value.next_run)
+            elif key == 'eternity_sea':
+                self.config.task_delay(task='EternitySea', target=value.next_run)
+            elif key == 'evo_zone':
+                self.config.task_delay(task='EvoZone', target=value.next_run)
+            elif key == 'exploration':
+                # TODO 等待探索完成
+                pass
+            else:
+                continue
+
+    def _update_strategy(self):
+        """
+        更新策略:
+        :return:
+        """
+        pass
 
 
 
 
 if __name__ == '__main__':
     host = Host(Config('oas1'))
+    sleep(20)
+    # 更新config -> multi_tasks -> publish_data
+    host._config_to_player()
+    host.q_publish.put(['Strategy' ,host.publish_data()])
+    host.q_publish.put(['Strategy' ,host.publish_data()])
+    host.q_publish.put(['Strategy' ,host.publish_data()])
+    sleep(46)
+

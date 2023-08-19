@@ -173,6 +173,16 @@ class ScriptTask(GameUi, WeeklyTriflesAssets):
                 continue
             if self.appear_then_click(self.I_WT_SE_SHARE, interval=1):
                 continue
+            if self.appear(self.I_WT_SE_RANK):
+                # 如果出现排名但是没有出现分享，那就是还没打，退出
+                time.sleep(0.5)
+                self.screenshot()
+                if self.appear(self.I_WT_SE_SHARE):
+                    continue
+                logger.warning('This week has not been obtained')
+                # 返回
+                self.ui_click(self.I_UI_BACK_BLUE, self.I_CHECK_MAIN)
+                return
         logger.info('Enter secret')
         # 判断是否已经领取
         self.screenshot()

@@ -56,8 +56,8 @@
   {
     "itemName": "d_auto_entry",
     "imageName": "duel_d_auto_entry.png",
-    "roiFront": "28,127,66,62",
-    "roiBack": "28,127,66,62",
+    "roiFront": "42,133,66,62",
+    "roiBack": "20,119,115,111",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "自动上阵"
@@ -74,8 +74,8 @@
   {
     "itemName": "d_help",
     "imageName": "duel_d_help.png",
-    "roiFront": "715,436,32,30",
-    "roiBack": "715,436,32,30",
+    "roiFront": "719,434,32,30",
+    "roiBack": "708,397,49,78",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "主界面的感叹号"
@@ -133,5 +133,23 @@
     "method": "Template matching",
     "threshold": 0.8,
     "description": "战"
+  },
+  {
+    "itemName": "d_celeb_star",
+    "imageName": "duel_d_celeb_star.png",
+    "roiFront": "586,456,30,32",
+    "roiBack": "574,444,53,54",
+    "method": "Template matching",
+    "threshold": 0.75,
+    "description": "名士的星星"
+  },
+  {
+    "itemName": "d_celeb_honor",
+    "imageName": "duel_d_celeb_honor.png",
+    "roiFront": "665,531,25,30",
+    "roiBack": "652,517,52,53",
+    "method": "Template matching",
+    "threshold": 0.75,
+    "description": "名士专属"
   }
 ]
