@@ -22,17 +22,17 @@ class ScriptTask(GameUi, DelegationAssets):
         self.check_reward()
         con: DelegationConfig = self.config.delegation.delegation_config
         if con.miyoshino_painting:
-            self.delegate_one('弥助的画')
+            self.delegate_one('弥助')
         if con.bird_feather:
-            self.delegate_one('鸟之羽')
+            self.delegate_one('鸟羽')
         if con.find_earring:
             self.delegate_one('寻找耳环')
         if con.cat_boss:
             self.delegate_one('猫老大')
         if con.miyoshino:
-            self.delegate_one('接送弥助')
+            self.delegate_one('接送')
         if con.strange_trace:
-            self.delegate_one('奇怪的痕迹')
+            self.delegate_one('痕迹')
 
 
         self.set_next_run(task='Delegation', success=True, finish=True)
@@ -73,10 +73,18 @@ class ScriptTask(GameUi, DelegationAssets):
         ui_click(self.C_D_2, self.I_D_SELECT_2)
         ui_click(self.C_D_3, self.I_D_SELECT_3)
         ui_click(self.C_D_4, self.I_D_SELECT_4)
-        ui_click(self.C_D_5, self.I_D_SELECT_5)
         # 委派开始
         logger.info(f'Delegation: {name} start')
-        self.ui_click_until_disappear(self.I_D_START)
+        while 1:
+            self.screenshot()
+            if not self.appear(self.I_D_START):
+                break
+            if self.click(self.C_D_5, interval=0.8):
+                continue
+            if self.appear_then_click(self.I_D_START, interval=1.8):
+                continue
+        # ui_click(self.C_D_5, self.I_D_SELECT_5)
+        # self.ui_click_until_disappear(self.I_D_START)
 
     def check_reward(self):
         check_timer = Timer(3)
@@ -111,7 +119,8 @@ if __name__ == '__main__':
     d = Device(c)
     t = ScriptTask(c, d)
 
-    t.delegate_one('弥助的画')
+    # t.delegate_one('弥助的画')
+    t.run()
 
 
 
