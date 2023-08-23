@@ -2,8 +2,8 @@
   {
     "itemName": "shi",
     "imageName": "as_shi.png",
-    "roiFront": "135,146,64,53",
-    "roiBack": "80,132,1029,76",
+    "roiFront": "136,237,59,42",
+    "roiBack": "85,170,1029,142",
     "method": "Template matching",
     "threshold": 0.7,
     "description": "进入活动"
@@ -11,8 +11,8 @@
   {
     "itemName": "back_green",
     "imageName": "as_back_green.png",
-    "roiFront": "23,18,49,49",
-    "roiBack": "23,18,49,49",
+    "roiFront": "13,18,49,49",
+    "roiBack": "13,18,49,49",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "左上角返回"
@@ -20,8 +20,8 @@
   {
     "itemName": "battle",
     "imageName": "as_battle.png",
-    "roiFront": "568,171,52,177",
-    "roiBack": "568,171,52,177",
+    "roiFront": "150,312,52,177",
+    "roiBack": "150,312,52,177",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "进入爬塔"
@@ -38,8 +38,8 @@
   {
     "itemName": "lock",
     "imageName": "as_lock.png",
-    "roiFront": "806,642,30,32",
-    "roiBack": "806,642,30,32",
+    "roiFront": "793,654,30,32",
+    "roiBack": "793,654,30,32",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "上锁图标"
@@ -47,8 +47,8 @@
   {
     "itemName": "unlock",
     "imageName": "as_unlock.png",
-    "roiFront": "807,640,27,35",
-    "roiBack": "807,640,27,35",
+    "roiFront": "795,650,27,35",
+    "roiBack": "795,650,27,35",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "还未上锁图片"
@@ -74,8 +74,8 @@
   {
     "itemName": "ap_activity",
     "imageName": "as_ap_activity.png",
-    "roiFront": "1109,502,27,27",
-    "roiBack": "1109,502,27,27",
+    "roiFront": "1120,510,27,27",
+    "roiBack": "1120,510,27,27",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "活动体力"
@@ -93,7 +93,7 @@
     "itemName": "buy_jade",
     "imageName": "as_buy_jade.png",
     "roiFront": "836,619,38,42",
-    "roiBack": "789,614,143,52",
+    "roiBack": "836,619,38,42",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "购买活动的体力"
