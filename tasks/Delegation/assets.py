@@ -58,6 +58,10 @@ class DelegationAssets:
 	I_REWARDS_GET = RuleImage(roi_front=(444,78,100,100), roi_back=(444,78,100,100), threshold=0.8, method="Template matching", file="./tasks/Delegation/rewards/rewards_rewards_get.png")
 	# description 
 	I_REWARDS_MIN = RuleImage(roi_front=(840,131,44,58), roi_back=(840,131,44,58), threshold=0.8, method="Template matching", file="./tasks/Delegation/rewards/rewards_rewards_min.png")
+	# 差强人意 
+	I_REWARDS_FALSE = RuleImage(roi_front=(430,72,100,100), roi_back=(430,72,100,100), threshold=0.8, method="Template matching", file="./tasks/Delegation/rewards/rewards_rewards_false.png")
+	# description 
+	I_CHAT_1 = RuleImage(roi_front=(716,380,318,100), roi_back=(716,380,318,100), threshold=0.8, method="Template matching", file="./tasks/Delegation/rewards/rewards_chat_1.png")
 
 
 	# Ocr Rule Assets

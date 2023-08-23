@@ -97,7 +97,13 @@ class ScriptTask(GameUi, DelegationAssets):
             if self.appear_then_click(self.I_REWARDS_CHAT, interval=1):
                 check_timer.reset()
                 continue
+            if self.appear_then_click(self.I_CHAT_1, interval=1):
+                check_timer.reset()
+                continue
             if self.appear_then_click(self.I_REWARDS_DONE, interval=1):
+                check_timer.reset()
+                continue
+            if self.appear_then_click(self.I_REWARDS_FALSE, interval=1):
                 check_timer.reset()
                 continue
 
