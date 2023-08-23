@@ -29,8 +29,8 @@
   {
     "itemName": "filter",
     "imageName": "res_filter.png",
-    "roiFront": "1106,29,48,49",
-    "roiBack": "1106,29,48,49",
+    "roiFront": "1108,31,48,49",
+    "roiBack": "1096,19,78,67",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "右上边选中鬼王的"

@@ -34,5 +34,23 @@
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"
+  },
+  {
+    "itemName": "rewards_false",
+    "imageName": "rewards_rewards_false.png",
+    "roiFront": "430,72,100,100",
+    "roiBack": "430,72,100,100",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "差强人意"
+  },
+  {
+    "itemName": "chat_1",
+    "imageName": "rewards_chat_1.png",
+    "roiFront": "716,380,318,100",
+    "roiBack": "716,380,318,100",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
   }
 ]

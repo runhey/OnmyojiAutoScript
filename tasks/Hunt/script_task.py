@@ -23,9 +23,6 @@ class ScriptTask(GameUi, GeneralBattle, GeneralInvite, SwitchSoul, HuntAssets):
     def run(self):
         if not self.check_datetime():
             # 设置下次运行时间 为今天的晚上七点钟
-            now = datetime.now()
-            next_run_time = datetime.combine(now.date(), time(19, 0, 0))
-            self.set_next_run(task='Hunt', success=False, finish=True, target=next_run_time)
             raise TaskEnd('Hunt')
         con = self.config.hunt.hunt_config
         if con.kirin_group_team != '-1,-1' or con.netherworld_group_team != '-1,-1':
@@ -60,11 +57,21 @@ class ScriptTask(GameUi, GeneralBattle, GeneralInvite, SwitchSoul, HuntAssets):
             self.kirin_day = False
 
 
-        if time(18, 59) < now.time() < time(21, 1):
-            return True
+        now = datetime.now()
+        # 如果时间在00:00-19:00 之间则设定时间为当天的19:00，返回False
+        if now.time() < time(19, 0):
+            next_run = datetime.combine(now.date(), time(19, 0))
+            self.set_next_run(task='Hunt', success=False, finish=True, target=next_run)
+            raise TaskEnd('Hunt')
+        # 如果是在21:00-23:59之间则设定时间为明天的19:00，返回False
+        elif now.time() > time(21, 0):
+            next_run = datetime.combine(now.date() + timedelta(days=1), time(19, 0))
+            self.set_next_run(task='Hunt', success=False, finish=True, target=next_run)
+            raise TaskEnd('Hunt')
+        # 如果是在19:00-21:00之间则返回True
         else:
-            logger.warning('Not in the time period')
-            return False
+            return True
+
 
     def kirin(self):
         logger.hr('kirin', 2)
