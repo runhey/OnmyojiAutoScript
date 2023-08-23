@@ -121,7 +121,7 @@ class GameUiAssets:
 
 	# Image Rule Assets
 	# 式神录 
-	I_MAIN_GOTO_SHIKIGAMI_RECORDS = RuleImage(roi_front=(1097,612,56,64), roi_back=(1097,612,56,64), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_main_goto_shikigami_records.png")
+	I_MAIN_GOTO_SHIKIGAMI_RECORDS = RuleImage(roi_front=(1098,611,56,64), roi_back=(1084,589,93,106), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_main_goto_shikigami_records.png")
 	# description 
 	I_MAIN_GOTO_ONMYODO = RuleImage(roi_front=(992,614,51,60), roi_back=(992,614,51,60), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_main_goto_onmyodo.png")
 	# description 
