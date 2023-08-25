@@ -267,6 +267,6 @@ if __name__ == '__main__':
     t = ScriptTask(c, d)
     t.screenshot()
 
-    t._broken_amulet(30)
+    t._share_collect()
 
 

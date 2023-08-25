@@ -61,7 +61,9 @@ class DelegationAssets:
 	# 差强人意 
 	I_REWARDS_FALSE = RuleImage(roi_front=(430,72,100,100), roi_back=(430,72,100,100), threshold=0.8, method="Template matching", file="./tasks/Delegation/rewards/rewards_rewards_false.png")
 	# description 
-	I_CHAT_1 = RuleImage(roi_front=(716,380,318,100), roi_back=(716,380,318,100), threshold=0.8, method="Template matching", file="./tasks/Delegation/rewards/rewards_chat_1.png")
+	I_CHAT_1 = RuleImage(roi_front=(735,350,318,100), roi_back=(651,161,601,391), threshold=0.8, method="Template matching", file="./tasks/Delegation/rewards/rewards_chat_1.png")
+	# description 
+	I_CHAT_2 = RuleImage(roi_front=(721,384,325,100), roi_back=(721,384,325,100), threshold=0.8, method="Template matching", file="./tasks/Delegation/rewards/rewards_chat_2.png")
 
 
 	# Ocr Rule Assets

@@ -29,19 +29,19 @@
   {
     "itemName": "wt_scroll_1",
     "imageName": "collect_wt_scroll_1.png",
-    "roiFront": "1186,28,28,121",
-    "roiBack": "1186,28,28,121",
+    "roiFront": "1180,27,28,121",
+    "roiBack": "1159,12,65,152",
     "method": "Template matching",
-    "threshold": 0.8,
+    "threshold": 0.7,
     "description": "百鬼夜行图"
   },
   {
     "itemName": "wt_scroll_2",
     "imageName": "collect_wt_scroll_2.png",
-    "roiFront": "1186,26,24,122",
-    "roiBack": "1186,26,24,122",
+    "roiFront": "1182,24,24,122",
+    "roiBack": "1163,12,63,155",
     "method": "Template matching",
-    "threshold": 0.8,
+    "threshold": 0.7,
     "description": "百妖风物鉴"
   },
   {
