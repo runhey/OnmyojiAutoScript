@@ -79,5 +79,14 @@
     "method": "Template matching",
     "threshold": 0.7,
     "description": "description"
+  },
+  {
+    "itemName": "d_back",
+    "imageName": "d_d_back.png",
+    "roiFront": "940,415,138,51",
+    "roiBack": "940,415,138,51",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "返回"
   }
 ]
