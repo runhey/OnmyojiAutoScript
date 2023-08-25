@@ -203,6 +203,8 @@ class ScriptTask(SecretScriptTask, GeneralInvite, WantedQuestsAssets):
         for i in range(num):
             self.wait_until_appear(self.I_WQSE_FIRE)
             # self.ui_click_until_disappear(self.I_WQSE_FIRE)
+            # 又臭又长的对话针的是服了这个网易
+            click_count = 0
             while 1:
                 self.screenshot()
                 if not self.appear(self.I_UI_BACK_RED, threshold=0.7):
@@ -210,7 +212,12 @@ class ScriptTask(SecretScriptTask, GeneralInvite, WantedQuestsAssets):
                 if self.appear_then_click(self.I_WQSE_FIRE, interval=1):
                     continue
                 if self.appear(self.I_UI_BACK_RED, threshold=0.7) and not self.appear(self.I_WQSE_FIRE):
-                    self.click(self.C_SECRET_CHAT, interval=0.6)
+                    self.click(self.C_SECRET_CHAT, interval=0.8)
+                    click_count += 1
+                    if click_count >= 6:
+                        logger.warning('Secret mission chat too long, force to close')
+                        click_count = 0
+                        self.device.click_record_clear()
                     continue
             success = self.run_general_battle(self.battle_config)
         while 1:
