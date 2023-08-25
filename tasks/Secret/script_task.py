@@ -248,7 +248,6 @@ class ScriptTask(GameUi, GeneralBattle, SwitchSoul, SecretAssets):
         self.device.click_record_clear()
         # 战斗过程 随机点击和滑动 防封
         logger.info("Start battle process")
-        # win: bool = False
         while 1:
             self.screenshot()
             if self.appear(self.I_SE_BATTLE_WIN):
