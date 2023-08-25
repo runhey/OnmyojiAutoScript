@@ -202,7 +202,16 @@ class ScriptTask(SecretScriptTask, GeneralInvite, WantedQuestsAssets):
         self.ui_click(goto, self.I_WQSE_FIRE)
         for i in range(num):
             self.wait_until_appear(self.I_WQSE_FIRE)
-            self.ui_click_until_disappear(self.I_WQSE_FIRE)
+            # self.ui_click_until_disappear(self.I_WQSE_FIRE)
+            while 1:
+                self.screenshot()
+                if not self.appear(self.I_UI_BACK_RED, threshold=0.7):
+                    break
+                if self.appear_then_click(self.I_WQSE_FIRE, interval=1):
+                    continue
+                if self.appear(self.I_UI_BACK_RED, threshold=0.7) and not self.appear(self.I_WQSE_FIRE):
+                    self.click(self.C_SECRET_CHAT, interval=0.6)
+                    continue
             success = self.run_general_battle(self.battle_config)
         while 1:
             self.screenshot()
