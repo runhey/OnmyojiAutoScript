@@ -47,8 +47,17 @@
   {
     "itemName": "chat_1",
     "imageName": "rewards_chat_1.png",
-    "roiFront": "716,380,318,100",
-    "roiBack": "716,380,318,100",
+    "roiFront": "735,350,318,100",
+    "roiBack": "651,161,601,391",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "chat_2",
+    "imageName": "rewards_chat_2.png",
+    "roiFront": "721,384,325,100",
+    "roiBack": "721,384,325,100",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"
