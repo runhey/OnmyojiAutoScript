@@ -22,7 +22,7 @@ class ScriptTask(GameUi, DelegationAssets):
         self.check_reward()
         con: DelegationConfig = self.config.delegation.delegation_config
         if con.miyoshino_painting:
-            self.delegate_one('弥助画')
+            self.delegate_one('画')
         if con.bird_feather:
             self.delegate_one('鸟羽')
         if con.find_earring:
@@ -65,6 +65,8 @@ class ScriptTask(GameUi, DelegationAssets):
             # 需要退出
             if self.appear(self.I_D_BACK):
                 logger.warning(f'Delegation: {name} is in delegation')
+                self.ui_click_until_disappear(self.I_D_BACK)
+                self.wait_until_appear(self.I_REWARDS_MIN)
                 return False
             if self.appear_then_click(self.I_D_SKIP, interval=0.8):
                 continue
