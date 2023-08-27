@@ -125,6 +125,8 @@ class ScriptTask(OrochiScriptTask, TrueOrochiAssets):
             if check_timer.reached():
                 logger.warning('Battle timeout')
                 check_timer.reset()
+                self.device.stuck_record_clear()
+                self.device.stuck_record_add('BATTLE_STATUS_S')
             sleep(0.5)
 
         logger.info("Battle process end")
