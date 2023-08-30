@@ -117,8 +117,8 @@ class ScriptTask(OrochiScriptTask, TrueOrochiAssets):
                         break
                     if self.appear_then_click(self.I_GREED_GHOST, interval=1):
                         continue
-                    # if self.appear_then_click(self.I_GREED_GHOST, action=self.C_REWARD_1, interval=1):
-                    #     continue
+                    if self.appear_then_click(self.I_ST_FRAME, interval=1):
+                        continue
                 break
             if self.appear_then_click(self.I_ST_FRAME, interval=1):
                 continue
