@@ -484,6 +484,9 @@ class ScriptTask(GameUi, BondlingBattle, SwitchSoul, BondlingFairylandAssets):
                 break
             if self.appear_then_click(self.I_BALL_FIRE, interval=1):
                 continue
+            # 某些活动的时候出现 “选择共鸣的阴阳师”
+            if self.appear_then_click(self.I_UI_CONFIRM, interval=1):
+                continue
 
     def in_catch_ui(self, screenshot=False) -> bool:
         """
