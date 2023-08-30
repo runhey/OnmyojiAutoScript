@@ -25,6 +25,7 @@ class MC(str, Enum):
     AW3 = '觉醒三'
     GR1 = '御灵一'
     GR2 = '御灵二'
+    GR3 = '御灵三'
     SO1 = '御魂一'
     SO2 = '御魂二'
     FRIEND = '好友'
@@ -64,7 +65,8 @@ class ScriptTask(GameUi, CollectiveMissionsAssets):
         if mission == MC.BL:
             # 契灵单独处理
             self._bondling_fairyland(index)
-        elif mission == MC.AW1 or mission == MC.AW2 or mission == MC.AW3 or mission == MC.GR1 or mission == MC.GR2:
+        elif mission == MC.AW1 or mission == MC.AW2 or mission == MC.AW3 \
+                or mission == MC.GR1 or mission == MC.GR2 or mission == MC.GR3:
             # 其他就捐材料
             self._donate(index)
         elif mission == MC.SO1 or mission == MC.SO2:
@@ -114,6 +116,8 @@ class ScriptTask(GameUi, CollectiveMissionsAssets):
             return MC.GR1
         elif result_2 == '御灵二':
             return MC.GR2
+        elif result_2 == '御灵三':
+            return MC.GR3
         elif result_2 == '御魂一':
             return MC.SO1
         elif result_2 == '御魂二':

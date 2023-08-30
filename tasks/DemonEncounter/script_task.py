@@ -362,6 +362,40 @@ class ScriptTask(GameUi, GeneralBattle, DemonEncounterAssets):
         else:
             return True
 
+    def battle_wait(self, random_click_swipt_enable: bool) -> bool:
+        # 重写
+        self.device.stuck_record_add('BATTLE_STATUS_S')
+        self.device.click_record_clear()
+        # 战斗过程 随机点击和滑动 防封
+        logger.info("Start battle process")
+        check_timer = None
+        while 1:
+            self.screenshot()
+            if self.appear(self.I_DE_WIN):
+                logger.info('Appear [demon encounter] win button')
+                self.ui_click_until_disappear(self.I_DE_WIN)
+                check_timer = Timer(3)
+                check_timer.start()
+                continue
+            if self.appear_then_click(self.I_WIN, interval=1):
+                logger.info('Appear win button')
+                check_timer = Timer(3)
+                check_timer.start()
+                continue
+            if self.appear(self.I_REWARD):
+                logger.info('Win battle')
+                self.ui_click_until_disappear(self.I_REWARD)
+                return True
+
+            # 失败的
+            if self.appear(self.I_FALSE):
+                logger.warning('False battle')
+                self.ui_click_until_disappear(self.I_FALSE)
+                return False
+            # 时间到
+            if check_timer and check_timer.reached():
+                logger.warning('Obtain battle timeout')
+                return True
 
 if __name__ == '__main__':
     from module.config.config import Config
@@ -372,4 +406,5 @@ if __name__ == '__main__':
     d = Device(c)
     t = ScriptTask(c, d)
 
-    t.run()
+    # t.run()
+    t.battle_wait(True)

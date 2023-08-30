@@ -10,6 +10,11 @@ from module.atom.list import RuleList
 class WantedQuestsAssets: 
 
 
+	# Click Rule Assets
+	# 秘闻的挑战对话 
+	C_SECRET_CHAT = RuleClick(roi_front=(597,296,59,100), roi_back=(597,296,59,100), name="secret_chat")
+
+
 	# Ocr Rule Assets
 	# 挑战券的数量 
 	O_WQ_NUMBER = RuleOcr(roi=(569,13,50,32), area=(569,13,50,32), mode="Digit", method="Default", keyword="", name="wq_number")

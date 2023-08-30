@@ -128,6 +128,9 @@ class ScriptTask(GameUi, SoulsTidyAssets):
                 self.screenshot()
                 if self.appear_then_click(self.I_UI_CONFIRM, interval=0.5):
                     continue
+                # 如果奉纳少就不是神赐而是获得奖励
+                if self.ui_reward_appear_click():
+                    continue
                 # 出现神赐, 就点击然后消失，
                 if self.appear(self.I_ST_GOD_PRESENT):
                     sleep(0.5)

@@ -42,6 +42,8 @@ class DelegationAssets:
 	I_D_SELECT_4 = RuleImage(roi_front=(632,595,42,40), roi_back=(579,584,111,57), threshold=0.7, method="Template matching", file="./tasks/Delegation/d/d_d_select_4.png")
 	# description 
 	I_D_SELECT_5 = RuleImage(roi_front=(767,593,41,40), roi_back=(721,582,103,60), threshold=0.7, method="Template matching", file="./tasks/Delegation/d/d_d_select_5.png")
+	# 返回 
+	I_D_BACK = RuleImage(roi_front=(940,415,138,51), roi_back=(940,415,138,51), threshold=0.8, method="Template matching", file="./tasks/Delegation/d/d_d_back.png")
 
 
 	# Ocr Rule Assets
@@ -61,7 +63,9 @@ class DelegationAssets:
 	# 差强人意 
 	I_REWARDS_FALSE = RuleImage(roi_front=(430,72,100,100), roi_back=(430,72,100,100), threshold=0.8, method="Template matching", file="./tasks/Delegation/rewards/rewards_rewards_false.png")
 	# description 
-	I_CHAT_1 = RuleImage(roi_front=(716,380,318,100), roi_back=(716,380,318,100), threshold=0.8, method="Template matching", file="./tasks/Delegation/rewards/rewards_chat_1.png")
+	I_CHAT_1 = RuleImage(roi_front=(735,350,318,100), roi_back=(651,161,601,391), threshold=0.8, method="Template matching", file="./tasks/Delegation/rewards/rewards_chat_1.png")
+	# description 
+	I_CHAT_2 = RuleImage(roi_front=(721,384,325,100), roi_back=(721,384,325,100), threshold=0.8, method="Template matching", file="./tasks/Delegation/rewards/rewards_chat_2.png")
 
 
 	# Ocr Rule Assets

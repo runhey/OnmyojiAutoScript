@@ -22,7 +22,7 @@ class ScriptTask(GameUi, DelegationAssets):
         self.check_reward()
         con: DelegationConfig = self.config.delegation.delegation_config
         if con.miyoshino_painting:
-            self.delegate_one('弥助')
+            self.delegate_one('画')
         if con.bird_feather:
             self.delegate_one('鸟羽')
         if con.find_earring:
@@ -61,6 +61,13 @@ class ScriptTask(GameUi, DelegationAssets):
             self.screenshot()
             if self.appear(self.I_D_START):
                 break
+            # 如果出现’召回‘ ’返回‘ 说明这个是现在委派中
+            # 需要退出
+            if self.appear(self.I_D_BACK):
+                logger.warning(f'Delegation: {name} is in delegation')
+                self.ui_click_until_disappear(self.I_D_BACK)
+                self.wait_until_appear(self.I_REWARDS_MIN)
+                return False
             if self.appear_then_click(self.I_D_SKIP, interval=0.8):
                 continue
             if self.appear_then_click(self.I_D_CONFIRM, interval=0.8):
@@ -98,6 +105,9 @@ class ScriptTask(GameUi, DelegationAssets):
                 check_timer.reset()
                 continue
             if self.appear_then_click(self.I_CHAT_1, interval=1):
+                check_timer.reset()
+                continue
+            if self.appear_then_click(self.I_CHAT_2, interval=1):
                 check_timer.reset()
                 continue
             if self.appear_then_click(self.I_REWARDS_DONE, interval=1):
