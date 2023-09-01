@@ -26,7 +26,7 @@ class Utils(QObject):
     def test_notify(self, _config: str, title: str, content: str) -> bool:
         from module.notify.notify import Notifier
         try:
-            notifier = Notifier(_config)
+            notifier = Notifier(_config, True)
             if notifier.push(title=title, content=content):
                 return "true"
             else:
