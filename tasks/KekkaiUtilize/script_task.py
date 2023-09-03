@@ -270,7 +270,7 @@ class ScriptTask(GameUi, ReplaceShikigami, KekkaiUtilizeAssets):
 
             if self.appear(self.I_U_ENTER_REALM):
                 break
-            if self.appear_then_click(self.I_UTILIZE_ADD, interval=1.5):
+            if self.appear_then_click(self.I_UTILIZE_ADD, interval=2):
                 continue
         logger.info('Enter utilize')
         return True

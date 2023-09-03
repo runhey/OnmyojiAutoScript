@@ -274,6 +274,7 @@ if __name__ == "__main__":
         c = ConfigModel()
 
     # c.save()
-    print(c.deep_get(c, 'area_boss.scheduler.success_interval'))
+    print(c.gui_args('Script'))
+    # print(c.deep_get(c, 'area_boss.scheduler.success_interval'))
 
 
