@@ -161,6 +161,7 @@ class ScriptTask(GameUi, BondlingBattle, SwitchSoul, BondlingFairylandAssets):
         (2) 超过时间限制了，(探查页面)返回False
         (3) 打满五只球了，(探查界面)返回True
         """
+        self.lock_team()
         while 1:
             # 检查是不是在探查界面，
             if not self.in_search_ui(screenshot=True):
@@ -541,10 +542,7 @@ if __name__ == '__main__':
     device = Device(config)
     task = ScriptTask(config, device)
     image = task.screenshot()
-    # print(task.roi_appear_ball(task.I_BF_LOCAL_3_LITTLE_KURO.roi_back, image))
-    # print(task.ball_number())
+
     con = config.bondling_fairyland
-    # task.run_catch(con.bondling_config, con.bondling_switch_soul, con.battle_config)
-    # task.run_stone(True, con.bondling_config.bondling_stone_class)
-    # task.run_search(con.bondling_config)
+    # task.lock_team()
     task.run()
