@@ -230,6 +230,6 @@ if __name__ == '__main__':
     t = ScriptTask(c, d)
     t.screenshot()
 
-    # t.run_shop(t.config.mystery_shop.shop_config)
-    t.shop_reward()
+    t.run_shop(t.config.mystery_shop.shop_config)
+    # t.shop_reward()
 
