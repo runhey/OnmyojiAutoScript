@@ -356,7 +356,8 @@ class GeneralBattle(GeneralBuff, GeneralBattleAssets):
                     self.swipe(self.S_BATTLE_RANDOM_RIGHT, interval=20)
             # 重新设置为长战斗
             self.device.stuck_record_add('BATTLE_STATUS_S')
-        time.sleep(0.4)  # 这样的好像不对
+        else:
+            time.sleep(0.4)  # 这样的好像不对
 
     # 判断是否在战斗中
     def is_in_battle(self, is_screenshot: bool = True) -> bool:
