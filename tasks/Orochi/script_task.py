@@ -38,13 +38,14 @@ class ScriptTask(GeneralBattle, GeneralInvite, GeneralBuff, GeneralRoom, GameUi,
         self.limit_count: int = limit_count
         self.limit_time: timedelta = timedelta(hours=limit_time.hour, minutes=limit_time.minute, seconds=limit_time.second)
 
-        self.ui_get_current_page()
-        self.ui_goto(page_main)
         config: Orochi = self.config.orochi
-        if config.orochi_config.soul_buff_enable:
-            self.open_buff()
-            self.soul(is_open=True)
-            self.close_buff()
+        if not self.is_in_battle(True):
+            self.ui_get_current_page()
+            self.ui_goto(page_main)
+            if config.orochi_config.soul_buff_enable:
+                self.open_buff()
+                self.soul(is_open=True)
+                self.close_buff()
 
         success = True
         match config.orochi_config.user_status:
@@ -328,8 +329,91 @@ class ScriptTask(GeneralBattle, GeneralInvite, GeneralBuff, GeneralRoom, GameUi,
 
 
     def run_wild(self):
-        logger.error('Wild mode is not implemented')
-        pass
+        logger.info('Start run wild')
+
+        # 已经在战斗中不必初始化，保证已经组队开始战斗的情况下可以自动执行后续任务
+        if not self.is_in_battle(True):
+            self.ui_get_current_page()
+            self.ui_goto(page_soul_zones)
+            self.orochi_enter()
+            layer = self.config.orochi.orochi_config.layer
+            self.check_layer(layer)
+            self.check_lock(self.config.orochi.general_battle_config.lock_team_enable)
+            # 创建队伍
+            logger.info('Create team')
+            while 1:
+                self.screenshot()
+                if self.appear(self.I_OROCHI_MATCHING):
+                    break
+                if self.appear_then_click(self.I_FORM_TEAM, interval=1):
+                    continue
+            # 创建房间
+            self.create_room()
+            self.ensure_public()
+            self.create_ensure()
+
+        while 1:
+            self.screenshot()
+            # 无论胜利与否, 都会出现是否邀请一次队友
+            # 区别在于，失败的话不会出现那个勾选默认邀请的框
+            if self.check_and_invite(self.config.orochi.invite_config.default_invite):
+                continue
+
+            # 检查猫咪奖励
+            if self.appear_then_click(self.I_PET_PRESENT, action=self.C_WIN_3, interval=1):
+                continue
+
+            if self.current_count >= self.limit_count:
+                if self.is_in_room():
+                    logger.info('Orochi count limit out')
+                    break
+
+            if datetime.now() - self.start_time >= self.limit_time:
+                if self.is_in_room():
+                    logger.info('Orochi time limit out')
+                    break
+
+            if not self.is_in_room():
+                # 如果在探索界面或者是出现在组队界面，那就是可能房间死了，要结束任务
+                sleep(0.5)
+                if self.appear(self.I_MATCHING) or self.appear(self.I_CHECK_EXPLORATION):
+                    sleep(0.5)
+                    if self.appear(self.I_MATCHING) or self.appear(self.I_CHECK_EXPLORATION):
+                        logger.warning('Orochi task failed')
+                        success = False
+                        break
+                continue
+
+            # 点击挑战
+            logger.info('Wait for starting')
+            while 1:
+                self.screenshot()
+                # 在进入战斗前必然会出现挑战界面，因此点击失败必须重复点击，防止卡在挑战界面，
+                # 点击成功后如果网络卡顿，导致没有进入战斗，则无法进入 run_general_battle 流程，
+                # 所以如果判断是在战斗中，则执行通用战斗流程
+                if not (self.appear_then_click(self.I_OROCHI_WILD_FIRE, interval=0.5, threshold=0.8)
+                         or self.is_in_battle(False)):
+                    continue
+
+                self.screenshot()
+                if not self.appear(self.I_OROCHI_WILD_FIRE, threshold=0.8):
+                    self.run_general_battle(config=self.config.orochi.general_battle_config)
+                    break
+
+        # 当结束或者是失败退出循环的时候只有两个UI的可能，在房间或者是在组队界面
+        # 如果在房间就退出
+        if self.exit_room():
+            pass
+        # 如果在组队界面就退出
+        if self.exit_team():
+            pass
+
+        self.ui_get_current_page()
+        self.ui_goto(page_main)
+
+        if not success:
+            return False
+        return True
 
 
 
