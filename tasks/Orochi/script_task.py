@@ -391,7 +391,7 @@ class ScriptTask(GeneralBattle, GeneralInvite, GeneralBuff, GeneralRoom, GameUi,
                 # 在进入战斗前必然会出现挑战界面，因此点击失败必须重复点击，防止卡在挑战界面，
                 # 点击成功后如果网络卡顿，导致没有进入战斗，则无法进入 run_general_battle 流程，
                 # 所以如果判断是在战斗中，则执行通用战斗流程
-                if not (self.appear_then_click(self.I_OROCHI_WILD_FIRE, interval=0.5, threshold=0.8)
+                if not (self.appear_then_click(self.I_OROCHI_WILD_FIRE, threshold=0.8)
                          or self.is_in_battle(False)):
                     continue
 
@@ -424,11 +424,11 @@ if __name__ == '__main__':
     from module.config.config import Config
     from module.device.device import Device
     from memory_profiler import profile
-    c = Config('oas1')
+    c = Config('test')
     d = Device(c)
     t = ScriptTask(c, d)
 
-    # t.run()
+    t.run()
 
     # t.check_layer('悲')
 
