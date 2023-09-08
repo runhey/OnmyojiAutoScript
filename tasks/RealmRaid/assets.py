@@ -24,7 +24,7 @@ class RealmRaidAssets:
 	# description 
 	I_MEDAL_1 = RuleImage(roi_front=(570,206,199,52), roi_back=(237,198,892,336), threshold=0.8, method="Template matching", file="./tasks/RealmRaid/res/res_medal_1.png")
 	# 没有勋章的 
-	I_MEDAL_0 = RuleImage(roi_front=(510,336,202,51), roi_back=(231,200,898,336), threshold=0.8, method="Template matching", file="./tasks/RealmRaid/res/res_medal_0.png")
+	I_MEDAL_0 = RuleImage(roi_front=(536,336,176,51), roi_back=(231,200,898,336), threshold=0.8, method="Template matching", file="./tasks/RealmRaid/res/res_medal_0.png")
 	# 右上角红色的关闭 
 	I_BACK_RED = RuleImage(roi_front=(1178,101,57,64), roi_back=(1178,101,57,64), threshold=0.7, method="Template matching", file="./tasks/RealmRaid/res/res_back_red.png")
 	# 没有锁的状态图标 

@@ -1,6 +1,7 @@
 # This Python file uses the following encoding: utf-8
 # @author runhey
 # github https://github.com/runhey
+import random
 from time import sleep
 from datetime import time, datetime, timedelta
 
@@ -110,11 +111,6 @@ class ScriptTask(GeneralBattle, GeneralInvite, GeneralBuff, GeneralRoom, GameUi,
                     return True
                 if self.appear_then_click(self.I_OROCHI_LOCK, interval=1):
                     continue
-
-
-
-
-
 
 
 
@@ -326,8 +322,6 @@ class ScriptTask(GeneralBattle, GeneralInvite, GeneralBuff, GeneralRoom, GameUi,
         self.ui_current = page_soul_zones
         self.ui_goto(page_main)
 
-
-
     def run_wild(self):
         logger.info('Start run wild')
 
@@ -416,7 +410,44 @@ class ScriptTask(GeneralBattle, GeneralInvite, GeneralBuff, GeneralRoom, GameUi,
         return True
 
 
+    def battle_wait(self, random_click_swipt_enable: bool) -> bool:
+        """
+        重写战斗等待
+        :param random_click_swipt_enable:
+        :return:
+        """
+        # 重写
+        self.device.stuck_record_add('BATTLE_STATUS_S')
+        self.device.click_record_clear()
+        # 战斗过程 随机点击和滑动 防封
+        logger.info("Start battle process")
+        while 1:
+            self.screenshot()
+            action_click = random.choice([self.C_WIN_1, self.C_WIN_2, self.C_WIN_3])
+            if self.appear_then_click(self.I_WIN, action=action_click ,interval=0.8):
+                # 赢的那个鼓
+                continue
+            if self.appear(self.I_GREED_GHOST):
+                # 贪吃鬼
+                logger.info('Win battle')
+                self.wait_until_appear(self.I_REWARD, wait_time=1.5)
+                while 1:
+                    self.screenshot()
+                    action_click = random.choice([self.C_REWARD_1, self.C_REWARD_2, self.C_REWARD_3])
+                    if self.appear_then_click(self.I_GREED_GHOST, action=action_click, interval=1.5):
+                        continue
+                    if not self.appear(self.I_GREED_GHOST):
+                        break
+                return True
 
+            if self.appear(self.I_FALSE):
+                logger.warning('False battle')
+                self.ui_click_until_disappear(self.I_FALSE)
+                return False
+
+            # 如果开启战斗过程随机滑动
+            if random_click_swipt_enable:
+                self.random_click_swipt()
 
 
 

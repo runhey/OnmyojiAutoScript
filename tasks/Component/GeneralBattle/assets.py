@@ -117,7 +117,7 @@ class GeneralBattleAssets:
 
 	# Image Rule Assets
 	# description 
-	I_GREED_GHOST = RuleImage(roi_front=(49,29,56,65), roi_back=(49,29,56,65), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralBattle/gb/gb_greed_ghost.png")
+	I_GREED_GHOST = RuleImage(roi_front=(56,40,45,45), roi_back=(56,40,45,45), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralBattle/gb/gb_greed_ghost.png")
 
 
 	# Swipe Rule Assets
