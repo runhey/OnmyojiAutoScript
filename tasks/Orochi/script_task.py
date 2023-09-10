@@ -172,15 +172,10 @@ class ScriptTask(GeneralBattle, GeneralInvite, GeneralBuff, GeneralRoom, GameUi,
 
             # 如果没有进入房间那就不需要后面的邀请
             if not self.is_in_room():
-                # 如果在探索界面或者是出现在组队界面， 那就是可能房间死了
-                # 要结束任务
-                sleep(0.5)
-                if self.appear(self.I_MATCHING) or self.appear(self.I_CHECK_EXPLORATION):
-                    sleep(0.5)
-                    if self.appear(self.I_MATCHING) or self.appear(self.I_CHECK_EXPLORATION):
-                        logger.warning('Orochi task failed')
-                        success = False
-                        break
+                if self.is_room_dead():
+                    logger.warning('Orochi task failed')
+                    success = False
+                    break
                 continue
 
             # 点击挑战
@@ -369,14 +364,10 @@ class ScriptTask(GeneralBattle, GeneralInvite, GeneralBuff, GeneralRoom, GameUi,
                     break
 
             if not self.is_in_room():
-                # 如果在探索界面或者是出现在组队界面，那就是可能房间死了，要结束任务
-                sleep(0.5)
-                if self.appear(self.I_MATCHING) or self.appear(self.I_CHECK_EXPLORATION):
-                    sleep(0.5)
-                    if self.appear(self.I_MATCHING) or self.appear(self.I_CHECK_EXPLORATION):
-                        logger.warning('Orochi task failed')
-                        success = False
-                        break
+                if self.is_room_dead():
+                    logger.warning('Orochi task failed')
+                    success = False
+                    break
                 continue
 
             # 点击挑战
@@ -387,8 +378,7 @@ class ScriptTask(GeneralBattle, GeneralInvite, GeneralBuff, GeneralRoom, GameUi,
                 # 点击成功后如果网络卡顿，导致没有进入战斗，则无法进入 run_general_battle 流程，
                 # 所以如果判断是在战斗中，则执行通用战斗流程
                 if not self.is_in_battle(False):
-                    # 不在战斗中且不在房间中，可能是房间超时，退出循环
-                    if not self.is_in_room(False):
+                    if not self.is_in_room() and self.is_room_dead():
                         break
                     if not self.appear_then_click(self.I_OROCHI_WILD_FIRE, interval=1, threshold=0.8):
                         continue
@@ -413,6 +403,14 @@ class ScriptTask(GeneralBattle, GeneralInvite, GeneralBuff, GeneralRoom, GameUi,
             return False
         return True
 
+    def is_room_dead(self) -> bool:
+        # 如果在探索界面或者是出现在组队界面，那就是可能房间死了
+        sleep(0.5)
+        if self.appear(self.I_MATCHING) or self.appear(self.I_CHECK_EXPLORATION):
+            sleep(0.5)
+            if self.appear(self.I_MATCHING) or self.appear(self.I_CHECK_EXPLORATION):
+                return True
+        return False
 
     def battle_wait(self, random_click_swipt_enable: bool) -> bool:
         """
