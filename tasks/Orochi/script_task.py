@@ -53,7 +53,7 @@ class ScriptTask(GeneralBattle, GeneralInvite, GeneralBuff, GeneralRoom, GameUi,
             case UserStatus.LEADER: success = self.run_leader()
             case UserStatus.MEMBER: success = self.run_member()
             case UserStatus.ALONE: self.run_alone()
-            case UserStatus.WILD: self.run_wild()
+            case UserStatus.WILD: success = self.run_wild()
             case _: logger.error('Unknown user status')
 
         # 记得关掉
@@ -346,6 +346,7 @@ class ScriptTask(GeneralBattle, GeneralInvite, GeneralBuff, GeneralRoom, GameUi,
             self.ensure_public()
             self.create_ensure()
 
+        success = True
         while 1:
             self.screenshot()
             # 无论胜利与否, 都会出现是否邀请一次队友
@@ -385,9 +386,12 @@ class ScriptTask(GeneralBattle, GeneralInvite, GeneralBuff, GeneralRoom, GameUi,
                 # 在进入战斗前必然会出现挑战界面，因此点击失败必须重复点击，防止卡在挑战界面，
                 # 点击成功后如果网络卡顿，导致没有进入战斗，则无法进入 run_general_battle 流程，
                 # 所以如果判断是在战斗中，则执行通用战斗流程
-                if not (self.appear_then_click(self.I_OROCHI_WILD_FIRE, threshold=0.8)
-                         or self.is_in_battle(False)):
-                    continue
+                if not self.is_in_battle(False):
+                    # 不在战斗中且不在房间中，可能是房间超时，退出循环
+                    if not self.is_in_room(False):
+                        break
+                    if not self.appear_then_click(self.I_OROCHI_WILD_FIRE, interval=1, threshold=0.8):
+                        continue
 
                 self.screenshot()
                 if not self.appear(self.I_OROCHI_WILD_FIRE, threshold=0.8):
