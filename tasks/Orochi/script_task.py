@@ -53,7 +53,7 @@ class ScriptTask(GeneralBattle, GeneralInvite, GeneralBuff, GeneralRoom, GameUi,
             case UserStatus.LEADER: success = self.run_leader()
             case UserStatus.MEMBER: success = self.run_member()
             case UserStatus.ALONE: self.run_alone()
-            case UserStatus.WILD: self.run_wild()
+            case UserStatus.WILD: success = self.run_wild()
             case _: logger.error('Unknown user status')
 
         # 记得关掉
@@ -172,15 +172,10 @@ class ScriptTask(GeneralBattle, GeneralInvite, GeneralBuff, GeneralRoom, GameUi,
 
             # 如果没有进入房间那就不需要后面的邀请
             if not self.is_in_room():
-                # 如果在探索界面或者是出现在组队界面， 那就是可能房间死了
-                # 要结束任务
-                sleep(0.5)
-                if self.appear(self.I_MATCHING) or self.appear(self.I_CHECK_EXPLORATION):
-                    sleep(0.5)
-                    if self.appear(self.I_MATCHING) or self.appear(self.I_CHECK_EXPLORATION):
-                        logger.warning('Orochi task failed')
-                        success = False
-                        break
+                if self.is_room_dead():
+                    logger.warning('Orochi task failed')
+                    success = False
+                    break
                 continue
 
             # 点击挑战
@@ -346,6 +341,7 @@ class ScriptTask(GeneralBattle, GeneralInvite, GeneralBuff, GeneralRoom, GameUi,
             self.ensure_public()
             self.create_ensure()
 
+        success = True
         while 1:
             self.screenshot()
             # 无论胜利与否, 都会出现是否邀请一次队友
@@ -368,14 +364,10 @@ class ScriptTask(GeneralBattle, GeneralInvite, GeneralBuff, GeneralRoom, GameUi,
                     break
 
             if not self.is_in_room():
-                # 如果在探索界面或者是出现在组队界面，那就是可能房间死了，要结束任务
-                sleep(0.5)
-                if self.appear(self.I_MATCHING) or self.appear(self.I_CHECK_EXPLORATION):
-                    sleep(0.5)
-                    if self.appear(self.I_MATCHING) or self.appear(self.I_CHECK_EXPLORATION):
-                        logger.warning('Orochi task failed')
-                        success = False
-                        break
+                if self.is_room_dead():
+                    logger.warning('Orochi task failed')
+                    success = False
+                    break
                 continue
 
             # 点击挑战
@@ -385,9 +377,11 @@ class ScriptTask(GeneralBattle, GeneralInvite, GeneralBuff, GeneralRoom, GameUi,
                 # 在进入战斗前必然会出现挑战界面，因此点击失败必须重复点击，防止卡在挑战界面，
                 # 点击成功后如果网络卡顿，导致没有进入战斗，则无法进入 run_general_battle 流程，
                 # 所以如果判断是在战斗中，则执行通用战斗流程
-                if not (self.appear_then_click(self.I_OROCHI_WILD_FIRE, threshold=0.8)
-                         or self.is_in_battle(False)):
-                    continue
+                if not self.is_in_battle(False):
+                    if not self.is_in_room() and self.is_room_dead():
+                        break
+                    if not self.appear_then_click(self.I_OROCHI_WILD_FIRE, interval=1, threshold=0.8):
+                        continue
 
                 self.screenshot()
                 if not self.appear(self.I_OROCHI_WILD_FIRE, threshold=0.8):
@@ -409,6 +403,14 @@ class ScriptTask(GeneralBattle, GeneralInvite, GeneralBuff, GeneralRoom, GameUi,
             return False
         return True
 
+    def is_room_dead(self) -> bool:
+        # 如果在探索界面或者是出现在组队界面，那就是可能房间死了
+        sleep(0.5)
+        if self.appear(self.I_MATCHING) or self.appear(self.I_CHECK_EXPLORATION):
+            sleep(0.5)
+            if self.appear(self.I_MATCHING) or self.appear(self.I_CHECK_EXPLORATION):
+                return True
+        return False
 
     def battle_wait(self, random_click_swipt_enable: bool) -> bool:
         """
