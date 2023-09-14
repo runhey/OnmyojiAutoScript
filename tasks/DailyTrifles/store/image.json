@@ -20,8 +20,8 @@
   {
     "itemName": "gift_sign",
     "imageName": "store_gift_sign.png",
-    "roiFront": "201,207,100,143",
-    "roiBack": "201,207,100,143",
+    "roiFront": "236,129,306,218",
+    "roiBack": "236,129,306,218",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "免费一抽"
