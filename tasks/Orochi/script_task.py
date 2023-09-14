@@ -415,12 +415,16 @@ class ScriptTask(GeneralBattle, GeneralInvite, GeneralBuff, GeneralRoom, GameUi,
     def battle_wait(self, random_click_swipt_enable: bool) -> bool:
         """
         重写战斗等待
+        # https://github.com/runhey/OnmyojiAutoScript/issues/95
         :param random_click_swipt_enable:
         :return:
         """
         # 重写
         self.device.stuck_record_add('BATTLE_STATUS_S')
         self.device.click_record_clear()
+        self.C_REWARD_1.name = 'C_REWARD'
+        self.C_REWARD_2.name = 'C_REWARD'
+        self.C_REWARD_3.name = 'C_REWARD'
         # 战斗过程 随机点击和滑动 防封
         logger.info("Start battle process")
         while 1:
@@ -433,12 +437,28 @@ class ScriptTask(GeneralBattle, GeneralInvite, GeneralBuff, GeneralRoom, GameUi,
                 # 贪吃鬼
                 logger.info('Win battle')
                 self.wait_until_appear(self.I_REWARD, wait_time=1.5)
+                self.screenshot()
+                if not self.appear(self.I_GREED_GHOST):
+                    logger.warning('Greedy ghost disappear. Maybe it is a false battle')
+                    continue
                 while 1:
                     self.screenshot()
                     action_click = random.choice([self.C_REWARD_1, self.C_REWARD_2, self.C_REWARD_3])
-                    if self.appear_then_click(self.I_GREED_GHOST, action=action_click, interval=1.5):
-                        continue
                     if not self.appear(self.I_GREED_GHOST):
+                        break
+                    if self.click(action_click, interval=1.5):
+                        continue
+                return True
+            if self.appear(self.I_REWARD):
+                # 魂
+                logger.info('Win battle')
+                appear_greed_ghost = self.appear(self.I_GREED_GHOST)
+                while 1:
+                    self.screenshot()
+                    action_click = random.choice([self.C_REWARD_1, self.C_REWARD_2, self.C_REWARD_3])
+                    if self.appear_then_click(self.I_REWARD, action=action_click, interval=1.5):
+                        continue
+                    if not self.appear(self.I_REWARD):
                         break
                 return True
 
