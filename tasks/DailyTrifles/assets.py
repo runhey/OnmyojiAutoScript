@@ -21,7 +21,7 @@ class DailyTriflesAssets:
 
 	# Image Rule Assets
 	# 礼包屋 
-	I_ROOM_GIFT = RuleImage(roi_front=(1142,629,69,64), roi_back=(1127,611,103,94), threshold=0.8, method="Template matching", file="./tasks/DailyTrifles/store/store_room_gift.png")
+	I_ROOM_GIFT = RuleImage(roi_front=(1142,638,62,55), roi_back=(1127,611,103,94), threshold=0.8, method="Template matching", file="./tasks/DailyTrifles/store/store_room_gift.png")
 	# description 
 	I_GIFT_RECOMMEND = RuleImage(roi_front=(1186,98,53,64), roi_back=(1172,83,83,214), threshold=0.8, method="Template matching", file="./tasks/DailyTrifles/store/store_gift_recommend.png")
 	# 免费一抽 
