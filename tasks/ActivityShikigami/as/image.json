@@ -2,7 +2,7 @@
   {
     "itemName": "shi",
     "imageName": "as_shi.png",
-    "roiFront": "136,237,59,42",
+    "roiFront": "1014.3333333333333,206.66666666666652,49,39",
     "roiBack": "85,170,1029,142",
     "method": "Template matching",
     "threshold": 0.7,
@@ -11,7 +11,7 @@
   {
     "itemName": "back_green",
     "imageName": "as_back_green.png",
-    "roiFront": "13,18,49,49",
+    "roiFront": "13,18,44,44",
     "roiBack": "13,18,49,49",
     "method": "Template matching",
     "threshold": 0.8,
@@ -20,8 +20,8 @@
   {
     "itemName": "battle",
     "imageName": "as_battle.png",
-    "roiFront": "150,312,52,177",
-    "roiBack": "150,312,52,177",
+    "roiFront": "1010,189,47,172",
+    "roiBack": "1010,189,52,177",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "进入爬塔"
@@ -29,8 +29,8 @@
   {
     "itemName": "drum",
     "imageName": "as_drum.png",
-    "roiFront": "902,379,41,43",
-    "roiBack": "902,379,41,43",
+    "roiFront": "1011,114,29,31",
+    "roiBack": "1011,114,29,31",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "归鹿之途"
@@ -38,8 +38,8 @@
   {
     "itemName": "lock",
     "imageName": "as_lock.png",
-    "roiFront": "793,654,30,32",
-    "roiBack": "793,654,30,32",
+    "roiFront": "795,654,25,32",
+    "roiBack": "795,654,25,32",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "上锁图标"
@@ -47,8 +47,8 @@
   {
     "itemName": "unlock",
     "imageName": "as_unlock.png",
-    "roiFront": "795,650,27,35",
-    "roiBack": "795,650,27,35",
+    "roiFront": "1135,483,27,27",
+    "roiBack": "795,654,27,27",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "还未上锁图片"
@@ -56,8 +56,8 @@
   {
     "itemName": "fire",
     "imageName": "as_fire.png",
-    "roiFront": "1123,563,106,116",
-    "roiBack": "1123,563,106,116",
+    "roiFront": "1135,483,22,22",
+    "roiBack": "1104,551,138,130",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "点击战斗"
@@ -65,8 +65,8 @@
   {
     "itemName": "ap",
     "imageName": "as_ap.png",
-    "roiFront": "1116,498,27,37",
-    "roiBack": "1116,498,27,37",
+    "roiFront": "1136,488,20,22",
+    "roiBack": "1133,481,27,37",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "体力按钮"
@@ -74,8 +74,8 @@
   {
     "itemName": "ap_activity",
     "imageName": "as_ap_activity.png",
-    "roiFront": "1120,510,27,27",
-    "roiBack": "1120,510,27,27",
+    "roiFront": "1132,485,27,31",
+    "roiBack": "1127,479,37,44",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "活动体力"
@@ -83,8 +83,8 @@
   {
     "itemName": "switch",
     "imageName": "as_switch.png",
-    "roiFront": "1207,505,33,30",
-    "roiBack": "1207,505,33,30",
+    "roiFront": "1211,486,33,30",
+    "roiBack": "1211,486,33,30",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "切换按键"
@@ -92,7 +92,7 @@
   {
     "itemName": "buy_jade",
     "imageName": "as_buy_jade.png",
-    "roiFront": "836,619,38,42",
+    "roiFront": "1004,192,38,42",
     "roiBack": "836,619,38,42",
     "method": "Template matching",
     "threshold": 0.8,
@@ -101,7 +101,7 @@
   {
     "itemName": "add_max",
     "imageName": "as_add_max.png",
-    "roiFront": "974,524,57,54",
+    "roiFront": "17,24,33,37",
     "roiBack": "974,524,57,54",
     "method": "Template matching",
     "threshold": 0.8,
@@ -110,7 +110,7 @@
   {
     "itemName": "new",
     "imageName": "as_new.png",
-    "roiFront": "0,0,100,100",
+    "roiFront": "1004,192,65,52",
     "roiBack": "0,0,100,100",
     "method": "Template matching",
     "threshold": 0.8,
