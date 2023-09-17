@@ -10,10 +10,8 @@ from tasks.DailyTrifles.config import DailyTriflesConfig
 from tasks.DailyTrifles.assets import DailyTriflesAssets
 from tasks.Component.Summon.summon import Summon
 
-
 from module.logger import logger
 from module.exception import TaskEnd
-
 
 
 class ScriptTask(GameUi, Summon, DailyTriflesAssets):
@@ -65,14 +63,25 @@ class ScriptTask(GameUi, Summon, DailyTriflesAssets):
         self.ui_get_current_page()
         self.ui_goto(page_mall, confirm_wait=3)
 
-        while 1:
+        start_time = datetime.now()
+        found_gift_recommend = False
+
+        while datetime.now() - start_time < timedelta(seconds=5):
             self.screenshot()
             if self.appear(self.I_GIFT_RECOMMEND):
+                self.appear_then_click(self.I_GIFT_RECOMMEND, interval=1)
+                found_gift_recommend = True
                 break
             if self.appear_then_click(self.I_ROOM_GIFT, interval=1):
                 continue
-        self.screenshot()
-        self.appear_then_click(self.I_GIFT_RECOMMEND, interval=1)
+
+        if not found_gift_recommend:
+            logger.warning('I_ROOM_GIFT not found within 5 seconds')
+            self.ui_click(self.I_UI_BACK_YELLOW, self.I_CHECK_MALL)
+            self.ui_get_current_page()
+            self.ui_goto(page_main)
+            return
+
         logger.info('Enter store sign')
         sleep(1)  # 等个动画
         self.screenshot()
@@ -91,9 +100,6 @@ class ScriptTask(GameUi, Summon, DailyTriflesAssets):
         self.ui_goto(page_main)
 
 
-
-
-
 if __name__ == '__main__':
     from module.config.config import Config
     from module.device.device import Device
@@ -104,4 +110,3 @@ if __name__ == '__main__':
     t = ScriptTask(c, d)
 
     t.run_store_sign()
-
