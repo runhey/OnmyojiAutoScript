@@ -83,6 +83,7 @@ class ScriptTask(GameUi, GeneralBattle, DemonEncounterAssets):
                 continue
         logger.info('Boss battle start')
         # 点击集结挑战
+        boss_fire_count = 0  # 五次没点到就意味着今天已经挑战过了
         while 1:
             self.screenshot()
             if self.appear(self.I_BOSS_CONFIRM):
@@ -91,7 +92,12 @@ class ScriptTask(GameUi, GeneralBattle, DemonEncounterAssets):
                 break
             if self.appear(self.I_BOSS_GATHER):
                 break
+            if boss_fire_count >= 5:
+                logger.warning('Boss battle already done')
+                self.ui_click_until_disappear(self.I_UI_BACK_RED)
+                return
             if self.appear_then_click(self.I_BOSS_FIRE, interval=1):
+                boss_fire_count += 1
                 continue
         logger.info('Boss battle confirm and enter')
         # 等待挑战, 5秒也是等
