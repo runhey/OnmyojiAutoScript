@@ -47,6 +47,8 @@ class SecretAssets:
 	O_SE_NO_PASS_LAST = RuleOcr(roi=(429,381,180,234), area=(429,381,180,234), mode="Full", method="Default", keyword="未通关", name="se_no_pass_last")
 	# 勾玉 
 	O_SE_JADE = RuleOcr(roi=(327,230,23,24), area=(327,230,23,24), mode="Digit", method="Default", keyword="", name="se_jade")
+	# 金币 
+	O_SE_GOLD = RuleOcr(roi=(363,226,48,21), area=(363,226,48,21), mode="Digit", method="Default", keyword="", name="se_gold")
 
 
 	# Swipe Rule Assets

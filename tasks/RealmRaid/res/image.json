@@ -56,7 +56,7 @@
   {
     "itemName": "medal_0",
     "imageName": "res_medal_0.png",
-    "roiFront": "510,336,202,51",
+    "roiFront": "536,336,176,51",
     "roiBack": "231,200,898,336",
     "method": "Template matching",
     "threshold": 0.8,

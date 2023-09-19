@@ -42,6 +42,7 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, RyouToppaAssets):
         self.ui_get_current_page()
         self.ui_goto(page_kekkai_toppa)
         ryou_toppa_start_flag = True
+        ryou_toppa_success_penetration = False
         # 点击突破
         while 1:
             self.screenshot()
@@ -55,6 +56,7 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, RyouToppaAssets):
             # 攻破阴阳寮，说明寮突已开，则退出
             elif self.appear(self.I_SUCCESS_PENETRATION, threshold=0.8):
                 ryou_toppa_start_flag = True
+                ryou_toppa_success_penetration = True
                 break
             # 出现选择寮突说明寮突未开
             elif self.appear(self.I_SELECT_RYOU_BUTTON, threshold=0.8):
@@ -70,6 +72,11 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, RyouToppaAssets):
             # 开寮突
             self.start_ryou_toppa()
 
+        # 100% 攻破, 第二天再执行
+        if ryou_toppa_success_penetration:
+            self.set_next_run(task='RyouToppa', finish=True, success=True)
+            raise TaskEnd
+
         # 开始突破
         while 1:
             if self.execute_round():
@@ -81,7 +88,7 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, RyouToppaAssets):
         # self.ui_current = page_ryou_toppa
         # self.ui_goto(page_main)
 
-        self.set_next_run(task='RyouToppa', finish=True, success=True)
+        self.set_next_run(task='RyouToppa', finish=True, server=False, success=True)
         raise TaskEnd
 
     def start_ryou_toppa(self):

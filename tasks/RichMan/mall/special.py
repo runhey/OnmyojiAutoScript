@@ -163,8 +163,12 @@ class Special(Buy, MallNavbar):
         result = self.O_SP_RES_NUMBER.ocr(self.device.image)
         result = result.replace('？', '2').replace('?', '2').replace(':', '；')
         try:
-            result = re.findall(r'剩余购买次数：(\d+)', result)[0]
-            result = int(result)
+            if '：' in result:
+                result = re.findall(r'剩余购买次数：(\d+)', result)[0]
+                result = int(result)
+            else:
+                result = re.findall(r'剩余购买次数(\d+)', result)[0]
+                result = int(result)
         except:
             result = 0
         logger.info(f'Remain [{result}]')

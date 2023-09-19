@@ -267,6 +267,6 @@ if __name__ == '__main__':
     t = ScriptTask(c, d)
     t.screenshot()
 
-    t._share_collect()
+    t._share_secret()
 
 

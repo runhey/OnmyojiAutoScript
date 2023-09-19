@@ -321,7 +321,7 @@ class Script:
                     if not self.wait_until(task.next_run):
                         del_cached_property(self, 'config')
                         continue
-                    self.run('start')
+                    self.run('Restart')
                 elif method == 'goto_main':
                     logger.info('Goto main page during wait')
                     self.run('GotoMain')
