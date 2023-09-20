@@ -548,7 +548,7 @@
     "general_climb": {
       "limit_time": "00:30:00",
       "limit_count": 50,
-      "ap_game_max": 300,
+      "ap_game_max": 999,
       "ap_mode": "ap_activity",
       "activity_toggle": false
     },
@@ -860,7 +860,7 @@
       "server_update": "09:00:00"
     },
     "missions_config": {
-      "missions_rule": "契灵 > 觉醒三 > 觉醒二 > 觉醒一 > 御灵二 > 御灵一 > 御魂二 > 御魂一"
+      "missions_rule": "契灵 > 觉醒三 > 觉醒二 > 觉醒一 > 御灵三 > 御灵二 > 御灵一 > 御魂二 > 御魂一"
     }
   },
   "hunt": {

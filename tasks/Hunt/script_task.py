@@ -92,7 +92,7 @@ class ScriptTask(GameUi, GeneralBattle, GeneralInvite, SwitchSoul, HuntAssets):
         self.ui_click(self.I_KIRIN_CHALLAGE, self.I_KIRIN_GATHER)
         # 等待进入战斗
         # 等待挑战, 5秒也是等
-        time.sleep(5)
+        sleep(5)
         self.device.stuck_record_add('BATTLE_STATUS_S')
         self.wait_until_disappear(self.I_KIRIN_GATHER)
         self.device.stuck_record_clear()
