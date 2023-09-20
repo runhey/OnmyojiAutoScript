@@ -48,3 +48,16 @@ class GeneralClimb(ConfigBase):
                     return time(hour=0, minute=30, second=0)
         return value
 
+    @validator('ap_game_max', pre=True, always=True)
+    def reset_game_max(cls, value):
+        def_value = 999
+        if isinstance(value, str):
+            try:
+                return int(value)
+            except ValueError:
+                logger.warning('Invalid ap_game_max value. Expected format: int')
+                return def_value
+        elif isinstance(value, int):
+            return def_value
+
+

@@ -1,0 +1,32 @@
+[
+  {
+    "itemName": "random_left",
+    "roiFront": "21,23,290,599",
+    "roiBack": "21,23,290,599",
+    "description": "description"
+  },
+  {
+    "itemName": "random_right",
+    "roiFront": "969,55,296,638",
+    "roiBack": "969,55,296,638",
+    "description": "description"
+  },
+  {
+    "itemName": "random_top",
+    "roiFront": "85,46,1159,101",
+    "roiBack": "85,46,1159,101",
+    "description": "description"
+  },
+  {
+    "itemName": "random_bottom",
+    "roiFront": "182,539,1063,100",
+    "roiBack": "182,539,1063,100",
+    "description": "description"
+  },
+  {
+    "itemName": "random_all",
+    "roiFront": "42,94,1207,543",
+    "roiBack": "42,94,1207,543",
+    "description": "description"
+  }
+]
