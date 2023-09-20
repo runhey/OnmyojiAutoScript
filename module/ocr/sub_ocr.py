@@ -129,20 +129,22 @@ class DigitCounter(Single):
 
     @classmethod
     def ocr_str_digit_counter(cls, result: str) -> tuple[int, int, int]:
-        result = re.search(r'(\d+万|\d+)/(\d+)', result)
+        # 正则匹配 1.1万，11万，100等数字，会在result.groups()生成三个字符串，取其1,3
+        result = re.search(r'((\d+\.\d+|\d+)万?)/(\d+)', result)
         def process_unit(str):
             if '万' in str:
                 str = str.replace('万', '')
-                return int(str) * 10000
+                return int(float(str) * 10000)
             else:
                 return int(str)
         if result:
-            current = process_unit(result.group(1))
-            total = int(result.group(2))
+            current, _, total = result.groups()
+            current = process_unit(current)
+            total = int(total)
             # 不知道为什么加了这一句，妈的
             # current = min(current, total)
-            # if current > total:
-            #     logger.warning(f'[{cls.name}]: Current {current} is greater than total {total}')
+            if current > total:
+                logger.warning(f'[{cls.name}]: Current {current} is greater than total {total}')
             return current, total - current, total
         else:
             logger.warning(f'Unexpected ocr result: {result}')
