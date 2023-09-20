@@ -10,9 +10,22 @@ from module.atom.list import RuleList
 class ActivityShikigamiAssets: 
 
 
+	# Click Rule Assets
+	# description 
+	C_RANDOM_LEFT = RuleClick(roi_front=(21,23,290,599), roi_back=(21,23,290,599), name="random_left")
+	# description 
+	C_RANDOM_RIGHT = RuleClick(roi_front=(969,55,296,638), roi_back=(969,55,296,638), name="random_right")
+	# description 
+	C_RANDOM_TOP = RuleClick(roi_front=(85,46,1159,101), roi_back=(85,46,1159,101), name="random_top")
+	# description 
+	C_RANDOM_BOTTOM = RuleClick(roi_front=(182,539,1063,100), roi_back=(182,539,1063,100), name="random_bottom")
+	# description 
+	C_RANDOM_ALL = RuleClick(roi_front=(42,94,1207,543), roi_back=(42,94,1207,543), name="random_all")
+
+
 	# Image Rule Assets
 	# 进入活动 
-	I_SHI = RuleImage(roi_front=(1014.3333333333333,206.66666666666652,49,39), roi_back=(85,170,1029,142), threshold=0.7, method="Template matching", file="./tasks/ActivityShikigami/as/as_shi.png")
+	I_SHI = RuleImage(roi_front=(434,268,49,39), roi_back=(85,170,1029,142), threshold=0.7, method="Template matching", file="./tasks/ActivityShikigami/as/as_shi.png")
 	# 左上角返回 
 	I_BACK_GREEN = RuleImage(roi_front=(13,18,44,44), roi_back=(13,18,49,49), threshold=0.8, method="Template matching", file="./tasks/ActivityShikigami/as/as_back_green.png")
 	# 进入爬塔 
@@ -41,7 +54,7 @@ class ActivityShikigamiAssets:
 
 	# Ocr Rule Assets
 	# 体力的数量检测 
-	O_REMAIN_AP = RuleOcr(roi=(1096,26,116,28), area=(1092,23,121,33), mode="DigitCounter", method="Default", keyword="", name="remain_ap")
+	O_REMAIN_AP = RuleOcr(roi=(1180,682,80,25), area=(1180,682,80,25), mode="DigitCounter", method="Default", keyword="", name="remain_ap")
 	# 活动体力的剩余检测 
 	O_REMAIN_AP_ACTIVITY = RuleOcr(roi=(707,24,106,34), area=(707,24,106,34), mode="DigitCounter", method="Default", keyword="", name="remain_ap_activity")
 	# 还有多少次购买体力的机会 
