@@ -155,6 +155,8 @@ class ScriptTask(GameUi, ReplaceShikigami, KekkaiUtilizeAssets):
                             break
                         if self.appear_then_click(self.I_UI_REWARD, self.C_UI_REWARD, interval=1, threshold=0.6):
                             continue
+                    logger.info('Reward box')
+                    break
 
                 if self.appear_then_click(self.I_BOX_AP, interval=1):
                     continue
