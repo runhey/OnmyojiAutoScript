@@ -143,17 +143,19 @@ class ScriptTask(GameUi, ReplaceShikigami, KekkaiUtilizeAssets):
             if not appear:
                 return False
             # 点击盒子
-            timer_ap = Timer(12)
+            timer_ap = Timer(6)
             timer_ap.start()
             while 1:
                 self.screenshot()
 
-                if self.ui_reward_appear_click():
+                if self.appear(self.I_UI_REWARD):
                     while 1:
-                        # 等待动画结束
+                        self.screenshot()
                         if not self.appear(self.I_UI_REWARD):
                             break
-                    break
+                        if self.appear_then_click(self.I_UI_REWARD, self.C_UI_REWARD, interval=1, threshold=0.6):
+                            continue
+
                 if self.appear_then_click(self.I_BOX_AP, interval=1):
                     continue
                 if self.appear_then_click(self.I_AP_EXTRACT, interval=2):
