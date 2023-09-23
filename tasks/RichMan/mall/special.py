@@ -167,7 +167,7 @@ class Special(Buy, MallNavbar):
                 result = re.findall(r'剩余购买次数：(\d+)', result)[0]
                 result = int(result)
             else:
-                result = re.findall(r'剩余购买次数(\d+)', result)[0]
+                result = re.findall(r'本周剩余数量(\d+)', result)[0]
                 result = int(result)
         except:
             result = 0
