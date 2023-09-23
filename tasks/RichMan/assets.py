@@ -24,7 +24,7 @@ class RichManAssets:
 	# 皮肤券 
 	I_GUILD_SKIN = RuleImage(roi_front=(795,436,71,74), roi_back=(795,436,71,74), threshold=0.8, method="Template matching", file="./tasks/RichMan/guild/guild_guild_skin.png")
 	# 购买检查 
-	I_GUILD_CHECK_SCRAP = RuleImage(roi_front=(454,240,90,88), roi_back=(454,240,90,88), threshold=0.8, method="Template matching", file="./tasks/RichMan/guild/guild_guild_check_scrap.png")
+	I_GUILD_CHECK_SCRAP = RuleImage(roi_front=(590,246,90,88), roi_back=(590,246,90,88), threshold=0.8, method="Template matching", file="./tasks/RichMan/guild/guild_guild_check_scrap.png")
 
 
 	# Ocr Rule Assets
@@ -33,7 +33,7 @@ class RichManAssets:
 	# Ocr-description 
 	O_GUILD_NUMBER_BLUE = RuleOcr(roi=(888,269,25,33), area=(888,269,25,33), mode="Digit", method="Default", keyword="", name="guild_number_blue")
 	# Ocr-description 
-	O_GUILD_NUMBER_BLACK = RuleOcr(roi=(663,520,22,31), area=(663,520,22,31), mode="Digit", method="Default", keyword="", name="guild_number_black")
+	O_GUILD_NUMBER_BLACK = RuleOcr(roi=(663,523,21,27), area=(663,523,21,27), mode="Digit", method="Default", keyword="", name="guild_number_black")
 	# Ocr-description 
 	O_GUILD_NUMBER_SKIN = RuleOcr(roi=(889,519,21,35), area=(889,519,21,35), mode="Digit", method="Default", keyword="", name="guild_number_skin")
 
