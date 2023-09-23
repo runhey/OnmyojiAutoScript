@@ -21,13 +21,13 @@ class BuyAssets:
 
 	# Image Rule Assets
 	# 拉满 
-	I_BUY_PLUS = RuleImage(roi_front=(762,410,50,58), roi_back=(762,410,50,58), threshold=0.8, method="Template matching", file="./tasks/Component/Buy/buy/buy_buy_plus.png")
+	I_BUY_PLUS = RuleImage(roi_front=(759,422,50,58), roi_back=(746,397,98,96), threshold=0.8, method="Template matching", file="./tasks/Component/Buy/buy/buy_buy_plus.png")
 	# 加一个 
-	I_BUY_ADD = RuleImage(roi_front=(686,411,51,54), roi_back=(686,411,51,54), threshold=0.8, method="Template matching", file="./tasks/Component/Buy/buy/buy_buy_add.png")
+	I_BUY_ADD = RuleImage(roi_front=(671,428,51,54), roi_back=(645,412,111,84), threshold=0.8, method="Template matching", file="./tasks/Component/Buy/buy/buy_buy_add.png")
 	# 减 
-	I_BUY_SUB = RuleImage(roi_front=(471,416,50,48), roi_back=(471,416,50,48), threshold=0.8, method="Template matching", file="./tasks/Component/Buy/buy/buy_buy_sub.png")
+	I_BUY_SUB = RuleImage(roi_front=(467,429,50,48), roi_back=(452,412,85,94), threshold=0.8, method="Template matching", file="./tasks/Component/Buy/buy/buy_buy_sub.png")
 	# 出现用魂玉购买 
-	I_BUY_RMB = RuleImage(roi_front=(615,452,35,32), roi_back=(552,432,178,72), threshold=0.8, method="Template matching", file="./tasks/Component/Buy/buy/buy_buy_rmb.png")
+	I_BUY_RMB = RuleImage(roi_front=(610,532,35,32), roi_back=(548,513,178,72), threshold=0.8, method="Template matching", file="./tasks/Component/Buy/buy/buy_buy_rmb.png")
 
 
 	# Ocr Rule Assets
