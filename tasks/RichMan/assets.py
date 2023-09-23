@@ -69,11 +69,11 @@ class RichManAssets:
 
 	# Image Rule Assets
 	# 蓝票 
-	I_CH_BLUE = RuleImage(roi_front=(623,142,145,111), roi_back=(161,112,844,462), threshold=0.8, method="Template matching", file="./tasks/RichMan/mall/charisma/charisma_ch_blue.png")
+	I_CH_BLUE = RuleImage(roi_front=(623,142,145,111), roi_back=(623,142,145,111), threshold=0.8, method="Template matching", file="./tasks/RichMan/mall/charisma/charisma_ch_blue.png")
 	# description 
-	I_CH_BLACK = RuleImage(roi_front=(848,393,141,110), roi_back=(137,94,895,486), threshold=0.8, method="Template matching", file="./tasks/RichMan/mall/charisma/charisma_ch_black.png")
+	I_CH_BLACK = RuleImage(roi_front=(848,393,141,110), roi_back=(848,393,141,110), threshold=0.8, method="Template matching", file="./tasks/RichMan/mall/charisma/charisma_ch_black.png")
 	# 蓝票购买确认 
-	I_CH_CHECK_BLUE = RuleImage(roi_front=(451,230,100,100), roi_back=(451,230,100,100), threshold=0.8, method="Template matching", file="./tasks/RichMan/mall/charisma/charisma_ch_check_blue.png")
+	I_CH_CHECK_BLUE = RuleImage(roi_front=(587,243,100,100), roi_back=(587,243,100,100), threshold=0.8, method="Template matching", file="./tasks/RichMan/mall/charisma/charisma_ch_check_blue.png")
 
 
 	# Image Rule Assets
