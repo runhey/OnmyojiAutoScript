@@ -12,7 +12,7 @@ class GeneralBuffAssets:
 
 	# Image Rule Assets
 	# 庭院左上角的加成 
-	I_BUFF_1 = RuleImage(roi_front=(357,42,45,50), roi_back=(357,42,45,50), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralBuff/gb/gb_buff_1.png")
+	I_BUFF_1 = RuleImage(roi_front=(363,32,32,46), roi_back=(344,14,128,76), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralBuff/gb/gb_buff_1.png")
 	# description 
 	I_AWAKE = RuleImage(roi_front=(381,130,35,45), roi_back=(360,107,80,447), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralBuff/gb/gb_awake.png")
 	# 御魂加成 
