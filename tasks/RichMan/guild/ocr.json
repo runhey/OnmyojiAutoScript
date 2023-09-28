@@ -19,8 +19,8 @@
   },
   {
     "itemName": "guild_number_black",
-    "roiFront": "663,520,22,31",
-    "roiBack": "663,520,22,31",
+    "roiFront": "663,523,21,27",
+    "roiBack": "663,523,21,27",
     "mode": "Digit",
     "method": "Default",
     "keyword": "",

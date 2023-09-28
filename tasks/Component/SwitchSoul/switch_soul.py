@@ -168,19 +168,19 @@ class SwitchSoul(BaseTask, SwitchSoulAssets):
         保证在式神录的界面
         :return:
         """
+        logger.hr('Switch soul by name')
         # 滑动至分组最上层
+        last_group_text = ''
         while 1:
             self.screenshot()
             compare1 = self.O_SS_GROUP_NAME.detect_and_ocr(self.device.image)
-            text1 = str([result.ocr_text for result in compare1])
-            # 向上滑动
-            self.swipe(self.S_SS_GROUP_SWIPE_UP, 6)
-            self.screenshot()
-            compare2 = self.O_SS_GROUP_NAME.detect_and_ocr(self.device.image)
-            text2 = str([result.ocr_text for result in compare2])
-            # 相等时 滑动到最上层
-            if text1 == text2:
+            now_group_text = str([result.ocr_text for result in compare1])
+            if now_group_text == last_group_text:
                 break
+            self.swipe(self.S_SS_GROUP_SWIPE_UP, 2)
+            sleep(2.5)
+            last_group_text = now_group_text
+        logger.info('Swipe to top of group')
 
         # 判断有无目标分组
         while 1:
@@ -194,6 +194,8 @@ class SwitchSoul(BaseTask, SwitchSoulAssets):
             if result and len(result) > 0:
                 break
             self.swipe(self.S_SS_GROUP_SWIPE_DOWN)
+            sleep(1.5)
+        logger.info('Swipe down to find target group')
 
         # 选中分组
         while 1:
@@ -201,20 +203,22 @@ class SwitchSoul(BaseTask, SwitchSoulAssets):
             self.O_SS_GROUP_NAME.keyword = groupName
             if self.ocr_appear_click(self.O_SS_GROUP_NAME):
                 break
+        logger.info(f'Select group {groupName}')
 
         # 滑动至阵容最上层
+        last_team_text = ''
         while 1:
             self.screenshot()
             compare1 = self.O_SS_TEAM_NAME.detect_and_ocr(self.device.image)
-            text1 = str([result.ocr_text for result in compare1])
+            now_team_text = str([result.ocr_text for result in compare1])
             # 向上滑动
-            self.swipe(self.S_SS_TEAM_SWIPE_DOWN, 6)
-            self.screenshot()
-            compare2 = self.O_SS_TEAM_NAME.detect_and_ocr(self.device.image)
-            text2 = str([result.ocr_text for result in compare2])
-            # 相等时 说明滑动到最上层
-            if text1 == text2:
+            if now_team_text == last_team_text:
                 break
+            self.swipe(self.S_SS_TEAM_SWIPE_DOWN, 1.5)
+            sleep(2)
+            last_team_text = now_team_text
+        logger.info('Swipe to top of team')
+
         # 判断当前分组有无目标阵容
         while 1:
             self.screenshot()
@@ -227,6 +231,7 @@ class SwitchSoul(BaseTask, SwitchSoulAssets):
             if result and len(result) > 0:
                 break
             self.swipe(self.S_SS_TEAM_SWIPE_UP)
+        logger.info('Swipe up to find target team')
 
         # 选中分组
         while 1:
@@ -234,8 +239,9 @@ class SwitchSoul(BaseTask, SwitchSoulAssets):
             self.O_SS_TEAM_NAME.keyword = teamName
             if self.ocr_appear_click(self.O_SS_TEAM_NAME):
                 break
+        logger.info(f'Select team {teamName}')
         # 切换御魂
-        for i in range(6):
+        for i in range(5):
             sleep(0.8)
             self.screenshot()
             self.O_SS_TEAM_NAME.keyword = teamName
@@ -244,6 +250,7 @@ class SwitchSoul(BaseTask, SwitchSoulAssets):
             if self.appear_then_click(self.I_SOU_SWITCH_SURE, interval=1):
                 break
         logger.info(f'Switch soul_one group {groupName} team {teamName}')
+
 
     def ocr_appear_click_by_rule(self,
                          target: RuleOcr,
@@ -277,6 +284,6 @@ if __name__ == '__main__':
     s = SwitchSoul(c, d)
 
     s.click_preset()
-    s.switch_soul_one(4, 1)
+    # s.switch_soul_one(4, 1)
     # s.switch_soul_by_name('契灵', '茨球')
-    # s.switch_soul_by_name('默认分组', '结界突破2')
+    s.switch_soul_by_name('默认分组', '队伍5')

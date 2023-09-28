@@ -75,7 +75,7 @@ class SwitchSoulAssets:
 
 	# Swipe Rule Assets
 	# 列表的向上滑动 
-	S_SS_GROUP_SWIPE_UP = RuleSwipe(roi_front=(1154,180,23,21), roi_back=(1153,322,21,21), mode="default", name="ss_group_swipe_up")
+	S_SS_GROUP_SWIPE_UP = RuleSwipe(roi_front=(1154,180,90,21), roi_back=(1153,322,86,21), mode="default", name="ss_group_swipe_up")
 	# 列表的向下滑动 
 	S_SS_GROUP_SWIPE_DOWN = RuleSwipe(roi_front=(1155,388,21,22), roi_back=(1152,177,22,24), mode="default", name="ss_group_swipe_down")
 	# 阵容向上滑动 
