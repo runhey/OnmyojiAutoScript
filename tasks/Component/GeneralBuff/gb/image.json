@@ -2,8 +2,8 @@
   {
     "itemName": "buff_1",
     "imageName": "gb_buff_1.png",
-    "roiFront": "357,42,45,50",
-    "roiBack": "357,42,45,50",
+    "roiFront": "363,32,32,46",
+    "roiBack": "344,14,128,76",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "庭院左上角的加成"

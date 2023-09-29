@@ -1,8 +1,8 @@
 [
   {
     "itemName": "ss_group_swipe_up",
-    "roiFront": "1154,180,23,21",
-    "roiBack": "1153,322,21,21",
+    "roiFront": "1154,180,90,21",
+    "roiBack": "1153,322,86,21",
     "mode": "default",
     "description": "列表的向上滑动"
   },

@@ -51,7 +51,7 @@ class RestartAssets:
 	# description 
 	I_LOGIN_YELLOW_CLOSE = RuleImage(roi_front=(29,17,46,44), roi_back=(0,0,94,86), threshold=0.8, method="Template matching", file="./tasks/Restart/login/login_login_yellow_close.png")
 	# 用于判断是否出现登录选区的 
-	I_LOGIN_8 = RuleImage(roi_front=(178,572,53,60), roi_back=(19,547,223,105), threshold=0.8, method="Template matching", file="./tasks/Restart/login/login_login_8.png")
+	I_LOGIN_8 = RuleImage(roi_front=(178,572,53,60), roi_back=(1,547,241,105), threshold=0.8, method="Template matching", file="./tasks/Restart/login/login_login_8.png")
 	# 登录时候不观看CG视频 
 	I_WATCH_VIDEO_CANCEL = RuleImage(roi_front=(466,396,130,61), roi_back=(466,396,130,61), threshold=0.8, method="Template matching", file="./tasks/Restart/login/login_watch_video_cancel.png")
 	# 指定角色进入游戏,默认第一个 

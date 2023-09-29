@@ -32,11 +32,11 @@ class MysteryShopAssets:
 
 	# Image Rule Assets
 	# 蓝票 
-	I_MS_BLUE = RuleImage(roi_front=(650,371,92,93), roi_back=(179,81,829,471), threshold=0.8, method="Template matching", file="./tasks/MysteryShop/ms/ms_ms_blue.png")
+	I_MS_BLUE = RuleImage(roi_front=(850,379,117,98), roi_back=(179,81,829,471), threshold=0.7, method="Template matching", file="./tasks/MysteryShop/ms/ms_ms_blue.png")
 	# 黑蛋 
-	I_MS_BLACK = RuleImage(roi_front=(877,369,91,91), roi_back=(170,64,850,448), threshold=0.8, method="Template matching", file="./tasks/MysteryShop/ms/ms_ms_black.png")
+	I_MS_BLACK = RuleImage(roi_front=(851,353,114,102), roi_back=(170,64,850,448), threshold=0.6, method="Template matching", file="./tasks/MysteryShop/ms/ms_ms_black.png")
 	# description 
-	I_MS_TAIKO_3 = RuleImage(roi_front=(431,371,85,91), roi_back=(171,50,839,494), threshold=0.8, method="Template matching", file="./tasks/MysteryShop/ms/ms_ms_taiko_3.png")
+	I_MS_TAIKO_3 = RuleImage(roi_front=(176,353,140,104), roi_back=(144,50,866,494), threshold=0.8, method="Template matching", file="./tasks/MysteryShop/ms/ms_ms_taiko_3.png")
 	# description 
 	I_MS_TAIKO_4 = RuleImage(roi_front=(204,372,90,88), roi_back=(156,81,874,473), threshold=0.8, method="Template matching", file="./tasks/MysteryShop/ms/ms_ms_taiko_4.png")
 	# description 
@@ -44,17 +44,17 @@ class MysteryShopAssets:
 	# description 
 	I_MS_EXP = RuleImage(roi_front=(0,0,100,100), roi_back=(0,0,100,100), threshold=0.8, method="Template matching", file="./tasks/MysteryShop/ms/ms_ms_exp.png")
 	# description 
-	I_MS_CHECK_BLUE = RuleImage(roi_front=(455,235,88,94), roi_back=(455,235,88,94), threshold=0.8, method="Template matching", file="./tasks/MysteryShop/ms/ms_ms_check_blue.png")
+	I_MS_CHECK_BLUE = RuleImage(roi_front=(592,241,88,94), roi_back=(455,235,261,146), threshold=0.8, method="Template matching", file="./tasks/MysteryShop/ms/ms_ms_check_blue.png")
 	# description 
-	I_MS_CHECK_BLACK = RuleImage(roi_front=(454,235,86,92), roi_back=(454,235,86,92), threshold=0.8, method="Template matching", file="./tasks/MysteryShop/ms/ms_ms_check_black.png")
+	I_MS_CHECK_BLACK = RuleImage(roi_front=(598,258,86,92), roi_back=(455,238,273,123), threshold=0.8, method="Template matching", file="./tasks/MysteryShop/ms/ms_ms_check_black.png")
 	# description 
-	I_MS_CHECK_TAIKO_3 = RuleImage(roi_front=(465,245,70,81), roi_back=(465,245,70,81), threshold=0.8, method="Template matching", file="./tasks/MysteryShop/ms/ms_ms_check_taiko_3.png")
+	I_MS_CHECK_TAIKO_3 = RuleImage(roi_front=(567,259,70,81), roi_back=(465,245,252,124), threshold=0.8, method="Template matching", file="./tasks/MysteryShop/ms/ms_ms_check_taiko_3.png")
 	# description 
-	I_MS_CHECK_TAIKO_4 = RuleImage(roi_front=(461,254,66,73), roi_back=(461,254,66,73), threshold=0.8, method="Template matching", file="./tasks/MysteryShop/ms/ms_ms_check_taiko_4.png")
+	I_MS_CHECK_TAIKO_4 = RuleImage(roi_front=(591,277,66,73), roi_back=(453,235,280,146), threshold=0.8, method="Template matching", file="./tasks/MysteryShop/ms/ms_ms_check_taiko_4.png")
 	# description 
-	I_MS_CHECK_TAIKO_6 = RuleImage(roi_front=(0,0,100,100), roi_back=(0,0,100,100), threshold=0.8, method="Template matching", file="./tasks/MysteryShop/ms/ms_ms_check_taiko_6.png")
+	I_MS_CHECK_TAIKO_6 = RuleImage(roi_front=(580,253,100,100), roi_back=(430,220,334,171), threshold=0.8, method="Template matching", file="./tasks/MysteryShop/ms/ms_ms_check_taiko_6.png")
 	# description 
-	I_MS_CHECK_EXP = RuleImage(roi_front=(0,0,100,100), roi_back=(0,0,100,100), threshold=0.8, method="Template matching", file="./tasks/MysteryShop/ms/ms_ms_check_exp.png")
+	I_MS_CHECK_EXP = RuleImage(roi_front=(589,255,100,100), roi_back=(472,225,243,149), threshold=0.8, method="Template matching", file="./tasks/MysteryShop/ms/ms_ms_check_exp.png")
 	# description 
 	I_MS_REWARD_3 = RuleImage(roi_front=(511,630,48,47), roi_back=(511,630,48,47), threshold=0.7, method="Template matching", file="./tasks/MysteryShop/ms/ms_ms_reward_3.png")
 	# description 

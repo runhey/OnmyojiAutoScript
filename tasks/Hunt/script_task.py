@@ -92,7 +92,7 @@ class ScriptTask(GameUi, GeneralBattle, GeneralInvite, SwitchSoul, HuntAssets):
         self.ui_click(self.I_KIRIN_CHALLAGE, self.I_KIRIN_GATHER)
         # 等待进入战斗
         # 等待挑战, 5秒也是等
-        time.sleep(5)
+        sleep(5)
         self.device.stuck_record_add('BATTLE_STATUS_S')
         self.wait_until_disappear(self.I_KIRIN_GATHER)
         self.device.stuck_record_clear()
@@ -117,6 +117,11 @@ class ScriptTask(GameUi, GeneralBattle, GeneralInvite, SwitchSoul, HuntAssets):
                 continue
             if self.appear_then_click(self.I_NW_CHALLAGE, interval=1.5):
                 continue
+            if self.appear(self.I_NW_DONE):
+                # 今日已挑战
+                logger.warning('Today have already challenged the Netherworld')
+                self.ui_click_until_disappear(self.I_UI_BACK_RED)
+                return
         logger.info('Start battle')
         self.run_general_battle()
 

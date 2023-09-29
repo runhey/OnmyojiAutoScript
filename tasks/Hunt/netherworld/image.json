@@ -16,5 +16,14 @@
     "method": "Template matching",
     "threshold": 0.8,
     "description": "点击挑战"
+  },
+  {
+    "itemName": "nw_done",
+    "imageName": "netherworld_nw_done.png",
+    "roiFront": "308,600,156,41",
+    "roiBack": "308,600,156,41",
+    "method": "Template matching",
+    "threshold": 0.9,
+    "description": "今日已挑战"
   }
 ]

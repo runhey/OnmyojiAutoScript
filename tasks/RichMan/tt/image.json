@@ -47,8 +47,8 @@
   {
     "itemName": "tt_buy_up",
     "imageName": "tt_tt_buy_up.png",
-    "roiFront": "761,411,59,57",
-    "roiBack": "761,411,59,57",
+    "roiFront": "755,427,59,57",
+    "roiBack": "740,386,80,146",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "提高"
@@ -57,7 +57,7 @@
     "itemName": "tt_buy_confirm",
     "imageName": "tt_tt_buy_confirm.png",
     "roiFront": "584,512,53,53",
-    "roiBack": "553,508,169,60",
+    "roiBack": "553,487,169,115",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"
