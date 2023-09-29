@@ -1,5 +1,5 @@
 name: 🐛问题反馈
-title: '🐛'
+title: ''
 description: 在使用 oas 过程中遇到了错误
 labels: bug
 body:
