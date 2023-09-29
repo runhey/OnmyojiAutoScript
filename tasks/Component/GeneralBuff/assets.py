@@ -42,6 +42,8 @@ class GeneralBuffAssets:
 	O_EXP_50 = RuleOcr(roi=(426,119,335,394), area=(0,0,100,100), mode="Full", method="Default", keyword="战斗胜利获得的经验增加50%", name="exp_50")
 	# Ocr-description 
 	O_EXP_100 = RuleOcr(roi=(421,127,342,388), area=(0,0,100,100), mode="Full", method="Default", keyword="战斗胜利获得的经验增加100%", name="exp_100")
+	# 打开buff加成 
+	O_GB_BUFF_2 = RuleOcr(roi=(348,31,93,51), area=(363,36,29,43), mode="Single", method="Default", keyword="加成", name="gb_buff_2")
 
 
 	# Swipe Rule Assets
