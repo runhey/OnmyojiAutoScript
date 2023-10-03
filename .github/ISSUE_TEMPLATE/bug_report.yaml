@@ -1,5 +1,4 @@
 name: 🐛问题反馈
-title: '🐛'
 description: 在使用 oas 过程中遇到了错误
 labels: bug
 body:
@@ -15,6 +14,8 @@ body:
       - label: 我已经阅读了文档中的 常见问题(FAQ)
         required: true
       - label: 这个问题出现了至少三次，不是偶发的
+        required: false
+      - label: 我使用 OAS 最新版
         required: false
   - type: textarea
     id: describe
