@@ -152,18 +152,18 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, RealmRaidAssets):
         # 开始循环
         success = True
         last_battle = True  # 记录上一次战斗的结果
-        while 1:
+        # 先行判断票数，将其作为启动循环的判断依据，并在循环之中先检测三次奖励以避免聊天框遮挡
+        if not self.check_ticket(con.raid_config.number_base):
+            ticket = False
+        else:
+            ticket = True
+        while ticket:
             self.screenshot()
 
-            # 检查票数
-            if not self.check_ticket(con.raid_config.number_base):
-                break
-            # 挑战次数
-            if self.current_count >= con.raid_config.number_attack:
-                logger.info(f'Current count {self.current_count}, max count {con.raid_config.number_attack}')
-                break
+
             # 检查是否每三次领一个奖励
             if self.reward_detect_click(False):
+                logger.info('Rewards of three wins')
                 continue
             # 刷新 >> 如果勾选了三次刷新并且到达了三次，就刷新
             if con.raid_config.three_refresh and self.appear(self.I_RR_THREE, threshold=0.8):
@@ -196,6 +196,13 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, RealmRaidAssets):
                     logger.info('No one can attack, break')
                     success = False
                     break
+            # 检查票数
+            if not self.check_ticket(con.raid_config.number_base):
+                break
+            # 挑战次数
+            if self.current_count >= con.raid_config.number_attack:
+                logger.info(f'Current count {self.current_count}, max count {con.raid_config.number_attack}')
+                break
             # 判断是不是左上角第一个
             lock_before = con.general_battle_config.lock_team_enable
             if index == 1:
@@ -217,6 +224,8 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, RealmRaidAssets):
             last_battle = self.run_general_battle(con.general_battle_config)
             if lock_before:
                 con.general_battle_config.lock_team_enable = lock_before
+            # 等待回到主界面的动画
+            time.sleep(3)
 
         self.ui_click(self.I_BACK_RED, self.I_CHECK_EXPLORATION)
         self.ui_get_current_page()
@@ -398,7 +407,8 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, RealmRaidAssets):
                 self.screenshot()
                 if not self.appear(self.I_SOUL_RAID, threshold=0.7):
                     return True
-                if self.appear_then_click(self.I_SOUL_RAID, interval=1.5):
+                # 加长延长以使其正常运行
+                if self.appear_then_click(self.I_SOUL_RAID, interval=3):
                     continue
 
     def check_refresh(self, screenshot: bool=True) -> bool:
