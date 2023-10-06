@@ -25,7 +25,7 @@ class GeneralBuff(BaseTask, GeneralBuffAssets):
             self.screenshot()
             if self.appear(self.I_CLOUD):
                 break
-            if self.appear_then_click(self.I_BUFF_1, interval=2) or self.ocr_appear_click(self.O_GB_BUFF_2, interval=2):
+            if self.appear_then_click(self.I_BUFF_1, interval=2):
                 continue
 
         check_image = self.I_AWAKE
