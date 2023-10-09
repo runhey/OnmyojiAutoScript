@@ -397,7 +397,7 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, RealmRaidAssets):
         text = self.O_TEXT.ocr(self.device.image)
         # 识别突破卷区域，如果识别到了且其中含有文字，即有聊天框遮挡则进入循环，等待三胜奖励出现并点击，循环退出条件为识别到票（即*/*的形式）
         if text != "":
-            if re.search(r'[\u4e00-\u9fff]', TEXT):
+            if re.search(r'[\u4e00-\u9fff]', text):
                 while 1:
                     self.screenshot()
                     result = self.O_TEXT.ocr(self.device.image)
