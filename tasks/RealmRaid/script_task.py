@@ -152,35 +152,16 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, RealmRaidAssets):
         # 开始循环
         success = True
         last_battle = True  # 记录上一次战斗的结果
-        # 先行判断票数，将其作为启动循环的判断依据，并在循环之中先检测三次奖励以避免聊天框遮挡
-        if not self.check_ticket(con.raid_config.number_base):
-            ticket = False
-        else:
-            ticket = True
-        while ticket:
+        # 更改循环顺序
+        while 1:
             self.screenshot()
-
-
-            # 检查是否每三次领一个奖励
-            if self.reward_detect_click(False):
-                logger.info('Rewards of three wins')
-                continue
-            # 刷新 >> 如果勾选了三次刷新并且到达了三次，就刷新
-            if con.raid_config.three_refresh and self.appear(self.I_RR_THREE, threshold=0.8):
-                logger.info('Three refresh')
-                if self.check_refresh():
-                    continue
-                else:
-                    success = False
-                    break
-            # 刷新 >> 如果上一轮的失败并且勾选了失败刷新，就刷新
-            if not last_battle and con.raid_config.when_attack_fail == WhenAttackFail.REFRESH:
-                logger.info('Battle lost and then refresh')
-                if self.check_refresh():
-                    continue
-                else:
-                    success = False
-                    break
+            # 检查票数
+            if not self.check_ticket(con.raid_config.number_base):
+                break
+            # 挑战次数
+            if self.current_count >= con.raid_config.number_attack:
+                logger.info(f'Current count {self.current_count}, max count {con.raid_config.number_attack}')
+                break
             # ----------------------------------------开始进攻
             medal, index = self.find_one(False)
             if not medal and not index:
@@ -196,13 +177,6 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, RealmRaidAssets):
                     logger.info('No one can attack, break')
                     success = False
                     break
-            # 检查票数
-            if not self.check_ticket(con.raid_config.number_base):
-                break
-            # 挑战次数
-            if self.current_count >= con.raid_config.number_attack:
-                logger.info(f'Current count {self.current_count}, max count {con.raid_config.number_attack}')
-                break
             # 判断是不是左上角第一个
             lock_before = con.general_battle_config.lock_team_enable
             if index == 1:
@@ -224,8 +198,27 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, RealmRaidAssets):
             last_battle = self.run_general_battle(con.general_battle_config)
             if lock_before:
                 con.general_battle_config.lock_team_enable = lock_before
-            # 等待回到主界面的动画
-            time.sleep(3)
+            # 检查是否每三次领一个奖励
+            if self.reward_detect_click(False):
+                logger.info('Rewards of three wins')
+                continue
+            # 刷新 >> 如果勾选了三次刷新并且到达了三次，就刷新
+            if con.raid_config.three_refresh and self.appear(self.I_RR_THREE, threshold=0.8):
+                logger.info('Three refresh')
+                if self.check_refresh():
+                    continue
+                else:
+                    success = False
+                    break
+            # 刷新 >> 如果上一轮的失败并且勾选了失败刷新，就刷新
+            if not last_battle and con.raid_config.when_attack_fail == WhenAttackFail.REFRESH:
+                logger.info('Battle lost and then refresh')
+                if self.check_refresh():
+                    continue
+                else:
+                    success = False
+                    break
+
 
         self.ui_click(self.I_BACK_RED, self.I_CHECK_EXPLORATION)
         self.ui_get_current_page()
@@ -297,6 +290,9 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, RealmRaidAssets):
         self.wait_until_appear(self.I_BACK_RED)
         self.screenshot()
         cu, res, total = self.O_NUMBER.ocr(self.device.image)
+
+        if total == 0:
+            self.reward_detect_click(False)
         if cu == 0 and cu + res == total:
             logger.warning(f'Execute raid failed, no ticket')
             return False
@@ -397,19 +393,31 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, RealmRaidAssets):
         """
         if screenshot:
             self.screenshot()
-        if self.appear(self.I_SOUL_RAID):
-            self.screenshot()
-            # 稳定一次的截图时间
-            # 再次判断是否出现的
-            if not self.appear(self.I_SOUL_RAID):
-                return False
-            while 1:
-                self.screenshot()
-                if not self.appear(self.I_SOUL_RAID, threshold=0.7):
-                    return True
-                # 加长延长以使其正常运行
-                if self.appear_then_click(self.I_SOUL_RAID, interval=3):
-                    continue
+        self.screenshot()
+        text = self.O_TEXT.ocr(self.device.image)
+        # 识别突破卷区域，如果识别到了且其中含有文字，即有聊天框遮挡则进入循环，等待三胜奖励出现并点击，循环退出条件为识别到票（即*/*的形式）
+        if text != "":
+            if re.search(r'[\u4e00-\u9fff]', TEXT):
+                while 1:
+                    self.screenshot()
+                    result = self.O_TEXT.ocr(self.device.image)
+                    if not re.search(r'[\u4e00-\u9fff]', result) and re.search(r'(\d+)/(\d+)', result):
+                        return True
+                    if self.appear_then_click(self.I_SOUL_RAID, interval=1.5):
+                        continue
+
+        # if self.appear(self.I_SOUL_RAID):
+        #     self.screenshot()
+        #     # 稳定一次的截图时间
+        #     # 再次判断是否出现的
+        #     if not self.appear(self.I_SOUL_RAID):
+        #         return False
+        #     while 1:
+        #         self.screenshot()
+        #         if not self.appear(self.I_SOUL_RAID, threshold=0.7):
+        #             return True
+        #         if self.appear_then_click(self.I_SOUL_RAID, interval=1.5):
+        #             continue
 
     def check_refresh(self, screenshot: bool=True) -> bool:
         """
