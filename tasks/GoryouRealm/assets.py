@@ -31,7 +31,7 @@ class GoryouRealmAssets:
 
 
 	# Ocr Rule Assets
-	# 多少张票 
-	O_GR_TICKET = RuleOcr(roi=(934,21,84,41), area=(934,21,84,41), mode="Digit", method="Default", keyword="", name="gr_ticket")
+	# 多少张票
+	O_GR_TICKET = RuleOcr(roi=(910,21,100,41), area=(910,21,100,41), mode="Digit", method="Default", keyword="", name="gr_ticket")
 
 
