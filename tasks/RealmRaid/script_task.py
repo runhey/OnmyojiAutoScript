@@ -293,6 +293,8 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, RealmRaidAssets):
 
         if total == 0:
             self.reward_detect_click(False)
+            # 增加出现聊天框遮挡，处理奖励之后，重新识别票数
+            cu, res, total = self.O_NUMBER.ocr(self.device.image)
         if cu == 0 and cu + res == total:
             logger.warning(f'Execute raid failed, no ticket')
             return False
@@ -393,7 +395,6 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, RealmRaidAssets):
         """
         if screenshot:
             self.screenshot()
-        self.screenshot()
         text = self.O_TEXT.ocr(self.device.image)
         # 识别突破卷区域，如果识别到了且其中含有文字，即有聊天框遮挡则进入循环，等待三胜奖励出现并点击，循环退出条件为识别到票（即*/*的形式）
         if text != "":
