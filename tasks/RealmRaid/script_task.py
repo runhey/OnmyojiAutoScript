@@ -395,6 +395,8 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, RealmRaidAssets):
         """
         if screenshot:
             self.screenshot()
+        # 由于更改识别顺序，退出战斗之后，需要先等待回到个人突破界面，即识别到红色退出按钮，再进行奖励判断
+        self.wait_until_appear(self.I_BACK_RED)
         text = self.O_TEXT.ocr(self.device.image)
         # 识别突破卷区域，如果识别到了且其中含有文字，即有聊天框遮挡则进入循环，等待三胜奖励出现并点击，循环退出条件为识别到票（即*/*的形式）
         if text != "":
