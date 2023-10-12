@@ -2,8 +2,8 @@
   {
     "itemName": "mall_consignment",
     "imageName": "navbar_mall_consignment.png",
-    "roiFront": "192,629,63,72",
-    "roiBack": "192,629,63,72",
+    "roiFront": "200,626,63,72",
+    "roiBack": "175,610,120,103",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "寄售屋"
@@ -20,8 +20,8 @@
   {
     "itemName": "mall_sccales",
     "imageName": "navbar_mall_sccales.png",
-    "roiFront": "433,635,100,64",
-    "roiBack": "433,635,100,64",
+    "roiFront": "447,634,91,64",
+    "roiBack": "427,621,147,92",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "密卷屋"
@@ -65,8 +65,8 @@
   {
     "itemName": "mall_sundry",
     "imageName": "navbar_mall_sundry.png",
-    "roiFront": "854,623,74,61",
-    "roiBack": "854,623,74,61",
+    "roiFront": "856,639,74,61",
+    "roiBack": "834,621,116,90",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "杂货铺"
