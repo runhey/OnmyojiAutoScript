@@ -72,6 +72,7 @@ class ScriptTask(GameUi, GeneralBattle, SwitchSoul, SecretAssets):
                 logger.info('Secret zone finished')
                 break
             layer = self.find_battle()
+            logger.info(f'Current layer: {layer}')
             if not layer:
                 continue
             if layer >= 6:
@@ -165,8 +166,8 @@ class ScriptTask(GameUi, GeneralBattle, SwitchSoul, SecretAssets):
             """
             ocr_target.roi[0] = int(roi[0]) - 118
             ocr_target.roi[1] = int(roi[1]) + 37
-            print(f'检测到的未通过ROI: {roi}')
-            print(f'检测到的勾玉数量ROI: {ocr_target.roi}')
+            # print(f'检测到的未通过ROI: {roi}')
+            # print(f'检测到的勾玉数量ROI: {ocr_target.roi}')
             jade_num = ocr_target.ocr(self.device.image)
             if isinstance(jade_num, str):
                 logger.warning(f'OCR failed, try again {jade_num}')
@@ -199,14 +200,6 @@ class ScriptTask(GameUi, GeneralBattle, SwitchSoul, SecretAssets):
         if text_pos != (0, 0, 0, 0):
             # 如果能找得到 未通关 ，那可以挑战
             layer = confirm_layer(self.O_SE_JADE, text_pos)
-            # layer = check_layer(self.O_SE_LAYER_1, None)
-            # # 如果第一个文字就找得到的，就点击这个
-            # if not layer:
-            #     layer = check_layer(self.O_SE_LAYER_8, None)
-            # if not layer:
-            #     layer = check_layer(self.O_SE_LAYER_1, text_pos)
-
-            print('识别到的层数：', layer)
             if layer:
                 self.C_SE_CLICK_LAYER.roi_front = text_pos
                 self.click(self.C_SE_CLICK_LAYER, interval=1)
@@ -220,12 +213,11 @@ class ScriptTask(GameUi, GeneralBattle, SwitchSoul, SecretAssets):
             if last_text_pos != (0, 0, 0, 0):
                 # 如果是后面找得到
                 layer = confirm_layer(self.O_SE_JADE, last_text_pos)
-                # layer = check_layer(self.O_SE_LAYER_10, last_text_pos)
-                # if not layer:
-                #     layer = check_layer(self.O_SE_LAYER_9, None)
-                # if not layer:
-                #     layer = check_layer(self.O_SE_LAYER_10, None)
-                # 如果第一个文字就找得到的，就点击这个
+
+                # 有个bug 十层的发现不了
+                if not layer and last_text_pos[1] > 520:
+                    layer = 10
+
                 if layer:
                     self.C_SE_CLICK_LAYER.roi_front = last_text_pos
                     self.click(self.C_SE_CLICK_LAYER, interval=1)
