@@ -35,7 +35,8 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, ExplorationAssets):
         if explorationConfig.switch_soul_config.enable_switch_by_name:
             self.ui_get_current_page()
             self.ui_goto(page_shikigami_records)
-            self.run_switch_soul_by_name(explorationConfig.switch_soul_config.group_name, explorationConfig.switch_soul_config.team_name)
+            self.run_switch_soul_by_name(explorationConfig.switch_soul_config.group_name,
+                                         explorationConfig.switch_soul_config.team_name)
 
         # 开启加成
         con = self.config.exploration.exploration_config
@@ -66,6 +67,7 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, ExplorationAssets):
             count = 0
             while count < 7:
                 self.screenshot()
+                time.sleep(0.5)
                 if self.appear_then_click(self.I_E_EXPLORATION_CLICK):
                     count += 1
                     # 进入战斗环节
@@ -199,7 +201,11 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, ExplorationAssets):
                     break
             # 小怪 战
             if self.appear_then_click(self.I_NORMAL_BATTLE_BUTTON):
-                self.run_general_battle(self.config.exploration.general_battle_config)
+                self.screenshot()
+                if self.appear_then_click(self.I_NORMAL_BATTLE_BUTTON):
+                    self.run_general_battle(self.config.exploration.general_battle_config)
+                else:
+                    self.run_general_battle(self.config.exploration.general_battle_config)
                 self.screenshot()
                 while self.appear(self.I_BATTLE_REWARD):
                     self.screenshot()
