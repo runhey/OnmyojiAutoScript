@@ -34,5 +34,14 @@
     "method": "Default",
     "keyword": "",
     "description": "Ocr-description"
+  },
+  {
+    "itemName": "guild_remain",
+    "roiFront": "304,268,154,33",
+    "roiBack": "304,268,154,33",
+    "mode": "Single",
+    "method": "Default",
+    "keyword": "",
+    "description": "本周剩余数量x"
   }
 ]
