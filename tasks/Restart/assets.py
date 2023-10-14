@@ -68,6 +68,6 @@ class RestartAssets:
 	# 点击屏幕跳过 
 	O_LOGIN_SKIP_1 = RuleOcr(roi=(1046,35,130,37), area=(1046,35,130,37), mode="Single", method="Default", keyword="点击屏幕跳过", name="login_skip_1")
 	# 登录指定角色，默认第一个 
-	O_LOGIN_SPECIFIC_SERVE = RuleOcr(roi=(694,605,62,34), area=(516,75,662,585), mode="Single", method="Default", keyword="游戏", name="login_specific_serve")
+	O_LOGIN_SPECIFIC_SERVE = RuleOcr(roi=(524,600,242,53), area=(516,75,662,585), mode="Single", method="Default", keyword="游戏", name="login_specific_serve")
 
 

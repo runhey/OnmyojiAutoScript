@@ -87,6 +87,8 @@ class RealmRaidAssets:
 	O_FROG_8 = RuleOcr(roi=(494,441,31,31), area=(494,441,31,31), mode="Digit", method="Default", keyword="", name="frog_8")
 	# Ocr-description 
 	O_FROG_9 = RuleOcr(roi=(825,440,33,33), area=(825,440,33,33), mode="Digit", method="Default", keyword="", name="frog_9")
+	# text 
+	O_TEXT = RuleOcr(roi=(1143,13,80,39), area=(0,0,100,100), mode="Single", method="Default", keyword="", name="text")
 
 
 	# Click Rule Assets
