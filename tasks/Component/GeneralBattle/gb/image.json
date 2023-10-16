@@ -56,8 +56,8 @@
   {
     "itemName": "preset_ensure",
     "imageName": "gb_preset_ensure.png",
-    "roiFront": "354,641,141,50",
-    "roiBack": "354,641,141,50",
+    "roiFront": "352,643,141,50",
+    "roiBack": "305,625,236,83",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "确认预设的队伍"
