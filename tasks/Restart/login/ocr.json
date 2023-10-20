@@ -32,7 +32,7 @@
     "roiBack": "516,75,662,585",
     "mode": "Single",
     "method": "Default",
-    "keyword": "点击屏幕进入游戏",
+    "keyword": "游戏",
     "description": "登录指定角色，默认第一个"
   }
 ]

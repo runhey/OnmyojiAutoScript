@@ -481,7 +481,7 @@ class ScriptTask(GameUi, BondlingBattle, SwitchSoul, BondlingFairylandAssets):
         """
         while 1:
             self.screenshot()
-            if not self.appear(self.I_BALL_FIRE):
+            if not self.appear(self.I_CLICK_CAPTION, threshold=0.7):
                 break
             if self.appear_then_click(self.I_BALL_FIRE, interval=1):
                 continue

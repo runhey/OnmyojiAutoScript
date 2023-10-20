@@ -29,8 +29,8 @@
   {
     "itemName": "guild_blue",
     "imageName": "guild_guild_blue.png",
-    "roiFront": "793,179,74,80",
-    "roiBack": "793,179,74,80",
+    "roiFront": "344,186,74,73",
+    "roiBack": "315,164,584,370",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "蓝票"
@@ -38,8 +38,8 @@
   {
     "itemName": "guild_scrap",
     "imageName": "guild_guild_scrap.png",
-    "roiFront": "570,442,71,68",
-    "roiBack": "570,442,71,68",
+    "roiFront": "795,187,71,68",
+    "roiBack": "331,160,559,372",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "黑蛋碎片"
@@ -47,8 +47,8 @@
   {
     "itemName": "guild_skin",
     "imageName": "guild_guild_skin.png",
-    "roiFront": "795,436,71,74",
-    "roiBack": "795,436,71,74",
+    "roiFront": "345,438,71,72",
+    "roiBack": "320,162,573,371",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "皮肤券"

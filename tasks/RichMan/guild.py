@@ -2,8 +2,10 @@
 # @author runhey
 # github https://github.com/runhey
 import time
+import re
 
 from module.logger import logger
+from module.atom.image import RuleImage
 
 from tasks.GameUi.page import page_main, page_guild
 from tasks.GameUi.game_ui import GameUi
@@ -29,7 +31,7 @@ class Guild(Buy, GameUi, RichManAssets):
         time.sleep(0.5)
         while 1:
             self.screenshot()
-            if self.appear(self.I_GUILD_SCRAP):
+            if self.appear(self.I_GUILD_SKIN):
                 break
             if self.swipe(self.S_GUILD_STORE, interval=1.5):
                 time.sleep(2)
@@ -58,10 +60,7 @@ class Guild(Buy, GameUi, RichManAssets):
         self.screenshot()
         if not self.buy_check_money(self.O_GUILD_TOTAL, 240):
             return False
-        number = self.O_GUILD_NUMBER_BLUE.ocr(self.device.image)
-        if not isinstance(number, int):
-            logger.warning('OCR number failed')
-            return False
+        number = self.check_remain(self.I_GUILD_BLUE)
         if number == 0:
             logger.warning('No mystery amulet can buy')
             return False
@@ -74,10 +73,7 @@ class Guild(Buy, GameUi, RichManAssets):
         self.screenshot()
         if not self.buy_check_money(self.O_GUILD_TOTAL, 200):
             return False
-        number = self.O_GUILD_NUMBER_BLACK.ocr(self.device.image)
-        if not isinstance(number, int):
-            logger.warning('OCR number failed')
-            return False
+        number = self.check_remain(self.I_GUILD_SCRAP)
         if number == 0:
             logger.warning('No black daruma can buy')
             return False
@@ -93,10 +89,7 @@ class Guild(Buy, GameUi, RichManAssets):
         self.screenshot()
         if not self.buy_check_money(self.O_GUILD_TOTAL, 50):
             return False
-        number = self.O_GUILD_NUMBER_SKIN.ocr(self.device.image)
-        if not isinstance(number, int):
-            logger.warning('OCR number failed')
-            return False
+        number = self.check_remain(self.I_GUILD_SKIN)
         if number == 0:
             logger.warning('No skin ticket can buy')
             return False
@@ -104,6 +97,21 @@ class Guild(Buy, GameUi, RichManAssets):
         time.sleep(0.5)
         return True
 
+    def check_remain(self, image: RuleImage) -> int:
+        self.O_GUILD_REMAIN.roi[0] = image.roi_front[0] - 38
+        self.O_GUILD_REMAIN.roi[1] = image.roi_front[1] + 83
+        logger.info(f'Image roi {image.roi_front}')
+        logger.info(f'Image roi {self.O_GUILD_REMAIN.roi}')
+        self.screenshot()
+        result = self.O_GUILD_REMAIN.ocr(self.device.image)
+        result = result.replace('？', '2').replace('?', '2').replace(':', '；')
+        try:
+            result = re.findall(r'本周剩余数量(\d+)', result)[0]
+            result = int(result)
+        except:
+            result = 0
+        logger.info('Remain: %s' % result)
+        return int(result)
 
 
 if __name__ == '__main__':
@@ -114,7 +122,7 @@ if __name__ == '__main__':
     d = Device(c)
     t = Guild(c, d)
 
-    t._guild_skin_ticket(5)
-
+    # t._guild_skin_ticket(5)
+    t.execute_guild(con=c.rich_man.guild_store)
 
 

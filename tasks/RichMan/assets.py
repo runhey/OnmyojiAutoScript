@@ -18,11 +18,11 @@ class RichManAssets:
 	# description 
 	I_GUILD_CLOSE_RED = RuleImage(roi_front=(1029,120,53,57), roi_back=(1029,120,53,57), threshold=0.8, method="Template matching", file="./tasks/RichMan/guild/guild_guild_close_red.png")
 	# 蓝票 
-	I_GUILD_BLUE = RuleImage(roi_front=(793,179,74,80), roi_back=(793,179,74,80), threshold=0.8, method="Template matching", file="./tasks/RichMan/guild/guild_guild_blue.png")
+	I_GUILD_BLUE = RuleImage(roi_front=(344,186,74,73), roi_back=(315,164,584,370), threshold=0.8, method="Template matching", file="./tasks/RichMan/guild/guild_guild_blue.png")
 	# 黑蛋碎片 
-	I_GUILD_SCRAP = RuleImage(roi_front=(570,442,71,68), roi_back=(570,442,71,68), threshold=0.8, method="Template matching", file="./tasks/RichMan/guild/guild_guild_scrap.png")
+	I_GUILD_SCRAP = RuleImage(roi_front=(795,187,71,68), roi_back=(331,160,559,372), threshold=0.8, method="Template matching", file="./tasks/RichMan/guild/guild_guild_scrap.png")
 	# 皮肤券 
-	I_GUILD_SKIN = RuleImage(roi_front=(795,436,71,74), roi_back=(795,436,71,74), threshold=0.8, method="Template matching", file="./tasks/RichMan/guild/guild_guild_skin.png")
+	I_GUILD_SKIN = RuleImage(roi_front=(345,438,71,72), roi_back=(320,162,573,371), threshold=0.8, method="Template matching", file="./tasks/RichMan/guild/guild_guild_skin.png")
 	# 购买检查 
 	I_GUILD_CHECK_SCRAP = RuleImage(roi_front=(590,246,90,88), roi_back=(590,246,90,88), threshold=0.8, method="Template matching", file="./tasks/RichMan/guild/guild_guild_check_scrap.png")
 
@@ -36,6 +36,8 @@ class RichManAssets:
 	O_GUILD_NUMBER_BLACK = RuleOcr(roi=(663,523,21,27), area=(663,523,21,27), mode="Digit", method="Default", keyword="", name="guild_number_black")
 	# Ocr-description 
 	O_GUILD_NUMBER_SKIN = RuleOcr(roi=(889,519,21,35), area=(889,519,21,35), mode="Digit", method="Default", keyword="", name="guild_number_skin")
+	# 本周剩余数量x 
+	O_GUILD_REMAIN = RuleOcr(roi=(304,268,154,33), area=(304,268,154,33), mode="Single", method="Default", keyword="", name="guild_remain")
 
 
 	# Swipe Rule Assets
