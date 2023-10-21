@@ -65,8 +65,8 @@
   {
     "itemName": "s_confirm_white_five",
     "imageName": "shrine_s_confirm_white_five.png",
-    "roiFront": "554,438,174,61",
-    "roiBack": "554,438,174,61",
+    "roiFront": "554,522,174,61",
+    "roiBack": "520,416,220,193",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"
@@ -74,8 +74,8 @@
   {
     "itemName": "s_confirm_white_four",
     "imageName": "shrine_s_confirm_white_four.png",
-    "roiFront": "552,509,176,62",
-    "roiBack": "552,509,176,62",
+    "roiFront": "548,486,176,62",
+    "roiBack": "509,404,252,231",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"
@@ -83,8 +83,8 @@
   {
     "itemName": "s_confirm_black",
     "imageName": "shrine_s_confirm_black.png",
-    "roiFront": "552,439,180,62",
-    "roiBack": "552,439,180,62",
+    "roiFront": "547,496,180,62",
+    "roiBack": "532,426,214,184",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"

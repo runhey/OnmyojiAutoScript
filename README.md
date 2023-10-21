@@ -64,7 +64,7 @@ This project is licensed under the GNU General Public License v3.0.
 - 你必须拥有一个 Github 账户来点一个 **Star** (这并不影响你入群后取消Star)，同样的要求注册时间过半年。
 - 入群验证填入你的 Github 账号名，无需在意问题是什么。
 
-#### 开发群: 207613181
+#### QQ开发群: 207613181
 
 - 发展规划：[#54](https://github.com/runhey/OnmyojiAutoScript/issues/54)
 - OAS 继承了 Alas 的设计思路，这使得极大简便了开发，欢迎提交 Pull Requests，挑选你感兴趣的部分进行开发即可。
