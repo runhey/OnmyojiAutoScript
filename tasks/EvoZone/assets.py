@@ -14,7 +14,7 @@ class EvoZoneAssets:
 	# 火麒麟进入 
 	I_FIRE_KIRIN = RuleImage(roi_front=(84,126,217,406), roi_back=(84,126,217,406), threshold=0.8, method="Template matching", file="./tasks/EvoZone/o/o_fire_kirin.png")
 	# 组队 
-	I_FORM_TEAM = RuleImage(roi_front=(937,591,100,100), roi_back=(937,591,100,100), threshold=0.8, method="Template matching", file="./tasks/EvoZone/o/o_form_team.png")
+	I_FORM_TEAM = RuleImage(roi_front=(934,585,100,100), roi_back=(916,572,156,130), threshold=0.8, method="Template matching", file="./tasks/EvoZone/o/o_form_team.png")
 	# description 
 	I_EVOZONE_LOCK = RuleImage(roi_front=(558,565,31,32), roi_back=(548,554,53,54), threshold=0.8, method="Template matching", file="./tasks/EvoZone/o/o_evozone_lock.png")
 	# description 
