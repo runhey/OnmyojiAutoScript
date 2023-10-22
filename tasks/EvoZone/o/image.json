@@ -11,8 +11,8 @@
   {
     "itemName": "form_team",
     "imageName": "o_form_team.png",
-    "roiFront": "937,591,100,100",
-    "roiBack": "937,591,100,100",
+    "roiFront": "934,585,100,100",
+    "roiBack": "916,572,156,130",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "组队"

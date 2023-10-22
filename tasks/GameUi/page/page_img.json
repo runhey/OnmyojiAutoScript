@@ -29,8 +29,8 @@
   {
     "itemName": "exploration_goto_awake_zone",
     "imageName": "page_exploration_goto_awake_zone.png",
-    "roiFront": "50,637,57,61",
-    "roiBack": "50,637,57,61",
+    "roiFront": "57,628,57,61",
+    "roiBack": "33,619,113,79",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"
@@ -38,8 +38,8 @@
   {
     "itemName": "exploration_goto_soul_zone",
     "imageName": "page_exploration_goto_soul_zone.png",
-    "roiFront": "151,637,55,55",
-    "roiBack": "151,637,55,55",
+    "roiFront": "159,633,55,55",
+    "roiBack": "138,620,89,75",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"
