@@ -153,10 +153,12 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, RealmRaidAssets):
         success = True
         last_battle = True  # 记录上一次战斗的结果
         # 更改循环顺序
-        while 1:
+        self.screenshot()
+        battle_numbers, _, _ = self.O_NUMBER.ocr(self.device.image)
+        while battle_numbers >= con.raid_config.number_base:
             self.screenshot()
             # 检查票数
-            if not self.check_ticket(con.raid_config.number_base):
+            if not self.check_ticket(con.raid_config.number_base, battle_numbers, self.current_count):
                 break
             # 挑战次数
             if self.current_count >= con.raid_config.number_attack:
@@ -278,10 +280,12 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, RealmRaidAssets):
             return True
         return False
 
-    def check_ticket(self, base: int=0) -> bool:
+    def check_ticket(self, base: int = 0, battle_numbers: int = 0, current_count: int = 0) -> bool:
         """
         检查是不是有票， 检查这个票是否大于等于基准
         :param base:
+        :param battle_numbers:
+        :param current_count:
         :return:
         """
         if base < 0 or base > 30:
@@ -298,7 +302,7 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, RealmRaidAssets):
         if cu == 0 and cu + res == total:
             logger.warning(f'Execute raid failed, no ticket')
             return False
-        elif cu + res == total and cu < base:
+        elif current_count >= battle_numbers and cu < base:
             logger.warning(f'Execute raid failed, ticket is not enough')
             return False
         return True
