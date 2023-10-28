@@ -6,31 +6,29 @@ from tasks.Component.SwitchSoul.switch_soul import SwitchSoul
 from tasks.Component.GeneralBattle.general_battle import GeneralBattle
 from tasks.GameUi.game_ui import GameUi
 from PIL import Image
+from tasks.Hyakkiyakou.assets import HyakkiyakouAssets
 
 
-class GetImages(GeneralBattle, GameUi, SwitchSoul):
+class GetImages(GeneralBattle, GameUi, HyakkiyakouAssets):
 
     def run(self):
-        end = RuleImage(roi_front=(0, 0, 246, 78), roi_back=(0, 0, 1240, 700), threshold=0.8,
-                        method="Template matching",
-                        file="./res/end.png")
-        test = RuleImage(roi_front=(1116, 556, 110, 85), roi_back=(0, 0, 1240, 700), threshold=0.8,
-                         method="Template matching",
-                         file="./res/start.png")
         self.screenshot()
-        if self.appear_then_click(test):
+        if self.appear_then_click(self.START):
             n = 0
             while 1:
-                time.sleep(0.5)
+                start = time.time()
+                time.sleep(0.3)
                 self.screenshot()
-                if self.appear(end):
+                if self.appear(self.END):
                     break
                 n = n + 1
                 # Image
                 im = self.device.image
                 img = Image.fromarray(im)
                 # Inference
-                img.save(f"./images/image{n}.jpg")
+                img.save(f"./tasks/Hyakkiyakou/images/{time.time()}.jpg")
+                end = time.time()
+                print(end - start)
 
 
 if __name__ == "__main__":
