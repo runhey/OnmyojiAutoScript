@@ -13,6 +13,7 @@ from tasks.Component.Summon.summon import Summon
 
 from module.logger import logger
 from module.exception import TaskEnd
+from module.base.timer import Timer
 
 
 
@@ -49,15 +50,20 @@ class ScriptTask(GameUi, Summon, DailyTriflesAssets):
                 break
             if self.appear_then_click(self.I_L_FRIENDS, interval=1):
                 continue
-        logger.info('Friend love')
-        sleep(0.5)
-        self.screenshot()
-        if not self.appear(self.I_L_COLLECT):
-            logger.warning('There is no any love')
-            self.ui_click(self.I_UI_BACK_RED, self.I_CHECK_MAIN)
-            return
-        if self.ui_get_reward(self.I_L_COLLECT):
-            logger.info('Get reward of friend love')
+        logger.info('Start friend love')
+        check_timer = Timer(2)
+        check_timer.start()
+        while 1:
+            self.screenshot()
+
+            if self.appear_then_click(self.I_L_COLLECT, interval=1):
+                continue
+            if self.ui_reward_appear_click():
+                logger.info('Get reward of friend love')
+                break
+            if check_timer.reached():
+                logger.warning('There is no any love')
+                break
 
         self.ui_click(self.I_UI_BACK_RED, self.I_CHECK_MAIN)
 
@@ -103,5 +109,5 @@ if __name__ == '__main__':
     d = Device(c)
     t = ScriptTask(c, d)
 
-    t.run_store_sign()
+    t.run_friend_love()
 
