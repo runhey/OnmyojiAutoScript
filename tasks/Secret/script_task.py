@@ -178,7 +178,7 @@ class ScriptTask(GameUi, GeneralBattle, SwitchSoul, SecretAssets):
             if jade_num < 7:
                 # 第一个的时候可能是没有检测到
                 gold_number = self.O_SE_GOLD.ocr(self.device.image)
-                if isinstance(gold_number, int) and gold_number == 10000:
+                if isinstance(gold_number, int) and (gold_number == 10000 or gold_number == 18000):
                     logger.info(f'No find jade number, but find gold number {gold_number}')
                     return 1
                 return None

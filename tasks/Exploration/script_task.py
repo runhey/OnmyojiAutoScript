@@ -182,37 +182,28 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, ExplorationAssets):
     def do_battle(self):
         while 1:
             self.screenshot()
+            # 战后奖励
+            self.appear_then_click(self.I_BATTLE_REWARD)
             # boss 战
             if self.appear_then_click(self.I_BOSS_BATTLE_BUTTON):
-                self.run_general_battle(self.config.exploration.general_battle_config)
+                time.sleep(0.5)
                 self.screenshot()
-                if self.wait_until_appear(self.I_E_SETTINGS_BUTTON):
-                    while 1:
-                        self.screenshot()
-                        if self.appear_then_click(self.I_BATTLE_REWARD):
-                            self.screenshot()
-                            self.click(self.C_CLICK_ROTATE_1)
-                            time.sleep(0.5)
-                        if self.appear(self.I_EXPLORATION_TITLE):
-                            break
-                        if self.appear(self.I_E_EXPLORATION_CLICK):
-                            break
-                if self.appear(self.I_E_EXPLORATION_CLICK) or self.appear(self.I_EXPLORATION_TITLE):
-                    break
+                if self.appear(self.I_BOSS_BATTLE_BUTTON):
+                    continue
+                self.run_general_battle(self.config.exploration.general_battle_config)
             # 小怪 战
             if self.appear_then_click(self.I_NORMAL_BATTLE_BUTTON):
+                time.sleep(0.5)
                 self.screenshot()
-                if self.appear_then_click(self.I_NORMAL_BATTLE_BUTTON):
-                    self.run_general_battle(self.config.exploration.general_battle_config)
-                else:
-                    self.run_general_battle(self.config.exploration.general_battle_config)
+                if self.appear(self.I_NORMAL_BATTLE_BUTTON):
+                    continue
+                self.run_general_battle(self.config.exploration.general_battle_config)
                 self.screenshot()
-                while self.appear(self.I_BATTLE_REWARD):
-                    self.screenshot()
-                    self.appear_then_click(self.I_BATTLE_REWARD)
-                    self.screenshot()
-            else:
+            elif self.appear(self.I_E_AUTO_ROTATE_ON) and not self.appear(self.I_BATTLE_REWARD):
                 self.swipe(self.S_SWIPE_BACKGROUND_RIGHT)
+            # 结束流程
+            if self.appear(self.I_E_EXPLORATION_CLICK) or self.appear(self.I_EXPLORATION_TITLE):
+                break
 
     # 战斗流程
     def battle_process(self):

@@ -3,10 +3,10 @@
   "script": {
     "device": {
       "serial": "auto",
-      "handle": "auto",
+      "handle": "",
       "package_name": "auto",
-      "screenshot_method": "window_background",
-      "control_method": "window_message",
+      "screenshot_method": "auto",
+      "control_method": "minitouch",
       "adb_restart": false
     },
     "error": {
