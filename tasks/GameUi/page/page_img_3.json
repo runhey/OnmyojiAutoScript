@@ -38,10 +38,10 @@
   {
     "itemName": "main_goto_mall",
     "imageName": "page_main_goto_mall.png",
-    "roiFront": "657,624,47,52",
-    "roiBack": "657,624,47,52",
+    "roiFront": "663,661,41,22",
+    "roiBack": "644,613,81,78",
     "method": "Template matching",
-    "threshold": 0.8,
+    "threshold": 0.7,
     "description": "description"
   },
   {
