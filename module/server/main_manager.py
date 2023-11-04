@@ -15,8 +15,6 @@ class MainManager(ConfigManager):
 
     def __init__(self) -> None:
         super().__init__()
-        self.manager = SyncManager()  # 进程管理器
-        self.manager.start()
 
 
 

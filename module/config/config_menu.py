@@ -43,6 +43,11 @@ class ConfigMenu:
         """
         return json.dumps(self.menu, ensure_ascii=False, sort_keys=False, default=str)
 
+    @cached_property
+    def gui_menu_list(self) -> dict:
+        return self.menu
+
+
 if __name__ == "__main__":
     try:
         m = ConfigMenu()

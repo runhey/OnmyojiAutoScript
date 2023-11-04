@@ -25,6 +25,7 @@ class ScriptProcess:
                                                 args=(self.state_queue, self.log_pipe_in,),
                                                 name=self.config_name,
                                                 daemon=True)
+        # threading.Condition  可以多用户通知
 
 
 
