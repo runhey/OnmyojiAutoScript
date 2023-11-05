@@ -64,12 +64,12 @@ class ConfigManager:
 
 
     @staticmethod
-    def generate_script_name(self) -> str:
+    def generate_script_name() -> str:
         """
         生成一个新的配置的名字
         :return:
         """
-        all_script_files = self.all_script_files()
+        all_script_files = ConfigManager.all_script_files()
         if not all_script_files:
             return 'oas1'
 

@@ -15,6 +15,6 @@ async def home_test():
 
 @home_app.get('/home_menu')
 async def home_menu():
-    return ['Home', 'Updater', 'Tool']
+    return {'Home': [], 'Updater': [], 'Tool': []}
 
 

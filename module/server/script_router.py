@@ -33,9 +33,13 @@ async def config_copy(file: str, template: str = 'template'):
     mm.copy(file, template)
     return mm.all_script_files()
 
-@script_app.delete('/config_new_name')
+@script_app.get('/config_new_name')
 async def config_new_name():
     return mm.generate_script_name()
+
+@script_app.get('/config_all')
+async def config_all():
+    return mm.all_json_file()
 
 
 # ---------------------------------   脚本实例管理   ----------------------------------
