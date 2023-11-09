@@ -60,9 +60,9 @@ async def script_stop(script_name: str):
 
 @script_app.get('/{script_name}/{task}/args')
 async def script_task(script_name: str, task: str):
-    if not mm.ensure_config_cache(task):
+    if not mm.ensure_config_cache(script_name):
         raise Exception(f'[{script_name}] script file does not exist')
-    return mm.config_cache.get_task_args(task)
+    return mm.config_cache.model.script_task(task)
 
 @script_app.put('/{script_name}/{task}/{group}/{argument}/value/{value}')
 async def script_task(script_name: str, task: str, group: str, argument: str, value):

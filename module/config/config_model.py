@@ -1,7 +1,10 @@
 # This Python file uses the following encoding: utf-8
 # @author runhey
 # github https://github.com/runhey
+from typing import Dict, Any
+
 import re
+import inflection
 
 from pathlib import Path
 from pydantic import BaseModel, ValidationError, Field
@@ -265,6 +268,68 @@ class ConfigModel(ConfigBase):
         except (AttributeError, KeyError):
             return False
 
+# ----------------------------------- fastapi -----------------------------------
+    def script_task(self, task: str) -> dict:
+        """
+
+        :param task: 同gui_args函数
+        :return:
+        """
+        task = convert_to_underscore(task)
+        task = getattr(self, task, None)
+        if task is None:
+            logger.warning(f'{task} is no inexistence')
+            return {}
+
+        def extract_groups(sch):
+            # 从schema 中提取未解析的group的数据
+            properties = {}
+            for key, value in sch["properties"].items():
+                properties[key] = re.search(r"/([^/]+)$", value['$ref']).group(1)
+            print(f'输出的组是{properties}')
+
+            result = {}
+            for key, value in properties.items():
+                result[key] = sch["definitions"][value]
+
+            return result
+
+        def merge_value(groups, jsons, definitions) -> list[dict]:
+            # 将 groups的参数，同导出的json一起合并, 用于前端显示
+            result = []
+            for key, value in groups["properties"].items():
+                item = {}
+                item["title"] = value["title"] if "title" in value else inflection.humanize(key)
+                if "description" in value:
+                    item["description"] = value["description"]
+                item["default"] = value["default"]
+                item["value"] = jsons[key] if key in jsons else value["default"]
+                item["type"] = value["type"] if "type" in value else "enum"
+                if 'allOf' in value:
+                    # list
+                    item["enumEnum"] = definitions[inflection.camelize(key, uppercase_first_letter=True)]["enum"]
+                # TODO: 最大值最小值
+                result.append(item)
+            return result
+
+
+
+
+
+
+
+        schema = task.schema()
+        groups = extract_groups(schema)
+
+
+        result: dict[str, list] = {}
+        for key, value in task.dict().items():
+            result[inflection.humanize(key)] = merge_value(groups[key], value, schema["definitions"])
+
+        return result
+
+
+
 
 if __name__ == "__main__":
     try:
@@ -274,7 +339,6 @@ if __name__ == "__main__":
         c = ConfigModel()
 
     # c.save()
-    print(c.gui_args('Script'))
-    # print(c.deep_get(c, 'area_boss.scheduler.success_interval'))
+    print(c.script_task('Script'))
 
 

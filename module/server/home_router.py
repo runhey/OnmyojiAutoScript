@@ -12,7 +12,7 @@ home_app = APIRouter(
 @home_app.get('/test')
 async def home_test():
     return {'message':'test'}
-
+#  gcc -Wall -pedantic -shared -fPIC -o group_work.so group_work.c -lwiringPi
 @home_app.get('/home_menu')
 async def home_menu():
     return {'Home': [], 'Updater': [], 'Tool': []}
