@@ -3,7 +3,7 @@
 # github https://github.com/runhey
 from typing import Any
 from collections.abc import Callable, Generator
-from datetime import timedelta, time
+from datetime import timedelta, time, datetime
 
 from pydantic import BaseModel, datetime_parse
 from pydantic.fields import ModelField
@@ -15,28 +15,6 @@ def format_timedelta(tdelta: timedelta):
     hours, rem = divmod(tdelta.seconds, 3600)
     minutes, seconds = divmod(rem, 60)
     return f"{days:02d} {hours:02d}:{minutes:02d}:{seconds:02d}"
-
-class TimeDelta(timedelta):
-    def __str__(self):
-        return format_timedelta(self)
-
-    def __repr__(self):
-        return format_timedelta(self)
-
-    @classmethod
-    def __modify_schema__(
-            cls, field_schema: dict[str, Any], field: ModelField | None
-    ):
-        if field:
-            field_schema['type'] = 'time_delta'
-
-class ConfigBase(BaseModel):
-    # 这个是导出json时候的配置，但是新的是导出dict，所以的无效
-    class Config:
-        json_encoders = {
-            TimeDelta: format_timedelta
-        }
-
 
 
 class MultiLine(str):
@@ -54,6 +32,29 @@ class MultiLine(str):
     ):
         if field:
             field_schema['type'] = 'multi_line'
+
+class TimeDelta(timedelta):
+    def __str__(self):
+        return format_timedelta(self)
+
+    def __repr__(self):
+        return format_timedelta(self)
+
+    @classmethod
+    def __modify_schema__(
+            cls, field_schema: dict[str, Any], field: ModelField | None
+    ):
+        if field:
+            field_schema['type'] = 'time_delta'
+
+class DateTime(datetime):
+    @classmethod
+    def __modify_schema__(
+            cls, field_schema: dict[str, Any], field: ModelField | None
+    ):
+        if field:
+            field_schema['type'] = 'date_time'
+
 
 class Time(time):
     """
@@ -74,9 +75,17 @@ class Time(time):
         else:
             raise ValueError("Invalid time format")
 
-    # @classmethod
-    # def __modify_schema__(
-    #         cls, field_schema: dict[str, Any], field: ModelField | None
-    # ):
-    #     if field:
-    #         field_schema['type'] = 'time'
+    @classmethod
+    def __modify_schema__(
+            cls, field_schema: dict[str, Any], field: ModelField | None
+    ):
+        if field:
+            field_schema['type'] = 'time'
+
+# ---------------------------------------------------------------------------------------------------------------------
+class ConfigBase(BaseModel):
+    # 这个是导出json时候的配置，但是新的是导出dict，所以的无效
+    class Config:
+        json_encoders = {
+            TimeDelta: format_timedelta
+        }

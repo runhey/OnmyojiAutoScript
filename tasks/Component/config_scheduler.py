@@ -6,16 +6,16 @@ from enum import Enum
 from datetime import datetime, timedelta, time
 from pydantic import BaseModel, ValidationError, validator, Field
 
-from tasks.Component.config_base import ConfigBase, TimeDelta
+from tasks.Component.config_base import ConfigBase, TimeDelta, DateTime, Time
 
 class Scheduler(ConfigBase):
     enable: bool = Field(default=False, description='enable_help')
-    next_run: datetime = Field(default="2023-01-01 00:00:00", description='next_run_help')
+    next_run: DateTime = Field(default="2023-01-01 00:00:00", description='next_run_help')
     priority: int = Field(default=5, description='priority_help')
 
     success_interval: TimeDelta = Field(default=TimeDelta(days=1), description='success_interval_help')
     failure_interval: TimeDelta = Field(default=TimeDelta(days=1), description='failure_interval_help')
-    server_update: time = Field(default=time(hour=9, minute=0, second=0), description='server_update_help')
+    server_update: Time = Field(default=Time(hour=9, minute=0, second=0), description='server_update_help')
 
     @validator('next_run', pre=True, always=True)
     def parse_next_run(cls, value):

@@ -7,7 +7,7 @@ from datetime import datetime, time
 
 from tasks.Component.SwitchSoul.switch_soul_config import SwitchSoulConfig
 from tasks.Component.config_scheduler import Scheduler
-from tasks.Component.config_base import ConfigBase, TimeDelta
+from tasks.Component.config_base import ConfigBase, Time
 from tasks.Component.GeneralInvite.config_invite import InviteConfig
 from tasks.Component.GeneralBattle.config_general_battle import GeneralBattleConfig
 
@@ -38,7 +38,7 @@ class OrochiConfig(ConfigBase):
     # 层数
     layer: Layer = Field(default=Layer.ELEVEN, description='layer_help')
     # 限制时间
-    limit_time: time = Field(default=time(minute=30), description='limit_time_help')
+    limit_time: Time = Field(default=Time(minute=30), description='limit_time_help')
     # 限制次数
     limit_count: int = Field(default=30, description='limit_count_help')
     # 是否开启御魂加成
