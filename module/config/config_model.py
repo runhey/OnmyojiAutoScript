@@ -299,6 +299,7 @@ class ConfigModel(ConfigBase):
             result = []
             for key, value in groups["properties"].items():
                 item = {}
+                item["name"] = key
                 item["title"] = value["title"] if "title" in value else inflection.humanize(key)
                 if "description" in value:
                     item["description"] = value["description"]
@@ -307,7 +308,8 @@ class ConfigModel(ConfigBase):
                 item["type"] = value["type"] if "type" in value else "enum"
                 if 'allOf' in value:
                     # list
-                    item["enumEnum"] = definitions[inflection.camelize(key, uppercase_first_letter=True)]["enum"]
+                    enum_key = re.search(r"/([^/]+)$", value['allOf'][0]['$ref']).group(1)
+                    item["enumEnum"] = definitions[enum_key]["enum"]
                 # TODO: 最大值最小值
                 result.append(item)
             return result
@@ -339,6 +341,6 @@ if __name__ == "__main__":
         c = ConfigModel()
 
     # c.save()
-    print(c.script_task('Script'))
+    print(c.script_task('Orochi'))
 
 

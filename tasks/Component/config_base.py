@@ -23,7 +23,15 @@ class TimeDelta(timedelta):
     def __repr__(self):
         return format_timedelta(self)
 
+    @classmethod
+    def __modify_schema__(
+            cls, field_schema: dict[str, Any], field: ModelField | None
+    ):
+        if field:
+            field_schema['type'] = 'time_delta'
+
 class ConfigBase(BaseModel):
+    # 这个是导出json时候的配置，但是新的是导出dict，所以的无效
     class Config:
         json_encoders = {
             TimeDelta: format_timedelta
@@ -65,3 +73,10 @@ class Time(time):
             return value
         else:
             raise ValueError("Invalid time format")
+
+    # @classmethod
+    # def __modify_schema__(
+    #         cls, field_schema: dict[str, Any], field: ModelField | None
+    # ):
+    #     if field:
+    #         field_schema['type'] = 'time'
