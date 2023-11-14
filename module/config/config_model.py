@@ -13,7 +13,7 @@ from module.config.utils import *
 from module.logger import logger
 
 # 导入配置的Python文件
-from tasks.Component.config_base import ConfigBase
+from tasks.Component.config_base import ConfigBase, TimeDelta
 from tasks.Exploration.config import Exploration
 from tasks.RyouToppa.config import RyouToppa
 from tasks.Script.config import Script
@@ -281,12 +281,15 @@ class ConfigModel(ConfigBase):
             logger.warning(f'{task} is no inexistence')
             return {}
 
-        def extract_groups(sch):
-            # 从schema 中提取未解析的group的数据
+        def properties_groups(sch) -> dict:
             properties = {}
             for key, value in sch["properties"].items():
                 properties[key] = re.search(r"/([^/]+)$", value['$ref']).group(1)
-            print(f'输出的组是{properties}')
+            return properties
+
+        def extract_groups(sch):
+            # 从schema 中提取未解析的group的数据
+            properties = properties_groups(sch)
 
             result = {}
             for key, value in properties.items():
@@ -300,7 +303,7 @@ class ConfigModel(ConfigBase):
             for key, value in groups["properties"].items():
                 item = {}
                 item["name"] = key
-                item["title"] = value["title"] if "title" in value else inflection.humanize(key)
+                item["title"] = value["title"] if "title" in value else inflection.underscore(key)
                 if "description" in value:
                     item["description"] = value["description"]
                 item["default"] = value["default"]
@@ -326,10 +329,58 @@ class ConfigModel(ConfigBase):
 
         result: dict[str, list] = {}
         for key, value in task.dict().items():
-            result[inflection.humanize(key)] = merge_value(groups[key], value, schema["definitions"])
+            result[key] = merge_value(groups[key], value, schema["definitions"])
 
         return result
 
+    def script_set_arg(self, task: str, group: str, argument: str, value) -> bool:
+        # 验证参数
+        task = convert_to_underscore(task)
+        group = convert_to_underscore(group)
+        argument = convert_to_underscore(argument)
+
+
+        # pandtic验证
+        if isinstance(value, str) and len(value) == 8:
+            try:
+                value = datetime.strptime(value, '%H:%M:%S').time()
+            except ValueError:
+                pass
+        if isinstance(value, str) and len(value) == 11:
+            try:
+                date_time = datetime.strptime(value, '%d %H:%M:%S')
+                value = TimeDelta(days=date_time.day, hours=date_time.hour, minutes=date_time.minute, seconds=date_time.second)
+            except ValueError:
+                pass
+        if isinstance(value, str) and len(value) == 19:
+            try:
+                value = datetime.strptime(value, '%Y-%m-%d %H:%M:%S')
+            except ValueError:
+                pass
+        if isinstance(value, str) and value == 'true':
+            value = True
+        if isinstance(value, str) and value == 'false':
+            value = False
+
+        task_object = getattr(self, task, None)
+        group_object = getattr(task_object, group, None)
+        argument_object = getattr(group_object, argument, None)
+        print(group_object)
+        print(argument_object)
+
+        if argument_object is None:
+            logger.error(f'Set arg {task}.{group}.{argument}.{value} failed')
+            return False
+
+        # 设置参数
+        try:
+            setattr(group_object, argument, value)
+            logger.info(f'Set arg {self.config_name}.{task}.{group}.{argument}.{value}')
+            self.save()  # 我是没有想到什么方法可以使得属性改变自动保存的
+            return True
+        except ValidationError as e:
+            logger.error(e)
+            return False
 
 
 

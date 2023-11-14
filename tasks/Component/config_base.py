@@ -66,7 +66,7 @@ class Time(time):
 
     @classmethod
     def validate(cls, value):
-        print('validate', value)
+        print(f' Time validate: {value} type: {type(value)}')
         if isinstance(value, str):
             hour, minute, second = map(int, value.split(":"))
             return cls(hour, minute, second)

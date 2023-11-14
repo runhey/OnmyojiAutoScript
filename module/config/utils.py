@@ -166,6 +166,7 @@ def convert_to_underscore(text: str) -> str:
     if '_' in text:
         # If text already contains underscore, assume it's in the correct format
         return text
+    text = text.replace(' ', '')
 
     result = ''
     for i, char in enumerate(text):

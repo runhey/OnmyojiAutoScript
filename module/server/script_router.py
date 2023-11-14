@@ -4,11 +4,14 @@
 import asyncio
 from fastapi import APIRouter, HTTPException
 from fastapi.responses import StreamingResponse
+from datetime import datetime
 from module.config.config import Config
 
 from module.logger import logger
 from module.server.main_manager import MainManager
 from module.server.script_process import ScriptProcess
+
+from tasks.Component.config_base import TimeDelta
 
 
 script_app = APIRouter()
@@ -64,12 +67,35 @@ async def script_task(script_name: str, task: str):
         raise Exception(f'[{script_name}] script file does not exist')
     return mm.config_cache.model.script_task(task)
 
-@script_app.put('/{script_name}/{task}/{group}/{argument}/value/{value}')
-async def script_task(script_name: str, task: str, group: str, argument: str, value):
-    if not mm.ensure_config_cache(task):
+@script_app.put('/{script_name}/{task}/{group}/{argument}/value')
+async def script_task(script_name: str, task: str, group: str, argument: str, types: str ,value):
+    if not mm.ensure_config_cache(script_name):
         raise HTTPException(status_code=404, detail=f'[{script_name}] script file does not exist')
-    mm.config_cache.set_task_args(task, group, argument, value)
-    return
+    try:
+        match types:
+            case 'integer':
+                value = int(value)
+            case 'number':
+                value = float(value)
+            case 'boolean':
+                value = bool(value)
+            case 'string':
+                pass
+            case 'date_time':
+                value = datetime.strptime(value, '%Y-%m-%d %H:%M:%S')
+            case 'time_delta':
+                # strptime 是个好东西，但是不能解析00的天数
+                day = int(value[0:1])
+                date_time = datetime.strptime(value[3:], '%H:%M:%S')
+                value = TimeDelta(days=day, hours=date_time.hour, minutes=date_time.minute, seconds=date_time.second)
+            case 'time':
+                value = datetime.strptime(value, '%H:%M:%S').time()
+            case _:pass
+    except Exception as e:
+        # 类型不正确
+        raise HTTPException(status_code=400, detail=f'Argument type error: {e}')
+    mm.config_cache.model.config_name = script_name
+    return mm.config_cache.model.script_set_arg(task, group, argument, value)
 
 # --------------------------------------  SSE  --------------------------------------
 @script_app.get('/{script_name}/state')
