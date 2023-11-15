@@ -50,7 +50,7 @@ class GeneralClimb(ConfigBase):
 
     @validator('ap_game_max', pre=True, always=True)
     def reset_game_max(cls, value):
-        def_value = int(999)
+        def_value = int(300)
         if isinstance(value, str):
             try:
                 return int(value)
