@@ -4,6 +4,7 @@
 import asyncio
 from fastapi import APIRouter, HTTPException
 from fastapi.responses import StreamingResponse
+from fastapi import WebSocket, WebSocketDisconnect
 from datetime import datetime
 from module.config.config import Config
 
@@ -127,4 +128,37 @@ async def script_task_log(script_name: str):
     response = StreamingResponse(log_generate_events(), media_type="text/event-stream")
     response.headers["Cache-Control"] = "no-cache"
     return response
+
+# -------------------------------------- websocket --------------------------------------
+
+@script_app.websocket("/ws/{script_name}")
+async def websocket_endpoint(websocket: WebSocket, script_name: str):
+    if script_name not in mm.script_process:
+        mm.script_process[script_name] = ScriptProcess(script_name)
+    script_process = mm.script_process[script_name]
+    await script_process.connect(websocket)
+    await script_process.broadcast_state({"state": script_process.state})
+    await script_process.broadcast_state({"schedule": mm.config_cache.get_schedule_data()})
+
+    try:
+        while True:
+            # 初次进入，广播state schedule
+            data = await websocket.receive_text()
+            if data == 'get_sate':
+                await script_process.broadcast_state({"state":script_process.state})
+            elif data == 'get_schedule':
+                mm.ensure_config_cache(script_name)
+                await script_process.broadcast_state({"schedule":mm.config_cache.get_schedule_data()})
+            elif data == 'start':
+                script_process.start()
+            elif data == 'stop':
+                script_process.stop()
+
+    except WebSocketDisconnect:
+        script_process.disconnect(websocket)
+
+
+
+
+
 

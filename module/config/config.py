@@ -224,6 +224,29 @@ class Config(ConfigState, ConfigManual, ConfigWatcher, ConfigMenu):
             logger.critical("Please enable at least one task")
             raise RequestHumanTakeover
 
+    def get_schedule_data(self) -> dict[str, dict]:
+        """
+        获取调度器的数据， 但是你必须使用update_scheduler来更新信息
+        :return:
+        """
+        running = {}
+        if self.task is not None and self.task.next_run < datetime.now():
+            running = {"name": self.task.command, "next_run": str(self.task.next_run)}
+
+        pending = []
+        for p in self.pending_task[1:]:
+            item = {"name": p.command, "next_run": str(p.next_run)}
+            pending.append(item)
+
+        waiting = []
+        for w in self.waiting_task:
+            item = {"name": w.command, "next_run": str(w.next_run)}
+            waiting.append(item)
+
+        data = {"running": running, "pending": pending, "waiting": waiting}
+        return data
+
+
     def task_call(self, task: str=None, force_call=True):
         """
         回调任务，这会是在任务结束后调用

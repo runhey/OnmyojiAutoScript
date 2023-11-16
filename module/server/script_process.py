@@ -8,24 +8,27 @@ from enum import Enum
 
 from module.logger import logger
 
+from module.server.script_websocket import ScriptWSManager
+
 class ScriptState(int, Enum):
     INACTIVE = 1
     RUNNING = 2
     WARNING = 3
     UPDATING = 4
 
-class ScriptProcess:
+class ScriptProcess(ScriptWSManager):
 
     def __init__(self, config_name: str) -> None:
+        super().__init__()
         self.config_name = config_name  # config_name
         self.log_pipe_out, self.log_pipe_in = multiprocessing.Pipe(False)
         self.state_queue = multiprocessing.Queue()
-        # self.state: ScriptState = ScriptState.INACTIVE
+        self.state: ScriptState = ScriptState.INACTIVE
         self._process = multiprocessing.Process(target=self.func,
                                                 args=(self.state_queue, self.log_pipe_in,),
                                                 name=self.config_name,
                                                 daemon=True)
-        # threading.Condition  可以多用户通知
+
 
 
 
@@ -37,6 +40,7 @@ class ScriptProcess:
             logger.warning(f'Script {self.config_name} is already running and first stop it')
             self.stop()
         self._process.start()
+        self.state = ScriptState.RUNNING
 
     def stop(self):
         if self._process is None:
@@ -46,6 +50,7 @@ class ScriptProcess:
             logger.warning(f'Script {self.config_name} is not running')
             return
         self._process.terminate()
+        self.state = ScriptState.INACTIVE
 
 
 
@@ -54,15 +59,19 @@ class ScriptProcess:
         self.start_log(log_pipe_in)
         try:
             from script import Script
-            # script = Script(config_name=self.config_name)
+            script = Script(config_name=self.config_name)
+            script.state_queue = state_queue
             # script.loop()
             # 脚本启动
             from time import sleep
             logger.info(f'Script {self.config_name} start')
             sleep(5)
             logger.info(f'Script {self.config_name} end')
+            exit(0)
             raise Exception('test')
-
+        except SystemExit as e:
+            logger.info(f'Script {self.config_name} exit')
+            self.state = ScriptState.WARNING
         except Exception as e:
             logger.exception(f'Run script {self.config_name} error')
             logger.error(f'Error: {e}')
@@ -77,6 +86,16 @@ class ScriptProcess:
             logger.exception(f'Start log error')
             logger.error(f'Error: {e}')
             raise
+
+
+    async def broadcast_state_log(self):
+        try:
+            state = self.state_queue.get_nowait()
+            if not state:
+                pass
+            await self.broadcast_state(state)
+        except Exception as e:
+            pass
 
 
 
