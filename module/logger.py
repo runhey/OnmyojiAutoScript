@@ -37,86 +37,81 @@ class RichFileHandler(RichHandler):
     # Rename
     pass
 
-class LogStream(TextIOBase):
-    def __init__(self, *args, func: Callable[[ConsoleRenderable], None] = None, **kwargs):
-        super().__init__(*args, **kwargs)
-        self._func = func
 
-    def write(self, msg: str) -> int:
-        if isinstance(msg, bytes):
-            msg = msg.decode("utf-8")
-        self._func(msg)
-        return len(msg)
-    
-class RichStreamHandler(RichHandler):
+
+#
+# class FlutterHandler(RichHandler):
+#     """
+#     Pass renderable into a function
+#     主要是传入一个回调函数
+#     """
+#
+#     def __init__(self, *args, func: Callable[[ConsoleRenderable], None] = None, **kwargs):
+#         super().__init__(*args, **kwargs)
+#         self._func = func
+#
+#     def emit(self, record: logging.LogRecord) -> None:
+#         message = self.format(record)
+#         tb = None
+#         if (
+#             self.rich_tracebacks
+#             and record.exc_info
+#             and record.exc_info != (None, None, None)
+#         ):
+#             exc_type, exc_value, exc_traceback = record.exc_info
+#             traceback.print_tb(exc_traceback)
+#             self._func(exc_traceback)
+#             assert exc_type is not None
+#             assert exc_value is not None
+#             tb = Traceback.from_exception(
+#                 exc_type,
+#                 exc_value,
+#                 exc_traceback,
+#                 width=self.tracebacks_width,
+#                 extra_lines=self.tracebacks_extra_lines,
+#                 theme=self.tracebacks_theme,
+#                 word_wrap=self.tracebacks_word_wrap,
+#                 show_locals=self.tracebacks_show_locals,
+#                 locals_max_length=self.locals_max_length,
+#                 locals_max_string=self.locals_max_string,
+#             )
+#             # 这个好理解转化为特定格式， getMessage()返回寸str
+#             message = record.getMessage()
+#             if self.formatter:
+#                 record.message = record.getMessage()
+#                 formatter = self.formatter
+#                 if hasattr(formatter, "usesTime") and formatter.usesTime():
+#                     record.asctime = formatter.formatTime(
+#                         record, formatter.datefmt)
+#                 message = formatter.formatMessage(record)
+#
+#         # 这个message_renderable是一个Text对象
+#         message_renderable = self.render_message(record, message)
+#         log_renderable: ConsoleRenderable = self.render(
+#             record=record, traceback=tb, message_renderable=message_renderable
+#         )
+#
+#         # msg2 = Text.from_markup(message).markup
+#
+#         # 这个message_renderable是一个Text对象
+#         # traceback是表示异常的对象
+#         # Directly put renderable into function
+#         if log_renderable:
+#             if log_renderable is not str:
+#                 print(f'-------------------------------------------------------log is not str{log_renderable}')
+#                 log_renderable = str(log_renderable)
+#             self._func(log_renderable)
+#
+#     def handle(self, record: logging.LogRecord) -> bool:
+#         if not self._func:
+#             return True
+#         super().handle(record)
+
+class FlutterHandler(RichHandler):
+    # Rename
     pass
 
-
-class RichRenderableHandler(RichHandler):
-    """
-    Pass renderable into a function
-    主要是传入一个回调函数
-    """
-
-    def __init__(self, *args, func: Callable[[ConsoleRenderable], None] = None, **kwargs):
-        super().__init__(*args, **kwargs)
-        self._func = func
-
-    def emit(self, record: logging.LogRecord) -> None:
-        message = self.format(record)
-        tb = None
-        if (
-            self.rich_tracebacks
-            and record.exc_info
-            and record.exc_info != (None, None, None)
-        ):
-            exc_type, exc_value, exc_traceback = record.exc_info
-            traceback.print_tb(exc_traceback)
-            self._func(exc_traceback)
-            assert exc_type is not None
-            assert exc_value is not None
-            tb = Traceback.from_exception(
-                exc_type,
-                exc_value,
-                exc_traceback,
-                width=self.tracebacks_width,
-                extra_lines=self.tracebacks_extra_lines,
-                theme=self.tracebacks_theme,
-                word_wrap=self.tracebacks_word_wrap,
-                show_locals=self.tracebacks_show_locals,
-                locals_max_length=self.locals_max_length,
-                locals_max_string=self.locals_max_string,
-            )
-            # 这个好理解转化为特定格式， getMessage()返回寸str
-            message = record.getMessage()
-            if self.formatter:
-                record.message = record.getMessage()
-                formatter = self.formatter
-                if hasattr(formatter, "usesTime") and formatter.usesTime():
-                    record.asctime = formatter.formatTime(
-                        record, formatter.datefmt)
-                message = formatter.formatMessage(record)
-
-        # 这个message_renderable是一个Text对象
-        message_renderable = self.render_message(record, message)
-        log_renderable: ConsoleRenderable = self.render(
-            record=record, traceback=tb, message_renderable=message_renderable
-        )
-
-        # msg2 = Text.from_markup(message).markup
-
-        # 这个message_renderable是一个Text对象
-        # traceback是表示异常的对象
-        # Directly put renderable into function
-        self._func(log_renderable)
-
-    def handle(self, record: logging.LogRecord) -> bool:
-        if not self._func:
-            return True
-        super().handle(record)
-
-
-class HTMLConsole(Console):
+class FlutterConsole(Console):
     """
     Force full feature console
     but not working lol :(
@@ -133,35 +128,16 @@ class HTMLConsole(Console):
             is_terminal=False,
         )
 
+class FlutterLogStream(TextIOBase):
+    def __init__(self, *args, func: Callable[[ConsoleRenderable], None] = None, **kwargs):
+        super().__init__(*args, **kwargs)
+        self._func = func
 
-class Highlighter(RegexHighlighter):
-    base_style = 'web.'
-    highlights = [
-        # (r'(?P<datetime>(\d{2}|\d{4})(?:\-)?([0]{1}\d{1}|[1]{1}[0-2]{1})'
-        #  r'(?:\-)?([0-2]{1}\d{1}|[3]{1}[0-1]{1})(?:\s)?([0-1]{1}\d{1}|'
-        #  r'[2]{1}[0-3]{1})(?::)?([0-5]{1}\d{1})(?::)?([0-5]{1}\d{1}).\d+\b)'),
-        (r'(?P<time>([0-1]{1}\d{1}|[2]{1}[0-3]{1})(?::)?'
-         r'([0-5]{1}\d{1})(?::)?([0-5]{1}\d{1})(.\d+\b))'),
-        r"(?P<brace>[\{\[\(\)\]\}])",
-        r"\b(?P<bool_true>True)\b|\b(?P<bool_false>False)\b|\b(?P<none>None)\b",
-        r"(?P<path>(([A-Za-z]\:)|.)?\B([\/\\][\w\.\-\_\+]+)*[\/\\])(?P<filename>[\w\.\-\_\+]*)?",
-        # r"(?<![\\\w])(?P<str>b?\'\'\'.*?(?<!\\)\'\'\'|b?\'.*?(?<!\\)\'|b?\"\"\".*?(?<!\\)\"\"\"|b?\".*?(?<!\\)\")",
-    ]
-
-
-WEB_THEME = Theme({
-    "web.brace": Style(bold=True),
-    "web.bool_true": Style(color="bright_green", italic=True),
-    "web.bool_false": Style(color="bright_red", italic=True),
-    "web.none": Style(color="magenta", italic=True),
-    "web.path": Style(color="magenta"),
-    "web.filename": Style(color="bright_magenta"),
-    "web.str": Style(color="green", italic=False, bold=False),
-    "web.time": Style(color="cyan"),
-    "rule.text": Style(bold=True),
-})
-
-
+    def write(self, msg: str) -> int:
+        if isinstance(msg, bytes):
+            msg = msg.decode("utf-8")
+        self._func(msg)
+        return len(msg)
 
 
 def show_handlers(handlers):
@@ -193,14 +169,9 @@ file_formatter = logging.Formatter(
     fmt='%(asctime)s.%(msecs)03d | %(levelname)8s | %(message)s', datefmt='%Y-%m-%d %H:%M:%S')
 console_formatter = logging.Formatter(
     fmt='%(asctime)s.%(msecs)03d │ %(message)s', datefmt='%Y-%m-%d %H:%M:%S')
-web_formatter = logging.Formatter(
+flutter_formatter = logging.Formatter(
     fmt='%(asctime)s.%(msecs)03d │ %(message)s', datefmt='%H:%M:%S')
 
-# Add console logger
-# console = logging.StreamHandler(stream=sys.stdout)
-# console.setFormatter(formatter)
-# console.flush = sys.stdout.flush
-# logger.addHandler(console)
 
 # Add rich console logger
 # ======================================================================================================================
@@ -219,26 +190,8 @@ logger.addHandler(console_hdlr)
 
 # Ensure running in Alas root folder
 os.chdir(os.path.join(os.path.dirname(__file__), '../'))
-
 # Add file logger
 pyw_name = os.path.splitext(os.path.basename(sys.argv[0]))[0]
-
-# 这个函数貌似没有用到
-def _set_file_logger(name=pyw_name):
-    if '_' in name:
-        name = name.split('_', 1)[0]
-    log_file = f'./log/{datetime.date.today()}_{name}.txt'
-    try:
-        file = logging.FileHandler(log_file, encoding='utf-8')
-    except FileNotFoundError:
-        os.mkdir('./log')
-        file = logging.FileHandler(log_file, encoding='utf-8')
-    file.setFormatter(file_formatter)
-
-    logger.handlers = [h for h in logger.handlers if not isinstance(
-        h, (logging.FileHandler, RichFileHandler))]
-    logger.addHandler(file)
-    logger.log_file = log_file
 
 
 def set_file_logger(name=pyw_name):
@@ -255,7 +208,7 @@ def set_file_logger(name=pyw_name):
         file=file,
         no_color=True,
         highlight=False,
-        width=120,
+        width=100,
     )
 
     hdlr = RichFileHandler(
@@ -276,20 +229,19 @@ def set_file_logger(name=pyw_name):
     logger.addHandler(hdlr)
     logger.log_file = log_file
 
-# 给web设置
+# 给flutter设置
 def set_func_logger(func):
-
-    stream = LogStream(func=func)
-    file_console = Console(
+    stream = FlutterLogStream(func=func)
+    stream_console = Console(
         file=stream,
         force_terminal=False,
         force_interactive=False,
         no_color=True,
         highlight=False,
-        width=120,
+        width=100,
     )
-    hdlr = RichStreamHandler(
-        console=file_console,
+    hdlr = FlutterHandler(
+        console=stream_console,
         show_path=False,
         show_time=False,
         show_level=True,
@@ -298,7 +250,7 @@ def set_func_logger(func):
         tracebacks_extra_lines=3,
         highlighter=NullHighlighter(),
     )
-    hdlr.setFormatter(web_formatter)
+    hdlr.setFormatter(flutter_formatter)
     logger.addHandler(hdlr)
 
 
@@ -329,9 +281,9 @@ def _get_renderables(
 
 def print(*objects: ConsoleRenderable, **kwargs):
     for hdlr in logger.handlers:
-        if isinstance(hdlr, RichRenderableHandler):
+        if isinstance(hdlr, FlutterHandler):
             for renderable in _get_renderables(hdlr.console, *objects, **kwargs):
-                hdlr._func(renderable)
+                hdlr.console.file._func(str(renderable))
         elif isinstance(hdlr, RichHandler):
             hdlr.console.print(*objects)
 
@@ -342,11 +294,25 @@ class GuiRule(Rule):
         options.max_width = 80
         return super().__rich_console__(console, options)
 
+    def __str__(self):
+        total_width = 100
+        cell_len = len(self.title) + 2
+        aside_len = (total_width - cell_len) // 2
+        left = self.characters * aside_len
+        right = self.characters * (total_width - cell_len - aside_len)
+        if self.title:
+            space = ' '
+        else:
+            space = self.characters
+        return f"{left}{space}{self.title}{space}{right}\n"
+
+    def __repr__(self):
+        return self.__str__()
+
 def rule(title="", *, characters="─", style="rule.line", end="\n", align="center"):
     rule = GuiRule(title=title, characters=characters,
                 style=style, end=end)
     print(rule)
-
 
 def hr(title, level=3):
     title = str(title).upper()
@@ -363,17 +329,14 @@ def hr(title, level=3):
         logger.rule(title, characters='─')
         logger.rule(characters='═')
 
-
 def attr(name, text):
     logger.info('[%s] %s' % (str(name), str(text)))
-
 
 def attr_align(name, text, front='', align=22):
     name = str(name).rjust(align)
     if front:
         name = front + name[len(front):]
     logger.info('%s: %s' % (name, str(text)))
-
 
 def show():
     logger.info('INFO')
@@ -392,7 +355,6 @@ def show():
     # Line before exception
     raise Exception("Exception")
     # Line below exception
-
 
 def error_convert(func):
     def error_wrapper(msg, *args, **kwargs):

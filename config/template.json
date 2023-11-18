@@ -875,7 +875,6 @@
     "hunt_config": {
       "kirin_group_team": "-1,-1",
       "netherworld_group_team": "-1,-1"
-    },
-    "exit_battle": false
+    }
   }
 }

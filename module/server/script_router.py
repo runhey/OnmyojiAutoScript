@@ -153,9 +153,9 @@ async def websocket_endpoint(websocket: WebSocket, script_name: str):
                 mm.config_cache.update_scheduler()
                 await script_process.broadcast_state({"schedule":mm.config_cache.get_schedule_data()})
             elif data == 'start':
-                script_process.start()
+                await script_process.start()
             elif data == 'stop':
-                script_process.stop()
+                await script_process.stop()
 
     except WebSocketDisconnect:
         logger.warning(f'[{script_name}] websocket disconnect')

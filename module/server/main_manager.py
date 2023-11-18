@@ -49,7 +49,7 @@ class MainManager(ConfigManager):
         tasks : dict[str, Task] = {}
         from asyncio import sleep
         while 1:
-            await sleep(5)
+            await sleep(3)
             # logger.info(asyncio.all_tasks())
             for name, script_p in self.script_process.items():
                 # 遍历所有的
@@ -61,5 +61,10 @@ class MainManager(ConfigManager):
                     continue
                 coroutine_state_name = f'coroutine_state_{name}'
                 if coroutine_state_name not in tasks:
-                    tasks[coroutine_state_name] = asyncio.create_task(script_p.coroutine_broadcast_state(), name=coroutine_state_name)
+                    tasks[coroutine_state_name] = asyncio.create_task(script_p.coroutine_broadcast_state(),
+                                                                      name=coroutine_state_name)
+                coroutine_log_name = f'coroutine_log_{name}'
+                if coroutine_log_name not in tasks:
+                    tasks[coroutine_log_name] = asyncio.create_task(script_p.coroutine_broadcast_log(),
+                                                                    name=coroutine_log_name)
 
