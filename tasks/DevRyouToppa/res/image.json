@@ -1,0 +1,146 @@
+[
+  {
+    "itemName": "area_1_is_failure",
+    "imageName": "loser_sign_2.png",
+    "roiFront": "673,146,63,32",
+    "roiBack": "421,138,325,123",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "区域1攻略失败"
+  },
+  {
+    "itemName": "area_2_is_failure",
+    "imageName": "loser_sign_2.png",
+    "roiFront": "1011,146,63,30",
+    "roiBack": "757,137,327,128",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "区域2攻略失败"
+  },
+  {
+    "itemName": "area_3_is_failure",
+    "imageName": "loser_sign_2.png",
+    "roiFront": "665,283,73,40",
+    "roiBack": "419,271,327,127",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "区域3攻略失败"
+  },
+  {
+    "itemName": "area_4_is_failure",
+    "imageName": "loser_sign_2.png",
+    "roiFront": "1000,283,72,38",
+    "roiBack": "756,271,325,128",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "区域4攻略失败"
+  },
+  {
+    "itemName": "area_5_is_failure",
+    "imageName": "loser_sign_2.png",
+    "roiFront": "669,419,65,29",
+    "roiBack": "418,406,328,128",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "区域5攻略失败"
+  },
+  {
+    "itemName": "area_6_is_failure",
+    "imageName": "loser_sign_2.png",
+    "roiFront": "988,416,84,37",
+    "roiBack": "755,405,328,131",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "区域6攻略失败"
+  },
+  {
+    "itemName": "area_7_is_failure",
+    "imageName": "loser_sign_2.png",
+    "roiFront": "672,556,61,37",
+    "roiBack": "420,543,326,114",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "区域7攻略失败"
+  },
+  {
+    "itemName": "area_8_is_failure",
+    "imageName": "loser_sign_2.png",
+    "roiFront": "1004,556,64,29",
+    "roiBack": "756,541,327,113",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "区域8攻略失败"
+  },
+  {
+    "itemName": "area_1_is_failure_new",
+    "imageName": "loser_sign_1.png",
+    "roiFront": "673,146,63,32",
+    "roiBack": "421,138,325,123",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "区域1攻略失败（最近一次）"
+  },
+  {
+    "itemName": "area_2_is_failure_new",
+    "imageName": "loser_sign_1.png",
+    "roiFront": "1011,146,63,30",
+    "roiBack": "757,137,327,128",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "区域2攻略失败（最近一次）"
+  },
+  {
+    "itemName": "area_3_is_failure_new",
+    "imageName": "loser_sign_1.png",
+    "roiFront": "665,283,73,40",
+    "roiBack": "419,271,327,127",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "区域3攻略失败（最近一次）"
+  },
+  {
+    "itemName": "area_4_is_failure_new",
+    "imageName": "loser_sign_1.png",
+    "roiFront": "1000,283,72,38",
+    "roiBack": "756,271,325,128",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "区4攻略失败（最近一次）"
+  },
+  {
+    "itemName": "area_5_is_failure_new",
+    "imageName": "loser_sign_1.png",
+    "roiFront": "669,419,65,29",
+    "roiBack": "418,406,328,128",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "区域5攻略失败（最近一次）"
+  },
+  {
+    "itemName": "area_6_is_failure_new",
+    "imageName": "loser_sign_1.png",
+    "roiFront": "988,416,84,37",
+    "roiBack": "755,405,328,131",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "区域6攻略失败（最近一次）"
+  },
+  {
+    "itemName": "area_7_is_failure_new",
+    "imageName": "loser_sign_1.png",
+    "roiFront": "672,556,61,37",
+    "roiBack": "420,543,326,114",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "区域7攻略失败（最近一次）"
+  },
+  {
+    "itemName": "area_8_is_failure_new",
+    "imageName": "loser_sign_1.png",
+    "roiFront": "1004,556,64,29",
+    "roiBack": "756,541,327,113",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "区域8攻略失败（最近一次）"
+  }
+]
