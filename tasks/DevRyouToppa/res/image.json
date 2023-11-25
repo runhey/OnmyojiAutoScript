@@ -142,5 +142,86 @@
     "method": "Template matching",
     "threshold": 0.8,
     "description": "区域8攻略失败（最近一次）"
+  },
+  {
+    "itemName": "toppa_record",
+    "imageName": "res_toppa_record.png",
+    "roiFront": "66,628,64,39",
+    "roiBack": "66,628,64,39",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "area_1_finished",
+    "imageName": "finished.png",
+    "roiFront": "658,141,93,91",
+    "roiBack": "658,141,93,91",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "区域1已攻破"
+  },
+  {
+    "itemName": "area_2_finished",
+    "imageName": "finished.png",
+    "roiFront": "983,137,100,100",
+    "roiBack": "983,137,100,100",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "区域2已攻破"
+  },
+  {
+    "itemName": "area_3_finished",
+    "imageName": "finished.png",
+    "roiFront": "650,270,100,100",
+    "roiBack": "650,270,100,100",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "区域3已攻破"
+  },
+  {
+    "itemName": "area_4_finished",
+    "imageName": "finished.png",
+    "roiFront": "996,271,100,100",
+    "roiBack": "996,271,100,100",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "区域4已攻破"
+  },
+  {
+    "itemName": "area_5_finished",
+    "imageName": "finished.png",
+    "roiFront": "647,404,100,100",
+    "roiBack": "647,404,100,100",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "区域5已攻破"
+  },
+  {
+    "itemName": "area_6_finished",
+    "imageName": "finished.png",
+    "roiFront": "982,403,100,100",
+    "roiBack": "982,403,100,100",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "区域6已攻破"
+  },
+  {
+    "itemName": "area_7_finished",
+    "imageName": "finished.png",
+    "roiFront": "643,543,100,100",
+    "roiBack": "643,543,100,100",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "区域7已攻破"
+  },
+  {
+    "itemName": "area_8_finished",
+    "imageName": "finished.png",
+    "roiFront": "983,541,100,100",
+    "roiBack": "983,541,100,100",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "区域8已攻破"
   }
 ]

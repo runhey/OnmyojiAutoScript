@@ -10,6 +10,25 @@ from module.atom.list import RuleList
 class DevRyouToppaAssets: 
 
 
+	# Click Rule Assets
+	# area1 
+	C_AREA_1 = RuleClick(roi_front=(533,162,177,74), roi_back=(533,162,177,74), name="area_1")
+	# area2 
+	C_AREA_2 = RuleClick(roi_front=(863,164,181,71), roi_back=(863,164,181,71), name="area_2")
+	# area3 
+	C_AREA_3 = RuleClick(roi_front=(532,292,181,87), roi_back=(532,292,181,87), name="area_3")
+	# area4 
+	C_AREA_4 = RuleClick(roi_front=(863,301,171,62), roi_back=(863,301,171,62), name="area_4")
+	# area5 
+	C_AREA_5 = RuleClick(roi_front=(540,432,169,68), roi_back=(540,432,169,68), name="area_5")
+	# area6 
+	C_AREA_6 = RuleClick(roi_front=(876,432,165,74), roi_back=(876,432,165,74), name="area_6")
+	# area7 
+	C_AREA_7 = RuleClick(roi_front=(538,557,149,71), roi_back=(538,557,149,71), name="area_7")
+	# area8 
+	C_AREA_8 = RuleClick(roi_front=(876,562,150,67), roi_back=(876,562,150,67), name="area_8")
+
+
 	# Image Rule Assets
 	# 区域1攻略失败 
 	I_AREA_1_IS_FAILURE = RuleImage(roi_front=(673,146,63,32), roi_back=(421,138,325,123), threshold=0.8, method="Template matching", file="./tasks/DevRyouToppa/res/loser_sign_2.png")
@@ -43,5 +62,28 @@ class DevRyouToppaAssets:
 	I_AREA_7_IS_FAILURE_NEW = RuleImage(roi_front=(672,556,61,37), roi_back=(420,543,326,114), threshold=0.8, method="Template matching", file="./tasks/DevRyouToppa/res/loser_sign_1.png")
 	# 区域8攻略失败（最近一次） 
 	I_AREA_8_IS_FAILURE_NEW = RuleImage(roi_front=(1004,556,64,29), roi_back=(756,541,327,113), threshold=0.8, method="Template matching", file="./tasks/DevRyouToppa/res/loser_sign_1.png")
+	# description 
+	I_TOPPA_RECORD = RuleImage(roi_front=(66,628,64,39), roi_back=(66,628,64,39), threshold=0.8, method="Template matching", file="./tasks/DevRyouToppa/res/res_toppa_record.png")
+	# 区域1已攻破 
+	I_AREA_1_FINISHED = RuleImage(roi_front=(658,141,93,91), roi_back=(658,141,93,91), threshold=0.8, method="Template matching", file="./tasks/DevRyouToppa/res/finished.png")
+	# 区域2已攻破 
+	I_AREA_2_FINISHED = RuleImage(roi_front=(983,137,100,100), roi_back=(983,137,100,100), threshold=0.8, method="Template matching", file="./tasks/DevRyouToppa/res/finished.png")
+	# 区域3已攻破 
+	I_AREA_3_FINISHED = RuleImage(roi_front=(650,270,100,100), roi_back=(650,270,100,100), threshold=0.8, method="Template matching", file="./tasks/DevRyouToppa/res/finished.png")
+	# 区域4已攻破 
+	I_AREA_4_FINISHED = RuleImage(roi_front=(996,271,100,100), roi_back=(996,271,100,100), threshold=0.8, method="Template matching", file="./tasks/DevRyouToppa/res/finished.png")
+	# 区域5已攻破 
+	I_AREA_5_FINISHED = RuleImage(roi_front=(647,404,100,100), roi_back=(647,404,100,100), threshold=0.8, method="Template matching", file="./tasks/DevRyouToppa/res/finished.png")
+	# 区域6已攻破 
+	I_AREA_6_FINISHED = RuleImage(roi_front=(982,403,100,100), roi_back=(982,403,100,100), threshold=0.8, method="Template matching", file="./tasks/DevRyouToppa/res/finished.png")
+	# 区域7已攻破 
+	I_AREA_7_FINISHED = RuleImage(roi_front=(643,543,100,100), roi_back=(643,543,100,100), threshold=0.8, method="Template matching", file="./tasks/DevRyouToppa/res/finished.png")
+	# 区域8已攻破 
+	I_AREA_8_FINISHED = RuleImage(roi_front=(983,541,100,100), roi_back=(983,541,100,100), threshold=0.8, method="Template matching", file="./tasks/DevRyouToppa/res/finished.png")
+
+
+	# Ocr Rule Assets
+	# 进攻回合数 
+	O_NUMBER = RuleOcr(roi=(271,560,48,31), area=(271,560,48,31), mode="DigitCounter", method="Default", keyword="", name="number")
 
 
