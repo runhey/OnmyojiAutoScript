@@ -199,7 +199,7 @@ class Benchmark(DaemonBase):
 
     def run(self):
         try:
-            self.config.override(script.device.screenshot_method='ADB')
+            self.config.override(self.device.screenshot_method == 'ADB')
             self.device.uninstall_minicap()
 
         except RequestHumanTakeover:
@@ -227,6 +227,8 @@ class Benchmark(DaemonBase):
             screenshot = remove('aScreenCap', 'aScreenCap_nc')
         if self.device.is_chinac_phone_cloud:
             screenshot = remove('ADB_nc', 'aScreenCap_nc')
+        if self.config.script.device.handle == '':
+            screenshot = remove('window_background')
         screenshot = tuple(screenshot)
 
         self.TEST_TOTAL = 3

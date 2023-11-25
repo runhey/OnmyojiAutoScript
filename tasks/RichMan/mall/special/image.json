@@ -29,8 +29,8 @@
   {
     "itemName": "sp_swipe_check",
     "imageName": "special_sp_swipe_check.png",
-    "roiFront": "866,445,103,96",
-    "roiBack": "829,424,164,143",
+    "roiFront": "866,439,170,102",
+    "roiBack": "759,374,341,193",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "判断是否滑动到底"

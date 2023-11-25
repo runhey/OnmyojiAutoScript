@@ -12,7 +12,7 @@ class GeneralBattleAssets:
 
 	# Click Rule Assets
 	# description 
-	C_WIN_1 = RuleClick(roi_front=(175,40,1054,161), roi_back=(175,40,1054,161), name="win_1")
+	C_WIN_1 = RuleClick(roi_front=(175,102,1054,99), roi_back=(175,102,1054,99), name="win_1")
 	# description 
 	C_WIN_2 = RuleClick(roi_front=(22,112,210,496), roi_back=(22,112,210,496), name="win_2")
 	# description 
