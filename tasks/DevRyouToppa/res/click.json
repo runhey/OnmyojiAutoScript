@@ -46,5 +46,11 @@
     "roiFront": "876,562,150,67",
     "roiBack": "876,562,150,67",
     "description": "area8"
+  },
+  {
+    "itemName": "safe_area",
+    "roiFront": "182,213,160,229",
+    "roiBack": "182,213,160,229",
+    "description": "在点击进攻后如果未进入战斗画面则点击的安全区域"
   }
 ]
