@@ -133,5 +133,14 @@
     "method": "Template matching",
     "threshold": 0.8,
     "description": "妖"
+  },
+  {
+    "itemName": "battle_start",
+    "imageName": "res_battle_start.png",
+    "roiFront": "555,688,39,27.5",
+    "roiBack": "221,677,561,41",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
   }
 ]

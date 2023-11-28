@@ -103,7 +103,7 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, ExplorationAssets):
             self.screenshot()
             self.O_E_EXPLORATION_LEVEL_NUMBER.keyword = explorationConfig.exploration_config.exploration_level
             if self.ocr_appear_click(self.O_E_EXPLORATION_LEVEL_NUMBER):
-                self.wait_until_appear(self.I_E_EXPLORATION_CLICK)
+                self.wait_until_appear(self.I_E_EXPLORATION_CLICK, wait_time=3)
             if self.appear(self.I_E_EXPLORATION_CLICK):
                 break
 
@@ -186,18 +186,16 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, ExplorationAssets):
             self.appear_then_click(self.I_BATTLE_REWARD)
             # boss 战
             if self.appear_then_click(self.I_BOSS_BATTLE_BUTTON):
-                time.sleep(0.5)
-                self.screenshot()
-                if self.appear(self.I_BOSS_BATTLE_BUTTON):
+                if self.wait_until_appear(self.I_BATTLE_START, wait_time=5):
+                    self.run_general_battle(self.config.exploration.general_battle_config)
+                else:
                     continue
-                self.run_general_battle(self.config.exploration.general_battle_config)
             # 小怪 战
             if self.appear_then_click(self.I_NORMAL_BATTLE_BUTTON):
-                time.sleep(0.5)
-                self.screenshot()
-                if self.appear(self.I_NORMAL_BATTLE_BUTTON):
+                if self.wait_until_appear(self.I_BATTLE_START, wait_time=5):
+                    self.run_general_battle(self.config.exploration.general_battle_config)
+                else:
                     continue
-                self.run_general_battle(self.config.exploration.general_battle_config)
                 self.screenshot()
             elif self.appear(self.I_E_AUTO_ROTATE_ON) and not self.appear(self.I_BATTLE_REWARD):
                 self.swipe(self.S_SWIPE_BACKGROUND_RIGHT)
