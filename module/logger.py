@@ -170,7 +170,7 @@ file_formatter = logging.Formatter(
 console_formatter = logging.Formatter(
     fmt='%(asctime)s.%(msecs)03d │ %(message)s', datefmt='%Y-%m-%d %H:%M:%S')
 flutter_formatter = logging.Formatter(
-    fmt='%(asctime)s.%(msecs)03d │ %(message)s', datefmt='%H:%M:%S')
+    fmt='| %(asctime)s.%(msecs)03d | %(message)08s', datefmt='%H:%M:%S')
 
 
 # Add rich console logger
