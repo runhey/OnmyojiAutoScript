@@ -71,6 +71,8 @@ class ScriptProcess(ScriptWSManager):
                     if not data:
                         await sleep(0.5)
                         continue
+                    if 'state' in data and data['state'] == ScriptState.WARNING:
+                        self.state = ScriptState.WARNING
                     await self.broadcast_state(data)
                 except QueueEmpty as e:
                     logger.warning(f'QueueEmpty: {e}')

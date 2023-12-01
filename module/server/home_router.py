@@ -3,6 +3,8 @@
 # github https://github.com/runhey
 from fastapi import APIRouter
 
+from module.logger import logger
+
 
 home_app = APIRouter(
     prefix="/home",
@@ -16,5 +18,20 @@ async def home_test():
 @home_app.get('/home_menu')
 async def home_menu():
     return {'Home': [], 'Updater': [], 'Tool': []}
+
+@home_app.post('/notify_test')
+async def notify_test(setting: str, title: str, content: str):
+    from module.notify.notify import Notifier
+    try:
+        notifier = Notifier(setting, True)
+        if notifier.push(title=title, content=content):
+            del notifier
+            return True
+        else:
+            del notifier
+            return False
+    except Exception as e:
+        logger.exception(e)
+        return str(e)
 
 
