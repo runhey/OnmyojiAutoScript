@@ -3,6 +3,9 @@
 # 主进程的管理
 # github https://github.com/runhey
 import asyncio
+import sys
+import os
+import signal
 from asyncio.tasks import Task
 from multiprocessing import Queue, Pipe
 from threading import Thread
@@ -17,6 +20,7 @@ class MainManager(ConfigManager):
     config_cache: Config = None  # 缓存当前切换的配置
     script_process: dict[str: ScriptProcess] = None  # 脚本进程
     push_data_thread: Thread = None  # 数据推送线程
+    signal_kill_server: bool = False
 
     def __init__(self) -> None:
         super().__init__()
@@ -24,7 +28,7 @@ class MainManager(ConfigManager):
         self._all_script_files = self.all_script_files()
         for script_name in self._all_script_files:
             self.script_process[script_name] = ScriptProcess(script_name)
-        self.push_data_thread = Thread(target=lambda : asyncio.run(self.push_data_handle()), daemon=True)
+        self.push_data_thread = Thread(target=self.start_push_data_thread, daemon=True)
         self.push_data_thread.start()
 
     def ensure_config_cache(self, config_name):
@@ -45,11 +49,33 @@ class MainManager(ConfigManager):
         self._all_script_files = self.all_script_files()
         self.script_process[file_name] = ScriptProcess(file_name)
 
+    def start_push_data_thread(self):
+        try:
+            asyncio.run(self.push_data_handle())
+        except SystemExit as e:
+            logger.info('Kill the main process')
+            # sys.exit(0)
+            try:
+                os.kill(os.getpid(), signal.SIGILL)
+                print("Process killed successfully.")
+            except OSError:
+                print("Failed to kill the process.")
+
+        except Exception as e:
+            logger.exception(e)
+            sys.exit(0)
+
     async def push_data_handle(self):
-        tasks : dict[str, Task] = {}
+        tasks: dict[str, Task] = {}
         from asyncio import sleep
         while 1:
             await sleep(3)
+            if MainManager.signal_kill_server:  # 结束所有的进程
+                logger.info('Kill all server')
+                for script_p in self.script_process.values():
+                    await script_p.stop()
+                logger.info('Kill push data thread')
+                sys.exit(0)
             # logger.info(asyncio.all_tasks())
             for name, script_p in self.script_process.items():
                 # 遍历所有的
@@ -67,4 +93,3 @@ class MainManager(ConfigManager):
                 if coroutine_log_name not in tasks:
                     tasks[coroutine_log_name] = asyncio.create_task(script_p.coroutine_broadcast_log(),
                                                                     name=coroutine_log_name)
-

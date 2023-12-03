@@ -4,20 +4,24 @@
 from fastapi import APIRouter
 
 from module.logger import logger
-
+from module.server.main_manager import MainManager
 
 home_app = APIRouter(
     prefix="/home",
     tags=["home"],
 )
 
+
 @home_app.get('/test')
 async def home_test():
-    return {'message':'test'}
+    return {'message': 'test'}
+
+
 #  gcc -Wall -pedantic -shared -fPIC -o group_work.so group_work.c -lwiringPi
 @home_app.get('/home_menu')
 async def home_menu():
     return {'Home': [], 'Updater': [], 'Tool': []}
+
 
 @home_app.post('/notify_test')
 async def notify_test(setting: str, title: str, content: str):
@@ -35,3 +39,7 @@ async def notify_test(setting: str, title: str, content: str):
         return str(e)
 
 
+@home_app.get('/kill_server')
+async def kill_server():
+    MainManager.signal_kill_server = True
+    return 'success'
