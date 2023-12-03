@@ -66,9 +66,8 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, ExplorationAssets):
         if explorationConfig.exploration_config.attack_number == AttackNumber.SEVEN:
             count = 0
             while count < 7:
-                self.screenshot()
-                time.sleep(0.5)
-                if self.appear_then_click(self.I_E_EXPLORATION_CLICK):
+                if self.wait_until_appear(self.I_E_EXPLORATION_CLICK, wait_time=1):
+                    self.click(self.I_E_EXPLORATION_CLICK)
                     count += 1
                     # 进入战斗环节
                     self.battle_process()
@@ -90,7 +89,7 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, ExplorationAssets):
             # 判断当前章节有无目标章节
             result = set(text1).intersection({explorationConfig.exploration_config.exploration_level})
             # 有则跳出检测
-            if result and len(result) > 0:
+            if self.appear(self.I_E_EXPLORATION_CLICK) or result and len(result) > 0:
                 break
             self.device.click_record_clear()
             self.swipe(self.S_SWIPE_LEVEL_UP)
@@ -183,7 +182,10 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, ExplorationAssets):
         while 1:
             self.screenshot()
             # 战后奖励
-            self.appear_then_click(self.I_BATTLE_REWARD)
+            if self.appear(self.I_BATTLE_REWARD) and not self.appear(self.I_GET_REWARD):
+                self.click(self.I_BATTLE_REWARD)
+                while self.appear(self.I_GET_REWARD):
+                    self.swipe(self.S_SWIPE_BACKGROUND_RIGHT)
             # boss 战
             if self.appear_then_click(self.I_BOSS_BATTLE_BUTTON):
                 if self.wait_until_appear(self.I_BATTLE_START, wait_time=5):
@@ -196,8 +198,7 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, ExplorationAssets):
                     self.run_general_battle(self.config.exploration.general_battle_config)
                 else:
                     continue
-                self.screenshot()
-            elif self.appear(self.I_E_AUTO_ROTATE_ON) and not self.appear(self.I_BATTLE_REWARD):
+            elif self.appear(self.I_E_AUTO_ROTATE_ON):
                 self.swipe(self.S_SWIPE_BACKGROUND_RIGHT)
             # 结束流程
             if self.appear(self.I_E_EXPLORATION_CLICK) or self.appear(self.I_EXPLORATION_TITLE):

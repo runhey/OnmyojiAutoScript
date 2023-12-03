@@ -62,6 +62,8 @@ class ExplorationAssets:
 	I_EXPLORATION_TITLE = RuleImage(roi_front=(1133,124,47,43), roi_back=(1133,124,47,43), threshold=0.8, method="Template matching", file="./tasks/Exploration/res/res_exploration_title.png")
 	# description 
 	I_BATTLE_START = RuleImage(roi_front=(555,688,39,27.5), roi_back=(221,677,561,41), threshold=0.8, method="Template matching", file="./tasks/Exploration/res/res_battle_start.png")
+	# description 
+	I_GET_REWARD = RuleImage(roi_front=(464,231,339,44), roi_back=(464,231,339,44), threshold=0.8, method="Template matching", file="./tasks/Exploration/res/res_get_reward.png")
 
 
 	# Ocr Rule Assets
