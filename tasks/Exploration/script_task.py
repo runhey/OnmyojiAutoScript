@@ -184,8 +184,6 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, ExplorationAssets):
             # 战后奖励
             if self.appear(self.I_BATTLE_REWARD) and not self.appear(self.I_GET_REWARD):
                 self.click(self.I_BATTLE_REWARD)
-                while self.appear(self.I_GET_REWARD):
-                    self.swipe(self.S_SWIPE_BACKGROUND_RIGHT)
             # boss 战
             if self.appear_then_click(self.I_BOSS_BATTLE_BUTTON):
                 if self.wait_until_appear(self.I_BATTLE_START, wait_time=5):
@@ -198,7 +196,8 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, ExplorationAssets):
                     self.run_general_battle(self.config.exploration.general_battle_config)
                 else:
                     continue
-            elif self.appear(self.I_E_AUTO_ROTATE_ON):
+            # 滑动
+            elif self.appear(self.I_E_AUTO_ROTATE_ON) or self.appear(self.I_GET_REWARD):
                 self.swipe(self.S_SWIPE_BACKGROUND_RIGHT)
             # 结束流程
             if self.appear(self.I_E_EXPLORATION_CLICK) or self.appear(self.I_EXPLORATION_TITLE):
