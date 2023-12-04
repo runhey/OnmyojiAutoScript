@@ -68,6 +68,9 @@ FluWindow {
 //            process_manager.create_all()
         }
     }
+    Notity{
+        id: notity
+    }
 
     FluNavigationView{
         id:nav_view
@@ -83,6 +86,8 @@ FluWindow {
             footerItems.navigationView = nav_view
             nav_view.setCurrentIndex(0)
             items.addFluPaneItems()
+
+            notity.open()
         }
     }
     Component.onCompleted:{
