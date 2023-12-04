@@ -31,13 +31,15 @@ class MainManager(ConfigManager):
         self.push_data_thread = Thread(target=self.start_push_data_thread, daemon=True)
         self.push_data_thread.start()
 
-    def ensure_config_cache(self, config_name):
+    def ensure_config_cache(self, config_name: str, reload: bool = False):
         if self.config_cache is None:
             if config_name not in self._all_script_files:
                 logger.warning(f'[{config_name}] script file does not exist')
                 return None
             self.config_cache = Config(config_name)
         elif self.config_cache.config_name != config_name:
+            self.config_cache = Config(config_name)
+        if reload:
             self.config_cache = Config(config_name)
         return self.config_cache
 

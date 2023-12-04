@@ -459,6 +459,7 @@ class Script:
                 logger.critical('Request human takeover')
                 exit(1)
 
+            self.config.save()
             if success:
                 del_cached_property(self, 'config')
                 continue
