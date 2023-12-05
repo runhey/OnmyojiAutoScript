@@ -342,9 +342,10 @@ class ScriptTask(KU, KekkaiActivationAssets):
         while 1:
             self.screenshot()
 
-            if self.appear(self.I_REALM_SHIN):
-                break
-            if self.appear(self.I_SHI_GROWN):
+            if self.appear(self.I_REALM_SHIN) and self.appear(self.I_SHI_GROWN):
+                self.screenshot()
+                if not self.appear(self.I_REALM_SHIN):
+                    continue
                 break
             if self.appear_then_click(self.I_UI_BACK_BLUE, interval=1):
                 continue
