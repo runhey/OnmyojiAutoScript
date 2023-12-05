@@ -10,7 +10,7 @@ from module.base.timer import Timer
 from module.atom.image_grid import ImageGrid
 from module.atom.image import RuleImage
 from module.logger import logger
-from module.exception import TaskEnd
+from module.exception import TaskEnd, GameStuckError
 
 from tasks.KekkaiUtilize.script_task import ScriptTask as KU
 from tasks.KekkaiUtilize.utils import CardClass
@@ -193,6 +193,10 @@ class ScriptTask(KU, KekkaiActivationAssets):
         if not isinstance(delta, timedelta):
             logger.warning('OCR error')
             return None
+        if delta == timedelta(0):
+            logger.error('The remaining time detected for this card is 0')
+            logger.error('This may be due to the fact that the card has not yet been collected')
+            raise GameStuckError
         return delta
 
     def screening_card(self, rule: str):
@@ -337,6 +341,9 @@ class ScriptTask(KU, KekkaiActivationAssets):
             self.set_shikigami(shikigami_order=7, stop_image=self.I_RS_NO_ADD)
         else:
             logger.info('No max level shikigami')
+        if self.detect_no_shikigami():
+            logger.warning('There are no any shikigami grow room')
+            self.set_shikigami(shikigami_order=7, stop_image=self.I_RS_NO_ADD)
 
         # 回到结界界面
         while 1:
