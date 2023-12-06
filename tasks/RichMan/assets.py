@@ -284,7 +284,7 @@ class RichManAssets:
 	# 购买低级盘 
 	I_SP_BUY_LOW = RuleImage(roi_front=(176,148,144,108), roi_back=(128,142,902,449), threshold=0.8, method="Template matching", file="./tasks/RichMan/mall/special/special_sp_buy_low.png")
 	# 判断是否滑动到底 
-	I_SP_SWIPE_CHECK = RuleImage(roi_front=(866,445,103,96), roi_back=(829,424,164,143), threshold=0.8, method="Template matching", file="./tasks/RichMan/mall/special/special_sp_swipe_check.png")
+	I_SP_SWIPE_CHECK = RuleImage(roi_front=(866,439,170,102), roi_back=(759,374,341,193), threshold=0.8, method="Template matching", file="./tasks/RichMan/mall/special/special_sp_swipe_check.png")
 
 
 	# Ocr Rule Assets
