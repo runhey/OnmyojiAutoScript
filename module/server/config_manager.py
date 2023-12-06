@@ -22,6 +22,10 @@ class ConfigManager:
             if json.stem == 'template':
                 continue
             result.append(json.stem)
+        if len(result) == 0:
+            # 如果没有脚本文件 则创建一个
+            ConfigManager.copy(file='oas1', template='template')
+            result.append('oas1')
         return result
 
     @staticmethod
