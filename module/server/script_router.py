@@ -79,6 +79,12 @@ async def script_task(script_name: str, task: str, group: str, argument: str, ty
             case 'number':
                 value = float(value)
             case 'boolean':
+                if isinstance(value, str):
+                    logger.warning(f'[{script_name}] script argument {argument} value is string, try to convert to bool')
+                    if value.lower() in ['true', '1']:
+                        value = True
+                    elif value.lower() in ['false', '0']:
+                        value = False
                 value = bool(value)
             case 'string':
                 pass

@@ -365,8 +365,8 @@ class ConfigModel(ConfigBase):
         task_object = getattr(self, task, None)
         group_object = getattr(task_object, group, None)
         argument_object = getattr(group_object, argument, None)
-        print(group_object)
-        print(argument_object)
+        # print(group_object)
+        # print(argument_object)
 
         if argument_object is None:
             logger.error(f'Set arg {task}.{group}.{argument}.{value} failed')
