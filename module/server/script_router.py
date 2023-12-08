@@ -91,7 +91,7 @@ async def script_task(script_name: str, task: str, group: str, argument: str, ty
                 value = TimeDelta(days=day, hours=date_time.hour, minutes=date_time.minute, seconds=date_time.second)
             case 'time':
                 value = datetime.strptime(value, '%H:%M:%S').time()
-            case _:pass
+            case _: pass
     except Exception as e:
         # 类型不正确
         raise HTTPException(status_code=400, detail=f'Argument type error: {e}')

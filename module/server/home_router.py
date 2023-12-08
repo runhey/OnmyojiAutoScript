@@ -5,6 +5,7 @@ from fastapi import APIRouter
 
 from module.logger import logger
 from module.server.main_manager import MainManager
+from module.server.updater import Updater
 
 home_app = APIRouter(
     prefix="/home",
@@ -43,3 +44,19 @@ async def notify_test(setting: str, title: str, content: str):
 async def kill_server():
     MainManager.signal_kill_server = True
     return 'success'
+
+
+@home_app.get('/update_info')
+async def update_info():
+    try:
+        updater = Updater()
+        result = {'is_update': updater.check_update(),
+                  'branch': updater.current_branch(),
+                  'current_commit': updater.current_commit(),
+                  'latest_commit': updater.latest_commit(),
+                  'commit': updater.get_commit(n=15),
+                  }
+        return result
+    except Exception as e:
+        logger.error(e)
+        return None
