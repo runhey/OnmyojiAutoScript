@@ -27,10 +27,6 @@ class ScriptTask(SecretScriptTask, GeneralInvite, WantedQuestsAssets):
         self.pre_work()
         self.screenshot()
         number_challenge = self.O_WQ_NUMBER.ocr(self.device.image)
-        O_TEXT_COPY_1 = copy.deepcopy(self.O_WQ_TEXT_1)
-        O_TEXT_COPY_2 = copy.deepcopy(self.O_WQ_TEXT_2)
-        O_TEXT_COPY_1.keyword = '封印'
-        O_TEXT_COPY_2.keyword = '封印'
         ocr_error_count = 0
         while 1:
             self.screenshot()
@@ -40,7 +36,7 @@ class ScriptTask(SecretScriptTask, GeneralInvite, WantedQuestsAssets):
             if ocr_error_count > 10:
                 logger.warning('OCR failed too many times, exit')
                 break
-            if self.ocr_appear(self.O_WQ_TEXT_1, interval=0.7) or self.ocr_appear(O_TEXT_COPY_1, interval=0.7):
+            if self.ocr_appear(self.O_WQ_TEXT_1, interval=0.7):
                 cu, re, total = self.O_WQ_NUM_1.ocr(self.device.image)
                 if cu == re == total == 0:
                     logger.warning('OCR failed and skip this round')
@@ -51,7 +47,7 @@ class ScriptTask(SecretScriptTask, GeneralInvite, WantedQuestsAssets):
                 if cu < total and re != 0:
                     self.execute_mission(self.O_WQ_TEXT_1, total, number_challenge)
                 continue
-            if self.ocr_appear(self.O_WQ_TEXT_2, interval=0.7) or self.ocr_appear(O_TEXT_COPY_1, interval=0.7):
+            if self.ocr_appear(self.O_WQ_TEXT_2, interval=0.7):
                 cu, re, total = self.O_WQ_NUM_2.ocr(self.device.image)
                 if cu == re == total == 0:
                     logger.warning('OCR failed and skip this round')
