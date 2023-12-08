@@ -123,8 +123,12 @@ class ScriptTask(GameUi, GeneralBattle, GeneralRoom, GeneralInvite, NianAssets):
         if not isinstance(result, str):
             logger.error(f'OCR error {result}')
             return False
-        result = re.search(r'(\d+)时(\d+)分后可', result)
-        time_delta = timedelta(hours=int(result.group(1)), minutes=int(result.group(2)))
+        try:
+            result = re.search(r'(\d+)时(\d+)分后可', result)
+            time_delta = timedelta(hours=int(result.group(1)), minutes=int(result.group(2)))
+        except Exception as e:
+            logger.error(f'{e} {result}')
+            time_delta = timedelta(hours=4)
         return time_delta
 
     @cached_property
