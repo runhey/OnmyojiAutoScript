@@ -1,0 +1,20 @@
+[
+  {
+    "itemName": "feed_heap",
+    "imageName": "feed_feed_heap.png",
+    "roiFront": "20,543,42,59",
+    "roiBack": "20,543,42,59",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "堆叠"
+  },
+  {
+    "itemName": "feed_submit",
+    "imageName": "feed_feed_submit.png",
+    "roiFront": "703,340,114,54",
+    "roiBack": "703,340,114,54",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "提交"
+  }
+]

@@ -28,8 +28,9 @@ class MC(str, Enum):
     GR3 = '御灵三'
     SO1 = '御魂一'
     SO2 = '御魂二'
-    FRIEND = '好友'
+    FRIEND = '结伴同行'
     UNKNOWN = '未知'
+    FEED = '远远不够'  # 喂N卡
 
 class ScriptTask(GameUi, CollectiveMissionsAssets):
     missions: list = []  # 用于记录三个的任务的种类
@@ -65,6 +66,9 @@ class ScriptTask(GameUi, CollectiveMissionsAssets):
         if mission == MC.BL:
             # 契灵单独处理
             self._bondling_fairyland(index)
+        elif mission == MC.FEED:
+            # 单独喂一个 N 卡
+            self._feed(index)
         elif mission == MC.AW1 or mission == MC.AW2 or mission == MC.AW3 \
                 or mission == MC.GR1 or mission == MC.GR2 or mission == MC.GR3:
             # 其他就捐材料
@@ -103,9 +107,9 @@ class ScriptTask(GameUi, CollectiveMissionsAssets):
             return MC.FRIEND
         elif result_1 == '契灵探查':
             return MC.BL
-        if result_1 != '远远不够':
+        if result_1 == '远远不够':
             logger.warning(f'Ocr task name: {result_1}')
-            return MC.UNKNOWN
+            return MC.FEED
         if result_2 == '觉醒一':
             return MC.AW1
         elif result_2 == '觉醒二':
@@ -129,29 +133,22 @@ class ScriptTask(GameUi, CollectiveMissionsAssets):
         自动寻找最好的任务并返回，期间记录三个任务的类型
         :return: 任务类型, 0/1/2
         """
-        best_index = 0
-        best_class = self.detect_one(self.O_CM_1, self.O_CM_2)
-        self.missions.append(best_class)
-        # 判断第二个,是否比第一个好
-        last_index = self.rule.index(best_class)
-        now_class = self.detect_one(self.O_CM_3, self.O_CM_4)
-        self.missions.append(now_class)
-        now_index = self.rule.index(now_class)
-        if now_index < last_index:
-            best_index = 1
-            best_class = now_class
-        # 判断第三个,是否比前两个好
-        last_index = self.rule.index(best_class)
-        now_class = self.detect_one(self.O_CM_5, self.O_CM_6)
-        self.missions.append(now_class)
-        if now_class == MC.FRIEND:
-            logger.info('The third mission is friend')
-            return best_class, best_index
-        now_index = self.rule.index(now_class)
-        if now_index < last_index:
-            best_index = 2
-            best_class = now_class
+        first_class = self.detect_one(self.O_CM_1, self.O_CM_2)
+        second_class = self.detect_one(self.O_CM_3, self.O_CM_4)
+        third_class = self.detect_one(self.O_CM_5, self.O_CM_6)
+        first_order = self.rule.index(first_class) if first_class in self.rule else 100
+        second_order = self.rule.index(second_class) if second_class in self.rule else 101
+        third_order = self.rule.index(third_class) if third_class in self.rule else 102
+        logger.info(f'first_class: {first_class}, second_class: {second_class}, third_class: {third_class}')
+        logger.info(f'first_order: {first_order}, second_order: {second_order}, third_order: {third_order}')
+        if first_order > second_order and first_order > third_order:
+            best_index, best_class = 0, first_class
+        elif second_order > first_order and second_order > third_order:
+            best_index, best_class = 1, second_class
+        elif third_order > first_order and third_order > second_order:
+            best_index, best_class = 2, third_class
         return best_class, best_index
+
 
     def _bondling_fairyland(self, index: int):
         """
@@ -170,7 +167,7 @@ class ScriptTask(GameUi, CollectiveMissionsAssets):
                 logger.error('The scheduler of bondling_fairyland is not enable')
                 logger.error('Please enable it in config file')
                 raise RequestHumanTakeover
-            self.set_next_run(task='CollectiveMissions', success=True, finish=True, target=self.start_time+ timedelta(hours=2))
+            self.set_next_run(task='CollectiveMissions', success=True, finish=True, target=self.start_time + timedelta(hours=2))
             return True
         # 领取奖励
         logger.info('Start to collect bondling rewards')
@@ -325,7 +322,38 @@ class ScriptTask(GameUi, CollectiveMissionsAssets):
         logger.info('Finish to collect soul rewards')
         self.wait_until_appear(self.I_CM_RECORDS)
 
+    def _feed(self, index: int):
+        logger.info('Start to feed soul')
+        match_click = {
+            0: self.C_CM_1,
+            1: self.C_CM_2,
+            2: self.C_CM_3,
+        }
+        self.ui_click(match_click[index], self.I_FEED_HEAP)
+        logger.info('Submit to feed soul')
+        click_list = random.sample([self.L_FEED_CLICK_1, self.L_FEED_CLICK_2, self.L_FEED_CLICK_3, self.L_FEED_CLICK_4], 2)
+        while 1:
+            self.screenshot()
+            if self.appear(self.I_FEED_SUBMIT):
+                break
+            for click in click_list:
+                self.click(click)
+        logger.info('Finish to feed soul')
+        # 还有一点很重要的，捐赠会有双倍的，需要领两次
+        reward_number = 0
+        while 1:
+            self.screenshot()
 
+            if reward_number >= 2:
+                break
+            if self.ui_reward_appear_click(False):
+                reward_number += 1
+                continue
+            if self.appear_then_click(self.I_FEED_SUBMIT, interval=1):
+                continue
+        self.ui_reward_appear_click(True)
+        logger.info('Donate finished')
+        return True
 
 
 
