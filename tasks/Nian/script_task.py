@@ -90,11 +90,12 @@ class ScriptTask(GameUi, GeneralBattle, GeneralRoom, GeneralInvite, NianAssets):
                 else:
                     break
             # 如果时间到了
-            if click_timer.reached():
+            if click_timer and click_timer.reached():
                 logger.warning('It has waited for 240s , but the battle has not started.')
                 logger.warning('It will be waited for 240s and try again.')
                 self.screenshot()
                 self.click(self.C_CLIC_SAFE)
+                del click_timer
                 continue
 
             if check_timer.reached():
