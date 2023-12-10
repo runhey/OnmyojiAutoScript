@@ -80,20 +80,28 @@ class Buy(BaseTask, BuyAssets):
         :param number: 不指定就是拉满
         :return:
         """
+        try_click_count = 0
         while 1:
             self.screenshot()
 
             if self.appear(self.I_BUY_PLUS):
                 break
+            if try_click_count >= 5:
+                logger.warning(f'Buy_more failed, try_click_count: {try_click_count}')
+                logger.warning('Close the purchase')
+                return
 
             if isinstance(start_click, RuleImage):
                 if self.appear_then_click(start_click, interval=1):
+                    try_click_count += 1
                     continue
             elif isinstance(start_click, RuleOcr):
                 if self.ocr_appear_click(start_click, interval=1):
+                    try_click_count += 1
                     continue
             elif isinstance(start_click, RuleClick):
                 if self.click(start_click, interval=1):
+                    try_click_count += 1
                     continue
         # 设置购买的数量
         if number is None:
