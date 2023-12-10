@@ -95,7 +95,8 @@ class ScriptTask(GameUi, GeneralBattle, GeneralRoom, GeneralInvite, NianAssets):
                 logger.warning('It will be waited for 240s and try again.')
                 self.screenshot()
                 self.click(self.C_CLIC_SAFE)
-                del click_timer
+                click_timer = None
+                self.device.stuck_record_clear()
                 continue
 
             if check_timer.reached():
