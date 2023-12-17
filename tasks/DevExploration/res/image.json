@@ -1,0 +1,83 @@
+[
+  {
+    "itemName": "chapter",
+    "imageName": "res_chapter.png",
+    "roiFront": "1086,559,131,76",
+    "roiBack": "1086,559,131,76",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "第二十八章节"
+  },
+  {
+    "itemName": "smile",
+    "imageName": "res_smile.png",
+    "roiFront": "25,539,55,53",
+    "roiBack": "25,539,55,53",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "微笑标识"
+  },
+  {
+    "itemName": "add_image",
+    "imageName": "res_add_image.png",
+    "roiFront": "1040,203,100,100",
+    "roiBack": "1040,203,100,100",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "添加图案"
+  },
+  {
+    "itemName": "start",
+    "imageName": "res_start.png",
+    "roiFront": "1180,610,74,68",
+    "roiBack": "1180,610,74,68",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "挑战按钮"
+  },
+  {
+    "itemName": "sure",
+    "imageName": "res_sure.png",
+    "roiFront": "725,413,69,41",
+    "roiBack": "725,413,69,41",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "确认"
+  },
+  {
+    "itemName": "accept",
+    "imageName": "res_accept.png",
+    "roiFront": "111,229,63,55",
+    "roiBack": "111,229,63,55",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "接受邀请"
+  },
+  {
+    "itemName": "exit_tansuo",
+    "imageName": "res_exit_tansuo.png",
+    "roiFront": "17,35,70,56",
+    "roiBack": "17,35,70,56",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "退出探索"
+  },
+  {
+    "itemName": "exit_sign",
+    "imageName": "res_exit_sign.png",
+    "roiFront": "10,123,87,162",
+    "roiBack": "10,123,87,162",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "退出标识"
+  },
+  {
+    "itemName": "exit_sign_2",
+    "imageName": "res_exit_sign_2.png",
+    "roiFront": "11,148,94,321",
+    "roiBack": "11,148,94,321",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "exit_sign_2"
+  }
+]

@@ -8,6 +8,7 @@ from pydantic import BaseModel, ValidationError, validator, Field
 
 from module.config.utils import *
 
+
 class ConfigMenu:
     # 手动的代码配置菜单
     def __init__(self) -> None:
@@ -18,13 +19,14 @@ class ConfigMenu:
         # 脚本设置
         self.menu['Script'] = ['Script', 'Restart', 'GlobalGame']
         # 刷御魂
-        self.menu["Soul Zones"] = ['Orochi', 'Sougenbi', 'FallenSun', 'EternitySea']
+        self.menu["Soul Zones"] = ['Orochi', 'Sougenbi', 'FallenSun', 'EternitySea', 'MyOrochi']
         # 日常的任务
         self.menu["Daily Task"] = ['DailyTrifles', 'AreaBoss', 'GoldYoukai', 'ExperienceYoukai', 'Nian',
                                    'TalismanPass', 'DemonEncounter', 'Pets', 'SoulsTidy', 'Delegation', 'WantedQuests',
                                    'Tako']
         # 很肝的任务
-        self.menu["Liver Emperor Exclusive"] = ['BondlingFairyland', 'EvoZone', 'GoryouRealm', 'Exploration']
+        self.menu["Liver Emperor Exclusive"] = ['BondlingFairyland', 'EvoZone', 'GoryouRealm', 'Exploration',
+                                                'DevExploration']
         # 阴阳寮
         self.menu["Guild"] = ['KekkaiUtilize', 'KekkaiActivation', 'RealmRaid', 'RyouToppa', 'CollectiveMissions',
                               'Hunt', 'DevRyouToppa']
@@ -42,6 +44,7 @@ class ConfigMenu:
         :return:
         """
         return json.dumps(self.menu, ensure_ascii=False, sort_keys=False, default=str)
+
 
 if __name__ == "__main__":
     try:

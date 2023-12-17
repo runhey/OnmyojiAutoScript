@@ -26,7 +26,6 @@ from module.atom.list import RuleList
 IMPORT_EXP = IMPORT_EXP.strip().split('MODULE_FOLDER') + ['']
 
 
-
 def name_transform(name: str) -> str:
     """
     转换名称, 把小写的转化为大写的, 带有数字的不变，有下划线继续有下划线,
@@ -39,6 +38,7 @@ def name_transform(name: str) -> str:
     if name.islower():
         return name.upper()
     return name.upper()
+
 
 class ImageExtractor:
 
@@ -59,7 +59,6 @@ class ImageExtractor:
     def result(self) -> str:
         return self._result
 
-
     def extract_item(self, item) -> str:
         """
         解析每一项，返回字符串
@@ -74,6 +73,7 @@ class ImageExtractor:
                     f'method="{item["method"]}", ' \
                     f'file="./{self.image_path}/{item["imageName"]}")\n'
         return description + name
+
 
 class ClickExtractor:
 
@@ -102,6 +102,7 @@ class ClickExtractor:
                     f'roi_back=({item["roiBack"]}), ' \
                     f'name="{item["itemName"]}")\n'
         return description + name
+
 
 class LongClickExtractor:
 
@@ -132,6 +133,7 @@ class LongClickExtractor:
                     f'name="{item["itemName"]}")\n'
         return description + name
 
+
 class SwipeExtractor:
 
     def __init__(self, file: str, data: list) -> None:
@@ -160,6 +162,7 @@ class SwipeExtractor:
                     f'mode="{item["mode"]}", ' \
                     f'name="{item["itemName"]}")\n'
         return description + name
+
 
 class OcrExtractor:
     def __init__(self, file: str, data: list) -> None:
@@ -240,9 +243,6 @@ class ListExtractor:
         return description + name
 
 
-
-
-
 class AssetsExtractor:
 
     def __init__(self, task_path: str) -> None:
@@ -261,7 +261,6 @@ class AssetsExtractor:
         for import_exp in IMPORT_EXP:
             self._result += import_exp
         self._result += self.class_name
-
 
     def all_json_file(self) -> list:
         """
@@ -353,7 +352,6 @@ class AssetsExtractor:
             return True
         return False
 
-
     def write_file(self) -> None:
         """
         将自身的_resule写入文件
@@ -418,6 +416,5 @@ class AllAssetsExtractor:
         me.extract()
 
 
-
 if __name__ == "__main__":
-    AllAssetsExtractor()
+    AllAssetsExtractor.work(r"D:\Tools\OnmyojiAutoScript\tasks\MyOrochi")

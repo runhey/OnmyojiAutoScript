@@ -60,7 +60,7 @@ area_map = (
 )
 
 
-def random_delay(min_value: float = 2.0, max_value: float = 10.0, decimal: int = 1):
+def random_delay(min_value: float = 1.0, max_value: float = 2.0, decimal: int = 1):
     """
     生成一个指定范围内的随机小数
     """

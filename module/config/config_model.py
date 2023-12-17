@@ -14,6 +14,8 @@ from tasks.Component.config_base import ConfigBase
 from tasks.Exploration.config import Exploration
 from tasks.RyouToppa.config import RyouToppa
 from tasks.DevRyouToppa.config import DevRyouToppa
+from tasks.DevExploration.config import DevExploration
+from tasks.MyOrochi.config import MyOrochi
 from tasks.Script.config import Script
 from tasks.Restart.config import Restart
 from tasks.GlobalGame.config import GlobalGame
@@ -75,6 +77,7 @@ class ConfigModel(ConfigBase):
     realm_raid: RealmRaid = Field(default_factory=RealmRaid)
     ryou_toppa: RyouToppa = Field(default_factory=RyouToppa)
     dev_ryou_toppa: DevRyouToppa = Field(default_factory=DevRyouToppa)
+    my_orochi: MyOrochi = Field(default_factory=MyOrochi)
     kekkai_utilize: KekkaiUtilize = Field(default_factory=KekkaiUtilize)
     kekkai_activation: KekkaiActivation = Field(default_factory=KekkaiActivation)
     demon_encounter: DemonEncounter = Field(default_factory=DemonEncounter)
@@ -84,6 +87,7 @@ class ConfigModel(ConfigBase):
     souls_tidy: SoulsTidy = Field(default_factory=SoulsTidy)
     delegation: Delegation = Field(default_factory=Delegation)
     exploration: Exploration = Field(default_factory=Exploration)
+    dev_exploration: DevExploration = Field(default_factory=DevExploration)
     wanted_quests: WantedQuests = Field(default_factory=WantedQuests)
     tako: Tako = Field(default_factory=Tako)
 
