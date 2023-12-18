@@ -63,7 +63,7 @@ class WeeklyTriflesAssets:
 	# 微信分享 
 	I_WT_COLLECT_WECHAT = RuleImage(roi_front=(640,617,70,63), roi_back=(640,617,70,63), threshold=0.8, method="Template matching", file="./tasks/WeeklyTrifles/collect/collect_wt_collect_wechat.png")
 	# 二维码 
-	I_WT_QR_CODE = RuleImage(roi_front=(473,160,336,96), roi_back=(473,160,336,96), threshold=0.8, method="Template matching", file="./tasks/WeeklyTrifles/collect/collect_wt_qr_code.png")
+	I_WT_QR_CODE = RuleImage(roi_front=(473,161,336,96), roi_back=(404,112,483,168), threshold=0.8, method="Template matching", file="./tasks/WeeklyTrifles/collect/collect_wt_qr_code.png")
 
 
 	# Image Rule Assets

@@ -56,8 +56,8 @@
   {
     "itemName": "wt_qr_code",
     "imageName": "collect_wt_qr_code.png",
-    "roiFront": "473,160,336,96",
-    "roiBack": "473,160,336,96",
+    "roiFront": "473,161,336,96",
+    "roiBack": "404,112,483,168",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "二维码"
