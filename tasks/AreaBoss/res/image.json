@@ -65,8 +65,8 @@
   {
     "itemName": "fire",
     "imageName": "res_fire.png",
-    "roiFront": "1108,492,100,100",
-    "roiBack": "1108,492,100,100",
+    "roiFront": "1109,490,100,73",
+    "roiBack": "1075,463,150,158",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "点击挑战"
