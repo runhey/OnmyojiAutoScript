@@ -20,8 +20,8 @@
   {
     "itemName": "wt_share_ab",
     "imageName": "area_boss_wt_share_ab.png",
-    "roiFront": "1131,429,45,39",
-    "roiBack": "1131,429,45,39",
+    "roiFront": "1183,308,45,39",
+    "roiBack": "1136,292,105,79",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "地鬼分享"

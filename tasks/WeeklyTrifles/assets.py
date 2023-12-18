@@ -21,7 +21,7 @@ class WeeklyTriflesAssets:
 	# 今天一个都没有打 
 	I_WT_NO_DAY = RuleImage(roi_front=(167,360,72,69), roi_back=(167,360,72,69), threshold=0.8, method="Template matching", file="./tasks/WeeklyTrifles/area_boss/area_boss_wt_no_day.png")
 	# 地鬼分享 
-	I_WT_SHARE_AB = RuleImage(roi_front=(1131,429,45,39), roi_back=(1131,429,45,39), threshold=0.8, method="Template matching", file="./tasks/WeeklyTrifles/area_boss/area_boss_wt_share_ab.png")
+	I_WT_SHARE_AB = RuleImage(roi_front=(1183,308,45,39), roi_back=(1136,292,105,79), threshold=0.8, method="Template matching", file="./tasks/WeeklyTrifles/area_boss/area_boss_wt_share_ab.png")
 	# 分享勾玉 
 	I_WT_AB_JADE = RuleImage(roi_front=(922,554,44,47), roi_back=(922,554,44,47), threshold=0.8, method="Template matching", file="./tasks/WeeklyTrifles/area_boss/area_boss_wt_ab_jade.png")
 	# 微信分享 

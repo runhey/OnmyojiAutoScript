@@ -36,7 +36,13 @@ class ScriptTask(GameUi, WeeklyTriflesAssets):
         :return:
         """
         # 点击分享
-        self.ui_click(wechat, self.I_WT_QR_CODE)
+        # self.ui_click(wechat, self.I_WT_QR_CODE)
+        while 1:
+            self.screenshot()
+            if self.appear(self.I_WT_QR_CODE):
+                break
+            if self.appear_then_click(wechat, interval=2.5):
+                continue
         logger.info('Click share')
         get_timer = Timer(7)
         get_timer.start()
@@ -267,7 +273,7 @@ if __name__ == '__main__':
     t = ScriptTask(c, d)
     t.screenshot()
 
-    t._share_collect()
+    t._share_area_boss()
     # t.click_share(t.I_WT_SE_WECHAT)
 
 
