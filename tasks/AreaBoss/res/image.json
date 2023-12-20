@@ -65,7 +65,7 @@
   {
     "itemName": "fire",
     "imageName": "res_fire.png",
-    "roiFront": "1108,492,100,100",
+    "roiFront": "1112,507,89,29",
     "roiBack": "1108,492,100,100",
     "method": "Template matching",
     "threshold": 0.8,
