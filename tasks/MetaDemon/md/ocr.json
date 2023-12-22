@@ -1,0 +1,20 @@
+[
+  {
+    "itemName": "md_exhaustion",
+    "roiFront": "1096,18,89,31",
+    "roiBack": "1096,18,89,31",
+    "mode": "DigitCounter",
+    "method": "Default",
+    "keyword": "",
+    "description": "Ocr-description"
+  },
+  {
+    "itemName": "md_ticket",
+    "roiFront": "923,18,82,30",
+    "roiBack": "923,18,82,30",
+    "mode": "DigitCounter",
+    "method": "Default",
+    "keyword": "",
+    "description": "Ocr-description"
+  }
+]
