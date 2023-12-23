@@ -178,17 +178,9 @@ class ScriptTask(GameUi, ReplaceShikigami, KekkaiUtilizeAssets):
             time_exp.start()
             while 1:
                 self.screenshot()
-
-                if self.appear_then_click(self.I_BOX_EXP, threshold=0.6, interval=1):
-                    continue
-                if self.appear_then_click(self.I_EXP_EXTRACT, interval=1):
-                    continue
-
                 # 如果出现结界皮肤， 表示收取好了
                 if self.appear(self.I_REALM_SHIN) and not self.appear(self.I_BOX_EXP, threshold=0.6):
                     break
-
-
                 # 如果出现收取确认，表明进入到了有满级的
                 if self.appear(self.I_UI_CONFIRM):
                     self.screenshot()
@@ -215,6 +207,10 @@ class ScriptTask(GameUi, ReplaceShikigami, KekkaiUtilizeAssets):
                     if cur == totol and cur + res == totol:
                         logger.info('Exp box reach max do not collect')
                         break
+                if self.appear_then_click(self.I_BOX_EXP, threshold=0.6, interval=1):
+                    continue
+                if self.appear_then_click(self.I_EXP_EXTRACT, interval=1):
+                    continue
 
                 if time_exp.reached():
                     logger.warning('Extract exp box timeout')
