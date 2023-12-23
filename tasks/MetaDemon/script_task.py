@@ -2,7 +2,8 @@
 # @author runhey
 # github https://github.com/runhey
 from cached_property import cached_property
-from datetime import datetime, time
+from datetime import datetime
+from time import sleep
 
 from tasks.Component.config_base import ConfigBase, TimeDelta, DateTime, Time
 from tasks.Component.GeneralBattle.general_battle import GeneralBattle
@@ -61,8 +62,30 @@ class ScriptTask(GeneralBattle, SwitchSoul, GameUi, MetaDemonAssets):
             if self.appear_then_click(self.I_MD_FIND, interval=1.5):
                 continue
             #
-            if self.appear(self.I_MD_FIRE):
-                self.click_fire()
+            if self.appear(self.I_MD_FIRE) and self.appear(self.I_MD_FIRE_COMMON):
+                if self.ocr_appear(self.O_MD_COUNT_INFO):
+                    # 结算中
+                    logger.info('Waiting for settlement')
+                    sleep(1)
+                    continue
+                # 是否为极
+                if self.appear(self.I_MD_EXTREME):
+                    logger.info('Find extreme Demon')
+                    if config.meta_demon_config.extreme_notify:
+                        self.config.notifier.push(title='超鬼王', content=f"发现极鬼王")
+                        self.set_next_run('MetaDemon', finish=True,
+                                          target=config.scheduler.interval + datetime.now().replace(second=0, microsecond=0))
+                        break
+                    else:
+                        pass
+                while 1:
+                    self.screenshot()
+                    if self.appear(self.I_MD_FIRE) and self.appear(self.I_MD_FIRE_COMMON):
+                        pass
+                    else:
+                        break
+                    if self.appear_then_click(self.I_MD_FIRE, interval=2):
+                        continue
                 self.run_general_battle(config=self.battle_config)
         # exit
         while 1:
@@ -113,7 +136,7 @@ class ScriptTask(GeneralBattle, SwitchSoul, GameUi, MetaDemonAssets):
                 self.screenshot()
                 if not self.appear(self.I_MD_FIRE):
                     break
-            if self.appear_then_click(self.I_MD_FIRE, interval=1.5):
+            if self.appear_then_click(self.I_MD_FIRE, interval=2):
                 continue
 
     def buy_tea(self):
@@ -133,9 +156,9 @@ class ScriptTask(GeneralBattle, SwitchSoul, GameUi, MetaDemonAssets):
                 self.ui_click_until_disappear(self.I_WIN)
                 return True
 
-            if self.appear(self.I_FALSE):
+            if self.appear(self.I_MD_BATTLE_FAILURE):
                 logger.warning('False battle')
-                self.ui_click_until_disappear(self.I_FALSE)
+                self.ui_click_until_disappear(self.I_MD_BATTLE_FAILURE)
                 return False
 
 if __name__ == '__main__':

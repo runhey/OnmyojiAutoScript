@@ -10,7 +10,8 @@ from enum import Enum
 class Scheduler(ConfigBase):
     enable: bool = Field(default=False, description='enable_help')
     next_run: DateTime = Field(default="2023-01-01 00:00:00", description='next_run_help')
-    interval: TimeDelta = Field(default=TimeDelta(days=1), description='interval_help')
+    priority: int = Field(default=5, description='priority_help')
+    interval: TimeDelta = Field(default=TimeDelta(hours=3), description='interval_help')
 
 class MetaDemonConfig(ConfigBase):
     auto_tea: bool = Field(default=False, description='auto_tea_help')

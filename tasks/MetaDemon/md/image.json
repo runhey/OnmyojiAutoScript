@@ -79,5 +79,14 @@
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"
+  },
+  {
+    "itemName": "md_battle_failure",
+    "imageName": "md_md_battle_failure.png",
+    "roiFront": "412,105,100,100",
+    "roiBack": "412,105,100,100",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "失败"
   }
 ]

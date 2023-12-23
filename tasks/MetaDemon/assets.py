@@ -29,6 +29,8 @@ class MetaDemonAssets:
 	I_MD_FIRE_COMMON = RuleImage(roi_front=(1065,499,100,36), roi_back=(1065,499,100,36), threshold=0.8, method="Template matching", file="./tasks/MetaDemon/md/md_md_fire_common.png")
 	# description 
 	I_MD_FIRE_POWER = RuleImage(roi_front=(1159,498,100,37), roi_back=(1159,498,100,37), threshold=0.8, method="Template matching", file="./tasks/MetaDemon/md/md_md_fire_power.png")
+	# 失败 
+	I_MD_BATTLE_FAILURE = RuleImage(roi_front=(412,105,100,100), roi_back=(412,105,100,100), threshold=0.8, method="Template matching", file="./tasks/MetaDemon/md/md_md_battle_failure.png")
 
 
 	# Ocr Rule Assets
@@ -36,5 +38,7 @@ class MetaDemonAssets:
 	O_MD_EXHAUSTION = RuleOcr(roi=(1096,18,89,31), area=(1096,18,89,31), mode="DigitCounter", method="Default", keyword="", name="md_exhaustion")
 	# Ocr-description 
 	O_MD_TICKET = RuleOcr(roi=(923,18,82,30), area=(923,18,82,30), mode="DigitCounter", method="Default", keyword="", name="md_ticket")
+	# Ocr-description 
+	O_MD_COUNT_INFO = RuleOcr(roi=(94,314,161,37), area=(94,314,161,37), mode="Single", method="Default", keyword="击败奖励结算中", name="md_count_info")
 
 

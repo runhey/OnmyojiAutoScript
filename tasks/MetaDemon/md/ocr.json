@@ -16,5 +16,14 @@
     "method": "Default",
     "keyword": "",
     "description": "Ocr-description"
+  },
+  {
+    "itemName": "md_count_info",
+    "roiFront": "94,314,161,37",
+    "roiBack": "94,314,161,37",
+    "mode": "Single",
+    "method": "Default",
+    "keyword": "击败奖励结算中",
+    "description": "Ocr-description"
   }
 ]
