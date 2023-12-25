@@ -65,6 +65,7 @@ class BaseTask(GlobalGameAssets):
         if self.friend_timer and self.friend_timer.reached():
             self.friend_timer.reset()
             invite = self.appear(self.I_G_ACCEPT)
+            detect_record = self.device.detect_record
             # 如果是全部接受
             if invite and self.config.global_game.emergency.friend_invitation == FriendInvitation.ACCEPT:
                 # 如果是接受邀请
@@ -93,6 +94,8 @@ class BaseTask(GlobalGameAssets):
                         continue
                     if not self.appear(self.I_G_ACCEPT):
                         break
+            # 有的时候长战斗 点击后会取消战斗状态
+            self.device.detect_record = detect_record
             # 判断网络异常
             if self.appear(self.I_NETWORK_ABNORMAL):
                 logger.warning(f"Network abnormal")
