@@ -125,7 +125,6 @@ def func(config: str, state_queue: multiprocessing.Queue, log_pipe_in) -> None:
             logger.error(f'Error: {e}')
             raise
     start_log()
-    logger.hr(f'Script [{config}] process start')
     import time
     try:
         # while 1:

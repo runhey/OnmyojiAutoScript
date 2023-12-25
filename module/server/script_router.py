@@ -138,7 +138,7 @@ async def websocket_endpoint(websocket: WebSocket, script_name: str):
     await script_process.connect(websocket)
     await script_process.broadcast_state({"state": script_process.state})
     config = mm.config_cache(script_name)
-    config.update_scheduler()
+    config.get_next()
     await script_process.broadcast_state({"schedule": config.get_schedule_data()})
 
     try:
@@ -149,7 +149,7 @@ async def websocket_endpoint(websocket: WebSocket, script_name: str):
                 await script_process.broadcast_state({"state": script_process.state})
             elif data == 'get_schedule':
                 config = mm.config_cache(script_name)
-                config.update_scheduler()
+                config.get_next()
                 await script_process.broadcast_state({"schedule": config.get_schedule_data()})
             elif data == 'start':
                 await script_process.start()

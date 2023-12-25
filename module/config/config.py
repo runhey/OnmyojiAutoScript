@@ -209,6 +209,7 @@ class Config(ConfigState, ConfigManual, ConfigWatcher, ConfigMenu):
         if self.pending_task:
             logger.info(f"Pending tasks: {[f.command for f in self.pending_task]}")
             task = self.pending_task[0]
+            self.task = task
             logger.attr("Task", task)
             return task
 
