@@ -59,7 +59,7 @@
     "roiFront": "473,161,336,96",
     "roiBack": "404,112,483,168",
     "method": "Template matching",
-    "threshold": 0.8,
+    "threshold": 0.65,
     "description": "二维码"
   }
 ]
