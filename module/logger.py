@@ -208,7 +208,7 @@ def set_file_logger(name=pyw_name):
         file=file,
         no_color=True,
         highlight=False,
-        width=100,
+        width=80,
     )
 
     hdlr = RichFileHandler(
@@ -238,7 +238,7 @@ def set_func_logger(func):
         force_interactive=False,
         no_color=True,
         highlight=False,
-        width=100,
+        width=80,
     )
     hdlr = FlutterHandler(
         console=stream_console,
@@ -295,7 +295,7 @@ class GuiRule(Rule):
         return super().__rich_console__(console, options)
 
     def __str__(self):
-        total_width = 100
+        total_width = 80
         cell_len = len(self.title) + 2
         aside_len = (total_width - cell_len) // 2
         left = self.characters * aside_len
