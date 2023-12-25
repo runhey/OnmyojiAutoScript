@@ -158,6 +158,9 @@ class Config(ConfigState, ConfigManual, ConfigWatcher, ConfigMenu):
         except:
             logger.exception(f'have no arg {task}.{group}.{argument}')
 
+    def reload(self):
+        self.model = ConfigModel(config_name=self.config_name)
+
     def save(self) -> None:
         """
         保存配置文件
@@ -349,11 +352,13 @@ class Config(ConfigState, ConfigManual, ConfigWatcher, ConfigMenu):
         self.lock_config.acquire()
         try:
             scheduler.next_run = next_run
+            self.reload()
+            self.save()
         finally:
             self.lock_config.release()
         # 设置
         logger.attr(f'{task}.scheduler.next_run', next_run)
-        self.save()
+
 
     @cached_property
     def notifier(self):
