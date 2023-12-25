@@ -24,9 +24,7 @@ async def script_test():
 
 @script_app.get('/script_menu')
 async def script_menu():
-    if mm.config_cache is None:
-        mm.config_cache = Config('template')
-    return mm.config_cache.gui_menu_list
+    return mm.config_cache('template').gui_menu_list
 # ----------------------------------   配置文件管理   ----------------------------------
 @script_app.get('/config_list')
 async def config_list():
@@ -64,14 +62,10 @@ async def script_stop(script_name: str):
 
 @script_app.get('/{script_name}/{task}/args')
 async def script_task(script_name: str, task: str):
-    if not mm.ensure_config_cache(script_name):
-        raise Exception(f'[{script_name}] script file does not exist')
-    return mm.config_cache.model.script_task(task)
+    return mm.config_cache(script_name).model.script_task(task)
 
 @script_app.put('/{script_name}/{task}/{group}/{argument}/value')
-async def script_task(script_name: str, task: str, group: str, argument: str, types: str ,value):
-    if not mm.ensure_config_cache(script_name):
-        raise HTTPException(status_code=404, detail=f'[{script_name}] script file does not exist')
+async def script_task(script_name: str, task: str, group: str, argument: str, types: str, value):
     try:
         match types:
             case 'integer':
@@ -101,8 +95,7 @@ async def script_task(script_name: str, task: str, group: str, argument: str, ty
     except Exception as e:
         # 类型不正确
         raise HTTPException(status_code=400, detail=f'Argument type error: {e}')
-    mm.config_cache.model.config_name = script_name
-    return mm.config_cache.model.script_set_arg(task, group, argument, value)
+    return mm.config_cache(script_name).model.script_set_arg(task, group, argument, value)
 
 # --------------------------------------  SSE  --------------------------------------
 @script_app.get('/{script_name}/state')
@@ -144,9 +137,9 @@ async def websocket_endpoint(websocket: WebSocket, script_name: str):
     script_process = mm.script_process[script_name]
     await script_process.connect(websocket)
     await script_process.broadcast_state({"state": script_process.state})
-    mm.ensure_config_cache(script_name, reload=True)
-    mm.config_cache.update_scheduler()
-    await script_process.broadcast_state({"schedule": mm.config_cache.get_schedule_data()})
+    config = mm.config_cache(script_name)
+    config.update_scheduler()
+    await script_process.broadcast_state({"schedule": config.get_schedule_data()})
 
     try:
         while True:
@@ -155,9 +148,9 @@ async def websocket_endpoint(websocket: WebSocket, script_name: str):
             if data == 'get_state':
                 await script_process.broadcast_state({"state": script_process.state})
             elif data == 'get_schedule':
-                mm.ensure_config_cache(script_name, reload=True)
-                mm.config_cache.update_scheduler()
-                await script_process.broadcast_state({"schedule":mm.config_cache.get_schedule_data()})
+                config = mm.config_cache(script_name)
+                config.update_scheduler()
+                await script_process.broadcast_state({"schedule": config.get_schedule_data()})
             elif data == 'start':
                 await script_process.start()
             elif data == 'stop':
