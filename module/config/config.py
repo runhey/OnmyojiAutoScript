@@ -286,6 +286,7 @@ class Config(ConfigState, ConfigManual, ConfigWatcher, ConfigMenu):
         :param finish: 是完成任务后的时间为基准还是开始任务的时间为基准
         :return:
         """
+        self.reload()
         # 任务预处理
         if not task:
             task = self.task.command
@@ -352,7 +353,7 @@ class Config(ConfigState, ConfigManual, ConfigWatcher, ConfigMenu):
         self.lock_config.acquire()
         try:
             scheduler.next_run = next_run
-            self.reload()
+
             self.save()
         finally:
             self.lock_config.release()

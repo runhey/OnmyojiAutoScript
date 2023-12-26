@@ -24,7 +24,13 @@ class ScriptTask(SecretScriptTask, GeneralInvite, WantedQuestsAssets):
 
     def run(self):
         con = self.config
-        self.pre_work()
+        if not self.pre_work():
+            # 无法完成预处理 很有可能你已经完成了悬赏任务
+            logger.warning('Cannot pre-work')
+            logger.warning('You may have completed the reward task')
+            self.next_run()
+            raise TaskEnd('WantedQuests')
+
         self.screenshot()
         number_challenge = self.O_WQ_NUMBER.ocr(self.device.image)
         ocr_error_count = 0
@@ -100,6 +106,7 @@ class ScriptTask(SecretScriptTask, GeneralInvite, WantedQuestsAssets):
         """
         self.ui_get_current_page()
         self.ui_goto(page_main)
+        done_timer = Timer(5)
         while 1:
             self.screenshot()
             if self.appear(self.I_TARCE_DISENABLE):
@@ -110,11 +117,18 @@ class ScriptTask(SecretScriptTask, GeneralInvite, WantedQuestsAssets):
                 continue
             if self.appear_then_click(self.I_TRACE_ENABLE, interval=1):
                 continue
+            if self.appear(self.I_UI_BACK_RED):
+                if not done_timer.started():
+                    done_timer.start()
+            if done_timer.started() and done_timer.reached():
+                self.ui_click_until_disappear(self.I_UI_BACK_RED)
+                return False
         # 已追踪所有任务
         logger.info('All wanted quests are traced')
         self.invite_five()
         self.ui_click_until_disappear(self.I_UI_BACK_RED)
         self.ui_goto(page_exploration)
+        return True
 
     def execute_mission(self, ocr, num_want: int, num_challenge: int):
         """
