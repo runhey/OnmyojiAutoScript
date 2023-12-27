@@ -97,6 +97,7 @@ class ScriptTask(GameUi, GeneralBattle, GeneralRoom, GeneralInvite, NianAssets):
                 self.click(self.C_CLIC_SAFE)
                 click_timer = None
                 self.device.stuck_record_clear()
+                self.device.stuck_record_add('LOGIN_CHECK')
                 continue
 
             if check_timer.reached():

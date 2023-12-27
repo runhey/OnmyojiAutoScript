@@ -53,7 +53,7 @@ if __name__ == '__main__':
     config = Config('oas2')
     device = Device(config)
     task = ScriptTask(config, device)
-    task.app_start()
+    task.app_restart()
 
 
 
