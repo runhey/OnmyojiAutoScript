@@ -86,7 +86,7 @@ async def script_task(script_name: str, task: str, group: str, argument: str, ty
                 value = datetime.strptime(value, '%Y-%m-%d %H:%M:%S')
             case 'time_delta':
                 # strptime 是个好东西，但是不能解析00的天数
-                day = int(value[0:1])
+                day = int(value[1])
                 date_time = datetime.strptime(value[3:], '%H:%M:%S')
                 value = TimeDelta(days=day, hours=date_time.hour, minutes=date_time.minute, seconds=date_time.second)
             case 'time':
