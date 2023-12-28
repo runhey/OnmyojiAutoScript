@@ -101,7 +101,7 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, DevRyouToppaAssets):
                     self.flush_area_cache()
                     index = 0
 
-    def check_area(self, index: int):
+    def check_area(self, index: int) -> bool:
         """
         检查该区域是否攻略失败
         :return:
