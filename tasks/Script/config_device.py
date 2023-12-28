@@ -17,8 +17,8 @@ class ScreenshotMethod(str, Enum):
     ADB = 'ADB'
     ADB_NC = 'ADB_nc'
     UIAUTOMATOR2 = 'uiautomator2'
-    DROIDCAST = 'Droidcast'
-    DROIDCAST_RAW = 'Droidcast_raw'
+    DROIDCAST = 'DroidCast'
+    DROIDCAST_RAW = 'DroidCast_raw'
     SCRCPY = 'scrcpy'
     WINDOW_BACKGROUND = 'window_background'
 

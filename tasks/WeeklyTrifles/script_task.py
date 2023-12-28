@@ -36,16 +36,22 @@ class ScriptTask(GameUi, WeeklyTriflesAssets):
         :return:
         """
         # 点击分享
-        self.ui_click(wechat, self.I_WT_QR_CODE)
+        # self.ui_click(wechat, self.I_WT_QR_CODE)
+        while 1:
+            self.screenshot()
+            if self.appear(self.I_WT_QR_CODE):
+                break
+            if self.appear_then_click(wechat, interval=2.5):
+                continue
         logger.info('Click share')
-        get_timer = Timer(2)
+        get_timer = Timer(7)
         get_timer.start()
         while 1:
             self.screenshot()
             if self.ui_reward_appear_click():
                 logger.info('Get reward')
                 return True
-            if self.appear_then_click(self.I_WT_QR_CODE, self.C_WT_WECHAT, interval=0.8):
+            if self.appear_then_click(self.I_WT_QR_CODE, self.C_WT_WECHAT, interval=4.8):
                 continue
             if get_timer.reached():
                 logger.warning('Share timeout. The reward may have been obtained')
@@ -78,7 +84,7 @@ class ScriptTask(GameUi, WeeklyTriflesAssets):
                 break
             if self.appear_then_click(self.I_WT_COLLECT_WECHAT, interval=1):
                 continue
-            if self.appear_then_click(self.I_WT_COLLECT, interval=1):
+            if self.appear_then_click(self.I_WT_COLLECT, interval=5):
                 continue
         logger.info('Click share')
         get_timer = Timer(3)
@@ -267,6 +273,7 @@ if __name__ == '__main__':
     t = ScriptTask(c, d)
     t.screenshot()
 
-    t._share_secret()
+    t._share_collect()
+    # t.click_share(t.I_WT_SE_WECHAT)
 
 

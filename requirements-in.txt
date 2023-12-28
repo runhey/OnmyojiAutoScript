@@ -18,3 +18,5 @@ tqdm==4.65.0
 ppocr-onnx==0.0.3.9
 onepush==1.2.0
 paho-mqtt==1.6.1
+fastapi==0.104.1
+uvicorn==0.23.2

@@ -17,6 +17,7 @@ from tasks.Component.GeneralBattle.general_battle import GeneralBattle
 from tasks.Component.GeneralBattle.config_general_battle import GeneralBattleConfig
 from tasks.Component.SwitchSoul.switch_soul import SwitchSoul
 from tasks.Component.GeneralBuff.config_buff import BuffClass
+from tasks.WeeklyTrifles.assets import WeeklyTriflesAssets
 
 class ScriptTask(GameUi, GeneralBattle, SwitchSoul, SecretAssets):
     lay_list = ['壹', '贰', '叁', '肆', '伍', '陆', '柒', '捌', '玖', '拾']
@@ -74,6 +75,9 @@ class ScriptTask(GameUi, GeneralBattle, SwitchSoul, SecretAssets):
             layer = self.find_battle()
             logger.info(f'Current layer: {layer}')
             if not layer:
+                if self.appear(WeeklyTriflesAssets.I_WT_SE_SHARE):
+                    logger.warning('You have completed the weekly trifles, skip')
+                    break
                 continue
             if layer >= 6:
                 first_battle = False

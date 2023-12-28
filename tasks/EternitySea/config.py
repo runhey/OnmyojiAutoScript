@@ -6,7 +6,7 @@ from enum import Enum
 from datetime import datetime, time
 
 from tasks.Component.config_scheduler import Scheduler
-from tasks.Component.config_base import ConfigBase
+from tasks.Component.config_base import ConfigBase, Time
 from tasks.Orochi.config import UserStatus
 
 
@@ -22,7 +22,7 @@ class EternitySeaConfig(ConfigBase):
     # 层数
     layer: Layer = Field(default=Layer.FOUR, description='layer_help')
     # 限制时间
-    limit_time: time = Field(default=time(minute=30), description='limit_time_help')
+    limit_time: Time = Field(default=Time(minute=30), description='limit_time_help')
     # 限制次数
     limit_count: int = Field(default=50, description='limit_count_help')
 

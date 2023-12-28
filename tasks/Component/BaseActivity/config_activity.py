@@ -7,7 +7,7 @@ from enum import Enum
 
 from module.logger import logger
 
-from tasks.Component.config_base import ConfigBase, TimeDelta
+from tasks.Component.config_base import ConfigBase, TimeDelta, Time
 
 class ApMode(str, Enum):
     AP_ACTIVITY = 'ap_activity'
@@ -16,7 +16,7 @@ class ApMode(str, Enum):
 
 class GeneralClimb(ConfigBase):
     # 限制执行的时间
-    limit_time: time = Field(default=time(minute=30), description='limit_time_help')
+    limit_time: Time = Field(default=Time(minute=30), description='limit_time_help')
     # 限制执行的次数
     limit_count: int = Field(default=50, description='limit_count_help')
     # 每日使用体力挑战的最大次数，默认是300

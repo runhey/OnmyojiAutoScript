@@ -7,7 +7,7 @@ from datetime import datetime, time
 
 from tasks.Component.SwitchSoul.switch_soul_config import SwitchSoulConfig
 from tasks.Component.config_scheduler import Scheduler
-from tasks.Component.config_base import ConfigBase
+from tasks.Component.config_base import ConfigBase, DateTime, TimeDelta, Time
 from tasks.BondlingFairyland.config_battle import BattleConfig
 
 class BondlingMode(str, Enum):
@@ -31,7 +31,7 @@ class BondlingClass(str, Enum):
 
 class BondlingConfig(ConfigBase):
     bondling_mode: BondlingMode = Field(default=BondlingMode.MODE1, description='bondling_mode_help')
-    limit_time: time = Field(default=time(minute=30), description='limit_time_help')
+    limit_time: Time = Field(default=Time(minute=30), description='limit_time_help')
     limit_count: int = Field(default=30, description='limit_count_help')
     bondling_stone_enable: bool = Field(default=False, description='bondling_stone_enable_help')
     bondling_stone_class: BondlingClass = Field(default=BondlingClass.TOMB_GUARD, description='bondling_stone_class_help')

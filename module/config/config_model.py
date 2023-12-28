@@ -1,7 +1,10 @@
 # This Python file uses the following encoding: utf-8
 # @author runhey
 # github https://github.com/runhey
+from typing import Dict, Any
+
 import re
+import inflection
 
 from pathlib import Path
 from pydantic import BaseModel, ValidationError, Field
@@ -10,7 +13,7 @@ from module.config.utils import *
 from module.logger import logger
 
 # 导入配置的Python文件
-from tasks.Component.config_base import ConfigBase
+from tasks.Component.config_base import ConfigBase, TimeDelta
 from tasks.Exploration.config import Exploration
 from tasks.RyouToppa.config import RyouToppa
 from tasks.DevRyouToppa.config import DevRyouToppa
@@ -46,6 +49,7 @@ from tasks.Hunt.config import Hunt
 
 # 这一部分是活动的配置-----------------------------------------------------------------------------------------------------
 from tasks.ActivityShikigami.config import ActivityShikigami
+from tasks.MetaDemon.config import MetaDemon
 # ----------------------------------------------------------------------------------------------------------------------
 
 # 肝帝专属---------------------------------------------------------------------------------------------------------------
@@ -100,6 +104,7 @@ class ConfigModel(ConfigBase):
 
     # 这些是活动的
     activity_shikigami: ActivityShikigami = Field(default_factory=ActivityShikigami)
+    meta_demon: MetaDemon = Field(default_factory=MetaDemon)
 
     # 这些是肝帝专属
     bondling_fairyland: BondlingFairyland = Field(default_factory=BondlingFairyland)
@@ -271,6 +276,121 @@ class ConfigModel(ConfigBase):
         except (AttributeError, KeyError):
             return False
 
+# ----------------------------------- fastapi -----------------------------------
+    def script_task(self, task: str) -> dict:
+        """
+
+        :param task: 同gui_args函数
+        :return:
+        """
+        task = convert_to_underscore(task)
+        task = getattr(self, task, None)
+        if task is None:
+            logger.warning(f'{task} is no inexistence')
+            return {}
+
+        def properties_groups(sch) -> dict:
+            properties = {}
+            for key, value in sch["properties"].items():
+                properties[key] = re.search(r"/([^/]+)$", value['$ref']).group(1)
+            return properties
+
+        def extract_groups(sch):
+            # 从schema 中提取未解析的group的数据
+            properties = properties_groups(sch)
+
+            result = {}
+            for key, value in properties.items():
+                result[key] = sch["definitions"][value]
+
+            return result
+
+        def merge_value(groups, jsons, definitions) -> list[dict]:
+            # 将 groups的参数，同导出的json一起合并, 用于前端显示
+            result = []
+            for key, value in groups["properties"].items():
+                item = {}
+                item["name"] = key
+                item["title"] = value["title"] if "title" in value else inflection.underscore(key)
+                if "description" in value:
+                    item["description"] = value["description"]
+                item["default"] = value["default"]
+                item["value"] = jsons[key] if key in jsons else value["default"]
+                item["type"] = value["type"] if "type" in value else "enum"
+                if 'allOf' in value:
+                    # list
+                    enum_key = re.search(r"/([^/]+)$", value['allOf'][0]['$ref']).group(1)
+                    item["enumEnum"] = definitions[enum_key]["enum"]
+                # TODO: 最大值最小值
+                result.append(item)
+            return result
+
+
+
+
+
+
+
+        schema = task.schema()
+        groups = extract_groups(schema)
+
+
+        result: dict[str, list] = {}
+        for key, value in task.dict().items():
+            result[key] = merge_value(groups[key], value, schema["definitions"])
+
+        return result
+
+    def script_set_arg(self, task: str, group: str, argument: str, value) -> bool:
+        # 验证参数
+        task = convert_to_underscore(task)
+        group = convert_to_underscore(group)
+        argument = convert_to_underscore(argument)
+
+
+        # pandtic验证
+        if isinstance(value, str) and len(value) == 8:
+            try:
+                value = datetime.strptime(value, '%H:%M:%S').time()
+            except ValueError:
+                pass
+        if isinstance(value, str) and len(value) == 11:
+            try:
+                date_time = datetime.strptime(value, '%d %H:%M:%S')
+                value = TimeDelta(days=date_time.day, hours=date_time.hour, minutes=date_time.minute, seconds=date_time.second)
+            except ValueError:
+                pass
+        if isinstance(value, str) and len(value) == 19:
+            try:
+                value = datetime.strptime(value, '%Y-%m-%d %H:%M:%S')
+            except ValueError:
+                pass
+        if isinstance(value, str) and value == 'true':
+            value = True
+        if isinstance(value, str) and value == 'false':
+            value = False
+
+        task_object = getattr(self, task, None)
+        group_object = getattr(task_object, group, None)
+        argument_object = getattr(group_object, argument, None)
+        # print(group_object)
+        # print(argument_object)
+
+        if argument_object is None:
+            logger.error(f'Set arg {task}.{group}.{argument}.{value} failed')
+            return False
+
+        # 设置参数
+        try:
+            setattr(group_object, argument, value)
+            logger.info(f'Set arg {self.config_name}.{task}.{group}.{argument}.{value}')
+            self.save()  # 我是没有想到什么方法可以使得属性改变自动保存的
+            return True
+        except ValidationError as e:
+            logger.error(e)
+            return False
+
+
 
 if __name__ == "__main__":
     try:
@@ -280,7 +400,6 @@ if __name__ == "__main__":
         c = ConfigModel()
 
     # c.save()
-    print(c.gui_args('Script'))
-    # print(c.deep_get(c, 'area_boss.scheduler.success_interval'))
+    print(c.script_task('Orochi'))
 
 

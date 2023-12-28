@@ -1,0 +1,30 @@
+[
+  {
+    "itemName": "feed_click_1",
+    "roiFront": "160,531,100,100",
+    "roiBack": "160,531,100,100",
+    "duration": 1500,
+    "description": "description"
+  },
+  {
+    "itemName": "feed_click_2",
+    "roiFront": "293,533,100,100",
+    "roiBack": "293,533,100,100",
+    "duration": 1500,
+    "description": "description"
+  },
+  {
+    "itemName": "feed_click_3",
+    "roiFront": "430,530,100,100",
+    "roiBack": "430,530,100,100",
+    "duration": 1500,
+    "description": "description"
+  },
+  {
+    "itemName": "feed_click_4",
+    "roiFront": "576,529,100,100",
+    "roiBack": "576,529,100,100",
+    "duration": 1500,
+    "description": "description"
+  }
+]

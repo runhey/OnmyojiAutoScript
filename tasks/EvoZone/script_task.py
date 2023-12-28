@@ -321,7 +321,7 @@ class ScriptTask(GeneralBattle, GeneralInvite, GeneralBuff, GeneralRoom, GameUi,
             if self.appear_then_click(self.I_BACK_BL, interval=1):
                 continue
 
-        self.ui_current = page_soul_zones
+        self.ui_current = page_awake_zones
         self.ui_goto(page_main)
 
 
@@ -338,26 +338,16 @@ class ScriptTask(GeneralBattle, GeneralInvite, GeneralBuff, GeneralRoom, GameUi,
 if __name__ == '__main__':
     from module.config.config import Config
     from module.device.device import Device
-    from memory_profiler import profile
     c = Config('oas1')
     d = Device(c)
     t = ScriptTask(c, d)
 
-    # t.run()
+    t.run()
 
     # t.check_layer('悲')
 
     from module.base.timer import timer
 
-    @timer
-    @profile
-    def test_memory():
-        t.screenshot()
-        print(t.ocr_appear(t.O_O_TEST_OCR))
-        print(t.L_LAYER_LIST.image_appear(t.device.image, '悲'))
-    for i in range(4):
-        test_memory()
-        print('=====================')
 
 
 

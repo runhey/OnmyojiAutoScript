@@ -133,5 +133,23 @@
     "method": "Template matching",
     "threshold": 0.8,
     "description": "妖"
+  },
+  {
+    "itemName": "battle_start",
+    "imageName": "res_battle_start.png",
+    "roiFront": "555,688,39,27.5",
+    "roiBack": "221,677,561,41",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "get_reward",
+    "imageName": "res_get_reward.png",
+    "roiFront": "464,231,339,44",
+    "roiBack": "464,231,339,44",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
   }
 ]

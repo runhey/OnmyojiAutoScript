@@ -5,14 +5,14 @@ from pydantic import BaseModel, Field
 from datetime import time
 
 from tasks.Component.config_scheduler import Scheduler
-from tasks.Component.config_base import ConfigBase
+from tasks.Component.config_base import ConfigBase, Time
 from tasks.Component.GeneralBattle.config_general_battle import GreenMarkType
 
 class DuelConfig(ConfigBase):
     # 一键切换斗技御魂
     switch_all_soul: bool = Field(default=False, description='switch_all_soul_help')
     # 限制时间
-    limit_time: time = Field(default=time(minute=30), description='limit_time_help')
+    limit_time: Time = Field(default=Time(minute=30), description='limit_time_help')
     # 目标分数
     target_score: int = Field(default=2000, description='target_score_help')
     # 刷满荣誉就退出

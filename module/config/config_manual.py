@@ -9,7 +9,7 @@ class ConfigManual:
 
     SCHEDULER_PRIORITY = """
         Restart
-        >KekkaiUtilize > KekkaiActivation > DemonEncounter
+        > KekkaiUtilize > KekkaiActivation > DemonEncounter
         > AreaBoss > GoldYoukai > ExperienceYoukai > Nian > Tako > RealmRaid > RyouToppa > DailyTrifles > Exploration
         > Hunt > DevRyouToppa > DevExploration
         > MyOrochi > Orochi > OrochiMoans > OrochiJudgement > Sougenbi > FallenSun > EternitySea
@@ -18,7 +18,7 @@ class ConfigManual:
         > TrueOrochi > RichMan
         > CollectiveMissions
         > Pets > TalismanPass > SoulsTidy > Delegation
-        > Secret > WeeklyTrifles > MysteryShop > Duel
+        > Secret > WeeklyTrifles > MysteryShop > Duel > MetaDemon
         """
 
     DEVICE_OVER_HTTP = False

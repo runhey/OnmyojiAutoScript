@@ -85,13 +85,8 @@ class Device(Screenshot, Control, AppControl, EmulatorManager):
 
         try:
             super().screenshot()
-        except RequestHumanTakeover:
-            if not self.ascreencap_available:
-                logger.error('aScreenCap unavailable on current device, fallback to auto')
-                self.run_simple_screenshot_benchmark()
-                super().screenshot()
-            else:
-                raise
+        except RequestHumanTakeover as e:
+            raise RequestHumanTakeover
 
         if self.handle_night_commission():
             super().screenshot()

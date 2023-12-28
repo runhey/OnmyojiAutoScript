@@ -97,3 +97,14 @@ class ReplaceShikigami(BaseTask, ReplaceShikigamiAssets):
             if self.click(click_match, interval=1.5):
                 continue
         logger.info('Set shikigami: %d' % shikigami_order)
+
+    def detect_no_shikigami(self) -> bool:
+        self.screenshot()
+        if self.appear(self.I_DETECT_EMPTY_1)\
+            and self.appear(self.I_DETECT_EMPTY_2) \
+                and self.appear(self.I_DETECT_EMPTY_3) \
+                and self.appear(self.I_DETECT_EMPTY_4) \
+                and self.appear(self.I_DETECT_EMPTY_5) \
+                and self.appear(self.I_DETECT_EMPTY_6):
+            return True
+        return False

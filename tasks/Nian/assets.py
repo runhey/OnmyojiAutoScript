@@ -10,6 +10,11 @@ from module.atom.list import RuleList
 class NianAssets: 
 
 
+	# Click Rule Assets
+	# description 
+	C_CLIC_SAFE = RuleClick(roi_front=(242,25,100,65), roi_back=(242,25,100,65), name="clic_safe")
+
+
 	# Image Rule Assets
 	# 自动匹配 
 	I_AUTO_MATCHING = RuleImage(roi_front=(698,598,180,64), roi_back=(698,598,180,64), threshold=0.8, method="Template matching", file="./tasks/Nian/nian/nian_auto_matching.png")

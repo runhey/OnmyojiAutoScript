@@ -5,10 +5,10 @@ from datetime import timedelta, datetime, time
 from pydantic import BaseModel, Field
 
 from tasks.Component.config_scheduler import Scheduler
-from tasks.Component.config_base import ConfigBase
+from tasks.Component.config_base import ConfigBase, Time
 
 class ShopConfig(BaseModel):
-    time_of_mystery: time = Field(default=time(hour=0, minute=0, second=0), description='time_of_mystery_help')
+    time_of_mystery: Time = Field(default=Time(hour=0, minute=0, second=0), description='time_of_mystery_help')
     mystery_amulet: bool = Field(default=False)
     black_daruma_scrap: bool = Field(default=False)
     shop_kaiko_3: bool = Field(default=False)

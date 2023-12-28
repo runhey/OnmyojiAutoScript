@@ -158,6 +158,9 @@ class Config(ConfigState, ConfigManual, ConfigWatcher, ConfigMenu):
         except:
             logger.exception(f'have no arg {task}.{group}.{argument}')
 
+    def reload(self):
+        self.model = ConfigModel(config_name=self.config_name)
+
     def save(self) -> None:
         """
         保存配置文件
@@ -209,6 +212,7 @@ class Config(ConfigState, ConfigManual, ConfigWatcher, ConfigMenu):
         if self.pending_task:
             logger.info(f"Pending tasks: {[f.command for f in self.pending_task]}")
             task = self.pending_task[0]
+            self.task = task
             logger.attr("Task", task)
             return task
 
@@ -223,6 +227,29 @@ class Config(ConfigState, ConfigManual, ConfigWatcher, ConfigMenu):
             logger.critical("No task waiting or pending")
             logger.critical("Please enable at least one task")
             raise RequestHumanTakeover
+
+    def get_schedule_data(self) -> dict[str, dict]:
+        """
+        获取调度器的数据， 但是你必须使用update_scheduler来更新信息
+        :return:
+        """
+        running = {}
+        if self.task is not None and self.task.next_run < datetime.now():
+            running = {"name": self.task.command, "next_run": str(self.task.next_run)}
+
+        pending = []
+        for p in self.pending_task[1:]:
+            item = {"name": p.command, "next_run": str(p.next_run)}
+            pending.append(item)
+
+        waiting = []
+        for w in self.waiting_task:
+            item = {"name": w.command, "next_run": str(w.next_run)}
+            waiting.append(item)
+
+        data = {"running": running, "pending": pending, "waiting": waiting}
+        return data
+
 
     def task_call(self, task: str=None, force_call=True):
         """
@@ -259,6 +286,7 @@ class Config(ConfigState, ConfigManual, ConfigWatcher, ConfigMenu):
         :param finish: 是完成任务后的时间为基准还是开始任务的时间为基准
         :return:
         """
+        self.reload()
         # 任务预处理
         if not task:
             task = self.task.command
@@ -317,7 +345,7 @@ class Config(ConfigState, ConfigManual, ConfigWatcher, ConfigMenu):
         logger.info(f"Delay task `{task}` to {next_run} ({kv})")
 
         # 强制设定下一次的运行时间
-        if server and scheduler.server_update != time(hour=9):
+        if server and hasattr(scheduler, 'server_update') and scheduler.server_update != time(hour=9):
             next_run = parse_tomorrow_server(scheduler.server_update)
 
 
@@ -325,11 +353,13 @@ class Config(ConfigState, ConfigManual, ConfigWatcher, ConfigMenu):
         self.lock_config.acquire()
         try:
             scheduler.next_run = next_run
+
+            self.save()
         finally:
             self.lock_config.release()
         # 设置
         logger.attr(f'{task}.scheduler.next_run', next_run)
-        self.save()
+
 
     @cached_property
     def notifier(self):

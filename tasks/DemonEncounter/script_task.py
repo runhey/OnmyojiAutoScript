@@ -145,7 +145,7 @@ class ScriptTask(GameUi, GeneralBattle, DemonEncounterAssets):
             if cu == 0 and re == 4:
                 break
 
-            if self.appear_then_click(self.I_DE_FIND, interval=1):
+            if self.appear_then_click(self.I_DE_FIND, interval=2.5):
                 continue
         logger.info('Lantern count success')
         # 然后领取红色达摩
