@@ -496,30 +496,12 @@ class BaseTask(GlobalGameAssets):
         循环的一个操作，直到出现stop
         :param click:
         :param stop:
+        :parm interval
         :return:
         """
         while 1:
             self.screenshot()
             if self.appear(stop):
-                break
-            if isinstance(click, RuleImage) and self.appear_then_click(click, interval=interval):
-                continue
-            if isinstance(click, RuleClick) and self.click(click, interval=interval):
-                continue
-            elif isinstance(click, RuleOcr) and self.ocr_appear_click(click, interval=interval):
-                continue
-
-    def ui_click_u_disappear(self, click, stop, interval=1):
-        """
-        循环的一个操作，直到 stop 消失
-        :param click:
-        :param stop:
-        :param interval:
-        :return:
-        """
-        while 1:
-            self.screenshot()
-            if not self.appear(stop):
                 break
             if isinstance(click, RuleImage) and self.appear_then_click(click, interval=interval):
                 continue

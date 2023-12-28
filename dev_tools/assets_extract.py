@@ -417,4 +417,4 @@ class AllAssetsExtractor:
 
 
 if __name__ == "__main__":
-    AllAssetsExtractor.work(r"D:\Tools\OnmyojiAutoScript\tasks\MyOrochi")
+    AllAssetsExtractor()
