@@ -11,8 +11,8 @@ class ConfigManual:
         Restart
         > KekkaiUtilize > KekkaiActivation > DemonEncounter
         > AreaBoss > GoldYoukai > ExperienceYoukai > Nian > Tako > RealmRaid > RyouToppa > DailyTrifles > Exploration
-        > Hunt 
-        > Orochi > OrochiMoans > OrochiJudgement > Sougenbi > FallenSun > EternitySea
+        > Hunt > DevRyouToppa > DevExploration
+        > MyOrochi > Orochi > OrochiMoans > OrochiJudgement > Sougenbi > FallenSun > EternitySea
         > ActivityShikigami > WantedQuests
         > BondlingFairyland > EvoZone > GoryouRealm
         > TrueOrochi > RichMan

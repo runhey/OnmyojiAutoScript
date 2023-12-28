@@ -1,0 +1,146 @@
+[
+  {
+    "itemName": "area_1_finished",
+    "imageName": "finished_1.png",
+    "roiFront": "658,141,93,91",
+    "roiBack": "421,127,325,134",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "区域1已攻破"
+  },
+  {
+    "itemName": "area_2_finished",
+    "imageName": "finished_1.png",
+    "roiFront": "983,137,100,100",
+    "roiBack": "757,125,327,140",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "区域2已攻破"
+  },
+  {
+    "itemName": "area_3_finished",
+    "imageName": "finished_1.png",
+    "roiFront": "681,312,47,37",
+    "roiBack": "419,254,327,144",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "区域3已攻破"
+  },
+  {
+    "itemName": "area_4_finished",
+    "imageName": "finished_1.png",
+    "roiFront": "996,271,100,100",
+    "roiBack": "756,260,325,139",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "区域4已攻破"
+  },
+  {
+    "itemName": "area_5_finished",
+    "imageName": "finished_1.png",
+    "roiFront": "647,404,100,100",
+    "roiBack": "418,392,328,142",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "区域5已攻破"
+  },
+  {
+    "itemName": "area_6_finished",
+    "imageName": "finished_1.png",
+    "roiFront": "1015,448,56,35",
+    "roiBack": "755,395,328,141",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "区域6已攻破"
+  },
+  {
+    "itemName": "area_7_finished",
+    "imageName": "finished_1.png",
+    "roiFront": "643,543,100,100",
+    "roiBack": "420,530,326,127",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "区域7已攻破"
+  },
+  {
+    "itemName": "area_8_finished",
+    "imageName": "finished_1.png",
+    "roiFront": "983,541,100,100",
+    "roiBack": "756,530,327,124",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "区域8已攻破"
+  },
+  {
+    "itemName": "area_1_finished_new",
+    "imageName": "finished_2.png",
+    "roiFront": "658,141,93,91",
+    "roiBack": "421,127,325,134",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "区域1已攻破新"
+  },
+  {
+    "itemName": "area_2_finished_new",
+    "imageName": "finished_2.png",
+    "roiFront": "983,137,100,100",
+    "roiBack": "757,125,327,140",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "区域2已攻破新"
+  },
+  {
+    "itemName": "area_3_finished_new",
+    "imageName": "finished_2.png",
+    "roiFront": "681,312,47,37",
+    "roiBack": "419,254,327,144",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "区域3已攻破新"
+  },
+  {
+    "itemName": "area_4_finished_new",
+    "imageName": "finished_2.png",
+    "roiFront": "996,271,100,100",
+    "roiBack": "756,260,325,139",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "区域4已攻破新"
+  },
+  {
+    "itemName": "area_5_finished_new",
+    "imageName": "finished_2.png",
+    "roiFront": "647,404,100,100",
+    "roiBack": "418,392,328,142",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "区域5已攻破新"
+  },
+  {
+    "itemName": "area_6_finished_new",
+    "imageName": "finished_2.png",
+    "roiFront": "1015,448,56,35",
+    "roiBack": "755,395,328,141",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "区域6已攻破新"
+  },
+  {
+    "itemName": "area_7_finished_new",
+    "imageName": "finished_2.png",
+    "roiFront": "643,543,100,100",
+    "roiBack": "420,530,326,127",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "区域7已攻破新"
+  },
+  {
+    "itemName": "area_8_finished_new",
+    "imageName": "finished_2.png",
+    "roiFront": "983,541,100,100",
+    "roiBack": "756,530,327,124",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "区域8已攻破新"
+  }
+]

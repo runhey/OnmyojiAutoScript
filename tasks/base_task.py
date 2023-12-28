@@ -174,7 +174,7 @@ class BaseTask(GlobalGameAssets):
     def wait_until_appear(self,
                           target: RuleImage,
                           skip_first_screenshot=False,
-                          wait_time: int=None) -> bool:
+                          wait_time: int = None) -> bool:
         """
         等待直到出现目标
         :param wait_time: 等待时间，单位秒
@@ -427,7 +427,7 @@ class BaseTask(GlobalGameAssets):
                 sleep(1)  # 等待滑动完成， 还没想好如何优化
 
     def set_next_run(self, task: str, finish: bool = False,
-                     success: bool=None, server: bool=True, target: datetime=None) -> None:
+                     success: bool = None, server: bool = True, target: datetime = None) -> None:
         """
         设置下次运行时间  当然这个也是可以重写的
         :param target: 可以自定义的下次运行时间
@@ -491,8 +491,7 @@ class BaseTask(GlobalGameAssets):
 
         return True
 
-
-    def ui_click(self, click, stop):
+    def ui_click(self, click, stop, interval=1):
         """
         循环的一个操作，直到出现stop
         :param click:
@@ -503,11 +502,30 @@ class BaseTask(GlobalGameAssets):
             self.screenshot()
             if self.appear(stop):
                 break
-            if isinstance(click, RuleImage) and self.appear_then_click(click, interval=1):
+            if isinstance(click, RuleImage) and self.appear_then_click(click, interval=interval):
                 continue
-            if isinstance(click, RuleClick) and self.click(click, interval=1):
+            if isinstance(click, RuleClick) and self.click(click, interval=interval):
                 continue
-            elif isinstance(click, RuleOcr) and self.ocr_appear_click(click, interval=1):
+            elif isinstance(click, RuleOcr) and self.ocr_appear_click(click, interval=interval):
+                continue
+
+    def ui_click_u_disappear(self, click, stop, interval=1):
+        """
+        循环的一个操作，直到 stop 消失
+        :param click:
+        :param stop:
+        :param interval:
+        :return:
+        """
+        while 1:
+            self.screenshot()
+            if not self.appear(stop):
+                break
+            if isinstance(click, RuleImage) and self.appear_then_click(click, interval=interval):
+                continue
+            if isinstance(click, RuleClick) and self.click(click, interval=interval):
+                continue
+            elif isinstance(click, RuleOcr) and self.ocr_appear_click(click, interval=interval):
                 continue
 
     def ui_click_until_disappear(self, click):
@@ -522,5 +540,3 @@ class BaseTask(GlobalGameAssets):
                 break
             elif self.appear_then_click(click, interval=1):
                 continue
-
-
