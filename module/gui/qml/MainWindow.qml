@@ -68,9 +68,9 @@ FluWindow {
 //            process_manager.create_all()
         }
     }
-    Notity{
-        id: notity
-    }
+//    Notity{
+//        id: notity
+//    }
 
     FluNavigationView{
         id:nav_view
