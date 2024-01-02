@@ -1,4 +1,3 @@
-pyside6==6.4.3
 adbutils==0.11.0
 uiautomator2==2.16.17
 uiautomator2cache==0.3.0.1
