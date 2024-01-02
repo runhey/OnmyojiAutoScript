@@ -10,7 +10,7 @@ from tasks.Component.config_base import ConfigBase, TimeDelta
 from tasks.Component.BaseActivity.config_activity import GeneralClimb
 
 class ShikigamiConfig(BaseModel):
-    limit_time: timedelta = Field(default=timedelta(hours=0, minutes=30, seconds=0), description='limit_time_help')
+    limit_time: TimeDelta = Field(default=TimeDelta(hours=0, minutes=30, seconds=0), description='limit_time_help')
     limit_count: int = Field(default=10, description='limit_count_help')
 
 

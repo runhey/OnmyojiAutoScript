@@ -26,7 +26,7 @@ class AreaBossAssets:
 	# 选中第三个鬼王的 
 	I_BATTLE_3 = RuleImage(roi_front=(1071,521,100,100), roi_back=(1071,521,100,100), threshold=0.8, method="Template matching", file="./tasks/AreaBoss/res/res_battle_3.png")
 	# 点击挑战 
-	I_FIRE = RuleImage(roi_front=(1108,492,100,100), roi_back=(1108,492,100,100), threshold=0.8, method="Template matching", file="./tasks/AreaBoss/res/res_fire.png")
+	I_FIRE = RuleImage(roi_front=(1109,490,100,73), roi_back=(1075,463,150,158), threshold=0.8, method="Template matching", file="./tasks/AreaBoss/res/res_fire.png")
 	# 跟buff冲突弃用 
 	I_CLOSE_RED = RuleImage(roi_front=(1190,24,37,38), roi_back=(1190,24,37,38), threshold=0.8, method="Template matching", file="./tasks/AreaBoss/res/res_close_red.png")
 	# 红色关闭 

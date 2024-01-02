@@ -1,6 +1,7 @@
 # This Python file uses the following encoding: utf-8
 # @author runhey
 # github https://github.com/runhey
+
 import zerorpc
 import zmq
 import msgpack
@@ -18,8 +19,8 @@ from datetime import datetime, timedelta
 from pathlib import Path
 from cached_property import cached_property
 from pydantic import BaseModel, ValidationError
-from PySide6.QtGui import QImage
 from threading import Thread
+from multiprocessing.queues import Queue
 
 
 from module.config.utils import convert_to_underscore
@@ -35,6 +36,7 @@ class Script:
     def __init__(self, config_name: str ='oas') -> None:
         logger.hr('Start', level=0)
         self.server = None
+        self.state_queue: Queue = None
         self.gui_update_task: Callable = None  # 回调函数, gui进程注册当每次config更新任务的时候更新gui的信息
         self.config_name = config_name
         # Skip first restart
@@ -238,7 +240,6 @@ class Script:
         if self.gui_update_task is not None:
             self.gui_update_task(data)
 
-
     def gui_task_list(self) -> str:
         """
         获取给gui显示的任务列表
@@ -259,13 +260,6 @@ class Script:
             key = self.config.model.type(key)
             result[key] = item
         return json.dumps(result)
-
-
-
-
-
-
-
 
 
 
@@ -304,7 +298,8 @@ class Script:
         while 1:
             task = self.config.get_next()
             self.config.task = task
-            self._gui_update_tasks()
+            if self.state_queue:
+                self.state_queue.put({"schedule": self.config.get_schedule_data()})
 
             # from module.base.resource import release_resources
             # if self.config.task.command != 'Alas':

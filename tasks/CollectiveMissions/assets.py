@@ -79,6 +79,24 @@ class CollectiveMissionsAssets:
 
 
 	# Image Rule Assets
+	# 堆叠 
+	I_FEED_HEAP = RuleImage(roi_front=(20,543,42,59), roi_back=(20,543,42,59), threshold=0.8, method="Template matching", file="./tasks/CollectiveMissions/feed/feed_feed_heap.png")
+	# 提交 
+	I_FEED_SUBMIT = RuleImage(roi_front=(703,340,114,54), roi_back=(703,340,114,54), threshold=0.8, method="Template matching", file="./tasks/CollectiveMissions/feed/feed_feed_submit.png")
+
+
+	# Long Click Rule Assets
+	# description 
+	L_FEED_CLICK_1 = RuleLongClick(roi_front=(160,531,100,100), roi_back=(160,531,100,100), duration=1500, name="feed_click_1")
+	# description 
+	L_FEED_CLICK_2 = RuleLongClick(roi_front=(293,533,100,100), roi_back=(293,533,100,100), duration=1500, name="feed_click_2")
+	# description 
+	L_FEED_CLICK_3 = RuleLongClick(roi_front=(430,530,100,100), roi_back=(430,530,100,100), duration=1500, name="feed_click_3")
+	# description 
+	L_FEED_CLICK_4 = RuleLongClick(roi_front=(576,529,100,100), roi_back=(576,529,100,100), duration=1500, name="feed_click_4")
+
+
+	# Image Rule Assets
 	# 提交 
 	I_SL_SUBMIT = RuleImage(roi_front=(835,588,145,61), roi_back=(835,588,145,61), threshold=0.8, method="Template matching", file="./tasks/CollectiveMissions/soul/soul_sl_submit.png")
 

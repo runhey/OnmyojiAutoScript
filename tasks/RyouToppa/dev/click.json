@@ -1,0 +1,56 @@
+[
+  {
+    "itemName": "area_1",
+    "roiFront": "533,162,177,74",
+    "roiBack": "533,162,177,74",
+    "description": "area1"
+  },
+  {
+    "itemName": "area_2",
+    "roiFront": "863,164,181,71",
+    "roiBack": "863,164,181,71",
+    "description": "area2"
+  },
+  {
+    "itemName": "area_3",
+    "roiFront": "532,292,181,87",
+    "roiBack": "532,292,181,87",
+    "description": "area3"
+  },
+  {
+    "itemName": "area_4",
+    "roiFront": "863,301,171,62",
+    "roiBack": "863,301,171,62",
+    "description": "area4"
+  },
+  {
+    "itemName": "area_5",
+    "roiFront": "540,432,169,68",
+    "roiBack": "540,432,169,68",
+    "description": "area5"
+  },
+  {
+    "itemName": "area_6",
+    "roiFront": "876,432,165,74",
+    "roiBack": "876,432,165,74",
+    "description": "area6"
+  },
+  {
+    "itemName": "area_7",
+    "roiFront": "538,557,149,71",
+    "roiBack": "538,557,149,71",
+    "description": "area7"
+  },
+  {
+    "itemName": "area_8",
+    "roiFront": "876,562,150,67",
+    "roiBack": "876,562,150,67",
+    "description": "area8"
+  },
+  {
+    "itemName": "safe_area",
+    "roiFront": "182,213,160,229",
+    "roiBack": "182,213,160,229",
+    "description": "在点击进攻后如果未进入战斗画面则点击的安全区域"
+  }
+]

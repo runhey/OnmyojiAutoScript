@@ -21,11 +21,11 @@ class Notifier:
 
         if not self.enable:
             return
+        config = {}
         try:
-            config = {}
             for item in yaml.safe_load_all(_config):
                 config.update(item)
-        except Exception:
+        except Exception as e:
             logger.error("Fail to load onepush config, skip sending")
             return
         self.config = config

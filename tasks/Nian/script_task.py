@@ -90,6 +90,16 @@ class ScriptTask(GameUi, GeneralBattle, GeneralRoom, GeneralInvite, NianAssets):
                 else:
                     break
             # 如果时间到了
+            if click_timer and click_timer.reached():
+                logger.warning('It has waited for 240s , but the battle has not started.')
+                logger.warning('It will be waited for 240s and try again.')
+                self.screenshot()
+                self.click(self.C_CLIC_SAFE)
+                click_timer = None
+                self.device.stuck_record_clear()
+                self.device.stuck_record_add('LOGIN_CHECK')
+                continue
+
             if check_timer.reached():
                 logger.warning('Nian match timeout')
                 while 1:
@@ -123,8 +133,12 @@ class ScriptTask(GameUi, GeneralBattle, GeneralRoom, GeneralInvite, NianAssets):
         if not isinstance(result, str):
             logger.error(f'OCR error {result}')
             return False
-        result = re.search(r'(\d+)时(\d+)分后可', result)
-        time_delta = timedelta(hours=int(result.group(1)), minutes=int(result.group(2)))
+        try:
+            result = re.search(r'(\d+)时(\d+)分后可', result)
+            time_delta = timedelta(hours=int(result.group(1)), minutes=int(result.group(2)))
+        except Exception as e:
+            logger.error(f'{e} {result}')
+            time_delta = timedelta(hours=4)
         return time_delta
 
     @cached_property
@@ -141,4 +155,5 @@ if __name__ == '__main__':
     t.screenshot()
 
     t.run()
+
 

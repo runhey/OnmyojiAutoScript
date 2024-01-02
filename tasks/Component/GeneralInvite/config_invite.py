@@ -21,7 +21,7 @@ class InviteConfig(BaseModel):
     friend_1: str = Field(default='', description='friend_name_help')
     friend_2: str = Field(default='', description='friend_2_name_help')
     find_mode: FindMode = Field(default=FindMode.AUTO_FIND, description='find_mode_help')
-    wait_time: time = Field(default=time(minute=2), description='wait_time_help')
+    wait_time: Time = Field(default=Time(minute=2), description='wait_time_help')
     default_invite: bool = Field(default=True, description='default_invite_help')
 
     # @validator('wait_time', pre=False, always=False)

@@ -8,6 +8,7 @@ from pydantic import BaseModel, ValidationError, validator, Field
 
 from module.config.utils import *
 
+
 class ConfigMenu:
     # 手动的代码配置菜单
     def __init__(self) -> None:
@@ -24,14 +25,14 @@ class ConfigMenu:
                                    'TalismanPass', 'DemonEncounter', 'Pets', 'SoulsTidy', 'Delegation', 'WantedQuests',
                                    'Tako']
         # 很肝的任务
-        self.menu["Liver Emperor Exclusive"] = ['BondlingFairyland', 'EvoZone', 'GoryouRealm', 'Exploration']
+        self.menu["Liver Emperor Exclusive"] = ['BondlingFairyland', 'EvoZone', 'GoryouRealm', 'Exploration',]
         # 阴阳寮
         self.menu["Guild"] = ['KekkaiUtilize', 'KekkaiActivation', 'RealmRaid', 'RyouToppa', 'CollectiveMissions',
                               'Hunt']
         # 每周任务
         self.menu["Weekly Task"] = ['TrueOrochi', 'RichMan', 'Secret', 'WeeklyTrifles', 'MysteryShop', 'Duel']
         # 活动的任务
-        self.menu["Activity Task"] = ['ActivityShikigami']
+        self.menu["Activity Task"] = ['ActivityShikigami', 'MetaDemon']
         # 开发工具
         self.menu["Tools"] = ['Image Rule', 'Ocr Rule', 'Click Rule', 'Long Click Rule', 'Swipe Rule', 'List Rule']
 
@@ -42,6 +43,13 @@ class ConfigMenu:
         :return:
         """
         return json.dumps(self.menu, ensure_ascii=False, sort_keys=False, default=str)
+
+    @cached_property
+    def gui_menu_list(self) -> dict:
+        del self.menu['TaskList']
+        del self.menu['Tools']
+        return self.menu
+
 
 if __name__ == "__main__":
     try:

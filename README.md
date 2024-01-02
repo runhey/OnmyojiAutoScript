@@ -1,7 +1,5 @@
 <div align="center">
 
-<br><br>
-
 # OnmyojiAutoScript
 
 <br>
@@ -20,11 +18,10 @@
 </div>
 <br>
 
-阴阳师 自动化 脚本 
+阴阳师自动化脚本 
 
-基于图像识别技术，一键托管
+一键托管
 
-绝赞更新中✿✿ヽ(°▽°)ノ✿<br>
 
 ### [文档](https://runhey.github.io/OnmyojiAutoScript-website/)
 
@@ -45,13 +42,16 @@ This project is licensed under the GNU General Public License v3.0.
 本软件开源、免费，仅供学习交流使用。开发者团队拥有本项目的最终解释权。使用本软件产生的所有问题与本项目与开发者团队无关。
 
 ## 相关项目 Relative Repositories
-- [Alas](https://github.com/LmeSzinc/AzurLaneAutoScript): 碧蓝航线的自动化脚本，OAS 在其架构上开发
-- [SRC](https://github.com/LmeSzinc/StarRailCopilot): 崩坏：星穹铁道脚本，基于下一代Alas框架
+OAS 基于 Alas 框架开发
+- [Alas](https://github.com/LmeSzinc/AzurLaneAutoScript): 碧蓝航线的自动化脚本
+- [SRC](https://github.com/LmeSzinc/StarRailCopilot): 星铁速溶茶，崩坏：星穹铁道脚本，基于下一代Alas框架。
+- [NikkeAutoScript](https://github.com/takagisanmie/NIKKEAutoScript): 胜利女神：NIKKE 自动日常脚本
+- [AAS](https://github.com/TheFunny/ArisuAutoSweeper): 蔚蓝档案自动化脚本
+- [MAA](https://github.com/MaaAssistantArknights/MaaAssistantArknights): 明日方舟小助手，全日常一键长草
+- [FGO-py](https://github.com/hgjazhgj/FGO-py): 全自动免配置跨平台开箱即用的Fate/Grand Order助手.启动脚本,上床睡觉,养肝护发,满加成圣诞了解一下?
 - [OAS-website](https://github.com/runhey/OnmyojiAutoScript-website): OAS 的文档网站，使用 [docusaurus](https://docusaurus.io/) 构建
-- [FluentUI](https://github.com/zhuzichu520/FluentUI): GUI 库，使用 QML 语言
-- [Uowl](https://github.com/runhey/Uowl): 作者早期的 Onmyoji 脚本，已停止维护
 - [ppocr-onnx](https://github.com/triwinds/ppocr-onnx): OCR 库，基于 onnxruntime 和 PaddleOCR
-- [gurs](https://github.com/2833844911/gurs): 基于赛贝尔曲线模拟滑动轨迹
+- [gurs](https://github.com/2833844911/gurs): 基于赛贝尔曲线模拟滑动轨迹, 引入其轨迹模拟人手滑动
 
 ## 联系/加入我们 Contact/Join Us
 
