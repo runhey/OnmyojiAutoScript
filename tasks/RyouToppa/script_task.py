@@ -3,7 +3,7 @@
 # github https://github.com/runhey
 import time
 from datetime import datetime, timedelta
-from random import random
+import random
 
 from tasks.Component.SwitchSoul.switch_soul import SwitchSoul
 from tasks.RyouToppa.assets import RyouToppaAssets
