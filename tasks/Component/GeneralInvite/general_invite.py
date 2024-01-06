@@ -145,6 +145,10 @@ class GeneralInvite(BaseTask, GeneralInviteAssets):
                 return True
             if self.appear(self.I_UNLOCK_SEA):
                 return True
+            # 修复三人组队卡住bug，#78
+            # 增加左上角协战房间判断，存在就说明在组队界面
+            if self.appear(self.GI_IN_ROOM):
+                return True
             if self.appear(self.I_MATCHING):
                 return False
 
