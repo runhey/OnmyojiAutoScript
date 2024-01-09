@@ -72,7 +72,7 @@ class ScriptTask(OrochiScriptTask, TrueOrochiAssets):
                 break
             if self.appear_then_click(self.I_UI_CONFIRM, interval=1):
                 continue
-            if self.appear_then_click(self.I_ST_FIRE, interval=1):
+            if self.appear_then_click(self.I_ST_FIRE, interval=4):
                 continue
             if self.appear_then_click(self.I_FIND_TS, interval=1):
                 continue
@@ -81,7 +81,7 @@ class ScriptTask(OrochiScriptTask, TrueOrochiAssets):
             self.screenshot()
             if self.appear(self.I_ST_FIRE_PREPARE):
                 break
-            if self.appear_then_click(self.I_FIRE, interval=1, threshold=0.7):
+            if self.appear_then_click(self.I_FIRE, interval=3, threshold=0.7):
                 continue
             if self.appear_then_click(self.I_UI_CONFIRM, interval=1):
                 continue
@@ -177,7 +177,7 @@ class ScriptTask(OrochiScriptTask, TrueOrochiAssets):
 if __name__ == '__main__':
     from module.config.config import Config
     from module.device.device import Device
-    c = Config('test')
+    c = Config('oas1')
     d = Device(c)
     t = ScriptTask(c, d)
     t.screenshot()
