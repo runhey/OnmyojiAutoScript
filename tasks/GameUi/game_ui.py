@@ -158,7 +158,7 @@ class GameUi(BaseTask, GameUiAssets):
         """
         pass
 
-    def ui_goto(self, destination, confirm_wait=0, skip_first_screenshot=True):
+    def ui_goto(self, destination: Page, confirm_wait=0, skip_first_screenshot=True):
         """
         Args:
             destination (Page):
