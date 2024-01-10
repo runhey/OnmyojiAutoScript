@@ -13,6 +13,13 @@ class ApMode(str, Enum):
     AP_ACTIVITY = 'ap_activity'
     AP_GAME = 'ap_game'
 
+class BattleMode(str, Enum):
+    CLASS1 = '活动室'
+    CLASS2 = '战术厅'
+    CLASS3 = '船员室'
+    CLASS4 = '黄金阁'
+
+
 
 class GeneralClimb(ConfigBase):
     # 限制执行的时间
@@ -20,7 +27,7 @@ class GeneralClimb(ConfigBase):
     # 限制执行的次数
     limit_count: int = Field(default=50, description='limit_count_help')
     # 每日使用体力挑战的最大次数，默认是300
-    ap_game_max: int = Field(default=300, description='ap_game_max_help')
+    ap_game_max: int = Field(default=1800, description='ap_game_max_help')
     # 爬塔活动挂活动的体力还是游戏的体力
     ap_mode: ApMode = Field(default=ApMode.AP_ACTIVITY, description='ap_mode_help')
     # 游戏体力不足是否需要话勾玉购买
@@ -28,6 +35,7 @@ class GeneralClimb(ConfigBase):
     # 如果挂完的活动的体力，是不是需要挂游戏的体力
     # 在我的设计理念中：活动体力>游戏体力。所以不提供从300挂满然后才到挂活动币
     activity_toggle: bool = Field(default=False, description='activity_toggle_help')
+    battle_mode: BattleMode = Field(default=BattleMode.CLASS1, description='battle_mode_help')
 
     @validator('limit_time', pre=True, always=True)
     def parse_limit_time(cls, value):
@@ -50,7 +58,7 @@ class GeneralClimb(ConfigBase):
 
     @validator('ap_game_max', pre=True, always=True)
     def reset_game_max(cls, value):
-        def_value = int(300)
+        def_value = int(1800)
         if isinstance(value, str):
             try:
                 return int(value)

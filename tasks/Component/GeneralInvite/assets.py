@@ -11,8 +11,6 @@ class GeneralInviteAssets:
 
 
 	# Image Rule Assets
-	# 三人御魂组队左上角的协站队伍
-	GI_IN_ROOM = RuleImage(roi_front=(92, 17, 213, 64), roi_back=(92, 17, 213, 64), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralInvite/gi/gi_in_room.png")
 	# 中间的邀请图片 
 	I_ADD_1 = RuleImage(roi_front=(592,288,114,51), roi_back=(592,288,114,51), threshold=0.9, method="Template matching", file="./tasks/Component/GeneralInvite/gi/gi_add_1.png")
 	# 最右边的邀请 

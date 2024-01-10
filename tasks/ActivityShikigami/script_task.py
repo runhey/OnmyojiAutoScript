@@ -10,11 +10,14 @@ from tasks.AreaBoss.assets import AreaBossAssets
 from tasks.Component.BaseActivity.base_activity import BaseActivity
 from tasks.Component.BaseActivity.config_activity import ApMode
 from tasks.ActivityShikigami.assets import ActivityShikigamiAssets
+from tasks.GameUi.page import page_main
+from tasks.GameUi.game_ui import GameUi
+
 from module.logger import logger
 from module.exception import TaskEnd
 
 
-class ScriptTask(BaseActivity, ActivityShikigamiAssets):
+class ScriptTask(GameUi, BaseActivity, ActivityShikigamiAssets):
 
     def run(self) -> None:
 
@@ -25,6 +28,8 @@ class ScriptTask(BaseActivity, ActivityShikigamiAssets):
                                         seconds=self.limit_time.second)
         self.limit_count = config.general_climb.limit_count
 
+        self.ui_get_current_page()
+        self.ui_goto(page_main)
         self.home_main()
 
         # 设定是否锁定阵容
@@ -103,11 +108,21 @@ class ScriptTask(BaseActivity, ActivityShikigamiAssets):
         从庭院到活动的爬塔界面
         :return:
         """
+        from tasks.Component.BaseActivity.config_activity import BattleMode
+        match (self.config.model.activity_shikigami.general_climb.battle_mode):
+            case BattleMode.CLASS1: target_image = self.I_BATTLE_CLASS_1
+            case BattleMode.CLASS2: target_image = self.I_BATTLE_CLASS_2
+            case BattleMode.CLASS3: target_image = self.I_BATTLE_CLASS_3
+            case BattleMode.CLASS4: target_image = self.I_BATTLE_CLASS_4
+            case _: raise ValueError("Unknown battle mode")
+
         logger.hr("Enter Shikigami", 2)
         while 1:
             self.screenshot()
             if self.appear(self.I_FIRE):
                 break
+            if self.appear_then_click(target_image, interval=2):
+                continue
             if self.appear_then_click(self.I_SHI, interval=1):
                 continue
             if self.appear_then_click(self.I_DRUM, interval=1):
