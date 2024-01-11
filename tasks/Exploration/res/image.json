@@ -131,7 +131,7 @@
     "roiFront": "1133,124,47,43",
     "roiBack": "1133,124,47,43",
     "method": "Template matching",
-    "threshold": 0.8,
+    "threshold": 0.7,
     "description": "妖"
   },
   {

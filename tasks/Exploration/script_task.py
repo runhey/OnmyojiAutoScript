@@ -71,7 +71,7 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, ExplorationAssets):
                     count += 1
                     # 进入战斗环节
                     self.battle_process()
-                if self.appear_then_click(self.I_EXPLORATION_TITLE):
+                if self.appear(self.I_EXPLORATION_TITLE):
                     self.open_expect_level()
 
     # 查找指定的章节：
@@ -235,7 +235,7 @@ if __name__ == "__main__":
     from module.config.config import Config
     from module.device.device import Device
 
-    config = Config('oas1')
+    config = Config('oas2')
     device = Device(config)
     t = ScriptTask(config, device)
     t.config.exploration.exploration_config.exploration_level = '第二十八章'
