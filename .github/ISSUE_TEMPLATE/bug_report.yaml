@@ -15,7 +15,7 @@ body:
         required: true
       - label: 这个问题出现了至少三次，不是偶发的
         required: false
-      - label: 我使用 OAS 最新版
+      - label: 我使用 OAS 的 dev 分支
         required: false
   - type: textarea
     id: describe
