@@ -151,5 +151,14 @@
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"
+  },
+  {
+    "itemName": "red_close",
+    "imageName": "res_red_close.png",
+    "roiFront": "1027,129,41,42",
+    "roiBack": "1021,121,54,55",
+    "method": "Template matching",
+    "threshold": 0.6,
+    "description": "description"
   }
 ]

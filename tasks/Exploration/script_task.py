@@ -74,6 +74,11 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, ExplorationAssets):
                 if self.appear(self.I_EXPLORATION_TITLE):
                     self.open_expect_level()
 
+            if self.wait_until_appear(self.I_RED_CLOSE, wait_time=2):
+                self.appear_then_click(self.I_RED_CLOSE)
+            self.ui_goto(page_main)
+            self.set_next_run(task='Exploration', success=True, finish=False)
+
     # 查找指定的章节：
     def open_expect_level(self):
         swipeCount = 0
