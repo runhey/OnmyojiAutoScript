@@ -20,7 +20,7 @@ class GeneralBattle(GeneralBuff, GeneralBattleAssets):
     使用这个通用的战斗必须要求这个任务的config有config_general_battle
     """
 
-    def run_general_battle(self, config: dict=None, buff: BuffClass or list[BuffClass]=None) -> bool:
+    def run_general_battle(self, config: GeneralBattleConfig=None, buff: BuffClass or list[BuffClass]=None) -> bool:
         """
         运行脚本
         :return:

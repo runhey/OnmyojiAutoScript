@@ -3,7 +3,7 @@
 # github https://github.com/runhey
 import time
 from datetime import datetime, timedelta
-from random import random
+import random
 
 from tasks.Component.SwitchSoul.switch_soul import SwitchSoul
 from tasks.RyouToppa.assets import RyouToppaAssets
@@ -168,9 +168,9 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, RyouToppaAssets):
         # self.ui_current = page_ryou_toppa
         # self.ui_goto(page_main)
         if success:
-            self.set_next_run(task='RyouToppa', finish=True, server=False, success=True)
+            self.set_next_run(task='RyouToppa', finish=True, server=True, success=True)
         else:
-            self.set_next_run(task='RyouToppa', finish=True, server=False, success=False)
+            self.set_next_run(task='RyouToppa', finish=True, server=True, success=False)
         raise TaskEnd
 
     def start_ryou_toppa(self):
@@ -229,7 +229,7 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, RyouToppaAssets):
         # 如果该区域已经被攻破则退出
         # Ps: 这时候能打过的都打过了，没有能攻打的结界了, 代表任务已经完成，set_next_run time=1d
         if self.appear(f3, threshold=0.8) or self.appear(f4, threshold=0.8):
-            self.set_next_run(task='DevRyouToppa', finish=True, success=True)
+            self.set_next_run(task='RyouToppa', finish=True, success=True)
             raise TaskEnd
         # 如果该区域攻略失败返回 False
         if self.appear(f1, threshold=0.8) or self.appear(f2, threshold=0.8):
@@ -267,8 +267,8 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, RyouToppaAssets):
 
 
         rcl = area_map[index].get("rule_click")
-        # 点击攻击区域，等待攻击按钮出现。
-        self.ui_click(rcl, stop=RealmRaidAssets.I_FIRE, interval=2)
+        # # 点击攻击区域，等待攻击按钮出现。
+        # self.ui_click(rcl, stop=RealmRaidAssets.I_FIRE, interval=2)
         # 塔塔开！
         click_failure_count = 0
         while True:
@@ -286,6 +286,8 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, RyouToppaAssets):
 
             if self.appear_then_click(RealmRaidAssets.I_FIRE, interval=2, threshold=0.8):
                 click_failure_count += 1
+                continue
+            if self.click(rcl, interval=5):
                 continue
 
 

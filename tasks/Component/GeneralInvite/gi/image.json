@@ -322,5 +322,14 @@
     "method": "Template matching",
     "threshold": 0.8,
     "description": "所有的组队界面都有加成"
+  },
+  {
+    "itemName": "gi_in_room",
+    "imageName": "gi_in_room.png",
+    "roiFront": "92,17,213,64",
+    "roiBack": "92,17,213,64",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "三人御魂组队左上角的协站队伍"
   }
 ]

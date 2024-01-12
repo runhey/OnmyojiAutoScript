@@ -1,0 +1,29 @@
+[
+    {
+        "itemName": "eternity_sea",
+        "imageName": "es_eternity_sea.png",
+        "roiFront": "1150,101,127,416",
+        "roiBack": "0,0,1279,719",
+        "method": "Template matching",
+        "threshold": 0.8,
+        "description": "选择永生之海"
+    },
+    {
+        "itemName": "form_team",
+        "imageName": "es_form_team.png",
+        "roiFront": "939,594,96,90",
+        "roiBack": "939,594,96,90",
+        "method": "Template matching",
+        "threshold": 0.8,
+        "description": "组队"
+    },
+    {
+        "itemName": "eternity_sea_fire",
+        "imageName": "es_eternity_sea_fire.png",
+        "roiFront": "1108,592,96,93",
+        "roiBack": "1108,592,96,93",
+        "method": "Template matching",
+        "threshold": 0.8,
+        "description": "挑战"
+    }
+]

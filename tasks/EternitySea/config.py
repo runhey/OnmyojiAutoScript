@@ -7,6 +7,7 @@ from datetime import datetime, time
 
 from tasks.Component.config_scheduler import Scheduler
 from tasks.Component.config_base import ConfigBase, Time
+from tasks.Component.GeneralBattle.config_general_battle import GeneralBattleConfig
 from tasks.Orochi.config import UserStatus
 
 
@@ -29,4 +30,5 @@ class EternitySeaConfig(ConfigBase):
 class EternitySea(ConfigBase):
     scheduler: Scheduler = Field(default_factory=Scheduler)
     eternity_sea_config: EternitySeaConfig = Field(default_factory=EternitySeaConfig)
+    general_battle_config: GeneralBattleConfig = Field(default_factory=GeneralBattleConfig)
 
