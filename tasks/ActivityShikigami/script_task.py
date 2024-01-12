@@ -218,7 +218,7 @@ class ScriptTask(GameUi, BaseActivity, ActivityShikigamiAssets):
     #                 if not self.appear(self.I_WIN):
     #                     break
     #                 if self.appear_then_click(self.I_WIN, action=self.C_RANDOM_ALL, interval=1.1):
-    #                     continue
+    #                     continuee
     #             return True
     #         # 失败 -> 正常人不会失败
     #         if self.appear(self.I_FALSE):
