@@ -104,7 +104,7 @@ class ScriptTask(KU, KekkaiActivationAssets):
             # 不稳定太，等待动画结束
             if not card_status and not card_effect:
                 # 黄色的 ”激活“
-                if self.appear(self.I_A_ACTIVATE_YELLOW, threshold=0.99):
+                if self.appear(self.I_A_ACTIVATE_YELLOW, threshold=0.95):
                     continue
             # 如果这张卡生效着，在使用中
             if card_status and card_effect:

@@ -34,7 +34,7 @@ class LoginHandler(BaseTask, RestartAssets):
             self.screenshot()
 
             # 确认进入庭院
-            if self.appear_then_click(self.I_LOGIN_SCROOLL_CLOSE, interval=2, threshold=0.85):
+            if self.appear_then_click(self.I_LOGIN_SCROOLL_CLOSE, interval=2, threshold=0.9):
                 logger.info('Open scroll')
                 continue
             if self.appear(self.I_LOGIN_SCROOLL_OPEN, interval=0.2):
@@ -102,7 +102,7 @@ class LoginHandler(BaseTask, RestartAssets):
                 continue
 
         logger.critical('Login failed more than 3')
-        logger.critical('Azur Lane server may be under maintenance, or you may lost network connection')
+        logger.critical('Onmyoji server may be under maintenance, or you may lost network connection')
         raise RequestHumanTakeover
 
 

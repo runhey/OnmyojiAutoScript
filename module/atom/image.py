@@ -98,6 +98,7 @@ class RuleImage:
         :return:
         """
         x, y, w, h = self.roi_back
+        x, y, w, h = int(x), int(y), int(w), int(h)
         return image[y:y + h, x:x + w]
 
 
