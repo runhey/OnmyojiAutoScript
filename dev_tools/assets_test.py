@@ -25,6 +25,7 @@ def detect_image(file: str, targe: RuleImage) -> bool:
     return targe.match(img)
 
 
+
 # 图片文件路径 可以是相对路径
 IMAGE_FILE = './log/error/1704971960417/2024-01-11_19-19-20-403213.png'
 if __name__ == '__main__':
