@@ -25,6 +25,8 @@
 
 ### [文档](https://runhey.github.io/OnmyojiAutoScript-website/)
 
+#### 主仓库: [https://github.com/runhey/OnmyojiAutoScript](https://github.com/runhey/OnmyojiAutoScript)
+
 </div>
 
 
@@ -69,6 +71,12 @@ OAS 基于 Alas 框架开发
 - 发展规划：[#54](https://github.com/runhey/OnmyojiAutoScript/issues/54)
 - OAS 继承了 Alas 的设计思路，这使得极大简便了开发，欢迎提交 Pull Requests，挑选你感兴趣的部分进行开发即可。
 - OAS 仍在活跃中， 我们会不定期发布未来的工作在 Issues 上并标记为 `help wanted`，欢迎向 OAS 提交 Pull Requests，我们会认真阅读你的每一行代码的。
+
+## 安装 Installation 
+
+- [用户手册](https://runhey.github.io/OnmyojiAutoScript-website/docs/user-manual/getting-started): 在线手册，不定期更新，包含所有使用说明
+- [安装教程](https://runhey.github.io/OnmyojiAutoScript-website/docs/user-manual/installation): 保姆式安装手册,多翻翻有惊喜
+- [开发文档](https://runhey.github.io/OnmyojiAutoScript-website/docs/development/preamble): 虽然迭代很多、年久失修，但入门开发必读，具体以源码为准
 
 ## 鸣谢 Acknowledgements
 
