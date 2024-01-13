@@ -19,7 +19,7 @@ class KekkaiActivationAssets:
 
 	# Ocr Rule Assets
 	# 这张卡一共有多少小时 
-	O_CARD_ALL_TIME = RuleOcr(roi=(926,262,95,31), area=(926,262,95,31), mode="Single", method="Default", keyword="", name="card_all_time")
+	O_CARD_ALL_TIME = RuleOcr(roi=(926,262,95,31), area=(926,262,95,31), mode="Duration", method="Default", keyword="", name="card_all_time")
 
 
 	# Swipe Rule Assets
@@ -72,6 +72,8 @@ class KekkaiActivationAssets:
 	I_A_HARVEST_FISH_6 = RuleImage(roi_front=(898,159,45,38), roi_back=(869,131,100,100), threshold=0.7, method="Template matching", file="./tasks/KekkaiActivation/a/a_a_harvest_fish_6.png")
 	# 太阴3 
 	I_A_HARVEST_MOON_3 = RuleImage(roi_front=(897,159,46,40), roi_back=(869,127,100,100), threshold=0.7, method="Template matching", file="./tasks/KekkaiActivation/a/a_a_harvest_moon_3.png")
+	# 卸下 
+	I_A_DEMOUNT = RuleImage(roi_front=(939,575,55,47), roi_back=(903,551,107,91), threshold=0.8, method="Template matching", file="./tasks/KekkaiActivation/a/a_a_demount.png")
 
 
 	# Image Rule Assets

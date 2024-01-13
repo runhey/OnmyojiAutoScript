@@ -196,5 +196,14 @@
     "method": "Template matching",
     "threshold": 0.7,
     "description": "太阴3"
+  },
+  {
+    "itemName": "a_demount",
+    "imageName": "a_a_demount.png",
+    "roiFront": "939,575,55,47",
+    "roiBack": "903,551,107,91",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "卸下"
   }
 ]
