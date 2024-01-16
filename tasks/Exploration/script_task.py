@@ -231,6 +231,11 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, ExplorationAssets):
         # 自动添加候补式神
         if self.config.exploration.exploration_config.auto_rotate == AutoRotate.yes:
             self.enter_settings_and_do_operations()
+        
+        # 修复卡结算问题
+        # 卡结算是因为没有设置锁定队伍，修改后无论是否锁定都不会因为没有锁定队伍而卡在结算界面
+        if not self.config.exploration.general_battle_config.lock_team_enable:
+            self.config.exploration.general_battle_config.lock_team_enable = True
 
         # 进入战斗环节
         self.do_battle()
