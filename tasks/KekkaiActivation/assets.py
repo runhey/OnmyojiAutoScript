@@ -47,7 +47,7 @@ class KekkaiActivationAssets:
 	# 其他变异 
 	I_A_CARD_OTHER = RuleImage(roi_front=(353,502,173,61), roi_back=(353,502,173,61), threshold=0.9, method="Template matching", file="./tasks/KekkaiActivation/a/a_a_card_other.png")
 	# 邀请 
-	I_A_INVITE = RuleImage(roi_front=(1040,552,100,100), roi_back=(1040,552,100,100), threshold=0.8, method="Template matching", file="./tasks/KekkaiActivation/a/a_a_invite.png")
+	I_A_INVITE = RuleImage(roi_front=(1045,559,100,100), roi_back=(1014,538,182,162), threshold=0.8, method="Template matching", file="./tasks/KekkaiActivation/a/a_a_invite.png")
 	# 自动邀请 
 	I_A_AUTO_INVITE = RuleImage(roi_front=(1071,456,53,51), roi_back=(1071,456,53,51), threshold=0.8, method="Template matching", file="./tasks/KekkaiActivation/a/a_a_auto_invite.png")
 	# description 

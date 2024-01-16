@@ -83,8 +83,8 @@
   {
     "itemName": "a_invite",
     "imageName": "a_a_invite.png",
-    "roiFront": "1040,552,100,100",
-    "roiBack": "1040,552,100,100",
+    "roiFront": "1045,559,100,100",
+    "roiBack": "1014,538,182,162",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "邀请"
