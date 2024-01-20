@@ -21,15 +21,16 @@ class RuleImage:
         :param threshold: 阈值  0.8
         :param file: 相对路径, 带后缀
         """
+        self._match_init = False  # 这个是给后面的 等待图片稳定
+        self._image = None  # 这个是匹配的目标
+        self.method = method
+
         self.roi_front: list = list(roi_front)
         self.roi_back = roi_back
-        self.method = method
         self.threshold = threshold
         self.file = file
 
-        self._match_init = False  # 这个是给后面的 等待图片稳定
 
-        self._image = None  # 这个是匹配的目标
 
     @cached_property
     def name(self) -> str:
@@ -90,7 +91,6 @@ class RuleImage:
         """
         return self.method == "Template matching"
 
-
     def corp(self, image: np.array) -> np.array:
         """
         截取图片
@@ -101,10 +101,8 @@ class RuleImage:
         x, y, w, h = int(x), int(y), int(w), int(h)
         return image[y:y + h, x:x + w]
 
-
     def match(self, image: np.array, threshold: float = None) -> bool:
         """
-
         :param threshold:
         :param image:
         :return:
@@ -150,6 +148,7 @@ class RuleImage:
         """
         x, y, w, h = self.roi_front
         return int(x + w//2), int(y + h//2)
+
 
 
 if __name__ == "__main__":

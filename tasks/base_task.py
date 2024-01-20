@@ -22,11 +22,12 @@ from module.config.utils import get_server_next_update, nearest_future, dict_to_
 from module.device.device import Device
 from tasks.GlobalGame.assets import GlobalGameAssets
 from tasks.GlobalGame.config_emergency import FriendInvitation, WhenNetworkAbnormal, WhenNetworkError
+from tasks.Component.Costume.costume_base import CostumeBase
 
 from module.exception import GameStuckError, ScriptError
 
 
-class BaseTask(GlobalGameAssets):
+class BaseTask(GlobalGameAssets, CostumeBase):
     config: Config = None
     device: Device = None
 
@@ -43,9 +44,8 @@ class BaseTask(GlobalGameAssets):
         self.device = device
 
         self.interval_timer = {}  # 这个是用来记录每个匹配的运行间隔的，用于控制运行频率
-
         self.start_time = datetime.now()  # 启动的时间
-
+        self.check_costume(self.config.global_game.costume_config)
         self.friend_timer = None  # 这个是用来记录勾协的时间的
         if self.config.global_game.emergency.invitation_detect_interval:
             self.interval_time = self.config.global_game.emergency.invitation_detect_interval
