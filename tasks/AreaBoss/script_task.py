@@ -68,7 +68,7 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AreaBossAssets):
             self.screenshot()
             if self.appear_then_click(self.I_BACK_BLUE, threshold=0.6, interval=2):
                 continue
-            if self.appear(self.I_EXPLORE, threshold=0.6):
+            if self.appear(self.I_CHECK_MAIN, threshold=0.6):
                 break
 
     def boss(self, battle: RuleImage, collect: bool=False):
