@@ -103,11 +103,10 @@ class ScriptTask(GameUi, Summon, DailyTriflesAssets):
 if __name__ == '__main__':
     from module.config.config import Config
     from module.device.device import Device
-    from memory_profiler import profile
 
     c = Config('oas1')
     d = Device(c)
     t = ScriptTask(c, d)
 
-    t.run_store_sign()
+    t.run()
 

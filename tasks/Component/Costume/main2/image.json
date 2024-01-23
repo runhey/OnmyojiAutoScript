@@ -23,8 +23,8 @@
     "roiFront": "975,238,85,45",
     "roiBack": "752,208,408,100",
     "method": "Template matching",
-    "threshold": 0.8,
-    "description": "description"
+    "threshold": 0.6,
+    "description": "不知道为什么有的时候这个会有一个蝴蝶在上面飞"
   },
   {
     "itemName": "main_goto_town_2",
