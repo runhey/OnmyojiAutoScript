@@ -43,5 +43,23 @@
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"
+  },
+  {
+    "itemName": "check_friend_realm_1",
+    "imageName": "utilize_check_friend_realm_1.png",
+    "roiFront": "1059,17,90,21",
+    "roiBack": "1050,4,107,65",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "check_friend_realm_2",
+    "imageName": "utilize_check_friend_realm_2.png",
+    "roiFront": "590,143,44,52",
+    "roiBack": "538,106,161,158",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
   }
 ]

@@ -104,6 +104,10 @@ class KekkaiUtilizeAssets:
 	I_U_MOON_3 = RuleImage(roi_front=(549,305,53,53), roi_back=(535,173,77,430), threshold=0.8, method="Template matching", file="./tasks/KekkaiUtilize/utilize/utilize_u_moon_3.png")
 	# description 
 	I_U_MOON_2 = RuleImage(roi_front=(552,313,46,44), roi_back=(542,174,81,437), threshold=0.8, method="Template matching", file="./tasks/KekkaiUtilize/utilize/utilize_u_moon_2.png")
+	# description 
+	I_CHECK_FRIEND_REALM_1 = RuleImage(roi_front=(1059,17,90,21), roi_back=(1050,4,107,65), threshold=0.8, method="Template matching", file="./tasks/KekkaiUtilize/utilize/utilize_check_friend_realm_1.png")
+	# description 
+	I_CHECK_FRIEND_REALM_2 = RuleImage(roi_front=(590,143,44,52), roi_back=(538,106,161,158), threshold=0.8, method="Template matching", file="./tasks/KekkaiUtilize/utilize/utilize_check_friend_realm_2.png")
 
 
 	# Ocr Rule Assets

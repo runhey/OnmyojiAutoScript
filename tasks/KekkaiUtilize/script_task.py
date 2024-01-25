@@ -406,13 +406,15 @@ class ScriptTask(GameUi, ReplaceShikigami, KekkaiUtilizeAssets):
             return
         while 1:
             self.screenshot()
-
-            if not self.appear(self.I_U_ENTER_REALM):
-                # 用不显示原按键来判断是否进入是很蠢的
-                time.sleep(0.5)
+            if self.appear(self.I_CHECK_FRIEND_REALM_1):
+                logger.info('Appear enter friend realm button')
                 break
 
-            if self.appear_then_click(self.I_U_ENTER_REALM, interval=1):
+            if self.appear_then_click(self.I_CHECK_FRIEND_REALM_2, interval=1.5):
+                logger.info('Click too fast to enter the friend\'s realm pool')
+                continue
+            if self.appear_then_click(self.I_U_ENTER_REALM, interval=2.5):
+                time.sleep(0.5)
                 continue
         logger.info('Enter friend realm')
 
