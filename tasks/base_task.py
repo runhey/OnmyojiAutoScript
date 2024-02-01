@@ -455,10 +455,11 @@ class BaseTask(GlobalGameAssets, CostumeBase):
             self.screenshot()
         return self.appear_then_click(self.I_UI_REWARD, action=self.C_UI_REWARD, interval=0.4, threshold=0.6)
 
-    def ui_get_reward(self, click_image: RuleImage or RuleOcr or RuleClick):
+    def ui_get_reward(self, click_image: RuleImage or RuleOcr or RuleClick, click_interval: float=1):
         """
         传进来一个点击图片 或是 一个ocr， 会点击这个图片，然后等待‘获得奖励’，
         最后当获得奖励消失后 退出
+        :param click_interval:
         :param click_image:
         :return:
         """
@@ -480,13 +481,13 @@ class BaseTask(GlobalGameAssets, CostumeBase):
                 break
 
             if isinstance(click_image, RuleImage):
-                if self.appear_then_click(click_image, interval=1):
+                if self.appear_then_click(click_image, interval=click_interval):
                     continue
             elif isinstance(click_image, RuleOcr):
-                if self.ocr_appear_click(click_image, interval=1):
+                if self.ocr_appear_click(click_image, interval=click_interval):
                     continue
             elif isinstance(click_image, RuleClick):
-                if self.click(click_image, interval=1):
+                if self.click(click_image, interval=click_interval):
                     continue
 
         return True
