@@ -249,7 +249,7 @@ class ScriptTask(KU, KekkaiActivationAssets):
                 self.screenshot()
                 if self.appear(target_class):
                     break
-            if self.click(self.C_A_SELECT_CARD_LIST, interval=1):
+            if self.click(self.C_A_SELECT_CARD_LIST, interval=2.5):
                 continue
         logger.info('Appear card class: {}'.format(card_class))
         while 1:
