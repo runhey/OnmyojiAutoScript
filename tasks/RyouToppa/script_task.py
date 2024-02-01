@@ -123,9 +123,12 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, RyouToppaAssets):
                 ryou_toppa_start_flag = True
                 break
 
+        logger.attr('ryou_toppa_start_flag', ryou_toppa_start_flag)
+        logger.atter('ryou_toppa_success_penetration', ryou_toppa_success_penetration)
         # 寮突未开 并且有权限， 开开寮突
         if not ryou_toppa_start_flag and ryou_config.raid_config.ryou_access:
-            # 开寮突
+            # 作为寮管理，开启今天的寮突
+            logger.info("As the manager of the ryou, try to start ryou toppa.")
             self.start_ryou_toppa()
 
         # 100% 攻破, 第二天再执行
@@ -133,8 +136,10 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, RyouToppaAssets):
             self.set_next_run(task='RyouToppa', finish=True, success=True)
             raise TaskEnd
         if self.config.ryou_toppa.general_battle_config.lock_team_enable:
+            logger.info("Lock team.")
             self.ui_click(self.I_TOPPA_UNLOCK_TEAM, self.I_TOPPA_LOCK_TEAM)
         else:
+            logger.info("Unlock team.")
             self.ui_click(self.I_TOPPA_LOCK_TEAM, self.I_TOPPA_UNLOCK_TEAM)
         # --------------------------------------------------------------------------------------------------------------
         # 开始突破
