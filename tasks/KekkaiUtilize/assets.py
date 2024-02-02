@@ -108,6 +108,8 @@ class KekkaiUtilizeAssets:
 	I_CHECK_FRIEND_REALM_1 = RuleImage(roi_front=(1059,17,90,21), roi_back=(1050,4,107,65), threshold=0.8, method="Template matching", file="./tasks/KekkaiUtilize/utilize/utilize_check_friend_realm_1.png")
 	# description 
 	I_CHECK_FRIEND_REALM_2 = RuleImage(roi_front=(590,143,44,52), roi_back=(538,106,161,158), threshold=0.8, method="Template matching", file="./tasks/KekkaiUtilize/utilize/utilize_check_friend_realm_2.png")
+	# 好友寄养 
+	I_CHECK_FRIEND_REALM_3 = RuleImage(roi_front=(900,23,22,120), roi_back=(884,11,271,160), threshold=0.9, method="Template matching", file="./tasks/KekkaiUtilize/utilize/utilize_check_friend_realm_3.png")
 
 
 	# Ocr Rule Assets

@@ -61,5 +61,14 @@
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"
+  },
+  {
+    "itemName": "check_friend_realm_3",
+    "imageName": "utilize_check_friend_realm_3.png",
+    "roiFront": "900,23,22,120",
+    "roiBack": "884,11,271,160",
+    "method": "Template matching",
+    "threshold": 0.9,
+    "description": "好友寄养"
   }
 ]
