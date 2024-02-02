@@ -156,9 +156,10 @@ class DigitCounter(Single):
 
 class Duration(Single):
     def after_process(self, result):
-        result = super().after_process(result)
         result = result.replace('I', '1').replace('D', '0').replace('S', '5')
-        result = result.replace('B', '8').replace('：', ':')
+        result = result.replace('o', '0').replace('l', '1').replace('O', '0')
+        result = result.replace('B', '8').replace('：', ':').replace(' ', '')
+        result = super().after_process(result)
         return result
 
     @staticmethod

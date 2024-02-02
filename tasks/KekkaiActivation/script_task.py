@@ -104,7 +104,12 @@ class ScriptTask(KU, KekkaiActivationAssets):
             # 不稳定太，等待动画结束
             if not card_status and not card_effect:
                 # 黄色的 ”激活“
-                if self.appear(self.I_A_ACTIVATE_YELLOW, threshold=0.99):
+                if self.appear(self.I_A_ACTIVATE_YELLOW, threshold=0.95):
+                    continue
+                if self.appear(self.I_A_DEMOUNT):
+                    # 现在在动画里面
+                    logger.info('Now in the animation')
+                    logger.info('Now there is no card')
                     continue
             # 如果这张卡生效着，在使用中
             if card_status and card_effect:
@@ -244,7 +249,7 @@ class ScriptTask(KU, KekkaiActivationAssets):
                 self.screenshot()
                 if self.appear(target_class):
                     break
-            if self.click(self.C_A_SELECT_CARD_LIST, interval=1):
+            if self.click(self.C_A_SELECT_CARD_LIST, interval=2.5):
                 continue
         logger.info('Appear card class: {}'.format(card_class))
         while 1:
@@ -262,6 +267,7 @@ class ScriptTask(KU, KekkaiActivationAssets):
             self.screenshot()
             current_best = self._current_select_best(card_best)
             if current_best is None:
+                logger.warning('There is no card in the list')
                 break
 
             if current_best == self.order_cards[0]:

@@ -3,7 +3,7 @@
     "itemName": "shi_grown",
     "imageName": "realm_shi_grown.png",
     "roiFront": "595,291,35,38",
-    "roiBack": "540,264,155,167",
+    "roiBack": "530,254,181,198",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "育成"
@@ -12,7 +12,7 @@
     "itemName": "shi_card",
     "imageName": "realm_shi_card.png",
     "roiFront": "886,290,44,56",
-    "roiBack": "806,271,183,128",
+    "roiBack": "801,259,215,175",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "结界卡"
@@ -21,7 +21,7 @@
     "itemName": "shi_defense",
     "imageName": "realm_shi_defense.png",
     "roiFront": "294,298,49,56",
-    "roiBack": "255,262,131,146",
+    "roiBack": "215,207,208,221",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"
@@ -30,7 +30,7 @@
     "itemName": "card_exp",
     "imageName": "realm_card_exp.png",
     "roiFront": "889,151,57,54",
-    "roiBack": "863,118,124,121",
+    "roiBack": "829,107,199,185",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "收取经验（没有满的图）"
@@ -39,7 +39,7 @@
     "itemName": "box_ap",
     "imageName": "realm_box_ap.png",
     "roiFront": "815,435,57,51",
-    "roiBack": "778,411,130,100",
+    "roiBack": "744,336,202,204",
     "method": "Template matching",
     "threshold": 0.7,
     "description": "收取体力（没有满）"
@@ -48,7 +48,7 @@
     "itemName": "box_exp",
     "imageName": "realm_box_exp.png",
     "roiFront": "893,440,42,45",
-    "roiBack": "866,407,100,100",
+    "roiBack": "862,396,147,127",
     "method": "Template matching",
     "threshold": 0.7,
     "description": "收取盒子的经验（没有满）"
@@ -57,7 +57,7 @@
     "itemName": "realm_shin",
     "imageName": "realm_realm_shin.png",
     "roiFront": "175,460,54,58",
-    "roiBack": "147,443,100,100",
+    "roiBack": "22,380,393,308",
     "method": "Template matching",
     "threshold": 0.9,
     "description": "结界皮肤"
@@ -92,8 +92,8 @@
   {
     "itemName": "box_exp_max",
     "imageName": "realm_box_exp_max.png",
-    "roiFront": "886,425,61,64",
-    "roiBack": "886,425,61,64",
+    "roiFront": "889,430,61,64",
+    "roiBack": "829,372,228,186",
     "method": "Template matching",
     "threshold": 0.7,
     "description": "盒子经验满"

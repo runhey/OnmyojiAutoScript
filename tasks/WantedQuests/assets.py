@@ -13,6 +13,8 @@ class WantedQuestsAssets:
 	# Click Rule Assets
 	# 秘闻的挑战对话 
 	C_SECRET_CHAT = RuleClick(roi_front=(597,296,59,100), roi_back=(597,296,59,100), name="secret_chat")
+	# 特殊的庭院需要点击，然后才能找到这个悬赏 
+	C_SPECIAL_MAIN = RuleClick(roi_front=(409,572,32,30), roi_back=(404,569,41,35), name="special_main")
 
 
 	# Ocr Rule Assets

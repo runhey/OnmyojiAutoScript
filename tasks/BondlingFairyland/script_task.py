@@ -23,6 +23,13 @@ from module.atom.image import RuleImage
 from module.logger import logger
 from module.exception import TaskEnd
 
+
+
+class BondlingNumberMax(Exception):
+    pass
+
+
+
 class ScriptTask(GameUi, BondlingBattle, SwitchSoul, BondlingFairylandAssets):
 
     ball_pos_list = [None, None, None, None, None]  # 用于记录每一个位置的球是否出现
@@ -45,6 +52,7 @@ class ScriptTask(GameUi, BondlingBattle, SwitchSoul, BondlingFairylandAssets):
         battle_config = cong.battle_config
 
         current_ball = 0  # 用于记录当前捕捉的球的位置
+        success = True
         while 1:
 
             if not self.in_search_ui(screenshot=True):
@@ -72,10 +80,17 @@ class ScriptTask(GameUi, BondlingBattle, SwitchSoul, BondlingFairylandAssets):
                     current_ball -= 1
                     logger.info(f'Current ball number: {current_ball} ')
                     continue
-                if self.run_catch(bondling_config, bondling_switch_soul, battle_config):
-                    current_ball -= 1
-                    logger.info(f'Catch successful and current ball number: {current_ball} ')
-                else:
+
+                try:
+                    if self.run_catch(bondling_config, bondling_switch_soul, battle_config):
+                        current_ball -= 1
+                        logger.info(f'Catch successful and current ball number: {current_ball} ')
+                    else:
+                        break
+                except BondlingNumberMax:
+                    logger.error('Bondling number max, exit')
+                    self.config.notifier.push(title='契灵之境', content='契灵数量已达上限500，请及时处理')
+                    success = False
                     break
             else:
                 # 否则就是模式1
@@ -93,7 +108,10 @@ class ScriptTask(GameUi, BondlingBattle, SwitchSoul, BondlingFairylandAssets):
         self.ui_get_current_page()
         self.ui_goto(page_main)
 
-        self.set_next_run(task='BondlingFairyland', finish=True, success=True)
+        if success:
+            self.set_next_run(task='BondlingFairyland', finish=True, success=True)
+        else:
+            self.set_next_run(task='BondlingFairyland', finish=True, success=False)
         raise TaskEnd
 
 
@@ -479,12 +497,18 @@ class ScriptTask(GameUi, BondlingBattle, SwitchSoul, BondlingFairylandAssets):
         """
         点击 挑战， 主要是结契时的挑战
         """
+        click_count = 0
         while 1:
             self.screenshot()
             if not self.appear(self.I_CLICK_CAPTION, threshold=0.7):
                 break
             if self.appear_then_click(self.I_BALL_FIRE, interval=1):
+                click_count += 1
                 continue
+            if click_count >= 6:
+                logger.error('Click fire failed')
+                logger.error('You might need to check your bondling number. It most possibly arrived to the max 500')
+                raise BondlingNumberMax
             # 某些活动的时候出现 “选择共鸣的阴阳师”
             if self.appear_then_click(self.I_UI_CONFIRM, interval=1):
                 continue

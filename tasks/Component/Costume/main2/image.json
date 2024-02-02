@@ -1,0 +1,47 @@
+[
+  {
+    "itemName": "check_main_2",
+    "imageName": "main2_check_main_2.png",
+    "roiFront": "1090,146,48,55",
+    "roiBack": "880,108,271,100",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "main_goto_exploration_2",
+    "imageName": "main2_main_goto_exploration_2.png",
+    "roiFront": "749,197,50,54",
+    "roiBack": "506,166,441,100",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "main_goto_summon_2",
+    "imageName": "main2_main_goto_summon_2.png",
+    "roiFront": "975,238,85,45",
+    "roiBack": "752,208,408,100",
+    "method": "Template matching",
+    "threshold": 0.6,
+    "description": "不知道为什么有的时候这个会有一个蝴蝶在上面飞"
+  },
+  {
+    "itemName": "main_goto_town_2",
+    "imageName": "main2_main_goto_town_2.png",
+    "roiFront": "783,328,47,60",
+    "roiBack": "608,310,398,86",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "pet_house_2",
+    "imageName": "main2_pet_house_2.png",
+    "roiFront": "1243,458,29,40",
+    "roiBack": "1198,396,81,147",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  }
+]

@@ -2,6 +2,7 @@ import os
 import time
 from collections import deque
 from datetime import datetime
+from pathlib import Path
 
 import cv2
 import numpy as np
@@ -119,18 +120,21 @@ class Screenshot(Adb, DroidCast, Scrcpy, Window):
         """
         now = time.time()
         if interval is None:
-            interval = self.config.SCREEN_SHOT_SAVE_INTERVAL
+            interval = 1  # 可改
 
         if now - self._last_save_time.get(genre, 0) > interval:
             fmt = 'png'
-            file = '%s.%s' % (int(now * 1000), fmt)
+            file: str = '%s.%s' % (int(now * 1000), fmt)
 
-            folder = self.config.SCREEN_SHOT_SAVE_FOLDER_BASE if to_base_folder else self.config.SCREEN_SHOT_SAVE_FOLDER
-            folder = os.path.join(folder, genre)
-            if not os.path.exists(folder):
-                os.mkdir(folder)
+            folder = Path('./log/screenshots')
+            folder.mkdir(parents=True, exist_ok=True)
+            file: Path = folder / file
+            file = file.resolve()
+            # folder = os.path.join(folder, genre)
+            # if not os.path.exists(folder):
+            #     os.mkdir(folder)
 
-            file = os.path.join(folder, file)
+            # file = os.path.join(folder, file)
             self.image_save(file)
             self._last_save_time[genre] = now
             return True

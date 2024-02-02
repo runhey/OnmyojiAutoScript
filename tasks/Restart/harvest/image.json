@@ -3,7 +3,7 @@
     "itemName": "harvest_jade",
     "imageName": "harvest_harvest_jade.png",
     "roiFront": "732,489,34,33",
-    "roiBack": "177,451,963,100",
+    "roiBack": "177,451,973,141",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "点击勾玉"
@@ -11,8 +11,8 @@
   {
     "itemName": "harvest_sign",
     "imageName": "harvest_harvest_sign.png",
-    "roiFront": "295,496,32,43",
-    "roiBack": "70,481,889,71",
+    "roiFront": "397,500,24,34",
+    "roiBack": "70,471,889,89",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "签到小图标"
@@ -30,7 +30,7 @@
     "itemName": "harvest_sign_999",
     "imageName": "harvest_harvest_sign_999.png",
     "roiFront": "345,494,23,29",
-    "roiBack": "51,459,888,92",
+    "roiBack": "51,459,888,103",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "999签到福袋"
@@ -39,7 +39,7 @@
     "itemName": "harvest_mail",
     "imageName": "harvest_harvest_mail.png",
     "roiFront": "337,505,37,25",
-    "roiBack": "38,476,880,78",
+    "roiBack": "38,465,880,89",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "邮件小图标"
@@ -93,7 +93,7 @@
     "itemName": "harvest_ap",
     "imageName": "harvest_harvest_ap.png",
     "roiFront": "721,486,31,38",
-    "roiBack": "206,462,999,81",
+    "roiBack": "206,462,970,134",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"
@@ -111,7 +111,7 @@
     "itemName": "harvest_sign_3",
     "imageName": "harvest_harvest_sign_3.png",
     "roiFront": "291,495,33,36",
-    "roiBack": "100,473,1014,70",
+    "roiBack": "100,473,1014,91",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "签到"

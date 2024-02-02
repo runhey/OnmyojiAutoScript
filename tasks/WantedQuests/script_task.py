@@ -19,6 +19,7 @@ from tasks.Component.GeneralInvite.general_invite import GeneralInvite
 from tasks.Secret.script_task import ScriptTask as SecretScriptTask
 from tasks.WantedQuests.config import WantedQuestsConfig
 from tasks.WantedQuests.assets import WantedQuestsAssets
+from tasks.Component.Costume.config import MainType
 
 class ScriptTask(SecretScriptTask, GeneralInvite, WantedQuestsAssets):
 
@@ -116,6 +117,9 @@ class ScriptTask(SecretScriptTask, GeneralInvite, WantedQuestsAssets):
             if self.appear_then_click(self.I_WQ_DONE, interval=1):
                 continue
             if self.appear_then_click(self.I_TRACE_ENABLE, interval=1):
+                continue
+            if self.special_main and self.click(self.C_SPECIAL_MAIN, interval=3):
+                logger.info('Click special main left to find wanted quests')
                 continue
             if self.appear(self.I_UI_BACK_RED):
                 if not done_timer.started():
@@ -272,6 +276,15 @@ class ScriptTask(SecretScriptTask, GeneralInvite, WantedQuestsAssets):
         invite(self.I_WQ_INVITE_1)
         invite(self.I_WQ_INVITE_2)
         invite(self.I_WQ_INVITE_3)
+
+    @cached_property
+    def special_main(self) -> bool:
+        # 特殊的庭院需要点一下，左边然后才能找到图标
+        main_type = self.config.global_game.costume_config.costume_main_type
+        if main_type == MainType.COSTUME_MAIN_3:
+            return True
+        return False
+
 
 if __name__ == '__main__':
     from module.config.config import Config

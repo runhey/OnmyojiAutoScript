@@ -1,0 +1,20 @@
+[
+  {
+    "itemName": "shi_card_1",
+    "imageName": "realm1_shi_card_1.png",
+    "roiFront": "919,295,36,66",
+    "roiBack": "868,238,141,150",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "shi_defense_1",
+    "imageName": "realm1_shi_defense_1.png",
+    "roiFront": "308,294,35,100",
+    "roiBack": "197,241,247,207",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  }
+]

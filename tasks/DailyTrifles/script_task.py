@@ -89,7 +89,7 @@ class ScriptTask(GameUi, Summon, DailyTriflesAssets):
             self.ui_goto(page_main)
             return
 
-        if self.ui_get_reward(self.I_GIFT_SIGN):
+        if self.ui_get_reward(self.I_GIFT_SIGN, click_interval=2.5):
             logger.info('Get reward of gift sign')
 
         self.ui_click(self.I_UI_BACK_YELLOW, self.I_CHECK_MALL)
@@ -103,11 +103,10 @@ class ScriptTask(GameUi, Summon, DailyTriflesAssets):
 if __name__ == '__main__':
     from module.config.config import Config
     from module.device.device import Device
-    from memory_profiler import profile
 
     c = Config('oas1')
     d = Device(c)
     t = ScriptTask(c, d)
 
-    t.run_store_sign()
+    t.run()
 
