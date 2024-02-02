@@ -267,6 +267,7 @@ class ScriptTask(KU, KekkaiActivationAssets):
             self.screenshot()
             current_best = self._current_select_best(card_best)
             if current_best is None:
+                logger.warning('There is no card in the list')
                 break
 
             if current_best == self.order_cards[0]:
