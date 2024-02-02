@@ -124,7 +124,7 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, RyouToppaAssets):
                 break
 
         logger.attr('ryou_toppa_start_flag', ryou_toppa_start_flag)
-        logger.atter('ryou_toppa_success_penetration', ryou_toppa_success_penetration)
+        logger.attr('ryou_toppa_success_penetration', ryou_toppa_success_penetration)
         # 寮突未开 并且有权限， 开开寮突
         if not ryou_toppa_start_flag and ryou_config.raid_config.ryou_access:
             # 作为寮管理，开启今天的寮突
