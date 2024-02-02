@@ -101,3 +101,16 @@ class CostumeAssets:
 	I_PET_HOUSE_7 = RuleImage(roi_front=(1163,468,50,40), roi_back=(1033,444,241,73), threshold=0.8, method="Template matching", file="./tasks/Component/Costume/main7/main7_pet_house_7.png")
 
 
+	# Image Rule Assets
+	# description 
+	I_CHECK_MAIN_8 = RuleImage(roi_front=(843,116,240,64), roi_back=(149,108,1088,100), threshold=0.8, method="Template matching", file="./tasks/Component/Costume/main8/main8_check_main_8.png")
+	# description 
+	I_MAIN_GOTO_EXPLORATION_8 = RuleImage(roi_front=(665,141,59,61), roi_back=(239,125,904,100), threshold=0.8, method="Template matching", file="./tasks/Component/Costume/main8/main8_main_goto_exploration_8.png")
+	#  
+	I_MAIN_GOTO_SUMMON_8 = RuleImage(roi_front=(1236,212,39,62), roi_back=(1085,192,194,119), threshold=0.8, method="Template matching", file="./tasks/Component/Costume/main8/main8_main_goto_summon_8.png")
+	# description 
+	I_MAIN_GOTO_TOWN_8 = RuleImage(roi_front=(671,434,56,51), roi_back=(308,409,888,82), threshold=0.8, method="Template matching", file="./tasks/Component/Costume/main8/main8_main_goto_town_8.png")
+	# description 
+	I_PET_HOUSE_8 = RuleImage(roi_front=(1110,499,50,40), roi_back=(1033,469,241,83), threshold=0.8, method="Template matching", file="./tasks/Component/Costume/main8/main8_pet_house_8.png")
+
+

@@ -13,6 +13,7 @@ class MainType(str, Enum):
     COSTUME_MAIN_5 = 'costume_main_5'  # 枫色秋庭
     COSTUME_MAIN_6 = 'costume_main_6'  # 暖池青苑
     COSTUME_MAIN_7 = 'costume_main_7'  # 盛夏幽庭
+    COSTUME_MAIN_8 = 'costume_main_8'  # 远海航船
 
 
 class CostumeConfig(BaseModel):
