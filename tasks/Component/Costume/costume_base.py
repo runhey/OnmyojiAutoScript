@@ -4,9 +4,12 @@
 
 from module.atom.image import RuleImage
 
-from tasks.Component.Costume.config import MainType, CostumeConfig
+from tasks.Component.Costume.config import (MainType, CostumeConfig, RealmType,
+                                            ThemeType, ShikigamiType, SignType, BattleType)
 from tasks.Component.Costume.assets import CostumeAssets
+from tasks.Component.CostumeRealm.assets import CostumeRealmAssets
 
+# 庭院皮肤
 main_costume_model = {
     MainType.COSTUME_MAIN_1: {'I_CHECK_MAIN': 'I_CHECK_MAIN_1',
                               'I_MAIN_GOTO_EXPLORATION': 'I_MAIN_GOTO_EXPLORATION_1',
@@ -50,19 +53,17 @@ main_costume_model = {
                               'I_PET_HOUSE': 'I_PET_HOUSE_8', },
 }
 
+# 结界皮肤
+realm_costume_model = {
+    RealmType.COSTUME_REALM_1: {'I_SHI_CARD': 'I_SHI_CARD_1',
+                                'I_SHI_DEFENSE': 'I_SHI_DEFENSE_1',},
+}
 
 class CostumeBase:
 
     def check_costume(self, config: CostumeConfig):
         self.check_costume_main(config.costume_main_type)
-
-    def check_costume_main(self, main_type: MainType):
-        if main_type == MainType.COSTUME_MAIN:
-            return
-        costume_assets = CostumeAssets()
-        for key, value in main_costume_model[main_type].items():
-            assert_value: RuleImage = getattr(costume_assets, value)
-            self.replace_img(key, assert_value)
+        self.check_costume_realm(config.costume_realm_type)
 
     def replace_img(self, asset_before: str, asset_after: RuleImage):
         if not hasattr(self, asset_before):
@@ -73,6 +74,22 @@ class CostumeBase:
         asset_before_object.roi_back = asset_after.roi_back
         asset_before_object.threshold = asset_after.threshold
         asset_before_object.file = asset_after.file
+
+    def check_costume_main(self, main_type: MainType):
+        if main_type == MainType.COSTUME_MAIN:
+            return
+        costume_assets = CostumeAssets()
+        for key, value in main_costume_model[main_type].items():
+            assert_value: RuleImage = getattr(costume_assets, value)
+            self.replace_img(key, assert_value)
+
+    def check_costume_realm(self, realm_type: RealmType):
+        if realm_type == RealmType.COSTUME_REALM_DEFAULT:
+            return
+        costume_realm_assets = CostumeRealmAssets()
+        for key, value in realm_costume_model[realm_type].items():
+            assert_value: RuleImage = getattr(costume_realm_assets, value)
+            self.replace_img(key, assert_value)
 
 
 
