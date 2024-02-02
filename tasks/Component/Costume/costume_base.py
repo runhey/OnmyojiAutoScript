@@ -18,6 +18,11 @@ main_costume_model = {
                               'I_MAIN_GOTO_SUMMON': 'I_MAIN_GOTO_SUMMON_2',
                               'I_MAIN_GOTO_TOWN': 'I_MAIN_GOTO_TOWN_2',
                               'I_PET_HOUSE': 'I_PET_HOUSE_2', },
+    MainType.COSTUME_MAIN_3: {'I_CHECK_MAIN': 'I_CHECK_MAIN_3',
+                              'I_MAIN_GOTO_EXPLORATION': 'I_MAIN_GOTO_EXPLORATION_3',
+                              'I_MAIN_GOTO_SUMMON': 'I_MAIN_GOTO_SUMMON_3',
+                              'I_MAIN_GOTO_TOWN': 'I_MAIN_GOTO_TOWN_3',
+                              'I_PET_HOUSE': 'I_PET_HOUSE_3', },
 }
 
 

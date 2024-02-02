@@ -8,6 +8,7 @@ class MainType(str, Enum):
     COSTUME_MAIN = 'costume_main'  # 初语谧景
     COSTUME_MAIN_1 = 'costume_main_1'  # 织梦莲庭
     COSTUME_MAIN_2 = 'costume_main_2'  # 琼夜淬光
+    COSTUME_MAIN_3 = 'costume_main_3'  # 烬夜韶阁
 
 
 class CostumeConfig(BaseModel):
