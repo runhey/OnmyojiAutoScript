@@ -11,7 +11,8 @@ class MainType(str, Enum):
     COSTUME_MAIN_3 = 'costume_main_3'  # 烬夜韶阁
     COSTUME_MAIN_4 = 'costume_main_4'  # 笔墨山河
     COSTUME_MAIN_5 = 'costume_main_5'  # 枫色秋庭
-    COSTUME_MAIN_6 = 'costume_main_6'  # 枫色秋庭
+    COSTUME_MAIN_6 = 'costume_main_6'  # 暖池青苑
+    COSTUME_MAIN_7 = 'costume_main_7'  # 盛夏幽庭
 
 
 class CostumeConfig(BaseModel):
