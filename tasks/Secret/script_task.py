@@ -200,6 +200,8 @@ class ScriptTask(GameUi, GeneralBattle, SwitchSoul, SecretAssets):
 
         if screenshot:
             self.screenshot()
+        if self.appear(self.I_CHAT_CLOSE_BUTTON):
+            self.ui_click_until_disappear(self.I_CHAT_CLOSE_BUTTON, interval=2)
         text_pos = self.O_SE_NO_PASS.ocr(self.device.image)
         if text_pos != (0, 0, 0, 0):
             # 如果能找得到 未通关 ，那可以挑战
@@ -252,7 +254,7 @@ class ScriptTask(GameUi, GeneralBattle, SwitchSoul, SecretAssets):
             self.screenshot()
             if self.appear(self.I_SE_BATTLE_WIN):
                 logger.info('Win battle')
-                self.ui_click_until_disappear(self.I_SE_BATTLE_WIN)
+                self.ui_click_until_disappear(self.I_SE_BATTLE_WIN, interval=2)
                 return True
             if self.appear_then_click(self.I_WIN, interval=1):
                 continue

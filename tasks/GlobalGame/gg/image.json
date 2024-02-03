@@ -52,5 +52,14 @@
     "method": "Template matching",
     "threshold": 0.8,
     "description": "我还没有碰到这个情况没能截图"
+  },
+  {
+    "itemName": "chat_close_button",
+    "imageName": "gg_chat_close_button.png",
+    "roiFront": "632,343,49,103",
+    "roiBack": "632,343,49,103",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
   }
 ]
