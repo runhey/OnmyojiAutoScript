@@ -57,11 +57,18 @@ main_costume_model = {
 realm_costume_model = {
     RealmType.COSTUME_REALM_1: {'I_SHI_CARD': 'I_SHI_CARD_1',
                                 'I_SHI_DEFENSE': 'I_SHI_DEFENSE_1',},
+    RealmType.COSTUME_REALM_2: {'I_SHI_CARD': 'I_SHI_CARD_2',
+                                'I_SHI_DEFENSE': 'I_SHI_DEFENSE_2',
+                                'I_SHI_GROWN': 'I_SHI_GROWN_2',
+                                'I_BOX_AP': 'I_BOX_AP_2',
+                                'I_BOX_EXP': 'I_BOX_EXP_2'},
 }
 
 class CostumeBase:
 
-    def check_costume(self, config: CostumeConfig):
+    def check_costume(self, config: CostumeConfig=None):
+        if config is None:
+            config: CostumeConfig = self.config.model.global_game.costume_config
         self.check_costume_main(config.costume_main_type)
         self.check_costume_realm(config.costume_realm_type)
 

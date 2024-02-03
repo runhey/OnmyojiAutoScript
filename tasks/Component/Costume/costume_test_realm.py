@@ -7,6 +7,7 @@ from module.logger import logger
 from module.base.timer import Timer
 
 from tasks.KekkaiActivation.script_task import ScriptTask as KekkaiActivationScriptTask
+from tasks.Component.Costume.config import RealmType
 
 class ScriptTask(KekkaiActivationScriptTask):
 
@@ -42,11 +43,16 @@ class ScriptTask(KekkaiActivationScriptTask):
                 logger.info('Five seconds test over')
                 break
 
-        logger.info('--------------------------------------------------------')
-        logger.info('%-20s   %s' % ('Image', 'Count'))
+        print('--------------------------------------------------------')
+        print('%-20s   %s' % ('Image', 'Count'))
         for i in images_count:
-            logger.info('%-20s %3d times' % (i[0], i[1]))
+            print('%-20s %3d times' % (i[0], i[1]))
         logger.info('Test Done')
+
+    def set_costume(self, costume: RealmType=RealmType.COSTUME_REALM_DEFAULT):
+        self.config.model.global_game.costume_config.costume_realm_type = costume
+        self.check_costume()
+        logger.info('Set costume to %s' % self.config.model.global_game.costume_config.costume_realm_type)
 
 
 if __name__ == '__main__':
@@ -56,6 +62,7 @@ if __name__ == '__main__':
     c = Config('oas1')
     d = Device(c)
     t = ScriptTask(c, d)
+    t.set_costume(RealmType.COSTUME_REALM_2)
     t.run()
 
 
