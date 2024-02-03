@@ -11,8 +11,8 @@
   {
     "itemName": "mall_consignment_check",
     "imageName": "navbar_mall_consignment_check.png",
-    "roiFront": "171,83,100,49",
-    "roiBack": "171,83,100,49",
+    "roiFront": "12,166,100,390",
+    "roiBack": "12,166,100,390",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "寄售屋"

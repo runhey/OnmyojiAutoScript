@@ -80,7 +80,7 @@ class RichManAssets:
 
 	# Image Rule Assets
 	# 进入寄售屋 
-	I_CON_ENTER_CHECK = RuleImage(roi_front=(660,485,393,100), roi_back=(660,485,393,100), threshold=0.8, method="Template matching", file="./tasks/RichMan/mall/consignment/consignment_con_enter_check.png")
+	I_CON_ENTER_CHECK = RuleImage(roi_front=(660,423,393,162), roi_back=(660,423,393,162), threshold=0.8, method="Template matching", file="./tasks/RichMan/mall/consignment/consignment_con_enter_check.png")
 	# 兑换 
 	I_CON_ENTER = RuleImage(roi_front=(1176,304,68,74), roi_back=(1176,304,68,74), threshold=0.8, method="Template matching", file="./tasks/RichMan/mall/consignment/consignment_con_enter.png")
 	# 寄售券 
@@ -152,7 +152,7 @@ class RichManAssets:
 	# 寄售屋 
 	I_MALL_CONSIGNMENT = RuleImage(roi_front=(200,626,63,72), roi_back=(175,610,120,103), threshold=0.8, method="Template matching", file="./tasks/RichMan/mall/navbar/navbar_mall_consignment.png")
 	# 寄售屋 
-	I_MALL_CONSIGNMENT_CHECK = RuleImage(roi_front=(171,83,100,49), roi_back=(171,83,100,49), threshold=0.8, method="Template matching", file="./tasks/RichMan/mall/navbar/navbar_mall_consignment_check.png")
+	I_MALL_CONSIGNMENT_CHECK = RuleImage(roi_front=(12,166,100,390), roi_back=(12,166,100,390), threshold=0.8, method="Template matching", file="./tasks/RichMan/mall/navbar/navbar_mall_consignment_check.png")
 	# 密卷屋 
 	I_MALL_SCCALES = RuleImage(roi_front=(447,634,91,64), roi_back=(427,621,147,92), threshold=0.8, method="Template matching", file="./tasks/RichMan/mall/navbar/navbar_mall_sccales.png")
 	# 密卷屋 
