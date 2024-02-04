@@ -8,7 +8,6 @@ from module.logger import logger
 
 class WhenTaskQueueEmpty(str, Enum):
     GOTO_MAIN = 'goto_main'
-    GOTO_HOME = 'goto_home'
     CLOSE_GAME = 'close_game'
 
 class ScheduleRule(str, Enum):
