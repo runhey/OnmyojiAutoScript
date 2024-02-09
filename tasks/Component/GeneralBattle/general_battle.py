@@ -452,7 +452,7 @@ class GeneralBattle(GeneralBuff, GeneralBattleAssets):
         if not buff:
             return
         logger.info(f'Open buff {buff}')
-        self.ui_click(self.I_BUFF, self.I_CLOUD)
+        self.ui_click(self.I_BUFF, self.I_CLOUD, interval=2)
         if isinstance(buff, BuffClass):
             buff = [buff]
         match_method = {

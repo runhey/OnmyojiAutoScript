@@ -29,7 +29,7 @@
   {
     "itemName": "sp_swipe_check",
     "imageName": "special_sp_swipe_check.png",
-    "roiFront": "866,439,170,102",
+    "roiFront": "847,461,170,82",
     "roiBack": "759,374,341,193",
     "method": "Template matching",
     "threshold": 0.8,

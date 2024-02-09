@@ -23,6 +23,8 @@ class GlobalGameAssets:
 	I_NETWORK_ERROR = RuleImage(roi_front=(431,253,416,208), roi_back=(431,253,416,208), threshold=0.8, method="Template matching", file="./tasks/GlobalGame/gg/gg_network_error.png")
 	# 我还没有碰到这个情况没能截图 
 	I_CLIENT_CLEAR = RuleImage(roi_front=(578,369,151,72), roi_back=(578,369,151,72), threshold=0.8, method="Template matching", file="./tasks/GlobalGame/gg/gg_client_clear.png")
+	# description 
+	I_CHAT_CLOSE_BUTTON = RuleImage(roi_front=(632,343,49,103), roi_back=(632,343,49,103), threshold=0.8, method="Template matching", file="./tasks/GlobalGame/gg/gg_chat_close_button.png")
 
 
 	# Click Rule Assets

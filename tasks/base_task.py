@@ -511,9 +511,10 @@ class BaseTask(GlobalGameAssets, CostumeBase):
             elif isinstance(click, RuleOcr) and self.ocr_appear_click(click, interval=interval):
                 continue
 
-    def ui_click_until_disappear(self, click):
+    def ui_click_until_disappear(self, click, interval: float =1):
         """
         点击一个按钮直到消失
+        :param interval:
         :param click:
         :return:
         """
@@ -521,5 +522,5 @@ class BaseTask(GlobalGameAssets, CostumeBase):
             self.screenshot()
             if not self.appear(click):
                 break
-            elif self.appear_then_click(click, interval=1):
+            elif self.appear_then_click(click, interval=interval):
                 continue

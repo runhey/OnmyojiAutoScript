@@ -53,7 +53,7 @@ if __name__ == '__main__':
     config = Config('oas1')
     device = Device(config)
     task = ScriptTask(config, device)
-    task.harvest()
+    task.app_restart()
     # task.screenshot()
     # print(task.appear_then_click(task.I_LOGIN_SCROOLL_CLOSE, threshold=0.9))
 

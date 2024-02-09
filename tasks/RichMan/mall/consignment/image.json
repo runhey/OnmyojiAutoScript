@@ -2,8 +2,8 @@
   {
     "itemName": "con_enter_check",
     "imageName": "consignment_con_enter_check.png",
-    "roiFront": "660,485,393,100",
-    "roiBack": "660,485,393,100",
+    "roiFront": "660,423,393,162",
+    "roiBack": "660,423,393,162",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "进入寄售屋"

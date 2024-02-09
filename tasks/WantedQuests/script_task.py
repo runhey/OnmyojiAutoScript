@@ -43,7 +43,7 @@ class ScriptTask(SecretScriptTask, GeneralInvite, WantedQuestsAssets):
             if ocr_error_count > 10:
                 logger.warning('OCR failed too many times, exit')
                 break
-            if self.ocr_appear(self.O_WQ_TEXT_1, interval=0.7):
+            if self.ocr_appear(self.O_WQ_TEXT_1, interval=1):
                 cu, re, total = self.O_WQ_NUM_1.ocr(self.device.image)
                 if cu == re == total == 0:
                     logger.warning('OCR failed and skip this round')
@@ -53,8 +53,8 @@ class ScriptTask(SecretScriptTask, GeneralInvite, WantedQuestsAssets):
                     cu = cu % 10
                 if cu < total and re != 0:
                     self.execute_mission(self.O_WQ_TEXT_1, total, number_challenge)
-                continue
-            if self.ocr_appear(self.O_WQ_TEXT_2, interval=0.7):
+
+            if self.ocr_appear(self.O_WQ_TEXT_2, interval=1):
                 cu, re, total = self.O_WQ_NUM_2.ocr(self.device.image)
                 if cu == re == total == 0:
                     logger.warning('OCR failed and skip this round')
@@ -253,7 +253,7 @@ class ScriptTask(SecretScriptTask, GeneralInvite, WantedQuestsAssets):
             self.screenshot()
             if not self.appear(add_button):
                 return False
-            self.ui_click(add_button, self.I_INVITE_ENSURE)
+            self.ui_click(add_button, self.I_INVITE_ENSURE, interval=2.5)
             sleep(1)
             self.click(self.I_WQ_FIREND_1)
             sleep(0.4)
