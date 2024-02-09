@@ -171,25 +171,25 @@ class RichManAssets:
 
 	# Image Rule Assets
 	# 特殊 
-	I_SIDE_SURE_SPECIAL = RuleImage(roi_front=(1172,91,70,74), roi_back=(1172,91,70,74), threshold=0.8, method="Template matching", file="./tasks/RichMan/mall/navbar/navbar_side_sure_special.png")
+	I_SIDE_SURE_SPECIAL = RuleImage(roi_front=(1172,91,70,74), roi_back=(1172,91,70,74), threshold=0.7, method="Template matching", file="./tasks/RichMan/mall/navbar/navbar_side_sure_special.png")
 	# 特殊 
-	I_SIDE_CHECK_SPECIAL = RuleImage(roi_front=(102,7,42,42), roi_back=(102,7,42,42), threshold=0.8, method="Template matching", file="./tasks/RichMan/mall/navbar/navbar_side_check_special.png")
+	I_SIDE_CHECK_SPECIAL = RuleImage(roi_front=(102,7,42,42), roi_back=(102,7,42,42), threshold=0.7, method="Template matching", file="./tasks/RichMan/mall/navbar/navbar_side_check_special.png")
 	# 荣誉 
-	I_SIDE_SUER_HONOR = RuleImage(roi_front=(1171,185,72,74), roi_back=(1171,185,72,74), threshold=0.8, method="Template matching", file="./tasks/RichMan/mall/navbar/navbar_side_suer_honor.png")
+	I_SIDE_SUER_HONOR = RuleImage(roi_front=(1180,191,59,60), roi_back=(1150,159,103,132), threshold=0.7, method="Template matching", file="./tasks/RichMan/mall/navbar/navbar_side_suer_honor.png")
 	# 荣誉 
-	I_SIDE_CHECK_HONOR = RuleImage(roi_front=(694,12,41,42), roi_back=(694,12,41,42), threshold=0.8, method="Template matching", file="./tasks/RichMan/mall/navbar/navbar_side_check_honor.png")
+	I_SIDE_CHECK_HONOR = RuleImage(roi_front=(694,12,41,42), roi_back=(694,12,41,42), threshold=0.7, method="Template matching", file="./tasks/RichMan/mall/navbar/navbar_side_check_honor.png")
 	# 友情点 
-	I_SIDE_SURE_FRIENDS = RuleImage(roi_front=(1174,279,68,70), roi_back=(1174,279,68,70), threshold=0.8, method="Template matching", file="./tasks/RichMan/mall/navbar/navbar_side_sure_friends.png")
+	I_SIDE_SURE_FRIENDS = RuleImage(roi_front=(1174,277,68,70), roi_back=(1163,258,93,109), threshold=0.7, method="Template matching", file="./tasks/RichMan/mall/navbar/navbar_side_sure_friends.png")
 	# 友情点 
-	I_SIDE_CHECK_FRIENDS = RuleImage(roi_front=(890,8,39,43), roi_back=(890,8,39,43), threshold=0.8, method="Template matching", file="./tasks/RichMan/mall/navbar/navbar_side_check_friends.png")
+	I_SIDE_CHECK_FRIENDS = RuleImage(roi_front=(890,8,39,43), roi_back=(890,8,39,43), threshold=0.7, method="Template matching", file="./tasks/RichMan/mall/navbar/navbar_side_check_friends.png")
 	# 勋章 
-	I_SIDE_SURE_MEDAL = RuleImage(roi_front=(1175,370,72,73), roi_back=(1175,370,72,73), threshold=0.8, method="Template matching", file="./tasks/RichMan/mall/navbar/navbar_side_sure_medal.png")
+	I_SIDE_SURE_MEDAL = RuleImage(roi_front=(1190,375,39,62), roi_back=(1156,352,99,113), threshold=0.7, method="Template matching", file="./tasks/RichMan/mall/navbar/navbar_side_sure_medal.png")
 	# 勋章 
-	I_SIDE_CHECK_MEDAL = RuleImage(roi_front=(889,11,40,44), roi_back=(889,11,40,44), threshold=0.8, method="Template matching", file="./tasks/RichMan/mall/navbar/navbar_side_check_medal.png")
+	I_SIDE_CHECK_MEDAL = RuleImage(roi_front=(889,11,40,44), roi_back=(889,11,40,44), threshold=0.7, method="Template matching", file="./tasks/RichMan/mall/navbar/navbar_side_check_medal.png")
 	# 魅力值 
-	I_SIDE_SURE_CHARISMA = RuleImage(roi_front=(1175,464,72,74), roi_back=(1175,464,72,74), threshold=0.8, method="Template matching", file="./tasks/RichMan/mall/navbar/navbar_side_sure_charisma.png")
+	I_SIDE_SURE_CHARISMA = RuleImage(roi_front=(1181,467,59,58), roi_back=(1158,445,101,106), threshold=0.7, method="Template matching", file="./tasks/RichMan/mall/navbar/navbar_side_sure_charisma.png")
 	# 魅力值 
-	I_SIDE_CHECK_CHARISMA = RuleImage(roi_front=(886,4,48,46), roi_back=(886,4,48,46), threshold=0.8, method="Template matching", file="./tasks/RichMan/mall/navbar/navbar_side_check_charisma.png")
+	I_SIDE_CHECK_CHARISMA = RuleImage(roi_front=(886,4,48,46), roi_back=(886,4,48,46), threshold=0.7, method="Template matching", file="./tasks/RichMan/mall/navbar/navbar_side_check_charisma.png")
 
 
 	# Ocr Rule Assets
@@ -284,7 +284,7 @@ class RichManAssets:
 	# 购买低级盘 
 	I_SP_BUY_LOW = RuleImage(roi_front=(176,148,144,108), roi_back=(128,142,902,449), threshold=0.8, method="Template matching", file="./tasks/RichMan/mall/special/special_sp_buy_low.png")
 	# 判断是否滑动到底 
-	I_SP_SWIPE_CHECK = RuleImage(roi_front=(866,439,170,102), roi_back=(759,374,341,193), threshold=0.8, method="Template matching", file="./tasks/RichMan/mall/special/special_sp_swipe_check.png")
+	I_SP_SWIPE_CHECK = RuleImage(roi_front=(847,461,170,82), roi_back=(759,374,341,193), threshold=0.8, method="Template matching", file="./tasks/RichMan/mall/special/special_sp_swipe_check.png")
 
 
 	# Ocr Rule Assets

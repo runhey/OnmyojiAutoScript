@@ -5,7 +5,7 @@
     "roiFront": "1172,91,70,74",
     "roiBack": "1172,91,70,74",
     "method": "Template matching",
-    "threshold": 0.8,
+    "threshold": 0.7,
     "description": "特殊"
   },
   {
@@ -14,16 +14,16 @@
     "roiFront": "102,7,42,42",
     "roiBack": "102,7,42,42",
     "method": "Template matching",
-    "threshold": 0.8,
+    "threshold": 0.7,
     "description": "特殊"
   },
   {
     "itemName": "side_suer_honor",
     "imageName": "navbar_side_suer_honor.png",
-    "roiFront": "1171,185,72,74",
-    "roiBack": "1171,185,72,74",
+    "roiFront": "1180,191,59,60",
+    "roiBack": "1150,159,103,132",
     "method": "Template matching",
-    "threshold": 0.8,
+    "threshold": 0.7,
     "description": "荣誉"
   },
   {
@@ -32,16 +32,16 @@
     "roiFront": "694,12,41,42",
     "roiBack": "694,12,41,42",
     "method": "Template matching",
-    "threshold": 0.8,
+    "threshold": 0.7,
     "description": "荣誉"
   },
   {
     "itemName": "side_sure_friends",
     "imageName": "navbar_side_sure_friends.png",
-    "roiFront": "1174,279,68,70",
-    "roiBack": "1174,279,68,70",
+    "roiFront": "1174,277,68,70",
+    "roiBack": "1163,258,93,109",
     "method": "Template matching",
-    "threshold": 0.8,
+    "threshold": 0.7,
     "description": "友情点"
   },
   {
@@ -50,16 +50,16 @@
     "roiFront": "890,8,39,43",
     "roiBack": "890,8,39,43",
     "method": "Template matching",
-    "threshold": 0.8,
+    "threshold": 0.7,
     "description": "友情点"
   },
   {
     "itemName": "side_sure_medal",
     "imageName": "navbar_side_sure_medal.png",
-    "roiFront": "1175,370,72,73",
-    "roiBack": "1175,370,72,73",
+    "roiFront": "1190,375,39,62",
+    "roiBack": "1156,352,99,113",
     "method": "Template matching",
-    "threshold": 0.8,
+    "threshold": 0.7,
     "description": "勋章"
   },
   {
@@ -68,16 +68,16 @@
     "roiFront": "889,11,40,44",
     "roiBack": "889,11,40,44",
     "method": "Template matching",
-    "threshold": 0.8,
+    "threshold": 0.7,
     "description": "勋章"
   },
   {
     "itemName": "side_sure_charisma",
     "imageName": "navbar_side_sure_charisma.png",
-    "roiFront": "1175,464,72,74",
-    "roiBack": "1175,464,72,74",
+    "roiFront": "1181,467,59,58",
+    "roiBack": "1158,445,101,106",
     "method": "Template matching",
-    "threshold": 0.8,
+    "threshold": 0.7,
     "description": "魅力值"
   },
   {
@@ -86,7 +86,7 @@
     "roiFront": "886,4,48,46",
     "roiBack": "886,4,48,46",
     "method": "Template matching",
-    "threshold": 0.8,
+    "threshold": 0.7,
     "description": "魅力值"
   }
 ]
