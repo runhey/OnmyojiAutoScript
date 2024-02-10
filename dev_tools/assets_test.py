@@ -32,10 +32,10 @@ def detect_ocr(file: str, target: RuleOcr):
 
 
 # 图片文件路径 可以是相对路径
-IMAGE_FILE = './log/error/1707301227880/error1707301227880.png'
+IMAGE_FILE = './log/error/1707485692010/2024-02-09_21-34-51-948148.png'
 if __name__ == '__main__':
-    from tasks.KekkaiActivation.assets import KekkaiActivationAssets
-    targe = KekkaiActivationAssets.I_CARDS_KAIKO_5
+    from tasks.GameUi.assets import GameUiAssets
+    targe = GameUiAssets.I_MAIN_GOTO_TEAM
     print(detect_image(IMAGE_FILE, targe))
     # from tasks.KekkaiActivation.assets import KekkaiActivationAssets
     # target = KekkaiActivationAssets.O_CARD_ALL_TIME

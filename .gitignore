@@ -266,3 +266,6 @@ adb_port.ini
 *.zip
 console.bat
 .vscode/*
+module/config/argument/setting-template.json
+bin/droidcast/DroidCast-debug-1.1.0.apk
+start-server.bat
