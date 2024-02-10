@@ -1,3 +1,4 @@
+from module.logger import logger
 # from module.base.button import Button
 from module.base.decorator import cached_property
 from module.base.timer import Timer
@@ -7,7 +8,14 @@ from module.base.utils import *
 from module.device.method.minitouch import Minitouch
 from module.device.method.adb import Adb
 from module.device.method.scrcpy import Scrcpy
-from module.device.method.window import Window
+
+if sys.platform == 'win32':
+    from module.device.method.window import Window
+else:
+    logger.warning('非window平台，无法调用pywin32相关函数')
+    class Window:
+        pass
+
 from module.logger import logger
 
 
@@ -22,7 +30,7 @@ class Control(Minitouch, Adb, Scrcpy, Window):
             'ADB': self.click_adb,
             'uiautomator2': self.click_uiautomator2,
             'minitouch': self.click_minitouch,
-            'window_message': self.click_window_message
+            'window_message': self.click_window_message if sys.platform == 'win32' else None
             # 'Hermit': self.click_hermit,
             # 'MaaTouch': self.click_maatouch,
         }
@@ -33,7 +41,7 @@ class Control(Minitouch, Adb, Scrcpy, Window):
             'ADB': self.long_click_adb,
             'uiautomator2': self.long_click_uiautomator2,
             'minitouch': self.long_click_minitouch,
-            'window_message': self.long_click_window_message,
+            'window_message': self.long_click_window_message if sys.platform == 'win32' else None,
             'scrcpy': self.long_click_scrcpy
             # 'Hermit': self.click_hermit,
             # 'MaaTouch': self.click_maatouch,

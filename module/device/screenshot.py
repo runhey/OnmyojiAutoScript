@@ -1,5 +1,5 @@
 import os
-import time
+import time,sys
 from collections import deque
 from datetime import datetime
 from pathlib import Path
@@ -12,7 +12,11 @@ from module.base.decorator import cached_property
 from module.base.timer import Timer
 from module.base.utils import get_color, image_size, limit_in, save_image
 from module.device.method.adb import Adb
-from module.device.method.window import Window
+if sys.platform == 'win32':
+    from module.device.method.window import Window
+else:
+    class Window:
+        pass    
 from module.device.method.droidcast import DroidCast
 from module.device.method.scrcpy import Scrcpy
 from module.exception import RequestHumanTakeover, ScriptError
@@ -29,7 +33,8 @@ class Screenshot(Adb, DroidCast, Scrcpy, Window):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        super(Window, self).__init__(*args, **kwargs)
+        if sys.platform == 'win32':
+            super(Window, self).__init__(*args, **kwargs)
 
     @cached_property
     def screenshot_methods(self):
@@ -42,7 +47,7 @@ class Screenshot(Adb, DroidCast, Scrcpy, Window):
             'DroidCast': self.screenshot_droidcast,
             'DroidCast_raw': self.screenshot_droidcast_raw,
             'scrcpy': self.screenshot_scrcpy,
-            'window_background': self.screenshot_window_background
+            'window_background': self.screenshot_window_background if sys.platform == 'win32' else None
         }
 
     def screenshot(self):

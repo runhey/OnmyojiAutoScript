@@ -4,12 +4,15 @@ import os
 import re
 import shutil
 import subprocess
-import winreg
+# import winreg
 
 from deploy.logger import logger
 from deploy.utils import cached_property
 
-asyncio.set_event_loop_policy(asyncio.WindowsProactorEventLoopPolicy())
+try:
+    asyncio.set_event_loop_policy(asyncio.WindowsProactorEventLoopPolicy())
+except AttributeError:
+    logger.info('asyncio.WindowsProactorEventLoopPolicy()方法不在当前系统, skip')
 
 
 class VirtualBoxEmulator:
@@ -40,6 +43,12 @@ class VirtualBoxEmulator:
         Raises:
             FileNotFoundError: If emulator not installed.
         """
+        try:
+            import winreg
+        except ModuleNotFoundError:
+            logger.info('winreg not installed, skip')
+            return False
+
         if self.name == 'LDPlayer4':
             root = self.get_install_dir_from_reg('SOFTWARE\\leidian\\ldplayer', 'InstallDir')
             if root is not None:
@@ -69,6 +78,11 @@ class VirtualBoxEmulator:
         Returns:
             str: Installation dir or None
         """
+        try:
+            import winreg
+        except ModuleNotFoundError:
+            logger.info('winreg not installed, skip')
+            return False
         try:
             reg = winreg.OpenKey(winreg.HKEY_LOCAL_MACHINE, path, 0)
             root = winreg.QueryValueEx(reg, key)[0]

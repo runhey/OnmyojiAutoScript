@@ -2,8 +2,8 @@
 # @author runhey
 # github https://github.com/runhey
 import ctypes
-import win32gui
-import win32con
+# import win32gui
+# import win32con
 import sys
 import time
 
