@@ -1,0 +1,11 @@
+[
+  {
+    "itemName": "frog_boss_enter",
+    "imageName": "fb_frog_boss_enter.png",
+    "roiFront": "1191,391,36,38",
+    "roiBack": "1174,135,78,320",
+    "method": "Template matching",
+    "threshold": 0.7,
+    "description": "description"
+  }
+]
