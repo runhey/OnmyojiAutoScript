@@ -133,6 +133,7 @@ class ScriptTask(GameUi, SoulsTidyAssets):
                     continue
                 # 出现神赐, 就点击然后消失，
                 if self.appear(self.I_ST_GOD_PRESENT):
+                    logger.info('God present appear')
                     sleep(0.5)
                     self.screenshot()
                     if not self.appear(self.I_ST_GOD_PRESENT):
@@ -140,12 +141,13 @@ class ScriptTask(GameUi, SoulsTidyAssets):
                     while 1:
                         self.screenshot()
                         if not self.appear(self.I_ST_GOD_PRESENT):
+                            logger.info('God present disappear')
                             break
                         if self.click(self.C_ST_GOD_PRSENT, interval=1):
                             continue
                     sleep(0.5)
                     break
-                if self.appear_then_click(self.I_ST_DONATE, interval=3.5):
+                if self.appear_then_click(self.I_ST_DONATE, interval=5.5):
                     continue
             logger.info('Donate one')
 
