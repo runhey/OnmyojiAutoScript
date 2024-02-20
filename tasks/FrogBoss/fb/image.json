@@ -1,0 +1,128 @@
+[
+  {
+    "itemName": "bet_left",
+    "imageName": "fb_bet_left.png",
+    "roiFront": "88,342,145,100",
+    "roiBack": "88,342,145,100",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "左边竞猜"
+  },
+  {
+    "itemName": "bet_right",
+    "imageName": "fb_bet_right.png",
+    "roiFront": "1044,344,146,100",
+    "roiBack": "1044,344,146,100",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "右边竞猜"
+  },
+  {
+    "itemName": "bet_success_box",
+    "imageName": "fb_bet_success_box.png",
+    "roiFront": "590,439,87,50",
+    "roiBack": "590,439,87,50",
+    "method": "Template matching",
+    "threshold": 0.75,
+    "description": "description"
+  },
+  {
+    "itemName": "success_left",
+    "imageName": "fb_success_left.png",
+    "roiFront": "108,352,100,100",
+    "roiBack": "108,352,100,100",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "左边赢了"
+  },
+  {
+    "itemName": "failure_right",
+    "imageName": "fb_failure_right.png",
+    "roiFront": "1067,341,100,100",
+    "roiBack": "1067,341,100,100",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "右边输了"
+  },
+  {
+    "itemName": "next_competition",
+    "imageName": "fb_next_competition.png",
+    "roiFront": "1098,510,42,36",
+    "roiBack": "1098,510,42,36",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "gold_30",
+    "imageName": "fb_gold_30.png",
+    "roiFront": "824,499,78,76",
+    "roiBack": "824,499,78,76",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "30万金币"
+  },
+  {
+    "itemName": "bet_sure",
+    "imageName": "fb_bet_sure.png",
+    "roiFront": "1014,404,100,100",
+    "roiBack": "1014,404,100,100",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "确认竞猜"
+  },
+  {
+    "itemName": "gold_30_check",
+    "imageName": "fb_gold_30_check.png",
+    "roiFront": "512,180,68,83",
+    "roiBack": "402,141,459,489",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "betted",
+    "imageName": "fb_betted.png",
+    "roiFront": "93,352,125,54",
+    "roiBack": "49,322,1192,100",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "success_right",
+    "imageName": "fb_success_right.png",
+    "roiFront": "1061,336,122,116",
+    "roiBack": "1061,336,122,116",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "failure_left",
+    "imageName": "fb_failure_left.png",
+    "roiFront": "107,351,100,100",
+    "roiBack": "107,351,100,100",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "bet_failure",
+    "imageName": "fb_bet_failure.png",
+    "roiFront": "510,266,269,72",
+    "roiBack": "510,266,269,72",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "bet_success",
+    "imageName": "fb_bet_success.png",
+    "roiFront": "512,264,260,73",
+    "roiBack": "433,214,418,151",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  }
+]
