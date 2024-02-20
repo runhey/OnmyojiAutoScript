@@ -27,6 +27,10 @@ class ScriptTask(RightActivity, FrogBossAssets):
             if self.appear(self.I_BETTED):
                 logger.info('You have betted')
                 break
+            # 休息中
+            if self.appear(self.I_FROG_BOSS_REST):
+                logger.info('Frog Boss Rest')
+                break
             # 竞猜成功
             if self.appear(self.I_BET_SUCCESS):
                 logger.info('You bet win')
@@ -74,9 +78,9 @@ class ScriptTask(RightActivity, FrogBossAssets):
             time_set = time_set.replace(hour=24)
         elif 22 <= time_now.hour < 24:
             day = time_now.day + 1
-            time_set = time_set.replace(day=day, hour=10)
+            time_set = time_set.replace(day=day, hour=12)
         else:
-            time_set = time_set.replace(hour=10)
+            time_set = time_set.replace(hour=12)
 
         self.set_next_run(task='FrogBoss', target=time_set - time_delta)
 
