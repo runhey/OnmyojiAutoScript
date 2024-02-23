@@ -22,7 +22,7 @@ class ConfigModel:
     KeepLocalChanges: bool = False
 
     # Python
-    PythonExecutable: str = "./toolkit/pyth on.exe"
+    PythonExecutable: str = "./toolkit/python.exe"
     PypiMirror: Optional[str] = None
     InstallDependencies: bool = True
     RequirementsFile: str = "requirements.txt"
