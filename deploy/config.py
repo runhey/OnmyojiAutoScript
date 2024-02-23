@@ -14,7 +14,7 @@ class ExecutionError(Exception):
 class ConfigModel:
     # Git
     Repository: str = "https://github.com/jxjyzzc/OnmyojiAutoScript.git"
-    Branch: str = "master"
+    Branch: str = "dev"
     GitExecutable: str = "./toolkit/Git/mingw64/bin/git.exe"
     GitProxy: Optional[str] = None
     SSLVerify: bool = False
@@ -22,7 +22,7 @@ class ConfigModel:
     KeepLocalChanges: bool = False
 
     # Python
-    PythonExecutable: str = "./toolkit/python.exe"
+    PythonExecutable: str = "./toolkit/pyth on.exe"
     PypiMirror: Optional[str] = None
     InstallDependencies: bool = True
     RequirementsFile: str = "requirements.txt"
