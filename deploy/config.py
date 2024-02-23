@@ -13,7 +13,7 @@ class ExecutionError(Exception):
 
 class ConfigModel:
     # Git
-    Repository: str = "https://e.coding.net/onmyojiautoscript/oas/OnmyojiAutoScript.git"
+    Repository: str = "https://github.com/jxjyzzc/OnmyojiAutoScript.git"
     Branch: str = "master"
     GitExecutable: str = "./toolkit/Git/mingw64/bin/git.exe"
     GitProxy: Optional[str] = None
