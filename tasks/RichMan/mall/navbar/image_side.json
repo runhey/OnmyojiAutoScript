@@ -38,7 +38,7 @@
   {
     "itemName": "side_sure_friends",
     "imageName": "navbar_side_sure_friends.png",
-    "roiFront": "1174,277,68,70",
+    "roiFront": "1190,287,43,52",
     "roiBack": "1163,258,93,109",
     "method": "Template matching",
     "threshold": 0.7,
