@@ -2,7 +2,7 @@
   {
     "itemName": "cards_kaiko_6",
     "imageName": "cards_cards_kaiko_6.png",
-    "roiFront": "193,192,89,73",
+    "roiFront": "193,204,89,73",
     "roiBack": "169,148,130,501",
     "method": "Template matching",
     "threshold": 0.8,

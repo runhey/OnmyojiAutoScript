@@ -1,0 +1,47 @@
+[
+  {
+    "itemName": "check_main_9",
+    "imageName": "main9_check_main_9.png",
+    "roiFront": "764,117,134,42",
+    "roiBack": "149,109,1099,100",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "main_goto_exploration_9",
+    "imageName": "main9_main_goto_exploration_9.png",
+    "roiFront": "553,107,31,30",
+    "roiBack": "234,98,904,68",
+    "method": "Template matching",
+    "threshold": 0.7,
+    "description": "description"
+  },
+  {
+    "itemName": "main_goto_summon_9",
+    "imageName": "main9_main_goto_summon_9.png",
+    "roiFront": "970,210,35,29",
+    "roiBack": "609,194,623,68",
+    "method": "Template matching",
+    "threshold": 0.7,
+    "description": ""
+  },
+  {
+    "itemName": "main_goto_town_9",
+    "imageName": "main9_main_goto_town_9.png",
+    "roiFront": "684,342,41,42",
+    "roiBack": "276,321,999,78",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "pet_house_9",
+    "imageName": "main9_pet_house_9.png",
+    "roiFront": "888,327,40,35",
+    "roiBack": "730,316,440,57",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  }
+]

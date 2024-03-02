@@ -23,7 +23,9 @@ def load_image(file: str):
 
 def detect_image(file: str, targe: RuleImage) -> bool:
     img = load_image(file)
-    return targe.match(img)
+    result = targe.test_match(img)
+    logger.info(f'[{targe.name}]: {result}')
+    return result
 
 def detect_ocr(file: str, target: RuleOcr):
     img = load_image(file)

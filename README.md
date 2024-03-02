@@ -39,7 +39,7 @@
 - **阴阳寮**: 结界上卡、结界蹭卡、结界突破、寮突破、狩猎战、集体任务
 - **御魂副本**: 八岐大蛇、业原火、日轮之城、永生之海
 - **肝帝专属**: 探索、契灵、御灵、觉醒副本、石距
-- **限时活动**: 每期爬塔、超鬼王
+- **限时活动**: 每期爬塔、超鬼王、对弈竞猜
 
 ### 显著特点 
 - **全部任务**: 你能想到的没有想到的都有，一条龙给你解放双手（该画饼画饼，该挖坑挖坑）
@@ -57,8 +57,8 @@ This project is licensed under the GNU General Public License v3.0.
 ## 关于 Alas
 OAS 基于碧蓝航线脚本 [AzurLaneAutoScript](https://github.com/LmeSzinc/AzurLaneAutoScript) 开发，考虑到星穹铁道脚本 [StarRailCopilot](https://github.com/LmeSzinc/StarRailCopilot) 中所提及的问题，
 OAS 在其基础上进行了如下优化：
-- **调整设计架构**: 将前后端拆离出来更加灵活，方便后续的维护和扩展；更改些代码架构使其减少同游戏耦合，更加通用。
-- **搭建新的GUI**: 原生的方案过于臃肿，选用 [flutter](https://flutter.cn) 搭建一个全平台的界面端，界面更加舒适简洁
+- **调整设计架构**: 将前后端拆离出来更加灵活，方便后续的维护和扩展；优化代码架构使其减少同游戏耦合，更加通用。
+- **搭建新的GUI**: 原先的方案过于臃肿，选用 [flutter](https://flutter.cn) 搭建一个全平台的界面端，界面更加舒适简洁
 - **新的OCR库**: 跟随 [LmeSzinc](https://github.com/LmeSzinc) 的步伐， [ppocr-onnx](https://github.com/triwinds/ppocr-onnx) 更加简易使用，精度更高速度更快 
 - **新的Assets管理**: 构建了一个新的Assets管理系统，更加方便的管理游戏资源如图片，文字，点击等等
 - **配置文件 [pydantic](https://github.com/pydantic/pydantic) 化**: pydantic 可以更加优雅的管理用户配置
@@ -85,7 +85,7 @@ OAS 在其基础上进行了如下优化：
 为此保持较高的入群门槛:  
 - 你的QQ等级必须大于32级(🌞🌞)，注册时间超过一年，低等级账号成分复杂，还请见谅。
 - 你必须拥有一个 Github 账户来点一个 **Star** (这并不影响你入群后取消Star)，同样的要求注册时间过半年。
-- 入群验证填入你的 Github 账号名，无需在意问题是什么。
+- 入群验证填入你的 Github id，无需在意问题是什么，由QQ机器人审核(机器永远的对的)。
 
 #### QQ开发群: 207613181
 
@@ -95,7 +95,7 @@ OAS 在其基础上进行了如下优化：
 
 ## 安装 Installation 
 
-- [学习提问](https://runhey.github.io/OnmyojiAutoScript-website/docs/user-manual/scientific-question): 最基本的要求，**必看必学必会**
+- [学会提问](https://runhey.github.io/OnmyojiAutoScript-website/docs/user-manual/scientific-question): 最基本的要求，**必看必学必会**
 - [用户手册](https://runhey.github.io/OnmyojiAutoScript-website/docs/user-manual/getting-started): 在线手册，不定期更新，包含所有使用说明
 - [安装教程](https://runhey.github.io/OnmyojiAutoScript-website/docs/user-manual/installation): 保姆式安装手册,多翻翻有惊喜
 - [开发文档](https://runhey.github.io/OnmyojiAutoScript-website/docs/development/preamble): 虽然迭代很多、年久失修，但入门开发必读，具体以源码为准

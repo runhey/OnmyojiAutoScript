@@ -78,7 +78,7 @@ class KekkaiActivationAssets:
 
 	# Image Rule Assets
 	# description 
-	I_CARDS_KAIKO_6 = RuleImage(roi_front=(193,192,89,73), roi_back=(169,148,130,501), threshold=0.8, method="Template matching", file="./tasks/KekkaiActivation/cards/cards_cards_kaiko_6.png")
+	I_CARDS_KAIKO_6 = RuleImage(roi_front=(193,204,89,73), roi_back=(169,148,130,501), threshold=0.8, method="Template matching", file="./tasks/KekkaiActivation/cards/cards_cards_kaiko_6.png")
 	# description 
 	I_CARDS_KAIKO_5 = RuleImage(roi_front=(191,345,88,58), roi_back=(172,162,126,488), threshold=0.8, method="Template matching", file="./tasks/KekkaiActivation/cards/cards_cards_kaiko_5.png")
 	# description 
