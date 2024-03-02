@@ -107,9 +107,6 @@ class ScriptTask(GameUi, CollectiveMissionsAssets):
             return MC.FRIEND
         elif result_1 == '契灵探查':
             return MC.BL
-        if result_1 == '远远不够':
-            logger.warning(f'Ocr task name: {result_1}')
-            return MC.FEED
         if result_2 == '觉醒一':
             return MC.AW1
         elif result_2 == '觉醒二':
@@ -126,6 +123,9 @@ class ScriptTask(GameUi, CollectiveMissionsAssets):
             return MC.SO1
         elif result_2 == '御魂二':
             return MC.SO2
+        if result_1 == '远远不够':
+            logger.warning(f'Ocr task name: {result_1}')
+            return MC.FEED
         return MC.UNKNOWN
 
     def detect_best(self) -> tuple:
@@ -141,11 +141,11 @@ class ScriptTask(GameUi, CollectiveMissionsAssets):
         third_order = self.rule.index(third_class) if third_class in self.rule else 102
         logger.info(f'first_class: {first_class}, second_class: {second_class}, third_class: {third_class}')
         logger.info(f'first_order: {first_order}, second_order: {second_order}, third_order: {third_order}')
-        if first_order > second_order and first_order > third_order:
+        if first_order < second_order and first_order < third_order:
             best_index, best_class = 0, first_class
-        elif second_order > first_order and second_order > third_order:
+        elif second_order < first_order and second_order < third_order:
             best_index, best_class = 1, second_class
-        elif third_order > first_order and third_order > second_order:
+        elif third_order < first_order and third_order < second_order:
             best_index, best_class = 2, third_class
         return best_class, best_index
 
