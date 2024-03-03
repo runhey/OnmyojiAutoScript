@@ -10,11 +10,16 @@ from module.atom.list import RuleList
 class HyakkiyakouAssets: 
 
 
+	# Click Rule Assets
+	# description 
+	C_CLICK = RuleClick(roi_front=(26,250,33,100), roi_back=(26,250,33,100), name="click")
+
+
 	# Image Rule Assets
 	# 缘结之庭 
 	I_TPAGE_1 = RuleImage(roi_front=(238,504,221,123), roi_back=(121,480,950,166), threshold=0.7, method="Template matching", file="./tasks/Hyakkiyakou/train/train_tpage_1.png")
 	# 本丸御殿 
-	I_TPAGE_2 = RuleImage(roi_front=(491,506,231,120), roi_back=(132,479,933,171), threshold=0.7, method="Template matching", file="./tasks/Hyakkiyakou/train/train_tpage_2.png")
+	I_TPAGE_2 = RuleImage(roi_front=(411,506,231,120), roi_back=(132,479,933,171), threshold=0.5, method="Template matching", file="./tasks/Hyakkiyakou/train/train_tpage_2.png")
 	# 之境 
 	I_TPAGE_3 = RuleImage(roi_front=(748,504,240,118), roi_back=(125,482,937,166), threshold=0.7, method="Template matching", file="./tasks/Hyakkiyakou/train/train_tpage_3.png")
 	# 鲸歌潜岸 
@@ -32,15 +37,21 @@ class HyakkiyakouAssets:
 	# description 
 	I_TCHECK_4 = RuleImage(roi_front=(7,108,100,332), roi_back=(0,101,120,347), threshold=0.8, method="Template matching", file="./tasks/Hyakkiyakou/train/train_tcheck_4.png")
 	# description 
-	I_TCHECK_5 = RuleImage(roi_front=(23,111,100,355), roi_back=(9,99,134,378), threshold=0.8, method="Template matching", file="./tasks/Hyakkiyakou/train/train_tcheck_5.png")
+	I_TCHECK_5 = RuleImage(roi_front=(132,28,77,103), roi_back=(94,13,152,234), threshold=0.4, method="Template matching", file="./tasks/Hyakkiyakou/train/train_tcheck_5.png")
 	# description 
 	I_TCHECK_6 = RuleImage(roi_front=(9,107,100,350), roi_back=(3,97,113,369), threshold=0.8, method="Template matching", file="./tasks/Hyakkiyakou/train/train_tcheck_6.png")
 	# description 
 	I_SWITCH_BACKGROUND = RuleImage(roi_front=(992,649,105,36), roi_back=(969,627,152,72), threshold=0.7, method="Template matching", file="./tasks/Hyakkiyakou/train/train_switch_background.png")
+	# description 
+	I_TCHECK_22 = RuleImage(roi_front=(14,150,100,100), roi_back=(5,139,124,127), threshold=0.8, method="Template matching", file="./tasks/Hyakkiyakou/train/train_tcheck_22.png")
+	# description 
+	I_TCHECK_32 = RuleImage(roi_front=(35,175,100,100), roi_back=(26,155,123,141), threshold=0.7, method="Template matching", file="./tasks/Hyakkiyakou/train/train_tcheck_32.png")
 
 
 	# Swipe Rule Assets
 	# description 
-	S_TSWIPE = RuleSwipe(roi_front=(612,527,21,91), roi_back=(359,519,23,100), mode="default", name="tswipe")
+	S_TSWIPE = RuleSwipe(roi_front=(421,521,21,91), roi_back=(273,516,23,100), mode="default", name="tswipe")
+	# description 
+	S_TBACK = RuleSwipe(roi_front=(259,515,21,100), roi_back=(993,521,22,100), mode="default", name="tback")
 
 

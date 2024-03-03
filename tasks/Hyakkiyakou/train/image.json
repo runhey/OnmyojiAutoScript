@@ -11,10 +11,10 @@
   {
     "itemName": "tpage_2",
     "imageName": "train_tpage_2.png",
-    "roiFront": "491,506,231,120",
+    "roiFront": "411,506,231,120",
     "roiBack": "132,479,933,171",
     "method": "Template matching",
-    "threshold": 0.7,
+    "threshold": 0.5,
     "description": "本丸御殿"
   },
   {
@@ -23,7 +23,7 @@
     "roiFront": "748,504,240,118",
     "roiBack": "125,482,937,166",
     "method": "Template matching",
-    "threshold": 0.7,
+    "threshold": 0.8,
     "description": "之境"
   },
   {
@@ -92,10 +92,10 @@
   {
     "itemName": "tcheck_5",
     "imageName": "train_tcheck_5.png",
-    "roiFront": "23,111,100,355",
-    "roiBack": "9,99,134,378",
+    "roiFront": "132,28,77,103",
+    "roiBack": "94,13,152,234",
     "method": "Template matching",
-    "threshold": 0.8,
+    "threshold": 0.4,
     "description": "description"
   },
   {
@@ -112,6 +112,24 @@
     "imageName": "train_switch_background.png",
     "roiFront": "992,649,105,36",
     "roiBack": "969,627,152,72",
+    "method": "Template matching",
+    "threshold": 0.7,
+    "description": "description"
+  },
+  {
+    "itemName": "tcheck_22",
+    "imageName": "train_tcheck_22.png",
+    "roiFront": "14,150,100,100",
+    "roiBack": "5,139,124,127",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "tcheck_32",
+    "imageName": "train_tcheck_32.png",
+    "roiFront": "35,175,100,100",
+    "roiBack": "26,155,123,141",
     "method": "Template matching",
     "threshold": 0.7,
     "description": "description"
