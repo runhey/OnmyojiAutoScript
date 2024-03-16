@@ -21,7 +21,7 @@ class HyakkiyakouAssets:
 	# 本丸御殿 
 	I_TPAGE_2 = RuleImage(roi_front=(411,506,231,120), roi_back=(132,479,933,171), threshold=0.5, method="Template matching", file="./tasks/Hyakkiyakou/train/train_tpage_2.png")
 	# 之境 
-	I_TPAGE_3 = RuleImage(roi_front=(748,504,240,118), roi_back=(125,482,937,166), threshold=0.7, method="Template matching", file="./tasks/Hyakkiyakou/train/train_tpage_3.png")
+	I_TPAGE_3 = RuleImage(roi_front=(748,504,240,118), roi_back=(125,482,937,166), threshold=0.8, method="Template matching", file="./tasks/Hyakkiyakou/train/train_tpage_3.png")
 	# 鲸歌潜岸 
 	I_TPAGE_4 = RuleImage(roi_front=(281,507,233,120), roi_back=(124,484,933,163), threshold=0.8, method="Template matching", file="./tasks/Hyakkiyakou/train/train_tpage_4.png")
 	# 杨帆远航 

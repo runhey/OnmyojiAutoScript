@@ -24,6 +24,7 @@ class ScriptTask(Benchmark, HyakkiyakouAssets):
     hero_name = ''
 
     def run_simple(self, hero_name: str='test'):
+        self.screenshot_benchmark()
         ScriptTask.hero_name = hero_name
         self.add_one_video(hero_name, index=0)
 
@@ -159,10 +160,15 @@ if __name__ == '__main__':
     from module.config.config import Config
     from module.device.device import Device
 
-    c = Config('oas1')
+    c = Config('oas2')
     d = Device(c)
     t = ScriptTask(c, d)
-    HERO_NAME = 'sp_009'
-    t.run_simple(HERO_NAME)
+    HERO_NAME = 'g_015'
+    # t.run_simple(HERO_NAME)
     t.run(HERO_NAME)
+
+
+
+
+
 

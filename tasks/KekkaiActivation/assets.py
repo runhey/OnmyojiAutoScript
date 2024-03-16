@@ -88,9 +88,9 @@ class KekkaiActivationAssets:
 	# description 
 	I_CARDS_FISH_6 = RuleImage(roi_front=(193,183,87,91), roi_back=(178,169,110,474), threshold=0.8, method="Template matching", file="./tasks/KekkaiActivation/cards/cards_cards_fish_6.png")
 	# description 
-	I_CARDS_FISH_5 = RuleImage(roi_front=(192,358,88,21), roi_back=(176,155,105,492), threshold=0.9, method="Template matching", file="./tasks/KekkaiActivation/cards/cards_cards_fish_5.png")
+	I_CARDS_FISH_5 = RuleImage(roi_front=(192,358,88,21), roi_back=(176,155,105,492), threshold=0.7, method="Template matching", file="./tasks/KekkaiActivation/cards/cards_cards_fish_5.png")
 	# description 
-	I_CARDS_FISH_4 = RuleImage(roi_front=(192,409,87,21), roi_back=(176,175,118,473), threshold=0.9, method="Template matching", file="./tasks/KekkaiActivation/cards/cards_cards_fish_4.png")
+	I_CARDS_FISH_4 = RuleImage(roi_front=(192,409,87,21), roi_back=(176,175,118,473), threshold=0.7, method="Template matching", file="./tasks/KekkaiActivation/cards/cards_cards_fish_4.png")
 	# description 
 	I_CARDS_FISH_3 = RuleImage(roi_front=(193,314,86,64), roi_back=(188,164,100,482), threshold=0.8, method="Template matching", file="./tasks/KekkaiActivation/cards/cards_cards_fish_3.png")
 	# description 
