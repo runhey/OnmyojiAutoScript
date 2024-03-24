@@ -46,6 +46,8 @@ class HyakkiyakouAssets:
 	I_TCHECK_22 = RuleImage(roi_front=(14,150,100,100), roi_back=(5,139,124,127), threshold=0.8, method="Template matching", file="./tasks/Hyakkiyakou/train/train_tcheck_22.png")
 	# description 
 	I_TCHECK_32 = RuleImage(roi_front=(35,175,100,100), roi_back=(26,155,123,141), threshold=0.7, method="Template matching", file="./tasks/Hyakkiyakou/train/train_tcheck_32.png")
+	# 检查是否在砸豆子 
+	I_CHECK_RUN = RuleImage(roi_front=(95,598,92,45), roi_back=(68,578,143,100), threshold=0.8, method="Template matching", file="./tasks/Hyakkiyakou/train/train_check_run.png")
 
 
 	# Swipe Rule Assets

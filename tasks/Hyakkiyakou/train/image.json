@@ -133,5 +133,14 @@
     "method": "Template matching",
     "threshold": 0.7,
     "description": "description"
+  },
+  {
+    "itemName": "check_run",
+    "imageName": "train_check_run.png",
+    "roiFront": "95,598,92,45",
+    "roiBack": "68,578,143,100",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "检查是否在砸豆子"
   }
 ]
