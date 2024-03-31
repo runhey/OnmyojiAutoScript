@@ -40,6 +40,10 @@ class BaseTask(GlobalGameAssets, CostumeBase):
     current_count: int = None  # 当前运行的次数
 
     def __init__(self, config: Config, device: Device) -> None:
+        """
+
+        :rtype: object
+        """
         self.config = config
         self.device = device
 
