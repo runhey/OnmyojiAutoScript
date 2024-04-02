@@ -49,7 +49,7 @@ class Special(Buy, MallNavbar):
             if self.swipe(self.S_SP_DOWN, interval=2):
                 time.sleep(2)
 
-    def _special_totom(self, totem_pass:bool):
+    def _special_totom(self, totem_pass: bool):
         """
         购买御灵，要求必须下滑出现御灵
         :return:
@@ -108,7 +108,6 @@ class Special(Buy, MallNavbar):
             self.buy_more(self.I_SP_BUY_MEDIUM, buy_res_number)
             time.sleep(0.5)
 
-
     def _special_low(self, buy_number: int = 10):
         """
         购买低级盘，要求必须下滑出现低级盘
@@ -144,8 +143,6 @@ class Special(Buy, MallNavbar):
             self.buy_more(self.I_SP_BUY_LOW, buy_res_number)
             time.sleep(0.5)
 
-
-
     def _special_check_remain(self, target: RuleImage):
         """
         检查这个种类的剩余， 要求必须这个出现在当前的页面
@@ -155,7 +152,7 @@ class Special(Buy, MallNavbar):
         upper_midpoint = target.roi_front[0] + target.roi_front[2] // 2, target.roi_front[1]
         # 重设roi
         roi = self.O_SP_RES_NUMBER.roi
-        self.O_SP_RES_NUMBER.roi[0] = upper_midpoint[0] - roi[2]//2
+        self.O_SP_RES_NUMBER.roi[0] = upper_midpoint[0] - roi[2] // 2
         self.O_SP_RES_NUMBER.roi[1] = upper_midpoint[1] - roi[3]
         # logger.info(f'图片的ROI是: {target.roi_front}')
         # logger.info(f'上中点是：{upper_midpoint}')
@@ -184,8 +181,3 @@ if __name__ == '__main__':
     t = Special(c, d)
 
     t.execute_special()
-
-
-
-
-
