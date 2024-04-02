@@ -27,20 +27,20 @@ def detect_image(file: str, targe: RuleImage) -> bool:
     logger.info(f'[{targe.name}]: {result}')
     return result
 
+
 def detect_ocr(file: str, target: RuleOcr):
     img = load_image(file)
     return target.ocr(img)
 
 
-
 # 图片文件路径 可以是相对路径
-IMAGE_FILE = './log/error/1710141221597/2024-03-11_15-13-41-589447.png'
+IMAGE_FILE = r'C:\Users\Ryland\Downloads\QQ截图20240402214513.png'
 if __name__ == '__main__':
     from tasks.KekkaiActivation.assets import KekkaiActivationAssets
-    targe = KekkaiActivationAssets.I_CARDS_FISH_3
+    from tasks.GameUi.assets import GameUiAssets
+
+    targe = GameUiAssets.I_MAIN_GOTO_DAILY
     print(detect_image(IMAGE_FILE, targe))
     # from tasks.KekkaiActivation.assets import KekkaiActivationAssets
     # target = KekkaiActivationAssets.O_CARD_ALL_TIME
     # print(detect_ocr(IMAGE_FILE, target))
-
-
