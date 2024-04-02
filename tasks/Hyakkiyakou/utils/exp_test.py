@@ -2,6 +2,7 @@
 # @author runhey
 # github https://github.com/runhey
 import cv2
+import random
 
 from datetime import datetime
 from pathlib import Path
@@ -9,10 +10,11 @@ from cached_property import cached_property
 
 from module.logger import logger
 from module.base.timer import Timer
+from module.atom.click import RuleClick
 
 from tasks.Exploration.assets import ExplorationAssets
 from tasks.GameUi.game_ui import GameUi
-from tasks.GameUi.page import page_main, page_town
+from tasks.GameUi.page import page_main, page_town, page_exploration
 from tasks.base_task import BaseTask
 from tasks.Script.config_device import ScreenshotMethod, ControlMethod
 from tasks.Component.RightActivity.right_activity import RightActivity
@@ -59,7 +61,6 @@ class Step:
 # -----------------------------------------------------------------------
 
 
-
 # -----------------------------------------------------------------------
 
 class ExpTest(RightActivity, FastDevice, RestartAssets, ExplorationAssets):
@@ -82,7 +83,8 @@ class ExpTest(RightActivity, FastDevice, RestartAssets, ExplorationAssets):
         self.ui_click(self.I_LOGIN_SCROOLL_OPEN, self.I_LOGIN_SCROOLL_CLOSE, interval=1)
 
     def _go(self):
-        pass
+        self.ui_get_current_page()
+        self.ui_goto(page_exploration)
 
     def run_step(self, step: Step):
         logger.hr(f'Running step: {step}', 1)
@@ -149,3 +151,149 @@ class ExpTest(RightActivity, FastDevice, RestartAssets, ExplorationAssets):
         self.run_step(step_6)
         self.run_step(step_7)
         self.run_step(step_8)
+
+    def exp_enter(self, layer: int = 25):
+        w = 188
+        h = 80
+        x_25, y_25 = 1052, 208
+        x_26, y_26 = 1052, 316
+        x_27, y_27 = 1052, 443
+        x_28, y_28 = 1052, 564
+        exp_click_25 = RuleClick(roi_front=(x_25, y_25, w, h), roi_back=(x_25, y_25, w, h), name="exp_click_25")
+        exp_click_26 = RuleClick(roi_front=(x_26, y_26, w, h), roi_back=(x_26, y_26, w, h), name="exp_click_26")
+        exp_click_27 = RuleClick(roi_front=(x_27, y_27, w, h), roi_back=(x_27, y_27, w, h), name="exp_click_27")
+        exp_click_28 = RuleClick(roi_front=(x_28, y_28, w, h), roi_back=(x_28, y_28, w, h), name="exp_click_28")
+        match layer:
+            case 25:
+                exp_click = exp_click_25
+            case 26:
+                exp_click = exp_click_26
+            case 27:
+                exp_click = exp_click_27
+            case 28:
+                exp_click = exp_click_28
+            case _:
+                exp_click = exp_click_28
+        self.ui_click(exp_click, self.I_E_EXPLORATION_CLICK)
+        while 1:
+            self.screenshot()
+            if self.appear(self.I_E_AUTO_ROTATE_ON) or self.appear(self.I_E_AUTO_ROTATE_OFF):
+                break
+            if self.appear_then_click(self.I_E_EXPLORATION_CLICK, interval=1):
+                continue
+        logger.info(f'Enter exploration {layer}')
+
+    def exp_exit(self):
+        while 1:
+            self.screenshot()
+            if self.appear(self.I_UI_BACK_RED):
+                break
+            if self.appear_then_click(self.I_UI_CONFIRM, interval=1):
+                continue
+            if self.appear_then_click(self.I_UI_CONFIRM_SAMLL, interval=1):
+                continue
+            if self.appear_then_click(self.I_E_EXIT_CONFIRM, interval=1):
+                continue
+            if self.appear_then_click(self.I_UI_BACK_BLUE, interval=1.5):
+                continue
+        self.ui_click_until_disappear(self.I_UI_BACK_RED, interval=0.5)
+
+    def run_exp_25(self):
+        pos_right = 1270
+        pos_left = 260
+        pos_top = 390
+        pos_bottom = 620
+        pos_level = (pos_top + pos_bottom) / 2
+
+        step_1 = Step('step_1', pos=(pos_right, random.randint(pos_top, pos_bottom)), time=2.1)
+        step_2 = Step('step_2', pos=(pos_right, random.randint(pos_top, pos_bottom)), time=2.1)
+        step_3 = Step('step_3', pos=(pos_right, random.randint(pos_top, pos_bottom)), time=2.1)
+        step_4 = Step('step_4', pos=(pos_right, random.randint(pos_top, pos_bottom)), time=2.1)
+        step_5 = Step('step_5', pos=(pos_right, pos_bottom), time=2.1)
+
+        save_time = 1.6
+        back_1 = Step('back_1', pos=(pos_left, pos_bottom), time=1, save_img=True,
+                      save_roi=(random.randint(100, 540), 80))
+        back_2 = Step('back_2', pos=(pos_left, pos_top), time=2, save_img=True,
+                      save_roi=(random.randint(100, 540), 80))
+        back_3 = Step('back_3', pos=(pos_left, pos_top), time=2, save_img=True,
+                      save_roi=(random.randint(100, 540), 80))
+        back_4 = Step('back_4', pos=(pos_left, pos_bottom), time=2,  save_time=1.6, save_img=True,
+                      save_roi=(random.randint(100, 540), 80))
+        back_5 = Step('back_5', pos=(pos_left, pos_level), time=save_time, save_img=True,
+                      save_roi=(random.randint(100, 540), 80))
+
+        self.run_step(step_1)
+        self.run_step(step_2)
+        self.run_step(step_3)
+        self.run_step(step_4)
+        self.run_step(step_5)
+        self.run_step(back_1)
+        self.run_step(back_2)
+        self.run_step(back_3)
+        self.run_step(back_4)
+        self.run_step(back_5)
+
+    def run_exp_26(self):
+        pos_right = 1270
+        pos_left = 260
+        pos_top = 454
+        pos_bottom = 620
+        pos_level = (pos_top + pos_bottom) / 2
+        step_1 = Step('step_1', pos=(pos_right, random.randint(pos_top, pos_bottom)), time=2.1)
+        step_2 = Step('step_2', pos=(pos_right, random.randint(pos_top, pos_bottom)), time=2.1)
+        step_3 = Step('step_3', pos=(pos_right, random.randint(pos_top, pos_bottom)), time=2.1)
+        step_4 = Step('step_4', pos=(pos_right, pos_bottom), time=2.1)
+        self.run_step(step_1)
+        self.run_step(step_2)
+        self.run_step(step_3)
+        self.run_step(step_4)
+
+        back_1 = Step('back_1', pos=(pos_left, pos_bottom), time=1, save_img=True,
+                      save_roi=(random.randint(100, 540), 80))
+        back_2 = Step('back_2', pos=(pos_left, pos_top), time=2, save_img=True,
+                      save_roi=(random.randint(100, 540), 80))
+        back_3 = Step('back_3', pos=(pos_left, pos_top), time=2, save_img=True,
+                      save_roi=(random.randint(100, 540), 80))
+        back_4 = Step('back_4', pos=(pos_left, pos_bottom), time=2, save_time=1.6, save_img=True,
+                      save_roi=(random.randint(100, 540), 80))
+        back_5 = Step('back_5', pos=(pos_left, pos_level), time=1.7, save_img=True,
+                      save_roi=(random.randint(100, 540), 80))
+
+        self.run_step(back_1)
+        self.run_step(back_2)
+        self.run_step(back_3)
+        self.run_step(back_4)
+        self.run_step(back_5)
+
+    def run_exp_27(self):
+        pos_right = 1270
+        pos_left = 260
+        pos_top = 510
+        pos_bottom = 620
+        pos_level = (pos_top + pos_bottom) / 2
+        step_1 = Step('step_1', pos=(pos_right, random.randint(pos_top, pos_bottom)), time=2.1)
+        step_2 = Step('step_2', pos=(pos_right, random.randint(pos_top, pos_bottom)), time=2.3)
+        step_3 = Step('step_3', pos=(pos_right, random.randint(pos_top, pos_bottom)), time=2.5)
+        step_4 = Step('step_4', pos=(pos_right, pos_bottom), time=2.9)
+        self.run_step(step_1)
+        self.run_step(step_2)
+        self.run_step(step_3)
+        self.run_step(step_4)
+
+        back_1 = Step('back_1', pos=(pos_left, pos_bottom), time=1, save_img=True,
+                      save_roi=(random.randint(100, 540), 80))
+        back_2 = Step('back_2', pos=(pos_left, pos_top), time=2, save_img=True,
+                      save_roi=(random.randint(100, 540), 80))
+        back_3 = Step('back_3', pos=(pos_left, pos_top), time=2, save_img=True,
+                      save_roi=(random.randint(100, 540), 80))
+        back_4 = Step('back_4', pos=(pos_left, pos_bottom), time=2, save_time=1.6, save_img=True,
+                      save_roi=(random.randint(100, 540), 80))
+        back_5 = Step('back_5', pos=(pos_left, pos_level), time=1.7, save_img=True,
+                      save_roi=(random.randint(100, 540), 80))
+
+        self.run_step(back_1)
+        self.run_step(back_2)
+        self.run_step(back_3)
+        self.run_step(back_4)
+        self.run_step(back_5)

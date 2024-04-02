@@ -160,5 +160,14 @@
     "method": "Template matching",
     "threshold": 0.6,
     "description": "description"
+  },
+  {
+    "itemName": "e_exit_confirm",
+    "imageName": "res_e_exit_confirm.png",
+    "roiFront": "694,380,163,49",
+    "roiBack": "694,380,163,49",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
   }
 ]
