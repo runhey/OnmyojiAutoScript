@@ -297,3 +297,28 @@ class ExpTest(RightActivity, FastDevice, RestartAssets, ExplorationAssets):
         self.run_step(back_3)
         self.run_step(back_4)
         self.run_step(back_5)
+
+    def run_main(self):
+        from time import sleep
+        self.ui_get_current_page()
+        self.ui_goto(page_main)
+        sleep(1)
+
+        pos_right = 1270
+        pos_left = 540
+        pos_top = 540
+        pos_bottom = 660
+        step_1 = Step('step_1', pos=(pos_right, pos_top), time=2.1)
+        back_1 = Step('back_1', pos=(pos_left, pos_top), time=1.7, save_img=True, save_roi=(640, 80))
+        step_2 = step_1
+        step_2.name = 'step_2'
+        back_2 = Step('back_2', pos=(pos_left, pos_bottom), time=1.7, save_img=True, save_roi=(640, 80))
+
+        self.run_step(step_1)
+        self.run_step(back_1)
+        self.run_step(step_2)
+        self.run_step(back_2)
+
+    def back_main(self):
+        self.ui_get_current_page()
+        self.ui_goto(page_main)
