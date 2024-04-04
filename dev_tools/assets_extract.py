@@ -267,7 +267,7 @@ class AssetsExtractor:
         获取所有json文件
         :return: json文件（带后缀）列表
         """
-        return [str(x) for x in self.task_path.rglob('*.json')]
+        return [str(x) for x in self.task_path.rglob('*.json') if 'temp' not in str(x)]
 
     @classmethod
     def read_file(cls, file: str) -> list:

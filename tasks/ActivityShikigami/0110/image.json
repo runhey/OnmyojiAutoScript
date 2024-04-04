@@ -1,72 +1,27 @@
 [
   {
-    "itemName": "battle_class_1",
-    "imageName": "0110_battle_class_1.png",
-    "roiFront": "126,132,124,81",
-    "roiBack": "126,132,124,81",
+    "itemName": "n_battle",
+    "imageName": "0110_n_battle.png",
+    "roiFront": "131,164,86,86",
+    "roiBack": "119,50,1075,635",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"
   },
   {
-    "itemName": "battle_class_2",
-    "imageName": "0110_battle_class_2.png",
-    "roiFront": "120,231,129,83",
-    "roiBack": "120,231,129,83",
+    "itemName": "n_confirm",
+    "imageName": "0110_n_confirm.png",
+    "roiFront": "670,402,176,63",
+    "roiBack": "670,402,176,63",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"
   },
   {
-    "itemName": "battle_class_3",
-    "imageName": "0110_battle_class_3.png",
-    "roiFront": "141,331,100,89",
-    "roiBack": "141,331,100,89",
-    "method": "Template matching",
-    "threshold": 0.8,
-    "description": "description"
-  },
-  {
-    "itemName": "battle_class_4",
-    "imageName": "0110_battle_class_4.png",
-    "roiFront": "141,435,100,83",
-    "roiBack": "141,435,100,83",
-    "method": "Template matching",
-    "threshold": 0.8,
-    "description": "description"
-  },
-  {
-    "itemName": "battle_check_1",
-    "imageName": "0110_battle_check_1.png",
-    "roiFront": "36,643,39,41",
-    "roiBack": "36,643,39,41",
-    "method": "Template matching",
-    "threshold": 0.7,
-    "description": "description"
-  },
-  {
-    "itemName": "battle_check_2",
-    "imageName": "0110_battle_check_2.png",
-    "roiFront": "31,649,39,45",
-    "roiBack": "31,649,39,45",
-    "method": "Template matching",
-    "threshold": 0.7,
-    "description": "description"
-  },
-  {
-    "itemName": "battle_check_3",
-    "imageName": "0110_battle_check_3.png",
-    "roiFront": "34,652,38,42",
-    "roiBack": "34,652,38,42",
-    "method": "Template matching",
-    "threshold": 0.8,
-    "description": "description"
-  },
-  {
-    "itemName": "battle_check_4",
-    "imageName": "0110_battle_check_4.png",
-    "roiFront": "33,652,38,40",
-    "roiBack": "33,652,38,40",
+    "itemName": "c_confirm1",
+    "imageName": "0110_c_confirm1.png",
+    "roiFront": "560,341,37,38",
+    "roiBack": "560,341,37,38",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"

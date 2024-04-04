@@ -32,6 +32,13 @@ class ScriptTask(GameUi, BaseActivity, ActivityShikigamiAssets):
         self.ui_goto(page_main)
         self.home_main()
 
+        # 2024-04-04 ---------------------start
+        config.general_climb.ap_mode = ApMode.AP_GAME
+        # 2024-04-04 ---------------------end
+        # 选择是游戏的体力还是活动的体力
+        current_ap = config.general_climb.ap_mode
+        self.switch(current_ap)
+
         # 设定是否锁定阵容
         if config.general_battle.lock_team_enable:
             logger.info("Lock team")
@@ -49,10 +56,6 @@ class ScriptTask(GameUi, BaseActivity, ActivityShikigamiAssets):
                     continue
                 if self.appear(self.I_UNLOCK):
                     break
-
-        # 选择是游戏的体力还是活动的体力
-        current_ap = config.general_climb.ap_mode
-        self.switch(current_ap)
 
         # 流程应该是 在页面处：
         # 1. 判定计数是否超了，时间是否超了
@@ -84,16 +87,20 @@ class ScriptTask(GameUi, BaseActivity, ActivityShikigamiAssets):
                     logger.info("Activity ap out")
                     break
 
-
             # 点击战斗
-
             logger.info("Click battle")
             while 1:
                 self.screenshot()
-                if self.appear_then_click(self.I_FIRE, interval=1):
+                if self.appear_then_click(self.I_FIRE, interval=2):
                     continue
                 if not self.appear(self.I_FIRE):
                     break
+                if self.appear_then_click(self.I_C_CONFIRM1, interval=0.6):
+                    continue
+                if self.appear_then_click(self.I_UI_CONFIRM_SAMLL, interval=1):
+                    continue
+                if self.appear_then_click(self.I_UI_CONFIRM, interval=1):
+                    continue
 
             if self.run_general_battle(config=config.general_battle):
                 logger.info("General battle success")
@@ -101,7 +108,6 @@ class ScriptTask(GameUi, BaseActivity, ActivityShikigamiAssets):
         self.main_home()
         self.set_next_run(task="ActivityShikigami", success=True)
         raise TaskEnd
-
 
     def home_main(self) -> bool:
         """
@@ -114,14 +120,16 @@ class ScriptTask(GameUi, BaseActivity, ActivityShikigamiAssets):
             self.screenshot()
             if self.appear(self.I_FIRE):
                 break
+            # 2024-04-04 --------------start
+            if self.appear_then_click(self.I_N_BATTLE, interval=1):
+                continue
+            # 2024-04-04 --------------end
             if self.appear_then_click(self.I_SHI, interval=1):
                 continue
             if self.appear_then_click(self.I_DRUM, interval=1):
                 continue
             if self.appear_then_click(self.I_BATTLE, interval=1):
                 continue
-
-
 
     def main_home(self) -> bool:
         """
@@ -137,7 +145,6 @@ class ScriptTask(GameUi, BaseActivity, ActivityShikigamiAssets):
                 continue
             if self.appear_then_click(self.I_BACK_GREEN, interval=1):
                 continue
-
 
     def check_ap_remain(self, current_ap: ApMode) -> bool:
         """
@@ -175,6 +182,10 @@ class ScriptTask(GameUi, BaseActivity, ActivityShikigamiAssets):
                 self.screenshot()
                 if self.appear(self.I_AP_ACTIVITY):
                     break
+                if self.appear_then_click(self.I_UI_CONFIRM_SAMLL, interval=1):
+                    continue
+                if self.appear_then_click(self.I_UI_CONFIRM, interval=1):
+                    continue
                 if self.appear(self.I_AP, interval=1):
                     self.appear_then_click(self.I_SWITCH, interval=2)  # 点击切换
         else:
@@ -186,44 +197,45 @@ class ScriptTask(GameUi, BaseActivity, ActivityShikigamiAssets):
                 if self.appear(self.I_AP_ACTIVITY, interval=1):
                     self.appear_then_click(self.I_SWITCH, interval=2)
 
-    # def battle_wait(self, random_click_swipt_enable: bool) -> bool:
-    #     # 重写
-    #     self.device.stuck_record_add('BATTLE_STATUS_S')
-    #     self.device.click_record_clear()
-    #     logger.info("Start battle process")
-    #     self.C_RANDOM_LEFT.name = "BATTLE_RANDOM"
-    #     self.C_RANDOM_RIGHT.name = "BATTLE_RANDOM"
-    #     self.C_RANDOM_TOP.name = "BATTLE_RANDOM"
-    #     self.C_RANDOM_BOTTOM.name = "BATTLE_RANDOM"
-    #     while 1:
-    #         self.screenshot()
-    #         # 如果出现了 “获得奖励”
-    #         reward_click = random.choice([self.C_RANDOM_LEFT, self.C_RANDOM_RIGHT, self.C_RANDOM_TOP, self.C_RANDOM_BOTTOM])
-    #         if self.appear_then_click(self.I_UI_REWARD, action=reward_click, interval=1.3):
-    #             continue
-    #         # 如果出现了 “鼓”
-    #         if self.appear(self.I_WIN):
-    #             logger.info("Win")
-    #             while 1:
-    #                 self.screenshot()
-    #                 if not self.appear(self.I_WIN):
-    #                     break
-    #                 if self.appear_then_click(self.I_WIN, action=self.C_RANDOM_ALL, interval=1.1):
-    #                     continuee
-    #             return True
-    #         # 失败 -> 正常人不会失败
-    #         if self.appear(self.I_FALSE):
-    #             logger.warning('False battle')
-    #             self.ui_click_until_disappear(self.I_FALSE)
-    #             return False
-    #         # 如果开启战斗过程随机滑动
-    #         if random_click_swipt_enable:
-    #             self.random_click_swipt()
+    def battle_wait(self, random_click_swipt_enable: bool) -> bool:
+        # 重写
+        self.device.stuck_record_add('BATTLE_STATUS_S')
+        self.device.click_record_clear()
+        logger.info("Start battle process")
+        self.C_RANDOM_LEFT.name = "BATTLE_RANDOM"
+        self.C_RANDOM_RIGHT.name = "BATTLE_RANDOM"
+        self.C_RANDOM_TOP.name = "BATTLE_RANDOM"
+        self.C_RANDOM_BOTTOM.name = "BATTLE_RANDOM"
+        while 1:
+            self.screenshot()
+            # 如果出现了 “获得奖励”
+            reward_click = random.choice([self.C_RANDOM_LEFT, self.C_RANDOM_RIGHT, self.C_RANDOM_TOP, self.C_RANDOM_BOTTOM])
+            if self.appear_then_click(self.I_UI_REWARD, action=reward_click, interval=1.3):
+                continue
+            # 如果出现了 “鼓”
+            if self.appear(self.I_WIN):
+                logger.info("Win")
+                while 1:
+                    self.screenshot()
+                    if not self.appear(self.I_WIN):
+                        break
+                    if self.appear_then_click(self.I_WIN, action=self.C_RANDOM_ALL, interval=1.1):
+                        continue
+                return True
+            # 失败 -> 正常人不会失败
+            if self.appear(self.I_FALSE):
+                logger.warning('False battle')
+                self.ui_click_until_disappear(self.I_FALSE)
+                return False
+            # 如果开启战斗过程随机滑动
+            if random_click_swipt_enable:
+                self.random_click_swipt()
 
 
 if __name__ == '__main__':
     from module.config.config import Config
     from module.device.device import Device
+
     c = Config('oas1')
     d = Device(c)
     t = ScriptTask(c, d)
