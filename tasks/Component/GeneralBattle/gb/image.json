@@ -20,8 +20,8 @@
   {
     "itemName": "prepare_highlight",
     "imageName": "gb_prepare_highlight.png",
-    "roiFront": "1128,536,100,100",
-    "roiBack": "1128,536,100,100",
+    "roiFront": "1119,523,100,100",
+    "roiBack": "1119,523,100,100",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "准备"
@@ -38,8 +38,8 @@
   {
     "itemName": "prepare_dark",
     "imageName": "gb_prepare_dark.png",
-    "roiFront": "1131,538,100,100",
-    "roiBack": "1131,538,100,100",
+    "roiFront": "1118,521,100,100",
+    "roiBack": "1118,521,100,100",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "准备但是界面还未加载这个时候是黑色的"

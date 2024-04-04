@@ -181,6 +181,8 @@ class ExpTest(RightActivity, FastDevice, RestartAssets, ExplorationAssets):
                 break
             if self.appear_then_click(self.I_E_EXPLORATION_CLICK, interval=1):
                 continue
+        from time import sleep
+        sleep(1)
         logger.info(f'Enter exploration {layer}')
 
     def exp_exit(self):
@@ -202,7 +204,7 @@ class ExpTest(RightActivity, FastDevice, RestartAssets, ExplorationAssets):
         pos_right = 1270
         pos_left = 260
         pos_top = 390
-        pos_bottom = 620
+        pos_bottom = 500
         pos_level = (pos_top + pos_bottom) / 2
 
         step_1 = Step('step_1', pos=(pos_right, random.randint(pos_top, pos_bottom)), time=2.1)

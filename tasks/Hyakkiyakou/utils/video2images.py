@@ -80,7 +80,7 @@ class TransformVideo(HyakkiyakouAssets):
             if count_frame % frame_skip != 0:
                 continue
 
-            w, h, _ = frame.shape
+            h, w, _ = frame.shape
             if h == 720 and w == 1280:
                 pass
             elif h == 720 and w != 1280:
@@ -96,16 +96,18 @@ class TransformVideo(HyakkiyakouAssets):
                 frame = cv2.cvtColor(frame, cv2.COLOR_RGB2BGR)
             index_frame += 1
 
+            h, w, _ = frame.shape
+
             match mode:
                 case 0:
-                    img_a = frame[80:, 0:640]
+                    img_a = frame[h-640:, 0:640]
                     img_b = None
                 case 1:
                     img_a = None
-                    img_b = frame[80:, 640:1280]
+                    img_b = frame[h-640:, 640:1280]
                 case 2:
-                    img_a = frame[80:, 0:640]
-                    img_b = frame[80:, 640:1280]
+                    img_a = frame[h-640:, 0:640]
+                    img_b = frame[h-640:, 640:1280]
                 case _:
                     raise ValueError('mode must be 0, 1, or 2')
             if img_a is not None:
@@ -118,7 +120,7 @@ class TransformVideo(HyakkiyakouAssets):
 
 
 if __name__ == '__main__':
-    VIDEO = r'C:\Users\Ryland\Downloads\202404021234_ssr_021_a.mp4'
+    VIDEO = r'C:\Users\Ryland\Downloads\202404031513.mp4'
     # SAVE_PATH = 'D:/Project/Hyakkiyakou/OnmyojiAutoScript-hyakkiyakou/temp/sources_images'
     t = TransformVideo(change_channel=True, interval=0.1)
-    t.parse_one(VIDEO, mode=1)
+    t.parse_one(VIDEO, mode=2)
