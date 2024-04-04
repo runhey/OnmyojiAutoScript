@@ -141,9 +141,11 @@ class ScriptTask(GameUi, BaseActivity, ActivityShikigamiAssets):
             self.screenshot()
             if self.appear(self.I_SHI):
                 break
-            if self.appear_then_click(self.I_UI_BACK_YELLOW, interval=1):
+            if self.appear_then_click(self.I_UI_BACK_RED, interval=2):
                 continue
-            if self.appear_then_click(self.I_BACK_GREEN, interval=1):
+            if self.appear_then_click(self.I_UI_BACK_YELLOW, interval=2):
+                continue
+            if self.appear_then_click(self.I_BACK_GREEN, interval=2):
                 continue
 
     def check_ap_remain(self, current_ap: ApMode) -> bool:
