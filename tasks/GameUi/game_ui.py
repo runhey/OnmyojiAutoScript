@@ -11,6 +11,7 @@ from module.atom.ocr import RuleOcr
 
 from tasks.GameUi.assets import GameUiAssets
 from tasks.GameUi.page import *
+from tasks.Restart.assets import RestartAssets
 from tasks.base_task import BaseTask
 from module.logger import logger
 from module.exception import (GameNotRunningError, GamePageUnknownError, RequestHumanTakeover)
@@ -68,6 +69,12 @@ class GameUi(BaseTask, GameUiAssets):
         判断当前页面是否为page
         """
         return self.appear(page.check_button)
+
+    def ensure_scroll_open(self):
+        """
+        判断庭院界面卷轴是否打开
+        """
+        return self.appear(RestartAssets.I_LOGIN_SCROOLL_CLOSE)
 
     def ensure_button_execute(self, button):
         """
@@ -134,6 +141,9 @@ class GameUi(BaseTask, GameUiAssets):
             # if self.appear_then_click(GOTO_MAIN, offset=(30, 30), interval=2) or self.ui_additional():
             #     timeout.reset()
             #     continue
+
+            if self.ensure_scroll_open():
+                self.click(RestartAssets.I_LOGIN_SCROOLL_CLOSE)
 
             app_check()
             minicap_check()
