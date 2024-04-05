@@ -291,7 +291,7 @@ class ExpTest(RightActivity, FastDevice, RestartAssets, ExplorationAssets):
                       save_roi=(random.randint(100, 540), 80))
         back_4 = Step('back_4', pos=(pos_left, pos_bottom), time=2, save_time=1.6, save_img=True,
                       save_roi=(random.randint(100, 540), 80))
-        back_5 = Step('back_5', pos=(pos_left, pos_level), time=1.7, save_img=True,
+        back_5 = Step('back_5', pos=(pos_left, pos_level), time=1.4, save_img=True,
                       save_roi=(random.randint(100, 540), 80))
 
         self.run_step(back_1)
