@@ -241,5 +241,14 @@
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"
+  },
+  {
+    "itemName": "check_expanded",
+    "imageName": "page_check_expanded.png",
+    "roiFront": "1173,627,47,79",
+    "roiBack": "1173,627,47,79",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "是否为展开绘卷"
   }
 ]

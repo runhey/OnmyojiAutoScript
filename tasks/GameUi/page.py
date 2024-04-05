@@ -119,6 +119,8 @@ page_town.link(button=G.I_TOWN_GOTO_HYAKKISEN, destination=page_hyakkisen)
 
 
 # ************************************* 庭院部分 *****************************************#
+# 庭院是否展开
+page_courtyard_expanded = Page(G.I_CHECK_EXPANDED)
 # 式神录 shikigami_records
 page_shikigami_records = Page(G.I_CHECK_RECORDS)
 page_shikigami_records.additional = [G.I_AD_DISAPPEAR, G.I_RECORDS_CLOSE]

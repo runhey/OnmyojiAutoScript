@@ -11,7 +11,7 @@ from tasks.Component.GeneralBuff.general_buff import GeneralBuff
 from tasks.Component.GeneralRoom.general_room import GeneralRoom
 from tasks.Component.SwitchSoul.switch_soul import SwitchSoul
 from tasks.GameUi.game_ui import GameUi
-from tasks.GameUi.page import page_main, page_soul_zones, page_shikigami_records
+from tasks.GameUi.page import page_main, page_soul_zones, page_shikigami_records, page_courtyard_expanded
 from tasks.Orochi.assets import OrochiAssets
 from tasks.Orochi.config import Orochi, UserStatus
 from module.logger import logger
@@ -20,6 +20,10 @@ from module.exception import TaskEnd
 class ScriptTask(GeneralBattle, GeneralInvite, GeneralBuff, GeneralRoom, GameUi, SwitchSoul, OrochiAssets):
 
     def run(self) -> bool:
+
+        self.screenshot()
+        if not self.appear(self.I_MAIN_GOTO_SHIKIGAMI_RECORDS,interval=0.7):
+            self.click(self.I_CHECK_EXPANDED)
         # 御魂切换方式一
         if self.config.orochi.switch_soul.enable:
             self.ui_get_current_page()
