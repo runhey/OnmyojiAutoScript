@@ -9,8 +9,9 @@ from module.logger import logger
 class PackageName(str, Enum):
     AUTO = 'auto'
     NETEASE_ONMYOJI = 'com.netease.onmyoji.wyzymnqsd_cps'  # 网易自家的阴阳师
-    NETEASE_MI = 'com.netease.onmyoji.mi'
+    NETEASE_MI = 'com.netease.onmyoji.mi'  # 小米
     NETEASE = 'com.netease.onmyoji'
+    NETEASE_HUAWEI = 'com.netease.onmyoji.huawei'
 
 class ScreenshotMethod(str, Enum):
     AUTO = 'auto'

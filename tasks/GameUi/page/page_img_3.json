@@ -29,11 +29,11 @@
   {
     "itemName": "main_goto_daily",
     "imageName": "page_main_goto_daily.png",
-    "roiFront": "778,612,52,54",
-    "roiBack": "759,595,84,84",
+    "roiFront": "779,612,51,67",
+    "roiBack": "754,595,89,97",
     "method": "Template matching",
     "threshold": 0.7,
-    "description": "description"
+    "description": "进入花合战"
   },
   {
     "itemName": "main_goto_mall",

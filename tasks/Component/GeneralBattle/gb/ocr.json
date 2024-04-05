@@ -1,0 +1,11 @@
+[
+  {
+    "itemName": "battle_prepare",
+    "roiFront": "1122,546,92,51",
+    "roiBack": "1122,546,92,51",
+    "mode": "Single",
+    "method": "Default",
+    "keyword": "准备",
+    "description": "准备"
+  }
+]

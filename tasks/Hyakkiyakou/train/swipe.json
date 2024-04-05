@@ -1,8 +1,15 @@
 [
   {
     "itemName": "tswipe",
-    "roiFront": "612,527,21,91",
-    "roiBack": "359,519,23,100",
+    "roiFront": "421,521,21,91",
+    "roiBack": "273,516,23,100",
+    "mode": "default",
+    "description": "description"
+  },
+  {
+    "itemName": "tback",
+    "roiFront": "259,515,21,100",
+    "roiBack": "993,521,22,100",
     "mode": "default",
     "description": "description"
   }

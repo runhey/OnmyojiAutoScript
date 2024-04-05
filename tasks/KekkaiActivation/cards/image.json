@@ -47,10 +47,10 @@
   {
     "itemName": "cards_fish_5",
     "imageName": "cards_cards_fish_5.png",
-    "roiFront": "192,358,88,21",
-    "roiBack": "176,155,105,492",
+    "roiFront": "192,329,88,90",
+    "roiBack": "176,155,116,492",
     "method": "Template matching",
-    "threshold": 0.9,
+    "threshold": 0.8,
     "description": "description"
   },
   {
@@ -59,7 +59,7 @@
     "roiFront": "192,409,87,21",
     "roiBack": "176,175,118,473",
     "method": "Template matching",
-    "threshold": 0.9,
+    "threshold": 0.7,
     "description": "description"
   },
   {

@@ -133,7 +133,6 @@ class Buy(BaseTask, BuyAssets):
                         break
                     number_record.pop(0)
 
-
         # 购买确认
         while 1:
             self.screenshot()
@@ -149,6 +148,12 @@ class Buy(BaseTask, BuyAssets):
                     # 一直点击
                     if self.ui_reward_appear_click():
                         continue
+                break
+
+            # 如果这个购买已达上限
+            if self.appear(self.I_UI_CONFIRM_SAMLL):
+                self.ui_click_until_disappear(self.I_UI_CONFIRM_SAMLL, interval=1)
+                logger.warning('Buy number limit')
                 break
 
             if self.click(self.C_BUY_MORE, interval=2):

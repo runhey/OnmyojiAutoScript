@@ -11,7 +11,7 @@ from tasks.GameUi.game_ui import GameUi
 from tasks.GameUi.page import page_exploration, page_shikigami_records, page_main
 
 from module.logger import logger
-from module.exception import RequestHumanTakeover
+from module.exception import RequestHumanTakeover, TaskEnd
 from module.atom.image_grid import ImageGrid
 
 
@@ -78,6 +78,7 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, ExplorationAssets):
                 self.appear_then_click(self.I_RED_CLOSE)
             self.ui_goto(page_main)
             self.set_next_run(task='Exploration', success=True, finish=False)
+        raise TaskEnd
 
     # 查找指定的章节：
     def open_expect_level(self):
