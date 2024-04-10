@@ -56,8 +56,8 @@
   {
     "itemName": "main_goto_team",
     "imageName": "page_main_goto_team.png",
-    "roiFront": "429,622,53,51",
-    "roiBack": "429,622,53,51",
+    "roiFront": "437,625,38,48",
+    "roiBack": "366,606,192,83",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"
@@ -65,8 +65,8 @@
   {
     "itemName": "main_goto_collection",
     "imageName": "page_main_goto_collection.png",
-    "roiFront": "92,611,51,64",
-    "roiBack": "92,611,51,64",
+    "roiFront": "92,621,36,41",
+    "roiBack": "51,596,159,85",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"

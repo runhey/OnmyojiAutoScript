@@ -96,7 +96,7 @@ class ScriptTask(GameUi, GeneralBattle, DemonEncounterAssets):
                 logger.warning('Boss battle already done')
                 self.ui_click_until_disappear(self.I_UI_BACK_RED)
                 return
-            if self.appear_then_click(self.I_BOSS_FIRE, interval=1):
+            if self.appear_then_click(self.I_BOSS_FIRE, interval=3):
                 boss_fire_count += 1
                 continue
         logger.info('Boss battle confirm and enter')
