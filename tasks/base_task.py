@@ -98,6 +98,15 @@ class BaseTask(GlobalGameAssets, CostumeBase):
                         continue
                     if not self.appear(self.I_G_ACCEPT):
                         break
+            # 全部忽略
+            elif invite and self.config.global_game.emergency.friend_invitation == FriendInvitation.IGNORE:
+                logger.info(f"Ignore friend invitation")
+                while 1:
+                    self.device.screenshot()
+                    if self.appear_then_click(self.I_G_IGNORE, interval=1):
+                        continue
+                    if not self.appear(self.I_G_IGNORE):
+                        break
             # 有的时候长战斗 点击后会取消战斗状态
             self.device.detect_record = detect_record
             # 判断网络异常
