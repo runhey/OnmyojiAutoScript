@@ -26,7 +26,7 @@ class RealmRaidTest(ScriptTask):
                 logger.warning("Click failure, check your click position")
                 return False
             if not self.appear(self.I_TOPPA_RECORD, threshold=0.85):
-                time.sleep(0.5)
+                time.sleep(1.5)
                 self.screenshot()
                 if self.appear(self.I_TOPPA_RECORD, threshold=0.85):
                     continue
