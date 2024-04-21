@@ -1,0 +1,20 @@
+[
+  {
+    "itemName": "hselect_1",
+    "roiFront": "158,209,225,405",
+    "roiBack": "158,209,225,405",
+    "description": "description"
+  },
+  {
+    "itemName": "hselect_2",
+    "roiFront": "531,225,202,363",
+    "roiBack": "531,225,202,363",
+    "description": "description"
+  },
+  {
+    "itemName": "hselect_3",
+    "roiFront": "875,210,219,394",
+    "roiBack": "875,210,219,394",
+    "description": "description"
+  }
+]
