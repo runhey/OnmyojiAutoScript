@@ -10,9 +10,9 @@
   },
   {
     "itemName": "gi_emoji_2",
-    "imageName": "gi_gi_emoji_2.png",
-    "roiFront": "21,632,53,64",
-    "roiBack": "21,632,53,64",
+    "imageName": "gi_gi_emoji_1.png",
+    "roiFront": "27,622,55,51",
+    "roiBack": "27,622,55,51",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"
