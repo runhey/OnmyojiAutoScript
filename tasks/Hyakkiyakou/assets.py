@@ -10,6 +10,15 @@ from module.atom.list import RuleList
 class HyakkiyakouAssets: 
 
 
+	# Click Rule Assets
+	# description 
+	C_HSELECT_1 = RuleClick(roi_front=(158,209,225,405), roi_back=(158,209,225,405), name="hselect_1")
+	# description 
+	C_HSELECT_2 = RuleClick(roi_front=(531,225,202,363), roi_back=(531,225,202,363), name="hselect_2")
+	# description 
+	C_HSELECT_3 = RuleClick(roi_front=(875,210,219,394), roi_back=(875,210,219,394), name="hselect_3")
+
+
 	# Image Rule Assets
 	# 邀请按钮 
 	I_HINVITE = RuleImage(roi_front=(139,569,63,60), roi_back=(139,569,63,60), threshold=0.8, method="Template matching", file="./tasks/Hyakkiyakou/hya/hya_hinvite.png")
