@@ -133,5 +133,32 @@
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"
+  },
+  {
+    "itemName": "town_goto_hyakkiyakou",
+    "imageName": "page_town_goto_hyakkiyakou.png",
+    "roiFront": "880,165,53,69",
+    "roiBack": "827,149,148,100",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "check_kyakkiyakou",
+    "imageName": "page_check_kyakkiyakou.png",
+    "roiFront": "305,567,56,64",
+    "roiBack": "280,545,100,100",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "hyakkiyakou_close",
+    "imageName": "page_hyakkiyakou_close.png",
+    "roiFront": "1063,181,47,43",
+    "roiBack": "1063,181,47,43",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
   }
 ]
