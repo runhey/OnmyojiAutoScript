@@ -51,8 +51,8 @@ class GeneralBattle(GeneralBuff, GeneralBattleAssets):
                 if self.appear_then_click(self.I_PREPARE_HIGHLIGHT, interval=1.5):
                     occur_prepare_button = True
                     continue
-                if occur_prepare_button and self.ocr_appear_click(self.O_BATTLE_PREPARE, interval=2):
-                    continue
+                # if occur_prepare_button and self.ocr_appear_click(self.O_BATTLE_PREPARE, interval=2):
+                #     continue
             logger.info("Click prepare ensure button")
 
             # 照顾一下某些模拟器慢的
