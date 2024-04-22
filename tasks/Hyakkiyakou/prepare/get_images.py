@@ -49,13 +49,17 @@ class GenerateImages(GameUi, HyakkiyakouAssets):
                 self.click(click_button, interval=1)
         self.device.stuck_record_add('BATTLE_STATUS_S')
         # 保存图片
-        save_img_timer = Timer(0.1)
+        save_img_timer = Timer(0.4)
         save_img_timer.start()
         while 1:
             self.screenshot()
             if self.appear(self.I_HEND):
                 logger.info('Generate a time Images Success')
                 break
+            if not self.appear(self.I_CHECK_RUN):
+                continue
+            if self.appear(self.I_HFREEZE):
+                continue
             if save_img_timer.reached():
                 save_img_timer.reset()
                 self.save_image()
