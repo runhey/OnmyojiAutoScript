@@ -43,5 +43,14 @@
     "method": "Template matching",
     "threshold": 0.8,
     "description": "结束"
+  },
+  {
+    "itemName": "hfreeze",
+    "imageName": "hya_hfreeze.png",
+    "roiFront": "1092,665,187,54",
+    "roiBack": "1092,665,187,54",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "冰冻"
   }
 ]
