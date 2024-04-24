@@ -117,6 +117,12 @@ class GameUiAssets:
 	I_BACK_YOLLOW = RuleImage(roi_front=(24,16,48,55), roi_back=(0,0,100,100), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_back_yollow.png")
 	# description 
 	I_DEMON_ENCOUNTER_GOTO_TOWN = RuleImage(roi_front=(28,20,56,52), roi_back=(3,4,100,100), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_demon_encounter_goto_town.png")
+	# description 
+	I_TOWN_GOTO_HYAKKIYAKOU = RuleImage(roi_front=(880,165,53,69), roi_back=(827,149,148,100), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_town_goto_hyakkiyakou.png")
+	# description 
+	I_CHECK_KYAKKIYAKOU = RuleImage(roi_front=(305,567,56,64), roi_back=(280,545,100,100), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_check_kyakkiyakou.png")
+	# description 
+	I_HYAKKIYAKOU_CLOSE = RuleImage(roi_front=(1063,181,47,43), roi_back=(1063,181,47,43), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_hyakkiyakou_close.png")
 
 
 	# Image Rule Assets
@@ -133,9 +139,9 @@ class GameUiAssets:
 	# description 
 	I_MAIN_GOTO_GUILD = RuleImage(roi_front=(540,611,50,54), roi_back=(540,611,50,54), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_main_goto_guild.png")
 	# description 
-	I_MAIN_GOTO_TEAM = RuleImage(roi_front=(429,622,53,51), roi_back=(429,622,53,51), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_main_goto_team.png")
+	I_MAIN_GOTO_TEAM = RuleImage(roi_front=(437,625,38,48), roi_back=(366,606,192,83), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_main_goto_team.png")
 	# description 
-	I_MAIN_GOTO_COLLECTION = RuleImage(roi_front=(92,611,51,64), roi_back=(92,611,51,64), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_main_goto_collection.png")
+	I_MAIN_GOTO_COLLECTION = RuleImage(roi_front=(92,621,36,41), roi_back=(51,596,159,85), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_main_goto_collection.png")
 	# description 
 	I_CHECK_RECORDS = RuleImage(roi_front=(269,71,55,50), roi_back=(269,71,55,50), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_check_records.png")
 	# description 

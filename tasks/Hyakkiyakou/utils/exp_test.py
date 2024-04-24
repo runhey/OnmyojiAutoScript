@@ -271,7 +271,7 @@ class ExpTest(RightActivity, FastDevice, RestartAssets, ExplorationAssets):
     def run_exp_27(self):
         pos_right = 1270
         pos_left = 260
-        pos_top = 510
+        pos_top = 550
         pos_bottom = 620
         pos_level = (pos_top + pos_bottom) / 2
         step_1 = Step('step_1', pos=(pos_right, random.randint(pos_top, pos_bottom)), time=2.1)
