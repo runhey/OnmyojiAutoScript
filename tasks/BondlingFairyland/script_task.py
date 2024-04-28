@@ -543,6 +543,10 @@ class ScriptTask(GameUi, BondlingBattle, SwitchSoul, BondlingFairylandAssets):
                 return False
             if not self.appear(self.I_BF_SEARSH):
                 return True
+            if self.appear_then_click(self.I_UI_CONFIRM, interval=1):
+                continue
+            if self.appear_then_click(self.I_UI_CONFIRM_SAMLL, interval=1):
+                continue
             if self.appear_then_click(self.I_BF_SEARSH, interval=2):
                 count += 1
                 continue
