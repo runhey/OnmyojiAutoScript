@@ -25,7 +25,7 @@ class GenerateImages(GameUi, HyakkiyakouAssets):
     def run(self):
         self.ui_get_current_page()
         self.ui_goto(page_hyakkiyakou)
-        for i in range(1):
+        for i in range(20):
             self.save_one()
 
     def save_one(self):
