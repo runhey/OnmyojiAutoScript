@@ -19,6 +19,7 @@ from tasks.base_task import BaseTask
 from tasks.Script.config_device import ScreenshotMethod, ControlMethod
 from tasks.Component.RightActivity.right_activity import RightActivity
 from tasks.Restart.assets import RestartAssets
+from tasks.Exploration.config import ExplorationLevel
 
 from utils import usage_time
 from fast_device import FastDevice
@@ -100,7 +101,7 @@ class ExpTest(RightActivity, FastDevice, RestartAssets, ExplorationAssets):
 
             if not start_flag:
                 with usage_time('click'):
-                    self.device.click(x=step.pos[0], y=step.pos[1])
+                    self.device.click(x=step.pos[0], y=step.pos[1], control_name=step.step_name)
                 timer_step.start()
                 timer_save_img.start()
                 timer_save_interval.start()
@@ -324,3 +325,161 @@ class ExpTest(RightActivity, FastDevice, RestartAssets, ExplorationAssets):
     def back_main(self):
         self.ui_get_current_page()
         self.ui_goto(page_main)
+
+    def open_expect_level(self, level: int):
+        self.config.model.script.device.control_method = ControlMethod.UIAUTOMATOR2
+        exploration_level = self.exp_level_map.get(level, None)
+        swipeCount = 0
+        while 1:
+            self.screenshot()
+
+            results = self.O_E_EXPLORATION_LEVEL_NUMBER.detect_and_ocr(self.device.image)
+            text1 = [result.ocr_text for result in results]
+            result = set(text1).intersection({exploration_level})
+            if self.appear(self.I_E_EXPLORATION_CLICK) or result and len(result) > 0:
+                break
+            self.device.click_record_clear()
+            self.swipe(self.S_SWIPE_LEVEL_UP)
+            swipeCount += 1
+            if swipeCount >= 25:
+                return False
+        self.config.model.script.device.control_method = ControlMethod.WINDOW_MESSAGE
+
+        self.O_E_EXPLORATION_LEVEL_NUMBER.keyword = exploration_level
+        while 1:
+            self.screenshot()
+
+            if self.appear(self.I_E_EXPLORATION_CLICK):
+                break
+            if self.ocr_appear_click(self.O_E_EXPLORATION_LEVEL_NUMBER):
+                self.wait_until_appear(self.I_E_EXPLORATION_CLICK, wait_time=3)
+        while 1:
+            self.screenshot()
+            if self.appear(self.I_E_AUTO_ROTATE_ON) or self.appear(self.I_E_AUTO_ROTATE_OFF):
+                break
+            if self.appear_then_click(self.I_E_EXPLORATION_CLICK, interval=1):
+                continue
+        from time import sleep
+        sleep(1)
+        logger.info(f'Enter exploration {level}')
+
+    @cached_property
+    def exp_level_map(self):
+        return {
+            1: ExplorationLevel.EXPLORATION_1,
+            2: ExplorationLevel.EXPLORATION_2,
+            3: ExplorationLevel.EXPLORATION_3,
+            4: ExplorationLevel.EXPLORATION_4,
+            5: ExplorationLevel.EXPLORATION_5,
+            6: ExplorationLevel.EXPLORATION_6,
+            7: ExplorationLevel.EXPLORATION_7,
+            8: ExplorationLevel.EXPLORATION_8,
+            9: ExplorationLevel.EXPLORATION_9,
+            10: ExplorationLevel.EXPLORATION_10,
+            11: ExplorationLevel.EXPLORATION_11,
+            12: ExplorationLevel.EXPLORATION_12,
+            13: ExplorationLevel.EXPLORATION_13,
+            14: ExplorationLevel.EXPLORATION_14,
+            15: ExplorationLevel.EXPLORATION_15,
+            16: ExplorationLevel.EXPLORATION_16,
+            17: ExplorationLevel.EXPLORATION_17,
+            18: ExplorationLevel.EXPLORATION_18,
+            19: ExplorationLevel.EXPLORATION_19,
+            20: ExplorationLevel.EXPLORATION_20,
+            21: ExplorationLevel.EXPLORATION_21,
+            22: ExplorationLevel.EXPLORATION_22,
+            23: ExplorationLevel.EXPLORATION_23,
+            24: ExplorationLevel.EXPLORATION_24,
+            25: ExplorationLevel.EXPLORATION_25,
+            26: ExplorationLevel.EXPLORATION_26,
+            27: ExplorationLevel.EXPLORATION_27,
+            28: ExplorationLevel.EXPLORATION_28,
+        }
+
+    def run_exp_base(self, pos_top: int = 550, go_times: int = 7, back_times: int = 7):
+        pos_right = 1270
+        pos_left = 260
+        pos_top = pos_top
+        pos_bottom = 620
+        pos_level = (pos_top + pos_bottom) / 2
+        save_roi_start = 200
+        save_roi_end = 640 - save_roi_start
+        step_1 = Step('step_1', pos=(pos_right, random.randint(pos_bottom - 10, pos_bottom)), time=2.3)
+        step_2 = Step('step_2', pos=(pos_right, random.randint(pos_bottom - 10, pos_bottom)), time=2.3)
+        step_3 = Step('step_3', pos=(pos_right, random.randint(pos_bottom - 10, pos_bottom)), time=2.3)
+        step_4 = Step('step_4', pos=(pos_right, random.randint(pos_bottom - 10, pos_bottom)), time=2.3)
+        step_5 = Step('step_5', pos=(pos_right, random.randint(pos_bottom - 10, pos_bottom)), time=2.3)
+        step_6 = Step('step_6', pos=(pos_right, random.randint(pos_bottom - 10, pos_bottom)), time=2.3)
+        step_7 = Step('step_7', pos=(pos_right, random.randint(pos_bottom - 10, pos_bottom)), time=2.3)
+        step_8 = Step('step_7', pos=(pos_right, random.randint(pos_bottom - 10, pos_bottom)), time=2.3)
+        back_1 = Step('back_1', pos=(pos_left, pos_level), time=1.7, save_img=True,
+                      save_roi=(random.randint(save_roi_start, save_roi_end), 80))
+        back_2 = Step('back_2', pos=(pos_left, pos_top), time=1.7, save_img=True,
+                      save_roi=(random.randint(save_roi_start, save_roi_end), 80))
+        back_3 = Step('back_3', pos=(pos_left, pos_level), time=1.7, save_img=True,
+                      save_roi=(random.randint(save_roi_start, save_roi_end), 80))
+        back_4 = Step('back_4', pos=(pos_left, pos_bottom), time=1.7, save_img=True,
+                      save_roi=(random.randint(save_roi_start, save_roi_end), 80))
+        back_5 = Step('back_5', pos=(pos_left, pos_bottom), time=1.4, save_img=True,
+                      save_roi=(random.randint(save_roi_start, save_roi_end), 80))
+        back_6 = Step('back_6', pos=(pos_left, pos_top), time=2.1, save_img=True,
+                      save_roi=(random.randint(save_roi_start, save_roi_end), 80))
+        back_7 = Step('back_7', pos=(pos_left, pos_bottom), time=2.1, save_img=True,
+                      save_roi=(random.randint(save_roi_start, save_roi_end), 80))
+        back_8 = Step('back_8', pos=(pos_left, pos_level), time=1.8, save_img=True,
+                      save_roi=(random.randint(save_roi_start, save_roi_end), 80))
+        back_9 = Step('back_9', pos=(pos_left, pos_top), time=1.8, save_img=True,
+                      save_roi=(random.randint(save_roi_start, save_roi_end), 80))
+        back_10 = Step('back_10', pos=(pos_left, pos_bottom), time=2.1, save_img=True,
+                       save_roi=(random.randint(save_roi_start, save_roi_end), 80))
+        if go_times >= 3:
+            self.run_step(step_1)
+            self.run_step(step_2)
+            self.run_step(step_3)
+        if go_times >= 4:
+            self.run_step(step_4)
+        if go_times >= 5:
+            self.run_step(step_5)
+        if go_times >= 6:
+            self.run_step(step_6)
+        if go_times >= 7:
+            self.run_step(step_7)
+        if go_times >= 8:
+            self.run_step(step_8)
+
+        if back_times >= 4:
+            self.run_step(back_1)
+            self.run_step(back_2)
+            self.run_step(back_3)
+            self.run_step(back_4)
+        if back_times >= 5:
+            self.run_step(back_5)
+        if back_times >= 6:
+            self.run_step(back_6)
+        if back_times >= 7:
+            self.run_step(back_7)
+        if back_times >= 8:
+            self.run_step(back_8)
+        if back_times >= 9:
+            self.run_step(back_9)
+        if back_times >= 10:
+            self.run_step(back_10)
+        logger.info('exp done')
+        logger.info('-----------------------------------------------------------------------------')
+
+    def run_exp_24(self):
+        self.run_exp_base(pos_top=470, go_times=8, back_times=10)
+
+    def run_exp_20(self):
+        self.run_exp_base(pos_top=470, go_times=7, back_times=8)
+
+    def run_exp_18(self):
+        self.run_exp_base(pos_top=470, go_times=4, back_times=5)
+
+    def run_exp_15(self):
+        self.run_exp_base(pos_top=470, go_times=7, back_times=8)
+
+    def run_exp_12(self):
+        self.run_exp_base(pos_top=470, go_times=3, back_times=5)
+
+
