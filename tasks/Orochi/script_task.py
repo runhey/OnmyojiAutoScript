@@ -144,6 +144,7 @@ class ScriptTask(GeneralBattle, GeneralInvite, GeneralBuff, GeneralRoom, GameUi,
         self.create_ensure()
 
         # 邀请队友
+        logger.info('Leader Invite team')
         success = True
         is_first = True
         # 这个时候我已经进入房间了哦
@@ -157,7 +158,8 @@ class ScriptTask(GeneralBattle, GeneralInvite, GeneralBuff, GeneralRoom, GameUi,
             # 检查猫咪奖励
             if self.appear_then_click(self.I_PET_PRESENT, action=self.C_WIN_3, interval=1):
                 continue
-
+                
+            logger.info('Orochi detect in_room')    
             if self.current_count >= self.limit_count:
                 if self.is_in_room():
                     logger.info('Orochi count limit out')
@@ -168,8 +170,6 @@ class ScriptTask(GeneralBattle, GeneralInvite, GeneralBuff, GeneralRoom, GameUi,
                     logger.info('Orochi time limit out')
                     break
 
-
-
             # 如果没有进入房间那就不需要后面的邀请
             if not self.is_in_room():
                 if self.is_room_dead():
@@ -178,6 +178,7 @@ class ScriptTask(GeneralBattle, GeneralInvite, GeneralBuff, GeneralRoom, GameUi,
                     break
                 continue
 
+            logger.info('Orochi is_first: %s', is_first)
             # 点击挑战
             if not is_first:
                 if self.run_invite(config=self.config.orochi.invite_config):
