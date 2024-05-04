@@ -385,7 +385,9 @@ class GeneralInvite(BaseTask, GeneralInviteAssets):
                     continue
 
             logger.info(f'Now find friend in “最近”')
+            logger.info(f'Now find friend in “最近”')
             sleep(1)
+            # 开始选择好友
             # 开始选择好友
             if not is_select:
                 if self.detect_select(name):
