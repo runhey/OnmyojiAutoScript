@@ -46,7 +46,7 @@ class OcrMethod(Enum):
 class BaseCor:
 
     lang: str = "ch"
-    score: float = 0.6  # 阈值默认为0.5
+    score: float = 0.7  # 阈值默认为0.5
 
     name: str = "ocr"
     mode: OcrMode = OcrMode.FULL

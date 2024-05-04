@@ -91,7 +91,7 @@ class GeneralInviteAssets:
 	# description 
 	I_GI_EMOJI_1 = RuleImage(roi_front=(25,538,50,56), roi_back=(25,538,50,56), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralInvite/gi/gi_gi_emoji_1.png")
 	# description 
-	I_GI_EMOJI_2 = RuleImage(roi_front=(21,632,53,64), roi_back=(21,632,53,64), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralInvite/gi/gi_gi_emoji_2.png")
+	I_GI_EMOJI_2 = RuleImage(roi_front=(22,523,57,56), roi_back=(20,520,57,56), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralInvite/gi/gi_gi_emoji_2.png")
 	# 判断是不是在庭院界面 
 	I_GI_HOME = RuleImage(roi_front=(359,44,34,46), roi_back=(359,44,34,46), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralInvite/gi/gi_gi_home.png")
 	# 判断是不是在探索界面 
