@@ -105,7 +105,7 @@ class ScriptTask(GameUi, GeneralBattle, DuelAssets):
                 logger.info('You are already a celeb')
                 return None
             current_score = self.O_D_SCORE.ocr(self.device.image)
-            if current_score < 1200 or current_score > 3000:
+            if current_score < 1000 or current_score > 3000:
                 continue
             return current_score if current_score <= target else None
 
