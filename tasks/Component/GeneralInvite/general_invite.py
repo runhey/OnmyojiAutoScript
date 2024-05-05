@@ -456,7 +456,7 @@ class GeneralInvite(BaseTask, GeneralInviteAssets):
             success = self.invite_friend(config.friend_2, config.find_mode)
             if not success:
                 logger.warning('Invite friend 2 failed')
-        sleep(1.5)
+        sleep(0.5)
         # 点击确定
         logger.info('Click invite ensure')
         if not self.appear(self.I_INVITE_ENSURE):
