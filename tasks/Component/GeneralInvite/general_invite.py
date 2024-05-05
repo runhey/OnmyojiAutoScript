@@ -159,10 +159,10 @@ class GeneralInvite(BaseTask, GeneralInviteAssets):
         """
         if is_screenshot:
             self.screenshot()
-        logger.info('try find gi emoji1')
+        logger.debug('try find gi emoji1')
         if self.appear(self.I_GI_EMOJI_1):
             return True
-        logger.info('try find gi emoji2 ...')
+        logger.debug('try find gi emoji2 ...')
         if self.appear(self.I_GI_EMOJI_2):
             return True
         # if self.appear(self.I_MATCHING):
