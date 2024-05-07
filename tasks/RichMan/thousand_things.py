@@ -68,10 +68,11 @@ class ThousandThings(GameUi, RichManAssets):
             if self.ocr_appear_click(self.O_TT_BLUE_TICKET, interval=1):
                 continue
         logger.info('Buy mystery amulet')
-        self.tt_get_reward(self.I_TT_BUY_CONFIRM)
+        self.ui_get_reward(self.I_TT_BUY_CONFIRM)
         logger.info('Buy mystery amulet success')
         time.sleep(0.5)
         return True
+
 
     def tt_buy_black_daruma_scrap(self):
         self.screenshot()
@@ -87,7 +88,7 @@ class ThousandThings(GameUi, RichManAssets):
             if self.ocr_appear_click(self.O_TT_BLACK, interval=1):
                 continue
         logger.info('Buy black daruma scrap')
-        self.tt_get_reward(self.I_TT_BUY_CONFIRM)
+        self.ui_get_reward(self.I_TT_BUY_CONFIRM)
         logger.info('Buy black daruma scrap success')
         time.sleep(0.5)
         return True
@@ -115,7 +116,7 @@ class ThousandThings(GameUi, RichManAssets):
             if not appear_max and self.ocr_appear_click(self.O_TT_AP, interval=2.3):
                 continue
         logger.info('Buy ap')
-        self.tt_get_reward(self.I_TT_BUY_CONFIRM)
+        self.ui_get_reward(self.I_TT_BUY_CONFIRM)
         logger.info('Buy ap success')
         time.sleep(0.5)
         return True
@@ -132,45 +133,11 @@ class ThousandThings(GameUi, RichManAssets):
         logger.info('Money is not enough')
         return False
 
-    def tt_get_reward(self, image_button):
-        from time import sleep
-        click_count = 0
-        while 1:
-            self.screenshot()
-
-            if click_count >= 6:
-                logger.warning('Get reward failed')
-                while 1:
-                    self.screenshot()
-                    if not self.appear(self.I_TT_BUY_UP):
-                        break
-                    if self.appear_then_click(self.I_UI_BACK_RED, interval=3):
-                        continue
-                break
-
-            if self.ui_reward_appear_click():
-                sleep(0.5)
-                while 1:
-                    self.screenshot()
-                    # 等待动画结束
-                    if not self.appear(self.I_UI_REWARD, threshold=0.6):
-                        logger.info('Get reward success')
-                        break
-
-                    # 一直点击
-                    if self.ui_reward_appear_click():
-                        continue
-                break
-
-            if self.appear_then_click(image_button, interval=2):
-                click_count += 1
-                continue
-        return True
-
 
 if __name__ == '__main__':
     from module.config.config import Config
     from module.device.device import Device
+    from memory_profiler import profile
     c = Config('oas1')
     d = Device(c)
     t = ThousandThings(c, d)

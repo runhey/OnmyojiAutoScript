@@ -10,7 +10,6 @@ class FriendInvitation(str, Enum):
     ACCEPT = 'accept'
     REJECT = 'reject'
     ONLY_JADE = 'only_jade'  # 仅接受勾玉邀请
-    IGNORE = 'ignore'
 
 class WhenNetworkAbnormal(str, Enum):
     RESTART = 'restart'

@@ -6,7 +6,7 @@
     "roiBack": "798,369,117,110",
     "method": "Template matching",
     "threshold": 0.8,
-    "description": "接受"
+    "description": "description"
   },
   {
     "itemName": "g_reject",
@@ -15,7 +15,7 @@
     "roiBack": "808,480,108,101",
     "method": "Template matching",
     "threshold": 0.8,
-    "description": "拒绝"
+    "description": "description"
   },
   {
     "itemName": "g_jade",
@@ -25,15 +25,6 @@
     "method": "Template matching",
     "threshold": 0.8,
     "description": "勾玉"
-  },
-  {
-    "itemName": "g_ignore",
-    "imageName": "gg_g_ignore.png",
-    "roiFront": "773,116,21,21",
-    "roiBack": "759,102,48,48",
-    "method": "Template matching",
-    "threshold": 0.8,
-    "description": "忽略"
   },
   {
     "itemName": "network_abnormal",
