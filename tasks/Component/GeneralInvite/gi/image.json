@@ -325,8 +325,8 @@
   },
   {
     "itemName": "gi_in_room",
-    "imageName": "gi_gi_in_room.png",
-    "roiFront": "92,19,213,64",
+    "imageName": "gi_in_room.png",
+    "roiFront": "92,17,213,64",
     "roiBack": "92,17,213,64",
     "method": "Template matching",
     "threshold": 0.8,
@@ -334,7 +334,7 @@
   },
   {
     "itemName": "gi_gi_emoji_2",
-    "imageName": "gi_gi_gi_emoji_2.png",
+    "imageName": "gi_gi_emoji_2.png",
     "roiFront": "22,523,62,58",
     "roiBack": "20,520,61,61",
     "method": "Template matching",
