@@ -159,10 +159,10 @@ class GeneralInvite(BaseTask, GeneralInviteAssets):
         """
         if is_screenshot:
             self.screenshot()
-        logger.info('try find gi emoji1')
+        logger.debug('try find gi emoji1')
         if self.appear(self.I_GI_EMOJI_1):
             return True
-        logger.info('try find gi emoji2 ...')
+        logger.debug('try find gi emoji2 ...')
         if self.appear(self.I_GI_EMOJI_2):
             return True
         # if self.appear(self.I_MATCHING):
@@ -308,8 +308,8 @@ class GeneralInvite(BaseTask, GeneralInviteAssets):
         self.screenshot()
         self.O_FRIEND_NAME_1.keyword = name
         self.O_FRIEND_NAME_2.keyword = name
-        appear_1 = self.ocr_appear_click(self.O_FRIEND_NAME_1, interval=2)
-        appear_2 = self.ocr_appear_click(self.O_FRIEND_NAME_2, interval=2)
+        appear_1 = self.ocr_appear_click(self.O_FRIEND_NAME_1, interval=1)
+        appear_2 = self.ocr_appear_click(self.O_FRIEND_NAME_2, interval=1)
         if not appear_1 and not appear_2:
             logger.info('Current page no friend')
             return False
@@ -318,8 +318,8 @@ class GeneralInvite(BaseTask, GeneralInviteAssets):
             self.screenshot()
             if self.appear(self.I_SELECTED):
                 break
-            appear_1 = self.ocr_appear_click(self.O_FRIEND_NAME_1, interval=2)
-            appear_2 = self.ocr_appear_click(self.O_FRIEND_NAME_2, interval=2)
+            appear_1 = self.ocr_appear_click(self.O_FRIEND_NAME_1, interval=1)
+            appear_2 = self.ocr_appear_click(self.O_FRIEND_NAME_2, interval=1)
 
         return True
 
@@ -521,7 +521,6 @@ class GeneralInvite(BaseTask, GeneralInviteAssets):
         :return:
         """
         if not self.appear(self.I_GI_SURE):
-            logger.debug('check_and_invite flag failed')
             return False
 
         if default_invite:
@@ -637,7 +636,7 @@ if __name__ == '__main__':
     d = Device(c)
     t = GeneralInvite(c, d)
 
-    # t.run_invite(c.orochi.invite_config, is_first=True)
+    t.run_invite(c.orochi.invite_config, is_first=True)
     t.screenshot()
     print(t.appear(t.I_FIRE, threshold=0.8))
 
