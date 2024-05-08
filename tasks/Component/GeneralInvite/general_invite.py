@@ -308,8 +308,8 @@ class GeneralInvite(BaseTask, GeneralInviteAssets):
         self.screenshot()
         self.O_FRIEND_NAME_1.keyword = name
         self.O_FRIEND_NAME_2.keyword = name
-        appear_1 = self.ocr_appear_click(self.O_FRIEND_NAME_1, interval=1)
-        appear_2 = self.ocr_appear_click(self.O_FRIEND_NAME_2, interval=1)
+        appear_1 = self.ocr_appear_click(self.O_FRIEND_NAME_1, interval=2)
+        appear_2 = self.ocr_appear_click(self.O_FRIEND_NAME_2, interval=2)
         if not appear_1 and not appear_2:
             logger.info('Current page no friend')
             return False
@@ -318,8 +318,8 @@ class GeneralInvite(BaseTask, GeneralInviteAssets):
             self.screenshot()
             if self.appear(self.I_SELECTED):
                 break
-            appear_1 = self.ocr_appear_click(self.O_FRIEND_NAME_1, interval=1)
-            appear_2 = self.ocr_appear_click(self.O_FRIEND_NAME_2, interval=1)
+            appear_1 = self.ocr_appear_click(self.O_FRIEND_NAME_1, interval=2)
+            appear_2 = self.ocr_appear_click(self.O_FRIEND_NAME_2, interval=2)
 
         return True
 
