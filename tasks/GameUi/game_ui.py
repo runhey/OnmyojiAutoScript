@@ -142,12 +142,12 @@ class GameUi(BaseTask, GameUiAssets):
             #     timeout.reset()
             #     continue
 
-            if self.ensure_scroll_open():
-                self.click(RestartAssets.I_LOGIN_SCROOLL_CLOSE)
-
             app_check()
             minicap_check()
             rotation_check()
+
+        if self.ensure_scroll_open():
+            self.ui_click_until_disappear(RestartAssets.I_LOGIN_SCROOLL_CLOSE)
 
         # Unknown page, need manual switching
         logger.warning("Unknown ui page")
