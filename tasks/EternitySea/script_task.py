@@ -7,7 +7,7 @@ from module.exception import TaskEnd
 from module.logger import logger
 
 from tasks.GameUi.game_ui import GameUi, Page
-from tasks.GameUi.page import page_soul_zones
+from tasks.GameUi.page import page_soul_zones, page_shikigami_records
 from tasks.Component.GeneralBattle.general_battle import GeneralBattle
 from tasks.Component.GeneralRoom.general_room import GeneralRoom
 from tasks.Component.GeneralInvite.general_invite import GeneralInvite
@@ -25,7 +25,20 @@ class ScriptTask(
     def task_name(self):
         return "EternitySea"
 
+    def _two_teams_switch_sous(self, config):
+        if config.enable:
+            self.ui_get_current_page()
+            self.ui_goto(page_shikigami_records)
+            self.run_switch_soul(config.switch_group_team)
+
+        if config.enable_switch_by_name:
+            self.ui_get_current_page()
+            self.ui_goto(page_shikigami_records)
+            self.run_switch_soul_by_name(config.group_name, config.team_name)
+
     def run(self) -> None:
+        self._two_teams_switch_sous(self._task_config.switch_soul_config_1)
+        self._two_teams_switch_sous(self._task_config.switch_soul_config_2)
         match self._task_config.eternity_sea_config.user_status:
             case UserStatus.ALONE:
                 success = self.run_alone()
