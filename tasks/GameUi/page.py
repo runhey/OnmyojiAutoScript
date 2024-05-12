@@ -116,6 +116,10 @@ page_town.link(button=G.I_TOWN_GOTO_DRAFT_DUEL, destination=page_draft_duel)
 page_hyakkisen = Page(G.I_CHECK_HYAKKISEN)
 page_hyakkisen.link(button=G.I_BACK_YOLLOW, destination=page_town)
 page_town.link(button=G.I_TOWN_GOTO_HYAKKISEN, destination=page_hyakkisen)
+# 百鬼夜行
+page_hyakkiyakou = Page(G.I_CHECK_KYAKKIYAKOU)
+page_hyakkiyakou.link(button=G.I_HYAKKIYAKOU_CLOSE, destination=page_town)
+page_town.link(button=G.I_TOWN_GOTO_HYAKKIYAKOU, destination=page_hyakkiyakou)
 
 
 # ************************************* 庭院部分 *****************************************#

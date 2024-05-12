@@ -375,6 +375,8 @@ class ScriptTask(KU, KekkaiActivationAssets):
         self.appear_then_click(self.I_A_HARVEST_KAIKO_6)  # 太鼓6
         self.appear_then_click(self.I_A_HARVEST_FISH_6)  # 斗鱼6
         self.appear_then_click(self.I_A_HARVEST_MOON_3)  # 太阴3
+        self.appear_then_click(self.I_A_HARVEST_FISH_3)  # 斗鱼三
+
 
 if __name__ == "__main__":
     from module.config.config import Config

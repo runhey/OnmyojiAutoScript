@@ -29,7 +29,7 @@
   {
     "itemName": "guild_blue",
     "imageName": "guild_guild_blue.png",
-    "roiFront": "344,186,74,73",
+    "roiFront": "794,186,74,73",
     "roiBack": "315,164,584,370",
     "method": "Template matching",
     "threshold": 0.8,
@@ -38,7 +38,7 @@
   {
     "itemName": "guild_scrap",
     "imageName": "guild_guild_scrap.png",
-    "roiFront": "795,187,71,68",
+    "roiFront": "570,439,71,68",
     "roiBack": "331,160,559,372",
     "method": "Template matching",
     "threshold": 0.8,
@@ -47,7 +47,7 @@
   {
     "itemName": "guild_skin",
     "imageName": "guild_guild_skin.png",
-    "roiFront": "345,438,71,72",
+    "roiFront": "795,438,71,72",
     "roiBack": "320,162,573,371",
     "method": "Template matching",
     "threshold": 0.8,
@@ -56,8 +56,8 @@
   {
     "itemName": "guild_check_scrap",
     "imageName": "guild_guild_check_scrap.png",
-    "roiFront": "590,246,90,88",
-    "roiBack": "590,246,90,88",
+    "roiFront": "561,429,90,88",
+    "roiBack": "561,429,90,88",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "购买检查"

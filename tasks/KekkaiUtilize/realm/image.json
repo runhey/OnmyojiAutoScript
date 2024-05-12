@@ -11,8 +11,8 @@
   {
     "itemName": "shi_card",
     "imageName": "realm_shi_card.png",
-    "roiFront": "886,290,44,56",
-    "roiBack": "801,259,215,175",
+    "roiFront": "886,290,38,56",
+    "roiBack": "870,276,75,86",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "结界卡"
