@@ -218,6 +218,10 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, RealmRaidAssets):
                 else:
                     success = False
                     break
+            # 如果上一轮失败 -> 退出
+            if not last_battle and con.raid_config.when_attack_fail == WhenAttackFail.EXIT:
+                logger.info('Battle lost and exit')
+                break
 
 
         self.ui_click(self.I_BACK_RED, self.I_CHECK_EXPLORATION)
@@ -342,7 +346,19 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, RealmRaidAssets):
         """
         if screenshot:
             self.screenshot()
-        target = self.order_medal.find_anyone(self.device.image)
+        image = self.device.image
+        # https://github.com/runhey/OnmyojiAutoScript/issues/71
+        # 如果开始失败后继挑战剩下的
+        if self.config.realm_raid.raid_config.when_attack_fail == WhenAttackFail.CONTINUE:
+            for i, roi in enumerate(self.false_roi):
+                self.false_image.roi_back = roi
+                if not self.appear(self.false_image):
+                    continue
+                logger.info(f'Position {i+1} is a failed')
+                x, y, w, h = self.partition[i].roi_back
+                image[y:y+h, x:x+w, ...] = 0
+        # -----------------------------------------------------
+        target = self.order_medal.find_anyone(image)
         if target:
             center = target.front_center()
             for i, click in enumerate(self.partition):
@@ -465,6 +481,36 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, RealmRaidAssets):
                 continue
         logger.info(f'Click fire {order} success')
 
+    @cached_property
+    def false_roi(self) -> list:
+        width = 86
+        height = 64
+        x1 = 386
+        x2 = 714
+        x3 = 1047
+        y1 = 143
+        y2 = 277
+        y3 = 414
+        return [
+            [x1, y1, width, height],  # 左上角
+            [x2, y1, width, height],
+            [x3, y1, width, height],
+            [x1, y2, width, height],  # 左中
+            [x2, y2, width, height],
+            [x3, y2, width, height],
+            [x1, y3, width, height],  # 左下
+            [x2, y3, width, height],
+            [x3, y3, width, height],
+        ]
+
+    @cached_property
+    def false_image(self):
+        return RuleImage(roi_front=(0 ,0, 63, 32),
+                         roi_back=(0, 0, 100, 100),
+                         threshold=0.8,
+                         method="Template matching",
+                         file="./tasks/RyouToppa/dev/loser_sign_1.png")
+
 
 if __name__ == "__main__":
     from module.config.config import Config
@@ -473,8 +519,8 @@ if __name__ == "__main__":
     device = Device(config)
     t = ScriptTask(config, device)
 
-    t.run()
+    # t.run()
 
-    # print(t.find_one())
+    print(t.find_one())
     # target, order = t.find_one()
     # print(t.check_medal_is_frog(True, target, order))
