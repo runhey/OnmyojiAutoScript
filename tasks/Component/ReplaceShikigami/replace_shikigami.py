@@ -96,6 +96,10 @@ class ReplaceShikigami(BaseTask, ReplaceShikigamiAssets):
 
             if self.click(click_match, interval=1.5):
                 continue
+            if self.click(click_match[6], interval=4.5):
+                # 有的时候第七个格子被占用到寄养上去了
+                # 导致一直无法选上
+                continue
         logger.info('Set shikigami: %d' % shikigami_order)
 
     def detect_no_shikigami(self) -> bool:
