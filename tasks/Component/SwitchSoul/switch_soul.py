@@ -119,13 +119,17 @@ class SwitchSoul(BaseTask, SwitchSoulAssets):
             sleep(0.5)
         # 点击队伍
         target_team = get_team_asset(team)
+        button_clicked = False  # Flag to track if the button has been clicked
         for i in range(3):
             sleep(0.8)
             self.screenshot()
             if self.appear_then_click(self.I_SOU_SWITCH_SURE, interval=1):
-                continue
+                button_clicked = True  # Set flag to True if button is clicked
+                break  # Exit the loop if the button is clicked
             if not self.appear_then_click(target_team, interval=1):
                 logger.warning(f'Click team {team} failed in group {group}')
+        if not button_clicked:
+            logger.warning(f'Click team {team} failed in group {group} after third clicks')
         logger.info(f'Switch soul_one group {group} team {team}')
 
     def switch_souls(self, target: tuple or list[tuple]) -> None:
