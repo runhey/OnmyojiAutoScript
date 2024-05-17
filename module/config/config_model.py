@@ -48,6 +48,7 @@ from tasks.Hunt.config import Hunt
 from tasks.ActivityShikigami.config import ActivityShikigami
 from tasks.MetaDemon.config import MetaDemon
 from tasks.FrogBoss.config import FrogBoss
+from tasks.Dance.config import DanceTril
 # ----------------------------------------------------------------------------------------------------------------------
 
 # 肝帝专属---------------------------------------------------------------------------------------------------------------
@@ -101,6 +102,7 @@ class ConfigModel(ConfigBase):
     activity_shikigami: ActivityShikigami = Field(default_factory=ActivityShikigami)
     meta_demon: MetaDemon = Field(default_factory=MetaDemon)
     frog_boss: FrogBoss = Field(default_factory=FrogBoss)
+    dance: DanceTril = Field(default_factory=DanceTril)
 
     # 这些是肝帝专属
     bondling_fairyland: BondlingFairyland = Field(default_factory=BondlingFairyland)

@@ -1,0 +1,29 @@
+[
+  {
+    "itemName": "tap_to_dance",
+    "imageName": "assets_tap_to_dance.png",
+    "roiFront": "402,250,43,39",
+    "roiBack": "0,78,1274,640",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "dance_end",
+    "imageName": "assets_dance_end.png",
+    "roiFront": "952,676,163,32",
+    "roiBack": "927,661,212,58",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "tap_to_random_dance",
+    "imageName": "assets_tap_to_random_dance.png",
+    "roiFront": "270,377,49,44",
+    "roiBack": "0,83,1279,630",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  }
+]
