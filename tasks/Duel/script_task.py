@@ -71,7 +71,7 @@ class ScriptTask(GameUi, GeneralBattle, DuelAssets):
         click_count = 0  # 计数
         while 1:
             self.screenshot()
-            if click_count >= 2:
+            if click_count >= 4:
                 break
 
             if self.appear_then_click(self.I_D_TEAM, interval=1):
@@ -79,6 +79,7 @@ class ScriptTask(GameUi, GeneralBattle, DuelAssets):
             if self.appear_then_click(self.I_UI_CONFIRM, interval=0.6):
                 continue
             if self.appear_then_click(self.I_D_TEAM_SWTICH, interval=1):
+                click_count += 1
                 continue
         logger.info('Souls Switch is complete')
         self.ui_click(self.I_UI_BACK_YELLOW, self.I_D_TEAM)

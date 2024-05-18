@@ -4,6 +4,7 @@
 from pydantic import BaseModel, Field
 from enum import Enum
 from datetime import datetime, time
+from tasks.Component.SwitchSoul.switch_soul_config import SwitchSoulConfig
 
 from tasks.Component.config_scheduler import Scheduler
 from tasks.Component.config_base import ConfigBase, Time
@@ -48,11 +49,13 @@ class EvoZoneConfig(ConfigBase):
     # 限制次数
     limit_count: int = Field(default=30, description='limit_count_help')
     # 是否开启觉醒加成
-    soul_buff_enable: bool = Field(default=False, description='soul_buff_enable_help')
+    soul_buff_enable: bool = Field(default=False, description='是否开启觉醒加成')
 
 class EvoZone(ConfigBase):
     scheduler: Scheduler = Field(default_factory=Scheduler)
     evo_zone_config: EvoZoneConfig = Field(default_factory=EvoZoneConfig)
     invite_config: InviteConfig = Field(default_factory=InviteConfig)
     general_battle_config: GeneralBattleConfig = Field(default_factory=GeneralBattleConfig)
+    switch_soul_config: SwitchSoulConfig = Field(default_factory=SwitchSoulConfig)
+
 

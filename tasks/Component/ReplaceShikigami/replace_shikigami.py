@@ -77,14 +77,14 @@ class ReplaceShikigami(BaseTask, ReplaceShikigamiAssets):
         :return:
         """
         # 选择式神
-        click_match = {1: self.C_SHIKIGAMI_LEFT_1,
-                       2: self.C_SHIKIGAMI_LEFT_2,
-                       3: self.C_SHIKIGAMI_LEFT_3,
-                       4: self.C_SHIKIGAMI_LEFT_4,
-                       5: self.C_SHIKIGAMI_LEFT_5,
-                       6: self.C_SHIKIGAMI_LEFT_6,
-                       7: self.C_SHIKIGAMI_LEFT_7}
-        click_match = click_match[shikigami_order]
+        _click_match = {1: self.C_SHIKIGAMI_LEFT_1,
+                        2: self.C_SHIKIGAMI_LEFT_2,
+                        3: self.C_SHIKIGAMI_LEFT_3,
+                        4: self.C_SHIKIGAMI_LEFT_4,
+                        5: self.C_SHIKIGAMI_LEFT_5,
+                        6: self.C_SHIKIGAMI_LEFT_6,
+                        7: self.C_SHIKIGAMI_LEFT_7}
+        click_match = _click_match[shikigami_order]
         while 1:
             self.screenshot()
 
@@ -95,6 +95,10 @@ class ReplaceShikigami(BaseTask, ReplaceShikigamiAssets):
                 continue
 
             if self.click(click_match, interval=1.5):
+                continue
+            if self.click(_click_match[6], interval=4.5):
+                # 有的时候第七个格子被占用到寄养上去了
+                # 导致一直无法选上
                 continue
         logger.info('Set shikigami: %d' % shikigami_order)
 

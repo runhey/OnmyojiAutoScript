@@ -349,6 +349,7 @@ class ScriptTask(KU, KekkaiActivationAssets):
             logger.info('No max level shikigami')
         if self.detect_no_shikigami():
             logger.warning('There are no any shikigami grow room')
+            self.switch_shikigami_class(shikigami_class)
             self.set_shikigami(shikigami_order=7, stop_image=self.I_RS_NO_ADD)
 
         # 回到结界界面
@@ -375,6 +376,8 @@ class ScriptTask(KU, KekkaiActivationAssets):
         self.appear_then_click(self.I_A_HARVEST_KAIKO_6)  # 太鼓6
         self.appear_then_click(self.I_A_HARVEST_FISH_6)  # 斗鱼6
         self.appear_then_click(self.I_A_HARVEST_MOON_3)  # 太阴3
+        self.appear_then_click(self.I_A_HARVEST_FISH_3)  # 斗鱼三
+
 
 if __name__ == "__main__":
     from module.config.config import Config
