@@ -95,6 +95,8 @@ class DroidCast(Uiautomator2):
     """
 
     _droidcast_port: int = 0
+    droidcast_width: int = 0
+    droidcast_height: int = 0
 
     @cached_property
     def droidcast_session(self):
@@ -120,12 +122,37 @@ class DroidCast(Uiautomator2):
 
         Note that /screenshot?format=jpg is unavailable.
         """
+    
+        if self.is_mumu_over_version_356:
+            w, h = self.droidcast_width, self.droidcast_height
+            if self.orientation == 0:
+                return f'http://127.0.0.1:{self._droidcast_port}{url}?width={w}&height={h}'
+            elif self.orientation == 1:
+                return f'http://127.0.0.1:{self._droidcast_port}{url}?width={h}&height={w}'
+            else:
+                # logger.warning('DroidCast receives invalid device orientation')
+                pass
+
+        return f'http://127.0.0.1:{self._droidcast_port}{url}'
+
+    def droidcast_raw_url(self, url='/screenshot'):
+        if self.is_mumu_over_version_356:
+            w, h = self.droidcast_width, self.droidcast_height
+            if self.orientation == 0:
+                return f'http://127.0.0.1:{self._droidcast_port}{url}?width={w}&height={h}'
+            elif self.orientation == 1:
+                return f'http://127.0.0.1:{self._droidcast_port}{url}?width={h}&height={w}'
+            else:
+                # logger.warning('DroidCast receives invalid device orientation')
+                pass
+
         return f'http://127.0.0.1:{self._droidcast_port}{url}'
 
     @Config.when(DROIDCAST_VERSION='DroidCast')
     def droidcast_init(self):
         logger.hr('Droidcast init')
         self.droidcast_stop()
+        self._droidcast_update_resolution()
 
         logger.info('Pushing DroidCast apk')
         self.adb_push(self.config.DROIDCAST_FILEPATH_LOCAL, self.config.DROIDCAST_FILEPATH_REMOTE)
@@ -146,6 +173,16 @@ class DroidCast(Uiautomator2):
         _ = self.droidcast_session
         logger.attr('DroidCast', self.droidcast_url())
         self.droidcast_wait_startup()
+
+    def _droidcast_update_resolution(self):
+        if self.is_mumu_over_version_356:
+            logger.info('Update droidcast resolution')
+            w, h = self.resolution_uiautomator2(cal_rotation=False)
+            self.get_orientation()
+            # 720, 1280
+            # mumu12 > 3.5.6 is always a vertical device
+            self.droidcast_width, self.droidcast_height = w, h
+            logger.info(f'Droicast resolution: {(w, h)}')
 
     @Config.when(DROIDCAST_VERSION='DroidCast_raw')
     def droidcast_init(self):
@@ -177,6 +214,11 @@ class DroidCast(Uiautomator2):
     @retry
     def screenshot_droidcast(self):
         self.config.DROIDCAST_VERSION = 'DroidCast'
+
+        if self.is_mumu_over_version_356:
+            if not self.droidcast_width or not self.droidcast_height:
+                self._droidcast_update_resolution()
+
         image = self.droidcast_session.get(self.droidcast_url(), timeout=3).content
         image = np.frombuffer(image, np.uint8)
         if image is None:
@@ -192,16 +234,28 @@ class DroidCast(Uiautomator2):
         if image is None:
             raise ImageTruncated('Empty image after cv2.cvtColor')
 
+        if self.is_mumu_over_version_356:
+            if self.orientation == 1:
+                image = cv2.rotate(image, cv2.ROTATE_90_CLOCKWISE)
+
         return image
 
     @retry
     def screenshot_droidcast_raw(self):
         self.config.DROIDCAST_VERSION = 'DroidCast_raw'
-        image = self.droidcast_session.get(self.droidcast_url(), timeout=3).content
+
+        shape = (720, 1280)
+        if self.is_mumu_over_version_356:
+            if not self.droidcast_width or not self.droidcast_height:
+                self._droidcast_update_resolution()
+            if self.droidcast_height and self.droidcast_width:
+                shape = (self.droidcast_height, self.droidcast_width)
+
+        image = self.droidcast_session.get(self.droidcast_raw_url(), timeout=3).content
         # DroidCast_raw returns a RGB565 bitmap
 
         try:
-            arr = np.frombuffer(image, dtype=np.uint16).reshape((720, 1280))
+            arr = np.frombuffer(image, dtype=np.uint16).reshape(shape)
         except ValueError as e:
             # Try to load as `DroidCast`
             image = np.frombuffer(image, np.uint8)
@@ -235,6 +289,10 @@ class DroidCast(Uiautomator2):
         g = cv2.add(g, cv2.multiply(g, 0.015625))
         b = cv2.add(b, cv2.multiply(b, 0.03125))
         image = cv2.merge([r, g, b])
+
+        if self.is_mumu_over_version_356:
+            if self.orientation == 1:
+                image = cv2.rotate(image, cv2.ROTATE_90_CLOCKWISE)
 
         return image
 

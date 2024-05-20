@@ -277,8 +277,12 @@ class ScriptTask(KU, KekkaiActivationAssets):
             elif current_best == self.order_cards[1]:
                 break
 
+            # 滑到底就退出
+            if self.appear(self.I_AA_SWIPE_BLOCK):
+                logger.warning('Swipe to the end but no card is found')
+                break
             # 超过十次就退出
-            if swipe_count > 20:
+            if swipe_count > 15:
                 logger.warning('Swipe count is more than 10')
                 break
             # 一直向下滑动

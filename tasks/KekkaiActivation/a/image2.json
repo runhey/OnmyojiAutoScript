@@ -1,0 +1,11 @@
+[
+  {
+    "itemName": "aa_swipe_block",
+    "imageName": "a_aa_swipe_block.png",
+    "roiFront": "124,622,35,32",
+    "roiBack": "117,612,50,51",
+    "method": "Template matching",
+    "threshold": 0.9,
+    "description": "用于判断是否滑到底了"
+  }
+]

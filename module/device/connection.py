@@ -218,6 +218,18 @@ class Connection(ConnectionAttr):
             result = remove_shell_warning(result)
             # str
             return result
+    
+    def adb_getprop(self, name):
+        """
+        Get system property in Android, same as `getprop <name>`
+
+        Args:
+            name (str): Property name
+
+        Returns:
+            str:
+        """
+        return self.adb_shell(['getprop', name]).strip()
 
     @cached_property
     def cpu_abi(self) -> str:
@@ -252,6 +264,21 @@ class Connection(ConnectionAttr):
         if 'goldfish' in self.adb_shell(['getprop', 'ro.hardware.audio.primary']):
             return True
         return False
+    
+    @cached_property
+    def nemud_app_keep_alive(self) -> str:
+        res = self.adb_getprop('nemud.app_keep_alive')
+        logger.attr('nemud.app_keep_alive', res)
+        return res
+    
+    @cached_property
+    def is_mumu_over_version_356(self) -> bool:
+        """
+        Returns:
+            bool: If MuMu12 version >= 3.5.6,
+                which has nemud.app_keep_alive and always be a vertical device
+        """
+        return self.nemud_app_keep_alive != ''
 
     @cached_property
     def _nc_server_host_port(self):

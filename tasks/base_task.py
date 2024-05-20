@@ -89,16 +89,19 @@ class BaseTask(GlobalGameAssets, CostumeBase):
                         continue
                     if not self.appear(self.I_G_REJECT):
                         break
-            # 最后一个是仅仅接受勾协
+            # 如果是仅接受勾协
             elif invite and self.config.global_game.emergency.friend_invitation == FriendInvitation.ONLY_JADE:
                 logger.info(f"Accept jade invitation")
                 while 1:
                     self.device.screenshot()
-                    if self.appear_then_click(self.I_G_ACCEPT, interval=1):
+                    if self.appear(self.I_G_JADE):
+                        if self.appear_then_click(self.I_G_ACCEPT, interval=1):
+                            continue
+                    elif self.appear_then_click(self.I_G_IGNORE, interval=1):
                         continue
                     if not self.appear(self.I_G_ACCEPT):
                         break
-            # 全部忽略
+            # 如果是全部忽略
             elif invite and self.config.global_game.emergency.friend_invitation == FriendInvitation.IGNORE:
                 logger.info(f"Ignore friend invitation")
                 while 1:
