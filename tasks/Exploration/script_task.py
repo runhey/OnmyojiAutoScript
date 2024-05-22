@@ -81,6 +81,14 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, ExplorationAssets):
             if self.wait_until_appear(self.I_RED_CLOSE, wait_time=2):
                 self.appear_then_click(self.I_RED_CLOSE)
             self.ui_goto(page_main)
+            # 关闭 buff
+            if con.buff_gold_50_click or con.buff_gold_100_click or con.buff_exp_50_click or con.buff_exp_100_click:
+                self.open_buff()
+                self.gold_50(is_open=False)
+                self.gold_100(is_open=False)
+                self.exp_50(is_open=False)
+                self.exp_100(is_open=False)
+                self.close_buff()
             self.set_next_run(task='Exploration', success=True, finish=False)
         raise TaskEnd
 
