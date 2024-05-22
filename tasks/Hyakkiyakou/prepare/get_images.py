@@ -25,7 +25,7 @@ class GenerateImages(GameUi, HyakkiyakouAssets):
     def run(self):
         self.ui_get_current_page()
         self.ui_goto(page_hyakkiyakou)
-        for i in range(20):
+        for i in range(40):
             self.save_one()
 
     def save_one(self):
@@ -49,7 +49,7 @@ class GenerateImages(GameUi, HyakkiyakouAssets):
                 self.click(click_button, interval=1)
         self.device.stuck_record_add('BATTLE_STATUS_S')
         # 保存图片
-        save_img_timer = Timer(0.4)
+        save_img_timer = Timer(0.2)
         save_img_timer.start()
         while 1:
             self.screenshot()
