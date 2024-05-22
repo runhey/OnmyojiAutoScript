@@ -40,7 +40,7 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, ExplorationAssets):
 
         # 开启加成
         con = self.config.exploration.exploration_config
-        if con.buff_gold_50_click or con.buff_gold_100_click:
+        if con.buff_gold_50_click or con.buff_gold_100_click or con.buff_exp_50_click or con.buff_exp_100_click:
             self.ui_get_current_page()
             self.ui_goto(page_main)
             self.open_buff()
@@ -48,6 +48,10 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, ExplorationAssets):
                 self.gold_50()
             if con.buff_gold_100_click:
                 self.gold_100()
+            if con.buff_exp_50_click:
+                self.exp_50()
+            if con.buff_exp_100_click:
+                self.exp_100()
             self.close_buff()
 
         self.ui_get_current_page()
