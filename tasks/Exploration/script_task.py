@@ -219,6 +219,7 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, ExplorationAssets):
                 self.swipe(self.S_SWIPE_BACKGROUND_RIGHT)
             # 结束流程
             if self.appear(self.I_E_EXPLORATION_CLICK) or self.appear(self.I_EXPLORATION_TITLE):
+                self.appear_then_click(self.I_RED_CLOSE)
                 # 宝箱
                 if self.appear(self.I_BATTLE_REWARD_BOX) and not self.appear(self.I_REWARD):
                     self.click(self.I_BATTLE_REWARD_BOX)
