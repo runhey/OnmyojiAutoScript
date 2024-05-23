@@ -126,15 +126,6 @@
     "description": "战后奖励"
   },
   {
-    "itemName": "battle_reward_box",
-    "imageName": "res_battle_reward_box.png",
-    "roiFront": "705,225,55,45",
-    "roiBack": "141,68,901,547",
-    "method": "Template matching",
-    "threshold": 0.8,
-    "description": "战后奖励宝箱"
-  },
-  {
     "itemName": "exploration_title",
     "imageName": "res_exploration_title.png",
     "roiFront": "1133,124,47,43",
