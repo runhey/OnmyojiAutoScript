@@ -79,6 +79,11 @@ class KekkaiActivationAssets:
 
 
 	# Image Rule Assets
+	# 用于判断是否滑到底了 
+	I_AA_SWIPE_BLOCK = RuleImage(roi_front=(124,622,35,32), roi_back=(117,612,50,51), threshold=0.9, method="Template matching", file="./tasks/KekkaiActivation/a/a_aa_swipe_block.png")
+
+
+	# Image Rule Assets
 	# description 
 	I_CARDS_KAIKO_6 = RuleImage(roi_front=(193,204,89,73), roi_back=(169,148,130,501), threshold=0.8, method="Template matching", file="./tasks/KekkaiActivation/cards/cards_cards_kaiko_6.png")
 	# description 
