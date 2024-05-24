@@ -90,7 +90,7 @@ class GeneralBuff(BaseTask, GeneralBuffAssets):
         self.screenshot()
         area = self.get_area(self.device.image, self.O_GOLD_50)
         if not area:
-            logger.warning('No gold 100 buff')
+            logger.warning('No gold 50 buff')
             return None
         self.I_OPEN_YELLOW.roi_back = list(area)  # 动态设置roi
         self.I_CLOSE_RED.roi_back = list(area)
@@ -145,13 +145,21 @@ class GeneralBuff(BaseTask, GeneralBuffAssets):
         :return:
         """
         logger.info('Exp 50 buff')
-        self.screenshot()
-        area = self.get_area(self.device.image, self.O_EXP_50)
-        if not area:
-            logger.warning('No gold 100 buff')
-            return None
-        self.I_OPEN_YELLOW.roi_back = list(area)
-        self.I_CLOSE_RED.roi_back = list(area)
+        while 1:
+            self.screenshot()
+            area = self.get_area(self.device.image, self.O_EXP_50)
+            if not area:
+                logger.warning('No exp 50 buff')
+                continue
+            self.set_switch_area(area)
+
+            if not self.appear(self.I_OPEN_YELLOW) and not self.appear(self.I_CLOSE_RED):
+                logger.info('No exp 50 buff')
+                self.device.swipe(p2=(530, 240), p1=(580, 320))
+                time.sleep(1)
+            else:
+                break
+
         if is_open:
             while 1:
                 self.screenshot()
@@ -178,7 +186,7 @@ class GeneralBuff(BaseTask, GeneralBuffAssets):
             self.screenshot()
             area = self.get_area(self.device.image, self.O_EXP_100)
             if not area:
-                logger.warning('No gold 100 buff')
+                logger.warning('No exp 100 buff')
                 continue
             self.set_switch_area(area)
 
