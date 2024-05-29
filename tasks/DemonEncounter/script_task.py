@@ -107,10 +107,10 @@ class ScriptTask(GameUi, GeneralBattle, DemonEncounterAssets):
         self.device.stuck_record_clear()
         self.device.stuck_record_add('BATTLE_STATUS_S')
         # 延长时间并在战斗结束后改回来
-        self.device.stuck_timer_long = Timer(480, count=480).start()
+        self.device.stuck_timer_long = Timer(900, count=900).start()
         config = self.con
         self.run_general_battle(config)
-        self.device.stuck_timer_long = Timer(300, count=300).start()
+        self.device.stuck_timer_long = Timer(600, count=600).start()
 
         # 等待回到挑战boss主界面
         self.wait_until_appear(self.I_BOSS_GATHER)
