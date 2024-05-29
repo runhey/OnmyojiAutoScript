@@ -56,7 +56,7 @@
   {
     "itemName": "main_goto_team",
     "imageName": "page_main_goto_team.png",
-    "roiFront": "437,625,38,48",
+    "roiFront": "416,625,74,58",
     "roiBack": "366,606,192,83",
     "method": "Template matching",
     "threshold": 0.8,
@@ -128,8 +128,8 @@
   {
     "itemName": "check_team",
     "imageName": "page_check_team.png",
-    "roiFront": "53,570,41,119",
-    "roiBack": "53,570,41,119",
+    "roiFront": "95,22,100,42",
+    "roiBack": "92,18,107,50",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"
