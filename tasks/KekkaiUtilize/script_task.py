@@ -199,14 +199,14 @@ class ScriptTask(GameUi, ReplaceShikigami, KekkaiUtilizeAssets):
                             continue
                     break
 
-                if self.appear(self.I_EXP_EXTRACT):
-                    # 如果达到今日领取的最大，就不领取了
-                    cur, res, totol = self.O_BOX_EXP.ocr(self.device.image)
-                    if cur == res == totol == 0:
-                        continue
-                    if cur == totol and cur + res == totol:
-                        logger.info('Exp box reach max do not collect')
-                        break
+                # if self.appear(self.I_EXP_EXTRACT):
+                #     # 如果达到今日领取的最大，就不领取了
+                #     cur, res, totol = self.O_BOX_EXP.ocr(self.device.image)
+                #     if cur == res == totol == 0:
+                #         continue
+                #     if cur == totol and cur + res == totol:
+                #         logger.info('Exp box reach max do not collect')
+                #         break
                 if self.appear_then_click(self.I_BOX_EXP, threshold=0.6, interval=1):
                     continue
                 if self.appear_then_click(self.I_EXP_EXTRACT, interval=1):
