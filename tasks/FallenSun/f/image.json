@@ -47,8 +47,8 @@
   {
     "itemName": "fallen_sun_matching",
     "imageName": "f_fallen_sun_matching.png",
-    "roiFront": "62,568,44,114",
-    "roiBack": "62,568,44,114",
+    "roiFront": "32,585,82,90",
+    "roiBack": "32,585,82,90",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"

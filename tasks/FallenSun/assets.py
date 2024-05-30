@@ -22,7 +22,7 @@ class FallenSunAssets:
 	# description 
 	I_FALLEN_SUN_LOCK = RuleImage(roi_front=(557,561,31,37), roi_back=(557,561,31,37), threshold=0.8, method="Template matching", file="./tasks/FallenSun/f/f_fallen_sun_lock.png")
 	# description 
-	I_FALLEN_SUN_MATCHING = RuleImage(roi_front=(62,568,44,114), roi_back=(62,568,44,114), threshold=0.8, method="Template matching", file="./tasks/FallenSun/f/f_fallen_sun_matching.png")
+	I_FALLEN_SUN_MATCHING = RuleImage(roi_front=(32,585,82,90), roi_back=(32,585,82,90), threshold=0.8, method="Template matching", file="./tasks/FallenSun/f/f_fallen_sun_matching.png")
 	# 小小宠物，发现宝藏 
 	I_PET_PRESENT = RuleImage(roi_front=(873,184,62,147), roi_back=(873,184,62,147), threshold=0.8, method="Template matching", file="./tasks/FallenSun/f/f_pet_present.png")
 
