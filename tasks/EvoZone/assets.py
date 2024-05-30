@@ -23,8 +23,6 @@ class EvoZoneAssets:
 	I_EVOZONE_FIRE = RuleImage(roi_front=(1095,577,131,124), roi_back=(1095,577,131,124), threshold=0.6, method="Template matching", file="./tasks/EvoZone/o/o_evozone_fire.png")
 	# 式神录 
 	I_SHI_RECORDS = RuleImage(roi_front=(821,638,48,45), roi_back=(821,638,48,45), threshold=0.8, method="Template matching", file="./tasks/EvoZone/o/o_shi_records.png")
-	# description 
-	I_EVOZONE_MATCHING = RuleImage(roi_front=(62,568,44,114), roi_back=(62,568,44,114), threshold=0.8, method="Template matching", file="./tasks/EvoZone/o/o_evozone_matching.png")
 	# 小小宠物，发现宝藏 
 	I_PET_PRESENT = RuleImage(roi_front=(873,184,62,147), roi_back=(873,184,62,147), threshold=0.8, method="Template matching", file="./tasks/EvoZone/o/o_pet_present.png")
 	# 风麒麟进入 

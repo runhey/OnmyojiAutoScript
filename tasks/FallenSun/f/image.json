@@ -45,15 +45,6 @@
     "description": "description"
   },
   {
-    "itemName": "fallen_sun_matching",
-    "imageName": "f_fallen_sun_matching.png",
-    "roiFront": "62,568,44,114",
-    "roiBack": "62,568,44,114",
-    "method": "Template matching",
-    "threshold": 0.8,
-    "description": "description"
-  },
-  {
     "itemName": "pet_present",
     "imageName": "f_pet_present.png",
     "roiFront": "873,184,62,147",
