@@ -54,15 +54,6 @@
     "description": "式神录"
   },
   {
-    "itemName": "orochi_matching",
-    "imageName": "o_orochi_matching.png",
-    "roiFront": "32,585,82,90",
-    "roiBack": "32,585,82,90",
-    "method": "Template matching",
-    "threshold": 0.8,
-    "description": "description"
-  },
-  {
     "itemName": "pet_present",
     "imageName": "o_pet_present.png",
     "roiFront": "873,184,62,147",

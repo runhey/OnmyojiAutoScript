@@ -134,7 +134,7 @@ class ScriptTask(GeneralBattle, GeneralInvite, GeneralBuff, GeneralRoom, GameUi,
         logger.info('Create team')
         while 1:
             self.screenshot()
-            if self.appear(self.I_OROCHI_MATCHING):
+            if self.appear(self.I_CHECK_TEAM):
                 break
             if self.appear_then_click(self.I_FORM_TEAM, interval=1):
                 continue
@@ -332,7 +332,7 @@ class ScriptTask(GeneralBattle, GeneralInvite, GeneralBuff, GeneralRoom, GameUi,
             logger.info('Create team')
             while 1:
                 self.screenshot()
-                if self.appear(self.I_OROCHI_MATCHING):
+                if self.appear(self.I_CHECK_TEAM):
                     break
                 if self.appear_then_click(self.I_FORM_TEAM, interval=1):
                     continue
