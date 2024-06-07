@@ -143,7 +143,7 @@ page_daily.link(button=G.I_BACK_Y, destination=page_main)
 page_main.link(button=G.I_MAIN_GOTO_DAILY, destination=page_daily)
 # 商店 mall
 page_mall = Page(G.I_CHECK_MALL)
-page_mall.additional = [G.I_AD_CLOSE_RED]
+page_mall.additional = [G.I_AD_CLOSE_RED, G.I_BACK_Y]
 page_mall.link(button=G.I_BACK_BLUE, destination=page_main)
 page_main.link(button=G.I_MAIN_GOTO_MALL, destination=page_mall)
 # 阴阳寮 guild

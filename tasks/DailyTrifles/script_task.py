@@ -108,5 +108,6 @@ if __name__ == '__main__':
     d = Device(c)
     t = ScriptTask(c, d)
 
-    t.run_one_summon()
+    # t.run_one_summon()
+    t.run_store_sign()
 
