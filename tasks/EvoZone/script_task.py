@@ -8,14 +8,16 @@ from tasks.Component.GeneralBattle.general_battle import GeneralBattle
 from tasks.Component.GeneralInvite.general_invite import GeneralInvite
 from tasks.Component.GeneralBuff.general_buff import GeneralBuff
 from tasks.Component.GeneralRoom.general_room import GeneralRoom
+from tasks.Component.SwitchSoul.switch_soul import SwitchSoul
 from tasks.GameUi.game_ui import GameUi
-from tasks.GameUi.page import page_main, page_awake_zones
+from tasks.GameUi.page import page_main, page_awake_zones, page_shikigami_records
 from tasks.EvoZone.assets import EvoZoneAssets
 from tasks.EvoZone.config import EvoZone, UserStatus, KirinType
 from module.logger import logger
 from module.exception import TaskEnd
 
-class ScriptTask(GeneralBattle, GeneralInvite, GeneralBuff, GeneralRoom, GameUi, EvoZoneAssets):
+
+class ScriptTask(GeneralBattle, GeneralInvite, GeneralBuff, GeneralRoom, GameUi, EvoZoneAssets, SwitchSoul):
 
     def run(self) -> bool:
 
@@ -23,7 +25,17 @@ class ScriptTask(GeneralBattle, GeneralInvite, GeneralBuff, GeneralRoom, GameUi,
         limit_time = self.config.evo_zone.evo_zone_config.limit_time
         self.current_count = 0
         self.limit_count: int = limit_count
-        self.limit_time: timedelta = timedelta(hours=limit_time.hour, minutes=limit_time.minute, seconds=limit_time.second)
+        self.limit_time: timedelta = timedelta(hours=limit_time.hour, minutes=limit_time.minute,
+                                               seconds=limit_time.second)
+        con = self.config.evo_zone
+        if con.switch_soul_config.enable:
+            self.ui_get_current_page()
+            self.ui_goto(page_shikigami_records)
+            self.run_switch_soul(con.switch_soul_config.switch_group_team)
+        if con.switch_soul_config.enable_switch_by_name:
+            self.ui_get_current_page()
+            self.ui_goto(page_shikigami_records)
+            self.run_switch_soul_by_name(con.switch_soul_config.group_name, con.switch_soul_config.team_name)
 
         self.ui_get_current_page()
         self.ui_goto(page_main)
@@ -35,11 +47,16 @@ class ScriptTask(GeneralBattle, GeneralInvite, GeneralBuff, GeneralRoom, GameUi,
 
         success = True
         match config.evo_zone_config.user_status:
-            case UserStatus.LEADER: success = self.run_leader()
-            case UserStatus.MEMBER: success = self.run_member()
-            case UserStatus.ALONE: self.run_alone()
-            case UserStatus.WILD: self.run_wild()
-            case _: logger.error('Unknown user status')
+            case UserStatus.LEADER:
+                success = self.run_leader()
+            case UserStatus.MEMBER:
+                success = self.run_member()
+            case UserStatus.ALONE:
+                self.run_alone()
+            case UserStatus.WILD:
+                self.run_wild()
+            case _:
+                logger.error('Unknown user status')
 
         # 记得关掉
         if config.evo_zone_config.soul_buff_enable:
@@ -105,21 +122,6 @@ class ScriptTask(GeneralBattle, GeneralInvite, GeneralBuff, GeneralRoom, GameUi,
                 if self.appear_then_click(self.I_EVOZONE_LOCK, interval=1):
                     continue
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     def run_leader(self):
         logger.info('Start run leader')
         self.ui_get_current_page()
@@ -136,7 +138,7 @@ class ScriptTask(GeneralBattle, GeneralInvite, GeneralBuff, GeneralRoom, GameUi,
         logger.info('Create team')
         while 1:
             self.screenshot()
-            if self.appear(self.I_EVOZONE_MATCHING):
+            if self.appear(self.I_CHECK_TEAM):
                 break
             if self.appear_then_click(self.I_FORM_TEAM, interval=1):
                 continue
@@ -169,8 +171,6 @@ class ScriptTask(GeneralBattle, GeneralInvite, GeneralBuff, GeneralRoom, GameUi,
                 if self.is_in_room():
                     logger.info('EvoZone time limit out')
                     break
-
-
 
             # 如果没有进入房间那就不需要后面的邀请
             if not self.is_in_room():
@@ -267,7 +267,6 @@ class ScriptTask(GeneralBattle, GeneralInvite, GeneralBuff, GeneralRoom, GameUi,
             if self.exit_battle():
                 pass
 
-
         self.ui_get_current_page()
         self.ui_goto(page_main)
         return True
@@ -324,20 +323,15 @@ class ScriptTask(GeneralBattle, GeneralInvite, GeneralBuff, GeneralRoom, GameUi,
         self.ui_current = page_awake_zones
         self.ui_goto(page_main)
 
-
-
     def run_wild(self):
         logger.error('Wild mode is not implemented')
         pass
 
 
-
-
-
-
 if __name__ == '__main__':
     from module.config.config import Config
     from module.device.device import Device
+
     c = Config('oas1')
     d = Device(c)
     t = ScriptTask(c, d)
@@ -347,11 +341,3 @@ if __name__ == '__main__':
     # t.check_layer('悲')
 
     from module.base.timer import timer
-
-
-
-
-
-
-
-

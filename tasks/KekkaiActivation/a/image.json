@@ -205,5 +205,14 @@
     "method": "Template matching",
     "threshold": 0.8,
     "description": "卸下"
+  },
+  {
+    "itemName": "a_harvest_fish_3",
+    "imageName": "a_a_harvest_fish_3.png",
+    "roiFront": "891,165,57,39",
+    "roiBack": "854,128,132,124",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "斗鱼3"
   }
 ]

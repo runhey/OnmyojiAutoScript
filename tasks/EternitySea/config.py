@@ -4,6 +4,7 @@
 from pydantic import BaseModel, Field
 from enum import Enum
 from datetime import datetime, time
+from tasks.Component.SwitchSoul.switch_soul_config import SwitchSoulConfig
 
 from tasks.Component.config_scheduler import Scheduler
 from tasks.Component.config_base import ConfigBase, Time
@@ -31,4 +32,6 @@ class EternitySea(ConfigBase):
     scheduler: Scheduler = Field(default_factory=Scheduler)
     eternity_sea_config: EternitySeaConfig = Field(default_factory=EternitySeaConfig)
     general_battle_config: GeneralBattleConfig = Field(default_factory=GeneralBattleConfig)
+    switch_soul_config_1: SwitchSoulConfig = Field(default_factory=SwitchSoulConfig)
+    switch_soul_config_2: SwitchSoulConfig = Field(default_factory=SwitchSoulConfig)
 

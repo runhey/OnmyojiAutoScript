@@ -12,9 +12,9 @@ class SummonAssets:
 
 	# Image Rule Assets
 	# 点击蓝票 
-	I_BLUE_TICKET = RuleImage(roi_front=(533,594,65,76), roi_back=(533,594,65,76), threshold=0.8, method="Template matching", file="./tasks/Component/Summon/sm/sm_blue_ticket.png")
+	I_BLUE_TICKET = RuleImage(roi_front=(595,586,65,76), roi_back=(523,563,211,111), threshold=0.8, method="Template matching", file="./tasks/Component/Summon/sm/sm_blue_ticket.png")
 	# 点击厕所票 
-	I_LOW_TICKET = RuleImage(roi_front=(403,600,63,65), roi_back=(403,600,63,65), threshold=0.8, method="Template matching", file="./tasks/Component/Summon/sm/sm_low_ticket.png")
+	I_LOW_TICKET = RuleImage(roi_front=(436,605,63,65), roi_back=(378,577,157,99), threshold=0.8, method="Template matching", file="./tasks/Component/Summon/sm/sm_low_ticket.png")
 	# 单抽 
 	I_ONE_TICKET = RuleImage(roi_front=(396,599,76,76), roi_back=(396,599,76,76), threshold=0.8, method="Template matching", file="./tasks/Component/Summon/sm/sm_one_ticket.png")
 	# description 
@@ -25,7 +25,7 @@ class SummonAssets:
 
 	# Ocr Rule Assets
 	# Ocr-description 
-	O_ONE_TICKET = RuleOcr(roi=(514,682,100,32), area=(514,682,100,32), mode="Single", method="Default", keyword="", name="one_ticket")
+	O_ONE_TICKET = RuleOcr(roi=(574,681,100,32), area=(574,681,100,32), mode="Single", method="Default", keyword="", name="one_ticket")
 
 
 	# Swipe Rule Assets

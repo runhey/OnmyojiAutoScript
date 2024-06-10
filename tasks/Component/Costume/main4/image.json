@@ -11,8 +11,8 @@
   {
     "itemName": "main_goto_exploration_4",
     "imageName": "main4_main_goto_exploration_4.png",
-    "roiFront": "434,233,43,56",
-    "roiBack": "148,201,847,100",
+    "roiFront": "439,234,32,48",
+    "roiBack": "150,201,847,100",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"

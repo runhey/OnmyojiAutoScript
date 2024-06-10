@@ -106,7 +106,11 @@ class ScriptTask(GameUi, GeneralBattle, GeneralRoom, GeneralInvite, NianAssets):
                     self.screenshot()
                     if not self.appear(self.I_N_WAITING):
                         break
-                    if self.appear_then_click(self.I_N_WAITING, interval=0.7):
+                    if self.appear_then_click(self.I_UI_CONFIRM, interval=1):
+                        continue
+                    if self.appear_then_click(self.I_UI_CONFIRM_SAMLL, interval=1):
+                        continue
+                    if self.appear_then_click(self.I_N_WAITING, interval=1):
                         continue
                 logger.info('Nian match timeout, exit')
                 break

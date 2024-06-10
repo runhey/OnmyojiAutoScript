@@ -26,8 +26,8 @@ class ScriptTask(GameUi, ReplaceShikigami, KekkaiUtilizeAssets):
         self.ui_get_current_page()
         self.ui_goto(page_guild)
         # 收体力或者资金
-        # 进入寮主页会有一个动画，等一等
-        time.sleep(1)
+        # 进入寮主页会有一个动画，等一等，让小纸人跑一会儿
+        time.sleep(3)
         self.check_guild_ap_or_assets(ap_enable=con.guild_ap_enable, assets_enable=con.guild_assets_enable)
         # 进入寮结界
         self.goto_realm()
@@ -297,6 +297,8 @@ class ScriptTask(GameUi, ReplaceShikigami, KekkaiUtilizeAssets):
                 timer_click.reset()
                 x, y = check_image.coord()
                 self.device.click(x=x, y=y, control_name=check_image.name)
+        if friend == SelectFriendList.DIFFERENT_SERVER:
+            time.sleep(1)
         time.sleep(0.5)
 
     @cached_property
@@ -374,6 +376,13 @@ class ScriptTask(GameUi, ReplaceShikigami, KekkaiUtilizeAssets):
 
         logger.hr('Start utilize')
         self.switch_friend_list(friend)
+        self.swipe(self.S_U_END, interval=3)
+        if friend == SelectFriendList.SAME_SERVER:
+            self.switch_friend_list(SelectFriendList.DIFFERENT_SERVER)
+            self.switch_friend_list(SelectFriendList.SAME_SERVER)
+        else:
+            self.switch_friend_list(SelectFriendList.SAME_SERVER)
+            self.switch_friend_list(SelectFriendList.DIFFERENT_SERVER)
         card_best = None
         swipe_count = 0
         while 1:

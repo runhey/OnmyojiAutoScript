@@ -53,7 +53,7 @@ class CostumeAssets:
 	# description 
 	I_CHECK_MAIN_4 = RuleImage(roi_front=(513,139,48,55), roi_back=(149,108,1068,100), threshold=0.8, method="Template matching", file="./tasks/Component/Costume/main4/main4_check_main_4.png")
 	# description 
-	I_MAIN_GOTO_EXPLORATION_4 = RuleImage(roi_front=(434,233,43,56), roi_back=(148,201,847,100), threshold=0.8, method="Template matching", file="./tasks/Component/Costume/main4/main4_main_goto_exploration_4.png")
+	I_MAIN_GOTO_EXPLORATION_4 = RuleImage(roi_front=(439,234,32,48), roi_back=(150,201,847,100), threshold=0.8, method="Template matching", file="./tasks/Component/Costume/main4/main4_main_goto_exploration_4.png")
 	#  
 	I_MAIN_GOTO_SUMMON_4 = RuleImage(roi_front=(959,215,41,62), roi_back=(556,187,659,100), threshold=0.8, method="Template matching", file="./tasks/Component/Costume/main4/main4_main_goto_summon_4.png")
 	# description 

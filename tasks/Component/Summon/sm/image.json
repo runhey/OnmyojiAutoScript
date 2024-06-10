@@ -2,8 +2,8 @@
   {
     "itemName": "blue_ticket",
     "imageName": "sm_blue_ticket.png",
-    "roiFront": "533,594,65,76",
-    "roiBack": "533,594,65,76",
+    "roiFront": "595,586,65,76",
+    "roiBack": "523,563,211,111",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "点击蓝票"
@@ -11,8 +11,8 @@
   {
     "itemName": "low_ticket",
     "imageName": "sm_low_ticket.png",
-    "roiFront": "403,600,63,65",
-    "roiBack": "403,600,63,65",
+    "roiFront": "436,605,63,65",
+    "roiBack": "378,577,157,99",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "点击厕所票"

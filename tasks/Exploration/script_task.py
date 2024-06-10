@@ -40,7 +40,7 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, ExplorationAssets):
 
         # 开启加成
         con = self.config.exploration.exploration_config
-        if con.buff_gold_50_click or con.buff_gold_100_click:
+        if con.buff_gold_50_click or con.buff_gold_100_click or con.buff_exp_50_click or con.buff_exp_100_click:
             self.ui_get_current_page()
             self.ui_goto(page_main)
             self.open_buff()
@@ -48,6 +48,10 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, ExplorationAssets):
                 self.gold_50()
             if con.buff_gold_100_click:
                 self.gold_100()
+            if con.buff_exp_50_click:
+                self.exp_50()
+            if con.buff_exp_100_click:
+                self.exp_100()
             self.close_buff()
 
         self.ui_get_current_page()
@@ -77,6 +81,14 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, ExplorationAssets):
             if self.wait_until_appear(self.I_RED_CLOSE, wait_time=2):
                 self.appear_then_click(self.I_RED_CLOSE)
             self.ui_goto(page_main)
+            # 关闭 buff
+            if con.buff_gold_50_click or con.buff_gold_100_click or con.buff_exp_50_click or con.buff_exp_100_click:
+                self.open_buff()
+                self.gold_50(is_open=False)
+                self.gold_100(is_open=False)
+                self.exp_50(is_open=False)
+                self.exp_100(is_open=False)
+                self.close_buff()
             self.set_next_run(task='Exploration', success=True, finish=False)
         raise TaskEnd
 
@@ -246,7 +258,7 @@ if __name__ == "__main__":
     from module.config.config import Config
     from module.device.device import Device
 
-    config = Config('oas2')
+    config = Config('oas1')
     device = Device(config)
     t = ScriptTask(config, device)
     t.config.exploration.exploration_config.exploration_level = '第二十八章'

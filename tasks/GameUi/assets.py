@@ -117,6 +117,12 @@ class GameUiAssets:
 	I_BACK_YOLLOW = RuleImage(roi_front=(24,16,48,55), roi_back=(0,0,100,100), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_back_yollow.png")
 	# description 
 	I_DEMON_ENCOUNTER_GOTO_TOWN = RuleImage(roi_front=(28,20,56,52), roi_back=(3,4,100,100), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_demon_encounter_goto_town.png")
+	# description 
+	I_TOWN_GOTO_HYAKKIYAKOU = RuleImage(roi_front=(880,165,53,69), roi_back=(827,149,148,100), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_town_goto_hyakkiyakou.png")
+	# description 
+	I_CHECK_KYAKKIYAKOU = RuleImage(roi_front=(305,567,56,64), roi_back=(280,545,100,100), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_check_kyakkiyakou.png")
+	# description 
+	I_HYAKKIYAKOU_CLOSE = RuleImage(roi_front=(1063,181,47,43), roi_back=(1063,181,47,43), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_hyakkiyakou_close.png")
 
 
 	# Image Rule Assets
@@ -149,7 +155,7 @@ class GameUiAssets:
 	# description 
 	I_CHECK_GUILD = RuleImage(roi_front=(1072,630,49,46), roi_back=(1072,630,49,46), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_check_guild.png")
 	# description 
-	I_CHECK_TEAM = RuleImage(roi_front=(53,570,41,119), roi_back=(53,570,41,119), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_check_team.png")
+	I_CHECK_TEAM = RuleImage(roi_front=(32,585,82,90), roi_back=(32,585,82,90), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_check_team.png")
 	# description 
 	I_CHECK_COLLECTION = RuleImage(roi_front=(471,618,100,100), roi_back=(471,618,100,100), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_check_collection.png")
 	# description 
