@@ -17,7 +17,7 @@ class ConfigManual:
         > BondlingFairyland > EvoZone > GoryouRealm
         > TrueOrochi > RichMan
         > CollectiveMissions
-        > Pets > TalismanPass > SoulsTidy > Delegation
+        > Pets > TalismanPass > SoulsTidy > Delegation > Hyakkiyakou
         > Secret > WeeklyTrifles > MysteryShop > Duel > MetaDemon > FrogBoss
         """
 
