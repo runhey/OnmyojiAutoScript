@@ -95,6 +95,8 @@ class DroidCast(Uiautomator2):
     """
 
     _droidcast_port: int = 0
+    droidcast_width: int = 0
+    droidcast_height: int = 0
 
     @cached_property
     def droidcast_session(self):
@@ -113,15 +115,34 @@ class DroidCast(Uiautomator2):
         To get PNG screenshots.
     """
     def droidcast_url(self, url='/preview'):
+        if self.is_mumu_over_version_356:
+            w, h = self.droidcast_width, self.droidcast_height
+            if self.orientation == 0:
+                return f'http://127.0.0.1:{self._droidcast_port}{url}?width={w}&height={h}'
+            elif self.orientation == 1:
+                return f'http://127.0.0.1:{self._droidcast_port}{url}?width={h}&height={w}'
+            else:
+                # logger.warning('DroidCast receives invalid device orientation')
+                pass
         return f'http://127.0.0.1:{self._droidcast_port}{url}'
 
     def droidcast_raw_url(self, url='/screenshot'):
+        if self.is_mumu_over_version_356:
+            w, h = self.droidcast_width, self.droidcast_height
+            if self.orientation == 0:
+                return f'http://127.0.0.1:{self._droidcast_port}{url}?width={w}&height={h}'
+            elif self.orientation == 1:
+                return f'http://127.0.0.1:{self._droidcast_port}{url}?width={h}&height={w}'
+            else:
+                # logger.warning('DroidCast receives invalid device orientation')
+                pass
         return f'http://127.0.0.1:{self._droidcast_port}{url}'
 
 
     def droidcast_init(self):
         logger.hr('DroidCast init')
         self.droidcast_stop()
+        self._droidcast_update_resolution()
 
         logger.info('Pushing DroidCast apk')
         self.adb_push(self.config.DROIDCAST_FILEPATH_LOCAL, self.config.DROIDCAST_FILEPATH_REMOTE)
@@ -142,24 +163,39 @@ class DroidCast(Uiautomator2):
         del_cached_property(self, 'droidcast_session')
         _ = self.droidcast_session
 
-    @Config.when(DROIDCAST_VERSION='DroidCast')
-    def droidcast_start(self):
-        self.droidcast_init()
+        if self.config.DROIDCAST_VERSION == 'DroidCast':
+            logger.attr('DroidCast', self.droidcast_url())
+            self.droidcast_wait_startup()
+        elif self.config.DROIDCAST_VERSION == 'DroidCast_raw':
+            logger.attr('DroidCast_raw', self.droidcast_raw_url())
+            self.droidcast_wait_startup()
+        else:
+            logger.error(f'Unknown DROIDCAST_VERSION: {self.config.DROIDCAST_VERSION}')
 
-        logger.attr('DroidCast', self.droidcast_url())
-        self.droidcast_wait_startup()
+    def _droidcast_update_resolution(self):
+        if self.is_mumu_over_version_356:
+            logger.info('Update droidcast resolution')
+            w, h = self.resolution_uiautomator2(cal_rotation=False)
+            self.get_orientation()
+            # 720, 1280
+            # mumu12 > 3.5.6 is always a vertical device
+            self.droidcast_width, self.droidcast_height = w, h
+            logger.info(f'Droicast resolution: {(w, h)}')
 
-    @Config.when(DROIDCAST_VERSION='DroidCast_raw')
-    def droidcast_raw_start(self):
-        self.droidcast_init()
-
-        logger.attr('DroidCast_raw', self.droidcast_raw_url())
-        self.droidcast_wait_startup()
 
     @retry
     def screenshot_droidcast(self):
         self.config.DROIDCAST_VERSION = 'DroidCast'
-        image = self.droidcast_session.get(self.droidcast_raw_url(), timeout=3).content
+
+        if self.is_mumu_over_version_356:
+            if not self.droidcast_width or not self.droidcast_height:
+                self._droidcast_update_resolution()
+
+        resp = self.droidcast_session.get(self.droidcast_url(), timeout=3)
+
+        if resp.status_code == 404:
+            raise DroidCastVersionIncompatible('DroidCast server does not have /preview')
+        image = resp.content
         image = np.frombuffer(image, np.uint8)
         if image is None:
             raise ImageTruncated('Empty image after reading from buffer')
@@ -174,17 +210,41 @@ class DroidCast(Uiautomator2):
         if image is None:
             raise ImageTruncated('Empty image after cv2.cvtColor')
 
+        if self.is_mumu_over_version_356:
+            if self.orientation == 1:
+                image = cv2.rotate(image, cv2.ROTATE_90_CLOCKWISE)
+
         return image
 
     @retry
     def screenshot_droidcast_raw(self):
         self.config.DROIDCAST_VERSION = 'DroidCast_raw'
-        image = self.droidcast_session.get(self.droidcast_url(), timeout=3).content
+
+        shape = (720, 1280)
+        if self.is_mumu_over_version_356:
+            if not self.droidcast_width or not self.droidcast_height:
+                self._droidcast_update_resolution()
+            if self.droidcast_height and self.droidcast_width:
+                shape = (self.droidcast_height, self.droidcast_width)
+
+        rotate = self.is_mumu_over_version_356 and self.orientation == 1
+
+        image = self.droidcast_session.get(self.droidcast_raw_url(), timeout=3).content
         # DroidCast_raw returns a RGB565 bitmap
 
         try:
-            arr = np.frombuffer(image, dtype=np.uint16).reshape((720, 1280))
+            arr = np.frombuffer(image, dtype=np.uint16)
+            if rotate:
+                arr = arr.reshape(shape)
+                # arr = cv2.rotate(arr, cv2.ROTATE_90_CLOCKWISE)
+                # A little bit faster?
+                arr = cv2.transpose(arr)
+                cv2.flip(arr, 1, dst=arr)
+            else:
+                arr = arr.reshape(shape)
         except ValueError as e:
+            if len(image) < 500:
+                logger.warning(f'Unexpected screenshot: {image}')
             # Try to load as `DroidCast`
             image = np.frombuffer(image, np.uint8)
             if image is not None:
@@ -195,27 +255,38 @@ class DroidCast(Uiautomator2):
             # ValueError: cannot reshape array of size 0 into shape (720,1280)
             raise ImageTruncated(str(e))
 
-        # Convert RGB565 to RGB888
-        # https://blog.csdn.net/happy08god/article/details/10516871
+            # Convert RGB565 to RGB888
+            # https://blog.csdn.net/happy08god/article/details/10516871
 
-        # r = (arr & 0b1111100000000000) >> (11 - 3)
-        # g = (arr & 0b0000011111100000) >> (5 - 2)
-        # b = (arr & 0b0000000000011111) << 3
-        # r |= (r & 0b11100000) >> 5
-        # g |= (g & 0b11000000) >> 6
-        # b |= (b & 0b11100000) >> 5
-        # r = r.astype(np.uint8)
-        # g = g.astype(np.uint8)
-        # b = b.astype(np.uint8)
-        # image = cv2.merge([r, g, b])
+            # r = (arr & 0b1111100000000000) >> (11 - 3)
+            # g = (arr & 0b0000011111100000) >> (5 - 2)
+            # b = (arr & 0b0000000000011111) << 3
+            # r |= (r & 0b11100000) >> 5
+            # g |= (g & 0b11000000) >> 6
+            # b |= (b & 0b11100000) >> 5
+            # r = r.astype(np.uint8)
+            # g = g.astype(np.uint8)
+            # b = b.astype(np.uint8)
+            # image = cv2.merge([r, g, b])
 
-        # The same as the code above but costs about 5ms instead of 10ms.
-        r = cv2.multiply(arr & 0b1111100000000000, 0.00390625).astype(np.uint8)
-        g = cv2.multiply(arr & 0b0000011111100000, 0.125).astype(np.uint8)
-        b = cv2.multiply(arr & 0b0000000000011111, 8).astype(np.uint8)
-        r = cv2.add(r, cv2.multiply(r, 0.03125))
-        g = cv2.add(g, cv2.multiply(g, 0.015625))
-        b = cv2.add(b, cv2.multiply(b, 0.03125))
+            # The same as the code above but costs about 3~4ms instead of 10ms.
+            # Note that cv2.convertScaleAbs is 5x fast as cv2.multiply, cv2.add is 8x fast as cv2.convertScaleAbs
+            # Note that cv2.convertScaleAbs includes rounding
+        r = cv2.bitwise_and(arr, 0b1111100000000000)
+        r = cv2.convertScaleAbs(r, alpha=0.00390625)
+        m = cv2.convertScaleAbs(r, alpha=0.03125)
+        cv2.add(r, m, dst=r)
+
+        g = cv2.bitwise_and(arr, 0b0000011111100000)
+        g = cv2.convertScaleAbs(g, alpha=0.125)
+        m = cv2.convertScaleAbs(g, alpha=0.015625, dst=m)
+        cv2.add(g, m, dst=g)
+
+        b = cv2.bitwise_and(arr, 0b0000000000011111)
+        b = cv2.convertScaleAbs(b, alpha=8)
+        m = cv2.convertScaleAbs(b, alpha=0.03125, dst=m)
+        cv2.add(b, m, dst=b)
+
         image = cv2.merge([r, g, b])
 
         return image
@@ -274,7 +345,9 @@ class DroidCast(Uiautomator2):
             logger.info(f'Kill pid={proc.pid}')
             self.adb_shell(['kill', '-s', 9, proc.pid])
 
+
+
 if __name__ == '__main__':
     dc = DroidCast(config='oas1')
-    cv2.imshow("iiii", dc.screenshot_droidcast())
+    cv2.imshow("iiii", dc.screenshot_droidcast_raw())
     cv2.waitKey(0)
