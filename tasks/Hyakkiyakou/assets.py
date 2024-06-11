@@ -34,6 +34,19 @@ class HyakkiyakouAssets:
 	I_HFREEZE = RuleImage(roi_front=(1092,665,187,54), roi_back=(1092,665,187,54), threshold=0.8, method="Template matching", file="./tasks/Hyakkiyakou/hya/hya_hfreeze.png")
 
 
+	# Image Rule Assets
+	# 左边概率up 
+	I_HYA_STATE_BUFF06 = RuleImage(roi_front=(331,7,126,41), roi_back=(137,1,342,66), threshold=0.8, method="Template matching", file="./tasks/Hyakkiyakou/hya/hya_hya_state_buff06.png")
+	# 冰冻 
+	I_HYA_STATE_BUFF05 = RuleImage(roi_front=(158,5,127,45), roi_back=(147,0,322,62), threshold=0.8, method="Template matching", file="./tasks/Hyakkiyakou/hya/hya_hya_state_buff05.png")
+	# 左边好友up 
+	I_HYA_STATE_BUFF07 = RuleImage(roi_front=(157,7,127,43), roi_back=(143,0,347,80), threshold=0.8, method="Template matching", file="./tasks/Hyakkiyakou/hya/hya_hya_state_buff07.png")
+	# 左边减速 
+	I_HYA_STATE_BUFF02 = RuleImage(roi_front=(157,6,128,39), roi_back=(146,1,348,55), threshold=0.8, method="Template matching", file="./tasks/Hyakkiyakou/hya/hya_hya_state_buff02.png")
+	# 左边砸豆加速 
+	I_HYA_STATE_BUFF03 = RuleImage(roi_front=(326,4,129,44), roi_back=(143,3,326,59), threshold=0.8, method="Template matching", file="./tasks/Hyakkiyakou/hya/hya_hya_state_buff03.png")
+
+
 	# Click Rule Assets
 	# description 
 	C_CLICK = RuleClick(roi_front=(26,250,33,100), roi_back=(26,250,33,100), name="click")
