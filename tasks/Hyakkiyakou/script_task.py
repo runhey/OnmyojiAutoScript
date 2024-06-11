@@ -28,13 +28,7 @@ def plot_save(image, boxes):
     cv2.imwrite(save_file, image)
 
 def test_():
-    args = {
-        'dual_detect': True,
-        'conf_threshold': 0.5,
-        'iou_threshold': 0.6,
-        'precision': 'int8',
-    }
-    tracker = Tracker(args=args)
+    tracker = Tracker()
     # --------------------------------
     file_img = './tasks/Hyakkiyakou/temp/20240526T103931/all1716691228563.png'
     img = cv2.imdecode(fromfile(str(file_img), dtype=uint8), -1)
