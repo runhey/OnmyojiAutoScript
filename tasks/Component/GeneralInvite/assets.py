@@ -47,6 +47,7 @@ class GeneralInviteAssets:
 	I_BACK_YELLOW = RuleImage(roi_front=(19,13,58,55), roi_back=(19,13,58,55), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralInvite/gi/gi_back_yellow.png")
 	# 点击邀请 
 	I_INVITE_ENSURE = RuleImage(roi_front=(712,544,132,60), roi_back=(712,544,132,60), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralInvite/gi/gi_invite_ensure.png")
+	I_INVITE_ENSURE_NEW = RuleImage(roi_front=(720,553,106,44), roi_back=(720,553,106,44), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralInvite/gi/gi_invite_ensure.png")
 	# 判断是否点中好友了 
 	I_SELECTED = RuleImage(roi_front=(895,373,33,32), roi_back=(541,157,407,350), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralInvite/gi/gi_selected.png")
 	# 用来判断当前的列表是哪儿的 
@@ -101,8 +102,10 @@ class GeneralInviteAssets:
 	# Ocr Rule Assets
 	# Ocr-description 
 	O_TIME_1 = RuleOcr(roi=(541,12,96,33), area=(541,12,96,33), mode="Single", method="Default", keyword="", name="time_1")
+
 	# 永生之海判断时间 
 	O_TIME_2 = RuleOcr(roi=(538,70,100,34), area=(538,70,100,34), mode="Single", method="Default", keyword="", name="time_2")
+
 	# 上方好友列表的左边第一个（一般是好友） 
 	O_F_LIST_1 = RuleOcr(roi=(346,94,98,41), area=(346,94,98,41), mode="Single", method="Default", keyword="", name="f_list_1")
 	# Ocr-description 

@@ -75,10 +75,22 @@ class ScriptTask(GeneralBattle, GeneralInvite, GeneralBuff, GeneralRoom, GameUi,
         logger.info('Enter orochi')
         while True:
             self.screenshot()
+            logger.info("寻找 组队 图片")
             if self.appear(self.I_FORM_TEAM):
+                logger.info("匹配 组队 图片：成功")
                 return True
             if self.appear_then_click(self.I_OROCHI, interval=1):
                 continue
+
+    def check_layer_new(self, layer: str) -> bool:
+        """
+        检查挑战的层数, 并选中挑战的层
+        :return:
+        """
+        pos = self.list_find(self.L_LAYER_LIST_NEW, layer)
+        if pos:
+            self.device.click(x=pos[0], y=pos[1])
+            return True
 
     def check_layer(self, layer: str) -> bool:
         """
@@ -119,33 +131,52 @@ class ScriptTask(GeneralBattle, GeneralInvite, GeneralBuff, GeneralRoom, GameUi,
 
 
 
-
-
-
     def run_leader(self):
         logger.info('Start run leader')
         self.ui_get_current_page()
+        logger.info("界面跳转：探索 --> 御魂 --> 八岐大蛇 ./tasks/GameUi/page/page_check_soul_zones.png")
         self.ui_goto(page_soul_zones)
+        logger.info("定位 组队 图片...")
         self.orochi_enter()
-        layer = self.config.orochi.orochi_config.layer
-        self.check_layer(layer)
-        self.check_lock(self.config.orochi.general_battle_config.lock_team_enable)
-        # 创建队伍
-        logger.info('Create team')
+
+        # logger.debug(f"I_CHECK_TEAM这个图片是同心队，我不需要同心队")
+        # while 1:
+        #     self.screenshot()
+        #     if self.appear(self.I_CHECK_TEAM):
+        #         break
+        #     if self.appear_then_click(self.I_FORM_TEAM, interval=1):
+        #         continue
+
+        # 点击：组队
+        logger.info('点击：组队')
         while 1:
             self.screenshot()
-            if self.appear(self.I_CHECK_TEAM):
-                break
             if self.appear_then_click(self.I_FORM_TEAM, interval=1):
-                continue
+                break
+
+        layer = self.config.orochi.orochi_config.layer
+
+        logger.info(f"查找御魂层数：{layer}")
+        self.check_layer_new(layer)
+
+        logger.info("点击：创建队伍")
         # 创建房间
         self.create_room()
+
+
+        logger.info("设置队伍公开权限")
         self.ensure_private()
+
+        logger.info(f"检查是否锁定队伍：{self.config.orochi.general_battle_config.lock_team_enable}，识别有问题，暂跳过")
+        # self.check_lock(self.config.orochi.general_battle_config.lock_team_enable)
+
+        logger.info("点击：创建")
         self.create_ensure()
 
         # 邀请队友
         success = True
         is_first = True
+
         # 这个时候我已经进入房间了哦
         while 1:
             self.screenshot()
@@ -344,6 +375,7 @@ class ScriptTask(GeneralBattle, GeneralInvite, GeneralBuff, GeneralRoom, GameUi,
         success = True
         while 1:
             self.screenshot()
+
             # 无论胜利与否, 都会出现是否邀请一次队友
             # 区别在于，失败的话不会出现那个勾选默认邀请的框
             if self.check_and_invite(self.config.orochi.invite_config.default_invite):
@@ -355,17 +387,18 @@ class ScriptTask(GeneralBattle, GeneralInvite, GeneralBuff, GeneralRoom, GameUi,
 
             if self.current_count >= self.limit_count:
                 if self.is_in_room():
-                    logger.info('Orochi count limit out')
+                    logger.info('达到设定次数，御魂任务结束。Orochi count limit out')
                     break
 
             if datetime.now() - self.start_time >= self.limit_time:
                 if self.is_in_room():
-                    logger.info('Orochi time limit out')
+                    logger.info('达到设定的时间限制，御魂任务结束。Orochi time limit out')
                     break
 
             if not self.is_in_room():
+                logger.warning('不在御魂副本？')
                 if self.is_room_dead():
-                    logger.warning('Orochi task failed')
+                    logger.warning('不在御魂副本，并且队伍没了？退出。Orochi task failed')
                     success = False
                     break
                 continue

@@ -3,6 +3,7 @@
 # github https://github.com/runhey
 from time import sleep
 import numpy as np
+import cv2
 
 from enum import Enum
 from cached_property import cached_property
@@ -26,10 +27,13 @@ class FriendList(str, Enum):
 class RoomType(str, Enum):
     # 房间只可以两个人的： 探索
     NORMAL_2 = 'normal_2'
+
     # 房间可以两三个人的： 觉醒、御魂、日轮、石距（石距是单次没有锁定阵容）
     NORMAL_3 = 'normal_3'
+
     # 永生之海不一样
     ETERNITY_SEA = 'eternity_sea'
+
     # 经验妖怪和金币妖怪
     NORMAL_5 = 'normal_5'
 
@@ -125,6 +129,8 @@ class GeneralInvite(BaseTask, GeneralInviteAssets):
                 logger.info('Start challenge and this is lock sea')
                 fire = True
 
+            logger.info(f"run_invite: fire={fire}")
+            
             # 点击挑战
             if fire:
                 self.click_fire()
@@ -162,11 +168,15 @@ class GeneralInvite(BaseTask, GeneralInviteAssets):
         if is_screenshot:
             self.screenshot()
         if self.appear(self.I_GI_EMOJI_1):
+            logger.info(f"is_in_room: yes。匹配到：{self.I_GI_EMOJI_1}")
             return True
         if self.appear(self.I_GI_EMOJI_2):
+            logger.info(f"is_in_room: yes。匹配到：{self.I_GI_EMOJI_1}")
             return True
         # if self.appear(self.I_MATCHING):
         #     return False
+        logger.info("is_in_room: no")
+
         return False
 
     def exit_room(self) -> bool:
@@ -191,10 +201,22 @@ class GeneralInvite(BaseTask, GeneralInviteAssets):
 
     def click_fire(self):
         while 1:
+            # logger.info("等待2秒，再开始截图")
+            # sleep(2)
             self.screenshot()
             if not self.is_in_room(False):
                 break
-            if self.appear_then_click(self.I_FIRE, interval=1, threshold=0.7):
+
+            # cv2.imwrite("click_fire.jpg", self.device.image)
+
+            # print(f"FIXME ======================================================")
+            print(f"FIXME click_fire: 截图的灰度图跟I_FIRE匹配后，相似度只有0.4左右")
+            # print(f"FIXME ======================================================")
+            # 原始threshold
+            my_threshold = 0.7
+            # 临时threshold
+            my_threshold = 0.42
+            if self.appear_then_click(self.I_FIRE, interval=1, threshold=my_threshold):
                 continue
 
     @cached_property
@@ -323,19 +345,23 @@ class GeneralInvite(BaseTask, GeneralInviteAssets):
 
         return True
 
-    def invite_friend(self, name: str = None, find_mode: FindMode = FindMode.AUTO_FIND) -> bool:
+    def invite_friend_bak(self, name: str = None, find_mode: FindMode = FindMode.AUTO_FIND) -> bool:
         """
         邀请好友
         :param find_mode: 寻找的方式
         :param name:
         :return:
         """
-        logger.info('Click add to invite friend')
+        logger.info('点击：Click add to invite friend')
         # 点击＋号
         while 1:
             self.screenshot()
+
+            logger.info("")
             if self.appear(self.I_LOAD_FRIEND):
                 break
+
+            logger.info("点击：邀请")
             if self.appear(self.I_INVITE_ENSURE):
                 break
             if self.appear_then_click(self.I_ADD_2, interval=1):
@@ -458,11 +484,170 @@ class GeneralInvite(BaseTask, GeneralInviteAssets):
 
         return True
 
+    def invite_friend(self, name: str = None, find_mode: FindMode = FindMode.AUTO_FIND) -> bool:
+        """
+        邀请好友
+        :param find_mode: 寻找的方式
+        :param name:
+        :return:
+        """
+        import cv2
+        logger.info(f'点击：Click add to invite friend {name}')
+
+        # 点击＋号
+        while 1:
+            self.screenshot()
+
+            logger.info("")
+            if self.appear(self.I_LOAD_FRIEND):
+                break
+            sleep(2)
+            logger.info("点击：邀请")
+            if self.appear_then_click(self.I_ADD_2, interval=1):
+                break
+            # if self.appear(self.I_INVITE_ENSURE):
+            #     break
+            # if self.appear_then_click(self.I_ADD_2, interval=1):
+            #     continue
+            # if self.appear_then_click(self.I_ADD_5_4, interval=1):
+            #     continue
+
+        logger.info(f"点开邀请界面后，等2秒，然后重新截图")
+        sleep(2)
+        self.screenshot()
+
+        # 保存图片看看到底对不对
+        cv2.imwrite("invite_friend.jpg", self.device.image)
+
+        friend_class = []
+        class_ocr = [self.O_F_LIST_1, self.O_F_LIST_2, self.O_F_LIST_3, self.O_F_LIST_4]
+        class_index = 0
+        list_1 = self.O_F_LIST_1.ocr(self.device.image)
+        list_2 = self.O_F_LIST_2.ocr(self.device.image)
+        list_3 = self.O_F_LIST_3.ocr(self.device.image)
+        list_4 = self.O_F_LIST_4.ocr(self.device.image)
+
+        logger.info(f"list1={list_1}, list2={list_2}, list3={list_3}, list={list_4}")
+
+        if list_1 is not None and list_1 != '' and list_1 in self.friend_class:
+            friend_class.append(list_1)
+        if list_2 is not None and list_2 != '' and list_2 in self.friend_class:
+            friend_class.append(list_2)
+        if list_3 is not None and list_3 != '' and list_3 in self.friend_class:
+            friend_class.append(list_3)
+        if list_4 is not None and list_4 != '' and list_4 in self.friend_class:
+            friend_class.append(list_4)
+        for i in range(len(friend_class)):
+            if friend_class[i] == '蔡友':
+                friend_class[i] = '寮友'
+            elif friend_class[i] == '路区':
+                friend_class[i] = '跨区'
+            elif friend_class[i] == '察友':
+                friend_class[i] = '寮友'
+            elif friend_class[i] == '区':
+                friend_class[i] = '跨区'
+        logger.info(f'Friend class: {friend_class}')
+
+        is_select: bool = False  # 是否选中了好友
+        if find_mode == FindMode.RECENT_FRIEND:
+            logger.info('Find recent friend')
+            # 获取’最近‘在friend_class中的index
+            if '最近' not in friend_class:
+                logger.warning('No recent friend')
+                return False
+            recent_index = friend_class.index('最近')
+            while recent_index == 1:
+                self.screenshot()
+                if self.appear(self.I_FLAG_2_ON):
+                    break
+                if self.appear_then_click(self.I_FLAG_2_OFF, interval=1):
+                    continue
+
+            logger.info(f'Now find friend in ”最近“')
+            sleep(1)
+            if not is_select:
+                if self.detect_select(name):
+                    is_select = True
+            sleep(1)
+            if not is_select:
+                if self.detect_select(name):
+                    is_select = True
+
+        for index in range(len(friend_class)):
+            # 如果不是自动寻找，就跳过
+            if find_mode != FindMode.AUTO_FIND:
+                continue
+            # 如果已经选中了好友，就不需要再选中了
+            if is_select:
+                continue
+            # 首先切换到不同的好友列表
+            while index == 0:
+                self.screenshot()
+                if self.appear(self.I_FLAG_1_ON):
+                    break
+                if self.appear_then_click(self.I_FLAG_1_OFF, interval=1):
+                    continue
+            while index == 1:
+                self.screenshot()
+                if self.appear(self.I_FLAG_2_ON):
+                    break
+                if self.appear_then_click(self.I_FLAG_2_OFF, interval=1):
+                    continue
+            while index == 2:
+                self.screenshot()
+                if self.appear(self.I_FLAG_3_ON):
+                    break
+                if self.appear_then_click(self.I_FLAG_3_OFF, interval=1):
+                    continue
+            while index == 3:
+                self.screenshot()
+                if self.appear(self.I_FLAG_4_ON):
+                    break
+                if self.appear_then_click(self.I_FLAG_4_OFF, interval=1):
+                    continue
+
+            # 选中好友， 在这里游戏获取在线的好友并不是很快，根据不同的设备会有不同的时间，而且没有什么元素提供我们来判断
+            # 所以这里就直接等待一段时间
+            logger.info(f'Now find friend in {friend_class[index]}')
+            sleep(1)
+            if not is_select:
+                if self.detect_select(name):
+                    is_select = True
+            sleep(1)
+            if not is_select:
+                if self.detect_select(name):
+                    is_select = True
+
+        # 点击确定
+        logger.info('已选中队友，查找匹配 邀请 图片，Click invite ensure')
+        if not self.appear(self.I_INVITE_ENSURE_NEW):
+            logger.warning('No appear invite ensure while invite friend')
+        while 1:
+            self.screenshot()
+            if not self.appear(self.I_INVITE_ENSURE_NEW):
+                break
+            logger.info("点击邀请")
+            if self.appear_then_click(self.I_INVITE_ENSURE_NEW):
+                continue
+        # 哪怕没有找到好友也有点击 确认 以退出好友列表
+        if not is_select:
+            logger.warning('No find friend')
+            # 这个时候任务运行失败
+            logger.info('Task failed')
+            return False
+
+        logger.info(f"成功发送邀请给队友：{name}")
+
+        return True
+
     def invite_friends(self, config: InviteConfig) -> bool:
         """
         看情况邀请两个好友
         :return:
         """
+
+        logger.info(f"邀请好友：{config.find_mode}， {config.friend_1}，{config.friend_2}")
+
         success = self.invite_friend(config.friend_1, config.find_mode)
         if not success:
             logger.warning('Invite friend 1 failed')

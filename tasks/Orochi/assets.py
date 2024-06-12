@@ -32,6 +32,9 @@ class OrochiAssets:
 	L_LAYER_LIST = RuleList(folder="./tasks/Orochi/res", direction="vertical", mode="ocr", roi_back=(138,130,359,500), size=(45, 88), 
 					 array=["壹", "贰", "叁", "肆", "伍", "陆", "柒", "捌", "玖", "拾", "悲", "神"])
 
+	L_LAYER_LIST_NEW = RuleList(folder="./tasks/Orochi/res", direction="vertical", mode="ocr", roi_back=(430,190,160,370), size=(45, 88), 
+					 array=["壹", "贰", "叁", "肆", "伍", "陆", "柒", "捌", "玖", "拾", "悲", "神"])
+
 
 	# Ocr Rule Assets
 	# Ocr-description 
