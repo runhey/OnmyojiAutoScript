@@ -337,19 +337,6 @@ class RichManAssets:
 	I_CENTER2 = RuleImage(roi_front=(76,590,79,75), roi_back=(65,575,100,100), threshold=0.8, method="Template matching", file="./tasks/RichMan/shrine/shrine_center2.png")
 
 
-	# Ocr Rule Assets
-	# Ocr-description 
-	O_S_TOTAL = RuleOcr(roi=(1134,11,112,36), area=(1134,11,112,36), mode="Digit", method="Default", keyword="", name="s_total")
-	# 已兑换 
-	O_S_BLACK = RuleOcr(roi=(582,179,84,48), area=(582,179,84,48), mode="Single", method="Default", keyword="", name="s_black")
-	# Ocr-description 
-	O_S_WHITE_FIVE = RuleOcr(roi=(774,174,69,44), area=(774,174,69,44), mode="Single", method="Default", keyword="", name="s_white_five")
-	# Ocr-description 
-	O_S_WHITE_FOUR = RuleOcr(roi=(952,168,74,60), area=(952,168,74,60), mode="Single", method="Default", keyword="", name="s_white_four")
-	# 买两个四星蛋 
-	O_S_FOUR_NUMBER = RuleOcr(roi=(581,414,46,45), area=(581,414,46,45), mode="Digit", method="Default", keyword="2", name="s_four_number")
-
-
 	# Image Rule Assets
 	# 千物宝库 
 	I_TT_ENTER = RuleImage(roi_front=(1140,585,73,76), roi_back=(1140,585,73,76), threshold=0.8, method="Template matching", file="./tasks/RichMan/tt/tt_tt_enter.png")
