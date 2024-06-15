@@ -17,6 +17,18 @@ class HyakkiyakouAssets:
 	C_HSELECT_2 = RuleClick(roi_front=(531,225,202,363), roi_back=(531,225,202,363), name="hselect_2")
 	# description 
 	C_HSELECT_3 = RuleClick(roi_front=(875,210,219,394), roi_back=(875,210,219,394), name="hselect_3")
+	# description 
+	C_FRIEND_1 = RuleClick(roi_front=(446,227,181,67), roi_back=(446,227,181,67), name="friend_1")
+	# description 
+	C_FRIEND_2 = RuleClick(roi_front=(718,229,178,64), roi_back=(718,229,178,64), name="friend_2")
+	# description 
+	C_FRIEND_3 = RuleClick(roi_front=(445,310,183,66), roi_back=(445,310,183,66), name="friend_3")
+	# description 
+	C_FRIEND_4 = RuleClick(roi_front=(712,311,184,62), roi_back=(712,311,184,62), name="friend_4")
+	# description 
+	C_FRIEND_5 = RuleClick(roi_front=(449,394,178,61), roi_back=(449,394,178,61), name="friend_5")
+	# description 
+	C_FRIEND_6 = RuleClick(roi_front=(714,397,182,62), roi_back=(714,397,182,62), name="friend_6")
 
 
 	# Image Rule Assets
@@ -111,6 +123,28 @@ class HyakkiyakouAssets:
 	I_BEAN8 = RuleImage(roi_front=(132,646,14,23), roi_back=(0,0,100,100), threshold=0.8, method="Template matching", file="./tasks/Hyakkiyakou/hya/hya_bean8.png")
 	# description 
 	I_BEAN9 = RuleImage(roi_front=(133,649,15,21), roi_back=(0,0,100,100), threshold=0.8, method="Template matching", file="./tasks/Hyakkiyakou/hya/hya_bean9.png")
+	# description 
+	I_BEAN05 = RuleImage(roi_front=(387,640,32,35), roi_back=(371,631,86,52), threshold=0.8, method="Template matching", file="./tasks/Hyakkiyakou/hya/hya_bean05.png")
+	# description 
+	I_BEAN10 = RuleImage(roi_front=(560,640,32,35), roi_back=(531,634,72,47), threshold=0.8, method="Template matching", file="./tasks/Hyakkiyakou/hya/hya_bean10.png")
+
+
+	# Image Rule Assets
+	# description 
+	I_FRIEND_SAME_1 = RuleImage(roi_front=(375,122,106,62), roi_back=(375,122,106,62), threshold=0.8, method="Template matching", file="./tasks/Hyakkiyakou/hya/hya_friend_same_1.png")
+	# description 
+	I_FRIEND_REMOTE_1 = RuleImage(roi_front=(498,125,106,56), roi_back=(498,125,106,56), threshold=0.8, method="Template matching", file="./tasks/Hyakkiyakou/hya/hya_friend_remote_1.png")
+	# description 
+	I_FRIEND_SAME_2 = RuleImage(roi_front=(377,126,100,60), roi_back=(377,126,100,60), threshold=0.8, method="Template matching", file="./tasks/Hyakkiyakou/hya/hya_friend_same_2.png")
+	# description 
+	I_FRIEND_REMOTE_2 = RuleImage(roi_front=(504,127,100,56), roi_back=(504,127,100,56), threshold=0.8, method="Template matching", file="./tasks/Hyakkiyakou/hya/hya_friend_remote_2.png")
+
+
+	# Swipe Rule Assets
+	# description 
+	S_BEAN_05TO10 = RuleSwipe(roi_front=(390,648,21,22), roi_back=(565,646,21,23), mode="default", name="bean_05to10")
+	# description 
+	S_BEAN_10TO05 = RuleSwipe(roi_front=(565,647,24,24), roi_back=(390,647,22,22), mode="default", name="bean_10to05")
 
 
 	# Click Rule Assets

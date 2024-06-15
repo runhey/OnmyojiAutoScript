@@ -88,5 +88,23 @@
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"
+  },
+  {
+    "itemName": "bean05",
+    "imageName": "hya_bean05.png",
+    "roiFront": "387,640,32,35",
+    "roiBack": "371,631,86,52",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "bean10",
+    "imageName": "hya_bean10.png",
+    "roiFront": "560,640,32,35",
+    "roiBack": "531,634,72,47",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
   }
 ]

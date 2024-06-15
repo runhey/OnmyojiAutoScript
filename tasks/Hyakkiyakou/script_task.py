@@ -10,6 +10,9 @@ from cached_property import cached_property
 # Use cmd to install: ./toolkit/python.exe -m pip install -i https://pypi.org/simple/ oashya --trusted-host pypi.org
 from oashya.tracker import Tracker
 
+from module.exception import TaskEnd
+from tasks.GameUi.game_ui import GameUi
+from tasks.GameUi.page import page_hyakkiyakou
 from tasks.Hyakkiyakou.config import Hyakkiyakou as HyakkiyakouConfig
 from tasks.Hyakkiyakou.assets import HyakkiyakouAssets
 from tasks.Hyakkiyakou.agent.agent import Agent
@@ -50,7 +53,7 @@ def test_():
     plot_save(img, resutl)
 
 
-class ScriptTask:
+class ScriptTask(GameUi, HyaSlave):
 
     @cached_property
     def tracker(self) -> Tracker:
@@ -62,15 +65,21 @@ class ScriptTask:
         return Agent()
 
     @cached_property
-    def slave(self) -> HyaSlave:
-        return HyaSlave()
-
-    @cached_property
     def debugger(self) -> Debugger:
         return Debugger()
 
 
     def run(self):
+        self.ui_get_current_page()
+        self.ui_goto(page_hyakkiyakou)
+
+        self.one()
+
+        self.ui_click_until_disappear(self.I_UI_BACK_RED)
+        self.set_next_run(task='Hyakkiyakou', success=True, finish=False)
+        raise TaskEnd
+
+    def one(self):
         pass
 
 

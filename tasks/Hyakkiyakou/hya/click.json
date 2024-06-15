@@ -16,5 +16,41 @@
     "roiFront": "875,210,219,394",
     "roiBack": "875,210,219,394",
     "description": "description"
+  },
+  {
+    "itemName": "friend_1",
+    "roiFront": "446,227,181,67",
+    "roiBack": "446,227,181,67",
+    "description": "description"
+  },
+  {
+    "itemName": "friend_2",
+    "roiFront": "718,229,178,64",
+    "roiBack": "718,229,178,64",
+    "description": "description"
+  },
+  {
+    "itemName": "friend_3",
+    "roiFront": "445,310,183,66",
+    "roiBack": "445,310,183,66",
+    "description": "description"
+  },
+  {
+    "itemName": "friend_4",
+    "roiFront": "712,311,184,62",
+    "roiBack": "712,311,184,62",
+    "description": "description"
+  },
+  {
+    "itemName": "friend_5",
+    "roiFront": "449,394,178,61",
+    "roiBack": "449,394,178,61",
+    "description": "description"
+  },
+  {
+    "itemName": "friend_6",
+    "roiFront": "714,397,182,62",
+    "roiBack": "714,397,182,62",
+    "description": "description"
   }
 ]
