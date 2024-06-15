@@ -90,6 +90,29 @@ class HyakkiyakouAssets:
 	I_RESR_9 = RuleImage(roi_front=(638,12,32,47), roi_back=(638,12,32,47), threshold=0.8, method="Template matching", file="./tasks/Hyakkiyakou/hya/hya_resr_9.png")
 
 
+	# Image Rule Assets
+	# description 
+	I_BEAN0 = RuleImage(roi_front=(150,648,13,22), roi_back=(0,0,100,100), threshold=0.8, method="Template matching", file="./tasks/Hyakkiyakou/hya/hya_bean0.png")
+	# description 
+	I_BEAN1 = RuleImage(roi_front=(134,648,11,22), roi_back=(0,0,100,100), threshold=0.8, method="Template matching", file="./tasks/Hyakkiyakou/hya/hya_bean1.png")
+	# description 
+	I_BEAN2 = RuleImage(roi_front=(134,649,14,21), roi_back=(0,0,100,100), threshold=0.8, method="Template matching", file="./tasks/Hyakkiyakou/hya/hya_bean2.png")
+	# description 
+	I_BEAN3 = RuleImage(roi_front=(134,649,14,21), roi_back=(0,0,100,100), threshold=0.8, method="Template matching", file="./tasks/Hyakkiyakou/hya/hya_bean3.png")
+	# description 
+	I_BEAN4 = RuleImage(roi_front=(135,647,13,23), roi_back=(0,0,100,100), threshold=0.8, method="Template matching", file="./tasks/Hyakkiyakou/hya/hya_bean4.png")
+	# description 
+	I_BEAN5 = RuleImage(roi_front=(135,649,13,22), roi_back=(0,0,100,100), threshold=0.8, method="Template matching", file="./tasks/Hyakkiyakou/hya/hya_bean5.png")
+	# description 
+	I_BEAN6 = RuleImage(roi_front=(132,649,15,21), roi_back=(0,0,100,100), threshold=0.8, method="Template matching", file="./tasks/Hyakkiyakou/hya/hya_bean6.png")
+	# description 
+	I_BEAN7 = RuleImage(roi_front=(133,648,15,22), roi_back=(0,0,100,100), threshold=0.8, method="Template matching", file="./tasks/Hyakkiyakou/hya/hya_bean7.png")
+	# description 
+	I_BEAN8 = RuleImage(roi_front=(132,646,14,23), roi_back=(0,0,100,100), threshold=0.8, method="Template matching", file="./tasks/Hyakkiyakou/hya/hya_bean8.png")
+	# description 
+	I_BEAN9 = RuleImage(roi_front=(133,649,15,21), roi_back=(0,0,100,100), threshold=0.8, method="Template matching", file="./tasks/Hyakkiyakou/hya/hya_bean9.png")
+
+
 	# Click Rule Assets
 	# description 
 	C_CLICK = RuleClick(roi_front=(26,250,33,100), roi_back=(26,250,33,100), name="click")

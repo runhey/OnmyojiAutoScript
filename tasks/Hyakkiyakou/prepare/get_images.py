@@ -73,8 +73,8 @@ class GenerateImages(GameUi, HyakkiyakouAssets):
         # 时间戳毫秒级别
         time_now1 = int(time.time() * 1000)
         time_now2 = time_now1 + 1
-        cv2.imwrite(str(self.save_folder / f'{time_now1}.png'), img1)
-        cv2.imwrite(str(self.save_folder / f'{time_now2}.png'), img2)
+        # cv2.imwrite(str(self.save_folder / f'{time_now1}.png'), img1)
+        # cv2.imwrite(str(self.save_folder / f'{time_now2}.png'), img2)
         cv2.imwrite(str(self.save_folder / f'all{time_now1}.png'), image)
 
 
