@@ -87,11 +87,11 @@ class ScriptTask(GameUi, HyaSlave):
 if __name__ == '__main__':
     # from module.config.config import Config
     # from module.device.device import Device
-    # import cv2
+    from debugger import test_track
 
     # c = Config('oas1')
     # d = Device(c)
 
     # t = ScriptTask(c, d)
     # t.run()
-    test_()
+    test_track(show=True)
