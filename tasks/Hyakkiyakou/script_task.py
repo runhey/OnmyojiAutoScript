@@ -37,21 +37,6 @@ def plot_save(image, boxes):
     save_file = './tasks/Hyakkiyakou/temp/image.png'
     cv2.imwrite(save_file, image)
 
-def test_():
-    tracker = Tracker()
-    # --------------------------------
-    file_img = './tasks/Hyakkiyakou/temp/20240526T103931/all1716691228563.png'
-    img = cv2.imdecode(fromfile(str(file_img), dtype=uint8), -1)
-    img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
-    resutl = tracker.detect(img)
-    start_time = datetime.now()
-    resutl = tracker.detect(img)
-    end_time = datetime.now()
-    print(f'Cost time: {(end_time - start_time).total_seconds() * 1000} ms')
-    for one in resutl:
-        print(one)
-    plot_save(img, resutl)
-
 
 class ScriptTask(GameUi, HyaSlave):
 
