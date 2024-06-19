@@ -20,8 +20,8 @@
   {
     "itemName": "battle",
     "imageName": "as_battle.png",
-    "roiFront": "883,291,35,165",
-    "roiBack": "840,218,138,315",
+    "roiFront": "854,108,35,165",
+    "roiBack": "790,58,138,315",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "进入爬塔"
@@ -38,8 +38,8 @@
   {
     "itemName": "lock",
     "imageName": "as_lock.png",
-    "roiFront": "816,655,25,32",
-    "roiBack": "816,655,25,32",
+    "roiFront": "827,655,25,32",
+    "roiBack": "749,592,139,116",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "上锁图标"
@@ -47,8 +47,8 @@
   {
     "itemName": "unlock",
     "imageName": "as_unlock.png",
-    "roiFront": "813,656,28,28",
-    "roiBack": "813,656,28,28",
+    "roiFront": "823,654,28,28",
+    "roiBack": "802,610,86,87",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "还未上锁图片"
@@ -56,8 +56,8 @@
   {
     "itemName": "fire",
     "imageName": "as_fire.png",
-    "roiFront": "1117,564,107,108",
-    "roiBack": "1117,564,107,108",
+    "roiFront": "1143,585,84,78",
+    "roiBack": "1117,498,142,174",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "点击战斗"
@@ -65,8 +65,8 @@
   {
     "itemName": "ap",
     "imageName": "as_ap.png",
-    "roiFront": "984,474,29,26",
-    "roiBack": "984,474,29,26",
+    "roiFront": "1135,515,29,26",
+    "roiBack": "1092,487,103,71",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "体力按钮"
@@ -74,8 +74,8 @@
   {
     "itemName": "ap_activity",
     "imageName": "as_ap_activity.png",
-    "roiFront": "987,476,27,25",
-    "roiBack": "987,476,27,25",
+    "roiFront": "1133,516,27,25",
+    "roiBack": "1090,500,84,54",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "活动体力"
@@ -83,8 +83,8 @@
   {
     "itemName": "switch",
     "imageName": "as_switch.png",
-    "roiFront": "1075,480,23,23",
-    "roiBack": "1075,480,23,23",
+    "roiFront": "1221,518,23,23",
+    "roiBack": "1200,497,69,56",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "切换按键"
