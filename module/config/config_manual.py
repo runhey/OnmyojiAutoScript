@@ -30,10 +30,8 @@ class ConfigManual:
 
     # 'DroidCast', 'DroidCast_raw'
     DROIDCAST_VERSION = 'DroidCast'
-    DROIDCAST_FILEPATH_LOCAL = './bin/droidcast/DroidCast-debug-1.2.0.apk'
-    DROIDCAST_FILEPATH_REMOTE = '/data/local/tmp/DroidCast.apk'
-    DROIDCAST_RAW_FILEPATH_LOCAL = './bin/droidcast/DroidCastS-release-1.1.5.apk'
-    DROIDCAST_RAW_FILEPATH_REMOTE = '/data/local/tmp/DroidCastS.apk'
+    DROIDCAST_FILEPATH_LOCAL = './bin/droidcast/DroidCast_raw-release-1.0.apk'
+    DROIDCAST_FILEPATH_REMOTE = '/data/local/tmp/DroidCast_raw.apk'
 
     MINITOUCH_FILEPATH_REMOTE = '/data/local/tmp/minitouch'
 
