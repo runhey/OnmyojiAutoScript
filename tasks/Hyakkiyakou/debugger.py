@@ -16,7 +16,7 @@ from tasks.base_task import BaseTask
 from module.logger import logger
 
 
-def test_track(show : bool = False):
+def test_track(show: bool = False):
     tracker = Tracker()
     # --------------------------------
     #
@@ -33,12 +33,13 @@ def test_track(show : bool = False):
         img = cv2.imdecode(fromfile(str(file), dtype=uint8), -1)
         image = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
         results = tracker(image=image)
+        print(results)
         save_file = folder_save / f'{file.stem}.png'
         draw_image = draw_tracks(image, results)
         if show:
             cv2.imshow('OAS Tracker', draw_image)
+            cv2.waitKey(1000)
             time.sleep(2)
-            cv2.waitKey(10000)
             print('Press any key to continue')
         else:
             cv2.imwrite(str(save_file), draw_image)

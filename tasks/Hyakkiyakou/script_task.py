@@ -53,7 +53,6 @@ class ScriptTask(GameUi, HyaSlave):
     def debugger(self) -> Debugger:
         return Debugger()
 
-
     def run(self):
         self.ui_get_current_page()
         self.ui_goto(page_hyakkiyakou)

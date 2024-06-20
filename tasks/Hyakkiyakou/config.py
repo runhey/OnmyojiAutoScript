@@ -20,13 +20,14 @@ class HyakkiyakouConfig(ConfigBase):
     hya_invite_friend: bool = Field(default=False, description='hya_invite_friend_help')
     # 自动调整豆子数量
     hya_auto_bean: bool = Field(default=False, description='hya_auto_bean_help')
-    hya_sp: bool = Field(default=False, description='hya_sp_help')
-    hya_ssr: bool = Field(default=False, description='hya_ssr_help')
-    hya_sr: bool = Field(default=False, description='hya_sr_help')
-    hya_r: bool = Field(default=False, description='hya_r_help')
-    hya_n: bool = Field(default=False, description='hya_n_help')
+    hya_priorities: str = Field(default='', description='hya_priorities_help')
+    hya_sp: float = Field(default=1., description='hya_sp_help')
+    hya_ssr: float = Field(default=1., description='hya_ssr_help')
+    hya_sr: float = Field(default=0.5, description='hya_sr_help')
+    hya_r: float = Field(default=0, description='hya_r_help')
+    hya_n: float = Field(default=0, description='hya_n_help')
     # 呱太和N卡不是一个东西
-    hya_g: bool = Field(default=False, description='hya_g_help')
+    hya_g: float = Field(default=0, description='hya_g_help')
 
 
 class HyakkiyakouModels(ConfigBase):
