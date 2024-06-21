@@ -479,6 +479,8 @@ class BaseTask(GlobalGameAssets, CostumeBase):
         :param click_image:
         :return:
         """
+        _timer = Timer(10)
+        _timer.start()
         while 1:
             self.screenshot()
 
@@ -495,6 +497,9 @@ class BaseTask(GlobalGameAssets, CostumeBase):
                     if self.ui_reward_appear_click():
                         continue
                 break
+            if _timer.reached():
+                logger.warning('Get reward timeout')
+                break
 
             if isinstance(click_image, RuleImage):
                 if self.appear_then_click(click_image, interval=click_interval):
@@ -505,6 +510,7 @@ class BaseTask(GlobalGameAssets, CostumeBase):
             elif isinstance(click_image, RuleClick):
                 if self.click(click_image, interval=click_interval):
                     continue
+
 
         return True
 
