@@ -27,6 +27,24 @@
     "description": "勾玉"
   },
   {
+    "itemName": "g_cat_food",
+    "imageName": "gg_g_cat_food.png",
+    "roiFront": "565,463,59,65",
+    "roiBack": "565,463,59,65",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "猫粮"
+  },
+  {
+    "itemName": "g_dog_food",
+    "imageName": "gg_g_dog_food.png",
+    "roiFront": "565,464,60,63",
+    "roiBack": "565,464,60,63",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "狗粮"
+  },
+  {
     "itemName": "g_ignore",
     "imageName": "gg_g_ignore.png",
     "roiFront": "773,116,21,21",
