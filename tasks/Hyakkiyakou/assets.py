@@ -61,17 +61,17 @@ class HyakkiyakouAssets:
 
 	# Image Rule Assets
 	# description 
-	I_RESF_0 = RuleImage(roi_front=(615,14,30,46), roi_back=(615,14,30,46), threshold=0.8, method="Template matching", file="./tasks/Hyakkiyakou/hya/hya_resf_0.png")
+	I_RESF_0 = RuleImage(roi_front=(615,13,30,46), roi_back=(606,11,43,51), threshold=0.8, method="Template matching", file="./tasks/Hyakkiyakou/hya/hya_resf_0.png")
 	# description 
 	I_RESF_1 = RuleImage(roi_front=(617,13,31,46), roi_back=(610,11,42,50), threshold=0.8, method="Template matching", file="./tasks/Hyakkiyakou/hya/hya_resf_1.png")
 	# description 
-	I_RESF_2 = RuleImage(roi_front=(615,15,33,47), roi_back=(612,11,39,52), threshold=0.8, method="Template matching", file="./tasks/Hyakkiyakou/hya/hya_resf_2.png")
+	I_RESF_2 = RuleImage(roi_front=(611,14,33,47), roi_back=(602,10,47,57), threshold=0.8, method="Template matching", file="./tasks/Hyakkiyakou/hya/hya_resf_2.png")
 	# description 
 	I_RESF_3 = RuleImage(roi_front=(619,14,28,45), roi_back=(610,12,40,49), threshold=0.8, method="Template matching", file="./tasks/Hyakkiyakou/hya/hya_resf_3.png")
 	# description 
-	I_RESF_4 = RuleImage(roi_front=(613,14,37,47), roi_back=(613,14,37,47), threshold=0.8, method="Template matching", file="./tasks/Hyakkiyakou/hya/hya_resf_4.png")
+	I_RESF_4 = RuleImage(roi_front=(611,14,37,47), roi_back=(608,14,43,47), threshold=0.8, method="Template matching", file="./tasks/Hyakkiyakou/hya/hya_resf_4.png")
 	# description 
-	I_RESF_5 = RuleImage(roi_front=(612,10,35,48), roi_back=(612,10,35,48), threshold=0.8, method="Template matching", file="./tasks/Hyakkiyakou/hya/hya_resf_5.png")
+	I_RESF_5 = RuleImage(roi_front=(612,10,35,48), roi_back=(612,10,35,48), threshold=0.9, method="Template matching", file="./tasks/Hyakkiyakou/hya/hya_resf_5.png")
 	# description 
 	I_RESF_6 = RuleImage(roi_front=(616,10,29,49), roi_back=(616,10,29,49), threshold=0.8, method="Template matching", file="./tasks/Hyakkiyakou/hya/hya_resf_6.png")
 	# description 

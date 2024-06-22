@@ -71,11 +71,15 @@ class ScriptTask(GameUi, HyaSlave):
 if __name__ == '__main__':
     # from module.config.config import Config
     # from module.device.device import Device
-    from debugger import test_track
 
     # c = Config('oas1')
     # d = Device(c)
 
     # t = ScriptTask(c, d)
     # t.run()
-    test_track(show=True)
+    from tasks.Hyakkiyakou.agent.tagent import test_observe, test_state
+    test_state()
+    # from debugger import test_track
+    # test_track(show=False)
+    pass
+

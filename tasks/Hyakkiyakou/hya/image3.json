@@ -2,8 +2,8 @@
   {
     "itemName": "resf_0",
     "imageName": "hya_resf_0.png",
-    "roiFront": "615,14,30,46",
-    "roiBack": "615,14,30,46",
+    "roiFront": "615,13,30,46",
+    "roiBack": "606,11,43,51",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"
@@ -20,8 +20,8 @@
   {
     "itemName": "resf_2",
     "imageName": "hya_resf_2.png",
-    "roiFront": "615,15,33,47",
-    "roiBack": "612,11,39,52",
+    "roiFront": "611,14,33,47",
+    "roiBack": "602,10,47,57",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"
@@ -38,8 +38,8 @@
   {
     "itemName": "resf_4",
     "imageName": "hya_resf_4.png",
-    "roiFront": "613,14,37,47",
-    "roiBack": "613,14,37,47",
+    "roiFront": "611,14,37,47",
+    "roiBack": "608,14,43,47",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"
@@ -50,7 +50,7 @@
     "roiFront": "612,10,35,48",
     "roiBack": "612,10,35,48",
     "method": "Template matching",
-    "threshold": 0.8,
+    "threshold": 0.9,
     "description": "description"
   },
   {

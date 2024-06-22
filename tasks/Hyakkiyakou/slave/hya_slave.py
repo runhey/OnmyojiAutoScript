@@ -38,11 +38,16 @@ class HyaSlave(HyaDevice, HyaColor, HyakkiyakouAssets):
     UNIT0HUNDRED: list[int] = [146, 647, 18, 25]
     DECADE0DECADE: list[int] = [126, 647, 18, 25]
     UNIT0DECADE: list[int] = [140, 647, 18, 25]
+    UNIT0: list[int] = [132, 647, 18, 25]
     # buff
     BUFF_ROI1: list[int] = [150, 1, 150, 50]
     BUFF_ROI2: list[int] = [320, 1, 140, 50]
     BUFF_ROI3: list[int] = [840, 1, 150, 50]
     BUFF_ROI4: list[int] = [1100, 1, 140, 50]
+
+    # 剩余豆子数量， 剩余式神数量， 一次砸豆子的数量， 第一个格子， 第二个格子， 第三个格子， 第四个格子
+    slave_state: tuple = [250, 35, 10,
+                          HyaBuff.BUFF_STATE0, HyaBuff.BUFF_STATE0, HyaBuff.BUFF_STATE0, HyaBuff.BUFF_STATE0]
 
     @cached_property
     def res_r(self) -> list[RuleImage]:
@@ -111,9 +116,11 @@ class HyaSlave(HyaDevice, HyaColor, HyakkiyakouAssets):
     def predict_res(self, current: int) -> int:
         for i in range(current, current-5, -1):
             unit = i % 10
-            unit_img = self.res_r[unit]
+            unit_img = self.res_r[unit] if i >= 10 else self.res_f[unit]
             if not self.appear(unit_img):
                 continue
+            if i < 10:
+                return i
             decade = i // 10
             decade_img = self.res_f[decade]
             if not self.appear(decade_img):
@@ -138,7 +145,7 @@ class HyaSlave(HyaDevice, HyaColor, HyakkiyakouAssets):
                     continue
                 return bean
 
-            else:
+            elif bean >= 10:
                 decade = bean // 10
                 decade_img = self.bean[decade]
                 decade_img.roi_back = self.DECADE0DECADE
@@ -154,6 +161,17 @@ class HyaSlave(HyaDevice, HyaColor, HyakkiyakouAssets):
                     unit_img.roi_back = self.UNIT0DECADE
                     if self.appear(unit_img):
                         return max(0, (bean // 10) * 10 + i)
+            else:
+                unit = bean % 10
+                unit_img = self.bean[unit]
+                unit_img.roi_back = self.UNIT0
+                if self.appear(unit_img):
+                    return bean
+                for i in range(10):
+                    unit_img = self.bean[i]
+                    unit_img.roi_back = self.UNIT0
+                    if self.appear(unit_img):
+                        return max(0, i)
         logger.warning(f'Cannot predict bean, current: {current}')
         return current
 
@@ -208,6 +226,18 @@ class HyaSlave(HyaDevice, HyaColor, HyakkiyakouAssets):
                 continue
         logger.info('Invite friend done')
 
+    def update_state(self):
+        res_bean = self.predict_bean(self.slave_state[0])
+        res_shi = self.predict_res(self.slave_state[1])
+        num_bean = 5 if self.recognize_bean_05() else 10
+        buff_0 = self.predict_buff_state(pos=0, current=self.slave_state[3])
+        buff_1 = self.predict_buff_state(pos=1, current=self.slave_state[4])
+        buff_2 = self.predict_buff_state(pos=2, current=self.slave_state[5])
+        buff_3 = self.predict_buff_state(pos=3, current=self.slave_state[6])
+        self.slave_state = [
+            res_bean, res_shi, num_bean, buff_0, buff_1, buff_2, buff_3
+        ]
+        return self.slave_state
 
 def covert_rgb():
     images_folders: Path = Path(r'E:\Project\OnmyojiAutoScript\tasks\Hyakkiyakou\temp\20240614T214216')
@@ -228,15 +258,15 @@ def test_predict_res():
     c = Config('oas1')
     d = Device(c)
     hd = HyaSlave(c, d)
-    img = cv2.imread(r'E:\Project\OnmyojiAutoScript\tasks\Hyakkiyakou\temp\save\all1716691199364.png')
+    img = cv2.imread('D:/Project/OnmyojiAutoScript/tasks/Hyakkiyakou/temp/20240621T221325/all1718979259551.png')
     img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
     hd.device.image = img
-    print(hd.predict_res(18))
+    print(hd.predict_res(2))
 
-    def do_test():
-        hd.predict_res(18)
-    execution_time = timeit.timeit(do_test, number=100)
-    print(f"执行总的时间: {execution_time * 1000} ms")
+    # def do_test():
+    #     hd.predict_res(18)
+    # execution_time = timeit.timeit(do_test, number=100)
+    # print(f"执行总的时间: {execution_time * 1000} ms")
     # total time is 36.2ms on my computer /cpu:AMD Ryzen 5 3550H with Radeon Vega Mobile
     # 0.362ms per predict_res
 
@@ -248,14 +278,14 @@ def test_predict_bean():
     c = Config('oas1')
     d = Device(c)
     hd = HyaSlave(c, d)
-    img = cv2.imread(r'E:\Project\OnmyojiAutoScript\tasks\Hyakkiyakou\temp\save14\170.png')
+    img = cv2.imread('./tasks/Hyakkiyakou/temp/20240621T221325/all1718979269677.png')
     img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
     hd.device.image = img
-    print(hd.predict_bean(200))
-    def do_test():
-        hd.predict_bean(180)
-    execution_time = timeit.timeit(do_test, number=100)
-    print(f"执行总的时间: {execution_time * 1000} ms")
+    print(hd.predict_bean(15))
+    # def do_test():
+    #     hd.predict_bean(180)
+    # execution_time = timeit.timeit(do_test, number=100)
+    # print(f"执行总的时间: {execution_time * 1000} ms")
     # total time is 17.9ms on my computer in 100 times
 
 def test_predict_buff():
@@ -279,9 +309,9 @@ if __name__ == '__main__':
     c = Config('oas1')
     d = Device(c)
     hd = HyaSlave(c, d)
-    hd.invite_friend(False)
+    # hd.invite_friend(False)
 
     # test_predict_res()
-    # test_predict_bean()
+    test_predict_bean()
     # test_predict_buff()
 
