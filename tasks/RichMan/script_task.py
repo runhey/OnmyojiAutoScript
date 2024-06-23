@@ -48,8 +48,8 @@ if __name__ == '__main__':
     d = Device(c)
     t = ScriptTask(c, d)
 
-    # t.run()
-    t.execute_mall()
+    t.run()
+    # t.execute_mall()
 
 
 
