@@ -104,6 +104,10 @@ class Agent:
                     weight = -1.
                     _cy += 100
                 case _: continue
+            for priority in priorities:  # 我的代码在你之上
+                if priority == _class:
+                    weight = 1.7
+                    break
             if weight == 0.:
                 continue
             z = embed_patch_in_canvas(canvas=z, patch=(mu * weight) * Agent.GAUSSIAN, position=(_cx, _cy))

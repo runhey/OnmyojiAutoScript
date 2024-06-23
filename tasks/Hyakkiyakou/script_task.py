@@ -12,6 +12,7 @@ from random import choice
 from cached_property import cached_property
 # Use cmd to install: ./toolkit/python.exe -m pip install -i https://pypi.org/simple/ oashya --trusted-host pypi.org
 from oashya.tracker import Tracker
+from oashya.labels import label2id
 from oashya.utils import draw_tracks
 
 from module.exception import TaskEnd
@@ -83,9 +84,17 @@ class ScriptTask(GameUi, HyaSlave):
         n = hya_config.hya_n
         g = hya_config.hya_g
         weights: list = [sp, ssr, sr, r, n, g]
+        str_priorities: str = hya_config.hya_priorities
+        str_priorities = str_priorities.replace(' ', '').replace('，', ',')
+        try:
+            priorities = [label2id(s) for s in str_priorities.split(',')]
+        except Exception as e:
+            logger.error(f'Priority error: {str_priorities}')
+            logger.error(e)
+            raise RequestHumanTakeover
         strategy: dict = {
             'weights': weights,
-            'priorities': [],
+            'priorities': priorities,
             'invite_friend': hya_config.hya_invite_friend,
             'auto_bean': hya_config.hya_auto_bean
         }

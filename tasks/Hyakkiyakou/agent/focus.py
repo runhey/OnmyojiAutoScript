@@ -72,7 +72,7 @@ velocity: {self._v}"""
         buff_omega, buff_cx, buff_cy, buff_v, buff_class = self.omega_buff(tracks, strategy['invite_friend'])
         if self._omega > buff_omega:
             buffed = False
-            target_x = self._cx + self._v * 100
+            target_x = self._cx + self._v * 100 - (self._w // 2)
             target_y = self._cy - 40
         else:
             buffed = True
@@ -116,6 +116,6 @@ velocity: {self._v}"""
         upsilon = (vector[1] / 250 - vector[2] / 35)
         upsilon = 100 * (upsilon**2 if upsilon > 0 else - upsilon**2)
         result = _omega + tau + upsilon - 0.6
-        # logger.info(f"total: {result:.4f} | {_omega:.4f} | {tau:.4f} | {upsilon:.4f}")
+        logger.info(f"total: {result:.4f} | {_omega:.4f} | {tau:.4f} | {upsilon:.4f}")
         return result
 
