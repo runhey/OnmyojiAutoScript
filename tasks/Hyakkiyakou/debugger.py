@@ -103,6 +103,7 @@ class Debugger:
 
     def show_start(self):
         logger.info('OAS Track Debugger show image start')
+        Debugger.sync_image = np.zeros((720, 1280, 3), dtype=np.uint8)
         self.sync_thread.start()
 
     def show_sync(self, image=None):
@@ -138,14 +139,14 @@ class Debugger:
             return
         logger.info('OAS Track Debugger save images to train model')
         for image_name, image in self.images_cache.items():
-            cv2.imwrite(str(self.hya_save_folder / image_name), image)
+            cv2.imwrite(str(self.hya_save_folder / f'{image_name}.png'), image)
         self.images_cache.clear()
 
 
 
 
 def test_debugger():
-    debugger = Debugger()
+    debugger = Debugger(info_enable=False, continuous_learning=True)
     debugger.show_start()
     folder_image = Path('./tasks/Hyakkiyakou/temp/20240621T221325')
     for index, file in enumerate(folder_image.iterdir()):
@@ -155,12 +156,16 @@ def test_debugger():
         image = cv2.imdecode(fromfile(str(file), dtype=uint8), -1)
         image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
         debugger.show_sync(image)
-        time.sleep(0.2)
+        tracks = [[1, 190, 0.9, 0, 0, 0, 0, 0]]
+        debugger.deal_learning(image=image, tracks=tracks)
+        time.sleep(0.5)
+        if index >= 19:
+            break
     debugger.show_stop()
+    debugger.save_images()
 
 
 if __name__ == '__main__':
     # test_track()
-    sp = datetime.now().strftime('%Y%m%d')
-    print(sp)
+    test_debugger()
     pass

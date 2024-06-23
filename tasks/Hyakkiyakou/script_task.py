@@ -195,6 +195,7 @@ class ScriptTask(GameUi, HyaSlave):
         if self._config.debug_config.hya_show:
             self.debugger.show_stop()
         self.ui_click(self.I_HEND, self.I_HACCESS)
+        self.debugger.save_images()
         del self.debugger
 
     def do_action(self, action: list, state):
