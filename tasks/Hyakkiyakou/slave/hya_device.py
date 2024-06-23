@@ -1,5 +1,6 @@
 import timeit
 
+from module.base.timer import Timer
 from module.logger import logger
 from module.base.utils import point2str
 from tasks.base_task import BaseTask
@@ -13,7 +14,11 @@ class HyaDevice(BaseTask):
     3. 考虑JIT加速
     我宣布世界上最好的 Linux 系统是 Windows
     """
+    hya_screenshot_interval = Timer(0.2)  # 300ms
+
     def fast_screenshot(self):
+        self.hya_screenshot_interval.wait()
+        self.hya_screenshot_interval.reset()
         self.device.image = self.device.screenshot_window_background()
         return self.device.image
 
@@ -23,7 +28,13 @@ class HyaDevice(BaseTask):
         )
         self.device.click_window_message(x=x, y=y, fast=True)
 
+    def set_fast_screenshot_interval(self, interval: float):
+        """
 
+        @param interval: ms
+        @return:
+        """
+        self.hya_screenshot_interval = Timer(interval / 1000.)
 
 
 

@@ -13,6 +13,7 @@ from oashya.labels import CLASSINDEX as CI
 from oashya.labels import id2label, id2name
 from module.logger import logger
 from tasks.Hyakkiyakou.agent.focus import Focus
+from tasks.Hyakkiyakou.debugger import Debugger
 
 
 def generate_gaussian_patch(size=(300, 300), mean=0, std_dev=60):
@@ -26,6 +27,8 @@ def generate_gaussian_patch(size=(300, 300), mean=0, std_dev=60):
 def embed_patch_in_canvas(canvas, patch, position=(0, 0), patch_size=(300, 300)):
     canvas_height, canvas_width = 720, 1280
     patch_height, patch_width = patch_size
+    patch_height = max(0, min(patch_height, canvas_height))
+    patch_width = max(0, min(patch_width, canvas_width))
 
     x1 = position[0] - patch_width // 2
     y1 = position[1] - patch_height // 2
@@ -93,7 +96,9 @@ class Agent:
                 case _ if CI.MIN_SR <= _class <= CI.MAX_SR: weight = weights[2]
                 case _ if CI.MIN_SSR <= _class <= CI.MAX_SSR: weight = 1.5 * weights[1]
                 case _ if CI.MIN_SP <= _class <= CI.MAX_SP: weight = 1.5 * weights[0]
-                case CI.BUFF_005: weight = -1.  # freeze
+                case CI.BUFF_005:  # freeze
+                    weight = -1.
+                    _cy += 100
                 case _: continue
             if weight == 0.:
                 continue
@@ -113,7 +118,7 @@ class Agent:
                 max_variance = variance
         return Focus(inputs=tracks[max_index])
 
-    def decision(self, tracks: list[tuple], state: list):
+    def decision(self, tracks: list[tuple], state: list) -> list:
         not_decision = [-1, -1, False, -1]
         if not tracks:
             return not_decision
@@ -147,5 +152,6 @@ class Agent:
         elif self.focus == focus:
             self.focus.update(focus)
             self.focus.set_omega(omega)
-        # self.focus.show()
+        if Debugger.info_enable:
+            self.focus.show()
 

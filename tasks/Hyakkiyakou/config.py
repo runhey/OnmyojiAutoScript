@@ -48,12 +48,14 @@ class DebugConfig(ConfigBase):
     hya_info: bool = Field(default=False, description='hya_info_help')
     # 保存图片，拿去回喂给模型
     continuous_learning: bool = Field(default=False, description='continuous_learning_help')
+    # 单独的设定截屏间隔, 单位ms
+    screenshot_interval: float = Field(default=300, description='screenshot_interval_help')
 
 
 class Hyakkiyakou(ConfigBase):
     scheduler: Scheduler = Field(default_factory=Scheduler)
     hyakkiyakou_config: HyakkiyakouConfig = Field(default_factory=HyakkiyakouConfig)
-    hyakkiyakou__models: HyakkiyakouModels = Field(default_factory=HyakkiyakouModels)
+    hyakkiyakou_models: HyakkiyakouModels = Field(default_factory=HyakkiyakouModels)
     debug_config: DebugConfig = Field(default_factory=DebugConfig)
 
 

@@ -44,6 +44,10 @@ class HyakkiyakouAssets:
 	I_HEND = RuleImage(roi_front=(81,164,86,299), roi_back=(81,164,86,299), threshold=0.8, method="Template matching", file="./tasks/Hyakkiyakou/hya/hya_hend.png")
 	# 冰冻 
 	I_HFREEZE = RuleImage(roi_front=(1092,665,187,54), roi_back=(1092,665,187,54), threshold=0.8, method="Template matching", file="./tasks/Hyakkiyakou/hya/hya_hfreeze.png")
+	# description 
+	I_HTITLE = RuleImage(roi_front=(578,21,134,48), roi_back=(578,21,134,48), threshold=0.8, method="Template matching", file="./tasks/Hyakkiyakou/hya/hya_htitle.png")
+	# description 
+	I_HCLOSE_RED = RuleImage(roi_front=(1056,177,54,54), roi_back=(1056,177,54,54), threshold=0.8, method="Template matching", file="./tasks/Hyakkiyakou/hya/hya_hclose_red.png")
 
 
 	# Image Rule Assets
@@ -138,6 +142,11 @@ class HyakkiyakouAssets:
 	I_FRIEND_SAME_2 = RuleImage(roi_front=(377,126,100,60), roi_back=(377,126,100,60), threshold=0.8, method="Template matching", file="./tasks/Hyakkiyakou/hya/hya_friend_same_2.png")
 	# description 
 	I_FRIEND_REMOTE_2 = RuleImage(roi_front=(504,127,100,56), roi_back=(504,127,100,56), threshold=0.8, method="Template matching", file="./tasks/Hyakkiyakou/hya/hya_friend_remote_2.png")
+
+
+	# Ocr Rule Assets
+	# 最坏的情况下来判断豆子的数量 
+	O_BEAN_NUMBER = RuleOcr(roi=(119,645,45,29), area=(119,645,45,29), mode="Digit", method="Default", keyword="", name="bean_number")
 
 
 	# Swipe Rule Assets

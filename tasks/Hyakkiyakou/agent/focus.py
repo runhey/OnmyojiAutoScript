@@ -70,13 +70,19 @@ velocity: {self._v}"""
     def decision(self, tracks, strategy, state) -> list:
 
         buff_omega, buff_cx, buff_cy, buff_v, buff_class = self.omega_buff(tracks, strategy['invite_friend'])
-        self._omega_buff = buff_omega
-        buffed: bool = True if self._omega_buff > self._omega else False
-        omega = max(self._omega, self._omega_buff)
+        if self._omega > buff_omega:
+            buffed = False
+            target_x = self._cx + self._v * 100
+            target_y = self._cy - 40
+        else:
+            buffed = True
+            target_x = buff_cx + buff_v * 100
+            target_y = buff_cy - 40  # top left corner
+
         _r = self.r(vector=state, omega=self._omega, omega_buff=self._omega_buff)
         throw = True if _r > 0 else False
         # x, y, throw, number
-        return [0, 0, throw, 10]
+        return [target_x, target_y, throw, 10]
 
     def omega_buff(self, tracks, invite_friend: bool) -> float:
         max_omega = 0.
@@ -110,6 +116,6 @@ velocity: {self._v}"""
         upsilon = (vector[1] / 250 - vector[2] / 35)
         upsilon = 100 * (upsilon**2 if upsilon > 0 else - upsilon**2)
         result = _omega + tau + upsilon - 0.6
-        print(f"total: {result:.4f} | {_omega:.4f} | {tau:.4f} | {upsilon:.4f} | ")
+        logger.info(f"total: {result:.4f} | {_omega:.4f} | {tau:.4f} | {upsilon:.4f}")
         return result
 

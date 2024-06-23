@@ -172,6 +172,11 @@ class HyaSlave(HyaDevice, HyaColor, HyakkiyakouAssets):
                     unit_img.roi_back = self.UNIT0
                     if self.appear(unit_img):
                         return max(0, i)
+        # 最坏的情况下用ocr
+        num = self.O_BEAN_NUMBER.ocr(self.device.image)
+        if isinstance(num, int) and num >= 0:
+            return num
+
         logger.warning(f'Cannot predict bean, current: {current}')
         return current
 
