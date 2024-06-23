@@ -23,11 +23,11 @@ class HyakkiyakouConfig(ConfigBase):
     hya_priorities: str = Field(default='', description='hya_priorities_help')
     hya_sp: float = Field(default=1., description='hya_sp_help')
     hya_ssr: float = Field(default=1., description='hya_ssr_help')
-    hya_sr: float = Field(default=0.5, description='hya_sr_help')
-    hya_r: float = Field(default=0, description='hya_r_help')
-    hya_n: float = Field(default=0, description='hya_n_help')
+    hya_sr: float = Field(default=0.7, description='hya_sr_help')
+    hya_r: float = Field(default=0.3, description='hya_r_help')
+    hya_n: float = Field(default=0.0, description='hya_n_help')
     # 呱太和N卡不是一个东西
-    hya_g: float = Field(default=0, description='hya_g_help')
+    hya_g: float = Field(default=0.0, description='hya_g_help')
 
 
 class HyakkiyakouModels(ConfigBase):
@@ -49,7 +49,7 @@ class DebugConfig(ConfigBase):
     # 保存图片，拿去回喂给模型
     continuous_learning: bool = Field(default=False, description='continuous_learning_help')
     # 单独的设定截屏间隔, 单位ms
-    screenshot_interval: float = Field(default=300, description='screenshot_interval_help')
+    hya_interval: float = Field(default=300, description='hya_interval_help')
 
 
 class Hyakkiyakou(ConfigBase):

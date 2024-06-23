@@ -5,10 +5,11 @@ import time
 import numpy as np
 
 from datetime import datetime
+from cached_property import cached_property
 from pathlib import Path
 from numpy import uint8, fromfile
 from threading import Event, Lock, Thread
-from oashya.labels import id2label, CLASSIFY
+from oashya.labels import id2label, CLASSIFY, CLASSINDEX
 from oashya.utils import draw_tracks
 from oashya.tracker import Tracker
 
@@ -73,9 +74,28 @@ class Debugger:
     sync_thread = Thread(target=show_track, daemon=True, name='OAS Track Debugger',
                          args=(sync_image, sync_lock, stop_event))
     # sync_event = Event()  # reserved for future use
+    # -------------------------------------------------------------------------
 
-    def __init__(self, info_enable: bool = False):
+    def __init__(self, info_enable: bool = False, continuous_learning: bool = False):
         Debugger.info_enable = info_enable
+        self.images_cache: dict = {}
+        self.continuous_learning = continuous_learning
+        if continuous_learning:
+            logger.info('Continuous Learning Mode Enabled')
+            save_time = datetime.now().strftime('%Y%m%dT%H')
+            self.hya_save_folder: Path = Path(f'./log/hya/{save_time}')
+            self.hya_save_folder.mkdir(parents=True, exist_ok=True)
+
+    @cached_property
+    def save_class(self) -> list[int]:
+        """
+        需要保存的类别
+        @return:
+        """
+        sp = [i for i in range(CLASSINDEX.MIN_SP, CLASSINDEX.MAX_SP + 1)]
+        ssr = [i for i in range(CLASSINDEX.MIN_SSR, CLASSINDEX.MAX_SSR + 1)]
+        g = [i for i in range(CLASSINDEX.MIN_G, CLASSINDEX.MAX_G + 1)]
+        return sp + ssr + g
 
     def show(self, results):
         image = draw_tracks(self.device.image, results)
@@ -98,6 +118,31 @@ class Debugger:
         self.stop_event.set()
         self.sync_thread.join()
 
+    def check_class(self, _class: int) -> bool:
+        return _class in self.save_class
+
+    def deal_learning(self, image, tracks: list):
+        save_flag: bool = False
+        for _id, _class, _conf, _cx, _cy, _w, _h, _v in tracks:
+            if self.check_class(_class):
+                save_flag = True
+                break
+        if not save_flag:
+            return
+        time_now_image_name = f'hya_{int(time.time() * 1000)}'
+        self.images_cache[time_now_image_name] = image
+
+    def save_images(self):
+        if not self.images_cache:
+            self.images_cache: dict = {}
+            return
+        logger.info('OAS Track Debugger save images to train model')
+        for image_name, image in self.images_cache.items():
+            cv2.imwrite(str(self.hya_save_folder / image_name), image)
+        self.images_cache.clear()
+
+
+
 
 def test_debugger():
     debugger = Debugger()
@@ -116,4 +161,6 @@ def test_debugger():
 
 if __name__ == '__main__':
     # test_track()
+    sp = datetime.now().strftime('%Y%m%d')
+    print(sp)
     pass

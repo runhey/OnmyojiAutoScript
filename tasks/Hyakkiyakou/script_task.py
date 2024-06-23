@@ -94,11 +94,11 @@ class ScriptTask(GameUi, HyaSlave):
     @cached_property
     def debugger(self) -> Debugger:
         debug_config = self._config.debug_config
-        fast_screenshot_interval = debug_config.screenshot_interval
-        if fast_screenshot_interval <= 100 or fast_screenshot_interval >= 1000:
+        hya_interval = debug_config.hya_interval
+        if hya_interval <= 100 or hya_interval >= 1000:
             raise RequestHumanTakeover('screenshot_interval must be between 1000 and 10000')
-        self.set_fast_screenshot_interval(fast_screenshot_interval)
-        return Debugger(info_enable=debug_config.hya_info)
+        self.set_fast_screenshot_interval(hya_interval)
+        return Debugger(info_enable=debug_config.hya_info, continuous_learning=debug_config.continuous_learning)
 
     def run(self):
         hya_count: int = 0
@@ -172,15 +172,21 @@ class ScriptTask(GameUi, HyaSlave):
                 tracks = self.tracker(image=self.device.image, response=last_action)
                 last_action = self.agent.decision(tracks=tracks, state=slave_state)
                 self.do_action(last_action, state=slave_state)
+            else:
+                # TODO freeze state
+                tracks = []
             # debug
             if self._config.debug_config.hya_show:
-                draw_image = draw_tracks(self.device.image, tracks)
+                draw_image = draw_tracks(self.device.image, tracks=tracks)
                 self.debugger.show_sync(image=draw_image)
+            if self._config.debug_config.continuous_learning:
+                self.debugger.deal_learning(image=self.device.image, tracks=tracks)
 
         logger.info('Hyakkiyakou End')
         if self._config.debug_config.hya_show:
             self.debugger.show_stop()
         self.ui_click(self.I_HEND, self.I_HACCESS)
+        del self.debugger
 
     def do_action(self, action: list, state):
         x, y, throw, bean = action

@@ -27,19 +27,23 @@ def generate_gaussian_patch(size=(300, 300), mean=0, std_dev=60):
 def embed_patch_in_canvas(canvas, patch, position=(0, 0), patch_size=(300, 300)):
     canvas_height, canvas_width = 720, 1280
     patch_height, patch_width = patch_size
-    patch_height = max(0, min(patch_height, canvas_height))
-    patch_width = max(0, min(patch_width, canvas_width))
+    pos_x, pos_y = position
+    pos_x = max(0, min(pos_x, canvas_width))
+    pos_y = max(0, min(pos_y, canvas_width))
 
-    x1 = position[0] - patch_width // 2
-    y1 = position[1] - patch_height // 2
-    x2 = position[0] + patch_width // 2
-    y2 = position[1] + patch_height // 2
+    x1 = pos_x - patch_width // 2
+    y1 = pos_y - patch_height // 2
+    x2 = pos_x + patch_width // 2
+    y2 = pos_y + patch_height // 2
     x1 = max(0, x1)
     y1 = max(0, y1)
     x2 = min(canvas_width, x2)
     y2 = min(canvas_height, y2)
     embed_w = x2 - x1
     embed_h = y2 - y1
+    if embed_w <= 0 or embed_h <= 0:
+        logger.warning(f'Cannot embed patch in canvas: ({position})')
+        return canvas
     if embed_w < patch_width or embed_h < patch_height:
         _patch = patch[:embed_h, :embed_w]
     else:
