@@ -76,15 +76,24 @@ class Debugger:
     # sync_event = Event()  # reserved for future use
     # -------------------------------------------------------------------------
 
-    def __init__(self, info_enable: bool = False, continuous_learning: bool = False):
+    def __init__(self, 
+                 info_enable: bool = False, 
+                 continuous_learning: bool = False,
+                 hya_save_result: bool = False):
         Debugger.info_enable = info_enable
         self.images_cache: dict = {}
         self.continuous_learning = continuous_learning
+        self.hya_save_result = hya_save_result
         if continuous_learning:
             logger.info('Continuous Learning Mode Enabled')
             save_time = datetime.now().strftime('%Y%m%dT%H')
             self.hya_save_folder: Path = Path(f'./log/hya/{save_time}')
             self.hya_save_folder.mkdir(parents=True, exist_ok=True)
+        if hya_save_result:
+            logger.info('Hyakkiyakou Save Result Mode Enabled')
+            save_time = datetime.now().strftime('%Y%m%dT%H')
+            self.hya_save_result_folder: Path = Path(f'./log/hyakkiyakou/{save_time}')
+            self.hya_save_result_folder.mkdir(parents=True, exist_ok=True)
 
     @cached_property
     def save_class(self) -> list[int]:
@@ -139,10 +148,17 @@ class Debugger:
             return
         logger.info('OAS Track Debugger save images to train model')
         for image_name, image in self.images_cache.items():
+            image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
             cv2.imwrite(str(self.hya_save_folder / f'{image_name}.png'), image)
         self.images_cache.clear()
 
 
+    def save_result(self, image):
+        if not self.hya_save_result:
+            return
+        _now_name = f'hya_{int(time.time() * 1000)}.png'
+        image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+        cv2.imwrite(str(self.hya_save_result_folder / _now_name), image)
 
 
 def test_debugger():

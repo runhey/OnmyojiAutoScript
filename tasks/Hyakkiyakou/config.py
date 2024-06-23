@@ -48,6 +48,8 @@ class DebugConfig(ConfigBase):
     hya_info: bool = Field(default=False, description='hya_info_help')
     # 保存图片，拿去回喂给模型
     continuous_learning: bool = Field(default=False, description='continuous_learning_help')
+    # 保存每一张票的结果
+    hya_save_result: bool = Field(default=False, description='hya_save_result_help')
     # 单独的设定截屏间隔, 单位ms
     hya_interval: float = Field(default=300, description='hya_interval_help')
 

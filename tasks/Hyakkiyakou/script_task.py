@@ -85,13 +85,16 @@ class ScriptTask(GameUi, HyaSlave):
         g = hya_config.hya_g
         weights: list = [sp, ssr, sr, r, n, g]
         str_priorities: str = hya_config.hya_priorities
-        str_priorities = str_priorities.replace(' ', '').replace('，', ',')
-        try:
-            priorities = [label2id(s) for s in str_priorities.split(',')]
-        except Exception as e:
-            logger.error(f'Priority error: {str_priorities}')
-            logger.error(e)
-            raise RequestHumanTakeover
+        if str_priorities == '':
+            priorities = []
+        else:
+            str_priorities = str_priorities.replace(' ', '').replace('，', ',')
+            try:
+                priorities = [label2id(s) for s in str_priorities.split(',')]
+            except Exception as e:
+                logger.error(f'Priority error: {str_priorities}')
+                logger.error(e)
+                raise RequestHumanTakeover
         strategy: dict = {
             'weights': weights,
             'priorities': priorities,
@@ -104,10 +107,13 @@ class ScriptTask(GameUi, HyaSlave):
     def debugger(self) -> Debugger:
         debug_config = self._config.debug_config
         hya_interval = debug_config.hya_interval
+        hya_save_result = debug_config.hya_save_result
         if hya_interval <= 100 or hya_interval >= 1000:
             raise RequestHumanTakeover('screenshot_interval must be between 1000 and 10000')
         self.set_fast_screenshot_interval(hya_interval)
-        return Debugger(info_enable=debug_config.hya_info, continuous_learning=debug_config.continuous_learning)
+        return Debugger(info_enable=debug_config.hya_info, 
+                        continuous_learning=debug_config.continuous_learning,
+                        hya_save_result=hya_save_result)
 
     def run(self):
         hya_count: int = 0
@@ -194,6 +200,10 @@ class ScriptTask(GameUi, HyaSlave):
         logger.info('Hyakkiyakou End')
         if self._config.debug_config.hya_show:
             self.debugger.show_stop()
+        if self._config.debug_config.hya_save_result:
+            # 走个动画
+            time.sleep(0.9)
+            self.debugger.save_result(self.device.image)
         self.ui_click(self.I_HEND, self.I_HACCESS)
         self.debugger.save_images()
         del self.debugger
