@@ -101,6 +101,18 @@ class BaseTask(GlobalGameAssets, CostumeBase):
                         continue
                     if not self.appear(self.I_G_ACCEPT):
                         break
+            # 如果是接受勾协和粮协
+            elif invite and self.config.global_game.emergency.friend_invitation == FriendInvitation.JADE_AND_FOOD:
+                logger.info(f"Accept jade and food invitation")
+                while 1:
+                    self.device.screenshot()
+                    if self.appear(self.I_G_JADE) or self.appear(self.I_G_CAT_FOOD) or self.appear(self.I_G_DOG_FOOD):
+                        if self.appear_then_click(self.I_G_ACCEPT, interval=1):
+                            continue
+                    elif self.appear_then_click(self.I_G_IGNORE, interval=1):
+                        continue
+                    if not self.appear(self.I_G_ACCEPT):
+                        break
             # 如果是全部忽略
             elif invite and self.config.global_game.emergency.friend_invitation == FriendInvitation.IGNORE:
                 logger.info(f"Ignore friend invitation")
