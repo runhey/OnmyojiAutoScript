@@ -124,8 +124,6 @@ class ScriptTask(GameUi, HyaSlave):
         self.ui_get_current_page()
         self.ui_goto(page_hyakkiyakou)
 
-        if self._config.hyakkiyakou_config.hya_invite_friend:
-            self.invite_friend(True)
 
         while 1:
             if hya_count >= self.limit_count:
@@ -134,7 +132,9 @@ class ScriptTask(GameUi, HyaSlave):
             if datetime.now() - self.start_time >= self.limit_time:
                 logger.info('Hyakkiyakou time limit out')
                 break
-
+                
+            if self._config.hyakkiyakou_config.hya_invite_friend:
+                self.invite_friend(True)
             self.one()
             hya_count += 1
 
