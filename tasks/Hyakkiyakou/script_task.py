@@ -11,6 +11,7 @@ from numpy import uint8, fromfile
 from random import choice
 from cached_property import cached_property
 # Use cmd to install: ./toolkit/python.exe -m pip install -i https://pypi.org/simple/ oashya --trusted-host pypi.org
+# update oashya:  ./toolkit/python.exe -m pip install
 from oashya.tracker import Tracker
 from oashya.labels import label2id
 from oashya.utils import draw_tracks
