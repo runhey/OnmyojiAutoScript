@@ -11,6 +11,7 @@ from numpy import uint8, fromfile
 from random import choice
 from cached_property import cached_property
 # Use cmd to install: ./toolkit/python.exe -m pip install -i https://pypi.org/simple/ oashya --trusted-host pypi.org
+# update oashya:  ./toolkit/python.exe -m pip install
 from oashya.tracker import Tracker
 from oashya.labels import label2id
 from oashya.utils import draw_tracks
@@ -150,6 +151,10 @@ class ScriptTask(GameUi, HyaSlave):
         raise TaskEnd
 
     def one(self):
+        # 初始豆子数量， 初始式神数量， 一次砸豆子的数量， 第一个格子， 第二个格子， 第三个格子， 第四个格子
+        slave_state_default: tuple = [250, 35, 10, -1, -1, -1, -1]
+        # 每次运行时重置为初始值
+        self.slave_state = slave_state_default
         if not self.appear(self.I_HACCESS):
             logger.warning('Page Error')
         self.ui_click(self.I_HACCESS, self.I_HSTART, interval=2)
@@ -183,10 +188,10 @@ class ScriptTask(GameUi, HyaSlave):
                 time.sleep(0.5)
             if not self.appear(self.I_HFREEZE):
                 # --------------------------------------------------------
-                slave_state = self.update_state()
+                self.slave_state = self.update_state()
                 tracks = self.tracker(image=self.device.image, response=last_action)
-                last_action = self.agent.decision(tracks=tracks, state=slave_state)
-                self.do_action(last_action, state=slave_state)
+                last_action = self.agent.decision(tracks=tracks, state=self.slave_state)
+                self.do_action(last_action, state=self.slave_state)
             else:
                 # TODO freeze state
                 tracks = []
