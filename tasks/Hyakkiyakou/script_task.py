@@ -11,7 +11,7 @@ from numpy import uint8, fromfile
 from random import choice
 from cached_property import cached_property
 # Use cmd to install: ./toolkit/python.exe -m pip install -i https://pypi.org/simple/ oashya --trusted-host pypi.org
-# update oashya:  ./toolkit/python.exe -m pip install
+# update oashya:  ./toolkit/python.exe -m pip install --upgrade oashya
 from oashya.tracker import Tracker
 from oashya.labels import label2id
 from oashya.utils import draw_tracks
@@ -67,11 +67,13 @@ class ScriptTask(GameUi, HyaSlave):
         # 这个坑后面在补
         if inf_en == 'tensorrt' or precision == 'int8':
             raise RequestHumanTakeover('Only support onnxruntime')
+        debug_info: bool = self._config.debug_config.hya_info
         args = {
             'conf_threshold': conf,
             'iou_threshold': nms,
             'precision': precision,
             'inference_engine': inf_en,
+            'debug': debug_info,
         }
         return Tracker(args=args)
 
@@ -200,6 +202,8 @@ class ScriptTask(GameUi, HyaSlave):
                 self.debugger.show_sync(image=draw_image)
             if self._config.debug_config.continuous_learning:
                 self.debugger.deal_learning(image=self.device.image, tracks=tracks)
+            if self._config.debug_config.hya_info:
+                self.debugger.show_info(tracker=self.tracker, f=self.agent.focus)
 
         logger.info('Hyakkiyakou End')
         if self._config.debug_config.hya_show:
@@ -211,6 +215,8 @@ class ScriptTask(GameUi, HyaSlave):
         self.ui_click(self.I_HEND, self.I_HACCESS)
         self.debugger.save_images()
         del self.debugger
+        # you maybe update oashya
+        self.tracker.clear_tracks()
 
     def do_action(self, action: list, state):
         x, y, throw, bean = action
@@ -220,23 +226,6 @@ class ScriptTask(GameUi, HyaSlave):
             return
         self.fast_click(x=x, y=y)
 
-
-# def test_opencv():
-#     import timeit
-#     from module.config.config import Config
-#     from module.device.device import Device
-#
-#     c = Config('oas1')
-#     d = Device(c)
-#
-#     t = ScriptTask(c, d)
-#     t.fast_screenshot()
-#     def sh():
-#         t.device.image = cv2.cvtColor(t.device.image, cv2.COLOR_BGR2RGB)
-#     execution_time = timeit.timeit(sh, number=100)
-#     print(f"执行总的时间: {execution_time * 1000} ms")
-#     cv2.imshow('test', t.device.image)
-#     cv2.waitKey(0)
 
 if __name__ == '__main__':
     from module.config.config import Config

@@ -8,13 +8,15 @@ from datetime import datetime
 from cached_property import cached_property
 from pathlib import Path
 from numpy import uint8, fromfile
+from rich.table import Table
 from threading import Event, Lock, Thread
-from oashya.labels import id2label, CLASSIFY, CLASSINDEX
+from oashya.labels import id2label, CLASSIFY, CLASSINDEX, id2name
 from oashya.utils import draw_tracks
 from oashya.tracker import Tracker
 
 from tasks.base_task import BaseTask
 from module.logger import logger
+from tasks.Hyakkiyakou.agent.focus import Focus
 
 
 def test_track(show: bool = False):
@@ -168,6 +170,25 @@ class Debugger:
         _now_name = f'hya_{int(time.time() * 1000)}.png'
         image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
         cv2.imwrite(str(self.hya_save_result_folder / _now_name), image)
+
+    @classmethod
+    def show_info(cls, tracker, f: Focus):
+        table = Table(show_lines=True)
+        table.add_column('Property', header_style="bright_cyan", style="cyan", no_wrap=True)
+        table.add_column("Value", style="green")
+        table.add_column('Property', header_style="bright_cyan", style="cyan", no_wrap=True)
+        table.add_column("Value", style="green")
+        if f is not None:
+            try:
+                table.add_row('id', str(f._id), 'conf', f'{f._conf:.2f}')
+                table.add_row('class', str(f._class), 'xywh', f'({f._cx}, {f._cy}, {f._w}, {f._h})')
+                table.add_row('label', id2label(f._class), 'velocity', f'{f._v:.2f}')
+                table.add_row('name', f'{id2name(f._class)}', 'omega', str(f._omega))
+            except Exception as e:
+                pass
+        table.add_row('detect cost', f'{(tracker.detect_time.total_seconds() * 1000):.2f}ms',
+                    'track cost', f'{(tracker.track_time.total_seconds() * 1000):.2f}ms')
+        logger.print(table, justify='center')
 
 
 def test_debugger():
