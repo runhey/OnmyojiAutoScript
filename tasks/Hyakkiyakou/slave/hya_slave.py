@@ -46,7 +46,7 @@ class HyaSlave(HyaDevice, HyaColor, HyakkiyakouAssets):
     BUFF_ROI4: list[int] = [1100, 1, 140, 50]
 
     # 剩余豆子数量， 剩余式神数量， 一次砸豆子的数量， 第一个格子， 第二个格子， 第三个格子， 第四个格子
-    slave_state: tuple = [250, 35, 10,
+    slave_state: tuple = [250, 36, 10,
                           HyaBuff.BUFF_STATE0, HyaBuff.BUFF_STATE0, HyaBuff.BUFF_STATE0, HyaBuff.BUFF_STATE0]
 
     @cached_property
@@ -244,6 +244,9 @@ class HyaSlave(HyaDevice, HyaColor, HyakkiyakouAssets):
         ]
         return self.slave_state
 
+    def reset_state(self):
+        self.slave_state = [250, 36, 10,
+                          HyaBuff.BUFF_STATE0, HyaBuff.BUFF_STATE0, HyaBuff.BUFF_STATE0, HyaBuff.BUFF_STATE0]
 def covert_rgb():
     images_folders: Path = Path(r'E:\Project\OnmyojiAutoScript\tasks\Hyakkiyakou\temp\20240614T214216')
     save_folders = images_folders.parent / 'save14'

@@ -134,8 +134,7 @@ class ScriptTask(GameUi, HyaSlave):
                 logger.info('Hyakkiyakou time limit out')
                 break
                 
-            if self._config.hyakkiyakou_config.hya_invite_friend:
-                self.invite_friend(True)
+
             self.one()
             hya_count += 1
 
@@ -151,12 +150,12 @@ class ScriptTask(GameUi, HyaSlave):
         raise TaskEnd
 
     def one(self):
-        # 初始豆子数量， 初始式神数量， 一次砸豆子的数量， 第一个格子， 第二个格子， 第三个格子， 第四个格子
-        slave_state_default: tuple = [250, 35, 10, -1, -1, -1, -1]
-        # 每次运行时重置为初始值
-        self.slave_state = slave_state_default
+        self.reset_state()
         if not self.appear(self.I_HACCESS):
             logger.warning('Page Error')
+        if self._config.hyakkiyakou_config.hya_invite_friend:
+            self.invite_friend(True)
+        # start
         self.ui_click(self.I_HACCESS, self.I_HSTART, interval=2)
         self.wait_until_appear(self.I_HTITLE)
         # 随机选一个
