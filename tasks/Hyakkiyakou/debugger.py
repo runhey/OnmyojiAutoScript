@@ -54,6 +54,7 @@ def show_track(sync_image, sync_lock, stop_event):
     while True:
         if stop_event.is_set():
             logger.info('OAS Track Debugger stopped')
+            cv2.destroyAllWindows()
             break
         sync_lock.acquire()
         if Debugger.sync_image is None:
@@ -80,6 +81,7 @@ class Debugger:
                  info_enable: bool = False, 
                  continuous_learning: bool = False,
                  hya_save_result: bool = False):
+        self._reset_thread_env()
         Debugger.info_enable = info_enable
         self.images_cache: dict = {}
         self.continuous_learning = continuous_learning
@@ -105,6 +107,14 @@ class Debugger:
         ssr = [i for i in range(CLASSINDEX.MIN_SSR, CLASSINDEX.MAX_SSR + 1)]
         g = [i for i in range(CLASSINDEX.MIN_G, CLASSINDEX.MAX_G + 1)]
         return sp + ssr + g
+
+    def _reset_thread_env(self):
+        logger.info('Reset Debugger Thread Environment')
+        Debugger.sync_image = None
+        self.sync_lock = Lock()
+        self.stop_event = Event()
+        self.sync_thread = Thread(target=show_track, daemon=True, name='OAS Track Debugger',
+                                  args=(Debugger.sync_image, self.sync_lock, self.stop_event))
 
     def show(self, results):
         image = draw_tracks(self.device.image, results)
@@ -151,7 +161,6 @@ class Debugger:
             image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
             cv2.imwrite(str(self.hya_save_folder / f'{image_name}.png'), image)
         self.images_cache.clear()
-
 
     def save_result(self, image):
         if not self.hya_save_result:

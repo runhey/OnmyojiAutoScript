@@ -206,7 +206,7 @@ class ScriptTask(GameUi, HyaSlave):
             self.debugger.show_stop()
         if self._config.debug_config.hya_save_result:
             # 走个动画
-            time.sleep(0.9)
+            time.sleep(1.5)
             self.debugger.save_result(self.device.image)
         self.ui_click(self.I_HEND, self.I_HACCESS)
         self.debugger.save_images()
