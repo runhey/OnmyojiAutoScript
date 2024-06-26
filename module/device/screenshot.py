@@ -42,7 +42,8 @@ class Screenshot(Adb, DroidCast, Scrcpy, Window):
             'DroidCast': self.screenshot_droidcast,
             'DroidCast_raw': self.screenshot_droidcast_raw,
             'scrcpy': self.screenshot_scrcpy,
-            'window_background': self.screenshot_window_background
+            'window_background': self.screenshot_window_background,
+            'nemu_ipc': self.nemu_ipc
         }
 
     def screenshot(self):
@@ -158,6 +159,9 @@ class Screenshot(Adb, DroidCast, Scrcpy, Window):
             if interval != origin:
                 logger.warning(f'Optimization.ScreenshotInterval {origin} is revised to {interval}')
                 self.config.script.optimization.screenshot_interval = interval
+            # Allow nemu_ipc to have a lower default
+            if self.config.Emulator_ScreenshotMethod == 'nemu_ipc':
+                interval = limit_in(origin, 0.1, 0.2)
         elif interval == 'combat':
             origin = self.config.script.optimization.combat_screenshot_interval
             interval = limit_in(origin, 0.3, 1.0)
