@@ -8,13 +8,15 @@ from datetime import datetime
 from cached_property import cached_property
 from pathlib import Path
 from numpy import uint8, fromfile
+from rich.table import Table
 from threading import Event, Lock, Thread
-from oashya.labels import id2label, CLASSIFY, CLASSINDEX
+from oashya.labels import id2label, CLASSIFY, CLASSINDEX, id2name
 from oashya.utils import draw_tracks
 from oashya.tracker import Tracker
 
 from tasks.base_task import BaseTask
 from module.logger import logger
+from tasks.Hyakkiyakou.agent.focus import Focus
 
 
 def test_track(show: bool = False):
@@ -54,6 +56,7 @@ def show_track(sync_image, sync_lock, stop_event):
     while True:
         if stop_event.is_set():
             logger.info('OAS Track Debugger stopped')
+            cv2.destroyAllWindows()
             break
         sync_lock.acquire()
         if Debugger.sync_image is None:
@@ -80,6 +83,7 @@ class Debugger:
                  info_enable: bool = False, 
                  continuous_learning: bool = False,
                  hya_save_result: bool = False):
+        self._reset_thread_env()
         Debugger.info_enable = info_enable
         self.images_cache: dict = {}
         self.continuous_learning = continuous_learning
@@ -105,6 +109,14 @@ class Debugger:
         ssr = [i for i in range(CLASSINDEX.MIN_SSR, CLASSINDEX.MAX_SSR + 1)]
         g = [i for i in range(CLASSINDEX.MIN_G, CLASSINDEX.MAX_G + 1)]
         return sp + ssr + g
+
+    def _reset_thread_env(self):
+        logger.info('Reset Debugger Thread Environment')
+        Debugger.sync_image = None
+        self.sync_lock = Lock()
+        self.stop_event = Event()
+        self.sync_thread = Thread(target=show_track, daemon=True, name='OAS Track Debugger',
+                                  args=(Debugger.sync_image, self.sync_lock, self.stop_event))
 
     def show(self, results):
         image = draw_tracks(self.device.image, results)
@@ -152,13 +164,31 @@ class Debugger:
             cv2.imwrite(str(self.hya_save_folder / f'{image_name}.png'), image)
         self.images_cache.clear()
 
-
     def save_result(self, image):
         if not self.hya_save_result:
             return
         _now_name = f'hya_{int(time.time() * 1000)}.png'
         image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
         cv2.imwrite(str(self.hya_save_result_folder / _now_name), image)
+
+    @classmethod
+    def show_info(cls, tracker, f: Focus):
+        table = Table(show_lines=True)
+        table.add_column('Property', header_style="bright_cyan", style="cyan", no_wrap=True)
+        table.add_column("Value", style="green")
+        table.add_column('Property', header_style="bright_cyan", style="cyan", no_wrap=True)
+        table.add_column("Value", style="green")
+        if f is not None:
+            try:
+                table.add_row('id', str(f._id), 'conf', f'{f._conf:.2f}')
+                table.add_row('class', str(f._class), 'xywh', f'({f._cx}, {f._cy}, {f._w}, {f._h})')
+                table.add_row('label', id2label(f._class), 'velocity', f'{f._v:.2f}')
+                table.add_row('name', f'{id2name(f._class)}', 'omega', str(f._omega))
+            except Exception as e:
+                pass
+        table.add_row('detect cost', f'{(tracker.detect_time.total_seconds() * 1000):.2f}ms',
+                    'track cost', f'{(tracker.track_time.total_seconds() * 1000):.2f}ms')
+        logger.print(table, justify='center')
 
 
 def test_debugger():

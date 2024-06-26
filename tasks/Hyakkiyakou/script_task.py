@@ -11,7 +11,7 @@ from numpy import uint8, fromfile
 from random import choice
 from cached_property import cached_property
 # Use cmd to install: ./toolkit/python.exe -m pip install -i https://pypi.org/simple/ oashya --trusted-host pypi.org
-# update oashya:  ./toolkit/python.exe -m pip install
+# update oashya:  ./toolkit/python.exe -m pip install --upgrade oashya
 from oashya.tracker import Tracker
 from oashya.labels import label2id
 from oashya.utils import draw_tracks
@@ -67,11 +67,13 @@ class ScriptTask(GameUi, HyaSlave):
         # 这个坑后面在补
         if inf_en == 'tensorrt' or precision == 'int8':
             raise RequestHumanTakeover('Only support onnxruntime')
+        debug_info: bool = self._config.debug_config.hya_info
         args = {
             'conf_threshold': conf,
             'iou_threshold': nms,
             'precision': precision,
             'inference_engine': inf_en,
+            'debug': debug_info,
         }
         return Tracker(args=args)
 
@@ -134,8 +136,7 @@ class ScriptTask(GameUi, HyaSlave):
                 logger.info('Hyakkiyakou time limit out')
                 break
                 
-            if self._config.hyakkiyakou_config.hya_invite_friend:
-                self.invite_friend(True)
+
             self.one()
             hya_count += 1
 
@@ -151,12 +152,12 @@ class ScriptTask(GameUi, HyaSlave):
         raise TaskEnd
 
     def one(self):
-        # 初始豆子数量， 初始式神数量， 一次砸豆子的数量， 第一个格子， 第二个格子， 第三个格子， 第四个格子
-        slave_state_default: tuple = [250, 35, 10, -1, -1, -1, -1]
-        # 每次运行时重置为初始值
-        self.slave_state = slave_state_default
+        self.reset_state()
         if not self.appear(self.I_HACCESS):
             logger.warning('Page Error')
+        if self._config.hyakkiyakou_config.hya_invite_friend:
+            self.invite_friend(True)
+        # start
         self.ui_click(self.I_HACCESS, self.I_HSTART, interval=2)
         self.wait_until_appear(self.I_HTITLE)
         # 随机选一个
@@ -201,17 +202,21 @@ class ScriptTask(GameUi, HyaSlave):
                 self.debugger.show_sync(image=draw_image)
             if self._config.debug_config.continuous_learning:
                 self.debugger.deal_learning(image=self.device.image, tracks=tracks)
+            if self._config.debug_config.hya_info:
+                self.debugger.show_info(tracker=self.tracker, f=self.agent.focus)
 
         logger.info('Hyakkiyakou End')
         if self._config.debug_config.hya_show:
             self.debugger.show_stop()
         if self._config.debug_config.hya_save_result:
             # 走个动画
-            time.sleep(0.9)
+            time.sleep(1.5)
             self.debugger.save_result(self.device.image)
         self.ui_click(self.I_HEND, self.I_HACCESS)
         self.debugger.save_images()
         del self.debugger
+        # you maybe update oashya
+        self.tracker.clear_tracks()
 
     def do_action(self, action: list, state):
         x, y, throw, bean = action
@@ -221,23 +226,6 @@ class ScriptTask(GameUi, HyaSlave):
             return
         self.fast_click(x=x, y=y)
 
-
-# def test_opencv():
-#     import timeit
-#     from module.config.config import Config
-#     from module.device.device import Device
-#
-#     c = Config('oas1')
-#     d = Device(c)
-#
-#     t = ScriptTask(c, d)
-#     t.fast_screenshot()
-#     def sh():
-#         t.device.image = cv2.cvtColor(t.device.image, cv2.COLOR_BGR2RGB)
-#     execution_time = timeit.timeit(sh, number=100)
-#     print(f"执行总的时间: {execution_time * 1000} ms")
-#     cv2.imshow('test', t.device.image)
-#     cv2.waitKey(0)
 
 if __name__ == '__main__':
     from module.config.config import Config

@@ -112,10 +112,10 @@ velocity: {self._v}"""
     @classmethod
     def r(cls, vector: list, omega: float, omega_buff: float) -> float:
         _omega = max(omega, omega_buff)
-        tau = - 140 / (vector[0] - 100)
+        tau = - 140 / (max(101, vector[0]) - 100)
         upsilon = (vector[1] / 250 - vector[2] / 35)
         upsilon = 100 * (upsilon**2 if upsilon > 0 else - upsilon**2)
         result = _omega + tau + upsilon - 0.6
-        logger.info(f"total: {result:.4f} | {_omega:.4f} | {tau:.4f} | {upsilon:.4f}")
+        # print(f"total: {result:.4f} | {_omega:.4f} | {tau:.4f} | {upsilon:.4f}")
         return result
 

@@ -160,6 +160,6 @@ class Agent:
         elif self.focus == focus:
             self.focus.update(focus)
             self.focus.set_omega(omega)
-        if Debugger.info_enable:
-            self.focus.show()
+        # if Debugger.info_enable:
+        #     self.focus.show()
 

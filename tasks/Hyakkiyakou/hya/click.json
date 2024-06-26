@@ -1,20 +1,20 @@
 [
   {
     "itemName": "hselect_1",
-    "roiFront": "158,209,225,405",
-    "roiBack": "158,209,225,405",
+    "roiFront": "200,318,115,273",
+    "roiBack": "200,318,115,273",
     "description": "description"
   },
   {
     "itemName": "hselect_2",
-    "roiFront": "531,225,202,363",
-    "roiBack": "531,225,202,363",
+    "roiFront": "570,307,142,285",
+    "roiBack": "570,307,142,285",
     "description": "description"
   },
   {
     "itemName": "hselect_3",
-    "roiFront": "875,210,219,394",
-    "roiBack": "875,210,219,394",
+    "roiFront": "934,298,115,306",
+    "roiBack": "934,298,115,306",
     "description": "description"
   },
   {
