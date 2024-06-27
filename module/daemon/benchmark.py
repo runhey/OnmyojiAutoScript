@@ -216,7 +216,7 @@ class Benchmark(DaemonBase):
         Returns:
             str: The fastest screenshot method on current device.
         """
-        screenshot = ['ADB', 'ADB_nc', 'uiautomator2', 'DroidCast_raw', 'DroidCast', 'window_background']
+        screenshot = ['ADB', 'ADB_nc', 'uiautomator2', 'DroidCast_raw', 'DroidCast', 'window_background', 'nemu_ipc']
 
         def remove(*args):
             return [l for l in screenshot if l not in args]
@@ -242,6 +242,6 @@ if __name__ == '__main__':
     config = Config('oas1')
     device = Device(config)
     b = Benchmark(config=config, device=device)
-    # print(b.run_simple_screenshot_benchmark())
-    screenshot, click = b.get_test_methods()
-    b.benchmark(set(), click)
+    print(b.run_simple_screenshot_benchmark())
+    # screenshot, click = b.get_test_methods()
+    # b.benchmark(set(), click)
