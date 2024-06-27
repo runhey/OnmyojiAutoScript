@@ -3,20 +3,37 @@
 # github https://github.com/runhey
 import time
 
+from module.atom.image_grid import ImageGrid
+from module.exception import RequestHumanTakeover, TaskEnd
+from module.logger import logger
+from tasks.Component.GeneralBattle.general_battle import GeneralBattle
 from tasks.Component.SwitchSoul.switch_soul import SwitchSoul
 from tasks.Exploration.assets import ExplorationAssets
-from tasks.Exploration.config import ChooseRarity, AutoRotate, AttackNumber
-from tasks.Component.GeneralBattle.general_battle import GeneralBattle
+from tasks.Exploration.config import AttackNumber, AutoRotate, ChooseRarity
 from tasks.GameUi.game_ui import GameUi
-from tasks.GameUi.page import page_exploration, page_shikigami_records, page_main
-
-from module.logger import logger
-from module.exception import RequestHumanTakeover, TaskEnd
-from module.atom.image_grid import ImageGrid
+from tasks.GameUi.page import page_exploration, page_main, page_shikigami_records
 
 
 class ScriptTask(GeneralBattle, GameUi, SwitchSoul, ExplorationAssets):
     medal_grid: ImageGrid = None
+
+    def check_ap_remain(self, need_ap_num=0) -> bool:
+        """
+        检查体力是否足够
+        :return: 如何还有体力，返回True，否则返回False
+        """
+        self.screenshot()
+        cu, res, total = self.O_REMAIN_AP.ocr(image=self.device.image)
+        # 如果体力超过万了，正则会匹配不出来，就视为正常；
+        if res == 0:
+            return True
+
+        # 如果正常识别，每次探索体力需要消耗3
+        if cu >= need_ap_num:
+            return True
+
+        # 其他情况返回 False
+        return False
 
     def run(self):
         """
@@ -35,12 +52,19 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, ExplorationAssets):
         if explorationConfig.switch_soul_config.enable_switch_by_name:
             self.ui_get_current_page()
             self.ui_goto(page_shikigami_records)
-            self.run_switch_soul_by_name(explorationConfig.switch_soul_config.group_name,
-                                         explorationConfig.switch_soul_config.team_name)
+            self.run_switch_soul_by_name(
+                explorationConfig.switch_soul_config.group_name,
+                explorationConfig.switch_soul_config.team_name,
+            )
 
         # 开启加成
         con = self.config.exploration.exploration_config
-        if con.buff_gold_50_click or con.buff_gold_100_click or con.buff_exp_50_click or con.buff_exp_100_click:
+        if (
+            con.buff_gold_50_click
+            or con.buff_gold_100_click
+            or con.buff_exp_50_click
+            or con.buff_exp_100_click
+        ):
             self.ui_get_current_page()
             self.ui_goto(page_main)
             self.open_buff()
@@ -62,8 +86,10 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, ExplorationAssets):
         # 默认全部解锁， 当前处于第二十八章
         # 查找指定的章节：
         if not self.open_expect_level():
-            logger.critical(f'Not find {explorationConfig.exploration_config.exploration_level} or'
-                            f' Enter {explorationConfig.exploration_config.exploration_level} failed!')
+            logger.critical(
+                f"Not find {explorationConfig.exploration_config.exploration_level} or"
+                f" Enter {explorationConfig.exploration_config.exploration_level} failed!"
+            )
             raise RequestHumanTakeover
 
         # 只探索7次
@@ -78,18 +104,39 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, ExplorationAssets):
                 if self.appear(self.I_EXPLORATION_TITLE):
                     self.open_expect_level()
 
-            if self.wait_until_appear(self.I_RED_CLOSE, wait_time=2):
-                self.appear_then_click(self.I_RED_CLOSE)
-            self.ui_goto(page_main)
-            # 关闭 buff
-            if con.buff_gold_50_click or con.buff_gold_100_click or con.buff_exp_50_click or con.buff_exp_100_click:
-                self.open_buff()
-                self.gold_50(is_open=False)
-                self.gold_100(is_open=False)
-                self.exp_50(is_open=False)
-                self.exp_100(is_open=False)
-                self.close_buff()
-            self.set_next_run(task='Exploration', success=True, finish=False)
+        # 持续探索，直至体力不足30。避免战斗过程中出现体力不足的问题，减少ocr的次数。
+        if explorationConfig.exploration_config.attack_number == AttackNumber.ALL:
+            count = 1
+            while True:
+                if self.wait_until_appear(self.I_E_EXPLORATION_CLICK, wait_time=1):
+                    if self.check_ap_remain(need_ap_num=30):
+                        self.click(self.I_E_EXPLORATION_CLICK)
+                        count += 1
+                        # 进入战斗环节
+                        self.battle_process()
+                    else:
+                        break
+                if self.appear(self.I_EXPLORATION_TITLE):
+                    self.open_expect_level()
+
+        if self.wait_until_appear(self.I_RED_CLOSE, wait_time=2):
+            self.appear_then_click(self.I_RED_CLOSE)
+        self.ui_goto(page_main)
+        # 关闭 buff
+        if (
+            con.buff_gold_50_click
+            or con.buff_gold_100_click
+            or con.buff_exp_50_click
+            or con.buff_exp_100_click
+        ):
+            self.open_buff()
+            self.gold_50(is_open=False)
+            self.gold_100(is_open=False)
+            self.exp_50(is_open=False)
+            self.exp_100(is_open=False)
+            self.close_buff()
+        self.set_next_run(task="Exploration", success=True, finish=False)
+
         raise TaskEnd
 
     # 查找指定的章节：
@@ -102,10 +149,14 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, ExplorationAssets):
             # 判断有无目标章节
             self.screenshot()
             # 获取当前章节名
-            results = self.O_E_EXPLORATION_LEVEL_NUMBER.detect_and_ocr(self.device.image)
+            results = self.O_E_EXPLORATION_LEVEL_NUMBER.detect_and_ocr(
+                self.device.image
+            )
             text1 = [result.ocr_text for result in results]
             # 判断当前章节有无目标章节
-            result = set(text1).intersection({explorationConfig.exploration_config.exploration_level})
+            result = set(text1).intersection(
+                {explorationConfig.exploration_config.exploration_level}
+            )
             # 有则跳出检测
             if self.appear(self.I_E_EXPLORATION_CLICK) or result and len(result) > 0:
                 break
@@ -118,7 +169,9 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, ExplorationAssets):
         # 选中对应章节
         while 1:
             self.screenshot()
-            self.O_E_EXPLORATION_LEVEL_NUMBER.keyword = explorationConfig.exploration_config.exploration_level
+            self.O_E_EXPLORATION_LEVEL_NUMBER.keyword = (
+                explorationConfig.exploration_config.exploration_level
+            )
             if self.ocr_appear_click(self.O_E_EXPLORATION_LEVEL_NUMBER):
                 self.wait_until_appear(self.I_E_EXPLORATION_CLICK, wait_time=3)
             if self.appear(self.I_E_EXPLORATION_CLICK):
@@ -156,7 +209,10 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, ExplorationAssets):
             self.screenshot()
             # 成功进入稀有度选择界面
             if self.appear(self.I_E_ENTER_CHOOSE_RARITY):
-                if self.config.exploration.exploration_config.choose_rarity == ChooseRarity.N:
+                if (
+                    self.config.exploration.exploration_config.choose_rarity
+                    == ChooseRarity.N
+                ):
                     # N 卡
                     self.click(self.C_CLICK_N_SHIKI)
                 else:
@@ -205,20 +261,26 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, ExplorationAssets):
             # boss 战
             if self.appear_then_click(self.I_BOSS_BATTLE_BUTTON):
                 if self.wait_until_appear(self.I_BATTLE_START, wait_time=5):
-                    self.run_general_battle(self.config.exploration.general_battle_config)
+                    self.run_general_battle(
+                        self.config.exploration.general_battle_config
+                    )
                 else:
                     continue
             # 小怪 战
             if self.appear_then_click(self.I_NORMAL_BATTLE_BUTTON):
                 if self.wait_until_appear(self.I_BATTLE_START, wait_time=5):
-                    self.run_general_battle(self.config.exploration.general_battle_config)
+                    self.run_general_battle(
+                        self.config.exploration.general_battle_config
+                    )
                 else:
                     continue
             # 滑动
             elif self.appear(self.I_E_AUTO_ROTATE_ON) or self.appear(self.I_GET_REWARD):
                 self.swipe(self.S_SWIPE_BACKGROUND_RIGHT)
             # 结束流程
-            if self.appear(self.I_E_EXPLORATION_CLICK) or self.appear(self.I_EXPLORATION_TITLE):
+            if self.appear(self.I_E_EXPLORATION_CLICK) or self.appear(
+                self.I_EXPLORATION_TITLE
+            ):
                 break
 
     # 战斗流程
@@ -244,7 +306,7 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, ExplorationAssets):
         # 自动添加候补式神
         if self.config.exploration.exploration_config.auto_rotate == AutoRotate.yes:
             self.enter_settings_and_do_operations()
-        
+
         # 修复卡结算问题
         # 卡结算是因为没有设置锁定队伍，修改后无论是否锁定都不会因为没有锁定队伍而卡在结算界面
         if not self.config.exploration.general_battle_config.lock_team_enable:
@@ -258,10 +320,10 @@ if __name__ == "__main__":
     from module.config.config import Config
     from module.device.device import Device
 
-    config = Config('oas1')
+    config = Config("oas1")
     device = Device(config)
     t = ScriptTask(config, device)
-    t.config.exploration.exploration_config.exploration_level = '第二十八章'
+    t.config.exploration.exploration_config.exploration_level = "第二十八章"
     t.run()
     # t.battle_process()
     # t.enter_settings_and_do_operations()
