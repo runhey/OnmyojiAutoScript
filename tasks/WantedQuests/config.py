@@ -12,13 +12,9 @@ from tasks.Component.SwitchSoul.switch_soul_config import SwitchSoulConfig
 
 class WantedQuestsConfig(BaseModel):
     before_end: Time = Field(default=Time(0, 0, 0), description='before_end_help')
+    invite_friend_name: str = Field(default=str(""), description="协作任务邀请特定人员")
 
 
 class WantedQuests(ConfigBase):
     scheduler: Scheduler = Field(default_factory=Scheduler)
     wanted_quests_config: WantedQuestsConfig = Field(default_factory=WantedQuestsConfig)
-
-
-
-
-

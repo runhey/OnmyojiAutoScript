@@ -6,6 +6,7 @@ import copy
 from time import sleep
 from datetime import timedelta, time, datetime
 from cached_property import cached_property
+from enum import Enum
 
 from module.exception import TaskEnd
 from module.logger import logger
@@ -20,6 +21,7 @@ from tasks.Secret.script_task import ScriptTask as SecretScriptTask
 from tasks.WantedQuests.config import WantedQuestsConfig
 from tasks.WantedQuests.assets import WantedQuestsAssets
 from tasks.Component.Costume.config import MainType
+
 
 class ScriptTask(SecretScriptTask, GeneralInvite, WantedQuestsAssets):
 
@@ -73,7 +75,6 @@ class ScriptTask(SecretScriptTask, GeneralInvite, WantedQuestsAssets):
             if not self.appear(self.I_WQ_CHECK_TASK):
                 logger.info('No wanted quests')
                 break
-
 
         self.next_run()
         raise TaskEnd('WantedQuests')
@@ -129,7 +130,21 @@ class ScriptTask(SecretScriptTask, GeneralInvite, WantedQuestsAssets):
                 return False
         # 已追踪所有任务
         logger.info('All wanted quests are traced')
-        self.invite_five()
+        if self.config.wanted_quests.wanted_quests_config.invite_friend_name:
+            '''
+                尝试5次 如果邀请失败 等待30s 重新尝试
+                阴阳师BUG: 好友明明在线 但邀请界面找不到该好友(好友未接受任何协作任务的情况下)
+            '''
+            for i in range(5):
+                if not self.invite(self.config.wanted_quests.wanted_quests_config.invite_friend_name):
+                    sleep(30)
+                    # 第五次依旧失败,则随机邀请
+                    if i==5:
+                        self.invite_five()
+                    continue
+                break
+        else:
+            self.invite_five()
         self.ui_click_until_disappear(self.I_UI_BACK_RED)
         self.ui_goto(page_exploration)
         return True
@@ -156,6 +171,7 @@ class ScriptTask(SecretScriptTask, GeneralInvite, WantedQuestsAssets):
             return
         # 找到一个最优的关卡来挑战
         challenge = True if num_challenge >= 10 else False
+
         def check_battle(cha: bool, wq_type, wq_info) -> tuple:
             battle = False
             self.screenshot()
@@ -201,7 +217,6 @@ class ScriptTask(SecretScriptTask, GeneralInvite, WantedQuestsAssets):
             # 没有找到可以挑战的关卡 那就关闭
             logger.warning('No wanted quests can be challenged')
             return False
-
 
     def challenge(self, goto, num):
         self.ui_click(goto, self.I_WQC_FIRE)
@@ -249,11 +264,13 @@ class ScriptTask(SecretScriptTask, GeneralInvite, WantedQuestsAssets):
         邀请好友，默认点五个
         :return:
         """
+
         def invite(add_button):
             self.screenshot()
             if not self.appear(add_button):
                 return False
-            self.ui_click(add_button, self.I_INVITE_ENSURE, interval=2.5)
+            self.ui_click(add_button, self.I_WQ_INVITE_ENSURE, interval=2.5)
+            logger.info('enter invite form')
             sleep(1)
             self.click(self.I_WQ_FIREND_1)
             sleep(0.4)
@@ -277,6 +294,42 @@ class ScriptTask(SecretScriptTask, GeneralInvite, WantedQuestsAssets):
         invite(self.I_WQ_INVITE_2)
         invite(self.I_WQ_INVITE_3)
 
+    def invite(self, name: str):
+        self.screenshot()
+        if not self.appear(self.I_WQ_INVITE_1):
+            return False
+        self.ui_click(self.I_WQ_INVITE_1, self.I_WQ_INVITE_ENSURE, interval=2.5)
+
+        # 选人
+        self.O_WQ_INVITE_COLUMN_1.keyword = name
+        self.O_WQ_INVITE_COLUMN_2.keyword = name
+
+        find = False
+        for i in range(2):
+            self.screenshot()
+            in_col_1 = self.ocr_appear_click(self.O_WQ_INVITE_COLUMN_1)
+            in_col_2 = self.ocr_appear_click(self.O_WQ_INVITE_COLUMN_2)
+            find = in_col_2 or in_col_1
+            if find:
+                self.screenshot()
+                if self.appear(self.I_WQ_INVITE_SELECTED):
+                    logger.info("find in diff svr")
+                    break
+                #TODO OCR识别到文字 但是没有选中 尝试重新选择  (选择好友时,弹出协作邀请导致选择好友失败)
+            # 在当前服务器没找到,切换服务器
+            logger.info("change svr")
+            self.click(self.I_WQ_INVITE_DIFF_SVR)
+            #NOTE 跨服好友刷新缓慢,切换标签页难以检测,姑且用延时.非常卡的模拟器可能出问题
+            sleep(2)
+        # 没有找到需要邀请的人,点击取消 返回悬赏封印界面
+        if not find:
+            self.screenshot()
+            self.click(self.I_WQ_INVITE_CANCEL)
+            return False
+        #
+        self.ui_click_until_disappear(self.I_WQ_INVITE_ENSURE)
+        return True
+
     @cached_property
     def special_main(self) -> bool:
         # 特殊的庭院需要点一下，左边然后才能找到图标
@@ -289,6 +342,7 @@ class ScriptTask(SecretScriptTask, GeneralInvite, WantedQuestsAssets):
 if __name__ == '__main__':
     from module.config.config import Config
     from module.device.device import Device
+
     c = Config('oas1')
     d = Device(c)
     t = ScriptTask(c, d)
@@ -296,6 +350,3 @@ if __name__ == '__main__':
 
     t.run()
     # print(t.appear(t.I_WQ_CHECK_TASK))
-
-
-
