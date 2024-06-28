@@ -253,7 +253,7 @@ class ScriptTask(SecretScriptTask, GeneralInvite, WantedQuestsAssets):
             self.screenshot()
             if not self.appear(add_button):
                 return False
-            self.ui_click(add_button, self.I_INVITE_WQ, interval=2.5)
+            self.ui_click(add_button, self.I_INVITE_ENSURE, interval=2.5)
             sleep(1)
             self.click(self.I_WQ_FIREND_1)
             sleep(0.4)
@@ -269,7 +269,7 @@ class ScriptTask(SecretScriptTask, GeneralInvite, WantedQuestsAssets):
             if not self.appear(self.I_SELECTED):
                 logger.warning('No friend selected')
                 return False
-            self.ui_click_until_disappear(self.I_INVITE_WQ)
+            self.ui_click_until_disappear(self.I_INVITE_ENSURE)
             sleep(0.5)
 
         logger.hr('Invite friends')
@@ -294,7 +294,8 @@ if __name__ == '__main__':
     t = ScriptTask(c, d)
     t.screenshot()
 
-    t.run()
+    # t.run()
+    t.invite_five()
     # print(t.appear(t.I_WQ_CHECK_TASK))
 
 
