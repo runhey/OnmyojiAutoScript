@@ -5,7 +5,9 @@ from pathlib import Path
 from enum import Enum
 
 from module.logger import logger
+from module.base.timer import Timer
 from module.atom.image import RuleImage
+from module.exception import RequestHumanTakeover
 from tasks.Hyakkiyakou.slave.hya_device import HyaDevice
 from tasks.Hyakkiyakou.slave.hya_color import HyaColor
 from tasks.Hyakkiyakou.assets import HyakkiyakouAssets
@@ -220,16 +222,31 @@ class HyaSlave(HyaDevice, HyaColor, HyakkiyakouAssets):
                 break
             if self.appear_then_click(self.I_HINVITE, interval=4):
                 continue
+        if not self._invite_friend(True):
+            if not self._invite_friend(False):
+                raise RequestHumanTakeover('Invite friend failed')
+
+
+
+    def _invite_friend(self, same: bool = True) -> bool:
         if not same:
             logger.info('Invite different server friend')
             self.ui_click(self.I_FRIEND_REMOTE_1, self.I_FRIEND_REMOTE_2)
+        invite_timer = Timer(8)
+        invite_timer.start()
         while 1:
             self.screenshot()
             if not self.appear(self.I_HINVITE):
                 break
             if self.click(self.C_FRIEND_1, interval=2):
                 continue
+            if self.click(self.C_FRIEND_2, interval=3):
+                continue
+            if invite_timer.reached():
+                logger.warning('Invite friend timeout, It may be no friend available')
+                return False
         logger.info('Invite friend done')
+        return True
 
     def update_state(self):
         res_bean = self.predict_bean(self.slave_state[0])
