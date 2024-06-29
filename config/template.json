@@ -4,6 +4,7 @@
     "device": {
       "serial": "auto",
       "handle": "",
+      "emulatorinfo_path": "",
       "package_name": "auto",
       "screenshot_method": "auto",
       "control_method": "minitouch",
