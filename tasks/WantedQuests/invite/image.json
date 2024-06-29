@@ -29,8 +29,8 @@
   {
     "itemName": "wq_firend_1",
     "imageName": "invite_wq_firend_1.png",
-    "roiFront": "245,190,175,70",
-    "roiBack": "245,190,175,70",
+    "roiFront": "449,191,172,70",
+    "roiBack": "449,191,172,70",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"
@@ -38,8 +38,8 @@
   {
     "itemName": "wq_firend_2",
     "imageName": "invite_wq_firend_2.png",
-    "roiFront": "537,190,175,70",
-    "roiBack": "537,190,175,70",
+    "roiFront": "743,192,172,69",
+    "roiBack": "743,192,172,69",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"
@@ -47,8 +47,8 @@
   {
     "itemName": "wq_firend_3",
     "imageName": "invite_wq_firend_3.png",
-    "roiFront": "245,286,175,70",
-    "roiBack": "245,286,175,70",
+    "roiFront": "453,281,175,71",
+    "roiBack": "453,281,175,71",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"
@@ -56,8 +56,8 @@
   {
     "itemName": "wq_firend_4",
     "imageName": "invite_wq_firend_4.png",
-    "roiFront": "537,286,175,70",
-    "roiBack": "537,286,175,70",
+    "roiFront": "743,280,171,76",
+    "roiBack": "743,280,171,76",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"
@@ -65,19 +65,10 @@
   {
     "itemName": "wq_firend_5",
     "imageName": "invite_wq_firend_5.png",
-    "roiFront": "245,382,175,70",
-    "roiBack": "245,382,175,70",
+    "roiFront": "479,376,148,56",
+    "roiBack": "479,376,148,56",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"
-  },
-  {
-    "itemName": "invite_wq",
-    "imageName": "gi_invite_ensure.png",
-    "roiFront": "506,544,132,60",
-    "roiBack": "506,544,132,60",
-    "method": "Template matching",
-    "threshold": 0.8,
-    "description": "点击邀请"
   }
 ]
