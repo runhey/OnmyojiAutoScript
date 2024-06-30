@@ -294,7 +294,8 @@ if __name__ == '__main__':
     t = ScriptTask(c, d)
     t.screenshot()
 
-    t.run()
+    # t.run()
+    t.invite_five()
     # print(t.appear(t.I_WQ_CHECK_TASK))
 
 

@@ -53,6 +53,8 @@ This project is licensed under the GNU General Public License v3.0.
 
 ## 声明 Announcement
 本软件开源、免费，仅供学习交流使用。开发者团队拥有本项目的最终解释权。使用本软件产生的所有问题与本项目与开发者团队无关。
+OAS is a free open source software, if you paid for OAS from any channel, please refund.
+OAS 是一款免费开源软件，如果你在任何渠道付费购买了OAS，请退款。
 
 ## 关于 Alas
 OAS 基于碧蓝航线脚本 [AzurLaneAutoScript](https://github.com/LmeSzinc/AzurLaneAutoScript) 开发，考虑到星穹铁道脚本 [StarRailCopilot](https://github.com/LmeSzinc/StarRailCopilot) 中所提及的问题，

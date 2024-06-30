@@ -29,8 +29,8 @@
   {
     "itemName": "wq_firend_1",
     "imageName": "invite_wq_firend_1.png",
-    "roiFront": "449,191,172,70",
-    "roiBack": "449,191,172,70",
+    "roiFront": "245,190,175,70",
+    "roiBack": "245,190,175,70",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"
@@ -38,8 +38,8 @@
   {
     "itemName": "wq_firend_2",
     "imageName": "invite_wq_firend_2.png",
-    "roiFront": "743,192,172,69",
-    "roiBack": "743,192,172,69",
+    "roiFront": "537,190,175,70",
+    "roiBack": "537,190,175,70",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"
@@ -47,8 +47,8 @@
   {
     "itemName": "wq_firend_3",
     "imageName": "invite_wq_firend_3.png",
-    "roiFront": "453,281,175,71",
-    "roiBack": "453,281,175,71",
+    "roiFront": "245,286,175,70",
+    "roiBack": "245,286,175,70",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"
@@ -56,8 +56,8 @@
   {
     "itemName": "wq_firend_4",
     "imageName": "invite_wq_firend_4.png",
-    "roiFront": "743,280,171,76",
-    "roiBack": "743,280,171,76",
+    "roiFront": "537,286,175,70",
+    "roiBack": "537,286,175,70",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"
@@ -65,8 +65,8 @@
   {
     "itemName": "wq_firend_5",
     "imageName": "invite_wq_firend_5.png",
-    "roiFront": "479,376,148,56",
-    "roiBack": "479,376,148,56",
+    "roiFront": "245,382,175,70",
+    "roiBack": "245,382,175,70",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"

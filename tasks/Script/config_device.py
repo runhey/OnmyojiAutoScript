@@ -22,6 +22,7 @@ class ScreenshotMethod(str, Enum):
     DROIDCAST_RAW = 'DroidCast_raw'
     SCRCPY = 'scrcpy'
     WINDOW_BACKGROUND = 'window_background'
+    NEMU_IPC = 'nemu_ipc'
 
 class ControlMethod(str, Enum):
     ADB = 'adb'
@@ -29,12 +30,14 @@ class ControlMethod(str, Enum):
     MINITOUCH = 'minitouch'
     WINDOW_MESSAGE = 'window_message'
 
-
 class Device(BaseModel):
     serial: str = Field(default="auto",
                         description='serial_help')
     handle: str = Field(default='',
                         description='handle_help')
+    emulatorinfo_path: str = Field(default='',
+                        description='emulatorinfo_path_help')
+    # 举例, E:\ProgramFiles\MuMuPlayer-12.0\shell\MuMuPlayer.exe
     package_name: PackageName = Field(title='Package Name',
                                       default=PackageName.AUTO,
                                       description='package_name_help')
