@@ -88,5 +88,23 @@
     "method": "Template matching",
     "threshold": 0.8,
     "description": "红色关闭"
+  },
+  {
+    "itemName": "ab_filter_title_collection",
+    "imageName": "ab_filter_title_collection.png",
+    "roiFront": "940,110,170,70",
+    "roiBack":  "940,110,170,70",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "筛选中 选中收藏标识"
+  },
+  {
+    "itemName": "ab_filter_opened",
+    "imageName": "ab_filter_opened.png",
+    "roiFront": "840,110,130,70",
+    "roiBack":  "840,110,130,70",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "筛选界面打开标识"
   }
 ]
