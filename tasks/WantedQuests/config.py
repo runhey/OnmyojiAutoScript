@@ -44,28 +44,44 @@ class CooperationSelectMask(int, Enum):
 
 
 class CooperationSelectMaskDescription(str, Enum):
-    NoInvite = '不邀请'
-    GoldOnly = '仅金币'
-    JadeOnly = '仅勾协'
-    GoldAndJade = '金币和勾协'
-    FoodOnly = '仅食协'
-    GoldAndFood = '金币+食协'
-    JadeAndFood = '勾协+食协'
-    GoldAndJadeAndFood = '金币+勾协+食协'
-    SushiOnly = '仅体协'
-    GoldAndSushi = '金币+体协'
-    JadeAndSushi = '勾协+体协'
-    GoldAndJadeAndSushi = '金币+勾协+体协'
-    FoodAndSushi = '食协+体协'
-    GoldAndFoodAndSushi = '金币+食协+体协'
-    JadeAndFoodAndSushi = '勾协+食协+体协'
-    Any = '全部'
+    # NoInvite = '不邀请'
+    # GoldOnly = '仅金币'
+    # JadeOnly = '仅勾协'
+    # GoldAndJade = '金币和勾协'
+    # FoodOnly = '仅食协'
+    # GoldAndFood = '金币+食协'
+    # JadeAndFood = '勾协+食协'
+    # GoldAndJadeAndFood = '金币+勾协+食协'
+    # SushiOnly = '仅体协'
+    # GoldAndSushi = '金币+体协'
+    # JadeAndSushi = '勾协+体协'
+    # GoldAndJadeAndSushi = '金币+勾协+体协'
+    # FoodAndSushi = '食协+体协'
+    # GoldAndFoodAndSushi = '金币+食协+体协'
+    # JadeAndFoodAndSushi = '勾协+食协+体协'
+    # Any = '全部'
+    NoInvite = 'NoInvite'
+    GoldOnly = 'GoldOnly'
+    JadeOnly = 'JadeOnly'
+    GoldAndJade = 'GoldAndJade'
+    FoodOnly = 'FoodOnly'
+    GoldAndFood = 'GoldAndFood'
+    JadeAndFood = 'JadeAndFood'
+    GoldAndJadeAndFood = 'GoldAndJadeAndFood'
+    SushiOnly = 'SushiOnly'
+    GoldAndSushi = 'GoldAndSushi'
+    JadeAndSushi = 'JadeAndSushi'
+    GoldAndJadeAndSushi = 'GoldAndJadeAndSushi'
+    FoodAndSushi = 'FoodAndSushi'
+    GoldAndFoodAndSushi = 'GoldAndFoodAndSushi'
+    JadeAndFoodAndSushi = 'JadeAndFoodAndSushi'
+    Any = 'Any'
 
 
 class WantedQuestsConfig(BaseModel):
     before_end: Time = Field(default=Time(0, 0, 0), description='before_end_help')
-    invite_friend_name: str = Field(default=str(""), description="协作任务邀请特定人员,填写朋友昵称,无法区分不同服务器相同昵称好友")
-    cooperation_type: CooperationSelectMaskDescription = Field(default=CooperationSelectMaskDescription.Any, description="协作悬赏类型,其余协作任务不会邀请特定人员.仅当邀请特定人员时生效")
+    invite_friend_name: str = Field(default=str(""), description="invite_friend_name_help")
+    cooperation_type: CooperationSelectMaskDescription = Field(default=CooperationSelectMaskDescription.Any, description="cooperation_type_help")
 
 
 
