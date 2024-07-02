@@ -12,12 +12,13 @@ anytree==2.8.0            # via -r requirements-in.txt
 apkutils2==1.0.0          # via adbutils
 cached-property==1.5.2    # via uiautomator2
 certifi==2023.11.17       # via requests
-cffi==1.16.0              # via gevent
+cffi==1.16.0              # via cryptography, gevent
 charset-normalizer==3.3.2  # via requests
 cigam==0.0.3              # via apkutils2
 click==8.1.7              # via uvicorn
 colorama==0.4.6           # via click, logzero, tqdm
 coloredlogs==15.0.1       # via onnxruntime
+cryptography==42.0.8      # via -r requirements-in.txt
 decorator==5.1.1          # via retry
 deprecated==1.2.14        # via uiautomator2
 deprecation==2.1.0        # via adbutils
