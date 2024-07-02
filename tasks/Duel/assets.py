@@ -23,9 +23,9 @@ class DuelAssets:
 	# 观战 
 	I_D_VISIT = RuleImage(roi_front=(1045,613,53,55), roi_back=(1045,613,53,55), threshold=0.8, method="Template matching", file="./tasks/Duel/duel/duel_d_visit.png")
 	# description 
-	I_D_BATTLE = RuleImage(roi_front=(1143,566,100,100), roi_back=(1143,566,100,100), threshold=0.8, method="Template matching", file="./tasks/Duel/duel/duel_d_battle.png")
+	I_D_BATTLE = RuleImage(roi_front=(1153,573,100,100), roi_back=(1123,537,154,177), threshold=0.8, method="Template matching", file="./tasks/Duel/duel/duel_d_battle.png")
 	# 战斗带保护的 
-	I_D_BATTLE_PROTECT = RuleImage(roi_front=(1145,563,100,100), roi_back=(1145,563,100,100), threshold=0.8, method="Template matching", file="./tasks/Duel/duel/duel_d_battle_protect.png")
+	I_D_BATTLE_PROTECT = RuleImage(roi_front=(1153,578,100,100), roi_back=(1118,553,155,149), threshold=0.8, method="Template matching", file="./tasks/Duel/duel/duel_d_battle_protect.png")
 	# 预选点击确认 
 	I_D_CONFIRM = RuleImage(roi_front=(1097,517,139,156), roi_back=(1097,517,139,156), threshold=0.8, method="Template matching", file="./tasks/Duel/duel/duel_d_confirm.png")
 	# 自动上阵 
@@ -50,6 +50,8 @@ class DuelAssets:
 	I_D_CELEB_STAR = RuleImage(roi_front=(586,456,30,32), roi_back=(574,444,53,54), threshold=0.75, method="Template matching", file="./tasks/Duel/duel/duel_d_celeb_star.png")
 	# 名士专属 
 	I_D_CELEB_HONOR = RuleImage(roi_front=(665,531,25,30), roi_back=(652,517,52,53), threshold=0.75, method="Template matching", file="./tasks/Duel/duel/duel_d_celeb_honor.png")
+	# 练 
+	I_BATTLE_WITH_TRAIN = RuleImage(roi_front=(1161,588,78,81), roi_back=(1114,547,163,172), threshold=0.8, method="Template matching", file="./tasks/Duel/duel/duel_battle_with_train.png")
 
 
 	# Ocr Rule Assets
