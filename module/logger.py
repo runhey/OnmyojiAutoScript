@@ -166,9 +166,9 @@ logger_debug = False
 logger = logging.getLogger('oas')
 logger.setLevel(logging.DEBUG if logger_debug else logging.INFO)
 file_formatter = logging.Formatter(
-    fmt='%(asctime)s.%(msecs)03d | %(levelname)8s | %(message)s', datefmt='%Y-%m-%d %H:%M:%S')
+    fmt='%(asctime)s.%(msecs)03d | %(filename)s:%(lineno)d | %(levelname)8s | %(message)s', datefmt='%Y-%m-%d %H:%M:%S')
 console_formatter = logging.Formatter(
-    fmt='%(asctime)s.%(msecs)03d │ %(message)s', datefmt='%Y-%m-%d %H:%M:%S')
+    fmt='%(asctime)s.%(msecs)03d | %(filename)s:%(lineno)d│ %(message)s', datefmt='%Y-%m-%d %H:%M:%S')
 flutter_formatter = logging.Formatter(
     fmt='| %(asctime)s.%(msecs)03d | %(message)08s', datefmt='%H:%M:%S')
 

@@ -16,6 +16,7 @@ from module.logger import logger
 from tasks.Component.config_base import ConfigBase, TimeDelta
 from tasks.Exploration.config import Exploration
 from tasks.RyouToppa.config import RyouToppa
+from tasks.Dokan.config import Dokan
 from tasks.Script.config import Script
 from tasks.Restart.config import Restart
 from tasks.GlobalGame.config import GlobalGame
@@ -120,6 +121,7 @@ class ConfigModel(ConfigBase):
     # 阴阳寮
     collective_missions: CollectiveMissions = Field(default_factory=CollectiveMissions)
     hunt: Hunt = Field(default_factory=Hunt)
+    dokan: Dokan = Field(default_factory=Dokan)
 
     # @validator('script')
     # def script_validator(cls, v):
@@ -323,15 +325,8 @@ class ConfigModel(ConfigBase):
                 result.append(item)
             return result
 
-
-
-
-
-
-
         schema = task.schema()
         groups = extract_groups(schema)
-
 
         result: dict[str, list] = {}
         for key, value in task.dict().items():
@@ -344,7 +339,6 @@ class ConfigModel(ConfigBase):
         task = convert_to_underscore(task)
         group = convert_to_underscore(group)
         argument = convert_to_underscore(argument)
-
 
         # pandtic验证
         if isinstance(value, str) and len(value) == 8:
@@ -377,6 +371,12 @@ class ConfigModel(ConfigBase):
         if argument_object is None:
             logger.error(f'Set arg {task}.{group}.{argument}.{value} failed')
             return False
+        
+        # XXX temp implementation to enable oasx control the datetime configuration globally rather than a single task
+        if task == "restart" and group == "task_config" and argument == "reset_task_datetime_enable" and value == True:
+            date_time = self.restart.task_config.reset_task_datetime
+            logger.info(f"reset_task_datetime={date_time}")
+            self.reset_datetime_for_all_enabled_tasks(date_time)
 
         # 设置参数
         try:
@@ -388,7 +388,34 @@ class ConfigModel(ConfigBase):
             logger.error(e)
             return False
 
+    def replace_next_run(self, d, dt: datetime):
+        for k, v in d.items():
+            if isinstance(v, dict):
+                self.replace_next_run(v, dt=dt)
+            elif k == "next_run":
+                d[k] = dt
+                # convert value to datetime if it's a str
+                if isinstance(v, str):
+                    current_time = datetime.strptime(v, "%Y-%m-%d %H:%M:%S")
+                    if current_time != dt:
+                        d[k] = dt.strftime("%Y-%m-%d %H:%M:%S")
+                # already a datetime value
+                elif isinstance(v, datetime) and v != dt:
+                    d[k] = dt.strftime("%Y-%m-%d %H:%M:%S")
 
+    def reset_datetime_for_all_enabled_tasks(self, task_datetime: datetime):
+        logger.warn(f"trying to reset datetime of all tasks to: {task_datetime}")
+        # logger.info(f"current config: {self.dict()}")
+        data = self.dict()
+        self.replace_next_run(data, task_datetime)
+        # logger.info(f"new config: {data}")
+
+        # write to json config  file
+        self.write_json(self.config_name, data)
+
+        # reload from the newly modified json config file
+        data = self.read_json(self.config_name)
+        super().__init__(**data)
 
 if __name__ == "__main__":
     try:
