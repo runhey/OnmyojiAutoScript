@@ -313,7 +313,7 @@ class ScriptTask(SecretScriptTask, GeneralInvite, WantedQuestsAssets):
                 # BUG 存在多个协作任务时,邀请完第一个协作任务对方接受后,未邀请的任务位置无法确定(缺少信息)
                 # 例如 按顺序存在 abc 3个协作任务,邀请完a,好友接受后,这三个任务在界面上的顺序变化,abc 还是bca
                 # 如果顺序不变 则应该没有问题
-                logger.info("协作任务类型 %s 需要邀请的协作任务类型 %s 故跳过", item['type'], typeMask)
+                logger.info("cooperationType %s But needed Type %s ,Skipped", item['type'], typeMask)
                 break
             '''
                尝试5次 如果邀请失败 等待20s 重新尝试
@@ -324,10 +324,10 @@ class ScriptTask(SecretScriptTask, GeneralInvite, WantedQuestsAssets):
                 if self.cooperation_invite(item['inviteBtn'], name):
                     item['inviteResult'] = True
                     index = 5
-                logger.info("未找到该好友,等待20s,剩余邀请次数 %d", 5 - index - 1)
+                logger.info("%s not found,Wait 20s,%d invitations left", name, 5 - index - 1)
                 index += 1
                 sleep(20) if index < 5 else sleep(0)
-                # BUG 等待过程如果出现协作邀请 将会卡住 未防止卡住
+                #NOTE 等待过程如果出现协作邀请 将会卡住 为了防止卡住
                 self.screenshot()
         return ret
 
