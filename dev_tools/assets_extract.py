@@ -357,7 +357,7 @@ class AssetsExtractor:
         将自身的_resule写入文件
         :return:
         """
-        with open(self.assets_file, 'w', encoding='utf-8') as f:
+        with open(self.assets_file, 'w', encoding='utf-8', newline='\n') as f:
             f.write(self._result)
 
     def extract(self) -> str:
@@ -408,7 +408,7 @@ class AllAssetsExtractor:
         self.task_paths = [x for x in self.task_paths if 'Component' not in x]
         self.task_paths.extend([str(x) for x in (self.task_path / 'Component').iterdir() if x.is_dir()])
 
-        process_map(self.work, self.task_paths, max_workers=4)
+        process_map(self.work, self.task_paths, max_workers=1)
 
     @staticmethod
     def work(task_path: str):
