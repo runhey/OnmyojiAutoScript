@@ -1,37 +1,47 @@
 [
   {
     "itemName": "s_total",
-    "roiFront": "1164,11,74,36",
-    "roiBack": "1164,11,74,36",
+    "roiFront": "1134,11,112,36",
+    "roiBack": "1134,11,112,36",
+    "mode": "Digit",
     "method": "Default",
+    "keyword": "",
     "description": "Ocr-description"
   },
   {
     "itemName": "s_black",
     "roiFront": "582,179,84,48",
     "roiBack": "582,179,84,48",
+    "mode": "Single",
     "method": "Default",
+    "keyword": "",
     "description": "已兑换"
   },
   {
     "itemName": "s_white_five",
     "roiFront": "774,174,69,44",
     "roiBack": "774,174,69,44",
+    "mode": "Single",
     "method": "Default",
+    "keyword": "",
     "description": "Ocr-description"
   },
   {
     "itemName": "s_white_four",
     "roiFront": "952,168,74,60",
     "roiBack": "952,168,74,60",
+    "mode": "Single",
     "method": "Default",
+    "keyword": "",
     "description": "Ocr-description"
   },
   {
     "itemName": "s_four_number",
     "roiFront": "581,414,46,45",
     "roiBack": "581,414,46,45",
+    "mode": "Digit",
     "method": "Default",
+    "keyword": "2",
     "description": "买两个四星蛋"
   }
 ]

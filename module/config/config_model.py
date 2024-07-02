@@ -54,6 +54,7 @@ from tasks.FrogBoss.config import FrogBoss
 from tasks.BondlingFairyland.config import BondlingFairyland
 from tasks.EvoZone.config import EvoZone
 from tasks.GoryouRealm.config import GoryouRealm
+from tasks.Hyakkiyakou.config import Hyakkiyakou
 # ----------------------------------------------------------------------------------------------------------------------
 
 # 每周任务---------------------------------------------------------------------------------------------------------------
@@ -106,6 +107,7 @@ class ConfigModel(ConfigBase):
     bondling_fairyland: BondlingFairyland = Field(default_factory=BondlingFairyland)
     evo_zone: EvoZone = Field(default_factory=EvoZone)
     goryou_realm: GoryouRealm = Field(default_factory=GoryouRealm)
+    hyakkiyakou: Hyakkiyakou = Field(default_factory=Hyakkiyakou)
 
     # 这些是每周任务
     true_orochi: TrueOrochi = Field(default_factory=TrueOrochi)
