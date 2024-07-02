@@ -52,5 +52,23 @@
     "method": "Template matching",
     "threshold": 0.8,
     "description": "冰冻"
+  },
+  {
+    "itemName": "htitle",
+    "imageName": "hya_htitle.png",
+    "roiFront": "578,21,134,48",
+    "roiBack": "578,21,134,48",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "hclose_red",
+    "imageName": "hya_hclose_red.png",
+    "roiFront": "1056,177,54,54",
+    "roiBack": "1056,177,54,54",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
   }
 ]
