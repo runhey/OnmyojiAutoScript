@@ -19,14 +19,14 @@
   },
   {
     "itemName": "friend_1",
-    "roiFront": "446,227,181,67",
-    "roiBack": "446,227,181,67",
+    "roiFront": "466,227,161,67",
+    "roiBack": "466,227,161,67",
     "description": "description"
   },
   {
     "itemName": "friend_2",
-    "roiFront": "718,229,178,64",
-    "roiBack": "718,229,178,64",
+    "roiFront": "738,229,158,64",
+    "roiBack": "738,229,158,64",
     "description": "description"
   },
   {
