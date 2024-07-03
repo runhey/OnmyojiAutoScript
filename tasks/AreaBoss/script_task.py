@@ -3,6 +3,7 @@
 # github https://github.com/runhey
 import time
 
+import cv2
 from tasks.base_task import BaseTask
 from tasks.Component.GeneralBattle.general_battle import GeneralBattle
 from tasks.GameUi.game_ui import GameUi
@@ -71,26 +72,33 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AreaBossAssets):
             if self.appear(self.I_CHECK_MAIN, threshold=0.6):
                 break
 
-    def boss(self, battle: RuleImage, collect: bool=False):
-        def switch_collect():
+    def boss(self, battle: RuleImage, collect: bool = False):
+        def switch2mycollect():
             while 1:
                 self.screenshot()
-                if self.ocr_appear(self.O_AB_MY_COLLECT):
+                if self.appear(self.I_AB_FILTER_TITLE_COLLECTION):
                     break
-                if self.ocr_appear_click(self.O_AB_COLLECTING, interval=1):
+                if self.appear(self.I_AB_FILTER_OPENED):
+                    self.click(self.C_AB_COLLECTION_BTN, 1.5)
                     continue
 
         # 点击右上角的鬼王选择
         logger.info("Script filter")
         while 1:
             self.screenshot()
-            if self.appear(self.I_BATTLE_1) or self.appear(self.I_BATTLE_2) or self.appear(self.I_BATTLE_3):
+            # 如果筛选界面已经打开 点击热门按钮
+            if self.appear(self.I_AB_FILTER_OPENED):
+                self.click(self.C_AB_FAMOUS_BTN)
                 break
-            if self.appear_then_click(self.I_FILTER, interval=2):
+            if self.appear_then_click(self.I_FILTER, interval=3):
                 continue
 
         if collect:
-            switch_collect()
+            switch2mycollect()
+        # 页面没有可挑战的BOSS
+        if not (self.appear(self.I_BATTLE_1) or self.appear(self.I_BATTLE_2) or self.appear(self.I_BATTLE_3)):
+            logger.error("There is no boss could be challenged")
+            return
         # 点击第几个鬼王
         logger.info(f'Script area boss {battle}')
         self.ui_click(battle, self.I_AB_CLOSE_RED)
@@ -108,6 +116,7 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AreaBossAssets):
         logger.info("Script close red")
         self.wait_until_appear(self.I_AB_CLOSE_RED)
         self.ui_click(self.I_AB_CLOSE_RED, self.I_FILTER)
+
 
 if __name__ == '__main__':
     from module.config.config import Config
