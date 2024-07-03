@@ -125,6 +125,8 @@ class ScriptTask(GameUi, GeneralBattle, DuelAssets):
                 break
             if self.appear_then_click(self.I_D_BATTLE, interval=1):
                 continue
+            if self.appear_then_click(self.I_D_BATTLE2, interval=1):
+                continue
             if self.appear_then_click(self.I_BATTLE_WITH_TRAIN, interval=1):
                 continue
             if self.appear_then_click(self.I_D_BATTLE_PROTECT, interval=1.6):

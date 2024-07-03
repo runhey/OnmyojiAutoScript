@@ -160,5 +160,14 @@
     "method": "Template matching",
     "threshold": 0.8,
     "description": "练"
+  },
+  {
+    "itemName": "d_battle2",
+    "imageName": "duel_d_battle2.png",
+    "roiFront": "1171,592,69,78",
+    "roiBack": "1119,566,154,143",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "活动的战斗按钮"
   }
 ]
