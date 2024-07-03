@@ -4,9 +4,7 @@
 from pydantic import BaseModel, Field
 
 from tasks.Restart.config_scheduler import RestartScheduler
-from tasks.Component.config_base import ConfigBase
-
-
+from tasks.Component.config_base import ConfigBase, DateTime
 
 class HarvestConfig(BaseModel):
     # 默认启用
@@ -24,13 +22,12 @@ class HarvestConfig(BaseModel):
     # 体力
     enable_ap: bool = Field(default=True)
 
-
-
-
-
-
+class TasksReset(BaseModel):
+    reset_task_datetime_enable: bool = Field(default=False, description='reset_task_datetime_enable_help')
+    reset_task_datetime: DateTime = Field(default="2023-01-01 00:00:00", description='rest_task_datetime_help')
 
 class Restart(ConfigBase):
     scheduler: RestartScheduler = Field(default_factory=RestartScheduler)
+    tasks_config_reset: TasksReset = Field(default_factory=TasksReset)
     harvest_config: HarvestConfig = Field(default_factory=HarvestConfig)
 
