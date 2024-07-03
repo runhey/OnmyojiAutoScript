@@ -90,8 +90,7 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AreaBossAssets):
             if self.appear(self.I_AB_FILTER_OPENED):
                 self.click(self.C_AB_FAMOUS_BTN)
                 break
-            if self.appear_then_click(self.I_FILTER, interval=2):
-                time.sleep(0.6)
+            if self.appear_then_click(self.I_FILTER, interval=3):
                 continue
 
         if collect:
