@@ -151,9 +151,10 @@ class ScriptTask(GameUi, GeneralBattle, DuelAssets):
                 logger.info('Duel auto entry')
                 self.device.stuck_record_clear()
                 self.device.stuck_record_add('BATTLE_STATUS_S')
-                self.wait_until_disappear(self.I_D_WORD_BATTLE)
+                # self.wait_until_disappear(self.I_D_WORD_BATTLE)
+                self.wait_until_disappear(self.I_D_PREPARE_DONE2)
                 break
-            if current_score <= 1800 and self.appear(self.I_D_PREPARE):
+            if self.appear(self.I_D_PREPARE):
                 # 低段位有的准备
                 # self.ui_click(self.I_D_PREPARE, self.I_D_PREPARE_DONE)
                 self.ui_click_until_disappear(self.I_D_PREPARE)
