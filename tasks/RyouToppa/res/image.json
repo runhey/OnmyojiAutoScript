@@ -2,8 +2,8 @@
   {
     "itemName": "ryou_toppa",
     "imageName": "res_ryou_toppa.png",
-    "roiFront": "1191,352,78,116",
-    "roiBack": "1191,352,78,116",
+    "roiFront": "1197,358,68,110",
+    "roiBack": "1191,350,78,125",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "寮突"
