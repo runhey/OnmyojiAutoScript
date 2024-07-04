@@ -74,11 +74,11 @@
   {
     "itemName": "check_duel",
     "imageName": "page_check_duel.png",
-    "roiFront": "1045,610,50,53",
-    "roiBack": "1018,579,100,100",
+    "roiFront": "1069,626,50,53",
+    "roiBack": "1031,592,106,101",
     "method": "Template matching",
     "threshold": 0.8,
-    "description": "description"
+    "description": "斗技"
   },
   {
     "itemName": "check_demon_encounter",
