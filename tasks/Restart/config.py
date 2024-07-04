@@ -22,12 +22,12 @@ class HarvestConfig(BaseModel):
     # 体力
     enable_ap: bool = Field(default=True)
 
-class TaskConfig(BaseModel):
+class TasksReset(BaseModel):
     reset_task_datetime_enable: bool = Field(default=False, description='reset_task_datetime_enable_help')
     reset_task_datetime: DateTime = Field(default="2023-01-01 00:00:00", description='rest_task_datetime_help')
 
 class Restart(ConfigBase):
-    task_config: TaskConfig = Field(default_factory=TaskConfig)
     scheduler: RestartScheduler = Field(default_factory=RestartScheduler)
+    tasks_config_reset: TasksReset = Field(default_factory=TasksReset)
     harvest_config: HarvestConfig = Field(default_factory=HarvestConfig)
 
