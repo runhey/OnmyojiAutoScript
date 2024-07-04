@@ -106,7 +106,7 @@ class ScriptTask(GameUi, GeneralBattle, DuelAssets):
                 logger.info('You are already a celeb')
                 return None
             current_score = self.O_D_SCORE.ocr(self.device.image)
-            if current_score < 1200:
+            if current_score < 1000:
                 # 分太低了
                 logger.warning('Score is too low')
                 logger.error('Please enhance your score')
@@ -155,8 +155,9 @@ class ScriptTask(GameUi, GeneralBattle, DuelAssets):
                 break
             if current_score <= 1800 and self.appear(self.I_D_PREPARE):
                 # 低段位有的准备
-                self.ui_click(self.I_D_PREPARE, self.I_D_PREPARE_DONE)
-                self.wait_until_disappear(self.I_D_PREPARE_DONE)
+                # self.ui_click(self.I_D_PREPARE, self.I_D_PREPARE_DONE)
+                self.ui_click_until_disappear(self.I_D_PREPARE)
+                self.wait_until_disappear(self.I_D_PREPARE_DONE2)
                 logger.info('Duel prepare')
                 break
         # 正式进入战斗

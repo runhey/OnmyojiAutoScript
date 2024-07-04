@@ -169,5 +169,14 @@
     "method": "Template matching",
     "threshold": 0.8,
     "description": "活动的战斗按钮"
+  },
+  {
+    "itemName": "d_prepare_done2",
+    "imageName": "duel_d_prepare_done2.png",
+    "roiFront": "106,594,42,39",
+    "roiBack": "106,594,42,39",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "有呱的斗技判断是否准备完毕"
   }
 ]

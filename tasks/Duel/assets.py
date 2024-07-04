@@ -54,13 +54,15 @@ class DuelAssets:
 	I_BATTLE_WITH_TRAIN = RuleImage(roi_front=(1161,588,78,81), roi_back=(1114,547,163,172), threshold=0.8, method="Template matching", file="./tasks/Duel/duel/duel_battle_with_train.png")
 	# 活动的战斗按钮 
 	I_D_BATTLE2 = RuleImage(roi_front=(1171,592,69,78), roi_back=(1119,566,154,143), threshold=0.8, method="Template matching", file="./tasks/Duel/duel/duel_d_battle2.png")
+	# 有呱的斗技判断是否准备完毕 
+	I_D_PREPARE_DONE2 = RuleImage(roi_front=(106,594,42,39), roi_back=(106,594,42,39), threshold=0.8, method="Template matching", file="./tasks/Duel/duel/duel_d_prepare_done2.png")
 
 
 	# Ocr Rule Assets
 	# 荣誉 
 	O_D_HONOR = RuleOcr(roi=(699,562,131,31), area=(699,562,131,31), mode="DigitCounter", method="Default", keyword="", name="d_honor")
 	# 分数 
-	O_D_SCORE = RuleOcr(roi=(701,516,56,26), area=(701,516,56,26), mode="Digit", method="Default", keyword="", name="d_score")
+	O_D_SCORE = RuleOcr(roi=(700,515,60,30), area=(700,515,60,30), mode="Digit", method="Default", keyword="", name="d_score")
 	# 手动 
 	O_D_HAND = RuleOcr(roi=(31,639,63,45), area=(31,639,63,45), mode="Single", method="Default", keyword="手动", name="d_hand")
 	# 自动 
