@@ -384,8 +384,9 @@ class GeneralInvite(BaseTask, GeneralInviteAssets):
                 if self.appear_then_click(self.I_FLAG_2_OFF, interval=1):
                     continue
 
-            logger.info(f'Now find friend in ”最近“')
+            logger.info(f'Now find friend in “最近”')
             sleep(1)
+            # 开始选择好友
             if not is_select:
                 if self.detect_select(name):
                     is_select = True
@@ -439,24 +440,8 @@ class GeneralInvite(BaseTask, GeneralInviteAssets):
                 if self.detect_select(name):
                     is_select = True
 
-        # 点击确定
-        logger.info('Click invite ensure')
-        if not self.appear(self.I_INVITE_ENSURE):
-            logger.warning('No appear invite ensure while invite friend')
-        while 1:
-            self.screenshot()
-            if not self.appear(self.I_INVITE_ENSURE):
-                break
-            if self.appear_then_click(self.I_INVITE_ENSURE):
-                continue
-        # 哪怕没有找到好友也有点击 确认 以退出好友列表
-        if not is_select:
-            logger.warning('No find friend')
-            # 这个时候任务运行失败
-            logger.info('Task failed')
-            return False
+        return is_select
 
-        return True
 
     def invite_friends(self, config: InviteConfig) -> bool:
         """
@@ -471,7 +456,24 @@ class GeneralInvite(BaseTask, GeneralInviteAssets):
             success = self.invite_friend(config.friend_2, config.find_mode)
             if not success:
                 logger.warning('Invite friend 2 failed')
-        sleep(0.5)
+        sleep(1.5)
+        # 点击确定
+        logger.info('Click invite ensure')
+        if not self.appear(self.I_INVITE_ENSURE):
+            logger.warning('No appear invite ensure while invite friend')
+        while 1:
+            self.screenshot()
+            if not self.appear(self.I_INVITE_ENSURE):
+                break
+            if self.appear_then_click(self.I_INVITE_ENSURE):
+                continue
+        # 哪怕没有找到好友也有点击 确认 以退出好友列表
+        if not success:
+            logger.warning('No find friend')
+            # 这个时候任务运行失败
+            logger.info('Task failed')
+            return False
+        return True
 
     def invite_again(self, default_invite: bool=True) -> bool:
         """
@@ -519,6 +521,7 @@ class GeneralInvite(BaseTask, GeneralInviteAssets):
         :return:
         """
         if not self.appear(self.I_GI_SURE):
+            logger.info('check_and_invite flag failed')
             return False
 
         if default_invite:
