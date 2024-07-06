@@ -229,8 +229,15 @@
     "threshold": 0.8,
     "description": "状态：道馆挑战失败，投票NO"
   },
-
-  
+  {
+    "itemName": "ryou_dokan_exit_ensure",
+    "imageName": "res_ryou_dokan_exit_ensure.png",
+    "roiFront": "678,395,125,56",
+    "roiBack": "678,395,125,56",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "道馆退出确认"
+  },
 
   
   {
