@@ -121,6 +121,18 @@ class Updater(DeployConfig, GitManager, PipManager):
             logger.info(f"No update")
             return False
 
+    def execute_pull(self) -> bool:
+        source = "origin"
+        for _ in range(3):
+            if self.execute(
+                    f'"{self.git}" pull {source} {self.Branch} --no-rebase', allow_failure=True
+            ):
+                break
+        else:
+            logger.warning("Git fetch failed")
+            return False
+
+
 
 if __name__ == "__main__":
     updater = Updater()

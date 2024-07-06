@@ -386,7 +386,8 @@ class Script:
             logger.critical('This is likely to be a mistake of developers, but sometimes just random issues')
             self.config.notifier.push(title=command, content=f"<{self.config_name}> ScriptError")
             exit(1)
-        except RequestHumanTakeover:
+        except RequestHumanTakeover as e:
+            logger.critical(e)
             logger.critical('Request human takeover')
             self.config.notifier.push(title=command, content=f"<{self.config_name}> RequestHumanTakeover")
             exit(1)
