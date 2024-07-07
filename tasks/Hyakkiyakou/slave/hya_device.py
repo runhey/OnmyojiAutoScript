@@ -1,9 +1,18 @@
 import timeit
+import numpy as np
 
 from module.base.timer import Timer
 from module.logger import logger
 from module.base.utils import point2str
+from module.exception import RequestHumanTakeover
 from tasks.base_task import BaseTask
+
+
+def image_black(img) -> bool:
+    for y, x in [(0, 0), (719, 1279), (719, 0), (0, 1279)]:
+        if np.all(img[y, x] != 0):
+            return False
+    return True
 
 
 class HyaDevice(BaseTask):
@@ -20,6 +29,9 @@ class HyaDevice(BaseTask):
         self.hya_screenshot_interval.wait()
         self.hya_screenshot_interval.reset()
         self.device.image = self.device.screenshot_window_background()
+        if image_black(self.device.image):
+            logger.error('Screenshot image is black, try again')
+            raise RequestHumanTakeover('Screenshot image is black, try again')
         return self.device.image
 
     def fast_click(self, x: int, y: int) -> None:
@@ -37,7 +49,6 @@ class HyaDevice(BaseTask):
         self.hya_screenshot_interval = Timer(interval / 1000.)
 
 
-
 if __name__ == '__main__':
     from module.config.config import Config
     from module.device.device import Device
@@ -46,10 +57,13 @@ if __name__ == '__main__':
     d = Device(c)
     hd = HyaDevice(c, d)
 
-    def screenshot():
-        global hd
-        # hd.fast_screenshot()
-        hd.fast_click(420, 370)
-        hd.fast_click(750, 400)
-    execution_time = timeit.timeit(screenshot, number=50)
-    print(f"执行总的时间: {execution_time * 1000} ms")
+    # def screenshot():
+    #     global hd
+    #     # hd.fast_screenshot()
+    #     hd.fast_click(420, 370)
+    #     hd.fast_click(750, 400)
+    # execution_time = timeit.timeit(screenshot, number=50)
+    # print(f"执行总的时间: {execution_time * 1000} ms")
+
+    hd.fast_screenshot()
+
