@@ -3,23 +3,10 @@
 # @author   jackyhwei
 # @note     draft version without full test
 # github    https://github.com/roarhill/oas
-
-import sys
-from pathlib import Path
-
-# 获取当前文件的目录
-current_dir = Path(__file__).resolve().parent
-# 获取上级目录
-upper_dir = current_dir.parent.parent
-print(sys.path)
-sys.path.append(str(upper_dir))
-print(sys.path)
-
-from enum import Enum
 import time
-from datetime import datetime, timedelta
 import random
-import numpy as np  
+import numpy as np
+from enum import Enum
 
 from tasks.Component.GeneralBattle.config_general_battle import GeneralBattleConfig
 from tasks.Component.SwitchSoul.switch_soul import SwitchSoul
@@ -37,6 +24,7 @@ from module.base.utils import point2str
 from module.base.timer import Timer
 from module.exception import GamePageUnknownError
 from tasks.Dokan.config import DokanConfig, Dokan
+
 
 def detect_safe_area2(image, target_gray_value=255, tolerance=0):
     """
@@ -58,12 +46,12 @@ def detect_safe_area2(image, target_gray_value=255, tolerance=0):
 
     # 初始化结果列表
     solid_regions = []
-    
+
     # 遍历图片的每个像素
     for y in range(img_arr.shape[0]):  # 高度
         for x in range(img_arr.shape[1]):  # 宽度
             pixel_gray_value = img_arr[y, x]
-            
+
             # 检查当前像素灰度值是否与目标灰度值在容差范围内匹配
             if abs(pixel_gray_value - target_gray_value) <= tolerance:
                 # 检查周围是否也是同样的灰度值，以确定这是一个区块而非单个像素
@@ -79,25 +67,26 @@ def detect_safe_area2(image, target_gray_value=255, tolerance=0):
                                 break
                     if not is_solid_region:
                         break
-                
+
                 if is_solid_region:
                     # 记录纯色区块的左上角坐标和右下角坐标
                     start_x, start_y = x, y
-                    while start_y > 0 and abs(img_arr[start_y-1, x] - target_gray_value) <= tolerance:
+                    while start_y > 0 and abs(img_arr[start_y - 1, x] - target_gray_value) <= tolerance:
                         start_y -= 1
-                    while start_x > 0 and abs(img_arr[y, start_x-1] - target_gray_value) <= tolerance:
+                    while start_x > 0 and abs(img_arr[y, start_x - 1] - target_gray_value) <= tolerance:
                         start_x -= 1
                     end_x, end_y = x, y
-                    while end_y < img_arr.shape[0]-1 and abs(img_arr[end_y+1, x] - target_gray_value) <= tolerance:
+                    while end_y < img_arr.shape[0] - 1 and abs(img_arr[end_y + 1, x] - target_gray_value) <= tolerance:
                         end_y += 1
-                    while end_x < img_arr.shape[1]-1 and abs(img_arr[y, end_x+1] - target_gray_value) <= tolerance:
+                    while end_x < img_arr.shape[1] - 1 and abs(img_arr[y, end_x + 1] - target_gray_value) <= tolerance:
                         end_x += 1
-                    
-                    solid_regions.append(((start_x, start_y), (end_x+1, end_y+1)))
-    
+
+                    solid_regions.append(((start_x, start_y), (end_x + 1, end_y + 1)))
+
     return solid_regions
 
-def detect_safe_area2(image, safe_color_lower, safe_color_upper, num_areas=3, debug=False):  
+
+def detect_safe_area2(image, safe_color_lower, safe_color_upper, num_areas=3, debug=False):
     ''' 
     找出当前截图里最大的纯色区域，找出来的这个区域将被用于随机点击的区域。
     :note:          注意拿到这个区域后要马上点击，不要sleep！
@@ -113,15 +102,15 @@ def detect_safe_area2(image, safe_color_lower, safe_color_upper, num_areas=3, de
     # 定义颜色范围
     # 注意：这里的颜色范围需要根据实际图片中的安全区域颜色进行调整
     mask = cv2.inRange(hsv, safe_color_lower, safe_color_upper)
-  
+
     # 应用形态学操作来消除噪点和填补小的孔洞
-    kernel = np.ones((5,5),np.uint8)  
-    mask = cv2.dilate(mask,kernel,iterations = 1)  
-    mask = cv2.erode(mask,kernel,iterations = 1)  
-  
+    kernel = np.ones((5, 5), np.uint8)
+    mask = cv2.dilate(mask, kernel, iterations=1)
+    mask = cv2.erode(mask, kernel, iterations=1)
+
     # 查找轮廓  
-    contours, _ = cv2.findContours(mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)  
-  
+    contours, _ = cv2.findContours(mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+
     # 计算每个轮廓的面积并排序
     # areas = [(cv2.contourArea(contour), contour) for contour in contours]
     areas = []
@@ -139,7 +128,7 @@ def detect_safe_area2(image, safe_color_lower, safe_color_upper, num_areas=3, de
         for area, contour in areas_sorted[:num_areas]:
             x1, y1, w1, h1 = cv2.boundingRect(contour)
             # 使用蓝色边框，线宽为4
-            cv2.rectangle(image, (x1, y1), (x1+w1, y1+h1), (255, 0, 0), 4)  
+            cv2.rectangle(image, (x1, y1), (x1 + w1, y1 + h1), (255, 0, 0), 4)
             # 使用红色边框，线宽为3
             cv2.drawContours(image, [contour], -1, (0, 0, 255), 3)
 
@@ -153,8 +142,9 @@ def detect_safe_area2(image, safe_color_lower, safe_color_upper, num_areas=3, de
             cv2.drawContours(image, [safe_area], -1, (0, 255, 0), 3)
 
         return (x, y, w, h)
-    
+
     return (0, 0, 0, 0)
+
 
 class DokanScene(Enum):
     # 未知界面
@@ -181,20 +171,21 @@ class DokanScene(Enum):
     RYOU_DOKAN_SCENE_BOSS_WAITING = 10
     # 道馆结束
     RYOU_DOKAN_SCENE_FINISHED = 99
-    
+
     def __str__(self):
         return self.name.title()
-    
+
     def print(self):
-        print(DokanScene.RYOU_DOKAN_SCENE_GATHERING)        # 输出: DokanScene.Ryou_Daoguan_Scene_Gathering
-        print(DokanScene.RYOU_DOKAN_SCENE_CD.value)         # 输出: 2
-        print(str(DokanScene.RYOU_DOKAN_SCENE_FIGHTING))    # 输出: Ryou_Daoguan_Scene_Fighting
+        print(DokanScene.RYOU_DOKAN_SCENE_GATHERING)  # 输出: DokanScene.Ryou_Daoguan_Scene_Gathering
+        print(DokanScene.RYOU_DOKAN_SCENE_CD.value)  # 输出: 2
+        print(str(DokanScene.RYOU_DOKAN_SCENE_FIGHTING))  # 输出: Ryou_Daoguan_Scene_Fighting
+
 
 class ScriptTask(GeneralBattle, GameUi, SwitchSoul, DokanAssets):
     medal_grid: ImageGrid = None
     attack_priority_selected: bool = False
     team_switched: bool = False
-    green_mark_done : bool = False
+    green_mark_done: bool = False
 
     def run(self):
         """ 道馆主函数
@@ -230,7 +221,7 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, DokanAssets):
             self.ui_goto(page_guild)
 
             self.goto_dokan()
-    
+
         # 开始道馆流程
         while 1:
             self.screenshot()
@@ -296,21 +287,20 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, DokanAssets):
             else:
                 logger.info(f"unknown scene, skipped")
 
-            
             # 防封，随机移动，随机点击（安全点击），随机时延
             if not self.anti_detect(True, True, True):
                 time.sleep(1)
 
         # 保持好习惯，一个任务结束了就返回到庭院，方便下一任务的开始
         self.goto_main()
-        
+
         # 设置下次运行时间
         if success:
             self.set_next_run(task='Dokan', finish=True, server=True, success=True)
         else:
             self.set_next_run(task='Dokan', finish=True, server=True, success=False)
         raise TaskEnd
-    
+
     def dokan_battle(self, cfg: Dokan):
         """ 道馆战斗
         道馆集结结束后会自动进入战斗，打完一个也会自动进入下一个，因此直接点击右下角的开始
@@ -328,7 +318,8 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, DokanAssets):
 
         # 更换队伍
         if not self.team_switched:
-            logger.info(f"更换队伍: config.preset_enable={config.preset_enable}, config.preset_group={config.preset_group}, config.preset_team={config.preset_team}")
+            logger.info(
+                f"更换队伍: config.preset_enable={config.preset_enable}, config.preset_group={config.preset_group}, config.preset_team={config.preset_team}")
             self.switch_preset_team(config.preset_enable, config.preset_group, config.preset_team)
             self.team_switched = True
             # 切完队伍后有时候会卡顿，先睡一觉，防止快速跳到绿标流程，导致未能成功绿标
@@ -344,7 +335,8 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, DokanAssets):
 
             # 绿标式神, should we check there's a green marked role?
             if not self.green_mark_done and self.is_in_battle(False):
-                logger.info(f"绿标式神:config.green_enable={config.green_enable}, config.green_mark={config.green_mark}")
+                logger.info(
+                    f"绿标式神:config.green_enable={config.green_enable}, config.green_mark={config.green_mark}")
                 self.green_mark(config.green_enable, config.green_mark)
                 self.green_mark_done = True
 
@@ -494,7 +486,7 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, DokanAssets):
             else:
                 # 假设安全区域是绿色的  
                 safe_color_lower = np.array([45, 25, 25])  # HSV颜色空间的绿色下界  
-                safe_color_upper = np.array([90, 255,255])  # HSV颜色空间的绿色上界  
+                safe_color_upper = np.array([90, 255, 255])  # HSV颜色空间的绿色上界
                 pos = detect_safe_area2(self.device.image, safe_color_lower, safe_color_upper, 3, True)
                 logger.info(f"random click area: {pos}, delay: {sleep}")
                 self.click(pos)
@@ -508,7 +500,7 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, DokanAssets):
             time.sleep(sleep)
             res = True
         return res
-    
+
     def goto_main(self):
         ''' 保持好习惯，一个任务结束了就返回庭院，方便下一任务的开始或者是出错重启
          FIXME 退出道馆。注意：有的时候有退出确认框，有的时候没有。未找到规律。
@@ -535,7 +527,7 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, DokanAssets):
 
             if max_try <= 0:
                 break
-        
+
         # 退出道馆地图
         while 1:
             self.screenshot()
@@ -543,7 +535,6 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, DokanAssets):
             if self.appear_then_click(GameUi.I_BACK_BL, interval=2.5):
                 logger.info(f"Click {GameUi.I_BACK_BL.name}")
                 break
-        
 
     def goto_dokan(self):
         ''' 进入道馆
@@ -574,7 +565,7 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, DokanAssets):
                     logger.info("failed to find {self.O_DOKAN_MAP.keyword}")
                 else:
                     # 取中间
-                    x = pos[0] + pos[2]/2
+                    x = pos[0] + pos[2] / 2
                     # 往上偏移20
                     y = pos[1] - 20
 
@@ -612,19 +603,20 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, DokanAssets):
         # 状态：检查右下角有没有挑战？通常是失败了，并退出来到集结界面，可重新开始点击右下角挑战进入战斗
         elif self.appear(self.I_RYOU_DOKAN_START_CHALLENGE, 0.95):
             return True, DokanScene.RYOU_DOKAN_SCENE_START_CHALLENGE
-        
+
         # 状态：进入战斗，待开始
         elif self.appear(self.I_RYOU_DOKAN_IN_FIELD, threshold=0.85):
             return True, DokanScene.RYOU_DOKAN_SCENE_IN_FIELD
         # 状态：战斗结算，可能是打完小朋友了，也可能是失败了。
         if self.appear(self.I_RYOU_DOKAN_BATTLE_OVER, threshold=0.85):
             return True, DokanScene.RYOU_DOKAN_SCENE_BATTLE_OVER
-        
+
         # 状态：达到失败次数，CD中
         if self.appear(self.I_RYOU_DOKAN_CD, threshold=0.8):
             return True, DokanScene.RYOU_DOKAN_SCENE_CD
         # 状态：加油中，左下角有鼓
-        if self.appear_then_click(self.I_RYOU_DOKAN_CHEERING, threshold=0.8) or self.appear(self.I_RYOU_DOKAN_CHEERING_GRAY, threshold=0.8):
+        if self.appear_then_click(self.I_RYOU_DOKAN_CHEERING, threshold=0.8) or self.appear(
+                self.I_RYOU_DOKAN_CHEERING_GRAY, threshold=0.8):
             return True, DokanScene.RYOU_DOKAN_SCENE_CHEERING
         # # 状态：战斗中，左上角的加油图标
         # if self.appear(self.I_RYOU_DOKAN_FIGHTING, threshold=0.8):
@@ -636,15 +628,17 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, DokanAssets):
         # if self.ocr_appear(self.O_DOKAN_SUCCEEDED):
         if self.appear(self.I_RYOU_DOKAN_FINISHED, threshold=0.8):
             return True, DokanScene.RYOU_DOKAN_SCENE_FINISHED
-        
+
         return False, DokanScene.RYOU_DOKAN_SCENE_UNKNOWN
+
 
 def test_ocr_locate_dokan_target():
     import cv2
     from module.atom.ocr import RuleOcr
 
     logger.info("========================================>>test 2")
-    O_DOKAN_MAP = RuleOcr(roi=(270,130,740,460), area=(270,130,740,460), mode="Full", method="Default", keyword="万", name="dokan_map")
+    O_DOKAN_MAP = RuleOcr(roi=(270, 130, 740, 460), area=(270, 130, 740, 460), mode="Full", method="Default",
+                          keyword="万", name="dokan_map")
 
     image = cv2.imread("g:/yys/oas/tests/1.png")
     pos = O_DOKAN_MAP.ocr_full(image)
@@ -665,11 +659,12 @@ def test_ocr_locate_dokan_target():
         logger.info("failed to find {self.O_DOKAN_MAP.keyword}")
     else:
         # 取中间
-        x = pos[0] + pos[2]/2
+        x = pos[0] + pos[2] / 2
         # 往上偏移20
         y = pos[1] - 20
 
         logger.info(f"ocr detect result pos={pos}, try click pos, x={x}, y={y}")
+
 
 def test_anti_detect_random_click():
     import cv2
@@ -695,21 +690,22 @@ def test_anti_detect_random_click():
 
         # 示例使用：假设安全区域是绿色的  
         safe_color_lower = np.array([45, 25, 25])  # HSV颜色空间的绿色下界  
-        safe_color_upper = np.array([90, 255,255])  # HSV颜色空间的绿色上界  
+        safe_color_upper = np.array([90, 255, 255])  # HSV颜色空间的绿色上界
 
         # 读取图片  
         image = cv2.imread('c.png')
-        if image is None:  
-            print("Error: Image not found.")  
+        if image is None:
+            print("Error: Image not found.")
         else:
             # 调用函数  
             pos = detect_safe_area2(image, safe_color_lower, safe_color_upper, 3, True)
             print(f"pos={pos}")
 
             # 显示结果  
-            cv2.imshow('Safe Area', image)  
-            cv2.waitKey(0)  
-            cv2.destroyAllWindows()  
+            cv2.imshow('Safe Area', image)
+            cv2.waitKey(0)
+            cv2.destroyAllWindows()
+
 
 def test_goto_main():
     from module.config.config import Config
