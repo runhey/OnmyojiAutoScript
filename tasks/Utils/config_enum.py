@@ -26,6 +26,8 @@ class DemonClass(str, Enum):
     SHINKIRO = '蜃气楼'
     # ghostly songstress 鬼灵歌伎
     GHOSTLY_SONGSTRESS = '鬼灵歌伎'
+    # Boss_7 夜荒魂
+    BOSS_7 = '夜荒魂'
 
 
 

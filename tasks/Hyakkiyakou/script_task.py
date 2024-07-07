@@ -135,7 +135,6 @@ class ScriptTask(GameUi, HyaSlave):
             if datetime.now() - self.start_time >= self.limit_time:
                 logger.info('Hyakkiyakou time limit out')
                 break
-                
 
             self.one()
             hya_count += 1
@@ -175,6 +174,7 @@ class ScriptTask(GameUi, HyaSlave):
         logger.hr('Start Hyakkiyakou')
         init_bean_flag: bool = False
         last_action = [0, 0, False, 10]
+        self.hya_fs_check_timer.reset()
         if self._config.debug_config.hya_show:
             self.debugger.show_start()
         while 1:
