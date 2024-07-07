@@ -8,6 +8,7 @@ from datetime import datetime, time
 from tasks.Component.config_scheduler import Scheduler
 from tasks.Component.config_base import ConfigBase, TimeDelta
 from tasks.Utils.config_enum import ShikigamiClass
+from tasks.Component.SwitchSoul.switch_soul_config import SwitchSoulConfig
 
 class GreenMarkType(str, Enum):
     LEFT_1 = 'left_1'
@@ -34,4 +35,4 @@ class TrueOrochiConfig(BaseModel):
 class TrueOrochi(ConfigBase):
     scheduler: TrueOrochiScheduler = Field(default_factory=TrueOrochiScheduler)
     true_orochi_config: TrueOrochiConfig = Field(default_factory=TrueOrochiConfig)
-
+    switch_soul: SwitchSoulConfig = Field(default_factory=SwitchSoulConfig)
