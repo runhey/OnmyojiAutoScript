@@ -11,14 +11,15 @@ from pathlib import Path
 current_dir = Path(__file__).resolve().parent
 # 获取上级目录
 upper_dir = current_dir.parent.parent
-# print(sys.path)
+print(sys.path)
 sys.path.append(str(upper_dir))
-# print(sys.path)
+print(sys.path)
 
 from enum import Enum
 import time
 from datetime import datetime, timedelta
 import random
+import numpy as np  
 
 from tasks.Component.GeneralBattle.config_general_battle import GeneralBattleConfig
 from tasks.Component.SwitchSoul.switch_soul import SwitchSoul
@@ -36,6 +37,124 @@ from module.base.utils import point2str
 from module.base.timer import Timer
 from module.exception import GamePageUnknownError
 from tasks.Dokan.config import DokanConfig, Dokan
+
+def detect_safe_area2(image, target_gray_value=255, tolerance=0):
+    """
+    在灰度图片中查找与目标灰度值在容差范围内的纯色区块，并返回这些区块的坐标。
+    
+    :param image_path: 图片路径
+    :param target_gray_value: 目标灰度值，默认为255（最亮）
+    :param tolerance: 灰度差异容忍度，默认为0（即完全匹配）
+    :return: 包含找到的纯色区块坐标元组的列表
+    """
+    import cv2
+    # 加载图片并转换为灰度图
+    # img = Image.open(image_path).convert('L')  # 'L' 表示转换为灰度图
+    # img_arr = np.array(img)  # 转换为numpy数组以便高效处理
+
+    # 将图片转换为灰度图
+    gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+    _, img_arr = cv2.threshold(gray, 127, 255, cv2.THRESH_BINARY)
+
+    # 初始化结果列表
+    solid_regions = []
+    
+    # 遍历图片的每个像素
+    for y in range(img_arr.shape[0]):  # 高度
+        for x in range(img_arr.shape[1]):  # 宽度
+            pixel_gray_value = img_arr[y, x]
+            
+            # 检查当前像素灰度值是否与目标灰度值在容差范围内匹配
+            if abs(pixel_gray_value - target_gray_value) <= tolerance:
+                # 检查周围是否也是同样的灰度值，以确定这是一个区块而非单个像素
+                is_solid_region = True
+                for dy in range(-1, 2):  # 检查3x3区域
+                    for dx in range(-1, 2):
+                        if dy == 0 and dx == 0:
+                            continue  # 跳过中心点
+                        ny, nx = y + dy, x + dx
+                        if 0 <= ny < img_arr.shape[0] and 0 <= nx < img_arr.shape[1]:
+                            if abs(img_arr[ny, nx] - target_gray_value) > tolerance:
+                                is_solid_region = False
+                                break
+                    if not is_solid_region:
+                        break
+                
+                if is_solid_region:
+                    # 记录纯色区块的左上角坐标和右下角坐标
+                    start_x, start_y = x, y
+                    while start_y > 0 and abs(img_arr[start_y-1, x] - target_gray_value) <= tolerance:
+                        start_y -= 1
+                    while start_x > 0 and abs(img_arr[y, start_x-1] - target_gray_value) <= tolerance:
+                        start_x -= 1
+                    end_x, end_y = x, y
+                    while end_y < img_arr.shape[0]-1 and abs(img_arr[end_y+1, x] - target_gray_value) <= tolerance:
+                        end_y += 1
+                    while end_x < img_arr.shape[1]-1 and abs(img_arr[y, end_x+1] - target_gray_value) <= tolerance:
+                        end_x += 1
+                    
+                    solid_regions.append(((start_x, start_y), (end_x+1, end_y+1)))
+    
+    return solid_regions
+
+def detect_safe_area2(image, safe_color_lower, safe_color_upper, num_areas=3, debug=False):  
+    ''' 
+    找出当前截图里最大的纯色区域，找出来的这个区域将被用于随机点击的区域。
+    :note:          注意拿到这个区域后要马上点击，不要sleep！
+    :param image:   截图图像
+    :return:        最大纯色区域的坐标
+    '''
+    import cv2
+    import numpy as np
+
+    # 将图片从BGR转换到HSV色彩空间
+    hsv = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
+
+    # 定义颜色范围
+    # 注意：这里的颜色范围需要根据实际图片中的安全区域颜色进行调整
+    mask = cv2.inRange(hsv, safe_color_lower, safe_color_upper)
+  
+    # 应用形态学操作来消除噪点和填补小的孔洞
+    kernel = np.ones((5,5),np.uint8)  
+    mask = cv2.dilate(mask,kernel,iterations = 1)  
+    mask = cv2.erode(mask,kernel,iterations = 1)  
+  
+    # 查找轮廓  
+    contours, _ = cv2.findContours(mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)  
+  
+    # 计算每个轮廓的面积并排序
+    # areas = [(cv2.contourArea(contour), contour) for contour in contours]
+    areas = []
+    for contour in contours:
+        area = cv2.contourArea(contour)
+        print(f"area={area}")
+        areas.append((area, contour))
+
+    # areas.sort(reverse=True)
+    # 按面积降序排序
+    areas_sorted = sorted(areas, key=lambda x: x[0], reverse=True)
+
+    if debug:
+        # 绘制面积排名前3的区域
+        for area, contour in areas_sorted[:num_areas]:
+            x1, y1, w1, h1 = cv2.boundingRect(contour)
+            # 使用蓝色边框，线宽为4
+            cv2.rectangle(image, (x1, y1), (x1+w1, y1+h1), (255, 0, 0), 4)  
+            # 使用红色边框，线宽为3
+            cv2.drawContours(image, [contour], -1, (0, 0, 255), 3)
+
+    # 假设最大的轮廓是安全区域  
+    if contours:
+        safe_area = max(contours, key=cv2.contourArea)
+        x, y, w, h = cv2.boundingRect(safe_area)
+
+        if debug:
+            # 绘制安全区域  
+            cv2.drawContours(image, [safe_area], -1, (0, 255, 0), 3)
+
+        return (x, y, w, h)
+    
+    return (0, 0, 0, 0)
 
 class DokanScene(Enum):
     # 未知界面
@@ -128,7 +247,7 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, DokanAssets):
                 if scene_err_count >= 3:
                     self.goto_dokan()
                 # 先点击一下，然后等5秒再重新截图
-                self.anti_detect(True, False, False)
+                self.anti_detect(True, True, False)
                 time.sleep(5)
                 continue
             else:
@@ -140,6 +259,7 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, DokanAssets):
                 # 如果还未选择优先攻击，选一下
                 if not self.attack_priority_selected:
                     self.dokan_choose_attack_priority(attack_priority=attack_priority)
+                    self.attack_priority_selected = True
             # 场景状态：等待馆主战开始
             elif current_scene == DokanScene.RYOU_DOKAN_SCENE_BOSS_WAITING:
                 logger.debug(f"Ryou DOKAN boss battle waiting...")
@@ -151,11 +271,9 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, DokanAssets):
                 # 战斗
                 success = self.dokan_battle(cfg)
                 # 战斗结束后，随便点三下，确保跳过各种结算画面
-                self.click(click=self.C_DOKAN_READY_FOR_BATLLE)
-                time.sleep(2)
-                self.click(click=self.C_DOKAN_RANDOM_CLICK_AREA2)
-                time.sleep(2)
-                self.click(click=self.C_DOKAN_RANDOM_CLICK_AREA3)
+                self.click(click=self.C_DOKAN_READY_FOR_BATLLE, interval=1.5)
+                self.click(click=self.C_DOKAN_RANDOM_CLICK_AREA2, interval=2.2)
+                self.click(click=self.C_DOKAN_RANDOM_CLICK_AREA3, interval=1.8)
                 # 每次战斗结束都重置绿标
                 self.green_mark_done = False
             # 场景状态：如果CD中，开始加油
@@ -177,42 +295,14 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, DokanAssets):
                 logger.info("道馆挑战失败：投票保留")
             else:
                 logger.info(f"unknown scene, skipped")
+
             
             # 防封，随机移动，随机点击（安全点击），随机时延
             if not self.anti_detect(True, True, True):
                 time.sleep(1)
 
-        # self.ui_current = page_ryou_dokan
-        # self.ui_goto(page_main)
-
-        ''' 保持好习惯，一个任务结束了就返回到庭院，方便下一个任务的开始
-         FIXME 退出道馆。注意：有的时候有退出确认框，有的时候没有。未找到规律。
-               先试试用确认框的，若是实在不行，就改成等道馆时间结束后，系统自动退出
-        '''
-        max_try = 3
-        while 1:
-            self.screenshot()
-            if self.appear_then_click(GeneralBattle.I_EXIT, interval=1.5):
-                logger.info(f"Click {GeneralBattle.I_EXIT.name}")
-                continue
-            # 点了后EXIT后，可能无确认框
-            if self.appear_then_click(GeneralBattle.I_EXIT_ENSURE, interval=1.5):
-                logger.info(f"Click {GeneralBattle.I_EXIT_ENSURE.name}")
-                break
-            else:
-                max_try -= 1
-                time.sleep(1.2)
-
-            if max_try <= 0:
-                break
-        
-        # 退出道馆地图
-        while 1:
-            self.screenshot()
-            # 确认后会跳到竂地图，再点击左上角的蓝色的返回，但是不知道这个返回有没有确认
-            if self.appear_then_click(GameUi.I_BACK_BL, interval=2.5):
-                logger.info(f"Click {GameUi.I_BACK_BL.name}")
-                break
+        # 保持好习惯，一个任务结束了就返回到庭院，方便下一任务的开始
+        self.goto_main()
         
         # 设置下次运行时间
         if success:
@@ -241,6 +331,8 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, DokanAssets):
             logger.info(f"更换队伍: config.preset_enable={config.preset_enable}, config.preset_group={config.preset_group}, config.preset_team={config.preset_team}")
             self.switch_preset_team(config.preset_enable, config.preset_group, config.preset_team)
             self.team_switched = True
+            # 切完队伍后有时候会卡顿，先睡一觉，防止快速跳到绿标流程，导致未能成功绿标
+            time.sleep(3)
 
         # 等待准备按钮的出现
         logger.debug("等待准备按钮的出现")
@@ -261,7 +353,7 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, DokanAssets):
         logger.info("come on baby, let's go.")
 
         while 1:
-            logger.info("take a nap")
+            # logger.info("take a nap")
             time.sleep(1)
 
             self.device.stuck_record_add('BATTLE_STATUS_S')
@@ -320,53 +412,56 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, DokanAssets):
         : return 
         '''
         logger.info("选择优先攻击")
-
+        ret = False
         max_try = 5
 
+        if not self.appear_then_click(self.I_RYOU_DOKAN_PRIORITY, interval=2):
+            logger.error(f"can not find dokan priority option button, choose attack priority process skipped")
+            return ret
+
+        logger.info(f"start select attack priority: {attack_priority}, remain try: {max_try}")
+
         while 1:
+            time.sleep(2)
+            self.screenshot()
             if max_try <= 0:
                 logger.warn("give up priority selection!")
                 break
 
-            self.appear_then_click(self.I_RYOU_DOKAN_PRIORITY, interval=2)
-
-            if not self.appear_then_click(self.I_RYOU_DOKAN_PRIORITY, interval=2):
-                logger.info(f"start select attack priority: {attack_priority}, remain try: {max_try}")
-                max_try -= 1
-                self.screenshot()
-                if attack_priority == 0:
-                    if self.appear_then_click(self.I_RYOU_DOKAN_PRIORITY_0, interval=1.8):
-                        logger.info(f"selected attack priority: {attack_priority}")
-                    else:
-                        continue
-                elif attack_priority == 1:
-                    if self.appear_then_click(self.I_RYOU_DOKAN_PRIORITY_1, interval=1.8):
-                        logger.info(f"selected attack priority: {attack_priority}")
-                    else:
-                        continue
-                elif attack_priority == 2:
-                    if self.appear_then_click(self.I_RYOU_DOKAN_PRIORITY_2):
-                        logger.info(f"selected attack priority: {attack_priority}")
-                    else:
-                        continue
-                elif attack_priority == 3:
-                    if self.appear_then_click(self.I_RYOU_DOKAN_PRIORITY_3):
-                        logger.info(f"selected attack priority: {attack_priority}")
-                    else:
-                        continue
-                elif attack_priority == 4:
-                    if self.appear_then_click(self.I_RYOU_DOKAN_PRIORITY_4):
-                        logger.info(f"selected attack priority: {attack_priority}")
-                    else:
-                        continue
+            if attack_priority == 0:
+                if self.appear_then_click(self.I_RYOU_DOKAN_PRIORITY_0, interval=1.8):
+                    logger.info(f"selected attack priority: {attack_priority}")
                 else:
-                    self.appear_then_click(self.I_RYOU_DOKAN_PRIORITY_0)
-                    logger.error(f"invalid attack priority setting: {attack_priority}")
+                    continue
+            elif attack_priority == 1:
+                if self.appear_then_click(self.I_RYOU_DOKAN_PRIORITY_1, interval=1.8):
+                    logger.info(f"selected attack priority: {attack_priority}")
+                else:
+                    continue
+            elif attack_priority == 2:
+                if self.appear_then_click(self.I_RYOU_DOKAN_PRIORITY_2, interval=1.8):
+                    logger.info(f"selected attack priority: {attack_priority}")
+                else:
+                    continue
+            elif attack_priority == 3:
+                if self.appear_then_click(self.I_RYOU_DOKAN_PRIORITY_3, interval=1.8):
+                    logger.info(f"selected attack priority: {attack_priority}")
+                else:
+                    continue
+            elif attack_priority == 4:
+                if self.appear_then_click(self.I_RYOU_DOKAN_PRIORITY_4, interval=1.8):
+                    logger.info(f"selected attack priority: {attack_priority}")
+                else:
+                    continue
+            else:
+                self.appear_then_click(self.I_RYOU_DOKAN_PRIORITY_0, interval=1.8)
+                logger.error(f"invalid attack priority setting: {attack_priority}")
 
-                break
+            self.attack_priority_selected = True
+            ret = True
+            break
 
-
-        self.attack_priority_selected = True
+        return ret
 
     def anti_detect(self, random_move: bool = True, random_click: bool = True, random_delay: bool = True):
         '''额外的防封测试
@@ -379,8 +474,31 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, DokanAssets):
             self.random_click_swipt()
             res = True
         if random_click:
-            # pos = self.C_DOKAN_RANDOM_CLICK_AREA.coord()
-            # self.click(pos)
+            # 0到2秒之间的随机浮点数
+            sleep = random.uniform(0, 2)
+            # 只保留2位小数
+            sleep = round(sleep, 2)
+            if not self.config.dokan.dokan_config.anti_detect_click_fixed_random_area:
+                # 多搞几个安全点击区域
+                num = random.randint(0, 5)
+                if num == 0:
+                    self.click(click=self.C_DOKAN_RANDOM_CLICK_AREA, interval=sleep)
+                elif num == 1:
+                    self.click(click=self.C_DOKAN_RANDOM_CLICK_AREA2, interval=sleep)
+                elif num == 2:
+                    self.click(click=self.C_DOKAN_RANDOM_CLICK_AREA3, interval=sleep)
+                elif num == 3:
+                    self.click(click=self.C_DOKAN_RANDOM_CLICK_AREA, interval=sleep)
+                else:
+                    self.click(click=self.C_DOKAN_RANDOM_CLICK_AREA2, interval=sleep)
+            else:
+                # 假设安全区域是绿色的  
+                safe_color_lower = np.array([45, 25, 25])  # HSV颜色空间的绿色下界  
+                safe_color_upper = np.array([90, 255,255])  # HSV颜色空间的绿色上界  
+                pos = detect_safe_area2(self.device.image, safe_color_lower, safe_color_upper, 3, True)
+                logger.info(f"random click area: {pos}, delay: {sleep}")
+                self.click(pos)
+
             res = True
         if random_delay:
             # 0到2秒之间的随机浮点数
@@ -390,6 +508,42 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, DokanAssets):
             time.sleep(sleep)
             res = True
         return res
+    
+    def goto_main(self):
+        ''' 保持好习惯，一个任务结束了就返回庭院，方便下一任务的开始或者是出错重启
+         FIXME 退出道馆。注意：有的时候有退出确认框，有的时候没有。未找到规律。
+               先试试用确认框的，若是实在不行，就改成等道馆时间结束后，系统自动退出
+               但是如果出错了，需要重启任务时必须走GameUi.ui_goto(page_main)，
+               那样有或者无确认框不确定性还是会导致ui_goto()出错
+        '''
+        # self.ui_current = page_dokan
+        # self.ui_goto(page_main)
+
+        max_try = 3
+        while 1:
+            self.screenshot()
+            if self.appear_then_click(GeneralBattle.I_EXIT, interval=1.5):
+                logger.info(f"Click {GeneralBattle.I_EXIT.name}")
+                continue
+            # 点了后EXIT后，可能无确认框
+            if self.appear_then_click(self.I_RYOU_DOKAN_EXIT_ENSURE, interval=1.5):
+                logger.info(f"Click {self.I_RYOU_DOKAN_EXIT_ENSURE}")
+                break
+            else:
+                max_try -= 1
+                time.sleep(1.2)
+
+            if max_try <= 0:
+                break
+        
+        # 退出道馆地图
+        while 1:
+            self.screenshot()
+            # 确认后会跳到竂地图，再点击左上角的蓝色的返回，但是不知道这个返回有没有确认
+            if self.appear_then_click(GameUi.I_BACK_BL, interval=2.5):
+                logger.info(f"Click {GameUi.I_BACK_BL.name}")
+                break
+        
 
     def goto_dokan(self):
         ''' 进入道馆
@@ -485,15 +639,7 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, DokanAssets):
         
         return False, DokanScene.RYOU_DOKAN_SCENE_UNKNOWN
 
-if __name__ == "__main__":
-    # from module.config.config import Config
-    # from module.device.device import Device
-
-    # config = Config('oas1')
-    # device = Device(config)
-    # t = ScriptTask(config, device)
-    # t.run()
-
+def test_ocr_locate_dokan_target():
     import cv2
     from module.atom.ocr import RuleOcr
 
@@ -524,3 +670,69 @@ if __name__ == "__main__":
         y = pos[1] - 20
 
         logger.info(f"ocr detect result pos={pos}, try click pos, x={x}, y={y}")
+
+def test_anti_detect_random_click():
+    import cv2
+
+    # image_list = ['g:/yys/oas/tests/1.png', 'g:/yys/oas/tests/2.png', 'g:/yys/oas/tests/3.png', 'g:/yys/oas/tests/4.png', 'g:/yys/oas/tests/5.png']
+    image_list = ['g:/yys/oas/tests/a.png', 'g:/yys/oas/tests/b.png', 'g:/yys/oas/tests/c.png']
+
+    for item in image_list:
+        print(f"item: {item}")
+        image = cv2.imread(item)
+
+        # 注意：这里的颜色范围需要根据实际图片进行调整  
+        # http://kb.rg4.net/docs/omassistant/omassistant-1fnirpstkhdnh
+        # 0<=h<20， 红色
+        # 30<=h<45，黄色
+        # 45<=h<90，绿色
+        # 90<=h<125，青色
+        # 125<=h<150，蓝色
+        # 150<=h<175，紫色
+        # 175<=h<200，粉红色
+        # 200<=h<220，砖红色
+        # 220<=h<255，品红色
+
+        # 示例使用：假设安全区域是绿色的  
+        safe_color_lower = np.array([45, 25, 25])  # HSV颜色空间的绿色下界  
+        safe_color_upper = np.array([90, 255,255])  # HSV颜色空间的绿色上界  
+
+        # 读取图片  
+        image = cv2.imread('c.png')
+        if image is None:  
+            print("Error: Image not found.")  
+        else:
+            # 调用函数  
+            pos = detect_safe_area2(image, safe_color_lower, safe_color_upper, 3, True)
+            print(f"pos={pos}")
+
+            # 显示结果  
+            cv2.imshow('Safe Area', image)  
+            cv2.waitKey(0)  
+            cv2.destroyAllWindows()  
+
+def test_goto_main():
+    from module.config.config import Config
+    from module.device.device import Device
+    from tasks.GameUi.page import page_dokan
+
+    config = Config('oas1')
+    device = Device(config)
+    t = ScriptTask(config, device)
+    # t.run()
+    t.ui_current = page_dokan
+    t.ui_goto(page_main)
+
+
+if __name__ == "__main__":
+    # from module.config.config import Config
+    # from module.device.device import Device
+
+    # config = Config('oas1')
+    # device = Device(config)
+    # t = ScriptTask(config, device)
+    # t.run()
+
+    # test_ocr_locate_dokan_target()
+    # test_anti_detect_random_click()
+    test_goto_main()

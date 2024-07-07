@@ -421,6 +421,8 @@ window_background >>> DroidCast_raw >  ADB_nc >> DroidCast > uiautomator2 ~= ADB
 	<message><source>buy_ap_activity_help</source><translation>该设置只有是设定为活动次数时有效</translation></message>
 	<message><source>activity_toggle_help</source><translation>该设置只有是设定为活动次数时有效</translation></message>
 	<message><source>dokan_attack_priority_help</source><translation>道馆攻击优先顺序</translation></message>
+	<message><source>dokan_auto_cheering_while_cd_help</source><translation>失败CD后自动加油</translation></message>
+	<message><source>anti_detect_click_fixed_random_area_help</source><translation>防封：使用固定的随机区域进行随机点击，若为False将自动识别当前画面中的最大纯色区域作为随机点击区域</translation></message>
 </context>
 <context>
     <name>Args</name>

@@ -25,15 +25,15 @@ class DokanAssets:
 	# 优先攻击
 	I_RYOU_DOKAN_PRIORITY = RuleImage(roi_front=(666,672,58,25), roi_back=(666,672,58,25), threshold=0.8, method="Template matching", file="./tasks/Dokan/res/res_ryou_dokan_priority.png")
 	# 优先攻击选项:见习
-	I_RYOU_DOKAN_PRIORITY_0 = RuleImage(roi_front=(98,170,94,43), roi_back=(98,170,94,43), threshold=0.8, method="Template matching", file="./tasks/Dokan/res/res_ryou_dokan_priority.png")
+	I_RYOU_DOKAN_PRIORITY_0 = RuleImage(roi_front=(98,170,94,43), roi_back=(98,170,94,43), threshold=0.8, method="Template matching", file="./tasks/Dokan/res/res_ryou_dokan_priority_0.png")
 	# 优先攻击选项:初级
-	I_RYOU_DOKAN_PRIORITY_1 = RuleImage(roi_front=(342,175,96,42), roi_back=(342,175,96,42), threshold=0.8, method="Template matching", file="./tasks/Dokan/res/res_ryou_dokan_priority.png")
+	I_RYOU_DOKAN_PRIORITY_1 = RuleImage(roi_front=(342,175,96,42), roi_back=(342,175,96,42), threshold=0.8, method="Template matching", file="./tasks/Dokan/res/res_ryou_dokan_priority_1.png")
 	# 优先攻击选项:中级
-	I_RYOU_DOKAN_PRIORITY_2 = RuleImage(roi_front=(585,175,89,35), roi_back=(585,175,89,35), threshold=0.8, method="Template matching", file="./tasks/Dokan/res/res_ryou_dokan_priority.png")
+	I_RYOU_DOKAN_PRIORITY_2 = RuleImage(roi_front=(585,175,89,35), roi_back=(585,175,89,35), threshold=0.8, method="Template matching", file="./tasks/Dokan/res/res_ryou_dokan_priority_2.png")
 	# 优先攻击选项:高级
-	I_RYOU_DOKAN_PRIORITY_3 = RuleImage(roi_front=(830,175,88,41), roi_back=(830,175,88,41), threshold=0.8, method="Template matching", file="./tasks/Dokan/res/res_ryou_dokan_priority.png")
+	I_RYOU_DOKAN_PRIORITY_3 = RuleImage(roi_front=(830,175,88,41), roi_back=(830,175,88,41), threshold=0.8, method="Template matching", file="./tasks/Dokan/res/res_ryou_dokan_priority_3.png")
 	# 优先攻击选项:黑脸
-	I_RYOU_DOKAN_PRIORITY_4 = RuleImage(roi_front=(1072,178,94,39), roi_back=(1072,178,94,39), threshold=0.8, method="Template matching", file="./tasks/Dokan/res/res_ryou_dokan_priority.png")
+	I_RYOU_DOKAN_PRIORITY_4 = RuleImage(roi_front=(1072,178,94,39), roi_back=(1072,178,94,39), threshold=0.8, method="Template matching", file="./tasks/Dokan/res/res_ryou_dokan_priority_4.png")
 
 	# 状态：集结等待中
 	I_RYOU_DOKAN_GATHERING = RuleImage(roi_front=(653,76,46,26), roi_back=(653,76,46,26), threshold=0.8, method="Template matching", file="./tasks/Dokan/res/res_ryou_dokan_gathering.png")
@@ -63,10 +63,12 @@ class DokanAssets:
 	# 状态：道馆已经结束
 	I_RYOU_DOKAN_FINISHED = RuleImage(roi_front=(633,78,67,24), roi_back=(633,78,67,24), threshold=0.8, method="Template matching", file="./tasks/Dokan/res/res_ryou_dokan_finished.png")
 	# 状态：道馆挑战失败，投票NO(暂不考虑)
-	# I_RYOU_DOKAN_FAILED_VOTE_NO = RuleImage(roi_front=(832,279,130,43), roi_back=(1,1,1055,718), threshold=0.8, method="Template matching", file="./tasks/Dokan/res/res_ryou_dokan_failed_vote_no.png")
+	I_RYOU_DOKAN_FAILED_VOTE_NO = RuleImage(roi_front=(832,279,130,43), roi_back=(1,1,1055,718), threshold=0.8, method="Template matching", file="./tasks/Dokan/res/res_ryou_dokan_failed_vote_no.png")
+	# 道馆退出确认
+	I_RYOU_DOKAN_EXIT_ENSURE = RuleImage(roi_front=(678,395,125,56), roi_back=(678,395,125,56), threshold=0.8, method="Template matching", file="./tasks/Dokan/res/res_ryou_dokan_exit_ensure.png")
+
 	# 场景检测：阴阳竂
 	I_SCENE_RYOU = RuleImage(roi_front=(1161,674,75,31), roi_back=(1161,674,75,31), threshold=0.8, method="Template matching", file="./tasks/Dokan/res/scene_ryou.png")
-
 	# 进入加油相关：道馆积分按钮
 	I_RYOU_DOKAN_CHEERING_SCORES = RuleImage(roi_front=(832,279,130,43), roi_back=(1,1,1055,718), threshold=0.8, method="Template matching", file="./tasks/Dokan/res/res_ryou_dokan_scores.png")
 	# 进入加油相关：攻击中的竂友
