@@ -7,6 +7,7 @@ import time
 import random
 import numpy as np
 from enum import Enum
+from cached_property import cached_property
 
 from tasks.Component.GeneralBattle.config_general_battle import GeneralBattleConfig
 from tasks.Component.SwitchSoul.switch_soul import SwitchSoul
@@ -68,6 +69,14 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, DokanAssets):
     attack_priority_selected: bool = False
     team_switched: bool = False
     green_mark_done: bool = False
+
+    @cached_property
+    def _attack_priorities(self) -> list:
+        return [self.I_RYOU_DOKAN_PRIORITY_0,
+                self.I_RYOU_DOKAN_PRIORITY_1,
+                self.I_RYOU_DOKAN_PRIORITY_2,
+                self.I_RYOU_DOKAN_PRIORITY_3,
+                self.I_RYOU_DOKAN_PRIORITY_4]
 
     def run(self):
         """ 道馆主函数
@@ -281,61 +290,36 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, DokanAssets):
         else:
             return False
 
-    def dokan_choose_attack_priority(self, attack_priority: int):
+    def dokan_choose_attack_priority(self, attack_priority: int) -> bool:
         ''' 选择优先攻击
         : return 
         '''
-        logger.info("选择优先攻击")
-        ret = False
+        logger.hr('Try to choose attack priority')
         max_try = 5
 
         if not self.appear_then_click(self.I_RYOU_DOKAN_PRIORITY, interval=2):
             logger.error(f"can not find dokan priority option button, choose attack priority process skipped")
-            return ret
+            return False
 
         logger.info(f"start select attack priority: {attack_priority}, remain try: {max_try}")
+        try:
+            target_attack = self._attack_priorities[attack_priority]
+        except:
+            target_attack = self._attack_priorities[0]
 
         while 1:
-            time.sleep(2)
             self.screenshot()
             if max_try <= 0:
                 logger.warn("give up priority selection!")
                 break
 
-            if attack_priority == 0:
-                if self.appear_then_click(self.I_RYOU_DOKAN_PRIORITY_0, interval=1.8):
-                    logger.info(f"selected attack priority: {attack_priority}")
-                else:
-                    continue
-            elif attack_priority == 1:
-                if self.appear_then_click(self.I_RYOU_DOKAN_PRIORITY_1, interval=1.8):
-                    logger.info(f"selected attack priority: {attack_priority}")
-                else:
-                    continue
-            elif attack_priority == 2:
-                if self.appear_then_click(self.I_RYOU_DOKAN_PRIORITY_2, interval=1.8):
-                    logger.info(f"selected attack priority: {attack_priority}")
-                else:
-                    continue
-            elif attack_priority == 3:
-                if self.appear_then_click(self.I_RYOU_DOKAN_PRIORITY_3, interval=1.8):
-                    logger.info(f"selected attack priority: {attack_priority}")
-                else:
-                    continue
-            elif attack_priority == 4:
-                if self.appear_then_click(self.I_RYOU_DOKAN_PRIORITY_4, interval=1.8):
-                    logger.info(f"selected attack priority: {attack_priority}")
-                else:
-                    continue
-            else:
-                self.appear_then_click(self.I_RYOU_DOKAN_PRIORITY_0, interval=1.8)
-                logger.error(f"invalid attack priority setting: {attack_priority}")
+            if self.appear_then_click(target_attack, interval=1.8):
+                logger.info(f"selected attack priority: {attack_priority}")
+                max_try -= 1
 
             self.attack_priority_selected = True
-            ret = True
-            break
 
-        return ret
+        return True
 
     def anti_detect(self, random_move: bool = True, random_click: bool = True, random_delay: bool = True):
         '''额外的防封测试
@@ -512,9 +496,6 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, DokanAssets):
             return True, DokanScene.RYOU_DOKAN_SCENE_FINISHED
 
         return False, DokanScene.RYOU_DOKAN_SCENE_UNKNOWN
-
-
-
 
 
 def test_goto_main():
