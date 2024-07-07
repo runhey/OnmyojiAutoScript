@@ -4,7 +4,7 @@ import numpy as np
 from module.base.timer import Timer
 from module.logger import logger
 from module.base.utils import point2str
-from module.exception import RequestHumanTakeover
+from module.exception import RequestHumanTakeover, GameStuckError
 from tasks.base_task import BaseTask
 
 
@@ -24,6 +24,7 @@ class HyaDevice(BaseTask):
     我宣布世界上最好的 Linux 系统是 Windows
     """
     hya_screenshot_interval = Timer(0.2)  # 300ms
+    hya_fs_check_timer = Timer(5 * 60)  # 五分钟跑不完就应该是出问题了
 
     def fast_screenshot(self):
         self.hya_screenshot_interval.wait()
@@ -32,6 +33,10 @@ class HyaDevice(BaseTask):
         if image_black(self.device.image):
             logger.error('Screenshot image is black, try again')
             raise RequestHumanTakeover('Screenshot image is black, try again')
+        if self.hya_fs_check_timer.reached():
+            logger.error('Fast screenshot check timer reached')
+            logger.error('Five minutes have not ended, the game is probably stuck, please check the game')
+            raise GameStuckError
         return self.device.image
 
     def fast_click(self, x: int, y: int) -> None:
