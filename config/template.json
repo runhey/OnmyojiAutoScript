@@ -889,5 +889,37 @@
       "kirin_group_team": "-1,-1",
       "netherworld_group_team": "-1,-1"
     }
-  }
+  },
+  "dokan": {
+    "scheduler": {
+      "enable": true,
+      "next_run": "2023-01-01 00:00:00",
+      "priority": 5,
+      "success_interval": "01 00:00:00",
+      "failure_interval": "01 00:00:00",
+      "server_update": "19:00:00"
+    },
+    "dokan_config": {
+      "dokan_attack_priority": 0,
+      "dokan_auto_cheering_while_cd": false,
+      "random_delay": false,
+      "anti_detect_click_fixed_random_area": false
+    },
+    "general_battle_config": {
+      "lock_team_enable": false,
+      "preset_enable": true,
+      "preset_group": 1,
+      "preset_team": 1,
+      "green_enable": true,
+      "green_mark": "green_left4",
+      "random_click_swipt_enable": false
+    },
+    "switch_soul_config": {
+      "enable": false,
+      "switch_group_team": "1,1",
+      "enable_switch_by_name": false,
+      "group_name": "",
+      "team_name": ""
+    }
+  } 
 }
