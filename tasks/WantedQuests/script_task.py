@@ -216,7 +216,8 @@ class ScriptTask(SecretScriptTask, GeneralInvite, WantedQuestsAssets):
 
     def challenge(self, goto, num):
         self.ui_click(goto, self.I_WQC_FIRE)
-        self.ui_click(self.I_WQC_LOCK, self.I_WQC_UNLOCK)
+        # 不需要解锁
+        # self.ui_click(self.I_WQC_LOCK, self.I_WQC_UNLOCK)
         self.ui_click_until_disappear(self.I_WQC_FIRE)
         self.run_general_battle()
         self.wait_until_appear(self.I_WQC_FIRE, wait_time=4)
