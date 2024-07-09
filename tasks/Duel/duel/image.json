@@ -29,8 +29,8 @@
   {
     "itemName": "d_battle",
     "imageName": "duel_d_battle.png",
-    "roiFront": "1143,566,100,100",
-    "roiBack": "1143,566,100,100",
+    "roiFront": "1153,573,100,100",
+    "roiBack": "1123,537,154,177",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"
@@ -38,8 +38,8 @@
   {
     "itemName": "d_battle_protect",
     "imageName": "duel_d_battle_protect.png",
-    "roiFront": "1145,563,100,100",
-    "roiBack": "1145,563,100,100",
+    "roiFront": "1153,578,100,100",
+    "roiBack": "1118,553,155,149",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "战斗带保护的"
@@ -151,5 +151,23 @@
     "method": "Template matching",
     "threshold": 0.75,
     "description": "名士专属"
+  },
+  {
+    "itemName": "battle_with_train",
+    "imageName": "duel_battle_with_train.png",
+    "roiFront": "1161,588,78,81",
+    "roiBack": "1114,547,163,172",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "练"
+  },
+  {
+    "itemName": "d_battle2",
+    "imageName": "duel_d_battle2.png",
+    "roiFront": "1171,592,69,78",
+    "roiBack": "1119,566,154,143",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "活动的战斗按钮"
   }
 ]

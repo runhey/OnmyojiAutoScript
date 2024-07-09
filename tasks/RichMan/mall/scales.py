@@ -202,6 +202,7 @@ class Scales(Buy, MallNavbar):
             DemonClass.NAMAZU: self.I_SCA_DEMON_BOSS_4,  # 鲶鱼
             DemonClass.SHINKIRO: self.I_SCA_DEMON_BOSS_5,  # 神木鸟
             DemonClass.GHOSTLY_SONGSTRESS: self.I_SCA_DEMON_BOSS_6,  # 歌姬
+            DemonClass.BOSS_7: self.I_SCA_DEMON_BOSS_7,  # 夜荒魂
         }
         match_position = {
             1: self.C_SCA_DEMON_1,

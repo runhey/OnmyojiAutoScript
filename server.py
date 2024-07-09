@@ -54,7 +54,10 @@ def fun(ev: threading.Event):
     logger.attr("Port", port)
     logger.attr("Reload", ev is not None)
 
-    uvicorn.run("module.server.app:fastapi_app", host=host, port=port, factory=True)
+    uvicorn.run("module.server.app:fastapi_app",
+                host=host,
+                port=port,
+                factory=True)
 
 
 

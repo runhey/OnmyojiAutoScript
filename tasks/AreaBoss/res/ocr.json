@@ -19,8 +19,8 @@
   },
   {
     "itemName": "ab_famous",
-    "roiFront": "1188,181,78,82",
-    "roiBack": "1188,181,78,82",
+    "roiFront": "1190,220,50,120",
+    "roiBack": "1190,220,50,120",
     "mode": "Single",
     "method": "Default",
     "keyword": "热门",
@@ -28,8 +28,8 @@
   },
   {
     "itemName": "ab_collecting",
-    "roiFront": "1163,522,88,100",
-    "roiBack": "1163,522,88,100",
+    "roiFront": "1190,580,50,120",
+    "roiBack": "1190,580,50,120",
     "mode": "Single",
     "method": "Default",
     "keyword": "收藏",

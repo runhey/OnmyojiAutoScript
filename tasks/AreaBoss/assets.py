@@ -10,6 +10,13 @@ from module.atom.list import RuleList
 class AreaBossAssets: 
 
 
+	# Click Rule Assets
+	# 热门按钮 
+	C_AB_FAMOUS_BTN = RuleClick(roi_front=(1190,220,50,120), roi_back=(1190,220,50,120), name="ab_famous_btn")
+	# 收藏按钮 
+	C_AB_COLLECTION_BTN = RuleClick(roi_front=(1190,580,50,120), roi_back=(1190,580,50,120), name="ab_collection_btn")
+
+
 	# Image Rule Assets
 	# 探索图标 
 	I_EXPLORE = RuleImage(roi_front=(758,122,66,77), roi_back=(339,104,836,120), threshold=0.8, method="Template matching", file="./tasks/AreaBoss/res/res_explore.png")
@@ -31,6 +38,10 @@ class AreaBossAssets:
 	I_CLOSE_RED = RuleImage(roi_front=(1190,24,37,38), roi_back=(1190,24,37,38), threshold=0.8, method="Template matching", file="./tasks/AreaBoss/res/res_close_red.png")
 	# 红色关闭 
 	I_AB_CLOSE_RED = RuleImage(roi_front=(1194,24,38,37), roi_back=(1194,24,38,37), threshold=0.8, method="Template matching", file="./tasks/AreaBoss/res/res_ab_close_red.png")
+	# 筛选中 选中收藏标识 
+	I_AB_FILTER_TITLE_COLLECTION = RuleImage(roi_front=(940,110,170,70), roi_back=(940,110,170,70), threshold=0.8, method="Template matching", file="./tasks/AreaBoss/res/ab_filter_title_collection.png")
+	# 筛选界面打开标识 
+	I_AB_FILTER_OPENED = RuleImage(roi_front=(840,110,130,70), roi_back=(840,110,130,70), threshold=0.8, method="Template matching", file="./tasks/AreaBoss/res/ab_filter_opened.png")
 
 
 	# Ocr Rule Assets
@@ -39,8 +50,8 @@ class AreaBossAssets:
 	# 我的收藏 
 	O_AB_MY_COLLECT = RuleOcr(roi=(949,124,129,53), area=(949,124,129,53), mode="Single", method="Default", keyword="我的收藏", name="ab_my_collect")
 	# 热门 
-	O_AB_FAMOUS = RuleOcr(roi=(1188,181,78,82), area=(1188,181,78,82), mode="Single", method="Default", keyword="热门", name="ab_famous")
+	O_AB_FAMOUS = RuleOcr(roi=(1190,220,50,120), area=(1190,220,50,120), mode="Single", method="Default", keyword="热门", name="ab_famous")
 	# 收藏 
-	O_AB_COLLECTING = RuleOcr(roi=(1163,522,88,100), area=(1163,522,88,100), mode="Single", method="Default", keyword="收藏", name="ab_collecting")
+	O_AB_COLLECTING = RuleOcr(roi=(1190,580,50,120), area=(1190,580,50,120), mode="Single", method="Default", keyword="收藏", name="ab_collecting")
 
 

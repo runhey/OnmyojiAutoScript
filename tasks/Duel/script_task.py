@@ -5,7 +5,7 @@ from time import sleep
 from datetime import time, datetime, timedelta
 
 from module.logger import logger
-from module.exception import TaskEnd
+from module.exception import TaskEnd, RequestHumanTakeover
 from module.base.timer import Timer
 
 from tasks.Component.GeneralBattle.general_battle import GeneralBattle
@@ -106,7 +106,17 @@ class ScriptTask(GameUi, GeneralBattle, DuelAssets):
                 logger.info('You are already a celeb')
                 return None
             current_score = self.O_D_SCORE.ocr(self.device.image)
-            if current_score < 1200 or current_score > 3000:
+            if current_score < 1200:
+                # 分太低了
+                logger.warning('Score is too low')
+                logger.error('Please enhance your score')
+                raise RequestHumanTakeover
+            elif current_score > 10000:
+                # 识别错误分数超过一万, 去掉最高位
+                logger.warning('Recognition error, score is too high')
+                logger.warning('Remove the highest digit')
+                current_score = int(str(current_score)[1:])
+            elif current_score > 3000:
                 continue
             return current_score if current_score <= target else None
 
@@ -124,6 +134,10 @@ class ScriptTask(GameUi, GeneralBattle, DuelAssets):
             if not self.appear(self.I_D_HELP):
                 break
             if self.appear_then_click(self.I_D_BATTLE, interval=1):
+                continue
+            if self.appear_then_click(self.I_D_BATTLE2, interval=1):
+                continue
+            if self.appear_then_click(self.I_BATTLE_WITH_TRAIN, interval=1):
                 continue
             if self.appear_then_click(self.I_D_BATTLE_PROTECT, interval=1.6):
                 continue

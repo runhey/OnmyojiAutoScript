@@ -6,6 +6,8 @@ import copy
 from time import sleep
 from datetime import timedelta, time, datetime
 from cached_property import cached_property
+from enum import Enum
+from module.atom.image import RuleImage
 
 from module.exception import TaskEnd
 from module.logger import logger
@@ -17,9 +19,12 @@ from tasks.Component.GeneralBattle.general_battle import GeneralBattle
 from tasks.Component.GeneralBattle.config_general_battle import GeneralBattleConfig
 from tasks.Component.GeneralInvite.general_invite import GeneralInvite
 from tasks.Secret.script_task import ScriptTask as SecretScriptTask
-from tasks.WantedQuests.config import WantedQuestsConfig
+from tasks.WantedQuests.config import WantedQuestsConfig, CooperationType, CooperationSelectMask, \
+    CooperationSelectMaskDescription
 from tasks.WantedQuests.assets import WantedQuestsAssets
 from tasks.Component.Costume.config import MainType
+from typing import List
+
 
 class ScriptTask(SecretScriptTask, GeneralInvite, WantedQuestsAssets):
 
@@ -73,7 +78,6 @@ class ScriptTask(SecretScriptTask, GeneralInvite, WantedQuestsAssets):
             if not self.appear(self.I_WQ_CHECK_TASK):
                 logger.info('No wanted quests')
                 break
-
 
         self.next_run()
         raise TaskEnd('WantedQuests')
@@ -129,7 +133,14 @@ class ScriptTask(SecretScriptTask, GeneralInvite, WantedQuestsAssets):
                 return False
         # 已追踪所有任务
         logger.info('All wanted quests are traced')
-        self.invite_five()
+
+        # 存在协作任务则邀请
+        self.screenshot()
+        if self.appear(self.I_WQ_INVITE_1) or self.appear(self.I_WQ_INVITE_2) or self.appear(self.I_WQ_INVITE_3):
+            if self.config.wanted_quests.wanted_quests_config.invite_friend_name:
+                self.all_cooperation_invite(self.config.wanted_quests.wanted_quests_config.invite_friend_name)
+            else:
+                self.invite_five()
         self.ui_click_until_disappear(self.I_UI_BACK_RED)
         self.ui_goto(page_exploration)
         return True
@@ -156,6 +167,7 @@ class ScriptTask(SecretScriptTask, GeneralInvite, WantedQuestsAssets):
             return
         # 找到一个最优的关卡来挑战
         challenge = True if num_challenge >= 10 else False
+
         def check_battle(cha: bool, wq_type, wq_info) -> tuple:
             battle = False
             self.screenshot()
@@ -178,7 +190,7 @@ class ScriptTask(SecretScriptTask, GeneralInvite, WantedQuestsAssets):
             if one_number > num_want:
                 return battle, 1
             else:
-                return battle, num_want // one_number + 1
+                return battle, num_want // one_number + (1 if num_want % one_number > 0 else 0)
 
         battle, num, goto = None, None, None
         if not battle:
@@ -201,7 +213,6 @@ class ScriptTask(SecretScriptTask, GeneralInvite, WantedQuestsAssets):
             # 没有找到可以挑战的关卡 那就关闭
             logger.warning('No wanted quests can be challenged')
             return False
-
 
     def challenge(self, goto, num):
         self.ui_click(goto, self.I_WQC_FIRE)
@@ -244,38 +255,150 @@ class ScriptTask(SecretScriptTask, GeneralInvite, WantedQuestsAssets):
                 continue
         logger.info('Secret mission finished')
 
+    def invite_random(self, add_button: RuleImage):
+        self.screenshot()
+        if not self.appear(add_button):
+            return False
+        self.ui_click(add_button, self.I_WQ_INVITE_ENSURE, interval=2.5)
+        logger.info('enter invite form')
+        sleep(1)
+        self.click(self.I_WQ_FRIEND_1)
+        sleep(0.4)
+        self.click(self.I_WQ_FRIEND_2)
+        sleep(0.4)
+        self.click(self.I_WQ_FRIEND_3)
+        sleep(0.4)
+        self.click(self.I_WQ_FRIEND_4)
+        sleep(0.4)
+        self.click(self.I_WQ_FRIEND_5)
+        sleep(0.2)
+        self.screenshot()
+        if not self.appear(self.I_SELECTED):
+            logger.warning('No friend selected')
+            return False
+        self.ui_click_until_disappear(self.I_INVITE_ENSURE)
+        sleep(0.5)
+
     def invite_five(self):
         """
         邀请好友，默认点五个
         :return:
         """
-        def invite(add_button):
-            self.screenshot()
-            if not self.appear(add_button):
-                return False
-            self.ui_click(add_button, self.I_INVITE_ENSURE, interval=2.5)
-            sleep(1)
-            self.click(self.I_WQ_FIREND_1)
-            sleep(0.4)
-            self.click(self.I_WQ_FIREND_2)
-            sleep(0.4)
-            self.click(self.I_WQ_FIREND_3)
-            sleep(0.4)
-            self.click(self.I_WQ_FIREND_4)
-            sleep(0.4)
-            self.click(self.I_WQ_FIREND_5)
-            sleep(0.2)
-            self.screenshot()
-            if not self.appear(self.I_SELECTED):
-                logger.warning('No friend selected')
-                return False
-            self.ui_click_until_disappear(self.I_INVITE_ENSURE)
-            sleep(0.5)
 
         logger.hr('Invite friends')
-        invite(self.I_WQ_INVITE_1)
-        invite(self.I_WQ_INVITE_2)
-        invite(self.I_WQ_INVITE_3)
+        self.invite_random(self.I_WQ_INVITE_1)
+        self.invite_random(self.I_WQ_INVITE_2)
+        self.invite_random(self.I_WQ_INVITE_3)
+
+    def all_cooperation_invite(self, name: str):
+        """
+            所有的协作任务依次邀请
+        @param name: 被邀请的朋友名
+        @return:
+
+        """
+        self.screenshot()
+        if not self.appear(self.I_WQ_INVITE_1):
+            return False
+
+        ret = self.get_cooperation_info()
+        if len(ret) == 0:
+            logger.info("no Cooperation found")
+            return False
+        typeMask=15
+        typeMask = CooperationSelectMask [self.config.wanted_quests.wanted_quests_config.cooperation_type.value]
+        for item in ret:
+            # 该任务是需要邀请的任务类型
+            if not (item['type'] & typeMask):
+                # BUG 存在多个协作任务时,邀请完第一个协作任务对方接受后,未邀请的任务位置无法确定(缺少信息)
+                # 例如 按顺序存在 abc 3个协作任务,邀请完a,好友接受后,这三个任务在界面上的顺序变化,abc 还是bca
+                # 如果顺序不变 则应该没有问题
+                logger.info("cooperationType %s But needed Type %s ,Skipped", item['type'], typeMask)
+                break
+            '''
+               尝试5次 如果邀请失败 等待20s 重新尝试
+               阴阳师BUG: 好友明明在线 但邀请界面找不到该好友(好友未接受任何协作任务的情况下)
+           '''
+            index = 0
+            while index < 5:
+                if self.cooperation_invite(item['inviteBtn'], name):
+                    item['inviteResult'] = True
+                    index = 5
+                logger.info("%s not found,Wait 20s,%d invitations left", name, 5 - index - 1)
+                index += 1
+                sleep(20) if index < 5 else sleep(0)
+                #NOTE 等待过程如果出现协作邀请 将会卡住 为了防止卡住
+                self.screenshot()
+        return ret
+
+    def cooperation_invite(self, btn: RuleImage, name: str):
+        """
+            单个协作任务邀请
+        @param btn:
+        @param name:
+        @return:
+        """
+        self.ui_click(btn, self.I_WQ_INVITE_ENSURE, interval=2.5)
+
+        # 选人
+        self.O_WQ_INVITE_COLUMN_1.keyword = name
+        self.O_WQ_INVITE_COLUMN_2.keyword = name
+
+        find = False
+        for i in range(2):
+            self.screenshot()
+            in_col_1 = self.ocr_appear_click(self.O_WQ_INVITE_COLUMN_1)
+            in_col_2 = self.ocr_appear_click(self.O_WQ_INVITE_COLUMN_2)
+            find = in_col_2 or in_col_1
+            if find:
+                self.screenshot()
+                if self.appear(self.I_WQ_INVITE_SELECTED):
+                    logger.info("friend found and selected")
+                    break
+                # TODO OCR识别到文字 但是没有选中 尝试重新选择  (选择好友时,弹出协作邀请导致选择好友失败)
+            # 在当前服务器没找到,切换服务器
+            self.click(self.I_WQ_INVITE_DIFF_SVR)
+            # NOTE 跨服好友刷新缓慢,切换标签页难以检测,姑且用延时.非常卡的模拟器可能出问题
+            sleep(2)
+        # 没有找到需要邀请的人,点击取消 返回悬赏封印界面
+        if not find:
+            self.screenshot()
+            self.click(self.I_WQ_INVITE_CANCEL)
+            return False
+        #
+        self.ui_click_until_disappear(self.I_WQ_INVITE_ENSURE)
+        return True
+
+    def get_cooperation_info(self) -> List:
+        """
+            获取协作任务详情
+        @return: 协作任务类型与邀请按钮
+        """
+        self.screenshot()
+        retList = []
+        i = 0
+        for index in range(3):
+            btn = self.__getattribute__("I_WQ_INVITE_" + str(index + 1))
+            if not self.appear(btn):
+                break
+            if self.appear(self.__getattribute__("I_WQ_COOPERATION_TYPE_JADE_" + str(index + 1))):
+                retList.append({'type': CooperationType.Jade, 'inviteBtn': btn})
+                continue
+            if self.appear(self.__getattribute__("I_WQ_COOPERATION_TYPE_DOG_FOOD_" + str(index + 1))):
+                retList.append({'type': CooperationType.Food, 'inviteBtn': btn})
+                continue
+            if self.appear(self.__getattribute__("I_WQ_COOPERATION_TYPE_CAT_FOOD_" + str(index + 1))):
+                retList.append({'type': CooperationType.Food, 'inviteBtn': btn})
+                continue
+            if self.appear(self.__getattribute__("I_WQ_COOPERATION_TYPE_SUSHI_" + str(index + 1))):
+                retList.append({'type': CooperationType.Sushi, 'inviteBtn': btn})
+                continue
+            # NOTE 因为食物协作里面也有金币奖励 ,所以判断金币协作放在最后面
+            if self.appear(self.__getattribute__("I_WQ_COOPERATION_TYPE_GOLD_" + str(index + 1))):
+                retList.append({'type': CooperationType.Gold, 'inviteBtn': btn})
+                continue
+
+        return retList
 
     @cached_property
     def special_main(self) -> bool:
@@ -289,14 +412,11 @@ class ScriptTask(SecretScriptTask, GeneralInvite, WantedQuestsAssets):
 if __name__ == '__main__':
     from module.config.config import Config
     from module.device.device import Device
-    c = Config('oas1')
+
+    c = Config('回归')
     d = Device(c)
     t = ScriptTask(c, d)
     t.screenshot()
 
-    # t.run()
-    t.invite_five()
+    t.run()
     # print(t.appear(t.I_WQ_CHECK_TASK))
-
-
-

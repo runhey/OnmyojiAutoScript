@@ -173,6 +173,7 @@
 	<message><source>GlobalGame</source><translation>全局游戏设置</translation></message>
 	<message><source>RealmRaid</source><translation>个人突破</translation></message>
 	<message><source>RyouToppa</source><translation>寮突破</translation></message>
+	<message><source>Dokan</source><translation>道馆</translation></message>
 	<message><source>Exploration</source><translation>探索</translation></message>
 	<message><source>List Rule</source><translation>列表规则</translation></message>
 	<message><source>Activity Task</source><translation>限时活动</translation></message>
@@ -219,6 +220,7 @@
 	<message><source>GlobalGame</source><translation>全局游戏设置</translation></message>
 	<message><source>RealmRaid</source><translation>个人突破</translation></message>
 	<message><source>RyouToppa</source><translation>寮突破</translation></message>
+	<message><source>Dokan</source><translation>道馆</translation></message>
 	<message><source>Exploration</source><translation>探索</translation></message>
 	<message><source>List Rule</source><translation>列表规则</translation></message>
 	<message><source>Activity Task</source><translation>限时活动</translation></message>
@@ -418,6 +420,9 @@ window_background >>> DroidCast_raw >  ADB_nc >> DroidCast > uiautomator2 ~= ADB
 	<message><source>Buy Ap Activity</source><translation>游戏体力不足是否需要话勾玉购买</translation></message>
 	<message><source>buy_ap_activity_help</source><translation>该设置只有是设定为活动次数时有效</translation></message>
 	<message><source>activity_toggle_help</source><translation>该设置只有是设定为活动次数时有效</translation></message>
+	<message><source>dokan_attack_priority_help</source><translation>道馆攻击优先顺序</translation></message>
+	<message><source>dokan_auto_cheering_while_cd_help</source><translation>失败CD后自动加油</translation></message>
+	<message><source>anti_detect_click_fixed_random_area_help</source><translation>防封：使用固定的随机区域进行随机点击，若为False将自动识别当前画面中的最大纯色区域作为随机点击区域</translation></message>
 </context>
 <context>
     <name>Args</name>
