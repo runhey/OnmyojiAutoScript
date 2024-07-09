@@ -245,7 +245,7 @@ class ScriptTask(GameUi, BondlingBattle, SwitchSoul, BondlingFairylandAssets):
                 case BondlingClass.SNOWBALL: group_team = bondling_switch_soul.snowball_switch
                 case BondlingClass.LITTLE_KURO: group_team = bondling_switch_soul.little_kuro_switch
                 case BondlingClass.TOMB_GUARD: group_team = bondling_switch_soul.tomb_guard_switch
-            # group_team = switch_parser(group_team)
+            group_team = switch_parser(group_team)
             if group_team == [-1, -1]:
                 logger.info(f'{bondling_class.name } switch soul is not set, skip')
                 return False
