@@ -66,16 +66,24 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, ExplorationAssets):
                             f' Enter {explorationConfig.exploration_config.exploration_level} failed!')
             raise RequestHumanTakeover
 
-        # 只探索7次
-        if explorationConfig.exploration_config.attack_number == AttackNumber.SEVEN:
+        # 探索
+        exploration_count =explorationConfig.exploration_config.current_exploration_count
+        # logger.info("探索执行次数：" + str(exploration_count))
+        if exploration_count > 0:
             count = 0
-            while count < 7:
+            while count < exploration_count:
                 if self.wait_until_appear(self.I_E_EXPLORATION_CLICK, wait_time=1):
                     self.click(self.I_E_EXPLORATION_CLICK)
                     count += 1
+                    # logger.info("探索执行第几次：" + str(count))
                     # 进入战斗环节
                     self.battle_process()
-                if self.appear(self.I_EXPLORATION_TITLE):
+                # 判断宝箱
+                if self.appear(self.I_TREASURE_BOX_CLICK):
+                    self.click(self.I_TREASURE_BOX_CLICK)
+                    self.open_expect_level()
+                # 判断妖气
+                elif self.appear(self.I_EXPLORATION_TITLE):
                     self.open_expect_level()
 
             if self.wait_until_appear(self.I_RED_CLOSE, wait_time=2):
@@ -244,7 +252,7 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, ExplorationAssets):
         # 自动添加候补式神
         if self.config.exploration.exploration_config.auto_rotate == AutoRotate.yes:
             self.enter_settings_and_do_operations()
-        
+
         # 修复卡结算问题
         # 卡结算是因为没有设置锁定队伍，修改后无论是否锁定都不会因为没有锁定队伍而卡在结算界面
         if not self.config.exploration.general_battle_config.lock_team_enable:
