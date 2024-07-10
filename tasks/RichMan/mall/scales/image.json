@@ -29,8 +29,8 @@
   {
     "itemName": "sca_demon_boss_1",
     "imageName": "scales_sca_demon_boss_1.png",
-    "roiFront": "225,169,192,193",
-    "roiBack": "225,169,192,193",
+    "roiFront": "209,168,192,193",
+    "roiBack": "168,142,346,290",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "土蜘蛛"
@@ -38,8 +38,8 @@
   {
     "itemName": "sca_demon_boss_2",
     "imageName": "scales_sca_demon_boss_2.png",
-    "roiFront": "539,161,180,198",
-    "roiBack": "539,161,180,198",
+    "roiFront": "457,158,180,198",
+    "roiBack": "413,136,273,250",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "胧车"
@@ -47,8 +47,8 @@
   {
     "itemName": "sca_demon_boss_3",
     "imageName": "scales_sca_demon_boss_3.png",
-    "roiFront": "864,180,181,175",
-    "roiBack": "864,180,181,175",
+    "roiFront": "687,178,181,175",
+    "roiBack": "631,132,344,273",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "荒骷髅"
@@ -56,8 +56,8 @@
   {
     "itemName": "sca_demon_boss_4",
     "imageName": "scales_sca_demon_boss_4.png",
-    "roiFront": "228,412,188,211",
-    "roiBack": "228,412,188,211",
+    "roiFront": "883,162,188,211",
+    "roiBack": "804,121,315,292",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "地震鲶"
@@ -65,8 +65,8 @@
   {
     "itemName": "sca_demon_boss_5",
     "imageName": "scales_sca_demon_boss_5.png",
-    "roiFront": "534,414,211,218",
-    "roiBack": "534,414,211,218",
+    "roiFront": "326,425,211,218",
+    "roiBack": "241,414,504,242",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "蜃气楼"
@@ -74,8 +74,8 @@
   {
     "itemName": "sca_demon_boss_6",
     "imageName": "scales_sca_demon_boss_6.png",
-    "roiFront": "862,432,178,189",
-    "roiBack": "862,432,178,189",
+    "roiFront": "561,432,178,189",
+    "roiBack": "437,401,555,236",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "歌姬"
@@ -133,5 +133,14 @@
     "method": "Template matching",
     "threshold": 0.8,
     "description": "点击兑换"
+  },
+  {
+    "itemName": "sca_demon_boss_7",
+    "imageName": "scales_sca_demon_boss_7.png",
+    "roiFront": "819,489,100,100",
+    "roiBack": "640,423,412,222",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "夜荒魂"
   }
 ]

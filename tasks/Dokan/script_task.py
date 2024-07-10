@@ -291,9 +291,9 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, DokanAssets):
             return False
 
     def dokan_choose_attack_priority(self, attack_priority: int) -> bool:
-        ''' 选择优先攻击
+        """ 选择优先攻击
         : return 
-        '''
+        """
         logger.hr('Try to choose attack priority')
         max_try = 5
 
