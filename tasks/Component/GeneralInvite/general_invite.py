@@ -468,6 +468,7 @@ class GeneralInvite(BaseTask, GeneralInviteAssets):
             logger.warning('Invite friend 1 failed')
         # 如果是邀请第二个人
         if config.invite_number == InviteNumber.TWO:
+            sleep(5)
             success = self.invite_friend(config.friend_2, config.find_mode)
             if not success:
                 logger.warning('Invite friend 2 failed')
