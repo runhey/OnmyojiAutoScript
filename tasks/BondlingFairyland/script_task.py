@@ -377,11 +377,11 @@ class ScriptTask(GameUi, BondlingBattle, SwitchSoul, BondlingFairylandAssets):
             self.screenshot()
             if self.appear(self.I_CLICK_CAPTION):
                 return True
-            if click_count >= 4:
+            if click_count >= 5:
                 return False
             # 点击
-            self.click(click_target, interval=1)
-            click_count += 1
+            if self.click(click_target, interval=1):
+                click_count += 1
 
 
     def capture_setting(self, mode: BondlingMode) -> None:

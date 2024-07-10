@@ -3,26 +3,14 @@
 # @author   jackyhwei
 # @note     draft version without full test
 # github    https://github.com/roarhill/oas
-
-import sys
-from pathlib import Path
-
-# 获取当前文件的目录
-current_dir = Path(__file__).resolve().parent
-# 获取上级目录
-upper_dir = current_dir.parent.parent
-# print(sys.path)
-sys.path.append(str(upper_dir))
-# print(sys.path)
-
-from enum import Enum
 import time
-from datetime import datetime, timedelta
 import random
+import numpy as np
+from enum import Enum
+from cached_property import cached_property
 
 from tasks.Component.GeneralBattle.config_general_battle import GeneralBattleConfig
 from tasks.Component.SwitchSoul.switch_soul import SwitchSoul
-from tasks.Dokan.assets import DokanAssets
 from tasks.Component.GeneralBattle.general_battle import GeneralBattle
 from tasks.Component.config_base import ConfigBase, Time
 from tasks.GameUi.game_ui import GameUi
@@ -35,7 +23,11 @@ from module.atom.image_grid import ImageGrid
 from module.base.utils import point2str
 from module.base.timer import Timer
 from module.exception import GamePageUnknownError
+
 from tasks.Dokan.config import DokanConfig, Dokan
+from tasks.Dokan.assets import DokanAssets
+from tasks.Dokan.utils import detect_safe_area2
+
 
 class DokanScene(Enum):
     # 未知界面
@@ -62,20 +54,29 @@ class DokanScene(Enum):
     RYOU_DOKAN_SCENE_BOSS_WAITING = 10
     # 道馆结束
     RYOU_DOKAN_SCENE_FINISHED = 99
-    
+
     def __str__(self):
         return self.name.title()
-    
+
     def print(self):
-        print(DokanScene.RYOU_DOKAN_SCENE_GATHERING)        # 输出: DokanScene.Ryou_Daoguan_Scene_Gathering
-        print(DokanScene.RYOU_DOKAN_SCENE_CD.value)         # 输出: 2
-        print(str(DokanScene.RYOU_DOKAN_SCENE_FIGHTING))    # 输出: Ryou_Daoguan_Scene_Fighting
+        print(DokanScene.RYOU_DOKAN_SCENE_GATHERING)  # 输出: DokanScene.Ryou_Daoguan_Scene_Gathering
+        print(DokanScene.RYOU_DOKAN_SCENE_CD.value)  # 输出: 2
+        print(str(DokanScene.RYOU_DOKAN_SCENE_FIGHTING))  # 输出: Ryou_Daoguan_Scene_Fighting
+
 
 class ScriptTask(GeneralBattle, GameUi, SwitchSoul, DokanAssets):
     medal_grid: ImageGrid = None
     attack_priority_selected: bool = False
     team_switched: bool = False
-    green_mark_done : bool = False
+    green_mark_done: bool = False
+
+    @cached_property
+    def _attack_priorities(self) -> list:
+        return [self.I_RYOU_DOKAN_PRIORITY_0,
+                self.I_RYOU_DOKAN_PRIORITY_1,
+                self.I_RYOU_DOKAN_PRIORITY_2,
+                self.I_RYOU_DOKAN_PRIORITY_3,
+                self.I_RYOU_DOKAN_PRIORITY_4]
 
     def run(self):
         """ 道馆主函数
@@ -111,7 +112,7 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, DokanAssets):
             self.ui_goto(page_guild)
 
             self.goto_dokan()
-    
+
         # 开始道馆流程
         while 1:
             self.screenshot()
@@ -128,7 +129,7 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, DokanAssets):
                 if scene_err_count >= 3:
                     self.goto_dokan()
                 # 先点击一下，然后等5秒再重新截图
-                self.anti_detect(True, False, False)
+                self.anti_detect(True, True, False)
                 time.sleep(5)
                 continue
             else:
@@ -140,6 +141,7 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, DokanAssets):
                 # 如果还未选择优先攻击，选一下
                 if not self.attack_priority_selected:
                     self.dokan_choose_attack_priority(attack_priority=attack_priority)
+                    self.attack_priority_selected = True
             # 场景状态：等待馆主战开始
             elif current_scene == DokanScene.RYOU_DOKAN_SCENE_BOSS_WAITING:
                 logger.debug(f"Ryou DOKAN boss battle waiting...")
@@ -151,11 +153,9 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, DokanAssets):
                 # 战斗
                 success = self.dokan_battle(cfg)
                 # 战斗结束后，随便点三下，确保跳过各种结算画面
-                self.click(click=self.C_DOKAN_READY_FOR_BATLLE)
-                time.sleep(2)
-                self.click(click=self.C_DOKAN_RANDOM_CLICK_AREA2)
-                time.sleep(2)
-                self.click(click=self.C_DOKAN_RANDOM_CLICK_AREA3)
+                self.click(click=self.C_DOKAN_READY_FOR_BATLLE, interval=1.5)
+                self.click(click=self.C_DOKAN_RANDOM_CLICK_AREA2, interval=2.2)
+                self.click(click=self.C_DOKAN_RANDOM_CLICK_AREA3, interval=1.8)
                 # 每次战斗结束都重置绿标
                 self.green_mark_done = False
             # 场景状态：如果CD中，开始加油
@@ -177,50 +177,21 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, DokanAssets):
                 logger.info("道馆挑战失败：投票保留")
             else:
                 logger.info(f"unknown scene, skipped")
-            
+
             # 防封，随机移动，随机点击（安全点击），随机时延
             if not self.anti_detect(True, True, True):
                 time.sleep(1)
 
-        # self.ui_current = page_ryou_dokan
-        # self.ui_goto(page_main)
+        # 保持好习惯，一个任务结束了就返回到庭院，方便下一任务的开始
+        self.goto_main()
 
-        ''' 保持好习惯，一个任务结束了就返回到庭院，方便下一个任务的开始
-         FIXME 退出道馆。注意：有的时候有退出确认框，有的时候没有。未找到规律。
-               先试试用确认框的，若是实在不行，就改成等道馆时间结束后，系统自动退出
-        '''
-        max_try = 3
-        while 1:
-            self.screenshot()
-            if self.appear_then_click(GeneralBattle.I_EXIT, interval=1.5):
-                logger.info(f"Click {GeneralBattle.I_EXIT.name}")
-                continue
-            # 点了后EXIT后，可能无确认框
-            if self.appear_then_click(GeneralBattle.I_EXIT_ENSURE, interval=1.5):
-                logger.info(f"Click {GeneralBattle.I_EXIT_ENSURE.name}")
-                break
-            else:
-                max_try -= 1
-                time.sleep(1.2)
-
-            if max_try <= 0:
-                break
-        
-        # 退出道馆地图
-        while 1:
-            self.screenshot()
-            # 确认后会跳到竂地图，再点击左上角的蓝色的返回，但是不知道这个返回有没有确认
-            if self.appear_then_click(GameUi.I_BACK_BL, interval=2.5):
-                logger.info(f"Click {GameUi.I_BACK_BL.name}")
-                break
-        
         # 设置下次运行时间
         if success:
             self.set_next_run(task='Dokan', finish=True, server=True, success=True)
         else:
             self.set_next_run(task='Dokan', finish=True, server=True, success=False)
         raise TaskEnd
-    
+
     def dokan_battle(self, cfg: Dokan):
         """ 道馆战斗
         道馆集结结束后会自动进入战斗，打完一个也会自动进入下一个，因此直接点击右下角的开始
@@ -238,9 +209,12 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, DokanAssets):
 
         # 更换队伍
         if not self.team_switched:
-            logger.info(f"更换队伍: config.preset_enable={config.preset_enable}, config.preset_group={config.preset_group}, config.preset_team={config.preset_team}")
+            logger.info(
+                f"更换队伍: config.preset_enable={config.preset_enable}, config.preset_group={config.preset_group}, config.preset_team={config.preset_team}")
             self.switch_preset_team(config.preset_enable, config.preset_group, config.preset_team)
             self.team_switched = True
+            # 切完队伍后有时候会卡顿，先睡一觉，防止快速跳到绿标流程，导致未能成功绿标
+            time.sleep(3)
 
         # 等待准备按钮的出现
         logger.debug("等待准备按钮的出现")
@@ -252,7 +226,8 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, DokanAssets):
 
             # 绿标式神, should we check there's a green marked role?
             if not self.green_mark_done and self.is_in_battle(False):
-                logger.info(f"绿标式神:config.green_enable={config.green_enable}, config.green_mark={config.green_mark}")
+                logger.info(
+                    f"绿标式神:config.green_enable={config.green_enable}, config.green_mark={config.green_mark}")
                 self.green_mark(config.green_enable, config.green_mark)
                 self.green_mark_done = True
 
@@ -261,7 +236,7 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, DokanAssets):
         logger.info("come on baby, let's go.")
 
         while 1:
-            logger.info("take a nap")
+            # logger.info("take a nap")
             time.sleep(1)
 
             self.device.stuck_record_add('BATTLE_STATUS_S')
@@ -315,58 +290,36 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, DokanAssets):
         else:
             return False
 
-    def dokan_choose_attack_priority(self, attack_priority: int):
-        ''' 选择优先攻击
+    def dokan_choose_attack_priority(self, attack_priority: int) -> bool:
+        """ 选择优先攻击
         : return 
-        '''
-        logger.info("选择优先攻击")
-
+        """
+        logger.hr('Try to choose attack priority')
         max_try = 5
 
+        if not self.appear_then_click(self.I_RYOU_DOKAN_PRIORITY, interval=2):
+            logger.error(f"can not find dokan priority option button, choose attack priority process skipped")
+            return False
+
+        logger.info(f"start select attack priority: {attack_priority}, remain try: {max_try}")
+        try:
+            target_attack = self._attack_priorities[attack_priority]
+        except:
+            target_attack = self._attack_priorities[0]
+
         while 1:
+            self.screenshot()
             if max_try <= 0:
                 logger.warn("give up priority selection!")
                 break
 
-            self.appear_then_click(self.I_RYOU_DOKAN_PRIORITY, interval=2)
-
-            if not self.appear_then_click(self.I_RYOU_DOKAN_PRIORITY, interval=2):
-                logger.info(f"start select attack priority: {attack_priority}, remain try: {max_try}")
+            if self.appear_then_click(target_attack, interval=1.8):
+                logger.info(f"selected attack priority: {attack_priority}")
                 max_try -= 1
-                self.screenshot()
-                if attack_priority == 0:
-                    if self.appear_then_click(self.I_RYOU_DOKAN_PRIORITY_0, interval=1.8):
-                        logger.info(f"selected attack priority: {attack_priority}")
-                    else:
-                        continue
-                elif attack_priority == 1:
-                    if self.appear_then_click(self.I_RYOU_DOKAN_PRIORITY_1, interval=1.8):
-                        logger.info(f"selected attack priority: {attack_priority}")
-                    else:
-                        continue
-                elif attack_priority == 2:
-                    if self.appear_then_click(self.I_RYOU_DOKAN_PRIORITY_2):
-                        logger.info(f"selected attack priority: {attack_priority}")
-                    else:
-                        continue
-                elif attack_priority == 3:
-                    if self.appear_then_click(self.I_RYOU_DOKAN_PRIORITY_3):
-                        logger.info(f"selected attack priority: {attack_priority}")
-                    else:
-                        continue
-                elif attack_priority == 4:
-                    if self.appear_then_click(self.I_RYOU_DOKAN_PRIORITY_4):
-                        logger.info(f"selected attack priority: {attack_priority}")
-                    else:
-                        continue
-                else:
-                    self.appear_then_click(self.I_RYOU_DOKAN_PRIORITY_0)
-                    logger.error(f"invalid attack priority setting: {attack_priority}")
 
-                break
+            self.attack_priority_selected = True
 
-
-        self.attack_priority_selected = True
+        return True
 
     def anti_detect(self, random_move: bool = True, random_click: bool = True, random_delay: bool = True):
         '''额外的防封测试
@@ -379,8 +332,31 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, DokanAssets):
             self.random_click_swipt()
             res = True
         if random_click:
-            # pos = self.C_DOKAN_RANDOM_CLICK_AREA.coord()
-            # self.click(pos)
+            # 0到2秒之间的随机浮点数
+            sleep = random.uniform(0, 2)
+            # 只保留2位小数
+            sleep = round(sleep, 2)
+            if not self.config.dokan.dokan_config.anti_detect_click_fixed_random_area:
+                # 多搞几个安全点击区域
+                num = random.randint(0, 5)
+                if num == 0:
+                    self.click(click=self.C_DOKAN_RANDOM_CLICK_AREA, interval=sleep)
+                elif num == 1:
+                    self.click(click=self.C_DOKAN_RANDOM_CLICK_AREA2, interval=sleep)
+                elif num == 2:
+                    self.click(click=self.C_DOKAN_RANDOM_CLICK_AREA3, interval=sleep)
+                elif num == 3:
+                    self.click(click=self.C_DOKAN_RANDOM_CLICK_AREA, interval=sleep)
+                else:
+                    self.click(click=self.C_DOKAN_RANDOM_CLICK_AREA2, interval=sleep)
+            else:
+                # 假设安全区域是绿色的  
+                safe_color_lower = np.array([45, 25, 25])  # HSV颜色空间的绿色下界  
+                safe_color_upper = np.array([90, 255, 255])  # HSV颜色空间的绿色上界
+                pos = detect_safe_area2(self.device.image, safe_color_lower, safe_color_upper, 3, True)
+                logger.info(f"random click area: {pos}, delay: {sleep}")
+                self.click(pos)
+
             res = True
         if random_delay:
             # 0到2秒之间的随机浮点数
@@ -390,6 +366,41 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, DokanAssets):
             time.sleep(sleep)
             res = True
         return res
+
+    def goto_main(self):
+        ''' 保持好习惯，一个任务结束了就返回庭院，方便下一任务的开始或者是出错重启
+         FIXME 退出道馆。注意：有的时候有退出确认框，有的时候没有。未找到规律。
+               先试试用确认框的，若是实在不行，就改成等道馆时间结束后，系统自动退出
+               但是如果出错了，需要重启任务时必须走GameUi.ui_goto(page_main)，
+               那样有或者无确认框不确定性还是会导致ui_goto()出错
+        '''
+        # self.ui_current = page_dokan
+        # self.ui_goto(page_main)
+
+        max_try = 3
+        while 1:
+            self.screenshot()
+            if self.appear_then_click(GeneralBattle.I_EXIT, interval=1.5):
+                logger.info(f"Click {GeneralBattle.I_EXIT.name}")
+                continue
+            # 点了后EXIT后，可能无确认框
+            if self.appear_then_click(self.I_RYOU_DOKAN_EXIT_ENSURE, interval=1.5):
+                logger.info(f"Click {self.I_RYOU_DOKAN_EXIT_ENSURE}")
+                break
+            else:
+                max_try -= 1
+                time.sleep(1.2)
+
+            if max_try <= 0:
+                break
+
+        # 退出道馆地图
+        while 1:
+            self.screenshot()
+            # 确认后会跳到竂地图，再点击左上角的蓝色的返回，但是不知道这个返回有没有确认
+            if self.appear_then_click(GameUi.I_BACK_BL, interval=2.5):
+                logger.info(f"Click {GameUi.I_BACK_BL.name}")
+                break
 
     def goto_dokan(self):
         ''' 进入道馆
@@ -420,7 +431,7 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, DokanAssets):
                     logger.info("failed to find {self.O_DOKAN_MAP.keyword}")
                 else:
                     # 取中间
-                    x = pos[0] + pos[2]/2
+                    x = pos[0] + pos[2] / 2
                     # 往上偏移20
                     y = pos[1] - 20
 
@@ -458,19 +469,20 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, DokanAssets):
         # 状态：检查右下角有没有挑战？通常是失败了，并退出来到集结界面，可重新开始点击右下角挑战进入战斗
         elif self.appear(self.I_RYOU_DOKAN_START_CHALLENGE, 0.95):
             return True, DokanScene.RYOU_DOKAN_SCENE_START_CHALLENGE
-        
+
         # 状态：进入战斗，待开始
         elif self.appear(self.I_RYOU_DOKAN_IN_FIELD, threshold=0.85):
             return True, DokanScene.RYOU_DOKAN_SCENE_IN_FIELD
         # 状态：战斗结算，可能是打完小朋友了，也可能是失败了。
         if self.appear(self.I_RYOU_DOKAN_BATTLE_OVER, threshold=0.85):
             return True, DokanScene.RYOU_DOKAN_SCENE_BATTLE_OVER
-        
+
         # 状态：达到失败次数，CD中
         if self.appear(self.I_RYOU_DOKAN_CD, threshold=0.8):
             return True, DokanScene.RYOU_DOKAN_SCENE_CD
         # 状态：加油中，左下角有鼓
-        if self.appear_then_click(self.I_RYOU_DOKAN_CHEERING, threshold=0.8) or self.appear(self.I_RYOU_DOKAN_CHEERING_GRAY, threshold=0.8):
+        if self.appear_then_click(self.I_RYOU_DOKAN_CHEERING, threshold=0.8) or self.appear(
+                self.I_RYOU_DOKAN_CHEERING_GRAY, threshold=0.8):
             return True, DokanScene.RYOU_DOKAN_SCENE_CHEERING
         # # 状态：战斗中，左上角的加油图标
         # if self.appear(self.I_RYOU_DOKAN_FIGHTING, threshold=0.8):
@@ -482,8 +494,22 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, DokanAssets):
         # if self.ocr_appear(self.O_DOKAN_SUCCEEDED):
         if self.appear(self.I_RYOU_DOKAN_FINISHED, threshold=0.8):
             return True, DokanScene.RYOU_DOKAN_SCENE_FINISHED
-        
+
         return False, DokanScene.RYOU_DOKAN_SCENE_UNKNOWN
+
+
+def test_goto_main():
+    from module.config.config import Config
+    from module.device.device import Device
+    from tasks.GameUi.page import page_dokan
+
+    config = Config('oas1')
+    device = Device(config)
+    t = ScriptTask(config, device)
+    # t.run()
+    t.ui_current = page_dokan
+    t.ui_goto(page_main)
+
 
 if __name__ == "__main__":
     # from module.config.config import Config
@@ -494,33 +520,6 @@ if __name__ == "__main__":
     # t = ScriptTask(config, device)
     # t.run()
 
-    import cv2
-    from module.atom.ocr import RuleOcr
-
-    logger.info("========================================>>test 2")
-    O_DOKAN_MAP = RuleOcr(roi=(270,130,740,460), area=(270,130,740,460), mode="Full", method="Default", keyword="万", name="dokan_map")
-
-    image = cv2.imread("g:/yys/oas/tests/1.png")
-    pos = O_DOKAN_MAP.ocr_full(image)
-    print(f"image1: {pos}")
-
-    image = cv2.imread("g:/yys/oas/tests/2.png")
-    pos = O_DOKAN_MAP.ocr_full(image)
-    print(f"image2: {pos}")
-
-    image = cv2.imread("g:/yys/oas/tests/3.png")
-    pos = O_DOKAN_MAP.ocr_full(image)
-    print(f"image3: {pos}")
-
-    image = cv2.imread("g:/yys/oas/tests/4.png")
-    pos = O_DOKAN_MAP.ocr_full(image)
-    print(f"image4: {pos}")
-    if pos == (0, 0, 0, 0):
-        logger.info("failed to find {self.O_DOKAN_MAP.keyword}")
-    else:
-        # 取中间
-        x = pos[0] + pos[2]/2
-        # 往上偏移20
-        y = pos[1] - 20
-
-        logger.info(f"ocr detect result pos={pos}, try click pos, x={x}, y={y}")
+    # test_ocr_locate_dokan_target()
+    # test_anti_detect_random_click()
+    test_goto_main()
