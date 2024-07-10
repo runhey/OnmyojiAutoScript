@@ -75,7 +75,12 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, ExplorationAssets):
                     count += 1
                     # 进入战斗环节
                     self.battle_process()
-                if self.appear(self.I_EXPLORATION_TITLE):
+                # 判断宝箱
+                if self.wait_until_appear(self.I_TREASURE_BOX_CLICK, wait_time=1):
+                    self.click(self.I_TREASURE_BOX_CLICK)
+                    self.open_expect_level()
+                # 判断妖气
+                elif self.appear(self.I_EXPLORATION_TITLE):
                     self.open_expect_level()
 
             if self.wait_until_appear(self.I_RED_CLOSE, wait_time=2):
@@ -244,7 +249,7 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, ExplorationAssets):
         # 自动添加候补式神
         if self.config.exploration.exploration_config.auto_rotate == AutoRotate.yes:
             self.enter_settings_and_do_operations()
-        
+
         # 修复卡结算问题
         # 卡结算是因为没有设置锁定队伍，修改后无论是否锁定都不会因为没有锁定队伍而卡在结算界面
         if not self.config.exploration.general_battle_config.lock_team_enable:
