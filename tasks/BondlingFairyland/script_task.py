@@ -39,6 +39,12 @@ class ScriptTask(GameUi, BondlingBattle, SwitchSoul, BondlingFairylandAssets):
         # 引用配置
         cong = self.config.bondling_fairyland
 
+        # 御魂切换方式一
+        if cong.switch_soul_config.enable:
+            self.ui_get_current_page()
+            self.ui_goto(page_shikigami_records)
+            self.run_switch_soul(cong.switch_soul_config.switch_group_team)
+          # 御魂切换方式二
         if cong.switch_soul_config.enable_switch_by_name:
             self.ui_get_current_page()
             self.ui_goto(page_shikigami_records)
