@@ -33,7 +33,7 @@ class FloatParadeAssets:
 	I_FP_TASKS = RuleImage(roi_front=(1175,617,79,76), roi_back=(1162,605,100,100), threshold=0.8, method="Template matching", file="./tasks/FloatParade/fp/fp_fp_tasks.png")
 	# 升级 
 	I_FP_UPGRADE = RuleImage(roi_front=(1075,75,116,49), roi_back=(1040,52,169,100), threshold=0.8, method="Template matching", file="./tasks/FloatParade/fp/fp_fp_upgrade.png")
-	# description 
+	# 红色关闭 
 	I_FP_RED_CLOSE = RuleImage(roi_front=(1170,109,43,44), roi_back=(1157,101,72,62), threshold=0.8, method="Template matching", file="./tasks/FloatParade/fp/fp_fp_red_close.png")
 
 
