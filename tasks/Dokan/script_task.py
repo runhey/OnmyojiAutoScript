@@ -153,7 +153,7 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, DokanAssets):
                 # 战斗
                 success = self.dokan_battle(cfg)
                 # 战斗结束后，随便点三下，确保跳过各种结算画面
-                self.click(click=self.C_DOKAN_READY_FOR_BATLLE, interval=1.5)
+                self.click(click=self.C_DOKAN_READY_FOR_BATTLE, interval=1.5)
                 self.click(click=self.C_DOKAN_RANDOM_CLICK_AREA2, interval=2.2)
                 self.click(click=self.C_DOKAN_RANDOM_CLICK_AREA3, interval=1.8)
                 # 每次战斗结束都重置绿标

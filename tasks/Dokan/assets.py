@@ -88,7 +88,7 @@ class DokanAssets:
 
 	# List Rule Assets
 	# 这个是当前活跃的竂活动列表界面 
-	L_LAYER_LIST = RuleList(folder="./tasks/Dokan/res", direction="vertical", mode="ocr", roi_back=(35,157,37,250), size=(42, 27), 
+	L_RYOU_ACTIVITY_LIST = RuleList(folder="./tasks/Dokan/res", direction="vertical", mode="ocr", roi_back=(35,157,37,250), size=(42, 27), 
 					 array=["道馆", "首领", "狭间"])
 
 
@@ -103,5 +103,10 @@ class DokanAssets:
 	O_DOKAN_BOSS_WAITING = RuleOcr(roi=(603,148,130,32), area=(603,148,130,32), mode="Single", method="Default", keyword="馆主", name="dokan_boss_waiting")
 	# 道馆里找文字：后关闭 
 	O_DOKAN_SUCCEEDED = RuleOcr(roi=(1122,546,92,51), area=(1122,546,92,51), mode="Full", method="Default", keyword="关闭", name="dokan_succeeded")
+
+
+	# Click Rule Assets
+	# 选择第一个寮 
+	C_SELECT_FIRST_RYOU = RuleClick(roi_front=(1148,138,21,22), roi_back=(1148,138,21,22), name="select_first_ryou")
 
 
