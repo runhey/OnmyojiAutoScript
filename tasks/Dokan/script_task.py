@@ -72,11 +72,11 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, DokanAssets):
 
     @cached_property
     def _attack_priorities(self) -> list:
-        return [self.I_RYOU_DOKAN_PRIORITY_0,
-                self.I_RYOU_DOKAN_PRIORITY_1,
-                self.I_RYOU_DOKAN_PRIORITY_2,
-                self.I_RYOU_DOKAN_PRIORITY_3,
-                self.I_RYOU_DOKAN_PRIORITY_4]
+        return [self.I_RYOU_DOKAN_ATTACK_PRIORITY_0,
+                self.I_RYOU_DOKAN_ATTACK_PRIORITY_1,
+                self.I_RYOU_DOKAN_ATTACK_PRIORITY_2,
+                self.I_RYOU_DOKAN_ATTACK_PRIORITY_3,
+                self.I_RYOU_DOKAN_ATTACK_PRIORITY_4]
 
     def run(self):
         """ 道馆主函数
@@ -153,7 +153,7 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, DokanAssets):
                 # 战斗
                 success = self.dokan_battle(cfg)
                 # 战斗结束后，随便点三下，确保跳过各种结算画面
-                self.click(click=self.C_DOKAN_READY_FOR_BATLLE, interval=1.5)
+                self.click(click=self.C_DOKAN_READY_FOR_BATTLE, interval=1.5)
                 self.click(click=self.C_DOKAN_RANDOM_CLICK_AREA2, interval=2.2)
                 self.click(click=self.C_DOKAN_RANDOM_CLICK_AREA3, interval=1.8)
                 # 每次战斗结束都重置绿标
@@ -297,7 +297,7 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, DokanAssets):
         logger.hr('Try to choose attack priority')
         max_try = 5
 
-        if not self.appear_then_click(self.I_RYOU_DOKAN_PRIORITY, interval=2):
+        if not self.appear_then_click(self.I_RYOU_DOKAN_ATTACK_PRIORITY, interval=2):
             logger.error(f"can not find dokan priority option button, choose attack priority process skipped")
             return False
 

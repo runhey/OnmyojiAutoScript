@@ -1,5 +1,5 @@
 {
-    "name": "layer_list",
+    "name": "ryou_activity_list",
     "direction": "vertical",
     "type": "ocr",
     "roiBack": "35,157,37,250",
