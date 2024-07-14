@@ -147,7 +147,7 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AreaBossAssets):
                 if not self.appear(self.I_AB_DIFFICULTY_NORMAL):
                     self.switch2Level60()
                     if not self.startFight():
-                        logger.warning("60级都打不过")
+                        logger.warning("you are so weakness!")
                         self.wait_until_appear(self.I_AB_CLOSE_RED)
                         self.ui_click_until_disappear(self.I_AB_CLOSE_RED, interval=1)
                         return False
@@ -158,7 +158,7 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AreaBossAssets):
         result = True
         if not self.startFight():
             result = False
-            logger.warning("极地鬼挑战失败")
+            logger.warning("Area Boss Fight Failed ")
         self.wait_until_appear(self.I_AB_CLOSE_RED)
         self.ui_click_until_disappear(self.I_AB_CLOSE_RED, interval=1)
         return result
@@ -192,7 +192,7 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AreaBossAssets):
         self.screenshot()
         return self.appear(self.I_AB_DIFFICULTY_JI)
 
-    def switchDifficulty(self, isJi: bool = True) :
+    def switchDifficulty(self, isJi: bool = True):
         """
             切换普通地鬼/极地鬼
         @param isJi:  是否切换到极地鬼
