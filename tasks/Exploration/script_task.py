@@ -111,7 +111,8 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, ExplorationAssets):
                     # 进入战斗环节
                     self.battle_process()
                 # 判断宝箱
-                if self.appear_then_click(self.I_TREASURE_BOX_CLICK, interval=1.8):
+                if self.appear(self.I_TREASURE_BOX_CLICK):
+                    self.click(self.I_TREASURE_BOX_CLICK)
                     self.open_expect_level()
                 # 判断妖气
                 elif self.appear(self.I_EXPLORATION_TITLE):
