@@ -2,7 +2,7 @@ from pydantic import BaseModel, Field
 from enum import Enum
 from tasks.Component.GeneralBattle.config_general_battle import GeneralBattleConfig
 from tasks.Component.SwitchSoul.switch_soul_config import SwitchSoulConfig
-from tasks.Component.config_base import ConfigBase
+from tasks.Component.config_base import ConfigBase, TimeDelta
 from tasks.Component.config_scheduler import Scheduler
 
 
@@ -62,10 +62,9 @@ class ChooseRarity(str, Enum):
 
 class Scrolls(BaseModel):
     # 绘卷模式
-    scrolls_on: bool = Field(title='绘卷模式', default=False, description='绘卷模式（探索->突破）循环')
-    scrolls_cd: int = Field(title='探索间隔时间', default='5',
-                                     description='探索间隔时间（从检测到突破票超量算起）探索->突破（绘卷模式）')
-    scrolls_number: int = Field(title='突破票数量', default='25', description='设置突破票数量，超过去打突破')
+    scrolls_enable: bool = Field(title='绘卷模式', default=False, description='绘卷模式（探索->突破）循环')
+    scrolls_cd: TimeDelta = Field(title='探索间隔时间', default=TimeDelta(hours=0, minutes=30, seconds=0), description='探索间隔时间')
+    scrolls_threshold: int = Field(title='突破票数量', default='25', description='设置突破票数量，超过去打突破')
 
 
 class ExplorationConfig(BaseModel):
