@@ -346,7 +346,8 @@ class Config(ConfigState, ConfigManual, ConfigWatcher, ConfigMenu):
 
         # 强制设定下一次的运行时间
         if server and hasattr(scheduler, 'server_update') and scheduler.server_update != time(hour=9):
-            next_run = parse_tomorrow_server(scheduler.server_update)
+            if target is None:
+                next_run = parse_tomorrow_server(scheduler.server_update)
 
 
         # 保证线程安全的
