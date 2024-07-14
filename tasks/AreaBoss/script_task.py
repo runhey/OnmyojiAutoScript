@@ -45,10 +45,10 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AreaBossAssets):
 
         self.openFilter()
         # 以挑战鬼王数量
-        bossFought = 0
+        boss_fought = 0
         if con.boss_reward:
             self.fightRewardBoss()
-            bossFought += 1
+            boss_fought += 1
 
         self.openFilter()
         # 切换到对应集合(热门/收藏)
@@ -57,14 +57,14 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AreaBossAssets):
         else:
             self.switch2Famous()
 
-        if con.boss_number - bossFought == 3:
+        if con.boss_number - boss_fought == 3:
             self.bossFight(self.I_BATTLE_1)
             self.bossFight(self.I_BATTLE_2)
             self.bossFight(self.I_BATTLE_3)
-        elif con.boss_number - bossFought == 2:
+        elif con.boss_number - boss_fought == 2:
             self.bossFight(self.I_BATTLE_1)
             self.bossFight(self.I_BATTLE_2)
-        elif con.boss_number - bossFought == 1:
+        elif con.boss_number - boss_fought == 1:
             self.bossFight(self.I_BATTLE_1)
 
         # 退出
@@ -125,7 +125,7 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AreaBossAssets):
         self.wait_until_appear(self.I_AB_CLOSE_RED)
         self.ui_click(self.I_AB_CLOSE_RED, self.I_FILTER)
 
-    def bossFight(self, battle: RuleImage, needJi: bool = False)->bool:
+    def bossFight(self, battle: RuleImage, needJi: bool = False) -> bool:
         """
             完成挑战一个鬼王的全流程
             从打开筛选界面开始 到关闭鬼王详情界面结束
@@ -152,10 +152,8 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AreaBossAssets):
                         self.ui_click_until_disappear(self.I_AB_CLOSE_RED, interval=1)
                         return False
                 # 切换到 极地鬼
-                while 1:
-                    self.screenshot()
-                    if self.switchDifficulty():
-                        break
+                self.switchDifficulty(True)
+
             self.switchFloor2One()
         result = True
         if not self.startFight():
@@ -194,12 +192,23 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AreaBossAssets):
         self.screenshot()
         return self.appear(self.I_AB_DIFFICULTY_JI)
 
-    def switchDifficulty(self) -> bool:
-        self.click(self.I_AB_DIFFICULTY_JI, interval=1)
-        #
-        time.sleep(0.3)
-        self.screenshot()
-        return self.appear(self.I_AB_DIFFICULTY_JI)
+    def switchDifficulty(self, isJi: bool = True) :
+        """
+            切换普通地鬼/极地鬼
+        @param isJi:  是否切换到极地鬼
+                    True        切换到极地鬼
+                    False       切换到普通地鬼
+        @type isJi:
+        """
+        _from = self.I_AB_DIFFICULTY_NORMAL if isJi else self.I_AB_DIFFICULTY_JI
+        _to = self.I_AB_DIFFICULTY_JI if isJi else self.I_AB_DIFFICULTY_NORMAL
+        while 1:
+            self.screenshot()
+            if self.appear(_to):
+                break
+            if self.appear(_from):
+                self.click(_from, interval=1)
+                continue
 
     def switchFloor2One(self):
         """
