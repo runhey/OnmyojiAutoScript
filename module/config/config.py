@@ -286,6 +286,12 @@ class Config(ConfigState, ConfigManual, ConfigWatcher, ConfigMenu):
         :param finish: 是完成任务后的时间为基准还是开始任务的时间为基准
         :return:
         """
+        # 获取真蛇成功次数
+        global current_success, true_orochi_config
+        if task == 'TrueOrochi':
+            current_success = self.model.true_orochi.true_orochi_config.current_success
+
+        # 加载配置文件
         self.reload()
         # 任务预处理
         if not task:
@@ -353,7 +359,9 @@ class Config(ConfigState, ConfigManual, ConfigWatcher, ConfigMenu):
         self.lock_config.acquire()
         try:
             scheduler.next_run = next_run
-
+            if task == 'true_orochi':
+                true_orochi_config = getattr(task_object, 'true_orochi_config', None)
+                true_orochi_config.current_success = current_success
             self.save()
         finally:
             self.lock_config.release()
