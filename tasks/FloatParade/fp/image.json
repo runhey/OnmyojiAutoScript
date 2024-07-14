@@ -29,8 +29,8 @@
   {
     "itemName": "fp_getall1",
     "imageName": "fp_fp_getall1.png",
-    "roiFront": "1194,539,60,61",
-    "roiBack": "1167,520,100,100",
+    "roiFront": "1196,544,53,54",
+    "roiBack": "1159,489,113,164",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"

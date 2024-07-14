@@ -18,7 +18,7 @@ class FloatParadeAssets:
 	# description 
 	I_FP_RED_POINT0 = RuleImage(roi_front=(1242,604,22,21), roi_back=(1225,585,53,54), threshold=0.8, method="Template matching", file="./tasks/FloatParade/fp/fp_fp_red_point0.png")
 	# description 
-	I_FP_GETALL1 = RuleImage(roi_front=(1194,539,60,61), roi_back=(1167,520,100,100), threshold=0.8, method="Template matching", file="./tasks/FloatParade/fp/fp_fp_getall1.png")
+	I_FP_GETALL1 = RuleImage(roi_front=(1196,544,53,54), roi_back=(1159,489,113,164), threshold=0.8, method="Template matching", file="./tasks/FloatParade/fp/fp_fp_getall1.png")
 	# description 
 	I_FP_RED_POINT1 = RuleImage(roi_front=(1249,155,21,21), roi_back=(1223,138,56,62), threshold=0.8, method="Template matching", file="./tasks/FloatParade/fp/fp_fp_red_point1.png")
 	# description 
@@ -33,7 +33,7 @@ class FloatParadeAssets:
 	I_FP_TASKS = RuleImage(roi_front=(1175,617,79,76), roi_back=(1162,605,100,100), threshold=0.8, method="Template matching", file="./tasks/FloatParade/fp/fp_fp_tasks.png")
 	# 升级 
 	I_FP_UPGRADE = RuleImage(roi_front=(1075,75,116,49), roi_back=(1040,52,169,100), threshold=0.8, method="Template matching", file="./tasks/FloatParade/fp/fp_fp_upgrade.png")
-	# description 
+	# 红色关闭 
 	I_FP_RED_CLOSE = RuleImage(roi_front=(1170,109,43,44), roi_back=(1157,101,72,62), threshold=0.8, method="Template matching", file="./tasks/FloatParade/fp/fp_fp_red_close.png")
 
 
