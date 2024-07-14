@@ -60,16 +60,24 @@ class ChooseRarity(str, Enum):
     S = '素材'
 
 
+class Scrolls(BaseModel):
+    # 绘卷模式
+    scrolls_on: bool = Field(title='绘卷模式', default=False, description='绘卷模式（探索->突破）循环')
+    scrolls_cd: int = Field(title='探索间隔时间', default='5',
+                                     description='探索间隔时间（从检测到突破票超量算起）探索->突破（绘卷模式）')
+    scrolls_number: int = Field(title='突破票数量', default='25', description='设置突破票数量，超过去打突破')
+
+
 class ExplorationConfig(BaseModel):
     buff_gold_50_click: bool = Field(default=False)
     buff_gold_100_click: bool = Field(default=False)
     buff_exp_50_click: bool = Field(default=False)
     buff_exp_100_click: bool = Field(default=False)
 
-    attack_number: AttackNumber = Field(title='探索次数', default=AttackNumber.SEVEN,
-                                        description='默认探索7次')
+    # attack_number: AttackNumber = Field(title='探索次数', default=AttackNumber.SEVEN,
+    #                                     description='默认探索7次')
 
-    current_exploration_times: str = Field(default='0', description='探索次数')
+    current_exploration_count: int = Field(title='探索次数', default='7', description='默认探索7次')
 
     exploration_level: ExplorationLevel = Field(title='探索等级', default=ExplorationLevel.EXPLORATION_28,
                                                 description='探索等级 默认二十八')
@@ -86,6 +94,7 @@ class ExplorationConfig(BaseModel):
 class Exploration(ConfigBase):
     scheduler: Scheduler = Field(default_factory=Scheduler)
     exploration_config: ExplorationConfig = Field(default_factory=ExplorationConfig)
+    scrolls: Scrolls = Field(default_factory=Scrolls)
     general_battle_config: GeneralBattleConfig = Field(default_factory=GeneralBattleConfig)
     switch_soul_config: SwitchSoulConfig = Field(default_factory=SwitchSoulConfig)
     # auto_rotate_after_times: str = Field(default='30', description='探索30次后, 检测是否需要添加候补式神')
