@@ -16,3 +16,4 @@ class AreaBoss(ConfigBase):
     general_battle: GeneralBattleConfig = Field(default_factory=GeneralBattleConfig)
     switch_soul: SwitchSoulConfig = Field(default_factory=SwitchSoulConfig)
 
+
