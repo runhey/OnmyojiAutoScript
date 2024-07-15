@@ -478,10 +478,10 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, DokanAssets):
         # 状态：达到失败次数，CD中
         if self.appear(self.I_RYOU_DOKAN_CD, threshold=0.8):
             return True, DokanScene.RYOU_DOKAN_SCENE_CD
-        # 状态：加油中，左下角有鼓
-        if self.appear_then_click(self.I_RYOU_DOKAN_CHEERING, threshold=0.8) or self.appear(
-                self.I_RYOU_DOKAN_CHEERING_GRAY, threshold=0.8):
-            return True, DokanScene.RYOU_DOKAN_SCENE_CHEERING
+        # # 状态：加油中，左下角有鼓
+        # if self.appear_then_click(self.I_RYOU_DOKAN_CHEERING, threshold=0.8) or self.appear(
+        #         self.I_RYOU_DOKAN_CHEERING_GRAY, threshold=0.8):
+        #     return True, DokanScene.RYOU_DOKAN_SCENE_CHEERING
         # # 状态：战斗中，左上角的加油图标
         # if self.appear(self.I_RYOU_DOKAN_FIGHTING, threshold=0.8):
         #     return True, DokanScene.RYOU_DOKAN_SCENE_FIGHTING

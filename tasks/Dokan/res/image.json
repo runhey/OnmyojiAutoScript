@@ -194,24 +194,6 @@
     "description": "状态：战斗中，左上角的加油图标"
   },
   {
-    "itemName": "ryou_dokan_cheering",
-    "imageName": "res_ryou_dokan_cheering.png",
-    "roiFront": "68,597,69,33",
-    "roiBack": "68,597,69,33",
-    "method": "Template matching",
-    "threshold": 0.8,
-    "description": "状态：加油中，左下角有鼓"
-  },
-  {
-    "itemName": "ryou_dokan_cheering_gray",
-    "imageName": "res_ryou_dokan_cheering_gray.png",
-    "roiFront": "59,600,81,38",
-    "roiBack": "59,600,81,38",
-    "method": "Template matching",
-    "threshold": 0.8,
-    "description": "状态：加油中，左下角有鼓，灰色的鼓"
-  },
-  {
     "itemName": "ryou_dokan_finished",
     "imageName": "res_ryou_dokan_finished.png",
     "roiFront": "658,649,91,27",

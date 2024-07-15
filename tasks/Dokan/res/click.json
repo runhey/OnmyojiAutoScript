@@ -15,7 +15,7 @@
     "itemName": "dokan_random_click_area2",
     "roiFront": "1122,360,10,40",
     "roiBack": "1122,360,10,40",
-    "description": "道馆随机点击安全区域2：切换查看队伍模式"
+    "description": "道馆随机点击安全区域2：切换查看队伍模式。初步测试下来这个地方最安全，除了庭院、町中、逢魔外其他各场景都可用。"
   },
   {
     "itemName": "dokan_random_click_area3",

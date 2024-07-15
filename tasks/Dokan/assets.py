@@ -15,7 +15,7 @@ class DokanAssets:
 	C_DOKAN_RANDOM_CLICK_AREA = RuleClick(roi_front=(142,294,107,555), roi_back=(142,294,107,555), name="dokan_random_click_area")
 	# 道馆随机点击安全区域1：竂友突破信息 
 	C_DOKAN_RANDOM_CLICK_AREA1 = RuleClick(roi_front=(42,594,10,100), roi_back=(42,594,10,100), name="dokan_random_click_area1")
-	# 道馆随机点击安全区域2：切换查看队伍模式 
+	# 道馆随机点击安全区域2：切换查看队伍模式。初步测试下来这个地方最安全，除了庭院、町中、逢魔外其他各场景都可用。 
 	C_DOKAN_RANDOM_CLICK_AREA2 = RuleClick(roi_front=(1122,360,10,40), roi_back=(1122,360,10,40), name="dokan_random_click_area2")
 	# 道馆随机点击安全区域3 
 	C_DOKAN_RANDOM_CLICK_AREA3 = RuleClick(roi_front=(333,44,107,20), roi_back=(333,44,107,20), name="dokan_random_click_area3")
@@ -66,10 +66,6 @@ class DokanAssets:
 	I_RYOU_DOKAN_BATTLE_OVER = RuleImage(roi_front=(571,503,106,49), roi_back=(571,503,106,49), threshold=0.8, method="Template matching", file="./tasks/Dokan/res/res_ryou_dokan_battle_over.png")
 	# 状态：战斗中，左上角的加油图标 
 	I_RYOU_DOKAN_FIGHTING = RuleImage(roi_front=(232,36,42,19), roi_back=(232,36,42,19), threshold=0.8, method="Template matching", file="./tasks/Dokan/res/res_ryou_dokan_fighting.png")
-	# 状态：加油中，左下角有鼓 
-	I_RYOU_DOKAN_CHEERING = RuleImage(roi_front=(68,597,69,33), roi_back=(68,597,69,33), threshold=0.8, method="Template matching", file="./tasks/Dokan/res/res_ryou_dokan_cheering.png")
-	# 状态：加油中，左下角有鼓，灰色的鼓 
-	I_RYOU_DOKAN_CHEERING_GRAY = RuleImage(roi_front=(59,600,81,38), roi_back=(59,600,81,38), threshold=0.8, method="Template matching", file="./tasks/Dokan/res/res_ryou_dokan_cheering_gray.png")
 	# 状态：道馆已经结束 
 	I_RYOU_DOKAN_FINISHED = RuleImage(roi_front=(658,649,91,27), roi_back=(658,649,91,27), threshold=0.8, method="Template matching", file="./tasks/Dokan/res/res_ryou_dokan_finished.png")
 	# 状态：道馆挑战失败，投票NO 
