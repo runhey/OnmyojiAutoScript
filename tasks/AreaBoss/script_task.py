@@ -43,29 +43,29 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AreaBossAssets):
         self.ui_get_current_page()
         self.ui_goto(page_area_boss)
 
-        self.openFilter()
+        self.open_filter()
         # 以挑战鬼王数量
         boss_fought = 0
         if con.boss_reward:
-            self.fightRewardBoss()
+            self.fight_reward_boss()
             boss_fought += 1
 
-        self.openFilter()
+        self.open_filter()
         # 切换到对应集合(热门/收藏)
         if con.use_collect:
-            self.switch2Collect()
+            self.switch_to_collect()
         else:
-            self.switch2Famous()
+            self.switch_to_famous()
 
         if con.boss_number - boss_fought == 3:
-            self.bossFight(self.I_BATTLE_1)
-            self.bossFight(self.I_BATTLE_2)
-            self.bossFight(self.I_BATTLE_3)
+            self.boss_fight(self.I_BATTLE_1)
+            self.boss_fight(self.I_BATTLE_2)
+            self.boss_fight(self.I_BATTLE_3)
         elif con.boss_number - boss_fought == 2:
-            self.bossFight(self.I_BATTLE_1)
-            self.bossFight(self.I_BATTLE_2)
+            self.boss_fight(self.I_BATTLE_1)
+            self.boss_fight(self.I_BATTLE_2)
         elif con.boss_number - boss_fought == 1:
-            self.bossFight(self.I_BATTLE_1)
+            self.boss_fight(self.I_BATTLE_1)
 
         # 退出
         self.go_back()
@@ -102,7 +102,7 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AreaBossAssets):
                 continue
 
         if collect:
-            self.switch2Collect()
+            self.switch_to_collect()
         # 页面没有可挑战的BOSS
         if not (self.appear(self.I_BATTLE_1) or self.appear(self.I_BATTLE_2) or self.appear(self.I_BATTLE_3)):
             logger.error("There is no boss could be challenged")
@@ -125,45 +125,45 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AreaBossAssets):
         self.wait_until_appear(self.I_AB_CLOSE_RED)
         self.ui_click(self.I_AB_CLOSE_RED, self.I_FILTER)
 
-    def bossFight(self, battle: RuleImage, needJi: bool = False) -> bool:
+    def boss_fight(self, battle: RuleImage, ultra: bool = False) -> bool:
         """
             完成挑战一个鬼王的全流程
             从打开筛选界面开始 到关闭鬼王详情界面结束
         @param battle: 挑战按钮,鬼王头像也可,只要点击能进入详情界面
         @type battle:
-        @param needJi: 是否需要切换到极
-        @type needJi:
+        @param ultra: 是否需要切换到极地鬼
+        @type ultra:
         @return:    True        挑战成功
                     False       挑战失败
         @rtype:
         """
         if not self.appear(self.I_AB_FILTER_OPENED):
-            self.openFilter()
+            self.open_filter()
         self.ui_click(battle, self.I_AB_CLOSE_RED)
 
-        if needJi:
-            if not self.getDifficulty():
+        if ultra:
+            if not self.get_difficulty():
                 # 判断是否能切换到极地鬼
                 if not self.appear(self.I_AB_DIFFICULTY_NORMAL):
-                    self.switch2Level60()
-                    if not self.startFight():
+                    self.switch_to_level_60()
+                    if not self.start_fight():
                         logger.warning("you are so weakness!")
                         self.wait_until_appear(self.I_AB_CLOSE_RED)
                         self.ui_click_until_disappear(self.I_AB_CLOSE_RED, interval=1)
                         return False
                 # 切换到 极地鬼
-                self.switchDifficulty(True)
+                self.switch_difficulty(True)
 
-            self.switchFloor2One()
+            self.switch_to_floor_1()
         result = True
-        if not self.startFight():
+        if not self.start_fight():
             result = False
             logger.warning("Area Boss Fight Failed ")
         self.wait_until_appear(self.I_AB_CLOSE_RED)
         self.ui_click_until_disappear(self.I_AB_CLOSE_RED, interval=1)
         return result
 
-    def startFight(self) -> bool:
+    def start_fight(self) -> bool:
         while 1:
             self.screenshot()
             if self.appear_then_click(self.I_FIRE, interval=1):
@@ -173,7 +173,7 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AreaBossAssets):
 
         return self.run_general_battle(self.config.area_boss.general_battle)
 
-    def switch2Level60(self):
+    def switch_to_level_60(self):
         while 1:
             self.screenshot()
             if self.appear(self.I_AB_LEVEL_60):
@@ -183,7 +183,7 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AreaBossAssets):
                 self.S_AB_LEVEL_RIGHT.roi_front = (x, y, 10, 10)
                 self.swipe(self.S_AB_LEVEL_RIGHT)
 
-    def getDifficulty(self) -> bool:
+    def get_difficulty(self) -> bool:
         """
         @return:    True           极地鬼
                     False           普通地鬼
@@ -192,16 +192,16 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AreaBossAssets):
         self.screenshot()
         return self.appear(self.I_AB_DIFFICULTY_JI)
 
-    def switchDifficulty(self, isJi: bool = True):
+    def switch_difficulty(self, ultra: bool = True):
         """
             切换普通地鬼/极地鬼
-        @param isJi:  是否切换到极地鬼
+        @param ultra:  是否切换到极地鬼
                     True        切换到极地鬼
                     False       切换到普通地鬼
-        @type isJi:
+        @type ultra:
         """
-        _from = self.I_AB_DIFFICULTY_NORMAL if isJi else self.I_AB_DIFFICULTY_JI
-        _to = self.I_AB_DIFFICULTY_JI if isJi else self.I_AB_DIFFICULTY_NORMAL
+        _from = self.I_AB_DIFFICULTY_NORMAL if ultra else self.I_AB_DIFFICULTY_JI
+        _to = self.I_AB_DIFFICULTY_JI if ultra else self.I_AB_DIFFICULTY_NORMAL
         while 1:
             self.screenshot()
             if self.appear(_to):
@@ -210,7 +210,7 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AreaBossAssets):
                 self.click(_from, interval=1)
                 continue
 
-    def switchFloor2One(self):
+    def switch_to_floor_1(self):
         """
             更改层数为一层
         """
@@ -224,8 +224,8 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AreaBossAssets):
                 break
             self.swipe(self.S_AB_FLOOR_DOWN, interval=1)
 
-    def fightRewardBoss(self):
-        index = self.getHotInReward()
+    def fight_reward_boss(self):
+        index = self.get_hot_in_reward()
         # 滑动到最顶层
         if index < 3:
             logger.info("swipe to top")
@@ -233,50 +233,50 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AreaBossAssets):
                 self.swipe(self.S_AB_FILTER_DOWN)
         #
         if index == 0:
-            return self.bossFight(self.C_AB_BOSS_REWARD_PHOTO_1, True)
+            return self.boss_fight(self.C_AB_BOSS_REWARD_PHOTO_1, True)
         elif index == 1:
-            return self.bossFight(self.C_AB_BOSS_REWARD_PHOTO_2, True)
+            return self.boss_fight(self.C_AB_BOSS_REWARD_PHOTO_2, True)
         elif index == 2:
-            return self.bossFight(self.C_AB_BOSS_REWARD_PHOTO_3, True)
+            return self.boss_fight(self.C_AB_BOSS_REWARD_PHOTO_3, True)
         # 保证滑动到最底部
         for i in range(3):
             self.swipe(self.S_AB_FILTER_UP)
         if index == 3:
-            return self.bossFight(self.C_AB_BOSS_REWARD_PHOTO_MINUS_2, True)
+            return self.boss_fight(self.C_AB_BOSS_REWARD_PHOTO_MINUS_2, True)
         elif index == 4:
-            return self.bossFight(self.C_AB_BOSS_REWARD_PHOTO_MINUS_1, True)
+            return self.boss_fight(self.C_AB_BOSS_REWARD_PHOTO_MINUS_1, True)
 
-    def getHotInReward(self):
+    def get_hot_in_reward(self):
         """
             返回挑战人数最多的悬赏鬼王
         @return:    index
         @rtype:
         """
-        self.switch2Reward()
+        self.switch_to_reward()
         lst = []
-        num = self.getNumOfChallenge(self.C_AB_BOSS_REWARD_PHOTO_1)
+        num = self.get_num_challenge(self.C_AB_BOSS_REWARD_PHOTO_1)
         lst.append(num)
         self.ui_click_until_disappear(self.I_AB_CLOSE_RED)
-        self.openFilter()
-        num = self.getNumOfChallenge(self.C_AB_BOSS_REWARD_PHOTO_2)
+        self.open_filter()
+        num = self.get_num_challenge(self.C_AB_BOSS_REWARD_PHOTO_2)
         lst.append(num)
         self.ui_click_until_disappear(self.I_AB_CLOSE_RED)
-        self.openFilter()
-        num = self.getNumOfChallenge(self.C_AB_BOSS_REWARD_PHOTO_3)
+        self.open_filter()
+        num = self.get_num_challenge(self.C_AB_BOSS_REWARD_PHOTO_3)
         lst.append(num)
         self.ui_click_until_disappear(self.I_AB_CLOSE_RED)
-        self.openFilter()
+        self.open_filter()
         for i in range(3):
             self.swipe(self.S_AB_FILTER_UP)
 
-        num = self.getNumOfChallenge(self.C_AB_BOSS_REWARD_PHOTO_MINUS_2)
+        num = self.get_num_challenge(self.C_AB_BOSS_REWARD_PHOTO_MINUS_2)
         lst.append(num)
         self.ui_click_until_disappear(self.I_AB_CLOSE_RED)
-        self.openFilter()
-        num = self.getNumOfChallenge(self.C_AB_BOSS_REWARD_PHOTO_MINUS_1)
+        self.open_filter()
+        num = self.get_num_challenge(self.C_AB_BOSS_REWARD_PHOTO_MINUS_1)
         lst.append(num)
         self.ui_click_until_disappear(self.I_AB_CLOSE_RED)
-        self.openFilter()
+        self.open_filter()
         index = 0
         num = 0
         for idx, val in enumerate(lst):
@@ -285,11 +285,11 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AreaBossAssets):
                 num = val
         return index
 
-    def getNumOfChallenge(self, clickArea):
+    def get_num_challenge(self, click_area):
         """
             获取鬼王挑战人数
-        @param clickArea: 鬼王相应的挑战按钮
-        @type clickArea:
+        @param click_area: 鬼王相应的挑战按钮
+        @type click_area:
         @return:
         @rtype:
         """
@@ -299,17 +299,17 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AreaBossAssets):
             self.screenshot()
             if self.appear(self.I_AB_CLOSE_RED):
                 break
-            if self.click(clickArea, interval=2):
+            if self.click(click_area, interval=2):
                 numTry += 1
         if numTry >= 3:
             return 0
         return self.O_AB_NUM_OF_CHALLENGE.ocr_digit(self.device.image)
 
-    def openFilter(self):
+    def open_filter(self):
         logger.info("openFilter")
         self.ui_click(self.I_FILTER, self.I_AB_FILTER_OPENED, interval=1)
 
-    def switch2Collect(self):
+    def switch_to_collect(self):
         while 1:
             self.screenshot()
             if self.appear(self.I_AB_FILTER_TITLE_COLLECTION):
@@ -318,7 +318,7 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AreaBossAssets):
                 self.click(self.C_AB_COLLECTION_BTN, 1.5)
                 continue
 
-    def switch2Famous(self):
+    def switch_to_famous(self):
         while 1:
             self.screenshot()
             if self.appear(self.I_AB_FILTER_TITLE_FAMOUS):
@@ -327,7 +327,7 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AreaBossAssets):
                 self.click(self.C_AB_FAMOUS_BTN, 1.5)
                 continue
 
-    def switch2Reward(self):
+    def switch_to_reward(self):
         while 1:
             self.screenshot()
             if self.appear(self.I_AB_FILTER_TITLE_REWARD):
