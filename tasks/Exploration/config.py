@@ -62,9 +62,9 @@ class ChooseRarity(str, Enum):
 
 class Scrolls(BaseModel):
     # 绘卷模式
-    scrolls_enable: bool = Field(title='绘卷模式', default=False, description='绘卷模式（探索->突破）循环')
-    scrolls_cd: TimeDelta = Field(title='探索间隔时间', default=TimeDelta(hours=0, minutes=30, seconds=0), description='探索间隔时间')
-    scrolls_threshold: int = Field(title='突破票数量', default='25', description='设置突破票数量，超过去打突破')
+    scrolls_enable: bool = Field(title='绘卷模式', default=False, description='绘卷模式')
+    scrolls_cd: TimeDelta = Field(title='间隔时间', default=TimeDelta(hours=0, minutes=30, seconds=0), description='间隔时间')
+    scrolls_threshold: int = Field(title='突破票数量', default='25', description='突破票数量，超过打突破')
 
 
 class ExplorationConfig(BaseModel):
