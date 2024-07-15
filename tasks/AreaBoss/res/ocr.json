@@ -34,5 +34,14 @@
     "method": "Default",
     "keyword": "收藏",
     "description": "收藏"
+  },
+  {
+    "itemName": "ab_num_of_challenge",
+    "roiFront": "270,630,150,36",
+    "roiBack": "270,630,150,36",
+    "mode": "Digit",
+    "method": "Default",
+    "keyword": "",
+    "description": "挑战人数"
   }
 ]
