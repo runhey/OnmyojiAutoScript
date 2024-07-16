@@ -46,16 +46,16 @@
   },
   {
     "itemName": "ryou_dokan_attack_priority",
-    "imageName": "res_ryou_dokan_attack_priority.png",
-    "roiFront": "567,15,144,42",
-    "roiBack": "567,15,144,42",
+    "imageName": "res_ryou_dokan_priority.png",
+    "roiFront": "666,672,58,25",
+    "roiBack": "666,672,58,25",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "优先攻击选项"
   },
   {
     "itemName": "ryou_dokan_attack_priority_0",
-    "imageName": "res_ryou_dokan_attack_priority_0.png",
+    "imageName": "res_ryou_dokan_priority_0.png",
     "roiFront": "98,170,94,43",
     "roiBack": "98,170,94,43",
     "method": "Template matching",
@@ -64,7 +64,7 @@
   },
   {
     "itemName": "ryou_dokan_attack_priority_1",
-    "imageName": "res_ryou_dokan_attack_priority_1.png",
+    "imageName": "res_ryou_dokan_priority_1.png",
     "roiFront": "342,175,96,42",
     "roiBack": "342,175,96,42",
     "method": "Template matching",
@@ -73,7 +73,7 @@
   },
   {
     "itemName": "ryou_dokan_attack_priority_2",
-    "imageName": "res_ryou_dokan_attack_priority_2.png",
+    "imageName": "res_ryou_dokan_priority_2.png",
     "roiFront": "585,175,89,35",
     "roiBack": "585,175,89,35",
     "method": "Template matching",
@@ -82,7 +82,7 @@
   },
   {
     "itemName": "ryou_dokan_attack_priority_3",
-    "imageName": "res_ryou_dokan_attack_priority_3.png",
+    "imageName": "res_ryou_dokan_priority_3.png",
     "roiFront": "830,175,88,41",
     "roiBack": "830,175,88,41",
     "method": "Template matching",
@@ -91,7 +91,7 @@
   },
   {
     "itemName": "ryou_dokan_attack_priority_4",
-    "imageName": "res_ryou_dokan_attack_priority_4.png",
+    "imageName": "res_ryou_dokan_priority_4.png",
     "roiFront": "1072,178,94,39",
     "roiBack": "1072,178,94,39",
     "method": "Template matching",
@@ -192,24 +192,6 @@
     "method": "Template matching",
     "threshold": 0.8,
     "description": "状态：战斗中，左上角的加油图标"
-  },
-  {
-    "itemName": "ryou_dokan_cheering",
-    "imageName": "res_ryou_dokan_cheering.png",
-    "roiFront": "68,597,69,33",
-    "roiBack": "68,597,69,33",
-    "method": "Template matching",
-    "threshold": 0.8,
-    "description": "状态：加油中，左下角有鼓"
-  },
-  {
-    "itemName": "ryou_dokan_cheering_gray",
-    "imageName": "res_ryou_dokan_cheering_gray.png",
-    "roiFront": "59,600,81,38",
-    "roiBack": "59,600,81,38",
-    "method": "Template matching",
-    "threshold": 0.8,
-    "description": "状态：加油中，左下角有鼓，灰色的鼓"
   },
   {
     "itemName": "ryou_dokan_finished",

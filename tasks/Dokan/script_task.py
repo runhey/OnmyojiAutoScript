@@ -142,12 +142,13 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, DokanAssets):
                 if not self.attack_priority_selected:
                     self.dokan_choose_attack_priority(attack_priority=attack_priority)
                     self.attack_priority_selected = True
+                    continue
             # 场景状态：等待馆主战开始
             elif current_scene == DokanScene.RYOU_DOKAN_SCENE_BOSS_WAITING:
                 logger.debug(f"Ryou DOKAN boss battle waiting...")
             # 场景状态：检查右下角有没有挑战？通常是失败了，并退出来到集结界面，可重新开始点击右下角挑战进入战斗
             elif current_scene == DokanScene.RYOU_DOKAN_SCENE_START_CHALLENGE:
-                self.appear_then_click(self.I_RYOU_DOKAN_START_CHALLENGE, 1.2)
+                self.appear_then_click(self.I_RYOU_DOKAN_START_CHALLENGE, interval=1.2)
             # 场景状态：进入战斗，待开始
             elif current_scene == DokanScene.RYOU_DOKAN_SCENE_IN_FIELD:
                 # 战斗
@@ -166,9 +167,9 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, DokanAssets):
             # 场景状态：战斗中，左上角的加油图标
             elif current_scene == DokanScene.RYOU_DOKAN_SCENE_FIGHTING:
                 logger.info("Battle undergoing")
-            # 场景状态：加油中
-            elif current_scene == DokanScene.RYOU_DOKAN_SCENE_CHEERING:
-                self.appear_then_click(self.I_RYOU_DOKAN_CHEERING)
+            # # 场景状态：加油中
+            # elif current_scene == DokanScene.RYOU_DOKAN_SCENE_CHEERING:
+            #     self.appear_then_click(self.I_RYOU_DOKAN_CHEERING)
             # 场景状态：道馆已经结束
             elif current_scene == DokanScene.RYOU_DOKAN_SCENE_FINISHED:
                 logger.info("Dokan challenge finished, exit Dokan")
@@ -217,12 +218,11 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, DokanAssets):
             time.sleep(3)
 
         # 等待准备按钮的出现
-        logger.debug("等待准备按钮的出现")
         self.wait_until_appear(self.I_PREPARE_HIGHLIGHT)
 
         # 点击准备
         if self.appear_then_click(self.I_PREPARE_HIGHLIGHT, interval=1.5):
-            logger.info("点击准备")
+            logger.info("Prepare")
 
             # 绿标式神, should we check there's a green marked role?
             if not self.green_mark_done and self.is_in_battle(False):
@@ -426,7 +426,7 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, DokanAssets):
 
                 pos = self.O_DOKAN_MAP.ocr_full(image)
                 if pos == (0, 0, 0, 0):
-                    logger.info("failed to find {self.O_DOKAN_MAP.keyword}")
+                    logger.info(f"failed to find {self.O_DOKAN_MAP.keyword}")
                 else:
                     # 取中间
                     x = pos[0] + pos[2] / 2
@@ -478,10 +478,11 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, DokanAssets):
         # 状态：达到失败次数，CD中
         if self.appear(self.I_RYOU_DOKAN_CD, threshold=0.8):
             return True, DokanScene.RYOU_DOKAN_SCENE_CD
-        # 状态：加油中，左下角有鼓
-        if self.appear_then_click(self.I_RYOU_DOKAN_CHEERING, threshold=0.8) or self.appear(
-                self.I_RYOU_DOKAN_CHEERING_GRAY, threshold=0.8):
-            return True, DokanScene.RYOU_DOKAN_SCENE_CHEERING
+        
+        # # 状态：加油中，左下角有鼓
+        # if self.appear_then_click(self.I_RYOU_DOKAN_CHEERING, threshold=0.8) or self.appear(
+        #         self.I_RYOU_DOKAN_CHEERING_GRAY, threshold=0.8):
+        #     return True, DokanScene.RYOU_DOKAN_SCENE_CHEERING
         # # 状态：战斗中，左上角的加油图标
         # if self.appear(self.I_RYOU_DOKAN_FIGHTING, threshold=0.8):
         #     return True, DokanScene.RYOU_DOKAN_SCENE_FIGHTING
