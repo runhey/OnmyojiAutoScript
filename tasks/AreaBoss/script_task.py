@@ -5,6 +5,7 @@ import time
 
 import cv2
 import numpy as np
+import random
 from tasks.base_task import BaseTask
 from tasks.Component.GeneralBattle.general_battle import GeneralBattle
 from tasks.GameUi.game_ui import GameUi
@@ -226,6 +227,7 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AreaBossAssets):
 
     def fight_reward_boss(self):
         index = self.get_hot_in_reward()
+        self.open_filter()
         # 滑动到最顶层
         if index < 3:
             logger.info("swipe to top")
@@ -257,26 +259,31 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AreaBossAssets):
         num = self.get_num_challenge(self.C_AB_BOSS_REWARD_PHOTO_1)
         lst.append(num)
         self.ui_click_until_disappear(self.I_AB_CLOSE_RED)
+        #
         self.open_filter()
         num = self.get_num_challenge(self.C_AB_BOSS_REWARD_PHOTO_2)
         lst.append(num)
         self.ui_click_until_disappear(self.I_AB_CLOSE_RED)
+        #
         self.open_filter()
         num = self.get_num_challenge(self.C_AB_BOSS_REWARD_PHOTO_3)
         lst.append(num)
         self.ui_click_until_disappear(self.I_AB_CLOSE_RED)
+        #
         self.open_filter()
-        for i in range(3):
+        for i in range(random.randint(1, 3)):
             self.swipe(self.S_AB_FILTER_UP)
-
         num = self.get_num_challenge(self.C_AB_BOSS_REWARD_PHOTO_MINUS_2)
         lst.append(num)
         self.ui_click_until_disappear(self.I_AB_CLOSE_RED)
+        #
         self.open_filter()
+        for i in range(random.randint(1, 3)):
+            self.swipe(self.S_AB_FILTER_UP)
         num = self.get_num_challenge(self.C_AB_BOSS_REWARD_PHOTO_MINUS_1)
         lst.append(num)
         self.ui_click_until_disappear(self.I_AB_CLOSE_RED)
-        self.open_filter()
+
         index = 0
         num = 0
         for idx, val in enumerate(lst):
