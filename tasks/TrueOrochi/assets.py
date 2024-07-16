@@ -57,6 +57,6 @@ class TrueOrochiAssets:
 	# 60体力创建 
 	I_ST_CREATE_ROOM = RuleImage(roi_front=(528,482,223,62), roi_back=(528,482,223,62), threshold=0.8, method="Template matching", file="./tasks/TrueOrochi/st/st_st_create_room.png")
 	# 头像框 
-	I_ST_FRAME = RuleImage(roi_front=(574,441,130,63), roi_back=(574,441,130,63), threshold=0.8, method="Template matching", file="./tasks/TrueOrochi/st/st_st_frame.png")
+	I_ST_FRAME = RuleImage(roi_front=(571,442,135,65), roi_back=(571,442,135,65), threshold=0.8, method="Template matching", file="./tasks/TrueOrochi/st/st_st_frame.png")
 
 

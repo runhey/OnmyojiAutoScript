@@ -14,36 +14,39 @@ from tasks.Component.GeneralInvite.general_invite import GeneralInvite
 from tasks.Component.GeneralRoom.general_room import GeneralRoom
 from tasks.Orochi.script_task import ScriptTask as OrochiScriptTask
 from tasks.Orochi.config import Layer
-from tasks.GameUi.page import page_main, page_soul_zones,page_shikigami_records
+from tasks.GameUi.page import page_main, page_soul_zones, page_shikigami_records
 from tasks.TrueOrochi.assets import TrueOrochiAssets
 
 
 class ScriptTask(OrochiScriptTask, TrueOrochiAssets):
 
-
     def run(self):
     
-
-         # 御魂切换方式一
-        if self.config.true_orochi.switch_soul.enable:
-            self.ui_get_current_page()
-            self.ui_goto(page_shikigami_records)
-            self.run_switch_soul(self.config.true_orochi.switch_soul.switch_group_team)
-          # 御魂切换方式二
-        if self.config.true_orochi.switch_soul.enable_switch_by_name:
-            self.ui_get_current_page()
-            self.ui_goto(page_shikigami_records)
-            self.run_switch_soul_by_name(self.config.true_orochi.switch_soul.group_name,
-                                         self.config.true_orochi.switch_soul.team_name)
-
-
         conf = self.config.true_orochi.true_orochi_config
+
+        # 周一重置真蛇次数
+        now = datetime.now()
+        day_of_week = now.weekday()
+        if day_of_week == 0:
+            conf.current_success = 0
+
         if conf.current_success >= 2:
             # 超过两次就说明这周打完了没有必要再打了
             logger.warning('This week is full')
             self.check_times(True)
             raise TaskEnd('TrueOrochi')
-       
+
+        # 御魂切换方式一
+        if self.config.true_orochi.switch_soul.enable:
+            self.ui_get_current_page()
+            self.ui_goto(page_shikigami_records)
+            self.run_switch_soul(self.config.true_orochi.switch_soul.switch_group_team)
+        # 御魂切换方式二
+        if self.config.true_orochi.switch_soul.enable_switch_by_name:
+            self.ui_get_current_page()
+            self.ui_goto(page_shikigami_records)
+            self.run_switch_soul_by_name(self.config.true_orochi.switch_soul.group_name,
+                                         self.config.true_orochi.switch_soul.team_name)
 
         self.ui_get_current_page()
         self.ui_goto(page_soul_zones)
@@ -119,10 +122,12 @@ class ScriptTask(OrochiScriptTask, TrueOrochiAssets):
             self.screenshot()
             if not self.appear(self.I_BUFF):
                 break
-            if self.appear_then_click(self.I_ST_AUTO_FALSE, interval=0.8):
+            if self.appear_then_click(self.I_ST_AUTO_FALSE, interval=1.8):
                 continue
-            if self.appear_then_click(self.I_PREPARE_HIGHLIGHT, interval=1.8):
-                continue
+
+            # 下面代码 "点击准备" 会造成，点击了准备打第一层 循环 if not self.appear(self.I_BUFF): 时候跳出while循环，导致真蛇卡在第二层
+            # if self.appear_then_click(self.I_PREPARE_HIGHLIGHT, interval=1.8):
+            #     continue
         self.device.stuck_record_add('BATTLE_STATUS_S')
         self.device.click_record_clear()
         logger.info("Start battle process")
@@ -158,7 +163,6 @@ class ScriptTask(OrochiScriptTask, TrueOrochiAssets):
         self.check_times(battle)
         raise TaskEnd('TrueOrochi')
 
-
     def check_true_orochi(self, screenshot=False) -> bool:
         """
         检查是否出现真蛇（要求当前的界面必须是在御魂挑战的界面）
@@ -175,25 +179,21 @@ class ScriptTask(OrochiScriptTask, TrueOrochiAssets):
         :param current_success: 这周的成功次数
         :return:
         """
-        now = datetime.now()
-        now_year, now_week_number, now_weekday = now.isocalendar()
-        if battle:
-            next_run = now + self.config.true_orochi.scheduler.success_interval
-        else:
-            next_run = now + self.config.true_orochi.scheduler.failure_interval
-        next_run_year, next_run_week_number, next_run_weekday = next_run.isocalendar()
-        self.set_next_run(task='TrueOrochi', target=next_run)
-        # 如果下次运行的时间是下一周，那么就重置成功次数
-        if now_week_number != next_run_week_number:
-            self.config.true_orochi.true_orochi_config.current_success = 0
-        else:
-            # 如果不是下一周，那么就加一
-            self.config.true_orochi.true_orochi_config.current_success += 1
-
-
-
-
-
+        # now = datetime.now()
+        # now_year, now_week_number, now_weekday = now.isocalendar()
+        # if battle:
+        #     next_run = now + self.config.true_orochi.scheduler.success_interval
+        # else:
+        #     next_run = now + self.config.true_orochi.scheduler.failure_interval
+        # next_run_year, next_run_week_number, next_run_weekday = next_run.isocalendar()
+        # # 如果下次运行的时间是下一周，那么就重置成功次数
+        # if now_week_number != next_run_week_number:
+        #     self.config.true_orochi.true_orochi_config.current_success = 0
+        # else:
+        #     # 如果不是下一周，那么就加一
+        #     self.config.true_orochi.true_orochi_config.current_success += 1
+        # self.set_next_run(task='TrueOrochi', target=next_run)
+        self.set_next_run('TrueOrochi', finish=True, success=True)
 
     def run_true_orochi(self) -> bool:
         pass
@@ -202,6 +202,7 @@ class ScriptTask(OrochiScriptTask, TrueOrochiAssets):
 if __name__ == '__main__':
     from module.config.config import Config
     from module.device.device import Device
+
     c = Config('oas1')
     d = Device(c)
     t = ScriptTask(c, d)
