@@ -79,7 +79,7 @@ class WantedQuestsAssets:
 	# 悬赏封印邀请取消按钮 
 	I_WQ_INVITE_CANCEL = RuleImage(roi_front=(230,540,132,60), roi_back=(230,540,140,65), threshold=0.8, method="Template matching", file="./tasks/WantedQuests/invite/wq_invite_cancel.png")
 	# 邀请好友被选中标记 
-	I_WQ_INVITE_SELECTED = RuleImage(roi_front=(380,185,32,32), roi_back=(380,185,345,350), threshold=0.8, method="Template matching", file="./tasks/WantedQuests/invite/wq_invite_selected.png")
+	I_WQ_INVITE_SELECTED = RuleImage(roi_front=(380,170,32,32), roi_back=(380,170,360,375), threshold=0.8, method="Template matching", file="./tasks/WantedQuests/invite/wq_invite_selected.png")
 	# 邀请同服好友,由于选中与未选中亮度有区别,查找图片可能会出错,建议只使用位置信息 
 	I_WQ_INVITE_SAME_SVR = RuleImage(roi_front=(170,90,60,35), roi_back=(170,90,105,65), threshold=0.8, method="Template matching", file="./tasks/WantedQuests/invite/wq_invite_same_svr.png")
 	# 邀请跨服好友,由于选中与未选中亮度有区别,查找图片可能会出错,建议只使用位置信息 
