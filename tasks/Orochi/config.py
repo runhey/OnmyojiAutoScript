@@ -44,9 +44,20 @@ class OrochiConfig(ConfigBase):
     # 是否开启御魂加成
     soul_buff_enable: bool = Field(default=False, description='soul_buff_enable_help')
 
+
+class OrochiSwitchSoul(ConfigBase):
+    auto_switch_soul: bool = Field(default=False, description='auto_switch_soul_help')
+    # 十层 config
+    ten_switch: str = Field(default='-1,-1', description='ten_switch_help')
+    # 悲鸣 config
+    eleven_switch: str = Field(default='-1,-1', description='eleven_switch_help')
+    # 神罚 config
+    twelve_switch: str = Field(default='-1,-1', description='twelve_switch_help')
+
+
 class Orochi(ConfigBase):
     scheduler: Scheduler = Field(default_factory=Scheduler)
     orochi_config: OrochiConfig = Field(default_factory=OrochiConfig)
     invite_config: InviteConfig = Field(default_factory=InviteConfig)
     general_battle_config: GeneralBattleConfig = Field(default_factory=GeneralBattleConfig)
-    switch_soul: SwitchSoulConfig = Field(default_factory=SwitchSoulConfig)
+    orochi_switch_soul: OrochiSwitchSoul = Field(default_factory=OrochiSwitchSoul)
