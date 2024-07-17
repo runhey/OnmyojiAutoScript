@@ -92,8 +92,8 @@
   {
     "itemName": "wq_invite_selected",
     "imageName": "wq_invite_selected.png",
-    "roiFront": "380,185,32,32",
-    "roiBack": "380,185,345,350",
+    "roiFront": "380,170,32,32",
+    "roiBack": "380,170,360,375",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "邀请好友被选中标记"

@@ -117,7 +117,7 @@ class RyouToppaAssets:
 
 	# Image Rule Assets
 	# 寮突 
-	I_RYOU_TOPPA = RuleImage(roi_front=(1191,352,78,116), roi_back=(1191,352,78,116), threshold=0.8, method="Template matching", file="./tasks/RyouToppa/res/res_ryou_toppa.png")
+	I_RYOU_TOPPA = RuleImage(roi_front=(1191,352,78,116), roi_back=(1141,322,118,136), threshold=0.6, method="Template matching", file="./tasks/RyouToppa/res/res_ryou_toppa.png")
 	# 寮突选择阴阳寮按钮 
 	I_SELECT_RYOU_BUTTON = RuleImage(roi_front=(560,577,156,46), roi_back=(560,577,156,46), threshold=0.8, method="Template matching", file="./tasks/RyouToppa/res/res_select_ryou_button.png")
 	# 开始寮突按钮 
