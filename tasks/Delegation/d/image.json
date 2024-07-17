@@ -39,7 +39,7 @@
     "itemName": "d_select_1",
     "imageName": "d_d_select_1.png",
     "roiFront": "230,593,44,41",
-    "roiBack": "216,578,71,81",
+    "roiBack": "216,553,71,106",
     "method": "Template matching",
     "threshold": 0.7,
     "description": "description"
@@ -48,7 +48,7 @@
     "itemName": "d_select_2",
     "imageName": "d_d_select_2.png",
     "roiFront": "363,595,40,41",
-    "roiBack": "327,585,97,60",
+    "roiBack": "327,547,97,98",
     "method": "Template matching",
     "threshold": 0.7,
     "description": "description"
@@ -57,7 +57,7 @@
     "itemName": "d_select_3",
     "imageName": "d_d_select_3.png",
     "roiFront": "497,595,38,41",
-    "roiBack": "456,584,105,66",
+    "roiBack": "456,548,105,102",
     "method": "Template matching",
     "threshold": 0.7,
     "description": "description"
@@ -66,7 +66,7 @@
     "itemName": "d_select_4",
     "imageName": "d_d_select_4.png",
     "roiFront": "632,595,42,40",
-    "roiBack": "579,584,111,57",
+    "roiBack": "579,556,111,85",
     "method": "Template matching",
     "threshold": 0.7,
     "description": "description"
@@ -75,7 +75,7 @@
     "itemName": "d_select_5",
     "imageName": "d_d_select_5.png",
     "roiFront": "767,593,41,40",
-    "roiBack": "721,582,103,60",
+    "roiBack": "721,556,103,86",
     "method": "Template matching",
     "threshold": 0.7,
     "description": "description"
