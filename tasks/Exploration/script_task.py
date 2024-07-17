@@ -2,6 +2,7 @@
 # @author runhey
 # github https://github.com/runhey
 import time
+from datetime import timedelta, datetime
 
 from tasks.Component.SwitchSoul.switch_soul import SwitchSoul
 from tasks.Exploration.assets import ExplorationAssets
@@ -9,6 +10,7 @@ from tasks.Exploration.config import ChooseRarity, AutoRotate, AttackNumber
 from tasks.Component.GeneralBattle.general_battle import GeneralBattle
 from tasks.GameUi.game_ui import GameUi
 from tasks.GameUi.page import page_exploration, page_shikigami_records, page_main
+from tasks.RealmRaid.script_task import ScriptTask as RealmRaidScriptTask
 
 from module.logger import logger
 from module.exception import RequestHumanTakeover, TaskEnd
@@ -65,17 +67,32 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, ExplorationAssets):
             logger.critical(f'Not find {explorationConfig.exploration_config.exploration_level} or'
                             f' Enter {explorationConfig.exploration_config.exploration_level} failed!')
             raise RequestHumanTakeover
+        con_scrolls = self.config.exploration.scrolls
+        # 判断是否绘卷模式，设置探索次数
+        if con_scrolls.scrolls_enable:
+            exploration_count = 50
+        else:
+            exploration_count = explorationConfig.exploration_config.current_exploration_count
 
-        # 只探索7次
-        if explorationConfig.exploration_config.attack_number == AttackNumber.SEVEN:
+        logger.info("exploration_count:" + str(exploration_count))
+        if exploration_count > 0:
             count = 0
-            while count < 7:
+            while count < exploration_count:
                 if self.wait_until_appear(self.I_E_EXPLORATION_CLICK, wait_time=1):
+                    # 绘卷模式
+                    self.activate_realm_raid(con_scrolls,con)
+
                     self.click(self.I_E_EXPLORATION_CLICK)
                     count += 1
+                    logger.info("exploration count :" + str(count))
                     # 进入战斗环节
                     self.battle_process()
-                if self.appear(self.I_EXPLORATION_TITLE):
+                # 判断宝箱
+                if self.appear(self.I_TREASURE_BOX_CLICK):
+                    self.click(self.I_TREASURE_BOX_CLICK)
+                    self.open_expect_level()
+                # 判断妖气
+                elif self.appear(self.I_EXPLORATION_TITLE):
                     self.open_expect_level()
 
             if self.wait_until_appear(self.I_RED_CLOSE, wait_time=2):
@@ -252,6 +269,34 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, ExplorationAssets):
 
         # 进入战斗环节
         self.do_battle()
+
+    def activate_realm_raid(self, con_scrolls, con) -> None:
+        # 判断是否开启突破票检测
+        if not con_scrolls.scrolls_enable:
+            return
+        self.screenshot()
+        cu, res, total = self.O_REALM_RAID_NUMBER1.ocr(self.device.image)
+        # 判断突破票数量
+        if cu < con_scrolls.scrolls_threshold:
+            return
+
+        # 关闭加成
+        self.appear_then_click(self.I_RED_CLOSE)
+        self.ui_goto(page_main)
+        if con.buff_gold_50_click or con.buff_gold_100_click or con.buff_exp_50_click or con.buff_exp_100_click:
+            self.open_buff()
+            self.gold_50(is_open=False)
+            self.gold_100(is_open=False)
+            self.exp_50(is_open=False)
+            self.exp_100(is_open=False)
+            self.close_buff()
+
+        # 设置下次执行行时间
+        logger.info("RealmRaid and Exploration  set_next_run !")
+        next_run = datetime.now() + con_scrolls.scrolls_cd
+        self.set_next_run(task='Exploration', success=False, finish=False, target=next_run)
+        self.set_next_run(task='RealmRaid', success=False, finish=False, target=datetime.now())
+        raise TaskEnd
 
 
 if __name__ == "__main__":

@@ -16,5 +16,23 @@
     "method": "Default",
     "keyword": "",
     "description": "候补出战的数量"
+  },
+  {
+    "itemName": "realm_raid_number",
+    "roiFront": "739,11,78,37",
+    "roiBack": "739,11,78,37",
+    "mode": "DigitCounter",
+    "method": "Default",
+    "keyword": "",
+    "description": "探索右上角 突破卷的数量"
+  },
+  {
+    "itemName": "realm_raid_number1",
+    "roiFront": "936,10,82,36",
+    "roiBack": "936,10,82,36",
+    "mode": "DigitCounter",
+    "method": "Default",
+    "keyword": "",
+    "description": "（点出困难28时候）探索右上角 突破卷的数量"
   }
 ]

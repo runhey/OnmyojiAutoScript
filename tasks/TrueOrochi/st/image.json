@@ -119,8 +119,8 @@
   {
     "itemName": "st_frame",
     "imageName": "st_st_frame.png",
-    "roiFront": "574,441,130,63",
-    "roiBack": "574,441,130,63",
+    "roiFront": "571,442,135,65",
+    "roiBack": "571,442,135,65",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "头像框"

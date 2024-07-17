@@ -12,7 +12,7 @@ class HuntAssets:
 
 	# Click Rule Assets
 	# description 
-	C_HUNT_ENTER = RuleClick(roi_front=(1059,600,193,100), roi_back=(1059,600,193,100), name="hunt_enter")
+	C_HUNT_ENTER = RuleClick(roi_front=(1090,597,94,59), roi_back=(1090,597,94,59), name="hunt_enter")
 
 
 	# Image Rule Assets

@@ -68,6 +68,8 @@ class ExplorationAssets:
 	I_RED_CLOSE = RuleImage(roi_front=(1027,129,41,42), roi_back=(1021,121,54,55), threshold=0.6, method="Template matching", file="./tasks/Exploration/res/res_red_close.png")
 	# description 
 	I_E_EXIT_CONFIRM = RuleImage(roi_front=(694,380,163,49), roi_back=(694,380,163,49), threshold=0.8, method="Template matching", file="./tasks/Exploration/res/res_e_exit_confirm.png")
+	# 宝箱 
+	I_TREASURE_BOX_CLICK = RuleImage(roi_front=(33,476,70,49), roi_back=(2,130,135,406), threshold=0.7, method="Template matching", file="./tasks/Exploration/res/res_treasure_box_click.png")
 
 
 	# Ocr Rule Assets
@@ -75,6 +77,10 @@ class ExplorationAssets:
 	O_E_EXPLORATION_LEVEL_NUMBER = RuleOcr(roi=(1079,193,147,467), area=(1079,193,147,467), mode="Full", method="Default", keyword="", name="e_exploration_level_number")
 	# 候补出战的数量 
 	O_E_ALTERNATE_NUMBER = RuleOcr(roi=(1092,122,69,32), area=(1092,122,69,32), mode="DigitCounter", method="Default", keyword="", name="e_alternate_number")
+	# 探索右上角 突破卷的数量 
+	O_REALM_RAID_NUMBER = RuleOcr(roi=(739,11,78,37), area=(739,11,78,37), mode="DigitCounter", method="Default", keyword="", name="realm_raid_number")
+	# （点出困难28时候）探索右上角 突破卷的数量 
+	O_REALM_RAID_NUMBER1 = RuleOcr(roi=(936,10,82,36), area=(936,10,82,36), mode="DigitCounter", method="Default", keyword="", name="realm_raid_number1")
 
 
 	# Swipe Rule Assets

@@ -169,5 +169,14 @@
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"
+  },
+  {
+    "itemName": "treasure_box_click",
+    "imageName": "res_treasure_box_click.png",
+    "roiFront": "33,476,70,49",
+    "roiBack": "2,130,135,406",
+    "method": "Template matching",
+    "threshold": 0.7,
+    "description": "宝箱"
   }
 ]

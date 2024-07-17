@@ -42,7 +42,7 @@
     "roiBack": "1066,210,100,100",
     "method": "Template matching",
     "threshold": 0.8,
-    "description": "选中第一个鬼王的"
+    "description": "除悬赏外 选中第一个鬼王的"
   },
   {
     "itemName": "battle_2",
@@ -51,7 +51,7 @@
     "roiBack": "1068,364,100,100",
     "method": "Template matching",
     "threshold": 0.8,
-    "description": "选中第二个鬼王的"
+    "description": "除悬赏外 选中第二个鬼王的"
   },
   {
     "itemName": "battle_3",
@@ -60,7 +60,7 @@
     "roiBack": "1071,521,100,100",
     "method": "Template matching",
     "threshold": 0.8,
-    "description": "选中第三个鬼王的"
+    "description": "除悬赏外 选中第三个鬼王的"
   },
   {
     "itemName": "fire",
@@ -90,10 +90,28 @@
     "description": "红色关闭"
   },
   {
+    "itemName": "ab_filter_title_reward",
+    "imageName": "ab_filter_title_reward.png",
+    "roiFront": "920,110,190,70",
+    "roiBack": "920,110,190,70",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "筛选中 选中悬赏标识"
+  },
+  {
+    "itemName": "ab_filter_title_famous",
+    "imageName": "ab_filter_title_famous.png",
+    "roiFront": "920,110,190,70",
+    "roiBack": "920,110,190,70",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "筛选中 选中热门标识"
+  },
+  {
     "itemName": "ab_filter_title_collection",
     "imageName": "ab_filter_title_collection.png",
-    "roiFront": "940,110,170,70",
-    "roiBack":  "940,110,170,70",
+    "roiFront": "920,110,190,70",
+    "roiBack": "920,110,190,70",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "筛选中 选中收藏标识"
@@ -102,9 +120,63 @@
     "itemName": "ab_filter_opened",
     "imageName": "ab_filter_opened.png",
     "roiFront": "840,110,130,70",
-    "roiBack":  "840,110,130,70",
+    "roiBack": "840,110,130,70",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "筛选界面打开标识"
+  },
+  {
+    "itemName": "ab_difficulty_ji",
+    "imageName": "ab_difficulty_ji.png",
+    "roiFront": "260,100,70,70",
+    "roiBack": "260,100,70,70",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "极地鬼标识 出现此图片表明 是 极地鬼"
+  },
+  {
+    "itemName": "ab_difficulty_normal",
+    "imageName": "ab_difficulty_normal.png",
+    "roiFront": "260,100,70,70",
+    "roiBack": "260,100,70,70",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "极地鬼标识 出现此图片表明 是 普通地鬼"
+  },
+  {
+    "itemName": "ab_level_handle",
+    "imageName": "ab_level_handle.png",
+    "roiFront": "170,250,400,75",
+    "roiBack": "170,250,400,75",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "普通地鬼 更改等级 的把手"
+  },
+  {
+    "itemName": "ab_level_60",
+    "imageName": "ab_level_60.png",
+    "roiFront": "300,160,110,100",
+    "roiBack": "300,160,110,100",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "普通地鬼 等级为60 标志"
+  },
+  {
+    "itemName": "ab_ji_floor_list_check",
+    "imageName": "ab_ji_floor_list_check.png",
+    "roiFront": "390,150,60,290",
+    "roiBack": "390,150,60,290",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "极地鬼 层数列表打开 标志"
+  },
+    {
+    "itemName": "ab_ji_floor_one",
+    "imageName": "ab_ji_floor_one.png",
+    "roiFront": "390,150,60,290",
+    "roiBack": "390,150,60,290",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "极地鬼 一层"
   }
 ]

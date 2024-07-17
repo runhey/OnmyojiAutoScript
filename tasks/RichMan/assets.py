@@ -185,7 +185,7 @@ class RichManAssets:
 	# 勋章 
 	I_SIDE_SURE_MEDAL = RuleImage(roi_front=(1190,375,39,62), roi_back=(1156,352,99,113), threshold=0.7, method="Template matching", file="./tasks/RichMan/mall/navbar/navbar_side_sure_medal.png")
 	# 勋章 
-	I_SIDE_CHECK_MEDAL = RuleImage(roi_front=(889,11,40,44), roi_back=(889,11,40,44), threshold=0.7, method="Template matching", file="./tasks/RichMan/mall/navbar/navbar_side_check_medal.png")
+	I_SIDE_CHECK_MEDAL = RuleImage(roi_front=(665,6,40,44), roi_back=(453,1,476,58), threshold=0.7, method="Template matching", file="./tasks/RichMan/mall/navbar/navbar_side_check_medal.png")
 	# 魅力值 
 	I_SIDE_SURE_CHARISMA = RuleImage(roi_front=(1181,467,59,58), roi_back=(1158,445,101,106), threshold=0.7, method="Template matching", file="./tasks/RichMan/mall/navbar/navbar_side_sure_charisma.png")
 	# 魅力值 
@@ -234,17 +234,17 @@ class RichManAssets:
 	# 永生之海 
 	I_SCA_PICTURE_BOOK = RuleImage(roi_front=(995,258,100,100), roi_back=(995,258,100,100), threshold=0.8, method="Template matching", file="./tasks/RichMan/mall/scales/scales_sca_picture_book.png")
 	# 土蜘蛛 
-	I_SCA_DEMON_BOSS_1 = RuleImage(roi_front=(209,168,192,193), roi_back=(168,142,346,290), threshold=0.8, method="Template matching", file="./tasks/RichMan/mall/scales/scales_sca_demon_boss_1.png")
+	I_SCA_DEMON_BOSS_1 = RuleImage(roi_front=(246,224,112,126), roi_back=(168,142,346,290), threshold=0.8, method="Template matching", file="./tasks/RichMan/mall/scales/scales_sca_demon_boss_1.png")
 	# 胧车 
-	I_SCA_DEMON_BOSS_2 = RuleImage(roi_front=(457,158,180,198), roi_back=(413,136,273,250), threshold=0.8, method="Template matching", file="./tasks/RichMan/mall/scales/scales_sca_demon_boss_2.png")
+	I_SCA_DEMON_BOSS_2 = RuleImage(roi_front=(457,203,123,153), roi_back=(413,136,273,250), threshold=0.8, method="Template matching", file="./tasks/RichMan/mall/scales/scales_sca_demon_boss_2.png")
 	# 荒骷髅 
-	I_SCA_DEMON_BOSS_3 = RuleImage(roi_front=(687,178,181,175), roi_back=(631,132,344,273), threshold=0.8, method="Template matching", file="./tasks/RichMan/mall/scales/scales_sca_demon_boss_3.png")
+	I_SCA_DEMON_BOSS_3 = RuleImage(roi_front=(686,239,131,121), roi_back=(631,132,344,273), threshold=0.6, method="Template matching", file="./tasks/RichMan/mall/scales/scales_sca_demon_boss_3.png")
 	# 地震鲶 
-	I_SCA_DEMON_BOSS_4 = RuleImage(roi_front=(883,162,188,211), roi_back=(804,121,315,292), threshold=0.8, method="Template matching", file="./tasks/RichMan/mall/scales/scales_sca_demon_boss_4.png")
+	I_SCA_DEMON_BOSS_4 = RuleImage(roi_front=(912,188,141,169), roi_back=(804,121,315,292), threshold=0.8, method="Template matching", file="./tasks/RichMan/mall/scales/scales_sca_demon_boss_4.png")
 	# 蜃气楼 
-	I_SCA_DEMON_BOSS_5 = RuleImage(roi_front=(326,425,211,218), roi_back=(241,414,504,242), threshold=0.8, method="Template matching", file="./tasks/RichMan/mall/scales/scales_sca_demon_boss_5.png")
+	I_SCA_DEMON_BOSS_5 = RuleImage(roi_front=(345,469,136,160), roi_back=(241,414,504,242), threshold=0.8, method="Template matching", file="./tasks/RichMan/mall/scales/scales_sca_demon_boss_5.png")
 	# 歌姬 
-	I_SCA_DEMON_BOSS_6 = RuleImage(roi_front=(561,432,178,189), roi_back=(437,401,555,236), threshold=0.8, method="Template matching", file="./tasks/RichMan/mall/scales/scales_sca_demon_boss_6.png")
+	I_SCA_DEMON_BOSS_6 = RuleImage(roi_front=(561,480,141,141), roi_back=(437,402,555,236), threshold=0.8, method="Template matching", file="./tasks/RichMan/mall/scales/scales_sca_demon_boss_6.png")
 	# 永生之海第一个选择 
 	I_SCA_SELECT_1 = RuleImage(roi_front=(189,519,113,51), roi_back=(189,519,113,51), threshold=0.8, method="Template matching", file="./tasks/RichMan/mall/scales/scales_sca_select_1.png")
 	# description 
