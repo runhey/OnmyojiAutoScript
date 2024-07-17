@@ -185,7 +185,7 @@ class RichManAssets:
 	# 勋章 
 	I_SIDE_SURE_MEDAL = RuleImage(roi_front=(1190,375,39,62), roi_back=(1156,352,99,113), threshold=0.7, method="Template matching", file="./tasks/RichMan/mall/navbar/navbar_side_sure_medal.png")
 	# 勋章 
-	I_SIDE_CHECK_MEDAL = RuleImage(roi_front=(889,11,40,44), roi_back=(889,11,40,44), threshold=0.7, method="Template matching", file="./tasks/RichMan/mall/navbar/navbar_side_check_medal.png")
+	I_SIDE_CHECK_MEDAL = RuleImage(roi_front=(665,6,40,44), roi_back=(453,1,476,58), threshold=0.7, method="Template matching", file="./tasks/RichMan/mall/navbar/navbar_side_check_medal.png")
 	# 魅力值 
 	I_SIDE_SURE_CHARISMA = RuleImage(roi_front=(1181,467,59,58), roi_back=(1158,445,101,106), threshold=0.7, method="Template matching", file="./tasks/RichMan/mall/navbar/navbar_side_sure_charisma.png")
 	# 魅力值 
