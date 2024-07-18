@@ -5,7 +5,7 @@
     "roiFront": "1098,611,56,64",
     "roiBack": "1084,589,93,106",
     "method": "Template matching",
-    "threshold": 0.8,
+    "threshold": 0.7,
     "description": "式神录"
   },
   {
@@ -23,7 +23,7 @@
     "roiFront": "879,623,55,55",
     "roiBack": "867,606,79,77",
     "method": "Template matching",
-    "threshold": 0.8,
+    "threshold": 0.7,
     "description": "description"
   },
   {
@@ -50,7 +50,7 @@
     "roiFront": "540,611,50,54",
     "roiBack": "540,611,50,54",
     "method": "Template matching",
-    "threshold": 0.8,
+    "threshold": 0.7,
     "description": "description"
   },
   {
@@ -59,7 +59,7 @@
     "roiFront": "437,625,38,48",
     "roiBack": "366,606,192,83",
     "method": "Template matching",
-    "threshold": 0.8,
+    "threshold": 0.7,
     "description": "description"
   },
   {
@@ -68,7 +68,7 @@
     "roiFront": "92,621,36,41",
     "roiBack": "51,596,159,85",
     "method": "Template matching",
-    "threshold": 0.8,
+    "threshold": 0.7,
     "description": "description"
   },
   {
