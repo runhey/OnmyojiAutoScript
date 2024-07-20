@@ -314,10 +314,11 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, DokanAssets):
                 break
 
             if self.appear_then_click(target_attack, interval=1.8):
+                self.attack_priority_selected = True
                 logger.info(f"selected attack priority: {attack_priority}")
-                max_try -= 1
+                break
 
-            self.attack_priority_selected = True
+            max_try -= 1
 
         return True
 
@@ -489,9 +490,9 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, DokanAssets):
         # if self.appear(self.I_RYOU_DOKAN_FAILED_VOTE_NO):
         #     return True, DokanScene.RYOU_DOKAN_SCENE_FAILED_VOTE_NO
 
-        # 状态：道馆已经结束
-        # if self.ocr_appear(self.O_DOKAN_SUCCEEDED):
-        if self.appear(self.I_RYOU_DOKAN_FINISHED, threshold=0.8):
+        # 状态：道馆已经结束，图片位置会偏移，换OCR
+        if self.ocr_appear(self.O_DOKAN_SUCCEEDED):
+        # if self.appear(self.I_RYOU_DOKAN_FINISHED, threshold=0.8):
             return True, DokanScene.RYOU_DOKAN_SCENE_FINISHED
 
         return False, DokanScene.RYOU_DOKAN_SCENE_UNKNOWN
