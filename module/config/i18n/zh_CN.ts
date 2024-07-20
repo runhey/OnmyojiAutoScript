@@ -165,7 +165,7 @@
     <message><source>Nian</source><translation>年兽</translation></message>
     <message><source>Soul Zones</source><translation>御魂副本</translation></message>
     <message><source>Orochi</source><translation>八岐大蛇</translation></message>
-	<message><source>OrochiMoans</source><translation>魂土司机（测试版）</translation></message>
+	<message><source>OrochiMoans</source><translation>御魂悲鸣</translation></message>
     <message><source>OrochiJudgement</source><translation>御魂神罚</translation></message>
     <message><source>Sougenbi</source><translation>业原火</translation></message>
     <message><source>FallenSun</source><translation>日轮之城</translation></message>
@@ -212,7 +212,7 @@
     <message><source>Nian</source><translation>年兽</translation></message>
     <message><source>Soul Zones</source><translation>御魂副本</translation></message>
     <message><source>Orochi</source><translation>八岐大蛇</translation></message>
-	<message><source>OrochiMoans</source><translation>魂土司机（测试版）</translation></message>
+	<message><source>OrochiMoans</source><translation>御魂悲鸣</translation></message>
     <message><source>OrochiJudgement</source><translation>御魂神罚</translation></message>
     <message><source>Sougenbi</source><translation>业原火</translation></message>
     <message><source>FallenSun</source><translation>日轮之城</translation></message>
