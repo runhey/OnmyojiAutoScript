@@ -60,6 +60,7 @@ class GeneralInvite(BaseTask, GeneralInviteAssets):
             _ = self.room_type
             self.timer_invite = Timer(20)
             self.timer_invite.start()
+            logger.info(f"config.invite_number={config.invite_number}")
             self.ensure_room_type(config.invite_number)
             self.invite_friends(config)
         else:
@@ -219,7 +220,10 @@ class GeneralInvite(BaseTask, GeneralInviteAssets):
 
         def check_3(img) -> bool:
             appear = False
-            if self.I_ADD_1.match(img) and self.I_ADD_2.match(img):
+            # FIXME 三个人的房间，位置1已经有人了，按这个逻辑会变成两个人的房间
+            # if self.I_ADD_1.match(img) and self.I_ADD_2.match(img):
+            logger.warning(f"check_room_type, room3: {self.I_ADD_2.name}")
+            if self.appear(self.I_ADD_2):
                 appear = True
             return appear
 
@@ -255,11 +259,13 @@ class GeneralInvite(BaseTask, GeneralInviteAssets):
                     room_type = RoomType.ETERNITY_SEA if check_eternity_sea(image) else None
         if room_type:
             return room_type
-        if room_type is None and check_2(image):
-            room_type = RoomType.NORMAL_2
-            return room_type
+        
+        # FIXME 在加入自动、手动档结合的逻辑后，需要改变一个3和2的顺序，如果3个坑的队伍如果已经拉了1个人的话，原逻辑会被判定为2个坑的队伍
         if room_type is None and check_3(image):
             room_type = RoomType.NORMAL_3
+            return room_type
+        if room_type is None and check_2(image):
+            room_type = RoomType.NORMAL_2
             return room_type
         if room_type is None and check_5(image):
             room_type = RoomType.NORMAL_5

@@ -1,0 +1,11 @@
+[
+  {
+    "itemName": "toppa_scroll",
+    "roiFront": "1143,13,80,39",
+    "roiBack": "0,0,100,100",
+    "mode": "DigitCounter",
+    "method": "Default",
+    "keyword": "",
+    "description": "突破卷的数量"
+  }
+]
