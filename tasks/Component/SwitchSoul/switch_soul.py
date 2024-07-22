@@ -21,6 +21,7 @@ def switch_parser(switch_str: str) -> tuple:
         raise ValueError('Switch_str must be 2 length')
     return int(switch_list[0]), int(switch_list[1])
 
+
 class SwitchSoul(BaseTask, SwitchSoulAssets):
 
     def run_switch_soul(self, target: tuple or list[tuple]):
@@ -54,7 +55,8 @@ class SwitchSoul(BaseTask, SwitchSoulAssets):
                 break
             if self.appear(self.I_SOU_TEAM_PRESENT):
                 break
-            if self.appear_then_click(self.I_SOUL_PRESET, interval=1):
+            if self.appear(self.I_SOUL_PRESET):
+                self.click(self.I_SOUL_PRESET, interval=3)
                 continue
         logger.info('Click preset in switch soul')
 
@@ -88,18 +90,19 @@ class SwitchSoul(BaseTask, SwitchSoulAssets):
             return match[team]
 
         # 滑动至分组最上层(分組過多, 导致第一个分组显示不全)
+        cur_text = ""
         while 1:
             self.screenshot()
             compare1 = self.O_SS_GROUP_NAME.detect_and_ocr(self.device.image)
-            text1 = str([result.ocr_text for result in compare1])
-            # 向上滑动
-            self.swipe(self.S_SS_GROUP_SWIPE_UP, 6)
-            self.screenshot()
-            compare2 = self.O_SS_GROUP_NAME.detect_and_ocr(self.device.image)
-            text2 = str([result.ocr_text for result in compare2])
+            ocr_text = str([result.ocr_text for result in compare1])
             # 相等时 滑动到最上层
-            if text1 == text2:
+            if cur_text == ocr_text:
                 break
+            cur_text = ocr_text
+            # 向上滑动
+            self.swipe(self.S_SS_GROUP_SWIPE_UP, 0.5)
+            # 等待滑动动画
+            sleep(0.5)
 
         if group < 1 or group > 7:
             raise ValueError('Switch soul_one group must be in [1-7]')
@@ -122,10 +125,16 @@ class SwitchSoul(BaseTask, SwitchSoulAssets):
         for i in range(3):
             sleep(0.8)
             self.screenshot()
-            if self.appear_then_click(self.I_SOU_SWITCH_SURE, interval=1):
+            if self.appear(self.I_SOU_SWITCH_SURE):
+                while 1:
+                    self.click(self.I_SOU_SWITCH_SURE, 3)
+                    self.screenshot()
+                    if not self.appear(self.I_SOU_SWITCH_SURE):
+                        break
                 continue
             if not self.appear_then_click(target_team, interval=1):
                 logger.warning(f'Click team {team} failed in group {group}')
+
         logger.info(f'Switch soul_one group {group} team {team}')
 
     def switch_souls(self, target: tuple or list[tuple]) -> None:
@@ -251,12 +260,11 @@ class SwitchSoul(BaseTask, SwitchSoulAssets):
                 break
         logger.info(f'Switch soul_one group {groupName} team {teamName}')
 
-
     def ocr_appear_click_by_rule(self,
-                         target: RuleOcr,
-                         action: Union[RuleClick, RuleLongClick] = None,
-                         interval: float = None,
-                         duration: float = None) -> bool:
+                                 target: RuleOcr,
+                                 action: Union[RuleClick, RuleLongClick] = None,
+                                 interval: float = None,
+                                 duration: float = None) -> bool:
         """
         ocr识别目标，如果目标存在，则触发动作
         :param target:
@@ -276,9 +284,11 @@ class SwitchSoul(BaseTask, SwitchSoulAssets):
         self.device.click(x=x, y=y1, control_name=target.name)
         return True
 
+
 if __name__ == '__main__':
     from module.config.config import Config
     from module.device.device import Device
+
     c = Config('oas1')
     d = Device(c)
     s = SwitchSoul(c, d)
