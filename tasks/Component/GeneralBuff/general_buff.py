@@ -223,6 +223,7 @@ class GeneralBuff(BaseTask, GeneralBuffAssets):
         """
         self.reject_invite()
         self.screenshot()
+
         if not target.match(self.device.image):
             logger.warning(f'No {target.name} buff')
             return None
@@ -294,9 +295,17 @@ class GeneralBuff(BaseTask, GeneralBuffAssets):
         from tasks.Component.GeneralInvite.assets import GeneralInviteAssets as gia
         while 1:
             self.screenshot()
-            if not self.appear(gia.I_I_REJECT):
+            if not (self.appear(gia.I_I_REJECT_1) or self.appear(gia.I_I_REJECT_2) or self.appear(gia.I_I_REJECT_3)):
                 break
-            self.click(gia.I_I_REJECT, interval=1)
+            if self.appear(gia.I_I_REJECT_3):
+                self.click(gia.I_I_REJECT_3, 6)
+                continue
+            if self.appear(gia.I_I_REJECT_2):
+                self.click(gia.I_I_REJECT_2, 6)
+                continue
+            if self.appear(gia.I_I_REJECT_1):
+                self.click(gia.I_I_REJECT_1, 6)
+                continue
 
 
 if __name__ == '__main__':
