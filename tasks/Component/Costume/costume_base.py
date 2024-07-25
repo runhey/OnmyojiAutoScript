@@ -8,6 +8,7 @@ from tasks.Component.Costume.config import (MainType, CostumeConfig, RealmType,
                                             ThemeType, ShikigamiType, SignType, BattleType)
 from tasks.Component.Costume.assets import CostumeAssets
 from tasks.Component.CostumeRealm.assets import CostumeRealmAssets
+from tasks.Component.CostumeBattle.assets import CostumeBattleAssets
 
 # 庭院皮肤
 main_costume_model = {
@@ -69,6 +70,14 @@ realm_costume_model = {
                                 'I_BOX_EXP': 'I_BOX_EXP_2'},
 }
 
+# 战斗主题
+battle_theme_model = {
+    BattleType.COSTUME_BATTLE_1: {
+        'I_LOCAL': 'I_LOCAL_1',
+        'I_EXIT': 'I_EXIT_1',
+        'I_FRIENDS': 'I_FRIENDS_1',
+    },
+}
 class CostumeBase:
 
     def check_costume(self, config: CostumeConfig=None):
@@ -76,6 +85,7 @@ class CostumeBase:
             config: CostumeConfig = self.config.model.global_game.costume_config
         self.check_costume_main(config.costume_main_type)
         self.check_costume_realm(config.costume_realm_type)
+        self.check_costume_battle(config.costume_battle_type)
 
     def replace_img(self, asset_before: str, asset_after: RuleImage):
         if not hasattr(self, asset_before):
@@ -103,6 +113,13 @@ class CostumeBase:
             assert_value: RuleImage = getattr(costume_realm_assets, value)
             self.replace_img(key, assert_value)
 
+    def check_costume_battle(self, battle_type: BattleType):
+        if battle_type == BattleType.COSTUME_BATTLE_DEFAULT:
+            return
+        costume_battle_assets = CostumeBattleAssets()
+        for key, value in battle_theme_model[battle_type].items():
+            assert_value: RuleImage = getattr(costume_battle_assets, value)
+            self.replace_img(key, assert_value)
 
 
 if __name__ == '__main__':
