@@ -61,7 +61,7 @@ logger_debug = False
 logger = logging.getLogger('oas')
 logger.setLevel(logging.DEBUG if logger_debug else logging.INFO)
 file_formatter = logging.Formatter(
-    fmt='%(asctime)s.%(msecs)03d | %(filename)s:%(lineno)d | %(levelname)8s | %(message)s', datefmt='%Y-%m-%d %H:%M:%S')
+    fmt='%(asctime)s.%(msecs)03d | %(filename)20s:%(lineno)04d | %(levelname)8s | %(message)s', datefmt='%Y-%m-%d %H:%M:%S')
 console_formatter = logging.Formatter(
     fmt='%(asctime)s.%(msecs)03d │ %(message)s', datefmt='%Y-%m-%d %H:%M:%S')
 flutter_formatter = logging.Formatter(
@@ -73,7 +73,7 @@ flutter_formatter = logging.Formatter(
 # ======================================================================================================================
 console_hdlr = RichHandler(
     console=Console(
-        width=160
+        width=120
     ),
     show_path=False,
     show_time=False,
