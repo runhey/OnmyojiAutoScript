@@ -113,7 +113,7 @@ def set_file_logger(name=pyw_name):
         no_color=True,
         highlight=False,
         width=160,
-    )
+    ) 
 
     hdlr = RichFileHandler(
         console=file_console,

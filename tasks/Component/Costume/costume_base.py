@@ -3,6 +3,7 @@
 # github https://github.com/runhey
 
 from module.atom.image import RuleImage
+from module.logger import logger
 
 from tasks.Component.Costume.config import (MainType, CostumeConfig, RealmType,
                                             ThemeType, ShikigamiType, SignType, BattleType)
@@ -83,26 +84,28 @@ battle_theme_model = {
         'I_FRIENDS': 'I_FRIENDS_2',
     },
     BattleType.COSTUME_BATTLE_3: {
-        'I_LOCAL': 'I_LOCAL_1',
-        'I_EXIT': 'I_EXIT_1',
-        'I_FRIENDS': 'I_FRIENDS_1',
+        'I_LOCAL': 'I_LOCAL_3',
+        'I_EXIT': 'I_EXIT_3',
+        'I_FRIENDS': 'I_FRIENDS_3',
     },
     BattleType.COSTUME_BATTLE_4: {
-        'I_LOCAL': 'I_LOCAL_1',
-        'I_EXIT': 'I_EXIT_1',
-        'I_FRIENDS': 'I_FRIENDS_1',
+        'I_LOCAL': 'I_LOCAL_4',
+        'I_EXIT': 'I_EXIT_4',
+        'I_FRIENDS': 'I_FRIENDS_4',
     },
     BattleType.COSTUME_BATTLE_5: {
-        'I_LOCAL': 'I_LOCAL_1',
-        'I_EXIT': 'I_EXIT_1',
-        'I_FRIENDS': 'I_FRIENDS_1',
+        'I_LOCAL': 'I_LOCAL_5',
+        'I_EXIT': 'I_EXIT_5',
+        'I_FRIENDS': 'I_FRIENDS_5',
     },
     BattleType.COSTUME_BATTLE_6: {
-        'I_LOCAL': 'I_LOCAL_1',
-        'I_EXIT': 'I_EXIT_1',
-        'I_FRIENDS': 'I_FRIENDS_1',
+        'I_LOCAL': 'I_LOCAL_6',
+        'I_EXIT': 'I_EXIT_6',
+        'I_FRIENDS': 'I_FRIENDS_6',
     },
 }
+
+
 class CostumeBase:
 
     def check_costume(self, config: CostumeConfig=None):
@@ -129,6 +132,7 @@ class CostumeBase:
     def check_costume_main(self, main_type: MainType):
         if main_type == MainType.COSTUME_MAIN:
             return
+        logger.info(f'Switch main costume to {main_type}')
         costume_assets = CostumeAssets()
         for key, value in main_costume_model[main_type].items():
             assert_value: RuleImage = getattr(costume_assets, value)
@@ -137,6 +141,7 @@ class CostumeBase:
     def check_costume_realm(self, realm_type: RealmType):
         if realm_type == RealmType.COSTUME_REALM_DEFAULT:
             return
+        logger.info(f'Switch realm theme {realm_type}')
         costume_realm_assets = CostumeRealmAssets()
         for key, value in realm_costume_model[realm_type].items():
             assert_value: RuleImage = getattr(costume_realm_assets, value)
@@ -145,6 +150,7 @@ class CostumeBase:
     def check_costume_battle(self, battle_type: BattleType):
         if battle_type == BattleType.COSTUME_BATTLE_DEFAULT:
             return
+        logger.info(f'Switch battle theme {battle_type}')
         costume_battle_assets = CostumeBattleAssets()
         for key, value in battle_theme_model[battle_type].items():
             assert_value: RuleImage = getattr(costume_battle_assets, value)
