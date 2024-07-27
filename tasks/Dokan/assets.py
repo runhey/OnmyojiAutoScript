@@ -90,7 +90,7 @@ class DokanAssets:
 
 	# Ocr Rule Assets
 	# 道馆地图里找文字：万 
-	O_DOKAN_MAP = RuleOcr(roi=(1122,546,92,51), area=(1122,546,92,51), mode="Full", method="Default", keyword="万", name="dokan_map")
+	O_DOKAN_MAP = RuleOcr(roi=(270,130,740,460), area=(270,130,740,460), mode="Full", method="Default", keyword="万", name="dokan_map")
 	# 道馆里找文字：后开战 
 	O_DOKAN_GATHERING = RuleOcr(roi=(535,75,211,29), area=(535,75,211,29), mode="Single", method="Default", keyword="开战", name="dokan_gathering")
 	# 道馆里找文字：剩余突破时间 
@@ -98,6 +98,6 @@ class DokanAssets:
 	# 道馆里找文字：后挑战馆主 
 	O_DOKAN_BOSS_WAITING = RuleOcr(roi=(603,148,130,32), area=(603,148,130,32), mode="Single", method="Default", keyword="馆主", name="dokan_boss_waiting")
 	# 道馆里找文字：后关闭 
-	O_DOKAN_SUCCEEDED = RuleOcr(roi=(1122,546,92,51), area=(1122,546,92,51), mode="Full", method="Default", keyword="关闭", name="dokan_succeeded")
+	O_DOKAN_SUCCEEDED = RuleOcr(roi=(655,76,49,28), area=(655,76,49,28), mode="Full", method="Default", keyword="关闭", name="dokan_succeeded")
 
 

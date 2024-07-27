@@ -69,6 +69,12 @@ class GeneralInviteAssets:
 	I_ADD_SEA = RuleImage(roi_front=(836,231,100,100), roi_back=(836,231,100,100), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralInvite/gi/gi_add_sea.png")
 	# 队员不接受邀请 
 	I_I_REJECT = RuleImage(roi_front=(12,226,64,61), roi_back=(12,226,64,275), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralInvite/gi/gi_i_reject.png")
+	# 队员不接受邀请 
+	I_I_REJECT_1 = RuleImage(roi_front=(5,210,110,95), roi_back=(5,210,110,95), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralInvite/gi/gi_i_reject.png")
+	# 队员不接受邀请 
+	I_I_REJECT_2 = RuleImage(roi_front=(5,320,110,95), roi_back=(5,320,110,95), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralInvite/gi/gi_i_reject.png")
+	# 队员不接受邀请 
+	I_I_REJECT_3 = RuleImage(roi_front=(5,430,110,95), roi_back=(5,430,110,95), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralInvite/gi/gi_i_reject.png")
 	# 队员接受邀请 
 	I_I_ACCEPT = RuleImage(roi_front=(113,225,63,72), roi_back=(113,225,63,280), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralInvite/gi/gi_i_accept.png")
 	# 队员默认接受邀请 

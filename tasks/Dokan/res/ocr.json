@@ -1,8 +1,8 @@
 [
   {
     "itemName": "dokan_map",
-    "roiFront": "1122,546,92,51",
-    "roiBack": "1122,546,92,51",
+    "roiFront": "270,130,740,460",
+    "roiBack": "270,130,740,460",
     "mode": "Full",
     "method": "Default",
     "keyword": "万",
@@ -37,8 +37,8 @@
   },
   {
     "itemName": "dokan_succeeded",
-    "roiFront": "1122,546,92,51",
-    "roiBack": "1122,546,92,51",
+    "roiFront": "655,76,49,28",
+    "roiBack": "655,76,49,28",
     "mode": "Full",
     "method": "Default",
     "keyword": "关闭",

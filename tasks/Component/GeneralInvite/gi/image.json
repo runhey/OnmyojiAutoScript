@@ -261,6 +261,33 @@
     "description": "队员不接受邀请"
   },
   {
+    "itemName": "i_reject_1",
+    "imageName": "gi_i_reject.png",
+    "roiFront": "5,210,110,95",
+    "roiBack": "5,210,110,95",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "队员不接受邀请"
+  },
+  {
+    "itemName": "i_reject_2",
+    "imageName": "gi_i_reject.png",
+    "roiFront": "5,320,110,95",
+    "roiBack": "5,320,110,95",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "队员不接受邀请"
+  },
+  {
+    "itemName": "i_reject_3",
+    "imageName": "gi_i_reject.png",
+    "roiFront": "5,430,110,95",
+    "roiBack": "5,430,110,95",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "队员不接受邀请"
+  },
+  {
     "itemName": "i_accept",
     "imageName": "gi_i_accept.png",
     "roiFront": "113,225,63,72",

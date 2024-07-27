@@ -1,0 +1,29 @@
+[
+  {
+    "itemName": "local_3",
+    "imageName": "battle3_local_3.png",
+    "roiFront": "29,567,23,25",
+    "roiBack": "29,567,23,25",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "指针"
+  },
+  {
+    "itemName": "exit_3",
+    "imageName": "battle3_exit_3.png",
+    "roiFront": "23,18,27,31",
+    "roiBack": "23,18,27,31",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "左上角退出"
+  },
+  {
+    "itemName": "friends_3",
+    "imageName": "battle3_friends_3.png",
+    "roiFront": "89,17,35,34",
+    "roiBack": "89,17,35,34",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "左上角好友"
+  }
+]

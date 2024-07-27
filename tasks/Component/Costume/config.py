@@ -39,7 +39,13 @@ class SignType(str, Enum):
 
 # 战斗主题
 class BattleType(str, Enum):
-    COSTUME_BATTLE_DEFAULT = 'costume_battle_default'  # 默认
+    COSTUME_BATTLE_DEFAULT = 'costume_battle_default'  # 简约主题 / 不支持怀旧
+    COSTUME_BATTLE_1 = 'costume_battle_1'  # 雅乐之邦
+    COSTUME_BATTLE_2 = 'costume_battle_2'  # 蝶寻花踪
+    COSTUME_BATTLE_3 = 'costume_battle_3'  # 凛霜寒雪
+    COSTUME_BATTLE_4 = 'costume_battle_4'  # 春缕含青
+    COSTUME_BATTLE_5 = 'costume_battle_5'  # 祥夜幽芳
+    COSTUME_BATTLE_6 = 'costume_battle_6'  # 桂馥金秋
 
 
 

@@ -49,8 +49,7 @@ class GeneralBuff(BaseTask, GeneralBuffAssets):
             if self.appear_then_click(self.I_BUFF_1, interval=2):
                 continue
 
-    @staticmethod
-    def get_area(image: np.array, buff: RuleOcr) -> tuple:
+    def get_area(self, buff: RuleOcr) -> tuple:
         """
         获取要点击的开关buff的区域
         :param cls:
@@ -58,7 +57,10 @@ class GeneralBuff(BaseTask, GeneralBuffAssets):
         :param buff:
         :return:  如果没有就返回None
         """
-        area = buff.ocr(image)
+        # 防止邀请框挡住BUFF框架
+        self.reject_invite()
+        self.screenshot()
+        area = buff.ocr(self.device.image)
         if area == tuple([0, 0, 0, 0]):
             logger.info('No gold 50 buff')
             return None
@@ -79,7 +81,6 @@ class GeneralBuff(BaseTask, GeneralBuffAssets):
         self.I_OPEN_YELLOW.roi_back = list(area)  # 动态设置roi
         self.I_CLOSE_RED.roi_back = list(area)
 
-
     def gold_50(self, is_open: bool = True):
         """
         金币50buff
@@ -88,7 +89,7 @@ class GeneralBuff(BaseTask, GeneralBuffAssets):
         """
         logger.info('Gold 50 buff')
         self.screenshot()
-        area = self.get_area(self.device.image, self.O_GOLD_50)
+        area = self.get_area(self.O_GOLD_50)
         if not area:
             logger.warning('No gold 50 buff')
             return None
@@ -117,7 +118,7 @@ class GeneralBuff(BaseTask, GeneralBuffAssets):
         """
         logger.info('Gold 100 buff')
         self.screenshot()
-        area = self.get_area(self.device.image, self.O_GOLD_100)
+        area = self.get_area(self.O_GOLD_100)
         if not area:
             logger.warning('No gold 100 buff')
             return None
@@ -147,7 +148,7 @@ class GeneralBuff(BaseTask, GeneralBuffAssets):
         logger.info('Exp 50 buff')
         while 1:
             self.screenshot()
-            area = self.get_area(self.device.image, self.O_EXP_50)
+            area = self.get_area(self.O_EXP_50)
             if not area:
                 logger.warning('No exp 50 buff')
                 continue
@@ -184,7 +185,7 @@ class GeneralBuff(BaseTask, GeneralBuffAssets):
         logger.info('Exp 100 buff')
         while 1:
             self.screenshot()
-            area = self.get_area(self.device.image, self.O_EXP_100)
+            area = self.get_area(self.O_EXP_100)
             if not area:
                 logger.warning('No exp 100 buff')
                 continue
@@ -212,8 +213,7 @@ class GeneralBuff(BaseTask, GeneralBuffAssets):
                 if self.appear_then_click(self.I_OPEN_YELLOW, interval=1):
                     continue
 
-    @staticmethod
-    def get_area_image(image: np.array, target: RuleImage) -> list:
+    def get_area_image(self, target: RuleImage) -> list:
         """
         获取觉醒加成或者是御魂加成所要点击的区域
         因为实在的图片比ocr快
@@ -221,7 +221,10 @@ class GeneralBuff(BaseTask, GeneralBuffAssets):
         :param target:
         :return:
         """
-        if not target.match(image):
+        self.reject_invite()
+        self.screenshot()
+
+        if not target.match(self.device.image):
             logger.warning(f'No {target.name} buff')
             return None
             # logger.info(f'front area: {target.roi_front}')
@@ -240,7 +243,7 @@ class GeneralBuff(BaseTask, GeneralBuffAssets):
         """
         logger.info('Awake buff')
         self.screenshot()
-        area = self.get_area_image(self.device.image, self.I_AWAKE)
+        area = self.get_area_image(self.I_AWAKE)
         if not area:
             logger.warning('No awake buff')
             return None
@@ -268,7 +271,7 @@ class GeneralBuff(BaseTask, GeneralBuffAssets):
         """
         logger.info('Soul buff')
         self.screenshot()
-        area = self.get_area_image(self.device.image, self.I_SOUL)
+        area = self.get_area_image(self.I_SOUL)
         if not area:
             logger.warning('No soul buff')
             return None
@@ -288,10 +291,27 @@ class GeneralBuff(BaseTask, GeneralBuffAssets):
                 if self.appear_then_click(self.I_OPEN_YELLOW, interval=1):
                     continue
 
+    def reject_invite(self):
+        from tasks.Component.GeneralInvite.assets import GeneralInviteAssets as gia
+        while 1:
+            self.screenshot()
+            if not (self.appear(gia.I_I_REJECT_1) or self.appear(gia.I_I_REJECT_2) or self.appear(gia.I_I_REJECT_3)):
+                break
+            if self.appear(gia.I_I_REJECT_3):
+                self.click(gia.I_I_REJECT_3, 6)
+                continue
+            if self.appear(gia.I_I_REJECT_2):
+                self.click(gia.I_I_REJECT_2, 6)
+                continue
+            if self.appear(gia.I_I_REJECT_1):
+                self.click(gia.I_I_REJECT_1, 6)
+                continue
+
 
 if __name__ == '__main__':
     from module.config.config import Config
     from module.device.device import Device
+
     c = Config('oas1')
     d = Device(c)
     t = GeneralBuff(c, d)
@@ -305,6 +325,3 @@ if __name__ == '__main__':
     t.gold_100(is_open=True)
     t.exp_50(is_open=True)
     t.exp_100(is_open=True)
-
-
-
