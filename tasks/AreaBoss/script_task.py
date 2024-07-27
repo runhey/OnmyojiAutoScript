@@ -278,6 +278,7 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AreaBossAssets):
         self.open_filter()
         for i in range(random.randint(1, 3)):
             self.swipe(self.S_AB_FILTER_UP)
+        self.wait_until_appear(self.C_AB_BOSS_REWARD_PHOTO_MINUS_2, wait_time=1)
         num = self.get_num_challenge(self.C_AB_BOSS_REWARD_PHOTO_MINUS_2)
         lst.append(num)
         self.ui_click_until_disappear(self.I_AB_CLOSE_RED)
@@ -285,6 +286,7 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AreaBossAssets):
         self.open_filter()
         for i in range(random.randint(1, 3)):
             self.swipe(self.S_AB_FILTER_UP)
+        self.wait_until_appear(self.C_AB_BOSS_REWARD_PHOTO_MINUS_1, wait_time=1)
         num = self.get_num_challenge(self.C_AB_BOSS_REWARD_PHOTO_MINUS_1)
         lst.append(num)
         self.ui_click_until_disappear(self.I_AB_CLOSE_RED)
@@ -308,12 +310,14 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AreaBossAssets):
         # 如果鬼王不可挑战(未解锁),限制3次尝试打开鬼王详情界面
         numTry = 0
         while numTry < 3:
-            self.screenshot()
-            if self.appear(self.I_AB_CLOSE_RED):
-                break
             if self.click(click_area, interval=2):
                 numTry += 1
-        if numTry >= 3:
+                if self.wait_until_appear(self.I_AB_CLOSE_RED, True, 2):
+                    break
+
+        self.screenshot()
+        if numTry >= 3 and not self.appear(self.I_AB_CLOSE_RED):
+            logger.info("%s unavailable", str(click_area))
             return 0
         return self.O_AB_NUM_OF_CHALLENGE.ocr_digit(self.device.image)
 
@@ -360,10 +364,10 @@ if __name__ == '__main__':
     from module.config.config import Config
     from module.device.device import Device
 
-    c = Config('oas2')
+    c = Config('oas1')
     d = Device(c)
     t = ScriptTask(c, d)
-    time.sleep(3)
+    # time.sleep(3)
     # t.switchFloor2One()
     # t.switch2Level60()
     t.run()
