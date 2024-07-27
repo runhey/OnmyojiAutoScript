@@ -33,7 +33,6 @@
 
 ## 功能 Features
 
-- OAS 还在开发中，[查看已实现](https://github.com/runhey/OnmyojiAutoScript/issues/54)
 - **日常任务**: 悬赏封印、小猫咪、小杂签到、金币妖怪、年兽、花合战、地鬼、封魔、御魂整理
 - **每周相关**: 真蛇、秘闻竞速、神秘商店、搜刮商店、斗技、每周小杂事
 - **阴阳寮**: 结界上卡、结界蹭卡、结界突破、寮突破、狩猎战、集体任务、道馆
@@ -92,7 +91,7 @@ OAS 在其基础上进行了如下优化：
 
 #### QQ开发群: 207613181 (有意开发本项目请加此群, 请不要胡乱加群)
 
-- 发展规划：[#54](https://github.com/runhey/OnmyojiAutoScript/issues/54)
+- 开发规划：[#354](https://github.com/runhey/OnmyojiAutoScript/issues/354)
 - OAS 继承了 Alas 的设计思路，极大简便了开发，欢迎提交 PR，挑选你感兴趣的部分进行开发即可。
 - OAS 仍在活跃中， 我们会不定期发布未来的工作在 Issues 上并标记为 `help wanted`，欢迎向 OAS 提交 PR，我们会认真阅读你的每一行代码的。
 
