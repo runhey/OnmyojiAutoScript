@@ -337,6 +337,7 @@ class GeneralBattle(GeneralBuff, GeneralBattleAssets):
         logger.info("Select preset team")
 
         # 点击预设确认
+        time.sleep(0.5)
         while 1:
             self.screenshot()
             if self.appear_then_click(self.I_PRESET_ENSURE, threshold=0.8):
