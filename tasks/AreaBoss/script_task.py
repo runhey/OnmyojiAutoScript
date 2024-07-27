@@ -142,6 +142,11 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AreaBossAssets):
             self.open_filter()
         self.ui_click(battle, self.I_AB_CLOSE_RED)
 
+        if self.is_group_ranked():
+            # 如果已经打过该BOSS,直接跳过不打了
+            self.ui_click_until_disappear(self.I_AB_CLOSE_RED, interval=1)
+            return True
+
         if ultra:
             if not self.get_difficulty():
                 # 判断是否能切换到极地鬼
@@ -311,6 +316,13 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AreaBossAssets):
         if numTry >= 3:
             return 0
         return self.O_AB_NUM_OF_CHALLENGE.ocr_digit(self.device.image)
+
+    def is_group_ranked(self):
+        """
+            判断该鬼王是否已经获取到小组排名
+        """
+        return not self.appear(self.I_AB_GROUP_RANK_NONE)
+        pass
 
     def open_filter(self):
         logger.info("openFilter")
