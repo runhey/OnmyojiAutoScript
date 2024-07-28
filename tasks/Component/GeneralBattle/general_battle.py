@@ -337,8 +337,9 @@ class GeneralBattle(GeneralBuff, GeneralBattleAssets):
         self.wait_until_appear(self.I_PRESET_ENSURE, wait_time=1)
         while 1:
             self.screenshot()
-            if self.appear_then_click(self.I_PRESET_ENSURE, threshold=0.8):
-                continue
+            if self.wait_until_appear(self.I_PRESET_ENSURE, wait_time=1):
+                self.click(self.I_PRESET_ENSURE)
+                
             if not self.appear(self.I_PRESET_ENSURE):
                 break
         logger.info("Click preset ensure")

@@ -252,7 +252,8 @@ class ScriptTask(GeneralBattle, GeneralInvite, GeneralBuff, GeneralRoom, GameUi,
         while 1:
             # 有一种情况是本来要退出的，但是队长邀请了进入的战斗的加载界面
             if self.appear(self.I_GI_HOME) or self.appear(self.I_GI_EXPLORE):
-                break
+                if not self.appear_then_click(self.I_GI_SURE, interval=0.5):
+                    break
             # 如果可能在房间就退出
             if self.exit_room():
                 pass
