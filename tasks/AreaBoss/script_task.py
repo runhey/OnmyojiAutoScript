@@ -140,10 +140,13 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AreaBossAssets):
         """
         if not self.appear(self.I_AB_FILTER_OPENED):
             self.open_filter()
-        self.ui_click(battle, self.I_AB_CLOSE_RED)
 
+        # 如果打不开鬼王详情界面,直接退出
+        if not self.open_boss_detail(battle, 3):
+            return False
+
+        # 如果已经打过该BOSS,直接跳过不打了
         if self.is_group_ranked():
-            # 如果已经打过该BOSS,直接跳过不打了
             self.ui_click_until_disappear(self.I_AB_CLOSE_RED, interval=1)
             return True
 
@@ -213,7 +216,7 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AreaBossAssets):
             if self.appear(_to):
                 break
             if self.appear(_from):
-                self.click(_from, interval=1)
+                self.click(_from, interval=3)
                 continue
 
     def switch_to_floor_1(self):
@@ -308,18 +311,34 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AreaBossAssets):
         @rtype:
         """
         # 如果鬼王不可挑战(未解锁),限制3次尝试打开鬼王详情界面
-        numTry = 0
-        while numTry < 3:
-            if self.click(click_area, interval=2):
-                numTry += 1
-                if self.wait_until_appear(self.I_AB_CLOSE_RED, True, 2):
-                    break
-
-        self.screenshot()
-        if numTry >= 3 and not self.appear(self.I_AB_CLOSE_RED):
+        if not self.open_boss_detail(click_area, 3):
             logger.info("%s unavailable", str(click_area))
             return 0
         return self.O_AB_NUM_OF_CHALLENGE.ocr_digit(self.device.image)
+
+    def open_boss_detail(self, battle: RuleImage, try_num: int = 3) -> bool:
+        """
+            打开鬼王详情界面
+        @param battle:
+        @type battle:
+        @param try_num: 重试次数
+        @type try_num:
+        @return:    True        打开成功
+                    False       打开失败
+        @rtype:
+        """
+        try_num = 3 if try_num <= 0 else try_num
+
+        while try_num > 0:
+            self.click(battle, interval=3)
+            if self.wait_until_appear(self.I_AB_CLOSE_RED, wait_time=3):
+                break
+            try_num -= 1
+        # 打开鬼王详情界面失败,直接返回
+        self.screenshot()
+        if self.appear(self.I_AB_CLOSE_RED):
+            return True
+        return False
 
     def is_group_ranked(self):
         """
