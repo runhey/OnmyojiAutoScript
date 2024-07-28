@@ -18,7 +18,7 @@ class ScriptTask(GameUi, FloatParadeAssets, TalismanPassAssets):
     def run(self):
         self.ui_get_current_page()
         self.ui_goto(page_main)
-        con: FloatParadeConfig = self.config.talisman_pass.talisman
+        con: FloatParadeConfig = self.config.float_parade.float_parade
 
         # 收取全部奖励
         self.get_all()
