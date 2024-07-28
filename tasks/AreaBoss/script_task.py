@@ -232,6 +232,8 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AreaBossAssets):
                 self.click(self.I_AB_JI_FLOOR_ONE)
                 break
             self.swipe(self.S_AB_FLOOR_DOWN, interval=1)
+            # 等待滑动动画
+            self.wait_until_appear(self.I_AB_JI_FLOOR_ONE, False, 1)
 
     def fight_reward_boss(self):
         index = self.get_hot_in_reward()
