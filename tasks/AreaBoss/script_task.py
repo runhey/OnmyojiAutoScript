@@ -147,7 +147,7 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AreaBossAssets):
 
         # 如果已经打过该BOSS,直接跳过不打了
         if self.is_group_ranked():
-            self.ui_click_until_disappear(self.I_AB_CLOSE_RED, interval=1)
+            self.ui_click_until_disappear(self.I_AB_CLOSE_RED, interval=3)
             return True
 
         if ultra:
@@ -158,7 +158,7 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AreaBossAssets):
                     if not self.start_fight():
                         logger.warning("you are so weakness!")
                         self.wait_until_appear(self.I_AB_CLOSE_RED)
-                        self.ui_click_until_disappear(self.I_AB_CLOSE_RED, interval=1)
+                        self.ui_click_until_disappear(self.I_AB_CLOSE_RED, interval=3)
                         return False
                 # 切换到 极地鬼
                 self.switch_difficulty(True)
@@ -223,9 +223,9 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AreaBossAssets):
         """
             更改层数为一层
         """
-        _Floor = ["壹星", "贰星", "叁星", "肆星", "伍星", "陆星", "柒星", "捌星", "玖星", "拾星"]
+        # _Floor = ["壹星", "贰星", "叁星", "肆星", "伍星", "陆星", "柒星", "捌星", "玖星", "拾星"]
         # 打开选择列表
-        self.ui_click(self.C_AB_JI_FLOOR_SELECTED, self.I_AB_JI_FLOOR_LIST_CHECK, interval=1)
+        self.ui_click(self.C_AB_JI_FLOOR_SELECTED, self.I_AB_JI_FLOOR_LIST_CHECK, interval=3)
         while 1:
             self.screenshot()
             if self.appear(self.I_AB_JI_FLOOR_ONE):
@@ -241,7 +241,7 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AreaBossAssets):
         # 滑动到最顶层
         if index < 3:
             logger.info("swipe to top")
-            for i in range(3):
+            for i in range(random.randint(1, 3)):
                 self.swipe(self.S_AB_FILTER_DOWN)
         #
         if index == 0:
@@ -251,7 +251,7 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AreaBossAssets):
         elif index == 2:
             return self.boss_fight(self.C_AB_BOSS_REWARD_PHOTO_3, True)
         # 保证滑动到最底部
-        for i in range(3):
+        for i in range(random.randint(1, 3)):
             self.swipe(self.S_AB_FILTER_UP)
         if index == 3:
             return self.boss_fight(self.C_AB_BOSS_REWARD_PHOTO_MINUS_2, True)
@@ -351,7 +351,7 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AreaBossAssets):
 
     def open_filter(self):
         logger.info("openFilter")
-        self.ui_click(self.I_FILTER, self.I_AB_FILTER_OPENED, interval=1)
+        self.ui_click(self.I_FILTER, self.I_AB_FILTER_OPENED, interval=3)
 
     def switch_to_collect(self):
         while 1:
