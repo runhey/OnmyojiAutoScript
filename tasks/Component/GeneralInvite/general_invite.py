@@ -186,6 +186,7 @@ class GeneralInvite(BaseTask, GeneralInviteAssets):
             if self.appear_then_click(self.I_GI_SURE, interval=0.5):
                 continue
             if not self.appear(self.I_GI_SURE) and self.appear_then_click(self.I_BACK_YELLOW, interval=0.8):
+                self.wait_until_appear(self.I_GI_SURE, wait_time=0.3)
                 continue
         return True
 
