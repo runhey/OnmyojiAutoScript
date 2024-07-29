@@ -334,6 +334,7 @@ class GeneralBattle(GeneralBuff, GeneralBattleAssets):
         logger.info("Select preset team")
 
         # 点击预设确认
+        self.wait_until_appear(self.I_PRESET_ENSURE, wait_time=1)
         while 1:
             self.screenshot()
             if self.appear_then_click(self.I_PRESET_ENSURE, threshold=0.8):

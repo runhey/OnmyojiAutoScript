@@ -1,0 +1,20 @@
+[
+  {
+    "itemName": "store_refresh",
+    "imageName": "l101_store_refresh.png",
+    "roiFront": "545,596,46,47",
+    "roiBack": "519,568,100,100",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "宁息刷新"
+  },
+  {
+    "itemName": "store_skill_101",
+    "imageName": "l101_store_skill_101.png",
+    "roiFront": "876,121,47,41",
+    "roiBack": "682,100,455,571",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "购买柔风"
+  }
+]

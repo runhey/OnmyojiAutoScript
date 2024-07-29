@@ -1,0 +1,11 @@
+[
+  {
+    "itemName": "l103_exit",
+    "imageName": "l103_exit.png",
+    "roiFront": "1161,600,69,70",
+    "roiBack": "1161,600,69,70",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  }
+]
