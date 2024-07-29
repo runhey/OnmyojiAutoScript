@@ -12,7 +12,7 @@ class PetsAssets:
 
 	# Image Rule Assets
 	# 宠物小屋 
-	I_PET_HOUSE = RuleImage(roi_front=(1055,434,27,31), roi_back=(952,412,144,60), threshold=0.7, method="Template matching", file="./tasks/Pets/pet/pet_pet_house.png")
+	I_PET_HOUSE = RuleImage(roi_front=(1012,414,56,25), roi_back=(952,412,144,60), threshold=0.7, method="Template matching", file="./tasks/Pets/pet/pet_pet_house.png")
 	# 爪印 
 	I_PET_CLAW = RuleImage(roi_front=(1171,625,55,56), roi_back=(1171,625,55,56), threshold=0.8, method="Template matching", file="./tasks/Pets/pet/pet_pet_claw.png")
 	# 其乐融融 
