@@ -11,8 +11,8 @@
   {
     "itemName": "skill102",
     "imageName": "gate1_skill102.png",
-    "roiFront": "0,0,100,100",
-    "roiBack": "0,0,100,100",
+    "roiFront": "456,186,76,63",
+    "roiBack": "136,151,709,128",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"

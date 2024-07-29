@@ -19,5 +19,14 @@ class MoonSeaL104(MoonSeaSkills):
         self.select_skill()
 
 
+if __name__ == '__main__':
+    from module.config.config import Config
+    from module.device.device import Device
 
+    c = Config('oas1')
+    d = Device(c)
+    t = MoonSeaL104(c, d)
+    t.screenshot()
+
+    t.run_l104()
 

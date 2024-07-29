@@ -124,5 +124,14 @@
     "method": "Template matching",
     "threshold": 0.8,
     "description": "左上角退出"
+  },
+  {
+    "itemName": "m_store_activity",
+    "imageName": "gate1_m_store_activity.png",
+    "roiFront": "1121,596,72,57",
+    "roiBack": "1107,573,100,100",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "可以购买的幻息"
   }
 ]

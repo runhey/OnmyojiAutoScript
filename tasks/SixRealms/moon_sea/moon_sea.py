@@ -71,6 +71,40 @@ class MoonSea(MoonSeaMap, MoonSeaL101, MoonSeaL102, MoonSeaL103, MoonSeaL104):
             if '宁息' in text:
                 return MoonSeaType.island101
 
+    def boss_team_lock(self):
+        while 1:
+            self.screenshot()
+            if self.appear(self.I_BOSS_TEAM_LOCK):
+                break
+            if self.appear_then_click(self.I_BOSS_TEAM_UNLOCK, interval=2):
+                logger.info('Click lock Boss Team')
+                continue
+
+    def boss_battle(self):
+        logger.hr('Boss Battle')
+        self.ui_click_until_disappear(self.I_BOSS_FIRE, interval=1)
+        self.device.stuck_record_clear()
+        self.device.stuck_record_add('BATTLE_STATUS_S')
+        while 1:
+            self.screenshot()
+            if self.appear(self.I_BOSS_SHARE):
+                break
+
+            if self.appear(self.I_BOSS_USE_DOUBLE, interval=1):
+                # 双倍奖励
+                logger.info('Double reward')
+                self.ui_get_reward(self.I_BOSS_USE_DOUBLE)
+            if self.appear_then_click(self.I_BOSS_GET_EXP, interval=1):
+                logger.info('Get EXP')
+                continue
+            if self.appear_then_click(self.I_BOSS_SKIP, interval=1):
+                # 第二个boss
+                self.device.stuck_record_clear()
+                self.device.stuck_record_add('BATTLE_STATUS_S')
+                continue
+        logger.info('Boss battle end')
+        self.ui_click(self.I_BOSS_SHUTU, stop=self.I_MSTART)
+
 
 if __name__ == '__main__':
     from module.config.config import Config
@@ -81,4 +115,5 @@ if __name__ == '__main__':
     t = MoonSea(c, d)
     t.screenshot()
 
-    t.run_moon_sea()
+    # t.run_moon_sea()
+    t.boss_team_lock()

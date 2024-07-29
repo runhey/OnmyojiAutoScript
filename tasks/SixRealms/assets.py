@@ -10,6 +10,25 @@ from module.atom.list import RuleList
 class SixRealmsAssets: 
 
 
+	# Image Rule Assets
+	# 大boss挑战 
+	I_BOSS_FIRE = RuleImage(roi_front=(1128,576,100,100), roi_back=(1091,557,156,147), threshold=0.8, method="Template matching", file="./tasks/SixRealms/gate1/gate1_boss_fire.png")
+	# description 
+	I_BOSS_TEAM_LOCK = RuleImage(roi_front=(1139,493,21,21), roi_back=(1130,487,38,43), threshold=0.95, method="Template matching", file="./tasks/SixRealms/gate1/gate1_boss_team_lock.png")
+	# description 
+	I_BOSS_TEAM_UNLOCK = RuleImage(roi_front=(1138,497,22,21), roi_back=(1127,491,40,41), threshold=0.95, method="Template matching", file="./tasks/SixRealms/gate1/gate1_boss_team_unlock.png")
+	# description 
+	I_BOSS_SKIP = RuleImage(roi_front=(1131,13,100,42), roi_back=(1113,5,136,62), threshold=0.8, method="Template matching", file="./tasks/SixRealms/gate1/gate1_boss_skip.png")
+	# description 
+	I_BOSS_USE_DOUBLE = RuleImage(roi_front=(669,417,126,53), roi_back=(651,407,164,71), threshold=0.8, method="Template matching", file="./tasks/SixRealms/gate1/gate1_boss_use_double.png")
+	# 御神获得经验 
+	I_BOSS_GET_EXP = RuleImage(roi_front=(561,109,171,45), roi_back=(492,86,281,100), threshold=0.8, method="Template matching", file="./tasks/SixRealms/gate1/gate1_boss_get_exp.png")
+	# description 
+	I_BOSS_SHARE = RuleImage(roi_front=(1090,604,70,74), roi_back=(1074,587,100,100), threshold=0.8, method="Template matching", file="./tasks/SixRealms/gate1/gate1_boss_share.png")
+	# 结算的椒图 
+	I_BOSS_SHUTU = RuleImage(roi_front=(535,241,240,330), roi_back=(500,216,292,377), threshold=0.8, method="Template matching", file="./tasks/SixRealms/gate1/gate1_boss_shutu.png")
+
+
 	# Click Rule Assets
 	# 左边的 
 	C_NPC_FIRE_LEFT = RuleClick(roi_front=(423,203,153,193), roi_back=(423,203,153,193), name="npc_fire_left")
@@ -48,6 +67,8 @@ class SixRealmsAssets:
 	I_M_STORE = RuleImage(roi_front=(1124,594,61,57), roi_back=(1103,576,100,100), threshold=0.8, method="Template matching", file="./tasks/SixRealms/gate1/gate1_m_store.png")
 	# 左上角退出 
 	I_BACK_EXIT = RuleImage(roi_front=(11,18,51,47), roi_back=(0,0,100,100), threshold=0.8, method="Template matching", file="./tasks/SixRealms/gate1/gate1_back_exit.png")
+	# 可以购买的幻息 
+	I_M_STORE_ACTIVITY = RuleImage(roi_front=(1121,596,72,57), roi_back=(1107,573,100,100), threshold=0.8, method="Template matching", file="./tasks/SixRealms/gate1/gate1_m_store_activity.png")
 
 
 	# Ocr Rule Assets
@@ -63,7 +84,7 @@ class SixRealmsAssets:
 	# 柔风 
 	I_SKILL101 = RuleImage(roi_front=(440,181,100,69), roi_back=(139,167,722,100), threshold=0.8, method="Template matching", file="./tasks/SixRealms/gate1/gate1_skill101.png")
 	# description 
-	I_SKILL102 = RuleImage(roi_front=(0,0,100,100), roi_back=(0,0,100,100), threshold=0.8, method="Template matching", file="./tasks/SixRealms/gate1/gate1_skill102.png")
+	I_SKILL102 = RuleImage(roi_front=(456,186,76,63), roi_back=(136,151,709,128), threshold=0.8, method="Template matching", file="./tasks/SixRealms/gate1/gate1_skill102.png")
 	# description 
 	I_SKILL103 = RuleImage(roi_front=(0,0,100,100), roi_back=(0,0,100,100), threshold=0.8, method="Template matching", file="./tasks/SixRealms/gate1/gate1_skill103.png")
 	# description 

@@ -50,5 +50,4 @@ if __name__ == '__main__':
     t = MoonSeaL103(c, d)
     t.screenshot()
 
-    # t.run_103()
-    t.island_battle()
+    t.run_103()

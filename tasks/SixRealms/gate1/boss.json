@@ -1,0 +1,74 @@
+[
+  {
+    "itemName": "boss_fire",
+    "imageName": "gate1_boss_fire.png",
+    "roiFront": "1128,576,100,100",
+    "roiBack": "1091,557,156,147",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "大boss挑战"
+  },
+  {
+    "itemName": "boss_team_lock",
+    "imageName": "gate1_boss_team_lock.png",
+    "roiFront": "1139,493,21,21",
+    "roiBack": "1130,487,38,43",
+    "method": "Template matching",
+    "threshold": 0.95,
+    "description": "description"
+  },
+  {
+    "itemName": "boss_team_unlock",
+    "imageName": "gate1_boss_team_unlock.png",
+    "roiFront": "1138,497,22,21",
+    "roiBack": "1127,491,40,41",
+    "method": "Template matching",
+    "threshold": 0.95,
+    "description": "description"
+  },
+  {
+    "itemName": "boss_skip",
+    "imageName": "gate1_boss_skip.png",
+    "roiFront": "1131,13,100,42",
+    "roiBack": "1113,5,136,62",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "boss_use_double",
+    "imageName": "gate1_boss_use_double.png",
+    "roiFront": "669,417,126,53",
+    "roiBack": "651,407,164,71",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "boss_get_exp",
+    "imageName": "gate1_boss_get_exp.png",
+    "roiFront": "561,109,171,45",
+    "roiBack": "492,86,281,100",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "御神获得经验"
+  },
+  {
+    "itemName": "boss_share",
+    "imageName": "gate1_boss_share.png",
+    "roiFront": "1090,604,70,74",
+    "roiBack": "1074,587,100,100",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "boss_shutu",
+    "imageName": "gate1_boss_shutu.png",
+    "roiFront": "535,241,240,330",
+    "roiBack": "500,216,292,377",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "结算的椒图"
+  }
+]

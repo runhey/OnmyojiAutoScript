@@ -11,10 +11,10 @@ class MoonSeaL102(MoonSeaSkills):
         while 1:
             self.screenshot()
             if self.appear(self.I_COIN_RIGHT_TOP):
-                is_imitation = True
+                is_imitation = False
                 break
             if self.appear(self.I_IMITATE):
-                is_imitation = False
+                is_imitation = True
                 break
         if not is_imitation:
             logger.info('Transfer skill')
@@ -51,3 +51,15 @@ class MoonSeaL102(MoonSeaSkills):
             if self.appear_then_click(self.I_IMITATE, interval=2.5):
                 continue
         logger.info('Finish Imitate')
+
+
+if __name__ == '__main__':
+    from module.config.config import Config
+    from module.device.device import Device
+
+    c = Config('oas1')
+    d = Device(c)
+    t = MoonSeaL102(c, d)
+    t.screenshot()
+
+    t.run_l102()

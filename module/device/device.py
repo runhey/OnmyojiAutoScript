@@ -110,6 +110,7 @@ class Device(Screenshot, Control, AppControl, EmulatorManager):
         :return:
         """
         self.detect_record.add(str(button))
+        logger.info(f'Add stuck record: {button}')
 
     def stuck_record_clear(self):
         self.detect_record = set()

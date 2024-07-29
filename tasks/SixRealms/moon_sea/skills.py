@@ -11,7 +11,13 @@ class MoonSeaSkills(BaseTask, SixRealmsAssets):
     def in_main(self, screenshot: bool = False):
         if screenshot:
             self.screenshot()
-        return self.appear(self.I_M_STORE)
+        if self.appear(self.I_M_STORE):
+            return True
+        if self.appear(self.I_M_STORE_ACTIVITY):
+            return True
+        if self.appear(self.I_BOSS_FIRE):
+            return True
+        return False
 
     def battle_lock_team(self):
         self.ui_click(self.I_BATTLE_TEAM_UNLOCK, self.I_BATTLE_TEAM_LOCK)
@@ -20,7 +26,6 @@ class MoonSeaSkills(BaseTask, SixRealmsAssets):
     def island_battle(self):
         # 小怪战斗
         self.screenshot()
-        self.device.stuck_record_add('LOGIN_CHECK')
         while 1:
             self.screenshot()
             if self.appear(self.I_SKILL_REFRESH):
@@ -28,6 +33,8 @@ class MoonSeaSkills(BaseTask, SixRealmsAssets):
             if self.appear(self.I_COIN):
                 break
             if self.appear_then_click(self.I_NPC_FIRE, interval=1):
+                self.device.stuck_record_clear()
+                self.device.stuck_record_add('BATTLE_STATUS_S')
                 continue
         self.device.stuck_record_clear()
 
@@ -48,10 +55,10 @@ class MoonSeaSkills(BaseTask, SixRealmsAssets):
             button = self.I_SKILL101
         elif button is None and self.appear(self.I_SKILL102):
             button = self.I_SKILL102
-        elif button is None and self.appear(self.I_SKILL103):
-            button = self.I_SKILL103
-        elif button is None and self.appear(self.I_SKILL104):
-            button = self.I_SKILL104
+        # elif button is None and self.appear(self.I_SKILL103):
+        #     button = self.I_SKILL103
+        # elif button is None and self.appear(self.I_SKILL104):
+        #     button = self.I_SKILL104
         if button is not None:
             x, y = button.front_center()
             if x < 360:
