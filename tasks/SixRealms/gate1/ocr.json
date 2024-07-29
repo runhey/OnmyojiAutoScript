@@ -1,0 +1,29 @@
+[
+  {
+    "itemName": "ocr_map",
+    "roiFront": "191,286,944,197",
+    "roiBack": "191,286,944,197",
+    "mode": "Full",
+    "method": "Default",
+    "keyword": "",
+    "description": "Ocr-description"
+  },
+  {
+    "itemName": "island_name",
+    "roiFront": "88,17,148,49",
+    "roiBack": "88,17,148,49",
+    "mode": "Single",
+    "method": "Default",
+    "keyword": "",
+    "description": "Ocr-description"
+  },
+  {
+    "itemName": "coin_num",
+    "roiFront": "1171,23,59,31",
+    "roiBack": "1171,23,59,31",
+    "mode": "Digit",
+    "method": "Default",
+    "keyword": "",
+    "description": "有多少钱"
+  }
+]

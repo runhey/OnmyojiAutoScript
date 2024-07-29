@@ -1,0 +1,38 @@
+[
+  {
+    "itemName": "coin_right_top",
+    "imageName": "l102_coin_right_top.png",
+    "roiFront": "1065,21,40,30",
+    "roiBack": "942,10,177,112",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "要花钱的界面购买"
+  },
+  {
+    "itemName": "imitate",
+    "imageName": "l102_imitate.png",
+    "roiFront": "1157,598,100,100",
+    "roiBack": "1143,577,127,132",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "imitate_1",
+    "imageName": "l102_imitate_1.png",
+    "roiFront": "839,194,59,44",
+    "roiBack": "794,174,358,268",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "仿造的技能"
+  },
+  {
+    "itemName": "imitate_success",
+    "imageName": "l102_imitate_success.png",
+    "roiFront": "535,143,209,54",
+    "roiBack": "429,122,414,100",
+    "method": "Template matching",
+    "threshold": 0.7,
+    "description": "description"
+  }
+]

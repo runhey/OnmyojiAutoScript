@@ -1,0 +1,20 @@
+[
+  {
+    "itemName": "npc_fire_left",
+    "roiFront": "423,203,153,193",
+    "roiBack": "423,203,153,193",
+    "description": "左边的"
+  },
+  {
+    "itemName": "npc_fire_right",
+    "roiFront": "740,248,181,180",
+    "roiBack": "740,248,181,180",
+    "description": "description"
+  },
+  {
+    "itemName": "npc_fire_center",
+    "roiFront": "620,188,174,217",
+    "roiBack": "620,188,174,217",
+    "description": "中间的精英"
+  }
+]
