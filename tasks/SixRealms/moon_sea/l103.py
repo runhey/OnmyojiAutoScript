@@ -6,7 +6,8 @@ from tasks.SixRealms.moon_sea.skills import MoonSeaSkills
 class MoonSeaL103(MoonSeaSkills):
     def run_103(self):
         # 宝箱还是精英
-        logger.hr('Island 104')
+        logger.hr('Island 103')
+        self.wait_until_appear(self.I_ISLAND_TAG_FLAG, wait_time=2)
         is_box: bool = self.appear(self.I_L103_EXIT)
         if is_box:
             logger.info('Access to Box')
@@ -22,7 +23,7 @@ class MoonSeaL103(MoonSeaSkills):
                 if self.appear_then_click(self.I_L103_EXIT, interval=4):
                     continue
         self.battle_l103()
-        logger.info('Island 104 Finished')
+        logger.info('Island 103 Finished')
 
     def battle_l103(self):
         # 打精英

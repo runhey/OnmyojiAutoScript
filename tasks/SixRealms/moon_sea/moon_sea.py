@@ -1,24 +1,108 @@
+import time
+
 from module.logger import logger
+
+from cached_property import cached_property
+from datetime import datetime, timedelta
 
 from tasks.SixRealms.moon_sea.map import MoonSeaMap
 from tasks.SixRealms.moon_sea.l101 import MoonSeaL101
 from tasks.SixRealms.moon_sea.l102 import MoonSeaL102
 from tasks.SixRealms.moon_sea.l103 import MoonSeaL103
 from tasks.SixRealms.moon_sea.l104 import MoonSeaL104
+from tasks.SixRealms.moon_sea.l105 import MoonSeaL105
 from tasks.SixRealms.common import MoonSeaType
 
 
-class MoonSea(MoonSeaMap, MoonSeaL101, MoonSeaL102, MoonSeaL103, MoonSeaL104):
-    def run_moon_sea(self):
+class MoonSea(MoonSeaMap, MoonSeaL101, MoonSeaL102, MoonSeaL103, MoonSeaL104, MoonSeaL105):
+
+    @cached_property
+    def island_func(self) -> dict:
+        return {
+            MoonSeaType.island101: self.run_l101(),
+            MoonSeaType.island102: self.run_l102(),
+            MoonSeaType.island103: self.run_103(),
+            MoonSeaType.island104: self.run_l104(),
+            MoonSeaType.island105: self.run_l105(),
+        }
+
+    @property
+    def _conf(self):
+        return self.config.model.six_realms.six_realms_gate
+
+    def _run_moon_sea(self):
         # 在六道界面
-        self.one()
+        limit_time = self._conf.limit_time
+        max_cont = self._conf.limit_count
+        max_time: timedelta = timedelta(
+            hours=limit_time.hour,
+            minutes=limit_time.minute,
+            seconds=limit_time.second
+        )
+        cnt = 0
+        while 1:
+            if cnt >= max_cont:
+                logger.info('Run out of count, exit')
+                break
+            if datetime.now() - self.start_time >= max_time:
+                logger.info('Run out of time, exit')
+                break
+            self.one()
+            cnt += 1
+        logger.info('Exit Moon Sea')
+
 
     def one(self):
         self._start()
+        while 1:
+            self.screenshot()
+            if not self.in_main():
+                continue
+            isl_type, isl_num, isl_roi = self.decide()
+            # 如果前一个，召唤一次宁息
+            if isl_num == 1 and isl_type != MoonSeaType.island106:
+                self.activate_store()
+                isl_type, isl_num, isl_roi = self.decide()
+            # 如果是boss
+            if isl_type == MoonSeaType.island106:
+                self.boss_team_lock()
+                self.boss_battle()
+                break
+
+            self.enter_island(isl_type=isl_type, isl_roi=isl_roi)
+            isl_type = self.island_name()
+            match isl_type:
+                case MoonSeaType.island101: self.run_l101()
+                case MoonSeaType.island102: self.run_l102()
+                case MoonSeaType.island103: self.run_103()
+                case MoonSeaType.island104: self.run_l104()
+                case MoonSeaType.island105: self.run_l105()
+            # 不知道怎么处理过场动画
+            # TODO
+            time.sleep(1)
+            continue
+
+    def _continue(self):
+        logger.warning('Moon Sea Continue')
+        while 1:
+            self.screenshot()
+            if self.in_main():
+                break
+            if self.appear_then_click(self.I_MCONINUE, interval=1):
+                continue
 
     def _start(self):
         logger.hr('Moon Sea', 1)
-        self.ui_click(self.I_MENTER, stop=self.I_MSTART)
+        while 1:
+            self.screenshot()
+            if self.appear(self.I_MSTART):
+                break
+            if self.appear_then_click(self.I_MENTER, interval=1):
+                continue
+            if self.appear(self.I_MCONINUE):
+                # 继续上一把的
+                self._continue()
+                return
         logger.info("Ensure select ShouZu")
         while 1:
             self.screenshot()
@@ -45,6 +129,8 @@ class MoonSea(MoonSeaMap, MoonSeaL101, MoonSeaL102, MoonSeaL103, MoonSeaL104):
                 continue
             if self.appear_then_click(self.I_MSTART_CONFIRM, interval=3):
                 continue
+            if self.appear_then_click(self.I_MSTART_CONFIRM2, interval=3):
+                continue
             if self.appear_then_click(self.I_MCONINUE, interval=3):
                 continue
         logger.info("Start Roguelike")
@@ -61,10 +147,11 @@ class MoonSea(MoonSeaMap, MoonSeaL101, MoonSeaL102, MoonSeaL103, MoonSeaL104):
         while 1:
             self.screenshot()
             text = self.O_ISLAND_NAME.ocr(self.device.image)
-            # 混沌 战
+            if '星' in text:
+                return MoonSeaType.island105
             if '战' in text:
                 return MoonSeaType.island104
-            if '混沌' in text:
+            if '混' in text:
                 return MoonSeaType.island103
             if '神秘' in text:
                 return MoonSeaType.island102
@@ -115,5 +202,4 @@ if __name__ == '__main__':
     t = MoonSea(c, d)
     t.screenshot()
 
-    # t.run_moon_sea()
-    t.boss_team_lock()
+    t.one()

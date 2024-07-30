@@ -1,99 +1,144 @@
 import cv2
+import re
 import numpy as np
 from numpy import uint8, fromfile
+from module.logger import logger
 
 from tasks.base_task import BaseTask
+from tasks.SixRealms.moon_sea.skills import MoonSeaSkills
 from tasks.SixRealms.assets import SixRealmsAssets
 from tasks.SixRealms.common import MoonSeaType
+from tasks.SixRealms.oas_ocr import StoneOcr
 
 
-def binaryzate(img):
-    img0 = img[..., 0]
-    img1 = img[..., 1]
-    img2 = img[..., 2]
+class MoonSeaMap(MoonSeaSkills):
+    map_ocr = StoneOcr(
+        roi=(0, 0, 1280, 720),
+        area=(0, 0, 1280, 720),
+        mode="Full",
+        method="Default",
+        keyword="",
+        name="map_ocr")
 
-    mask0 = cv2.inRange(img0, MoonSeaMap.COLOR_RANGE_0[0], MoonSeaMap.COLOR_RANGE_0[1])
-    result0 = cv2.bitwise_and(img0, img0, mask=mask0)
-    mask1 = cv2.inRange(img1, 200, 250)
-    result1 = cv2.bitwise_and(img1, img1, mask=mask1)
-    mask2 = cv2.inRange(img2, 180, 230)
-    result2 = cv2.bitwise_and(img2, img2, mask=mask2)
+    @staticmethod
+    def contains_any_char(string, chars):
+        return not set(string).isdisjoint(set(chars))
 
-    result = np.zeros(img.shape, dtype=np.uint8)
-    result[..., 0]= result0
-    result[..., 1]= result1
-    result[..., 2]= result2
-    return  result
+    def decide(self) -> tuple:
+        """
+        这个玩意，检测不是很准
+        @return: 岛屿的类型，剩余多少回合, (x，y, w, h)
+        """
+        self.screenshot()
+        if self.appear(self.I_BOSS_FIRE):
+            # 最后的boss
+            return MoonSeaType.island106, 0, (0, 0, 0, 0)
+        isl_type = MoonSeaType.island100
+        isl_roi = (0, 0, 0, 0)
+        isl_num = 0
+        results = self.map_ocr.detect_and_ocr(image=self.device.image)
+        rx1, ry1, rw, rh = self.O_OCR_MAP.roi
+        rx2, ry2 = rx1 + rw, ry1 + rh
+        for result in results:
+            # box 是四个点坐标 左上， 右上， 右下， 左下
+            x1, y1, x2, y2 = result.box[0][0], result.box[0][1], result.box[2][0], result.box[2][1]
+            w, h = x2 - x1, y2 - y1
+            text = result.ocr_text
+
+            if self.contains_any_char(result.ocr_text, chars='回合国') and \
+                    (x1 > 1000 and y1 + h < 300):
+                # if text[1].isdigit():
+                #     isl_num = int(text[:2])
+                # elif text[0].isdigit():
+                #     isl_num = int(text[0])
+                match = re.search(r'\d{1,2}', text)
+                if match:
+                    isl_num = int(match.group())
+            if x1 < rx1 or x2 > rx2 or y1 < ry1 or y2 > ry2:
+                continue
+            if isl_type == MoonSeaType.island100 and self.contains_any_char(result.ocr_text, chars='宁息'):
+                isl_type = MoonSeaType.island101
+                isl_roi = x1, y1, w, h
+            elif isl_type == MoonSeaType.island100 and self.contains_any_char(result.ocr_text, chars='神秘'):
+                isl_type = MoonSeaType.island102
+                isl_roi = x1, y1, w, h
+            elif isl_type == MoonSeaType.island100 and self.contains_any_char(result.ocr_text, chars='回混范'):
+                isl_type = MoonSeaType.island103
+                isl_roi = x1, y1, w, h
+            elif isl_type == MoonSeaType.island100 and self.contains_any_char(result.ocr_text, chars='蜜馨屡战'):
+                isl_type = MoonSeaType.island104
+                isl_roi = x1, y1, w, h
+            elif isl_type == MoonSeaType.island100 and self.contains_any_char(result.ocr_text, chars='星之'):
+                isl_type = MoonSeaType.island105
+                isl_roi = x1, y1, w, h
+        logger.info('Island type: {}, Residue: {}, ROI: {}'.format(isl_type, isl_num, isl_roi))
+        return isl_type, isl_num, isl_roi
+
+    def enter_island(self, isl_type, isl_roi):
+        if isl_type == MoonSeaType.island100:
+            logger.warning('The island type was not recognized')
+            logger.warning('Pick one at random, starting from the right')
+            while 1:
+                self.screenshot()
+                if not self.in_main() and self.appear(self.I_BACK_EXIT):
+                    break
+                if self.click(self.C_ISLAND_ENTER_1, interval=2):
+                    continue
+                if self.click(self.C_ISLAND_ENTER_2, interval=2):
+                    continue
+                if self.click(self.C_ISLAND_ENTER_3, interval=2):
+                    continue
+                if self.click(self.C_ISLAND_ENTER_4, interval=2):
+                    continue
+                if self.click(self.C_ISLAND_ENTER_5, interval=2):
+                    continue
+                if self.click(self.C_ISLAND_ENTER_6, interval=2):
+                    continue
+            logger.info('Entering island randomly')
+            return
+        isl_roi = [isl_roi[0]-20, isl_roi[1]-20, isl_roi[2]+40, isl_roi[3]+40]
+        self.C_ISLAND_ENTER.roi_front = isl_roi
+        while 1:
+            self.screenshot()
+            if not self.in_main() and self.appear(self.I_BACK_EXIT):
+                break
+            if self.click(self.C_ISLAND_ENTER, interval=1):
+                continue
+        logger.info('Entering island')
+        return
+
+    def activate_store(self) -> bool:
+        """
+        最后打boss前面激活一次商店买东西
+        @return: 有钱够就是True
+        """
+        logger.info('Activating store')
+        self.screenshot()
+        if self.appear(self.I_M_STORE) and not self.appear(self.I_M_STORE_ACTIVITY):
+            logger.warning('Now you have not money to buy items')
+            logger.warning('Store is not active')
+            return False
+        while 1:
+            self.screenshot()
+            if self.appear(self.I_UI_CONFIRM):
+                self.ui_click_until_disappear(self.I_UI_CONFIRM, interval=2)
+                break
+            if self.appear_then_click(self.I_M_STORE_ACTIVITY, interval=1):
+                continue
 
 
-class MoonSeaMap(BaseTask, SixRealmsAssets):
-
-    LOWER_COLOR = np.array([220, 190, 170])
-    UPPER_COLOR = np.array([260, 250, 230])
-    COLOR_RANGE_0 = [220, 250]
-
-    def detect_current(self) -> list[tuple]:
-        # self.screenshot()
-        img = self.device.image
-        # img = 255 - img
-        # print(img[403, 384])
-        # print(img[444, 378])
-        # print(img[411, 381])
-        # binary_img = img
-        # img = cv2.inRange(img, self.LOWER_COLOR, self.UPPER_COLOR)
-
-        # cv2.imwrite('test_0.png', img[..., 0])
-        # cv2.imwrite('test_1.png', img[..., 1])
-        # cv2.imwrite('test_2.png', img[..., 2])
-
-        img = binaryzate(img)
-        # iii = np.zeros((720, 1280, 3), dtype=np.uint8)
-        # iii[..., 0] = img
-        # iii[..., 1] = img
-        # iii[..., 2] = img
-        # img = iii
-
-        cv2.imshow('Binary Image', img)
-        cv2.waitKey(0)
-        cv2.destroyAllWindows()
-
-
-        boxs = self.O_OCR_MAP.detect_and_ocr(img)
-        for box in boxs:
-            print(box)
-        return []
-
-
-def _test():
+if __name__ == '__main__':
     from module.config.config import Config
     from module.device.device import Device
+    from module.base.utils import load_image
 
     c = Config('oas1')
     d = Device(c)
     t = MoonSeaMap(c, d)
-    import cv2
-    file_image = r'C:\Users\Ryland\Desktop\Desktop\34.png'
-    image = cv2.imdecode(fromfile(str(file_image), dtype=uint8), -1)
-    # image = cv2.imread(file_image)
-    image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
-    t.device.image = image
+    t.device.image = load_image(r'C:\Users\Ryland\Desktop\Desktop\34.png')
 
-    t.detect_current()
+    match = re.search(r'\d{1,2}', '<17回合后迎战月读')
+    if match:
+        isl_num = int(match.group())
+        print(isl_num)
 
-
-def _test2():
-    file_image = r'test_1.png'
-    image = cv2.imdecode(fromfile(str(file_image), dtype=uint8), -1)
-    print(image.shape)
-    result = image
-    mask = cv2.inRange(image, 210, 250)
-    # mask = 255 * mask
-    result = cv2.bitwise_and(image, image, mask=mask)
-    # 显示结果
-    cv2.imshow('Result', result)
-    cv2.waitKey(0)
-    cv2.destroyAllWindows()
-
-
-if __name__ == '__main__':
-    _test()

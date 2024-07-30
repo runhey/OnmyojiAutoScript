@@ -20,10 +20,11 @@ from tasks.Sougenbi.config import SougenbiConfig, SougenbiClass
 from tasks.Component.SwitchSoul.switch_soul import SwitchSoul
 from tasks.GameUi.game_ui import GameUi
 from tasks.GameUi.page import page_main, page_six_gates
+from tasks.SixRealms.moon_sea.moon_sea import MoonSea
 from module.logger import logger
 
 
-class ScriptTask(GameUi, SwitchSoul):
+class ScriptTask(GameUi, SwitchSoul, MoonSea):
 
     @property
     def _config(self):
@@ -44,11 +45,14 @@ class ScriptTask(GameUi, SwitchSoul):
         self.ui_get_current_page()
         self.ui_goto(page_six_gates)
 
+        self.run_moon_sea()
+
         self.set_next_run('SixRealms', success=True, finish=True)
         raise TaskEnd
 
     def run_moon_sea(self):
-        pass
+        self._run_moon_sea()
+        self.ui_click(self.I_BACK_EXIT, self.I_CHECK_SIX_GATES)
 
 
 

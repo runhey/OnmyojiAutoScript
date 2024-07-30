@@ -1,3 +1,5 @@
+import time
+
 from cached_property import cached_property
 
 from module.logger import logger
@@ -78,15 +80,16 @@ class MoonSeaSkills(BaseTask, SixRealmsAssets):
 
         while 1:
             self.screenshot()
+            if self.in_main():
+                break
+
             if self.appear(self.I_SKILL_REFRESH):
                 select = self._select_skill()
                 if self.appear_then_click(self.selects_button[select]):
+                    time.sleep(1)
+                    # TODO 两次选的间隔太短就直接跳过了，或者说动画没有显示中间的就跳过了
                     continue
-            if self.appear(self.I_COIN):
-                while 1:
-                    self.screenshot()
-                    if self.in_main():
-                        break
-                    if self.appear_then_click(self.I_COIN, action=self.C_UI_REWARD, interval=0.8):
-                        continue
+            if self.appear_then_click(self.I_COIN, action=self.C_UI_REWARD, interval=1.5):
+                continue
+
 
