@@ -16,5 +16,14 @@
     "method": "Template matching",
     "threshold": 0.8,
     "description": "购买柔风"
+  },
+  {
+    "itemName": "store_exit",
+    "imageName": "l101_store_exit.png",
+    "roiFront": "1179,586,59,56",
+    "roiBack": "1161,561,100,100",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
   }
 ]

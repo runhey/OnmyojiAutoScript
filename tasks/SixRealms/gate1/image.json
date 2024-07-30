@@ -133,5 +133,23 @@
     "method": "Template matching",
     "threshold": 0.8,
     "description": "可以购买的幻息"
+  },
+  {
+    "itemName": "mstart_confirm2",
+    "imageName": "gate1_mstart_confirm2.png",
+    "roiFront": "1154,581,74,85",
+    "roiBack": "1079,535,196,177",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "island_tag_flag",
+    "imageName": "gate1_island_tag_flag.png",
+    "roiFront": "543,601,100,100",
+    "roiBack": "543,601,100,100",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "动画完了就有这个东西"
   }
 ]
