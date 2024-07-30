@@ -170,7 +170,7 @@
     "threshold": 0.8,
     "description": "极地鬼 层数列表打开 标志"
   },
-    {
+  {
     "itemName": "ab_ji_floor_one",
     "imageName": "ab_ji_floor_one.png",
     "roiFront": "390,150,60,290",
@@ -178,5 +178,14 @@
     "method": "Template matching",
     "threshold": 0.8,
     "description": "极地鬼 一层"
+  },
+  {
+    "itemName": "ab_group_rank_none",
+    "imageName": "ab_rank_none.png",
+    "roiFront": "890,415,95,85",
+    "roiBack": "890,415,95,85",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "小组内未取得名次"
   }
 ]
