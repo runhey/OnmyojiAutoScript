@@ -2,7 +2,7 @@
   {
     "itemName": "pet_house",
     "imageName": "pet_pet_house.png",
-    "roiFront": "1055,434,27,31",
+    "roiFront": "1012,414,56,25",
     "roiBack": "952,412,144,60",
     "method": "Template matching",
     "threshold": 0.7,
