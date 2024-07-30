@@ -118,12 +118,17 @@ class MoonSeaMap(MoonSeaSkills):
             logger.warning('Now you have not money to buy items')
             logger.warning('Store is not active')
             return False
+        cnt_act = 0
         while 1:
             self.screenshot()
             if self.appear(self.I_UI_CONFIRM):
                 self.ui_click_until_disappear(self.I_UI_CONFIRM, interval=2)
                 break
-            if self.appear_then_click(self.I_M_STORE_ACTIVITY, interval=1):
+            if cnt_act >= 3:
+                logger.warning('Store is not active')
+                return False
+            if self.appear_then_click(self.I_M_STORE_ACTIVITY, interval=1.5):
+                cnt_act += 1
                 continue
 
 

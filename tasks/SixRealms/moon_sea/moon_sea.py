@@ -79,7 +79,7 @@ class MoonSea(MoonSeaMap, MoonSeaL101, MoonSeaL102, MoonSeaL103, MoonSeaL104, Mo
                 case MoonSeaType.island105: self.run_l105()
             # 不知道怎么处理过场动画
             # TODO
-            time.sleep(1)
+            time.sleep(2)
             continue
 
     def _continue(self):

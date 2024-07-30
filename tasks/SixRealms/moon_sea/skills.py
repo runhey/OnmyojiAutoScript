@@ -9,6 +9,8 @@ from tasks.SixRealms.assets import SixRealmsAssets
 
 class MoonSeaSkills(BaseTask, SixRealmsAssets):
 
+    cnt_skill101 = 0
+
 
     def in_main(self, screenshot: bool = False):
         if screenshot:
@@ -53,10 +55,12 @@ class MoonSeaSkills(BaseTask, SixRealmsAssets):
         self.screenshot()
         select = 3  # 从0开始计数
         button = None
+        # 只选柔风
         if button is None and self.appear(self.I_SKILL101):
+            self.cnt_skill101 += 1
             button = self.I_SKILL101
-        elif button is None and self.appear(self.I_SKILL102):
-            button = self.I_SKILL102
+        # elif button is None and self.appear(self.I_SKILL102):
+        #     button = self.I_SKILL102
         # elif button is None and self.appear(self.I_SKILL103):
         #     button = self.I_SKILL103
         # elif button is None and self.appear(self.I_SKILL104):
