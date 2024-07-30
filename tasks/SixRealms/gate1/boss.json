@@ -65,8 +65,8 @@
   {
     "itemName": "boss_shutu",
     "imageName": "gate1_boss_shutu.png",
-    "roiFront": "535,241,240,330",
-    "roiBack": "500,216,292,377",
+    "roiFront": "435,46,388,46",
+    "roiBack": "338,1,573,166",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "结算的椒图"

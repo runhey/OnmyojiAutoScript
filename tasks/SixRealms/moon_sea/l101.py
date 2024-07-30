@@ -1,4 +1,5 @@
 import re
+import time
 from module.logger import logger
 from tasks.SixRealms.moon_sea.skills import MoonSeaSkills
 
@@ -24,6 +25,7 @@ class MoonSeaL101(MoonSeaSkills):
                 buy_try += 1
         self.ui_click_until_disappear(self.I_UI_CONFIRM)
         self.wait_until_appear(self.I_STORE_EXIT)
+        self.cnt_skill101 += 1
         logger.info('Buy skill 101 done')
         return True
 
@@ -52,6 +54,8 @@ class MoonSeaL101(MoonSeaSkills):
     def run_l101(self):
         logger.hr('Start l101')
         logger.info('Keep buying skills until you run out of money')
+        # 进商店动画 TODO
+        time.sleep(1)
         while 1:
             self.screenshot()
             coin = self.O_COIN_NUM.ocr(self.device.image)

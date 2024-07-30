@@ -47,6 +47,14 @@ class ScriptTask(GameUi, SwitchSoul, MoonSea):
 
         self.run_moon_sea()
 
+        # 退出六道
+        while 1:
+            self.screenshot()
+            if self.appear(self.I_CHECK_EXPLORATION) or self.appear(self.I_CHECK_MAIN):
+                break
+            if self.appear_then_click(self.I_BACK_EXIT, interval=2):
+                continue
+
         self.set_next_run('SixRealms', success=True, finish=True)
         raise TaskEnd
 
