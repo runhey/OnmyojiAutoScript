@@ -90,7 +90,7 @@ class MoonSeaSkills(BaseTask, SixRealmsAssets):
             if self.appear(self.I_SKILL_REFRESH):
                 select = self._select_skill()
                 if self.appear_then_click(self.selects_button[select]):
-                    time.sleep(1)
+                    time.sleep(2)
                     # TODO 两次选的间隔太短就直接跳过了，或者说动画没有显示中间的就跳过了
                     continue
             if self.appear_then_click(self.I_COIN, action=self.C_UI_REWARD, interval=1.5):

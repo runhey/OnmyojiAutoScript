@@ -77,9 +77,7 @@ class MoonSea(MoonSeaMap, MoonSeaL101, MoonSeaL102, MoonSeaL103, MoonSeaL104, Mo
                 case MoonSeaType.island103: self.run_103()
                 case MoonSeaType.island104: self.run_l104()
                 case MoonSeaType.island105: self.run_l105()
-            # 不知道怎么处理过场动画
-            # TODO
-            time.sleep(2)
+            self.wait_animate_stable(self.C_MAIN_ANIMATE_KEEP, timeout=3)
             continue
 
     def _continue(self):
@@ -181,6 +179,8 @@ class MoonSea(MoonSeaMap, MoonSeaL101, MoonSeaL102, MoonSeaL103, MoonSeaL104, Mo
                 # 双倍奖励
                 logger.info('Double reward')
                 self.ui_get_reward(self.I_BOSS_USE_DOUBLE)
+            if self.ui_reward_appear_click():
+                continue
             if self.appear_then_click(self.I_BOSS_GET_EXP, interval=1):
                 logger.info('Get EXP')
                 continue
