@@ -131,6 +131,27 @@ class MoonSeaMap(MoonSeaSkills):
                 cnt_act += 1
                 continue
 
+    def entry_island_random(self, area: list = None):
+        """
+
+        :param area: 搁置
+        :return:
+        """
+        # if not isinstance(area, list):
+        #     area = list(area)
+        logger.info('Entry island randomly')
+        while 1:
+            self.screenshot()
+            if not self.in_main() and self.appear(self.I_BACK_EXIT):
+                break
+            if self.click(self.C_ISLAND_ENTER_4, interval=2):
+                continue
+            if self.click(self.C_ISLAND_ENTER_5, interval=2):
+                continue
+            if self.click(self.C_ISLAND_ENTER_6, interval=2):
+                continue
+        return
+
 
 if __name__ == '__main__':
     from module.config.config import Config

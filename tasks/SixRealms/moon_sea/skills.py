@@ -58,6 +58,7 @@ class MoonSeaSkills(BaseTask, SixRealmsAssets):
         # 只选柔风
         if button is None and self.appear(self.I_SKILL101):
             self.cnt_skill101 += 1
+            logger.info(f'Skill 101 level: {self.cnt_skill101}')
             button = self.I_SKILL101
         # elif button is None and self.appear(self.I_SKILL102):
         #     button = self.I_SKILL102
@@ -87,11 +88,9 @@ class MoonSeaSkills(BaseTask, SixRealmsAssets):
             if self.in_main():
                 break
 
-            if self.appear(self.I_SKILL_REFRESH):
+            if self.appear(self.I_SKILL_REFRESH) and self.appear(self.I_SELECT_3):
                 select = self._select_skill()
                 if self.appear_then_click(self.selects_button[select]):
-                    time.sleep(2)
-                    # TODO 两次选的间隔太短就直接跳过了，或者说动画没有显示中间的就跳过了
                     continue
             if self.appear_then_click(self.I_COIN, action=self.C_UI_REWARD, interval=1.5):
                 continue

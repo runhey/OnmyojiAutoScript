@@ -27,6 +27,7 @@ class MoonSeaL101(MoonSeaSkills):
         self.ui_click_until_disappear(self.I_UI_CONFIRM)
         self.wait_until_appear(self.I_STORE_EXIT)
         self.cnt_skill101 += 1
+        logger.info(f'Skill 101 level: {self.cnt_skill101}')
         logger.info('Buy skill 101 done')
         return True
 
@@ -49,9 +50,8 @@ class MoonSeaL101(MoonSeaSkills):
             if self.appear_then_click(self.I_STORE_REFRESH, interval=1.5):
                 cnt_refresh += 1
                 continue
-            if cnt_refresh >= 4:
-                logger.warning('Refresh store failed')
-                break
+            if cnt_refresh >= 1:
+                return False
         self.ui_click_until_disappear(self.I_UI_CONFIRM, interval=2)
         self.wait_until_appear(self.I_STORE_EXIT)
         logger.info('Refresh store done')

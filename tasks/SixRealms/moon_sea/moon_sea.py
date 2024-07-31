@@ -62,12 +62,21 @@ class MoonSea(MoonSeaMap, MoonSeaL101, MoonSeaL102, MoonSeaL103, MoonSeaL104, Mo
             # 如果前一个，召唤一次宁息
             if isl_num == 1 and isl_type != MoonSeaType.island106:
                 self.activate_store()
+                self.wait_animate_stable(self.C_MAIN_ANIMATE_KEEP, timeout=3)
                 isl_type, isl_num, isl_roi = self.decide()
+                # 文字检测不一定发现到宁息
+                if isl_type != MoonSeaType.island101:
+                    logger.warning('OCR not found island101')
+                    logger.warning('Try to entry the island in the right randomly order')
+                    self.entry_island_random()
+
             # 如果是boss
             if isl_type == MoonSeaType.island106:
                 self.boss_team_lock()
-                self.boss_battle()
-                break
+                if self.boss_battle():
+                    break
+                else:
+                    continue
 
             self.enter_island(isl_type=isl_type, isl_roi=isl_roi)
             isl_type = self.island_name()
@@ -165,7 +174,7 @@ class MoonSea(MoonSeaMap, MoonSeaL101, MoonSeaL102, MoonSeaL103, MoonSeaL104, Mo
                 logger.info('Click lock Boss Team')
                 continue
 
-    def boss_battle(self):
+    def boss_battle(self) -> bool:
         logger.hr('Boss Battle')
         self.ui_click_until_disappear(self.I_BOSS_FIRE, interval=1)
         self.device.stuck_record_clear()
@@ -174,6 +183,11 @@ class MoonSea(MoonSeaMap, MoonSeaL101, MoonSeaL102, MoonSeaL103, MoonSeaL104, Mo
             self.screenshot()
             if self.appear(self.I_BOSS_SHARE):
                 break
+            if self.appear(self.I_BOSS_BATTLE_AGAIN):
+                # 打boss失败了重新挑战
+                logger.warning('Boss battle again')
+                self.ui_click_until_disappear(self.I_BOSS_BATTLE_AGAIN, interval=1)
+                return False
 
             if self.appear(self.I_BOSS_USE_DOUBLE, interval=1):
                 # 双倍奖励
@@ -184,6 +198,9 @@ class MoonSea(MoonSeaMap, MoonSeaL101, MoonSeaL102, MoonSeaL103, MoonSeaL104, Mo
             if self.appear_then_click(self.I_BOSS_GET_EXP, interval=1):
                 logger.info('Get EXP')
                 continue
+            if self.appear_then_click(self.I_UI_CONFIRM, interval=1):
+                # 取消购买 万相赐福
+                continue
             if self.appear_then_click(self.I_BOSS_SKIP, interval=1):
                 # 第二个boss
                 self.device.stuck_record_clear()
@@ -191,6 +208,7 @@ class MoonSea(MoonSeaMap, MoonSeaL101, MoonSeaL102, MoonSeaL103, MoonSeaL104, Mo
                 continue
         logger.info('Boss battle end')
         self.ui_click(self.I_BOSS_SHUTU, stop=self.I_MSTART)
+        return True
 
 
 if __name__ == '__main__':
