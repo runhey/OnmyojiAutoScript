@@ -70,5 +70,23 @@
     "method": "Template matching",
     "threshold": 0.8,
     "description": "结算的椒图"
+  },
+  {
+    "itemName": "boss_battle_again",
+    "imageName": "gate1_boss_battle_again.png",
+    "roiFront": "435,403,173,64",
+    "roiBack": "409,390,212,100",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "boss_battle_giveup",
+    "imageName": "gate1_boss_battle_giveup.png",
+    "roiFront": "671,399,175,59",
+    "roiBack": "649,381,219,100",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
   }
 ]

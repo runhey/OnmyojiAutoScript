@@ -119,13 +119,17 @@ class RuleImage:
             self.load_kp_des()
         return self._des
 
-    def corp(self, image: np.array) -> np.array:
+    def corp(self, image: np.array, roi: list = None) -> np.array:
         """
         截取图片
         :param image:
+        :param roi
         :return:
         """
-        x, y, w, h = self.roi_back
+        if roi is None:
+            x, y, w, h = self.roi_back
+        else:
+            x, y, w, h = roi
         x, y, w, h = int(x), int(y), int(w), int(h)
         return image[y:y + h, x:x + w]
 

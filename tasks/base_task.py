@@ -15,6 +15,7 @@ from module.atom.swipe import RuleSwipe
 from module.atom.ocr import RuleOcr
 from module.atom.list import RuleList
 from module.ocr.base_ocr import OcrMode, OcrMethod
+from module.atom.animate import RuleAnimate
 from module.logger import logger
 from module.base.timer import Timer
 from module.config.config import Config
@@ -48,6 +49,7 @@ class BaseTask(GlobalGameAssets, CostumeBase):
         self.device = device
 
         self.interval_timer = {}  # 这个是用来记录每个匹配的运行间隔的，用于控制运行频率
+        self.animates = {}  # 保存缓存
         self.start_time = datetime.now()  # 启动的时间
         self.check_costume(self.config.global_game.costume_config)
         self.friend_timer = None  # 这个是用来记录勾协的时间的
@@ -282,6 +284,39 @@ class BaseTask(GlobalGameAssets, CostumeBase):
 
             if timeout.reached():
                 logger.warning(f'Wait_until_stable({target}) timeout')
+                break
+
+    def wait_animate_stable(self, rule: RuleAnimate, interval: float = None, timeout: float = None):
+        """
+        不同与上面的wait_until_stable，这个将会匹配连续的两帧图片的特定区域
+        @param rule:
+        @param interval:
+        @param timeout:
+        @return:
+        """
+        if not isinstance(rule, RuleAnimate):
+            rule = RuleAnimate(rule)
+        timeout_timer = Timer(timeout).start() if timeout is not None else None
+        while 1:
+            self.screenshot()
+
+            if interval:
+                if rule.name in self.interval_timer:
+                    if self.interval_timer[rule.name].limit != interval:
+                        self.interval_timer[rule.name] = Timer(interval)
+                else:
+                    self.interval_timer[rule.name] = Timer(interval)
+                if not self.interval_timer[rule.name].reached():
+                    return False
+
+            stable = rule.stable(self.device.image)
+            if stable:
+                if interval:
+                    self.interval_timer[rule.name].reset()
+                break
+
+            if timeout_timer and timeout_timer.reached():
+                logger.info(f'Wait_animate_stable({rule}) timeout')
                 break
 
     def swipe(self, swipe: RuleSwipe, interval: float = None) -> None:
@@ -558,3 +593,5 @@ class BaseTask(GlobalGameAssets, CostumeBase):
                 break
             elif self.appear_then_click(click, interval=interval):
                 continue
+
+

@@ -14,7 +14,7 @@
     "roiFront": "876,121,47,41",
     "roiBack": "682,100,455,571",
     "method": "Template matching",
-    "threshold": 0.8,
+    "threshold": 0.9,
     "description": "购买柔风"
   },
   {

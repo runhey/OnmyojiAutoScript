@@ -8,6 +8,7 @@ class MoonSeaL101(MoonSeaSkills):
 
     def buy_skill_101(self) -> bool:
         logger.info('Buy skill 101')
+        self.wait_animate_stable(self.C_STORE_ANIMATE_KEEP, timeout=2)
         buy_try: int = 0
         while 1:
             self.screenshot()
@@ -26,6 +27,7 @@ class MoonSeaL101(MoonSeaSkills):
         self.ui_click_until_disappear(self.I_UI_CONFIRM)
         self.wait_until_appear(self.I_STORE_EXIT)
         self.cnt_skill101 += 1
+        logger.info(f'Skill 101 level: {self.cnt_skill101}')
         logger.info('Buy skill 101 done')
         return True
 
@@ -40,12 +42,16 @@ class MoonSeaL101(MoonSeaSkills):
             if refresh_time <= 0:
                 logger.warning('Refresh time is 0')
                 return False
+        cnt_refresh = 0
         while 1:
             self.screenshot()
             if self.appear(self.I_UI_CONFIRM):
                 break
             if self.appear_then_click(self.I_STORE_REFRESH, interval=1.5):
+                cnt_refresh += 1
                 continue
+            if cnt_refresh >= 1:
+                return False
         self.ui_click_until_disappear(self.I_UI_CONFIRM, interval=2)
         self.wait_until_appear(self.I_STORE_EXIT)
         logger.info('Refresh store done')
@@ -54,8 +60,8 @@ class MoonSeaL101(MoonSeaSkills):
     def run_l101(self):
         logger.hr('Start l101')
         logger.info('Keep buying skills until you run out of money')
-        # 进商店动画 TODO
-        time.sleep(1)
+        self.wait_until_appear(self.I_STORE_EXIT)
+        self.wait_animate_stable(self.C_STORE_ANIMATE_KEEP, timeout=2)
         while 1:
             self.screenshot()
             coin = self.O_COIN_NUM.ocr(self.device.image)
@@ -76,9 +82,6 @@ class MoonSeaL101(MoonSeaSkills):
                 continue
             if self.appear_then_click(self.I_STORE_EXIT, interval=1):
                 continue
-
-
-
 
 
 if __name__ == '__main__':
