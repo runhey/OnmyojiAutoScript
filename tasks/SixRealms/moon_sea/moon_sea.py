@@ -65,18 +65,19 @@ class MoonSea(MoonSeaMap, MoonSeaL101, MoonSeaL102, MoonSeaL103, MoonSeaL104, Mo
                 if self.cnt_skill101 >= 5:
                     # 如果柔风满级就不召唤
                     pass
-                # 如果没有三百块就不能召唤
-                if self.appear(self.I_M_STORE):
+                elif self.appear(self.I_M_STORE):
+                    # 如果没有三百块就不能召唤
                     logger.info('There have no money to active store at the last island')
                     pass
-                self.activate_store()
-                self.wait_animate_stable(self.C_MAIN_ANIMATE_KEEP, timeout=3)
-                isl_type, isl_num, isl_roi = self.decide()
-                # 文字检测不一定发现到宁息
-                if isl_type != MoonSeaType.island101:
-                    logger.warning('OCR not found island101')
-                    logger.warning('Try to entry the island in the right randomly order')
-                    self.entry_island_random()
+                else:
+                    self.activate_store()
+                    self.wait_animate_stable(self.C_MAIN_ANIMATE_KEEP, timeout=3)
+                    isl_type, isl_num, isl_roi = self.decide()
+                    # 文字检测不一定发现到宁息
+                    if isl_type != MoonSeaType.island101:
+                        logger.warning('OCR not found island101')
+                        logger.warning('Try to entry the island in the right randomly order')
+                        self.entry_island_random()
 
             # 如果是boss
             if isl_type == MoonSeaType.island106:
