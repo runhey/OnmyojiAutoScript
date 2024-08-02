@@ -25,5 +25,14 @@
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"
+  },
+  {
+    "itemName": "store_stable_flag",
+    "imageName": "l101_store_stable_flag.png",
+    "roiFront": "1028,251,28,27",
+    "roiBack": "1011,241,63,47",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "稳定标志"
   }
 ]

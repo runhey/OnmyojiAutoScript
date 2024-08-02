@@ -53,14 +53,18 @@ class MoonSea(MoonSeaMap, MoonSeaL101, MoonSeaL102, MoonSeaL103, MoonSeaL104, Mo
 
 
     def one(self):
+        self.cnt_skill101 = 1
         self._start()
         while 1:
             self.screenshot()
             if not self.in_main():
                 continue
             isl_type, isl_num, isl_roi = self.decide()
-            # 如果前一个，召唤一次宁息
             if isl_num == 1 and isl_type != MoonSeaType.island106:
+                # 如果前一个，召唤一次宁息
+                if self.cnt_skill101 >= 5:
+                    # 如果柔风满级就不召唤
+                    pass
                 self.activate_store()
                 self.wait_animate_stable(self.C_MAIN_ANIMATE_KEEP, timeout=3)
                 isl_type, isl_num, isl_roi = self.decide()

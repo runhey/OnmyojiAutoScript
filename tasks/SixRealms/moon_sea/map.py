@@ -102,7 +102,7 @@ class MoonSeaMap(MoonSeaSkills):
             self.screenshot()
             if not self.in_main() and self.appear(self.I_BACK_EXIT):
                 break
-            if self.click(self.C_ISLAND_ENTER, interval=1):
+            if self.click(self.C_ISLAND_ENTER, interval=2.5):
                 continue
         logger.info('Entering island')
         return
