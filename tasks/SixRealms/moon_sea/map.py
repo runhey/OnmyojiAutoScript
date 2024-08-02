@@ -96,7 +96,7 @@ class MoonSeaMap(MoonSeaSkills):
                     continue
             logger.info('Entering island randomly')
             return
-        isl_roi = [isl_roi[0]-20, isl_roi[1]-20, isl_roi[2]+40, isl_roi[3]+40]
+        isl_roi = [isl_roi[0]-40, isl_roi[1] + 70, isl_roi[2] + 40, isl_roi[3]+40]
         self.C_ISLAND_ENTER.roi_front = isl_roi
         while 1:
             self.screenshot()
