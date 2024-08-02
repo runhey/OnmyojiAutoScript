@@ -88,5 +88,23 @@
     "method": "Template matching",
     "threshold": 0.8,
     "description": "六道的金币"
+  },
+  {
+    "itemName": "coin2",
+    "imageName": "gate1_coin.png",
+    "roiFront": "612,345,66,53",
+    "roiBack": "405,229,561,270",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "六道的金币"
+  },
+  {
+    "itemName": "skill105",
+    "imageName": "gate1_skill105.png",
+    "roiFront": "178,187,80,69",
+    "roiBack": "112,149,779,151",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "洞察之力"
   }
 ]

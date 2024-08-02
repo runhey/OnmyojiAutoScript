@@ -57,6 +57,9 @@ class MoonSeaMap(MoonSeaSkills):
             if x1 < rx1 or x2 > rx2 or y1 < ry1 or y2 > ry2:
                 continue
             if isl_type == MoonSeaType.island100 and self.contains_any_char(result.ocr_text, chars='宁息'):
+                # 如果身上没有达到300块钱就不去了
+                if self.appear(self.I_M_STORE):
+                    continue
                 isl_type = MoonSeaType.island101
                 isl_roi = x1, y1, w, h
             elif isl_type == MoonSeaType.island100 and self.contains_any_char(result.ocr_text, chars='神秘'):
@@ -96,13 +99,13 @@ class MoonSeaMap(MoonSeaSkills):
                     continue
             logger.info('Entering island randomly')
             return
-        isl_roi = [isl_roi[0]-20, isl_roi[1]-20, isl_roi[2]+40, isl_roi[3]+40]
+        isl_roi = [isl_roi[0]-40, isl_roi[1] + 70, isl_roi[2] + 40, isl_roi[3]+40]
         self.C_ISLAND_ENTER.roi_front = isl_roi
         while 1:
             self.screenshot()
             if not self.in_main() and self.appear(self.I_BACK_EXIT):
                 break
-            if self.click(self.C_ISLAND_ENTER, interval=1):
+            if self.click(self.C_ISLAND_ENTER, interval=2.5):
                 continue
         logger.info('Entering island')
         return

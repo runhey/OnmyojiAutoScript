@@ -130,6 +130,10 @@ class SixRealmsAssets:
 	I_SELECT_3 = RuleImage(roi_front=(1016,581,145,43), roi_back=(1000,550,173,100), threshold=0.8, method="Template matching", file="./tasks/SixRealms/gate1/gate1_select_3.png")
 	# 六道的金币 
 	I_COIN = RuleImage(roi_front=(612,345,66,53), roi_back=(405,229,561,270), threshold=0.8, method="Template matching", file="./tasks/SixRealms/gate1/gate1_coin.png")
+	# 六道的金币 
+	I_COIN2 = RuleImage(roi_front=(612,345,66,53), roi_back=(405,229,561,270), threshold=0.8, method="Template matching", file="./tasks/SixRealms/gate1/gate1_coin.png")
+	# 洞察之力 
+	I_SKILL105 = RuleImage(roi_front=(178,187,80,69), roi_back=(112,149,779,151), threshold=0.8, method="Template matching", file="./tasks/SixRealms/gate1/gate1_skill105.png")
 
 
 	# Image Rule Assets
@@ -139,6 +143,8 @@ class SixRealmsAssets:
 	I_STORE_SKILL_101 = RuleImage(roi_front=(876,121,47,41), roi_back=(682,100,455,571), threshold=0.9, method="Template matching", file="./tasks/SixRealms/l101/l101_store_skill_101.png")
 	# description 
 	I_STORE_EXIT = RuleImage(roi_front=(1179,586,59,56), roi_back=(1161,561,100,100), threshold=0.8, method="Template matching", file="./tasks/SixRealms/l101/l101_store_exit.png")
+	# 稳定标志 
+	I_STORE_STABLE_FLAG = RuleImage(roi_front=(1028,251,28,27), roi_back=(1011,241,63,47), threshold=0.8, method="Template matching", file="./tasks/SixRealms/l101/l101_store_stable_flag.png")
 
 
 	# Ocr Rule Assets
