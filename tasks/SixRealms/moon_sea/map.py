@@ -57,6 +57,9 @@ class MoonSeaMap(MoonSeaSkills):
             if x1 < rx1 or x2 > rx2 or y1 < ry1 or y2 > ry2:
                 continue
             if isl_type == MoonSeaType.island100 and self.contains_any_char(result.ocr_text, chars='宁息'):
+                # 如果身上没有达到300块钱就不去了
+                if self.appear(self.I_M_STORE):
+                    continue
                 isl_type = MoonSeaType.island101
                 isl_roi = x1, y1, w, h
             elif isl_type == MoonSeaType.island100 and self.contains_any_char(result.ocr_text, chars='神秘'):

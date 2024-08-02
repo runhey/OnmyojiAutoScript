@@ -10,6 +10,7 @@ skill101 柔风
 skill102 细雨
 skill103 暴虐
 skill104 妖力化身
+skill105 洞察之力
 
 island101 宁息 l101
 island102 神秘 l102

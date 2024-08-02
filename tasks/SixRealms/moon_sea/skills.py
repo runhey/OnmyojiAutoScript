@@ -12,7 +12,6 @@ class MoonSeaSkills(BaseTask, SixRealmsAssets):
 
     cnt_skill101 = 0
 
-
     def in_main(self, screenshot: bool = False):
         if screenshot:
             self.screenshot()
@@ -68,6 +67,9 @@ class MoonSeaSkills(BaseTask, SixRealmsAssets):
         #     button = self.I_SKILL103
         # elif button is None and self.appear(self.I_SKILL104):
         #     button = self.I_SKILL104
+        elif button is None and self.appear(self.I_SKILL105):
+            logger.info(f'Skill 105 level: {self.cnt_skill101}')
+            button = self.I_SKILL105
         if button is not None:
             x, y = button.front_center()
             if x < 360:
