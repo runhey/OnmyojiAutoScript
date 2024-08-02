@@ -183,11 +183,11 @@ class MoonSea(MoonSeaMap, MoonSeaL101, MoonSeaL102, MoonSeaL103, MoonSeaL104, Mo
             self.screenshot()
             if self.appear(self.I_BOSS_SHARE):
                 break
-            if self.appear(self.I_BOSS_BATTLE_AGAIN):
-                # 打boss失败了重新挑战
-                logger.warning('Boss battle again')
-                self.ui_click_until_disappear(self.I_BOSS_BATTLE_AGAIN, interval=1)
-                return False
+            if self.appear(self.I_BOSS_BATTLE_GIVEUP):
+                # 打boss失败了
+                logger.warning('Boss battle give up')
+                self.ui_click_until_disappear(self.I_BOSS_BATTLE_GIVEUP, interval=1)
+                continue
 
             if self.appear(self.I_BOSS_USE_DOUBLE, interval=1):
                 # 双倍奖励
@@ -198,8 +198,10 @@ class MoonSea(MoonSeaMap, MoonSeaL101, MoonSeaL102, MoonSeaL103, MoonSeaL104, Mo
             if self.appear_then_click(self.I_BOSS_GET_EXP, interval=1):
                 logger.info('Get EXP')
                 continue
-            if self.appear_then_click(self.I_UI_CONFIRM, interval=1):
+            if self.appear_then_click(self.I_UI_CANCEL, interval=1):
                 # 取消购买 万相赐福
+                continue
+            if self.appear_then_click(self.I_UI_CONFIRM_SAMLL, interval=1):
                 continue
             if self.appear_then_click(self.I_BOSS_SKIP, interval=1):
                 # 第二个boss
