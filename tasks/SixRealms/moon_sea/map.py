@@ -85,6 +85,8 @@ class MoonSeaMap(MoonSeaSkills):
                 self.screenshot()
                 if not self.in_main() and self.appear(self.I_BACK_EXIT):
                     break
+                if self.appear_then_click(self.I_UI_CANCEL, interval=1):
+                    continue
                 if self.click(self.C_ISLAND_ENTER_1, interval=2):
                     continue
                 if self.click(self.C_ISLAND_ENTER_2, interval=2):

@@ -1,4 +1,5 @@
 import time
+import re
 
 from cached_property import cached_property
 
@@ -83,7 +84,24 @@ class MoonSeaSkills(BaseTask, SixRealmsAssets):
         logger.info(f'Select {select}')
         return select
 
-    def select_skill(self):
+    def select_skill(self, refresh: bool = False):
+        def check_coin_skill() -> bool:
+            coin = self.O_COIN_NUM.ocr(self.device.image)
+            return False if coin < 50 else True
+
+        def check_refresh() -> bool:
+            # 检测是否有钱刷新技能
+            text = self.O_SKILL_REFRESH.ocr(self.device.image)
+            matches = re.search(f"剩\d+次", text)
+            if matches:
+                refresh_time = int(matches.group()[1])
+                logger.info(f'Refresh time: {refresh_time}')
+                if refresh_time <= 0:
+                    logger.warning('Refresh time is 0')
+                    return False
+                else:
+                    return True
+            return False
         # 战斗结束后选技能
         logger.info('Start select skill')
 
@@ -92,10 +110,21 @@ class MoonSeaSkills(BaseTask, SixRealmsAssets):
             if self.in_main():
                 break
 
+            if self.appear(self.I_UI_CONFIRM):
+                self.ui_click_until_disappear(self.I_UI_CONFIRM)
+
             if self.appear(self.I_SKILL_REFRESH) and self.appear(self.I_SELECT_3) and not self.appear(self.I_COIN2):
                 select = self._select_skill()
+                # 如果没有柔风并且钱够并且还有刷新次数
+                if refresh and select == 3 and check_coin_skill() and check_refresh() and self.cnt_skill101 < 5:
+                    logger.info('Refresh skill')
+                    self.appear_then_click(self.I_SKILL_REFRESH)
+                    self.wait_until_stable(self.I_UI_CONFIRM, timeout=Timer(2))
+                    self.appear_then_click(self.I_UI_CONFIRM)
+                    self.wait_animate_stable(self.C_MAIN_ANIMATE_KEEP, timeout=1)
+                    continue
                 if self.appear_then_click(self.selects_button[select]):
-                    self.wait_animate_stable(self.C_MAIN_ANIMATE_KEEP, timeout=1.4)
+                    self.wait_animate_stable(self.C_MAIN_ANIMATE_KEEP, timeout=2)
                     continue
             if self.appear_then_click(self.I_COIN, action=self.C_UI_REWARD, interval=1.5):
                 continue
