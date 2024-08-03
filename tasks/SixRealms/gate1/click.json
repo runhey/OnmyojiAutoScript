@@ -1,0 +1,62 @@
+[
+  {
+    "itemName": "npc_fire_left",
+    "roiFront": "423,203,153,193",
+    "roiBack": "423,203,153,193",
+    "description": "左边的"
+  },
+  {
+    "itemName": "npc_fire_right",
+    "roiFront": "740,248,181,180",
+    "roiBack": "740,248,181,180",
+    "description": "description"
+  },
+  {
+    "itemName": "npc_fire_center",
+    "roiFront": "620,188,174,217",
+    "roiBack": "620,188,174,217",
+    "description": "中间的精英"
+  },
+  {
+    "itemName": "island_enter",
+    "roiFront": "0,0,100,100",
+    "roiBack": "0,0,100,100",
+    "description": "默认的"
+  },
+  {
+    "itemName": "island_enter_1",
+    "roiFront": "1012,349,136,221",
+    "roiBack": "1012,349,136,221",
+    "description": "右数第一个"
+  },
+  {
+    "itemName": "island_enter_2",
+    "roiFront": "825,341,143,224",
+    "roiBack": "825,341,143,224",
+    "description": "description"
+  },
+  {
+    "itemName": "island_enter_3",
+    "roiFront": "694,338,115,222",
+    "roiBack": "694,338,115,222",
+    "description": "description"
+  },
+  {
+    "itemName": "island_enter_4",
+    "roiFront": "501,323,141,243",
+    "roiBack": "501,323,141,243",
+    "description": "description"
+  },
+  {
+    "itemName": "island_enter_5",
+    "roiFront": "319,332,149,237",
+    "roiBack": "319,332,149,237",
+    "description": "description"
+  },
+  {
+    "itemName": "island_enter_6",
+    "roiFront": "162,265,136,302",
+    "roiBack": "162,265,136,302",
+    "description": "description"
+  }
+]

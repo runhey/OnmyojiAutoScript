@@ -180,12 +180,13 @@ class GeneralInvite(BaseTask, GeneralInviteAssets):
         while 1:
             self.screenshot()
             if not self.is_in_room() and \
-                    not self.appear_then_click(self.I_GI_SURE, interval=0.5) and \
+                    not self.appear_then_click(self.I_GI_SURE, interval=0.8) and \
                     not self.appear(self.I_BACK_YELLOW):
                 break
             if self.appear_then_click(self.I_GI_SURE, interval=0.5):
                 continue
-            if not self.appear(self.I_GI_SURE) and self.appear_then_click(self.I_BACK_YELLOW, interval=0.5):
+            if not self.appear(self.I_GI_SURE) and self.appear_then_click(self.I_BACK_YELLOW, interval=0.8):
+                self.wait_until_appear(self.I_GI_SURE, wait_time=0.8)
                 continue
         return True
 

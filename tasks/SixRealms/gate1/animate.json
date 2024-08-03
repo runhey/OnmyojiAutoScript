@@ -1,0 +1,14 @@
+[
+  {
+    "itemName": "main_animate_keep",
+    "roiFront": "565,7,100,215",
+    "roiBack": "565,7,100,215",
+    "description": "description"
+  },
+  {
+    "itemName": "store_animate_keep",
+    "roiFront": "825,87,317,466",
+    "roiBack": "825,87,317,466",
+    "description": "description"
+  }
+]

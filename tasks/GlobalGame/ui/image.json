@@ -79,5 +79,23 @@
     "method": "Template matching",
     "threshold": 0.8,
     "description": "短一点的取消"
+  },
+  {
+    "itemName": "ui_uncheck",
+    "imageName": "ui_ui_uncheck.png",
+    "roiFront": "567,343,33,36",
+    "roiBack": "497,303,216,100",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "ui_check",
+    "imageName": "ui_ui_check.png",
+    "roiFront": "564,341,40,38",
+    "roiBack": "512,329,164,78",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "勾选"
   }
 ]

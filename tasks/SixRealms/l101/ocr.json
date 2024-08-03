@@ -1,0 +1,11 @@
+[
+  {
+    "itemName": "store_refresh_time",
+    "roiFront": "538,661,110,27",
+    "roiBack": "538,661,110,27",
+    "mode": "Single",
+    "method": "Default",
+    "keyword": "",
+    "description": "刷新次数"
+  }
+]

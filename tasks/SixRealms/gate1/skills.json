@@ -1,0 +1,110 @@
+[
+  {
+    "itemName": "skill101",
+    "imageName": "gate1_skill101.png",
+    "roiFront": "440,181,100,69",
+    "roiBack": "139,167,722,100",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "柔风"
+  },
+  {
+    "itemName": "skill102",
+    "imageName": "gate1_skill102.png",
+    "roiFront": "456,186,76,63",
+    "roiBack": "136,151,709,128",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "skill103",
+    "imageName": "gate1_skill103.png",
+    "roiFront": "0,0,100,100",
+    "roiBack": "0,0,100,100",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "skill104",
+    "imageName": "gate1_skill104.png",
+    "roiFront": "0,0,100,100",
+    "roiBack": "0,0,100,100",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "skill_refresh",
+    "imageName": "gate1_skill_refresh.png",
+    "roiFront": "1196,625,44,39",
+    "roiBack": "1171,586,100,100",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "select_0",
+    "imageName": "gate1_select_0.png",
+    "roiFront": "152,572,132,44",
+    "roiBack": "140,542,163,100",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "select_1",
+    "imageName": "gate1_select_1.png",
+    "roiFront": "424,573,137,46",
+    "roiBack": "382,544,196,100",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "select_2",
+    "imageName": "gate1_select_2.png",
+    "roiFront": "696,572,140,47",
+    "roiBack": "666,546,196,100",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "select_3",
+    "imageName": "gate1_select_3.png",
+    "roiFront": "1016,581,145,43",
+    "roiBack": "1000,550,173,100",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "最右边的恢复生命"
+  },
+  {
+    "itemName": "coin",
+    "imageName": "gate1_coin.png",
+    "roiFront": "612,345,66,53",
+    "roiBack": "405,229,561,270",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "六道的金币"
+  },
+  {
+    "itemName": "coin2",
+    "imageName": "gate1_coin.png",
+    "roiFront": "612,345,66,53",
+    "roiBack": "405,229,561,270",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "六道的金币"
+  },
+  {
+    "itemName": "skill105",
+    "imageName": "gate1_skill105.png",
+    "roiFront": "178,187,80,69",
+    "roiBack": "112,149,779,151",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "洞察之力"
+  }
+]

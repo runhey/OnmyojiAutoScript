@@ -101,8 +101,8 @@
   {
     "itemName": "exploration_goto_six_gates",
     "imageName": "page_exploration_goto_six_gates.png",
-    "roiFront": "834,641,60,49",
-    "roiBack": "834,641,60,49",
+    "roiFront": "838,640,60,49",
+    "roiBack": "793,632,143,66",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "六道之门"
@@ -182,8 +182,8 @@
   {
     "itemName": "check_area_boss",
     "imageName": "page_check_area_boss.png",
-    "roiFront": "1176,505,65,62",
-    "roiBack": "1159,487,101,106",
+    "roiFront": "20,320,150,130",
+    "roiBack": "20,320,150,130",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"
