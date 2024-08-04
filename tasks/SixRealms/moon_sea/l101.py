@@ -76,6 +76,9 @@ class MoonSeaL101(MoonSeaSkills):
             if coin < 300:
                 logger.info('Not enough coin')
                 break
+            if self.cnt_skill101 >= 5:
+                logger.info('Skill 101 level is max')
+                break
 
             if self.appear(self.I_UI_CONFIRM):
                 self.ui_click_until_disappear(self.I_UI_CONFIRM, interval=1)

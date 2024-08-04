@@ -25,5 +25,14 @@
     "method": "Default",
     "keyword": "",
     "description": "有多少钱"
+  },
+  {
+    "itemName": "skill_refresh",
+    "roiFront": "1172,684,100,31",
+    "roiBack": "1172,684,100,31",
+    "mode": "Single",
+    "method": "Default",
+    "keyword": "",
+    "description": "Ocr-description"
   }
 ]
