@@ -27,8 +27,8 @@ class ScriptTask(GameUi, Summon, DailyTriflesAssets):
             pass
         if con.friend_love:
             self.run_friend_love()
+        if con.luck_msg:
             self.run_luck_msg()
-
         if con.store_sign:
             self.run_store_sign()
         self.set_next_run('DailyTrifles', success=True, finish=False)
