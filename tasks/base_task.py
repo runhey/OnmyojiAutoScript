@@ -79,6 +79,7 @@ class BaseTask(GlobalGameAssets, CostumeBase):
                 while 1:
                     self.device.screenshot()
                     if self.appear_then_click(self.I_G_ACCEPT, interval=1):
+                        self.set_next_run(task='WantedQuests', target=datetime.now())
                         continue
                     if not self.appear(self.I_G_ACCEPT):
                         break
@@ -98,6 +99,7 @@ class BaseTask(GlobalGameAssets, CostumeBase):
                     self.device.screenshot()
                     if self.appear(self.I_G_JADE):
                         if self.appear_then_click(self.I_G_ACCEPT, interval=1):
+                            self.set_next_run(task='WantedQuests', target=datetime.now())
                             continue
                     elif self.appear_then_click(self.I_G_IGNORE, interval=1):
                         continue
@@ -110,6 +112,7 @@ class BaseTask(GlobalGameAssets, CostumeBase):
                     self.device.screenshot()
                     if self.appear(self.I_G_JADE) or self.appear(self.I_G_CAT_FOOD) or self.appear(self.I_G_DOG_FOOD):
                         if self.appear_then_click(self.I_G_ACCEPT, interval=1):
+                            self.set_next_run(task='WantedQuests', target=datetime.now())
                             continue
                     elif self.appear_then_click(self.I_G_IGNORE, interval=1):
                         continue
