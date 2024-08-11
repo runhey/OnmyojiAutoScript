@@ -1,0 +1,97 @@
+{
+  "name": "team_list",
+  "direction": "vertical",
+  "type": "ocr",
+  "roiBack": "26,106,360,549",
+  "description": "description",
+  "list": [
+    {
+      "itemName": "全部",
+      "roiFront": "138,237,222,59"
+    },
+    {
+      "itemName": "探索（困难）",
+      "roiFront": "145,305,216,53"
+    },
+    {
+      "itemName": "觉醒业火轮",
+      "roiFront": "141,301,224,63"
+    },
+    {
+      "itemName": "觉醒风转符",
+      "roiFront": "146,302,214,65"
+    },
+    {
+      "itemName": "觉醒火灵鲤",
+      "roiFront": "145,304,215,55"
+    },
+    {
+      "itemName": "觉醒天雷鼓",
+      "roiFront": "145,302,216,67"
+    },
+    {
+      "itemName": "御魂",
+      "roiFront": "148,306,211,61"
+    },
+    {
+      "itemName": "日轮之陨",
+      "roiFront": "145,302,213,63"
+    },
+    {
+      "itemName": "永生之海",
+      "roiFront": "139,302,223,64"
+    },
+    {
+      "itemName": "妖气封印",
+      "roiFront": "147,305,213,66"
+    },
+    {
+      "itemName": "经验妖怪",
+      "roiFront": "145,303,218,60"
+    },
+    {
+      "itemName": "金币妖怪",
+      "roiFront": "148,306,214,62"
+    },
+    {
+      "itemName": "年兽",
+      "roiFront": "145,232,218,60"
+    },
+    {
+      "itemName": "石距",
+      "roiFront": "143,231,219,58"
+    },
+    {
+      "itemName": "愤怒的石距",
+      "roiFront": "143,230,214,60"
+    },
+    {
+      "itemName": "喷怒的石距",
+      "roiFront": "143,230,214,60"
+    },
+    {
+      "itemName": "结界突破",
+      "roiFront": "147,230,215,63"
+    },
+    {
+      "itemName": "真·八岐大蛇",
+      "roiFront": "145,226,221,64"
+    },
+    {
+      "itemName": "对弈社",
+      "roiFront": "148,228,213,64"
+    },
+    {
+      "itemName": "斗町",
+      "roiFront": "145,155,219,64"
+    },
+    {
+      "itemName": "连携召唤",
+      "roiFront": "145,229,215,63"
+    },
+    {
+      "itemName": "契灵之境",
+      "roiFront": "147,229,211,60"
+    }
+  ]
+}

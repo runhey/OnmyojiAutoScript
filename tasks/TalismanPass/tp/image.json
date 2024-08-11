@@ -1,0 +1,92 @@
+[
+  {
+    "itemName": "tp_get_all",
+    "imageName": "tp_tp_get_all.png",
+    "roiFront": "903,599,70,71",
+    "roiBack": "903,599,70,71",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "领取全部"
+  },
+  {
+    "itemName": "red_point_task",
+    "imageName": "tp_red_point_task.png",
+    "roiFront": "1226,312,23,24",
+    "roiBack": "1226,312,23,24",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "任务 的右上方红点"
+  },
+  {
+    "itemName": "red_point_day",
+    "imageName": "tp_red_point_day.png",
+    "roiFront": "632,157,23,26",
+    "roiBack": "632,157,23,26",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "今日 的右上方红点"
+  },
+  {
+    "itemName": "red_point_week",
+    "imageName": "tp_red_point_week.png",
+    "roiFront": "795,156,24,25",
+    "roiBack": "795,156,24,25",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "本周 的右上方红点"
+  },
+  {
+    "itemName": "red_point_level",
+    "imageName": "tp_red_point_level.png",
+    "roiFront": "1222,174,21,22",
+    "roiBack": "1214,165,40,43",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "等级奖励"
+  },
+  {
+    "itemName": "tp_level_1",
+    "imageName": "tp_tp_level_1.png",
+    "roiFront": "203,435,122,59",
+    "roiBack": "203,435,122,59",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "选择一号奖励"
+  },
+  {
+    "itemName": "tp_level_2",
+    "imageName": "tp_tp_level_2.png",
+    "roiFront": "577,435,122,55",
+    "roiBack": "577,435,122,55",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "选择二号奖励"
+  },
+  {
+    "itemName": "tp_level_3",
+    "imageName": "tp_tp_level_3.png",
+    "roiFront": "967,433,109,61",
+    "roiBack": "967,433,109,61",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "选择三号奖励"
+  },
+  {
+    "itemName": "tp_goto",
+    "imageName": "tp_tp_goto.png",
+    "roiFront": "995,254,85,34",
+    "roiBack": "928,219,206,315",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "前往"
+  },
+  {
+    "itemName": "tp_exp",
+    "imageName": "tp_tp_exp.png",
+    "roiFront": "922,254,32,36",
+    "roiBack": "884,215,100,331",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "经验的"
+  }
+]

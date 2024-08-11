@@ -1,0 +1,182 @@
+[
+  {
+    "itemName": "realm_raid",
+    "imageName": "res_realm_raid.png",
+    "roiFront": "246,628,63,64",
+    "roiBack": "246,628,63,64",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "点击结界突破的图片"
+  },
+  {
+    "itemName": "medal_5",
+    "imageName": "res_medal_5.png",
+    "roiFront": "238,205,212,53",
+    "roiBack": "216,187,919,364",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "五个勋章"
+  },
+  {
+    "itemName": "medal_4",
+    "imageName": "res_medal_4.png",
+    "roiFront": "241,483,193,46",
+    "roiBack": "228,178,899,362",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "medal_3",
+    "imageName": "res_medal_3.png",
+    "roiFront": "240,210,193,41",
+    "roiBack": "229,189,894,345",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "medal_2",
+    "imageName": "res_medal_2.png",
+    "roiFront": "572,478,198,48",
+    "roiBack": "217,193,923,354",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "medal_1",
+    "imageName": "res_medal_1.png",
+    "roiFront": "570,206,199,52",
+    "roiBack": "237,198,892,336",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "medal_0",
+    "imageName": "res_medal_0.png",
+    "roiFront": "536,336,176,51",
+    "roiBack": "231,200,898,336",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "没有勋章的"
+  },
+  {
+    "itemName": "back_red",
+    "imageName": "res_back_red.png",
+    "roiFront": "1178,101,57,64",
+    "roiBack": "1178,101,57,64",
+    "method": "Template matching",
+    "threshold": 0.7,
+    "description": "右上角红色的关闭"
+  },
+  {
+    "itemName": "unlock",
+    "imageName": "res_unlock.png",
+    "roiFront": "818,579,38,42",
+    "roiBack": "818,579,38,42",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "没有锁的状态图标"
+  },
+  {
+    "itemName": "lock",
+    "imageName": "res_lock.png",
+    "roiFront": "818,579,36,41",
+    "roiBack": "818,579,36,41",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "以锁的状态图片"
+  },
+  {
+    "itemName": "fresh",
+    "imageName": "res_fresh.png",
+    "roiFront": "957,564,182,66",
+    "roiBack": "957,564,182,66",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "刷新按钮"
+  },
+  {
+    "itemName": "shikigami",
+    "imageName": "res_shikigami.png",
+    "roiFront": "1206,608,54,51",
+    "roiBack": "1206,608,54,51",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "点击的式神录"
+  },
+  {
+    "itemName": "fire",
+    "imageName": "res_fire.png",
+    "roiFront": "982,494,136,63",
+    "roiBack": "140,129,1024,584",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "进攻"
+  },
+  {
+    "itemName": "soul_raid",
+    "imageName": "res_soul_raid.png",
+    "roiFront": "577,502,100,100",
+    "roiBack": "577,502,100,100",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "打完个后出现的领取奖励"
+  },
+  {
+    "itemName": "fresh_ensure",
+    "imageName": "res_fresh_ensure.png",
+    "roiFront": "672,403,173,59",
+    "roiBack": "672,403,173,59",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "刷新确认"
+  },
+  {
+    "itemName": "unlock_2",
+    "imageName": "res_unlock_2.png",
+    "roiFront": "1002,643,30,41",
+    "roiBack": "1002,643,30,41",
+    "method": "Template matching",
+    "threshold": 0.9,
+    "description": "没有锁图片，适配呱太入侵"
+  },
+  {
+    "itemName": "lock_2",
+    "imageName": "res_lock_2.png",
+    "roiFront": "1002,645,34,38",
+    "roiBack": "1002,645,34,38",
+    "method": "Template matching",
+    "threshold": 0.9,
+    "description": "以锁图片，适配呱太"
+  },
+  {
+    "itemName": "medal_5_frog",
+    "imageName": "res_medal_5_frog.png",
+    "roiFront": "903,479,201,49",
+    "roiBack": "189,182,967,376",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "medal_3_2",
+    "imageName": "res_medal_3_2.png",
+    "roiFront": "575,489,188,32",
+    "roiBack": "575,489,188,32",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "3徽章新图2号"
+  },
+  {
+    "itemName": "medal_3_3",
+    "imageName": "res_medal_3_3.png",
+    "roiFront": "902,479,201,50",
+    "roiBack": "902,479,201,50",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  }
+]

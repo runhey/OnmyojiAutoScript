@@ -1,0 +1,92 @@
+[
+  {
+    "itemName": "g_accept",
+    "imageName": "gg_g_accept.png",
+    "roiFront": "830,407,56,46",
+    "roiBack": "798,369,117,110",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "接受"
+  },
+  {
+    "itemName": "g_reject",
+    "imageName": "gg_g_reject.png",
+    "roiFront": "832,508,53,51",
+    "roiBack": "808,480,108,101",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "拒绝"
+  },
+  {
+    "itemName": "g_jade",
+    "imageName": "gg_g_jade.png",
+    "roiFront": "661,466,43,46",
+    "roiBack": "661,466,43,46",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "勾玉"
+  },
+  {
+    "itemName": "g_cat_food",
+    "imageName": "gg_g_cat_food.png",
+    "roiFront": "565,463,59,65",
+    "roiBack": "565,463,59,65",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "猫粮"
+  },
+  {
+    "itemName": "g_dog_food",
+    "imageName": "gg_g_dog_food.png",
+    "roiFront": "565,464,60,63",
+    "roiBack": "565,464,60,63",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "狗粮"
+  },
+  {
+    "itemName": "g_ignore",
+    "imageName": "gg_g_ignore.png",
+    "roiFront": "773,116,21,21",
+    "roiBack": "759,102,48,48",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "忽略"
+  },
+  {
+    "itemName": "network_abnormal",
+    "imageName": "gg_network_abnormal.png",
+    "roiFront": "583,330,221,67",
+    "roiBack": "583,330,221,67",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "网络异常"
+  },
+  {
+    "itemName": "network_error",
+    "imageName": "gg_network_error.png",
+    "roiFront": "431,253,416,208",
+    "roiBack": "431,253,416,208",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "已端口游戏服务器，需要重新连接，这种情况一般是断开很久了"
+  },
+  {
+    "itemName": "client_clear",
+    "imageName": "gg_client_clear.png",
+    "roiFront": "578,369,151,72",
+    "roiBack": "578,369,151,72",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "我还没有碰到这个情况没能截图"
+  },
+  {
+    "itemName": "chat_close_button",
+    "imageName": "gg_chat_close_button.png",
+    "roiFront": "632,343,49,103",
+    "roiBack": "632,343,49,103",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  }
+]

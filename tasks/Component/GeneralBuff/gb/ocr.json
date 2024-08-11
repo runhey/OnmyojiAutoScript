@@ -1,0 +1,47 @@
+[
+  {
+    "itemName": "gold_50",
+    "roiFront": "428,120,338,389",
+    "roiBack": "0,0,100,100",
+    "mode": "Full",
+    "method": "Default",
+    "keyword": "战斗胜利获得的金币增加50%",
+    "description": "Ocr-description"
+  },
+  {
+    "itemName": "gold_100",
+    "roiFront": "425,118,342,397",
+    "roiBack": "0,0,100,100",
+    "mode": "Full",
+    "method": "Default",
+    "keyword": "战斗胜利获得的金币增加100%",
+    "description": "Ocr-description"
+  },
+  {
+    "itemName": "exp_50",
+    "roiFront": "426,119,335,394",
+    "roiBack": "0,0,100,100",
+    "mode": "Full",
+    "method": "Default",
+    "keyword": "战斗胜利获得的经验增加50%",
+    "description": "Ocr-description"
+  },
+  {
+    "itemName": "exp_100",
+    "roiFront": "421,127,342,388",
+    "roiBack": "0,0,100,100",
+    "mode": "Full",
+    "method": "Default",
+    "keyword": "战斗胜利获得的经验增加100%",
+    "description": "Ocr-description"
+  },
+  {
+    "itemName": "gb_buff_2",
+    "roiFront": "348,31,93,51",
+    "roiBack": "363,36,29,43",
+    "mode": "Single",
+    "method": "Default",
+    "keyword": "加成",
+    "description": "打开buff加成"
+  }
+]

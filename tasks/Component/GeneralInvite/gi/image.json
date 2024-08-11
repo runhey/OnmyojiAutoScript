@@ -1,0 +1,362 @@
+[
+  {
+    "itemName": "add_1",
+    "imageName": "gi_add_1.png",
+    "roiFront": "592,288,114,51",
+    "roiBack": "592,288,114,51",
+    "method": "Template matching",
+    "threshold": 0.9,
+    "description": "中间的邀请图片"
+  },
+  {
+    "itemName": "add_2",
+    "imageName": "gi_add_2.png",
+    "roiFront": "1039,205,100,100",
+    "roiBack": "1039,205,100,100",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "最右边的邀请"
+  },
+  {
+    "itemName": "fire_fail",
+    "imageName": "gi_fire_fail.png",
+    "roiFront": "1177,604,81,74",
+    "roiBack": "1177,604,81,74",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "fire",
+    "imageName": "gi_fire.png",
+    "roiFront": "1179,602,81,87",
+    "roiBack": "1179,602,81,87",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "lock",
+    "imageName": "gi_lock.png",
+    "roiFront": "29,644,29,32",
+    "roiBack": "29,644,29,32",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "锁定阵容的图片"
+  },
+  {
+    "itemName": "unlock",
+    "imageName": "gi_unlock.png",
+    "roiFront": "30,647,23,30",
+    "roiBack": "30,647,23,30",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "还没有锁定阵容"
+  },
+  {
+    "itemName": "matching",
+    "imageName": "gi_matching.png",
+    "roiFront": "51,574,52,114",
+    "roiBack": "51,574,52,114",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "如果是到时间会退出房间，这个右边显示一个匹配的图片"
+  },
+  {
+    "itemName": "fire_fail_sea",
+    "imageName": "gi_fire_fail_sea.png",
+    "roiFront": "1160,585,100,100",
+    "roiBack": "1160,585,100,100",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "永生之海挑战（还未有队友的图片）"
+  },
+  {
+    "itemName": "fire_sea",
+    "imageName": "gi_fire_sea.png",
+    "roiFront": "1160,586,100,97",
+    "roiBack": "1160,586,100,97",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "lock_sea",
+    "imageName": "gi_lock_sea.png",
+    "roiFront": "781,658,27,28",
+    "roiBack": "781,658,27,28",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "unlock_sea",
+    "imageName": "gi_unlock_sea.png",
+    "roiFront": "781,656,27,30",
+    "roiBack": "781,656,27,30",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "永生之海 没有锁定队伍的图片"
+  },
+  {
+    "itemName": "add_5_1",
+    "imageName": "gi_add_5_1.png",
+    "roiFront": "370,243,100,100",
+    "roiBack": "370,243,100,100",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "五人的队伍的第一个加号"
+  },
+  {
+    "itemName": "add_5_2",
+    "imageName": "gi_add_5_2.png",
+    "roiFront": "612,263,100,100",
+    "roiBack": "612,263,100,100",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "add_5_3",
+    "imageName": "gi_add_5_3.png",
+    "roiFront": "862,243,100,100",
+    "roiBack": "862,243,100,100",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "add_5_4",
+    "imageName": "gi_add_5_4.png",
+    "roiFront": "1118,228,100,100",
+    "roiBack": "1118,228,100,100",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "load_friend",
+    "imageName": "gi_load_friend.png",
+    "roiFront": "709,546,134,60",
+    "roiBack": "709,546,134,60",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "游戏服务器获取在线好友时等待的图片"
+  },
+  {
+    "itemName": "back_yellow",
+    "imageName": "gi_back_yellow.png",
+    "roiFront": "19,13,58,55",
+    "roiBack": "19,13,58,55",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "左上角退出"
+  },
+  {
+    "itemName": "invite_ensure",
+    "imageName": "gi_invite_ensure.png",
+    "roiFront": "500,541,132,60",
+    "roiBack": "478,523,378,92",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "点击邀请"
+  },
+  {
+    "itemName": "selected",
+    "imageName": "gi_selected.png",
+    "roiFront": "895,373,33,32",
+    "roiBack": "380,157,568,350",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "判断是否点中好友了"
+  },
+  {
+    "itemName": "flag_1_on",
+    "imageName": "gi_flag_1_on.png",
+    "roiFront": "354,126,62,21",
+    "roiBack": "354,126,62,21",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "用来判断当前的列表是哪儿的"
+  },
+  {
+    "itemName": "flag_1_off",
+    "imageName": "gi_flag_1_off.png",
+    "roiFront": "353,126,58,22",
+    "roiBack": "353,126,58,22",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "flag_2_on",
+    "imageName": "gi_flag_2_on.png",
+    "roiFront": "465,126,61,24",
+    "roiBack": "465,126,61,24",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "flag_2_off",
+    "imageName": "gi_flag_2_off.png",
+    "roiFront": "469,127,58,21",
+    "roiBack": "469,127,58,21",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "flag_3_on",
+    "imageName": "gi_flag_3_on.png",
+    "roiFront": "588,126,48,22",
+    "roiBack": "588,126,48,22",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "flag_3_off",
+    "imageName": "gi_flag_3_off.png",
+    "roiFront": "590,126,41,22",
+    "roiBack": "590,126,41,22",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "flag_4_on",
+    "imageName": "gi_flag_4_on.png",
+    "roiFront": "713,128,34,21",
+    "roiBack": "713,128,34,21",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "flag_4_off",
+    "imageName": "gi_flag_4_off.png",
+    "roiFront": "703,128,53,21",
+    "roiBack": "703,128,53,21",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "add_sea",
+    "imageName": "gi_add_sea.png",
+    "roiFront": "836,231,100,100",
+    "roiBack": "836,231,100,100",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "永生之海添加好友"
+  },
+  {
+    "itemName": "i_reject",
+    "imageName": "gi_i_reject.png",
+    "roiFront": "12,226,64,61",
+    "roiBack": "12,226,64,275",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "队员不接受邀请"
+  },
+  {
+    "itemName": "i_reject_1",
+    "imageName": "gi_i_reject.png",
+    "roiFront": "5,210,110,95",
+    "roiBack": "5,210,110,95",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "队员不接受邀请"
+  },
+  {
+    "itemName": "i_reject_2",
+    "imageName": "gi_i_reject.png",
+    "roiFront": "5,320,110,95",
+    "roiBack": "5,320,110,95",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "队员不接受邀请"
+  },
+  {
+    "itemName": "i_reject_3",
+    "imageName": "gi_i_reject.png",
+    "roiFront": "5,430,110,95",
+    "roiBack": "5,430,110,95",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "队员不接受邀请"
+  },
+  {
+    "itemName": "i_accept",
+    "imageName": "gi_i_accept.png",
+    "roiFront": "113,225,63,72",
+    "roiBack": "113,225,63,280",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "队员接受邀请"
+  },
+  {
+    "itemName": "i_accept_default",
+    "imageName": "gi_i_accept_default.png",
+    "roiFront": "205,223,61,68",
+    "roiBack": "205,223,61,297",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "队员默认接受邀请"
+  },
+  {
+    "itemName": "i_no_default",
+    "imageName": "gi_i_no_default.png",
+    "roiFront": "542,343,36,35",
+    "roiBack": "542,343,36,35",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "不勾选 默认邀请"
+  },
+  {
+    "itemName": "i_default",
+    "imageName": "gi_i_default.png",
+    "roiFront": "541,342,41,39",
+    "roiBack": "541,342,41,39",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "勾选 默认邀请"
+  },
+  {
+    "itemName": "gi_cancel",
+    "imageName": "gi_gi_cancel.png",
+    "roiFront": "438,407,171,55",
+    "roiBack": "438,407,171,55",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "gi_sure",
+    "imageName": "gi_gi_sure.png",
+    "roiFront": "670,402,175,60",
+    "roiBack": "670,402,175,60",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "队长邀请 确定"
+  },
+  {
+    "itemName": "gi_buff",
+    "imageName": "gi_gi_buff.png",
+    "roiFront": "794,38,46,42",
+    "roiBack": "794,38,46,42",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "所有的组队界面都有加成"
+  },
+  {
+    "itemName": "gi_in_room",
+    "imageName": "gi_in_room.png",
+    "roiFront": "92,17,213,64",
+    "roiBack": "92,17,213,64",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "三人御魂组队左上角的协站队伍"
+  }
+]

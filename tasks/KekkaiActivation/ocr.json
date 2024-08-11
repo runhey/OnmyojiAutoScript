@@ -1,0 +1,11 @@
+[
+  {
+    "itemName": "card_all_time",
+    "roiFront": "926,262,95,31",
+    "roiBack": "926,262,95,31",
+    "mode": "Duration",
+    "method": "Default",
+    "keyword": "",
+    "description": "这张卡一共有多少小时"
+  }
+]

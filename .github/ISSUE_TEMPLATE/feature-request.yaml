@@ -1,0 +1,26 @@
+name: ✨功能请求
+title: '✨'
+description: 为 oas 提出一个新的想法或建议
+labels: 'enhancement'
+body:
+  - type: textarea
+    id: describe
+    attributes:
+      label: 当前不足
+      description: 简单描述本项目当前存在的不足之处, 请标明是具体的哪儿 issue 如果这个建议同某个问题关联
+    validations:
+      required: false
+  - type: textarea
+    id: solution
+    attributes:
+      label: 解决方案
+      description: 描述你想要的解决方案
+    validations:
+      required: false
+  - type: textarea
+    id: additional
+    attributes:
+      label: 其他内容
+      description: 关于该功能请求的任何其他背景或屏幕截图。
+    validations:
+      required: false

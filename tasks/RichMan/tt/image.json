@@ -1,0 +1,65 @@
+[
+  {
+    "itemName": "tt_enter",
+    "imageName": "tt_tt_enter.png",
+    "roiFront": "1140,585,73,76",
+    "roiBack": "1140,585,73,76",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "千物宝库"
+  },
+  {
+    "itemName": "tt_check",
+    "imageName": "tt_tt_check.png",
+    "roiFront": "141,61,228,67",
+    "roiBack": "141,61,228,67",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "确认进入"
+  },
+  {
+    "itemName": "tt_black",
+    "imageName": "tt_tt_black.png",
+    "roiFront": "710,176,91,90",
+    "roiBack": "453,171,589,109",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "tt_ticket_bule",
+    "imageName": "tt_tt_ticket_bule.png",
+    "roiFront": "484,176,85,91",
+    "roiBack": "475,170,562,110",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "tt_ap",
+    "imageName": "tt_tt_ap.png",
+    "roiFront": "938,177,88,87",
+    "roiBack": "467,167,581,123",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "tt_buy_up",
+    "imageName": "tt_tt_buy_up.png",
+    "roiFront": "755,427,59,57",
+    "roiBack": "740,386,80,146",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "提高"
+  },
+  {
+    "itemName": "tt_buy_confirm",
+    "imageName": "tt_tt_buy_confirm.png",
+    "roiFront": "584,512,53,53",
+    "roiBack": "553,487,169,115",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  }
+]

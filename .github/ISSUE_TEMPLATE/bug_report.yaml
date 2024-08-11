@@ -1,0 +1,71 @@
+name: 🐛问题反馈
+description: 在使用 oas 过程中遇到了错误
+labels: bug
+body:
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: 在提问之前...
+      options:
+      - label: 我已经搜索了现有的 issues
+        required: true
+      - label: 我在提问题之前至少花费了 5 分钟来思考和准备
+        required: true
+      - label: 我已经阅读了文档中的 常见问题(FAQ)
+        required: true
+      - label: 这个问题出现了至少三次，不是偶发的
+        required: false
+      - label: 我使用 OAS 的 dev 分支
+        required: false
+  - type: textarea
+    id: describe
+    attributes:
+      label: 描述你的问题
+      description: 简要描述你的问题
+    validations:
+      required: true
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: 如何复现
+      description: 重现该行为的步骤
+      value: |
+        1. 前往 '...'
+        2. 点击 '....'
+        3. 滑动到 '....'
+        4. 出现问题
+    validations:
+      required: false
+  - type: textarea
+    id: expected
+    attributes:
+      label: 预期行为
+      description: 简要描述你期望发生的事情
+    validations:
+      required: false
+  - type: textarea
+    id: logs
+    attributes:
+      label: 相关 Logs
+      description: 请复制并粘贴任何相关的日志输出。
+      render: Text
+    validations:
+      required: false
+  - type: textarea
+    id: screenshots
+    attributes:
+      label: 截图
+      description: |
+        如果有，添加屏幕截图以帮助解释你的问题。
+        提示: 可以通过点击这个区域，然后把文件拖进来添加图片或日志文件。
+    validations:
+      required: false
+  - type: textarea
+    id: others
+    attributes:
+      label: 还有别的吗？
+      description: |
+        相关的配置？链接？参考资料？
+        任何能让我们对你所遇到的问题有更多了解的东西。
+    validations:
+      required: false

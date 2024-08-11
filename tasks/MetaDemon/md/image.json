@@ -1,0 +1,92 @@
+[
+  {
+    "itemName": "md_enter",
+    "imageName": "md_md_enter.png",
+    "roiFront": "426,463,60,80",
+    "roiBack": "239,369,547,215",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "md_main",
+    "imageName": "md_md_main.png",
+    "roiFront": "658,156,41,139",
+    "roiBack": "636,133,100,245",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "md_find",
+    "imageName": "md_md_find.png",
+    "roiFront": "1112,581,100,100",
+    "roiBack": "1112,581,100,100",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "md_hard",
+    "imageName": "md_md_hard.png",
+    "roiFront": "513,515,26,27",
+    "roiBack": "513,515,26,27",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "高"
+  },
+  {
+    "itemName": "md_fire",
+    "imageName": "md_md_fire.png",
+    "roiFront": "1107,563,109,113",
+    "roiBack": "1107,563,109,113",
+    "method": "Template matching",
+    "threshold": 0.7,
+    "description": "description"
+  },
+  {
+    "itemName": "md_gift_box",
+    "imageName": "md_md_gift_box.png",
+    "roiFront": "1184,182,42,50",
+    "roiBack": "1184,182,42,50",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "md_extreme",
+    "imageName": "md_md_extreme.png",
+    "roiFront": "512,516,30,25",
+    "roiBack": "512,516,30,25",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "难度"
+  },
+  {
+    "itemName": "md_fire_common",
+    "imageName": "md_md_fire_common.png",
+    "roiFront": "1065,499,100,36",
+    "roiBack": "1065,499,100,36",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "md_fire_power",
+    "imageName": "md_md_fire_power.png",
+    "roiFront": "1159,498,100,37",
+    "roiBack": "1159,498,100,37",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "md_battle_failure",
+    "imageName": "md_md_battle_failure.png",
+    "roiFront": "412,105,100,100",
+    "roiBack": "412,105,100,100",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "失败"
+  }
+]

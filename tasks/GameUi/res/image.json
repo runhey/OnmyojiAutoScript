@@ -1,0 +1,101 @@
+[
+  {
+    "itemName": "back_bl",
+    "imageName": "res_back_blue.png",
+    "roiFront": "32,31,50,53",
+    "roiBack": "1,2,139,120",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "左上角蓝色的返回"
+  },
+  {
+    "itemName": "home_shikikami",
+    "imageName": "res_home_shikikami.png",
+    "roiFront": "1092,611,73,41",
+    "roiBack": "1092,611,73,41",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "式神录"
+  },
+  {
+    "itemName": "home_omnyouji",
+    "imageName": "res_home_omnyouji.png",
+    "roiFront": "989,613,59,58",
+    "roiBack": "989,613,59,58",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "阴阳术"
+  },
+  {
+    "itemName": "home_friend",
+    "imageName": "res_home_friend.png",
+    "roiFront": "876,619,60,53",
+    "roiBack": "876,619,60,53",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "home_tsk",
+    "imageName": "res_home_tsk.png",
+    "roiFront": "764,608,66,56",
+    "roiBack": "764,608,66,56",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "花合战"
+  },
+  {
+    "itemName": "home_mall",
+    "imageName": "res_home_mall.png",
+    "roiFront": "654,620,51,55",
+    "roiBack": "654,620,51,55",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "商店"
+  },
+  {
+    "itemName": "home_guild",
+    "imageName": "res_home_guild.png",
+    "roiFront": "540,607,53,50",
+    "roiBack": "540,607,53,50",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "阴阳寮"
+  },
+  {
+    "itemName": "home_team",
+    "imageName": "res_home_team.png",
+    "roiFront": "430,616,49,61",
+    "roiBack": "430,616,49,61",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "组队"
+  },
+  {
+    "itemName": "home_concentric_team",
+    "imageName": "res_home_concentric_team.png",
+    "roiFront": "310,618,67,60",
+    "roiBack": "310,618,67,60",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "同心队"
+  },
+  {
+    "itemName": "home_help",
+    "imageName": "res_home_help.png",
+    "roiFront": "201,617,56,57",
+    "roiBack": "201,617,56,57",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "珍旅居"
+  },
+  {
+    "itemName": "home_collect",
+    "imageName": "res_home_collect.png",
+    "roiFront": "92,607,48,74",
+    "roiBack": "92,607,48,74",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "图鉴"
+  }
+]

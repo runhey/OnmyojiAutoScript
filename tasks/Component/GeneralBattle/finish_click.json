@@ -1,0 +1,38 @@
+[
+  {
+    "itemName": "win_1",
+    "roiFront": "175,102,1054,99",
+    "roiBack": "175,102,1054,99",
+    "description": "description"
+  },
+  {
+    "itemName": "win_2",
+    "roiFront": "22,112,210,496",
+    "roiBack": "22,112,210,496",
+    "description": "description"
+  },
+  {
+    "itemName": "win_3",
+    "roiFront": "1059,114,206,468",
+    "roiBack": "1059,114,206,468",
+    "description": "description"
+  },
+  {
+    "itemName": "reward_1",
+    "roiFront": "606,603,325,87",
+    "roiBack": "606,603,325,87",
+    "description": "description"
+  },
+  {
+    "itemName": "reward_2",
+    "roiFront": "25,134,224,472",
+    "roiBack": "25,134,224,472",
+    "description": "description"
+  },
+  {
+    "itemName": "reward_3",
+    "roiFront": "1092,156,168,437",
+    "roiBack": "1092,156,168,437",
+    "description": "description"
+  }
+]

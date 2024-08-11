@@ -1,0 +1,21 @@
+{
+  "name": "layer_list",
+  "direction": "vertical",
+  "type": "ocr",
+  "roiBack": "138,130,359,500",
+  "description": "这个是御魂界面选择不同层数的",
+  "list": [
+    {
+      "itemName": "壹",
+      "roiFront": "281,135,39,102"
+    },
+    {
+      "itemName": "贰",
+      "roiFront": "283,293,39,85"
+    },
+    {
+      "itemName": "叁",
+      "roiFront": "281,439,43,93"
+    }
+  ]
+}

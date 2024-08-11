@@ -1,0 +1,20 @@
+[
+  {
+    "itemName": "ad_disappear",
+    "imageName": "additional_ad_disappear.png",
+    "roiFront": "412,405,37,40",
+    "roiBack": "412,405,37,40",
+    "method": "Template matching",
+    "threshold": 0.75,
+    "description": "description"
+  },
+  {
+    "itemName": "records_close",
+    "imageName": "additional_records_close.png",
+    "roiFront": "914,143,30,30",
+    "roiBack": "914,143,30,30",
+    "method": "Template matching",
+    "threshold": 0.7,
+    "description": "description"
+  }
+]

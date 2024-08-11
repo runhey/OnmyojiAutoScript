@@ -1,0 +1,29 @@
+[
+  {
+    "itemName": "bm_enter",
+    "imageName": "broken_amulet_bm_enter.png",
+    "roiFront": "399,601,62,68",
+    "roiBack": "399,601,62,68",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "进入普通召唤"
+  },
+  {
+    "itemName": "bm_confirm",
+    "imageName": "broken_amulet_bm_confirm.png",
+    "roiFront": "418,620,173,59",
+    "roiBack": "418,620,173,59",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "确定"
+  },
+  {
+    "itemName": "bm_again",
+    "imageName": "broken_amulet_bm_again.png",
+    "roiFront": "686,617,178,60",
+    "roiBack": "686,617,178,60",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "再次召唤"
+  }
+]

@@ -1,0 +1,74 @@
+[
+  {
+    "itemName": "u_moon_6",
+    "imageName": "utilize_u_moon_6.png",
+    "roiFront": "548,194,54,54",
+    "roiBack": "540,189,68,404",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "太阴6"
+  },
+  {
+    "itemName": "u_moon_5",
+    "imageName": "utilize_u_moon_5.png",
+    "roiFront": "548,205,48,46",
+    "roiBack": "540,196,66,407",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "u_moon_4",
+    "imageName": "utilize_u_moon_4.png",
+    "roiFront": "548,309,49,50",
+    "roiBack": "533,167,81,437",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "u_moon_3",
+    "imageName": "utilize_u_moon_3.png",
+    "roiFront": "549,305,53,53",
+    "roiBack": "535,173,77,430",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "u_moon_2",
+    "imageName": "utilize_u_moon_2.png",
+    "roiFront": "552,313,46,44",
+    "roiBack": "542,174,81,437",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "check_friend_realm_1",
+    "imageName": "utilize_check_friend_realm_1.png",
+    "roiFront": "1059,17,90,21",
+    "roiBack": "844,4,421,65",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "check_friend_realm_2",
+    "imageName": "utilize_check_friend_realm_2.png",
+    "roiFront": "590,143,44,52",
+    "roiBack": "538,106,161,158",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "check_friend_realm_3",
+    "imageName": "utilize_check_friend_realm_3.png",
+    "roiFront": "900,23,22,120",
+    "roiBack": "884,11,271,160",
+    "method": "Template matching",
+    "threshold": 0.9,
+    "description": "好友寄养"
+  }
+]

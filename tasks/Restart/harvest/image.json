@@ -1,0 +1,128 @@
+[
+  {
+    "itemName": "harvest_jade",
+    "imageName": "harvest_harvest_jade.png",
+    "roiFront": "732,489,34,33",
+    "roiBack": "177,451,973,141",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "点击勾玉"
+  },
+  {
+    "itemName": "harvest_sign",
+    "imageName": "harvest_harvest_sign.png",
+    "roiFront": "397,500,24,34",
+    "roiBack": "70,471,889,89",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "签到小图标"
+  },
+  {
+    "itemName": "harvest_sign_2",
+    "imageName": "harvest_harvest_sign_2.png",
+    "roiFront": "592,135,100,252",
+    "roiBack": "592,135,100,252",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "harvest_sign_999",
+    "imageName": "harvest_harvest_sign_999.png",
+    "roiFront": "345,494,23,29",
+    "roiBack": "51,459,888,103",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "999签到福袋"
+  },
+  {
+    "itemName": "harvest_mail",
+    "imageName": "harvest_harvest_mail.png",
+    "roiFront": "337,505,37,25",
+    "roiBack": "38,465,880,89",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "邮件小图标"
+  },
+  {
+    "itemName": "harvest_mail_all",
+    "imageName": "harvest_harvest_mail_all.png",
+    "roiFront": "80,622,75,64",
+    "roiBack": "80,622,75,64",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "全部收取"
+  },
+  {
+    "itemName": "harvest_mail_open",
+    "imageName": "harvest_harvest_mail_open.png",
+    "roiFront": "163,367,45,48",
+    "roiBack": "139,86,100,487",
+    "method": "Template matching",
+    "threshold": 0.9,
+    "description": "有些邮件需要点击一次"
+  },
+  {
+    "itemName": "harvest_mail_confirm",
+    "imageName": "harvest_harvest_mail_confirm.png",
+    "roiFront": "687,543,168,64",
+    "roiBack": "687,543,168,64",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "确认收取邮件"
+  },
+  {
+    "itemName": "harvest_soul",
+    "imageName": "harvest_harvest_soul.png",
+    "roiFront": "241,497,38,36",
+    "roiBack": "68,480,930,72",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "harvest_mail_title",
+    "imageName": "harvest_harvest_mail_title.png",
+    "roiFront": "520,48,245,41",
+    "roiBack": "520,48,245,41",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "harvest_ap",
+    "imageName": "harvest_harvest_ap.png",
+    "roiFront": "721,486,31,38",
+    "roiBack": "206,462,970,134",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "harvest_chat_close",
+    "imageName": "harvest_harvest_chat_close.png",
+    "roiFront": "639,309,35,100",
+    "roiBack": "639,309,35,100",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "打开聊天频道会自动关闭"
+  },
+  {
+    "itemName": "harvest_sign_3",
+    "imageName": "harvest_harvest_sign_3.png",
+    "roiFront": "291,495,33,36",
+    "roiBack": "100,473,1014,91",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "签到"
+  },
+  {
+    "itemName": "harvest_sign_4",
+    "imageName": "harvest_harvest_sign_4.png",
+    "roiFront": "587,151,100,228",
+    "roiBack": "547,123,185,281",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  }
+]

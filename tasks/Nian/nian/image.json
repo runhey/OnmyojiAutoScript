@@ -1,0 +1,29 @@
+[
+  {
+    "itemName": "auto_matching",
+    "imageName": "nian_auto_matching.png",
+    "roiFront": "698,598,180,64",
+    "roiBack": "698,598,180,64",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "自动匹配"
+  },
+  {
+    "itemName": "n_check",
+    "imageName": "nian_n_check.png",
+    "roiFront": "793,279,242,246",
+    "roiBack": "793,279,242,246",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "判断是否在年的界面"
+  },
+  {
+    "itemName": "n_waiting",
+    "imageName": "nian_n_waiting.png",
+    "roiFront": "735,28,54,51",
+    "roiBack": "735,28,54,51",
+    "method": "Template matching",
+    "threshold": 0.7,
+    "description": "等待进入，也是关闭按钮"
+  }
+]

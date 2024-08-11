@@ -1,0 +1,38 @@
+[
+  {
+    "itemName": "login_network",
+    "roiFront": "534,649,189,39",
+    "roiBack": "210,492,100,100",
+    "mode": "Single",
+    "method": "Default",
+    "keyword": "正在连接服务器",
+    "description": "正在连接服务器"
+  },
+  {
+    "itemName": "login_enter_game",
+    "roiFront": "550,567,176,56",
+    "roiBack": "558,574,154,49",
+    "mode": "Single",
+    "method": "Default",
+    "keyword": "进入游戏",
+    "description": "Ocr-description"
+  },
+  {
+    "itemName": "login_skip_1",
+    "roiFront": "1046,35,130,37",
+    "roiBack": "1046,35,130,37",
+    "mode": "Single",
+    "method": "Default",
+    "keyword": "点击屏幕跳过",
+    "description": "点击屏幕跳过"
+  },
+  {
+    "itemName": "login_specific_serve",
+    "roiFront": "694,605,59,34",
+    "roiBack": "516,75,662,585",
+    "mode": "Single",
+    "method": "Default",
+    "keyword": "游戏",
+    "description": "登录指定角色，默认第一个"
+  }
+]

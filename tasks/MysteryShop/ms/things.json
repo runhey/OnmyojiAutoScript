@@ -1,0 +1,137 @@
+[
+  {
+    "itemName": "ms_blue",
+    "imageName": "ms_ms_blue.png",
+    "roiFront": "850,379,117,98",
+    "roiBack": "179,81,829,471",
+    "method": "Template matching",
+    "threshold": 0.7,
+    "description": "蓝票"
+  },
+  {
+    "itemName": "ms_black",
+    "imageName": "ms_ms_black.png",
+    "roiFront": "851,353,114,102",
+    "roiBack": "170,64,850,448",
+    "method": "Template matching",
+    "threshold": 0.6,
+    "description": "黑蛋"
+  },
+  {
+    "itemName": "ms_taiko_3",
+    "imageName": "ms_ms_taiko_3.png",
+    "roiFront": "176,353,140,104",
+    "roiBack": "144,50,866,494",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "ms_taiko_4",
+    "imageName": "ms_ms_taiko_4.png",
+    "roiFront": "204,372,90,88",
+    "roiBack": "156,81,874,473",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "ms_taiko_6",
+    "imageName": "ms_ms_taiko_6.png",
+    "roiFront": "0,0,100,100",
+    "roiBack": "0,0,100,100",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "ms_exp",
+    "imageName": "ms_ms_exp.png",
+    "roiFront": "0,0,100,100",
+    "roiBack": "0,0,100,100",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "ms_check_blue",
+    "imageName": "ms_ms_check_blue.png",
+    "roiFront": "592,241,88,94",
+    "roiBack": "455,235,261,146",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "ms_check_black",
+    "imageName": "ms_ms_check_black.png",
+    "roiFront": "598,258,86,92",
+    "roiBack": "455,238,273,123",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "ms_check_taiko_3",
+    "imageName": "ms_ms_check_taiko_3.png",
+    "roiFront": "567,259,70,81",
+    "roiBack": "465,245,252,124",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "ms_check_taiko_4",
+    "imageName": "ms_ms_check_taiko_4.png",
+    "roiFront": "591,277,66,73",
+    "roiBack": "453,235,280,146",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "ms_check_taiko_6",
+    "imageName": "ms_ms_check_taiko_6.png",
+    "roiFront": "580,253,100,100",
+    "roiBack": "430,220,334,171",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "ms_check_exp",
+    "imageName": "ms_ms_check_exp.png",
+    "roiFront": "589,255,100,100",
+    "roiBack": "472,225,243,149",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "ms_reward_3",
+    "imageName": "ms_ms_reward_3.png",
+    "roiFront": "511,630,48,47",
+    "roiBack": "511,630,48,47",
+    "method": "Template matching",
+    "threshold": 0.7,
+    "description": "description"
+  },
+  {
+    "itemName": "ms_reward_5",
+    "imageName": "ms_ms_reward_5.png",
+    "roiFront": "682,632,48,42",
+    "roiBack": "682,632,48,42",
+    "method": "Template matching",
+    "threshold": 0.7,
+    "description": "description"
+  },
+  {
+    "itemName": "ms_reward_10",
+    "imageName": "ms_ms_reward_10.png",
+    "roiFront": "851,637,47,32",
+    "roiBack": "851,637,47,32",
+    "method": "Template matching",
+    "threshold": 0.7,
+    "description": "description"
+  }
+]

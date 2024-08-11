@@ -1,0 +1,38 @@
+[
+  {
+    "itemName": "npc_common",
+    "imageName": "l104_npc_common.png",
+    "roiFront": "718,232,36,40",
+    "roiBack": "684,208,100,100",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "npc_fire",
+    "imageName": "l104_npc_fire.png",
+    "roiFront": "1129,585,100,100",
+    "roiBack": "1080,551,174,144",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "点击挑战"
+  },
+  {
+    "itemName": "battle_team_unlock",
+    "imageName": "l104_battle_team_unlock.png",
+    "roiFront": "962,676,21,21",
+    "roiBack": "943,655,64,60",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "battle_team_lock",
+    "imageName": "l104_battle_team_lock.png",
+    "roiFront": "961,675,21,23",
+    "roiBack": "949,662,48,50",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  }
+]

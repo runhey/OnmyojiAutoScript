@@ -1,0 +1,38 @@
+[
+  {
+    "itemName": "sp_buy_totem",
+    "imageName": "special_sp_buy_totem.png",
+    "roiFront": "398,299,148,113",
+    "roiBack": "160,121,880,487",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "购买御灵"
+  },
+  {
+    "itemName": "sp_buy_medium",
+    "imageName": "special_sp_buy_medium.png",
+    "roiFront": "392,150,150,108",
+    "roiBack": "144,113,908,501",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "购买中级盘"
+  },
+  {
+    "itemName": "sp_buy_low",
+    "imageName": "special_sp_buy_low.png",
+    "roiFront": "176,148,144,108",
+    "roiBack": "128,142,902,449",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "购买低级盘"
+  },
+  {
+    "itemName": "sp_swipe_check",
+    "imageName": "special_sp_swipe_check.png",
+    "roiFront": "900,164,42,61",
+    "roiBack": "173,144,840,379",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "判断是否滑动到底"
+  }
+]

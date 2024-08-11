@@ -1,0 +1,29 @@
+[
+  {
+    "itemName": "con_enter_check",
+    "imageName": "consignment_con_enter_check.png",
+    "roiFront": "660,423,393,162",
+    "roiBack": "660,423,393,162",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "进入寄售屋"
+  },
+  {
+    "itemName": "con_enter",
+    "imageName": "consignment_con_enter.png",
+    "roiFront": "1176,304,68,74",
+    "roiBack": "1176,304,68,74",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "兑换"
+  },
+  {
+    "itemName": "con_ticket",
+    "imageName": "consignment_con_ticket.png",
+    "roiFront": "700,194,100,100",
+    "roiBack": "700,194,100,100",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "寄售券"
+  }
+]

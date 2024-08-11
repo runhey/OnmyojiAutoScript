@@ -1,0 +1,14 @@
+[
+  {
+    "itemName": "st_detail",
+    "roiFront": "1189,321,87,74",
+    "roiBack": "1189,321,87,74",
+    "description": "御魂详细"
+  },
+  {
+    "itemName": "st_god_prsent",
+    "roiFront": "717,165,100,48",
+    "roiBack": "926,165,100,54",
+    "description": "出现神赐"
+  }
+]

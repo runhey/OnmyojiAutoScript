@@ -1,0 +1,264 @@
+[
+  {
+    "itemName": "ryou_shenshe",
+    "imageName": "res_ryou_shenshe.png",
+    "roiFront": "476,173,62,24",
+    "roiBack": "476,173,62,24",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "阴阳竂->神社"
+  },
+  {
+    "itemName": "ryou_dokan",
+    "imageName": "res_ryou_dokan.png",
+    "roiFront": "476,173,62,24",
+    "roiBack": "476,173,62,24",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "神社->道馆"
+  },
+  {
+    "itemName": "ryou_dokan_ryou_select",
+    "imageName": "res_ryou_dokan_ryou_select.png",
+    "roiFront": "567,15,144,42",
+    "roiBack": "567,15,144,42",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "[]选择竂"
+  },
+  {
+    "itemName": "ryou_dokan_ryou_list",
+    "imageName": "res_ryou_dokan_ryou_list.png",
+    "roiFront": "567,15,144,42",
+    "roiBack": "567,15,144,42",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "可选的竂列表"
+  },
+  {
+    "itemName": "ryou_dokan_check",
+    "imageName": "res_ryou_dokan_check.png",
+    "roiFront": "567,15,144,42",
+    "roiBack": "567,15,144,42",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "是否已经成功进入道馆，上面中间的“道馆突破”文字"
+  },
+  {
+    "itemName": "ryou_dokan_attack_priority",
+    "imageName": "res_ryou_dokan_priority.png",
+    "roiFront": "666,672,58,25",
+    "roiBack": "666,672,58,25",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "优先攻击选项"
+  },
+  {
+    "itemName": "ryou_dokan_attack_priority_0",
+    "imageName": "res_ryou_dokan_priority_0.png",
+    "roiFront": "98,170,94,43",
+    "roiBack": "98,170,94,43",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "优先攻击: 见习"
+  },
+  {
+    "itemName": "ryou_dokan_attack_priority_1",
+    "imageName": "res_ryou_dokan_priority_1.png",
+    "roiFront": "342,175,96,42",
+    "roiBack": "342,175,96,42",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "优先攻击: 初级"
+  },
+  {
+    "itemName": "ryou_dokan_attack_priority_2",
+    "imageName": "res_ryou_dokan_priority_2.png",
+    "roiFront": "585,175,89,35",
+    "roiBack": "585,175,89,35",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "优先攻击: 中级"
+  },
+  {
+    "itemName": "ryou_dokan_attack_priority_3",
+    "imageName": "res_ryou_dokan_priority_3.png",
+    "roiFront": "830,175,88,41",
+    "roiBack": "830,175,88,41",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "优先攻击: 高级"
+  },
+  {
+    "itemName": "ryou_dokan_attack_priority_4",
+    "imageName": "res_ryou_dokan_priority_4.png",
+    "roiFront": "1072,178,94,39",
+    "roiBack": "1072,178,94,39",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "优先攻击: 黑脸"
+  },
+
+
+  {
+    "itemName": "ryou_dokan_gathering",
+    "imageName": "res_ryou_dokan_gathering.png",
+    "roiFront": "653,76,46,26",
+    "roiBack": "653,76,46,26",
+    "method": "Template matching",
+    "threshold": 0.85,
+    "description": "状态：集结等待中。检查右下角的挑战是不是灰色的。FIXME 黄色和灰色的挑战截图总是傻傻分不清，先改用OCR"
+  },
+  {
+    "itemName": "ryou_dokan_start_challenge",
+    "imageName": "res_ryou_dokan_start_challenge.png",
+    "roiFront": "1132,572,89,43",
+    "roiBack": "1132,572,89,43",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "状态：检查右下角有没有挑战？通常是失败了，并退出来到集结界面，可重新开始点击右下角挑战进入战斗"
+  },
+  {
+    "itemName": "ryou_dokan_cd1",
+    "imageName": "res_ryou_dokan_cd1.png",
+    "roiFront": "1068,500,146,27",
+    "roiBack": "1068,500,146,27",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "状态：达到失败次数，CD中。挑战次数恢复倒数"
+  },
+  {
+    "itemName": "ryou_dokan_cd",
+    "imageName": "res_ryou_dokan_cd.png",
+    "roiFront": "1122,566,117,74",
+    "roiBack": "1122,566,117,74",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "状态：达到失败次数，CD中。观战按钮"
+  },
+  {
+    "itemName": "ryou_dokan_in_field",
+    "imageName": "res_ryou_dokan_in_field.png",
+    "roiFront": "1128,536,100,100",
+    "roiBack": "1128,536,100,100",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "状态：进入战斗，待开始，右下角图标。TODO 欠截图。"
+  },
+  {
+    "itemName": "dokan_boss_waiting",
+    "imageName": "res_dokan_boss_waiting.png",
+    "roiFront": "603,148,130,32",
+    "roiBack": "603,148,130,32",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "馆主战等待中"
+  },
+
+  {
+    "itemName": "ryou_dokan_win",
+    "imageName": "res_ryou_dokan_win.png",
+    "roiFront": "628,60,45,33",
+    "roiBack": "628,60,45,33",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "状态：道馆胜利"
+  },
+
+  {
+    "itemName": "ryou_dokan_in_field2",
+    "imageName": "res_ryou_dokan_in_field2.png",
+    "roiFront": "1131,562,88,48",
+    "roiBack": "1131,562,88,48",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "状态：进入战斗，待开始，右下角图标。"
+  },
+  {
+    "itemName": "ryou_dokan_battle_over",
+    "imageName": "res_ryou_dokan_battle_over.png",
+    "roiFront": "571,503,106,49",
+    "roiBack": "571,503,106,49",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "状态：战斗结算，可能是打完小朋友了，也可能是失败了。"
+  },
+
+  {
+    "itemName": "ryou_dokan_fighting",
+    "imageName": "res_ryou_dokan_fighting.png",
+    "roiFront": "232,36,42,19",
+    "roiBack": "232,36,42,19",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "状态：战斗中，左上角的加油图标"
+  },
+  {
+    "itemName": "ryou_dokan_finished",
+    "imageName": "res_ryou_dokan_finished.png",
+    "roiFront": "658,649,91,27",
+    "roiBack": "658,649,91,27",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "状态：道馆已经结束"
+  },
+  {
+    "itemName": "ryou_dokan_failed_vote_no",
+    "imageName": "res_ryou_dokan_failed_vote_no.png",
+    "roiFront": "567,15,144,42",
+    "roiBack": "567,15,144,42",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "状态：道馆挑战失败，投票NO"
+  },
+  {
+    "itemName": "ryou_dokan_exit_ensure",
+    "imageName": "res_ryou_dokan_exit_ensure.png",
+    "roiFront": "678,395,125,56",
+    "roiBack": "678,395,125,56",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "道馆退出确认"
+  },
+
+  
+  {
+    "itemName": "ryou_dokan_cheering_scores",
+    "imageName": "res_ryou_dokan_cheering_scores.png",
+    "roiFront": "157,100,35,39",
+    "roiBack": "157,100,35,39",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "进入加油相关：道馆战报按钮"
+  },
+  {
+    "itemName": "ryou_dokan_cheering_attacking_sama",
+    "imageName": "res_ryou_dokan_cheering_attacking_sama.png",
+    "roiFront": "948,182,56,295",
+    "roiBack": "948,182,56,295",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "进入加油相关：前往战斗中的竂友"
+  },
+
+
+  {
+    "itemName": "scene_ryou",
+    "imageName": "scene_ryou.png",
+    "roiFront": "1161,674,75,31",
+    "roiBack": "1161,674,75,31",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "场景检测：阴阳竂"
+  },
+  {
+    "itemName": "scene_ryou",
+    "imageName": "scene_ryou.png",
+    "roiFront": "1161,674,75,31",
+    "roiBack": "1161,674,75,31",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "场景检测：阴阳竂"
+  }
+
+]

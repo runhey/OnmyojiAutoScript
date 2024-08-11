@@ -1,0 +1,20 @@
+[
+  {
+    "itemName": "utilize_res_time",
+    "roiFront": "1140,117,100,30",
+    "roiBack": "1140,117,100,30",
+    "mode": "Duration",
+    "method": "Default",
+    "keyword": "",
+    "description": "这个寄养的剩余时间"
+  },
+  {
+    "itemName": "box_exp",
+    "roiFront": "654,538,179,39",
+    "roiBack": "654,538,179,39",
+    "mode": "DigitCounter",
+    "method": "Default",
+    "keyword": "",
+    "description": "今日以领取经验"
+  }
+]

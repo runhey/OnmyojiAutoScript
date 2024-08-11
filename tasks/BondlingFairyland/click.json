@@ -1,0 +1,38 @@
+[
+  {
+    "itemName": "stone_1",
+    "roiFront": "239,536,26,24",
+    "roiBack": "0,0,100,100",
+    "description": "description"
+  },
+  {
+    "itemName": "stone_2",
+    "roiFront": "417,490,26,23",
+    "roiBack": "0,0,100,100",
+    "description": "description"
+  },
+  {
+    "itemName": "stone_3",
+    "roiFront": "705,511,28,26",
+    "roiBack": "0,0,100,100",
+    "description": "description"
+  },
+  {
+    "itemName": "stone_4",
+    "roiFront": "911,487,27,24",
+    "roiBack": "0,0,100,100",
+    "description": "description"
+  },
+  {
+    "itemName": "stone_5",
+    "roiFront": "1041,494,25,25",
+    "roiBack": "0,0,100,100",
+    "description": "description"
+  },
+  {
+    "itemName": "cap_success",
+    "roiFront": "317,102,378,363",
+    "roiBack": "0,0,100,100",
+    "description": "description"
+  }
+]

@@ -1,0 +1,65 @@
+[
+  {
+    "itemName": "detect_empty_1",
+    "imageName": "rs_detect_empty_1.png",
+    "roiFront": "64,262,100,100",
+    "roiBack": "38,227,158,177",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "detect_empty_2",
+    "imageName": "rs_detect_empty_2.png",
+    "roiFront": "281,263,100,100",
+    "roiBack": "238,234,178,168",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "detect_empty_3",
+    "imageName": "rs_detect_empty_3.png",
+    "roiFront": "495,263,100,100",
+    "roiBack": "470,234,150,150",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "detect_empty_4",
+    "imageName": "rs_detect_empty_4.png",
+    "roiFront": "703,256,100,100",
+    "roiBack": "681,229,157,174",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "detect_empty_5",
+    "imageName": "rs_detect_empty_5.png",
+    "roiFront": "914,257,100,100",
+    "roiBack": "872,221,198,190",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "detect_empty_6",
+    "imageName": "rs_detect_empty_6.png",
+    "roiFront": "1135,253,100,100",
+    "roiBack": "1091,229,156,159",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "new",
+    "imageName": "image_name.png",
+    "roiFront": "0,0,100,100",
+    "roiBack": "0,0,100,100",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  }
+]

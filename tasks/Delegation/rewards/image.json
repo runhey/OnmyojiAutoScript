@@ -1,0 +1,65 @@
+[
+  {
+    "itemName": "rewards_done",
+    "imageName": "rewards_rewards_done.png",
+    "roiFront": "982,303,149,60",
+    "roiBack": "982,303,149,60",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "rewards_chat",
+    "imageName": "rewards_rewards_chat.png",
+    "roiFront": "1171,124,48,65",
+    "roiBack": "1171,124,48,65",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "rewards_get",
+    "imageName": "rewards_rewards_get.png",
+    "roiFront": "444,78,100,100",
+    "roiBack": "444,78,100,100",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "完美达成"
+  },
+  {
+    "itemName": "rewards_min",
+    "imageName": "rewards_rewards_min.png",
+    "roiFront": "840,131,44,58",
+    "roiBack": "840,131,44,58",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "rewards_false",
+    "imageName": "rewards_rewards_false.png",
+    "roiFront": "430,72,100,100",
+    "roiBack": "430,72,100,100",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "差强人意"
+  },
+  {
+    "itemName": "chat_1",
+    "imageName": "rewards_chat_1.png",
+    "roiFront": "735,350,318,100",
+    "roiBack": "651,161,601,391",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "chat_2",
+    "imageName": "rewards_chat_2.png",
+    "roiFront": "721,384,325,100",
+    "roiBack": "721,384,325,100",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  }
+]

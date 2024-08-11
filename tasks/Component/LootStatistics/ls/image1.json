@@ -1,0 +1,11 @@
+[
+  {
+    "itemName": "realm_raid_pass",
+    "imageName": "ls_realm_raid_pass.png",
+    "roiFront": "402,175,100,100",
+    "roiBack": "251,161,809,128",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "突破卷"
+  }
+]

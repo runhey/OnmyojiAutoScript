@@ -1,0 +1,92 @@
+[
+  {
+    "itemName": "buff_1",
+    "imageName": "gb_buff_1.png",
+    "roiFront": "363,32,32,46",
+    "roiBack": "344,14,128,76",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "庭院左上角的加成"
+  },
+  {
+    "itemName": "awake",
+    "imageName": "gb_awake.png",
+    "roiFront": "381,130,35,45",
+    "roiBack": "360,107,80,447",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "soul",
+    "imageName": "gb_soul.png",
+    "roiFront": "377,203,39,40",
+    "roiBack": "361,121,71,388",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "御魂加成"
+  },
+  {
+    "itemName": "gold_50",
+    "imageName": "gb_gold_50.png",
+    "roiFront": "373,269,52,36",
+    "roiBack": "367,120,64,391",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "gold_100",
+    "imageName": "gb_gold_100.png",
+    "roiFront": "378,338,43,39",
+    "roiBack": "365,121,74,407",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "exp_50",
+    "imageName": "gb_exp_50.png",
+    "roiFront": "379,406,44,43",
+    "roiBack": "365,127,70,393",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "exp_100",
+    "imageName": "gb_exp_100.png",
+    "roiFront": "383,406,30,40",
+    "roiBack": "368,126,58,386",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "open_yellow",
+    "imageName": "gb_open_yellow.png",
+    "roiFront": "772,347,21,21",
+    "roiBack": "766,133,35,366",
+    "method": "Template matching",
+    "threshold": 0.7,
+    "description": "description"
+  },
+  {
+    "itemName": "close_red",
+    "imageName": "gb_close_red.png",
+    "roiFront": "774,143,21,21",
+    "roiBack": "764,134,38,369",
+    "method": "Template matching",
+    "threshold": 0.63,
+    "description": "description"
+  },
+  {
+    "itemName": "cloud",
+    "imageName": "gb_cloud.png",
+    "roiFront": "356,505,65,38",
+    "roiBack": "356,505,65,38",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "用来判定是否点击的那个"
+  }
+]

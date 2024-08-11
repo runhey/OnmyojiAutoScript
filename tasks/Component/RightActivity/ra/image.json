@@ -1,0 +1,20 @@
+[
+  {
+    "itemName": "ra_open",
+    "imageName": "ra_ra_open.png",
+    "roiFront": "1257,78,22,58",
+    "roiBack": "1257,78,22,58",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "ra_close",
+    "imageName": "ra_ra_close.png",
+    "roiFront": "1256,123,23,44",
+    "roiBack": "1256,123,23,44",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  }
+]

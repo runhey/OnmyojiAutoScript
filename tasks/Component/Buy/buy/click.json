@@ -1,0 +1,20 @@
+[
+  {
+    "itemName": "buy_one",
+    "roiFront": "551,506,174,36",
+    "roiBack": "551,506,174,36",
+    "description": "description"
+  },
+  {
+    "itemName": "buy_more",
+    "roiFront": "551,540,174,40",
+    "roiBack": "551,540,174,40",
+    "description": "description"
+  },
+  {
+    "itemName": "buy_cancel",
+    "roiFront": "121,2,100,22",
+    "roiBack": "121,2,100,22",
+    "description": "取消购买"
+  }
+]

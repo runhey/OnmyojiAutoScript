@@ -1,0 +1,56 @@
+[
+  {
+    "itemName": "main_goto_summon",
+    "imageName": "page_main_goto_summon.png",
+    "roiFront": "1073,174,57,65",
+    "roiBack": "571,153,586,124",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "summon_goto_main",
+    "imageName": "page_summon_goto_main.png",
+    "roiFront": "27,5,49,51",
+    "roiBack": "0,0,100,100",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "check_summon",
+    "imageName": "page_check_summon.png",
+    "roiFront": "581,594,68,66",
+    "roiBack": "316,528,594,174",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "realm_raid_goto_exploration",
+    "imageName": "page_realm_raid_goto_exploration.png",
+    "roiFront": "1192,107,36,43",
+    "roiBack": "1192,107,36,43",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "就是一个红叉"
+  },
+  {
+    "itemName": "main_goto_travel",
+    "imageName": "page_main_goto_travel.png",
+    "roiFront": "202,619,64,61",
+    "roiBack": "202,619,64,61",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "check_travel",
+    "imageName": "page_check_travel.png",
+    "roiFront": "1134,583,78,77",
+    "roiBack": "1134,583,78,77",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "珍旅居"
+  }
+]

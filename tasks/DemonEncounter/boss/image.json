@@ -1,0 +1,119 @@
+[
+  {
+    "itemName": "boss_namazu",
+    "imageName": "boss_boss_namazu.png",
+    "roiFront": "589,294,100,100",
+    "roiBack": "589,294,100,100",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "地震鲇"
+  },
+  {
+    "itemName": "boss_shinkiro",
+    "imageName": "boss_boss_shinkiro.png",
+    "roiFront": "587,279,100,100",
+    "roiBack": "587,279,100,100",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "蜃气楼"
+  },
+  {
+    "itemName": "boss_odokuro",
+    "imageName": "boss_boss_odokuro.png",
+    "roiFront": "596,287,100,100",
+    "roiBack": "596,287,100,100",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "荒骷髅"
+  },
+  {
+    "itemName": "boss_oboroguruma",
+    "imageName": "boss_boss_oboroguruma.png",
+    "roiFront": "588,285,100,100",
+    "roiBack": "588,285,100,100",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "胧车"
+  },
+  {
+    "itemName": "boss_tsuchigumo",
+    "imageName": "boss_boss_tsuchigumo.png",
+    "roiFront": "603,294,100,66",
+    "roiBack": "603,294,100,66",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "土蜘蛛"
+  },
+  {
+    "itemName": "boss_songstress",
+    "imageName": "boss_boss_songstress.png",
+    "roiFront": "592,323,67,61",
+    "roiBack": "592,323,67,61",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "歌姬"
+  },
+  {
+    "itemName": "boss_fire",
+    "imageName": "boss_boss_fire.png",
+    "roiFront": "1062,549,100,100",
+    "roiBack": "1062,549,100,100",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "集结挑战"
+  },
+  {
+    "itemName": "boss_confirm",
+    "imageName": "boss_boss_confirm.png",
+    "roiFront": "671,400,175,61",
+    "roiBack": "671,400,175,61",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "boss_selected",
+    "imageName": "boss_boss_selected.png",
+    "roiFront": "543,339,37,41",
+    "roiBack": "543,339,37,41",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "已选中"
+  },
+  {
+    "itemName": "boss_no_select",
+    "imageName": "boss_boss_no_select.png",
+    "roiFront": "544,337,37,43",
+    "roiBack": "544,337,37,43",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "还没选中"
+  },
+  {
+    "itemName": "boss_gather",
+    "imageName": "boss_boss_gather.png",
+    "roiFront": "801,589,100,100",
+    "roiBack": "801,589,100,100",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "集结"
+  },
+  {
+    "itemName": "boss_win",
+    "imageName": "boss_boss_win.png",
+    "roiFront": "380,43,100,100",
+    "roiBack": "380,43,100,100",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "战斗胜利"
+  },
+  {
+    "itemName": "boss_back_white",
+    "imageName": "boss_boss_back_white.png",
+    "roiFront": "16,12,39,40",
+    "roiBack": "16,12,39,40",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "白色退出"
+  }
+]

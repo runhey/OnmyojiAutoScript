@@ -1,0 +1,30 @@
+[
+  {
+    "itemName": "ab_filter_up",
+    "roiFront": "920,680,10,10",
+    "roiBack": "1130,230,10,10",
+    "mode": "default",
+    "description": "筛选列表 手指向上滑动"
+  },
+  {
+    "itemName": "ab_filter_down",
+    "roiFront": "1130,230,10,10",
+    "roiBack": "920,680,10,10",
+    "mode": "default",
+    "description": "筛选列表 手指向下滑动"
+  },
+  {
+    "itemName": "ab_floor_down",
+    "roiFront": "390,260,10,10",
+    "roiBack": "450,500,10,10",
+    "mode": "default",
+    "description": "极地鬼 层数列表 手指向下滑动 "
+  },
+  {
+    "itemName": "ab_level_right",
+    "roiFront": "0,0,10,10",
+    "roiBack": "570,270,10,10",
+    "mode": "default",
+    "description": "普通地鬼 等级滑轨 手指向右滑动 "
+  }
+]

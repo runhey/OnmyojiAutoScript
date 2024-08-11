@@ -1,0 +1,47 @@
+[
+  {
+    "itemName": "guild_total",
+    "roiFront": "1151,6,100,42",
+    "roiBack": "1151,6,100,42",
+    "mode": "Digit",
+    "method": "Default",
+    "keyword": "",
+    "description": "总的功勋"
+  },
+  {
+    "itemName": "guild_number_blue",
+    "roiFront": "888,269,25,33",
+    "roiBack": "888,269,25,33",
+    "mode": "Digit",
+    "method": "Default",
+    "keyword": "",
+    "description": "Ocr-description"
+  },
+  {
+    "itemName": "guild_number_black",
+    "roiFront": "663,523,21,27",
+    "roiBack": "663,523,21,27",
+    "mode": "Digit",
+    "method": "Default",
+    "keyword": "",
+    "description": "Ocr-description"
+  },
+  {
+    "itemName": "guild_number_skin",
+    "roiFront": "889,519,21,35",
+    "roiBack": "889,519,21,35",
+    "mode": "Digit",
+    "method": "Default",
+    "keyword": "",
+    "description": "Ocr-description"
+  },
+  {
+    "itemName": "guild_remain",
+    "roiFront": "304,268,154,33",
+    "roiBack": "304,268,154,33",
+    "mode": "Single",
+    "method": "Default",
+    "keyword": "",
+    "description": "本周剩余数量x"
+  }
+]

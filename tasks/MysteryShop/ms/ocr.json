@@ -1,0 +1,20 @@
+[
+  {
+    "itemName": "ms_friend",
+    "roiFront": "1017,660,58,38",
+    "roiBack": "1017,660,58,38",
+    "mode": "Single",
+    "method": "Default",
+    "keyword": "",
+    "description": "好友名字"
+  },
+  {
+    "itemName": "ms_records",
+    "roiFront": "324,638,44,36",
+    "roiBack": "324,638,44,36",
+    "mode": "Digit",
+    "method": "Default",
+    "keyword": "",
+    "description": "记录购买多少个的"
+  }
+]

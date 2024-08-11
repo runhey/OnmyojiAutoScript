@@ -1,0 +1,48 @@
+[
+  {
+    "itemName": "dokan_map",
+    "roiFront": "270,130,740,460",
+    "roiBack": "270,130,740,460",
+    "mode": "Full",
+    "method": "Default",
+    "keyword": "万",
+    "description": "道馆地图里找文字：万"
+  },
+  {
+    "itemName": "dokan_gathering",
+    "roiFront": "535,75,211,29",
+    "roiBack": "535,75,211,29",
+    "mode": "Single",
+    "method": "Default",
+    "keyword": "开战",
+    "description": "道馆里找文字：后开战"
+  },
+  {
+    "itemName": "dokan_attacking",
+    "roiFront": "1122,546,92,51",
+    "roiBack": "1122,546,92,51",
+    "mode": "Single",
+    "method": "Default",
+    "keyword": "剩余",
+    "description": "道馆里找文字：剩余突破时间"
+  },
+  {
+    "itemName": "dokan_boss_waiting",
+    "roiFront": "603,148,130,32",
+    "roiBack": "603,148,130,32",
+    "mode": "Single",
+    "method": "Default",
+    "keyword": "馆主",
+    "description": "道馆里找文字：后挑战馆主"
+  },
+  {
+    "itemName": "dokan_succeeded",
+    "roiFront": "655,76,49,28",
+    "roiBack": "655,76,49,28",
+    "mode": "Full",
+    "method": "Default",
+    "keyword": "关闭",
+    "description": "道馆里找文字：后关闭"
+  }
+
+]

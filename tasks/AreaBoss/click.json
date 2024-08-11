@@ -1,0 +1,98 @@
+[
+  {
+    "itemName": "ab_reward_btn",
+    "roiFront": "1190,100,50,120",
+    "roiBack": "1190,100,50,120",
+    "description": "悬赏按钮"
+  },
+  {
+    "itemName": "ab_famous_btn",
+    "roiFront": "1190,220,50,120",
+    "roiBack": "1190,220,50,120",
+    "description": "热门按钮"
+  },
+  {
+    "itemName": "ab_collection_btn",
+    "roiFront": "1190,580,50,120",
+    "roiBack": "1190,580,50,120",
+    "description": "收藏按钮"
+  },
+  {
+    "itemName": "ab_boss_photo_1",
+    "roiFront": "940,210,95,70",
+    "roiBack": "940,210,95,70",
+    "description": "筛选中 除悬赏外 第一个boss的头像位置"
+  },
+  {
+    "itemName": "ab_boss_photo_2",
+    "roiFront": "940,365,95,70",
+    "roiBack": "940,365,95,70",
+    "description": "筛选中 除悬赏外 第二个boss的头像位置"
+  },
+  {
+    "itemName": "ab_boss_photo_3",
+    "roiFront": "940,520,95,70",
+    "roiBack": "940,520,95,70",
+    "description": "筛选中 除悬赏外 第三个boss的头像位置"
+  },
+  {
+    "itemName": "ab_boss_photo_minus_3",
+    "roiFront": "940,255,95,70",
+    "roiBack": "940,255,95,70",
+    "description": "筛选中 除悬赏外 滑动到最底部时 第一个boss的头像位置 即倒数第三个"
+  },
+  {
+    "itemName": "ab_boss_photo_minus_2",
+    "roiFront": "940,410,95,70",
+    "roiBack": "940,410,95,70",
+    "description": "筛选中 除悬赏外 滑动到最底部时 第二个boss的头像位置 即倒数第二个"
+  },
+  {
+    "itemName": "ab_boss_photo_minus_1",
+    "roiFront": "940,560,95,70",
+    "roiBack": "940,560,95,70",
+    "description": "筛选中 除悬赏外 滑动到最底部时 第三个boss的头像位置 即倒数第一个"
+  },
+  {
+    "itemName": "ab_boss_reward_photo_1",
+    "roiFront": "940,250,95,70",
+    "roiBack": "940,250,95,70",
+    "description": "筛选中 悬赏中 第一个boss的头像位置"
+  },
+  {
+    "itemName": "ab_boss_reward_photo_2",
+    "roiFront": "940,375,95,70",
+    "roiBack": "940,375,95,70",
+    "description": "筛选中 悬赏中 第二个boss的头像位置"
+  },
+  {
+    "itemName": "ab_boss_reward_photo_3",
+    "roiFront": "940,500,95,70",
+    "roiBack": "940,500,95,70",
+    "description": "筛选中 悬赏中 第三个boss的头像位置"
+  },
+  {
+    "itemName": "ab_boss_reward_photo_minus_3",
+    "roiFront": "940,335,95,70",
+    "roiBack": "940,335,95,70",
+    "description": "筛选中 悬赏中 滑动到最底部时 第一个boss的头像位置 即倒数第三个"
+  },
+  {
+    "itemName": "ab_boss_reward_photo_minus_2",
+    "roiFront": "940,460,95,70",
+    "roiBack": "940,460,95,70",
+    "description": "筛选中 悬赏中 滑动到最底部时 第二个boss的头像位置 即倒数第二个"
+  },
+  {
+    "itemName": "ab_boss_reward_photo_minus_1",
+    "roiFront": "940,585,95,70",
+    "roiBack": "940,585,95,70",
+    "description": "筛选中 悬赏中 滑动到最底部时 第三个boss的头像位置 即倒数第一个"
+  },
+  {
+    "itemName": "ab_ji_floor_selected",
+    "roiFront": "380,120,70,30",
+    "roiBack": "380,120,70,30",
+    "description": "当前选择 的极地鬼层数"
+  }
+]

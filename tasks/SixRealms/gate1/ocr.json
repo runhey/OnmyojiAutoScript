@@ -1,0 +1,38 @@
+[
+  {
+    "itemName": "ocr_map",
+    "roiFront": "144,227,989,376",
+    "roiBack": "144,227,989,376",
+    "mode": "Full",
+    "method": "Default",
+    "keyword": "",
+    "description": "Ocr-description"
+  },
+  {
+    "itemName": "island_name",
+    "roiFront": "88,17,148,49",
+    "roiBack": "88,17,148,49",
+    "mode": "Single",
+    "method": "Default",
+    "keyword": "",
+    "description": "Ocr-description"
+  },
+  {
+    "itemName": "coin_num",
+    "roiFront": "1171,23,59,31",
+    "roiBack": "1171,23,59,31",
+    "mode": "Digit",
+    "method": "Default",
+    "keyword": "",
+    "description": "有多少钱"
+  },
+  {
+    "itemName": "skill_refresh",
+    "roiFront": "1172,684,100,31",
+    "roiBack": "1172,684,100,31",
+    "mode": "Single",
+    "method": "Default",
+    "keyword": "",
+    "description": "Ocr-description"
+  }
+]

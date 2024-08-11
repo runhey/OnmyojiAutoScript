@@ -1,0 +1,51 @@
+[
+  {
+    "itemName": "sou_group_1",
+    "roiFront": "1086,85,158,67",
+    "roiBack": "1086,85,158,67",
+    "description": "description"
+  },
+  {
+    "itemName": "sou_group_2",
+    "roiFront": "1087,155,162,62",
+    "roiBack": "1087,155,162,62",
+    "description": "description"
+  },
+  {
+    "itemName": "sou_group_3",
+    "roiFront": "1088,226,154,61",
+    "roiBack": "1088,226,154,61",
+    "description": "description"
+  },
+  {
+    "itemName": "sou_group_4",
+    "roiFront": "1087,297,157,59",
+    "roiBack": "1087,297,157,59",
+    "description": "description"
+  },
+  {
+    "itemName": "sou_group_5",
+    "roiFront": "1087,365,154,62",
+    "roiBack": "1087,365,154,62",
+    "description": "description"
+  },
+  {
+    "itemName": "sou_group_6",
+    "roiFront": "1088,437,156,57",
+    "roiBack": "1088,437,156,57",
+    "description": "description"
+  },
+  {
+    "itemName": "sou_group_7",
+    "roiFront": "1090,505,156,62",
+    "roiBack": "1090,505,156,62",
+    "description": "description"
+  },
+  {
+    "itemName": "sou_team_select",
+    "imageName": "ss_sou_team_select.png",
+    "roiFront": "977,157,21,21",
+    "roiBack": "977,157,21,21",
+    "description": "阵容选择按钮位置"
+  }
+]

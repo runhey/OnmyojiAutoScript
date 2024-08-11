@@ -1,0 +1,47 @@
+[
+  {
+    "itemName": "ball_fire",
+    "imageName": "ball_ball_fire.png",
+    "roiFront": "1140,575,100,100",
+    "roiBack": "1140,575,100,100",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "ball_unlock",
+    "imageName": "ball_ball_unlock.png",
+    "roiFront": "714,637,31,33",
+    "roiBack": "714,637,31,33",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "ball_lock",
+    "imageName": "ball_ball_lock.png",
+    "roiFront": "715,637,29,32",
+    "roiBack": "715,637,29,32",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "ball_records",
+    "imageName": "ball_ball_records.png",
+    "roiFront": "856,566,38,39",
+    "roiBack": "856,566,38,39",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "点击式神录"
+  },
+  {
+    "itemName": "ball_help",
+    "imageName": "ball_ball_help.png",
+    "roiFront": "963,571,100,100",
+    "roiBack": "963,571,100,100",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "求援"
+  }
+]

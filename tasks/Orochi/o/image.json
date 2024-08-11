@@ -1,0 +1,65 @@
+[
+  {
+    "itemName": "orochi",
+    "imageName": "o_orochi.png",
+    "roiFront": "55,104,295,406",
+    "roiBack": "55,104,295,406",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "八级大蛇进入"
+  },
+  {
+    "itemName": "form_team",
+    "imageName": "o_form_team.png",
+    "roiFront": "937,591,100,100",
+    "roiBack": "937,591,100,100",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "组队"
+  },
+  {
+    "itemName": "orochi_lock",
+    "imageName": "o_orochi_lock.png",
+    "roiFront": "575,561,22,26",
+    "roiBack": "548,546,109,62",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "orochi_unlock",
+    "imageName": "o_orochi_unlock.png",
+    "roiFront": "575,561,21,21",
+    "roiBack": "550,544,121,60",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "orochi_fire",
+    "imageName": "o_orochi_fire.png",
+    "roiFront": "1095,577,131,124",
+    "roiBack": "1095,577,131,124",
+    "method": "Template matching",
+    "threshold": 0.6,
+    "description": "点击挑战"
+  },
+  {
+    "itemName": "shi_records",
+    "imageName": "o_shi_records.png",
+    "roiFront": "821,638,48,45",
+    "roiBack": "821,638,48,45",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "式神录"
+  },
+  {
+    "itemName": "pet_present",
+    "imageName": "o_pet_present.png",
+    "roiFront": "873,184,62,147",
+    "roiBack": "873,184,62,147",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "小小宠物，发现宝藏"
+  }
+]

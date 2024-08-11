@@ -1,0 +1,137 @@
+[
+  {
+    "itemName": "rs_no_add",
+    "imageName": "rs_rs_no_add.png",
+    "roiFront": "276,222,100,212",
+    "roiBack": "28,181,1232,293",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "rs_material",
+    "imageName": "rs_rs_material.png",
+    "roiFront": "32,283,59,56",
+    "roiBack": "32,283,59,56",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "素材"
+  },
+  {
+    "itemName": "rs_n",
+    "imageName": "rs_rs_n.png",
+    "roiFront": "138,299,57,59",
+    "roiBack": "138,299,57,59",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "rs_r",
+    "imageName": "rs_rs_r.png",
+    "roiFront": "230,344,64,61",
+    "roiBack": "230,344,64,61",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "rs_sr",
+    "imageName": "rs_rs_sr.png",
+    "roiFront": "307,421,62,58",
+    "roiBack": "307,421,62,58",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "rs_ssr",
+    "imageName": "rs_rs_ssr.png",
+    "roiFront": "354,517,63,58",
+    "roiBack": "354,517,63,58",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "rs_sp",
+    "imageName": "rs_rs_sp.png",
+    "roiFront": "372,621,58,60",
+    "roiBack": "372,621,58,60",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "rs_material_selected",
+    "imageName": "rs_rs_material_selected.png",
+    "roiFront": "27,620,68,65",
+    "roiBack": "27,620,68,65",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "rs_n_selected",
+    "imageName": "rs_rs_n_selected.png",
+    "roiFront": "30,620,66,60",
+    "roiBack": "30,620,66,60",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "rs_r_selected",
+    "imageName": "rs_rs_r_selected.png",
+    "roiFront": "26,617,72,60",
+    "roiBack": "26,617,72,60",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "rs_sr_selected",
+    "imageName": "rs_rs_sr_selected.png",
+    "roiFront": "32,623,59,55",
+    "roiBack": "32,623,59,55",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "rs_ssr_selected",
+    "imageName": "rs_rs_ssr_selected.png",
+    "roiFront": "29,622,66,59",
+    "roiBack": "29,622,66,59",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "rs_sp_selected",
+    "imageName": "rs_rs_sp_selected.png",
+    "roiFront": "31,622,62,59",
+    "roiBack": "31,622,62,59",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "rs_records_shiki",
+    "imageName": "rs_rs_records_shiki.png",
+    "roiFront": "1148,548,49,43",
+    "roiBack": "1148,548,49,43",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "rs_level_max",
+    "imageName": "rs_rs_level_max.png",
+    "roiFront": "487,248,23,21",
+    "roiBack": "52,238,1118,37",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "检测到已经满级了"
+  }
+]

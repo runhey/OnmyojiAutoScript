@@ -1,0 +1,11 @@
+[
+  {
+    "itemName": "one_ticket",
+    "roiFront": "574,681,100,32",
+    "roiBack": "574,681,100,32",
+    "mode": "Single",
+    "method": "Default",
+    "keyword": "",
+    "description": "Ocr-description"
+  }
+]

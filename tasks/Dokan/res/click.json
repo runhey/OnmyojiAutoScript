@@ -1,0 +1,32 @@
+[
+  {
+    "itemName": "dokan_random_click_area",
+    "roiFront": "142,294,107,555",
+    "roiBack": "142,294,107,555",
+    "description": "道馆随机点击安全区域"
+  },
+  {
+    "itemName": "dokan_random_click_area1",
+    "roiFront": "42,594,10,100",
+    "roiBack": "42,594,10,100",
+    "description": "道馆随机点击安全区域1：竂友突破信息"
+  },
+  {
+    "itemName": "dokan_random_click_area2",
+    "roiFront": "1122,360,10,40",
+    "roiBack": "1122,360,10,40",
+    "description": "道馆随机点击安全区域2：切换查看队伍模式。初步测试下来这个地方最安全，除了庭院、町中、逢魔外其他各场景都可用。"
+  },
+  {
+    "itemName": "dokan_random_click_area3",
+    "roiFront": "333,44,107,20",
+    "roiBack": "333,44,107,20",
+    "description": "道馆随机点击安全区域3"
+  },
+  {
+    "itemName": "dokan_ready_for_battle",
+    "roiFront": "42,94,1207,543",
+    "roiBack": "42,94,1207,543",
+    "description": "准备战斗"
+  }
+]

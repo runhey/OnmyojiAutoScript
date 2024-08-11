@@ -1,0 +1,110 @@
+[
+  {
+    "itemName": "fresh_time",
+    "roiFront": "1042,582,85,36",
+    "roiBack": "0,0,100,100",
+    "mode": "Duration",
+    "method": "Default",
+    "keyword": "",
+    "description": "刷新的时间"
+  },
+  {
+    "itemName": "number",
+    "roiFront": "1143,13,80,39",
+    "roiBack": "0,0,100,100",
+    "mode": "DigitCounter",
+    "method": "Default",
+    "keyword": "",
+    "description": "右上角 突破卷的数量"
+  },
+  {
+    "itemName": "frog_1",
+    "roiFront": "158,168,42,33",
+    "roiBack": "158,168,42,33",
+    "mode": "Digit",
+    "method": "Default",
+    "keyword": "",
+    "description": "Ocr-description"
+  },
+  {
+    "itemName": "frog_2",
+    "roiFront": "491,170,34,32",
+    "roiBack": "491,170,34,32",
+    "mode": "Digit",
+    "method": "Default",
+    "keyword": "",
+    "description": "Ocr-description"
+  },
+  {
+    "itemName": "frog_3",
+    "roiFront": "824,170,34,32",
+    "roiBack": "824,170,34,32",
+    "mode": "Digit",
+    "method": "Default",
+    "keyword": "",
+    "description": "Ocr-description"
+  },
+  {
+    "itemName": "frog_4",
+    "roiFront": "158,303,38,35",
+    "roiBack": "158,303,38,35",
+    "mode": "Digit",
+    "method": "Default",
+    "keyword": "",
+    "description": "Ocr-description"
+  },
+  {
+    "itemName": "frog_5",
+    "roiFront": "489,304,35,35",
+    "roiBack": "489,304,35,35",
+    "mode": "Digit",
+    "method": "Default",
+    "keyword": "",
+    "description": "Ocr-description"
+  },
+  {
+    "itemName": "frog_6",
+    "roiFront": "824,305,35,33",
+    "roiBack": "824,305,35,33",
+    "mode": "Digit",
+    "method": "Default",
+    "keyword": "",
+    "description": "Ocr-description"
+  },
+  {
+    "itemName": "frog_7",
+    "roiFront": "160,439,31,33",
+    "roiBack": "160,439,31,33",
+    "mode": "Digit",
+    "method": "Default",
+    "keyword": "",
+    "description": "Ocr-description"
+  },
+  {
+    "itemName": "frog_8",
+    "roiFront": "494,441,31,31",
+    "roiBack": "494,441,31,31",
+    "mode": "Digit",
+    "method": "Default",
+    "keyword": "",
+    "description": "Ocr-description"
+  },
+  {
+    "itemName": "frog_9",
+    "roiFront": "825,440,33,33",
+    "roiBack": "825,440,33,33",
+    "mode": "Digit",
+    "method": "Default",
+    "keyword": "",
+    "description": "Ocr-description"
+  },
+  {
+    "itemName": "text",
+    "roiFront": "1143,13,80,39",
+    "roiBack": "0,0,100,100",
+    "mode": "Single",
+    "method": "Default",
+    "keyword": "",
+    "description": "text"
+    }
+]

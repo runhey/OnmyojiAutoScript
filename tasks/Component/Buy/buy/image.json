@@ -1,0 +1,38 @@
+[
+  {
+    "itemName": "buy_plus",
+    "imageName": "buy_buy_plus.png",
+    "roiFront": "759,422,50,58",
+    "roiBack": "746,397,98,156",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "拉满"
+  },
+  {
+    "itemName": "buy_add",
+    "imageName": "buy_buy_add.png",
+    "roiFront": "671,428,51,54",
+    "roiBack": "645,412,111,141",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "加一个"
+  },
+  {
+    "itemName": "buy_sub",
+    "imageName": "buy_buy_sub.png",
+    "roiFront": "467,429,50,48",
+    "roiBack": "452,412,85,147",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "减"
+  },
+  {
+    "itemName": "buy_rmb",
+    "imageName": "buy_buy_rmb.png",
+    "roiFront": "610,532,35,32",
+    "roiBack": "548,483,178,119",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "出现用魂玉购买"
+  }
+]

@@ -1,0 +1,47 @@
+[
+  {
+    "itemName": "shi_grown_2",
+    "imageName": "realm2_shi_grown_2.png",
+    "roiFront": "663,344,36,68",
+    "roiBack": "598,280,159,186",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "shi_card_2",
+    "imageName": "realm2_shi_card_2.png",
+    "roiFront": "934,351,36,43",
+    "roiBack": "903,318,100,100",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "shi_defense_2",
+    "imageName": "realm2_shi_defense_2.png",
+    "roiFront": "369,365,33,100",
+    "roiBack": "285,315,178,188",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "box_ap_2",
+    "imageName": "realm2_box_ap_2.png",
+    "roiFront": "925,448,50,54",
+    "roiBack": "852,377,154,160",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "box_exp_2",
+    "imageName": "realm2_box_exp_2.png",
+    "roiFront": "991,448,41,59",
+    "roiBack": "921,372,155,173",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  }
+]

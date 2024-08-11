@@ -1,0 +1,38 @@
+[
+  {
+    "itemName": "store_refresh",
+    "imageName": "l101_store_refresh.png",
+    "roiFront": "545,596,46,47",
+    "roiBack": "519,568,100,100",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "宁息刷新"
+  },
+  {
+    "itemName": "store_skill_101",
+    "imageName": "l101_store_skill_101.png",
+    "roiFront": "876,121,47,41",
+    "roiBack": "682,100,455,571",
+    "method": "Template matching",
+    "threshold": 0.9,
+    "description": "购买柔风"
+  },
+  {
+    "itemName": "store_exit",
+    "imageName": "l101_store_exit.png",
+    "roiFront": "1179,586,59,56",
+    "roiBack": "1161,561,100,100",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "store_stable_flag",
+    "imageName": "l101_store_stable_flag.png",
+    "roiFront": "1028,251,28,27",
+    "roiBack": "1011,241,63,47",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "稳定标志"
+  }
+]

@@ -1,0 +1,11 @@
+[
+  {
+    "itemName": "gr_zones_name",
+    "roiFront": "415,127,160,53",
+    "roiBack": "415,127,160,53",
+    "mode": "Single",
+    "method": "Default",
+    "keyword": "",
+    "description": "副本名字"
+  }
+]

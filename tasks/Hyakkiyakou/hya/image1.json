@@ -1,0 +1,74 @@
+[
+  {
+    "itemName": "hinvite",
+    "imageName": "hya_hinvite.png",
+    "roiFront": "139,569,63,60",
+    "roiBack": "139,569,63,60",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "邀请按钮"
+  },
+  {
+    "itemName": "haccess",
+    "imageName": "hya_haccess.png",
+    "roiFront": "1059,554,100,100",
+    "roiBack": "1059,554,100,100",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "进入"
+  },
+  {
+    "itemName": "hstart",
+    "imageName": "hya_hstart.png",
+    "roiFront": "1119,555,100,100",
+    "roiBack": "1119,555,100,100",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "开始"
+  },
+  {
+    "itemName": "hselected",
+    "imageName": "hya_hselected.png",
+    "roiFront": "980,265,41,44",
+    "roiBack": "226,53,836,348",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "押注"
+  },
+  {
+    "itemName": "hend",
+    "imageName": "hya_hend.png",
+    "roiFront": "81,164,86,299",
+    "roiBack": "81,164,86,299",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "结束"
+  },
+  {
+    "itemName": "hfreeze",
+    "imageName": "hya_hfreeze.png",
+    "roiFront": "1092,665,187,54",
+    "roiBack": "1092,665,187,54",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "冰冻"
+  },
+  {
+    "itemName": "htitle",
+    "imageName": "hya_htitle.png",
+    "roiFront": "578,21,134,48",
+    "roiBack": "578,21,134,48",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "hclose_red",
+    "imageName": "hya_hclose_red.png",
+    "roiFront": "1056,177,54,54",
+    "roiBack": "1056,177,54,54",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  }
+]

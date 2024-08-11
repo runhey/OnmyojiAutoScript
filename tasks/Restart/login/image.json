@@ -1,0 +1,74 @@
+[
+  {
+    "itemName": "login_scrooll_open",
+    "imageName": "login_login_scrooll_open.png",
+    "roiFront": "1208,609,33,83",
+    "roiBack": "1208,609,33,83",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "庭院卷轴打开"
+  },
+  {
+    "itemName": "login_scrooll_close",
+    "imageName": "login_login_scrooll_close.png",
+    "roiFront": "1181,634,28,39",
+    "roiBack": "1162,595,77,112",
+    "method": "Template matching",
+    "threshold": 0.7,
+    "description": "庭院卷轴关闭"
+  },
+  {
+    "itemName": "login_red_close",
+    "imageName": "login_login_red_close.png",
+    "roiFront": "1158,62,39,37",
+    "roiBack": "912,42,309,281",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "login_yellow_close",
+    "imageName": "login_login_yellow_close.png",
+    "roiFront": "29,17,46,44",
+    "roiBack": "0,0,94,86",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "login_8",
+    "imageName": "login_login_8.png",
+    "roiFront": "178,572,53,60",
+    "roiBack": "1,547,241,105",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "用于判断是否出现登录选区的"
+  },
+  {
+    "itemName": "watch_video_cancel",
+    "imageName": "login_watch_video_cancel.png",
+    "roiFront": "466,396,130,61",
+    "roiBack": "466,396,130,61",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "登录时候不观看CG视频"
+  },
+  {
+    "itemName": "login_specific_serve",
+    "imageName": "login_login_specific_serve.png",
+    "roiFront": "24,33,52,47",
+    "roiBack": "24,33,52,47",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "指定角色进入游戏,默认第一个"
+  },
+  {
+    "itemName": "login_load_down",
+    "imageName": "login_login_load_down.png",
+    "roiFront": "711,450,153,58",
+    "roiBack": "711,450,153,58",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "下载插画"
+  }
+]

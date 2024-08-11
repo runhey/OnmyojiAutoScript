@@ -1,0 +1,11 @@
+[
+  {
+    "itemName": "ad_close_red",
+    "imageName": "additional_ad_close_red.png",
+    "roiFront": "993,130,33,36",
+    "roiBack": "953,91,215,121",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "商店弹窗红色关闭"
+  }
+]

@@ -1,0 +1,92 @@
+[
+  {
+    "itemName": "cm_shrine",
+    "imageName": "cm_cm_shrine.png",
+    "roiFront": "875,628,55,60",
+    "roiBack": "853,604,100,100",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "神社"
+  },
+  {
+    "itemName": "cm_cm",
+    "imageName": "cm_cm_cm.png",
+    "roiFront": "157,169,210,161",
+    "roiBack": "137,131,246,235",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "集体任务"
+  },
+  {
+    "itemName": "cm_present",
+    "imageName": "cm_cm_present.png",
+    "roiFront": "559,594,160,66",
+    "roiBack": "559,594,160,66",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "提交"
+  },
+  {
+    "itemName": "cm_records",
+    "imageName": "cm_cm_records.png",
+    "roiFront": "1105,626,54,63",
+    "roiBack": "1105,626,54,63",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "判断是否到达"
+  },
+  {
+    "itemName": "cm_matter",
+    "imageName": "cm_cm_matter.png",
+    "roiFront": "860,396,36,37",
+    "roiBack": "843,119,66,459",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "将材料拉满的按钮，用来判断是否拉满"
+  },
+  {
+    "itemName": "cm_add_1",
+    "imageName": "cm_cm_add_1.png",
+    "roiFront": "904,142,48,48",
+    "roiBack": "904,142,48,48",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "cm_add_2",
+    "imageName": "cm_cm_add_2.png",
+    "roiFront": "903,262,52,53",
+    "roiBack": "903,262,52,53",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "cm_add_3",
+    "imageName": "cm_cm_add_3.png",
+    "roiFront": "904,389,48,45",
+    "roiBack": "904,389,48,45",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "cm_add_4",
+    "imageName": "cm_cm_add_4.png",
+    "roiFront": "904,510,47,47",
+    "roiBack": "904,510,47,47",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "cm_rewards",
+    "imageName": "cm_cm_rewards.png",
+    "roiFront": "567,463,145,60",
+    "roiBack": "200,458,914,88",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "领取奖励"
+  }
+]

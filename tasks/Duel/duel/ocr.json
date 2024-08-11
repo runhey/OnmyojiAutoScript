@@ -1,0 +1,38 @@
+[
+  {
+    "itemName": "d_honor",
+    "roiFront": "699,562,131,31",
+    "roiBack": "699,562,131,31",
+    "mode": "DigitCounter",
+    "method": "Default",
+    "keyword": "",
+    "description": "荣誉"
+  },
+  {
+    "itemName": "d_score",
+    "roiFront": "701,516,56,26",
+    "roiBack": "701,516,56,26",
+    "mode": "Digit",
+    "method": "Default",
+    "keyword": "",
+    "description": "分数"
+  },
+  {
+    "itemName": "d_hand",
+    "roiFront": "31,639,63,45",
+    "roiBack": "31,639,63,45",
+    "mode": "Single",
+    "method": "Default",
+    "keyword": "手动",
+    "description": "手动"
+  },
+  {
+    "itemName": "d_auto",
+    "roiFront": "30,640,65,44",
+    "roiBack": "30,640,65,44",
+    "mode": "Single",
+    "method": "Default",
+    "keyword": "自动",
+    "description": "自动"
+  }
+]

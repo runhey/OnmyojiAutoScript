@@ -1,0 +1,110 @@
+[
+  {
+    "itemName": "fp_access",
+    "imageName": "fp_fp_access.png",
+    "roiFront": "183,413,36,34",
+    "roiBack": "95,344,1042,229",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "从庭院进入花车活动"
+  },
+  {
+    "itemName": "fp_getall0",
+    "imageName": "fp_fp_getall0.png",
+    "roiFront": "1153,287,65,56",
+    "roiBack": "1134,261,100,100",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "fp_red_point0",
+    "imageName": "fp_fp_red_point0.png",
+    "roiFront": "1242,604,22,21",
+    "roiBack": "1225,585,53,54",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "fp_getall1",
+    "imageName": "fp_fp_getall1.png",
+    "roiFront": "1196,544,53,54",
+    "roiBack": "1159,489,113,164",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "fp_red_point1",
+    "imageName": "fp_fp_red_point1.png",
+    "roiFront": "1249,155,21,21",
+    "roiBack": "1223,138,56,62",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "fp_red_point2",
+    "imageName": "fp_fp_red_point2.png",
+    "roiFront": "1246,288,22,21",
+    "roiBack": "1232,278,43,41",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "fp_batch",
+    "imageName": "fp_fp_batch.png",
+    "roiFront": "985,520,94,31",
+    "roiBack": "978,507,112,64",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "fp_batch_true",
+    "imageName": "fp_fp_batch_true.png",
+    "roiFront": "938,518,35,37",
+    "roiBack": "924,506,64,62",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "fp_batch_false",
+    "imageName": "fp_fp_batch_false.png",
+    "roiFront": "936,515,40,45",
+    "roiBack": "924,505,63,65",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "fp_tasks",
+    "imageName": "fp_fp_tasks.png",
+    "roiFront": "1175,617,79,76",
+    "roiBack": "1162,605,100,100",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "右下角的任务"
+  },
+  {
+    "itemName": "fp_upgrade",
+    "imageName": "fp_fp_upgrade.png",
+    "roiFront": "1075,75,116,49",
+    "roiBack": "1040,52,169,100",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "升级"
+  },
+  {
+    "itemName": "fp_red_close",
+    "imageName": "fp_fp_red_close.png",
+    "roiFront": "1170,109,43,44",
+    "roiBack": "1157,101,72,62",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "红色关闭"
+  }
+]

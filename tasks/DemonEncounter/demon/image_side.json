@@ -1,0 +1,119 @@
+[
+  {
+    "itemName": "de_balloon",
+    "imageName": "demon_de_balloon.png",
+    "roiFront": "1214,295,28,27",
+    "roiBack": "1198,269,81,266",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "右侧的气球"
+  },
+  {
+    "itemName": "de_box",
+    "imageName": "demon_de_box.png",
+    "roiFront": "1210,295,34,33",
+    "roiBack": "1183,278,96,277",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "右侧的宝箱"
+  },
+  {
+    "itemName": "de_defeat_2",
+    "imageName": "demon_de_defeat_2.png",
+    "roiFront": "1211,422,28,35",
+    "roiBack": "1211,422,28,35",
+    "method": "Template matching",
+    "threshold": 0.7,
+    "description": "挑战某一个后的封印图片"
+  },
+  {
+    "itemName": "de_defeat_1",
+    "imageName": "demon_de_defeat_1.png",
+    "roiFront": "1223,489,42,41",
+    "roiBack": "1223,489,42,41",
+    "method": "Template matching",
+    "threshold": 0.7,
+    "description": "description"
+  },
+  {
+    "itemName": "de_defeat_3",
+    "imageName": "demon_de_defeat_3.png",
+    "roiFront": "1231,358,38,35",
+    "roiBack": "1231,358,38,35",
+    "method": "Template matching",
+    "threshold": 0.7,
+    "description": "description"
+  },
+  {
+    "itemName": "de_defeat_4",
+    "imageName": "demon_de_defeat_4.png",
+    "roiFront": "1215,295,35,35",
+    "roiBack": "1215,295,35,35",
+    "method": "Template matching",
+    "threshold": 0.7,
+    "description": "description"
+  },
+  {
+    "itemName": "de_award",
+    "imageName": "demon_de_award.png",
+    "roiFront": "1216,214,42,36",
+    "roiBack": "1195,198,74,67",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "已领取四次的奖励"
+  },
+  {
+    "itemName": "de_letter",
+    "imageName": "demon_de_letter.png",
+    "roiFront": "1236,358,33,35",
+    "roiBack": "1177,261,100,294",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "信"
+  },
+  {
+    "itemName": "letter_close",
+    "imageName": "demon_letter_close.png",
+    "roiFront": "851,43,45,45",
+    "roiBack": "851,43,45,45",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "关闭封魔密信"
+  },
+  {
+    "itemName": "de_small_fire",
+    "imageName": "demon_de_small_fire.png",
+    "roiFront": "1064,549,100,100",
+    "roiBack": "1064,549,100,100",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "小鬼王的挑战"
+  },
+  {
+    "itemName": "de_mystery",
+    "imageName": "demon_de_mystery.png",
+    "roiFront": "1216,296,27,29",
+    "roiBack": "1192,278,85,261",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "神秘任务"
+  },
+  {
+    "itemName": "de_realm",
+    "imageName": "demon_de_realm.png",
+    "roiFront": "1209,431,30,22",
+    "roiBack": "1190,274,88,273",
+    "method": "Template matching",
+    "threshold": 0.75,
+    "description": "打结界的"
+  },
+  {
+    "itemName": "de_realm_fire",
+    "imageName": "demon_de_realm_fire.png",
+    "roiFront": "696,421,129,63",
+    "roiBack": "162,99,1106,610",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "结界-进攻"
+  }
+]

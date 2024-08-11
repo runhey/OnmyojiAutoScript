@@ -1,0 +1,128 @@
+[
+  {
+    "itemName": "cards_kaiko_6",
+    "imageName": "cards_cards_kaiko_6.png",
+    "roiFront": "193,204,89,73",
+    "roiBack": "169,148,130,501",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "cards_kaiko_5",
+    "imageName": "cards_cards_kaiko_5.png",
+    "roiFront": "191,345,88,58",
+    "roiBack": "172,162,126,488",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "cards_kaiko_4",
+    "imageName": "cards_cards_kaiko_4.png",
+    "roiFront": "192,354,90,22",
+    "roiBack": "179,165,116,482",
+    "method": "Template matching",
+    "threshold": 0.85,
+    "description": "description"
+  },
+  {
+    "itemName": "cards_kaiko_3",
+    "imageName": "cards_cards_kaiko_3.png",
+    "roiFront": "192,187,89,66",
+    "roiBack": "183,169,109,474",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "cards_fish_6",
+    "imageName": "cards_cards_fish_6.png",
+    "roiFront": "193,183,87,91",
+    "roiBack": "178,169,110,474",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "cards_fish_5",
+    "imageName": "cards_cards_fish_5.png",
+    "roiFront": "192,329,88,90",
+    "roiBack": "176,155,116,492",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "cards_fish_4",
+    "imageName": "cards_cards_fish_4.png",
+    "roiFront": "192,409,87,21",
+    "roiBack": "176,175,118,473",
+    "method": "Template matching",
+    "threshold": 0.7,
+    "description": "description"
+  },
+  {
+    "itemName": "cards_fish_3",
+    "imageName": "cards_cards_fish_3.png",
+    "roiFront": "193,314,86,64",
+    "roiBack": "188,164,100,482",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "cards_moon_6",
+    "imageName": "cards_cards_moon_6.png",
+    "roiFront": "189,186,89,88",
+    "roiBack": "183,167,100,480",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "cards_moon_5",
+    "imageName": "cards_cards_moon_5.png",
+    "roiFront": "190,398,91,22",
+    "roiBack": "183,163,100,489",
+    "method": "Template matching",
+    "threshold": 0.9,
+    "description": "description"
+  },
+  {
+    "itemName": "cards_moon_4",
+    "imageName": "cards_cards_moon_4.png",
+    "roiFront": "190,426,91,21",
+    "roiBack": "186,144,100,491",
+    "method": "Template matching",
+    "threshold": 0.9,
+    "description": "description"
+  },
+  {
+    "itemName": "cards_moon_3",
+    "imageName": "cards_cards_moon_3.png",
+    "roiFront": "189,366,92,22",
+    "roiBack": "181,153,107,495",
+    "method": "Template matching",
+    "threshold": 0.9,
+    "description": "description"
+  },
+  {
+    "itemName": "cards_moon_2",
+    "imageName": "cards_cards_moon_2.png",
+    "roiFront": "189,355,91,60",
+    "roiBack": "180,162,108,484",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "cards_moon_1",
+    "imageName": "cards_cards_moon_1.png",
+    "roiFront": "190,430,93,74",
+    "roiBack": "173,156,123,492",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  }
+]

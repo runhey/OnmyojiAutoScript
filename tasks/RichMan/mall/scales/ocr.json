@@ -1,0 +1,65 @@
+[
+  {
+    "itemName": "sca_number_orochi",
+    "roiFront": "46,318,27,25",
+    "roiBack": "46,318,27,25",
+    "mode": "Digit",
+    "method": "Default",
+    "keyword": "",
+    "description": "蛇皮剩余可买的"
+  },
+  {
+    "itemName": "sca_number_demon",
+    "roiFront": "627,319,30,25",
+    "roiBack": "627,319,30,25",
+    "mode": "Digit",
+    "method": "Default",
+    "keyword": "",
+    "description": "首领御魂剩余可买的"
+  },
+  {
+    "itemName": "sca_number_sea",
+    "roiFront": "926,321,30,23",
+    "roiBack": "926,321,30,23",
+    "mode": "Digit",
+    "method": "Default",
+    "keyword": "",
+    "description": "永生之海"
+  },
+  {
+    "itemName": "sca_demon_postion",
+    "roiFront": "960,244,88,41",
+    "roiBack": "960,244,88,41",
+    "mode": "Single",
+    "method": "Default",
+    "keyword": "",
+    "description": "多少号位"
+  },
+  {
+    "itemName": "sca_res_orochi",
+    "roiFront": "531,9,127,37",
+    "roiBack": "531,9,127,37",
+    "mode": "DigitCounter",
+    "method": "Default",
+    "keyword": "",
+    "description": "朴素的御魂"
+  },
+  {
+    "itemName": "sca_res_demon",
+    "roiFront": "949,10,86,35",
+    "roiBack": "949,10,86,35",
+    "mode": "Digit",
+    "method": "Default",
+    "keyword": "",
+    "description": "首领御魂数量"
+  },
+  {
+    "itemName": "sca_res_sea",
+    "roiFront": "1152,11,80,38",
+    "roiBack": "1152,11,80,38",
+    "mode": "Digit",
+    "method": "Default",
+    "keyword": "",
+    "description": "永生之海"
+  }
+]

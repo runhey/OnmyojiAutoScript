@@ -1,0 +1,30 @@
+[
+  {
+    "itemName": "ss_group_swipe_up",
+    "roiFront": "1154,180,90,21",
+    "roiBack": "1153,322,86,21",
+    "mode": "default",
+    "description": "列表的向上滑动"
+  },
+  {
+    "itemName": "ss_group_swipe_down",
+    "roiFront": "1155,388,21,22",
+    "roiBack": "1152,177,22,24",
+    "mode": "default",
+    "description": "列表的向下滑动"
+  },
+  {
+    "itemName": "ss_team_swipe_up",
+    "roiFront": "720,439,21,21",
+    "roiBack": "717,308,21,21",
+    "mode": "default",
+    "description": "阵容向上滑动"
+  },
+  {
+    "itemName": "ss_team_swipe_down",
+    "roiFront": "709,308,21,21",
+    "roiBack": "709,449,21,21",
+    "mode": "default",
+    "description": "阵容向上滑动"
+  }
+]

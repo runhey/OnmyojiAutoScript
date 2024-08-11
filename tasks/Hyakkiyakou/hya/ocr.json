@@ -1,0 +1,11 @@
+[
+  {
+    "itemName": "bean_number",
+    "roiFront": "119,645,45,29",
+    "roiBack": "119,645,45,29",
+    "mode": "Digit",
+    "method": "Default",
+    "keyword": "",
+    "description": "最坏的情况下来判断豆子的数量"
+  }
+]

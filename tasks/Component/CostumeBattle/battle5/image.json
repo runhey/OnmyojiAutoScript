@@ -1,0 +1,29 @@
+[
+  {
+    "itemName": "local_5",
+    "imageName": "battle5_local_5.png",
+    "roiFront": "30,567,23,25",
+    "roiBack": "30,567,23,25",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "指针"
+  },
+  {
+    "itemName": "exit_5",
+    "imageName": "battle5_exit_5.png",
+    "roiFront": "22,17,27,31",
+    "roiBack": "22,17,27,31",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "左上角退出"
+  },
+  {
+    "itemName": "friends_5",
+    "imageName": "battle5_friends_5.png",
+    "roiFront": "90,17,35,34",
+    "roiBack": "90,17,35,34",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "左上角好友"
+  }
+]

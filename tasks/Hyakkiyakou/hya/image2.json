@@ -1,0 +1,47 @@
+[
+  {
+    "itemName": "hya_state_buff06",
+    "imageName": "hya_hya_state_buff06.png",
+    "roiFront": "331,7,126,41",
+    "roiBack": "137,1,342,66",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "左边概率up"
+  },
+  {
+    "itemName": "hya_state_buff05",
+    "imageName": "hya_hya_state_buff05.png",
+    "roiFront": "158,5,127,45",
+    "roiBack": "147,0,322,62",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "冰冻"
+  },
+  {
+    "itemName": "hya_state_buff07",
+    "imageName": "hya_hya_state_buff07.png",
+    "roiFront": "157,7,127,43",
+    "roiBack": "143,0,347,80",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "左边好友up"
+  },
+  {
+    "itemName": "hya_state_buff02",
+    "imageName": "hya_hya_state_buff02.png",
+    "roiFront": "157,6,128,39",
+    "roiBack": "146,1,348,55",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "左边减速"
+  },
+  {
+    "itemName": "hya_state_buff03",
+    "imageName": "hya_hya_state_buff03.png",
+    "roiFront": "326,4,129,44",
+    "roiBack": "143,3,326,59",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "左边砸豆加速"
+  }
+]

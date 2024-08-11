@@ -1,0 +1,110 @@
+[
+  {
+    "itemName": "wq_seal",
+    "imageName": "wq_wq_seal.png",
+    "roiFront": "244,181,40,40",
+    "roiBack": "56,152,664,396",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "封印"
+  },
+  {
+    "itemName": "wq_done",
+    "imageName": "wq_wq_done.png",
+    "roiFront": "248,183,37,39",
+    "roiBack": "107,147,570,389",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "勾号"
+  },
+  {
+    "itemName": "trace_enable",
+    "imageName": "wq_trace_enable.png",
+    "roiFront": "1097,588,101,70",
+    "roiBack": "1097,588,101,70",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "一键追踪"
+  },
+  {
+    "itemName": "tarce_disenable",
+    "imageName": "wq_tarce_disenable.png",
+    "roiFront": "1091,586,108,70",
+    "roiBack": "1091,586,108,70",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "取消追踪"
+  },
+  {
+    "itemName": "wq_box",
+    "imageName": "wq_wq_box.png",
+    "roiFront": "48,187,43,38",
+    "roiBack": "20,137,100,397",
+    "method": "Template matching",
+    "threshold": 0.7,
+    "description": "奖励宝箱"
+  },
+  {
+    "itemName": "trace_true",
+    "imageName": "wq_trace_true.png",
+    "roiFront": "173,187,28,29",
+    "roiBack": "173,187,28,29",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "小号追踪"
+  },
+  {
+    "itemName": "trace_false",
+    "imageName": "wq_trace_false.png",
+    "roiFront": "170,186,31,32",
+    "roiBack": "170,186,31,32",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "小号不追踪"
+  },
+  {
+    "itemName": "goto_1",
+    "imageName": "wq_goto_1.png",
+    "roiFront": "978,234,87,45",
+    "roiBack": "978,234,87,45",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "goto_2",
+    "imageName": "wq_goto_2.png",
+    "roiFront": "979,305,88,43",
+    "roiBack": "979,305,88,43",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "goto_3",
+    "imageName": "wq_goto_3.png",
+    "roiFront": "979,373,88,47",
+    "roiBack": "979,373,88,47",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "goto_4",
+    "imageName": "wq_goto_4.png",
+    "roiFront": "979,447,87,42",
+    "roiBack": "979,447,87,42",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "wq_check_task",
+    "imageName": "wq_wq_check_task.png",
+    "roiFront": "110,154,21,125",
+    "roiBack": "73,122,69,459",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "判断是否还有任务"
+  }
+]
