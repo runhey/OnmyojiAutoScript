@@ -338,16 +338,21 @@ class Config(ConfigState, ConfigManual, ConfigWatcher, ConfigMenu):
                 "Missing argument in delay_next_run, should set at least one"
             )
 
-        # 计算浮动时间
-        float_seconds = (
-            scheduler.float_time.hour * 3600 +
-            scheduler.float_time.minute * 60 +
-            scheduler.float_time.second
-        )
-        random_float = random.randint(-float_seconds, float_seconds)
-        run = min(run) + timedelta(seconds=random_float)
-        run = run.replace(microsecond=0)
+        run = min(run).replace(microsecond=0)
         next_run = run
+
+        if server and hasattr(scheduler, 'server_update'):
+            # 加入随机浮动时间
+            float_seconds = (scheduler.float_time.hour * 3600 +
+                             scheduler.float_time.minute * 60 +
+                             scheduler.float_time.second)
+            random_float = random.randint(-float_seconds, float_seconds)
+            # 如果有强制运行时间
+            if scheduler.server_update == time(hour=9):
+                next_run += timedelta(seconds=random_float)
+            else:
+                next_run = parse_tomorrow_server(scheduler.server_update, random_float)
+
         # 将这些连接起来，方便日志输出
         kv = dict_to_kv(
             {
@@ -358,12 +363,6 @@ class Config(ConfigState, ConfigManual, ConfigWatcher, ConfigMenu):
             allow_none=False,
         )
         logger.info(f"Delay task `{task}` to {next_run} ({kv})")
-
-        # 强制设定下一次的运行时间
-        if server and hasattr(scheduler, 'server_update') and scheduler.server_update != time(hour=9):
-            if target is None:
-                next_run = parse_tomorrow_server(scheduler.server_update)
-
 
         # 保证线程安全的
         self.lock_config.acquire()
