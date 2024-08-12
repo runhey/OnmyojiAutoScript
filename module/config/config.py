@@ -5,6 +5,7 @@ import copy
 import datetime
 import operator
 import threading
+import random
 
 from datetime import datetime, timedelta
 from cached_property import cached_property
@@ -337,7 +338,15 @@ class Config(ConfigState, ConfigManual, ConfigWatcher, ConfigMenu):
                 "Missing argument in delay_next_run, should set at least one"
             )
 
-        run = min(run).replace(microsecond=0)
+        # 计算浮动时间
+        float_seconds = (
+            scheduler.float_time.hour * 3600 +
+            scheduler.float_time.minute * 60 +
+            scheduler.float_time.second
+        )
+        random_float = random.randint(-float_seconds, float_seconds)
+        run = min(run) + timedelta(seconds=random_float)
+        run = run.replace(microsecond=0)
         next_run = run
         # 将这些连接起来，方便日志输出
         kv = dict_to_kv(
