@@ -244,17 +244,32 @@ def dict_to_kv(dictionary, allow_none=True):
     return ', '.join([f'{k}={repr(v)}' for k, v in dictionary.items() if allow_none or v is not None])
 
 
-def parse_tomorrow_server(server_update: time) -> datetime:
+def parse_tomorrow_server(server_update: time, float_seconds: int = 0) -> datetime:
     """
     获取明天的日期，给这个日期加上server_update的时间，返回datetime
     :param server_update:
+    :param float_seconds: 浮动的秒数，可为正或负值
     :return:
     """
     if isinstance(server_update, str):
         server_update = time.fromisoformat(server_update)
     now = datetime.now()
     tomorrow = now + timedelta(days=1)
-    return datetime.combine(tomorrow, server_update)
+    next_run = datetime.combine(tomorrow, server_update)
+    
+    # 应用浮动时间
+    next_run += timedelta(seconds=float_seconds)
+    
+    # 确保时间在第二天内，不回退到前一天，不跨越到第三天（考虑任务时间，最早 00:00，最晚 23:50）
+    start_of_tomorrow = datetime.combine(tomorrow, time.min)
+    end_of_tomorrow = datetime.combine(tomorrow, time(hour=23, minute=50))
+    
+    if next_run < start_of_tomorrow:
+        next_run = start_of_tomorrow
+    elif next_run > end_of_tomorrow:
+        next_run = end_of_tomorrow
+    
+    return next_run
 
 def deep_get(d, keys, default=None):
     """
