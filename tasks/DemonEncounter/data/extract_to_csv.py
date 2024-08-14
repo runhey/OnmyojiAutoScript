@@ -6,6 +6,7 @@ import rich
 import csv
 import pandas as pd
 
+from utils import remove_symbols
 
 class Extracter:
     def __init__(self, data_file: str='data.csv'):
@@ -71,9 +72,12 @@ class Extracter:
             if len(question) < 3:
                 continue
             # print(index, question, answer)
+            # 非常重要，去除标点符号
+            question = remove_symbols(question)
+            answer = remove_symbols(answer)
             if self.appear_in_df(question, answer):
                 continue
-            # print(index, question, answer)
+            print('New', index, question, answer)
             self.df.loc[index] = [question, answer]
         self.df.to_csv(self.data_file, index=False, encoding='utf-8-sig')
 
@@ -82,6 +86,13 @@ class Extracter:
             if row['question'] == question and row['answer'] == answer:
                 return True
         return False
+
+    def clear_symbols(self):
+        for index, row in self.df.iterrows():
+            row['question'] = remove_symbols(row['question'])
+            row['answer'] = remove_symbols(row['answer'])
+        self.df.to_csv(self.data_file, index=False, encoding='utf-8-sig')
+
 
 
 
