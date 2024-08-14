@@ -54,11 +54,11 @@ class BaseTask(GlobalGameAssets, CostumeBase):
         self.animates = {}  # 保存缓存
         self.start_time = datetime.now()  # 启动的时间
         self.check_costume(self.config.global_game.costume_config)
-        self.friend_timer = None  # 这个是用来记录勾协的时间的
-        if self.config.global_game.emergency.invitation_detect_interval:
-            self.interval_time = self.config.global_game.emergency.invitation_detect_interval
-            self.friend_timer = Timer(self.interval_time)
-            self.friend_timer.start()
+        # self.friend_timer = None  # 这个是用来记录勾协的时间的
+        # if self.config.global_game.emergency.invitation_detect_interval:
+        #     self.interval_time = self.config.global_game.emergency.invitation_detect_interval
+        #     self.friend_timer = Timer(self.interval_time)
+        #     self.friend_timer.start()
 
         # 战斗次数相关
         self.current_count = 0  # 战斗次数
