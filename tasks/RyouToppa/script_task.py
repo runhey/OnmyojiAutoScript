@@ -136,6 +136,7 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, RyouToppaAssets):
                 logger.info("As the manager of the ryou, try to start ryou toppa.")
                 self.start_ryou_toppa()
             else:
+                logger.info("The ryou toppa is not open and you are a ryou member.")
                 self.set_next_run(task='RyouToppa', finish=True, server=True, success=False)
                 raise TaskEnd
 
