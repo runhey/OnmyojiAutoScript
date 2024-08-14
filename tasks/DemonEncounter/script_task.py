@@ -34,8 +34,6 @@ class ScriptTask(GameUi, GeneralBattle, DemonEncounterAssets):
             logger.warning('Time is not right')
             raise TaskEnd('DemonEncounter')
         self.ui_get_current_page()
-        self.ui_goto(page_main)
-        self.ui_click(self.I_MAIN_GOTO_TOWN, self.I_CHECK_TOWN)
         self.ui_goto(page_demon_encounter)
         self.execute_lantern()
         self.execute_boss()
