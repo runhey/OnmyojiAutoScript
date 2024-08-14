@@ -20,8 +20,8 @@
   {
     "itemName": "no_select_ryou",
     "imageName": "res_no_select_ryou.png",
-    "roiFront": "554,180,247,361",
-    "roiBack": "554,180,247,361",
+    "roiFront": "554,180,100,167",
+    "roiBack": "554,180,100,167",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "寮突未选择阴阳寮"
