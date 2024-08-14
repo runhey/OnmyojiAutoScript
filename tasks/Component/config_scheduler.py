@@ -16,7 +16,7 @@ class Scheduler(ConfigBase):
     success_interval: TimeDelta = Field(default=TimeDelta(days=1), description='success_interval_help')
     failure_interval: TimeDelta = Field(default=TimeDelta(days=1), description='failure_interval_help')
     server_update: Time = Field(default=Time(hour=9, minute=0, second=0), description='server_update_help')
-    float_time: Time = Field(default=Time(hour=0, minute=0, second=0), description='float_time_help')
+    float_time: Time = Field(default=Time(hour=0, minute=0, second=0), description='下次运行时间将在此范围内随机浮动。未设强制执行时，推荐浮动小于间隔：如寮突30±5分钟，寄养6±0.2小时；有强制执行时，确保不超出窗口：如麒麟19:01±1分钟，逢魔18:00±0.5小时，避免影响其他任务')
 
     @validator('next_run', pre=True, always=True)
     def parse_next_run(cls, value):

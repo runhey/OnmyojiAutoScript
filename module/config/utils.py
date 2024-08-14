@@ -258,16 +258,17 @@ def parse_tomorrow_server(server_update: time, float_seconds: int = 0) -> dateti
     next_run = datetime.combine(tomorrow, server_update)
     
     # 应用浮动时间
-    next_run += timedelta(seconds=float_seconds)
+    if float_seconds !=0:
+        next_run += timedelta(seconds=float_seconds)
+
+        # 确保时间在第二天内，不回退到前一天，不跨越到第三天（考虑任务时间，最早 00:00，最晚 23:50）
+        start_of_tomorrow = datetime.combine(tomorrow, time.min)
+        end_of_tomorrow = datetime.combine(tomorrow, time(hour=23, minute=50))
     
-    # 确保时间在第二天内，不回退到前一天，不跨越到第三天（考虑任务时间，最早 00:00，最晚 23:50）
-    start_of_tomorrow = datetime.combine(tomorrow, time.min)
-    end_of_tomorrow = datetime.combine(tomorrow, time(hour=23, minute=50))
-    
-    if next_run < start_of_tomorrow:
-        next_run = start_of_tomorrow
-    elif next_run > end_of_tomorrow:
-        next_run = end_of_tomorrow
+        if next_run < start_of_tomorrow:
+            next_run = start_of_tomorrow
+        elif next_run > end_of_tomorrow:
+            next_run = end_of_tomorrow
     
     return next_run
 
