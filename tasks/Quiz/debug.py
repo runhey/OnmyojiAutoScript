@@ -22,7 +22,7 @@ class Debugger:
             file.parent.mkdir(parents=True)
         if not file.exists():
             file.touch()
-        f = open(str(file), 'a')
+        f = open(str(file), 'a', encoding='utf-8')
         return f
 
     def append_one(self, question: str, options: list[str]):

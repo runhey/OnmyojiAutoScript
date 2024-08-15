@@ -81,6 +81,15 @@ class Answer:
             for match in question_matches:
                 if match == option:
                     return index + 1
+        # 可能选项识别某一个字错误
+        if options[0] != '' and options[1] != '' and options[2] != '' and options[3] != '':
+            for index, option in enumerate(options):
+                for match in question_matches:
+                    if len(match) != len(option):
+                        continue
+                    if len(match) - count_intersection(match, option) <= 1 :
+                        logger.warning('Option is not match: %s, %s', match, option)
+                        return index + 1
         # 选项一个都对不上可能是，识别的选项异常
         for index, option in enumerate(options):
             if option == '':

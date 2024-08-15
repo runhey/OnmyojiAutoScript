@@ -16,6 +16,9 @@ from module.atom.image_grid import ImageGrid
 from module.atom.image import RuleImage
 from module.atom.click import RuleClick
 
+class NoTicket(Exception):
+    pass
+
 class ScriptTask(GameUi, QuizAssets, ActivityShikigamiAssets, Debugger):
 
     last_select_1 = ''
@@ -42,9 +45,11 @@ class ScriptTask(GameUi, QuizAssets, ActivityShikigamiAssets, Debugger):
         while 1:
             if quiz_cnt >= _config.quiz_cnt:
                 break
-            self.once()
-            quiz_cnt += 1
-
+            try:
+                self.once()
+                quiz_cnt += 1
+            except NoTicket:
+                break
 
         self.ui_click(self.I_UI_BACK_YELLOW, self.I_CHECK_MAIN, interval=2)
         self.set_next_run(task='Quiz', success=True, finish=True)
@@ -63,9 +68,17 @@ class ScriptTask(GameUi, QuizAssets, ActivityShikigamiAssets, Debugger):
 
     def once(self) -> bool:
         logger.hr('Quiz', 3)
-        self.ui_click(self.I_START, self.I_MESSAGE)
-        quests_cnt = 0
-        selected_flag = False
+        start_cnt = 0
+        while 1:
+            self.screenshot()
+            if self.appear(self.I_MESSAGE):
+                break
+            if start_cnt >= 4:
+                logger.error('No ticket')
+                raise NoTicket('No ticket')
+            if self.appear_then_click(self.I_START, interval=1.5):
+                start_cnt += 1
+                continue
         self.last_select_1, self.last_select_2, self.last_select_3, self.last_select_4 = '', '', '', ''
 
         while 1:
@@ -116,6 +129,8 @@ class ScriptTask(GameUi, QuizAssets, ActivityShikigamiAssets, Debugger):
         if index is None:
             logger.error('Now question has no answer, please check')
             self.append_one(question=question, options=[answer_1, answer_2, answer_3, answer_4])
+            self.config.notifier.push(title='Quiz',
+                                      content=f"New question: \n{question} \n{[answer_1, answer_2, answer_3, answer_4]}")
             index = 1
         logger.info(f'Question: {question}, Answer: {index}')
         self.click(self.click_options[index-1])
