@@ -18,6 +18,15 @@
     "description": "寮突选择阴阳寮按钮"
   },
   {
+    "itemName": "no_select_ryou",
+    "imageName": "res_no_select_ryou.png",
+    "roiFront": "554,180,100,167",
+    "roiBack": "554,180,100,167",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "寮突未选择阴阳寮"
+  },
+  {
     "itemName": "start_toppa_button",
     "imageName": "res_start_toppa_button.png",
     "roiFront": "832,279,130,43",
