@@ -16,7 +16,7 @@ from tasks.GameUi.page import page_main, page_demon_encounter
 from tasks.DemonEncounter.assets import DemonEncounterAssets
 from tasks.Component.GeneralBattle.general_battle import GeneralBattle
 from tasks.Component.GeneralBattle.config_general_battle import GeneralBattleConfig
-from tasks.DemonEncounter.data.answer import answer_one
+from tasks.DemonEncounter.data.answer import Answer
 
 class LanternClass(Enum):
     BATTLE = 0  # 打怪  --> 无法判断因为怪的图片不一样，用排除法
@@ -258,7 +258,9 @@ class ScriptTask(GameUi, GeneralBattle, DemonEncounterAssets):
             elif answer_3 == '其余选项皆对':
                 index = 3
             if not index:
-                index = answer_one(question=question, options=[answer_1, answer_2, answer_3])
+                index = Answer().answer_one(question=question, options=[answer_1, answer_2, answer_3])
+            if index is None:
+                index = 1
             logger.info(f'Question: {question}, Answer: {index}')
             return click_match[index]
 

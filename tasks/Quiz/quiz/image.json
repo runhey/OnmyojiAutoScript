@@ -1,0 +1,47 @@
+[
+  {
+    "itemName": "entry",
+    "imageName": "quiz_entry.png",
+    "roiFront": "143,363,40,128",
+    "roiBack": "119,246,100,326",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "start",
+    "imageName": "quiz_start.png",
+    "roiFront": "1149,608,66,41",
+    "roiBack": "1136,574,100,100",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "开始"
+  },
+  {
+    "itemName": "message",
+    "imageName": "quiz_message.png",
+    "roiFront": "75,488,58,41",
+    "roiBack": "50,460,100,100",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "标志"
+  },
+  {
+    "itemName": "fail_quit",
+    "imageName": "quiz_fail_quit.png",
+    "roiFront": "416,529,183,45",
+    "roiBack": "354,502,275,100",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "失败然后离开"
+  },
+  {
+    "itemName": "share",
+    "imageName": "quiz_share.png",
+    "roiFront": "1171,625,53,44",
+    "roiBack": "1152,592,100,100",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "结算分享"
+  }
+]

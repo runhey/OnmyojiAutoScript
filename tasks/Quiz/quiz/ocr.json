@@ -1,0 +1,65 @@
+[
+  {
+    "itemName": "question",
+    "roiFront": "903,32,322,101",
+    "roiBack": "903,32,322,101",
+    "mode": "Single",
+    "method": "Default",
+    "keyword": "",
+    "description": "Ocr-description"
+  },
+  {
+    "itemName": "answer1",
+    "roiFront": "906,178,320,53",
+    "roiBack": "906,178,320,53",
+    "mode": "Single",
+    "method": "Default",
+    "keyword": "",
+    "description": "Ocr-description"
+  },
+  {
+    "itemName": "answer2",
+    "roiFront": "905,289,319,51",
+    "roiBack": "905,289,319,51",
+    "mode": "Single",
+    "method": "Default",
+    "keyword": "",
+    "description": "Ocr-description"
+  },
+  {
+    "itemName": "answer3",
+    "roiFront": "906,399,320,55",
+    "roiBack": "906,399,320,55",
+    "mode": "Single",
+    "method": "Default",
+    "keyword": "",
+    "description": "Ocr-description"
+  },
+  {
+    "itemName": "answer4",
+    "roiFront": "909,511,316,54",
+    "roiBack": "909,511,316,54",
+    "mode": "Single",
+    "method": "Default",
+    "keyword": "",
+    "description": "Ocr-description"
+  },
+  {
+    "itemName": "countdown",
+    "roiFront": "1045,6,27,30",
+    "roiBack": "1045,6,27,30",
+    "mode": "Digit",
+    "method": "Default",
+    "keyword": "4",
+    "description": "倒计时"
+  },
+  {
+    "itemName": "countdown3",
+    "roiFront": "1045,6,27,30",
+    "roiBack": "1045,6,27,30",
+    "mode": "Digit",
+    "method": "Default",
+    "keyword": "3",
+    "description": "倒计时"
+  }
+]
