@@ -69,8 +69,7 @@ class BaseTask(GlobalGameAssets, CostumeBase):
         :return: 没有出现返回False, 其他True
         """
         image = self.device.image
-        # appear_invitation = self.appear(self.I_G_ACCEPT)
-        appear_invitation = False
+        appear_invitation = self.appear(self.I_G_ACCEPT)
         if not appear_invitation:
             return False
         logger.info('Invitation appearing')
