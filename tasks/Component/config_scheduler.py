@@ -16,6 +16,7 @@ class Scheduler(ConfigBase):
     success_interval: TimeDelta = Field(default=TimeDelta(days=1), description='success_interval_help')
     failure_interval: TimeDelta = Field(default=TimeDelta(days=1), description='failure_interval_help')
     server_update: Time = Field(default=Time(hour=9, minute=0, second=0), description='server_update_help')
+    float_time: Time = Field(default=Time(hour=0, minute=0, second=0), description='float_time_help')
 
     @validator('next_run', pre=True, always=True)
     def parse_next_run(cls, value):

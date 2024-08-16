@@ -120,6 +120,8 @@ class RyouToppaAssets:
 	I_RYOU_TOPPA = RuleImage(roi_front=(1191,352,78,116), roi_back=(1161,323,118,193), threshold=0.6, method="Template matching", file="./tasks/RyouToppa/res/res_ryou_toppa.png")
 	# 寮突选择阴阳寮按钮 
 	I_SELECT_RYOU_BUTTON = RuleImage(roi_front=(560,577,156,46), roi_back=(560,577,156,46), threshold=0.8, method="Template matching", file="./tasks/RyouToppa/res/res_select_ryou_button.png")
+	# 寮突未选择阴阳寮 
+	I_NO_SELECT_RYOU = RuleImage(roi_front=(554,180,100,167), roi_back=(554,180,100,167), threshold=0.8, method="Template matching", file="./tasks/RyouToppa/res/res_no_select_ryou.png")
 	# 开始寮突按钮 
 	I_START_TOPPA_BUTTON = RuleImage(roi_front=(832,279,130,43), roi_back=(1,1,1055,718), threshold=0.8, method="Template matching", file="./tasks/RyouToppa/res/res_start_toppa_button.png")
 	# 寮击破奖励 

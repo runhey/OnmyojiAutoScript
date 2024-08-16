@@ -34,23 +34,23 @@ class ActivityShikigamiAssets:
 
 	# Image Rule Assets
 	# 进入活动 
-	I_SHI = RuleImage(roi_front=(445,243,26,28), roi_back=(64,216,1110,326), threshold=0.7, method="Template matching", file="./tasks/ActivityShikigami/as/as_shi.png")
+	I_SHI = RuleImage(roi_front=(438,415,26,54), roi_back=(64,216,1110,326), threshold=0.7, method="Template matching", file="./tasks/ActivityShikigami/as/as_shi.png")
 	# 左上角返回 
 	I_BACK_GREEN = RuleImage(roi_front=(23,27,44,44), roi_back=(23,27,44,44), threshold=0.8, method="Template matching", file="./tasks/ActivityShikigami/as/as_back_green.png")
 	# 进入爬塔 
-	I_BATTLE = RuleImage(roi_front=(139,301,35,165), roi_back=(92,217,138,315), threshold=0.8, method="Template matching", file="./tasks/ActivityShikigami/as/as_battle.png")
+	I_BATTLE = RuleImage(roi_front=(456,151,35,165), roi_back=(393,81,138,315), threshold=0.8, method="Template matching", file="./tasks/ActivityShikigami/as/as_battle.png")
 	# 归鹿之途 
 	I_DRUM = RuleImage(roi_front=(885,310,29,145), roi_back=(860,244,87,232), threshold=0.8, method="Template matching", file="./tasks/ActivityShikigami/as/as_drum.png")
 	# 上锁图标 
 	I_LOCK = RuleImage(roi_front=(827,655,25,32), roi_back=(749,592,139,116), threshold=0.8, method="Template matching", file="./tasks/ActivityShikigami/as/as_lock.png")
 	# 还未上锁图片 
-	I_UNLOCK = RuleImage(roi_front=(823,654,28,28), roi_back=(802,610,86,87), threshold=0.8, method="Template matching", file="./tasks/ActivityShikigami/as/as_unlock.png")
+	I_UNLOCK = RuleImage(roi_front=(823,654,28,28), roi_back=(776,610,112,87), threshold=0.8, method="Template matching", file="./tasks/ActivityShikigami/as/as_unlock.png")
 	# 点击战斗 
 	I_FIRE = RuleImage(roi_front=(1134,587,84,78), roi_back=(1107,522,142,174), threshold=0.8, method="Template matching", file="./tasks/ActivityShikigami/as/as_fire.png")
 	# 体力按钮 
 	I_AP = RuleImage(roi_front=(1122,516,29,26), roi_back=(1092,487,103,71), threshold=0.8, method="Template matching", file="./tasks/ActivityShikigami/as/as_ap.png")
 	# 活动体力 
-	I_AP_ACTIVITY = RuleImage(roi_front=(1123,516,27,25), roi_back=(1090,500,84,54), threshold=0.8, method="Template matching", file="./tasks/ActivityShikigami/as/as_ap_activity.png")
+	I_AP_ACTIVITY = RuleImage(roi_front=(1128,517,21,25), roi_back=(1090,500,84,54), threshold=0.8, method="Template matching", file="./tasks/ActivityShikigami/as/as_ap_activity.png")
 	# 切换按键 
 	I_SWITCH = RuleImage(roi_front=(1211,518,23,23), roi_back=(1200,497,69,56), threshold=0.8, method="Template matching", file="./tasks/ActivityShikigami/as/as_switch.png")
 	# 购买活动的体力 
