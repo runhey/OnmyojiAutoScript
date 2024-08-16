@@ -89,7 +89,7 @@ class ScriptTask(GameUi, QuizAssets, ActivityShikigamiAssets, Debugger):
                 continue
         self.last_select_1, self.last_select_2, self.last_select_3, self.last_select_4 = '', '', '', ''
 
-        quiz_timer = Timer(1)
+        quiz_timer = Timer(1.4)
         quiz_timer.start()
         while 1:
             self.screenshot()
