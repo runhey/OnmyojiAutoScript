@@ -44,10 +44,12 @@ class Answer:
         :param options:
         :return:
         """
-        def decide_by_options(question: str, option: list[str]):
+        def decide_by_options(question: str, ops: list[str]):
             # 瞎猫当死耗子
             opts = {}
-            for index, option in enumerate(options):
+            for index, option in enumerate(ops):
+                for char in option:
+                    pass
                 if option in self.data_options.keys():
                     cnts = [count_intersection(question, ques) for ques in self.data_options[option] ]
                     cnts.sort(reverse=True)
@@ -75,7 +77,7 @@ class Answer:
         except Exception as e:
             # 没有出现题目，从选项反入手
             logger.error('Exception: %s', e)
-            return decide_by_options(question=question, option=options)
+            return decide_by_options(question=question, ops=options)
         # 出现了题目，开始对答案
         for index, option in enumerate(options):
             for match in question_matches:
@@ -100,9 +102,8 @@ class Answer:
 
 if __name__ == "__main__":
     answer = Answer()
-    question = '以下式神中，谁从小就是孤'
-    options = ['生命上限', '小鹿男', '荒川之主']
+    question = '冥界中谁拥阁魔之目一双审善度恶'
+    options = ['判官', '孟婆', '荒川之主', '阁魔']
     start_time = datetime.now()
-    print(answer.answer_one(question, options))
     print(answer.answer_one(question, options))
     print(datetime.now() - start_time)

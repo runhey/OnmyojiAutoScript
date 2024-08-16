@@ -61,5 +61,14 @@
     "method": "Default",
     "keyword": "3",
     "description": "倒计时"
+  },
+  {
+    "itemName": "question_and_answer",
+    "roiFront": "902,34,325,534",
+    "roiBack": "902,34,325,534",
+    "mode": "Full",
+    "method": "Default",
+    "keyword": "",
+    "description": "Ocr-description"
   }
 ]
