@@ -4,28 +4,24 @@
 
 import zerorpc
 import zmq
-import msgpack
-import random
 import re
 import cv2
 import time
 import os
 import inflection
-import asyncio
 import json
 
 from typing import Callable
 from datetime import datetime, timedelta
 from pathlib import Path
 from cached_property import cached_property
-from pydantic import BaseModel, ValidationError
+from pydantic import ValidationError
 from threading import Thread
 from multiprocessing.queues import Queue
 
 
 from module.config.utils import convert_to_underscore
 from module.config.config import Config
-from module.config.config_model import ConfigModel
 from module.device.device import Device
 from module.base.utils import load_module
 from module.base.decorator import del_cached_property
@@ -349,7 +345,7 @@ class Script:
             module_path = str(Path.cwd() / 'tasks' / command / (module_name+'.py'))
             logger.info(f'module_path: {module_path}, module_name: {module_name}')
             task_module = load_module(module_name, module_path)
-            task_module.ScriptTask(config=self.config, device=self.device).run()
+            task_module.run()
         except TaskEnd:
             return True
         except GameNotRunningError as e:
