@@ -38,5 +38,7 @@ class QuizAssets:
 	O_COUNTDOWN = RuleOcr(roi=(1045,6,27,30), area=(1045,6,27,30), mode="Digit", method="Default", keyword="4", name="countdown")
 	# 倒计时 
 	O_COUNTDOWN3 = RuleOcr(roi=(1045,6,27,30), area=(1045,6,27,30), mode="Digit", method="Default", keyword="3", name="countdown3")
+	# Ocr-description 
+	O_QUESTION_AND_ANSWER = RuleOcr(roi=(902,34,325,534), area=(902,34,325,534), mode="Full", method="Default", keyword="", name="question_and_answer")
 
 
