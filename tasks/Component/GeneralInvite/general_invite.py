@@ -351,6 +351,9 @@ class GeneralInvite(BaseTask, GeneralInviteAssets):
         list_2 = self.O_F_LIST_2.ocr(self.device.image)
         list_3 = self.O_F_LIST_3.ocr(self.device.image)
         list_4 = self.O_F_LIST_4.ocr(self.device.image)
+        list_1 = list_1.replace(' ', '').replace('、', '')
+        list_2 = list_2.replace(' ', '').replace('、', '')
+        list_3 = list_3.replace(' ', '').replace('、', '')
         if list_1 is not None and list_1 != '' and list_1 in self.friend_class:
             friend_class.append(list_1)
         if list_2 is not None and list_2 != '' and list_2 in self.friend_class:
