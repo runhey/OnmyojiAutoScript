@@ -133,5 +133,32 @@
     "method": "Template matching",
     "threshold": 0.6,
     "description": "description"
+  },
+  {
+    "itemName": "up_exp",
+    "imageName": "highlight_up_exp.png",
+    "roiFront": "471,518,74,71",
+    "roiBack": "1,225,1278,410",
+    "method": "Sift Flann",
+    "threshold": 0.8,
+    "description": "经验怪"
+  },
+  {
+    "itemName": "up_coin",
+    "imageName": "highlight_up_coin.png",
+    "roiFront": "330,529,74,74",
+    "roiBack": "1,317,1278,316",
+    "method": "Sift Flann",
+    "threshold": 0.8,
+    "description": "金币怪"
+  },
+  {
+    "itemName": "up_daruma",
+    "imageName": "highlight_up_daruma.png",
+    "roiFront": "1146,510,80,80",
+    "roiBack": "1,265,1278,369",
+    "method": "Sift Flann",
+    "threshold": 0.8,
+    "description": "达摩怪"
   }
 ]

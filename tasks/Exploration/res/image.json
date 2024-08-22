@@ -178,5 +178,41 @@
     "method": "Template matching",
     "threshold": 0.7,
     "description": "宝箱"
+  },
+  {
+    "itemName": "swipe_end",
+    "imageName": "res_swipe_end.png",
+    "roiFront": "994,234,119,100",
+    "roiBack": "968,196,311,165",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "困28滚动到最后"
+  },
+  {
+    "itemName": "team_emoji",
+    "imageName": "res_team_emoji.png",
+    "roiFront": "36,437,44,46",
+    "roiBack": "4,407,100,100",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "队伍的表情标志"
+  },
+  {
+    "itemName": "exp_create_team",
+    "imageName": "res_exp_create_team.png",
+    "roiFront": "590,514,122,52",
+    "roiBack": "543,490,192,100",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "组队按钮"
+  },
+  {
+    "itemName": "exp_create_ensure",
+    "imageName": "res_exp_create_ensure.png",
+    "roiFront": "534,486,218,59",
+    "roiBack": "516,475,244,85",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "创建确认"
   }
 ]

@@ -1,0 +1,30 @@
+[
+  {
+    "itemName": "rotate_1",
+    "roiFront": "516,582,22,21",
+    "roiBack": "516,582,22,21",
+    "duration": 1500,
+    "description": "description"
+  },
+  {
+    "itemName": "rotate_2",
+    "roiFront": "650,587,21,21",
+    "roiBack": "650,587,21,21",
+    "duration": 1500,
+    "description": "description"
+  },
+  {
+    "itemName": "rotate_3",
+    "roiFront": "785,587,21,21",
+    "roiBack": "785,587,21,21",
+    "duration": 1500,
+    "description": "description"
+  },
+  {
+    "itemName": "rotate_4",
+    "roiFront": "921,590,21,21",
+    "roiBack": "921,590,21,21",
+    "duration": 1500,
+    "description": "description"
+  }
+]
