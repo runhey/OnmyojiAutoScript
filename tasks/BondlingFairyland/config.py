@@ -37,7 +37,7 @@ class UserStatus(str, Enum):
     # WILD = 'wild'  # 还不打算实现
 class BondlingConfig(ConfigBase):
     # 身份
-    user_status: UserStatus = Field(default=UserStatus.LEADER, description='user_status_help')
+    user_status: UserStatus = Field(default=UserStatus.ALONE, description='user_status_help')
     bondling_mode: BondlingMode = Field(default=BondlingMode.MODE1, description='bondling_mode_help')
     limit_time: Time = Field(default=Time(minute=30), description='limit_time_help')
     limit_count: int = Field(default=30, description='limit_count_help')
