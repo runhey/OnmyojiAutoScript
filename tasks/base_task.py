@@ -25,7 +25,7 @@ from module.config.config import Config
 from module.config.utils import get_server_next_update, nearest_future, dict_to_kv, parse_tomorrow_server
 from module.device.device import Device
 from tasks.GlobalGame.assets import GlobalGameAssets
-from tasks.GlobalGame.config_emergency import FriendInvitation, WhenAcceptInvitation, WhenNetworkAbnormal, WhenNetworkError
+from tasks.GlobalGame.config_emergency import FriendInvitation, WhenNetworkAbnormal, WhenNetworkError
 from tasks.Component.Costume.costume_base import CostumeBase
 
 from module.exception import GameStuckError, ScriptError
@@ -114,8 +114,6 @@ class BaseTask(GlobalGameAssets, CostumeBase):
                 continue
         # 有的时候长战斗 点击后会取消战斗状态
         self.device.detect_record = detect_record
-        if WhenAcceptInvitation.accept_invitation_complete_now and click_button == self.I_G_ACCEPT:
-            self.set_next_run(task='WantedQuests', target=datetime.now())
         return True
 
     def screenshot(self):
