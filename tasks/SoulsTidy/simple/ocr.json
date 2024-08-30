@@ -61,5 +61,14 @@
     "method": "Default",
     "keyword": "位置",
     "description": "位置"
+  },
+  {
+    "itemName": "st_overflow",
+    "roiFront": "686,397,109,48",
+    "roiBack": "686,397,109,48",
+    "mode": "Single",
+    "method": "Default",
+    "keyword": "知道了",
+    "description": "Ocr-description"
   }
 ]

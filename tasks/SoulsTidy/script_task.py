@@ -43,6 +43,8 @@ class ScriptTask(GameUi, SoulsTidyAssets):
                 continue
             if self.click(self.C_ST_DETAIL, interval=1.5):
                 continue
+        # 御魂超过上限的提示
+        self.ocr_appear_click(self.O_ST_OVERFLOW)
         logger.info('Enter souls page')
 
     def back_records(self):
