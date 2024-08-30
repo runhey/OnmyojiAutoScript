@@ -207,6 +207,13 @@ class ScriptTask(GameUi, ReplaceShikigami, KekkaiUtilizeAssets):
                     if cur == totol and cur + res == totol:
                         logger.info('Exp box reach max do not collect')
                         break
+                    # 开启招财上宾后，上限增加20%，数值位置有偏移
+                    cur, res, totol = self.O_BOX_EXP_ZCSB.ocr(self.device.image)
+                    if cur == res == totol == 0:
+                        continue
+                    if cur == totol * 1.2 and cur + res == totol:
+                        logger.info('Exp box reach max do not collect')
+                        break
                 if self.appear_then_click(self.I_BOX_EXP, threshold=0.6, interval=1):
                     continue
                 if self.appear_then_click(self.I_EXP_EXTRACT, interval=1):
