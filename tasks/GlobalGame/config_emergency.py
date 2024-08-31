@@ -15,10 +15,6 @@ class FriendInvitation(str, Enum):
     JADE_AND_FOOD = 'jade_and_food' # 勾协+粮协
     IGNORE = 'ignore'
 
-class WhenAcceptInvitation(str, Enum):
-    # 接取悬赏后立即去完成，默认关闭
-    accept_invitation_complete_now: bool = Field(default=False)
-
 class WhenNetworkAbnormal(str, Enum):
     RESTART = 'restart'
     WAIT_10S = 'wait_10s'
@@ -29,7 +25,6 @@ class WhenNetworkError(str, Enum):
 # 也可以是左边的邀请什么的
 class Emergency(BaseModel):
     friend_invitation: FriendInvitation = Field(default=FriendInvitation.ACCEPT,description='friend_invitation_help')
-    when_accept_invitation: WhenAcceptInvitation = Field(default_factory=WhenAcceptInvitation)
     # invitation_detect_interval: int = Field(default=5, description='invitation_detect_interval_help')
     when_network_abnormal: WhenNetworkAbnormal = Field(default=WhenNetworkAbnormal.WAIT_10S, description='when_network_abnormal_help')
     when_network_error: WhenNetworkError = Field(default=WhenNetworkError.RESTART, description='when_network_error_help')
