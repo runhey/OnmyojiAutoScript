@@ -1,8 +1,11 @@
 from pydantic import BaseModel, Field
 from enum import Enum
+from datetime import datetime, time
+
 from tasks.Component.GeneralBattle.config_general_battle import GeneralBattleConfig
 from tasks.Component.SwitchSoul.switch_soul_config import SwitchSoulConfig
-from tasks.Component.config_base import ConfigBase, TimeDelta
+from tasks.Component.GeneralInvite.config_invite import FindMode
+from tasks.Component.config_base import ConfigBase, TimeDelta, Time
 from tasks.Component.config_scheduler import Scheduler
 
 
@@ -42,11 +45,16 @@ class AttackNumber(str, Enum):
     ALL = 'all'
 
 
-# class AttackRole(str, Enum):
-#     exp = '经验'
-#     gold = '金币'
-#     box = '奖励'
-#     ALL = '无所谓'
+class UpType(str, Enum):
+    ALL = 'up_all'  # 全部
+    EXP = 'up_exp'  # 经验
+    COIN = 'up_coin'  # 金币
+    DARUMAA = 'up_daruma'  # 达摩
+
+class UserStatus(str, Enum):
+    LEADER = 'leader'
+    MEMBER = 'member'
+    ALONE = 'alone'
 
 
 # 是否自动添加候补式神
@@ -58,6 +66,12 @@ class AutoRotate(str, Enum):
 class ChooseRarity(str, Enum):
     N = 'N卡'
     S = '素材'
+
+class InviteConfig(BaseModel):
+
+    friend_1: str = Field(default='', description='friend_name_help')
+    find_mode: FindMode = Field(default=FindMode.AUTO_FIND, description='find_mode_help')
+    wait_time: Time = Field(default=Time(minute=2), description='wait_time_help')
 
 
 class Scrolls(BaseModel):
@@ -73,28 +87,26 @@ class ExplorationConfig(BaseModel):
     buff_exp_50_click: bool = Field(default=False)
     buff_exp_100_click: bool = Field(default=False)
 
-    # attack_number: AttackNumber = Field(title='探索次数', default=AttackNumber.SEVEN,
-    #                                     description='默认探索7次')
-
-    current_exploration_count: int = Field(title='探索次数', default='7', description='默认探索7次')
+    user_status: UserStatus = Field(default=UserStatus.ALONE, description='user_status_help_')
+    # current_exploration_count: int = Field(title='探索次数', default='7', description='默认探索7次')
+    limit_time: Time = Field(default=Time(minute=30), description='limit_time_help')
+    minions_cnt: int = Field(title='战斗次数', default='30', ge=0, description='minions_cnt_help')
 
     exploration_level: ExplorationLevel = Field(title='探索等级', default=ExplorationLevel.EXPLORATION_28,
-                                                description='探索等级 默认二十八')
+                                                description='exploration_level_help')
 
     auto_rotate: AutoRotate = Field(title='自动添加候补式神', default=AutoRotate.no,
-                                    description='自动添加候补式神 默认 否')
+                                    description='auto_rotate_help')
 
-    # attack_role: AttackRole = Field(title='进攻的类型',
-    #                                 default=AttackRole.ALL, description='攻击的类型')
+    choose_rarity: ChooseRarity = Field(title='选择狗粮稀有度', default=ChooseRarity.N, description='choose_rarity_help')
 
-    choose_rarity: ChooseRarity = Field(title='选择狗粮稀有度', default=ChooseRarity.N, description='N')
-
+    up_type: UpType = Field(title='UpType', default=UpType.ALL, description='up_type_help')
 
 class Exploration(ConfigBase):
     scheduler: Scheduler = Field(default_factory=Scheduler)
     exploration_config: ExplorationConfig = Field(default_factory=ExplorationConfig)
     scrolls: Scrolls = Field(default_factory=Scrolls)
+    invite_config: InviteConfig = Field(default_factory=InviteConfig)
     general_battle_config: GeneralBattleConfig = Field(default_factory=GeneralBattleConfig)
     switch_soul_config: SwitchSoulConfig = Field(default_factory=SwitchSoulConfig)
-    # auto_rotate_after_times: str = Field(default='30', description='探索30次后, 检测是否需要添加候补式神')
-    # go_to_realm_after_times: str = Field(default='5', description='探索5次后, 检测是否需要进行结界突破')
+

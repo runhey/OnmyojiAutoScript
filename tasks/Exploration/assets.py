@@ -10,6 +10,45 @@ from module.atom.list import RuleList
 class ExplorationAssets: 
 
 
+	# Image Rule Assets
+	# description 
+	I_LIGHTTEST = RuleImage(roi_front=(550,288,85,82), roi_back=(97,182,1130,409), threshold=0.6, method="Template matching", file="./tasks/Exploration/highlight/highlight_lighttest.png")
+	# description 
+	I_LIGHT1 = RuleImage(roi_front=(498,297,86,87), roi_back=(97,182,1130,409), threshold=0.6, method="Template matching", file="./tasks/Exploration/highlight/highlight_light1.png")
+	# description 
+	I_LIGHT2 = RuleImage(roi_front=(497,300,86,82), roi_back=(97,182,1130,409), threshold=0.6, method="Template matching", file="./tasks/Exploration/highlight/highlight_light2.png")
+	# description 
+	I_LIGHT3 = RuleImage(roi_front=(495,301,85,77), roi_back=(97,182,1130,409), threshold=0.6, method="Template matching", file="./tasks/Exploration/highlight/highlight_light3.png")
+	# description 
+	I_LIGHT4 = RuleImage(roi_front=(496,296,85,85), roi_back=(0,0,100,100), threshold=0.6, method="Template matching", file="./tasks/Exploration/highlight/highlight_light4.png")
+	# description 
+	I_LIGHT5 = RuleImage(roi_front=(494,296,82,86), roi_back=(0,0,100,100), threshold=0.6, method="Template matching", file="./tasks/Exploration/highlight/highlight_light5.png")
+	# description 
+	I_LIGHT6 = RuleImage(roi_front=(490,295,83,85), roi_back=(0,0,100,100), threshold=0.6, method="Template matching", file="./tasks/Exploration/highlight/highlight_light6.png")
+	# description 
+	I_LIGHT7 = RuleImage(roi_front=(486,295,84,87), roi_back=(0,0,100,100), threshold=0.6, method="Template matching", file="./tasks/Exploration/highlight/highlight_light7.png")
+	# description 
+	I_LIGHT8 = RuleImage(roi_front=(485,298,84,81), roi_back=(0,0,100,100), threshold=0.6, method="Template matching", file="./tasks/Exploration/highlight/highlight_light8.png")
+	# description 
+	I_LIGHT9 = RuleImage(roi_front=(484,295,85,84), roi_back=(0,0,100,100), threshold=0.6, method="Template matching", file="./tasks/Exploration/highlight/highlight_light9.png")
+	# description 
+	I_LIGHT10 = RuleImage(roi_front=(479,297,84,78), roi_back=(0,0,100,100), threshold=0.6, method="Template matching", file="./tasks/Exploration/highlight/highlight_light10.png")
+	# description 
+	I_LIGHT11 = RuleImage(roi_front=(479,296,83,82), roi_back=(0,0,100,100), threshold=0.6, method="Template matching", file="./tasks/Exploration/highlight/highlight_light11.png")
+	# description 
+	I_LIGHT12 = RuleImage(roi_front=(477,290,85,90), roi_back=(0,0,100,100), threshold=0.6, method="Template matching", file="./tasks/Exploration/highlight/highlight_light12.png")
+	# description 
+	I_LIGHT13 = RuleImage(roi_front=(478,293,82,87), roi_back=(0,0,100,100), threshold=0.6, method="Template matching", file="./tasks/Exploration/highlight/highlight_light13.png")
+	# description 
+	I_LIGHT14 = RuleImage(roi_front=(474,290,82,87), roi_back=(0,0,100,100), threshold=0.6, method="Template matching", file="./tasks/Exploration/highlight/highlight_light14.png")
+	# 经验怪 
+	I_UP_EXP = RuleImage(roi_front=(471,518,74,71), roi_back=(1,225,1278,410), threshold=0.8, method="Sift Flann", file="./tasks/Exploration/highlight/highlight_up_exp.png")
+	# 金币怪 
+	I_UP_COIN = RuleImage(roi_front=(330,529,74,74), roi_back=(1,317,1278,316), threshold=0.8, method="Sift Flann", file="./tasks/Exploration/highlight/highlight_up_coin.png")
+	# 达摩怪 
+	I_UP_DARUMA = RuleImage(roi_front=(1146,510,80,80), roi_back=(1,265,1278,369), threshold=0.8, method="Sift Flann", file="./tasks/Exploration/highlight/highlight_up_daruma.png")
+
+
 	# Click Rule Assets
 	# 点击设置按钮 
 	C_CLICK_SETTINGS = RuleClick(roi_front=(55,662,21,21), roi_back=(55,662,21,21), name="click_settings")
@@ -27,6 +66,8 @@ class ExplorationAssets:
 	C_CLICK_ROTATE_3 = RuleClick(roi_front=(785,587,21,21), roi_back=(785,587,21,21), name="click_rotate_3")
 	# 位置4 
 	C_CLICK_ROTATE_4 = RuleClick(roi_front=(921,590,21,21), roi_back=(921,590,21,21), name="click_rotate_4")
+	# 随机点 
+	C_SAFE_RANDOM = RuleClick(roi_front=(0,0,111,12), roi_back=(0,0,111,12), name="safe_random")
 
 
 	# Image Rule Assets
@@ -70,6 +111,25 @@ class ExplorationAssets:
 	I_E_EXIT_CONFIRM = RuleImage(roi_front=(694,380,163,49), roi_back=(694,380,163,49), threshold=0.8, method="Template matching", file="./tasks/Exploration/res/res_e_exit_confirm.png")
 	# 宝箱 
 	I_TREASURE_BOX_CLICK = RuleImage(roi_front=(33,476,70,49), roi_back=(2,130,135,406), threshold=0.7, method="Template matching", file="./tasks/Exploration/res/res_treasure_box_click.png")
+	# 困28滚动到最后 
+	I_SWIPE_END = RuleImage(roi_front=(994,234,119,100), roi_back=(968,196,311,165), threshold=0.8, method="Template matching", file="./tasks/Exploration/res/res_swipe_end.png")
+	# 队伍的表情标志 
+	I_TEAM_EMOJI = RuleImage(roi_front=(36,437,44,46), roi_back=(4,407,100,100), threshold=0.8, method="Template matching", file="./tasks/Exploration/res/res_team_emoji.png")
+	# 组队按钮 
+	I_EXP_CREATE_TEAM = RuleImage(roi_front=(590,514,122,52), roi_back=(543,490,192,100), threshold=0.8, method="Template matching", file="./tasks/Exploration/res/res_exp_create_team.png")
+	# 创建确认 
+	I_EXP_CREATE_ENSURE = RuleImage(roi_front=(534,486,218,59), roi_back=(516,475,244,85), threshold=0.8, method="Template matching", file="./tasks/Exploration/res/res_exp_create_ensure.png")
+
+
+	# Long Click Rule Assets
+	# description 
+	L_ROTATE_1 = RuleLongClick(roi_front=(516,582,22,21), roi_back=(516,582,22,21), duration=1500, name="rotate_1")
+	# description 
+	L_ROTATE_2 = RuleLongClick(roi_front=(650,587,21,21), roi_back=(650,587,21,21), duration=1500, name="rotate_2")
+	# description 
+	L_ROTATE_3 = RuleLongClick(roi_front=(785,587,21,21), roi_back=(785,587,21,21), duration=1500, name="rotate_3")
+	# description 
+	L_ROTATE_4 = RuleLongClick(roi_front=(921,590,21,21), roi_back=(921,590,21,21), duration=1500, name="rotate_4")
 
 
 	# Ocr Rule Assets

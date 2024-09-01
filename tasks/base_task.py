@@ -16,6 +16,7 @@ from module.atom.long_click import RuleLongClick
 from module.atom.swipe import RuleSwipe
 from module.atom.ocr import RuleOcr
 from module.atom.list import RuleList
+from module.atom.gif import RuleGif
 from module.ocr.base_ocr import OcrMode, OcrMethod
 from module.atom.animate import RuleAnimate
 from module.logger import logger
@@ -136,7 +137,10 @@ class BaseTask(GlobalGameAssets, CostumeBase):
 
         return self.device.image
 
-    def appear(self, target: RuleImage, interval: float = None, threshold: float = None):
+    def appear(self,
+               target: RuleImage | RuleGif,
+               interval: float = None,
+               threshold: float = None):
         """
 
         :param target: 匹配的目标可以是RuleImage, 也可以是RuleOcr
@@ -144,7 +148,7 @@ class BaseTask(GlobalGameAssets, CostumeBase):
         :param threshold:
         :return:
         """
-        if not isinstance(target, RuleImage):
+        if not isinstance(target, RuleImage) and not isinstance(target, RuleGif):
             return False
 
         if interval:
@@ -164,7 +168,7 @@ class BaseTask(GlobalGameAssets, CostumeBase):
         return appear
 
     def appear_then_click(self,
-                          target: RuleImage,
+                          target: RuleImage | RuleGif,
                           action: Union[RuleClick, RuleLongClick] = None,
                           interval: float = None,
                           threshold: float = None,
@@ -178,7 +182,7 @@ class BaseTask(GlobalGameAssets, CostumeBase):
         :param threshold:
         :return: True or False
         """
-        if not isinstance(target, RuleImage):
+        if not isinstance(target, RuleImage) and not isinstance(target, RuleGif):
             return False
 
         appear = self.appear(target, interval=interval, threshold=threshold)

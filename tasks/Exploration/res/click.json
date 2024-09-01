@@ -46,5 +46,11 @@
     "roiFront": "921,590,21,21",
     "roiBack": "921,590,21,21",
     "description": "位置4"
+  },
+  {
+    "itemName": "safe_random",
+    "roiFront": "0,0,111,12",
+    "roiBack": "0,0,111,12",
+    "description": "随机点"
   }
 ]

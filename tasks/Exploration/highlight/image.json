@@ -1,0 +1,164 @@
+[
+  {
+    "itemName": "lighttest",
+    "imageName": "highlight_lighttest.png",
+    "roiFront": "550,288,85,82",
+    "roiBack": "97,182,1130,409",
+    "method": "Template matching",
+    "threshold": 0.6,
+    "description": "description"
+  },
+  {
+    "itemName": "light1",
+    "imageName": "highlight_light1.png",
+    "roiFront": "498,297,86,87",
+    "roiBack": "97,182,1130,409",
+    "method": "Template matching",
+    "threshold": 0.6,
+    "description": "description"
+  },
+  {
+    "itemName": "light2",
+    "imageName": "highlight_light2.png",
+    "roiFront": "497,300,86,82",
+    "roiBack": "97,182,1130,409",
+    "method": "Template matching",
+    "threshold": 0.6,
+    "description": "description"
+  },
+  {
+    "itemName": "light3",
+    "imageName": "highlight_light3.png",
+    "roiFront": "495,301,85,77",
+    "roiBack": "97,182,1130,409",
+    "method": "Template matching",
+    "threshold": 0.6,
+    "description": "description"
+  },
+  {
+    "itemName": "light4",
+    "imageName": "highlight_light4.png",
+    "roiFront": "496,296,85,85",
+    "roiBack": "0,0,100,100",
+    "method": "Template matching",
+    "threshold": 0.6,
+    "description": "description"
+  },
+  {
+    "itemName": "light5",
+    "imageName": "highlight_light5.png",
+    "roiFront": "494,296,82,86",
+    "roiBack": "0,0,100,100",
+    "method": "Template matching",
+    "threshold": 0.6,
+    "description": "description"
+  },
+  {
+    "itemName": "light6",
+    "imageName": "highlight_light6.png",
+    "roiFront": "490,295,83,85",
+    "roiBack": "0,0,100,100",
+    "method": "Template matching",
+    "threshold": 0.6,
+    "description": "description"
+  },
+  {
+    "itemName": "light7",
+    "imageName": "highlight_light7.png",
+    "roiFront": "486,295,84,87",
+    "roiBack": "0,0,100,100",
+    "method": "Template matching",
+    "threshold": 0.6,
+    "description": "description"
+  },
+  {
+    "itemName": "light8",
+    "imageName": "highlight_light8.png",
+    "roiFront": "485,298,84,81",
+    "roiBack": "0,0,100,100",
+    "method": "Template matching",
+    "threshold": 0.6,
+    "description": "description"
+  },
+  {
+    "itemName": "light9",
+    "imageName": "highlight_light9.png",
+    "roiFront": "484,295,85,84",
+    "roiBack": "0,0,100,100",
+    "method": "Template matching",
+    "threshold": 0.6,
+    "description": "description"
+  },
+  {
+    "itemName": "light10",
+    "imageName": "highlight_light10.png",
+    "roiFront": "479,297,84,78",
+    "roiBack": "0,0,100,100",
+    "method": "Template matching",
+    "threshold": 0.6,
+    "description": "description"
+  },
+  {
+    "itemName": "light11",
+    "imageName": "highlight_light11.png",
+    "roiFront": "479,296,83,82",
+    "roiBack": "0,0,100,100",
+    "method": "Template matching",
+    "threshold": 0.6,
+    "description": "description"
+  },
+  {
+    "itemName": "light12",
+    "imageName": "highlight_light12.png",
+    "roiFront": "477,290,85,90",
+    "roiBack": "0,0,100,100",
+    "method": "Template matching",
+    "threshold": 0.6,
+    "description": "description"
+  },
+  {
+    "itemName": "light13",
+    "imageName": "highlight_light13.png",
+    "roiFront": "478,293,82,87",
+    "roiBack": "0,0,100,100",
+    "method": "Template matching",
+    "threshold": 0.6,
+    "description": "description"
+  },
+  {
+    "itemName": "light14",
+    "imageName": "highlight_light14.png",
+    "roiFront": "474,290,82,87",
+    "roiBack": "0,0,100,100",
+    "method": "Template matching",
+    "threshold": 0.6,
+    "description": "description"
+  },
+  {
+    "itemName": "up_exp",
+    "imageName": "highlight_up_exp.png",
+    "roiFront": "471,518,74,71",
+    "roiBack": "1,225,1278,410",
+    "method": "Sift Flann",
+    "threshold": 0.8,
+    "description": "经验怪"
+  },
+  {
+    "itemName": "up_coin",
+    "imageName": "highlight_up_coin.png",
+    "roiFront": "330,529,74,74",
+    "roiBack": "1,317,1278,316",
+    "method": "Sift Flann",
+    "threshold": 0.8,
+    "description": "金币怪"
+  },
+  {
+    "itemName": "up_daruma",
+    "imageName": "highlight_up_daruma.png",
+    "roiFront": "1146,510,80,80",
+    "roiBack": "1,265,1278,369",
+    "method": "Sift Flann",
+    "threshold": 0.8,
+    "description": "达摩怪"
+  }
+]
