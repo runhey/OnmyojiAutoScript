@@ -114,6 +114,9 @@ class BaseTask(GlobalGameAssets, CostumeBase):
                 continue
         # 有的时候长战斗 点击后会取消战斗状态
         self.device.detect_record = detect_record
+        # 如果接受邀请则立即执行悬赏任务
+        if click_button == self.I_G_ACCEPT:
+            self.set_next_run(task='WantedQuests', target=datetime.now())
         return True
 
     def screenshot(self):
