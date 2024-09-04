@@ -210,6 +210,7 @@ class ScriptTask(GameUi, ReplaceShikigami, KekkaiUtilizeAssets):
                     if cur != 0 and totol != 0 and cur == totol * 1.2 and cur + res == totol:
                         logger.info('Exp box reach max do not collect')
                         break
+
                 if self.appear_then_click(self.I_BOX_EXP, threshold=0.6, interval=1):
                     continue
                 if self.appear_then_click(self.I_EXP_EXTRACT, interval=1):

@@ -170,6 +170,8 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, RyouToppaAssets):
                 break
             # 进攻
             res = self.attack_area(area_index)
+            self.device.stuck_record_clear()
+            self.device.stuck_record_add('BATTLE_STATUS_S')
             # 如果战斗失败或区域不可用，则弹出当前区域索引，开始进攻下一个
             if not res:
                 area_index += 1

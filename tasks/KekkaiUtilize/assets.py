@@ -31,7 +31,7 @@ class KekkaiUtilizeAssets:
 	# 育成 
 	I_SHI_GROWN = RuleImage(roi_front=(595,291,35,38), roi_back=(530,254,181,198), threshold=0.8, method="Template matching", file="./tasks/KekkaiUtilize/realm/realm_shi_grown.png")
 	# 结界卡 
-	I_SHI_CARD = RuleImage(roi_front=(886,290,38,56), roi_back=(870,276,75,86), threshold=0.8, method="Template matching", file="./tasks/KekkaiUtilize/realm/realm_shi_card.png")
+	I_SHI_CARD = RuleImage(roi_front=(886,290,38,56), roi_back=(870,276,75,86), threshold=0.6, method="Template matching", file="./tasks/KekkaiUtilize/realm/realm_shi_card.png")
 	# description 
 	I_SHI_DEFENSE = RuleImage(roi_front=(294,298,49,56), roi_back=(215,207,208,221), threshold=0.8, method="Template matching", file="./tasks/KekkaiUtilize/realm/realm_shi_defense.png")
 	# 收取经验（没有满的图） 

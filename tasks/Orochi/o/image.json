@@ -61,5 +61,14 @@
     "method": "Template matching",
     "threshold": 0.8,
     "description": "小小宠物，发现宝藏"
+  },
+  {
+    "itemName": "over_ghost",
+    "imageName": "o_over_ghost.png",
+    "roiFront": "609,410,65,28",
+    "roiBack": "609,410,65,28",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "御魂溢出"
   }
 ]

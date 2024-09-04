@@ -29,8 +29,8 @@
   {
     "itemName": "wt_ab_jade",
     "imageName": "area_boss_wt_ab_jade.png",
-    "roiFront": "922,554,44,47",
-    "roiBack": "922,554,44,47",
+    "roiFront": "797,515,432,97",
+    "roiBack": "797,515,432,97",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "分享勾玉"

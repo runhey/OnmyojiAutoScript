@@ -360,8 +360,8 @@ class Script:
             logger.error(e)
             self.save_error_log()
             logger.warning(f'Game stuck, {self.device.package} will be restarted in 10 seconds')
-            logger.warning('If you are playing by hand, please stop Alas')
-            self.config.notifier.push(title=command, content=f"<{self.config_name}> GameStuckError or GameTooManyClickError")
+            logger.warning('If you are playing by hand, please stop OAS')
+            self.config.notifier.push(title=command, content=f"<{self.config_name}>[{command}] GameStuckError or GameTooManyClickError")
             self.config.task_call('Restart')
             self.device.sleep(10)
             return False
@@ -378,23 +378,23 @@ class Script:
             # 这个还不重要 留着坑填
             logger.critical('Game page unknown')
             self.save_error_log()
-            self.config.notifier.push(title=command, content=f"<{self.config_name}> GamePageUnknownError")
+            self.config.notifier.push(title=command, content=f"<{self.config_name}>[{command}] GamePageUnknownError")
             exit(1)
             return False
         except ScriptError as e:
             logger.critical(e)
             logger.critical('This is likely to be a mistake of developers, but sometimes just random issues')
-            self.config.notifier.push(title=command, content=f"<{self.config_name}> ScriptError")
+            self.config.notifier.push(title=command, content=f"<{self.config_name}>[{command}] ScriptError")
             exit(1)
         except RequestHumanTakeover as e:
             logger.critical(e)
             logger.critical('Request human takeover')
-            self.config.notifier.push(title=command, content=f"<{self.config_name}> RequestHumanTakeover")
+            self.config.notifier.push(title=command, content=f"<{self.config_name}>[{command}] RequestHumanTakeover")
             exit(1)
         except Exception as e:
             logger.exception(e)
             self.save_error_log()
-            self.config.notifier.push(title=command, content=f"<{self.config_name}> Exception occured")
+            self.config.notifier.push(title=command, content=f"<{self.config_name}>[{command}] Exception occured")
             exit(1)
 
     def loop(self):

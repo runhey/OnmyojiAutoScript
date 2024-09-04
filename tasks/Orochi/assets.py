@@ -25,6 +25,8 @@ class OrochiAssets:
 	I_SHI_RECORDS = RuleImage(roi_front=(821,638,48,45), roi_back=(821,638,48,45), threshold=0.8, method="Template matching", file="./tasks/Orochi/o/o_shi_records.png")
 	# 小小宠物，发现宝藏 
 	I_PET_PRESENT = RuleImage(roi_front=(873,184,62,147), roi_back=(873,184,62,147), threshold=0.8, method="Template matching", file="./tasks/Orochi/o/o_pet_present.png")
+	# 御魂溢出 
+	I_OVER_GHOST = RuleImage(roi_front=(609,410,65,28), roi_back=(609,410,65,28), threshold=0.8, method="Template matching", file="./tasks/Orochi/o/o_over_ghost.png")
 
 
 	# List Rule Assets

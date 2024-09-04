@@ -91,8 +91,8 @@ class ScriptTask(SecretScriptTask, GeneralInvite, WantedQuestsAssets):
         now_datetime = datetime.now()
         now_time = now_datetime.time()
         if time(hour=6) <= now_time < time(hour=18):
-            # 如果是在6点到18点之间，那就设定下一次运行的时间为第二天的6点 + before_end
-            next_run_datetime = datetime.combine(now_datetime.date() + timedelta(days=1), time(hour=6))
+            # 如果是在6点到18点之间，那就设定下一次运行的时间为第二天的0点非6点 + before_end
+            next_run_datetime = datetime.combine(now_datetime.date() + timedelta(days=1), time(hour=0))
             next_run_datetime = next_run_datetime + time_delta
         elif time(hour=18) <= now_time < time(hour=23, minute=59, second=59):
             # 如果是在18点到23点59分59秒之间，那就设定下一次运行的时间为第二天的18点 + before_end

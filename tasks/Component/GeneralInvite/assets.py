@@ -50,7 +50,7 @@ class GeneralInviteAssets:
 	# 判断是否点中好友了 
 	I_SELECTED = RuleImage(roi_front=(895,373,33,32), roi_back=(380,157,568,350), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralInvite/gi/gi_selected.png")
 	# 用来判断当前的列表是哪儿的 
-	I_FLAG_1_ON = RuleImage(roi_front=(354,126,62,21), roi_back=(354,126,62,21), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralInvite/gi/gi_flag_1_on.png")
+	I_FLAG_1_ON = RuleImage(roi_front=(373,127,22,21), roi_back=(373,127,22,21), threshold=0.7, method="Template matching", file="./tasks/Component/GeneralInvite/gi/flag_1_on_new.png")
 	# description 
 	I_FLAG_1_OFF = RuleImage(roi_front=(353,126,58,22), roi_back=(353,126,58,22), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralInvite/gi/gi_flag_1_off.png")
 	# description 
