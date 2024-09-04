@@ -15,6 +15,15 @@
     "mode": "DigitCounter",
     "method": "Default",
     "keyword": "",
-    "description": "今日以领取经验"
+    "description": "今日已领取经验"
+  },
+  {
+    "itemName": "box_exp_zcsb",
+    "roiFront": "584,542,181,35",
+    "roiBack": "584,542,181,35",
+    "mode": "DigitCounter",
+    "method": "Default",
+    "keyword": "",
+    "description": "今日已领取经验（招财上宾）"
   }
 ]

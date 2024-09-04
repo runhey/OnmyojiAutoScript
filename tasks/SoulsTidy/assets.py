@@ -64,5 +64,7 @@ class SoulsTidyAssets:
 	O_ST_SORT_TYPE = RuleOcr(roi=(414,118,64,43), area=(414,118,64,43), mode="Single", method="Default", keyword="类型", name="st_sort_type")
 	# 位置 
 	O_ST_SORT_LOCATION = RuleOcr(roi=(415,119,61,39), area=(415,119,61,39), mode="Single", method="Default", keyword="位置", name="st_sort_location")
+	# Ocr-description 
+	O_ST_OVERFLOW = RuleOcr(roi=(686,397,109,48), area=(686,397,109,48), mode="Single", method="Default", keyword="知道了", name="st_overflow")
 
 

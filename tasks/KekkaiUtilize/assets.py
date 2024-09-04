@@ -115,8 +115,10 @@ class KekkaiUtilizeAssets:
 	# Ocr Rule Assets
 	# 这个寄养的剩余时间 
 	O_UTILIZE_RES_TIME = RuleOcr(roi=(1140,117,100,30), area=(1140,117,100,30), mode="Duration", method="Default", keyword="", name="utilize_res_time")
-	# 今日以领取经验 
+	# 今日已领取经验 
 	O_BOX_EXP = RuleOcr(roi=(654,538,179,39), area=(654,538,179,39), mode="DigitCounter", method="Default", keyword="", name="box_exp")
+	# 今日已领取经验（招财上宾） 
+	O_BOX_EXP_ZCSB = RuleOcr(roi=(584,542,181,35), area=(584,542,181,35), mode="DigitCounter", method="Default", keyword="", name="box_exp_zcsb")
 
 
 	# Swipe Rule Assets

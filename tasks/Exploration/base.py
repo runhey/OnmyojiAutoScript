@@ -135,6 +135,10 @@ class BaseExploration(GeneralBattle, GeneralRoom, GeneralInvite, ReplaceShikigam
             # 有则跳出检测
             if self.appear(self.I_E_EXPLORATION_CLICK) or result and len(result) > 0:
                 break
+            if self.appear_then_click(self.I_UI_CONFIRM, interval=1):
+                continue
+            if self.appear_then_click(self.I_UI_CONFIRM_SAMLL, interval=1):
+                continue
             self.device.click_record_clear()
             self.swipe(self.S_SWIPE_LEVEL_UP)
             swipeCount += 1
@@ -144,10 +148,16 @@ class BaseExploration(GeneralBattle, GeneralRoom, GeneralInvite, ReplaceShikigam
         # 选中对应章节
         while 1:
             self.screenshot()
+            if self.appear_then_click(self.I_UI_CONFIRM, interval=1):
+                continue
+            if self.appear_then_click(self.I_UI_CONFIRM_SAMLL, interval=1):
+                continue
             self.O_E_EXPLORATION_LEVEL_NUMBER.keyword = explorationConfig.exploration_config.exploration_level
             if self.ocr_appear_click(self.O_E_EXPLORATION_LEVEL_NUMBER):
                 self.wait_until_appear(self.I_E_EXPLORATION_CLICK, wait_time=3)
             if self.appear(self.I_E_EXPLORATION_CLICK):
+                break
+            if self.is_in_room():
                 break
 
         return True
@@ -329,6 +339,18 @@ class BaseExploration(GeneralBattle, GeneralRoom, GeneralInvite, ReplaceShikigam
                 continue
             if self.appear_then_click(self.I_UI_BACK_BLUE, interval=1.5):
                 continue
+
+    def fire(self, button) -> bool:
+        self.ui_click_until_disappear(button, interval=3)
+        if (self.appear(self.I_E_SETTINGS_BUTTON) or
+                self.appear(self.I_E_AUTO_ROTATE_ON) or
+                self.appear(self.I_E_AUTO_ROTATE_OFF)):
+            # 如果还在探索说明，这个是显示滑动导致挑战按钮不在范围内
+            logger.warning('Fire button disappear, but still in exploration')
+            return False
+        self.run_general_battle(self._config.general_battle_config)
+        self.minions_cnt += 1
+        return True
 
 
 if __name__ == "__main__":
