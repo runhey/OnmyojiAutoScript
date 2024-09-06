@@ -2,11 +2,12 @@
 # @author runhey
 # github https://github.com/runhey
 import json
+import sys
 import numpy as np
 
 from tqdm.contrib.concurrent import process_map
 from pathlib import Path
-
+sys.path.append("D:\\project\\OnmyojiAutoScript")
 from module.logger import logger
 
 MODULE_FOLDER = 'tasks'

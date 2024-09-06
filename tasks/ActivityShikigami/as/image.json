@@ -2,8 +2,8 @@
   {
     "itemName": "one",
     "imageName": "as_one.png",
-    "roiFront": "118,407,71,67",
-    "roiBack": "61,403,177,192",
+    "roiFront": "633,106,88,105",
+    "roiBack": "633,106,88,105",
     "method": "Template matching",
     "threshold": 0.7,
     "description": "进入活动第一步"
@@ -11,19 +11,64 @@
   {
     "itemName": "two",
     "imageName": "as_two.png",
-    "roiFront": "0,0,95,49",
-    "roiBack": "108,110,252,331",
+    "roiFront": "819,685,95,26",
+    "roiBack": "819,685,95,26",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "进入活动第二步"
   },
   {
-    "itemName": "three",
-    "imageName": "as_three.png",
-    "roiFront": "939,484,214,100",
-    "roiBack": "939,484,214,100",
+    "itemName": "gbb",
+    "imageName": "as_gbb.png",
+    "roiFront": "95,344,37,131",
+    "roiBack": "95,344,37,131",
     "method": "Template matching",
     "threshold": 0.8,
-    "description": "进入活动第三步"
+    "description": "点击鬼兵演武"
+  },
+  {
+    "itemName": "gbb_back",
+    "imageName": "as_gbb_back.png",
+    "roiFront": "11,13,63,56",
+    "roiBack": "11,13,63,56",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "爬塔返回按钮"
+  },
+  {
+    "itemName": "back",
+    "imageName": "as_back.png",
+    "roiFront": "20,24,75,76",
+    "roiBack": "20,24,75,76",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "鬼兵演武返回按钮"
+  },
+  {
+    "itemName": "battle",
+    "imageName": "as_battle.png",
+    "roiFront": "1111,545,130,154",
+    "roiBack": "1111,545,130,154",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "挑战按钮"
+  },
+  {
+    "itemName": "unlock",
+    "imageName": "as_unlock.png",
+    "roiFront": "817,648,33,31",
+    "roiBack": "817,648,33,31",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "解锁阵容"
+  },
+  {
+    "itemName": "lock",
+    "imageName": "as_lock.png",
+    "roiFront": "816,644,36,38",
+    "roiBack": "816,644,36,38",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
   }
 ]

@@ -3,6 +3,9 @@
 # github https://github.com/runhey
 import random
 from datetime import datetime, timedelta, time
+import sys
+
+sys.path.append("D:\\project\\OnmyojiAutoScript")
 
 from tasks.base_task import BaseTask
 from tasks.Component.GeneralBattle.general_battle import GeneralBattle
@@ -37,7 +40,7 @@ class ScriptTask(GameUi, BaseActivity, ActivityShikigamiAssets):
         # # 2024-04-04 ---------------------end
         # 选择是游戏的体力还是活动的体力
         current_ap = config.general_climb.ap_mode
-        self.switch(current_ap)
+        # self.switch(current_ap)
 
         # 设定是否锁定阵容
         if config.general_battle.lock_team_enable:

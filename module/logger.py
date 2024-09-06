@@ -1,14 +1,14 @@
 # This Python file uses the following encoding: utf-8
 # @author runhey
 # github https://github.com/runhey
-import datetime
+import datetime  # type: ignore
 import logging
 import os
 import sys
-import traceback
+import traceback  # type: ignore
 
-from io import TextIOBase
-from typing import Callable, List
+from io import TextIOBase  # type: ignore
+from typing import Callable, List  # type: ignore
 
 from rich.console import Console, ConsoleOptions, ConsoleRenderable, NewLine, RenderResult
 from rich.highlighter import RegexHighlighter, NullHighlighter
