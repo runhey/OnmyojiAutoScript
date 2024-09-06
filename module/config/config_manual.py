@@ -14,7 +14,7 @@ class ConfigManual:
         > Dokan > Hunt 
         > Orochi > OrochiMoans > OrochiJudgement > Sougenbi > FallenSun > EternitySea > SixRealms
         > ActivityShikigami > WantedQuests
-        > BondlingFairyland > EvoZone > GoryouRealm
+        > BondlingFairyland > EvoZone > GoryouRealm > HeroTest
         > TrueOrochi > RichMan
         > CollectiveMissions
         > Pets > TalismanPass > SoulsTidy > Delegation > Hyakkiyakou
@@ -36,5 +36,3 @@ class ConfigManual:
     MINITOUCH_FILEPATH_REMOTE = '/data/local/tmp/minitouch'
 
     HERMIT_FILEPATH_LOCAL = './bin/hermit/hermit.apk'
-
-

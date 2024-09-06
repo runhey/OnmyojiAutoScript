@@ -22,15 +22,15 @@ class ActivityShikigamiAssets:
 	# 鬼兵演武返回按钮 
 	I_BACK = RuleImage(roi_front=(20,24,75,76), roi_back=(20,24,75,76), threshold=0.8, method="Template matching", file="./tasks/ActivityShikigami/as/as_back.png")
 	# 挑战按钮 
-	I_BATTLE = RuleImage(roi_front=(1111,545,130,154), roi_back=(1111,545,130,154), threshold=0.8, method="Template matching", file="./tasks/ActivityShikigami/as/as_battle.png")
+	I_BATTLE = RuleImage(roi_front=(1129,588,99,49), roi_back=(1129,588,99,49), threshold=0.8, method="Template matching", file="./tasks/ActivityShikigami/as/as_battle.png")
 	# 解锁阵容 
 	I_UNLOCK = RuleImage(roi_front=(817,648,33,31), roi_back=(817,648,33,31), threshold=0.8, method="Template matching", file="./tasks/ActivityShikigami/as/as_unlock.png")
 	# description 
 	I_LOCK = RuleImage(roi_front=(816,644,36,38), roi_back=(816,644,36,38), threshold=0.8, method="Template matching", file="./tasks/ActivityShikigami/as/as_lock.png")
 
 
-	# Image Rule Assets
-	# 体力的数量检测 
-	I_REMAIN_AP = RuleImage(roi_front=(1093,26,126,33), roi_back=(1093,26,126,33), threshold=0, method="Default", file="./tasks/ActivityShikigami/as/as_remain_ap.png")
+	# Ocr Rule Assets
+	# 投喂的体力 
+	O_REMAIN_AP = RuleOcr(roi=(1095,24,123,33), area=(1095,24,123,33), mode="DigitCounter", method="Default", keyword="", name="remain_ap")
 
 

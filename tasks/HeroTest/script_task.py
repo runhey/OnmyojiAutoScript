@@ -7,7 +7,7 @@ from datetime import datetime, timedelta, time  # type: ignore
 
 from tasks.Component.BaseActivity.base_activity import BaseActivity
 from tasks.Component.BaseActivity.config_activity import ApMode
-from tasks.ActivityShikigami.assets import ActivityShikigamiAssets
+from tasks.HeroTest.assets import HeroTestAssets
 from tasks.GameUi.page import page_main
 from tasks.GameUi.game_ui import GameUi
 
@@ -15,15 +15,18 @@ from module.logger import logger
 from module.exception import TaskEnd
 
 
-class ScriptTask(GameUi, BaseActivity, ActivityShikigamiAssets):
+class ScriptTask(GameUi, BaseActivity, HeroTestAssets):
 
     def run(self) -> None:
 
-        config = self.config.activity_shikigami
+        config = self.config.HeroTest
         self.limit_time: timedelta = config.general_climb.limit_time
         if isinstance(self.limit_time, time):
-            self.limit_time = timedelta(hours=self.limit_time.hour, minutes=self.limit_time.minute,
-                                        seconds=self.limit_time.second)
+            self.limit_time = timedelta(
+                hours=self.limit_time.hour,
+                minutes=self.limit_time.minute,
+                seconds=self.limit_time.second,
+            )
         self.limit_count = config.general_climb.limit_count
 
         self.ui_get_current_page()
@@ -62,7 +65,10 @@ class ScriptTask(GameUi, BaseActivity, ActivityShikigamiAssets):
         # 4. 如果开启了切换到游戏体力，就切换
         while 1:
             # 1
-            if self.limit_time is not None and self.limit_time + self.start_time < datetime.now():
+            if (
+                self.limit_time is not None
+                and self.limit_time + self.start_time < datetime.now()
+            ):
                 logger.info("Time out")
                 break
             if self.current_count >= self.limit_count:
@@ -165,18 +171,18 @@ class ScriptTask(GameUi, BaseActivity, ActivityShikigamiAssets):
             cu, res, total = self.O_REMAIN_AP.ocr(image=self.device.image)
             if cu == total and cu + res == total:
                 if cu > total:
-                    logger.warning(f'Game ap {cu} more than total {total}')
+                    logger.warning(f"Game ap {cu} more than total {total}")
                     return True
-                logger.warning(f'Game ap not enough: {cu}')
+                logger.warning(f"Game ap not enough: {cu}")
                 return False
             return True
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     from module.config.config import Config
     from module.device.device import Device
 
-    c = Config('oas1')
+    c = Config("oas1")
     d = Device(c)
     t = ScriptTask(c, d)
 
