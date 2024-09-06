@@ -3,8 +3,6 @@
 # github https://github.com/runhey
 from datetime import datetime, timedelta, time  # type: ignore
 
-# sys.path.append('D:\\project\\OnmyojiAutoScript')
-
 from tasks.Component.BaseActivity.base_activity import BaseActivity
 from tasks.Component.BaseActivity.config_activity import ApMode
 from tasks.ActivityShikigami.assets import ActivityShikigamiAssets

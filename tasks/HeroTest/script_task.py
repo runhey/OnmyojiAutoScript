@@ -4,8 +4,6 @@
 from datetime import datetime, timedelta, time
 import random  # type: ignore
 
-# sys.path.append('D:\\project\\OnmyojiAutoScript')
-
 from tasks.Component.BaseActivity.base_activity import BaseActivity
 from tasks.HeroTest.assets import HeroTestAssets
 from tasks.GameUi.page import page_main
