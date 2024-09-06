@@ -102,7 +102,7 @@
     "itemName": "exploration_goto_six_gates",
     "imageName": "page_exploration_goto_six_gates.png",
     "roiFront": "838,640,60,49",
-    "roiBack": "793,632,143,66",
+    "roiBack": "818,631,200,66",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "六道之门"
@@ -110,8 +110,8 @@
   {
     "itemName": "exploration_goto_bondling_fairyland",
     "imageName": "page_exploration_goto_bondling_fairyland.png",
-    "roiFront": "937,639,61,54",
-    "roiBack": "937,639,61,54",
+    "roiFront": "937,639,56,49",
+    "roiBack": "928,633,203,64",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "器灵"
