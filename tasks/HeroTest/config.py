@@ -32,7 +32,5 @@ class HeroTestConfig(BaseModel):
 
 class HeroTest(ConfigBase):
     scheduler: Scheduler = Field(default_factory=Scheduler)
-    herotest_config: HeroTestConfig = Field(default_factory=HeroTestConfig)
-    general_battle_config: GeneralBattleConfig = Field(
-        default_factory=GeneralBattleConfig
-    )
+    herotest: HeroTestConfig = Field(default_factory=HeroTestConfig)
+    general_battle: GeneralBattleConfig = Field(default_factory=GeneralBattleConfig)

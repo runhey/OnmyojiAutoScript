@@ -1,12 +1,12 @@
 # This Python file uses the following encoding: utf-8
 # @author runhey
 # github https://github.com/runhey
-from datetime import datetime, timedelta, time  # type: ignore
+from datetime import datetime, timedelta, time
+import random  # type: ignore
 
 # sys.path.append('D:\\project\\OnmyojiAutoScript')
 
 from tasks.Component.BaseActivity.base_activity import BaseActivity
-from tasks.Component.BaseActivity.config_activity import ApMode
 from tasks.HeroTest.assets import HeroTestAssets
 from tasks.GameUi.page import page_main
 from tasks.GameUi.game_ui import GameUi
@@ -19,26 +19,23 @@ class ScriptTask(GameUi, BaseActivity, HeroTestAssets):
 
     def run(self) -> None:
 
-        config = self.config.HeroTest
-        self.limit_time: timedelta = config.general_climb.limit_time
+        config = self.config.hero_test
+        self.limit_time: timedelta = config.herotest.limit_time
         if isinstance(self.limit_time, time):
             self.limit_time = timedelta(
                 hours=self.limit_time.hour,
                 minutes=self.limit_time.minute,
                 seconds=self.limit_time.second,
             )
-        self.limit_count = config.general_climb.limit_count
+        self.limit_count = config.herotest.limit_count
 
         self.ui_get_current_page()
         self.ui_goto(page_main)
         self.home_main()
 
         # # 2024-04-04 ---------------------start
-        # config.general_climb.ap_mode = ApMode.AP_GAME
+        # config.herotest.ap_mode = ApMode.AP_GAME
         # # 2024-04-04 ---------------------end
-        # 选择是游戏的体力还是活动的体力
-        current_ap = config.general_climb.ap_mode
-        # self.switch(current_ap)
 
         # 设定是否锁定阵容
         if config.general_battle.lock_team_enable:
@@ -76,12 +73,6 @@ class ScriptTask(GameUi, BaseActivity, HeroTestAssets):
                 break
             # 2
             self.wait_until_appear(self.I_BATTLE)
-            # is_remain = self.check_ap_remain(current_ap)
-            is_remain = True
-            # 如果没有剩余了且这个时候是体力，就退出活动
-            if not is_remain and current_ap == ApMode.AP_GAME:
-                logger.info("Game ap out")
-                break
 
             # 点击战斗
             logger.info("Click battle")
@@ -102,8 +93,83 @@ class ScriptTask(GameUi, BaseActivity, HeroTestAssets):
                 logger.info("General battle success")
 
         self.main_home()
-        self.set_next_run(task="ActivityShikigami", success=True)
+        self.set_next_run(task="HeroTest", success=True)
         raise TaskEnd
+
+    def battle_wait(self, random_click_swipt_enable: bool) -> bool:
+        self.device.stuck_record_add("BATTLE_STATUS_S")
+        self.device.click_record_clear()
+        logger.info("Start battle process")
+        win: bool = False
+        while 1:
+            self.screenshot()
+            if self.appear(self.I_WIN, threshold=0.8) or self.appear(self.I_DE_WIN):
+                logger.info("Battle result is win")
+                if self.appear(self.I_DE_WIN):
+                    self.ui_click_until_disappear(self.I_DE_WIN)
+                win = True
+                break
+
+            # 如果出现失败 就点击，返回False
+            if self.appear(self.I_FALSE, threshold=0.8):
+                logger.info("Battle result is false")
+                win = False
+                break
+
+            # 如果领奖励
+            if self.appear(self.I_REWARD, threshold=0.6):
+                win = True
+                break
+
+            # 如果领奖励出现金币
+            if self.appear(self.I_REWARD_GOLD, threshold=0.8):
+                win = True
+                break
+            # 如果开启战斗过程随机滑动
+            if random_click_swipt_enable:
+                self.random_click_swipt()
+
+        # 再次确认战斗结果
+        logger.info("Reconfirm the results of the battle")
+        while 1:
+            self.screenshot()
+            if win:
+                # 点击赢了
+                action_click = random.choice([self.C_WIN_1, self.C_WIN_2, self.C_WIN_3])
+                if self.appear_then_click(
+                    self.I_WIN, action=action_click, interval=0.5
+                ):
+                    continue
+                if not self.appear(self.I_WIN):
+                    break
+            else:
+                # 如果失败且 点击失败后
+                if self.appear_then_click(self.I_FALSE, threshold=0.6):
+                    continue
+                if not self.appear(self.I_FALSE, threshold=0.6):
+                    return False
+        # 最后保证能点击 获得奖励
+        if not self.wait_until_appear(self.I_REWARD, wait_time=2):
+            # 有些的战斗没有下面的奖励，所以直接返回
+            logger.info("There is no reward, Exit battle")
+            return win
+        logger.info("Get reward")
+        while 1:
+            self.screenshot()
+            # 如果出现领奖励
+            action_click = random.choice(
+                [self.C_REWARD_1, self.C_REWARD_2, self.C_REWARD_3]
+            )
+            if self.appear_then_click(
+                self.I_REWARD, action=action_click, interval=1.5
+            ) or self.appear_then_click(
+                self.I_REWARD_GOLD, action=action_click, interval=1.5
+            ):
+                continue
+            if not self.appear(self.I_REWARD) and not self.appear(self.I_REWARD_GOLD):
+                break
+
+        return win
 
     def home_main(self) -> bool:
         """
@@ -115,7 +181,7 @@ class ScriptTask(GameUi, BaseActivity, HeroTestAssets):
         self.exp_100(True)
         self.exp_50(True)
         self.close_buff()
-        logger.hr("Enter Shikigami", 2)
+        logger.hr("Enter HeroTest", 2)
         while 1:
             self.screenshot()
             if self.appear(self.I_BATTLE):
@@ -135,7 +201,7 @@ class ScriptTask(GameUi, BaseActivity, HeroTestAssets):
         从活动的爬塔界面到庭院
         :return:
         """
-        logger.hr("Exit Shikigami", 2)
+        logger.hr("Exit HeroTest", 2)
         while 1:
             self.screenshot()
             if self.appear(self.I_ONE):
@@ -153,29 +219,6 @@ class ScriptTask(GameUi, BaseActivity, HeroTestAssets):
                 continue
             if self.appear_then_click(self.I_GBB_BACK, interval=2):
                 continue
-
-    def check_ap_remain(self, current_ap: ApMode) -> bool:
-        """
-        检查体力是否足够
-        :return: 如何还有体力，返回True，否则返回False
-        """
-        self.screenshot()
-        # 用不到活动体力
-        if current_ap == ApMode.AP_ACTIVITY:
-            cu, res, total = self.O_REMAIN_AP_ACTIVITY.ocr(image=self.device.image)
-            if cu == 0 and cu + res == total:
-                logger.warning("Activity ap not enough")
-                return False
-            return True
-        elif current_ap == ApMode.AP_GAME:
-            cu, res, total = self.O_REMAIN_AP.ocr(image=self.device.image)
-            if cu == total and cu + res == total:
-                if cu > total:
-                    logger.warning(f"Game ap {cu} more than total {total}")
-                    return True
-                logger.warning(f"Game ap not enough: {cu}")
-                return False
-            return True
 
 
 if __name__ == "__main__":
