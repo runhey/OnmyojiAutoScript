@@ -1,0 +1,11 @@
+[
+  {
+    "itemName": "remain_ap",
+    "roiFront": "1095,24,123,33",
+    "roiBack": "1095,24,123,33",
+    "mode": "DigitCounter",
+    "method": "Default",
+    "keyword": "",
+    "description": "投喂的体力"
+  }
+]
