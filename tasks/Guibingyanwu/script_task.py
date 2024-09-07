@@ -86,6 +86,7 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, GuibingyanwuAssets):
     # 检测鬼兵部等级是否高于40
     def gbyw_level_enough(self) -> bool:
         level = self.O_GBYW_LEVEL.ocr(self.device.image)
+        level = level % 100
         return level >= 40
 
 
