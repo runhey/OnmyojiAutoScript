@@ -12,11 +12,13 @@ class GuibingyanwuAssets:
 
 	# Image Rule Assets
 	# 鬼兵演武解锁阵容 
-	I_GBYW_UNLOCK = RuleImage(roi_front=(820,650,25,26), roi_back=(820,650,25,26), threshold=0.8, method="Template matching", file="./tasks/Guibingyanwu/gbyw/gbyw_unlock.png")
+	I_GBYW_UNLOCK = RuleImage(roi_front=(820,650,25,26), roi_back=(820,650,25,26), threshold=0.8, method="Template matching", file="./tasks/Guibingyanwu/gbyw/gbyw_gbyw_unlock.png")
 	# 鬼兵演武锁定阵容 
-	I_GBYW_LOCK = RuleImage(roi_front=(821,652,24,26), roi_back=(821,652,24,26), threshold=0.8, method="Template matching", file="./tasks/Guibingyanwu/gbyw/gbyw_lock.png")
+	I_GBYW_LOCK = RuleImage(roi_front=(821,652,24,26), roi_back=(821,652,24,26), threshold=0.8, method="Template matching", file="./tasks/Guibingyanwu/gbyw/gbyw_gbyw_lock.png")
 	# 鬼兵演武开始战斗按钮 
-	I_GBYW_FIRE = RuleImage(roi_front=(1140,590,75,38), roi_back=(1140,590,75,38), threshold=0.8, method="Template matching", file="./tasks/Guibingyanwu/gbyw/gbyw_fire.png")
+	I_GBYW_FIRE = RuleImage(roi_front=(1140,590,75,38), roi_back=(1140,590,75,38), threshold=0.8, method="Template matching", file="./tasks/Guibingyanwu/gbyw/gbyw_gbyw_fire.png")
+	# 鬼兵演武buff图标 
+	I_GBYW_BUFF = RuleImage(roi_front=(806,44,34,33), roi_back=(806,44,34,33), threshold=0.8, method="Template matching", file="./tasks/Guibingyanwu/gbyw/gbyw_gbyw_buff.png")
 
 
 	# Ocr Rule Assets
