@@ -15,9 +15,10 @@ from module.logger import logger
 
 class GeneralBuff(BaseTask, GeneralBuffAssets):
 
-    def open_buff(self):
+    def open_buff(self, buff_icon:RuleImage = GeneralBuffAssets.I_BUFF_1):
         """
         打开buff的总界面
+        @param buff_icon buff图标的识别图像
         :return:
         """
         logger.info('Open buff')
@@ -25,7 +26,7 @@ class GeneralBuff(BaseTask, GeneralBuffAssets):
             self.screenshot()
             if self.appear(self.I_CLOUD):
                 break
-            if self.appear_then_click(self.I_BUFF_1, interval=2):
+            if self.appear_then_click(buff_icon, interval=2):
                 continue
 
         check_image = self.I_AWAKE
@@ -36,9 +37,10 @@ class GeneralBuff(BaseTask, GeneralBuffAssets):
 
             self.swipe(self.S_BUFF_UP, interval=2)
 
-    def close_buff(self):
+    def close_buff(self, buff_icon:RuleImage = GeneralBuffAssets.I_BUFF_1):
         """
         关闭buff的总界面, 但是要确保buff界面已经打开了
+        @param buff_icon buff图标的识别图像
         :return:
         """
         logger.info('Close buff')
@@ -46,7 +48,7 @@ class GeneralBuff(BaseTask, GeneralBuffAssets):
             self.screenshot()
             if not self.appear(self.I_CLOUD):
                 break
-            if self.appear_then_click(self.I_BUFF_1, interval=2):
+            if self.appear_then_click(buff_icon, interval=2):
                 continue
 
     def get_area(self, buff: RuleOcr) -> tuple:

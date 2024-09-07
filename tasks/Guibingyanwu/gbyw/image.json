@@ -1,7 +1,7 @@
 [
   {
     "itemName": "gbyw_unlock",
-    "imageName": "gbyw_unlock.png",
+    "imageName": "gbyw_gbyw_unlock.png",
     "roiFront": "820,650,25,26",
     "roiBack": "820,650,25,26",
     "method": "Template matching",
@@ -10,7 +10,7 @@
   },
   {
     "itemName": "gbyw_lock",
-    "imageName": "gbyw_lock.png",
+    "imageName": "gbyw_gbyw_lock.png",
     "roiFront": "821,652,24,26",
     "roiBack": "821,652,24,26",
     "method": "Template matching",
@@ -19,11 +19,20 @@
   },
   {
     "itemName": "gbyw_fire",
-    "imageName": "gbyw_fire.png",
+    "imageName": "gbyw_gbyw_fire.png",
     "roiFront": "1140,590,75,38",
     "roiBack": "1140,590,75,38",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "鬼兵演武开始战斗按钮"
+  },
+  {
+    "itemName": "gbyw_buff",
+    "imageName": "gbyw_gbyw_buff.png",
+    "roiFront": "806,44,34,33",
+    "roiBack": "806,44,34,33",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "鬼兵演武buff图标"
   }
 ]

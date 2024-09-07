@@ -28,21 +28,19 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, GuibingyanwuAssets):
             self.ui_get_current_page()
             self.ui_goto(page_shikigami_records)
             self.run_switch_soul(con.switch_soul_config.switch_group_team)
-        # 开启加成
-        if con.guibingyanwu_config.exp_50 or con.guibingyanwu_config.exp_100:
-            self.ui_get_current_page()
-            self.ui_goto(page_main)
-            self.open_buff()
-            if con.guibingyanwu_config.exp_50:
-                self.exp_50(is_open=True)
-            if con.guibingyanwu_config.exp_100:
-                self.exp_100(is_open=True)
-            self.close_buff()
         # 前往鬼兵演武界面
         self.ui_get_current_page()
         self.ui_goto(page_guibingyanwu)
         while not self.ui_page_appear(page_guibingyanwu):
             self.screenshot()
+        # 开启加成
+        if con.guibingyanwu_config.exp_50 or con.guibingyanwu_config.exp_100:
+            self.open_buff(self.I_GBYW_BUFF)
+            if con.guibingyanwu_config.exp_50:
+                self.exp_50(is_open=True)
+            if con.guibingyanwu_config.exp_100:
+                self.exp_100(is_open=True)
+            self.close_buff(self.I_GBYW_BUFF)
         # 按照配置锁定队伍
         self.check_lock(
             con.general_battle_config.lock_team_enable,
@@ -77,14 +75,12 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, GuibingyanwuAssets):
                     break
         # 关闭加成
         if con.guibingyanwu_config.exp_50 or con.guibingyanwu_config.exp_100:
-            self.ui_get_current_page()
-            self.ui_goto(page_main)
-            self.open_buff()
+            self.open_buff(self.I_GBYW_BUFF)
             if con.guibingyanwu_config.exp_50:
                 self.exp_50(is_open=False)
             if con.guibingyanwu_config.exp_100:
                 self.exp_100(is_open=False)
-            self.close_buff()
+            self.close_buff(self.I_GBYW_BUFF)
 
         self.set_next_run(task="Guibingyanwu", success=True, finish=True)
         raise TaskEnd
