@@ -84,6 +84,14 @@ class GameUiAssets:
 	I_BONDLING_GOTO_EXPLORATION = RuleImage(roi_front=(20,13,60,59), roi_back=(20,13,60,59), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_bondling_goto_exploration.png")
 	# description 
 	I_RYOUTOPPA_GOTO_REALMRAID = RuleImage(roi_front=(1201,234,62,105), roi_back=(1201,234,62,105), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_ryoutoppa_goto_realmraid.png")
+	# 从探索前往英杰试炼 
+	I_EXPLORATION_GOTO_YINGJIESHILIAN = RuleImage(roi_front=(844,637,42,44), roi_back=(48,621,1228,71), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_exploration_goto_yingjieshilian.png")
+	# 判断是否在英杰试炼界面 
+	I_CHECK_YINGJIESHILIAN = RuleImage(roi_front=(1164,596,56,55), roi_back=(1164,596,56,55), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_check_yingjieshilian.png")
+	# 前往鬼兵演武 
+	I_GOTO_GUIBINGYANWU = RuleImage(roi_front=(98,343,32,130), roi_back=(98,343,32,130), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_goto_guibingyanwu.png")
+	# 判断是否在鬼兵演武界面 
+	I_CHECK_GUIBINGYANWU = RuleImage(roi_front=(40,473,54,51), roi_back=(40,473,54,51), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_check_guibingyanwu.png")
 
 
 	# Image Rule Assets

@@ -14,7 +14,7 @@ class ConfigManual:
         > Dokan > Hunt 
         > Orochi > OrochiMoans > OrochiJudgement > Sougenbi > FallenSun > EternitySea > SixRealms
         > ActivityShikigami > WantedQuests
-        > BondlingFairyland > EvoZone > GoryouRealm
+        > BondlingFairyland > EvoZone > GoryouRealm > Guibingyanwu
         > TrueOrochi > RichMan
         > CollectiveMissions
         > Pets > TalismanPass > SoulsTidy > Delegation > Hyakkiyakou

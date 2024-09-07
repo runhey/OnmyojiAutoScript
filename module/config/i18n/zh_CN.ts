@@ -196,6 +196,7 @@
 	<message><source>WeeklyTrifles</source><translation>每周琐事</translation></message>
 	<message><source>Delegation</source><translation>式神委派</translation></message>
 	<message><source>GoryouRealm</source><translation>御灵之境</translation></message>
+	<message><source>Guibingyanwu</source><translation>鬼兵演武</translation></message>
 	<message><source>CollectiveMissions</source><translation>集体任务</translation></message>
 	<message><source>Hunt</source><translation>狩猎战</translation></message>
 	<message><source>MysteryShop</source><translation>神秘商店</translation></message>
@@ -243,6 +244,7 @@
 	<message><source>WeeklyTrifles</source><translation>每周琐事</translation></message>
 	<message><source>Delegation</source><translation>式神委派</translation></message>
 	<message><source>GoryouRealm</source><translation>御灵之境</translation></message>
+	<message><source>Guibingyanwu</source><translation>鬼兵演武</translation></message>
 	<message><source>CollectiveMissions</source><translation>集体任务</translation></message>
 	<message><source>Hunt</source><translation>狩猎战</translation></message>
 	<message><source>MysteryShop</source><translation>神秘商店</translation></message>
