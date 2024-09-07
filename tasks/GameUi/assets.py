@@ -92,6 +92,8 @@ class GameUiAssets:
 	I_GOTO_GUIBINGYANWU = RuleImage(roi_front=(98,343,32,130), roi_back=(98,343,32,130), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_goto_guibingyanwu.png")
 	# 判断是否在鬼兵演武界面 
 	I_CHECK_GUIBINGYANWU = RuleImage(roi_front=(40,473,54,51), roi_back=(40,473,54,51), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_check_guibingyanwu.png")
+	# 鬼兵演武前往式神录 
+	I_GBYW_GOTO_SHIKIGAMI_RECORDS = RuleImage(roi_front=(996,560,40,38), roi_back=(996,560,40,38), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_gbyw_shikigami_records.png")
 
 
 	# Image Rule Assets

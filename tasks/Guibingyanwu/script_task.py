@@ -23,16 +23,16 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, GuibingyanwuAssets):
         self.limit_time: timedelta = timedelta(
             hours=limit_time.hour, minutes=limit_time.minute, seconds=limit_time.second
         )
-        # 切换御魂
-        if con.switch_soul_config.enable:
-            self.ui_get_current_page()
-            self.ui_goto(page_shikigami_records)
-            self.run_switch_soul(con.switch_soul_config.switch_group_team)
         # 前往鬼兵演武界面
         self.ui_get_current_page()
         self.ui_goto(page_guibingyanwu)
         while not self.ui_page_appear(page_guibingyanwu):
             self.screenshot()
+        # 切换御魂
+        if con.switch_soul_config.enable:
+            self.ui_goto(page_shikigami_records)
+            self.run_switch_soul(con.switch_soul_config.switch_group_team)
+            self.ui_goto(page_guibingyanwu)
         # 开启加成
         if con.guibingyanwu_config.exp_50 or con.guibingyanwu_config.exp_100:
             self.open_buff(self.I_GBYW_BUFF)
@@ -95,7 +95,7 @@ if __name__ == "__main__":
     from module.config.config import Config
     from module.device.device import Device
 
-    c = Config("oas1")
+    c = Config("oas2")
     d = Device(c)
     t = ScriptTask(c, d)
     t.screenshot()
