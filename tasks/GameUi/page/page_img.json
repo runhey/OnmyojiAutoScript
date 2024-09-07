@@ -277,5 +277,14 @@
     "method": "Template matching",
     "threshold": 0.8,
     "description": "判断是否在鬼兵演武界面"
+  },
+  {
+    "itemName": "gbyw_goto_shikigami_records",
+    "imageName": "page_gbyw_shikigami_records.png",
+    "roiFront": "996,560,40,38",
+    "roiBack": "996,560,40,38",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "鬼兵演武前往式神录"
   }
 ]
