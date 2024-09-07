@@ -18,7 +18,10 @@ class Layer(str, Enum):
 
 class HeroTestConfig(BaseModel):
     # 副本选择
-    layer: Layer = Field(default=Layer.YANWU, description="选择要打的关卡")
+    layer: Layer = Field(
+        default=Layer.YANWU,
+        description="选择要打的关卡,兵藏秘境默认不开经验加成。\n升级顺序八华斩->无畏 -> 暴击伤害 -> 默认祝福 -> 默认属性",
+    )
     # 限制时间
     limit_time: Time = Field(default=Time(minute=30), description="limit_time_help")
     # 限制次数

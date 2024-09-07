@@ -7,5 +7,23 @@
     "method": "Default",
     "keyword": "",
     "description": "投喂的体力"
+  },
+  {
+    "itemName": "art_war_card",
+    "roiFront": "735,25,77,31",
+    "roiBack": "735,25,77,31",
+    "mode": "DigitCounter",
+    "method": "Default",
+    "keyword": "",
+    "description": "兵藏秘境兵道帖"
+  },
+  {
+    "itemName": "art_war_card_plus",
+    "roiFront": "914,24,100,35",
+    "roiBack": "914,24,100,35",
+    "mode": "Single",
+    "method": "Default",
+    "keyword": "",
+    "description": "兵道帖机密"
   }
 ]

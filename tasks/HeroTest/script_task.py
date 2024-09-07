@@ -15,9 +15,21 @@ from module.exception import TaskEnd
 
 class ScriptTask(GameUi, BaseActivity, HeroTestAssets):
 
+    is_update = False
+    is_skill = False
+
     def run(self) -> None:
 
         config = self.config.hero_test
+        global is_update
+        global is_skill
+        if config.herotest.layer.value == "鬼兵演武":
+            is_update = True
+            is_skill = False
+        if config.herotest.layer.value == "兵藏秘境":
+            is_skill = True
+            is_update = False
+
         self.limit_time: timedelta = config.herotest.limit_time
         if isinstance(self.limit_time, time):
             self.limit_time = timedelta(
@@ -30,34 +42,42 @@ class ScriptTask(GameUi, BaseActivity, HeroTestAssets):
         self.ui_get_current_page()
         self.ui_goto(page_main)
         self.home_main()
-
-        # # 2024-04-04 ---------------------start
-        # config.herotest.ap_mode = ApMode.AP_GAME
-        # # 2024-04-04 ---------------------end
-
         # 设定是否锁定阵容
-        if config.general_battle.lock_team_enable:
-            logger.info("Lock team")
-            while 1:
-                self.screenshot()
-                if self.appear_then_click(self.I_UNLOCK, interval=1):
-                    continue
-                if self.appear(self.I_LOCK):
-                    break
-        else:
-            logger.info("Unlock team")
-            while 1:
-                self.screenshot()
-                if self.appear_then_click(self.I_LOCK, interval=1):
-                    continue
-                if self.appear(self.I_UNLOCK):
-                    break
+        if is_update:
+            if config.general_battle.lock_team_enable:
+                logger.info("Lock team")
+                while 1:
+                    self.screenshot()
+                    if self.appear_then_click(self.I_UNLOCK, interval=1):
+                        continue
+                    if self.appear(self.I_LOCK):
+                        break
+            else:
+                logger.info("Unlock team")
+                while 1:
+                    self.screenshot()
+                    if self.appear_then_click(self.I_LOCK, interval=1):
+                        continue
+                    if self.appear(self.I_UNLOCK):
+                        break
+        elif is_skill:
+            if config.general_battle.lock_team_enable:
+                logger.info("Lock team")
+                while 1:
+                    self.screenshot()
+                    if self.appear_then_click(self.I_BCMJ_UNLOCK, interval=1):
+                        continue
+                    if self.appear(self.I_BCMJ_LOCK):
+                        break
+            else:
+                logger.info("Unlock team")
+                while 1:
+                    self.screenshot()
+                    if self.appear_then_click(self.I_BCMJ_LOCK, interval=1):
+                        continue
+                    if self.appear(self.I_BCMJ_UNLOCK):
+                        break
 
-        # 流程应该是 在页面处：
-        # 1. 判定计数是否超了，时间是否超了
-        # 2. 如果是消耗活动体力，判定活动体力是否足够 如果是消耗一般的体力，判定一般体力是否足够
-        # 3. 如果开启买体力，就买体力
-        # 4. 如果开启了切换到游戏体力，就切换
         while 1:
             # 1
             if (
@@ -70,22 +90,32 @@ class ScriptTask(GameUi, BaseActivity, HeroTestAssets):
                 logger.info("Count out")
                 break
             # 2
-            self.wait_until_appear(self.I_BATTLE)
+            if is_update:
+                self.wait_until_appear(self.I_BATTLE)
+            if is_skill:
+                self.wait_until_appear(self.I_BCMJ_BATTLE)
 
+            # 如果是兵藏秘境 看看是否有兵道帖
+            if is_skill:
+                if not self.check_art_war_card():
+                    logger.info("Art war card is enough")
+                    break
             # 点击战斗
             logger.info("Click battle")
             while 1:
                 self.screenshot()
-                if self.appear_then_click(self.I_BATTLE, interval=2):
-                    self.device.stuck_record_clear()
-                    continue
-                if not self.appear(self.I_BATTLE):
-                    break
-
-                if self.appear_then_click(self.I_UI_CONFIRM_SAMLL, interval=1):
-                    continue
-                if self.appear_then_click(self.I_UI_CONFIRM, interval=1):
-                    continue
+                if is_update:
+                    if self.appear_then_click(self.I_BATTLE, interval=2):
+                        self.device.stuck_record_clear()
+                        continue
+                    if not self.appear(self.I_BATTLE):
+                        break
+                elif is_skill:
+                    if self.appear_then_click(self.I_BCMJ_BATTLE, interval=2):
+                        self.device.stuck_record_clear()
+                        continue
+                    if not self.appear(self.I_BCMJ_BATTLE):
+                        break
 
             if self.run_general_battle(config=config.general_battle):
                 logger.info("General battle success")
@@ -147,10 +177,36 @@ class ScriptTask(GameUi, BaseActivity, HeroTestAssets):
                 if not self.appear(self.I_FALSE, threshold=0.6):
                     return False
         # 最后保证能点击 获得奖励
-        if not self.wait_until_appear(self.I_REWARD, wait_time=2):
+        if not self.wait_until_appear(self.I_REWARD, wait_time=2) and not is_skill:
             # 有些的战斗没有下面的奖励，所以直接返回
             logger.info("There is no reward, Exit battle")
             return win
+        else:
+            if self.wait_until_appear(self.I_BCMJ_SKILL_ADD_CONFIRM, wait_time=2):
+                while 1:
+                    self.screenshot()
+                    if self.appear_then_click(self.I_BCMJ_SKILL_ADD1, interval=1):
+                        logger.info("升级八华斩")
+                        break
+                    if self.appear_then_click(self.I_BCMJ_SKILL_ADD2, interval=1):
+                        logger.info("升级无畏")
+                        break
+                    if self.appear_then_click(
+                        self.I_BCMJ_PROPERTY_ADD_CRITICAL, interval=1
+                    ):
+                        logger.info("升级暴击伤害")
+                        break
+                    if self.appear_then_click(self.I_BCMJ_BLESS, interval=1):
+                        logger.info("默认升级祝福")
+                        break
+                    if self.appear_then_click(
+                        self.I_BCMJ__DEFALUT_ATTRIBUTE, interval=1
+                    ):
+                        logger.info("默认升级属性")
+                        break
+                if self.appear_then_click(self.I_BCMJ_SKILL_ADD_CONFIRM, interval=1):
+                    return win
+
         logger.info("Get reward")
         while 1:
             self.screenshot()
@@ -169,30 +225,50 @@ class ScriptTask(GameUi, BaseActivity, HeroTestAssets):
 
         return win
 
+    def check_art_war_card(self):
+        self.screenshot()
+        cu, res, total = self.O_ART_WAR_CARD.ocr(image=self.device.image)
+        if cu >= 1:
+            logger.info("Art war card is enough")
+            return True
+        cu, res, total = self.O_ART_WAR_CARD_PLUS.ocr(image=self.device.image)
+        if cu >= 1:
+            logger.info("Art war card is not enough, but plus card is enough")
+            return True
+        return False
+
     def home_main(self) -> bool:
         """
         从庭院到活动的爬塔界面
         :return:
         """
-        # 启动经验加成
-        self.open_buff()
-        self.exp_100(True)
-        self.exp_50(True)
-        self.close_buff()
         logger.hr("Enter HeroTest", 2)
+        global is_update
+        global is_skill
+        # 启动经验加成
+        if is_update:
+            self.open_buff()
+            self.exp_100(True)
+            self.exp_50(True)
+            self.close_buff()
         while 1:
             self.screenshot()
-            if self.appear(self.I_BATTLE):
-                logger.info("发现了战斗按钮，进入活动界面成功")
-                break
-            # 2024-04-04 --------------start
+            if is_update:
+                if self.appear(self.I_BATTLE):
+                    break
+            if is_skill:
+                if self.appear(self.I_BCMJ_BATTLE):
+                    break
             if self.appear_then_click(self.I_ONE, interval=1):
                 continue
-            # 2024-04-04 --------------end
             if self.appear_then_click(self.I_TWO, interval=1):
                 continue
-            if self.appear_then_click(self.I_GBB, interval=1):
-                continue
+            if is_update:
+                if self.appear_then_click(self.I_GBB, interval=1):
+                    continue
+            if is_skill:
+                if self.appear_then_click(self.I_BCMJ, interval=1):
+                    continue
 
     def main_home(self) -> bool:
         """
@@ -200,14 +276,16 @@ class ScriptTask(GameUi, BaseActivity, HeroTestAssets):
         :return:
         """
         logger.hr("Exit HeroTest", 2)
+        global is_update
         while 1:
             self.screenshot()
             if self.appear(self.I_ONE):
-                # 关闭经验加成
-                self.open_buff()
-                self.exp_100(False)
-                self.exp_50(False)
-                self.close_buff()
+                if is_update:
+                    # 关闭经验加成
+                    self.open_buff()
+                    self.exp_100(False)
+                    self.exp_50(False)
+                    self.close_buff()
                 break
             if self.appear_then_click(self.I_UI_BACK_RED, interval=2):
                 continue
