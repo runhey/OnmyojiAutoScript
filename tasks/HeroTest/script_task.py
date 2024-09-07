@@ -111,6 +111,8 @@ class ScriptTask(GameUi, BaseActivity, HeroTestAssets):
                     if not self.appear(self.I_BATTLE):
                         break
                 elif is_skill:
+                    if self.appear_then_click(self.I_BCMJ_RESET_CONFIRM, interval=1):
+                        continue
                     if self.appear_then_click(self.I_BCMJ_BATTLE, interval=2):
                         self.device.stuck_record_clear()
                         continue
@@ -177,7 +179,7 @@ class ScriptTask(GameUi, BaseActivity, HeroTestAssets):
                 if not self.appear(self.I_FALSE, threshold=0.6):
                     return False
         # 最后保证能点击 获得奖励
-        if not self.wait_until_appear(self.I_REWARD, wait_time=2) and not is_skill:
+        if not is_skill and not self.wait_until_appear(self.I_REWARD, wait_time=2):
             # 有些的战斗没有下面的奖励，所以直接返回
             logger.info("There is no reward, Exit battle")
             return win
@@ -227,11 +229,16 @@ class ScriptTask(GameUi, BaseActivity, HeroTestAssets):
 
     def check_art_war_card(self):
         self.screenshot()
-        cu, res, total = self.O_ART_WAR_CARD.ocr(image=self.device.image)
-        if cu >= 1:
+        cu = self.O_ART_WAR_CARD.ocr(image=self.device.image)
+        if cu[0] >= 1:
             logger.info("Art war card is enough")
             return True
-        cu, res, total = self.O_ART_WAR_CARD_PLUS.ocr(image=self.device.image)
+        cu = self.O_ART_WAR_CARD_PLUS.ocr(image=self.device.image)
+        # 转换为int
+        if cu != "":
+            cu = int(cu)
+        else:
+            cu = 0
         if cu >= 1:
             logger.info("Art war card is not enough, but plus card is enough")
             return True

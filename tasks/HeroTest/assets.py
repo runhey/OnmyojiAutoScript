@@ -49,14 +49,18 @@ class HeroTestAssets:
 	I_BCMJ__DEFALUT_ATTRIBUTE = RuleImage(roi_front=(1168,159,21,22), roi_back=(255,155,944,31), threshold=0.8, method="Template matching", file="./tasks/HeroTest/as/as_bcmj__defalut_attribute.png")
 	# 兵藏秘境的阵容未锁 
 	I_BCMJ_UNLOCK = RuleImage(roi_front=(906,652,22,30), roi_back=(906,652,22,30), threshold=0.8, method="Template matching", file="./tasks/HeroTest/as/as_bcmj_unlock.png")
+	# 通过兵藏秘境确认重置按钮 
+	I_BCMJ_RESET_CONFIRM = RuleImage(roi_front=(668,399,180,70), roi_back=(668,399,180,70), threshold=0.8, method="Template matching", file="./tasks/HeroTest/as/as_bcmj_reset_confirm.png")
+	# 通过兵藏秘境取消重置按钮 
+	I_BCMJ_RESET_CLOSE = RuleImage(roi_front=(429,397,186,71), roi_back=(429,397,186,71), threshold=0.8, method="Template matching", file="./tasks/HeroTest/as/as_bcmj_reset_close.png")
 
 
 	# Ocr Rule Assets
 	# 投喂的体力 
 	O_REMAIN_AP = RuleOcr(roi=(1095,24,123,33), area=(1095,24,123,33), mode="DigitCounter", method="Default", keyword="", name="remain_ap")
 	# 兵藏秘境兵道帖 
-	O_ART_WAR_CARD = RuleOcr(roi=(735,25,77,31), area=(735,25,77,31), mode="DigitCounter", method="Default", keyword="", name="art_war_card")
+	O_ART_WAR_CARD = RuleOcr(roi=(712,21,98,36), area=(712,21,98,36), mode="DigitCounter", method="Default", keyword="", name="art_war_card")
 	# 兵道帖机密 
-	O_ART_WAR_CARD_PLUS = RuleOcr(roi=(914,24,100,35), area=(914,24,100,35), mode="Single", method="Default", keyword="", name="art_war_card_plus")
+	O_ART_WAR_CARD_PLUS = RuleOcr(roi=(916,25,90,29), area=(916,25,90,29), mode="SINGLE", method="Default", keyword="", name="art_war_card_plus")
 
 

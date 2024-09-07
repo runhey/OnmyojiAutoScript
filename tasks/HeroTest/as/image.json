@@ -169,5 +169,23 @@
     "method": "Template matching",
     "threshold": 0.8,
     "description": "兵藏秘境的阵容未锁"
+  },
+  {
+    "itemName": "bcmj_reset_confirm",
+    "imageName": "as_bcmj_reset_confirm.png",
+    "roiFront": "668,399,180,70",
+    "roiBack": "668,399,180,70",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "通过兵藏秘境确认重置按钮"
+  },
+  {
+    "itemName": "bcmj_reset_close",
+    "imageName": "as_bcmj_reset_close.png",
+    "roiFront": "429,397,186,71",
+    "roiBack": "429,397,186,71",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "通过兵藏秘境取消重置按钮"
   }
 ]

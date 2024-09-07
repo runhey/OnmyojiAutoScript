@@ -10,8 +10,8 @@
   },
   {
     "itemName": "art_war_card",
-    "roiFront": "735,25,77,31",
-    "roiBack": "735,25,77,31",
+    "roiFront": "712,21,98,36",
+    "roiBack": "712,21,98,36",
     "mode": "DigitCounter",
     "method": "Default",
     "keyword": "",
@@ -19,9 +19,9 @@
   },
   {
     "itemName": "art_war_card_plus",
-    "roiFront": "914,24,100,35",
-    "roiBack": "914,24,100,35",
-    "mode": "Single",
+    "roiFront": "916,25,90,29",
+    "roiBack": "916,25,90,29",
+    "mode": "SINGLE",
     "method": "Default",
     "keyword": "",
     "description": "兵道帖机密"
