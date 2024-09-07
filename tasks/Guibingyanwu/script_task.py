@@ -30,11 +30,11 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, GuibingyanwuAssets):
         # 前往鬼兵演武界面
         self.ui_goto(page_guibingyanwu)
         # 开启加成
-        if con.guibingyanwu_config.exp_50 or con.guibingyanwu_config.exp_100:
+        if con.guibingyanwu_config.buff_exp_50_click or con.guibingyanwu_config.buff_exp_100_click:
             self.open_buff(self.I_GBYW_BUFF)
-            if con.guibingyanwu_config.exp_50:
+            if con.guibingyanwu_config.buff_exp_50_click:
                 self.exp_50(is_open=True)
-            if con.guibingyanwu_config.exp_100:
+            if con.guibingyanwu_config.buff_exp_100_click:
                 self.exp_100(is_open=True)
             self.close_buff(self.I_GBYW_BUFF)
         # 按照配置锁定队伍
@@ -72,11 +72,11 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, GuibingyanwuAssets):
                 break
 
         # 关闭加成
-        if con.guibingyanwu_config.exp_50 or con.guibingyanwu_config.exp_100:
+        if con.guibingyanwu_config.buff_exp_50_click or con.guibingyanwu_config.buff_exp_100_click:
             self.open_buff(self.I_GBYW_BUFF)
-            if con.guibingyanwu_config.exp_50:
+            if con.guibingyanwu_config.buff_exp_50_click:
                 self.exp_50(is_open=False)
-            if con.guibingyanwu_config.exp_100:
+            if con.guibingyanwu_config.buff_exp_100_click:
                 self.exp_100(is_open=False)
             self.close_buff(self.I_GBYW_BUFF)
 

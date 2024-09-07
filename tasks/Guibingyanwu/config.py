@@ -15,9 +15,9 @@ class GuibingyanwuConfig(ConfigBase):
     # 限制次数
     limit_count: int = Field(default=30, description="limit_count_help")
     # 开启50%经验加成
-    exp_50: bool = Field(default=False, description="Buff Exp 50 Click")
+    buff_exp_50_click: bool = Field(default=False)
     # 开启100%经验加成
-    exp_100: bool = Field(default=False, description="Buff Exp 100 Click")
+    buff_exp_100_click: bool = Field(default=False)
 
 
 class Guibingyanwu(ConfigBase):
