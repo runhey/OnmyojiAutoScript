@@ -1,0 +1,11 @@
+[
+  {
+    "itemName": "gbyw_level",
+    "roiFront": "140,490,36,29",
+    "roiBack": "140,490,36,29",
+    "mode": "Digit",
+    "method": "Default",
+    "keyword": "",
+    "description": "鬼兵部等级"
+  }
+]

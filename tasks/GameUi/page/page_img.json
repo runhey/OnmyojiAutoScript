@@ -241,5 +241,41 @@
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"
+  },
+  {
+    "itemName": "exploration_goto_yingjieshilian",
+    "imageName": "page_exploration_goto_yingjieshilian.png",
+    "roiFront": "844,637,42,44",
+    "roiBack": "48,621,1228,71",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "从探索前往英杰试炼"
+  },
+  {
+    "itemName": "check_yingjieshilian",
+    "imageName": "page_check_yingjieshilian.png",
+    "roiFront": "1164,596,56,55",
+    "roiBack": "1164,596,56,55",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "判断是否在英杰试炼界面"
+  },
+  {
+    "itemName": "goto_guibingyanwu",
+    "imageName": "page_goto_guibingyanwu.png",
+    "roiFront": "98,343,32,130",
+    "roiBack": "98,343,32,130",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "前往鬼兵演武"
+  },
+  {
+    "itemName": "check_guibingyanwu",
+    "imageName": "page_check_guibingyanwu.png",
+    "roiFront": "40,473,54,51",
+    "roiBack": "40,473,54,51",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "判断是否在鬼兵演武界面"
   }
 ]

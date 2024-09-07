@@ -1,0 +1,29 @@
+[
+  {
+    "itemName": "gbyw_unlock",
+    "imageName": "gbyw_unlock.png",
+    "roiFront": "820,650,25,26",
+    "roiBack": "820,650,25,26",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "鬼兵演武解锁阵容"
+  },
+  {
+    "itemName": "gbyw_lock",
+    "imageName": "gbyw_lock.png",
+    "roiFront": "821,652,24,26",
+    "roiBack": "821,652,24,26",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "鬼兵演武锁定阵容"
+  },
+  {
+    "itemName": "gbyw_fire",
+    "imageName": "gbyw_fire.png",
+    "roiFront": "1140,590,75,38",
+    "roiBack": "1140,590,75,38",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "鬼兵演武开始战斗按钮"
+  }
+]

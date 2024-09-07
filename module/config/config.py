@@ -376,6 +376,35 @@ class Config(ConfigState, ConfigManual, ConfigWatcher, ConfigMenu):
             self.lock_config.release()
         # 设置
         logger.attr(f'{task}.scheduler.next_run', next_run)
+    
+    def close_task(self, task: str=None):
+        """
+        关闭指定任务
+        :param task: 任务名称，大驼峰的
+        """
+        # 加载配置文件
+        self.reload()
+        # 任务预处理
+        if not task:
+            task = self.task.command
+        task = convert_to_underscore(task)
+        task_object = getattr(self.model, task, None)
+        if not task_object:
+            logger.warning(f'No task named {task}')
+            return
+        scheduler = getattr(task_object, 'scheduler', None)
+        if not scheduler:
+            logger.warning(f'No scheduler in {task}')
+            return
+        
+        # 保证线程安全的
+        self.lock_config.acquire()
+        try:
+            scheduler.enable = False
+            self.save()
+        finally:
+            self.lock_config.release()
+
 
 
     @cached_property

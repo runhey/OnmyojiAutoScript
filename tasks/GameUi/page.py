@@ -84,6 +84,14 @@ page_exploration.link(button=G.I_EXPLORATION_GOTO_AREA_BOSS, destination=page_ar
 page_heian_kitan = Page(G.I_CHECK_HEIAN_KITAN)
 page_heian_kitan.link(button=G.I_CHECK_HEIAN_KITAN, destination=page_exploration)
 page_exploration.link(button=G.I_EXPLORATION_GOTO_HEIAN_KITAN, destination=page_heian_kitan)
+# 英杰试炼
+page_yingjieshilian = Page(G.I_CHECK_YINGJIESHILIAN)
+page_yingjieshilian.link(button=G.I_BACK_YOLLOW, destination=page_exploration)
+page_exploration.link(button=G.I_EXPLORATION_GOTO_YINGJIESHILIAN, destination=page_yingjieshilian)
+# 鬼兵演武
+page_guibingyanwu = Page(G.I_CHECK_GUIBINGYANWU)
+page_guibingyanwu.link(button=G.I_BACK_YOLLOW, destination=page_yingjieshilian)
+page_yingjieshilian.link(button=G.I_GOTO_GUIBINGYANWU, destination=page_guibingyanwu)
 # 六道之门 six gates
 page_six_gates = Page(G.I_CHECK_SIX_GATES)
 page_six_gates.link(button=G.I_SIX_GATES_GOTO_EXPLORATION, destination=page_exploration)
