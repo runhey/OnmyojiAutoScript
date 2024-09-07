@@ -64,15 +64,17 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, GuibingyanwuAssets):
             if datetime.now() - self.start_time >= self.limit_time:
                 logger.info("Guibingyanwu time limit out")
                 break
-
             # 点击挑战
-            while 1:
-                self.screenshot()
-                if self.appear_then_click(self.I_GBYW_FIRE, interval=1):
-                    pass
-                if not self.appear(self.I_GBYW_FIRE):
-                    self.run_general_battle(config=con.general_battle_config)
-                    break
+            self.ui_click_until_disappear(self.I_GBYW_FIRE, interval=1)
+            # 等待战斗结束
+            if self.run_general_battle(config=con.general_battle_config):
+                logger.info("Battle success")
+            else:
+                # 如果失败关闭任务
+                logger.error("Battle failed, turn off task")
+                self.config.close_task("Guibingyanwu")
+                break
+
         # 关闭加成
         if con.guibingyanwu_config.exp_50 or con.guibingyanwu_config.exp_100:
             self.open_buff(self.I_GBYW_BUFF)
@@ -95,7 +97,7 @@ if __name__ == "__main__":
     from module.config.config import Config
     from module.device.device import Device
 
-    c = Config("oas2")
+    c = Config("oas1")
     d = Device(c)
     t = ScriptTask(c, d)
     t.screenshot()
