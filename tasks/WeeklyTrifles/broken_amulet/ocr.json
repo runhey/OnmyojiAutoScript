@@ -1,8 +1,8 @@
 [
   {
     "itemName": "ba_amount_1",
-    "roiFront": "360,11,86,36",
-    "roiBack": "360,11,86,36",
+    "roiFront": "535,11,124,36",
+    "roiBack": "535,11,124,36",
     "mode": "Digit",
     "method": "Default",
     "keyword": "",
@@ -10,8 +10,8 @@
   },
   {
     "itemName": "ba_amount_2",
-    "roiFront": "762,570,118,35",
-    "roiBack": "762,570,118,35",
+    "roiFront": "762,570,125,35",
+    "roiBack": "762,570,125,35",
     "mode": "DigitCounter",
     "method": "Default",
     "keyword": "",
