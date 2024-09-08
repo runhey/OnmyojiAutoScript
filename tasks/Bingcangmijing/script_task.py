@@ -5,6 +5,7 @@
 from datetime import datetime, timedelta
 import re
 import difflib
+import random
 from collections import OrderedDict
 
 from module.logger import logger
@@ -140,6 +141,52 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, BingcangmijingAssets):
             logger.warning("No matched buff, select buff 1 by default")
             self.ui_click_until_disappear(self.I_BCMJ_BUFF1_CLICK)
         self.ui_click_until_disappear(self.I_BCMJ_BUFF_CONFIRM)
+    
+    def battle_wait(self, random_click_swipt_enable: bool) -> bool:
+        # 重写
+        # 有的时候是长战斗，需要在设置stuck检测为长战斗
+        # 但是无需取消设置，因为如果有点击或者滑动的话 handle_control_check会自行取消掉
+        self.device.stuck_record_add('BATTLE_STATUS_S')
+        self.device.click_record_clear()
+        logger.info("Start battle process")
+        win: bool = False
+        while 1:
+            self.screenshot()
+            # 胜利
+            if self.appear(self.I_WIN, threshold=0.8):
+                logger.info("Battle result is win")
+                win = True
+                break
+
+            # 失败
+            if self.appear(self.I_FALSE, threshold=0.8):
+                logger.info("Battle result is false")
+                win = False
+                break
+
+            # 如果开启战斗过程随机滑动
+            if random_click_swipt_enable:
+                self.random_click_swipt()
+
+        # 再次确认战斗结果
+        logger.info("Reconfirm the results of the battle")
+        while 1:
+            self.screenshot()
+            if win:
+                # 点击赢了
+                action_click = random.choice([self.C_WIN_1, self.C_WIN_2, self.C_WIN_3])
+                if self.appear_then_click(self.I_WIN, action=action_click, interval=0.5):
+                    continue
+                if not self.appear(self.I_WIN):
+                    break
+            else:
+                # 如果失败且 点击失败后
+                if self.appear_then_click(self.I_FALSE, threshold=0.6):
+                    continue
+                if not self.appear(self.I_FALSE, threshold=0.6):
+                    return False
+                
+        return win
 
 
 if __name__ == "__main__":
