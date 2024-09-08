@@ -365,8 +365,8 @@ class ScriptTask(GameUi, ReplaceShikigami, KekkaiUtilizeAssets):
             if last_best is not None:
                 last_index = self.order_cards.index(last_best)
                 current_index = self.order_cards.index(card_class)
-                if current_index > last_index:
-                    # 不比上一张卡好就退出不执行操作
+                if current_index >= last_index:
+                    # 不比上一张卡好就退出不执行操作，相同星级卡亦跳过
                     logger.info('Current card is not better than last best card')
                     return last_best
             logger.info('Current select card: %s', card_class)
