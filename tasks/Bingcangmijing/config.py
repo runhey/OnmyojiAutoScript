@@ -16,6 +16,8 @@ class BingcangmijingConfig(ConfigBase):
     limit_count: int = Field(default=30, description="limit_count_help")
     # buff选择优先级
     custom_buff_priority: str = Field(default="")
+    # 门票用完自动设定下周再执行
+    auto_next_week: bool = Field(default=True)
 
 
 class Bingcangmijing(ConfigBase):
