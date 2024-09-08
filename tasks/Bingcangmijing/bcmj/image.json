@@ -88,5 +88,14 @@
     "method": "Template matching",
     "threshold": 0.8,
     "description": "重置兵藏秘境弹窗选取消"
+  },
+  {
+    "itemName": "bcmj_weekly_confirm",
+    "imageName": "bcmj_bcmj_weekly_confirm.png",
+    "roiFront": "685,410,146,44",
+    "roiBack": "685,410,146,44",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "兵藏秘境每周提示确认"
   }
 ]

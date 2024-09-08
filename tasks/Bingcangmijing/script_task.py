@@ -77,7 +77,9 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, BingcangmijingAssets):
             # 点击挑战
             while True:
                 self.screenshot()
-                # 重置
+                # 每周都会弹一个「开始挑战后不可更换技能和祝福」的提示，点掉他
+                self.appear_then_click(self.I_BCMJ_WEEKLY_CONFIRM)
+                # 如果需要重置则点击
                 self.appear_then_click(self.I_BCMJ_RESET_CONFIRM)
                 if not self.appear(self.I_BCMJ_FIRE):
                     break
