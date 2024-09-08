@@ -273,7 +273,8 @@ if __name__ == '__main__':
     t = ScriptTask(c, d)
     t.screenshot()
 
-    t._share_collect()
+    t.run()
+    # t._share_collect()
     # t.click_share(t.I_WT_SE_WECHAT)
 
 
