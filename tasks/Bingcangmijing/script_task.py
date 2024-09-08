@@ -19,6 +19,20 @@ from tasks.Bingcangmijing.assets import BingcangmijingAssets
 from tasks.Bingcangmijing.config import Bingcangmijing
 
 
+def remove_punctuation(text):
+    return re.sub(r"[^\w\s]", "", text)
+
+
+def get_next_monday():
+    today = datetime.now()
+    # 计算到下一个星期一的天数
+    days_ahead = 7 - today.weekday()  # Monday is 0
+    if days_ahead == 7:
+        days_ahead = 0
+    next_monday = today + timedelta(days=days_ahead)
+    return next_monday.replace(hour=0, minute=0, second=0, microsecond=0)
+
+
 class ScriptTask(GeneralBattle, GameUi, SwitchSoul, BingcangmijingAssets):
     def run(self):
         con: Bingcangmijing = self.config.bingcangmijing
@@ -41,10 +55,19 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, BingcangmijingAssets):
             self.I_BCMJ_UNLOCK,
         )
         # 开始循环
+        success = True
+        no_ticket = False
         while 1:
             self.screenshot()
             while not self.ui_page_appear(page_bingcangmijing):
                 self.screenshot()
+            normal_ticket_count, _, _ = self.O_BINGDAOTIE_COUNT.ocr(self.device.image)
+            if normal_ticket_count == 0:
+                vip_ticket_count = self.O_BINGDAOTIE_JIMI_COUNT.ocr(self.device.image)
+                if vip_ticket_count == 0:
+                    logger.info("No ticket remained")
+                    no_ticket = True
+                    raise TaskEnd
             # 是否达到指定时间或次数
             if self.current_count >= self.limit_count:
                 logger.info("Bingcangmijing count limit out")
@@ -64,9 +87,9 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, BingcangmijingAssets):
             if self.run_general_battle(config=con.general_battle_config):
                 logger.info("Battle success")
             else:
-                # 如果失败关闭任务
+                # 战斗失败退出
                 logger.error("Battle failed, turn off task")
-                self.config.close_task("Bingcangmijing")
+                success = False
                 break
             # 判断是否需要选择祝福
             while True:
@@ -78,31 +101,53 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, BingcangmijingAssets):
                     if self.ui_page_appear(page_bingcangmijing):
                         logger.info("No buff to select")
                         break
-
-        self.set_next_run(task="Bingcangmijing", success=True, finish=True)
+        if no_ticket and con.bingcangmijing_config.auto_next_week:
+            # 设定下次执行时间为下周一00:00
+            next_run_datetime = get_next_monday()
+            self.set_next_run(task="Bingcangmijing", target=next_run_datetime)
+        else:
+            self.set_next_run(task="Bingcangmijing", success=success, finish=True)
         raise TaskEnd
-    
-    def remove_punctuation(text):
-        return re.sub(r'[^\w\s]', '', text)
-        
+
     def parse_buff_priority(self, con: Bingcangmijing):
         def merge_and_deduplicate(custom_priority, default_priority):
             combined = custom_priority + default_priority
             return list(OrderedDict.fromkeys(combined))
+
         default_priority_list = [
-            "天下布武绝命","天下布武刃降","天下布武血怒",
-            "鬼神之策刃破","鬼神之策爆烈","鬼神之策剑势",
-            "八华斩血啸","八华斩追斩","八华斩增进",
-            "血之契追袭","血之契刃反","血之契锐利",
-            "天剑退敌","天剑连破","天剑协战",
-            "无畏附魂","无畏透甲",
-            "鬼胄追击","鬼胄诱敌",
-            "剑之垒万刃","剑之垒乘胜",
-            "暴击伤害加成","伤害加成","速度提升","暴击加成",
+            "天下布武绝命",
+            "天下布武刃降",
+            "天下布武血怒",
+            "鬼神之策刃破",
+            "鬼神之策爆烈",
+            "鬼神之策剑势",
+            "八华斩血啸",
+            "八华斩追斩",
+            "八华斩增进",
+            "血之契追袭",
+            "血之契刃反",
+            "血之契锐利",
+            "天剑退敌",
+            "天剑连破",
+            "天剑协战",
+            "无畏附魂",
+            "无畏透甲",
+            "鬼胄追击",
+            "鬼胄诱敌",
+            "剑之垒万刃",
+            "剑之垒乘胜",
+            "暴击伤害加成",
+            "伤害加成",
+            "速度提升",
+            "暴击加成",
         ]
         custom_priority_str = con.bingcangmijing_config.custom_buff_priority
-        custom_priority_list = [ScriptTask.remove_punctuation(p) for p in custom_priority_str.split(">")]
-        self.priority_list = merge_and_deduplicate(custom_priority_list, default_priority_list)
+        custom_priority_list = [
+            remove_punctuation(p) for p in custom_priority_str.split(">")
+        ]
+        self.priority_list = merge_and_deduplicate(
+            custom_priority_list, default_priority_list
+        )
 
     def match_buff(self, buff_text):
         best_match = difflib.get_close_matches(buff_text, self.priority_list, n=1)
@@ -112,10 +157,10 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, BingcangmijingAssets):
 
     def select_buff(self):
         buff_texts = []
-        buff_texts.append(ScriptTask.remove_punctuation(self.O_BUFF_1.ocr(self.device.image)))
-        buff_texts.append(ScriptTask.remove_punctuation(self.O_BUFF_2.ocr(self.device.image)))
-        buff_texts.append(ScriptTask.remove_punctuation(self.O_BUFF_3.ocr(self.device.image)))
-        buff_texts.append(ScriptTask.remove_punctuation(self.O_BUFF_4.ocr(self.device.image)))
+        buff_texts.append(remove_punctuation(self.O_BUFF_1.ocr(self.device.image)))
+        buff_texts.append(remove_punctuation(self.O_BUFF_2.ocr(self.device.image)))
+        buff_texts.append(remove_punctuation(self.O_BUFF_3.ocr(self.device.image)))
+        buff_texts.append(remove_punctuation(self.O_BUFF_4.ocr(self.device.image)))
         # 找出最佳buff
         best_buff = ""
         best_buff_i = 0
@@ -141,12 +186,12 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, BingcangmijingAssets):
             logger.warning("No matched buff, select buff 1 by default")
             self.ui_click_until_disappear(self.I_BCMJ_BUFF1_CLICK)
         self.ui_click_until_disappear(self.I_BCMJ_BUFF_CONFIRM)
-    
+
     def battle_wait(self, random_click_swipt_enable: bool) -> bool:
         # 重写
         # 有的时候是长战斗，需要在设置stuck检测为长战斗
         # 但是无需取消设置，因为如果有点击或者滑动的话 handle_control_check会自行取消掉
-        self.device.stuck_record_add('BATTLE_STATUS_S')
+        self.device.stuck_record_add("BATTLE_STATUS_S")
         self.device.click_record_clear()
         logger.info("Start battle process")
         win: bool = False
@@ -175,7 +220,9 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, BingcangmijingAssets):
             if win:
                 # 点击赢了
                 action_click = random.choice([self.C_WIN_1, self.C_WIN_2, self.C_WIN_3])
-                if self.appear_then_click(self.I_WIN, action=action_click, interval=0.5):
+                if self.appear_then_click(
+                    self.I_WIN, action=action_click, interval=0.5
+                ):
                     continue
                 if not self.appear(self.I_WIN):
                     break
@@ -185,7 +232,7 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, BingcangmijingAssets):
                     continue
                 if not self.appear(self.I_FALSE, threshold=0.6):
                     return False
-                
+
         return win
 
 
