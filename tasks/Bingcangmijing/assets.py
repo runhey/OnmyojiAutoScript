@@ -31,6 +31,8 @@ class BingcangmijingAssets:
 	I_BCMJ_RESET_CONFIRM = RuleImage(roi_front=(685,411,147,41), roi_back=(685,411,147,41), threshold=0.8, method="Template matching", file="./tasks/Bingcangmijing/bcmj/bcmj_bcmj_reset_confirm.png")
 	# 重置兵藏秘境弹窗选取消 
 	I_BCMJ_RESET_CANCEL = RuleImage(roi_front=(442,412,156,44), roi_back=(442,412,156,44), threshold=0.8, method="Template matching", file="./tasks/Bingcangmijing/bcmj/bcmj_bcmj_reset_cancel.png")
+	# 兵藏秘境每周提示确认 
+	I_BCMJ_WEEKLY_CONFIRM = RuleImage(roi_front=(685,410,146,44), roi_back=(685,410,146,44), threshold=0.8, method="Template matching", file="./tasks/Bingcangmijing/bcmj/bcmj_bcmj_weekly_confirm.png")
 
 
 	# Ocr Rule Assets
