@@ -60,6 +60,7 @@ from tasks.EvoZone.config import EvoZone
 from tasks.GoryouRealm.config import GoryouRealm
 from tasks.Hyakkiyakou.config import Hyakkiyakou
 from tasks.Guibingyanwu.config import Guibingyanwu
+from tasks.Bingcangmijing.config import Bingcangmijing
 # ----------------------------------------------------------------------------------------------------------------------
 
 # 每周任务---------------------------------------------------------------------------------------------------------------
@@ -116,7 +117,10 @@ class ConfigModel(ConfigBase):
     evo_zone: EvoZone = Field(default_factory=EvoZone)
     goryou_realm: GoryouRealm = Field(default_factory=GoryouRealm)
     hyakkiyakou: Hyakkiyakou = Field(default_factory=Hyakkiyakou)
+    # 鬼兵演武
     guibingyanwu: Guibingyanwu = Field(default_factory=Guibingyanwu)
+    # 兵藏秘境
+    bingcangmijing: Bingcangmijing = Field(default_factory=Bingcangmijing)
 
     # 这些是每周任务
     true_orochi: TrueOrochi = Field(default_factory=TrueOrochi)

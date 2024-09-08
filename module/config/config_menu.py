@@ -26,7 +26,7 @@ class ConfigMenu:
                                    'Tako']
         # 很肝的任务
         self.menu["Liver Emperor Exclusive"] = ['BondlingFairyland', 'EvoZone', 'GoryouRealm', 'Exploration',
-                                                'Hyakkiyakou', 'Guibingyanwu']
+                                                'Hyakkiyakou', 'Guibingyanwu', 'Bingcangmijing']
         # 阴阳寮
         self.menu["Guild"] = ['KekkaiUtilize', 'KekkaiActivation', 'RealmRaid', 'RyouToppa', 'Dokan', 'CollectiveMissions',
                               'Hunt']

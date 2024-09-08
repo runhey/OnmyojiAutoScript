@@ -1,0 +1,92 @@
+[
+  {
+    "itemName": "bcmj_unlock",
+    "imageName": "bcmj_bcmj_unlock.png",
+    "roiFront": "907,658,23,20",
+    "roiBack": "907,658,23,20",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "兵藏秘境解锁阵容"
+  },
+  {
+    "itemName": "bcmj_lock",
+    "imageName": "bcmj_bcmj_lock.png",
+    "roiFront": "907,658,23,20",
+    "roiBack": "907,658,23,20",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "兵藏秘境锁定阵容"
+  },
+  {
+    "itemName": "bcmj_fire",
+    "imageName": "bcmj_bcmj_fire.png",
+    "roiFront": "1140,590,75,38",
+    "roiBack": "1140,590,75,38",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "兵藏秘境开始战斗按钮"
+  },
+  {
+    "itemName": "bcmj_buff_confirm",
+    "imageName": "bcmj_bcmj_buff_confirm.png",
+    "roiFront": "573,625,130,48",
+    "roiBack": "573,625,130,48",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "确认选择祝福"
+  },
+  {
+    "itemName": "bcmj_buff1_click",
+    "imageName": "bcmj_bcmj_buff1_click.png",
+    "roiFront": "44,119,20,488",
+    "roiBack": "44,119,20,488",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "选择局内祝福1"
+  },
+  {
+    "itemName": "bcmj_buff2_click",
+    "imageName": "bcmj_bcmj_buff2_click.png",
+    "roiFront": "345,118,20,490",
+    "roiBack": "345,118,20,490",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "选择局内祝福2"
+  },
+  {
+    "itemName": "bcmj_buff3_click",
+    "imageName": "bcmj_bcmj_buff3_click.png",
+    "roiFront": "651,120,20,488",
+    "roiBack": "651,120,20,488",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "选择局内祝福3"
+  },
+  {
+    "itemName": "bcmj_buff4_click",
+    "imageName": "bcmj_bcmj_buff4_click.png",
+    "roiFront": "953,121,20,486",
+    "roiBack": "953,121,20,486",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "选择局内祝福4"
+  },
+  {
+    "itemName": "bcmj_reset_confirm",
+    "imageName": "bcmj_bcmj_reset_confirm.png",
+    "roiFront": "685,411,147,41",
+    "roiBack": "685,411,147,41",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "重置兵藏秘境弹窗选确认"
+  },
+  {
+    "itemName": "bcmj_reset_cancel",
+    "imageName": "bcmj_bcmj_reset_cancel.png",
+    "roiFront": "442,412,156,44",
+    "roiBack": "442,412,156,44",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "重置兵藏秘境弹窗选取消"
+  }
+]

@@ -280,11 +280,38 @@
   },
   {
     "itemName": "gbyw_goto_shikigami_records",
-    "imageName": "page_gbyw_shikigami_records.png",
+    "imageName": "page_gbyw_goto_shikigami_records.png",
     "roiFront": "996,560,40,38",
     "roiBack": "996,560,40,38",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "鬼兵演武前往式神录"
+  },
+  {
+    "itemName": "goto_bingcangmijing",
+    "imageName": "page_goto_bingcangmijing.png",
+    "roiFront": "1091,348,34,131",
+    "roiBack": "1091,348,34,131",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "前往兵藏秘境"
+  },
+  {
+    "itemName": "check_bingcangmijing",
+    "imageName": "page_check_bingcangmijing.png",
+    "roiFront": "89,18,132,35",
+    "roiBack": "89,18,132,35",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "判断是否在兵藏秘境界面"
+  },
+  {
+    "itemName": "bcmj_goto_shikigami_records",
+    "imageName": "page_bcmj_goto_shikigami_records.png",
+    "roiFront": "994,565,38,39",
+    "roiBack": "994,565,38,39",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "兵藏秘境前往式神录"
   }
 ]
