@@ -1,0 +1,56 @@
+[
+  {
+    "itemName": "bingdaotie_count",
+    "roiFront": "717,21,113,35",
+    "roiBack": "717,21,113,35",
+    "mode": "DigitCounter",
+    "method": "Default",
+    "keyword": "",
+    "description": "兵道帖数量"
+  },
+  {
+    "itemName": "bingdaotie_jimi_count",
+    "roiFront": "912,22,100,33",
+    "roiBack": "912,22,100,33",
+    "mode": "Digit",
+    "method": "Default",
+    "keyword": "",
+    "description": "兵道帖·机密数量"
+  },
+  {
+    "itemName": "buff_1",
+    "roiFront": "58,346,250,54",
+    "roiBack": "58,346,250,54",
+    "mode": "Single",
+    "method": "Default",
+    "keyword": "",
+    "description": "局内祝福升级1"
+  },
+  {
+    "itemName": "buff_2",
+    "roiFront": "363,346,250,54",
+    "roiBack": "363,346,250,54",
+    "mode": "Single",
+    "method": "Default",
+    "keyword": "",
+    "description": "局内祝福升级2"
+  },
+  {
+    "itemName": "buff_3",
+    "roiFront": "665,346,250,54",
+    "roiBack": "665,346,250,54",
+    "mode": "Single",
+    "method": "Default",
+    "keyword": "",
+    "description": "局内祝福升级3"
+  },
+  {
+    "itemName": "buff_4",
+    "roiFront": "968,346,250,54",
+    "roiBack": "968,346,250,54",
+    "mode": "Single",
+    "method": "Default",
+    "keyword": "",
+    "description": "局内祝福升级4"
+  }
+]

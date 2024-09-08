@@ -92,6 +92,10 @@ page_exploration.link(button=G.I_EXPLORATION_GOTO_YINGJIESHILIAN, destination=pa
 page_guibingyanwu = Page(G.I_CHECK_GUIBINGYANWU)
 page_guibingyanwu.link(button=G.I_BACK_YOLLOW, destination=page_yingjieshilian)
 page_yingjieshilian.link(button=G.I_GOTO_GUIBINGYANWU, destination=page_guibingyanwu)
+# 兵藏秘境
+page_bingcangmijing = Page(G.I_CHECK_BINGCANGMIJING)
+page_bingcangmijing.link(button=G.I_BACK_YOLLOW, destination=page_yingjieshilian)
+page_yingjieshilian.link(button=G.I_GOTO_BINGCANGMIJING, destination=page_bingcangmijing)
 # 六道之门 six gates
 page_six_gates = Page(G.I_CHECK_SIX_GATES)
 page_six_gates.link(button=G.I_SIX_GATES_GOTO_EXPLORATION, destination=page_exploration)

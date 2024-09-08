@@ -93,7 +93,13 @@ class GameUiAssets:
 	# 判断是否在鬼兵演武界面 
 	I_CHECK_GUIBINGYANWU = RuleImage(roi_front=(40,473,54,51), roi_back=(40,473,54,51), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_check_guibingyanwu.png")
 	# 鬼兵演武前往式神录 
-	I_GBYW_GOTO_SHIKIGAMI_RECORDS = RuleImage(roi_front=(996,560,40,38), roi_back=(996,560,40,38), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_gbyw_shikigami_records.png")
+	I_GBYW_GOTO_SHIKIGAMI_RECORDS = RuleImage(roi_front=(996,560,40,38), roi_back=(996,560,40,38), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_gbyw_goto_shikigami_records.png")
+	# 前往兵藏秘境 
+	I_GOTO_BINGCANGMIJING = RuleImage(roi_front=(1091,348,34,131), roi_back=(1091,348,34,131), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_goto_bingcangmijing.png")
+	# 判断是否在兵藏秘境界面 
+	I_CHECK_BINGCANGMIJING = RuleImage(roi_front=(89,18,132,35), roi_back=(89,18,132,35), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_check_bingcangmijing.png")
+	# 兵藏秘境前往式神录 
+	I_BCMJ_GOTO_SHIKIGAMI_RECORDS = RuleImage(roi_front=(994,565,38,39), roi_back=(994,565,38,39), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_bcmj_goto_shikigami_records.png")
 
 
 	# Image Rule Assets
