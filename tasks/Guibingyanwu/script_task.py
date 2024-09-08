@@ -44,6 +44,7 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, GuibingyanwuAssets):
             self.I_GBYW_UNLOCK,
         )
         # 开始循环
+        success = True
         while 1:
             self.screenshot()
             while not self.ui_page_appear(page_guibingyanwu):
@@ -66,9 +67,9 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, GuibingyanwuAssets):
             if self.run_general_battle(config=con.general_battle_config):
                 logger.info("Battle success")
             else:
-                # 如果失败关闭任务
+                # 失败
                 logger.error("Battle failed, turn off task")
-                self.config.close_task("Guibingyanwu")
+                success = False
                 break
 
         # 关闭加成
@@ -80,7 +81,7 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, GuibingyanwuAssets):
                 self.exp_100(is_open=False)
             self.close_buff(self.I_GBYW_BUFF)
 
-        self.set_next_run(task="Guibingyanwu", success=True, finish=True)
+        self.set_next_run(task="Guibingyanwu", success=success, finish=True)
         raise TaskEnd
 
     # 检测鬼兵部等级是否高于40
