@@ -5,7 +5,6 @@
 from datetime import datetime, timedelta
 import re
 import difflib
-import random
 from collections import OrderedDict
 
 from module.logger import logger
@@ -219,9 +218,8 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, BingcangmijingAssets):
             self.screenshot()
             if win:
                 # 点击赢了
-                action_click = random.choice([self.C_WIN_1, self.C_WIN_2, self.C_WIN_3])
                 if self.appear_then_click(
-                    self.I_WIN, action=action_click, interval=0.5
+                    self.I_WIN, action=self.C_WIN_1, interval=0.5
                 ):
                     continue
                 if not self.appear(self.I_WIN):
