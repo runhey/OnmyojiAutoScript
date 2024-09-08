@@ -188,23 +188,18 @@ class ScriptTask(GameUi, BaseActivity, HeroTestAssets):
                 while 1:
                     self.screenshot()
                     if self.appear_then_click(self.I_BCMJ_SKILL_ADD1, interval=1):
-                        logger.info("升级八华斩")
                         break
                     if self.appear_then_click(self.I_BCMJ_SKILL_ADD2, interval=1):
-                        logger.info("升级无畏")
                         break
                     if self.appear_then_click(
                         self.I_BCMJ_PROPERTY_ADD_CRITICAL, interval=1
                     ):
-                        logger.info("升级暴击伤害")
                         break
                     if self.appear_then_click(self.I_BCMJ_BLESS, interval=1):
-                        logger.info("默认升级祝福")
                         break
                     if self.appear_then_click(
                         self.I_BCMJ__DEFALUT_ATTRIBUTE, interval=1
                     ):
-                        logger.info("默认升级属性")
                         break
                 if self.appear_then_click(self.I_BCMJ_SKILL_ADD_CONFIRM, interval=1):
                     return win
