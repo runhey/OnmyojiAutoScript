@@ -1,0 +1,29 @@
+[
+  {
+    "itemName": "remain_ap",
+    "roiFront": "1095,24,123,33",
+    "roiBack": "1095,24,123,33",
+    "mode": "DigitCounter",
+    "method": "Default",
+    "keyword": "",
+    "description": "投喂的体力"
+  },
+  {
+    "itemName": "art_war_card",
+    "roiFront": "712,21,98,36",
+    "roiBack": "712,21,98,36",
+    "mode": "DigitCounter",
+    "method": "Default",
+    "keyword": "",
+    "description": "兵藏秘境兵道帖"
+  },
+  {
+    "itemName": "art_war_card_plus",
+    "roiFront": "916,25,90,29",
+    "roiBack": "916,25,90,29",
+    "mode": "SINGLE",
+    "method": "Default",
+    "keyword": "",
+    "description": "兵道帖机密"
+  }
+]
