@@ -1,0 +1,191 @@
+[
+  {
+    "itemName": "one",
+    "imageName": "as_one.png",
+    "roiFront": "633,106,88,105",
+    "roiBack": "633,106,88,105",
+    "method": "Template matching",
+    "threshold": 0.7,
+    "description": "进入活动第一步"
+  },
+  {
+    "itemName": "two",
+    "imageName": "as_two.png",
+    "roiFront": "819,685,95,26",
+    "roiBack": "819,685,95,26",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "进入活动第二步"
+  },
+  {
+    "itemName": "gbb",
+    "imageName": "as_gbb.png",
+    "roiFront": "95,344,37,131",
+    "roiBack": "95,344,37,131",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "点击鬼兵演武"
+  },
+  {
+    "itemName": "gbb_back",
+    "imageName": "as_gbb_back.png",
+    "roiFront": "11,13,63,56",
+    "roiBack": "11,13,63,56",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "爬塔返回按钮"
+  },
+  {
+    "itemName": "back",
+    "imageName": "as_back.png",
+    "roiFront": "20,24,75,76",
+    "roiBack": "20,24,75,76",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "鬼兵演武返回按钮"
+  },
+  {
+    "itemName": "battle",
+    "imageName": "as_battle.png",
+    "roiFront": "1129,588,99,49",
+    "roiBack": "1129,588,99,49",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "挑战按钮"
+  },
+  {
+    "itemName": "unlock",
+    "imageName": "as_unlock.png",
+    "roiFront": "817,648,33,31",
+    "roiBack": "817,648,33,31",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "解锁阵容"
+  },
+  {
+    "itemName": "lock",
+    "imageName": "as_lock.png",
+    "roiFront": "816,644,36,38",
+    "roiBack": "816,644,36,38",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "bcmj",
+    "imageName": "as_bcmj.png",
+    "roiFront": "1086,350,45,131",
+    "roiBack": "1086,350,45,131",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "兵藏秘境"
+  },
+  {
+    "itemName": "bcmj_lock",
+    "imageName": "as_bcmj_lock.png",
+    "roiFront": "901,159.5,36,26",
+    "roiBack": "901,650,36,38",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "兵藏秘境阵容锁"
+  },
+  {
+    "itemName": "bcmj_battle",
+    "imageName": "as_bcmj_battle.png",
+    "roiFront": "1131,598,92,50",
+    "roiBack": "1131,598,92,50",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "兵藏秘境挑战"
+  },
+  {
+    "itemName": "bcmj_win",
+    "imageName": "as_bcmj_win.png",
+    "roiFront": "431,141,100,100",
+    "roiBack": "431,141,100,100",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "兵藏秘境胜利"
+  },
+  {
+    "itemName": "bcmj_skill_add1",
+    "imageName": "as_bcmj_skill_add1.png",
+    "roiFront": "109,361,90,32",
+    "roiBack": "103,359,1076,37",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "兵藏秘境选择八华斩"
+  },
+  {
+    "itemName": "bcmj_skill_add2",
+    "imageName": "as_bcmj_skill_add2.png",
+    "roiFront": "728,359,61,32",
+    "roiBack": "106,356,1068,38",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "技能选择 无畏"
+  },
+  {
+    "itemName": "bcmj_skill_add_confirm",
+    "imageName": "as_bcmj_skill_add_confirm.png",
+    "roiFront": "608,633,64,36",
+    "roiBack": "608,633,64,36",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "技能祝福确定"
+  },
+  {
+    "itemName": "bcmj_property_add_critical",
+    "imageName": "as_bcmj_property_add_critical.png",
+    "roiFront": "704,359,115,34",
+    "roiBack": "120,356,1038,39",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "兵藏秘境的暴击伤害属性奖励"
+  },
+  {
+    "itemName": "bcmj_bless",
+    "imageName": "as_bcmj_bless.png",
+    "roiFront": "261,159,21,20",
+    "roiBack": "256,156,939,27",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "兵藏秘境默认祝福"
+  },
+  {
+    "itemName": "bcmj__defalut_attribute",
+    "imageName": "as_bcmj__defalut_attribute.png",
+    "roiFront": "1168,159,21,22",
+    "roiBack": "255,155,944,31",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "默认属性"
+  },
+  {
+    "itemName": "bcmj_unlock",
+    "imageName": "as_bcmj_unlock.png",
+    "roiFront": "906,652,22,30",
+    "roiBack": "906,652,22,30",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "兵藏秘境的阵容未锁"
+  },
+  {
+    "itemName": "bcmj_reset_confirm",
+    "imageName": "as_bcmj_reset_confirm.png",
+    "roiFront": "668,399,180,70",
+    "roiBack": "668,399,180,70",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "通过兵藏秘境确认重置按钮"
+  },
+  {
+    "itemName": "bcmj_reset_close",
+    "imageName": "as_bcmj_reset_close.png",
+    "roiFront": "429,397,186,71",
+    "roiBack": "429,397,186,71",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "通过兵藏秘境取消重置按钮"
+  }
+]

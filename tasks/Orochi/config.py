@@ -5,7 +5,7 @@ from pydantic import BaseModel, Field
 from enum import Enum
 from datetime import datetime, time
 
-from tasks.Component.SwitchSoul.switch_soul_config import SwitchSoulConfig
+from tasks.Component.SwitchSoul.switch_soul_config import SwitchSoulConfig as BaseSwitchSoulConfig
 from tasks.Component.config_scheduler import Scheduler
 from tasks.Component.config_base import ConfigBase, Time
 from tasks.Component.GeneralInvite.config_invite import InviteConfig
@@ -44,9 +44,25 @@ class OrochiConfig(ConfigBase):
     # 是否开启御魂加成
     soul_buff_enable: bool = Field(default=False, description='soul_buff_enable_help')
 
+class SwitchSoulConfig(BaseSwitchSoulConfig):
+    enable: bool = Field(default=False)
+    switch_group_team: str = Field(default='-1,-1', description='switch_group_team_help')
+    enable_switch_by_name: bool = Field(default=False, description='enable_switch_by_name_help')
+    group_name: str = Field(default='')
+    team_name: str = Field(default='')
+    auto_switch_soul: bool = Field(default=False, description='auto_switch_soul_help')
+    # 十层 config
+    # ten_switch: str = Field(default='-1,-1', description='ten_switch_help')
+    # 悲鸣 config
+    eleven_switch: str = Field(default='-1,-1', description='eleven_switch_help')
+    # 神罚 config
+    twelve_switch: str = Field(default='-1,-1', description='twelve_switch_help')
+
+
 class Orochi(ConfigBase):
     scheduler: Scheduler = Field(default_factory=Scheduler)
     orochi_config: OrochiConfig = Field(default_factory=OrochiConfig)
     invite_config: InviteConfig = Field(default_factory=InviteConfig)
     general_battle_config: GeneralBattleConfig = Field(default_factory=GeneralBattleConfig)
     switch_soul: SwitchSoulConfig = Field(default_factory=SwitchSoulConfig)
+
