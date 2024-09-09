@@ -29,6 +29,9 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, GuibingyanwuAssets):
         if con.switch_soul_config.enable:
             self.ui_goto(page_shikigami_records)
             self.run_switch_soul(con.switch_soul_config.switch_group_team)
+        if con.switch_soul_config.enable_switch_by_name:
+            self.ui_goto(page_shikigami_records)
+            self.run_switch_soul_by_name(con.switch_soul_config.group_name, con.switch_soul_config.team_name)
         # 前往鬼兵演武界面
         self.ui_goto(page_guibingyanwu)
         # 开启加成
