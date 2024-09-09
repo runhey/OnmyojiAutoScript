@@ -23,7 +23,7 @@ class GameUi(BaseTask, GameUiAssets):
                 # 探索的
                 page_awake_zones, page_soul_zones, page_realm_raid, page_goryou_realm, page_delegation,
                 page_secret_zones, page_area_boss, page_heian_kitan, page_six_gates, page_bondling_fairyland,
-                page_kekkai_toppa, page_yingjieshilian, page_guibingyanwu,
+                page_kekkai_toppa, page_yingjieshilian, page_guibingyanwu, page_bingcangmijing,
                 # 町中的
                 page_duel, page_demon_encounter, page_hunt, page_draft_duel, page_hyakkisen,
                 # 庭院里面的

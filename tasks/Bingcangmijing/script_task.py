@@ -26,8 +26,6 @@ def get_next_monday():
     today = datetime.now()
     # 计算到下一个星期一的天数
     days_ahead = 7 - today.weekday()  # Monday is 0
-    if days_ahead == 7:
-        days_ahead = 0
     next_monday = today + timedelta(days=days_ahead)
     return next_monday.replace(hour=0, minute=0, second=0, microsecond=0)
 
@@ -41,6 +39,8 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, BingcangmijingAssets):
         self.limit_time: timedelta = timedelta(
             hours=limit_time.hour, minutes=limit_time.minute, seconds=limit_time.second
         )
+        self.screenshot()
+        self.ui_get_current_page()
         # 切换御魂
         if con.switch_soul_config.enable:
             self.ui_goto(page_shikigami_records)
@@ -66,7 +66,7 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, BingcangmijingAssets):
                 if vip_ticket_count == 0:
                     logger.info("No ticket remained")
                     no_ticket = True
-                    raise TaskEnd
+                    break
             # 是否达到指定时间或次数
             if self.current_count >= self.limit_count:
                 logger.info("Bingcangmijing count limit out")
@@ -240,7 +240,7 @@ if __name__ == "__main__":
     from module.config.config import Config
     from module.device.device import Device
 
-    c = Config("oas1")
+    c = Config("oas2")
     d = Device(c)
     t = ScriptTask(c, d)
     t.screenshot()

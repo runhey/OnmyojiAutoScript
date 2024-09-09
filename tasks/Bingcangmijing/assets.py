@@ -37,9 +37,9 @@ class BingcangmijingAssets:
 
 	# Ocr Rule Assets
 	# 兵道帖数量 
-	O_BINGDAOTIE_COUNT = RuleOcr(roi=(717,21,113,35), area=(717,21,113,35), mode="DigitCounter", method="Default", keyword="", name="bingdaotie_count")
+	O_BINGDAOTIE_COUNT = RuleOcr(roi=(735,24,85,31), area=(735,24,85,31), mode="DigitCounter", method="Default", keyword="", name="bingdaotie_count")
 	# 兵道帖·机密数量 
-	O_BINGDAOTIE_JIMI_COUNT = RuleOcr(roi=(912,22,100,33), area=(912,22,100,33), mode="Digit", method="Default", keyword="", name="bingdaotie_jimi_count")
+	O_BINGDAOTIE_JIMI_COUNT = RuleOcr(roi=(965,25,44,29), area=(965,25,44,29), mode="Digit", method="Default", keyword="", name="bingdaotie_jimi_count")
 	# 局内祝福升级1 
 	O_BUFF_1 = RuleOcr(roi=(58,346,250,54), area=(58,346,250,54), mode="Single", method="Default", keyword="", name="buff_1")
 	# 局内祝福升级2 

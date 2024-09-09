@@ -1,8 +1,8 @@
 [
   {
     "itemName": "bingdaotie_count",
-    "roiFront": "717,21,113,35",
-    "roiBack": "717,21,113,35",
+    "roiFront": "735,24,85,31",
+    "roiBack": "735,24,85,31",
     "mode": "DigitCounter",
     "method": "Default",
     "keyword": "",
@@ -10,8 +10,8 @@
   },
   {
     "itemName": "bingdaotie_jimi_count",
-    "roiFront": "912,22,100,33",
-    "roiBack": "912,22,100,33",
+    "roiFront": "965,25,44,29",
+    "roiBack": "965,25,44,29",
     "mode": "Digit",
     "method": "Default",
     "keyword": "",

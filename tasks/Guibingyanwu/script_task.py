@@ -23,6 +23,8 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, GuibingyanwuAssets):
         self.limit_time: timedelta = timedelta(
             hours=limit_time.hour, minutes=limit_time.minute, seconds=limit_time.second
         )
+        self.screenshot()
+        self.ui_get_current_page()
         # 切换御魂
         if con.switch_soul_config.enable:
             self.ui_goto(page_shikigami_records)
