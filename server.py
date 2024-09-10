@@ -10,7 +10,7 @@ def fun(ev: threading.Event):
     import asyncio
     import sys
 
-    import uvicorn111
+    import uvicorn
 
     # 不知道干啥的照着抄就行了
     if sys.platform.startswith("win"):
