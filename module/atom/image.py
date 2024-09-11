@@ -291,7 +291,7 @@ class RuleImage:
         """
         image = self.corp(image)
         average_color = cv2.mean(image)
-        logger.info(f'{self.name} average_color: {average_color}')
+        # logger.info(f'{self.name} average_color: {average_color}')
         for i in range(3):
             if abs(average_color[i] - color[i]) > bias:
                 return False
