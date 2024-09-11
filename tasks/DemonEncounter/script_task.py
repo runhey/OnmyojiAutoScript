@@ -36,7 +36,6 @@ class ScriptTask(GameUi, GeneralBattle, DemonEncounterAssets, SwitchSoul):
             raise TaskEnd('DemonEncounter')
         self.ui_get_current_page()
         # 切换御魂
-        global soul_config
         soul_config = self.config.demon_encounter.demon_soul_config
         if soul_config.enable:
             self.ui_goto(page_shikigami_records)
@@ -54,7 +53,7 @@ class ScriptTask(GameUi, GeneralBattle, DemonEncounterAssets, SwitchSoul):
         """
         # 判断今天是周几
         today = datetime.now().weekday()
-        global soul_config
+        soul_config = self.config.demon_encounter.demon_soul_config
         if today == 0:
             self.run_switch_soul(soul_config.demon_kiryou_utahime)
             self.run_switch_soul(soul_config.demon_kiryou_utahime_supplementary)
