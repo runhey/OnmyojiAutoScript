@@ -68,7 +68,12 @@ class SoloExploration(BaseExploration):
                         continue
                 # boss
                 if self.appear(self.I_BOSS_BATTLE_BUTTON):
-                    self.ui_click_until_disappear(self.I_BOSS_BATTLE_BUTTON)
+                    while 1:
+                        if not (self.appear(self.I_E_SETTINGS_BUTTON) or
+                            self.appear(self.I_E_AUTO_ROTATE_ON) or
+                            self.appear(self.I_E_AUTO_ROTATE_OFF)):
+                            break
+                        self.ui_click_until_disappear(self.I_BOSS_BATTLE_BUTTON)
                     self.run_general_battle(self._config.general_battle_config)
                     self.minions_cnt += 1
                     logger.info(f'Boss battle, minions cnt {self.minions_cnt}')
@@ -76,7 +81,12 @@ class SoloExploration(BaseExploration):
                 # 小怪
                 fight_button = self.search_up_fight()
                 if fight_button is not None:
-                    self.ui_click_until_disappear(fight_button)
+                    while 1:
+                        if not (self.appear(self.I_E_SETTINGS_BUTTON) or
+                            self.appear(self.I_E_AUTO_ROTATE_ON) or
+                            self.appear(self.I_E_AUTO_ROTATE_OFF)):
+                            break
+                        self.ui_click_until_disappear(fight_button)
                     self.run_general_battle(self._config.general_battle_config)
                     self.minions_cnt += 1
                     logger.info(f'Fight, minions cnt {self.minions_cnt}')
