@@ -418,8 +418,12 @@ class ScriptTask(GameUi, ReplaceShikigami, KekkaiUtilizeAssets):
             return
         while 1:
             self.screenshot()
-            if self.appear(self.I_CHECK_FRIEND_REALM_1) \
-                    or self.appear(self.I_CHECK_FRIEND_REALM_3):
+            if self.appear(self.I_CHECK_FRIEND_REALM_1):
+                self.wait_until_stable(self.I_CHECK_FRIEND_REALM_1)
+                logger.info('Appear enter friend realm button')
+                break
+            if self.appear(self.I_CHECK_FRIEND_REALM_3):
+                self.wait_until_stable(self.I_CHECK_FRIEND_REALM_3)
                 logger.info('Appear enter friend realm button')
                 break
 

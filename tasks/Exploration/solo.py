@@ -158,9 +158,8 @@ class SoloExploration(BaseExploration):
                 if self.appear(self.I_FIRE, threshold=0.8) and not self.appear(self.I_ADD_2):
                     self.ui_click_until_disappear(self.I_FIRE, interval=1)
                     continue
-                if self.appear(self.I_ADD_2):
-                    if self.run_invite(config=self._invite_config, is_first=True):
-                        continue
+                if self.appear(self.I_ADD_2) and self.run_invite(config=self._invite_config, is_first=True):
+                    continue
                 else:
                     logger.warning('Invite failed, quit')
                     while 1:
