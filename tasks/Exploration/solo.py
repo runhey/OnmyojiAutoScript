@@ -68,18 +68,14 @@ class SoloExploration(BaseExploration):
                         continue
                 # boss
                 if self.appear(self.I_BOSS_BATTLE_BUTTON):
-                    while 1:
-                        if self.fire(self.I_BOSS_BATTLE_BUTTON):
-                            break
-                    logger.info(f'Boss battle, minions cnt {self.minions_cnt}')
+                    if self.fire(self.I_BOSS_BATTLE_BUTTON):
+                        logger.info(f'Boss battle, minions cnt {self.minions_cnt}')
                     continue
                 # 小怪
                 fight_button = self.search_up_fight()
                 if fight_button is not None:
-                    while 1:
-                        if self.fire(fight_button):
-                            break
-                    logger.info(f'Fight, minions cnt {self.minions_cnt}')
+                    if self.fire(fight_button):
+                        logger.info(f'Fight, minions cnt {self.minions_cnt}')
                     continue
                 # 向后拉,寻找怪
                 if search_fail_cnt >= 4:
@@ -199,19 +195,14 @@ class SoloExploration(BaseExploration):
                         continue
                 # boss
                 if self.appear(self.I_BOSS_BATTLE_BUTTON):
-                    self.ui_click_until_disappear(self.I_BOSS_BATTLE_BUTTON, interval=4)
-                    self.run_general_battle(self._config.general_battle_config)
-                    self.minions_cnt += 1
-                    friend_leave_timer = Timer(10)
-                    logger.info(f'Boss battle, minions cnt {self.minions_cnt}')
+                    if self.fire(self.I_BOSS_BATTLE_BUTTON):
+                        logger.info(f'Boss battle, minions cnt {self.minions_cnt}')
                     continue
                 # 小怪
                 fight_button = self.search_up_fight()
                 if fight_button is not None:
-                    self.ui_click_until_disappear(fight_button, interval=3)
-                    self.run_general_battle(self._config.general_battle_config)
-                    self.minions_cnt += 1
-                    logger.info(f'Fight, minions cnt {self.minions_cnt}')
+                    if self.fire(fight_button):
+                        logger.info(f'Fight, minions cnt {self.minions_cnt}')
                     continue
                 # 向后拉,寻找怪
                 if search_fail_cnt >= 4:
