@@ -147,7 +147,10 @@ class BaseCor:
         start_time = time.time()
         image = self.crop(image, self.roi)
         image = self.pre_process(image)
+        """
+        此处会使个突 19/30 识别为 190，请修复后再使用
         image = enlarge_canvas(image)
+        """
         # ocr
         result, score = self.model.ocr_single_line(image)
         if score < self.score:
