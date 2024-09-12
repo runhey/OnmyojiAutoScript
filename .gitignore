@@ -38,6 +38,9 @@ hya
 deploy/launcher/oas-backend.bat
 deploy/launcher/oas-server.bat
 oas-backend.bat
+.eslintignore
+.eslintrc.js
+.prettierrc.js
 
 
 

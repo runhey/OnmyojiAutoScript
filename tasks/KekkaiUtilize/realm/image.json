@@ -14,7 +14,7 @@
     "roiFront": "886,290,38,56",
     "roiBack": "870,276,75,86",
     "method": "Template matching",
-    "threshold": 0.8,
+    "threshold": 0.7,
     "description": "结界卡"
   },
   {

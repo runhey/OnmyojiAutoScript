@@ -97,6 +97,7 @@ class Digit(Single):
         result = super().after_process(result)
         result = result.replace('I', '1').replace('D', '0').replace('S', '5')
         result = result.replace('B', '8').replace('？', '2').replace('?', '2')
+        result = result.replace('d', '6')
         result = [char for char in result if char.isdigit()]
         result = ''.join(result)
 
@@ -124,7 +125,10 @@ class DigitCounter(Single):
     def after_process(self, result):
         result = super().after_process(result)
         result = result.replace('I', '1').replace('D', '0').replace('S', '5')
-        result = result.replace('B', '8')
+        result = result.replace('B', '8').replace('？', '2').replace('?', '2')
+        result = result.replace('d', '6')
+        result = [char for char in result if char.isdigit() or char == '/']
+        result = ''.join(result)
         return result
 
     @classmethod
