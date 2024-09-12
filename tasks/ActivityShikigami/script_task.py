@@ -7,17 +7,18 @@ from datetime import datetime, timedelta, time
 from tasks.base_task import BaseTask
 from tasks.Component.GeneralBattle.general_battle import GeneralBattle
 from tasks.AreaBoss.assets import AreaBossAssets
+from tasks.Component.SwitchSoul.switch_soul import SwitchSoul
 from tasks.Component.BaseActivity.base_activity import BaseActivity
 from tasks.Component.BaseActivity.config_activity import ApMode
 from tasks.ActivityShikigami.assets import ActivityShikigamiAssets
-from tasks.GameUi.page import page_main
+from tasks.GameUi.page import page_main, page_shikigami_records
 from tasks.GameUi.game_ui import GameUi
 
 from module.logger import logger
 from module.exception import TaskEnd
 
 
-class ScriptTask(GameUi, BaseActivity, ActivityShikigamiAssets):
+class ScriptTask(GameUi, BaseActivity, SwitchSoul, ActivityShikigamiAssets):
 
     def run(self) -> None:
 
@@ -27,6 +28,18 @@ class ScriptTask(GameUi, BaseActivity, ActivityShikigamiAssets):
             self.limit_time = timedelta(hours=self.limit_time.hour, minutes=self.limit_time.minute,
                                         seconds=self.limit_time.second)
         self.limit_count = config.general_climb.limit_count
+
+        if config.switch_soul_config.enable:
+            self.ui_get_current_page()
+            self.ui_goto(page_shikigami_records)
+            self.run_switch_soul(config.switch_soul_config.switch_group_team)
+        if config.switch_soul_config.enable_switch_by_name:
+            self.ui_get_current_page()
+            self.ui_goto(page_shikigami_records)
+            self.run_switch_soul_by_name(
+                config.switch_soul_config.group_name,
+                config.switch_soul_config.team_name
+            )
 
         self.ui_get_current_page()
         self.ui_goto(page_main)

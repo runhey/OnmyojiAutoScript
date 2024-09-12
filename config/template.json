@@ -245,7 +245,19 @@
       "priority": 2,
       "success_interval": "01 00:00:00",
       "failure_interval": "01 00:00:00",
-      "server_update": "09:00:00"
+      "server_update": "09:00:00",
+      "float_time": "00:00:00"
+    },
+    "demon_soul_config": {
+      "enable": false,
+      "demon_kiryou_utahime": "-1,-1",
+      "demon_kiryou_utahime_supplementary": "-1,-1",
+      "demon_shinkirou": "-1,-1",
+      "demon_tsuchigumo": "-1,-1",
+      "demon_gashadokuro": "-1,-1",
+      "demon_namazu": "-1,-1",
+      "demon_oboroguruma": "-1,-1",
+      "demon_nightly_aramitama": "-1,-1"
     }
   },
   "daily_trifles": {

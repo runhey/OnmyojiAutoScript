@@ -11,8 +11,9 @@ from module.logger import logger
 from module.exception import TaskEnd
 from module.base.timer import Timer
 
+from tasks.Component.SwitchSoul.switch_soul import SwitchSoul
 from tasks.GameUi.game_ui import GameUi
-from tasks.GameUi.page import page_main, page_demon_encounter
+from tasks.GameUi.page import page_demon_encounter, page_shikigami_records
 from tasks.DemonEncounter.assets import DemonEncounterAssets
 from tasks.Component.GeneralBattle.general_battle import GeneralBattle
 from tasks.Component.GeneralBattle.config_general_battle import GeneralBattleConfig
@@ -27,13 +28,18 @@ class LanternClass(Enum):
     MYSTERY = 5  # 神秘任务
 
 
-class ScriptTask(GameUi, GeneralBattle, DemonEncounterAssets):
+class ScriptTask(GameUi, GeneralBattle, DemonEncounterAssets, SwitchSoul):
 
     def run(self):
         if not self.check_time():
             logger.warning('Time is not right')
             raise TaskEnd('DemonEncounter')
         self.ui_get_current_page()
+        # 切换御魂
+        soul_config = self.config.demon_encounter.demon_soul_config
+        if soul_config.enable:
+            self.ui_goto(page_shikigami_records)
+            self.checkout_soul()
         self.ui_goto(page_demon_encounter)
         self.execute_lantern()
         self.execute_boss()
@@ -41,6 +47,28 @@ class ScriptTask(GameUi, GeneralBattle, DemonEncounterAssets):
         self.set_next_run(task='DemonEncounter', success=True, finish=False)
         raise TaskEnd('DemonEncounter')
 
+    def checkout_soul(self):
+        """
+        切换御魂
+        """
+        # 判断今天是周几
+        today = datetime.now().weekday()
+        soul_config = self.config.demon_encounter.demon_soul_config
+        if today == 0:
+            self.run_switch_soul(soul_config.demon_kiryou_utahime)
+            self.run_switch_soul(soul_config.demon_kiryou_utahime_supplementary)
+        elif today == 1:
+            self.run_switch_soul(soul_config.demon_shinkirou)
+        elif today == 2:
+            self.run_switch_soul(soul_config.demon_tsuchigumo)
+        elif today == 3:
+            self.run_switch_soul(soul_config.demon_gashadokuro)
+        elif today == 4:
+            self.run_switch_soul(soul_config.demon_namazu)
+        elif today == 5:
+            self.run_switch_soul(soul_config.demon_oboroguruma)
+        elif today == 6:
+            self.run_switch_soul(soul_config.demon_nightly_aramitama)
 
     def execute_boss(self):
         """
@@ -404,6 +432,7 @@ class ScriptTask(GameUi, GeneralBattle, DemonEncounterAssets):
             if check_timer and check_timer.reached():
                 logger.warning('Obtain battle timeout')
                 return True
+
 
 if __name__ == '__main__':
     from module.config.config import Config
