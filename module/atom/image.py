@@ -9,6 +9,7 @@ from pathlib import Path
 
 from module.base.decorator import cached_property
 from module.logger import logger
+from module.base.utils import is_approx_rectangle
 
 class RuleImage:
 
@@ -261,6 +262,8 @@ class RuleImage:
                 self.roi_front[1] = dst[0, 0, 1] + self.roi_back[1]
                 if show:
                     cv2.polylines(source, [dst], isClosed=True, color=(0, 0, 255), thickness=2)
+                if not is_approx_rectangle(np.array([pos[0] for pos in dst])):
+                    result = False
         else:
             result = False
 
