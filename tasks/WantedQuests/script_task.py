@@ -216,9 +216,11 @@ class ScriptTask(SecretScriptTask, GeneralInvite, WantedQuestsAssets):
 
     def challenge(self, goto, num):
         self.ui_click(goto, self.I_WQC_FIRE)
-        self.ui_click(self.I_WQC_LOCK, self.I_WQC_UNLOCK)
+        self.ui_click(self.I_WQC_UNLOCK, self.I_WQC_LOCK)
         self.ui_click_until_disappear(self.I_WQC_FIRE)
-        self.run_general_battle()
+        # 锁定阵容进入战斗
+        wq_config = GeneralBattleConfig(lock_team_enable=True)
+        self.run_general_battle(config=wq_config)
         self.wait_until_appear(self.I_WQC_FIRE, wait_time=4)
         self.ui_click_until_disappear(self.I_UI_BACK_RED)
         # 我忘记了打完后是否需要关闭 挑战界面
