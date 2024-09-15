@@ -55,7 +55,7 @@ class BaseExploration(GeneralBattle, GeneralRoom, GeneralInvite, ReplaceShikigam
         if not reuse_screenshot:
             self.screenshot()
 
-        if self.appear(self.I_CHECK_EXPLORATION):
+        if self.appear(self.I_CHECK_EXPLORATION) and not self.appear(self.I_E_SETTINGS_BUTTON):
             return Scene.WORLD
         elif self.appear(self.I_UI_BACK_RED) and self.appear(self.I_E_EXPLORATION_CLICK):
             return Scene.ENTRANCE
@@ -285,7 +285,6 @@ class BaseExploration(GeneralBattle, GeneralRoom, GeneralInvite, ReplaceShikigam
         # 判断是否开启突破票检测
         if not con_scrolls.scrolls_enable:
             return
-        self.screenshot()
         if self.appear(self.I_E_EXPLORATION_CLICK) and self.appear(self.I_EXP_CREATE_TEAM):
             cu, res, total = self.O_REALM_RAID_NUMBER1.ocr(self.device.image)
         else:
