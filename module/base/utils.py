@@ -900,3 +900,42 @@ def load_module(moduleName :str, moduleFile :str):
     spec.loader.exec_module(module)
     sys.modules[moduleName] = module
     return module
+
+
+def angle(p1, p2, p3):
+    """计算三点形成的角度（单位：度）"""
+    v1 = p2 - p1
+    v2 = p3 - p2
+    cos_angle = np.dot(v1, v2) / (np.linalg.norm(v1) * np.linalg.norm(v2))
+    return np.degrees(np.arccos(np.clip(cos_angle, -1.0, 1.0)))  # 限制范围以防止浮点错误
+
+
+def is_approx_rectangle(points, tolerance=30):
+    """判断四个点是否近似于矩形
+    :param points: 坐上开始，逆时针
+    :param tolerance: 角度 不是弧度
+    """
+    if points.shape[0] != 4:
+        return False
+    # # 计算边长
+    # distances = [distance(points[i], points[j]) for i in range(4) for j in range(i + 1, 4)]
+    # distances.sort()
+    # # 最小边和最大边
+    # short_sides = distances[:4]
+    # long_sides = distances[4:]
+    # # 判断边长是否接近
+    # if not (np.isclose(short_sides[0], short_sides[1], atol=tolerance) and
+    #         np.isclose(long_sides[0], long_sides[1], atol=tolerance)):
+    #     return False
+
+    # 检查角度
+    angles = [
+        angle(points[0], points[1], points[2]),
+        angle(points[1], points[2], points[3]),
+        angle(points[2], points[3], points[0]),
+        angle(points[3], points[0], points[1])
+    ]
+
+    # 判断角度是否接近90度
+    return all(np.isclose(a, 90, atol=tolerance) for a in angles)
+
