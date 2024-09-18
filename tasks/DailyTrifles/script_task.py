@@ -63,10 +63,10 @@ class ScriptTask(GameUi, Summon, DailyTriflesAssets):
             if self.appear_then_click(self.I_ONE_CLICK_BLESS, interval=1):
                 continue
             if self.ui_reward_appear_click():
-                logger.info('Get reward of friend love')
+                logger.info('Get reward of luck msg')
                 break
             if check_timer.reached():
-                logger.warning('There is no any love')
+                logger.warning('There is no any luck msg')
                 break
 
         self.ui_click(self.I_UI_BACK_RED, self.I_CHECK_MAIN)
