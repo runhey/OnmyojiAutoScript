@@ -119,6 +119,8 @@ class ScriptTask(GameUi, BaseActivity, SwitchSoul, ActivityShikigamiAssets):
                 logger.info("General battle success")
 
         self.main_home()
+        if config.general_climb.active_souls_clean:
+            self.set_next_run(task='SoulsTidy', success=False, finish=False, target=datetime.now())
         self.set_next_run(task="ActivityShikigami", success=True)
         raise TaskEnd
 
