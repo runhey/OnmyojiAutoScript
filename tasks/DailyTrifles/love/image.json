@@ -25,5 +25,41 @@
     "method": "Template matching",
     "threshold": 0.8,
     "description": "一键收取"
+  },
+  {
+    "itemName": "luck_msg",
+    "imageName": "Screenshots_luck_msg.png",
+    "roiFront": "22,47,46,27",
+    "roiBack": "22,47,46,27",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "吉闻"
+  },
+  {
+    "itemName": "one_click_bless",
+    "imageName": "Screenshots_one_click_bless.png",
+    "roiFront": "1115,500,93,33",
+    "roiBack": "1115,500,93,33",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "一键祝福"
+  },
+  {
+    "itemName": "click_bless",
+    "imageName": "Screenshots_click_bless.png",
+    "roiFront": "617,442,92,39",
+    "roiBack": "617,442,92,39",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "点击祝福"
+  },
+  {
+    "itemName": "luck_title",
+    "imageName": "Screenshots_luck_title.png",
+    "roiFront": "600,52,131,67",
+    "roiBack": "600,52,131,67",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "吉闻页"
   }
 ]
