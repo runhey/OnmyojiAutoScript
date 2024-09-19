@@ -15,22 +15,22 @@ from tasks.Utils.config_enum import ShikigamiClass
 class DemonConfig(BaseModel):
     enable: bool = Field(default=False)
     # 周一
-    demon_kiryou_utahime: str = Field(default="-1,-1", description="鬼灵歌姬御魂1")
+    demon_kiryou_utahime: str = Field(default="group,team", description="鬼灵歌姬御魂1")
     demon_kiryou_utahime_supplementary: str = Field(
-        default="-1,-1", description="鬼灵歌姬御魂补充"
+        default="group,team", description="鬼灵歌姬御魂补充"
     )
     # 周二
-    demon_shinkirou: str = Field(default="-1,-1", description="蜃气楼御魂")
+    demon_shinkirou: str = Field(default="group,team", description="蜃气楼御魂")
     # 周三 土蜘蛛
-    demon_tsuchigumo: str = Field(default="-1,-1", description="土蜘蛛御魂")
+    demon_tsuchigumo: str = Field(default="group,team", description="土蜘蛛御魂")
     # 周四 荒骷髅
-    demon_gashadokuro: str = Field(default="-1,-1", description="荒骷髅御魂")
+    demon_gashadokuro: str = Field(default="group,team", description="荒骷髅御魂")
     # 周五 地震鲇
-    demon_namazu: str = Field(default="-1,-1", description="地震鲇御魂")
+    demon_namazu: str = Field(default="group,team", description="地震鲇御魂")
     # 周六 胧车
-    demon_oboroguruma: str = Field(default="-1,-1", description="胧车御魂")
+    demon_oboroguruma: str = Field(default="group,team", description="胧车御魂")
     # 周日 夜荒魂
-    demon_nightly_aramitama: str = Field(default="-1,-1", description="夜荒魂御魂")
+    demon_nightly_aramitama: str = Field(default="group,team", description="夜荒魂御魂")
 
 
 class UtilizeScheduler(Scheduler):
