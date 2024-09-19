@@ -53,9 +53,17 @@ class ScriptTask(GameUi, ReplaceShikigami, KekkaiUtilizeAssets):
             raise TaskEnd
         if not self.grown_goto_utilize():
             logger.info('Utilize failed, exit')
-        self.run_utilize(con.select_friend_list, con.shikigami_class, con.shikigami_order)
+        success = self.run_utilize(con.select_friend_list, con.shikigami_class, con.shikigami_order)
         self.back_guild()
-        self.set_next_run(task='KekkaiUtilize', success=True, finish=True)
+        if success:
+            self.set_next_run(task='KekkaiUtilize', success=True, finish=True)
+        else:
+            self.set_next_run(
+                task='KekkaiUtilize',
+                success=False,
+                finish=False,
+                target=datetime.now() + timedelta(minutes=5)
+            )
         raise TaskEnd
 
 
@@ -340,7 +348,7 @@ class ScriptTask(GameUi, ReplaceShikigami, KekkaiUtilizeAssets):
 
     def run_utilize(self, friend: SelectFriendList = SelectFriendList.SAME_SERVER,
                     shikigami_class: ShikigamiClass = ShikigamiClass.N,
-                    shikigami_order: int = 7):
+                    shikigami_order: int = 7) -> bool:
         """
         执行寄养
         :param shikigami_class:
@@ -415,7 +423,7 @@ class ScriptTask(GameUi, ReplaceShikigami, KekkaiUtilizeAssets):
             logger.warning('Cannot find enter realm button')
             # 可能是滑动的时候出错
             logger.warning('The best reason is that the swipe is wrong')
-            return
+            return False
         while 1:
             self.screenshot()
             if self.appear(self.I_CHECK_FRIEND_REALM_1):
@@ -448,9 +456,10 @@ class ScriptTask(GameUi, ReplaceShikigami, KekkaiUtilizeAssets):
             # 没有坑位可能是其他人的手速太快了抢占了
             logger.warning('Cannot find stop image')
             logger.warning('Maybe other people is faster than you')
-            return
+            return False
 
         self.set_shikigami(shikigami_order, stop_image)
+        return True
 
 
     def back_guild(self):
