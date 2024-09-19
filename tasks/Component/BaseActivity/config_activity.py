@@ -30,6 +30,8 @@ class GeneralClimb(ConfigBase):
     activity_toggle: bool = Field(default=False, description='activity_toggle_help')
     # 结束后激活 御魂清理
     active_souls_clean: bool = Field(default=False, description='active_souls_clean_help')
+    # 点击战斗随机休息
+    random_sleep: bool = Field(default=False, description='random_delay_help')
 
     @validator('limit_time', pre=True, always=True)
     def parse_limit_time(cls, value):
