@@ -13,7 +13,10 @@ from tasks.Utils.config_enum import ShikigamiClass
 
 # 不同封魔boss的御魂配置
 class DemonConfig(BaseModel):
-    enable: bool = Field(default=False)
+    enable: bool = Field(
+        default=False,
+        description="通过预设名称来匹配御魂分组\n例如=> 逢魔之时,歌(中间的是英文逗号)",
+    )
     # 周一
     demon_kiryou_utahime: str = Field(default="group,team", description="鬼灵歌姬御魂1")
     demon_kiryou_utahime_supplementary: str = Field(
