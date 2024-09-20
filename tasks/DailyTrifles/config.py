@@ -12,6 +12,7 @@ class DailyTriflesConfig(BaseModel):
     one_summon: bool = Field(title='One Summon', default=False)
     guild_wish: bool = Field(title='Guild Wish', default=False)
     friend_love: bool = Field(title='Friend Love', default=False)
+    luck_msg: bool = Field(title='Luck Msg', default=False)
     store_sign: bool = Field(title='Store Sign', default=False, description='store_sign_help')
 
 
