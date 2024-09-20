@@ -16,6 +16,7 @@ from tasks.GameUi.game_ui import GameUi
 
 from module.logger import logger
 from module.exception import TaskEnd
+from module.base.protect import random_sleep
 
 
 class ScriptTask(GameUi, BaseActivity, SwitchSoul, ActivityShikigamiAssets):
@@ -100,6 +101,9 @@ class ScriptTask(GameUi, BaseActivity, SwitchSoul, ActivityShikigamiAssets):
                     logger.info("Activity ap out")
                     break
 
+            # 随机休息
+            if config.general_climb.random_sleep:
+                random_sleep()
             # 点击战斗
             logger.info("Click battle")
             while 1:

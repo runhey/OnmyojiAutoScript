@@ -54,21 +54,28 @@ class ScriptTask(GameUi, GeneralBattle, DemonEncounterAssets, SwitchSoul):
         # 判断今天是周几
         today = datetime.now().weekday()
         soul_config = self.config.demon_encounter.demon_soul_config
+        group, team = None, None
         if today == 0:
-            self.run_switch_soul(soul_config.demon_kiryou_utahime)
-            self.run_switch_soul(soul_config.demon_kiryou_utahime_supplementary)
+            # 获取group,team
+            group, team = soul_config.demon_kiryou_utahime.split(",")
         elif today == 1:
-            self.run_switch_soul(soul_config.demon_shinkirou)
+            group, team = soul_config.demon_kiryou_utahime.split(",")
         elif today == 2:
-            self.run_switch_soul(soul_config.demon_tsuchigumo)
+            group, team = soul_config.demon_tsuchigumo.split(",")
         elif today == 3:
-            self.run_switch_soul(soul_config.demon_gashadokuro)
+            group, team = soul_config.demon_gashadokuro.split(",")
         elif today == 4:
-            self.run_switch_soul(soul_config.demon_namazu)
+            group, team = soul_config.demon_namazu.split(",")
         elif today == 5:
-            self.run_switch_soul(soul_config.demon_oboroguruma)
+            group, team = soul_config.demon_oboroguruma.split(",")
         elif today == 6:
-            self.run_switch_soul(soul_config.demon_nightly_aramitama)
+            group, team = soul_config.demon_nightly_aramitama.split(",")
+        if group and team:
+            self.run_switch_soul_by_name(group, team)
+        if today == 0:
+            # 获取group,team
+            group, team = soul_config.demon_kiryou_utahime_supplementary.split(",")
+            self.run_switch_soul_by_name(group, team)
 
     def execute_boss(self):
         """
