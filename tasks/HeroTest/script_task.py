@@ -191,11 +191,11 @@ class ScriptTask(GameUi, BaseActivity, HeroTestAssets):
                         break
                     if self.appear_then_click(self.I_BCMJ_SKILL_ADD2, interval=1):
                         break
+                    if self.appear_then_click(self.I_BCMJ_BLESS, interval=1):
+                        break
                     if self.appear_then_click(
                         self.I_BCMJ_PROPERTY_ADD_CRITICAL, interval=1
                     ):
-                        break
-                    if self.appear_then_click(self.I_BCMJ_BLESS, interval=1):
                         break
                     if self.appear_then_click(
                         self.I_BCMJ__DEFALUT_ATTRIBUTE, interval=1
