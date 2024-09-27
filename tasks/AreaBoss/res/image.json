@@ -37,7 +37,7 @@
   },
   {
     "itemName": "battle_1",
-    "imageName": "res_battle_1a.png",
+    "imageName": "res_battle_1.png",
     "roiFront": "1083,235,65,54",
     "roiBack": "1083,235,65,54",
     "method": "Template matching",
