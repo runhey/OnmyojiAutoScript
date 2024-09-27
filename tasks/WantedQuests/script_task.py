@@ -14,7 +14,7 @@ from module.logger import logger
 from module.base.timer import Timer
 
 from tasks.GameUi.game_ui import GameUi
-from tasks.GameUi.page import page_main, page_exploration
+from tasks.GameUi.page import page_main, page_exploration, page_shikigami_records
 from tasks.Component.GeneralBattle.general_battle import GeneralBattle
 from tasks.Component.GeneralBattle.config_general_battle import GeneralBattleConfig
 from tasks.Component.GeneralInvite.general_invite import GeneralInvite
@@ -24,12 +24,24 @@ from tasks.WantedQuests.config import WantedQuestsConfig, CooperationType, Coope
 from tasks.WantedQuests.assets import WantedQuestsAssets
 from tasks.Component.Costume.config import MainType
 from typing import List
+from tasks.Component.SwitchSoul.switch_soul import SwitchSoul
 
-
-class ScriptTask(SecretScriptTask, GeneralInvite, WantedQuestsAssets):
+class ScriptTask(SecretScriptTask, GeneralInvite, WantedQuestsAssets, SwitchSoul):
 
     def run(self):
         con = self.config
+
+         # 自动换御魂
+        if con.switch_soul_config.enable:
+            self.ui_get_current_page()
+            self.ui_goto(page_shikigami_records)
+            self.run_switch_soul(con.switch_soul_config.switch_group_team)
+        if con.switch_soul_config.enable_switch_by_name:
+            self.ui_get_current_page()
+            self.ui_goto(page_shikigami_records)
+            self.run_switch_soul_by_name(con.switch_soul_config.group_name, con.switch_soul_config.team_name)
+
+
         if not self.pre_work():
             # 无法完成预处理 很有可能你已经完成了悬赏任务
             logger.warning('Cannot pre-work')
