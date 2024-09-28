@@ -66,11 +66,11 @@ class AreaBossAssets:
 	# 右上边选中鬼王的 
 	I_FILTER = RuleImage(roi_front=(1116,33,35,31), roi_back=(1076,19,98,78), threshold=0.8, method="Template matching", file="./tasks/AreaBoss/res/res_filter.png")
 	# 除悬赏外 选中第一个鬼王的 
-	I_BATTLE_1 = RuleImage(roi_front=(1066,210,100,100), roi_back=(1066,210,100,100), threshold=0.8, method="Template matching", file="./tasks/AreaBoss/res/res_battle_1.png")
+	I_BATTLE_1 = RuleImage(roi_front=(1083,235,65,54), roi_back=(1083,235,65,54), threshold=0.8, method="Template matching", file="./tasks/AreaBoss/res/res_battle_1.png")
 	# 除悬赏外 选中第二个鬼王的 
-	I_BATTLE_2 = RuleImage(roi_front=(1068,364,100,100), roi_back=(1068,364,100,100), threshold=0.8, method="Template matching", file="./tasks/AreaBoss/res/res_battle_2.png")
+	I_BATTLE_2 = RuleImage(roi_front=(1086,390,56,53), roi_back=(1086,390,56,53), threshold=0.8, method="Template matching", file="./tasks/AreaBoss/res/res_battle_2.png")
 	# 除悬赏外 选中第三个鬼王的 
-	I_BATTLE_3 = RuleImage(roi_front=(1071,521,100,100), roi_back=(1071,521,100,100), threshold=0.8, method="Template matching", file="./tasks/AreaBoss/res/res_battle_3.png")
+	I_BATTLE_3 = RuleImage(roi_front=(1083,545,66,53), roi_back=(1083,545,66,53), threshold=0.8, method="Template matching", file="./tasks/AreaBoss/res/res_battle_3.png")
 	# 点击挑战 
 	I_FIRE = RuleImage(roi_front=(1109,490,100,73), roi_back=(1075,463,150,158), threshold=0.8, method="Template matching", file="./tasks/AreaBoss/res/res_fire.png")
 	# 跟buff冲突弃用 

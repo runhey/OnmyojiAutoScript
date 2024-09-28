@@ -38,8 +38,8 @@
   {
     "itemName": "battle_1",
     "imageName": "res_battle_1.png",
-    "roiFront": "1066,210,100,100",
-    "roiBack": "1066,210,100,100",
+    "roiFront": "1083,235,65,54",
+    "roiBack": "1083,235,65,54",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "除悬赏外 选中第一个鬼王的"
@@ -47,8 +47,8 @@
   {
     "itemName": "battle_2",
     "imageName": "res_battle_2.png",
-    "roiFront": "1068,364,100,100",
-    "roiBack": "1068,364,100,100",
+    "roiFront": "1086,390,56,53",
+    "roiBack": "1086,390,56,53",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "除悬赏外 选中第二个鬼王的"
@@ -56,8 +56,8 @@
   {
     "itemName": "battle_3",
     "imageName": "res_battle_3.png",
-    "roiFront": "1071,521,100,100",
-    "roiBack": "1071,521,100,100",
+    "roiFront": "1083,545,66,53",
+    "roiBack": "1083,545,66,53",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "除悬赏外 选中第三个鬼王的"
