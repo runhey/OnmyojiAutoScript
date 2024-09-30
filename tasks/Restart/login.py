@@ -131,11 +131,11 @@ class LoginHandler(BaseTask, RestartAssets):
                 continue
 
             # 勾玉
-            if self.appear_then_click(self.I_HARVEST_JADE, interval=1):
+            if self.appear_then_click(self.I_HARVEST_JADE, interval=1.5):
                 timer_harvest.reset()
                 continue
             # 签到
-            if self.appear_then_click(self.I_HARVEST_SIGN, interval=1):
+            if self.appear_then_click(self.I_HARVEST_SIGN, interval=1.5):
                 timer_harvest.reset()
                 continue
             # 某些活动的特殊签到，有空看到就删掉
@@ -144,11 +144,11 @@ class LoginHandler(BaseTask, RestartAssets):
             if self.appear_then_click(self.I_HARVEST_SIGN_4, interval=1):
                 timer_harvest.reset()
                 continue
-            if self.appear_then_click(self.I_HARVEST_SIGN_2, interval=1):
+            if self.appear_then_click(self.I_HARVEST_SIGN_2, interval=1.5):
                 timer_harvest.reset()
                 continue
             # 999天的签到福袋
-            if self.appear_then_click(self.I_HARVEST_SIGN_999, interval=1):
+            if self.appear_then_click(self.I_HARVEST_SIGN_999, interval=1.5):
                 timer_harvest.reset()
                 continue
             # 邮件
@@ -186,6 +186,17 @@ class LoginHandler(BaseTask, RestartAssets):
             if self.appear_then_click(self.I_HARVEST_SOUL, interval=1):
                 timer_harvest.reset()
                 continue
+            # 寮包
+            if self.appear_then_click(self.I_HARVEST_GUILD_REWARD, interval=2):
+                timer_harvest.reset()
+                continue
+            # 自选御魂
+            if self.appear(self.I_HARVEST_SOUL_1):
+                logger.info('Select soul 1')
+                self.ui_click(self.I_HARVEST_SOUL_1, stop=self.I_HARVEST_SOUL_2)
+                self.ui_click(self.I_HARVEST_SOUL_2, stop=self.I_HARVEST_SOUL_3, interval=3)
+                self.ui_click_until_disappear(click=self.I_HARVEST_SOUL_3)
+                timer_harvest.reset()
 
 
             # 红色的关闭

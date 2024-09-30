@@ -1,0 +1,29 @@
+[
+  {
+    "itemName": "local_7",
+    "imageName": "battle7_local_7.png",
+    "roiFront": "30,566,23,25",
+    "roiBack": "30,566,23,25",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "指针"
+  },
+  {
+    "itemName": "exit_7",
+    "imageName": "battle7_exit_7.png",
+    "roiFront": "22,17,27,31",
+    "roiBack": "22,17,27,31",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "左上角退出"
+  },
+  {
+    "itemName": "friends_7",
+    "imageName": "battle6_friends_7.png",
+    "roiFront": "89,18,35,34",
+    "roiBack": "89,18,35,34",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "左上角好友"
+  }
+]

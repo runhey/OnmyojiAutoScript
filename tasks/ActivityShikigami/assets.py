@@ -38,7 +38,7 @@ class ActivityShikigamiAssets:
 	# 左上角返回 
 	I_BACK_GREEN = RuleImage(roi_front=(23,27,44,44), roi_back=(23,27,44,44), threshold=0.8, method="Template matching", file="./tasks/ActivityShikigami/as/as_back_green.png")
 	# 进入爬塔 
-	I_BATTLE = RuleImage(roi_front=(1104,179,50,166), roi_back=(1104,179,138,315), threshold=0.8, method="Template matching", file="./tasks/ActivityShikigami/as/as_battle.png")
+	I_BATTLE = RuleImage(roi_front=(896,202,35,165), roi_back=(844,129,138,315), threshold=0.8, method="Template matching", file="./tasks/ActivityShikigami/as/as_battle.png")
 	# 归鹿之途 
 	I_DRUM = RuleImage(roi_front=(885,310,29,145), roi_back=(860,244,87,232), threshold=0.8, method="Template matching", file="./tasks/ActivityShikigami/as/as_drum.png")
 	# 上锁图标 
