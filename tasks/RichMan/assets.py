@@ -29,7 +29,7 @@ class RichManAssets:
 
 	# Ocr Rule Assets
 	# 总的功勋 
-	O_GUILD_TOTAL = RuleOcr(roi=(1151,6,100,42), area=(1151,6,100,42), mode="Digit", method="Default", keyword="", name="guild_total")
+	O_GUILD_TOTAL = RuleOcr(roi=(978,16,58,27), area=(978,16,58,27), mode="Digit", method="Default", keyword="", name="guild_total")
 	# Ocr-description 
 	O_GUILD_NUMBER_BLUE = RuleOcr(roi=(888,269,25,33), area=(888,269,25,33), mode="Digit", method="Default", keyword="", name="guild_number_blue")
 	# Ocr-description 
