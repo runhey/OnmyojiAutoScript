@@ -124,5 +124,41 @@
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"
+  },
+  {
+    "itemName": "harvest_soul_1",
+    "imageName": "harvest_harvest_soul_1.png",
+    "roiFront": "248,501,34,37",
+    "roiBack": "165,389,929,168",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "点击随机御魂"
+  },
+  {
+    "itemName": "harvest_soul_2",
+    "imageName": "harvest_harvest_soul_2.png",
+    "roiFront": "586,561,112,47",
+    "roiBack": "570,547,139,71",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "选择第一个御魂"
+  },
+  {
+    "itemName": "harvest_soul_3",
+    "imageName": "harvest_harvest_soul_3.png",
+    "roiFront": "313,489,188,33",
+    "roiBack": "302,472,216,60",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "harvest_guild_reward",
+    "imageName": "harvest_harvest_guild_reward.png",
+    "roiFront": "244,498,41,42",
+    "roiBack": "200,403,817,157",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "寮包"
   }
 ]
