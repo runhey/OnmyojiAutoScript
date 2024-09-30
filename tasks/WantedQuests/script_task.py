@@ -26,12 +26,12 @@ from tasks.Component.Costume.config import MainType
 from typing import List
 from tasks.Component.SwitchSoul.switch_soul import SwitchSoul
 
+
 class ScriptTask(SecretScriptTask, GeneralInvite, WantedQuestsAssets, SwitchSoul):
 
     def run(self):
-        con = self.config
-
-         # 自动换御魂
+        con = self.config.model.wanted_quests
+        # 自动换御魂
         if con.switch_soul_config.enable:
             self.ui_get_current_page()
             self.ui_goto(page_shikigami_records)
@@ -40,7 +40,6 @@ class ScriptTask(SecretScriptTask, GeneralInvite, WantedQuestsAssets, SwitchSoul
             self.ui_get_current_page()
             self.ui_goto(page_shikigami_records)
             self.run_switch_soul_by_name(con.switch_soul_config.group_name, con.switch_soul_config.team_name)
-
 
         if not self.pre_work():
             # 无法完成预处理 很有可能你已经完成了悬赏任务
@@ -180,9 +179,9 @@ class ScriptTask(SecretScriptTask, GeneralInvite, WantedQuestsAssets, SwitchSoul
             """
             result = [-1, '', -1, GOTO_BUTTON[index]]
             type_wq = OCR_WQ_TYPE[index].ocr(self.device.image)
-            info_wq = OCR_WQ_INFO[index].ocr(self.device.image)
-            info_wq = info_wq.replace('：', ':').replace('（',')').replace('）', ')')
-            match = re.match(r"^(.*?)\(数量:\s*(\d+)\)", info_wq)
+            info_wq_1 = OCR_WQ_INFO[index].ocr(self.device.image)
+            info_wq_1 = info_wq_1.replace('：', ':').replace('（', ')').replace('）', ')')
+            match = re.match(r"^(.*?)\(数量:\s*(\d+)\)", info_wq_1)
             if not match:
                 return None
             wq_destination = match.group(1)
@@ -197,7 +196,6 @@ class ScriptTask(SecretScriptTask, GeneralInvite, WantedQuestsAssets, SwitchSoul
                 result[0] = 2
             logger.info(f'[Wanted Quests] type: {type_wq} destination: {wq_destination} number: {wq_number} ')
             return tuple(result) if result[0] != -1 else None
-
 
         logger.hr('Start wanted quests')
         while 1:
@@ -224,10 +222,14 @@ class ScriptTask(SecretScriptTask, GeneralInvite, WantedQuestsAssets, SwitchSoul
         info_wq_list.sort(key=lambda x: x[0])
         best_type, destination, number, goto_button = info_wq_list[0]
         match best_type:
-            case 0: self.explore(goto_button, number)
-            case 1: self.challenge(goto_button, number)
-            case 2: self.secret(goto_button, number)
-            case _: logger.warning('No wanted quests can be challenged')
+            case 0:
+                self.explore(goto_button, number)
+            case 1:
+                self.challenge(goto_button, number)
+            case 2:
+                self.secret(goto_button, number)
+            case _:
+                logger.warning('No wanted quests can be challenged')
 
     def explore(self, goto, num):
         self.challenge(goto, num)
@@ -325,8 +327,8 @@ class ScriptTask(SecretScriptTask, GeneralInvite, WantedQuestsAssets, SwitchSoul
         if len(ret) == 0:
             logger.info("no Cooperation found")
             return False
-        typeMask=15
-        typeMask = CooperationSelectMask [self.config.wanted_quests.wanted_quests_config.cooperation_type.value]
+        typeMask = 15
+        typeMask = CooperationSelectMask[self.config.wanted_quests.wanted_quests_config.cooperation_type.value]
         for item in ret:
             # 该任务是需要邀请的任务类型
             if not (item['type'] & typeMask):
@@ -347,7 +349,7 @@ class ScriptTask(SecretScriptTask, GeneralInvite, WantedQuestsAssets, SwitchSoul
                 logger.info("%s not found,Wait 20s,%d invitations left", name, 5 - index - 1)
                 index += 1
                 sleep(20) if index < 5 else sleep(0)
-                #NOTE 等待过程如果出现协作邀请 将会卡住 为了防止卡住
+                # NOTE 等待过程如果出现协作邀请 将会卡住 为了防止卡住
                 self.screenshot()
         return ret
 
