@@ -47,8 +47,8 @@
   {
     "itemName": "next_competition",
     "imageName": "fb_next_competition.png",
-    "roiFront": "1104,467,42,36",
-    "roiBack": "1037,402,187,184",
+    "roiFront": "673,510,42,36",
+    "roiBack": "658,488,91,98",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"
