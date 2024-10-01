@@ -22,7 +22,7 @@ class FrogBossAssets:
 	# 右边输了 
 	I_FAILURE_RIGHT = RuleImage(roi_front=(1063,291,100,100), roi_back=(993,242,224,199), threshold=0.8, method="Template matching", file="./tasks/FrogBoss/fb/fb_failure_right.png")
 	# description 
-	I_NEXT_COMPETITION = RuleImage(roi_front=(1104,467,42,36), roi_back=(1037,402,187,184), threshold=0.8, method="Template matching", file="./tasks/FrogBoss/fb/fb_next_competition.png")
+	I_NEXT_COMPETITION = RuleImage(roi_front=(673,510,42,36), roi_back=(658,488,91,98), threshold=0.8, method="Template matching", file="./tasks/FrogBoss/fb/fb_next_competition.png")
 	# 30万金币 
 	I_GOLD_30 = RuleImage(roi_front=(858,494,78,76), roi_back=(809,427,147,187), threshold=0.8, method="Template matching", file="./tasks/FrogBoss/fb/fb_gold_30.png")
 	# 确认竞猜 
