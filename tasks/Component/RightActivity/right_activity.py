@@ -14,6 +14,7 @@ class RightActivity(GameUi, RightActivityAssets):
     def enter(self, target: RuleImage):
         self.ui_get_current_page()
         self.ui_goto(page_main)
+
         self.ui_click_until_disappear(target, interval=3.5)
 
     def right_open(self):

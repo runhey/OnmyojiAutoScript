@@ -26,12 +26,12 @@ from tasks.Component.Costume.config import MainType
 from typing import List
 from tasks.Component.SwitchSoul.switch_soul import SwitchSoul
 
+
 class ScriptTask(SecretScriptTask, GeneralInvite, WantedQuestsAssets, SwitchSoul):
 
     def run(self):
-        con = self.config
-
-         # 自动换御魂
+        con = self.config.model.wanted_quests
+        # 自动换御魂
         if con.switch_soul_config.enable:
             self.ui_get_current_page()
             self.ui_goto(page_shikigami_records)
@@ -40,7 +40,6 @@ class ScriptTask(SecretScriptTask, GeneralInvite, WantedQuestsAssets, SwitchSoul
             self.ui_get_current_page()
             self.ui_goto(page_shikigami_records)
             self.run_switch_soul_by_name(con.switch_soul_config.group_name, con.switch_soul_config.team_name)
-
 
         if not self.pre_work():
             # 无法完成预处理 很有可能你已经完成了悬赏任务
@@ -165,6 +164,40 @@ class ScriptTask(SecretScriptTask, GeneralInvite, WantedQuestsAssets, SwitchSoul
         :param num_challenge: 现在有的挑战卷数量
         :return:
         """
+        OCR_WQ_TYPE = [self.O_WQ_TYPE_1, self.O_WQ_TYPE_2, self.O_WQ_TYPE_3, self.O_WQ_TYPE_4]
+        OCR_WQ_INFO = [self.O_WQ_INFO_1, self.O_WQ_INFO_2, self.O_WQ_INFO_3, self.O_WQ_INFO_4]
+        GOTO_BUTTON = [self.I_GOTO_1, self.I_GOTO_2, self.I_GOTO_3, self.I_GOTO_4]
+
+        def extract_info(index: int) -> tuple or None:
+            """
+            提取每一个地点的信息
+            :param index: 从零开始
+            :return:
+            (type, destination, number, goto_button)
+            (类型, 地点层级，可以打败的数量，前往按钮)
+            类型： 探索0, 挑战1， 秘闻2
+            """
+            result = [-1, '', -1, GOTO_BUTTON[index]]
+            type_wq = OCR_WQ_TYPE[index].ocr(self.device.image)
+            info_wq_1 = OCR_WQ_INFO[index].ocr(self.device.image)
+            info_wq_1 = info_wq_1.replace('：', ':').replace('（', '(').replace('）', ')')
+            info_wq_1 = info_wq_1.replace('：', ':')
+            match = re.match(r"^(.*?)\(数量:\s*(\d+)\)", info_wq_1)
+            if not match:
+                return None
+            wq_destination = match.group(1)
+            wq_number = int(match.group(2))
+            result[1] = wq_destination
+            result[2] = wq_number
+            if type_wq == '探索':
+                result[0] = -1
+            elif type_wq == '挑战':
+                result[0] = 1 if num_challenge >= 10 else -1
+            elif type_wq == '秘闻':
+                result[0] = 2
+            logger.info(f'[Wanted Quests] type: {type_wq} destination: {wq_destination} number: {wq_number} ')
+            return tuple(result) if result[0] != -1 else None
+
         logger.hr('Start wanted quests')
         while 1:
             self.screenshot()
@@ -176,55 +209,32 @@ class ScriptTask(SecretScriptTask, GeneralInvite, WantedQuestsAssets, SwitchSoul
             # 如果没有出现 '前往'按钮， 那就是这个可能是神秘任务但是没有解锁
             logger.warning('This is a secret mission but not unlock')
             self.ui_click(self.I_TRACE_TRUE, self.I_TRACE_FALSE)
-            return
-        # 找到一个最优的关卡来挑战
-        challenge = True if num_challenge >= 10 else False
+            return False
 
-        def check_battle(cha: bool, wq_type, wq_info) -> tuple:
-            battle = False
-            self.screenshot()
-            type_wq = wq_type.ocr(self.device.image)
-            if cha and type_wq == '挑战':
-                battle = 'CHALLENGE'
-            if type_wq == '秘闻':
-                battle = 'SECRET'
-            if not battle:
-                return None, None
-            info = wq_info.ocr(self.device.image)
-            try:
-                # 匹配： 第九章(数量:5)
-                one_number = int(re.findall(r'(\d+)', info)[-1])
-                # one_number = int(re.findall(r'\*\(\数量:\s*(\d+)\)', info)[0])
-            except IndexError:
-                # 匹配： 第九章
-                one_number = 3
-            # num_want / one_number = 一共要打几次
-            if one_number > num_want:
-                return battle, 1
-            else:
-                return battle, num_want // one_number + (1 if num_want % one_number > 0 else 0)
-
-        battle, num, goto = None, None, None
-        if not battle:
-            battle, num = check_battle(challenge, self.O_WQ_TYPE_1, self.O_WQ_INFO_1)
-            goto = self.I_GOTO_1
-        if not battle:
-            battle, num = check_battle(challenge, self.O_WQ_TYPE_2, self.O_WQ_INFO_2)
-            goto = self.I_GOTO_2
-        if not battle:
-            battle, num = check_battle(challenge, self.O_WQ_TYPE_3, self.O_WQ_INFO_3)
-            goto = self.I_GOTO_3
-        if not battle:
-            battle, num = check_battle(challenge, self.O_WQ_TYPE_4, self.O_WQ_INFO_4)
-            goto = self.I_GOTO_4
-        if battle == 'CHALLENGE':
-            self.challenge(goto, num)
-        elif battle == 'SECRET':
-            self.secret(goto, num)
-        else:
-            # 没有找到可以挑战的关卡 那就关闭
+        info_wq_list = []
+        for i in range(4):
+            info_wq = extract_info(i)
+            if info_wq:
+                info_wq_list.append(info_wq)
+        if not info_wq_list:
             logger.warning('No wanted quests can be challenged')
             return False
+        # sort
+        info_wq_list.sort(key=lambda x: x[0])
+        best_type, destination, once_number, goto_button = info_wq_list[0]
+        do_number = 1 if once_number >= num_want else num_want // once_number + (1 if num_want % once_number > 0 else 0)
+        match best_type:
+            case 0:
+                self.explore(goto_button, do_number)
+            case 1:
+                self.challenge(goto_button, do_number)
+            case 2:
+                self.secret(goto_button, do_number)
+            case _:
+                logger.warning('No wanted quests can be challenged')
+
+    def explore(self, goto, num):
+        self.challenge(goto, num)
 
     def challenge(self, goto, num):
         self.ui_click(goto, self.I_WQC_FIRE)
@@ -319,8 +329,8 @@ class ScriptTask(SecretScriptTask, GeneralInvite, WantedQuestsAssets, SwitchSoul
         if len(ret) == 0:
             logger.info("no Cooperation found")
             return False
-        typeMask=15
-        typeMask = CooperationSelectMask [self.config.wanted_quests.wanted_quests_config.cooperation_type.value]
+        typeMask = 15
+        typeMask = CooperationSelectMask[self.config.wanted_quests.wanted_quests_config.cooperation_type.value]
         for item in ret:
             # 该任务是需要邀请的任务类型
             if not (item['type'] & typeMask):
@@ -341,7 +351,7 @@ class ScriptTask(SecretScriptTask, GeneralInvite, WantedQuestsAssets, SwitchSoul
                 logger.info("%s not found,Wait 20s,%d invitations left", name, 5 - index - 1)
                 index += 1
                 sleep(20) if index < 5 else sleep(0)
-                #NOTE 等待过程如果出现协作邀请 将会卡住 为了防止卡住
+                # NOTE 等待过程如果出现协作邀请 将会卡住 为了防止卡住
                 self.screenshot()
         return ret
 
@@ -427,10 +437,11 @@ if __name__ == '__main__':
     from module.config.config import Config
     from module.device.device import Device
 
-    c = Config('回归')
+    c = Config('oas1')
     d = Device(c)
     t = ScriptTask(c, d)
     t.screenshot()
 
     t.run()
-    # print(t.appear(t.I_WQ_CHECK_TASK))
+
+

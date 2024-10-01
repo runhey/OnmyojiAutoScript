@@ -2,8 +2,8 @@
   {
     "itemName": "bet_left",
     "imageName": "fb_bet_left.png",
-    "roiFront": "88,342,145,100",
-    "roiBack": "88,342,145,100",
+    "roiFront": "95,308,145,100",
+    "roiBack": "58,248,245,195",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "左边竞猜"
@@ -11,8 +11,8 @@
   {
     "itemName": "bet_right",
     "imageName": "fb_bet_right.png",
-    "roiFront": "1044,344,146,100",
-    "roiBack": "1044,344,146,100",
+    "roiFront": "1038,303,146,100",
+    "roiBack": "1012,268,187,208",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "右边竞猜"
@@ -20,8 +20,8 @@
   {
     "itemName": "bet_success_box",
     "imageName": "fb_bet_success_box.png",
-    "roiFront": "590,439,87,50",
-    "roiBack": "590,439,87,50",
+    "roiFront": "593,419,87,50",
+    "roiBack": "564,378,140,133",
     "method": "Template matching",
     "threshold": 0.75,
     "description": "description"
@@ -29,8 +29,8 @@
   {
     "itemName": "success_left",
     "imageName": "fb_success_left.png",
-    "roiFront": "108,352,100,100",
-    "roiBack": "108,352,100,100",
+    "roiFront": "123,316,100,100",
+    "roiBack": "91,254,202,221",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "左边赢了"
@@ -38,8 +38,8 @@
   {
     "itemName": "failure_right",
     "imageName": "fb_failure_right.png",
-    "roiFront": "1067,341,100,100",
-    "roiBack": "1067,341,100,100",
+    "roiFront": "1063,291,100,100",
+    "roiBack": "993,242,224,199",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "右边输了"
@@ -47,8 +47,8 @@
   {
     "itemName": "next_competition",
     "imageName": "fb_next_competition.png",
-    "roiFront": "1098,510,42,36",
-    "roiBack": "1098,510,42,36",
+    "roiFront": "1104,467,42,36",
+    "roiBack": "1037,402,187,184",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"
@@ -56,8 +56,8 @@
   {
     "itemName": "gold_30",
     "imageName": "fb_gold_30.png",
-    "roiFront": "824,499,78,76",
-    "roiBack": "824,499,78,76",
+    "roiFront": "858,494,78,76",
+    "roiBack": "809,427,147,187",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "30万金币"
@@ -65,8 +65,8 @@
   {
     "itemName": "bet_sure",
     "imageName": "fb_bet_sure.png",
-    "roiFront": "1014,404,100,100",
-    "roiBack": "1014,404,100,100",
+    "roiFront": "1025,402,100,100",
+    "roiBack": "1000,297,200,226",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "确认竞猜"
@@ -74,7 +74,7 @@
   {
     "itemName": "gold_30_check",
     "imageName": "fb_gold_30_check.png",
-    "roiFront": "512,180,68,83",
+    "roiFront": "513,196,58,53",
     "roiBack": "402,141,459,489",
     "method": "Template matching",
     "threshold": 0.8,
@@ -84,7 +84,7 @@
     "itemName": "betted",
     "imageName": "fb_betted.png",
     "roiFront": "93,352,125,54",
-    "roiBack": "49,322,1192,100",
+    "roiBack": "49,283,1192,161",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"
@@ -92,8 +92,8 @@
   {
     "itemName": "success_right",
     "imageName": "fb_success_right.png",
-    "roiFront": "1061,336,122,116",
-    "roiBack": "1061,336,122,116",
+    "roiFront": "1048,341,122,116",
+    "roiBack": "999,243,201,260",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"
@@ -101,8 +101,8 @@
   {
     "itemName": "failure_left",
     "imageName": "fb_failure_left.png",
-    "roiFront": "107,351,100,100",
-    "roiBack": "107,351,100,100",
+    "roiFront": "116,307,100,100",
+    "roiBack": "76,256,193,219",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"
@@ -110,8 +110,8 @@
   {
     "itemName": "bet_failure",
     "imageName": "fb_bet_failure.png",
-    "roiFront": "510,266,269,72",
-    "roiBack": "510,266,269,72",
+    "roiFront": "496,252,269,72",
+    "roiBack": "439,220,400,152",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"
