@@ -79,7 +79,7 @@ class ScriptTask(RightActivity, FrogBossAssets, GeneralBattleAssets):
         elif 18 <= time_now.hour < 20:
             time_set = time_set.replace(hour=22)
         elif 20 <= time_now.hour < 22:
-            time_set = time_set.replace(hour=24)
+            time_set = time_set.replace(hour=0) + TimeDelta(days=1)
         elif 22 <= time_now.hour < 24:
             day = time_now.day + 1
             time_set = time_set.replace(day=day, hour=12)
