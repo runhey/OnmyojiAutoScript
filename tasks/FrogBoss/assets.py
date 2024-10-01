@@ -44,8 +44,8 @@ class FrogBossAssets:
 	# Image Rule Assets
 	# description 
 	I_FROG_BOSS_ENTER = RuleImage(roi_front=(1191,391,36,38), roi_back=(1174,135,78,320), threshold=0.7, method="Template matching", file="./tasks/FrogBoss/fb/fb_frog_boss_enter.png")
-	# description 
-	I_FROG_BOSS_REST = RuleImage(roi_front=(508,266,169,64), roi_back=(508,266,169,64), threshold=0.8, method="Template matching", file="./tasks/FrogBoss/fb/fb_frog_boss_rest.png")
+	# 休息中 
+	I_FROG_BOSS_REST = RuleImage(roi_front=(510,274,169,64), roi_back=(492,260,220,113), threshold=0.8, method="Template matching", file="./tasks/FrogBoss/fb/fb_frog_boss_rest.png")
 
 
 	# Ocr Rule Assets
