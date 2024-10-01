@@ -12,11 +12,13 @@ from module.base.timer import Timer
 from tasks.GameUi.game_ui import GameUi
 from tasks.GameUi.page import page_main
 from tasks.Component.RightActivity.right_activity import RightActivity
+from tasks.Component.GeneralBattle.assets import GeneralBattleAssets
 from tasks.Component.config_base import TimeDelta
 from tasks.FrogBoss.assets import FrogBossAssets
 from tasks.FrogBoss.config import Strategy
 
-class ScriptTask(RightActivity, FrogBossAssets):
+
+class ScriptTask(RightActivity, FrogBossAssets, GeneralBattleAssets):
     def run(self):
         self.enter(self.I_FROG_BOSS_ENTER)
         # 进入主界面
@@ -40,6 +42,8 @@ class ScriptTask(RightActivity, FrogBossAssets):
                     if self.appear(self.I_BET_LEFT) and self.appear(self.I_BET_RIGHT):
                         break
                     if self.appear_then_click(self.I_BET_SUCCESS_BOX, interval=1):
+                        continue
+                    if self.appear_then_click(self.I_REWARD, interval=2):
                         continue
                     if self.appear_then_click(self.I_NEXT_COMPETITION, interval=4):
                         continue
