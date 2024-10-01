@@ -180,7 +180,8 @@ class ScriptTask(SecretScriptTask, GeneralInvite, WantedQuestsAssets, SwitchSoul
             result = [-1, '', -1, GOTO_BUTTON[index]]
             type_wq = OCR_WQ_TYPE[index].ocr(self.device.image)
             info_wq_1 = OCR_WQ_INFO[index].ocr(self.device.image)
-            info_wq_1 = info_wq_1.replace('：', ':').replace('（', ')').replace('）', ')')
+            info_wq_1 = info_wq_1.replace('：', ':').replace('（', '(').replace('）', ')')
+            info_wq_1 = info_wq_1.replace('：', ':')
             match = re.match(r"^(.*?)\(数量:\s*(\d+)\)", info_wq_1)
             if not match:
                 return None
@@ -189,7 +190,7 @@ class ScriptTask(SecretScriptTask, GeneralInvite, WantedQuestsAssets, SwitchSoul
             result[1] = wq_destination
             result[2] = wq_number
             if type_wq == '探索':
-                result[0] = 0
+                result[0] = -1
             elif type_wq == '挑战':
                 result[0] = 1 if num_challenge >= 10 else -1
             elif type_wq == '秘闻':
@@ -220,14 +221,15 @@ class ScriptTask(SecretScriptTask, GeneralInvite, WantedQuestsAssets, SwitchSoul
             return False
         # sort
         info_wq_list.sort(key=lambda x: x[0])
-        best_type, destination, number, goto_button = info_wq_list[0]
+        best_type, destination, once_number, goto_button = info_wq_list[0]
+        do_number = 1 if once_number >= num_want else num_want // once_number + (1 if num_want % once_number > 0 else 0)
         match best_type:
             case 0:
-                self.explore(goto_button, number)
+                self.explore(goto_button, do_number)
             case 1:
-                self.challenge(goto_button, number)
+                self.challenge(goto_button, do_number)
             case 2:
-                self.secret(goto_button, number)
+                self.secret(goto_button, do_number)
             case _:
                 logger.warning('No wanted quests can be challenged')
 
@@ -435,10 +437,11 @@ if __name__ == '__main__':
     from module.config.config import Config
     from module.device.device import Device
 
-    c = Config('回归')
+    c = Config('oas1')
     d = Device(c)
     t = ScriptTask(c, d)
     t.screenshot()
 
     t.run()
-    # print(t.appear(t.I_WQ_CHECK_TASK))
+
+
