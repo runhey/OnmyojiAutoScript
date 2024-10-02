@@ -103,6 +103,19 @@ battle_theme_model = {
         'I_EXIT': 'I_EXIT_6',
         'I_FRIENDS': 'I_FRIENDS_6',
     },
+    BattleType.COSTUME_BATTLE_7: {
+        'I_LOCAL': 'I_LOCAL_7',
+        'I_EXIT': 'I_EXIT_7',
+        'I_FRIENDS': 'I_FRIENDS_7',
+    },
+    BattleType.COSTUME_BATTLE_8: {
+        'I_LOCAL': 'I_LOCAL_8',
+        'I_EXIT': 'I_EXIT_8',
+        'I_FRIENDS': 'I_FRIENDS_8',
+        'I_WIN': 'I_WIN_8',
+        'I_DE_WIN': 'I_DE_WIN_8',
+        'I_FALSE': 'I_FALSE_8',
+    },
 }
 
 

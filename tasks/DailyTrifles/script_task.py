@@ -27,6 +27,8 @@ class ScriptTask(GameUi, Summon, DailyTriflesAssets):
             pass
         if con.friend_love:
             self.run_friend_love()
+        if con.luck_msg:
+            self.run_luck_msg()
         if con.store_sign:
             self.run_store_sign()
         self.set_next_run('DailyTrifles', success=True, finish=False)
@@ -40,6 +42,34 @@ class ScriptTask(GameUi, Summon, DailyTriflesAssets):
 
     def run_guild_wish(self):
         pass
+
+    def run_luck_msg(self):
+        self.ui_get_current_page()
+        self.ui_goto(page_friends)
+        while 1:
+            self.screenshot()
+            if self.appear(self.I_LUCK_TITLE):
+                break
+            if self.appear_then_click(self.I_LUCK_MSG, interval=1):
+                continue
+        logger.info('Start luck msg')
+        check_timer = Timer(2)
+        check_timer.start()
+        while 1:
+            self.screenshot()
+
+            if self.appear_then_click(self.I_CLICK_BLESS, interval=1):
+                continue
+            if self.appear_then_click(self.I_ONE_CLICK_BLESS, interval=1):
+                continue
+            if self.ui_reward_appear_click():
+                logger.info('Get reward of luck msg')
+                break
+            if check_timer.reached():
+                logger.warning('There is no any luck msg')
+                break
+
+        self.ui_click(self.I_UI_BACK_RED, self.I_CHECK_MAIN)
 
     def run_friend_love(self):
         self.ui_get_current_page()
@@ -104,10 +134,10 @@ if __name__ == '__main__':
     from module.config.config import Config
     from module.device.device import Device
 
-    c = Config('oas1')
+    c = Config('du')
     d = Device(c)
     t = ScriptTask(c, d)
 
     # t.run_one_summon()
-    t.run_store_sign()
+    t.run_luck_msg()
 

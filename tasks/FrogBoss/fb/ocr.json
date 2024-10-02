@@ -1,8 +1,8 @@
 [
   {
     "itemName": "left_count",
-    "roiFront": "144,541,69,31",
-    "roiBack": "144,541,69,31",
+    "roiFront": "143,496,69,31",
+    "roiBack": "143,496,69,31",
     "mode": "Digit",
     "method": "Default",
     "keyword": "",
@@ -10,8 +10,8 @@
   },
   {
     "itemName": "right_count",
-    "roiFront": "1110,542,77,32",
-    "roiBack": "1110,542,77,32",
+    "roiFront": "1105,497,77,32",
+    "roiBack": "1105,497,77,32",
     "mode": "Digit",
     "method": "Default",
     "keyword": "",
@@ -19,8 +19,8 @@
   },
   {
     "itemName": "time_remain",
-    "roiFront": "590,601,91,35",
-    "roiBack": "590,601,91,35",
+    "roiFront": "594,564,91,35",
+    "roiBack": "594,564,91,35",
     "mode": "Duration",
     "method": "Default",
     "keyword": "",

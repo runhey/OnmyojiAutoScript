@@ -8,7 +8,7 @@ class ConfigManual:
     """
 
     SCHEDULER_PRIORITY = """
-        Restart
+        Restart > SoulsTidy
         > KekkaiUtilize > KekkaiActivation > DemonEncounter
         > AreaBoss > GoldYoukai > ExperienceYoukai > Nian > Tako > RealmRaid > RyouToppa > DailyTrifles > Exploration
         > Dokan > Hunt 
@@ -17,7 +17,7 @@ class ConfigManual:
         > BondlingFairyland > EvoZone > GoryouRealm > HeroTest
         > TrueOrochi > RichMan
         > CollectiveMissions
-        > Pets > TalismanPass > SoulsTidy > Delegation > Hyakkiyakou
+        > Pets > TalismanPass > Delegation > Hyakkiyakou
         > Secret > WeeklyTrifles > MysteryShop > Duel > MetaDemon > FrogBoss > FloatParade > Quiz
         """
 

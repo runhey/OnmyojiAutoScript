@@ -28,6 +28,10 @@ class GeneralClimb(ConfigBase):
     # 如果挂完的活动的体力，是不是需要挂游戏的体力
     # 在我的设计理念中：活动体力>游戏体力。所以不提供从300挂满然后才到挂活动币
     activity_toggle: bool = Field(default=False, description='activity_toggle_help')
+    # 结束后激活 御魂清理
+    active_souls_clean: bool = Field(default=False, description='active_souls_clean_help')
+    # 点击战斗随机休息
+    random_sleep: bool = Field(default=False, description='random_delay_help')
 
     @validator('limit_time', pre=True, always=True)
     def parse_limit_time(cls, value):

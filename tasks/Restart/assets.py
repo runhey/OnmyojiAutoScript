@@ -39,6 +39,14 @@ class RestartAssets:
 	I_HARVEST_SIGN_3 = RuleImage(roi_front=(291,495,33,36), roi_back=(100,473,1014,91), threshold=0.8, method="Template matching", file="./tasks/Restart/harvest/harvest_harvest_sign_3.png")
 	# description 
 	I_HARVEST_SIGN_4 = RuleImage(roi_front=(587,151,100,228), roi_back=(547,123,185,281), threshold=0.8, method="Template matching", file="./tasks/Restart/harvest/harvest_harvest_sign_4.png")
+	# 点击随机御魂 
+	I_HARVEST_SOUL_1 = RuleImage(roi_front=(248,501,34,37), roi_back=(165,389,929,168), threshold=0.8, method="Template matching", file="./tasks/Restart/harvest/harvest_harvest_soul_1.png")
+	# 选择第一个御魂 
+	I_HARVEST_SOUL_2 = RuleImage(roi_front=(586,561,112,47), roi_back=(570,547,139,71), threshold=0.8, method="Template matching", file="./tasks/Restart/harvest/harvest_harvest_soul_2.png")
+	# description 
+	I_HARVEST_SOUL_3 = RuleImage(roi_front=(313,489,188,33), roi_back=(302,472,216,60), threshold=0.8, method="Template matching", file="./tasks/Restart/harvest/harvest_harvest_soul_3.png")
+	# 寮包 
+	I_HARVEST_GUILD_REWARD = RuleImage(roi_front=(244,498,41,42), roi_back=(200,403,817,157), threshold=0.8, method="Template matching", file="./tasks/Restart/harvest/harvest_harvest_guild_reward.png")
 
 
 	# Image Rule Assets
