@@ -2,6 +2,7 @@ import cv2
 import re
 import numpy as np
 from numpy import uint8, fromfile
+from module.atom.click import RuleClick
 from module.logger import logger
 
 from tasks.base_task import BaseTask
@@ -57,18 +58,19 @@ class MoonSeaMap(MoonSeaSkills):
             if x1 < rx1 or x2 > rx2 or y1 < ry1 or y2 > ry2:
                 continue
             if isl_type == MoonSeaType.island100 and self.contains_any_char(result.ocr_text, chars='宁息'):
-                # 如果身上没有达到300块钱就不去了
-                if self.appear(self.I_M_STORE):
-                    continue
+                # 保证返回值类型正确
                 isl_type = MoonSeaType.island101
                 isl_roi = x1, y1, w, h
+                 # 如果身上没有达到300块钱就不去了
+                if self.appear(self.I_M_STORE):
+                    continue
             elif isl_type == MoonSeaType.island100 and self.contains_any_char(result.ocr_text, chars='神秘'):
                 isl_type = MoonSeaType.island102
                 isl_roi = x1, y1, w, h
             elif isl_type == MoonSeaType.island100 and self.contains_any_char(result.ocr_text, chars='回混范'):
                 isl_type = MoonSeaType.island103
                 isl_roi = x1, y1, w, h
-            elif isl_type == MoonSeaType.island100 and self.contains_any_char(result.ocr_text, chars='蜜馨屡战'):
+            elif isl_type == MoonSeaType.island100 and self.contains_any_char(result.ocr_text, chars='蜜噻金鹰馨屡燎鹰战'):
                 isl_type = MoonSeaType.island104
                 isl_roi = x1, y1, w, h
             elif isl_type == MoonSeaType.island100 and self.contains_any_char(result.ocr_text, chars='星之'):
@@ -107,8 +109,16 @@ class MoonSeaMap(MoonSeaSkills):
             self.screenshot()
             if not self.in_main() and self.appear(self.I_BACK_EXIT):
                 break
-            if self.click(self.C_ISLAND_ENTER, interval=2.5):
-                continue
+            
+            # 对不识别的岛屿使用固定位置 识别的使用图像中心坐标
+            if isl_type == MoonSeaType.island100:
+                if self.click(self.C_ISLAND_ENTER, interval=2.5):
+                    continue
+            else:
+                temp_center = RuleClick(isl_roi, roi_back=(0,0,100,100), name="center_point")
+                if self.click(temp_center, interval=5):
+                    continue
+         
         logger.info('Entering island')
         return
 

@@ -55,6 +55,7 @@ class MoonSea(MoonSeaMap, MoonSeaL101, MoonSeaL102, MoonSeaL103, MoonSeaL104, Mo
     def one(self):
         self.cnt_skill101 = 1
         self._start()
+        error_count = 0
         while 1:
             self.screenshot()
             if not self.in_main():
@@ -86,6 +87,15 @@ class MoonSea(MoonSeaMap, MoonSeaL101, MoonSeaL102, MoonSeaL103, MoonSeaL104, Mo
                     break
                 else:
                     continue
+
+
+            #多识别几次文字
+            if errorcount >=3:
+                errorcount = 0
+                logger.warning('OCR not found island . Try entering a random island')
+            if isl_type == MoonSeaType.island100 and errorcount < 3:
+                errorcount += 1
+                continue
 
             self.enter_island(isl_type=isl_type, isl_roi=isl_roi)
             isl_type = self.island_name()
