@@ -13,6 +13,7 @@ class Strategy(str, Enum):
     Majority = 'frog_majority'
     Minority = 'frog_minority'
     Bilibili = 'frog_bilibili'
+    Dashen = 'frog_dashen'
 
 class FrogBossConfig(ConfigBase):
     before_end_frog: Time = Field(default=Time(0, 15, 0), description='before_end_frog_help')
