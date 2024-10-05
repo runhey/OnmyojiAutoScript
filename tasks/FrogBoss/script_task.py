@@ -287,7 +287,7 @@ class ScriptTask(RightActivity, FrogBossAssets, GeneralBattleAssets):
                         if bet_result == 'LEFT':
                             count_uper_left += 1
                         elif bet_result == 'RIGHT':
-                            right_count += 1
+                            count_uper_right += 1
 
             # 最终输出决策
             if count_uper_left > count_uper_right:
