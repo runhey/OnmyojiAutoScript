@@ -260,51 +260,48 @@ class ScriptTask(RightActivity, FrogBossAssets, GeneralBattleAssets):
 
 
         # 主函数，遍历这批 uid
-        def process_uids_with_names(uids):
-            count_uper_left = 0  # 统计博主投注左侧红方次数
-            count_uper_right = 0  # 统计博主投注右侧蓝方次数
+        count_uper_left = 0  # 统计博主投注左侧红方次数
+        count_uper_right = 0  # 统计博主投注右侧蓝方次数
 
-            for user in uids:
-                uid = user['id']
-                name = user['name']
-                feed_id = get_feed_id(uid)
-                if feed_id:
-                    details = get_feed_details(feed_id)
-                    # 检查 create_time 和 body_text
-                    if details and is_time_valid(int(details['create_time'])) and details['body_text']:
-                        bet_result = analyze_bet(details['body_text'])
-                        bet_rate = (re.compile(r"([5-9]\d%|\d+开|[一二三四五六七八九十零]+开|([红蓝][一二三四五六七八九十零,0-9])+)")
-                                .search(details.get('body_text')))
-                        if bet_rate:
-                            bet_rate = ',' + bet_rate.group()
-                        else:
-                            bet_rate = ''
-                        # 输出博主结论，可省略
-                        # logger.info(f"{name}({details['user_nick']}) has bet on the {bet_result}{bet_rate}")
+        for user in uids:
+            uid = user['id']
+            name = user['name']
+            feed_id = get_feed_id(uid)
+            if feed_id:
+                details = get_feed_details(feed_id)
+                # 检查 create_time 和 body_text
+                if details and is_time_valid(int(details['create_time'])) and details['body_text']:
+                    bet_result = analyze_bet(details['body_text'])
+                    bet_rate = (re.compile(r"([5-9]\d%|\d+开|[一二三四五六七八九十零]+开|([红蓝][一二三四五六七八九十零,0-9])+)")
+                            .search(details.get('body_text')))
+                    if bet_rate:
+                        bet_rate = ',' + bet_rate.group()
+                    else:
+                        bet_rate = ''
+                    # 输出博主结论，可省略
+                    # logger.info(f"{name}({details['user_nick']}) has bet on the {bet_result}{bet_rate}")
 
-                        # 根据投注结果更新统计
-                        if bet_result == 'LEFT':
-                            count_uper_left += 1
-                        elif bet_result == 'RIGHT':
-                            count_uper_right += 1
+                    # 根据投注结果更新统计
+                    if bet_result == 'LEFT':
+                        count_uper_left += 1
+                    elif bet_result == 'RIGHT':
+                        count_uper_right += 1
 
-            # 最终输出决策
-            if count_uper_left > count_uper_right:
-                logger.info(f"Final decision: The best bet is LEFT({count_uper_left}:{count_uper_right})")
-                return self.I_BET_LEFT  # 返回下注的目标是左边
-            elif count_uper_right > count_uper_left:
-                logger.info(f"Final decision: The best bet is RIGHT({count_uper_right}:{count_uper_left})")
-                return self.I_BET_RIGHT  # 返回下注的目标是右边
+        # 最终输出决策
+        if count_uper_left > count_uper_right:
+            logger.info(f"Final decision: The best bet is LEFT({count_uper_left}:{count_uper_right})")
+            return self.I_BET_LEFT  # 返回下注的目标是左边
+        elif count_uper_right > count_uper_left:
+            logger.info(f"Final decision: The best bet is RIGHT({count_uper_right}:{count_uper_left})")
+            return self.I_BET_RIGHT  # 返回下注的目标是右边
+        else:
+            logger.info("Final decision:Left and right bets are equal, default bet is minority")
+            # 若五五开则投注少数博反压奖励
+            if count_left < count_right:
+                return self.I_BET_LEFT
             else:
-                logger.info("Final decision:Left and right bets are equal, default bet is minority")
-                # 若五五开则投注少数博反压奖励
-                if count_left < count_right:
-                    return self.I_BET_LEFT
-                else:
-                    return self.I_BET_RIGHT
+                return self.I_BET_RIGHT
 
-        # 调用运行
-        process_uids_with_names(uids)
 
 if __name__ == '__main__':
     from module.config.config import Config
