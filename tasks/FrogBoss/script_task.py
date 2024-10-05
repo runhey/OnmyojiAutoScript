@@ -103,7 +103,7 @@ class ScriptTask(RightActivity, FrogBossAssets, GeneralBattleAssets):
             case Strategy.Bilibili:
                 click_image = self.I_BET_LEFT if count_left > count_right else self.I_BET_RIGHT
             case Strategy.Dashen:
-                click_image = self.get_dashen()
+                click_image = self.get_dashen(count_left, count_right)
             case _:
                 raise ValueError(f'Unknown bet mode: {self.config.model.frog_boss.frog_boss_config.strategy_frog}')
         logger.info(f'You strategy is {self.config.model.frog_boss.frog_boss_config.strategy_frog} and bet on {click_image}')
@@ -156,15 +156,15 @@ class ScriptTask(RightActivity, FrogBossAssets, GeneralBattleAssets):
         """
         pass
 
-    def get_dashen(self) -> RuleImage:
+    def get_dashen(self, count_left, count_right) -> RuleImage:
         """
         获取博主的策略选择，整合多个博主的投注策略，并返回最终的下注建议
         :return: 'left' 或 'right' 的下注目标
         """
         logger.info('Fetching strategy from multiple Dashen UPer')
         # 定义正则表达式
-        red_regex = re.compile(r'(红|左|红优|押红|红方|左方|左边|我红|我左)')
-        blue_regex = re.compile(r'(蓝|右|蓝优|押蓝|蓝方|右方|右边|我蓝|我右)')
+        red_regex = re.compile(r'(押红|押左|压红|压左|红方|我红|我左|红优|左|红六|红七|红八|红九|红十|91开|82开|73开|64开)')
+        blue_regex = re.compile(r'(押蓝|押右|压蓝|压右|蓝方|我蓝|我右|蓝优|右|蓝六|蓝七|蓝八|蓝九|蓝十|19开|28开|37开|46开)')
 
         # 获取 feedId 的函数
         def get_feed_id(uid):
@@ -223,34 +223,34 @@ class ScriptTask(RightActivity, FrogBossAssets, GeneralBattleAssets):
             if blue_regex.search(body_text):
                 blue_span=blue_regex.search(body_text).start()
             if red_span < blue_span:
-                return '红方'
+                return 'LEFT'
             elif red_span > blue_span:
-                return '蓝方'
-            return '未知'
+                return 'RIGHT'
+            return 'Unknown'
 
         # 提供的 uid 列表
         uids = [
             {"name": "面灵气喵", "id": "462382f1127b46c5add1185d88f0ea40"},
             {"name": "余岁岁", "id": "54399446d5084a0e8878dac8f6ff56d0"},
             {"name": "七面相", "id": "840742d60e4a43208605ae68ca8c3f64"},
-            {"name": "待机中的徐 ok", "id": "c3c989fae4074d04b478b8ba47ae4120"},
-            {"name": "yys雯雯", "id": "aaa923436aa440df9ac1ee3f47387b99"},
+            {"name": "待机中的徐ok", "id": "c3c989fae4074d04b478b8ba47ae4120"},
+            {"name": "雯雯", "id": "aaa923436aa440df9ac1ee3f47387b99"},
             {"name": "晨时微凉", "id": "72584a679e2f45b6859566b5523400d5"},
             {"name": "梅布斯尼", "id": "3d4726d99f2642a485729695b798cb8c"},
             {"name": "鸽海成路", "id": "1d2dcbbd7e3d481c8d0f27ba4ff0dc71"},
             {"name": "徐清林", "id": "21657a558bdd4ddfb6501298350336e7"},
             {"name": "不包邮哦亲", "id": "0e4e0c5a1e494a1fa9a58ac55de689c1"},
             {"name": "天真珈百璃", "id": "30e383c884f844a18a7a76fe3c1e888f"},
-            {"name": "yys薛定谔家查查尔", "id": "d9dc2a75497c4a91b2db1e909a36544d"},
+            {"name": "薛定谔家查查尔", "id": "d9dc2a75497c4a91b2db1e909a36544d"},
             {"name": "嘤嘤井", "id": "e7107cd3010e418da26672669d8eeb5e"},
             {"name": "Prince班崎", "id": "74adeb1bfb2b4cf382edbbb430da2149"},
-            {"name": "yys靠脸混饭", "id": "e87f855f36f24b34b9d8f8a4fb2d62b2"},
+            {"name": "靠脸混饭", "id": "e87f855f36f24b34b9d8f8a4fb2d62b2"},
             {"name": "夜神月丶L", "id": "82de68c7672e4b6da65493fb829b57b6"},
             {"name": "是大荣啦", "id": "f6d6bb15d6024200a985752e2ab4c373"},
             {"name": "炒饭菌", "id": "06e2bba14a914012bc8064601cfa19ea"},
             {"name": "清流不加班", "id": "8982241de1844638b4bb455139b8dcc0"},
             {"name": "槐夏三十", "id": "a9724e98c1cb4a4e931ebc3f467ea73d"},
-            {"name": "yys落沫颜", "id": "e9b0a16325af46628e8dfb9e7942cf1d"},
+            {"name": "落沫颜", "id": "e9b0a16325af46628e8dfb9e7942cf1d"},
             {"name": "槐夏三十", "id": "a9724e98c1cb4a4e931ebc3f467ea73d"},
             {"name": "Mico林木森", "id": "b6b5bc8277e34f69aeca018db0081397"},
             {"name": "查查尔", "id": "d9dc2a75497c4a91b2db1e909a36544d"},
@@ -259,42 +259,53 @@ class ScriptTask(RightActivity, FrogBossAssets, GeneralBattleAssets):
             # ... 可以添加更多 uid
         ]
 
-        red_count = 0  # 统计红方投注次数
-        blue_count = 0  # 统计蓝方投注次数
 
-        for user in uids:
-            uid = user['id']
-            name = user['name']
-            feed_id = get_feed_id(uid)
-            if feed_id:
-                details = get_feed_details(feed_id)
-                # 检查 create_time 和 body_text
-                if details and is_time_valid(int(details['create_time'])) and details['body_text']:
-                    bet_result = analyze_bet(details['body_text'])
-                    bet_rate = (re.compile(r"([5-9]\d%|\d+开|[一二三四五六七八九十零]+开|红[一二三四五六七八九十零,0-9])")
+        # 主函数，遍历这批 uid
+        def process_uids_with_names(uids):
+            count_uper_left = 0  # 统计博主投注左侧红方次数
+            count_uper_right = 0  # 统计博主投注右侧蓝方次数
+
+            for user in uids:
+                uid = user['id']
+                name = user['name']
+                feed_id = get_feed_id(uid)
+                if feed_id:
+                    details = get_feed_details(feed_id)
+                    # 检查 create_time 和 body_text
+                    if details and is_time_valid(int(details['create_time'])) and details['body_text']:
+                        bet_result = analyze_bet(details['body_text'])
+                        bet_rate = (re.compile(r"([5-9]\d%|\d+开|[一二三四五六七八九十零]+开|([红蓝][一二三四五六七八九十零,0-9])+)")
                                 .search(details.get('body_text')))
-                    if bet_rate:
-                        bet_rate = ' ,' + bet_rate.group()
-                    else:
-                        bet_rate = ''
-                    logger.info(f"{name} ({details['user_nick']}) 投注了 {bet_result}{bet_rate}")
+                        if bet_rate:
+                            bet_rate = ',' + bet_rate.group()
+                        else:
+                            bet_rate = ''
+                        # 输出博主结论，可省略
+                        # logger.info(f"{name}({details['user_nick']}) has bet on the {bet_result}{bet_rate}")
 
-                    # 根据投注结果更新统计
-                    if bet_result == '红方':
-                        red_count += 1
-                    elif bet_result == '蓝方':
-                        blue_count += 1
+                        # 根据投注结果更新统计
+                        if bet_result == 'LEFT':
+                            count_uper_left += 1
+                        elif bet_result == 'RIGHT':
+                            count_uper_right += 1
 
-        # 最终输出决策
-        if red_count > blue_count:
-            logger.info(f"最终决策：推荐投注 红方 ({red_count} 对 {blue_count})")
-            return self.I_BET_LEFT  # 返回下注的目标是左边
-        elif blue_count > red_count:
-            logger.info(f"最终决策：推荐投注 蓝方 ({blue_count} 对 {red_count})")
-            return self.I_BET_RIGHT  # 返回下注的目标是右边
-        else:
-            logger.info("红蓝投注持平，请自行决定，默认投注蓝方")
-            return self.I_BET_RIGHT  # 默认投注蓝方
+            # 最终输出决策
+            if count_uper_left > count_uper_right:
+                logger.info(f"Final decision: The best bet is LEFT({count_uper_left}:{count_uper_right})")
+                return self.I_BET_LEFT  # 返回下注的目标是左边
+            elif count_uper_right > count_uper_left:
+                logger.info(f"Final decision: The best bet is RIGHT({count_uper_right}:{count_uper_left})")
+                return self.I_BET_RIGHT  # 返回下注的目标是右边
+            else:
+                logger.info("Final decision:Left and right bets are equal, default bet is minority")
+                # 若五五开则投注少数博反压奖励
+                if count_left < count_right:
+                    return self.I_BET_LEFT
+                else:
+                    return self.I_BET_RIGHT
+
+        # 调用运行
+        process_uids_with_names(uids)
 
 if __name__ == '__main__':
     from module.config.config import Config
