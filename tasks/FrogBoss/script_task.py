@@ -165,7 +165,7 @@ class ScriptTask(RightActivity, FrogBossAssets, GeneralBattleAssets):
         logger.info('Fetching strategy from multiple Dashen UPer')
         # 定义正则表达式
         red_regex = re.compile(r'(押红|押左|压红|压左|红方|红色|我红|我左|红优|左|红六|红七|红八|红九|红十|91开|82开|73开|64开)')
-        blue_regex = re.compile(r'(押蓝|押右|压蓝|压右|蓝方|红色|我蓝|我右|蓝优|右|蓝六|蓝七|蓝八|蓝九|蓝十|19开|28开|37开|46开)')
+        blue_regex = re.compile(r'(押蓝|押右|压蓝|压右|蓝方|蓝色|我蓝|我右|蓝优|右|蓝六|蓝七|蓝八|蓝九|蓝十|19开|28开|37开|46开)')
 
         # 获取 feedId 的函数
         def get_feed_id(uid):
