@@ -164,8 +164,8 @@ class ScriptTask(RightActivity, FrogBossAssets, GeneralBattleAssets):
         """
         logger.info('Fetching strategy from multiple Dashen UPer')
         # 定义正则表达式
-        red_regex = re.compile(r'(押红|押左|压红|压左|红方|我红|我左|红优|左|红六|红七|红八|红九|红十|91开|82开|73开|64开)')
-        blue_regex = re.compile(r'(押蓝|押右|压蓝|压右|蓝方|我蓝|我右|蓝优|右|蓝六|蓝七|蓝八|蓝九|蓝十|19开|28开|37开|46开)')
+        red_regex = re.compile(r'(押红|押左|压红|压左|红方|红色|我红|我左|红优|左|红六|红七|红八|红九|红十|91开|82开|73开|64开)')
+        blue_regex = re.compile(r'(押蓝|押右|压蓝|压右|蓝方|红色|我蓝|我右|蓝优|右|蓝六|蓝七|蓝八|蓝九|蓝十|19开|28开|37开|46开)')
 
         # 获取 feedId 的函数
         def get_feed_id(uid):
@@ -252,7 +252,6 @@ class ScriptTask(RightActivity, FrogBossAssets, GeneralBattleAssets):
             {"name": "清流不加班", "id": "8982241de1844638b4bb455139b8dcc0"},
             {"name": "槐夏三十", "id": "a9724e98c1cb4a4e931ebc3f467ea73d"},
             {"name": "落沫颜", "id": "e9b0a16325af46628e8dfb9e7942cf1d"},
-            {"name": "槐夏三十", "id": "a9724e98c1cb4a4e931ebc3f467ea73d"},
             {"name": "Mico林木森", "id": "b6b5bc8277e34f69aeca018db0081397"},
             {"name": "查查尔", "id": "d9dc2a75497c4a91b2db1e909a36544d"},
             {"name": "CC南浔", "id": "74db771d92a54c28ae3e98d19aa565a3"},
