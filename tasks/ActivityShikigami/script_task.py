@@ -218,39 +218,39 @@ class ScriptTask(GameUi, BaseActivity, SwitchSoul, ActivityShikigamiAssets):
                 if self.appear(self.I_AP_ACTIVITY, interval=1):
                     self.appear_then_click(self.I_SWITCH, interval=2)
 
-    def battle_wait(self, random_click_swipt_enable: bool) -> bool:
-        # 重写
-        self.device.stuck_record_add('BATTLE_STATUS_S')
-        self.device.click_record_clear()
-        logger.info("Start battle process")
-        self.C_RANDOM_LEFT.name = "BATTLE_RANDOM"
-        self.C_RANDOM_RIGHT.name = "BATTLE_RANDOM"
-        self.C_RANDOM_TOP.name = "BATTLE_RANDOM"
-        self.C_RANDOM_BOTTOM.name = "BATTLE_RANDOM"
-        while 1:
-            self.screenshot()
-            # 如果出现了 “获得奖励”
-            reward_click = random.choice([self.C_RANDOM_LEFT, self.C_RANDOM_RIGHT, self.C_RANDOM_TOP, self.C_RANDOM_BOTTOM])
-            if self.appear_then_click(self.I_UI_REWARD, action=reward_click, interval=1.3):
-                continue
-            # 如果出现了 “鼓”
-            if self.appear(self.I_WIN):
-                logger.info("Win")
-                while 1:
-                    self.screenshot()
-                    if not self.appear(self.I_WIN):
-                        break
-                    if self.appear_then_click(self.I_WIN, action=self.C_RANDOM_ALL, interval=1.1):
-                        continue
-                return True
-            # 失败 -> 正常人不会失败
-            if self.appear(self.I_FALSE):
-                logger.warning('False battle')
-                self.ui_click_until_disappear(self.I_FALSE)
-                return False
-            # 如果开启战斗过程随机滑动
-            if random_click_swipt_enable:
-                self.random_click_swipt()
+    # def battle_wait(self, random_click_swipt_enable: bool) -> bool:
+    #     # 重写
+    #     self.device.stuck_record_add('BATTLE_STATUS_S')
+    #     self.device.click_record_clear()
+    #     logger.info("Start battle process")
+    #     self.C_RANDOM_LEFT.name = "BATTLE_RANDOM"
+    #     self.C_RANDOM_RIGHT.name = "BATTLE_RANDOM"
+    #     self.C_RANDOM_TOP.name = "BATTLE_RANDOM"
+    #     self.C_RANDOM_BOTTOM.name = "BATTLE_RANDOM"
+    #     while 1:
+    #         self.screenshot()
+    #         # 如果出现了 “获得奖励”
+    #         reward_click = random.choice([self.C_RANDOM_LEFT, self.C_RANDOM_RIGHT, self.C_RANDOM_TOP, self.C_RANDOM_BOTTOM])
+    #         if self.appear_then_click(self.I_UI_REWARD, action=reward_click, interval=1.3):
+    #             continue
+    #         # 如果出现了 “鼓”
+    #         if self.appear(self.I_WIN):
+    #             logger.info("Win")
+    #             while 1:
+    #                 self.screenshot()
+    #                 if not self.appear(self.I_WIN):
+    #                     break
+    #                 if self.appear_then_click(self.I_WIN, action=self.C_RANDOM_ALL, interval=1.1):
+    #                     continue
+    #             return True
+    #         # 失败 -> 正常人不会失败
+    #         if self.appear(self.I_FALSE):
+    #             logger.warning('False battle')
+    #             self.ui_click_until_disappear(self.I_FALSE)
+    #             return False
+    #         # 如果开启战斗过程随机滑动
+    #         if random_click_swipt_enable:
+    #             self.random_click_swipt()
 
 
 if __name__ == '__main__':
