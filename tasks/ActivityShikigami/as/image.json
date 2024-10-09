@@ -2,7 +2,7 @@
   {
     "itemName": "shi",
     "imageName": "as_shi.png",
-    "roiFront": "443,169,33,34",
+    "roiFront": "524,205,33,34",
     "roiBack": "64,115,1110,427",
     "method": "Template matching",
     "threshold": 0.7,
@@ -20,8 +20,8 @@
   {
     "itemName": "battle",
     "imageName": "as_battle.png",
-    "roiFront": "896,202,35,165",
-    "roiBack": "844,129,138,315",
+    "roiFront": "290,209,35,145",
+    "roiBack": "248,146,138,315",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "进入爬塔"
@@ -65,7 +65,7 @@
   {
     "itemName": "ap",
     "imageName": "as_ap.png",
-    "roiFront": "1133,505,23,24",
+    "roiFront": "1127,509,23,24",
     "roiBack": "1092,487,103,71",
     "method": "Template matching",
     "threshold": 0.8,
@@ -74,7 +74,7 @@
   {
     "itemName": "ap_activity",
     "imageName": "as_ap_activity.png",
-    "roiFront": "1133,509,21,21",
+    "roiFront": "1124,514,21,21",
     "roiBack": "1090,500,84,54",
     "method": "Template matching",
     "threshold": 0.8,
@@ -83,7 +83,7 @@
   {
     "itemName": "switch",
     "imageName": "as_switch.png",
-    "roiFront": "1226,511,23,23",
+    "roiFront": "1212,514,23,23",
     "roiBack": "1200,497,69,56",
     "method": "Template matching",
     "threshold": 0.8,
