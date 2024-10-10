@@ -151,5 +151,14 @@
     "method": "Template matching",
     "threshold": 0.8,
     "description": "动画完了就有这个东西"
+  },
+  {
+    "itemName": "exit_sixrealms",
+    "imageName": "gate1_exit_sixrealms.png",
+    "roiFront": "507.5,308,100,100",
+    "roiBack": "507.5,308,100,100",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "暂时离开六道之门"
   }
 ]

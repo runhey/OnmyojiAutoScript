@@ -182,8 +182,8 @@ class BaseExploration(GeneralBattle, GeneralRoom, GeneralInvite, ReplaceShikigam
             logger.warning('Opening settings failed due to now in battle')
             return
         cu, res, total = self.O_E_ALTERNATE_NUMBER.ocr(self.device.image)
-        if cu >= 40:
-            logger.info("Alternate number is full")
+        if cu >= 10:
+            logger.info("Alternate number is enough")
             self.ui_click_until_disappear(self.I_E_SURE_BUTTON)
             return
         else:
