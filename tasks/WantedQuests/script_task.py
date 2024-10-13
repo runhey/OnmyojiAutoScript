@@ -30,6 +30,11 @@ from tasks.Component.SwitchSoul.switch_soul import SwitchSoul
 
 class ScriptTask(WQExplore, SecretScriptTask, WantedQuestsAssets):
     want_strategy_excluding: list[list] = []  # 不需要执行的
+    # 可加入特殊处理悬赏
+    custom_strategy = {
+        "道成夙怨·壹",
+        "特殊地点B",
+    }
 
     def run(self):
         con = self.config.model.wanted_quests
@@ -64,8 +69,12 @@ class ScriptTask(WQExplore, SecretScriptTask, WantedQuestsAssets):
             if self.ocr_appear(self.O_WQ_TEXT_1, interval=1):
                 cu, re, total = self.O_WQ_NUM_1.ocr(self.device.image)
                 if cu == re == total == 0:
-                    logger.warning('OCR failed and skip this round')
+                    logger.warning('OCR failed and have a try')
                     ocr_error_count += 1
+                    # 尝试打一次
+                    unknown_num = self.O_WQ_NUM_UNKNOWN_1.ocr(self.device.image)
+                    if unknown_num > 14:
+                        self.execute_mission(self.O_WQ_TEXT_1, 1, number_challenge)
                 if cu > total:
                     logger.warning('Current number of wanted quests is greater than total number')
                     cu = cu % 10
@@ -75,8 +84,12 @@ class ScriptTask(WQExplore, SecretScriptTask, WantedQuestsAssets):
             if self.ocr_appear(self.O_WQ_TEXT_2, interval=1):
                 cu, re, total = self.O_WQ_NUM_2.ocr(self.device.image)
                 if cu == re == total == 0:
-                    logger.warning('OCR failed and skip this round')
+                    logger.warning('OCR failed and have a try')
                     ocr_error_count += 1
+                    # 尝试打一次
+                    unknown_num = self.O_WQ_NUM_UNKNOWN_2.ocr(self.device.image)
+                    if unknown_num > 14:
+                        self.execute_mission(self.O_WQ_TEXT_2, 1, number_challenge)
                 if cu > total:
                     logger.warning('Current number of wanted quests is greater than total number')
                     cu = cu % 10
@@ -177,7 +190,7 @@ class ScriptTask(WQExplore, SecretScriptTask, WantedQuestsAssets):
             :return:
             (type, destination, number, goto_button)
             (类型, 地点层级，可以打败的数量，前往按钮)
-            类型： 探索0, 挑战1， 秘闻2
+            类型： 挑战0, 探索1， 秘闻2
             """
             result = [-1, '', -1, GOTO_BUTTON[index]]
             type_wq = OCR_WQ_TYPE[index].ocr(self.device.image)
@@ -191,10 +204,10 @@ class ScriptTask(WQExplore, SecretScriptTask, WantedQuestsAssets):
             wq_number = int(match.group(2))
             result[1] = wq_destination
             result[2] = wq_number
-            if type_wq == '探索':
-                result[0] = 0
-            elif type_wq == '挑战':
-                result[0] = 1 if num_challenge >= 10 else -1
+            if type_wq == '挑战':
+                result[0] = 0 if num_challenge >= 10 else -1
+            elif type_wq == '探索':
+                result[0] = 1
             elif type_wq == '秘闻':
                 result[0] = 2
             logger.info(f'[Wanted Quests] type: {type_wq} destination: {wq_destination} number: {wq_number} ')
@@ -222,6 +235,20 @@ class ScriptTask(WQExplore, SecretScriptTask, WantedQuestsAssets):
         if not info_wq_list:
             logger.warning('No wanted quests can be challenged')
             return False
+        # 检查特殊悬赏
+        for i in range(4):
+            best_type, destination, once_number, goto_button = info_wq_list[i]
+            if destination in self.custom_strategy:
+                logger.info("Start running a custom strategy")
+                do_number = 1 if once_number >= num_want else num_want // once_number + (1 if num_want % once_number > 0 else 0)
+                match best_type:
+                    case 0:
+                        self.challenge(goto_button, do_number)
+                    case 1:
+                        self.explore(goto_button, do_number)
+                    case 2:
+                        self.secret(goto_button, do_number)
+                return True
         # sort
         info_wq_list.sort(key=lambda x: x[0])
         best_type, destination, once_number, goto_button = info_wq_list[0]
@@ -229,9 +256,9 @@ class ScriptTask(WQExplore, SecretScriptTask, WantedQuestsAssets):
         try:
             match best_type:
                 case 0:
-                    self.explore(goto_button, do_number)
-                case 1:
                     self.challenge(goto_button, do_number)
+                case 1:
+                    self.explore(goto_button, do_number)
                 case 2:
                     self.secret(goto_button, do_number)
                 case _:
