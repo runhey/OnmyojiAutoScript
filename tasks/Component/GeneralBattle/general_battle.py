@@ -179,6 +179,10 @@ class GeneralBattle(GeneralBuff, GeneralBattleAssets):
                 win = False
                 break
 
+            # 检查御魂溢出
+            if self.appear_then_click(self.I_OVER_GHOST, interval=1):
+                continue
+
             # 如果领奖励
             if self.appear(self.I_REWARD, threshold=0.6):
                 win = True
