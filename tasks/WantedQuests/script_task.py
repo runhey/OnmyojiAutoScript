@@ -236,8 +236,8 @@ class ScriptTask(WQExplore, SecretScriptTask, WantedQuestsAssets):
             logger.warning('No wanted quests can be challenged')
             return False
         # 检查特殊悬赏
-        for i in range(4):
-            best_type, destination, once_number, goto_button = info_wq_list[i]
+        for info in info_wq_list:
+            best_type, destination, once_number, goto_button = info
             if destination in self.custom_strategy:
                 logger.info("Start running a custom strategy")
                 do_number = 1 if once_number >= num_want else num_want // once_number + (1 if num_want % once_number > 0 else 0)
