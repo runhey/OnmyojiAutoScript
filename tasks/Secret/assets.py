@@ -30,6 +30,8 @@ class SecretAssets:
 	I_SE_BATTLE_WIN = RuleImage(roi_front=(436,62,100,100), roi_back=(436,62,100,100), threshold=0.8, method="Template matching", file="./tasks/Secret/se/se_se_battle_win.png")
 	# 已经完成可以退出 
 	I_SE_FINISHED_1 = RuleImage(roi_front=(441,546,40,43), roi_back=(441,546,40,43), threshold=0.8, method="Template matching", file="./tasks/Secret/se/se_se_finished_1.png")
+	# 御魂溢出 
+	I_OVER_GHOST = RuleImage(roi_front=(609,410,65,28), roi_back=(609,410,65,28), threshold=0.8, method="Template matching", file="./tasks/Secret/se/se_over_ghost.png")
 
 
 	# Ocr Rule Assets

@@ -260,8 +260,16 @@ class ScriptTask(GameUi, GeneralBattle, SwitchSoul, SecretAssets):
                 continue
             if self.appear(self.I_REWARD):
                 logger.info('Win battle')
-                self.ui_click_until_disappear(self.I_REWARD)
-                return True
+                while 1:
+                    # 检查御魂溢出
+                    if self.appear(self.I_OVER_GHOST):
+                        logger.warning('Too many souls!')
+                        self.ui_click_until_disappear(self.I_OVER_GHOST, interval=1)
+                        continue
+                    if self.appear_then_click(self.I_REWARD, interval=1):
+                        continue
+                    if not self.appear(self.I_REWARD):
+                        return True
 
             if self.appear(self.I_FALSE):
                 logger.warning('False battle')
