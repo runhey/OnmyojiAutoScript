@@ -15,7 +15,6 @@ from tasks.Secret.config import SecretConfig, Secret
 from tasks.Secret.assets import SecretAssets
 from tasks.Component.GeneralBattle.general_battle import GeneralBattle
 from tasks.Component.GeneralBattle.config_general_battle import GeneralBattleConfig
-from tasks.Component.GeneralBattle.assets import GeneralBattleAssets
 from tasks.Component.SwitchSoul.switch_soul import SwitchSoul
 from tasks.Component.GeneralBuff.config_buff import BuffClass
 from tasks.WeeklyTrifles.assets import WeeklyTriflesAssets
@@ -261,7 +260,6 @@ class ScriptTask(GameUi, GeneralBattle, SwitchSoul, SecretAssets):
                 continue
             if self.appear(self.I_REWARD):
                 logger.info('Win battle')
-                self.ui_click_until_disappear(self.I_OVER_GHOST, interval=1) # 检查御魂溢出
                 self.ui_click_until_disappear(self.I_REWARD)
                 return True
 
