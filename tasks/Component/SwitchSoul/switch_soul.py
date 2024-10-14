@@ -253,11 +253,11 @@ class SwitchSoul(BaseTask, SwitchSoulAssets):
         for i in range(5):
             sleep(0.8)
             self.screenshot()
-            self.O_SS_TEAM_NAME.keyword = teamName
-            if self.ocr_appear_click_by_rule(self.O_SS_TEAM_NAME, self.I_SOU_CLICK_PRESENT, interval=1):
-                continue
             if self.appear_then_click(self.I_SOU_SWITCH_SURE, interval=1):
                 break
+            self.O_SS_TEAM_NAME.keyword = teamName
+            if self.ocr_appear_click_by_rule(self.O_SS_TEAM_NAME, self.I_SOU_CLICK_PRESENT, interval=1.5):
+                continue
         logger.info(f'Switch soul_one group {groupName} team {teamName}')
 
     def ocr_appear_click_by_rule(self,
