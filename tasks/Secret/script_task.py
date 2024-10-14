@@ -261,6 +261,7 @@ class ScriptTask(GameUi, GeneralBattle, SwitchSoul, SecretAssets):
             if self.appear(self.I_REWARD):
                 logger.info('Win battle')
                 while 1:
+                    self.screenshot()
                     # 检查御魂溢出
                     if self.appear(self.I_OVER_GHOST):
                         logger.warning('Too many souls!')
