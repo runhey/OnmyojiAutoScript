@@ -17,7 +17,6 @@ from tasks.GameUi.game_ui import GameUi
 from tasks.GameUi.page import page_main, page_exploration, page_shikigami_records
 from tasks.Component.GeneralBattle.general_battle import GeneralBattle
 from tasks.Component.GeneralBattle.config_general_battle import GeneralBattleConfig
-from tasks.Component.GeneralBattle.assets import GeneralBattleAssets
 from tasks.Component.GeneralInvite.general_invite import GeneralInvite
 from tasks.Secret.script_task import ScriptTask as SecretScriptTask
 from tasks.WantedQuests.config import WantedQuestsConfig, CooperationType, CooperationSelectMask, \
@@ -29,7 +28,7 @@ from typing import List
 from tasks.Component.SwitchSoul.switch_soul import SwitchSoul
 
 
-class ScriptTask(WQExplore, SecretScriptTask, WantedQuestsAssets, GeneralBattleAssets):
+class ScriptTask(WQExplore, SecretScriptTask, WantedQuestsAssets):
     want_strategy_excluding: list[list] = []  # 不需要执行的
     # 可加入特殊处理悬赏
     custom_strategy = {

@@ -15,12 +15,11 @@ from tasks.Secret.config import SecretConfig, Secret
 from tasks.Secret.assets import SecretAssets
 from tasks.Component.GeneralBattle.general_battle import GeneralBattle
 from tasks.Component.GeneralBattle.config_general_battle import GeneralBattleConfig
-from tasks.Component.GeneralBattle.assets import GeneralBattleAssets
 from tasks.Component.SwitchSoul.switch_soul import SwitchSoul
 from tasks.Component.GeneralBuff.config_buff import BuffClass
 from tasks.WeeklyTrifles.assets import WeeklyTriflesAssets
 
-class ScriptTask(GameUi, GeneralBattle, SwitchSoul, SecretAssets, GeneralBattleAssets):
+class ScriptTask(GameUi, GeneralBattle, SwitchSoul, SecretAssets):
     lay_list = ['壹', '贰', '叁', '肆', '伍', '陆', '柒', '捌', '玖', '拾']
 
     @cached_property
