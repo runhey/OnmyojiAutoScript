@@ -180,9 +180,7 @@ class GeneralBattle(GeneralBuff, GeneralBattleAssets):
                 break
 
             # 检查御魂溢出
-            if self.appear(self.I_OVER_GHOST):
-                logger.warning('Too many souls!')
-                self.ui_click_until_disappear(self.I_OVER_GHOST, interval=1)
+            if self.appear_then_click(self.I_OVER_GHOST, interval=1):
                 continue
 
             # 如果领奖励
@@ -224,9 +222,7 @@ class GeneralBattle(GeneralBuff, GeneralBattleAssets):
         while 1:
             self.screenshot()
             # 检查御魂溢出
-            if self.appear(self.I_OVER_GHOST):
-                logger.warning('Too many souls!')
-                self.ui_click_until_disappear(self.I_OVER_GHOST, interval=1)
+            if self.appear_then_click(self.I_OVER_GHOST, interval=1):
                 continue
             # 如果出现领奖励
             action_click = random.choice([self.C_REWARD_1, self.C_REWARD_2, self.C_REWARD_3])

@@ -253,11 +253,6 @@ class ScriptTask(GameUi, GeneralBattle, SwitchSoul, SecretAssets):
         logger.info("Start battle process")
         while 1:
             self.screenshot()
-            # 检查御魂溢出
-            if self.appear(self.I_OVER_GHOST):
-                logger.warning('Too many souls!')
-                self.ui_click_until_disappear(self.I_OVER_GHOST, interval=1)
-                continue
             if self.appear(self.I_SE_BATTLE_WIN):
                 logger.info('Win battle')
                 self.ui_click_until_disappear(self.I_SE_BATTLE_WIN, interval=2)
@@ -266,6 +261,7 @@ class ScriptTask(GameUi, GeneralBattle, SwitchSoul, SecretAssets):
                 continue
             if self.appear(self.I_REWARD):
                 logger.info('Win battle')
+                self.ui_click_until_disappear(self.I_OVER_GHOST, interval=1) # 检查御魂溢出
                 self.ui_click_until_disappear(self.I_REWARD)
                 return True
 
