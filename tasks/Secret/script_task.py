@@ -20,7 +20,7 @@ from tasks.Component.SwitchSoul.switch_soul import SwitchSoul
 from tasks.Component.GeneralBuff.config_buff import BuffClass
 from tasks.WeeklyTrifles.assets import WeeklyTriflesAssets
 
-class ScriptTask(GameUi, GeneralBattle, SwitchSoul, SecretAssets, GeneralBattleAssets):
+class ScriptTask(GameUi, GeneralBattle, SwitchSoul, SecretAssets):
     lay_list = ['壹', '贰', '叁', '肆', '伍', '陆', '柒', '捌', '玖', '拾']
 
     @cached_property
