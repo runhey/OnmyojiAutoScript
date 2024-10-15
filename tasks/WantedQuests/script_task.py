@@ -30,11 +30,6 @@ from tasks.Component.SwitchSoul.switch_soul import SwitchSoul
 
 class ScriptTask(WQExplore, SecretScriptTask, WantedQuestsAssets):
     want_strategy_excluding: list[list] = []  # 不需要执行的
-    # 可加入特殊处理悬赏
-    custom_strategy = {
-        "道成夙怨·壹",
-        "特殊地点B",
-    }
 
     def run(self):
         con = self.config.model.wanted_quests
@@ -190,8 +185,13 @@ class ScriptTask(WQExplore, SecretScriptTask, WantedQuestsAssets):
             :return:
             (type, destination, number, goto_button)
             (类型, 地点层级，可以打败的数量，前往按钮)
-            类型： 挑战0, 探索1， 秘闻2
+            类型： 挑战0, 秘闻1， 探索2
             """
+            layer_limit = {
+                # 低层不限制
+                # "壹", "贰", "叁", "肆", "伍", "陆",
+                "柒", "捌", "玖", "拾"
+            }
             result = [-1, '', -1, GOTO_BUTTON[index]]
             type_wq = OCR_WQ_TYPE[index].ocr(self.device.image)
             info_wq_1 = OCR_WQ_INFO[index].ocr(self.device.image)
@@ -202,13 +202,17 @@ class ScriptTask(WQExplore, SecretScriptTask, WantedQuestsAssets):
                 return None
             wq_destination = match.group(1)
             wq_number = int(match.group(2))
+            # 跳过高层秘闻
+            if wq_destination[-1] in layer_limit:
+                logger.warning('This secret layer is too high')
+                return None
             result[1] = wq_destination
             result[2] = wq_number
             if type_wq == '挑战':
                 result[0] = 0 if num_challenge >= 10 else -1
-            elif type_wq == '探索':
-                result[0] = 1
             elif type_wq == '秘闻':
+                result[0] = 1
+            elif type_wq == '探索':
                 result[0] = 2
             logger.info(f'[Wanted Quests] type: {type_wq} destination: {wq_destination} number: {wq_number} ')
             return tuple(result) if result[0] != -1 else None
@@ -235,20 +239,6 @@ class ScriptTask(WQExplore, SecretScriptTask, WantedQuestsAssets):
         if not info_wq_list:
             logger.warning('No wanted quests can be challenged')
             return False
-        # 检查特殊悬赏
-        for info in info_wq_list:
-            best_type, destination, once_number, goto_button = info
-            if destination in self.custom_strategy:
-                logger.info("Start running a custom strategy")
-                do_number = 1 if once_number >= num_want else num_want // once_number + (1 if num_want % once_number > 0 else 0)
-                match best_type:
-                    case 0:
-                        self.challenge(goto_button, do_number)
-                    case 1:
-                        self.explore(goto_button, do_number)
-                    case 2:
-                        self.secret(goto_button, do_number)
-                return True
         # sort
         info_wq_list.sort(key=lambda x: x[0])
         best_type, destination, once_number, goto_button = info_wq_list[0]
@@ -258,9 +248,9 @@ class ScriptTask(WQExplore, SecretScriptTask, WantedQuestsAssets):
                 case 0:
                     self.challenge(goto_button, do_number)
                 case 1:
-                    self.explore(goto_button, do_number)
-                case 2:
                     self.secret(goto_button, do_number)
+                case 2:
+                    self.explore(goto_button, do_number)
                 case _:
                     logger.warning('No wanted quests can be challenged')
         except ExploreWantedBoss:
