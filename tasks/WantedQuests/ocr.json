@@ -54,6 +54,24 @@
     "description": "Ocr-description"
   },
   {
+    "itemName": "wq_num_unknown_1",
+    "roiFront": "32,260,72,27",
+    "roiBack": "32,260,72,27",
+    "mode": "Digit",
+    "method": "Default",
+    "keyword": "",
+    "description": "备用识别1"
+  },
+  {
+    "itemName": "wq_num_unknown_2",
+    "roiFront": "34,406,65,24",
+    "roiBack": "34,406,65,24",
+    "mode": "Digit",
+    "method": "Default",
+    "keyword": "",
+    "description": "备用识别2"
+  },
+  {
     "itemName": "wq_type_1",
     "roiFront": "544,238,55,36",
     "roiBack": "544,238,55,36",
