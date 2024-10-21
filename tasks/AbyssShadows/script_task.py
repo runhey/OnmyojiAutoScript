@@ -92,7 +92,7 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AbyssShadowsAssets):
 
         :return:
         """
-        cfg: AbyssShadows = self.config.abyss_shadows_config
+        cfg: AbyssShadows = self.config.abyss_shadows
 
         if cfg.switch_soul_config.enable:
             self.ui_get_current_page()
