@@ -902,6 +902,33 @@
       "netherworld_group_team": "-1,-1"
     }
   },
+  "abyss_shadows": {
+    "scheduler": {
+      "enable": false,
+      "next_run": "2023-01-01 00:00:00",
+      "priority": 5,
+      "success_interval": "01 00:00:00",
+      "failure_interval": "01 00:00:00",
+      "server_update": "09:00:00",
+      "float_time": "00:00:00"
+    },
+    "general_battle_config": {
+      "lock_team_enable": false,
+      "preset_enable": false,
+      "preset_group": 1,
+      "preset_team": 1,
+      "green_enable": false,
+      "green_mark": "green_left1",
+      "random_click_swipt_enable": false
+    },
+    "switch_soul_config": {
+      "enable": false,
+      "switch_group_team": "-1,-1",
+      "enable_switch_by_name": false,
+      "group_name": "",
+      "team_name": ""
+    }
+  },
   "dokan": {
     "scheduler": {
       "enable": true,
@@ -960,5 +987,6 @@
         "random_click_swipt_enable": false
       }
     }
-  } 
+    
+  }
 }

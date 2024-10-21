@@ -1,0 +1,23 @@
+{
+    "name": "ryou_activity_list",
+    "direction": "vertical",
+    "type": "ocr",
+    "roiBack": "35,157,37,250",
+    "description": "这个是当前活跃的竂活动列表界面",
+    "list": [
+      {
+        "itemName": "道馆",
+        "roiFront": "33,253,42,26"
+      },
+      {
+        "itemName": "首领",
+        "roiFront": "34,433,43,28",
+        "description": "首领退治"
+      },
+      {
+        "itemName": "狭间",
+        "roiFront": "34,523,43,28",
+        "description": "狭间暗域"
+      }
+    ]
+  }

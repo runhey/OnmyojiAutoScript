@@ -45,6 +45,7 @@ from tasks.SixRealms.config import SixRealms
 from tasks.RealmRaid.config import RealmRaid
 from tasks.CollectiveMissions.config import CollectiveMissions
 from tasks.Hunt.config import Hunt
+from tasks.AbyssShadows.config import AbyssShadows
 
 # 这一部分是活动的配置-----------------------------------------------------------------------------------------------------
 from tasks.ActivityShikigami.config import ActivityShikigami
@@ -131,6 +132,7 @@ class ConfigModel(ConfigBase):
     collective_missions: CollectiveMissions = Field(default_factory=CollectiveMissions)
     hunt: Hunt = Field(default_factory=Hunt)
     dokan: Dokan = Field(default_factory=Dokan)
+    abyss_shadows: AbyssShadows = Field(default_factory=AbyssShadows)
 
     # @validator('script')
     # def script_validator(cls, v):
