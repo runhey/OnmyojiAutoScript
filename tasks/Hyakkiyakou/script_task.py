@@ -178,7 +178,7 @@ class ScriptTask(GameUi, HyaSlave):
         if self._config.debug_config.hya_show:
             self.debugger.show_start()
         while 1:
-            self.fast_screenshot()
+            self.fast_screenshot(screenshot=self._config.debug_config.hya_screenshot_method)
             if self.appear(self.I_HEND):
                 break
             if not self.appear(self.I_CHECK_RUN):

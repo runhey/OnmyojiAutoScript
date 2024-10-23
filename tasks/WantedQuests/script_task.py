@@ -120,7 +120,7 @@ class ScriptTask(WQExplore, SecretScriptTask, WantedQuestsAssets):
             next_run_datetime = datetime.combine(now_datetime.date() + timedelta(days=1), time(hour=18))
             next_run_datetime = next_run_datetime + time_delta
         else:
-            # 如果是在0点到6点之间，那就设定下一次运行的时间为今天的18点 + before_end
+            # 如果是在0点到5点之间，那就设定下一次运行的时间为今天的18点 + before_end
             next_run_datetime = datetime.combine(now_datetime.date(), time(hour=18))
             next_run_datetime = next_run_datetime + time_delta
         self.set_next_run(task='WantedQuests', target=next_run_datetime)
@@ -208,12 +208,16 @@ class ScriptTask(WQExplore, SecretScriptTask, WantedQuestsAssets):
                 return None
             result[1] = wq_destination
             result[2] = wq_number
-            if type_wq == '挑战':
-                result[0] = 0 if num_challenge >= 10 else -1
-            elif type_wq == '秘闻':
-                result[0] = 1
-            elif type_wq == '探索':
-                result[0] = 2
+            order_list = self.config.model.wanted_quests.wanted_quests_config.battle_priority
+            order_list = order_list.replace(' ', '').replace('\n', '')
+            order_list: list = re.split(r'>', order_list)
+            result[0] = order_list.index(type_wq) if type_wq in order_list else -1
+            # if type_wq == '挑战':
+            #     result[0] = 0 if num_challenge >= 10 else -1
+            # elif type_wq == '秘闻':
+            #     result[0] = 1
+            # elif type_wq == '探索':
+            #     result[0] = 2
             logger.info(f'[Wanted Quests] type: {type_wq} destination: {wq_destination} number: {wq_number} ')
             return tuple(result) if result[0] != -1 else None
 

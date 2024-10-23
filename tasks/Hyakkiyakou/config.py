@@ -13,6 +13,10 @@ class InferenceEngine(str, Enum):
     ONNXRUNTIME = 'Onnxruntime'
     TENSORRT = 'TensorRT'
 
+class ScreenshotMethod(str, Enum):
+    WINDOW_BACKGROUND = 'window_background'
+    NEMU_IPC = 'nemu_ipc'
+
 
 class HyakkiyakouConfig(ConfigBase):
     hya_limit_time: Time = Field(default=Time(minute=20), description='hya_limit_time_help')
@@ -52,6 +56,9 @@ class DebugConfig(ConfigBase):
     hya_save_result: bool = Field(default=False, description='hya_save_result_help')
     # 单独的设定截屏间隔, 单位ms
     hya_interval: float = Field(default=300, description='hya_interval_help')
+    # 单独的截屏设置
+    hya_screenshot_method: ScreenshotMethod = Field(default=ScreenshotMethod.WINDOW_BACKGROUND,
+                                                    description='hya_screenshot')
 
 
 class Hyakkiyakou(ConfigBase):

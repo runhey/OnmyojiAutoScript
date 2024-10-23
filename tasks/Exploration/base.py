@@ -105,6 +105,7 @@ class BaseExploration(GameUi, GeneralBattle, GeneralRoom, GeneralInvite, Replace
         self.ui_goto(page_exploration)
 
     def post_process(self):
+        self.wait_until_stable(self.I_UI_BACK_RED)
         self.ui_get_current_page()
         self.ui_goto(page_main)
         con = self._config.exploration_config
