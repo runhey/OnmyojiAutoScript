@@ -45,7 +45,7 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AreaBossAssets):
         self.ui_goto(page_area_boss)
 
         self.open_filter()
-        # 以挑战鬼王数量
+        # 已挑战鬼王数量
         boss_fought = 0
         if con.boss_reward:
             self.fight_reward_boss()
@@ -77,7 +77,7 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AreaBossAssets):
 
     def go_back(self) -> None:
         """
-        返回, 要求这个时候是出现在  地狱鬼王的主界面
+        返回, 要求这个时候是出现在地域鬼王的主界面
         :return:
         """
         # 点击返回
@@ -120,7 +120,7 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AreaBossAssets):
             if not self.appear(self.I_AB_CLOSE_RED):  # 如果这个红色的关闭不见了才可以进行继续
                 break
         if not self.run_general_battle(self.config.area_boss.general_battle):
-            logger.info("地狱鬼王第2只战斗失败")
+            logger.info("地域鬼王第2只战斗失败")
         # 红色关闭
         logger.info("Script close red")
         self.wait_until_appear(self.I_AB_CLOSE_RED)
@@ -138,6 +138,7 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AreaBossAssets):
                     False       挑战失败
         @rtype:
         """
+        con = self.config.area_boss.boss
         if not self.appear(self.I_AB_FILTER_OPENED):
             self.open_filter()
 
@@ -162,8 +163,9 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AreaBossAssets):
                         return False
                 # 切换到 极地鬼
                 self.switch_difficulty(True)
-
-            self.switch_to_floor_1()
+            # 如果打较简单的一星悬赏
+            if con.reward_floor_1:
+                self.switch_to_floor_1()
         result = True
         if not self.start_fight():
             result = False
