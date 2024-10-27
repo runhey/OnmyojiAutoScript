@@ -177,14 +177,19 @@ class ScriptTask(WQExplore, SecretScriptTask, WantedQuestsAssets):
         OCR_WQ_TYPE = [self.O_WQ_TYPE_1, self.O_WQ_TYPE_2, self.O_WQ_TYPE_3, self.O_WQ_TYPE_4]
         OCR_WQ_INFO = [self.O_WQ_INFO_1, self.O_WQ_INFO_2, self.O_WQ_INFO_3, self.O_WQ_INFO_4]
         GOTO_BUTTON = [self.I_GOTO_1, self.I_GOTO_2, self.I_GOTO_3, self.I_GOTO_4]
+        name_funcs: dict = {
+            '挑战': self.challenge,
+            '探索': self.explore,
+            '秘闻': self.secret
+        }
 
         def extract_info(index: int) -> tuple or None:
             """
             提取每一个地点的信息
             :param index: 从零开始
             :return:
-            (type, destination, number, goto_button)
-            (类型, 地点层级，可以打败的数量，前往按钮)
+            (type, destination, number, goto_button, func)
+            (类型, 地点层级，可以打败的数量，前往按钮, func)
             类型： 挑战0, 秘闻1， 探索2
             """
             layer_limit = {
@@ -192,7 +197,7 @@ class ScriptTask(WQExplore, SecretScriptTask, WantedQuestsAssets):
                 # "壹", "贰", "叁", "肆", "伍", "陆",
                 "柒", "捌", "玖", "拾"
             }
-            result = [-1, '', -1, GOTO_BUTTON[index]]
+            result = [-1, '', -1, GOTO_BUTTON[index], self.challenge]
             type_wq = OCR_WQ_TYPE[index].ocr(self.device.image)
             info_wq_1 = OCR_WQ_INFO[index].ocr(self.device.image)
             info_wq_1 = info_wq_1.replace('：', ':').replace('（', '(').replace('）', ')')
@@ -212,12 +217,7 @@ class ScriptTask(WQExplore, SecretScriptTask, WantedQuestsAssets):
             order_list = order_list.replace(' ', '').replace('\n', '')
             order_list: list = re.split(r'>', order_list)
             result[0] = order_list.index(type_wq) if type_wq in order_list else -1
-            # if type_wq == '挑战':
-            #     result[0] = 0 if num_challenge >= 10 else -1
-            # elif type_wq == '秘闻':
-            #     result[0] = 1
-            # elif type_wq == '探索':
-            #     result[0] = 2
+            result[4] = name_funcs.get(type_wq, lambda: logger.warning('No task can be challenged'))
             logger.info(f'[Wanted Quests] type: {type_wq} destination: {wq_destination} number: {wq_number} ')
             return tuple(result) if result[0] != -1 else None
 
@@ -245,18 +245,10 @@ class ScriptTask(WQExplore, SecretScriptTask, WantedQuestsAssets):
             return False
         # sort
         info_wq_list.sort(key=lambda x: x[0])
-        best_type, destination, once_number, goto_button = info_wq_list[0]
+        best_type, destination, once_number, goto_button, func = info_wq_list[0]
         do_number = 1 if once_number >= num_want else num_want // once_number + (1 if num_want % once_number > 0 else 0)
         try:
-            match best_type:
-                case 0:
-                    self.challenge(goto_button, do_number)
-                case 1:
-                    self.secret(goto_button, do_number)
-                case 2:
-                    self.explore(goto_button, do_number)
-                case _:
-                    logger.warning('No wanted quests can be challenged')
+            func(goto_button, do_number)
         except ExploreWantedBoss:
             logger.warning('The extreme case. The quest only needs to challenge one final boss, so skip it')
             self.want_strategy_excluding.append(info_wq_list[0])
