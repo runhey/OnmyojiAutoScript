@@ -28,11 +28,11 @@
   },
   {
     "itemName": "login_specific_serve",
-    "roiFront": "694,605,59,34",
-    "roiBack": "516,75,662,585",
-    "mode": "Single",
+    "roiFront": "110,120,350,600",
+    "roiBack": "110,120,350,600",
+    "mode": "Full",
     "method": "Default",
-    "keyword": "游戏",
+    "keyword": "",
     "description": "登录指定角色，默认第一个"
   }
 ]

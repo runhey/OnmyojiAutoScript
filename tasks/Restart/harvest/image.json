@@ -160,5 +160,23 @@
     "method": "Template matching",
     "threshold": 0.8,
     "description": "寮包"
+  },
+  {
+    "itemName": "harvest_back_pet_house",
+    "imageName": "harvest_back_pet_house.png",
+    "roiFront": "20,15,70,70",
+    "roiBack": "20,15,70,70",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "宠物小屋关闭按钮"
+  },
+  {
+    "itemName": "harvest_zidu",
+    "imageName": "harvest_zidu.png",
+    "roiFront": "785,475,135,135",
+    "roiBack": "785,475,135,135",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "点击庭院阴阳师出现的姿度按钮"
   }
 ]

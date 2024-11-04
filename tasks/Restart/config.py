@@ -30,4 +30,5 @@ class Restart(ConfigBase):
     scheduler: RestartScheduler = Field(default_factory=RestartScheduler)
     tasks_config_reset: TasksReset = Field(default_factory=TasksReset)
     harvest_config: HarvestConfig = Field(default_factory=HarvestConfig)
-
+    # 同账号同服务器多个角色时,需要登录的角色名
+    character: str = Field(default="")
