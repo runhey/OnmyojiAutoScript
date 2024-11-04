@@ -15,6 +15,17 @@ from module.logger import logger
 class SwitchAccount(LoginAccount, ExitGame, GameUi, SwitchAccountAssets):
 
     def __init__(self, config: Config, device: Device, to: AccountInfo, frm: AccountInfo = None):
+        """
+
+        @param config:
+        @type config:
+        @param device:
+        @type device:
+        @param to: 要登录的账号信息
+        @type to:
+        @param frm: 上一个账号信息 ,避免关键字from
+        @type frm:
+        """
         super().__init__(config, device)
         self.toAccountInfo = to
         self.fromAccountInfo = frm
