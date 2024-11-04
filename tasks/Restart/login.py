@@ -17,7 +17,7 @@ class LoginHandler(BaseTask, RestartAssets):
 
     def __init__(self, *wargs, **kwargs):
         super().__init__(*wargs, **kwargs)
-        self.character = self.config.restart.character
+        self.character = self.config.restart.login_character_config.character
         self.O_LOGIN_SPECIFIC_SERVE.keyword = self.character
         # self.specific_usr = kwargs['config'].
 
