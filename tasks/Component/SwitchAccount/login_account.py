@@ -3,6 +3,7 @@ import time
 
 import cv2
 from module.atom.click import RuleClick
+from module.atom.gif import RuleGif
 from module.atom.image import RuleImage
 from module.atom.ocr import RuleOcr
 from module.logger import logger
@@ -84,7 +85,6 @@ class LoginAccount(BaseTask, SwitchAccountAssets):
         """
               需保证账号已登录 且处于登录界面
         @param characterName:
-        @type str:
         @return:
         @rtype:
         """
@@ -115,11 +115,11 @@ class LoginAccount(BaseTask, SwitchAccountAssets):
                 from copy import deepcopy
                 tmpClick = RuleClick(
                     roi_back=deepcopy(tmp.roi),
-                    roi_front=[
+                    roi_front=(
                         tmp.roi[0] + ocrResBoxList[index][0][0],
                         tmp.roi[1] + ocrResBoxList[index][0][1],
                         ocrResBoxList[index][1][0] - ocrResBoxList[index][0][0],
-                        ocrResBoxList[index][2][1] - ocrResBoxList[index][1][1]],
+                        ocrResBoxList[index][2][1] - ocrResBoxList[index][1][1]),
                     name="tmpClick"
                 )
 
@@ -150,7 +150,7 @@ class LoginAccount(BaseTask, SwitchAccountAssets):
         while 1:
             if self.appear(self.I_SA_NETEASE_GAME_LOGO) and self.appear(self.I_SA_ACCOUNT_LOGIN_BTN):
                 return
-            if self.appear_then_click(self.I_SA_SWITCH_ACCOUNT_BTN, 1.5):
+            if self.appear_then_click(self.I_SA_SWITCH_ACCOUNT_BTN, interval=1.5):
                 continue
             if self.appear(self.I_CHECK_LOGIN_FORM):
                 self.click(self.C_SA_LOGIN_FORM_USER_CENTER, 1.5)
@@ -182,7 +182,6 @@ class LoginAccount(BaseTask, SwitchAccountAssets):
                     # if accountInfo.account in [ocrResItem.ocr_text for ocrResItem in ocrRes]:
                     #     index = [ocrResItem.ocr_text for ocrResItem in ocrRes].index(accountInfo.account)
                     ocrResBoxList = [ocrResItem.box for ocrResItem in ocrRes]
-                    tmpObj = self.O_SA_ACCOUNT_ACCOUNT_LIST
                     self.O_SA_ACCOUNT_ACCOUNT_LIST.area = [
                         self.O_SA_ACCOUNT_ACCOUNT_LIST.roi[0] + ocrResBoxList[index][0][
                             0],
@@ -321,3 +320,30 @@ class LoginAccount(BaseTask, SwitchAccountAssets):
                      accountInfo.account,
                      'Android' if accountInfo.appleOrAndroid else 'Apple')
         return False
+
+    def ui_click_until_disappear(self, click, interval: float = 1, stop: RuleImage | RuleGif = None):
+        """
+        重写原ui_click_until_disappear方法,增加stop参数
+        点击一个按钮直到stop消失
+        如果click为RuleOcr ,直接当作RuleClick点击,不会进行ocr识别,
+        @param interval:
+        @param click:
+        @param stop:
+        @type stop:
+        @return:
+        """
+        if (isinstance(click, RuleImage) or isinstance(click, RuleGif)) and (stop is None):
+            stop = click
+        while 1:
+            self.screenshot()
+            if not self.appear(stop):
+                break
+            if isinstance(click, RuleImage) or isinstance(click, RuleGif):
+                self.appear_then_click(click, interval=interval)
+                continue
+            elif isinstance(click, RuleClick):
+                self.click(click, interval)
+                continue
+            elif isinstance(click, RuleOcr):
+                self.click(click)
+                continue
