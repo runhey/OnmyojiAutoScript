@@ -182,8 +182,8 @@
   {
     "itemName": "ab_ji_floor_ten",
     "imageName": "ab_ji_floor_ten.png",
-    "roiFront": "390,150,60,290",
-    "roiBack": "390,150,60,290",
+    "roiFront": "390,370,60,40",
+    "roiBack": "390,370,60,40",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "极地鬼 十层"

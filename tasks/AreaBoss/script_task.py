@@ -234,7 +234,7 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AreaBossAssets):
             self.screenshot()
             if self.appear(self.I_AB_JI_FLOOR_ONE):
                 self.click(self.I_AB_JI_FLOOR_ONE)
-                logger.info("switch to floor 1")
+                logger.info("Switch to floor 1")
                 break
             self.swipe(self.S_AB_FLOOR_DOWN, interval=1)
             # 等待滑动动画
@@ -250,10 +250,8 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AreaBossAssets):
             self.screenshot()
             if self.appear(self.I_AB_JI_FLOOR_TEN):
                 self.click(self.I_AB_JI_FLOOR_TEN)
-                logger.info("switch to floor 10")
+                logger.info("Switch to floor 10")
                 break
-            self.swipe(self.S_AB_FLOOR_UP, interval=1)
-            # 等待滑动动画
             self.wait_until_appear(self.I_AB_JI_FLOOR_TEN, False, 1)
 
     def fight_reward_boss(self):
@@ -261,7 +259,7 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AreaBossAssets):
         self.open_filter()
         # 滑动到最顶层
         if index < 3:
-            logger.info("swipe to top")
+            logger.info("Swipe to top")
             for i in range(random.randint(1, 3)):
                 self.swipe(self.S_AB_FILTER_DOWN)
         #
