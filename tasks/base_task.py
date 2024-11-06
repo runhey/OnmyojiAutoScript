@@ -27,6 +27,7 @@ from module.device.device import Device
 from tasks.GlobalGame.assets import GlobalGameAssets
 from tasks.GlobalGame.config_emergency import FriendInvitation, WhenNetworkAbnormal, WhenNetworkError
 from tasks.Component.Costume.costume_base import CostumeBase
+from tasks.Component.config_base import ConfigBase, Time
 
 from module.exception import GameStuckError, ScriptError
 
@@ -510,6 +511,16 @@ class BaseTask(GlobalGameAssets, CostumeBase):
             start_time = self.start_time
         self.config.task_delay(task, start_time=start_time, success=success, server=server, target=target)
 
+    def custom_next_run(self, task: str, custom_time: Time = None, time_delta: float = 1) -> None:
+        """
+        设置下次自定义运行时间
+        :param task: 任务名称，大驼峰的
+        :param custom_time: 可以自定义的下次运行时间
+        :param time_delta: 下次运行日期为几天后，默认为第二天
+        :return:
+        """
+        target_time = (datetime.now() + timedelta(days=time_delta)).replace(hour=custom_time.hour, minute=custom_time.minute, second=custom_time.second)
+        self.set_next_run(task, target=target_time)
     #  ---------------------------------------------------------------------------------------------------------------
     #
     #  ---------------------------------------------------------------------------------------------------------------
