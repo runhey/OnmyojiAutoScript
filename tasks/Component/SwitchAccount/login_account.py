@@ -115,11 +115,11 @@ class LoginAccount(BaseTask, SwitchAccountAssets):
                 from copy import deepcopy
                 tmpClick = RuleClick(
                     roi_back=deepcopy(tmp.roi),
-                    roi_front=(
+                    roi_front=[
                         tmp.roi[0] + ocrResBoxList[index][0][0],
                         tmp.roi[1] + ocrResBoxList[index][0][1],
                         ocrResBoxList[index][1][0] - ocrResBoxList[index][0][0],
-                        ocrResBoxList[index][2][1] - ocrResBoxList[index][1][1]),
+                        ocrResBoxList[index][2][1] - ocrResBoxList[index][1][1]],
                     name="tmpClick"
                 )
 
