@@ -46,12 +46,12 @@ class ScriptTask(GameUi, BaseActivity, SwitchSoul, ActivityShikigamiAssets):
         self.ui_goto(page_main)
         self.home_main()
 
-        # # 2024-04-04 ---------------------start
-        # config.general_climb.ap_mode = ApMode.AP_GAME
-        # # 2024-04-04 ---------------------end
+        # # 2024-11-06 ---------------------start
+        config.general_climb.ap_mode = ApMode.AP_GAME
         # 选择是游戏的体力还是活动的体力
         current_ap = config.general_climb.ap_mode
-        self.switch(current_ap)
+        # self.switch(current_ap)
+        # # 2024-11-06 ---------------------end
 
         # 设定是否锁定阵容
         if config.general_battle.lock_team_enable:

@@ -2,7 +2,7 @@
   {
     "itemName": "shi",
     "imageName": "as_shi.png",
-    "roiFront": "524,205,33,34",
+    "roiFront": "545,254,33,34",
     "roiBack": "64,115,1110,427",
     "method": "Template matching",
     "threshold": 0.7,
@@ -20,8 +20,8 @@
   {
     "itemName": "battle",
     "imageName": "as_battle.png",
-    "roiFront": "290,209,35,145",
-    "roiBack": "248,146,138,315",
+    "roiFront": "1080,229,35,145",
+    "roiBack": "1028,155,138,315",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "进入爬塔"
@@ -56,7 +56,7 @@
   {
     "itemName": "fire",
     "imageName": "as_fire.png",
-    "roiFront": "1134,587,84,78",
+    "roiFront": "1134,579,84,78",
     "roiBack": "1107,522,142,174",
     "method": "Template matching",
     "threshold": 0.8,
