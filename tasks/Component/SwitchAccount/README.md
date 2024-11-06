@@ -14,6 +14,7 @@
    - 别名配置为 a6co123#abc023#.....
 4. appleOrAndroid: true为安卓,false为苹果
 5. last_complete_time: 上次完成时间,第一次配置时可以填写为(1970-01-01 00:00:00),后期无需手动修改
+6. 仅支持正式服,渠道服暂不支持
    
 示例:
 ```angular2html
