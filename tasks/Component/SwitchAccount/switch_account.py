@@ -1,3 +1,5 @@
+from adbutils import device
+
 from module.config.config import Config
 from module.device.device import Device
 from tasks.Component.SwitchAccount.assets import SwitchAccountAssets
@@ -51,3 +53,11 @@ class SwitchAccount(LoginAccount, ExitGame, GameUi, SwitchAccountAssets):
         login_handler.app_handle_login()
 
         return True
+
+
+if __name__ == '__main__':
+    config = Config('oas1')
+    device=Device()
+    toAccount=AccountInfo(account="email0@163.com",accountAlias="emailO#emailo",appleOrAndroid=True,character="粘贴",svr="立秋夕烛")
+    sa=SwitchAccount(config,device,toAccount)
+    sa.switchAccount()
