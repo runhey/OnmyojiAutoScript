@@ -193,6 +193,9 @@ class SoloExploration(BaseExploration):
                         logger.warning('Exit team')
                         self.quit_explore()
                         continue
+                else:
+                    logger.warning('Team emoji appear again, clear friend_leave_timer')
+                    friend_leave_timer = Timer(10)
                 # boss
                 if self.appear(self.I_BOSS_BATTLE_BUTTON):
                     if self.fire(self.I_BOSS_BATTLE_BUTTON):
@@ -277,6 +280,9 @@ class SoloExploration(BaseExploration):
                         wait_timer = Timer(50)
                         wait_timer.start()
                         continue
+                else:
+                    logger.warning('Team emoji appear again, clear friend_leave_timer')
+                    friend_leave_timer = Timer(10)
             #
             elif scene == Scene.BATTLE_PREPARE or scene == Scene.BATTLE_FIGHTING:
                 self.check_take_over_battle(is_screenshot=False, config=self._config.general_battle_config)

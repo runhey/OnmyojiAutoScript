@@ -180,6 +180,15 @@
     "description": "极地鬼 一层"
   },
   {
+    "itemName": "ab_ji_floor_ten",
+    "imageName": "ab_ji_floor_ten.png",
+    "roiFront": "390,370,60,40",
+    "roiBack": "390,370,60,40",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "极地鬼 十层"
+  },
+  {
     "itemName": "ab_group_rank_none",
     "imageName": "ab_rank_none.png",
     "roiFront": "890,415,95,85",

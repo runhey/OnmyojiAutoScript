@@ -37,7 +37,7 @@ class Scene(Enum):
 
 
 
-class BaseExploration(GeneralBattle, GeneralRoom, GeneralInvite, ReplaceShikigami, GameUi, SwitchSoul, ExplorationAssets):
+class BaseExploration(GameUi, GeneralBattle, GeneralRoom, GeneralInvite, ReplaceShikigami, SwitchSoul, ExplorationAssets):
     minions_cnt = 0
 
     @cached_property
@@ -105,6 +105,7 @@ class BaseExploration(GeneralBattle, GeneralRoom, GeneralInvite, ReplaceShikigam
         self.ui_goto(page_exploration)
 
     def post_process(self):
+        self.wait_until_stable(self.I_UI_BACK_RED)
         self.ui_get_current_page()
         self.ui_goto(page_main)
         con = self._config.exploration_config
@@ -341,6 +342,7 @@ class BaseExploration(GeneralBattle, GeneralRoom, GeneralInvite, ReplaceShikigam
 
     def fire(self, button) -> bool:
         self.ui_click_until_disappear(button, interval=3)
+        self.screenshot()
         if (self.appear(self.I_E_SETTINGS_BUTTON) or
                 self.appear(self.I_E_AUTO_ROTATE_ON) or
                 self.appear(self.I_E_AUTO_ROTATE_OFF)):
