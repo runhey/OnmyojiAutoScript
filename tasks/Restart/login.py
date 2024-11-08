@@ -1,15 +1,12 @@
 # This Python file uses the following encoding: utf-8
 # @author runhey
 # github https://github.com/runhey
-import time
 
-from tasks.Restart.config_scheduler import Scheduler
-from module.logger import logger
 from module.base.timer import Timer
-
+from module.exception import RequestHumanTakeover, GameTooManyClickError, GameStuckError
+from module.logger import logger
 from tasks.Restart.assets import RestartAssets
 from tasks.base_task import BaseTask
-from module.exception import TaskEnd, RequestHumanTakeover, GameTooManyClickError, GameStuckError
 
 
 class LoginHandler(BaseTask, RestartAssets):
@@ -101,8 +98,8 @@ class LoginHandler(BaseTask, RestartAssets):
             # 点击屏幕进入游戏
             if self.appear(self.I_LOGIN_SPECIFIC_SERVE, interval=0.6) \
                     and self.ocr_appear_click(self.O_LOGIN_SPECIFIC_SERVE, interval=0.6):
-                self.ui_click_until_disappear(self.C_LOGIN_ENSURE_LOGIN_CHARACTER_IN_SAME_SVR,
-                                              stop=self.I_LOGIN_SPECIFIC_SERVE, interval=2)
+                self.ui_click(self.C_LOGIN_ENSURE_LOGIN_CHARACTER_IN_SAME_SVR,
+                              stop=self.I_LOGIN_SPECIFIC_SERVE, interval=2)
                 logger.info('login specific user')
                 continue
             # 点击’进入游戏‘

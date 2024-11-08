@@ -584,31 +584,18 @@ class BaseTask(GlobalGameAssets, CostumeBase):
             elif isinstance(click, RuleOcr) and self.ocr_appear_click(click, interval=interval):
                 continue
 
-    def ui_click_until_disappear(self, click, interval: float = 1, stop: RuleImage | RuleGif = None):
+    def ui_click_until_disappear(self, click, interval: float =1):
         """
-        点击一个按钮直到stop消失
-        如果click为RuleOcr ,直接当作RuleClick点击,不会进行ocr识别,
-        @param interval:
-        @param click:
-        @param stop:
-        @type stop:
-        @return:
+        点击一个按钮直到消失
+        :param interval:
+        :param click:
+        :return:
         """
-        if (isinstance(click, RuleImage) or isinstance(click, RuleGif)) and (stop is None):
-            stop = click
         while 1:
             self.screenshot()
-            if not self.appear(stop):
+            if not self.appear(click):
                 break
-            if isinstance(click, RuleImage) or isinstance(click, RuleGif):
-                self.appear_then_click(click, interval=interval)
+            elif self.appear_then_click(click, interval=interval):
                 continue
-            elif isinstance(click, RuleClick):
-                self.click(click, interval)
-                continue
-            elif isinstance(click, RuleOcr):
-                self.click(click)
-                continue
-
 
 
