@@ -159,23 +159,18 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AbyssShadowsAssets):
 
         # 设置下次运行时间
         if success:
-            custom_time = None
             if today == 4:
                 # 周五推迟到周六
                 logger.info(f"The next abyss shadows day is Saturday")
-                custom_time = cfg.abyss_shadows_time.custom_run_time_saturday
-                target_time = (datetime.now() + timedelta(days=1)).replace(hour=custom_time.hour, minute=custom_time.minute, second=custom_time.second)
+                self.custom_next_run(task='AbyssShadows', custom_time=cfg.abyss_shadows_time.custom_run_time_saturday, time_delta=1)
             elif today == 5:
                 # 周六推迟到周日
                 logger.info(f"The next abyss shadows day is Sunday")
-                custom_time = cfg.abyss_shadows_time.custom_run_time_sunday
-                target_time = (datetime.now() + timedelta(days=1)).replace(hour=custom_time.hour, minute=custom_time.minute, second=custom_time.second)
+                self.custom_next_run(task='AbyssShadows', custom_time=cfg.abyss_shadows_time.custom_run_time_sunday, time_delta=1)
             elif today == 6:
                 # 周日推迟到下周五
                 logger.info(f"The next abyss shadows day is Friday")
-                custom_time = cfg.abyss_shadows_time.custom_run_time_friday
-                target_time = (datetime.now() + timedelta(days=5)).replace(hour=custom_time.hour, minute=custom_time.minute, second=custom_time.second)
-            self.set_next_run(task='AbyssShadows', target=target_time)
+                self.custom_next_run(task='AbyssShadows', custom_time=cfg.abyss_shadows_time.custom_run_time_friday, time_delta=5)
         else:
             self.set_next_run(task='AbyssShadows', finish=True, server=True, success=False)
         raise TaskEnd
