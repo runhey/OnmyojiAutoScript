@@ -1,16 +1,22 @@
 # This Python file uses the following encoding: utf-8
 # @author runhey
 # github https://github.com/runhey
-from tasks.Restart.config_scheduler import Scheduler
-from module.logger import logger
-from module.base.timer import Timer
 
+from module.base.timer import Timer
+from module.exception import RequestHumanTakeover, GameTooManyClickError, GameStuckError
+from module.logger import logger
 from tasks.Restart.assets import RestartAssets
 from tasks.base_task import BaseTask
-from module.exception import TaskEnd, RequestHumanTakeover, GameTooManyClickError, GameStuckError
 
 
 class LoginHandler(BaseTask, RestartAssets):
+    character: str
+
+    def __init__(self, *wargs, **kwargs):
+        super().__init__(*wargs, **kwargs)
+        self.character = self.config.restart.login_character_config.character
+        self.O_LOGIN_SPECIFIC_SERVE.keyword = self.character
+        # self.specific_usr = kwargs['config'].
 
     def _app_handle_login(self) -> bool:
         """
@@ -53,7 +59,6 @@ class LoginHandler(BaseTask, RestartAssets):
             #     logger.error('Network error')
             #     raise RequestHumanTakeover('Network error')
 
-
             # 跳过观看视频
             # if self.ocr_appear_click(self.O_LOGIN_SKIP_1, interval=1):
             #     continue
@@ -73,18 +78,38 @@ class LoginHandler(BaseTask, RestartAssets):
             if self.appear_then_click(self.I_LOGIN_YELLOW_CLOSE, interval=0.6):
                 logger.info('Close yellow close')
                 continue
+            # 绑定手机号弹窗
+            if self.appear_then_click(self.I_LOGIN_LOGIN_GOTO_BIND_PHONE):
+                while 1:
+                    self.screenshot()
+                    if self.appear_then_click(self.I_LOGIN_LOGIN_CANCEL_BIND_PHONE):
+                        logger.info("Close bind phone")
+                        break
+                continue
+            # 关闭各种邀请弹窗(主要时结界卡寄养邀请)
+            from tasks.Component.GeneralInvite.assets import GeneralInviteAssets as gia
+            if self.appear_then_click(gia.I_I_REJECT, interval=0.8):
+                logger.info("reject invites")
+                continue
+            # 关闭阴阳师精灵提示
+            if self.appear_then_click(self.I_LOGIN_LOGIN_ONMYOJI_GENIE):
+                logger.info("click onmyoji genie")
+                continue
             # 点击屏幕进入游戏
-            if self.appear(self.I_LOGIN_SPECIFIC_SERVE, interval=0.6) and self.ocr_appear_click(self.O_LOGIN_SPECIFIC_SERVE, interval=0.6):
+            if self.appear(self.I_LOGIN_SPECIFIC_SERVE, interval=0.6) \
+                    and self.ocr_appear_click(self.O_LOGIN_SPECIFIC_SERVE, interval=0.6):
+                self.ui_click(self.C_LOGIN_ENSURE_LOGIN_CHARACTER_IN_SAME_SVR,
+                              stop=self.I_LOGIN_SPECIFIC_SERVE, interval=2)
                 logger.info('login specific user')
                 continue
             # 点击’进入游戏‘
             if not self.appear(self.I_LOGIN_8):
                 continue
-            if self.ocr_appear_click(self.O_LOGIN_ENTER_GAME, interval=2.5):
+            if self.ocr_appear_click(self.O_LOGIN_ENTER_GAME, interval=3):
+                self.wait_until_appear(self.I_LOGIN_SPECIFIC_SERVE, False, wait_time=2)
                 continue
 
         return login_success
-
 
     def app_handle_login(self) -> bool:
         for _ in range(2):
@@ -105,15 +130,13 @@ class LoginHandler(BaseTask, RestartAssets):
         logger.critical('Onmyoji server may be under maintenance, or you may lost network connection')
         raise RequestHumanTakeover
 
-
-
     def harvest(self):
         """
         获得奖励
         :return: 如果没有发现任何奖励后退出
         """
         logger.hr('Harvest')
-        timer_harvest = Timer(3)  # 如果连续3秒没有发现任何奖励，退出
+        timer_harvest = Timer(5)  # 如果连续3秒没有发现任何奖励，退出
         while 1:
             self.screenshot()
 
@@ -129,6 +152,25 @@ class LoginHandler(BaseTask, RestartAssets):
             if self.appear_then_click(self.I_HARVEST_CHAT_CLOSE, interval=1):
                 timer_harvest.reset()
                 continue
+            # 偶尔会进入其他页面
+            # 左上角的黄色关闭
+            if self.appear_then_click(self.I_LOGIN_YELLOW_CLOSE, interval=0.6):
+                timer_harvest.reset()
+                logger.info('Close yellow close')
+                continue
+                # 关闭宠物小屋
+            if self.appear_then_click(self.I_HARVEST_BACK_PET_HOUSE, interval=0.6):
+                timer_harvest.reset()
+                logger.info('Close yellow close')
+                continue
+                # 关闭姿度出现的蒙版
+            if self.appear(self.I_HARVEST_ZIDU, interval=1):
+                timer_harvest.reset()
+                self.I_HARVEST_ZIDU.roi_front[0] -= 200
+                self.I_HARVEST_ZIDU.roi_front[1] -= 200
+                if self.click(self.I_HARVEST_ZIDU, interval=2):
+                    logger.info('Close zidu')
+                continue
 
             # 勾玉
             if self.appear_then_click(self.I_HARVEST_JADE, interval=1.5):
@@ -140,6 +182,7 @@ class LoginHandler(BaseTask, RestartAssets):
                 continue
             # 某些活动的特殊签到，有空看到就删掉
             if self.appear_then_click(self.I_HARVEST_SIGN_3, interval=0.7):
+                timer_harvest.reset()
                 continue
             if self.appear_then_click(self.I_HARVEST_SIGN_4, interval=1):
                 timer_harvest.reset()
@@ -155,29 +198,30 @@ class LoginHandler(BaseTask, RestartAssets):
             # 判断是否勾选了收取邮件（不收取邮件可以查看每日收获）
             if self.config.restart.harvest_config.enable_mail:
 
-                if self.appear_then_click(self.I_HARVEST_MAIL, interval=1.2):
+                if self.appear_then_click(self.I_HARVEST_MAIL, interval=3):
                     timer_harvest.reset()
-                    continue
-                if self.appear(self.I_HARVEST_MAIL_TITLE, interval=0.2):
-                    while 1:
-                        self.screenshot()
-                        if self.appear_then_click(self.I_HARVEST_MAIL_ALL, interval=2):
-                            timer_harvest.reset()
-                            pass
-                        if self.appear_then_click(self.I_HARVEST_MAIL_CONFIRM, interval=1):
-                            continue
+                    self.wait_until_appear(self.I_HARVEST_MAIL_TITLE, wait_time=2)
+                    if self.appear(self.I_HARVEST_MAIL_TITLE, interval=2.5):
+                        while 1:
+                            self.screenshot()
+                            if self.appear_then_click(self.I_HARVEST_MAIL_ALL, interval=2):
+                                timer_harvest.reset()
+                                pass
+                            if self.appear_then_click(self.I_HARVEST_MAIL_CONFIRM, interval=1):
+                                continue
 
-                        # 如果一直出现收取全部，那就说明还在进行中
-                        if self.appear(self.I_HARVEST_MAIL_ALL):
-                            pass
-                        # 如果没有出现 ‘收取全部’ 也没有出现 ‘还未读的邮件’ 那就可以退出了
-                        if not self.appear(self.I_HARVEST_MAIL_ALL) and not self.appear(self.I_HARVEST_MAIL_OPEN):
-                            logger.info('Mail has been harvested')
-                            logger.info('Exit mail')
-                            break
-                        if self.appear_then_click(self.I_HARVEST_MAIL_OPEN, interval=1):
-                            timer_harvest.reset()
-                            continue
+                            # 如果一直出现收取全部，那就说明还在进行中
+                            if self.appear(self.I_HARVEST_MAIL_ALL):
+                                pass
+                            # 如果没有出现 ‘收取全部’ 也没有出现 ‘还未读的邮件’ 那就可以退出了
+                            if not self.appear(self.I_HARVEST_MAIL_ALL) and not self.appear(self.I_HARVEST_MAIL_OPEN):
+                                logger.info('Mail has been harvested')
+                                logger.info('Exit mail')
+                                break
+                            if self.appear_then_click(self.I_HARVEST_MAIL_OPEN, interval=1):
+                                timer_harvest.reset()
+                                continue
+                        continue
             # 体力
             if self.appear_then_click(self.I_HARVEST_AP, interval=1, threshold=0.7):
                 timer_harvest.reset()
@@ -198,9 +242,8 @@ class LoginHandler(BaseTask, RestartAssets):
                 self.ui_click_until_disappear(click=self.I_HARVEST_SOUL_3)
                 timer_harvest.reset()
 
-
             # 红色的关闭
-            if self.appear_then_click(self.I_UI_BACK_RED, interval=2.3):
+            if self.appear_then_click(self.I_UI_BACK_RED, interval=4):
                 timer_harvest.reset()
                 continue
 
@@ -212,3 +255,6 @@ class LoginHandler(BaseTask, RestartAssets):
                     logger.info('No more reward')
                     return
 
+    def set_specific_usr(self, character: str):
+        self.character = character
+        self.O_LOGIN_SPECIFIC_SERVE.keyword = character

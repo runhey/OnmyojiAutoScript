@@ -20,8 +20,8 @@
   {
     "itemName": "login_red_close",
     "imageName": "login_login_red_close.png",
-    "roiFront": "1158,62,39,37",
-    "roiBack": "912,42,309,281",
+    "roiFront": "912,0,360,290",
+    "roiBack": "912,0,360,290",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"
@@ -70,5 +70,41 @@
     "method": "Template matching",
     "threshold": 0.8,
     "description": "下载插画"
+  },
+  {
+    "itemName": "login_login_goto_bind_phone",
+    "imageName": "login_login_goto_bind_phone.png",
+    "roiFront": "940,430,170,150",
+    "roiBack": "940,430,170,150",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "登录界面 弹出框 前往绑定 手机"
+  },
+  {
+    "itemName": "login_login_ensure_bind_phone",
+    "imageName": "login_login_ensure_bind_phone.png",
+    "roiFront": "670,460,160,100",
+    "roiBack": "670,460,160,100",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "登录界面 弹出框 确定绑定手机"
+  },
+  {
+    "itemName": "login_login_cancel_bind_phone",
+    "imageName": "login_login_cancel_bind_phone.png",
+    "roiFront": "450,460,160,100",
+    "roiBack": "450,460,160,100",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "登录界面 弹出框 取消绑定手机"
+  },
+  {
+    "itemName": "login_login_onmyoji_genie",
+    "imageName": "login_login_onmyoji_genie.png",
+    "roiFront": "80,110,280,120",
+    "roiBack": "80,110,280,120",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "登录界面 弹出框 阴阳师精灵"
   }
 ]
