@@ -62,6 +62,7 @@ from tasks.GoryouRealm.config import GoryouRealm
 from tasks.Hyakkiyakou.config import Hyakkiyakou
 from tasks.HeroTest.config import HeroTest
 
+from tasks.FindJade.config import FindJade
 # ----------------------------------------------------------------------------------------------------------------------
 
 # 每周任务---------------------------------------------------------------------------------------------------------------
@@ -119,6 +120,7 @@ class ConfigModel(ConfigBase):
     goryou_realm: GoryouRealm = Field(default_factory=GoryouRealm)
     hyakkiyakou: Hyakkiyakou = Field(default_factory=Hyakkiyakou)
     hero_test: HeroTest = Field(default_factory=HeroTest)
+    find_jade: FindJade = Field(default_factory=FindJade)
 
     # 这些是每周任务
     true_orochi: TrueOrochi = Field(default_factory=TrueOrochi)

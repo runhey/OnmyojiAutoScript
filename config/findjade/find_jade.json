@@ -1,0 +1,35 @@
+{
+  "find_jade_accounts_info": [
+    {
+      "character": "小号1",
+      "svr": "万事屋",
+      "account": "150****4444",
+      "accountAlias": "150★***4444#150*★**4444#150**★*4444#150***★4444",
+      "appleOrAndroid": true,
+      "last_complete_time": "2024-11-12 18:02:28.342305"
+    },
+    {
+      "character": "小号2",
+      "svr": "祈世之舞",
+      "account": "150****4444",
+      "accountAlias": "150★***4444#150*★**4444#150**★*4444#150***★4444",
+      "appleOrAndroid": true,
+      "last_complete_time": "2024-11-12 18:03:08.517909"
+    }],
+  "invite_info_list": [
+    {
+      "name": "大号1",
+      "default_invite_type": "JadeAndFood",
+      "invite_history": [
+        {
+          "cooperation_type": 2,
+          "time": "2024-11-05 18:08:53.597534"
+        }]
+    },
+    {
+      "name": "大号2",
+      "default_invite_type": "JadeAndFood",
+      "invite_history": []
+    }],
+  "updateHandle": "<bound method ScriptTask.save_jade_json of <script_task.ScriptTask object at 0x000001C5E7229D50>>"
+}
