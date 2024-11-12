@@ -1,0 +1,11 @@
+[
+  {
+    "itemName": "check_login_form",
+    "imageName": "page_check_login_form.png",
+    "roiFront": "178,572,53,60",
+    "roiBack": "1,500,400,150",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  }
+]
