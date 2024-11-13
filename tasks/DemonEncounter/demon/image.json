@@ -52,5 +52,23 @@
     "method": "Template matching",
     "threshold": 0.8,
     "description": "左下角小指针"
+  },
+  {
+    "itemName": "blue_piao",
+    "imageName": "blue_piao.png",
+    "roiFront": "420,226,444,262",
+    "roiBack": "420,226,444,262",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "逢魔蓝票"
+  },
+  {
+    "itemName": "jade_50",
+    "imageName": "jade_50.png",
+    "roiFront": "420,226,444,262",
+    "roiBack": "420,226,444,262",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "50勾玉购买"
   }
 ]
