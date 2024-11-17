@@ -151,12 +151,12 @@ class ScriptTask(GameUi, GeneralBattle, DemonEncounterAssets, SwitchSoul):
         self.wait_until_appear(self.I_BOSS_GATHER)
         while 1:
             self.screenshot()
-            if self.appear(self.I_DE_LOCATION):
-                break
             if self.appear_then_click(self.I_UI_CONFIRM_SAMLL, interval=1):
                 continue
             if self.appear_then_click(self.I_BOSS_BACK_WHITE, interval=1):
                 continue
+            if self.appear(self.I_DE_LOCATION):
+                break
         # 返回到封魔主界面
 
     def execute_lantern(self):
