@@ -301,7 +301,7 @@ class RichManAssets:
 
 	# Click Rule Assets
 	# description 
-	C_C_SHRINE = RuleClick(roi_front=(1098,261,56,100), roi_back=(1098,261,56,100), name="c_shrine")
+	C_C_SHRINE = RuleClick(roi_front=(1167,303,102,164), roi_back=(1167,303,102,164), name="c_shrine")
 
 
 	# Image Rule Assets

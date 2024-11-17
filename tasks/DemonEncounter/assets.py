@@ -78,6 +78,7 @@ class DemonEncounterAssets:
 	# 50勾玉购买 
 	I_JADE_50 = RuleImage(roi_front=(420,226,444,262), roi_back=(420,226,444,262), threshold=0.8, method="Template matching", file="./tasks/DemonEncounter/demon/jade_50.png")
 
+
 	# Image Rule Assets
 	# 右侧的气球 
 	I_DE_BALLOON = RuleImage(roi_front=(1214,295,28,27), roi_back=(1198,269,81,266), threshold=0.8, method="Template matching", file="./tasks/DemonEncounter/demon/demon_de_balloon.png")
