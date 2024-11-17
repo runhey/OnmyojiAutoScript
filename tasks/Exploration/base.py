@@ -23,6 +23,7 @@ from tasks.Utils.config_enum import ShikigamiClass
 from module.logger import logger
 from module.exception import RequestHumanTakeover, TaskEnd
 from module.atom.image_grid import ImageGrid
+from module.atom.animate import RuleAnimate
 from module.base.utils import load_image
 
 class Scene(Enum):
@@ -50,6 +51,10 @@ class BaseExploration(GameUi, GeneralBattle, GeneralRoom, GeneralInvite, Replace
             seconds=limit_time.second
         )
         return self.config.model.exploration
+
+    @cached_property
+    def _match_end(self):
+        return RuleAnimate(self.I_SWIPE_END)
 
     def get_current_scene(self, reuse_screenshot: bool = True) -> Scene:
         if not reuse_screenshot:
