@@ -34,10 +34,10 @@ def detect_ocr(file: str, target: RuleOcr):
 
 
 # 图片文件路径 可以是相对路径
-IMAGE_FILE = r"C:\Users\萌萌哒\Desktop\384653401-2ed53690-bf55-41b9-ac45-6d984d6e9f05.png"
+IMAGE_FILE = r"C:\Users\萌萌哒\Desktop\379738421-b29c0114-7f25-4d89-a32a-20f06cd4b77c.png"
 if __name__ == '__main__':
-    from tasks.GlobalGame.assets import GlobalGameAssets
-    targe = GlobalGameAssets.I_UI_BACK_RED
+    from tasks.Duel.assets import DuelAssets
+    targe = DuelAssets.I_D_TEAM
     print(detect_image(IMAGE_FILE, targe))
 
     # ocr demo
