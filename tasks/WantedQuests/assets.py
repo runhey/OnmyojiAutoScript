@@ -157,5 +157,9 @@ class WantedQuestsAssets:
 	# Image Rule Assets
 	# 奇怪了之前的不能用 
 	I_WQSE_FIRE = RuleImage(roi_front=(1041,556,100,100), roi_back=(1016,534,147,138), threshold=0.8, method="Template matching", file="./tasks/WantedQuests/wq/wq_wqse_fire.png")
+	# 妖气封印 
+	I_WQ_D1111 = RuleImage(roi_front=(20,171,99,105), roi_back=(6,148,150,299), threshold=0.8, method="Template matching", file="./tasks/WantedQuests/wq/wq_wq_d1111.png")
+	# 年兽 
+	I_WQ_NIAN = RuleImage(roi_front=(19,176,100,100), roi_back=(0,153,166,273), threshold=0.8, method="Template matching", file="./tasks/WantedQuests/wq/wq_wq_nian.png")
 
 
