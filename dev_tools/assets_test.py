@@ -34,10 +34,10 @@ def detect_ocr(file: str, target: RuleOcr):
 
 
 # 图片文件路径 可以是相对路径
-IMAGE_FILE = r"C:\Users\Ryland\Desktop\363385164-41fa341c-3efc-43f8-91b5-0cdd065ed8cf.png"
+IMAGE_FILE = r"C:\Users\萌萌哒\Desktop\384653401-2ed53690-bf55-41b9-ac45-6d984d6e9f05.png"
 if __name__ == '__main__':
-    from tasks.KekkaiUtilize.assets import KekkaiUtilizeAssets
-    targe = KekkaiUtilizeAssets.I_SHI_CARD
+    from tasks.GlobalGame.assets import GlobalGameAssets
+    targe = GlobalGameAssets.I_UI_BACK_RED
     print(detect_image(IMAGE_FILE, targe))
 
     # ocr demo
