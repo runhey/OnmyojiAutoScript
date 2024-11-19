@@ -2,7 +2,7 @@
 # @author runhey
 # github https://github.com/runhey
 import time
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, time
 import random
 
 from tasks.Component.SwitchSoul.switch_soul import SwitchSoul
