@@ -2,7 +2,7 @@
 # @author runhey
 # github https://github.com/runhey
 import time
-from datetime import datetime, timedelta, time
+from datetime import datetime, timedelta, time as dt_time
 import random
 
 from tasks.Component.SwitchSoul.switch_soul import SwitchSoul
@@ -194,7 +194,7 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, RyouToppaAssets):
         # 安排下次寮突破，便于复用
         now = datetime.now()
         # 如果时间在00:00-5:00之间则设定时间为当天的自定义时间
-        if now.time() < time(5, 0):
+        if now.time() < dt_time(5, 0):  # 不确定 time 的使用范围，重命名 datetime 中的 time
             self.custom_next_run(task='RyouToppa', custom_time=self.config.ryou_toppa.raid_config.next_ryoutoppa_time, time_delta=0)
         # 如果时间在05:00-23:59之间则设定时间为明天的自定义时间
         else:
