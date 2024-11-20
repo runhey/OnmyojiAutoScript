@@ -12,6 +12,8 @@ class RaidConfig(BaseModel):
     limit_time: Time = Field(default=Time(minute=30), description='limit_time_help')
     # 限制次数
     limit_count: int = Field(default=50, description='limit_count_help')
+    # 攻破完成后指定下次运行时间
+    next_ryoutoppa_time: Time = Field(default=Time(hour=7, minute=0, second=0))
     # 是否跳过难度较高的结界，失败后不再攻打该结界
     skip_difficult: bool = Field(default=True, description='skip_difficult_help')
     # 寮管理开启寮突破
