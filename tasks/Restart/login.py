@@ -99,7 +99,7 @@ class LoginHandler(BaseTask, RestartAssets):
             if self.appear(self.I_LOGIN_SPECIFIC_SERVE, interval=0.6) \
                     and self.ocr_appear_click(self.O_LOGIN_SPECIFIC_SERVE, interval=0.6):
                 self.ui_click(self.C_LOGIN_ENSURE_LOGIN_CHARACTER_IN_SAME_SVR,
-                              stop=self.I_LOGIN_SPECIFIC_SERVE, interval=2)
+                              stop=self.I_LOGIN_SCROOLL_CLOSE, interval=2)
                 logger.info('login specific user')
                 continue
             # 点击’进入游戏‘
