@@ -17,10 +17,19 @@ class Scheduler(ConfigBase):
 
 
 if __name__ == "__main__":
-    s = Scheduler(success_interval='00 00:00:10', float_time='00:01:00', next_run='2023-01-01 00:00:10')
+    dict_s = {
+        "enable": False,
+        "next_run": "2026-07-19T14:15:37",
+        "priority": 5,
+        "success_interval": "10 00:00:01",
+        "failure_interval": "10 00:00:01",
+        "server_update": "09:03:00",
+        "float_time": "02:00:05"
+    }
+    s = Scheduler(**dict_s)
     print(s.model_dump())
-    schema = s.model_json_schema(mode='validation')
+    # schema = s.model_json_schema(mode='validation')
     import json
-    print(str(schema))
+    # print(str(schema))
 
 

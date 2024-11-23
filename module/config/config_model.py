@@ -312,21 +312,22 @@ class ConfigModel(ConfigBase):
                 item["default"] = value["default"]
                 item["value"] = jsons[key] if key in jsons else value["default"]
                 item["type"] = value["type"] if "type" in value else "enum"
-                if 'allOf' in value:
-                    # list
-                    enum_key = re.search(r"/([^/]+)$", value['allOf'][0]['$ref']).group(1)
+                if '$ref' in value:  # list
+                    enum_key = re.search(r"/([^/]+)$", value['$ref']).group(1)
                     item["enumEnum"] = definitions[enum_key]["enum"]
-                # TODO: 最大值最小值
+                # if 'allOf' in value:
+                #     enum_key = re.search(r"/([^/]+)$", value['allOf'][0]['$ref']).group(1)
+                #     item["enumEnum"] = definitions[enum_key]["enum"]
                 result.append(item)
             return result
 
-        schema = task.schema()
-        print(schema)
+        schema = task.model_json_schema(mode='serialization')
+        # print(schema)
         groups = extract_groups(schema)
 
         result: dict[str, list] = {}
         for key, value in task.model_dump().items():
-            result[key] = merge_value(groups[key], value, schema["defs"])
+            result[key] = merge_value(groups[key], value, schema["$defs"])
 
         return result
 
@@ -421,5 +422,6 @@ if __name__ == "__main__":
         print(e)
         c = ConfigModel()
 
-    # c.save()
-    print(c.script_task('Duel'))
+    import json
+    sch = json.dumps(c.script_task('Duel'), indent=4)
+    print(sch)
