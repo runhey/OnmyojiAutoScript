@@ -58,6 +58,9 @@ class ScriptTask(WQExplore, SecretScriptTask, WantedQuestsAssets):
             if self.appear(self.I_WQ_BOX):
                 self.ui_get_reward(self.I_WQ_BOX)
                 continue
+            if self.appear(self.I_TREASURE_BOX_CLICK):
+                self.ui_get_reward(self.I_TREASURE_BOX_CLICK)
+                continue
             if ocr_error_count > 10:
                 logger.warning('OCR failed too many times, exit')
                 break
@@ -92,6 +95,12 @@ class ScriptTask(WQExplore, SecretScriptTask, WantedQuestsAssets):
                     self.execute_mission(self.O_WQ_TEXT_2, min(total, 20), number_challenge)
                 continue
 
+            # 妖气封印或者年兽，那就四分钟后继续
+            if self.appear(self.I_WQ_D1111) or self.appear(self.I_WQ_NIAN):
+                logger.warning('Tiger is in the way, wait for 4 minutes')
+                logger.info('Time to wait for 4 minutes')
+                self.set_next_run('WantedQuests', target=datetime.now() + timedelta(minutes=4))
+                raise TaskEnd('WantedQuests')
             if self.appear(self.I_WQ_CHECK_TASK):
                 continue
             sleep(1.5)

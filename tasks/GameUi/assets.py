@@ -32,6 +32,8 @@ class GameUiAssets:
 	# Image Rule Assets
 	# description 
 	I_CHECK_MAIN = RuleImage(roi_front=(801,109,38,37), roi_back=(49,98,1033,61), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_check_main.png")
+	# 庭院卷轴关闭标识 
+	I_MAIN_SCROLL_CLOSE = RuleImage(roi_front=(1181,634,28,39), roi_back=(1162,595,77,112), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_main_scroll_close.png")
 	# description 
 	I_MAIN_GOTO_EXPLORATION = RuleImage(roi_front=(493,116,45,75), roi_back=(243,100,933,211), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_main_goto_exploration.png")
 	# description 
@@ -104,7 +106,7 @@ class GameUiAssets:
 	# 百鬼奕 
 	I_TOWN_GOTO_HYAKKISEN = RuleImage(roi_front=(192,145,48,67), roi_back=(86,130,447,100), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_town_goto_hyakkisen.png")
 	# description 
-	I_CHECK_DUEL = RuleImage(roi_front=(1045,610,50,53), roi_back=(1018,579,100,100), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_check_duel.png")
+	I_CHECK_DUEL = RuleImage(roi_front=(110,10,64,38), roi_back=(79,1,110,74), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_check_duel.png")
 	# description 
 	I_CHECK_DEMON_ENCOUNTER = RuleImage(roi_front=(26,658,42,43), roi_back=(2,619,100,100), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_check_demon_encounter.png")
 	# description 
@@ -168,6 +170,11 @@ class GameUiAssets:
 	I_BACK_DAILY = RuleImage(roi_front=(33,13,39,50), roi_back=(33,13,39,50), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_back_daily.png")
 	# description 
 	I_NEW = RuleImage(roi_front=(0,0,100,100), roi_back=(0,0,100,100), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/image_name.png")
+
+
+	# Image Rule Assets
+	# description 
+	I_CHECK_LOGIN_FORM = RuleImage(roi_front=(178,572,53,60), roi_back=(1,500,400,150), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_check_login_form.png")
 
 
 	# Image Rule Assets

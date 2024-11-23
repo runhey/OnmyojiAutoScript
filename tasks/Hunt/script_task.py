@@ -19,8 +19,10 @@ from tasks.Hunt.assets import HuntAssets
 
 class ScriptTask(GameUi, GeneralBattle, GeneralInvite, SwitchSoul, HuntAssets):
     kirin_day = True  # 不是麒麟就是阴界之门
+    tomorrow_kirin_day = True  # 明天是麒麟还是阴界之门
 
     def run(self):
+        self.con_time = self.config.hunt.hunt_time
         if not self.check_datetime():
             # 设置下次运行时间 为今天的晚上七点钟
             raise TaskEnd('Hunt')
@@ -44,7 +46,7 @@ class ScriptTask(GameUi, GeneralBattle, GeneralInvite, SwitchSoul, HuntAssets):
             self.netherworld()
         sleep(1)
 
-        self.set_next_run(task='Hunt', success=True, finish=True)
+        self.plan_tomorrow_hunt()
         raise TaskEnd('Hunt')
 
     def check_datetime(self) -> bool:
@@ -58,23 +60,38 @@ class ScriptTask(GameUi, GeneralBattle, GeneralInvite, SwitchSoul, HuntAssets):
             self.kirin_day = True
         elif 4 <= day_of_week <= 6:
             self.kirin_day = False
-
+        
+        if 3 <= day_of_week <= 5:
+            self.tomorrow_kirin_day = False
+        else:
+            self.tomorrow_kirin_day = True
 
         now = datetime.now()
-        # 如果时间在00:00-19:00 之间则设定时间为当天的19:00，返回False
+        # 如果时间在00:00-19:00 之间则设定时间为当天的自定义时间，返回False
         if now.time() < time(19, 0):
-            next_run = datetime.combine(now.date(), time(19, 0))
-            self.set_next_run(task='Hunt', success=False, finish=True, target=next_run)
+            if self.kirin_day:
+                logger.info('Today is the Kirin day')
+                self.custom_next_run(task='Hunt', custom_time=self.con_time.kirin_time, time_delta=0)
+            else:
+                logger.info('Today is the Netherworld day')
+                self.custom_next_run(task='Hunt', custom_time=self.con_time.netherworld_time, time_delta=0)
             raise TaskEnd('Hunt')
-        # 如果是在21:00-23:59之间则设定时间为明天的19:00，返回False
+        # 如果是在21:00-23:59之间则设定时间为明天的自定义时间，返回False
         elif now.time() > time(21, 0):
-            next_run = datetime.combine(now.date() + timedelta(days=1), time(19, 0))
-            self.set_next_run(task='Hunt', success=False, finish=True, target=next_run)
+            self.plan_tomorrow_hunt()
             raise TaskEnd('Hunt')
         # 如果是在19:00-21:00之间则返回True
         else:
             return True
 
+    def plan_tomorrow_hunt(self):
+        # 安排次日狩猎战，便于复用
+        if self.tomorrow_kirin_day:
+            logger.info('Tomorrow is the Kirin day')
+            self.custom_next_run(task='Hunt', custom_time=self.con_time.kirin_time, time_delta=1)
+        else:
+            logger.info('Tomorrow is the Netherworld day')
+            self.custom_next_run(task='Hunt', custom_time=self.con_time.netherworld_time, time_delta=1)
 
     def kirin(self):
         logger.hr('kirin', 2)
@@ -85,7 +102,7 @@ class ScriptTask(GameUi, GeneralBattle, GeneralInvite, SwitchSoul, HuntAssets):
             if self.appear(self.I_KIRIN_END):
                 # 你的阴阳寮已经打过的麒麟了
                 logger.warning('Your guild have already challenged the Kirin')
-                self.set_next_run(task='Hunt', success=True, finish=True)
+                self.plan_tomorrow_hunt()
                 raise TaskEnd('Hunt')
             if self.appear_then_click(self.I_KIRIN_CHALLAGE, interval=0.9):
                 break

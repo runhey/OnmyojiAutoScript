@@ -200,7 +200,7 @@ class ScriptTask(GameUi, GeneralBattle, DemonEncounterAssets, SwitchSoul):
             lantern_type = self.check_lantern(i)
             match lantern_type:
                 case LanternClass.BOX:
-                    self._box()
+                    self._box(match_click[i])
                 case LanternClass.MAIL:
                     self._mail(match_click[i])
                 case LanternClass.REALM:
@@ -267,9 +267,23 @@ class ScriptTask(GameUi, GeneralBattle, DemonEncounterAssets, SwitchSoul):
             logger.info(f'Lantern {index} is battle')
             return LanternClass.BATTLE
 
-    def _box(self):
-        # 宝箱不领
-        pass
+    def _box(self, target_click):
+        while 1:
+            self.screenshot()
+            if self.appear(self.I_JADE_50):
+                break
+            if self.click(target_click, interval=1):
+                continue
+        while 1:
+            self.screenshot()
+            if self.appear(self.I_BLUE_PIAO):
+                if self.click(self.I_JADE_50):
+                    logger.info('Buy a mystery amulet for 50 jade')
+                    continue
+            if not self.appear(self.I_BLUE_PIAO):
+                if self.appear_then_click(self.I_DE_FIND, interval=2.5):
+                    break
+
 
     def _mail(self, target_click):
         # 答题，还没有碰到过答题的
@@ -446,9 +460,9 @@ if __name__ == '__main__':
     from module.device.device import Device
     from memory_profiler import profile
 
-    c = Config('oas1')
+    c = Config('du')
     d = Device(c)
     t = ScriptTask(c, d)
 
-    # t.run()
-    t.battle_wait(True)
+    t.run()
+    # t.battle_wait(True)

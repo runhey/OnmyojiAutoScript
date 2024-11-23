@@ -9,6 +9,14 @@
     "description": "description"
   },
   {
+    "itemName": "main_scroll_close",
+    "imageName": "page_main_scroll_close.png",
+    "roiFront": "1181,634,28,39",
+    "roiBack": "1162,595,77,112",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "庭院卷轴关闭标识"
+  },  {
     "itemName": "main_goto_exploration",
     "imageName": "page_main_goto_exploration.png",
     "roiFront": "493,116,45,75",

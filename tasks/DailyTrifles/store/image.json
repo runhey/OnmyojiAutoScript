@@ -2,7 +2,7 @@
   {
     "itemName": "room_gift",
     "imageName": "store_room_gift.png",
-    "roiFront": "1142,638,62,55",
+    "roiFront": "1152,644,52,53",
     "roiBack": "1127,611,103,94",
     "method": "Template matching",
     "threshold": 0.8,
@@ -12,7 +12,7 @@
     "itemName": "gift_recommend",
     "imageName": "store_gift_recommend.png",
     "roiFront": "1186,98,53,64",
-    "roiBack": "1172,83,83,214",
+    "roiBack": "1172,83,83,306",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"

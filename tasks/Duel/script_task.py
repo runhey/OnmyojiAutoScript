@@ -61,7 +61,7 @@ class ScriptTask(GameUi, GeneralBattle, DuelAssets):
         """
         if screenshot:
             self.screenshot()
-        return self.appear(self.I_D_HELP)
+        return self.appear(self.I_D_HELP) or self.appear(self.I_D_CELEB_STAR) or self.appear(self.I_D_CELEB_HONOR)
 
     def switch_all_soul(self):
         """

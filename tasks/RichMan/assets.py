@@ -150,11 +150,11 @@ class RichManAssets:
 
 	# Image Rule Assets
 	# 寄售屋 
-	I_MALL_CONSIGNMENT = RuleImage(roi_front=(200,626,63,72), roi_back=(175,610,120,103), threshold=0.8, method="Template matching", file="./tasks/RichMan/mall/navbar/navbar_mall_consignment.png")
+	I_MALL_CONSIGNMENT = RuleImage(roi_front=(207,639,56,59), roi_back=(175,610,120,103), threshold=0.8, method="Template matching", file="./tasks/RichMan/mall/navbar/navbar_mall_consignment.png")
 	# 寄售屋 
 	I_MALL_CONSIGNMENT_CHECK = RuleImage(roi_front=(12,166,100,390), roi_back=(12,166,100,390), threshold=0.8, method="Template matching", file="./tasks/RichMan/mall/navbar/navbar_mall_consignment_check.png")
 	# 密卷屋 
-	I_MALL_SCCALES = RuleImage(roi_front=(447,634,91,64), roi_back=(427,621,147,92), threshold=0.8, method="Template matching", file="./tasks/RichMan/mall/navbar/navbar_mall_sccales.png")
+	I_MALL_SCCALES = RuleImage(roi_front=(470,649,68,49), roi_back=(427,621,147,92), threshold=0.8, method="Template matching", file="./tasks/RichMan/mall/navbar/navbar_mall_sccales.png")
 	# 密卷屋 
 	I_MALL_SCCALES_CHECK = RuleImage(roi_front=(409,253,100,100), roi_back=(409,253,100,100), threshold=0.8, method="Template matching", file="./tasks/RichMan/mall/navbar/navbar_mall_sccales_check.png")
 	# description 
@@ -164,7 +164,7 @@ class RichManAssets:
 	# 契灵商店 
 	I_MALL_BONDLINGS_CHECK = RuleImage(roi_front=(355,186,34,104), roi_back=(355,186,34,104), threshold=0.8, method="Template matching", file="./tasks/RichMan/mall/navbar/navbar_mall_bondlings_check.png")
 	# 杂货铺 
-	I_MALL_SUNDRY = RuleImage(roi_front=(856,639,74,61), roi_back=(834,621,116,90), threshold=0.8, method="Template matching", file="./tasks/RichMan/mall/navbar/navbar_mall_sundry.png")
+	I_MALL_SUNDRY = RuleImage(roi_front=(880,646,53,54), roi_back=(834,621,116,90), threshold=0.8, method="Template matching", file="./tasks/RichMan/mall/navbar/navbar_mall_sundry.png")
 	# 杂货铺 
 	I_MALL_SUNDRY_CHECK = RuleImage(roi_front=(1093,10,31,44), roi_back=(1093,10,31,44), threshold=0.7, method="Template matching", file="./tasks/RichMan/mall/navbar/navbar_mall_sundry_check.png")
 
@@ -301,7 +301,7 @@ class RichManAssets:
 
 	# Click Rule Assets
 	# description 
-	C_C_SHRINE = RuleClick(roi_front=(1098,261,56,100), roi_back=(1098,261,56,100), name="c_shrine")
+	C_C_SHRINE = RuleClick(roi_front=(1167,303,102,164), roi_back=(1167,303,102,164), name="c_shrine")
 
 
 	# Image Rule Assets
