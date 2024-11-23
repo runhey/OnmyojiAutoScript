@@ -5,9 +5,12 @@ from typing import Any
 from collections.abc import Callable, Generator
 from datetime import timedelta, time, datetime
 
-from pydantic import BaseModel, datetime_parse
-from pydantic.fields import ModelField
-
+from typing_extensions import Annotated
+from pydantic import (BeforeValidator,
+                      PlainSerializer,
+                      WithJsonSchema,
+                      TypeAdapter)
+from pydantic import BaseModel
 
 
 def format_timedelta(tdelta: timedelta):
@@ -16,76 +19,36 @@ def format_timedelta(tdelta: timedelta):
     minutes, seconds = divmod(rem, 60)
     return f"{days:02d} {hours:02d}:{minutes:02d}:{seconds:02d}"
 
+def datetime_validator(v: Any) -> datetime:
+    if isinstance(v, str):
+        return datetime.fromisoformat(v)
+    return v
 
-class MultiLine(str):
-    # @classmethod
-    # def __get_validators__(cls) -> Generator[Callable, None, None]:
-    #     yield cls.validate
-    #
-    # @classmethod
-    # def validate(cls, value: str, field: ModelField):
-    #     return cls(value)
-
-    @classmethod
-    def __modify_schema__(
-        cls, field_schema: dict[str, Any], field: ModelField | None
-    ):
-        if field:
-            field_schema['type'] = 'multi_line'
-
-class TimeDelta(timedelta):
-    def __str__(self):
-        return format_timedelta(self)
-
-    def __repr__(self):
-        return format_timedelta(self)
-
-    @classmethod
-    def __modify_schema__(
-            cls, field_schema: dict[str, Any], field: ModelField | None
-    ):
-        if field:
-            field_schema['type'] = 'time_delta'
-
-class DateTime(datetime):
-    @classmethod
-    def __modify_schema__(
-            cls, field_schema: dict[str, Any], field: ModelField | None
-    ):
-        if field:
-            field_schema['type'] = 'date_time'
+def time_validator(v: Any) -> time:
+    if isinstance(v, str):
+        return time.fromisoformat(v)
+    return v
 
 
-class Time(time):
-    """
-    尝试将字符串转换为time对象， 但是不生效
-    """
-    @classmethod
-    def __get_validators__(cls):
-        yield cls.validate
+MultiLine = Annotated[str,
+                      WithJsonSchema({'type': 'multi_line'}, mode='serialization'),]
 
-    @classmethod
-    def validate(cls, value):
-        # print(f' Time validate: {value} type: {type(value)}')
-        if isinstance(value, str):
-            hour, minute, second = map(int, value.split(":"))
-            return cls(hour, minute, second)
-        elif isinstance(value, time):
-            return value
-        else:
-            raise ValueError("Invalid time format")
 
-    @classmethod
-    def __modify_schema__(
-            cls, field_schema: dict[str, Any], field: ModelField | None
-    ):
-        if field:
-            field_schema['type'] = 'time'
+TimeDelta = Annotated[timedelta,
+                      BeforeValidator(lambda v: isinstance(v, str) or isinstance(v, timedelta)),
+                      PlainSerializer(format_timedelta, return_type=str),
+                      WithJsonSchema({'type': 'time_delta'}, mode='serialization'),]
+
+DateTime = Annotated[datetime,
+                     BeforeValidator(datetime_validator),
+                     PlainSerializer(lambda v: v.isoformat(), return_type=str),
+                     WithJsonSchema({'type': 'date_time'}, mode='serialization'),]
+
+Time = Annotated[time,
+                 BeforeValidator(time_validator),
+                 PlainSerializer(lambda v: v.isoformat(), return_type=str),
+                 WithJsonSchema({'type': 'time'}, mode='serialization'),]
 
 # ---------------------------------------------------------------------------------------------------------------------
 class ConfigBase(BaseModel):
-    # 这个是导出json时候的配置，但是新的是导出dict，所以的无效
-    class Config:
-        json_encoders = {
-            TimeDelta: format_timedelta
-        }
+    pass

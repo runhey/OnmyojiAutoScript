@@ -134,10 +134,6 @@ class ConfigModel(ConfigBase):
     dokan: Dokan = Field(default_factory=Dokan)
     abyss_shadows: AbyssShadows = Field(default_factory=AbyssShadows)
 
-    # @validator('script')
-    # def script_validator(cls, v):
-    #     if v is None:
-    #         return Script()
 
     def __init__(self, config_name: str=None) -> None:
         """
@@ -243,16 +239,6 @@ class ConfigModel(ConfigBase):
             classname = re.findall(r"'([^']*)'", field_type)[0]
             return classname
 
-    # @root_validator
-    # def on_on_property_change(cls, values):
-    #     """
-    #     当属性改变时保存
-    #     :param values:
-    #     :return:
-    #     """
-    #     logger.info(f'property change auto save')
-    #     cls.save()
-
     @staticmethod
     def deep_get(obj, keys: str, default=None):
         """
@@ -310,7 +296,7 @@ class ConfigModel(ConfigBase):
 
             result = {}
             for key, value in properties.items():
-                result[key] = sch["definitions"][value]
+                result[key] = sch["$defs"][value]
 
             return result
 
@@ -335,11 +321,12 @@ class ConfigModel(ConfigBase):
             return result
 
         schema = task.schema()
+        print(schema)
         groups = extract_groups(schema)
 
         result: dict[str, list] = {}
-        for key, value in task.dict().items():
-            result[key] = merge_value(groups[key], value, schema["definitions"])
+        for key, value in task.model_dump().items():
+            result[key] = merge_value(groups[key], value, schema["defs"])
 
         return result
 
@@ -426,6 +413,7 @@ class ConfigModel(ConfigBase):
         data = self.read_json(self.config_name)
         super().__init__(**data)
 
+
 if __name__ == "__main__":
     try:
         c = ConfigModel("oas1")
@@ -434,4 +422,4 @@ if __name__ == "__main__":
         c = ConfigModel()
 
     # c.save()
-    print(c.script_task('Orochi'))
+    print(c.script_task('Duel'))
