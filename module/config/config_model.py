@@ -221,7 +221,7 @@ class ConfigModel(ConfigBase):
 
         :return:
         """
-        self.write_json(self.config_name, self.dict())
+        self.write_json(self.config_name, self.model_dump())
 
     @staticmethod
     def type(key: str) -> str:
@@ -284,21 +284,20 @@ class ConfigModel(ConfigBase):
             logger.warning(f'{task} is no inexistence')
             return {}
 
-        def properties_groups(sch) -> dict:
-            properties = {}
-            for key, value in sch["properties"].items():
-                properties[key] = re.search(r"/([^/]+)$", value['$ref']).group(1)
-            return properties
-
         def extract_groups(sch):
             # 从schema 中提取未解析的group的数据
-            properties = properties_groups(sch)
+            # properties = properties_groups(sch)
+            results = {}
+            properties = {}
+            for key, value in sch["properties"].items():
+                if 'items' in value:
+                    properties[key] = re.search(r"/([^/]+)$", value['items']['$ref']).group(1)
+                else:
+                    properties[key] = re.search(r"/([^/]+)$", value['$ref']).group(1)
 
-            result = {}
             for key, value in properties.items():
-                result[key] = sch["$defs"][value]
-
-            return result
+                results[key] = sch["$defs"][value]
+            return results
 
         def merge_value(groups, jsons, definitions) -> list[dict]:
             # 将 groups的参数，同导出的json一起合并, 用于前端显示
@@ -321,13 +320,17 @@ class ConfigModel(ConfigBase):
                 result.append(item)
             return result
 
-        schema = task.model_json_schema(mode='serialization')
-        # print(schema)
+        schema = task.model_json_schema()
         groups = extract_groups(schema)
+        groups_value = groups.copy()
 
         result: dict[str, list] = {}
         for key, value in task.model_dump().items():
-            result[key] = merge_value(groups[key], value, schema["$defs"])
+            if key not in groups:
+                for group_name in groups.keys():
+                    if group_name in key:
+                        groups_value[key] = groups[group_name]
+            result[key] = merge_value(groups_value[key], value, schema["$defs"])
 
         return result
 
@@ -361,9 +364,15 @@ class ConfigModel(ConfigBase):
 
         task_object = getattr(self, task, None)
         group_object = getattr(task_object, group, None)
+        if group_object is None:  # deal list
+            matchs = re.findall(r'\d+', group)
+            index = int(matchs[-1]) - 1 if matchs else None
+            task_object_list = list(dict(task_object))
+            for k, v in dict(task_object).items():
+                if k not in group:
+                    continue
+                group_object = v[index] if group_object is None else None
         argument_object = getattr(group_object, argument, None)
-        # print(group_object)
-        # print(argument_object)
 
         if argument_object is None:
             logger.error(f'Set arg {task}.{group}.{argument}.{value} failed')
@@ -422,6 +431,4 @@ if __name__ == "__main__":
         print(e)
         c = ConfigModel()
 
-    import json
-    sch = json.dumps(c.script_task('Duel'), indent=4)
-    print(sch)
+    c.script_set_arg('Duel', 'test_list_2', 'switch_all_soul', 'false')

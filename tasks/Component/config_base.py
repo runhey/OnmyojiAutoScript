@@ -48,23 +48,23 @@ def time_validator(v: Any) -> time:
 
 
 MultiLine = Annotated[str,
-                      WithJsonSchema({'type': 'multi_line'}, mode='serialization'),]
+                      WithJsonSchema({'type': 'multi_line'}),]
 
 
 TimeDelta = Annotated[timedelta,
                       BeforeValidator(datadelta_validator),
                       PlainSerializer(format_timedelta, return_type=str),
-                      WithJsonSchema({'type': 'time_delta'}, mode='serialization'),]
+                      WithJsonSchema({'type': 'time_delta'}),]
 
 DateTime = Annotated[datetime,
                      BeforeValidator(datetime_validator),
                      PlainSerializer(lambda v: v.isoformat(), return_type=str),
-                     WithJsonSchema({'type': 'date_time'}, mode='serialization'),]
+                     WithJsonSchema({'type': 'date_time'}),]
 
 Time = Annotated[time,
                  BeforeValidator(time_validator),
                  PlainSerializer(lambda v: v.isoformat(), return_type=str),
-                 WithJsonSchema({'type': 'time'}, mode='serialization'),]
+                 WithJsonSchema({'type': 'time'}),]
 
 # ---------------------------------------------------------------------------------------------------------------------
 class ConfigBase(BaseModel):

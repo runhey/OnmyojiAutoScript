@@ -28,8 +28,6 @@ if __name__ == "__main__":
     }
     s = Scheduler(**dict_s)
     print(s.model_dump())
-    # schema = s.model_json_schema(mode='validation')
-    import json
-    # print(str(schema))
+
 
 
