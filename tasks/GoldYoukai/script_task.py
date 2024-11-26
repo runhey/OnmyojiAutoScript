@@ -55,7 +55,7 @@ class ScriptTask(GameUi, GeneralBattle, GeneralRoom, GeneralInvite, SwitchSoul, 
             self.ensure_public()
             self.create_ensure()
             # 进入到了房间里面
-            wait_timer = Timer(20)
+            wait_timer = Timer(50)
             wait_timer.start()
             while 1:
                 self.screenshot()
@@ -63,9 +63,6 @@ class ScriptTask(GameUi, GeneralBattle, GeneralRoom, GeneralInvite, SwitchSoul, 
                 if not self.is_in_room():
                     continue
                 if wait_timer.reached():
-                    # logger.warning('Wait for too long, exit')
-                    # self.exit_room()
-
                     # 超过时间依然挑战
                     logger.warning('Wait for too long and start the challenge')
                     self.click_fire()
@@ -81,6 +78,7 @@ class ScriptTask(GameUi, GeneralBattle, GeneralRoom, GeneralInvite, SwitchSoul, 
                     break
         # 退出 (要么是在组队界面要么是在庭院)
         self.gold_exit(con)
+
 
     def battle_wait(self, random_click_swipt_enable: bool) -> bool:
         # 重写
