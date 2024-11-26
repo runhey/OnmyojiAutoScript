@@ -53,7 +53,7 @@ class ScriptTask(GameUi, GeneralBattle, GeneralRoom, GeneralInvite, SwitchSoul, 
         self.ensure_public()
         self.create_ensure()
         # 进入到了房间里面
-        wait_timer = Timer(60)
+        wait_timer = Timer(50)
         wait_timer.start()
         while 1:
             self.screenshot()
@@ -61,8 +61,10 @@ class ScriptTask(GameUi, GeneralBattle, GeneralRoom, GeneralInvite, SwitchSoul, 
             if not self.is_in_room():
                 continue
             if wait_timer.reached():
-                logger.warning('Wait for too long, exit')
-                self.exit_room()
+                # 等待时间过长，单人进行战斗
+                logger.info('Wait for too long, fire')
+                self.click_fire()
+                self.run_general_battle()
                 break
             if not self.appear(self.I_ADD_5_1):
                 # 有人进来了，可以进行挑战
