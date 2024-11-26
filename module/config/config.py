@@ -342,11 +342,11 @@ class Config(ConfigState, ConfigManual, ConfigWatcher, ConfigMenu):
         next_run = run
 
         if server and hasattr(scheduler, 'server_update'):
-            # 加入随机浮动时间
+            # 加入随机延迟时间
             float_seconds = (scheduler.float_time.hour * 3600 +
                              scheduler.float_time.minute * 60 +
                              scheduler.float_time.second)
-            random_float = random.randint(-float_seconds, float_seconds)
+            random_float = random.randint(0, float_seconds)
             # 如果有强制运行时间
             if scheduler.server_update == time(hour=9):
                 next_run += timedelta(seconds=random_float)
