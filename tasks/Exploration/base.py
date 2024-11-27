@@ -344,7 +344,7 @@ class BaseExploration(GameUi, GeneralBattle, GeneralRoom, GeneralInvite, Replace
                 break
             if self.appear_then_click(self.I_E_EXIT_CONFIRM, interval=0.8):
                 continue
-            if self.appear_then_click(self.I_UI_BACK_BLUE, interval=1.5):
+            if self.appear_then_click(self.I_UI_BACK_BLUE, interval=3.5):
                 continue
 
     def fire(self, button) -> bool:
