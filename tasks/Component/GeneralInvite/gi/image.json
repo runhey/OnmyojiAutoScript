@@ -65,8 +65,8 @@
   {
     "itemName": "fire_fail_sea",
     "imageName": "gi_fire_fail_sea.png",
-    "roiFront": "1160,585,100,100",
-    "roiBack": "1160,585,100,100",
+    "roiFront": "1160,585,100,70",
+    "roiBack": "1160,585,100,70",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "永生之海挑战（还未有队友的图片）"
@@ -74,8 +74,8 @@
   {
     "itemName": "fire_sea",
     "imageName": "gi_fire_sea.png",
-    "roiFront": "1160,586,100,97",
-    "roiBack": "1160,586,100,97",
+    "roiFront": "1160,586,100,68",
+    "roiBack": "1160,586,100,68",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"
@@ -155,8 +155,8 @@
   {
     "itemName": "invite_ensure",
     "imageName": "gi_invite_ensure.png",
-    "roiFront": "500,541,132,60",
-    "roiBack": "478,523,378,92",
+    "roiFront": "710,544,132,60",
+    "roiBack": "710,544,132,60",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "点击邀请"
@@ -165,7 +165,7 @@
     "itemName": "selected",
     "imageName": "gi_selected.png",
     "roiFront": "895,373,33,32",
-    "roiBack": "380,157,568,350",
+    "roiBack": "895,373,33,32",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "判断是否点中好友了"
@@ -352,11 +352,20 @@
   },
   {
     "itemName": "gi_in_room",
-    "imageName": "gi_in_room.png",
+    "imageName": "gi_gi_in_room.png",
     "roiFront": "92,17,213,64",
     "roiBack": "92,17,213,64",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "三人御魂组队左上角的协站队伍"
+  },
+  {
+    "itemName": "back_yellow_sea",
+    "imageName": "gi_back_yellow_sea.png",
+    "roiFront": "31,16,42,42",
+    "roiBack": "31,16,42,42",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
   }
 ]

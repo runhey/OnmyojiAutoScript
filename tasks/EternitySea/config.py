@@ -6,6 +6,7 @@ from enum import Enum
 from datetime import datetime, time
 from tasks.Component.SwitchSoul.switch_soul_config import SwitchSoulConfig
 
+from tasks.Component.GeneralInvite.config_invite import InviteConfig
 from tasks.Component.config_scheduler import Scheduler
 from tasks.Component.config_base import ConfigBase, Time
 from tasks.Component.GeneralBattle.config_general_battle import GeneralBattleConfig
@@ -34,4 +35,5 @@ class EternitySea(ConfigBase):
     general_battle_config: GeneralBattleConfig = Field(default_factory=GeneralBattleConfig)
     switch_soul_config_1: SwitchSoulConfig = Field(default_factory=SwitchSoulConfig)
     switch_soul_config_2: SwitchSoulConfig = Field(default_factory=SwitchSoulConfig)
+    invite_config: InviteConfig = Field(default_factory=InviteConfig)
 
