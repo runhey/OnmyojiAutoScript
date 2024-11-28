@@ -2,8 +2,8 @@
   {
     "itemName": "a_harvest_fish4",
     "imageName": "a_a_harvest_fish4.png",
-    "roiFront": "897,159,48,40",
-    "roiBack": "872,128,100,100",
+    "roiFront": "930,231,69,49",
+    "roiBack": "930,231,69,49",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "斗鱼收获奖励4星"
@@ -155,8 +155,8 @@
   {
     "itemName": "a_harvest_kaiko_4",
     "imageName": "a_a_harvest_kaiko_4.png",
-    "roiFront": "894,164,48,41",
-    "roiBack": "867,132,100,100",
+    "roiFront": "930,231,69,49",
+    "roiBack": "930,231,69,49",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "太鼓4"
@@ -173,8 +173,8 @@
   {
     "itemName": "a_harvest_kaiko_6",
     "imageName": "a_a_harvest_kaiko_6.png",
-    "roiFront": "898,160,45,38",
-    "roiBack": "868,129,100,100",
+    "roiFront": "930,231,69,49",
+    "roiBack": "930,231,69,49",
     "method": "Template matching",
     "threshold": 0.7,
     "description": "太鼓6"
@@ -182,8 +182,8 @@
   {
     "itemName": "a_harvest_fish_6",
     "imageName": "a_a_harvest_fish_6.png",
-    "roiFront": "898,159,45,38",
-    "roiBack": "869,131,100,100",
+    "roiFront": "930,231,69,49",
+    "roiBack": "930,231,69,49",
     "method": "Template matching",
     "threshold": 0.7,
     "description": "斗鱼6"
@@ -191,8 +191,8 @@
   {
     "itemName": "a_harvest_moon_3",
     "imageName": "a_a_harvest_moon_3.png",
-    "roiFront": "897,159,46,40",
-    "roiBack": "869,127,100,100",
+    "roiFront": "930,231,69,49",
+    "roiBack": "930,231,69,49",
     "method": "Template matching",
     "threshold": 0.7,
     "description": "太阴3"
@@ -209,8 +209,8 @@
   {
     "itemName": "a_harvest_fish_3",
     "imageName": "a_a_harvest_fish_3.png",
-    "roiFront": "891,165,57,39",
-    "roiBack": "854,128,132,124",
+    "roiFront": "930,231,69,49",
+    "roiBack": "930,231,69,49",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "斗鱼3"
