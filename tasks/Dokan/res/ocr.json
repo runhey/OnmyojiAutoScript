@@ -1,5 +1,50 @@
 [
   {
+    "itemName": "dokan_status",
+    "roiFront": "492,628,222,44",
+    "roiBack": "492,628,222,44",
+    "mode": "Full",
+    "method": "Default",
+    "keyword": "",
+    "description": "道馆开启状态"
+  },
+  {
+    "itemName": "dokan_ready_sel1",
+    "roiFront": "1156,105,80,28",
+    "roiBack": "1156,105,80,28",
+    "mode": "Digit",
+    "method": "Default",
+    "keyword": "",
+    "description": "选择寮1"
+  },
+  {
+    "itemName": "dokan_ready_sel2",
+    "roiFront": "1156,255,80,28",
+    "roiBack": "1156,255,80,28",
+    "mode": "Digit",
+    "method": "Default",
+    "keyword": "",
+    "description": "选择寮2"
+  },
+  {
+    "itemName": "dokan_ready_sel3",
+    "roiFront": "1156,400,80,28",
+    "roiBack": "1156,400,80,28",
+    "mode": "Digit",
+    "method": "Default",
+    "keyword": "",
+    "description": "选择寮3"
+  },
+  {
+    "itemName": "dokan_ready_sel4",
+    "roiFront": "1156,545,80,28",
+    "roiBack": "1156,545,80,28",
+    "mode": "Digit",
+    "method": "Default",
+    "keyword": "",
+    "description": "选择寮4"
+  },
+  {
     "itemName": "dokan_map",
     "roiFront": "270,130,740,460",
     "roiBack": "270,130,740,460",
@@ -44,5 +89,4 @@
     "keyword": "关闭",
     "description": "道馆里找文字：后关闭"
   }
-
 ]

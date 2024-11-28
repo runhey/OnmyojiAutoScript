@@ -15,7 +15,7 @@ from tasks.Component.config_scheduler import Scheduler
 
 class DokanConfig(BaseModel):
     # # 寮管理开启道馆
-    # dokan_declare_war: bool = Field(default=False, description='dokan_declare_war_help')
+    dokan_enable: bool = Field(default=False, description='寮管理开启道馆')
     # # 选择哪一个竂
     # dokan_declear_war_priority: int = Field(default=0, description='dokan_declear_war_priority_help')
 

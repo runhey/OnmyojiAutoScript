@@ -1,12 +1,138 @@
 [
   {
-    "itemName": "ryou_shenshe",
-    "imageName": "res_ryou_shenshe.png",
-    "roiFront": "476,173,62,24",
-    "roiBack": "476,173,62,24",
+    "itemName": "green_mark",
+    "imageName": "green_mark.png",
+    "roiFront": "157,220,979,229,",
+    "roiBack": "157,220,979,229,",
     "method": "Template matching",
     "threshold": 0.8,
-    "description": "阴阳竂->神社"
+    "description": "区域找绿标"
+  },
+  {
+    "itemName": "daoguan",
+    "imageName": "Screenshots_daoguan.png",
+    "roiFront": "462,159,100,100",
+    "roiBack": "462,159,100,100",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "道馆"
+  },
+  {
+    "itemName": "guild_name_title",
+    "imageName": "Screenshots_guild_name_title.png",
+    "roiFront": "596,191,75,43",
+    "roiBack": "596,191,75,43",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "寮称号"
+  },
+  {
+    "itemName": "fangshou",
+    "imageName": "Screenshots_fangshou.png",
+    "roiFront": "35,610,75,79",
+    "roiBack": "35,610,75,79",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "防守战报"
+  },
+  {
+    "itemName": "create_daoguan",
+    "imageName": "Screenshots_create_daoguan.png",
+    "roiFront": "262,630,45,62",
+    "roiBack": "262,630,45,62",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "建立道馆 "
+  },
+  {
+    "itemName": "create_daoguan_sure",
+    "imageName": "Screenshots_create_daoguan_sure.png",
+    "roiFront": "766,409,100,55",
+    "roiBack": "766,409,100,55",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "确定建立道馆"
+  },
+  {
+    "itemName": "create_daoguan_ok",
+    "imageName": "Screenshots_create_daoguan_ok.png",
+    "roiFront": "262,630,45,62",
+    "roiBack": "262,630,45,62",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "已经建立道馆 "
+  },
+  {
+    "itemName": "red_close",
+    "imageName": "Screenshots_red_close.png",
+    "roiFront": "1175,108,41,42",
+    "roiBack": "1175,108,41,42",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "建立道馆弹出页，红色关闭"
+  },
+  {
+    "itemName": "newtz",
+    "imageName": "Screenshots_newtz.png",
+    "roiFront": "798,482,44,39",
+    "roiBack": "0,0,1047,718",
+    "method": "Template matching",
+    "threshold": 0.7,
+    "description": "挑战"
+  },
+  {
+    "itemName": "ok",
+    "imageName": "Screenshots_ok.png",
+    "roiFront": "706,407,100,48",
+    "roiBack": "706,407,100,48",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "确定"
+  },
+  {
+    "itemName": "quit_dokan",
+    "imageName": "Screenshots_quit_dokan.png",
+    "roiFront": "60,612,53,53",
+    "roiBack": "60,612,53,53",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "放弃突破"
+  },
+  {
+    "itemName": "quit_dokan_sure",
+    "imageName": "Screenshots_quit_dokan_sure.png",
+    "roiFront": "669,387,144,73",
+    "roiBack": "669,387,144,73",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "确认放弃突破"
+  },
+  {
+    "itemName": "quit_dokan_over",
+    "imageName": "Screenshots_quit_dokan_over.png",
+    "roiFront": "1056,211,55,35",
+    "roiBack": "1056,211,55,35",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "管理放弃道馆over"
+  },
+  {
+    "itemName": "crowd_quit_dokan",
+    "imageName": "Screenshots_crowd_quit_dokan.png",
+    "roiFront": "1059,244,77,71",
+    "roiBack": "1059,244,77,71",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "寮友同意放弃突破"
+  },
+  {
+    "itemName": "continue_dokan",
+    "imageName": "Screenshots_continue_dokan.png",
+    "roiFront": "1177,246,71,67",
+    "roiBack": "1177,246,71,67",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "再战道馆"
   },
   {
     "itemName": "ryou_dokan",
@@ -98,8 +224,6 @@
     "threshold": 0.8,
     "description": "优先攻击: 黑脸"
   },
-
-
   {
     "itemName": "ryou_dokan_gathering",
     "imageName": "res_ryou_dokan_gathering.png",
@@ -154,7 +278,6 @@
     "threshold": 0.8,
     "description": "馆主战等待中"
   },
-
   {
     "itemName": "ryou_dokan_win",
     "imageName": "res_ryou_dokan_win.png",
@@ -162,9 +285,17 @@
     "roiBack": "628,60,45,33",
     "method": "Template matching",
     "threshold": 0.8,
-    "description": "状态：道馆胜利"
+    "description": "打馆主胜利"
   },
-
+  {
+    "itemName": "ryou_dokan_fail",
+    "imageName": "res_ryou_dokan_fail.png",
+    "roiFront": "454,44,56,46",
+    "roiBack": "454,44,56,46",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "打馆主失败"
+  },
   {
     "itemName": "ryou_dokan_in_field2",
     "imageName": "res_ryou_dokan_in_field2.png",
@@ -183,7 +314,6 @@
     "threshold": 0.8,
     "description": "状态：战斗结算，可能是打完小朋友了，也可能是失败了。"
   },
-
   {
     "itemName": "ryou_dokan_fighting",
     "imageName": "res_ryou_dokan_fighting.png",
@@ -220,8 +350,6 @@
     "threshold": 0.8,
     "description": "道馆退出确认"
   },
-
-  
   {
     "itemName": "ryou_dokan_cheering_scores",
     "imageName": "res_ryou_dokan_cheering_scores.png",
@@ -240,17 +368,6 @@
     "threshold": 0.8,
     "description": "进入加油相关：前往战斗中的竂友"
   },
-
-
-  {
-    "itemName": "scene_ryou",
-    "imageName": "scene_ryou.png",
-    "roiFront": "1161,674,75,31",
-    "roiBack": "1161,674,75,31",
-    "method": "Template matching",
-    "threshold": 0.8,
-    "description": "场景检测：阴阳竂"
-  },
   {
     "itemName": "scene_ryou",
     "imageName": "scene_ryou.png",
@@ -260,5 +377,4 @@
     "threshold": 0.8,
     "description": "场景检测：阴阳竂"
   }
-
 ]

@@ -1,5 +1,11 @@
 [
   {
+    "itemName": "dokan_ready_sel",
+    "roiFront": "1113,179,100,100",
+    "roiBack": "1113,179,100,100",
+    "description": "选择寮"
+  },
+  {
     "itemName": "dokan_random_click_area",
     "roiFront": "142,294,107,555",
     "roiBack": "142,294,107,555",
@@ -28,5 +34,11 @@
     "roiFront": "42,94,1207,543",
     "roiBack": "42,94,1207,543",
     "description": "准备战斗"
+  },
+  {
+    "itemName": "dokan_green_left_5",
+    "roiFront": "993,474,67,104",
+    "roiBack": "993,474,67,104",
+    "description": "道馆从左开始第五个绿标"
   }
 ]

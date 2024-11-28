@@ -11,6 +11,8 @@ class DokanAssets:
 
 
 	# Click Rule Assets
+	# 选择寮 
+	C_DOKAN_READY_SEL = RuleClick(roi_front=(1113,179,100,100), roi_back=(1113,179,100,100), name="dokan_ready_sel")
 	# 道馆随机点击安全区域 
 	C_DOKAN_RANDOM_CLICK_AREA = RuleClick(roi_front=(142,294,107,555), roi_back=(142,294,107,555), name="dokan_random_click_area")
 	# 道馆随机点击安全区域1：竂友突破信息 
@@ -21,11 +23,41 @@ class DokanAssets:
 	C_DOKAN_RANDOM_CLICK_AREA3 = RuleClick(roi_front=(333,44,107,20), roi_back=(333,44,107,20), name="dokan_random_click_area3")
 	# 准备战斗 
 	C_DOKAN_READY_FOR_BATTLE = RuleClick(roi_front=(42,94,1207,543), roi_back=(42,94,1207,543), name="dokan_ready_for_battle")
+	# 道馆从左开始第五个绿标 
+	C_DOKAN_GREEN_LEFT_5 = RuleClick(roi_front=(993,474,67,104), roi_back=(993,474,67,104), name="dokan_green_left_5")
 
 
 	# Image Rule Assets
-	# 阴阳竂->神社 
-	I_RYOU_SHENSHE = RuleImage(roi_front=(476,173,62,24), roi_back=(476,173,62,24), threshold=0.8, method="Template matching", file="./tasks/Dokan/res/res_ryou_shenshe.png")
+	# 区域找绿标 
+	I_GREEN_MARK = RuleImage(roi_front=(157,220,979,229,), roi_back=(157,220,979,229,), threshold=0.8, method="Template matching", file="./tasks/Dokan/res/green_mark.png")
+	# 道馆 
+	I_DAOGUAN = RuleImage(roi_front=(462,159,100,100), roi_back=(462,159,100,100), threshold=0.8, method="Template matching", file="./tasks/Dokan/res/Screenshots_daoguan.png")
+	# 寮称号 
+	I_GUILD_NAME_TITLE = RuleImage(roi_front=(596,191,75,43), roi_back=(596,191,75,43), threshold=0.8, method="Template matching", file="./tasks/Dokan/res/Screenshots_guild_name_title.png")
+	# 防守战报 
+	I_FANGSHOU = RuleImage(roi_front=(35,610,75,79), roi_back=(35,610,75,79), threshold=0.8, method="Template matching", file="./tasks/Dokan/res/Screenshots_fangshou.png")
+	# 建立道馆  
+	I_CREATE_DAOGUAN = RuleImage(roi_front=(262,630,45,62), roi_back=(262,630,45,62), threshold=0.8, method="Template matching", file="./tasks/Dokan/res/Screenshots_create_daoguan.png")
+	# 确定建立道馆 
+	I_CREATE_DAOGUAN_SURE = RuleImage(roi_front=(766,409,100,55), roi_back=(766,409,100,55), threshold=0.8, method="Template matching", file="./tasks/Dokan/res/Screenshots_create_daoguan_sure.png")
+	# 已经建立道馆  
+	I_CREATE_DAOGUAN_OK = RuleImage(roi_front=(262,630,45,62), roi_back=(262,630,45,62), threshold=0.8, method="Template matching", file="./tasks/Dokan/res/Screenshots_create_daoguan_ok.png")
+	# 建立道馆弹出页，红色关闭 
+	I_RED_CLOSE = RuleImage(roi_front=(1175,108,41,42), roi_back=(1175,108,41,42), threshold=0.8, method="Template matching", file="./tasks/Dokan/res/Screenshots_red_close.png")
+	# 挑战 
+	I_NEWTZ = RuleImage(roi_front=(798,482,44,39), roi_back=(0,0,1047,718), threshold=0.7, method="Template matching", file="./tasks/Dokan/res/Screenshots_newtz.png")
+	# 确定 
+	I_OK = RuleImage(roi_front=(706,407,100,48), roi_back=(706,407,100,48), threshold=0.8, method="Template matching", file="./tasks/Dokan/res/Screenshots_ok.png")
+	# 放弃突破 
+	I_QUIT_DOKAN = RuleImage(roi_front=(60,612,53,53), roi_back=(60,612,53,53), threshold=0.8, method="Template matching", file="./tasks/Dokan/res/Screenshots_quit_dokan.png")
+	# 确认放弃突破 
+	I_QUIT_DOKAN_SURE = RuleImage(roi_front=(669,387,144,73), roi_back=(669,387,144,73), threshold=0.8, method="Template matching", file="./tasks/Dokan/res/Screenshots_quit_dokan_sure.png")
+	# 管理放弃道馆over 
+	I_QUIT_DOKAN_OVER = RuleImage(roi_front=(1056,211,55,35), roi_back=(1056,211,55,35), threshold=0.8, method="Template matching", file="./tasks/Dokan/res/Screenshots_quit_dokan_over.png")
+	# 寮友同意放弃突破 
+	I_CROWD_QUIT_DOKAN = RuleImage(roi_front=(1059,244,77,71), roi_back=(1059,244,77,71), threshold=0.8, method="Template matching", file="./tasks/Dokan/res/Screenshots_crowd_quit_dokan.png")
+	# 再战道馆 
+	I_CONTINUE_DOKAN = RuleImage(roi_front=(1177,246,71,67), roi_back=(1177,246,71,67), threshold=0.8, method="Template matching", file="./tasks/Dokan/res/Screenshots_continue_dokan.png")
 	# 神社->道馆 
 	I_RYOU_DOKAN = RuleImage(roi_front=(476,173,62,24), roi_back=(476,173,62,24), threshold=0.8, method="Template matching", file="./tasks/Dokan/res/res_ryou_dokan.png")
 	# []选择竂 
@@ -58,8 +90,10 @@ class DokanAssets:
 	I_RYOU_DOKAN_IN_FIELD = RuleImage(roi_front=(1128,536,100,100), roi_back=(1128,536,100,100), threshold=0.8, method="Template matching", file="./tasks/Dokan/res/res_ryou_dokan_in_field.png")
 	# 馆主战等待中 
 	I_DOKAN_BOSS_WAITING = RuleImage(roi_front=(603,148,130,32), roi_back=(603,148,130,32), threshold=0.8, method="Template matching", file="./tasks/Dokan/res/res_dokan_boss_waiting.png")
-	# 状态：道馆胜利 
+	# 打馆主胜利 
 	I_RYOU_DOKAN_WIN = RuleImage(roi_front=(628,60,45,33), roi_back=(628,60,45,33), threshold=0.8, method="Template matching", file="./tasks/Dokan/res/res_ryou_dokan_win.png")
+	# 打馆主失败 
+	I_RYOU_DOKAN_FAIL = RuleImage(roi_front=(454,44,56,46), roi_back=(454,44,56,46), threshold=0.8, method="Template matching", file="./tasks/Dokan/res/res_ryou_dokan_fail.png")
 	# 状态：进入战斗，待开始，右下角图标。 
 	I_RYOU_DOKAN_IN_FIELD2 = RuleImage(roi_front=(1131,562,88,48), roi_back=(1131,562,88,48), threshold=0.8, method="Template matching", file="./tasks/Dokan/res/res_ryou_dokan_in_field2.png")
 	# 状态：战斗结算，可能是打完小朋友了，也可能是失败了。 
@@ -78,8 +112,6 @@ class DokanAssets:
 	I_RYOU_DOKAN_CHEERING_ATTACKING_SAMA = RuleImage(roi_front=(948,182,56,295), roi_back=(948,182,56,295), threshold=0.8, method="Template matching", file="./tasks/Dokan/res/res_ryou_dokan_cheering_attacking_sama.png")
 	# 场景检测：阴阳竂 
 	I_SCENE_RYOU = RuleImage(roi_front=(1161,674,75,31), roi_back=(1161,674,75,31), threshold=0.8, method="Template matching", file="./tasks/Dokan/res/scene_ryou.png")
-	# 场景检测：阴阳竂 
-	I_SCENE_RYOU = RuleImage(roi_front=(1161,674,75,31), roi_back=(1161,674,75,31), threshold=0.8, method="Template matching", file="./tasks/Dokan/res/scene_ryou.png")
 
 
 	# List Rule Assets
@@ -89,6 +121,16 @@ class DokanAssets:
 
 
 	# Ocr Rule Assets
+	# 道馆开启状态 
+	O_DOKAN_STATUS = RuleOcr(roi=(492,628,222,44), area=(492,628,222,44), mode="Full", method="Default", keyword="", name="dokan_status")
+	# 选择寮1 
+	O_DOKAN_READY_SEL1 = RuleOcr(roi=(1156,105,80,28), area=(1156,105,80,28), mode="Digit", method="Default", keyword="", name="dokan_ready_sel1")
+	# 选择寮2 
+	O_DOKAN_READY_SEL2 = RuleOcr(roi=(1156,255,80,28), area=(1156,255,80,28), mode="Digit", method="Default", keyword="", name="dokan_ready_sel2")
+	# 选择寮3 
+	O_DOKAN_READY_SEL3 = RuleOcr(roi=(1156,400,80,28), area=(1156,400,80,28), mode="Digit", method="Default", keyword="", name="dokan_ready_sel3")
+	# 选择寮4 
+	O_DOKAN_READY_SEL4 = RuleOcr(roi=(1156,545,80,28), area=(1156,545,80,28), mode="Digit", method="Default", keyword="", name="dokan_ready_sel4")
 	# 道馆地图里找文字：万 
 	O_DOKAN_MAP = RuleOcr(roi=(270,130,740,460), area=(270,130,740,460), mode="Full", method="Default", keyword="万", name="dokan_map")
 	# 道馆里找文字：后开战 
