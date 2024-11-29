@@ -50,9 +50,9 @@ class SwitchSoulConfig(BaseSwitchSoulConfig):
     enable_switch_by_name: bool = Field(default=False, description='enable_switch_by_name_help')
     group_name: str = Field(default='')
     team_name: str = Field(default='')
-    auto_switch_soul: bool = Field(default=False, description='auto_switch_soul_help')
+    auto_switch_soul: bool = Field(default=False, description='auto_switch_soul_orochi_help')
     # 十层 config
-    # ten_switch: str = Field(default='-1,-1', description='ten_switch_help')
+    ten_switch: str = Field(default='-1,-1', description='ten_switch_help')
     # 悲鸣 config
     eleven_switch: str = Field(default='-1,-1', description='eleven_switch_help')
     # 神罚 config
