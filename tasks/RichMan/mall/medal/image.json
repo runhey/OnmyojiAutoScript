@@ -29,8 +29,8 @@
   {
     "itemName": "me_souls",
     "imageName": "medal_me_souls.png",
-    "roiFront": "173,391,148,133",
-    "roiBack": "121,116,898,476",
+    "roiFront": "175,373,141,148",
+    "roiBack": "79,68,986,524",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "随机御魂"
@@ -38,10 +38,10 @@
   {
     "itemName": "me_white",
     "imageName": "medal_me_white.png",
-    "roiFront": "399,391,142,131",
-    "roiBack": "115,114,908,452",
+    "roiFront": "401,393,138,126",
+    "roiBack": "115,79,943,503",
     "method": "Template matching",
-    "threshold": 0.8,
+    "threshold": 0.6,
     "description": "白蛋"
   },
   {
@@ -50,7 +50,7 @@
     "roiFront": "618,390,146,129",
     "roiBack": "114,102,914,478",
     "method": "Template matching",
-    "threshold": 0.8,
+    "threshold": 0.7,
     "description": "御灵挑战券"
   },
   {

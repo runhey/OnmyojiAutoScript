@@ -129,11 +129,11 @@ class RichManAssets:
 	# 体力 
 	I_ME_AP = RuleImage(roi_front=(842,395,145,123), roi_back=(156,111,862,454), threshold=0.8, method="Template matching", file="./tasks/RichMan/mall/medal/medal_me_ap.png")
 	# 随机御魂 
-	I_ME_SOULS = RuleImage(roi_front=(173,391,148,133), roi_back=(121,116,898,476), threshold=0.8, method="Template matching", file="./tasks/RichMan/mall/medal/medal_me_souls.png")
+	I_ME_SOULS = RuleImage(roi_front=(175,373,141,148), roi_back=(79,68,986,524), threshold=0.8, method="Template matching", file="./tasks/RichMan/mall/medal/medal_me_souls.png")
 	# 白蛋 
-	I_ME_WHITE = RuleImage(roi_front=(399,391,142,131), roi_back=(115,114,908,452), threshold=0.8, method="Template matching", file="./tasks/RichMan/mall/medal/medal_me_white.png")
+	I_ME_WHITE = RuleImage(roi_front=(401,393,138,126), roi_back=(115,79,943,503), threshold=0.6, method="Template matching", file="./tasks/RichMan/mall/medal/medal_me_white.png")
 	# 御灵挑战券 
-	I_ME_CHALLENGE_PASS = RuleImage(roi_front=(618,390,146,129), roi_back=(114,102,914,478), threshold=0.8, method="Template matching", file="./tasks/RichMan/mall/medal/medal_me_challenge_pass.png")
+	I_ME_CHALLENGE_PASS = RuleImage(roi_front=(618,390,146,129), roi_back=(114,102,914,478), threshold=0.7, method="Template matching", file="./tasks/RichMan/mall/medal/medal_me_challenge_pass.png")
 	# 红蛋 
 	I_ME_RED = RuleImage(roi_front=(847,146,137,129), roi_back=(141,129,864,454), threshold=0.8, method="Template matching", file="./tasks/RichMan/mall/medal/medal_me_red.png")
 	# 破碎的咒符 
