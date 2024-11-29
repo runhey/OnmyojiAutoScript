@@ -1192,6 +1192,7 @@
       "float_time": "00:00:00"
     },
     "dokan_config": {
+      "dokan_enable": false,
       "dokan_attack_priority": 0,
       "dokan_auto_cheering_while_cd": false,
       "random_delay": false,
