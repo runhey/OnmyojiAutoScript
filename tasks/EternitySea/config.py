@@ -26,7 +26,7 @@ class EternitySeaConfig(ConfigBase):
     # 限制时间
     limit_time: Time = Field(default=Time(minute=30), description='limit_time_help')
     # 限制次数
-    limit_count: int = Field(default=50, description='limit_count_help')
+    limit_count: int = Field(default=30, description='limit_count_help')
 
 class EternitySea(ConfigBase):
     scheduler: Scheduler = Field(default_factory=Scheduler)
