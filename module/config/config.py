@@ -351,7 +351,7 @@ class Config(ConfigState, ConfigManual, ConfigWatcher, ConfigMenu):
             if scheduler.server_update == time(hour=9):
                 next_run += timedelta(seconds=random_float)
             else:
-                next_run = parse_tomorrow_server(scheduler.server_update, random_float)
+                next_run = parse_tomorrow_server(scheduler.server_update, scheduler.delay_date, random_float)
 
         # 将这些连接起来，方便日志输出
         kv = dict_to_kv(
