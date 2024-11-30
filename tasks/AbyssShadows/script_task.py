@@ -424,11 +424,11 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AbyssShadowsAssets):
         :param config:
         :return:
         """
+        # 确保进入战斗
         while 1:
             self.screenshot()
-            if self.appear_then_click(self.I_PREPARE_HIGHLIGHT, interval=1.5):
-                continue
-            if not self.appear(self.I_PRESET):
+            if self.wait_until_appear(self.I_PREPARE_HIGHLIGHT, wait_time=10):
+                self.click(self.I_PREPARE_HIGHLIGHT, interval=1.5)
                 break
         logger.info(f"Click {self.I_PREPARE_HIGHLIGHT.name}")
 
