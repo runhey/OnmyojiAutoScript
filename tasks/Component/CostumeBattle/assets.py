@@ -88,3 +88,12 @@ class CostumeBattleAssets:
 	I_FALSE_8 = RuleImage(roi_front=(384,106,100,100), roi_back=(346,96,184,120), threshold=0.8, method="Template matching", file="./tasks/Component/CostumeBattle/battle8/battle8_false_8.png")
 
 
+	# Image Rule Assets
+	# 左上角退出 
+	I_EXIT_9 = RuleImage(roi_front=(20,17,35,34), roi_back=(20,17,35,34), threshold=0.8, method="Template matching", file="./tasks/Component/CostumeBattle/battle9/battle9_exit_9.png")
+	# 左上角好友 
+	I_FRIENDS_9 = RuleImage(roi_front=(93,15,31,36), roi_back=(93,15,31,36), threshold=0.8, method="Template matching", file="./tasks/Component/CostumeBattle/battle9/battle9_friends_9.png")
+	# 指针 
+	I_LOCAL_9 = RuleImage(roi_front=(114,489,37,37), roi_back=(114,489,37,37), threshold=0.8, method="Template matching", file="./tasks/Component/CostumeBattle/battle9/battle9_local_9.png")
+
+

@@ -1,0 +1,29 @@
+[
+  {
+    "itemName": "exit_9",
+    "imageName": "battle9_exit_9.png",
+    "roiFront": "20,17,35,34",
+    "roiBack": "20,17,35,34",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "左上角退出"
+  },
+  {
+    "itemName": "friends_9",
+    "imageName": "battle9_friends_9.png",
+    "roiFront": "93,15,31,36",
+    "roiBack": "93,15,31,36",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "左上角好友"
+  },
+  {
+    "itemName": "local_9",
+    "imageName": "battle9_local_9.png",
+    "roiFront": "114,489,37,37",
+    "roiBack": "114,489,37,37",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "指针"
+  }
+]

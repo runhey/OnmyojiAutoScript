@@ -116,6 +116,11 @@ battle_theme_model = {
         'I_DE_WIN': 'I_DE_WIN_8',
         'I_FALSE': 'I_FALSE_8',
     },
+    BattleType.COSTUME_BATTLE_9: {
+        'I_LOCAL': 'I_LOCAL_9',
+        'I_EXIT': 'I_EXIT_9',
+        'I_FRIENDS': 'I_FRIENDS_9',
+    },
 }
 
 
@@ -176,4 +181,4 @@ class CostumeBase:
 
 if __name__ == '__main__':
     c = CostumeBase()
-    c.check_costume_main(MainType.COSTUME_MAIN_1)
+    c.check_costume_main(MainType.COSTUME_MAIN_2)
