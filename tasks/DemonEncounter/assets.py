@@ -73,6 +73,10 @@ class DemonEncounterAssets:
 	I_DE_SHI_RECORDS = RuleImage(roi_front=(789,639,48,48), roi_back=(789,639,48,48), threshold=0.8, method="Template matching", file="./tasks/DemonEncounter/demon/demon_de_shi_records.png")
 	# 左下角小指针 
 	I_DE_LOCATION = RuleImage(roi_front=(26,653,44,47), roi_back=(26,653,44,47), threshold=0.8, method="Template matching", file="./tasks/DemonEncounter/demon/demon_de_location.png")
+	# 逢魔蓝票 
+	I_BLUE_PIAO = RuleImage(roi_front=(420,226,444,262), roi_back=(420,226,444,262), threshold=0.8, method="Template matching", file="./tasks/DemonEncounter/demon/blue_piao.png")
+	# 50勾玉购买 
+	I_JADE_50 = RuleImage(roi_front=(420,226,444,262), roi_back=(420,226,444,262), threshold=0.8, method="Template matching", file="./tasks/DemonEncounter/demon/jade_50.png")
 
 
 	# Image Rule Assets

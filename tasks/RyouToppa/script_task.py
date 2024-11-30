@@ -2,7 +2,7 @@
 # @author runhey
 # github https://github.com/runhey
 import time
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, time as dt_time
 import random
 
 from tasks.Component.SwitchSoul.switch_soul import SwitchSoul
@@ -144,7 +144,8 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, RyouToppaAssets):
 
         # 100% 攻破, 第二天再执行
         if ryou_toppa_success_penetration:
-            self.set_next_run(task='RyouToppa', finish=True, success=True)
+            logger.info('RyouToppa is 100%')
+            self.plan_tomorrow_ryoutoppa()
             raise TaskEnd
         if self.config.ryou_toppa.general_battle_config.lock_team_enable:
             logger.info("Lock team.")
@@ -189,6 +190,16 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, RyouToppaAssets):
             self.set_next_run(task='RyouToppa', finish=True, server=True, success=False)
         raise TaskEnd
 
+    def plan_tomorrow_ryoutoppa(self):
+        # 安排下次寮突破，便于复用
+        now = datetime.now()
+        # 如果时间在00:00-5:00之间则设定时间为当天的自定义时间
+        if now.time() < dt_time(5, 0):  # 不确定 time 的使用范围，重命名 datetime 中的 time
+            self.custom_next_run(task='RyouToppa', custom_time=self.config.ryou_toppa.raid_config.next_ryoutoppa_time, time_delta=0)
+        # 如果时间在05:00-23:59之间则设定时间为明天的自定义时间
+        else:
+            self.custom_next_run(task='RyouToppa', custom_time=self.config.ryou_toppa.raid_config.next_ryoutoppa_time, time_delta=1)
+
     def start_ryou_toppa(self):
         """
         开启寮突破
@@ -223,8 +234,8 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, RyouToppaAssets):
         如果没有票了，那么就返回False
         :return:
         """
-        # 21点后无限进攻机会
-        if datetime.now().hour >= 21:
+        # 21点后、次日5点前无限进攻机会
+        if datetime.now().hour >= 21 or datetime.now().hour <= 5:
             return True
         self.wait_until_appear(self.I_TOPPA_RECORD)
         self.screenshot()
@@ -245,7 +256,8 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, RyouToppaAssets):
         # 如果该区域已经被攻破则退出
         # Ps: 这时候能打过的都打过了，没有能攻打的结界了, 代表任务已经完成，set_next_run time=1d
         if self.appear(f3, threshold=0.8) or self.appear(f4, threshold=0.8):
-            self.set_next_run(task='RyouToppa', finish=True, success=True)
+            logger.info('RyouToppa has tried to attack')
+            self.plan_tomorrow_ryoutoppa()
             raise TaskEnd
         # 如果该区域攻略失败返回 False
         if self.appear(f1, threshold=0.8) or self.appear(f2, threshold=0.8):

@@ -17,7 +17,7 @@ class DuelAssets:
 
 	# Image Rule Assets
 	# 点击阵容 
-	I_D_TEAM = RuleImage(roi_front=(813,284,34,74), roi_back=(813,284,34,74), threshold=0.8, method="Template matching", file="./tasks/Duel/duel/duel_d_team.png")
+	I_D_TEAM = RuleImage(roi_front=(813,288,34,74), roi_back=(785,259,115,119), threshold=0.8, method="Template matching", file="./tasks/Duel/duel/duel_d_team.png")
 	# 一键切换所有的御魂 
 	I_D_TEAM_SWTICH = RuleImage(roi_front=(1082,85,38,41), roi_back=(1082,85,38,41), threshold=0.8, method="Template matching", file="./tasks/Duel/duel/duel_d_team_swtich.png")
 	# 观战 

@@ -2,8 +2,8 @@
   {
     "itemName": "d_team",
     "imageName": "duel_d_team.png",
-    "roiFront": "813,284,34,74",
-    "roiBack": "813,284,34,74",
+    "roiFront": "813,288,34,74",
+    "roiBack": "785,259,115,119",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "点击阵容"

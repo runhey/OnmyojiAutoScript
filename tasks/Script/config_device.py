@@ -12,6 +12,7 @@ class PackageName(str, Enum):
     NETEASE_MI = 'com.netease.onmyoji.mi'  # 小米
     NETEASE = 'com.netease.onmyoji'
     NETEASE_HUAWEI = 'com.netease.onmyoji.huawei'
+    NETEASE_BILIBILI = 'com.netease.onmyoji.bili'
 
 class ScreenshotMethod(str, Enum):
     AUTO = 'auto'
