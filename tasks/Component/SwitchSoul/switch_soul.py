@@ -159,7 +159,7 @@ class SwitchSoul(BaseTask, SwitchSoulAssets):
             self.screenshot()
             if not self.appear(self.I_SOU_CHECK_IN):
                 break
-            if self.appear_then_click(self.I_RECORD_SOUL_BACK, interval=1):
+            if self.appear_then_click(self.I_RECORD_SOUL_BACK, interval=3.5):
                 continue
         logger.info('Exit shikigami records')
 
