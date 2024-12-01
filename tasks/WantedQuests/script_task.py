@@ -2,30 +2,23 @@
 # @author runhey
 # github https://github.com/runhey
 import re
-import copy
-from time import sleep
 from datetime import timedelta, time, datetime
-from cached_property import cached_property
-from enum import Enum
-from module.atom.image import RuleImage
+from time import sleep
+from typing import List
 
+from cached_property import cached_property
+
+from module.atom.image import RuleImage
+from module.base.timer import Timer
 from module.exception import TaskEnd
 from module.logger import logger
-from module.base.timer import Timer
-
-from tasks.GameUi.game_ui import GameUi
-from tasks.GameUi.page import page_main, page_exploration, page_shikigami_records
-from tasks.Component.GeneralBattle.general_battle import GeneralBattle
-from tasks.Component.GeneralBattle.config_general_battle import GeneralBattleConfig
-from tasks.Component.GeneralInvite.general_invite import GeneralInvite
-from tasks.Secret.script_task import ScriptTask as SecretScriptTask
-from tasks.WantedQuests.config import WantedQuestsConfig, CooperationType, CooperationSelectMask, \
-    CooperationSelectMaskDescription
-from tasks.WantedQuests.assets import WantedQuestsAssets
-from tasks.WantedQuests.explore import WQExplore, ExploreWantedBoss
 from tasks.Component.Costume.config import MainType
-from typing import List
-from tasks.Component.SwitchSoul.switch_soul import SwitchSoul
+from tasks.Component.GeneralBattle.config_general_battle import GeneralBattleConfig
+from tasks.GameUi.page import page_main, page_exploration, page_shikigami_records
+from tasks.Secret.script_task import ScriptTask as SecretScriptTask
+from tasks.WantedQuests.assets import WantedQuestsAssets
+from tasks.WantedQuests.config import CooperationType, CooperationSelectMask
+from tasks.WantedQuests.explore import WQExplore, ExploreWantedBoss
 
 
 class ScriptTask(WQExplore, SecretScriptTask, WantedQuestsAssets):
@@ -493,7 +486,7 @@ class ScriptTask(WQExplore, SecretScriptTask, WantedQuestsAssets):
         # 没有找到需要邀请的人,点击取消 返回悬赏封印界面
         if not find:
             self.screenshot()
-            self.ui_click_until_disappear(self.I_WQ_INVITE_CANCEL, interval=0.5)
+            self.ui_click_until_disappear(self.I_WQ_INVITE_CANCEL, interval=1.5)
             return False
         #
         self.ui_click_until_disappear(self.I_WQ_INVITE_ENSURE, interval=1)
@@ -527,7 +520,7 @@ class ScriptTask(WQExplore, SecretScriptTask, WantedQuestsAssets):
             if self.appear(self.__getattribute__("I_WQ_COOPERATION_TYPE_GOLD_" + str(index + 1))):
                 retList.append({'type': CooperationType.Gold, 'inviteBtn': btn})
                 continue
-
+        logger.info(f"get cooperation size {len(retList)}")
         return retList
 
     @cached_property

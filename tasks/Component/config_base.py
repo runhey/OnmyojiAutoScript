@@ -2,16 +2,14 @@
 # @author runhey
 # github https://github.com/runhey
 import re
-from typing import Any
-from collections.abc import Callable, Generator
 from datetime import timedelta, time, datetime
+from typing import Any
 
-from typing_extensions import Annotated
+from pydantic import BaseModel
 from pydantic import (BeforeValidator,
                       PlainSerializer,
-                      WithJsonSchema,
-                      TypeAdapter)
-from pydantic import BaseModel
+                      WithJsonSchema)
+from typing_extensions import Annotated
 
 
 def format_timedelta(tdelta: timedelta):
@@ -58,12 +56,12 @@ TimeDelta = Annotated[timedelta,
 
 DateTime = Annotated[datetime,
                      BeforeValidator(datetime_validator),
-                     PlainSerializer(lambda v: v.isoformat(), return_type=str),
+                     PlainSerializer(lambda v: v.strftime('%Y-%m-%d %H:%M:%S'), return_type=str),
                      WithJsonSchema({'type': 'date_time'}),]
 
 Time = Annotated[time,
                  BeforeValidator(time_validator),
-                 PlainSerializer(lambda v: v.isoformat(), return_type=str),
+                 PlainSerializer(lambda v: v.strftime('%H:%M:%S'), return_type=str),
                  WithJsonSchema({'type': 'time'}),]
 
 # ---------------------------------------------------------------------------------------------------------------------
