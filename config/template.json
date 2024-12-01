@@ -640,6 +640,14 @@
       "enable_switch_by_name": false,
       "group_name": "",
       "team_name": ""
+    },
+    "invite_config": {
+      "invite_number": "one",
+      "friend_1": "",
+      "friend_2": "",
+      "find_mode": "auto_find",
+      "wait_time": "00:02:00",
+      "default_invite": true
     }
   },
   "six_realms": {
