@@ -21,6 +21,7 @@ from tasks.RealmRaid.script_task import ScriptTask as RealmRaidScriptTask
 from tasks.Utils.config_enum import ShikigamiClass
 
 from module.logger import logger
+from module.base.timer import Timer
 from module.exception import RequestHumanTakeover, TaskEnd
 from module.atom.image_grid import ImageGrid
 from module.atom.animate import RuleAnimate
@@ -338,9 +339,15 @@ class BaseExploration(GameUi, GeneralBattle, GeneralRoom, GeneralInvite, Replace
 
     def quit_explore(self):
         logger.info('Quit explore')
+        boss_timer = Timer(15)
+        boss_timer.start()
         while 1:
             self.screenshot()
             if self.appear(self.I_UI_BACK_RED) and self.appear(self.I_E_EXPLORATION_CLICK):
+                break
+            if boss_timer.reached():
+                # https://github.com/runhey/OnmyojiAutoScript/issues/548
+                logger.warning('Exit immediately after the boss battle')
                 break
             if self.appear_then_click(self.I_E_EXIT_CONFIRM, interval=0.8):
                 continue
