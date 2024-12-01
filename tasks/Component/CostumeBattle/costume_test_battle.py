@@ -74,5 +74,5 @@ if __name__ == '__main__':
     c = Config('oas1')
     d = Device(c)
     t = ScriptTask(c, d)
-    t.set_costume(BattleType.COSTUME_BATTLE_1)
+    t.set_costume(BattleType.COSTUME_BATTLE_9)
     t.run()
