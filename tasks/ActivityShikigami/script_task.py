@@ -46,12 +46,9 @@ class ScriptTask(GameUi, BaseActivity, SwitchSoul, ActivityShikigamiAssets):
         self.ui_goto(page_main)
         self.home_main()
 
-        # # 2024-11-06 ---------------------start
-        config.general_climb.ap_mode = ApMode.AP_GAME
         # 选择是游戏的体力还是活动的体力
         current_ap = config.general_climb.ap_mode
-        # self.switch(current_ap)
-        # # 2024-11-06 ---------------------end
+        self.switch(current_ap)
 
         # 设定是否锁定阵容
         if config.general_battle.lock_team_enable:
@@ -139,10 +136,16 @@ class ScriptTask(GameUi, BaseActivity, SwitchSoul, ActivityShikigamiAssets):
             self.screenshot()
             if self.appear(self.I_FIRE):
                 break
-            # 2024-04-04 --------------start
-            if self.appear_then_click(self.I_N_BATTLE, interval=1):
-                continue
-            # 2024-04-04 --------------end
+            # 2024-12-04 --------------start
+            from tasks.ActivityShikigami.config import ShikigamiType
+            map_click = {
+                ShikigamiType.FOOD_TYPE_1: self.C_CLICK1,
+                ShikigamiType.FOOD_TYPE_2: self.C_CLICK2,
+                ShikigamiType.FOOD_TYPE_3: self.C_CLICK3,
+                ShikigamiType.FOOD_TYPE_4: self.C_CLICK4,
+            }
+            self.click(map_click[self.config.model.activity_shikigami.shikigami.food_type], interval=4)
+            # 2024-12-04 --------------end
             if self.appear_then_click(self.I_SHI, interval=1):
                 continue
             if self.appear_then_click(self.I_DRUM, interval=1):
