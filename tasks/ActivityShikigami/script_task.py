@@ -115,6 +115,8 @@ class ScriptTask(GameUi, BaseActivity, SwitchSoul, ActivityShikigamiAssets):
                     continue
                 if self.appear_then_click(self.I_UI_CONFIRM, interval=1):
                     continue
+                if self.appear_then_click(self.I_N_CONFIRM, interval=1):
+                    continue
 
             if self.run_general_battle(config=config.general_battle):
                 logger.info("General battle success")
