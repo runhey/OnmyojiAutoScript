@@ -227,7 +227,6 @@ class ScriptTask(WQExplore, SecretScriptTask, WantedQuestsAssets):
                 continue
             # 根据邀请按钮位置生成 对应的点击位置 打开追踪界面
             # NOTE magic Number
-
             self.device.click(btn.roi_front[0], btn.roi_front[1] - 40, control_name=str(btn) + ' y-40')
             # 防止点击后界面来不及刷新
             sleep(1.5)
@@ -399,7 +398,7 @@ class ScriptTask(WQExplore, SecretScriptTask, WantedQuestsAssets):
         self.invite_random(self.I_WQ_INVITE_2)
         self.invite_random(self.I_WQ_INVITE_3)
 
-    def all_cooperation_invite(self, name: str=None):
+    def all_cooperation_invite(self, name: str = None):
         """
             所有的协作任务依次邀请
             如果配置了只完成协作任务 还会将该任务设置为追踪
@@ -458,9 +457,7 @@ class ScriptTask(WQExplore, SecretScriptTask, WantedQuestsAssets):
         @param name:
         @return:
         """
-        self.ui_click(btn, self.I_WQ_INVITE_ENSURE, interval=2.5)
-        # 等待好友列表加载
-        sleep(1.5)
+        self.ui_click(btn, stop=self.I_WQ_INVITE_ENSURE, interval=2.5)
 
         # 选人
         self.O_WQ_INVITE_COLUMN_1.keyword = name
@@ -468,21 +465,22 @@ class ScriptTask(WQExplore, SecretScriptTask, WantedQuestsAssets):
 
         find = False
         for i in range(2):
-            self.screenshot()
+            # 等待好友列表出现
+            self.wait_until_appear(self.I_WQ_INVITE_FRIEND_LIST_APPEAR, True, wait_time=4)
+
             in_col_1 = self.ocr_appear_click(self.O_WQ_INVITE_COLUMN_1)
             in_col_2 = self.ocr_appear_click(self.O_WQ_INVITE_COLUMN_2)
             find = in_col_2 or in_col_1
             if find:
-                sleep(4)
-                self.screenshot()
+                self.wait_until_appear(self.I_WQ_INVITE_SELECTED, skip_first_screenshot=True, wait_time=4)
                 if self.appear(self.I_WQ_INVITE_SELECTED):
                     logger.info("friend found and selected")
                     break
                 # TODO OCR识别到文字 但是没有选中 尝试重新选择  (选择好友时,弹出协作邀请导致选择好友失败)
             # 在当前服务器没找到,切换服务器  30s 防止短时间连续点击
             self.click(self.I_WQ_INVITE_DIFF_SVR, interval=30)
-            # NOTE 跨服好友刷新缓慢,切换标签页难以检测,姑且用延时.非常卡的模拟器可能出问题
-            sleep(4)
+            # 截次图用以等待同服务器好友列表消失
+            self.screenshot()
         # 没有找到需要邀请的人,点击取消 返回悬赏封印界面
         if not find:
             self.screenshot()
@@ -556,11 +554,25 @@ if __name__ == '__main__':
     from module.config.config import Config
     from module.device.device import Device
 
+    import cv2
+    import numpy as np
+
+    target_image = cv2.imread('E:\\friend.png')
+    template_image = cv2.imread('E:\\friend_1.png')
+    result = cv2.matchTemplate(target_image, template_image, cv2.TM_CCOEFF_NORMED)
+    w = 30
+    h = 30
+    loc = np.where(result >= 0.9)
+    # 在目标图像上绘制矩形框标记匹配位置
+    for pt in zip(*loc[::-1]):
+        cv2.rectangle(target_image, pt, (pt[0] + w, pt[1] + h), (0, 255, 0), 2)
+
+    # 显示结果图像
+    cv2.imshow('Detected', target_image)
+    cv2.waitKey(0)
+    cv2.destroyAllWindows()
     c = Config('oas1')
     d = Device(c)
     t = ScriptTask(c, d)
-    t.screenshot()
 
     t.run()
-
-
