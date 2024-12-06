@@ -17,6 +17,7 @@ from tasks.Orochi.config import UserStatus
 from tasks.EternitySea.config import EternitySea
 from module.exception import RequestHumanTakeover
 from tasks.GameUi.page import page_main, page_soul_zones, page_shikigami_records
+from time import sleep
 
 class ScriptTask(
     GameUi, GeneralBattle, GeneralRoom, GeneralInvite, SwitchSoul, EternitySeaAssets
@@ -219,6 +220,15 @@ class ScriptTask(
                     )
                     break
 
+    def is_room_dead(self) -> bool:
+        # 如果在探索界面或者是出现在组队界面，那就是可能房间死了
+        sleep(0.5)
+        if self.appear(self.I_MATCHING) or self.appear(self.I_CHECK_EXPLORATION):
+            sleep(0.5)
+            if self.appear(self.I_MATCHING) or self.appear(self.I_CHECK_EXPLORATION):
+                return True
+        return False
+
     def eternitysea_enter(self) -> bool:
         logger.info('Enter EternitySea')
         while True:
@@ -247,6 +257,8 @@ class ScriptTask(
             if self.appear(self.I_FORM_TEAM, interval=1):
                 return True
             if self.appear_then_click(self.I_ETERNITY_SEA):
+                #有可能点击到录像
+                self.appear_then_click(self.I_BACK_BOTTOM, interval=1)
                 continue
 
     def _navigate_to_soul_zones(self) -> None:
