@@ -214,5 +214,14 @@
     "method": "Template matching",
     "threshold": 0.8,
     "description": "封魔的金币"
+  },
+  {
+    "itemName": "green_marker",
+    "imageName": "gb_green_marker.png",
+    "roiFront": "0,0,1280,720",
+    "roiBack": "0,0,1280,720",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "绿标"
   }
 ]
