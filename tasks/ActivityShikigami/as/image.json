@@ -2,7 +2,7 @@
   {
     "itemName": "shi",
     "imageName": "as_shi.png",
-    "roiFront": "545,254,33,34",
+    "roiFront": "519,223,33,34",
     "roiBack": "64,115,1110,427",
     "method": "Template matching",
     "threshold": 0.7,
@@ -20,8 +20,8 @@
   {
     "itemName": "battle",
     "imageName": "as_battle.png",
-    "roiFront": "1080,229,35,145",
-    "roiBack": "1028,155,138,315",
+    "roiFront": "668,377,35,145",
+    "roiBack": "613,296,138,315",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "进入爬塔"
@@ -56,8 +56,8 @@
   {
     "itemName": "fire",
     "imageName": "as_fire.png",
-    "roiFront": "1134,579,84,78",
-    "roiBack": "1107,522,142,174",
+    "roiFront": "1133,566,84,78",
+    "roiBack": "1099,522,150,174",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "点击战斗"
@@ -65,8 +65,8 @@
   {
     "itemName": "ap",
     "imageName": "as_ap.png",
-    "roiFront": "1127,509,23,24",
-    "roiBack": "1092,487,103,71",
+    "roiFront": "1130,526,23,24",
+    "roiBack": "1092,497,103,71",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "体力按钮"
@@ -74,8 +74,8 @@
   {
     "itemName": "ap_activity",
     "imageName": "as_ap_activity.png",
-    "roiFront": "1124,514,21,21",
-    "roiBack": "1090,500,84,54",
+    "roiFront": "1129,529,21,21",
+    "roiBack": "1101,509,84,54",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "活动体力"
@@ -83,8 +83,8 @@
   {
     "itemName": "switch",
     "imageName": "as_switch.png",
-    "roiFront": "1212,514,23,23",
-    "roiBack": "1200,497,69,56",
+    "roiFront": "1217,527,23,23",
+    "roiBack": "1199,507,69,56",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "切换按键"

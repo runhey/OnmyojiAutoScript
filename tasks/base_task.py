@@ -117,7 +117,7 @@ class BaseTask(GlobalGameAssets, CostumeBase):
         self.device.detect_record = detect_record
         # 如果接受邀请则立即执行悬赏任务
         if click_button == self.I_G_ACCEPT:
-            self.set_next_run(task='WantedQuests', target=datetime.now())
+            self.set_next_run(task='WantedQuests', target=datetime.now().replace(microsecond=0))
         return True
 
     def screenshot(self):

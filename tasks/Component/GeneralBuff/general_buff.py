@@ -61,7 +61,7 @@ class GeneralBuff(BaseTask, GeneralBuffAssets):
         self.reject_invite()
         self.screenshot()
         area = buff.ocr(self.device.image)
-        if area == tuple([0, 0, 0, 0]):
+        if area == tuple([432.0, 143.0, 325.0, 21.0]):
             logger.info('No gold 50 buff')
             return None
 

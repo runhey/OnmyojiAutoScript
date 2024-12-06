@@ -12,10 +12,24 @@ class EternitySeaAssets:
 
 	# Image Rule Assets
 	# 选择永生之海 
-	I_ETERNITY_SEA = RuleImage(roi_front=(1150,101,127,416), roi_back=(0,0,1279,719), threshold=0.8, method="Template matching", file="./tasks/EternitySea/res/es_eternity_sea.png")
+	I_ETERNITY_SEA = RuleImage(roi_front=(1139,93,127,416), roi_back=(1139,93,127,416), threshold=0.8, method="Template matching", file="./tasks/EternitySea/res/res_eternity_sea.png")
 	# 组队 
-	I_FORM_TEAM = RuleImage(roi_front=(939,594,96,90), roi_back=(939,594,96,90), threshold=0.8, method="Template matching", file="./tasks/EternitySea/res/es_form_team.png")
+	I_FORM_TEAM = RuleImage(roi_front=(939,594,96,90), roi_back=(939,594,96,90), threshold=0.8, method="Template matching", file="./tasks/EternitySea/res/res_form_team.png")
 	# 挑战 
-	I_ETERNITY_SEA_FIRE = RuleImage(roi_front=(1108,592,96,93), roi_back=(1108,592,96,93), threshold=0.8, method="Template matching", file="./tasks/EternitySea/res/es_eternity_sea_fire.png")
+	I_ETERNITY_SEA_FIRE = RuleImage(roi_front=(1108,592,96,93), roi_back=(1108,592,96,93), threshold=0.8, method="Template matching", file="./tasks/EternitySea/res/res_eternity_sea_fire.png")
+	# 开锁 
+	I_ETERNITYSEA_UNLOCK = RuleImage(roi_front=(556,560,35,34), roi_back=(556,560,35,34), threshold=0.8, method="Template matching", file="./tasks/EternitySea/res/res_eternitysea_unlock.png")
+	# 关锁 
+	I_NEWETERNITYSEA_LOCK = RuleImage(roi_front=(556,560,31,37), roi_back=(556,560,31,37), threshold=0.8, method="Template matching", file="./tasks/EternitySea/res/res_neweternitysea_lock.png")
+	# 小小宠物，发现宝藏 
+	I_PET_PRESENT = RuleImage(roi_front=(873,184,62,147), roi_back=(873,184,62,147), threshold=0.8, method="Template matching", file="./tasks/EternitySea/res/res_pet_present.png")
+	# description 
+	I_BACK_BOTTOM = RuleImage(roi_front=(1126,49,46,45), roi_back=(1126,49,46,45), threshold=0.8, method="Template matching", file="./tasks/EternitySea/res/res_back_bottom.png")
+
+
+	# List Rule Assets
+	# 永生之海层数列表 
+	L_LAYER_LIST = RuleList(folder="./tasks/EternitySea/res", direction="vertical", mode="ocr", roi_back=(138,127,353,435), size=(56, 68), 
+					 array=["壹", "贰", "叁", "肆"])
 
 

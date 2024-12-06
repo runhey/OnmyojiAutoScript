@@ -482,8 +482,8 @@ class ScriptTask(GeneralBattle, GeneralInvite, GeneralBuff, GeneralRoom, GameUi,
         group_team: str = None
         layer = self.config.orochi.orochi_config.layer
         match layer:
-            # case Layer.TEN:
-            #     group_team = orochi_switch_soul.ten_switch
+            case Layer.TEN:
+                group_team = orochi_switch_soul.ten_switch
             case Layer.ELEVEN:
                 group_team = orochi_switch_soul.eleven_switch
             case Layer.TWELVE:
