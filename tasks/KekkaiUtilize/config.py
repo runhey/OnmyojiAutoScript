@@ -22,7 +22,7 @@ class UtilizeRule(str, Enum):
 
 
 class UtilizeScheduler(Scheduler):
-    priority = Field(default=2, description='priority_help')
+    priority: int = Field(default=2, description='priority_help')
     success_interval: TimeDelta = Field(default=TimeDelta(hours=6), description='success_interval_help')
     failure_interval: TimeDelta = Field(default=TimeDelta(hours=6), description='failure_interval_help')
 
