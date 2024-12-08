@@ -97,18 +97,18 @@ class RealmRaidAssets:
 	# 用来分割不同的挑战位置 
 	C_PARTITION_2 = RuleClick(roi_front=(566,148,237,115), roi_back=(566,148,237,115), name="partition_2")
 	# 用来分割不同的挑战位置 
-	C_PARTITION_3 = RuleClick(roi_front=(895,147,232,116), roi_back=(895,147,232,116), name="partition_3")
+	C_PARTITION_3 = RuleClick(roi_front=(900,147,222,116), roi_back=(900,147,222,116), name="partition_3")
 	# 用来分割不同的挑战位置 
 	C_PARTITION_4 = RuleClick(roi_front=(236,283,229,124), roi_back=(236,283,229,124), name="partition_4")
 	# 用来分割不同的挑战位置 
 	C_PARTITION_5 = RuleClick(roi_front=(564,280,237,120), roi_back=(564,280,237,120), name="partition_5")
 	# 用来分割不同的挑战位置 
-	C_PARTITION_6 = RuleClick(roi_front=(899,282,232,120), roi_back=(899,282,232,120), name="partition_6")
+	C_PARTITION_6 = RuleClick(roi_front=(900,282,222,120), roi_back=(900,282,222,120), name="partition_6")
 	# 用来分割不同的挑战位置 
 	C_PARTITION_7 = RuleClick(roi_front=(233,416,236,121), roi_back=(233,416,236,121), name="partition_7")
 	# 用来分割不同的挑战位置 
 	C_PARTITION_8 = RuleClick(roi_front=(567,413,230,124), roi_back=(567,413,230,124), name="partition_8")
 	# 用来分割不同的挑战位置 
-	C_PARTITION_9 = RuleClick(roi_front=(897,418,230,116), roi_back=(897,418,230,116), name="partition_9")
+	C_PARTITION_9 = RuleClick(roi_front=(900,418,222,116), roi_back=(900,418,222,116), name="partition_9")
 
 

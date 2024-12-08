@@ -13,8 +13,8 @@
   },
   {
     "itemName": "partition_3",
-    "roiFront": "895,147,232,116",
-    "roiBack": "895,147,232,116",
+    "roiFront": "900,147,222,116",
+    "roiBack": "900,147,222,116",
     "description": "用来分割不同的挑战位置"
   },
   {
@@ -31,8 +31,8 @@
   },
   {
     "itemName": "partition_6",
-    "roiFront": "899,282,232,120",
-    "roiBack": "899,282,232,120",
+    "roiFront": "900,282,222,120",
+    "roiBack": "900,282,222,120",
     "description": "用来分割不同的挑战位置"
   },
   {
@@ -49,8 +49,8 @@
   },
   {
     "itemName": "partition_9",
-    "roiFront": "897,418,230,116",
-    "roiBack": "897,418,230,116",
+    "roiFront": "900,418,222,116",
+    "roiBack": "900,418,222,116",
     "description": "用来分割不同的挑战位置"
   }
 ]
