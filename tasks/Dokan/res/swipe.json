@@ -1,0 +1,9 @@
+[
+  {
+    "itemName": "dokan_list_up",
+    "roiFront": "1100,420,30,21",
+    "roiBack": "1240,240,30,21",
+    "mode": "default",
+    "description": "道馆选择界面 右侧侧边栏 手指向上滑动"
+  }
+]
