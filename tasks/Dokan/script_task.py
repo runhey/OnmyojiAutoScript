@@ -280,6 +280,7 @@ class ScriptTask(ExtendGreenMark, GameUi, SwitchSoul, DokanSceneDetector):
         # 正式进攻会设定 2s - 10s 的随机延迟，避免攻击间隔及其相近被检测为脚本。
         if cfg.dokan_config.random_delay:
             self.anti_detect(False, False, True)
+            self.device.stuck_record_add("BATTLE_STATUS_S")
 
         # 上面可能睡了一觉，重新截图
         self.screenshot()
@@ -849,7 +850,7 @@ class ScriptTask(ExtendGreenMark, GameUi, SwitchSoul, DokanSceneDetector):
                 return
         # 检测当前时间,如果在服务器时间左右[-1,2]范围内,则认为当前时间可能进行道馆,执行失败逻辑;否则直接设置时间
         now = datetime.now()
-        ser_time: Time = self.config.scheduler.server_update
+        ser_time: Time = self.config.dokan.scheduler.server_update
         if now.hour >= ser_time.hour - 1:
             # 在服务器时间之前,直接设定到服务器时间
             self.set_next_run(task="Dokan", server=False,

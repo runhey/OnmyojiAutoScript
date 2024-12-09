@@ -85,9 +85,13 @@ class ExtendGreenMark(GeneralBattle):
 
     @green_marker_detector
     def ex_green_mark(self, enable=True, mark_mode=GreenMarkType.GREEN_MAIN):
+        if not enable:
+            return
         return self.super_green_mark(enable=enable, mark_mode=mark_mode)
 
     def ex_green_mark_3_retry(self, enable=True, mark_mode=GreenMarkType.GREEN_MAIN):
+        if not enable:
+            return
         return self.ex_green_mark(enable=enable, mark_mode=mark_mode, detect_time=3, callback=self.super_green_mark,
                                   cbargs={'enable': enable, 'mark_mode': mark_mode})
 
