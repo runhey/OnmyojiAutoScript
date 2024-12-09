@@ -3,6 +3,7 @@
 # github https://github.com/runhey
 import time
 from cached_property import cached_property
+from datetime import datetime
 
 from module.exception import TaskEnd
 from module.logger import logger
@@ -37,6 +38,7 @@ class ScriptTask(GameUi, GeneralBattle, SwitchSoul, SecretAssets):
         return GeneralBattleConfig()
 
     def run(self):
+        self.check_time()
         secret: Secret = self.config.secret
         con = secret.secret_config
         if secret.switch_soul.enable:
@@ -267,6 +269,18 @@ class ScriptTask(GameUi, GeneralBattle, SwitchSoul, SecretAssets):
                 logger.warning('False battle')
                 self.ui_click_until_disappear(self.I_FALSE)
                 return False
+
+    def check_time(self) -> None:
+        """
+        周一早上不能打
+        @return:
+        """
+        time_now = datetime.now()
+        if time_now.weekday() == 0 and time_now.hour < 8:
+            self.set_next_run(task='Secret',
+                              finish=True,
+                              server=time_now.replace(hour=9, minute=0, second=0, microsecond=0))
+            raise TaskEnd('Secret')
 
 
 if __name__ == '__main__':
