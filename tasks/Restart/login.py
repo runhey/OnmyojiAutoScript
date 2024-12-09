@@ -197,8 +197,8 @@ class LoginHandler(BaseTask, RestartAssets):
             # 邮件
             # 判断是否勾选了收取邮件（不收取邮件可以查看每日收获）
             if self.config.restart.harvest_config.enable_mail:
-
-                if self.appear_then_click(self.I_HARVEST_MAIL, interval=3):
+                if self.appear_then_click(self.I_HARVEST_MAIL, interval=3) or\
+                        self.appear_then_click(self.I_HARVEST_MAIL_COPY, interval=3):
                     timer_harvest.reset()
                     self.wait_until_appear(self.I_HARVEST_MAIL_TITLE, wait_time=2)
                     if self.appear(self.I_HARVEST_MAIL_TITLE, interval=2.5):

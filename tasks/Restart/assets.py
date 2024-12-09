@@ -50,7 +50,9 @@ class RestartAssets:
 	# 宠物小屋关闭按钮 
 	I_HARVEST_BACK_PET_HOUSE = RuleImage(roi_front=(20,15,70,70), roi_back=(20,15,70,70), threshold=0.8, method="Template matching", file="./tasks/Restart/harvest/harvest_back_pet_house.png")
 	# 点击庭院阴阳师出现的姿度按钮 
-	I_HARVEST_ZIDU = RuleImage(roi_front=(785,475,135,135), roi_back=(785,475,135,135), threshold=0.8, method="Template matching", file="./tasks/Restart/harvest/harvest_zidu.png")
+	I_HARVEST_ZIDU = RuleImage(roi_front=(785,475,135,135), roi_back=(785,475,135,135), threshold=0.8, method="Template matching", file="./tasks/Restart/harvest/harvest_harvest_zidu.png")
+	# description 
+	I_HARVEST_MAIL_COPY = RuleImage(roi_front=(257,509,29,21), roi_back=(192,472,790,100), threshold=0.8, method="Template matching", file="./tasks/Restart/harvest/harvest_harvest_mail_copy.png")
 
 
 	# Click Rule Assets
