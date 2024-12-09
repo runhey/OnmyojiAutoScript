@@ -32,7 +32,7 @@ from tasks.Dokan.dokan_scene import DokanScene, DokanSceneDetector
 from tasks.Dokan.ex_green_mark import ExtendGreenMark
 from tasks.Dokan.utils import detect_safe_area2
 from tasks.GameUi.game_ui import GameUi
-from tasks.GameUi.page import page_shikigami_records, page_guild
+from tasks.GameUi.page import page_shikigami_records, page_guild, page_main
 
 
 class ScriptTask(ExtendGreenMark, GameUi, SwitchSoul, DokanSceneDetector):
@@ -183,6 +183,13 @@ class ScriptTask(ExtendGreenMark, GameUi, SwitchSoul, DokanSceneDetector):
                 logger.info(f"{current_scene} dokan_master_count:{count}")
                 if count <= 0:
                     self.quit_battle()
+                # 切换预设阵容
+                group, team = cfg.dokan_config.parse_preset_group(cfg.dokan_config.preset_group_2)
+                if cfg.dokan_config.switch_preset_enable and group:
+                    logger.info(f"Master_First:switch_preset_team{group},{team}")
+                    self.switch_preset_team(cfg.dokan_config.switch_preset_enable, group, team)
+                    self.wait_until_disappear(self.I_PRESET, interval=2)
+
                 battle_success = self.dokan_battle(cfg, count)
                 if count == 1 and battle_success:
                     # TEST 只打一次 应该是还在战斗界面 处于未准备界面(RYOU_DOKAN_SCENE_BATTLE_MASTER_SECOND)
@@ -205,10 +212,20 @@ class ScriptTask(ExtendGreenMark, GameUi, SwitchSoul, DokanSceneDetector):
                     # 退出战斗界面
                     self.quit_battle()
                     continue
+                # 切换预设阵容
+                group, team = cfg.dokan_config.parse_preset_group(cfg.dokan_config.preset_group_2)
+                if cfg.dokan_config.switch_preset_enable and group:
+                    logger.info(f"Master_Second:switch_preset_team{group},{team}")
+                    self.switch_preset_team(cfg.dokan_config.switch_preset_enable, group, team)
+
                 self.dokan_battle(cfg)
                 continue
             # 场景状态：进入战斗，待开始
             if current_scene == DokanScene.RYOU_DOKAN_SCENE_IN_FIELD:
+                group, team = cfg.dokan_config.parse_preset_group(cfg.dokan_config.preset_group_1)
+                if cfg.dokan_config.switch_preset_enable and group:
+                    logger.info(f"Normal Battle:switch_preset_team{group},{team}")
+                    self.switch_preset_team(cfg.dokan_config.switch_preset_enable, group, team)
                 # 战斗
                 self.dokan_battle(cfg)
                 # 战斗结束,尝试退出战斗界面
@@ -286,14 +303,14 @@ class ScriptTask(ExtendGreenMark, GameUi, SwitchSoul, DokanSceneDetector):
         self.screenshot()
         win = False
 
-        # 更换队伍
-        if not self.team_switched:
-            logger.info(f"switch team preset: enable={battle_config.preset_enable},"
-                        f" preset_group={battle_config.preset_group}, preset_team={battle_config.preset_team}")
-            self.switch_preset_team(battle_config.preset_enable, battle_config.preset_group, battle_config.preset_team)
-            self.team_switched = True
-            # 切完队伍后有时候会卡顿，先睡一觉，防止快速跳到绿标流程，导致未能成功绿标
-            time.sleep(3)
+        # # 更换队伍
+        # if not self.team_switched:
+        #     logger.info(f"switch team preset: enable={battle_config.preset_enable},"
+        #                 f" preset_group={battle_config.preset_group}, preset_team={battle_config.preset_team}")
+        #     self.switch_preset_team(battle_config.preset_enable, battle_config.preset_group, battle_config.preset_team)
+        #     self.team_switched = True
+        #     # 切完队伍后有时候会卡顿，先睡一觉，防止快速跳到绿标流程，导致未能成功绿标
+        #     time.sleep(3)
 
         # 等待准备按钮的出现
         self.wait_until_appear(self.I_PREPARE_HIGHLIGHT)
@@ -446,36 +463,27 @@ class ScriptTask(ExtendGreenMark, GameUi, SwitchSoul, DokanSceneDetector):
 
     def goto_main(self):
         """ 保持好习惯，一个任务结束了就返回庭院，方便下一任务的开始或者是出错重启
-         FIXME 退出道馆。注意：有的时候有退出确认框，有的时候没有。未找到规律。
-               先试试用确认框的，若是实在不行，就改成等道馆时间结束后，系统自动退出
-               但是如果出错了，需要重启任务时必须走GameUi.ui_goto(page_main)，
-               那样有或者无确认框不确定性还是会导致ui_goto()出错
+
+            任意庭院->道馆的界面返回庭院
         """
-
-        max_try = 3
+        from tasks.Component.GeneralInvite.assets import GeneralInviteAssets as gia
         while 1:
             self.screenshot()
-            if self.appear_then_click(GeneralBattle.I_EXIT, interval=1.5):
-                logger.info(f"Click {GeneralBattle.I_EXIT.name}")
+            if self.appear(self.I_CHECK_MAIN):
+                break
+            if self.appear(self.I_RYOU_DOKAN_QUIT_BATTLE_ENSURE):
+                # 借用下,猜测是一样的确定按钮,如果不一样,会卡住
+                self.ui_click_until_disappear(self.I_RYOU_DOKAN_QUIT_BATTLE_ENSURE, interval=2)
                 continue
-            # 点了后EXIT后，可能无确认框
-            if self.appear_then_click(self.I_RYOU_DOKAN_EXIT_ENSURE, interval=1.5):
-                logger.info(f"Click {self.I_RYOU_DOKAN_EXIT_ENSURE}")
-                break
-            else:
-                max_try -= 1
-                time.sleep(1.2)
-
-            if max_try <= 0:
-                break
-
-        # 退出道馆地图
-        while 1:
-            self.screenshot()
-            # 确认后会跳到竂地图，再点击左上角的蓝色的返回，但是不知道这个返回有没有确认
-            if self.appear_then_click(GameUi.I_BACK_BL, interval=2.5):
-                logger.info(f"Click {GameUi.I_BACK_BL.name}")
-                break
+            if self.appear(gia.I_BACK_YELLOW_SEA):
+                self.click(gia.I_BACK_YELLOW_SEA, interval=3)
+                continue
+            if self.appear(self.I_BACK_BL):
+                self.click(self.I_BACK_BL, interval=3)
+                continue
+            if self.appear(self.I_BACK_Y):
+                self.click(self.I_BACK_Y, interval=3)
+                continue
 
     def goto_dokan_map(self):
         """
@@ -954,4 +962,3 @@ if __name__ == "__main__":
     img = cv2.imread(r'E:\1.png')
     res = t.I_RYOU_DOKAN_START_CHALLENGE.match(img, threshold=0.8)
     print(res)
-

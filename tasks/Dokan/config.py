@@ -3,6 +3,7 @@
 # @author   jackyhwei
 # @note     draft version without full test
 # github    https://github.com/roarhill/oas
+import re
 from datetime import datetime
 from enum import Enum
 
@@ -143,8 +144,23 @@ class DokanConfig(BaseModel):
     # 道馆系数,赏金/人数 根据喜好配置
     find_dokan_score: float = Field(default=4.6, description='dokan_score_help')
 
-    # 单词查找道馆时,最大刷新次数.超过此次数后,若还未找到符合要求的,会随机选择一个道馆
+    # 单次查找道馆时,最大刷新次数.超过此次数后,若还未找到符合要求的,会随机选择一个道馆
     find_dokan_refresh_count: int = Field(default=7, description='find_dokan_refresh_count_help')
+
+    # 是否切换阵容(速攻阵容/挂机阵容)
+    switch_preset_enable: bool = Field(default=False, description='switch_preset_enable_help')
+
+    # 速攻阵容 格式:n,n
+    preset_group_1: str = Field(default="", description='preset_group_help')
+    # 挂机阵容
+    preset_group_2: str = Field(default="", description='preset_group_help')
+
+    def parse_preset_group(self, value: str):
+        re_str = r"([1-7])\,([1-5])"
+        tmp = re.match(re_str, value)
+        if not tmp:
+            return None, None
+        return int(tmp.group(1)), int(tmp.group(2))
 
 
 class Dokan(ConfigBase):
