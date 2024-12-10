@@ -1,10 +1,9 @@
 from cached_property import cached_property
 
-from module.atom.image import RuleImage
 from module.atom.animate import RuleAnimate
+from module.atom.image import RuleImage
 from module.base.timer import Timer
 from module.logger import logger
-
 from tasks.Exploration.base import BaseExploration, Scene
 from tasks.Exploration.version import HighLight
 
@@ -61,7 +60,13 @@ class WQExplore(BaseExploration, HighLight):
             # 探索里面
             elif scene == Scene.MAIN:
                 if not explore_init:
-                    self.ui_click(self.I_E_AUTO_ROTATE_OFF, stop=self.I_E_AUTO_ROTATE_ON)
+                    count=0
+                    while count<5:
+                        if self.appear(self.I_E_AUTO_ROTATE_ON):
+                            break
+                        if self.appear(self.I_E_AUTO_ROTATE_OFF, interval=1.5):
+                            self.click(self.I_E_AUTO_ROTATE_OFF)
+                            count+=1
                     explore_init = True
                     continue
                 # 小纸人

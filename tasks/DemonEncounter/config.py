@@ -37,7 +37,7 @@ class DemonConfig(BaseModel):
 
 
 class UtilizeScheduler(Scheduler):
-    priority = Field(default=2, description='priority_help')
+    priority: int = Field(default=2, description='priority_help')
 
 class DemonEncounter(ConfigBase):
     scheduler: UtilizeScheduler = Field(default_factory=UtilizeScheduler)

@@ -12,7 +12,7 @@ from tasks.Component.config_base import ConfigBase, TimeDelta
 from tasks.Utils.config_enum import ShikigamiClass
 
 class ActivationScheduler(Scheduler):
-    priority = Field(default=2, description='priority_help')
+    priority: int = Field(default=2, description='priority_help')
     success_interval: TimeDelta = Field(default=TimeDelta(days=1), description='success_interval_help')
     failure_interval: TimeDelta = Field(default=TimeDelta(hours=10), description='failure_interval_help')
 
