@@ -329,9 +329,15 @@ class Handle:
         :return:  出错返回None
         """
         if self.emulator_family == EmulatorFamily.FAMILY_MUMU:
-            # 使用正则匹配12 来判定是不是mumu12这并不是一个好的方法
-            name = self.root_node.children[0].name
-            num = self.root_node.children[0].num
+            # 使用正则匹配12 来判定是不是mumu12这并不是一个好的方法         
+            name: str = ""
+            num: int = 0
+            if isinstance(self.root_node.children, tuple) and len(self.root_node.children) > 0:
+                name = self.root_node.children[0].name
+                num = self.root_node.children[0].num
+            else:
+                name = self.root_node.name
+                num = self.root_node.num
             if name == 'MuMuPlayer':
                 logger.info('The emulator is MuMu模拟器12')
                 return num
