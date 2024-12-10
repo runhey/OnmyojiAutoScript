@@ -120,8 +120,6 @@ class WantedQuestsAssets:
 	I_WQ_COOPERATION_TYPE_CAT_FOOD_3 = RuleImage(roi_front=(790,505,180,90), roi_back=(790,505,180,90), threshold=0.8, method="Template matching", file="./tasks/WantedQuests/invite/wq_cooperation_type_cat_food.png")
 	# 从左到右第三个协作任务的类型 
 	I_WQ_COOPERATION_TYPE_SUSHI_3 = RuleImage(roi_front=(790,505,180,90), roi_back=(790,505,180,90), threshold=0.8, method="Template matching", file="./tasks/WantedQuests/invite/wq_cooperation_type_sushi.png")
-	# 好友列表刷新缓慢,用作刷新出来的标志 
-	I_WQ_INVITE_FRIEND_LIST_APPEAR = RuleImage(roi_front=(400,240,40,40), roi_back=(400,240,40,40), threshold=0.9, method="Template matching", file="./tasks/WantedQuests/invite/wq_invite_friend_list_appear.png")
 
 
 	# Ocr Rule Assets

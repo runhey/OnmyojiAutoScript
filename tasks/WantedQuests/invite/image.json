@@ -250,14 +250,5 @@
     "method": "Template matching",
     "threshold": 0.8,
     "description": "从左到右第三个协作任务的类型"
-  },
-  {
-    "itemName": "wq_invite_friend_list_appear",
-    "imageName": "wq_invite_friend_list_appear.png",
-    "roiFront": "400,240,40,40",
-    "roiBack": "400,240,40,40",
-    "method": "Template matching",
-    "threshold": 0.9,
-    "description": "好友列表刷新缓慢,用作刷新出来的标志"
   }
 ]
