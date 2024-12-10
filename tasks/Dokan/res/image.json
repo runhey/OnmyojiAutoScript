@@ -36,6 +36,15 @@
     "description": "是否已经成功进入道馆，上面中间的“道馆突破”文字"
   },
   {
+    "itemName": "ryou_dokan_shikigami",
+    "imageName": "res_ryou_dokan_shikigami.png",
+    "roiFront": "960,580,140,120",
+    "roiBack": "960,580,140,120",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "道馆内式神录"
+  },
+  {
     "itemName": "ryou_dokan_attack_priority",
     "imageName": "res_ryou_dokan_priority.png",
     "roiFront": "666,672,58,25",
@@ -403,7 +412,8 @@
     "method": "Template matching",
     "threshold": 0.9,
     "description": "今日道馆已挑战成功"
-  },{
+  },
+  {
     "itemName": "ryou_dokan_remain_attack_count_zero",
     "imageName": "res_ryou_dokan_remain_attack_count_zero.png",
     "roiFront": "650,610,110,80",

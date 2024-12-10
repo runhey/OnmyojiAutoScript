@@ -40,6 +40,7 @@ class ScriptTask(ExtendGreenMark, GameUi, SwitchSoul, DokanSceneDetector):
     attack_priority_selected: bool = False
     team_switched: bool = False
     green_mark_done: bool = False
+    switch_soul_done: bool = False
 
     @cached_property
     def _attack_priorities(self) -> list:
@@ -66,15 +67,15 @@ class ScriptTask(ExtendGreenMark, GameUi, SwitchSoul, DokanSceneDetector):
                 self.next_run(True)
                 return
 
-        # 自动换御魂
-        if cfg.switch_soul_config.enable:
-            self.ui_get_current_page()
-            self.ui_goto(page_shikigami_records)
-            self.run_switch_soul(cfg.switch_soul_config.switch_group_team)
-        if cfg.switch_soul_config.enable_switch_by_name:
-            self.ui_get_current_page()
-            self.ui_goto(page_shikigami_records)
-            self.run_switch_soul_by_name(cfg.switch_soul_config.group_name, cfg.switch_soul_config.team_name)
+        # # 自动换御魂
+        # if cfg.switch_soul_config.enable:
+        #     self.ui_get_current_page()
+        #     self.ui_goto(page_shikigami_records)
+        #     self.run_switch_soul(cfg.switch_soul_config.switch_group_team)
+        # if cfg.switch_soul_config.enable_switch_by_name:
+        #     self.ui_get_current_page()
+        #     self.ui_goto(page_shikigami_records)
+        #     self.run_switch_soul_by_name(cfg.switch_soul_config.group_name, cfg.switch_soul_config.team_name)
 
         # 初始化相关动态参数,从配置文件读取相关记录,如果没有当天的记录则设置为默认值
         cfg.attack_count_config.init_attack_count(callback=self.config.save)
@@ -146,6 +147,8 @@ class ScriptTask(ExtendGreenMark, GameUi, SwitchSoul, DokanSceneDetector):
                     self.dokan_choose_attack_priority(attack_priority=attack_priority)
                     self.attack_priority_selected = True
                     continue
+                self.switch_soul_in_dokan()
+
                 self.device.click_record_clear()
                 self.device.stuck_record_clear()
                 sleep(2)
@@ -153,6 +156,8 @@ class ScriptTask(ExtendGreenMark, GameUi, SwitchSoul, DokanSceneDetector):
             # 场景状态：等待馆主战开始
             if current_scene == DokanScene.RYOU_DOKAN_SCENE_BOSS_WAITING:
                 logger.debug(f"Ryou DOKAN boss battle waiting...")
+                self.switch_soul_in_dokan()
+
                 self.device.stuck_record_clear()
                 if cfg.dokan_config.try_start_dokan and cfg.attack_count_config.attack_dokan_master_count() == 0:
                     # 有权限且当前道馆突破 不再打馆主,直接放弃突破
@@ -235,6 +240,8 @@ class ScriptTask(ExtendGreenMark, GameUi, SwitchSoul, DokanSceneDetector):
                 continue
             # 场景状态：如果CD中，开始加油
             if current_scene == DokanScene.RYOU_DOKAN_SCENE_CD:
+                self.switch_soul_in_dokan()
+
                 self.device.stuck_record_clear()
                 logger.info(f"Fail CD: start cheering={cfg.dokan_config.dokan_auto_cheering_while_cd}..")
                 if cfg.dokan_config.dokan_auto_cheering_while_cd:
@@ -829,6 +836,22 @@ class ScriptTask(ExtendGreenMark, GameUi, SwitchSoul, DokanSceneDetector):
             if self.appear(self.I_RYOU_DOKAN_FAILED_VOTE_KEEP_BOUNTY):
                 self.ui_click_until_disappear(self.I_RYOU_DOKAN_FAILED_VOTE_KEEP_BOUNTY)
 
+    def switch_soul_in_dokan(self):
+        if self.switch_soul_done:
+            return
+        self.ui_click_until_disappear(self.I_RYOU_DOKAN_SHIKIGAMI, interval=2)
+
+        if self.config.dokan.switch_soul_config.enable:
+            self.run_switch_soul(self.config.dokan.switch_soul_config.switch_group_team)
+        if self.config.dokan.switch_soul_config.enable_switch_by_name:
+            self.run_switch_soul_by_name(self.config.dokan.switch_soul_config.group_name,
+                                         self.config.dokan.switch_soul_config.team_name)
+
+        self.switch_soul_done = True
+        # back to dokan
+        from tasks.GameUi.assets import GameUiAssets as gua
+        self.ui_click_until_disappear(gua.I_BACK_Y, interval=2)
+
     def next_run(self, skip_today=False, is_dokan_activated=False):
         """
             设置下次运行时间
@@ -859,11 +882,11 @@ class ScriptTask(ExtendGreenMark, GameUi, SwitchSoul, DokanSceneDetector):
         # 检测当前时间,如果在服务器时间左右[-1,2]范围内,则认为当前时间可能进行道馆,执行失败逻辑;否则直接设置时间
         now = datetime.now()
         ser_time: Time = self.config.dokan.scheduler.server_update
-        if now.hour >= ser_time.hour - 1:
+        if now.hour < ser_time.hour or (now.hour == ser_time.hour and now.minute < ser_time.minute):
             # 在服务器时间之前,直接设定到服务器时间
             self.set_next_run(task="Dokan", server=False,
                               target=now.replace(hour=ser_time.hour, minute=ser_time.minute, second=ser_time.second))
-        elif now.hour <= ser_time.hour + 2:
+        elif now.hour >= ser_time.hour + 2:
             # 在服务器时间之后,当作已经打过,设定到明天
             self.set_next_run(task="Dokan", finish=True, success=True, server=True)
         else:
