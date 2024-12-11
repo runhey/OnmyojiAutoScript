@@ -27,8 +27,8 @@
     "description": "一键追踪"
   },
   {
-    "itemName": "tarce_disenable",
-    "imageName": "wq_tarce_disenable.png",
+    "itemName": "trace_disable",
+    "imageName": "wq_trace_disable.png",
     "roiFront": "1091,586,108,70",
     "roiBack": "1091,586,108,70",
     "method": "Template matching",
@@ -106,5 +106,41 @@
     "method": "Template matching",
     "threshold": 0.8,
     "description": "判断是否还有任务"
+  },
+  {
+    "itemName": "wq_trace_one_enable",
+    "imageName": "wq_trace_one_enable.png",
+    "roiFront": "160,175,120,60",
+    "roiBack": "160,175,120,60",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "庭院悬赏任务界面 单个任务点开后 左上角是否追踪"
+  },
+  {
+    "itemName": "wq_trace_one_disable",
+    "imageName": "wq_trace_one_disable.png",
+    "roiFront": "160,175,120,60",
+    "roiBack": "160,175,120,60",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "庭院悬赏任务界面 单个任务点开后 左上角是否追踪"
+  },
+  {
+    "itemName": "wq_trace_one_check_opened",
+    "imageName": "wq_trace_one_check_opened.png",
+    "roiFront": "510,175,210,60",
+    "roiBack": "510,175,210,60",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "庭院悬赏任务界面 单个任务点开后的界面 是否打开的 标志"
+  },
+  {
+    "itemName": "wq_trace_one_realworld",
+    "imageName": "wq_trace_one_realworld.png",
+    "roiFront": "850,470,180,180",
+    "roiBack": "850,470,180,180",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "庭院悬赏任务界面 单个任务点开后的界面 是否为现世任务标志"
   }
 ]
