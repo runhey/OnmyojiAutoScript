@@ -502,5 +502,14 @@
     "method": "Template matching",
     "threshold": 0.8,
     "description": "寮境中上部的标志"
+  },
+  {
+    "itemName": "ryou_dokan_dokan_quit",
+    "imageName": "res_ryou_dokan_dokan_quit.png",
+    "roiFront": "0,2,80,80",
+    "roiBack": "0,2,80,80",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "左上角退出按钮-"
   }
 ]

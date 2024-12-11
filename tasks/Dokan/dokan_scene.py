@@ -108,7 +108,8 @@ class DokanSceneDetector(DokanAssets, BaseTask, GeneralBattleAssets):
         if self.appear(self.I_RYOU_DOKAN_IN_FIELD):
             return True, DokanScene.RYOU_DOKAN_SCENE_IN_FIELD
         # 状态：战斗结算，可能是打完小朋友了，也可能是失败了。
-        if self.appear(self.I_RYOU_DOKAN_BATTLE_OVER):
+        if self.appear(self.I_RYOU_DOKAN_BATTLE_OVER) or self.appear(GeneralBattleAssets.I_WIN) \
+                or self.appear(GeneralBattleAssets.I_FALSE):
             return True, DokanScene.RYOU_DOKAN_SCENE_BATTLE_OVER
 
         # # 状态：加油中，左下角有鼓

@@ -146,6 +146,8 @@ class DokanAssets:
 	I_RIGHTPAD_POINT_BOUNTY = RuleImage(roi_front=(1050,0,230,0), roi_back=(1050,0,230,50), threshold=0.8, method="Template matching", file="./tasks/Dokan/res/res_ryou_dokan_rightpad_point_bounty.png")
 	# 寮境中上部的标志 
 	I_RYOU_DOKAN_CENTER_TOP = RuleImage(roi_front=(500,20,300,70), roi_back=(500,20,300,70), threshold=0.8, method="Template matching", file="./tasks/Dokan/res/res_ryou_dokan_center_top.png")
+	# 左上角退出按钮- 
+	I_RYOU_DOKAN_DOKAN_QUIT = RuleImage(roi_front=(0,2,80,80), roi_back=(0,2,80,80), threshold=0.8, method="Template matching", file="./tasks/Dokan/res/res_ryou_dokan_dokan_quit.png")
 
 
 	# List Rule Assets

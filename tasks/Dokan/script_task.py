@@ -33,6 +33,7 @@ from tasks.Dokan.ex_green_mark import ExtendGreenMark
 from tasks.Dokan.utils import detect_safe_area2
 from tasks.GameUi.game_ui import GameUi
 from tasks.GameUi.page import page_shikigami_records, page_guild, page_main
+from tasks.Hyakkiyakou.utils.fast_device import FastDevice
 
 
 class ScriptTask(ExtendGreenMark, GameUi, SwitchSoul, DokanSceneDetector):
@@ -119,6 +120,7 @@ class ScriptTask(ExtendGreenMark, GameUi, SwitchSoul, DokanSceneDetector):
             if current_scene == DokanScene.RYOU_DOKAN_SCENE_BATTLE_OVER:
                 # 随便点击个地方退出奖励界面
                 self.click(self.C_DOKAN_TOPPA_RANK_CLOSE_AREA, interval=2)
+                sleep(2)
                 continue
             # 道馆结束弹窗 突破排名
             if current_scene == DokanScene.RYOU_DOKAN_SCENE_TOPPA_RANK:
@@ -138,7 +140,6 @@ class ScriptTask(ExtendGreenMark, GameUi, SwitchSoul, DokanSceneDetector):
             if current_scene == DokanScene.RYOU_DOKAN_SCENE_FOUND_DOKAN:
                 self.enter_dokan()
                 continue
-
             # 场景状态：道馆集结中
             if current_scene == DokanScene.RYOU_DOKAN_SCENE_GATHERING:
                 logger.debug(f"Ryou DOKAN gathering...")
@@ -193,7 +194,7 @@ class ScriptTask(ExtendGreenMark, GameUi, SwitchSoul, DokanSceneDetector):
                 if cfg.dokan_config.switch_preset_enable and group:
                     logger.info(f"Master_First:switch_preset_team{group},{team}")
                     self.switch_preset_team(cfg.dokan_config.switch_preset_enable, group, team)
-                    self.wait_until_disappear(self.I_PRESET, interval=2)
+                    self.wait_until_appear(self.I_PRESET, False, 3)
 
                 battle_success = self.dokan_battle(cfg, count)
                 if count == 1 and battle_success:
@@ -224,6 +225,8 @@ class ScriptTask(ExtendGreenMark, GameUi, SwitchSoul, DokanSceneDetector):
                     self.switch_preset_team(cfg.dokan_config.switch_preset_enable, group, team)
 
                 self.dokan_battle(cfg)
+                self.quit_battle()
+                self.green_mark_done = False
                 continue
             # 场景状态：进入战斗，待开始
             if current_scene == DokanScene.RYOU_DOKAN_SCENE_IN_FIELD:
@@ -473,7 +476,6 @@ class ScriptTask(ExtendGreenMark, GameUi, SwitchSoul, DokanSceneDetector):
 
             任意庭院->道馆的界面返回庭院
         """
-        from tasks.Component.GeneralInvite.assets import GeneralInviteAssets as gia
         while 1:
             self.screenshot()
             if self.appear(self.I_CHECK_MAIN):
@@ -482,8 +484,8 @@ class ScriptTask(ExtendGreenMark, GameUi, SwitchSoul, DokanSceneDetector):
                 # 借用下,猜测是一样的确定按钮,如果不一样,会卡住
                 self.ui_click_until_disappear(self.I_RYOU_DOKAN_QUIT_BATTLE_ENSURE, interval=2)
                 continue
-            if self.appear(gia.I_BACK_YELLOW_SEA):
-                self.click(gia.I_BACK_YELLOW_SEA, interval=3)
+            if self.appear(self.I_RYOU_DOKAN_DOKAN_QUIT):
+                self.click(self.I_RYOU_DOKAN_DOKAN_QUIT, interval=3)
                 continue
             if self.appear(self.I_BACK_BL):
                 self.click(self.I_BACK_BL, interval=3)
@@ -839,6 +841,7 @@ class ScriptTask(ExtendGreenMark, GameUi, SwitchSoul, DokanSceneDetector):
     def switch_soul_in_dokan(self):
         if self.switch_soul_done:
             return
+        logger.info("start switch soul...")
         self.ui_click_until_disappear(self.I_RYOU_DOKAN_SHIKIGAMI, interval=2)
 
         if self.config.dokan.switch_soul_config.enable:
@@ -862,11 +865,7 @@ class ScriptTask(ExtendGreenMark, GameUi, SwitchSoul, DokanSceneDetector):
         @param skip_today: 是否跳过今天,True->当作当天的道馆已成功打掉,False->无效
                             为了跳过周五->周天
         @type skip_today: bool
-        @param is_dokan_activated: 道馆已开启->True->是否需要开启第二次道馆->False->道馆任务成功完成
-                                        |                           |
-                                        |                           |->True--
-                                        |                                   |
-                                        |----------------------------------->->道馆任务失败
+        @param is_dokan_activated:
         @type is_dokan_activated: bool
         @return:
         @rtype:
@@ -874,25 +873,27 @@ class ScriptTask(ExtendGreenMark, GameUi, SwitchSoul, DokanSceneDetector):
         if skip_today:
             self.set_next_run(task="Dokan", finish=False, success=True, server=True)
             return
-        if is_dokan_activated:
-            if self.config.dokan.attack_count_config.remain_attack_count == 0 and \
-                    self.config.dokan.attack_count_config.daily_attack_count == 2:
-                self.set_next_run(task="Dokan", finish=False, success=True, server=True)
-                return
-        # 检测当前时间,如果在服务器时间左右[-1,2]范围内,则认为当前时间可能进行道馆,执行失败逻辑;否则直接设置时间
+        # 道馆没有开启
         now = datetime.now()
         ser_time: Time = self.config.dokan.scheduler.server_update
-        if now.hour < ser_time.hour or (now.hour == ser_time.hour and now.minute < ser_time.minute):
-            # 在服务器时间之前,直接设定到服务器时间
-            self.set_next_run(task="Dokan", server=False,
-                              target=now.replace(hour=ser_time.hour, minute=ser_time.minute, second=ser_time.second))
-        elif now.hour >= ser_time.hour + 2:
-            # 在服务器时间之后,当作已经打过,设定到明天
-            self.set_next_run(task="Dokan", finish=True, success=True, server=True)
-        else:
-            #
-            self.set_next_run(task='Dokan', finish=True, success=False, server=False)
-        return
+        if not is_dokan_activated:
+            # 在服务器时间之前,设置为服务器时间
+            if now.hour < ser_time.hour or (now.hour == ser_time.hour and now.minute < ser_time.minute):
+                self.set_next_run(task="Dokan", target=now.replace(hour=ser_time.hour, minute=ser_time.minute))
+                return
+            # 在服务器时间之后,如超过两小时,则直接当作成功;未超过则当作失败
+            if now.hour - ser_time.hour > 2:
+                self.set_next_run(task="Dokan", finish=False, success=True, server=True)
+                return
+        # 道馆已开启
+        if is_dokan_activated:
+            # 如果打两次,当前是第一次,当作此次道馆失败
+            if self.config.dokan.attack_count_config.remain_attack_count == 1 and self.config.dokan.attack_count_config.daily_attack_count == 2:
+                self.set_next_run(task="Dokan", finish=True, success=False, server=False)
+                return
+            # 其余情况当作成功
+            self.set_next_run(task="Dokan", finish=False, success=True, server=True)
+            pass
 
     def position_offset(self, src, offset: tuple):
         return (src[0] + offset[0], src[1] + offset[1]
