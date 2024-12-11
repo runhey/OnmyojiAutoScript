@@ -508,6 +508,9 @@ class ScriptTask(ExtendGreenMark, GameUi, SwitchSoul, DokanSceneDetector):
                 return True
             if cur_scene == DokanScene.RYOU_DOKAN_RYOU:
                 if not try_start_dokan:
+                    # 等待左侧活动列表弹出
+                    self.wait_until_stable(self.I_RYOU_DOKAN_ACTIVATED, Timer(0.5, 2), Timer(5, 10))
+
                     # 尝试通过已开启活动列表中查找道馆
                     if self.appear(self.I_RYOU_DOKAN_ACTIVATED):
                         self.ui_click_until_disappear(self.I_RYOU_DOKAN_ACTIVATED)
