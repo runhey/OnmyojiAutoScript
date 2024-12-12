@@ -129,6 +129,15 @@ class ScriptTask(ExtendGreenMark, GameUi, SwitchSoul, DokanSceneDetector):
 
             # 场景状态：寻找合适道馆中
             if current_scene == DokanScene.RYOU_DOKAN_SCENE_FINDING_DOKAN:
+                # NOTE 只在周一尝试建立道馆
+                if datetime.now().weekday() == 0:
+                    self.creat_dokan()
+
+                # 更新可挑战次数 可挑战次数为<=0,当作道馆成功完成
+                count = self.update_remain_attack_count()
+                if count <= 0:
+                    is_dokan_activated = True
+                    break
                 # 寻找合适道馆,找不到直接退出
                 if not self.find_dokan(self.config.dokan.dokan_config.find_dokan_score):
                     is_dokan_activated = False
@@ -327,6 +336,13 @@ class ScriptTask(ExtendGreenMark, GameUi, SwitchSoul, DokanSceneDetector):
 
         while count >= 0:
             self.screenshot()
+
+            # 击败馆主后出现的 带成功失败的 突破排名 列表
+            if self.appear(self.I_RYOU_DOKAN_TOPPA_RANK):
+                logger.info("Dokan challenge success / failed")
+                # 只是点击尝试关闭改弹窗
+                self.click(self.C_DOKAN_TOPPA_RANK_CLOSE_AREA, interval=2)
+                continue
 
             # 如果出现赢 就点击
             if self.appear(GeneralBattle.I_WIN):
@@ -570,15 +586,6 @@ class ScriptTask(ExtendGreenMark, GameUi, SwitchSoul, DokanSceneDetector):
             return False
         if cur_scene != DokanScene.RYOU_DOKAN_SCENE_FINDING_DOKAN:
             return True
-
-        # NOTE 只在周一尝试建立道馆
-        if datetime.now().weekday() == 0:
-            self.creat_dokan()
-
-        # 更新可挑战次数
-        count = self.update_remain_attack_count()
-        if count <= 0:
-            return False
 
         # 刷新按钮点击次数
         num_fresh = 0
@@ -888,15 +895,19 @@ class ScriptTask(ExtendGreenMark, GameUi, SwitchSoul, DokanSceneDetector):
             if now.hour - ser_time.hour > 2:
                 self.set_next_run(task="Dokan", finish=False, success=True, server=True)
                 return
+            # 时间在道馆开启时间附近，3分钟后执行
+
+            self.set_next_run(task="Dokan", target=now + config.dokan.scheduler.failure_interval)
         # 道馆已开启
         if is_dokan_activated:
-            # 如果打两次,当前是第一次,当作此次道馆失败
+            # 如果打两次,当前是第一次,设置为3分钟后运行
+            #   # 本来以为server为False(finish=True,success=False,server=False)就不会变成明天，谁知道还是变成明天
+            #   # 逻辑太复杂,不如直接target，简单点
             if self.config.dokan.attack_count_config.remain_attack_count == 1 and self.config.dokan.attack_count_config.daily_attack_count == 2:
-                self.set_next_run(task="Dokan", finish=True, success=False, server=False)
+                self.set_next_run(task="Dokan", target=now + config.dokan.scheduler.failure_interval)
                 return
             # 其余情况当作成功
             self.set_next_run(task="Dokan", finish=False, success=True, server=True)
-            pass
 
     def position_offset(self, src, offset: tuple):
         return (src[0] + offset[0], src[1] + offset[1]
