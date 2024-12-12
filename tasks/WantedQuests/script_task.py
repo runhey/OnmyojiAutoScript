@@ -399,7 +399,7 @@ class ScriptTask(WQExplore, SecretScriptTask, WantedQuestsAssets):
         self.invite_random(self.I_WQ_INVITE_2)
         self.invite_random(self.I_WQ_INVITE_3)
 
-    def all_cooperation_invite(self, name: str=None):
+    def all_cooperation_invite(self, name_all: str = None):
         """
             所有的协作任务依次邀请
             如果配置了只完成协作任务 还会将该任务设置为追踪
@@ -430,8 +430,10 @@ class ScriptTask(WQExplore, SecretScriptTask, WantedQuestsAssets):
            '''
             index = 0
             item['inviteResult'] = False
-            if name is None:
+            if name_all is None:
                 name = self.get_invite_vip_name(item['type'])
+            else:
+                name = name_all
             logger.warning("find cooperationType %s ,start invite %s", item['type'], name)
             while index < 5:
                 if self.cooperation_invite(item['inviteBtn'], name):
@@ -562,5 +564,3 @@ if __name__ == '__main__':
     t.screenshot()
 
     t.run()
-
-
