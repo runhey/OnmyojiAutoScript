@@ -36,13 +36,22 @@
     "description": "道馆里找文字：后挑战馆主"
   },
   {
-    "itemName": "dokan_succeeded",
-    "roiFront": "655,76,49,28",
-    "roiBack": "655,76,49,28",
+    "itemName": "dokan_rightpad_bounty",
+    "roiFront": "0,0,0,0",
+    "roiBack": "0,0,0,0",
+    "mode": "Single",
+    "method": "Default",
+    "keyword": "",
+    "description": "查找道馆时,右侧边栏中的赏金"
+  },
+
+  {
+    "itemName": "dokan_center_people_number",
+    "roiFront": "0,0,0,0",
+    "roiBack": "0,0,0,0",
     "mode": "Full",
     "method": "Default",
-    "keyword": "关闭",
-    "description": "道馆里找文字：后关闭"
+    "keyword": "",
+    "description": "查找道馆时,中间卡片上防守人数"
   }
-
 ]
