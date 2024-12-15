@@ -11,7 +11,7 @@ anytree==2.8.0
 pywin32==306
 zerorpc==0.6.3
 wrapt==1.15.0
-pydantic==1.10.7
+pydantic==2.10.0
 inflection==0.5.1
 tqdm==4.65.0
 ppocr-onnx==0.0.3.9

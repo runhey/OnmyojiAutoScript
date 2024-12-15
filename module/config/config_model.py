@@ -62,6 +62,7 @@ from tasks.GoryouRealm.config import GoryouRealm
 from tasks.Hyakkiyakou.config import Hyakkiyakou
 from tasks.HeroTest.config import HeroTest
 
+from tasks.FindJade.config import FindJade
 # ----------------------------------------------------------------------------------------------------------------------
 
 # 每周任务---------------------------------------------------------------------------------------------------------------
@@ -119,6 +120,7 @@ class ConfigModel(ConfigBase):
     goryou_realm: GoryouRealm = Field(default_factory=GoryouRealm)
     hyakkiyakou: Hyakkiyakou = Field(default_factory=Hyakkiyakou)
     hero_test: HeroTest = Field(default_factory=HeroTest)
+    find_jade: FindJade = Field(default_factory=FindJade)
 
     # 这些是每周任务
     true_orochi: TrueOrochi = Field(default_factory=TrueOrochi)
@@ -134,10 +136,6 @@ class ConfigModel(ConfigBase):
     dokan: Dokan = Field(default_factory=Dokan)
     abyss_shadows: AbyssShadows = Field(default_factory=AbyssShadows)
 
-    # @validator('script')
-    # def script_validator(cls, v):
-    #     if v is None:
-    #         return Script()
 
     def __init__(self, config_name: str=None) -> None:
         """
@@ -225,7 +223,7 @@ class ConfigModel(ConfigBase):
 
         :return:
         """
-        self.write_json(self.config_name, self.dict())
+        self.write_json(self.config_name, self.model_dump())
 
     @staticmethod
     def type(key: str) -> str:
@@ -242,16 +240,6 @@ class ConfigModel(ConfigBase):
         else:
             classname = re.findall(r"'([^']*)'", field_type)[0]
             return classname
-
-    # @root_validator
-    # def on_on_property_change(cls, values):
-    #     """
-    #     当属性改变时保存
-    #     :param values:
-    #     :return:
-    #     """
-    #     logger.info(f'property change auto save')
-    #     cls.save()
 
     @staticmethod
     def deep_get(obj, keys: str, default=None):
@@ -298,21 +286,20 @@ class ConfigModel(ConfigBase):
             logger.warning(f'{task} is no inexistence')
             return {}
 
-        def properties_groups(sch) -> dict:
-            properties = {}
-            for key, value in sch["properties"].items():
-                properties[key] = re.search(r"/([^/]+)$", value['$ref']).group(1)
-            return properties
-
         def extract_groups(sch):
             # 从schema 中提取未解析的group的数据
-            properties = properties_groups(sch)
+            # properties = properties_groups(sch)
+            results = {}
+            properties = {}
+            for key, value in sch["properties"].items():
+                if 'items' in value:
+                    properties[key] = re.search(r"/([^/]+)$", value['items']['$ref']).group(1)
+                else:
+                    properties[key] = re.search(r"/([^/]+)$", value['$ref']).group(1)
 
-            result = {}
             for key, value in properties.items():
-                result[key] = sch["definitions"][value]
-
-            return result
+                results[key] = sch["$defs"][value]
+            return results
 
         def merge_value(groups, jsons, definitions) -> list[dict]:
             # 将 groups的参数，同导出的json一起合并, 用于前端显示
@@ -326,20 +313,26 @@ class ConfigModel(ConfigBase):
                 item["default"] = value["default"]
                 item["value"] = jsons[key] if key in jsons else value["default"]
                 item["type"] = value["type"] if "type" in value else "enum"
-                if 'allOf' in value:
-                    # list
-                    enum_key = re.search(r"/([^/]+)$", value['allOf'][0]['$ref']).group(1)
+                if '$ref' in value:  # list
+                    enum_key = re.search(r"/([^/]+)$", value['$ref']).group(1)
                     item["enumEnum"] = definitions[enum_key]["enum"]
-                # TODO: 最大值最小值
+                # if 'allOf' in value:
+                #     enum_key = re.search(r"/([^/]+)$", value['allOf'][0]['$ref']).group(1)
+                #     item["enumEnum"] = definitions[enum_key]["enum"]
                 result.append(item)
             return result
 
-        schema = task.schema()
+        schema = task.model_json_schema()
         groups = extract_groups(schema)
+        groups_value = groups.copy()
 
         result: dict[str, list] = {}
-        for key, value in task.dict().items():
-            result[key] = merge_value(groups[key], value, schema["definitions"])
+        for key, value in task.model_dump().items():
+            if key not in groups:
+                for group_name in groups.keys():
+                    if group_name in key:
+                        groups_value[key] = groups[group_name]
+            result[key] = merge_value(groups_value[key], value, schema["$defs"])
 
         return result
 
@@ -373,9 +366,15 @@ class ConfigModel(ConfigBase):
 
         task_object = getattr(self, task, None)
         group_object = getattr(task_object, group, None)
+        if group_object is None:  # deal list
+            matchs = re.findall(r'\d+', group)
+            index = int(matchs[-1]) - 1 if matchs else None
+            task_object_list = list(dict(task_object))
+            for k, v in dict(task_object).items():
+                if k not in group:
+                    continue
+                group_object = v[index] if group_object is None else None
         argument_object = getattr(group_object, argument, None)
-        # print(group_object)
-        # print(argument_object)
 
         if argument_object is None:
             logger.error(f'Set arg {task}.{group}.{argument}.{value} failed')
@@ -426,6 +425,7 @@ class ConfigModel(ConfigBase):
         data = self.read_json(self.config_name)
         super().__init__(**data)
 
+
 if __name__ == "__main__":
     try:
         c = ConfigModel("oas1")
@@ -433,5 +433,4 @@ if __name__ == "__main__":
         print(e)
         c = ConfigModel()
 
-    # c.save()
-    print(c.script_task('Orochi'))
+    c.script_set_arg('Duel', 'test_list_2', 'switch_all_soul', 'false')

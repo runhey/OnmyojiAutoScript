@@ -10,5 +10,11 @@
     "roiFront": "409,572,32,30",
     "roiBack": "404,569,41,35",
     "description": "特殊的庭院需要点击，然后才能找到这个悬赏"
+  },
+  {
+    "itemName": "wq_trace_one_close",
+    "roiFront": "170,30,400,100",
+    "roiBack": "170,30,400,100",
+    "description": "关闭 单个任务追踪界面 所需点击 的  空白区域"
   }
 ]
