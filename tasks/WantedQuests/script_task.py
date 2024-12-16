@@ -1,12 +1,15 @@
 # This Python file uses the following encoding: utf-8
 # @author runhey
 # github https://github.com/runhey
+import copy
 import re
 from datetime import timedelta, time, datetime
 from time import sleep
 from typing import List
 
+import cv2
 from cached_property import cached_property
+from markdown_it.rules_inline import image
 
 from module.atom.image import RuleImage
 from module.base.timer import Timer
@@ -232,7 +235,7 @@ class ScriptTask(WQExplore, SecretScriptTask, WantedQuestsAssets):
             # 防止点击后界面来不及刷新
             sleep(1.5)
         # 关闭单个任务的追踪界面
-        self.ui_click(self.C_WQ_TRACE_ONE_CLOSE, stop=self.I_WQ_TRACE_ONE_CHECK_OPENED, interval=1.5)
+        self.ui_click_until_smt_disappear(self.C_WQ_TRACE_ONE_CLOSE, stop=self.I_WQ_TRACE_ONE_CHECK_OPENED, interval=1.5)
 
     def execute_mission(self, ocr, num_want: int, num_challenge: int):
         """
@@ -461,8 +464,6 @@ class ScriptTask(WQExplore, SecretScriptTask, WantedQuestsAssets):
         @return:
         """
         self.ui_click(btn, self.I_WQ_INVITE_ENSURE, interval=2.5)
-        # 等待好友列表加载
-        sleep(1.5)
 
         # 选人
         self.O_WQ_INVITE_COLUMN_1.keyword = name
@@ -470,21 +471,27 @@ class ScriptTask(WQExplore, SecretScriptTask, WantedQuestsAssets):
 
         find = False
         for i in range(2):
+            self.wait_until_appear(self.I_WQ_INVITE_FRIEND_LIST_APPEAR, wait_time=4)
             self.screenshot()
             in_col_1 = self.ocr_appear_click(self.O_WQ_INVITE_COLUMN_1)
             in_col_2 = self.ocr_appear_click(self.O_WQ_INVITE_COLUMN_2)
             find = in_col_2 or in_col_1
             if find:
-                sleep(4)
+                self.wait_until_appear(self.I_WQ_INVITE_SELECTED, wait_time=2)
                 self.screenshot()
                 if self.appear(self.I_WQ_INVITE_SELECTED):
                     logger.info("friend found and selected")
                     break
                 # TODO OCR识别到文字 但是没有选中 尝试重新选择  (选择好友时,弹出协作邀请导致选择好友失败)
-            # 在当前服务器没找到,切换服务器  30s 防止短时间连续点击
-            self.click(self.I_WQ_INVITE_DIFF_SVR, interval=30)
-            # NOTE 跨服好友刷新缓慢,切换标签页难以检测,姑且用延时.非常卡的模拟器可能出问题
-            sleep(4)
+            # 检测跨服好友按钮是否高亮
+            while 1:
+                self.screenshot()
+                if not self.appear_highlight(self.I_WQ_INVITE_DIFF_SVR_HIGHLIGHT):
+                    self.click(self.I_WQ_INVITE_DIFF_SVR)
+                    continue
+                break
+            # 等待好友列表加载
+            self.wait_until_appear(self.I_WQ_INVITE_DIFF_SVR_HIGHLIGHT, wait_time=4)
         # 没有找到需要邀请的人,点击取消 返回悬赏封印界面
         if not find:
             self.screenshot()
@@ -525,6 +532,39 @@ class ScriptTask(WQExplore, SecretScriptTask, WantedQuestsAssets):
         logger.info(f"get cooperation size {len(retList)}")
         return retList
 
+    # 使用平均亮度检测是否一致
+    def appear_highlight(self, rule_image: RuleImage):
+        def compute_region_brightness(img, top_left, width, height):
+            """
+            计算目标区域的平均亮度 (灰度图的平均值)
+            :param img: 目标图像
+            :param top_left: 匹配区域的左上角坐标
+            :param width: 模板宽度
+            :param height: 模板高度
+            :return: 区域亮度均值
+            """
+            # 裁剪出匹配区域
+            region = img[top_left[1]:top_left[1] + height, top_left[0]:top_left[0] + width]
+            # 转为灰度图
+            gray_region = cv2.cvtColor(region, cv2.COLOR_BGR2GRAY)
+            # 计算灰度均值
+            return gray_region.mean()
+
+        src = rule_image.corp(self.device.image)
+        template = rule_image.image
+        result = cv2.matchTemplate(src, template, cv2.TM_CCOEFF_NORMED)
+        _, max_val, _, max_loc = cv2.minMaxLoc(result)
+
+        brightness_src = compute_region_brightness(src, max_loc, template.shape[1], template.shape[0])
+        brightness_template = compute_region_brightness(template, (0, 0), template.shape[1], template.shape[0])
+
+        if max_val > rule_image.threshold and (brightness_src >= brightness_template * rule_image.threshold) and (
+                brightness_src <= brightness_template * (2 - rule_image.threshold)):
+            rule_image.roi_front[0] = max_loc[0] + rule_image.roi_back[0]
+            rule_image.roi_front[1] = max_loc[1] + rule_image.roi_back[1]
+            return True
+        return False
+
     @cached_property
     def special_main(self) -> bool:
         # 特殊的庭院需要点一下，左边然后才能找到图标
@@ -561,6 +601,14 @@ if __name__ == '__main__':
     c = Config('oas1')
     d = Device(c)
     t = ScriptTask(c, d)
-    t.screenshot()
+    img = cv2.imread(r"E:\highlight.png")
+    img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+    t.device.image = img
+    appear = t.appear_highlight(t.I_WQ_INVITE_DIFF_SVR_HIGHLIGHT)
 
-    t.run()
+    img = cv2.imread(r"E:\normal.png")
+    img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+    t.device.image = img
+    appear_normal = t.appear_highlight(t.I_WQ_INVITE_DIFF_SVR_HIGHLIGHT)
+
+    print(appear)

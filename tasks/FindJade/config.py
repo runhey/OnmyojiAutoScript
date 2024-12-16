@@ -17,8 +17,9 @@ class InviteHistoryItem(BaseModel):
 
 class InviteInfo(BaseModel):
     # 被邀请人员昵称
-    name: str = Field(default="")
-    default_invite_type: CooperationSelectMaskDescription = Field(default=CooperationSelectMaskDescription.JadeAndFood)
+    name: str = Field(default="", description='name_help')
+    default_invite_type: CooperationSelectMaskDescription = Field(default=CooperationSelectMaskDescription.JadeAndFood,
+                                                                  description='default_invite_type_help')
 
     # 协作任务类型   上次邀请时间
     invite_history_1: DateTime = Field(default=DateTime.fromisoformat("2023-01-01 00:00:00"),
