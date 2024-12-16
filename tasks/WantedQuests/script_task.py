@@ -235,7 +235,7 @@ class ScriptTask(WQExplore, SecretScriptTask, WantedQuestsAssets):
             # 防止点击后界面来不及刷新
             sleep(1.5)
         # 关闭单个任务的追踪界面
-        self.ui_click(self.C_WQ_TRACE_ONE_CLOSE, stop=self.I_WQ_TRACE_ONE_CHECK_OPENED, interval=1.5)
+        self.ui_click_until_smt_disappear(self.C_WQ_TRACE_ONE_CLOSE, stop=self.I_WQ_TRACE_ONE_CHECK_OPENED, interval=1.5)
 
     def execute_mission(self, ocr, num_want: int, num_challenge: int):
         """

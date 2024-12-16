@@ -519,8 +519,11 @@ class BaseTask(GlobalGameAssets, CostumeBase):
         :param time_delta: 下次运行日期为几天后，默认为第二天
         :return:
         """
-        target_time = (datetime.now() + timedelta(days=time_delta)).replace(hour=custom_time.hour, minute=custom_time.minute, second=custom_time.second)
+        target_time = (datetime.now() + timedelta(days=time_delta)).replace(hour=custom_time.hour,
+                                                                            minute=custom_time.minute,
+                                                                            second=custom_time.second)
         self.set_next_run(task, target=target_time)
+
     #  ---------------------------------------------------------------------------------------------------------------
     #
     #  ---------------------------------------------------------------------------------------------------------------
@@ -533,7 +536,7 @@ class BaseTask(GlobalGameAssets, CostumeBase):
             self.screenshot()
         return self.appear_then_click(self.I_UI_REWARD, action=self.C_UI_REWARD, interval=0.4, threshold=0.6)
 
-    def ui_get_reward(self, click_image: RuleImage or RuleOcr or RuleClick, click_interval: float=1):
+    def ui_get_reward(self, click_image: RuleImage or RuleOcr or RuleClick, click_interval: float = 1):
         """
         传进来一个点击图片 或是 一个ocr， 会点击这个图片，然后等待‘获得奖励’，
         最后当获得奖励消失后 退出
@@ -573,7 +576,6 @@ class BaseTask(GlobalGameAssets, CostumeBase):
                 if self.click(click_image, interval=click_interval):
                     continue
 
-
         return True
 
     def ui_click(self, click, stop, interval=1):
@@ -595,7 +597,7 @@ class BaseTask(GlobalGameAssets, CostumeBase):
             elif isinstance(click, RuleOcr) and self.ocr_appear_click(click, interval=interval):
                 continue
 
-    def ui_click_until_disappear(self, click, interval: float =1):
+    def ui_click_until_disappear(self, click, interval: float = 1):
         """
         点击一个按钮直到消失
         :param interval:
@@ -609,4 +611,16 @@ class BaseTask(GlobalGameAssets, CostumeBase):
             elif self.appear_then_click(click, interval=interval):
                 continue
 
-
+    def ui_click_until_smt_disappear(self, click, stop, interval: float = 1):
+        """
+        点击一个按钮直到消失
+        :param interval:
+        :param click:
+        :return:
+        """
+        while 1:
+            self.screenshot()
+            if not self.appear(stop):
+                break
+            if self.appear_then_click(click, interval=interval):
+                continue
