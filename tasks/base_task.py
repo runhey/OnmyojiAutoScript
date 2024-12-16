@@ -613,14 +613,19 @@ class BaseTask(GlobalGameAssets, CostumeBase):
 
     def ui_click_until_smt_disappear(self, click, stop, interval: float = 1):
         """
-        点击一个按钮直到消失
-        :param interval:
-        :param click:
-        :return:
+        点击一个按钮/区域/文字直到stop消失
+
         """
         while 1:
             self.screenshot()
             if not self.appear(stop):
                 break
-            if self.appear_then_click(click, interval=interval):
+            if isinstance(click, RuleImage) or isinstance(click, RuleGif):
+                self.appear_then_click(click, interval=interval)
+                continue
+            if isinstance(click, RuleClick):
+                self.click(click, interval)
+                continue
+            if isinstance(click, RuleOcr):
+                self.click(click)
                 continue
