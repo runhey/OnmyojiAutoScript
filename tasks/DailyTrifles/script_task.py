@@ -32,7 +32,7 @@ class ScriptTask(GameUi, Summon, DailyTriflesAssets):
         if con.luck_msg:
             self.run_luck_msg()
         if con.store_sign or con.buy_sushi_count > 0:
-            self.run_store_sign()
+            self.run_store()
         self.set_next_run('DailyTrifles', success=True, finish=False)
         raise TaskEnd('DailyTrifles')
 
