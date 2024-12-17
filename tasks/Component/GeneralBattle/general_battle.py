@@ -3,6 +3,7 @@
 # github https://github.com/runhey
 import time
 import random
+from time import sleep
 
 from tasks.base_task import BaseTask
 from tasks.Component.GeneralBattle.config_general_battle import GreenMarkType, GeneralBattleConfig
@@ -314,7 +315,11 @@ class GeneralBattle(GeneralBuff, GeneralBattleAssets):
                 x, y = self.C_PRESET_GROUP_7.coord()
             case _:
                 x, y = self.C_PRESET_GROUP_1.coord()
-        self.device.click(x, y)
+        count = 0
+        while count < 3:
+            self.device.click(x, y)
+            sleep(0.02)
+            count += 1
         logger.info("Select preset group")
 
         # 选择预设的队伍
@@ -330,7 +335,11 @@ class GeneralBattle(GeneralBuff, GeneralBattleAssets):
                 x, y = self.C_PRESET_TEAM_4.coord()
             case _:
                 x, y = self.C_PRESET_TEAM_1.coord()
-        self.device.click(x, y)
+        count = 0
+        while count < 3:
+            self.device.click(x, y)
+            sleep(0.02)
+            count += 1
         logger.info("Select preset team")
 
         # 点击预设确认
