@@ -50,6 +50,8 @@ class ScriptTask(GameUi, Summon, DailyTriflesAssets):
             self.screenshot()
             if self.appear(self.I_LUCK_TITLE):
                 break
+            if self.appear_then_click(self.I_FRIENDSHIP_UP, interval=1):
+                continue
             if self.appear_then_click(self.I_LUCK_MSG, interval=1):
                 continue
         logger.info('Start luck msg')
@@ -78,6 +80,8 @@ class ScriptTask(GameUi, Summon, DailyTriflesAssets):
             self.screenshot()
             if self.appear(self.I_L_LOVE):
                 break
+            if self.appear_then_click(self.I_FRIENDSHIP_UP, interval=1):
+                continue
             if self.appear_then_click(self.I_L_FRIENDS, interval=1):
                 continue
         logger.info('Start friend love')
