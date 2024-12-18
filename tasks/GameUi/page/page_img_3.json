@@ -187,5 +187,14 @@
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"
+  },
+  {
+    "itemName": "dlc_close",
+    "imageName": "store_dlc_close.png",
+    "roiFront": "916,147,24,25",
+    "roiBack": "916,147,24,25",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "下载拓展包弹窗"
   }
 ]

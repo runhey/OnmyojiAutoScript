@@ -61,5 +61,14 @@
     "method": "Template matching",
     "threshold": 0.8,
     "description": "吉闻页"
+  },
+  {
+    "itemName": "friendship_up",
+    "imageName": "friendship_up.png",
+    "roiFront": "1147,80,27,28",
+    "roiBack": "1147,80,27,28",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "好友羁绊提升弹窗"
   }
 ]
