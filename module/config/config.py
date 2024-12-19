@@ -26,9 +26,6 @@ from module.exception import RequestHumanTakeover, ScriptError
 from module.logger import logger
 
 
-
-
-
 class Function:
     def __init__(self, key: str, data: dict):
         """
@@ -251,8 +248,7 @@ class Config(ConfigState, ConfigManual, ConfigWatcher, ConfigMenu):
         data = {"running": running, "pending": pending, "waiting": waiting}
         return data
 
-
-    def task_call(self, task: str=None, force_call=True):
+    def task_call(self, task: str = None, force_call=True):
         """
         回调任务，这会是在任务结束后调用
         :param task: 调用的任务的大写名称
@@ -277,7 +273,7 @@ class Config(ConfigState, ConfigManual, ConfigWatcher, ConfigMenu):
             return False
 
     def task_delay(self, task: str, start_time: datetime = None,
-                   success: bool=None, server: bool=True, target: datetime=None) -> None:
+                   success: bool = None, server: bool = True, target: datetime = None) -> None:
         """
         设置下次运行时间  当然这个也是可以重写的
         :param target: 可以自定义的下次运行时间
@@ -341,7 +337,7 @@ class Config(ConfigState, ConfigManual, ConfigWatcher, ConfigMenu):
         run = min(run).replace(microsecond=0)
         next_run = run
 
-        if server and hasattr(scheduler, 'server_update'):
+        if server and hasattr(scheduler, 'server_update') and (target is None):
             # 加入随机延迟时间
             float_seconds = (scheduler.float_time.hour * 3600 +
                              scheduler.float_time.minute * 60 +
@@ -377,7 +373,6 @@ class Config(ConfigState, ConfigManual, ConfigWatcher, ConfigMenu):
         # 设置
         logger.attr(f'{task}.scheduler.next_run', next_run)
 
-
     @cached_property
     def notifier(self):
         notifier = Notifier(self.model.script.error.notify_config, enable=self.model.script.error.notify_enable)
@@ -385,13 +380,10 @@ class Config(ConfigState, ConfigManual, ConfigWatcher, ConfigMenu):
         logger.info(f'Notifier: {notifier.config_name}')
         return notifier
 
+
 if __name__ == '__main__':
     config = Config(config_name='oas1')
     config.update_scheduler()
     print(config.waiting_task)
 
     # print(config.get_next())
-
-
-
-
