@@ -14,6 +14,7 @@ from tasks.GameUi.page import page_main, page_shikigami_records
 from tasks.SoulsTidy.assets import SoulsTidyAssets
 from tasks.SoulsTidy.config import SimpleTidy
 
+
 class ScriptTask(GameUi, SoulsTidyAssets):
     def run(self):
         self.ui_get_current_page()
@@ -89,6 +90,12 @@ class ScriptTask(GameUi, SoulsTidyAssets):
             if self.appear_then_click(self.I_ST_BONGNA, interval=1, threshold=0.6):
                 continue
         logger.hr('Enter bongna')
+        # 进入已弃置界面
+        while True:
+            if not self.appear(self.I_ST_ABANDONED_SELECTED):
+                self.click(self.I_ST_ABANDONED_SELECTED, interval=2)
+                continue
+            break
         # 确保是按照等级来排序的
         while 1:
             self.screenshot()
@@ -111,6 +118,11 @@ class ScriptTask(GameUi, SoulsTidyAssets):
                 # 问就是 把 +0 识别成了 古
                 logger.info('No zero level, bongna done')
                 break
+            # 非+0的不弃置 双保险
+            if not self.appear(self.I_ST_LEVEL_0):
+                logger.info("Level 0 Orichi,quit")
+                break
+
             # !!!!!!  这里没有检查金币是否足够
             # 长按
             while 1:
@@ -156,22 +168,14 @@ class ScriptTask(GameUi, SoulsTidyAssets):
         logger.info('Bongna done')
 
 
-
-
-
-
-
-
-
 if __name__ == '__main__':
     from module.config.config import Config
     from module.device.device import Device
+
     c = Config('oas1')
     d = Device(c)
     t = ScriptTask(c, d)
     t.screenshot()
 
-
     # t.greed_maneki()
     t.run()
-

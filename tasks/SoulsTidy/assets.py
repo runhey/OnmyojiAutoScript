@@ -15,6 +15,8 @@ class SoulsTidyAssets:
 	C_ST_DETAIL = RuleClick(roi_front=(1189,321,87,74), roi_back=(1189,321,87,74), name="st_detail")
 	# 出现神赐 
 	C_ST_GOD_PRSENT = RuleClick(roi_front=(717,165,100,48), roi_back=(926,165,100,54), name="st_god_prsent")
+	# 已弃置 
+	C_ST_ABANDONED = RuleClick(roi_front=(40,120,40,80), roi_back=(40,120,40,80), name="st_abandoned")
 
 
 	# Image Rule Assets
@@ -42,6 +44,10 @@ class SoulsTidyAssets:
 	I_ST_DONATE = RuleImage(roi_front=(813,628,126,68), roi_back=(813,628,126,68), threshold=0.8, method="Template matching", file="./tasks/SoulsTidy/simple/simple_st_donate.png")
 	# 神赐 
 	I_ST_GOD_PRESENT = RuleImage(roi_front=(578,234,131,73), roi_back=(542,117,204,219), threshold=0.8, method="Template matching", file="./tasks/SoulsTidy/simple/simple_st_god_present.png")
+	# 已弃置被选中 
+	I_ST_ABANDONED_SELECTED = RuleImage(roi_front=(20,110,140,50), roi_back=(20,110,140,50), threshold=0.8, method="Template matching", file="./tasks/SoulsTidy/simple/simple_st_abandoned_selected.png")
+	# 第一个御魂是+0的 
+	I_ST_LEVEL_0 = RuleImage(roi_front=(85,235,45,30), roi_back=(85,235,45,30), threshold=0.9, method="Template matching", file="./tasks/SoulsTidy/simple/simple_st_level_0.png")
 
 
 	# Long Click Rule Assets
