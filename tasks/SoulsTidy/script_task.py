@@ -112,6 +112,7 @@ class ScriptTask(GameUi, SoulsTidyAssets):
         logger.info('Sort by level')
         # 开始奉纳
         while 1:
+            self.wait_until_appear(self.I_ST_LEVEL_0, wait_time=2)
             self.screenshot()
             firvel = self.O_ST_FIRSET_LEVEL.ocr(self.device.image)
             if firvel != '古':
@@ -120,7 +121,7 @@ class ScriptTask(GameUi, SoulsTidyAssets):
                 break
             # 非+0的不弃置 双保险
             if not self.appear(self.I_ST_LEVEL_0):
-                logger.info("Level 0 Orichi,quit")
+                logger.info("First Orichi is Level 0,quit")
                 break
 
             # !!!!!!  这里没有检查金币是否足够
