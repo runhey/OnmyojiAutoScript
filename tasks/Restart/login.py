@@ -109,6 +109,9 @@ class LoginHandler(BaseTask, RestartAssets):
             # 点击’进入游戏‘
             if not self.appear(self.I_LOGIN_8):
                 continue
+            if self.appear(self.I_CHARACTARS, interval=1):
+                # https://github.com/runhey/OnmyojiAutoScript/issues/585
+                self.device.click(x=246, y=535)
             if self.ocr_appear_click(self.O_LOGIN_ENTER_GAME, interval=3):
                 self.wait_until_appear(self.I_LOGIN_SPECIFIC_SERVE, True, wait_time=5)
                 continue
