@@ -256,9 +256,10 @@ class ScriptTask(
             self.screenshot()
             if self.appear(self.I_FORM_TEAM, interval=1):
                 return True
-            if self.appear_then_click(self.I_ETERNITY_SEA):
-                #有可能点击到录像
-                self.appear_then_click(self.I_BACK_BOTTOM, interval=1)
+            if self.appear_then_click(self.I_ETERNITY_SEA, interval=1):
+                continue
+            #有可能点击到录像
+            if self.appear_then_click(self.I_BACK_BOTTOM, interval=1):
                 continue
 
     def _navigate_to_soul_zones(self) -> None:
