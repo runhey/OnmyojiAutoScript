@@ -105,6 +105,6 @@
     "roiBack": "177,625,59,51",
     "method": "Template matching",
     "threshold": 0.8,
-    "description": "description"
+    "description": "结契设置"
   }
 ]
