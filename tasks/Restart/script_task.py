@@ -56,6 +56,7 @@ class ScriptTask(LoginHandler):
         for task in self.config.pending_task:
             print(task.command)
             self.set_next_run(task=task.command, target=datetime_now.replace(hour=9, minute=0, second=0, microsecond=0))
+        self.set_next_run(task='Restart', success=True, finish=True, server=True)
         return True
 
 
