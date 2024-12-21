@@ -92,11 +92,20 @@
   {
     "itemName": "wq_invite_selected",
     "imageName": "wq_invite_selected.png",
-    "roiFront": "380,170,32,32",
-    "roiBack": "380,170,360,375",
+    "roiFront": "370,180,32,32",
+    "roiBack": "370,180,370,355",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "邀请好友被选中标记"
+  },
+  {
+    "itemName": "wq_invite_friend_list_appear",
+    "imageName": "wq_invite_friend_list_appear.png",
+    "roiFront": "370,180,32,32",
+    "roiBack": "370,180,370,355",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "好友列表已加载标志"
   },
   {
     "itemName": "wq_invite_same_svr",
@@ -115,6 +124,15 @@
     "method": "Template matching",
     "threshold": 0.8,
     "description": "邀请跨服好友,由于选中与未选中亮度有区别,查找图片可能会出错,建议只使用位置信息"
+  },
+  {
+    "itemName": "wq_invite_diff_svr_highlight",
+    "imageName": "wq_invite_diff_svr_highlight.png",
+    "roiFront": "260,70,120,90",
+    "roiBack": "260,70,120,90",
+    "method": "Template matching",
+    "threshold": 0.9,
+    "description": "邀请跨服好友,已选中状态，高亮状态"
   },
   {
     "itemName": "wq_cooperation_type_gold_1",

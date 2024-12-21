@@ -9,6 +9,7 @@ from onepush.core import Provider
 from onepush.exceptions import OnePushException
 from onepush.providers.custom import Custom
 from requests import Response
+from smtplib import SMTPResponseException
 
 from module.logger import logger
 onepush.core.log = logger
@@ -91,6 +92,9 @@ class Notifier:
                             logger.warning(
                                 f"Return message:{return_data['wording']}")
                             return False
+        except SMTPResponseException:
+            logger.warning("Appear SMTPResponseException")
+            pass
         except OnePushException:
             logger.exception("Push notify failed")
             return False

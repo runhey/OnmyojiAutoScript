@@ -131,6 +131,8 @@ class ScriptTask(GeneralBattle, GeneralInvite, GeneralBuff, GeneralRoom, GameUi,
         self.orochi_enter()
         layer = self.config.orochi.orochi_config.layer
         self.check_layer(layer)
+        # https://github.com/runhey/OnmyojiAutoScript/issues/592
+        self.config.orochi.general_battle_config.lock_team_enable = True
         self.check_lock(self.config.orochi.general_battle_config.lock_team_enable)
         # 创建队伍
         logger.info('Create team')
