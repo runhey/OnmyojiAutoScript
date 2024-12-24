@@ -27,13 +27,13 @@ class GeneralBattleAssets:
 
 	# Click Rule Assets
 	# 预设队伍1 
-	C_PRESET_TEAM_1 = RuleClick(roi_front=(196,234,464,114), roi_back=(196,234,464,114), name="preset_team_1")
+	C_PRESET_TEAM_1 = RuleClick(roi_front=(195,235,465,110), roi_back=(195,235,465,110), name="preset_team_1")
 	# 预设队伍2 
-	C_PRESET_TEAM_2 = RuleClick(roi_front=(197,358,465,103), roi_back=(197,358,465,103), name="preset_team_2")
+	C_PRESET_TEAM_2 = RuleClick(roi_front=(195,355,465,110), roi_back=(195,355,465,110), name="preset_team_2")
 	# 预设队伍3 
-	C_PRESET_TEAM_3 = RuleClick(roi_front=(195,480,462,100), roi_back=(195,480,462,100), name="preset_team_3")
+	C_PRESET_TEAM_3 = RuleClick(roi_front=(195,475,465,110), roi_back=(195,475,465,110), name="preset_team_3")
 	# 预设队伍4 
-	C_PRESET_TEAM_4 = RuleClick(roi_front=(193,596,464,35), roi_back=(193,596,464,35), name="preset_team_4")
+	C_PRESET_TEAM_4 = RuleClick(roi_front=(195,595,465,35), roi_back=(195,595,465,35), name="preset_team_4")
 	# 预设组1 
 	C_PRESET_GROUP_1 = RuleClick(roi_front=(35,240,25,50), roi_back=(35,240,25,50), name="preset_group_1")
 	# 预设组2 
@@ -117,6 +117,10 @@ class GeneralBattleAssets:
 	I_DE_GOLD = RuleImage(roi_front=(61,52,30,25), roi_back=(45,33,65,64), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralBattle/gb/gb_de_gold.png")
 	# 绿标 
 	I_GREEN_MARKER = RuleImage(roi_front=(0,0,1280,720), roi_back=(0,0,1280,720), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralBattle/gb/gb_green_marker.png")
+	# 绿标-左上角部分 
+	I_GREEN_MARKER_LEFT_TOP = RuleImage(roi_front=(0,0,1280,720), roi_back=(0,0,1280,720), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralBattle/gb/gb_green_marker_left_top.png")
+	# 绿标-下半部分 
+	I_GREEN_MARKER_BOTTOM = RuleImage(roi_front=(0,0,1280,720), roi_back=(0,0,1280,720), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralBattle/gb/gb_green_marker_bottom.png")
 
 
 	# Image Rule Assets

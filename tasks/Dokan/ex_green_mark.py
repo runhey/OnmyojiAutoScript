@@ -85,7 +85,10 @@ from tasks.Dokan.utils import retry
 class GreenMarkState(int, Enum):
     #
     NOT_INIT = 0,
-    INITED = 1
+    INITED = 1,
+    # 备用
+    MARKED=2,
+    DISAPPEARED = 3
 
 
 class ExtendGreenMark(GeneralBattle):
@@ -182,8 +185,11 @@ class ExtendGreenMark(GeneralBattle):
         if len(res) <= 0:
             return None
         box = res[0].box
+        # 经实验，点击式神名称位置，可能点击不到，故此做一个修正
+        offset = [5, 30, -10, 0]
         # x,y,w,h
-        return [box[0, 0], box[0, 1], box[2, 0] - box[0, 0], box[2, 1] - box[0, 1]]
+        return [box[0, 0] + offset[0], box[0, 1] + offset[1], box[2, 0] - box[0, 0] + offset[2],
+                box[2, 1] - box[0, 1] + offset[3]]
 
     def calc_green_mark_locate_area(self, roi, margin=None):
         """
@@ -195,9 +201,11 @@ class ExtendGreenMark(GeneralBattle):
         @rtype:
 
         """
+        if roi is None:
+            return [0, 0, 1280, 720]
         result = [0, 0, 0, 0]
         if margin is None:
-            margin = [150, 40, 20, 80]
+            margin = [160, 40, 20, 80]
         result[0] = x if (x := roi[0] - margin[3]) > 0 else 0
         result[1] = y if (y := roi[1] - margin[0]) > 0 else 0
         result[2] = w if (w := roi[2] + margin[1] + margin[3]) + x <= 1280 else 1280 - x
@@ -205,12 +213,18 @@ class ExtendGreenMark(GeneralBattle):
         return result
 
     def detect_green_mark(self, img=None, area=None):
+        def init_green_marker_roi(roi):
+            self.I_GREEN_MARKER.roi_back = roi
+            self.I_GREEN_MARKER_LEFT_TOP.roi_back = roi
+            self.I_GREEN_MARKER_BOTTOM.roi_back = roi
+
+        # 初始化绿标相关变量的roi信息
         if area is not None:
-            self.I_GREEN_MARKER.roi_back = area
+            init_green_marker_roi(area)
         elif self._green_mark_detect_area is not None:
-            self.I_GREEN_MARKER.roi_back = self._green_mark_detect_area
+            init_green_marker_roi(self._green_mark_detect_area)
         else:
-            self.I_GREEN_MARKER.roi_back = (0, 0, 1280, 720)
+            init_green_marker_roi((0, 0, 1280, 720))
 
         if img is not None:
             self.device.image = img
@@ -221,7 +235,10 @@ class ExtendGreenMark(GeneralBattle):
             upper_green = np.array([80, 255, 232])
             mask = cv2.inRange(hsv_image, lower_green, upper_green)
             result = cv2.bitwise_and(image, image, mask=mask)
-            res = self.I_GREEN_MARKER.match(result)
+            # 伤害数字，御魂生效后弹出会遮挡绿标信息，目前的策略：尽量的延长检测到绿标的时间
+            res = (self.I_GREEN_MARKER_LEFT_TOP.match(result)
+                   or self.I_GREEN_MARKER_BOTTOM.match(result)
+                   or self.I_GREEN_MARKER.match(result))
             return res
 
         if detect_green_marker_base(self.device.image):
@@ -236,7 +253,7 @@ class ExtendGreenMark(GeneralBattle):
         """
         self.screenshot()
         # 若未初始化，直接返回，不检测绿标状态
-        if self._state == GreenMarkState.NOT_INIT:
+        if self._state == GreenMarkState.NOT_INIT or self._state is None:
             return self.device.image
 
         # 检测式神名区域
@@ -249,8 +266,11 @@ class ExtendGreenMark(GeneralBattle):
         if self.detect_green_mark(self.device.image):
             self._disappear_count = 0
             self._disappear_timer.reset()
+            logger.info("green mark appear")
             return self.device.image
 
+        if self._disappear_count == 0:
+            logger.info("green mark DISappear")
         self._disappear_count += 1
         self._disappear_timer.start()
         if self.need_green_mark():
@@ -293,6 +313,8 @@ class ExtendGreenMark(GeneralBattle):
 
     def start_green_mark(self):
         self._state = GreenMarkState.INITED
+        self._disappear_timer.clear()
+        self._disappear_count = 0
 
     def stop_green_mark(self):
         self._state = GreenMarkState.NOT_INIT

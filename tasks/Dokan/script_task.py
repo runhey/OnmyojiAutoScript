@@ -962,6 +962,7 @@ class ScriptTask(ExtendGreenMark, GameUi, SwitchSoul, DokanSceneDetector):
         :return: 战斗成功(True) or 战斗失败(False) or 区域不可用（False）
         @type count: int 战斗次数限制
         """
+
         def anti_wait_long_time():
             self.device.stuck_record_add("BATTLE_STATUS_S")
 
@@ -1037,15 +1038,15 @@ class ScriptTask(ExtendGreenMark, GameUi, SwitchSoul, DokanSceneDetector):
                     logger.info("--------New battle starts---------")
                     # 初始化 green_mark
                     self.init_green_mark_from_cfg(self.config.model)
-                    # 长延时防止过快点击
-                    self.ui_click_until_disappear(self.I_RYOU_DOKAN_IN_FIELD, interval=1.3)
+                    #
+                    self.ui_click_until_disappear(self.I_RYOU_DOKAN_IN_FIELD, interval=0.4)
                     anti_wait_long_time()
                     count -= 1
                     continue
                 if count <= 0:
                     win = True
                     break
-
+            sleep(0.02)
             continue
 
         self.stop_green_mark()
