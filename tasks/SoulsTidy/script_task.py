@@ -116,7 +116,7 @@ class ScriptTask(GameUi, SoulsTidyAssets):
             self.screenshot()
             firvel = self.O_ST_FIRSET_LEVEL.ocr(self.device.image)
             if firvel is None or firvel == '':
-                logger.info('No zero level, bongna done')
+                logger.info('ocr result is Null')
                 continue
             if firvel != '古':
                 # 问就是 把 +0 识别成了 古
@@ -137,6 +137,7 @@ class ScriptTask(GameUi, SoulsTidyAssets):
                 continue
             if gold_amount == 0:
                 continue
+
             # 点击奉纳收取奖励
             if not self.appear(self.I_ST_DONATE):
                 logger.warning('Donate button not appear, skip')
