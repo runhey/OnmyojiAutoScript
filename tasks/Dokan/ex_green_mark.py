@@ -319,6 +319,10 @@ class ExtendGreenMark(GeneralBattle):
     def stop_green_mark(self):
         self._state = GreenMarkState.NOT_INIT
 
+    def set_disappear_count(self, count):
+        # 设置消失次数，用于（主动触发执行绿标）
+        self._disappear_count = count
+
 
 def change_green_mark(obj):
     obj.old_green_mark = obj.green_mark

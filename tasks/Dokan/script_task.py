@@ -181,7 +181,7 @@ class ScriptTask(ExtendGreenMark, GameUi, SwitchSoul, DokanSceneDetector):
                 logger.info(f"{current_scene} dokan_master_count:{count},first_master_killed:{first_master_killed}")
                 if (count - (1 if first_master_killed else 0)) > 0:
                     logger.info("start Master_first")
-                    self.ui_click_until_disappear(self.I_RYOU_DOKAN_START_CHALLENGE, interval=2)
+                    self.click(self.I_RYOU_DOKAN_START_CHALLENGE, interval=2)
                     continue
                 # 放弃突破
                 if cfg.dokan_config.try_start_dokan:
@@ -190,7 +190,7 @@ class ScriptTask(ExtendGreenMark, GameUi, SwitchSoul, DokanSceneDetector):
                 continue
             # 场景状态：检查右下角有没有挑战？通常是失败了，并退出来到集结界面，可重新开始点击右下角挑战进入战斗
             if current_scene == DokanScene.RYOU_DOKAN_SCENE_START_CHALLENGE:
-                self.ui_click_until_disappear(self.I_RYOU_DOKAN_START_CHALLENGE, interval=1)
+                self.click(self.I_RYOU_DOKAN_START_CHALLENGE, interval=1)
                 continue
             # 场景状态：馆主第一阵容 且战斗未开始
             if current_scene == DokanScene.RYOU_DOKAN_SCENE_BATTLE_MASTER_FIRST:
@@ -980,6 +980,8 @@ class ScriptTask(ExtendGreenMark, GameUi, SwitchSoul, DokanSceneDetector):
 
         # 等待准备按钮的出现
         self.wait_until_appear(self.I_PREPARE_HIGHLIGHT)
+        # 战斗刚开始，需要添加绿标
+        need_green_mark = True
 
         while count >= 0:
             self.green_mark_screenshot(anti_wait_long_time)
@@ -1038,6 +1040,10 @@ class ScriptTask(ExtendGreenMark, GameUi, SwitchSoul, DokanSceneDetector):
                     logger.info("--------New battle starts---------")
                     # 初始化 green_mark
                     self.init_green_mark_from_cfg(self.config.model)
+                    if need_green_mark:
+                        # 缩短第一次绿标的检测时间，在短时间内触发标记
+                        self.set_disappear_count(self.MAX_DISAPPEAR_COUNT - 10)
+                        need_green_mark = False
                     #
                     self.ui_click_until_disappear(self.I_RYOU_DOKAN_IN_FIELD, interval=0.4)
                     anti_wait_long_time()
