@@ -980,8 +980,11 @@ class ScriptTask(ExtendGreenMark, GameUi, SwitchSoul, DokanSceneDetector):
 
         # 等待准备按钮的出现
         self.wait_until_appear(self.I_PREPARE_HIGHLIGHT)
+
         # 战斗刚开始，需要添加绿标
         need_green_mark = True
+        # 绿标区域初始化标识，只初始化一次绿标区域
+        need_init_green_mark_area = True
 
         while count >= 0:
             self.green_mark_screenshot(anti_wait_long_time)
@@ -1038,8 +1041,11 @@ class ScriptTask(ExtendGreenMark, GameUi, SwitchSoul, DokanSceneDetector):
                 self.device.stuck_record_clear()
                 if count > 0:
                     logger.info("--------New battle starts---------")
-                    # 初始化 green_mark
-                    self.init_green_mark_from_cfg(self.config.model)
+                    if need_init_green_mark_area:
+                        # 初始化 green_mark
+                        need_init_green_mark_area = False
+                        self.init_green_mark_from_cfg(self.config.dokan.dokan_config.green_mark_shikigami_name,
+                                                      self.config.dokan.general_battle_config.green_mark)
                     if need_green_mark:
                         # 缩短第一次绿标的检测时间，在短时间内触发标记
                         self.set_disappear_count(self.MAX_DISAPPEAR_COUNT - 10)

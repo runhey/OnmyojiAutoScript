@@ -87,7 +87,7 @@ class GreenMarkState(int, Enum):
     NOT_INIT = 0,
     INITED = 1,
     # 备用
-    MARKED=2,
+    MARKED = 2,
     DISAPPEARED = 3
 
 
@@ -110,15 +110,17 @@ class ExtendGreenMark(GeneralBattle):
     # 判断是否开始检测绿标
     _state = GreenMarkState.NOT_INIT
 
+    #
+
     def __init__(self, config, device):
         super().__init__(config, device)
         self.super_green_mark = self.green_mark
 
-    def init_green_mark_from_cfg(self, cfg: BaseModel):
-        self._shikigami_name = cfg.dokan.dokan_config.green_mark_shikigami_name
+    def init_green_mark_from_cfg(self, names: str = None, green_mark_type: GreenMarkType = None):
+        self._shikigami_name = names
         if self._shikigami_name is None or self._shikigami_name == "":
             # 使用默认的绿标模式
-            tmp = self.generate_green_mark_area(cfg.dokan.general_battle_config.green_mark)
+            tmp = self.generate_green_mark_area(green_mark_type)
             self._green_mark_click_roi = tmp.roi_front
         else:
             # 使用式神名称进行绿标
@@ -127,7 +129,7 @@ class ExtendGreenMark(GeneralBattle):
                 return self.detect_name_position(self.device.image, self._shikigami_name)
 
             # 多试几次，避免识别失败
-            self._green_mark_click_roi = retry(detect_name_position_retry, 10)
+            self._green_mark_click_roi = retry(detect_name_position_retry, 3)
 
         #
         self._green_mark_detect_area = self.calc_green_mark_locate_area(self._green_mark_click_roi)
@@ -170,7 +172,7 @@ class ExtendGreenMark(GeneralBattle):
                 logger.info("Green main")
         return result
 
-    def detect_name_position(self, img, name: str) -> list[int]:
+    def detect_name_position(self, img, names: str) -> list[int]:
         def similarity(txt1, txt2):
             txtset1 = set(txt1)
             txtset2 = set(txt2)
@@ -178,18 +180,22 @@ class ExtendGreenMark(GeneralBattle):
             union = txtset1.union(txtset2)
             return len(intersection) / len(union)
 
-        # 此处为了获取到OCR模型，随机选择一个了RuleOcr对象，可以使用任意的RuleOcr对象
-        res_list = self.O_EXP_50.model.detect_and_ocr(img, 0.7)
-        res = [item for item in res_list if similarity(item.ocr_text, name) > 0.5]
-        res = sorted(res, key=lambda x: x.score)
-        if len(res) <= 0:
-            return None
-        box = res[0].box
-        # 经实验，点击式神名称位置，可能点击不到，故此做一个修正
-        offset = [5, 30, -10, 0]
-        # x,y,w,h
-        return [box[0, 0] + offset[0], box[0, 1] + offset[1], box[2, 0] - box[0, 0] + offset[2],
-                box[2, 1] - box[0, 1] + offset[3]]
+        name_list = names.split(',')
+        for name in name_list:
+            # 此处为了获取到OCR模型，随机选择一个了RuleOcr对象，可以使用任意的RuleOcr对象
+            res_list = self.O_EXP_50.model.detect_and_ocr(img, 0.7)
+            res = [item for item in res_list if similarity(item.ocr_text, name) > 0.5]
+            res = sorted(res, key=lambda x: x.score)
+            if len(res) <= 0:
+                continue
+            box = res[0].box
+            logger.info(f"detect{res[0].ocr_text} with name:{name} in {box}")
+            # 经实验，点击式神名称位置，可能点击不到，故此做一个修正
+            offset = [5, 30, -10, 0]
+            # x,y,w,h
+            return [box[0, 0] + offset[0], box[0, 1] + offset[1], box[2, 0] - box[0, 0] + offset[2],
+                    box[2, 1] - box[0, 1] + offset[3]]
+        return None
 
     def calc_green_mark_locate_area(self, roi, margin=None):
         """
@@ -266,11 +272,14 @@ class ExtendGreenMark(GeneralBattle):
         if self.detect_green_mark(self.device.image):
             self._disappear_count = 0
             self._disappear_timer.reset()
-            logger.info("green mark appear")
+            if self._state != GreenMarkState.MARKED:
+                logger.info("green mark appear")
+                self._state = GreenMarkState.MARKED
             return self.device.image
 
-        if self._disappear_count == 0:
+        if self._state != GreenMarkState.DISAPPEARED:
             logger.info("green mark DISappear")
+            self._state = GreenMarkState.DISAPPEARED
         self._disappear_count += 1
         self._disappear_timer.start()
         if self.need_green_mark():
@@ -302,8 +311,13 @@ class ExtendGreenMark(GeneralBattle):
         """
         if area is None:
             area = self._green_mark_click_roi
+        if area is None:
+            logger.warn("Green Mark with area None,give up")
+            return False
         self.C_GREEN_MARK_AREA.roi_front = area
         if self.click(self.C_GREEN_MARK_AREA, interval=interval):
+            # NOTE 防止式神死亡导致的连续点击，程序退出
+            self.device.click_record_clear()
             logger.info(f"green mark with area:{area}")
             return True
         return False

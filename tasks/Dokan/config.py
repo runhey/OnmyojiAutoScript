@@ -155,7 +155,7 @@ class DokanConfig(BaseModel):
     # 挂机阵容
     preset_group_2: str = Field(default="", description='preset_group_2_help')
 
-    # 按式神名字绿标
+    # 按式神名字绿标，多个名字用“,”分隔
     green_mark_shikigami_name: str = Field(default="", description='green_mark_shikigami_name_help')
 
     def parse_preset_group(self, value: str):
