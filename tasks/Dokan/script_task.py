@@ -955,24 +955,20 @@ class ScriptTask(ExtendGreenMark, GameUi, SwitchSoul, DokanSceneDetector):
                 continue
         return False
 
-    def dokan_battle(self, cfg: Dokan, count=None):
+    def dokan_battle(self, cfg: Dokan, battle_count_limit=None):
         """ 道馆战斗
         道馆集结结束后会自动进入战斗，打完一个也会自动进入下一个，因此直接点击右下角的开始
 
         :return: 战斗成功(True) or 战斗失败(False) or 区域不可用（False）
-        @type count: int 战斗次数限制
+        @type battle_count_limit: int 战斗次数限制
         """
 
         def anti_wait_long_time():
             self.device.stuck_record_add("BATTLE_STATUS_S")
 
         battle_config: GeneralBattleConfig = cfg.general_battle_config
-        if not count:
-            count = 999
-        # 正式进攻会设定 2s - 10s 的随机延迟，避免攻击间隔及其相近被检测为脚本。
-        if cfg.dokan_config.random_delay:
-            self.anti_detect(False, False, True)
-            anti_wait_long_time()
+        if not battle_count_limit:
+            battle_count_limit = 999
 
         # 上面可能睡了一觉，重新截图
         self.screenshot()
@@ -982,45 +978,53 @@ class ScriptTask(ExtendGreenMark, GameUi, SwitchSoul, DokanSceneDetector):
         self.wait_until_appear(self.I_PREPARE_HIGHLIGHT)
 
         # 战斗刚开始，需要添加绿标
-        need_green_mark = True
+        need_green_mark = battle_config.green_enable
         # 绿标区域初始化标识，只初始化一次绿标区域
-        need_init_green_mark_area = True
+        need_init_green_mark_area = battle_config.green_enable
 
-        while count >= 0:
-            self.green_mark_screenshot(anti_wait_long_time)
+        while True:
+            if cfg.general_battle_config.green_enable:
+                self.green_mark_screenshot(anti_wait_long_time)
+            else:
+                self.screenshot()
 
-            def is_end():
+            def is_battle_end() -> (bool, bool):
+
+                if battle_count_limit <= 0:
+                    win = True
+                    return win, True
 
                 # 如果出现赢 就点击
                 if self.appear(GeneralBattle.I_WIN):
                     logger.info("Dokan guards eliminated, boss is on the way")
                     win = True
-                    return True
+                    return win, True
 
                 # 如果出现打败馆主的赢，就点击
                 if self.appear(self.I_RYOU_DOKAN_WIN):
                     logger.info("We've defeated the boss, and win the final game.")
                     win = True
-                    return True
+                    return win, True
 
                 # 如果出现失败 就点击，返回False。 TODO 不知道挑战馆主失败是不是同一个画面？
                 if self.appear(GeneralBattle.I_FALSE):
                     logger.info("Battle failed")
                     win = False
-                    return True
+                    return win, True
 
                 # 如果领奖励
                 if self.appear(self.I_RYOU_DOKAN_BATTLE_OVER, threshold=0.6):
                     logger.info("Battle over")
                     win = True
-                    return True
+                    return win, True
 
                 # 如果领奖励出现金币
                 if self.appear(GeneralBattle.I_REWARD_GOLD):
                     win = True
-                    return True
+                    return win, True
 
-            if is_end():
+            win, is_battle_end_and_exit = is_battle_end()
+            if is_battle_end_and_exit:
                 break
 
             # 击败馆主后出现的 带成功失败的 突破排名 列表
@@ -1030,8 +1034,8 @@ class ScriptTask(ExtendGreenMark, GameUi, SwitchSoul, DokanSceneDetector):
                 self.click(self.C_DOKAN_TOPPA_RANK_CLOSE_AREA, interval=2)
                 continue
 
-            # 如果开启战斗过程随机滑动
-            if battle_config.random_click_swipt_enable:
+            # 如果开启战斗过程随机滑动-如果启用绿标则禁止滑动
+            if battle_config.random_click_swipt_enable and not battle_config.green_enable:
                 logger.info("random swipt ...")
                 self.random_click_swipt()
 
@@ -1039,25 +1043,28 @@ class ScriptTask(ExtendGreenMark, GameUi, SwitchSoul, DokanSceneDetector):
             if self.appear(self.I_RYOU_DOKAN_IN_FIELD):
                 self.device.click_record_clear()
                 self.device.stuck_record_clear()
-                if count > 0:
-                    logger.info("--------New battle starts---------")
-                    if need_init_green_mark_area:
-                        # 初始化 green_mark
-                        need_init_green_mark_area = False
-                        self.init_green_mark_from_cfg(self.config.dokan.dokan_config.green_mark_shikigami_name,
-                                                      self.config.dokan.general_battle_config.green_mark)
-                    if need_green_mark:
-                        # 缩短第一次绿标的检测时间，在短时间内触发标记
-                        self.set_disappear_count(self.MAX_DISAPPEAR_COUNT - 10)
-                        need_green_mark = False
-                    #
-                    self.ui_click_until_disappear(self.I_RYOU_DOKAN_IN_FIELD, interval=0.4)
-                    anti_wait_long_time()
-                    count -= 1
-                    continue
-                if count <= 0:
-                    win = True
-                    break
+
+                logger.info("--------New battle starts---------")
+
+                if need_init_green_mark_area:
+                    need_init_green_mark_area = False
+                    # 初始化 green_mark
+                    self.init_green_mark_from_cfg(self.config.dokan.dokan_config.green_mark_shikigami_name,
+                                                  self.config.dokan.general_battle_config.green_mark)
+                if need_green_mark:
+                    need_green_mark = False
+                    # 缩短第一次绿标的检测时间，在短时间内触发标记动作
+                    self.set_disappear_count(self.MAX_DISAPPEAR_COUNT - 10)
+
+                # 正式进攻会设定 2s - 10s 的随机延迟，避免攻击间隔及其相近被检测为脚本。
+                if cfg.dokan_config.random_delay:
+                    self.anti_detect(False, False, True)
+
+                self.ui_click_until_disappear(self.I_RYOU_DOKAN_IN_FIELD, interval=0.4)
+                anti_wait_long_time()
+                battle_count_limit -= 1
+                continue
+
             sleep(0.02)
             continue
 
