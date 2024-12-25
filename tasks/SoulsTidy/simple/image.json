@@ -124,5 +124,14 @@
     "method": "Template matching",
     "threshold": 0.9,
     "description": "第一个御魂是+0的"
+  },
+  {
+    "itemName": "st_gold",
+    "imageName": "simple_st_gold.png",
+    "roiFront": "170,100,950,500",
+    "roiBack": "170,100,950,500",
+    "method": "Template matching",
+    "threshold": 0.9,
+    "description": "御魂奉纳后获得的金币"
   }
 ]
