@@ -688,6 +688,7 @@ class ScriptTask(ExtendGreenMark, GameUi, SwitchSoul, DokanSceneDetector):
 
         while num_fresh < self.config.dokan.dokan_config.find_dokan_refresh_count:
             for i in range(3):
+                sleep(3)
                 if find_challengeable():
                     logger.info("find challengeable dokan")
                     self.ui_click(self.I_CENTER_CHALLENGE, self.I_CHALLENGE_ENSURE, interval=1)
@@ -699,13 +700,13 @@ class ScriptTask(ExtendGreenMark, GameUi, SwitchSoul, DokanSceneDetector):
                     return True
                 # 滑动道馆列表
                 self.swipe(self.S_DOKAN_LIST_UP)
-                sleep(3)
+
             # 恢复初始位置信息,防止下次使用出错
             restore_roi()
             logger.info("=========refresh dokan list=========")
             self.ui_click(self.C_DOKAN_REFRESH, self.I_REFRESH_ENSURE, interval=1)
             self.ui_click_until_disappear(self.I_REFRESH_ENSURE, interval=1)
-            sleep(3)
+
             logger.info("Refresh Done")
             num_fresh += 1
 
