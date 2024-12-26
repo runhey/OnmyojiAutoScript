@@ -167,7 +167,7 @@ class LoginAccount(BaseTask, SwitchAccountAssets):
                 self.screenshot()
                 if self.appear(self.I_SA_ACCOUNT_DROP_DOWN_CLOSED):
                     if self.ocr_appear(self.O_SA_ACCOUNT_ACCOUNT_SELECTED):
-                        break
+                        return True
                     self.ui_click_until_disappear(self.I_SA_ACCOUNT_DROP_DOWN_CLOSED,
                                                   interval=1.5)
                     continue
@@ -253,7 +253,7 @@ class LoginAccount(BaseTask, SwitchAccountAssets):
 
             # 处于选择 苹果安卓界面
             if self.appear(self.I_SA_LOGIN_FORM_APPLE):
-                btn = self.I_SA_LOGIN_FORM_ANDROID if accountInfo.appleOrAndroid else self.I_SA_LOGIN_FORM_APPLE
+                btn = self.I_SA_LOGIN_FORM_ANDROID if accountInfo.apple_or_android else self.I_SA_LOGIN_FORM_APPLE
                 self.ui_click_until_disappear(btn)
                 isAccountLogon = True
                 continue
@@ -313,12 +313,12 @@ class LoginAccount(BaseTask, SwitchAccountAssets):
             # self.ui_click_until_disappear(self.C_SA_LOGIN_FORM_ENTER_GAME_BTN, stop=self.I_CHECK_LOGIN_FORM)
             logger.info("character %s-%s account:%s %s login Success", accountInfo.character, accountInfo.svr,
                         accountInfo.account,
-                        'Android' if accountInfo.appleOrAndroid else 'Apple')
+                        'Android' if accountInfo.apple_or_android else 'Apple')
             return True
 
         logger.error("character %s-%s account:%s %s login Failed", accountInfo.character, accountInfo.svr,
                      accountInfo.account,
-                     'Android' if accountInfo.appleOrAndroid else 'Apple')
+                     'Android' if accountInfo.apple_or_android else 'Apple')
         return False
 
     def ui_click_until_disappear(self, click, interval: float = 1, stop: RuleImage | RuleGif = None):
