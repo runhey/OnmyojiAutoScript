@@ -14,9 +14,10 @@ class DailyTriflesConfig(BaseModel):
     friend_love: bool = Field(title='Friend Love', default=False)
     luck_msg: bool = Field(title='Luck Msg', default=False)
     store_sign: bool = Field(title='Store Sign', default=False, description='store_sign_help')
+    # 每天购买体力数量
+    buy_sushi_count: int = Field(title='Buy Sushi Count', default=-1)
 
 
 class DailyTrifles(ConfigBase):
     scheduler: Scheduler = Field(default_factory=Scheduler)
     trifles_config: DailyTriflesConfig = Field(default_factory=DailyTriflesConfig)
-

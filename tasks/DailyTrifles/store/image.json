@@ -25,5 +25,23 @@
     "method": "Template matching",
     "threshold": 0.8,
     "description": "免费一抽"
+  },
+  {
+    "itemName": "special_sushi",
+    "imageName": "store_sushi.png",
+    "roiFront": "180,130,800,200",
+    "roiBack": "180,130,800,200",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "体力"
+  },
+  {
+    "itemName": "store_cost_type_jade",
+    "imageName": "store_cost_type_jade.png",
+    "roiFront": "600,490,50,60",
+    "roiBack": "600,490,50,60",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "购买时货币类型为勾玉"
   }
 ]

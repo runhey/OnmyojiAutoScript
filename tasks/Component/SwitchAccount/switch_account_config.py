@@ -16,8 +16,8 @@ class AccountInfo(BaseModel):
     svr: str = Field(default="", description="svr_help")
     account: str = Field(default="", description="account_help")
     # 为防止ocr出错 暂定格式 字符串以#分割
-    accountAlias: str = Field(default="", description="account_alias_help")
-    appleOrAndroid: bool = Field(default=True, description="apple_or_android_help")
+    account_alias: str = Field(default="", description="account_alias_help")
+    apple_or_android: bool = Field(default=True, description="apple_or_android_help")
     # 上一次执行成功的时间 ,防止出错时重复登录浪费时间
     last_complete_time: DateTime = Field(default=DateTime.fromisoformat("2023-01-01 00:00:00"), description="last_complete_time_help")
 
@@ -25,9 +25,9 @@ class AccountInfo(BaseModel):
         tmp_account = AccountInfo.preprocessAccount(self.account)
         if ocr_account == self.account or ocr_account.startswith(tmp_account):
             return True
-        if not self.accountAlias:
+        if not self.account_alias:
             return False
-        _accountAliasList = self.accountAlias.split('#')
+        _accountAliasList = self.account_alias.split('#')
         for alias in _accountAliasList:
             if ocr_account.startswith(alias):
                 return True
