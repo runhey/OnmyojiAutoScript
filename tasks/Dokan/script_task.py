@@ -705,6 +705,7 @@ class ScriptTask(ExtendGreenMark, GameUi, SwitchSoul, DokanSceneDetector):
             logger.info("=========refresh dokan list=========")
             self.ui_click(self.C_DOKAN_REFRESH, self.I_REFRESH_ENSURE, interval=1)
             self.ui_click_until_disappear(self.I_REFRESH_ENSURE, interval=1)
+            sleep(3)
             logger.info("Refresh Done")
             num_fresh += 1
 
@@ -1022,6 +1023,8 @@ class ScriptTask(ExtendGreenMark, GameUi, SwitchSoul, DokanSceneDetector):
                 if self.appear(GeneralBattle.I_REWARD_GOLD):
                     win = True
                     return win, True
+
+                return False, False
 
             win, is_battle_end_and_exit = is_battle_end()
             if is_battle_end_and_exit:
