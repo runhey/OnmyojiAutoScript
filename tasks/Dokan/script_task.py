@@ -117,7 +117,8 @@ class ScriptTask(ExtendGreenMark, GameUi, SwitchSoul, DokanSceneDetector):
             out_dokan_timer.clear()
 
             # 战斗结束
-            if current_scene == DokanScene.RYOU_DOKAN_SCENE_BATTLE_OVER:
+            if (current_scene == DokanScene.RYOU_DOKAN_SCENE_BATTLE_OVER or
+                    current_scene == DokanScene.RYOU_DOKAN_SCENE_WIN):
                 # 随便点击个地方退出奖励界面
                 self.click(self.C_DOKAN_TOPPA_RANK_CLOSE_AREA, interval=2)
                 sleep(2)
@@ -992,7 +993,8 @@ class ScriptTask(ExtendGreenMark, GameUi, SwitchSoul, DokanSceneDetector):
 
             def is_battle_end() -> (bool, bool):
 
-                if battle_count_limit <= 0:
+                if battle_count_limit < 0:
+                    logger.info(f"battle_count_limit:{battle_count_limit}")
                     win = True
                     return win, True
 
@@ -1022,6 +1024,7 @@ class ScriptTask(ExtendGreenMark, GameUi, SwitchSoul, DokanSceneDetector):
 
                 # 如果领奖励出现金币
                 if self.appear(GeneralBattle.I_REWARD_GOLD):
+                    logger.info("Reward gold")
                     win = True
                     return win, True
 
