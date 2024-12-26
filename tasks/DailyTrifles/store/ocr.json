@@ -1,0 +1,11 @@
+[
+  {
+    "itemName": "store_sushi_price",
+    "roiFront": "0,0,0,0",
+    "roiBack": "0,0,0,0",
+    "mode": "Digit",
+    "method": "Default",
+    "keyword": "",
+    "description": "商店Special购买体力所需勾玉数量，roiBack为动态调整，故此设置为0，0，0，0"
+  }
+]
