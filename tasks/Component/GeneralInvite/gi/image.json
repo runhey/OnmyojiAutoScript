@@ -173,8 +173,8 @@
   {
     "itemName": "flag_1_on",
     "imageName": "gi_flag_1_on.png",
-    "roiFront": "354,126,62,21",
-    "roiBack": "354,126,62,21",
+    "roiFront": "373,127,22,21",
+    "roiBack": "3373,127,22,21",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "用来判断当前的列表是哪儿的"
