@@ -50,7 +50,7 @@ class GeneralInviteAssets:
 	# 判断是否点中好友了 
 	I_SELECTED = RuleImage(roi_front=(895,373,33,32), roi_back=(380,157,568,350), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralInvite/gi/gi_selected.png")
 	# 用来判断当前的列表是哪儿的 
-	I_FLAG_1_ON = RuleImage(roi_front=(373,127,22,21), roi_back=(373,127,22,21), threshold=0.7, method="Template matching", file="./tasks/Component/GeneralInvite/gi/flag_1_on_new.png")
+	I_FLAG_1_ON = RuleImage(roi_front=(373,127,22,21), roi_back=(373,127,22,21), threshold=0.7, method="Template matching", file="./tasks/Component/GeneralInvite/gi/gi_flag_1_on_new.png")
 	# description 
 	I_FLAG_1_OFF = RuleImage(roi_front=(353,126,58,22), roi_back=(353,126,58,22), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralInvite/gi/gi_flag_1_off.png")
 	# description 
@@ -90,7 +90,7 @@ class GeneralInviteAssets:
 	# 所有的组队界面都有加成 
 	I_GI_BUFF = RuleImage(roi_front=(794,38,46,42), roi_back=(794,38,46,42), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralInvite/gi/gi_gi_buff.png")
 	# 三人御魂组队左上角的协站队伍 
-	I_GI_IN_ROOM = RuleImage(roi_front=(92,17,213,64), roi_back=(92,17,213,64), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralInvite/gi/gi_in_room.png")
+	I_GI_IN_ROOM = RuleImage(roi_front=(92,17,213,64), roi_back=(92,17,213,64), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralInvite/gi/gi_gi_in_room.png")
 	# description 
 	I_BACK_YELLOW_SEA = RuleImage(roi_front=(31,16,42,42), roi_back=(31,16,42,42), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralInvite/gi/gi_back_yellow_sea.png")
 
