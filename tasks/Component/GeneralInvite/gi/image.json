@@ -352,7 +352,7 @@
   },
   {
     "itemName": "gi_in_room",
-    "imageName": "gi_in_room.png",
+    "imageName": "gi_gi_in_room.png",
     "roiFront": "92,17,213,64",
     "roiBack": "92,17,213,64",
     "method": "Template matching",
