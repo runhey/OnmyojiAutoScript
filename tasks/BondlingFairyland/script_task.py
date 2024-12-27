@@ -896,7 +896,7 @@ if __name__ == '__main__':
     from module.device.device import Device
     import cv2
 
-    config = Config('du')
+    config = Config('oas1')
     device = Device(config)
     task = ScriptTask(config, device)
     image = task.screenshot()

@@ -36,7 +36,7 @@ class RoomType(str, Enum):
     NORMAL_5 = 'normal_5'
 
 
-class GeneralInvite(BaseTask, GeneralInviteAssets):
+class GeneralInvite(BaseTask, BondlingFairylandAssets, GeneralInviteAssets):
     timer_invite = None
     timer_wait = None
     timer_emoji = None  # 等待期间如果没有操作的话，可能会导致长时间无响应报错
@@ -319,7 +319,7 @@ class GeneralInvite(BaseTask, GeneralInviteAssets):
 
         while appear_1 or appear_2:
             self.screenshot()
-            if self.appear(BondlingFairylandAssets.I_SELECTED):
+            if self.appear(self.I_SELECTED):
                 break
             appear_1 = self.ocr_appear_click(self.O_FRIEND_NAME_1, interval=2)
             appear_2 = self.ocr_appear_click(self.O_FRIEND_NAME_2, interval=2)
@@ -339,7 +339,7 @@ class GeneralInvite(BaseTask, GeneralInviteAssets):
             self.screenshot()
             if self.appear(self.I_LOAD_FRIEND):
                 break
-            if self.appear(BondlingFairylandAssets.I_INVITE_ENSURE):
+            if self.appear(self.I_INVITE_ENSURE):
                 break
             if self.appear_then_click(self.I_ADD_2, interval=1):
                 continue
@@ -412,7 +412,7 @@ class GeneralInvite(BaseTask, GeneralInviteAssets):
             # 首先切换到不同的好友列表
             while index == 0:
                 self.screenshot()
-                if self.appear(BondlingFairylandAssets.I_FLAG_1_ON):
+                if self.appear(self.I_FLAG_1_ON):
                     break
                 if self.appear_then_click(self.I_FLAG_1_OFF, interval=1):
                     continue
@@ -449,13 +449,13 @@ class GeneralInvite(BaseTask, GeneralInviteAssets):
 
         # 点击确定
         logger.info('Click invite ensure')
-        if not self.appear(BondlingFairylandAssets.I_INVITE_ENSURE):
+        if not self.appear(self.I_INVITE_ENSURE):
             logger.warning('No appear invite ensure while invite friend')
         while 1:
             self.screenshot()
-            if not self.appear(BondlingFairylandAssets.I_INVITE_ENSURE):
+            if not self.appear(self.I_INVITE_ENSURE):
                 break
-            if self.appear_then_click(BondlingFairylandAssets.I_INVITE_ENSURE):
+            if self.appear_then_click(self.I_INVITE_ENSURE):
                 continue
         # 哪怕没有找到好友也有点击 确认 以退出好友列表
         if not is_select:
