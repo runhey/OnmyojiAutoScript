@@ -81,7 +81,7 @@ class DokanAssets:
 	# 放弃突破 
 	I_DOKAN_ABANDONED_TOPPA_TITLE = RuleImage(roi_front=(1020,160,260,80), roi_back=(1020,160,260,80), threshold=0.8, method="Template matching", file="./tasks/Dokan/res/res_ryou_dokan_abandoned_toppa_title.png")
 	# 状态：道馆胜利 
-	I_RYOU_DOKAN_WIN = RuleImage(roi_front=(628,60,45,33), roi_back=(628,60,45,33), threshold=0.8, method="Template matching", file="./tasks/Dokan/res/res_ryou_dokan_win.png")
+	I_RYOU_DOKAN_WIN = RuleImage(roi_front=(620,50,100,80), roi_back=(620,50,100,80), threshold=0.8, method="Template matching", file="./tasks/Dokan/res/res_ryou_dokan_win.png")
 	# 状态：进入战斗，待开始，右下角图标。 
 	I_RYOU_DOKAN_IN_FIELD2 = RuleImage(roi_front=(1131,562,88,48), roi_back=(1131,562,88,48), threshold=0.8, method="Template matching", file="./tasks/Dokan/res/res_ryou_dokan_in_field2.png")
 	# 馆主战,第一阵容 

@@ -38,9 +38,11 @@ class DokanScene(Enum):
     RYOU_DOKAN_SCENE_MASTER_BATTLING = 14
     # 弹出窗口,道馆打完后,出现的排名
     RYOU_DOKAN_SCENE_TOPPA_RANK = 15
+    # 道馆胜利后，出现的界面
+    RYOU_DOKAN_SCENE_WIN=16
 
     # 阴阳寮神社界面
-    RYOU_DOKAN_SHENSHE = 16
+    RYOU_DOKAN_SHENSHE = 17
 
     # 正在查找道馆,处于地图界面
     RYOU_DOKAN_SCENE_FINDING_DOKAN = 97
@@ -131,6 +133,9 @@ class DokanSceneDetector(DokanAssets, BaseTask, GeneralBattleAssets):
         # 放弃后投票,右侧俩按钮: 保留赏金/再战道馆
         if self.appear(self.I_RYOU_DOKAN_FAILED_VOTE_KEEP_BOUNTY):
             return True, DokanScene.RYOU_DOKAN_SCENE_FAILED_VOTE
+        # 状态：胜利
+        if self.appear(self.I_RYOU_DOKAN_WIN):
+            return True, DokanScene.RYOU_DOKAN_SCENE_WIN
 
         # 状态：道馆已经结束 在寮境,底部有 "今日可挑战机会" 字样
         if (self.appear(self.I_RYOU_DOKAN_CENTER_TOP) and

@@ -3,7 +3,11 @@
 # github https://github.com/runhey
 import time
 import random
+from time import sleep
 
+import cv2
+
+from module.base.utils import get_color, color_similar
 from tasks.base_task import BaseTask
 from tasks.Component.GeneralBattle.config_general_battle import GreenMarkType, GeneralBattleConfig
 from tasks.Component.GeneralBattle.assets import GeneralBattleAssets
@@ -293,54 +297,80 @@ class GeneralBattle(GeneralBuff, GeneralBattleAssets):
                 break
             if self.appear_then_click(self.I_PRESET, threshold=0.8, interval=1):
                 continue
+            if self.ocr_appear(self.O_PRESET):
+                self.click(self.O_PRESET, interval=1)
+                continue
         logger.info("Click preset button")
 
+        def get_unselect_color(tmp1, tmp2, tmp3, size):
+            # 获取未选择分组的颜色，3组之中必定存在两个颜色相似
+            # area 参数格式是（x1,y1,x2,y2）
+            color_1 = get_color(self.device.image,
+                                (tmp1.roi_back[0], tmp1.roi_back[1],
+                                 tmp1.roi_back[0] + size[0], tmp1.roi_back[1] + size[1]))
+            color_2 = get_color(self.device.image,
+                                (tmp2.roi_back[0], tmp2.roi_back[1],
+                                 tmp2.roi_back[0] + size[0], tmp2.roi_back[1] + size[1]))
+            color_3 = get_color(self.device.image,
+                                (tmp3.roi_back[0], tmp3.roi_back[1],
+                                 tmp3.roi_back[0] + size[0], tmp3.roi_back[1] + size[1]))
+
+            if color_similar(color_1, color_2):
+                return color_1
+            if color_similar(color_2, color_3):
+                return color_2
+            return color_3
+
         # 选择预设组
-        x, y = None, None
-        match preset_group:
-            case 1:
-                x, y = self.C_PRESET_GROUP_1.coord()
-            case 2:
-                x, y = self.C_PRESET_GROUP_2.coord()
-            case 3:
-                x, y = self.C_PRESET_GROUP_3.coord()
-            case 4:
-                x, y = self.C_PRESET_GROUP_4.coord()
-            case 5:
-                x, y = self.C_PRESET_GROUP_5.coord()
-            case 6:
-                x, y = self.C_PRESET_GROUP_6.coord()
-            case 7:
-                x, y = self.C_PRESET_GROUP_7.coord()
-            case _:
-                x, y = self.C_PRESET_GROUP_1.coord()
-        self.device.click(x, y)
+        tmp = self.__getattribute__("C_PRESET_GROUP_" + str(preset_group))
+        if tmp is None:
+            tmp = self.C_PRESET_GROUP_1
+        color_size = [self.C_PRESET_GROUP_1.roi_back[2],
+                      self.C_PRESET_GROUP_1.roi_back[3]]
+        # unselected_color = get_unselect_color(self.C_PRESET_GROUP_1, self.C_PRESET_GROUP_2, self.C_PRESET_GROUP_3, size=color_size)
+        # 考虑到有些预设组没有预设，所以这里取一个比较固定的颜色
+        unselected_color = (224.9, 208.3, 187.4)
+        while True:
+            self.screenshot()
+            color_tmp = get_color(self.device.image,
+                                  (tmp.roi_back[0], tmp.roi_back[1], tmp.roi_back[0] + color_size[0],
+                                   tmp.roi_back[1] + color_size[1]))
+            if color_similar(color_tmp, unselected_color):
+                self.click(tmp, interval=0.2)
+                continue
+            break
+
         logger.info("Select preset group")
 
         # 选择预设的队伍
         time.sleep(0.5)
-        match preset_team:
-            case 1:
-                x, y = self.C_PRESET_TEAM_1.coord()
-            case 2:
-                x, y = self.C_PRESET_TEAM_2.coord()
-            case 3:
-                x, y = self.C_PRESET_TEAM_3.coord()
-            case 4:
-                x, y = self.C_PRESET_TEAM_4.coord()
-            case _:
-                x, y = self.C_PRESET_TEAM_1.coord()
-        self.device.click(x, y)
+        tmp = self.__getattribute__("C_PRESET_TEAM_" + str(preset_team))
+        if tmp is None:
+            tmp = self.C_PRESET_TEAM_1
+        color_size = [5, 5]
+        # unselected_color = get_unselect_color(self.C_PRESET_TEAM_1, self.C_PRESET_TEAM_2, self.C_PRESET_TEAM_3, size=color_size )
+        unselected_color = (216.8, 185.0, 146.8)
+        while True:
+            self.screenshot()
+            color_tmp = get_color(self.device.image,
+                                  (tmp.roi_back[0], tmp.roi_back[1], tmp.roi_back[0] + color_size[0],
+                                   tmp.roi_back[1] + color_size[1]))
+            if color_similar(color_tmp, unselected_color):
+                self.click(tmp, interval=0.2)
+                continue
+            break
+
+        self.click(tmp)
         logger.info("Select preset team")
 
         # 点击预设确认
         self.wait_until_appear(self.I_PRESET_ENSURE, wait_time=1)
         while 1:
             self.screenshot()
-            if self.appear_then_click(self.I_PRESET_ENSURE, threshold=0.8):
-                continue
             if not self.appear(self.I_PRESET_ENSURE):
                 break
+            if self.appear_then_click(self.I_PRESET_ENSURE, threshold=0.8, interval=0.2):
+                continue
         logger.info("Click preset ensure")
 
     def random_click_swipt(self):
@@ -488,5 +518,41 @@ if __name__ == '__main__':
     c = Config('oas1')
     d = Device(c)
     t = GeneralBattle(c, d)
+    self = t
+    # t.check_buff([BuffClass.EXP_50, BuffClass.GOLD_50])
 
-    t.check_buff([BuffClass.EXP_50, BuffClass.GOLD_50])
+    img = cv2.imread(r"E:\preset3.png")
+    img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+    self.device.image = img
+
+
+    def get_unselect_color(tmp1, tmp2, tmp3, size):
+        # 获取未选择分组的颜色，3组之中必定存在两个颜色相似
+        # area 参数格式是（x1,y1,x2,y2）
+        color_1 = get_color(self.device.image,
+                            (tmp1.roi_back[0], tmp1.roi_back[1],
+                             tmp1.roi_back[0] + size[0], tmp1.roi_back[1] + size[1]))
+        color_2 = get_color(self.device.image,
+                            (tmp2.roi_back[0], tmp2.roi_back[1],
+                             tmp2.roi_back[0] + size[0], tmp2.roi_back[1] + size[1]))
+        color_3 = get_color(self.device.image,
+                            (tmp3.roi_back[0], tmp3.roi_back[1],
+                             tmp3.roi_back[0] + size[0], tmp3.roi_back[1] + size[1]))
+
+        if color_similar(color_1, color_2):
+            return color_1
+        if color_similar(color_2, color_3):
+            return color_2
+        return color_3
+
+
+    color_size = [self.C_PRESET_GROUP_1.roi_back[2],
+                  self.C_PRESET_GROUP_1.roi_back[3]]
+    unselected_color = get_unselect_color(self.C_PRESET_GROUP_1, self.C_PRESET_GROUP_2, self.C_PRESET_GROUP_3,
+                                          size=color_size)
+    print("")
+    color_size = [5, 5]
+    unselected_color = get_unselect_color(self.C_PRESET_TEAM_1, self.C_PRESET_TEAM_2, self.C_PRESET_TEAM_3,
+                                          size=color_size
+                                          )
+    print("")

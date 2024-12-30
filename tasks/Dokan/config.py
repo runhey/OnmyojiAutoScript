@@ -58,7 +58,7 @@ class AttackDokanMasterType(str, Enum):
 
 class AttackAccountConfig(BaseModel):
     # 当天可攻击次数,用以记录当天运行历史,用作状态恢复,不用配置
-    remain_attack_count: int = Field(default=2)
+    remain_attack_count: int = Field(default=2, description='remain_attack_count_help')
     # remain_attack_count 值记录的时间,不用配置
     attack_date: str = Field(default='2023-01-01', description='attack_date_help')
     # 每日最大攻击次数(1-2,默认2次),建议:僵尸寮配置2,其他寮配置1
@@ -151,9 +151,12 @@ class DokanConfig(BaseModel):
     switch_preset_enable: bool = Field(default=False, description='switch_preset_enable_help')
 
     # 速攻阵容 格式:n,n
-    preset_group_1: str = Field(default="", description='preset_group_help')
+    preset_group_1: str = Field(default="", description='preset_group_1_help')
     # 挂机阵容
-    preset_group_2: str = Field(default="", description='preset_group_help')
+    preset_group_2: str = Field(default="", description='preset_group_2_help')
+
+    # 按式神名字绿标，多个名字用“,”分隔
+    green_mark_shikigami_name: str = Field(default="", description='green_mark_shikigami_name_help')
 
     def parse_preset_group(self, value: str):
         re_str = r"([1-7])\,([1-5])"
