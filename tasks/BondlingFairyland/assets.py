@@ -51,12 +51,9 @@ class BondlingFairylandAssets:
 	I_BALL_HELP = RuleImage(roi_front=(963,571,100,100), roi_back=(963,571,100,100), threshold=0.8, method="Template matching", file="./tasks/BondlingFairyland/ball/ball_ball_help.png")
 	# 契灵创建队伍 
 	I_CREATE_TEAM = RuleImage(roi_front=(569,491,141,50), roi_back=(569,491,141,50), threshold=0.8, method="Template matching", file="./tasks/BondlingFairyland/ball/create_team.png")
-	# 点击邀请
-	I_INVITE_ENSURE = RuleImage(roi_front=(500,541,132,60), roi_back=(478,523,378,92), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralInvite/gi/gi_invite_ensure.png")
-	# 判断是否点中好友了
-	I_SELECTED = RuleImage(roi_front=(895,373,33,32), roi_back=(380,157,568,350), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralInvite/gi/gi_selected.png")
-	# 用来判断当前的列表是哪儿的
+	# 用来判断当前的列表是哪儿的 
 	I_FLAG_1_ON = RuleImage(roi_front=(373,127,22,21), roi_back=(373,127,22,21), threshold=0.7, method="Template matching", file="./tasks/BondlingFairyland/ball/gi_flag_1_on.png")
+
 
 	# Image Rule Assets
 	# description 

@@ -45,7 +45,7 @@ class GeneralInvite(BaseTask, BondlingFairylandAssets, GeneralInviteAssets):
 
     """
 
-    def run_invite(self, config: InviteConfig, is_first: bool = False) -> bool:
+    def run_invite(self, config: InviteConfig, is_first: bool = False, is_over: bool = True) -> bool:
         """
         队长！！身份。。。在组队界面邀请好友（ 如果开启is_first） 等待队员进入开启挑战
         请注意，返回的时候成功时是进入战斗了！！！
@@ -120,8 +120,11 @@ class GeneralInvite(BaseTask, BondlingFairylandAssets, GeneralInviteAssets):
 
             # 点击挑战
             if fire:
-                self.click_fire()
-                return True
+                if is_over:
+                    self.click_fire()
+                    return True
+                else:
+                    return True
 
             if self.timer_invite and self.timer_invite.reached():
                 if is_first:
