@@ -354,21 +354,14 @@ class GeneralInvite(BaseTask, BondlingFairylandAssets, GeneralInviteAssets):
         friend_class = []
         class_ocr = [self.O_F_LIST_1, self.O_F_LIST_2, self.O_F_LIST_3, self.O_F_LIST_4]
         class_index = 0
-        list_1 = self.O_F_LIST_1.ocr(self.device.image)
-        list_2 = self.O_F_LIST_2.ocr(self.device.image)
-        list_3 = self.O_F_LIST_3.ocr(self.device.image)
-        list_4 = self.O_F_LIST_4.ocr(self.device.image)
+        list_1 = self.O_FRIEND.ocr(self.device.image)
+        list_2 = self.O_KUAQU.ocr(self.device.image)
         list_1 = list_1.replace(' ', '').replace('、', '')
         list_2 = list_2.replace(' ', '').replace('、', '')
-        list_3 = list_3.replace(' ', '').replace('、', '')
         if list_1 is not None and list_1 != '' and list_1 in self.friend_class:
             friend_class.append(list_1)
         if list_2 is not None and list_2 != '' and list_2 in self.friend_class:
             friend_class.append(list_2)
-        if list_3 is not None and list_3 != '' and list_3 in self.friend_class:
-            friend_class.append(list_3)
-        if list_4 is not None and list_4 != '' and list_4 in self.friend_class:
-            friend_class.append(list_4)
         for i in range(len(friend_class)):
             if friend_class[i] == '蔡友':
                 friend_class[i] = '寮友'
@@ -415,27 +408,15 @@ class GeneralInvite(BaseTask, BondlingFairylandAssets, GeneralInviteAssets):
             # 首先切换到不同的好友列表
             while index == 0:
                 self.screenshot()
-                if self.appear(self.I_FLAG_1_ON):
+                if self.appear(self.I_SELECT_FRIEND_ON):
                     break
-                if self.appear_then_click(self.I_FLAG_1_OFF, interval=1):
+                if self.appear_then_click(self.I_SELECT_FRIEND_OFF, interval=1):
                     continue
             while index == 1:
                 self.screenshot()
-                if self.appear(self.I_FLAG_2_ON):
+                if self.appear(self.I_SELECT_KUAQU_ON):
                     break
-                if self.appear_then_click(self.I_FLAG_2_OFF, interval=1):
-                    continue
-            while index == 2:
-                self.screenshot()
-                if self.appear(self.I_FLAG_3_ON):
-                    break
-                if self.appear_then_click(self.I_FLAG_3_OFF, interval=1):
-                    continue
-            while index == 3:
-                self.screenshot()
-                if self.appear(self.I_FLAG_4_ON):
-                    break
-                if self.appear_then_click(self.I_FLAG_4_OFF, interval=1):
+                if self.appear_then_click(self.I_SELECT_KUAQU_OFF, interval=1):
                     continue
 
             # 选中好友， 在这里游戏获取在线的好友并不是很快，根据不同的设备会有不同的时间，而且没有什么元素提供我们来判断

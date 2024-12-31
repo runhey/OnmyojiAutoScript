@@ -52,14 +52,5 @@
     "method": "Template matching",
     "threshold": 0.8,
     "description": "契灵创建队伍"
-  },
-  {
-    "itemName": "flag_1_on",
-    "imageName": "gi_flag_1_on.png",
-    "roiFront": "373,127,22,21",
-    "roiBack": "373,127,22,21",
-    "method": "Template matching",
-    "threshold": 0.7,
-    "description": "用来判断当前的列表是哪儿的"
   }
 ]

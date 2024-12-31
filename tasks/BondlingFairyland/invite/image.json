@@ -1,0 +1,38 @@
+[
+  {
+    "itemName": "select_kuaqu_on",
+    "imageName": "select_kuaqu_on.png",
+    "roiFront": "485,124,79,31",
+    "roiBack": "485,124,79,31",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "select_friend_off",
+    "imageName": "select_friend_off.png",
+    "roiFront": "366,121,78,32",
+    "roiBack": "366,121,78,32",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "select_friend_on",
+    "imageName": "select_friend_on.png",
+    "roiFront": "376,121,63,38",
+    "roiBack": "376,121,63,38",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "select_kuaqu_off",
+    "imageName": "select_kuaqu_off.png",
+    "roiFront": "490,119,68,33",
+    "roiBack": "490,119,68,33",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  }
+]
