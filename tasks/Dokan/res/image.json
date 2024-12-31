@@ -511,5 +511,14 @@
     "method": "Template matching",
     "threshold": 0.8,
     "description": "左上角退出按钮-"
+  },
+  {
+    "itemName": "ryou_dokan_spoils_of_dokan",
+    "imageName": "res_ryou_dokan_spoils_of_dokan.png",
+    "roiFront": "480,400,400,100",
+    "roiBack":  "480,400,400,100",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "道馆攻破后夺得资金界面"
   }
 ]
