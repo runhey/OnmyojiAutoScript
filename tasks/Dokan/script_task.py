@@ -1056,6 +1056,10 @@ class ScriptTask(ExtendGreenMark, GameUi, SwitchSoul, DokanSceneDetector):
 
             # 打完一个小朋友，自动进入下一个小朋友
             if self.appear(self.I_RYOU_DOKAN_IN_FIELD):
+                # 在此处判断战斗次数,防止开启额外的战斗
+                if battle_count_limit <= 0:
+                    win = True
+                    break
                 self.device.click_record_clear()
                 self.device.stuck_record_clear()
 
