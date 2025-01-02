@@ -8,7 +8,7 @@ import random
 from tasks.Component.Summon.assets import SummonAssets
 from tasks.base_task import BaseTask
 from module.logger import logger
-
+import re
 
 class Summon(BaseTask, SummonAssets):
 
@@ -41,10 +41,17 @@ class Summon(BaseTask, SummonAssets):
         self.wait_until_appear(self.I_BLUE_TICKET)
         while True:
             ticket_info = self.O_ONE_TICKET.ocr(self.device.image)
-            if ticket_info is None:
+            # 处理 None 和空字符串
+            if ticket_info is None or ticket_info == '':
                 ticket_info = 0
             else:
-                ticket_info = int(ticket_info)
+                # 使用正则表达式提取字符串中的数字
+                match = re.search(r'\d+', ticket_info)
+                if match:
+                    ticket_info = int(match.group())
+                else:
+                    logger.warning(f'Invalid ticket_info value: {ticket_info}, expected a numeric string')
+                    ticket_info = 0  # 将无效值设置为默认值 0
             if ticket_info <= 0:
                 logger.warning('There is no any one blue ticket')
                 return
