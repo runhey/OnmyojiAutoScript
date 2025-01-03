@@ -138,16 +138,6 @@ class ScriptTask(GameUi, BaseActivity, SwitchSoul, ActivityShikigamiAssets):
             self.screenshot()
             if self.appear(self.I_FIRE):
                 break
-            # 2024-12-04 --------------start
-            from tasks.ActivityShikigami.config import ShikigamiType
-            map_click = {
-                ShikigamiType.FOOD_TYPE_1: self.C_CLICK1,
-                ShikigamiType.FOOD_TYPE_2: self.C_CLICK2,
-                ShikigamiType.FOOD_TYPE_3: self.C_CLICK3,
-                ShikigamiType.FOOD_TYPE_4: self.C_CLICK4,
-            }
-            self.click(map_click[self.config.model.activity_shikigami.shikigami.food_type], interval=4)
-            # 2024-12-04 --------------end
             if self.appear_then_click(self.I_SHI, interval=1):
                 continue
             if self.appear_then_click(self.I_DRUM, interval=1):
