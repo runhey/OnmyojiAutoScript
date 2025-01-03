@@ -54,6 +54,15 @@
     "description": "皮肤券"
   },
   {
+    "itemName": "guild_skin_check",
+    "imageName": "guild_guild_skin.png",
+    "roiFront": "795,438,71,72",
+    "roiBack": "320,162,573,371",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "皮肤券判断是否到末端"
+  },
+  {
     "itemName": "guild_check_scrap",
     "imageName": "guild_guild_check_scrap.png",
     "roiFront": "561,429,90,88",

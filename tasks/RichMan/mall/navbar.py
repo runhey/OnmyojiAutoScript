@@ -34,7 +34,7 @@ class MallNavbar(GameUi, RichManAssets):
         :return:
         """
         self._enter_scales()
-        self.ui_click(self.I_MALL_BONDLINGS_SURE, self.I_MALL_BONDLINGS_CHECK)
+        self.ui_click(self.I_MALL_BONDLINGS_SURE, self.I_MALL_BONDLINGS_ON)
 
     def _enter_sundry(self):
         """

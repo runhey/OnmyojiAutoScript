@@ -171,9 +171,15 @@ class Buy(BaseTask, BuyAssets):
             logger.error('Target is not RuleOcr')
             return False
         current = target.ocr(self.device.image)
-        if not isinstance(current, int):
-            logger.warning('OCR current money failed')
-            return False
+        if '万' in current:
+            logger.info('Money is enough')
+            return True
+            # 使用正则表达式提取字符串中的数字
+        else:
+            current = int(current)
+        # if not isinstance(current, int):
+        #     logger.warning('OCR current money failed')
+        #     return False
         if current >= minimum:
             logger.info('Money is enough')
             return True
