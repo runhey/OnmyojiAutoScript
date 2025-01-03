@@ -70,6 +70,17 @@ class ScriptTask(GameUi, GeneralInvite, GeneralRoom, BondlingBattle, SwitchSoul,
         self.current_count = 0
         self.limit_count: int = limit_count
 
+        if UserStatus.handoff1 == cong.bondling_config.user_status:
+            self.limit_count: int = limit_count//2
+            self.switch_ball()
+        if UserStatus.handoff2 == cong.bondling_config.user_status:
+            self.limit_count: int = limit_count//2
+            self.run_member()
+            self.current_count = 0
+            self.ui_get_current_page()
+            self.ui_goto(page_bondling_fairyland)
+            self.switch_ball()
+
         match cong.bondling_config.user_status:
             case UserStatus.LEADER:
                 self.switch_ball()
@@ -106,7 +117,7 @@ class ScriptTask(GameUi, GeneralInvite, GeneralRoom, BondlingBattle, SwitchSoul,
             #     logger.info('Orochi count limit out')
             #     break
             if datetime.now() - self.start_time >= self.limit_time:
-                logger.info('Orochi time limit out')
+                logger.info('BondlingFairyland time limit out')
                 break
 
             if self.check_then_accept():
@@ -138,15 +149,13 @@ class ScriptTask(GameUi, GeneralInvite, GeneralRoom, BondlingBattle, SwitchSoul,
             # 如果还在战斗中，就退出战斗
             if self.exit_battle():
                 pass
-
-        self.ui_get_current_page()
-        self.ui_goto(page_main)
-
-        if success:
+                # 引用配置
+        if UserStatus.MEMBER == self.config.bondling_fairyland.bondling_config.user_status:
+            self.ui_get_current_page()
+            self.ui_goto(page_main)
             self.set_next_run(task='BondlingFairyland', finish=True, success=True)
-        else:
-            self.set_next_run(task='BondlingFairyland', finish=True, success=False)
-        raise TaskEnd
+            raise TaskEnd
+
 
     def switch_ball(self):
         cong = self.config.bondling_fairyland
@@ -212,12 +221,9 @@ class ScriptTask(GameUi, GeneralInvite, GeneralRoom, BondlingBattle, SwitchSoul,
 
         self.ui_get_current_page()
         self.ui_goto(page_main)
-
-        if success:
-            self.set_next_run(task='BondlingFairyland', finish=True, success=True)
-        else:
-            self.set_next_run(task='BondlingFairyland', finish=True, success=False)
+        self.set_next_run(task='BondlingFairyland', finish=True, success=True)
         raise TaskEnd
+
 
     def run_stone(self, bondling_stone_enable: bool, bondling_stone_class: BondlingClass):
         """
@@ -382,6 +388,12 @@ class ScriptTask(GameUi, GeneralInvite, GeneralRoom, BondlingBattle, SwitchSoul,
             cong = self.config.bondling_fairyland
             match cong.bondling_config.user_status:
                 case UserStatus.LEADER:
+                    if self.run_leader():
+                        return success
+                case UserStatus.handoff1:
+                    if self.run_leader():
+                        return success
+                case UserStatus.handoff2:
                     if self.run_leader():
                         return success
                 case UserStatus.ALONE:
@@ -682,6 +694,10 @@ class ScriptTask(GameUi, GeneralInvite, GeneralRoom, BondlingBattle, SwitchSoul,
 
             if self.current_count >= self.limit_count:
                 if self.appear(self.I_GI_IN_ROOM):
+                    # 次数达到也要邀请好友进房间,然后退出,不然队员无法判断是否完成契灵,出现异常
+                    self.run_invite(config=self.config.bondling_fairyland.invite_config, is_over=False)
+                    # 等待三秒让队员进房间,避免队员没进房间出现异常
+                    sleep(3)
                     logger.info('bondling_fairyland count limit out')
                     break
 
@@ -722,12 +738,14 @@ class ScriptTask(GameUi, GeneralInvite, GeneralRoom, BondlingBattle, SwitchSoul,
             pass
 
         self.ui_get_current_page()
+        self.ui_goto(page_bondling_fairyland)
+        # 引用配置
+        if UserStatus.handoff1 == self.config.bondling_fairyland.bondling_config.user_status:
+            self.current_count = 0
+            self.run_member()
+        self.ui_get_current_page()
         self.ui_goto(page_main)
-
-        if success:
-            self.set_next_run(task='BondlingFairyland', finish=True, success=True)
-        else:
-            self.set_next_run(task='BondlingFairyland', finish=True, success=False)
+        self.set_next_run(task='BondlingFairyland', finish=True, success=True)
         raise TaskEnd
 
     def wait_battle(self, wait_time: time) -> bool:
@@ -865,6 +883,7 @@ class ScriptTask(GameUi, GeneralInvite, GeneralRoom, BondlingBattle, SwitchSoul,
                 break
 
             if self.is_in_room():
+                logger.info("进入到组队房间！is_in_room")
                 return True
             # 被秒开
             # https://github.com/runhey/OnmyojiAutoScript/issues/230
