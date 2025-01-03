@@ -43,7 +43,7 @@ class ScriptTask(
         match self._task_config.eternity_sea_config.user_status:
             case UserStatus.LEADER: success = self.run_leader()
             case UserStatus.MEMBER: success = self.run_member()
-            case UserStatus.ALONE: self.run_alone()
+            case UserStatus.ALONE: success = self.run_alone()
             case _: logger.error('Unknown user status')
 
         if success:
@@ -219,6 +219,7 @@ class ScriptTask(
                         config=self._task_config.general_battle_config
                     )
                     break
+        return True
 
     def is_room_dead(self) -> bool:
         # 如果在探索界面或者是出现在组队界面，那就是可能房间死了

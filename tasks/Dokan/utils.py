@@ -4,6 +4,19 @@ import numpy as np
 from module.logger import logger
 
 
+def retry(func, max_retry=3, *args, **kwargs):
+    while True:
+        try:
+            result = func(*args, **kwargs)
+            if result is not None or max_retry <= 0:
+                return result
+            max_retry -= 1
+        except Exception as e:
+            if max_retry <= 0:
+                raise e
+            max_retry -= 1
+
+
 def detect_safe_area(image, target_gray_value=255, tolerance=0):
     """
     在灰度图片中查找与目标灰度值在容差范围内的纯色区块，并返回这些区块的坐标。
@@ -193,5 +206,3 @@ def test_anti_detect_random_click():
             cv2.imshow('Safe Area', image)
             cv2.waitKey(0)
             cv2.destroyAllWindows()
-
-

@@ -209,8 +209,8 @@
   {
     "itemName": "ryou_dokan_win",
     "imageName": "res_ryou_dokan_win.png",
-    "roiFront": "628,60,45,33",
-    "roiBack": "628,60,45,33",
+    "roiFront": "620,50,100,80",
+    "roiBack": "620,50,100,80",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "状态：道馆胜利"
