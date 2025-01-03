@@ -27,27 +27,27 @@ class GeneralBattleAssets:
 
 	# Click Rule Assets
 	# 预设队伍1 
-	C_PRESET_TEAM_1 = RuleClick(roi_front=(196,234,464,114), roi_back=(196,234,464,114), name="preset_team_1")
+	C_PRESET_TEAM_1 = RuleClick(roi_front=(195,235,465,110), roi_back=(195,235,465,110), name="preset_team_1")
 	# 预设队伍2 
-	C_PRESET_TEAM_2 = RuleClick(roi_front=(197,358,465,103), roi_back=(197,358,465,103), name="preset_team_2")
+	C_PRESET_TEAM_2 = RuleClick(roi_front=(195,355,465,110), roi_back=(195,355,465,110), name="preset_team_2")
 	# 预设队伍3 
-	C_PRESET_TEAM_3 = RuleClick(roi_front=(195,480,462,100), roi_back=(195,480,462,100), name="preset_team_3")
+	C_PRESET_TEAM_3 = RuleClick(roi_front=(195,475,465,110), roi_back=(195,475,465,110), name="preset_team_3")
 	# 预设队伍4 
-	C_PRESET_TEAM_4 = RuleClick(roi_front=(193,596,464,35), roi_back=(193,596,464,35), name="preset_team_4")
+	C_PRESET_TEAM_4 = RuleClick(roi_front=(195,595,465,35), roi_back=(195,595,465,35), name="preset_team_4")
 	# 预设组1 
-	C_PRESET_GROUP_1 = RuleClick(roi_front=(28,238,134,56), roi_back=(28,238,134,56), name="preset_group_1")
+	C_PRESET_GROUP_1 = RuleClick(roi_front=(35,240,25,50), roi_back=(35,240,25,50), name="preset_group_1")
 	# 预设组2 
-	C_PRESET_GROUP_2 = RuleClick(roi_front=(31,298,132,60), roi_back=(31,298,132,60), name="preset_group_2")
+	C_PRESET_GROUP_2 = RuleClick(roi_front=(35,305,25,50), roi_back=(35,305,25,50), name="preset_group_2")
 	# 预设组3 
-	C_PRESET_GROUP_3 = RuleClick(roi_front=(31,362,135,59), roi_back=(31,362,135,59), name="preset_group_3")
+	C_PRESET_GROUP_3 = RuleClick(roi_front=(35,365,25,50), roi_back=(35,365,25,50), name="preset_group_3")
 	# 预设组4 
-	C_PRESET_GROUP_4 = RuleClick(roi_front=(29,427,133,57), roi_back=(29,427,133,57), name="preset_group_4")
+	C_PRESET_GROUP_4 = RuleClick(roi_front=(35,430,25,50), roi_back=(35,430,25,50), name="preset_group_4")
 	# 预设组5 
-	C_PRESET_GROUP_5 = RuleClick(roi_front=(31,489,133,60), roi_back=(31,489,133,60), name="preset_group_5")
+	C_PRESET_GROUP_5 = RuleClick(roi_front=(35,495,25,50), roi_back=(35,495,25,50), name="preset_group_5")
 	# 预设组6 
-	C_PRESET_GROUP_6 = RuleClick(roi_front=(31,549,132,63), roi_back=(31,549,132,63), name="preset_group_6")
+	C_PRESET_GROUP_6 = RuleClick(roi_front=(35,555,25,50), roi_back=(35,555,25,50), name="preset_group_6")
 	# 预设组7 
-	C_PRESET_GROUP_7 = RuleClick(roi_front=(29,615,137,63), roi_back=(29,615,137,63), name="preset_group_7")
+	C_PRESET_GROUP_7 = RuleClick(roi_front=(35,615,25,50), roi_back=(35,615,25,50), name="preset_group_7")
 	# 从左开始第一个绿标 
 	C_GREEN_LEFT_1 = RuleClick(roi_front=(128,433,90,150), roi_back=(128,433,90,150), name="green_left_1")
 	# 从左开始第二个绿标 
@@ -60,6 +60,8 @@ class GeneralBattleAssets:
 	C_GREEN_LEFT_5 = RuleClick(roi_front=(1059,416,85,145), roi_back=(1059,416,85,145), name="green_left_5")
 	# 绿标阴阳师 
 	C_GREEN_MAIN = RuleClick(roi_front=(590,454,88,178), roi_back=(590,454,88,178), name="green_main")
+	# 绿标点击 区域,默认为全屏，需要在代码中更新其区域 
+	C_GREEN_MARK_AREA = RuleClick(roi_front=(0,0,1280,720), roi_back=(0,0,1280,720), name="green_mark_area")
 	# 战斗的时候有一定的概率随机点击 
 	C_RANDOM_CLICK = RuleClick(roi_front=(104,79,1050,507), roi_back=(255,65,100,100), name="random_click")
 
@@ -113,6 +115,12 @@ class GeneralBattleAssets:
 	I_PRESENT_LESS_THAN_5 = RuleImage(roi_front=(222,648,418,43), roi_back=(222,648,418,43), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralBattle/gb/gb_present_less_than_5.png")
 	# 封魔的金币 
 	I_DE_GOLD = RuleImage(roi_front=(61,52,30,25), roi_back=(45,33,65,64), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralBattle/gb/gb_de_gold.png")
+	# 绿标 
+	I_GREEN_MARKER = RuleImage(roi_front=(0,0,1280,720), roi_back=(0,0,1280,720), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralBattle/gb/gb_green_marker.png")
+	# 绿标-左上角部分 
+	I_GREEN_MARKER_LEFT_TOP = RuleImage(roi_front=(0,0,1280,720), roi_back=(0,0,1280,720), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralBattle/gb/gb_green_marker_left_top.png")
+	# 绿标-下半部分 
+	I_GREEN_MARKER_BOTTOM = RuleImage(roi_front=(0,0,1280,720), roi_back=(0,0,1280,720), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralBattle/gb/gb_green_marker_bottom.png")
 
 
 	# Image Rule Assets
@@ -123,6 +131,8 @@ class GeneralBattleAssets:
 	# Ocr Rule Assets
 	# 准备 
 	O_BATTLE_PREPARE = RuleOcr(roi=(1122,546,92,51), area=(1122,546,92,51), mode="Single", method="Default", keyword="准备", name="battle_prepare")
+	# 预设,部分场景预设按钮上的文字为'预设'+数字,导致点击preset失败 
+	O_PRESET = RuleOcr(roi=(20,620,60,80), area=(20,620,60,80), mode="Single", method="Default", keyword="预", name="preset")
 
 
 	# Swipe Rule Assets

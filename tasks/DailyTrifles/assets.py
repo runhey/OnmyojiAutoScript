@@ -25,6 +25,8 @@ class DailyTriflesAssets:
 	I_CLICK_BLESS = RuleImage(roi_front=(617,442,92,39), roi_back=(617,442,92,39), threshold=0.8, method="Template matching", file="./tasks/DailyTrifles/love/Screenshots_click_bless.png")
 	# 吉闻页 
 	I_LUCK_TITLE = RuleImage(roi_front=(600,52,131,67), roi_back=(600,52,131,67), threshold=0.8, method="Template matching", file="./tasks/DailyTrifles/love/Screenshots_luck_title.png")
+	# 好友羁绊提升弹窗 
+	I_FRIENDSHIP_UP = RuleImage(roi_front=(1147,80,27,28), roi_back=(1147,80,27,28), threshold=0.8, method="Template matching", file="./tasks/DailyTrifles/love/friendship_up.png")
 
 
 	# Image Rule Assets
@@ -34,5 +36,14 @@ class DailyTriflesAssets:
 	I_GIFT_RECOMMEND = RuleImage(roi_front=(1186,98,53,64), roi_back=(1172,83,83,306), threshold=0.8, method="Template matching", file="./tasks/DailyTrifles/store/store_gift_recommend.png")
 	# 免费一抽 
 	I_GIFT_SIGN = RuleImage(roi_front=(236,129,306,218), roi_back=(236,129,306,218), threshold=0.8, method="Template matching", file="./tasks/DailyTrifles/store/store_gift_sign.png")
+	# 体力 
+	I_SPECIAL_SUSHI = RuleImage(roi_front=(180,130,800,200), roi_back=(180,130,800,200), threshold=0.8, method="Template matching", file="./tasks/DailyTrifles/store/store_sushi.png")
+	# 购买时货币类型为勾玉 
+	I_STORE_COST_TYPE_JADE = RuleImage(roi_front=(600,490,50,60), roi_back=(600,490,50,60), threshold=0.8, method="Template matching", file="./tasks/DailyTrifles/store/store_cost_type_jade.png")
+
+
+	# Ocr Rule Assets
+	# 商店Special购买体力所需勾玉数量，roiBack为动态调整，故此设置为0，0，0，0 
+	O_STORE_SUSHI_PRICE = RuleOcr(roi=(0,0,0,0), area=(0,0,0,0), mode="Digit", method="Default", keyword="", name="store_sushi_price")
 
 

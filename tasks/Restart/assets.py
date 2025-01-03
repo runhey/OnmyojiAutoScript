@@ -50,7 +50,9 @@ class RestartAssets:
 	# 宠物小屋关闭按钮 
 	I_HARVEST_BACK_PET_HOUSE = RuleImage(roi_front=(20,15,70,70), roi_back=(20,15,70,70), threshold=0.8, method="Template matching", file="./tasks/Restart/harvest/harvest_back_pet_house.png")
 	# 点击庭院阴阳师出现的姿度按钮 
-	I_HARVEST_ZIDU = RuleImage(roi_front=(785,475,135,135), roi_back=(785,475,135,135), threshold=0.8, method="Template matching", file="./tasks/Restart/harvest/harvest_zidu.png")
+	I_HARVEST_ZIDU = RuleImage(roi_front=(785,475,135,135), roi_back=(785,475,135,135), threshold=0.8, method="Template matching", file="./tasks/Restart/harvest/harvest_harvest_zidu.png")
+	# description 
+	I_HARVEST_MAIL_COPY = RuleImage(roi_front=(257,509,29,21), roi_back=(192,472,790,100), threshold=0.8, method="Template matching", file="./tasks/Restart/harvest/harvest_harvest_mail_copy.png")
 
 
 	# Click Rule Assets
@@ -72,7 +74,7 @@ class RestartAssets:
 	# 登录时候不观看CG视频 
 	I_WATCH_VIDEO_CANCEL = RuleImage(roi_front=(466,396,130,61), roi_back=(466,396,130,61), threshold=0.8, method="Template matching", file="./tasks/Restart/login/login_watch_video_cancel.png")
 	# 指定角色进入游戏,默认第一个 
-	I_LOGIN_SPECIFIC_SERVE = RuleImage(roi_front=(24,33,52,47), roi_back=(24,33,52,47), threshold=0.8, method="Template matching", file="./tasks/Restart/login/login_login_specific_serve.png")
+	I_LOGIN_SPECIFIC_SERVE = RuleImage(roi_front=(0,0,120,120), roi_back=(0,0,120,120), threshold=0.8, method="Template matching", file="./tasks/Restart/login/login_login_specific_serve.png")
 	# 下载插画 
 	I_LOGIN_LOAD_DOWN = RuleImage(roi_front=(711,450,153,58), roi_back=(711,450,153,58), threshold=0.8, method="Template matching", file="./tasks/Restart/login/login_login_load_down.png")
 	# 登录界面 弹出框 前往绑定 手机 
@@ -83,6 +85,8 @@ class RestartAssets:
 	I_LOGIN_LOGIN_CANCEL_BIND_PHONE = RuleImage(roi_front=(450,460,160,100), roi_back=(450,460,160,100), threshold=0.8, method="Template matching", file="./tasks/Restart/login/login_login_cancel_bind_phone.png")
 	# 登录界面 弹出框 阴阳师精灵 
 	I_LOGIN_LOGIN_ONMYOJI_GENIE = RuleImage(roi_front=(80,110,280,120), roi_back=(80,110,280,120), threshold=0.8, method="Template matching", file="./tasks/Restart/login/login_login_onmyoji_genie.png")
+	# 已有角色 
+	I_CHARACTARS = RuleImage(roi_front=(246,535,100,31), roi_back=(219,523,173,57), threshold=0.8, method="Template matching", file="./tasks/Restart/login/login_charactars.png")
 
 
 	# Ocr Rule Assets

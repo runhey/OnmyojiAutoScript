@@ -1,31 +1,27 @@
 # This Python file uses the following encoding: utf-8
 # @author runhey
 # github https://github.com/runhey
-import re
 import copy
-from time import sleep
+import re
 from datetime import timedelta, time, datetime
-from cached_property import cached_property
-from enum import Enum
-from module.atom.image import RuleImage
+from time import sleep
+from typing import List
 
+import cv2
+from cached_property import cached_property
+from markdown_it.rules_inline import image
+
+from module.atom.image import RuleImage
+from module.base.timer import Timer
 from module.exception import TaskEnd
 from module.logger import logger
-from module.base.timer import Timer
-
-from tasks.GameUi.game_ui import GameUi
-from tasks.GameUi.page import page_main, page_exploration, page_shikigami_records
-from tasks.Component.GeneralBattle.general_battle import GeneralBattle
-from tasks.Component.GeneralBattle.config_general_battle import GeneralBattleConfig
-from tasks.Component.GeneralInvite.general_invite import GeneralInvite
-from tasks.Secret.script_task import ScriptTask as SecretScriptTask
-from tasks.WantedQuests.config import WantedQuestsConfig, CooperationType, CooperationSelectMask, \
-    CooperationSelectMaskDescription
-from tasks.WantedQuests.assets import WantedQuestsAssets
-from tasks.WantedQuests.explore import WQExplore, ExploreWantedBoss
 from tasks.Component.Costume.config import MainType
-from typing import List
-from tasks.Component.SwitchSoul.switch_soul import SwitchSoul
+from tasks.Component.GeneralBattle.config_general_battle import GeneralBattleConfig
+from tasks.GameUi.page import page_main, page_exploration, page_shikigami_records
+from tasks.Secret.script_task import ScriptTask as SecretScriptTask
+from tasks.WantedQuests.assets import WantedQuestsAssets
+from tasks.WantedQuests.config import CooperationType, CooperationSelectMask
+from tasks.WantedQuests.explore import WQExplore, ExploreWantedBoss
 
 
 class ScriptTask(WQExplore, SecretScriptTask, WantedQuestsAssets):
@@ -43,7 +39,12 @@ class ScriptTask(WQExplore, SecretScriptTask, WantedQuestsAssets):
             self.ui_goto(page_shikigami_records)
             self.run_switch_soul_by_name(con.switch_soul_config.group_name, con.switch_soul_config.team_name)
 
-        if not self.pre_work():
+        preSuc = False
+        if (self.get_config()).cooperation_only:
+            preSuc = self.pre_work_cooperation_only()
+        else:
+            preSuc = self.pre_work()
+        if not preSuc:
             # 无法完成预处理 很有可能你已经完成了悬赏任务
             logger.warning('Cannot pre-work')
             logger.warning('You may have completed the reward task')
@@ -113,7 +114,7 @@ class ScriptTask(WQExplore, SecretScriptTask, WantedQuestsAssets):
         raise TaskEnd('WantedQuests')
 
     def next_run(self):
-        before_end: time = self.config.wanted_quests.wanted_quests_config.before_end
+        before_end: time = self.get_config().before_end
         if before_end == time(hour=0, minute=0, second=0):
             self.set_next_run(task='WantedQuests', success=True, finish=True)
             return
@@ -144,7 +145,7 @@ class ScriptTask(WQExplore, SecretScriptTask, WantedQuestsAssets):
         done_timer = Timer(5)
         while 1:
             self.screenshot()
-            if self.appear(self.I_TARCE_DISENABLE):
+            if self.appear(self.I_TRACE_DISABLE):
                 break
             if self.appear_then_click(self.I_WQ_SEAL, interval=1):
                 continue
@@ -167,13 +168,74 @@ class ScriptTask(WQExplore, SecretScriptTask, WantedQuestsAssets):
         # 存在协作任务则邀请
         self.screenshot()
         if self.appear(self.I_WQ_INVITE_1) or self.appear(self.I_WQ_INVITE_2) or self.appear(self.I_WQ_INVITE_3):
-            if self.config.wanted_quests.wanted_quests_config.invite_friend_name:
-                self.all_cooperation_invite(self.config.wanted_quests.wanted_quests_config.invite_friend_name)
+            if self.need_invite_vip():
+                self.all_cooperation_invite()
             else:
                 self.invite_five()
         self.ui_click_until_disappear(self.I_UI_BACK_RED)
         self.ui_goto(page_exploration)
         return True
+
+    def pre_work_cooperation_only(self):
+        #
+        if self.ui_get_current_page() != page_main:
+            self.ui_goto(page_main)
+        # 打开悬赏封印 界面
+        while 1:
+            self.screenshot()
+            if self.appear(self.I_TRACE_ENABLE) or self.appear(self.I_TRACE_DISABLE):
+                break
+            if self.appear_then_click(self.I_WQ_SEAL, interval=1):
+                continue
+            if self.appear_then_click(self.I_WQ_DONE, interval=1):
+                continue
+            if self.special_main and self.click(self.C_SPECIAL_MAIN, interval=3):
+                logger.info('Click special main left to find wanted quests')
+                continue
+        #
+        if not (self.appear(self.I_WQ_INVITE_1) or self.appear(self.I_WQ_INVITE_2) or self.appear(self.I_WQ_INVITE_3)):
+            logger.info("there is no cooperation quest")
+            return False
+
+        # if self.appear(self.I_WQ_INVITE_1):
+        #     self.trace_one(self.I_WQ_INVITE_1)
+        # if self.appear(self.I_WQ_INVITE_2):
+        #     self.trace_one(self.I_WQ_INVITE_2)
+        # if self.appear(self.I_WQ_INVITE_3):
+        #     self.trace_one(self.I_WQ_INVITE_3)
+
+        # 追踪任务 并邀请
+        self.all_cooperation_invite()
+
+        self.ui_click_until_disappear(self.I_UI_BACK_RED)
+        self.ui_goto(page_exploration)
+        return True
+
+    def trace_one(self, btn: RuleImage):
+        """
+            参数必须为邀请按钮(I_WQ_INVITE_n ),特定场景,就不做通用的函数了,怪麻烦的,若还有什么奇葩需求,再扩展吧
+        @param btn: 邀请按钮,
+        @type btn:
+        """
+        self.screenshot()
+        if not self.appear(btn):
+            return
+        while 1:
+            self.screenshot()
+            # 追踪成功  或  是现世任务 不需要追踪
+            if self.appear(self.I_WQ_TRACE_ONE_ENABLE) or self.appear(self.I_WQ_TRACE_ONE_REALWORLD):
+                break
+            if self.appear(self.I_WQ_TRACE_ONE_DISABLE):
+                self.click(self.I_WQ_TRACE_ONE_DISABLE, interval=1.5)
+                continue
+            # 根据邀请按钮位置生成 对应的点击位置 打开追踪界面
+            # NOTE magic Number
+
+            self.device.click(btn.roi_front[0], btn.roi_front[1] - 40, control_name=str(btn) + ' y-40')
+            # 防止点击后界面来不及刷新
+            sleep(1.5)
+        # 关闭单个任务的追踪界面
+        self.ui_click_until_smt_disappear(self.C_WQ_TRACE_ONE_CLOSE, stop=self.I_WQ_TRACE_ONE_CHECK_OPENED, interval=1.5)
 
     def execute_mission(self, ocr, num_want: int, num_challenge: int):
         """
@@ -262,8 +324,8 @@ class ScriptTask(WQExplore, SecretScriptTask, WantedQuestsAssets):
             logger.warning('The extreme case. The quest only needs to challenge one final boss, so skip it')
             self.want_strategy_excluding.append(info_wq_list[0])
 
-    def challenge(self, goto, num):
-        self.ui_click(goto, self.I_WQC_FIRE)
+    def challenge(self, goto_btn, num):
+        self.ui_click(goto_btn, self.I_WQC_FIRE)
         self.ui_click(self.I_WQC_UNLOCK, self.I_WQC_LOCK)
         self.ui_click_until_disappear(self.I_WQC_FIRE)
         # 锁定阵容进入战斗
@@ -340,10 +402,10 @@ class ScriptTask(WQExplore, SecretScriptTask, WantedQuestsAssets):
         self.invite_random(self.I_WQ_INVITE_2)
         self.invite_random(self.I_WQ_INVITE_3)
 
-    def all_cooperation_invite(self, name: str):
+    def all_cooperation_invite(self, name_all: str = None):
         """
             所有的协作任务依次邀请
-        @param name: 被邀请的朋友名
+            如果配置了只完成协作任务 还会将该任务设置为追踪
         @return:
 
         """
@@ -356,7 +418,7 @@ class ScriptTask(WQExplore, SecretScriptTask, WantedQuestsAssets):
             logger.info("no Cooperation found")
             return False
         typeMask = 15
-        typeMask = CooperationSelectMask[self.config.wanted_quests.wanted_quests_config.cooperation_type.value]
+        typeMask = CooperationSelectMask[(self.get_config()).cooperation_type.value]
         for item in ret:
             # 该任务是需要邀请的任务类型
             if not (item['type'] & typeMask):
@@ -370,15 +432,28 @@ class ScriptTask(WQExplore, SecretScriptTask, WantedQuestsAssets):
                阴阳师BUG: 好友明明在线 但邀请界面找不到该好友(好友未接受任何协作任务的情况下)
            '''
             index = 0
+            item['inviteResult'] = False
+            if name_all is None:
+                name = self.get_invite_vip_name(item['type'])
+            else:
+                name = name_all
+            logger.warning("find cooperationType %s ,start invite %s", item['type'], name)
             while index < 5:
                 if self.cooperation_invite(item['inviteBtn'], name):
                     item['inviteResult'] = True
                     index = 5
+                    continue
                 logger.info("%s not found,Wait 20s,%d invitations left", name, 5 - index - 1)
                 index += 1
                 sleep(20) if index < 5 else sleep(0)
                 # NOTE 等待过程如果出现协作邀请 将会卡住 为了防止卡住
                 self.screenshot()
+            # 邀请追踪一起吧,只有邀请成功才追踪
+            if item['inviteResult']:
+                self.invite_success_callback(item['type'], name)
+                if (self.get_config()).cooperation_only:
+                    logger.info("start trace_one")
+                    self.trace_one(item['inviteBtn'])
         return ret
 
     def cooperation_invite(self, btn: RuleImage, name: str):
@@ -396,27 +471,34 @@ class ScriptTask(WQExplore, SecretScriptTask, WantedQuestsAssets):
 
         find = False
         for i in range(2):
+            self.wait_until_appear(self.I_WQ_INVITE_FRIEND_LIST_APPEAR, wait_time=4)
             self.screenshot()
             in_col_1 = self.ocr_appear_click(self.O_WQ_INVITE_COLUMN_1)
             in_col_2 = self.ocr_appear_click(self.O_WQ_INVITE_COLUMN_2)
             find = in_col_2 or in_col_1
             if find:
+                self.wait_until_appear(self.I_WQ_INVITE_SELECTED, wait_time=2)
                 self.screenshot()
                 if self.appear(self.I_WQ_INVITE_SELECTED):
                     logger.info("friend found and selected")
                     break
                 # TODO OCR识别到文字 但是没有选中 尝试重新选择  (选择好友时,弹出协作邀请导致选择好友失败)
-            # 在当前服务器没找到,切换服务器
-            self.click(self.I_WQ_INVITE_DIFF_SVR)
-            # NOTE 跨服好友刷新缓慢,切换标签页难以检测,姑且用延时.非常卡的模拟器可能出问题
-            sleep(2)
+            # 检测跨服好友按钮是否高亮
+            while 1:
+                self.screenshot()
+                if not self.appear_highlight(self.I_WQ_INVITE_DIFF_SVR_HIGHLIGHT):
+                    self.click(self.I_WQ_INVITE_DIFF_SVR)
+                    continue
+                break
+            # 等待好友列表加载
+            self.wait_until_appear(self.I_WQ_INVITE_DIFF_SVR_HIGHLIGHT, wait_time=4)
         # 没有找到需要邀请的人,点击取消 返回悬赏封印界面
         if not find:
             self.screenshot()
-            self.click(self.I_WQ_INVITE_CANCEL)
+            self.ui_click_until_disappear(self.I_WQ_INVITE_CANCEL, interval=1.5)
             return False
         #
-        self.ui_click_until_disappear(self.I_WQ_INVITE_ENSURE)
+        self.ui_click_until_disappear(self.I_WQ_INVITE_ENSURE, interval=1)
         return True
 
     def get_cooperation_info(self) -> List:
@@ -447,8 +529,41 @@ class ScriptTask(WQExplore, SecretScriptTask, WantedQuestsAssets):
             if self.appear(self.__getattribute__("I_WQ_COOPERATION_TYPE_GOLD_" + str(index + 1))):
                 retList.append({'type': CooperationType.Gold, 'inviteBtn': btn})
                 continue
-
+        logger.info(f"get cooperation size {len(retList)}")
         return retList
+
+    # 使用平均亮度检测是否一致
+    def appear_highlight(self, rule_image: RuleImage):
+        def compute_region_brightness(img, top_left, width, height):
+            """
+            计算目标区域的平均亮度 (灰度图的平均值)
+            :param img: 目标图像
+            :param top_left: 匹配区域的左上角坐标
+            :param width: 模板宽度
+            :param height: 模板高度
+            :return: 区域亮度均值
+            """
+            # 裁剪出匹配区域
+            region = img[top_left[1]:top_left[1] + height, top_left[0]:top_left[0] + width]
+            # 转为灰度图
+            gray_region = cv2.cvtColor(region, cv2.COLOR_BGR2GRAY)
+            # 计算灰度均值
+            return gray_region.mean()
+
+        src = rule_image.corp(self.device.image)
+        template = rule_image.image
+        result = cv2.matchTemplate(src, template, cv2.TM_CCOEFF_NORMED)
+        _, max_val, _, max_loc = cv2.minMaxLoc(result)
+
+        brightness_src = compute_region_brightness(src, max_loc, template.shape[1], template.shape[0])
+        brightness_template = compute_region_brightness(template, (0, 0), template.shape[1], template.shape[0])
+
+        if max_val > rule_image.threshold and (brightness_src >= brightness_template * rule_image.threshold) and (
+                brightness_src <= brightness_template * (2 - rule_image.threshold)):
+            rule_image.roi_front[0] = max_loc[0] + rule_image.roi_back[0]
+            rule_image.roi_front[1] = max_loc[1] + rule_image.roi_back[1]
+            return True
+        return False
 
     @cached_property
     def special_main(self) -> bool:
@@ -458,6 +573,26 @@ class ScriptTask(WQExplore, SecretScriptTask, WantedQuestsAssets):
             return True
         return False
 
+    def get_config(self):
+        return self.config.wanted_quests.wanted_quests_config
+
+    def need_invite_vip(self):
+        return bool(self.get_config().invite_friend_name)
+
+    def get_invite_vip_name(self, ctype: CooperationType):
+        return self.get_config().invite_friend_name
+
+    def invite_success_callback(self, ctype: CooperationType, name):
+        """
+           邀请成功回调
+        @param ctype:
+        @type ctype:
+        @param name:
+        @type name:
+        """
+
+        return True
+
 
 if __name__ == '__main__':
     from module.config.config import Config
@@ -466,8 +601,14 @@ if __name__ == '__main__':
     c = Config('oas1')
     d = Device(c)
     t = ScriptTask(c, d)
-    t.screenshot()
+    img = cv2.imread(r"E:\highlight.png")
+    img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+    t.device.image = img
+    appear = t.appear_highlight(t.I_WQ_INVITE_DIFF_SVR_HIGHLIGHT)
 
-    t.run()
+    img = cv2.imread(r"E:\normal.png")
+    img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+    t.device.image = img
+    appear_normal = t.appear_highlight(t.I_WQ_INVITE_DIFF_SVR_HIGHLIGHT)
 
-
+    print(appear)

@@ -170,6 +170,8 @@ class GameUiAssets:
 	I_BACK_DAILY = RuleImage(roi_front=(33,13,39,50), roi_back=(33,13,39,50), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_back_daily.png")
 	# description 
 	I_NEW = RuleImage(roi_front=(0,0,100,100), roi_back=(0,0,100,100), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/image_name.png")
+	# 下载拓展包弹窗 
+	I_DLC_CLOSE = RuleImage(roi_front=(916,147,24,25), roi_back=(916,147,24,25), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/store_dlc_close.png")
 
 
 	# Image Rule Assets

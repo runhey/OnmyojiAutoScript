@@ -15,6 +15,8 @@ class WantedQuestsAssets:
 	C_SECRET_CHAT = RuleClick(roi_front=(597,296,59,100), roi_back=(597,296,59,100), name="secret_chat")
 	# 特殊的庭院需要点击，然后才能找到这个悬赏 
 	C_SPECIAL_MAIN = RuleClick(roi_front=(409,572,32,30), roi_back=(404,569,41,35), name="special_main")
+	# 关闭 单个任务追踪界面 所需点击 的  空白区域 
+	C_WQ_TRACE_ONE_CLOSE = RuleClick(roi_front=(170,30,400,100), roi_back=(170,30,400,100), name="wq_trace_one_close")
 
 
 	# Ocr Rule Assets
@@ -83,11 +85,15 @@ class WantedQuestsAssets:
 	# 悬赏封印邀请取消按钮 
 	I_WQ_INVITE_CANCEL = RuleImage(roi_front=(230,540,132,60), roi_back=(230,540,140,65), threshold=0.8, method="Template matching", file="./tasks/WantedQuests/invite/wq_invite_cancel.png")
 	# 邀请好友被选中标记 
-	I_WQ_INVITE_SELECTED = RuleImage(roi_front=(380,170,32,32), roi_back=(380,170,360,375), threshold=0.8, method="Template matching", file="./tasks/WantedQuests/invite/wq_invite_selected.png")
+	I_WQ_INVITE_SELECTED = RuleImage(roi_front=(370,180,32,32), roi_back=(370,180,370,355), threshold=0.8, method="Template matching", file="./tasks/WantedQuests/invite/wq_invite_selected.png")
+	# 好友列表已加载标志 
+	I_WQ_INVITE_FRIEND_LIST_APPEAR = RuleImage(roi_front=(370,180,32,32), roi_back=(370,180,370,355), threshold=0.8, method="Template matching", file="./tasks/WantedQuests/invite/wq_invite_friend_list_appear.png")
 	# 邀请同服好友,由于选中与未选中亮度有区别,查找图片可能会出错,建议只使用位置信息 
 	I_WQ_INVITE_SAME_SVR = RuleImage(roi_front=(170,90,60,35), roi_back=(170,90,105,65), threshold=0.8, method="Template matching", file="./tasks/WantedQuests/invite/wq_invite_same_svr.png")
 	# 邀请跨服好友,由于选中与未选中亮度有区别,查找图片可能会出错,建议只使用位置信息 
 	I_WQ_INVITE_DIFF_SVR = RuleImage(roi_front=(280,90,60,35), roi_back=(280,90,105,65), threshold=0.8, method="Template matching", file="./tasks/WantedQuests/invite/wq_invite_diff_svr.png")
+	# 邀请跨服好友,已选中状态，高亮状态 
+	I_WQ_INVITE_DIFF_SVR_HIGHLIGHT = RuleImage(roi_front=(260,70,120,90), roi_back=(260,70,120,90), threshold=0.9, method="Template matching", file="./tasks/WantedQuests/invite/wq_invite_diff_svr_highlight.png")
 	# 从左到右第一个协作任务的类型 
 	I_WQ_COOPERATION_TYPE_GOLD_1 = RuleImage(roi_front=(195,505,180,90), roi_back=(195,505,180,90), threshold=0.8, method="Template matching", file="./tasks/WantedQuests/invite/wq_cooperation_type_gold.png")
 	# 从左到右第一个协作任务的类型 
@@ -135,7 +141,7 @@ class WantedQuestsAssets:
 	# 一键追踪 
 	I_TRACE_ENABLE = RuleImage(roi_front=(1097,588,101,70), roi_back=(1097,588,101,70), threshold=0.8, method="Template matching", file="./tasks/WantedQuests/wq/wq_trace_enable.png")
 	# 取消追踪 
-	I_TARCE_DISENABLE = RuleImage(roi_front=(1091,586,108,70), roi_back=(1091,586,108,70), threshold=0.8, method="Template matching", file="./tasks/WantedQuests/wq/wq_tarce_disenable.png")
+	I_TRACE_DISABLE = RuleImage(roi_front=(1091,586,108,70), roi_back=(1091,586,108,70), threshold=0.8, method="Template matching", file="./tasks/WantedQuests/wq/wq_trace_disable.png")
 	# 奖励宝箱 
 	I_WQ_BOX = RuleImage(roi_front=(48,187,43,38), roi_back=(20,137,100,397), threshold=0.7, method="Template matching", file="./tasks/WantedQuests/wq/wq_wq_box.png")
 	# 小号追踪 
@@ -152,6 +158,14 @@ class WantedQuestsAssets:
 	I_GOTO_4 = RuleImage(roi_front=(979,447,87,42), roi_back=(979,447,87,42), threshold=0.8, method="Template matching", file="./tasks/WantedQuests/wq/wq_goto_4.png")
 	# 判断是否还有任务 
 	I_WQ_CHECK_TASK = RuleImage(roi_front=(110,154,21,125), roi_back=(73,122,69,459), threshold=0.8, method="Template matching", file="./tasks/WantedQuests/wq/wq_wq_check_task.png")
+	# 庭院悬赏任务界面 单个任务点开后 左上角是否追踪 
+	I_WQ_TRACE_ONE_ENABLE = RuleImage(roi_front=(160,175,120,60), roi_back=(160,175,120,60), threshold=0.8, method="Template matching", file="./tasks/WantedQuests/wq/wq_trace_one_enable.png")
+	# 庭院悬赏任务界面 单个任务点开后 左上角是否追踪 
+	I_WQ_TRACE_ONE_DISABLE = RuleImage(roi_front=(160,175,120,60), roi_back=(160,175,120,60), threshold=0.8, method="Template matching", file="./tasks/WantedQuests/wq/wq_trace_one_disable.png")
+	# 庭院悬赏任务界面 单个任务点开后的界面 是否打开的 标志 
+	I_WQ_TRACE_ONE_CHECK_OPENED = RuleImage(roi_front=(510,175,210,60), roi_back=(510,175,210,60), threshold=0.8, method="Template matching", file="./tasks/WantedQuests/wq/wq_trace_one_check_opened.png")
+	# 庭院悬赏任务界面 单个任务点开后的界面 是否为现世任务标志 
+	I_WQ_TRACE_ONE_REALWORLD = RuleImage(roi_front=(850,470,180,180), roi_back=(850,470,180,180), threshold=0.8, method="Template matching", file="./tasks/WantedQuests/wq/wq_trace_one_realworld.png")
 
 
 	# Image Rule Assets

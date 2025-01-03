@@ -214,5 +214,32 @@
     "method": "Template matching",
     "threshold": 0.8,
     "description": "封魔的金币"
+  },
+  {
+    "itemName": "green_marker",
+    "imageName": "gb_green_marker.png",
+    "roiFront": "0,0,1280,720",
+    "roiBack": "0,0,1280,720",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "绿标"
+  },
+  {
+    "itemName": "green_marker_left_top",
+    "imageName": "gb_green_marker_left_top.png",
+    "roiFront": "0,0,1280,720",
+    "roiBack": "0,0,1280,720",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "绿标-左上角部分"
+  },
+  {
+    "itemName": "green_marker_bottom",
+    "imageName": "gb_green_marker_bottom.png",
+    "roiFront": "0,0,1280,720",
+    "roiBack": "0,0,1280,720",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "绿标-下半部分"
   }
 ]

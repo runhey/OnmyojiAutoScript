@@ -14,13 +14,13 @@ from module.logger import logger
 
 class BondlingBattle(GeneralBattle, BondlingFairylandAssets):
 
-    def run_battle(self, battle_config: BattleConfig) -> bool:
+    def run_battle(self, battle_config: BattleConfig, limit_count: int = None) -> bool:
         """
         :return: 如果结契成功返回True，否则返回False
         """
         logger.hr("General battle start", 2)
         self.current_count += 1
-        logger.info(f"Current count: {self.current_count}")
+        logger.info(f"Current count: {self.current_count} / " + str(limit_count))
 
         if self.check_load():
             # 首先要判断进入战斗的界面

@@ -1,5 +1,6 @@
-from datetime import datetime
 from pydantic import Field, BaseModel
+
+from tasks.Component.config_base import DateTime
 
 
 class AccountInfo(BaseModel):
@@ -15,18 +16,18 @@ class AccountInfo(BaseModel):
     svr: str = Field(default="", description="svr_help")
     account: str = Field(default="", description="account_help")
     # 为防止ocr出错 暂定格式 字符串以#分割
-    accountAlias: str = Field(default="", description="")
-    appleOrAndroid: bool = Field(default=True, description="apple_or_android_help")
+    account_alias: str = Field(default="", description="account_alias_help")
+    apple_or_android: bool = Field(default=True, description="apple_or_android_help")
     # 上一次执行成功的时间 ,防止出错时重复登录浪费时间
-    last_complete_time: datetime = Field(default=datetime(1970, 1, 1, 1, 1, 1), description="last_complete_time_help")
+    last_complete_time: DateTime = Field(default=DateTime.fromisoformat("2023-01-01 00:00:00"), description="last_complete_time_help")
 
     def is_account_alias(self, ocr_account):
         tmp_account = AccountInfo.preprocessAccount(self.account)
         if ocr_account == self.account or ocr_account.startswith(tmp_account):
             return True
-        if not self.accountAlias:
+        if not self.account_alias:
             return False
-        _accountAliasList = self.accountAlias.split('#')
+        _accountAliasList = self.account_alias.split('#')
         for alias in _accountAliasList:
             if ocr_account.startswith(alias):
                 return True
@@ -43,3 +44,6 @@ class AccountInfo(BaseModel):
         @rtype:
         """
         return account.split('@')[0]
+
+    def is_valid(self):
+        return self.character!="" and self.character is not None

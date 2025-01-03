@@ -1,11 +1,15 @@
 # This Python file uses the following encoding: utf-8
 # @author runhey
 # github https://github.com/runhey
-from fastapi import APIRouter
+import json
+from fastapi import APIRouter, Body
+from pathlib import Path
 
+from module.config.utils import write_file
 from module.logger import logger
 from module.server.main_manager import MainManager
 from module.server.updater import Updater
+from module.server.i18n import I18n
 
 home_app = APIRouter(
     prefix="/home",
@@ -61,6 +65,7 @@ async def update_info():
         logger.error(e)
         return None
 
+
 @home_app.get('/execute_update')
 async def execute_update():
     # 下拉仓库 -> 关闭所有脚本进程 -> 最后重启oasx
@@ -71,3 +76,11 @@ async def execute_update():
         logger.error(e)
     return '手动更新将会立即结束运行中的脚本服务, 最后你还需重启oasx'
 
+
+@home_app.put('/chinese_translate')
+async def chinese_translate(data: dict = Body(...)):
+    try:
+        I18n.save_zh_cn(data)
+    except Exception as e:
+        logger.error(e)
+    return True

@@ -74,7 +74,7 @@ class ScriptTask(GameUi, SoulsTidyAssets):
                 continue
             if feed_count >= 3:
                 break
-            if self.appear_then_click(self.I_ST_FEED_NOW, interval=1.9):
+            if self.appear_then_click(self.I_ST_FEED_NOW, interval=3.5):
                 feed_count += 1
                 continue
         logger.info('Feed greed ghost done')

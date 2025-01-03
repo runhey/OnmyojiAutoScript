@@ -172,11 +172,20 @@
   },
   {
     "itemName": "harvest_zidu",
-    "imageName": "harvest_zidu.png",
+    "imageName": "harvest_harvest_zidu.png",
     "roiFront": "785,475,135,135",
     "roiBack": "785,475,135,135",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "点击庭院阴阳师出现的姿度按钮"
+  },
+  {
+    "itemName": "harvest_mail_copy",
+    "imageName": "harvest_harvest_mail_copy.png",
+    "roiFront": "257,509,29,21",
+    "roiBack": "192,472,790,100",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
   }
 ]

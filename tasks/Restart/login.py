@@ -98,15 +98,22 @@ class LoginHandler(BaseTask, RestartAssets):
             # 点击屏幕进入游戏
             if self.appear(self.I_LOGIN_SPECIFIC_SERVE, interval=0.6) \
                     and self.ocr_appear_click(self.O_LOGIN_SPECIFIC_SERVE, interval=0.6):
-                self.ui_click(self.C_LOGIN_ENSURE_LOGIN_CHARACTER_IN_SAME_SVR,
-                              stop=self.I_LOGIN_SCROOLL_CLOSE, interval=2)
+                while True:
+                    self.screenshot()
+                    if self.appear(self.I_LOGIN_SPECIFIC_SERVE):
+                        self.click(self.C_LOGIN_ENSURE_LOGIN_CHARACTER_IN_SAME_SVR,interval=2)
+                        continue
+                    break
                 logger.info('login specific user')
                 continue
             # 点击’进入游戏‘
             if not self.appear(self.I_LOGIN_8):
                 continue
+            if self.appear(self.I_CHARACTARS, interval=1):
+                # https://github.com/runhey/OnmyojiAutoScript/issues/585
+                self.device.click(x=246, y=535)
             if self.ocr_appear_click(self.O_LOGIN_ENTER_GAME, interval=3):
-                self.wait_until_appear(self.I_LOGIN_SPECIFIC_SERVE, False, wait_time=2)
+                self.wait_until_appear(self.I_LOGIN_SPECIFIC_SERVE, True, wait_time=5)
                 continue
 
         return login_success
@@ -197,8 +204,8 @@ class LoginHandler(BaseTask, RestartAssets):
             # 邮件
             # 判断是否勾选了收取邮件（不收取邮件可以查看每日收获）
             if self.config.restart.harvest_config.enable_mail:
-
-                if self.appear_then_click(self.I_HARVEST_MAIL, interval=3):
+                if self.appear_then_click(self.I_HARVEST_MAIL, interval=3) or\
+                        self.appear_then_click(self.I_HARVEST_MAIL_COPY, interval=3):
                     timer_harvest.reset()
                     self.wait_until_appear(self.I_HARVEST_MAIL_TITLE, wait_time=2)
                     if self.appear(self.I_HARVEST_MAIL_TITLE, interval=2.5):

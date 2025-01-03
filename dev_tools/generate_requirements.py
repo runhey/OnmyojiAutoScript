@@ -3,7 +3,6 @@
 # github https://github.com/runhey
 import argparse
 import subprocess
-import time
 
 from module.logger import logger
 

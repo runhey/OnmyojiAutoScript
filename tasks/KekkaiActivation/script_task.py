@@ -365,7 +365,10 @@ class ScriptTask(KU, KekkaiActivationAssets):
                 if not self.appear(self.I_REALM_SHIN):
                     continue
                 break
-            if self.appear_then_click(self.I_UI_BACK_BLUE, interval=2.5):
+            # 有时候退出动画太久点了两次退出，需要重新进入
+            if self.appear_then_click(self.I_GUILD_REALM, interval=1.5):
+                continue
+            if self.appear_then_click(self.I_UI_BACK_BLUE, interval=5.5):
                 continue
 
     def harvest_card(self):

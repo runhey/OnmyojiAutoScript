@@ -171,22 +171,23 @@ class ScriptTask(GameUi, WeeklyTriflesAssets):
         self.ui_get_current_page()
         self.ui_goto(page_secret_zones)
         # 一路进去
+        valid = False
         while 1:
             self.screenshot()
             if self.appear(self.I_WT_SE_WECHAT):
+                self.wait_until_stable(self.I_WT_SE_WECHAT, skip_first_screenshot=True)
                 break
             if self.appear_then_click(self.I_WT_ENTER_SE, interval=1):
                 continue
-            if self.appear_then_click(self.I_WT_SE_SHARE, interval=1):
+            if self.appear_then_click(self.I_WT_SE_SHARE, interval=5):
+                valid = True
                 continue
-            if self.appear(self.I_WT_SE_RANK):
+            if self.appear(self.I_WT_SE_RANK) and (not valid):
                 # 如果出现排名但是没有出现分享，那就是还没打，退出
-                time.sleep(0.5)
-                self.screenshot()
+                self.wait_until_stable(self.I_WT_SE_SHARE, skip_first_screenshot=True)
                 if self.appear(self.I_WT_SE_SHARE):
                     continue
                 logger.warning('This week has not been obtained')
-                # 返回
                 self.ui_click(self.I_UI_BACK_BLUE, self.I_CHECK_MAIN)
                 return
         logger.info('Enter secret')
@@ -273,7 +274,7 @@ if __name__ == '__main__':
     t = ScriptTask(c, d)
     t.screenshot()
 
-    t.run()
+    t._share_secret()
     # t._share_collect()
     # t.click_share(t.I_WT_SE_WECHAT)
 
