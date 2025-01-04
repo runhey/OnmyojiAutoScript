@@ -1,0 +1,60 @@
+[
+  {
+    "itemName": "recall_ticket_area",
+    "roiFront": "590,660,100,32",
+    "roiBack": "590,660,100,32",
+    "mode": "Single",
+    "method": "Default",
+    "keyword": "",
+    "description": "今忆抽卡区域"
+  },
+  {
+    "itemName": "select_sm",
+    "roiFront": "0,0,100,720",
+    "roiBack": "0,0,100,720",
+    "mode": "Single",
+    "method": "Default",
+    "keyword": "",
+    "description": "选择抽卡区域"
+  },
+  {
+    "itemName": "select_sm1",
+    "roiFront": "27,130,45,38",
+    "roiBack": "27,130,45,38",
+    "method": "Template matching",
+    "mode": "Single",
+    "method": "Default",
+    "keyword": "",
+    "description": "description"
+  },
+  {
+    "itemName": "select_sm2",
+    "roiFront": "26,216,45,38",
+    "roiBack": "26,216,45,38",
+    "method": "Template matching",
+    "mode": "Single",
+    "method": "Default",
+    "keyword": "",
+    "description": "description"
+  },
+  {
+    "itemName": "select_sm3",
+    "roiFront": "26,304,45,38",
+    "roiBack": "26,304,45,38",
+    "method": "Template matching",
+    "mode": "Single",
+    "method": "Default",
+    "keyword": "",
+    "description": "description"
+  },
+  {
+    "itemName": "select_sm4",
+    "roiFront": "26,397,45,38",
+    "roiBack": "26,397,45,38",
+    "method": "Template matching",
+    "mode": "Single",
+    "method": "Default",
+    "keyword": "",
+    "description": "description"
+  }
+]
