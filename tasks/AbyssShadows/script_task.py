@@ -105,7 +105,8 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AbyssShadowsAssets):
         today = datetime.now().weekday()
         if today not in [4, 5, 6]:
             logger.info(f"Today is not abyss shadows day, exit")
-            self.set_next_run(task='AbyssShadows', finish=False, server=True, success=False)
+            # 设置下次运行时间为本周五
+            self.custom_next_run(task='AbyssShadows', custom_time=cfg.abyss_shadows_time.custom_run_time_friday, time_delta=4-today)
             raise TaskEnd
         success = True
         # 进入狭间
