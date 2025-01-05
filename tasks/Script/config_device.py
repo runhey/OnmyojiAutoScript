@@ -2,6 +2,7 @@
 # @author runhey
 # github https://github.com/runhey
 from enum import Enum
+from typing import Union
 from pydantic import BaseModel, ValidationError, validator, Field
 
 from module.logger import logger
@@ -31,14 +32,28 @@ class ControlMethod(str, Enum):
     MINITOUCH = 'minitouch'
     WINDOW_MESSAGE = 'window_message'
 
+class EmulatorInfoType(str, Enum):
+    # module.device.platform2.emulator_base.EmulatorBase
+    AUTO = 'auto'
+    NoxPlayer = 'NoxPlayer'
+    NoxPlayer64 = 'NoxPlayer64'
+    BlueStacks4 = 'BlueStacks4'
+    BlueStacks5 = 'BlueStacks5'
+    BlueStacks4HyperV = 'BlueStacks4HyperV'
+    BlueStacks5HyperV = 'BlueStacks5HyperV'
+    LDPlayer3 = 'LDPlayer3'
+    LDPlayer4 = 'LDPlayer4'
+    LDPlayer9 = 'LDPlayer9'
+    MuMuPlayer = 'MuMuPlayer'
+    MuMuPlayerX = 'MuMuPlayerX'
+    MuMuPlayer12 = 'MuMuPlayer12'
+    MEmuPlayer = 'MEmuPlayer'
+
 class Device(BaseModel):
     serial: str = Field(default="auto",
                         description='serial_help')
     handle: str = Field(default='',
                         description='handle_help')
-    emulatorinfo_path: str = Field(default='',
-                        description='emulatorinfo_path_help')
-    # 举例, E:\ProgramFiles\MuMuPlayer-12.0\shell\MuMuPlayer.exe
     package_name: PackageName = Field(title='Package Name',
                                       default=PackageName.AUTO,
                                       description='package_name_help')
@@ -48,6 +63,13 @@ class Device(BaseModel):
                                           description='control_method_help')
     adb_restart: bool = Field(default=False,
                               description='adb_restart_help')
+    emulatorinfo_type: Union[EmulatorInfoType, str] = Field(default=EmulatorInfoType.AUTO,
+                                                description='emulatorinfo_type_help')
+    emulatorinfo_name: str = Field(default='',
+                                   description='emulatorinfo_name_help')
+    emulatorinfo_path: str = Field(default='',
+                                   description='emulatorinfo_path_help')
+    # 举例, E:\ProgramFiles\MuMuPlayer-12.0\shell\MuMuPlayer.exe
 
 
 

@@ -1,7 +1,7 @@
 # This Python file uses the following encoding: utf-8
 import ipaddress
 import logging
-import platform
+import platform2
 import re
 import socket
 import subprocess
@@ -301,7 +301,7 @@ class Connection(ConnectionAttr):
                 logger.error(e)
                 logger.error(f'Unknown host name: {socket.gethostname()}')
                 host = '127.0.0.1'
-            if platform.system() == 'Linux' and host == '127.0.1.1':
+            if platform2.system() == 'Linux' and host == '127.0.1.1':
                 host = '127.0.0.1'
             logger.info(f'Connecting to local emulator, using host {host}')
             port = random_port(self.config.FORWARD_PORT_RANGE)
@@ -842,6 +842,18 @@ class Connection(ConnectionAttr):
         packages = self.list_package(show_log=show_log)
         packages = [p for p in packages if any([k in p.lower() for k in keywords])]
         return packages
+
+    # def list_known_packages(self, show_log=True):
+    #     """
+    #     Args:
+    #         show_log:
+    #
+    #     Returns:
+    #         list[str]: List of package names
+    #     """
+    #     packages = self.list_package(show_log=show_log)
+    #     packages = [p for p in packages if p in server_.VALID_PACKAGE or p in server_.VALID_CLOUD_PACKAGE]
+    #     return packages
 
     def detect_package(self, keywords=('onmyoji', 'yys'), set_config=True):
         """
