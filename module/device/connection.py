@@ -1,7 +1,7 @@
 # This Python file uses the following encoding: utf-8
 import ipaddress
 import logging
-import platform2
+import platform
 import re
 import socket
 import subprocess
@@ -301,7 +301,7 @@ class Connection(ConnectionAttr):
                 logger.error(e)
                 logger.error(f'Unknown host name: {socket.gethostname()}')
                 host = '127.0.0.1'
-            if platform2.system() == 'Linux' and host == '127.0.1.1':
+            if platform.system() == 'Linux' and host == '127.0.1.1':
                 host = '127.0.0.1'
             logger.info(f'Connecting to local emulator, using host {host}')
             port = random_port(self.config.FORWARD_PORT_RANGE)

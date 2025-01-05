@@ -18,7 +18,7 @@ class ConfigManual:
         > TrueOrochi > RichMan
         > CollectiveMissions
         > Pets > TalismanPass > Delegation > Hyakkiyakou
-        > Secret > WeeklyTrifles > MysteryShop > Duel > MetaDemon > FrogBoss > FloatParade > Quiz
+        > Secret > WeeklyTrifles > MysteryShop > Duel > MetaDemon > FrogBoss > FloatParade > Quiz > KittyShop
         """
 
     DEVICE_OVER_HTTP = False
