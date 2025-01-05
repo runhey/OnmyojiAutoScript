@@ -13,6 +13,9 @@ from tasks.GameUi.page import page_main
 from tasks.ActivityShikigami.assets import ActivityShikigamiAssets
 from tasks.KittyShop.assets import KittyShopAssets
 
+class SelectFailed(Exception):
+    pass
+
 class ScriptTask(GameUi, ActivityShikigamiAssets, KittyShopAssets):
 
     MAIN_BUSY: list = [KittyShopAssets.I_MAIN_BUSY_1,
@@ -37,37 +40,20 @@ class ScriptTask(GameUi, ActivityShikigamiAssets, KittyShopAssets):
         for _ in range(max(attempts, 0)):
             self._run()
 
+        self.ui_click(self.I_UI_BACK_YELLOW, stop=self.I_CHECK_MAIN, interval=2.4)
         self.set_next_run(task="KittyShop", success=True)
         raise TaskEnd
 
     def _run(self):
         logger.hr('Kitty Shop', level=1)
-        self.ui_click(self.I_START_FARMING, stop=self.I_START_ENSURE)
-
-        index_timer = Timer(1).start()
-        index_cnt = 0
-        while 1:
-            self.screenshot()
-            if index_timer.reached():
-                index_cnt += 1
-                index_timer.reset()
-
-            if not self.appear(self.I_UNSELECTED):
+        for trial in range(3):
+            try:
+                self._select_kitty()
                 break
-            match index_cnt:
-                case 0:
-                    self.click(self.C_SELECT_1, interval=1)
-                case 1:
-                    self.click(self.C_SELECT_2, interval=1)
-                case 2:
-                    self.click(self.C_SELECT_3, interval=1)
-                case 3 | 7 | 9 | 11 | 13 | 15 | 17:
-                    self.click(self.C_SELECT_4, interval=1)
-                case 5 | 10 | 14:
-                    self.swipe(self.S_SELECTION, interval=1.5)
-        logger.info('Select all kitties done')
-        import time
-        time.sleep(5)
+            except SelectFailed:
+                self.ui_click(self.I_UI_BACK_YELLOW, stop=self.I_START_FARMING, interval=2.2)
+                logger.error('Select kitty failed')
+
         self.ui_click(self.I_START_ENSURE, stop=self.I_MAIN_FLAG)
         logger.info('Start farming')
         while 1:
@@ -75,6 +61,13 @@ class ScriptTask(GameUi, ActivityShikigamiAssets, KittyShopAssets):
             self.screenshot()
             if self.appear(self.I_MAIN_SHARE):
                 break
+            if self.config.model.kitty_shop.kitty_shop_config.kitty_quit_when_finished:
+                if self.appear_then_click(self.I_UI_CONFIRM, interval=0.7):
+                    continue
+                if self.appear_then_click(self.I_UI_CONFIRM_SAMLL, interval=0.7):
+                    continue
+                if self.appear_then_click(self.I_MAIN_FINSH, interval=1):
+                    continue
 
             if not self.appear(self.I_MAIN_FLAG):
                 continue
@@ -92,6 +85,34 @@ class ScriptTask(GameUi, ActivityShikigamiAssets, KittyShopAssets):
             if self.appear(self.I_START_FARMING):
                 break
             self.click(self.I_MAIN_FLAG1, interval=2)
+
+    def _select_kitty(self):
+        self.ui_click(self.I_START_FARMING, stop=self.I_START_ENSURE)
+
+        index_timer = Timer(1.2).start()
+        index_cnt = 0
+        while 1:
+            self.screenshot()
+            if index_timer.reached():
+                index_cnt += 1
+                index_timer.reset()
+
+            if not self.appear(self.I_UNSELECTED):
+                break
+            match index_cnt:
+                case 0:
+                    self.click(self.C_SELECT_1, interval=1.2)
+                case 1:
+                    self.click(self.C_SELECT_2, interval=1.2)
+                case 2:
+                    self.click(self.C_SELECT_3, interval=1.2)
+                case 3 | 7 | 11:
+                    self.click(self.C_SELECT_4, interval=1.2)
+                case 5 | 10:
+                    self.swipe(self.S_SELECTION, interval=1.5)
+                case 12:
+                    raise SelectFailed('Select failed')
+        logger.info('Select all kitties done')
 
     def _main_select_kitty(self):
         for busy in self.MAIN_BUSY:

@@ -8,6 +8,7 @@ from tasks.Component.config_base import ConfigBase
 
 class KittyShopConfig(BaseModel):
     kitty_attempts: int = Field(default=1, description='kitty_attempts_help')
+    kitty_quit_when_finished: bool = Field(default=False, description='kitty_quit_when_finished_help')
 
 
 class KittyShop(ConfigBase):

@@ -62,6 +62,8 @@ class KittyShopAssets:
 	I_MAIN_BUSY_4 = RuleImage(roi_front=(781,634,64,24), roi_back=(731,572,170,142), threshold=0.8, method="Template matching", file="./tasks/KittyShop/ks/ks_main_busy_4.png")
 	# description 
 	I_MAIN_BUSY_5 = RuleImage(roi_front=(961,626,64,24), roi_back=(900,571,165,136), threshold=0.8, method="Template matching", file="./tasks/KittyShop/ks/ks_main_busy_5.png")
+	# 结算 
+	I_MAIN_FINSH = RuleImage(roi_front=(764,16,52,42), roi_back=(740,1,100,100), threshold=0.8, method="Template matching", file="./tasks/KittyShop/ks/ks_main_finsh.png")
 
 
 	# Swipe Rule Assets

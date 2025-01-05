@@ -133,5 +133,14 @@
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"
+  },
+  {
+    "itemName": "main_finsh",
+    "imageName": "ks_main_finsh.png",
+    "roiFront": "764,16,52,42",
+    "roiBack": "740,1,100,100",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "结算"
   }
 ]
