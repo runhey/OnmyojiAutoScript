@@ -43,5 +43,14 @@
     "method": "Default",
     "keyword": "",
     "description": "挑战人数"
+  },
+  {
+    "itemName": "ab_boss_name",
+    "roiFront": "114,36,248,69",
+    "roiBack": "114,36,248,69",
+    "mode": "Full",
+    "method": "Default",
+    "keyword": "",
+    "description": "地鬼名字"
   }
 ]

@@ -114,5 +114,7 @@ class AreaBossAssets:
 	O_AB_COLLECTING = RuleOcr(roi=(1190,580,50,120), area=(1190,580,50,120), mode="Single", method="Default", keyword="收藏", name="ab_collecting")
 	# 挑战人数 
 	O_AB_NUM_OF_CHALLENGE = RuleOcr(roi=(270,630,150,36), area=(270,630,150,36), mode="Digit", method="Default", keyword="", name="ab_num_of_challenge")
+	# 地鬼名字 
+	O_AB_BOSS_NAME = RuleOcr(roi=(114,36,248,69), area=(114,36,248,69), mode="Full", method="Default", keyword="", name="ab_boss_name")
 
 
