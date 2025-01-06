@@ -55,6 +55,7 @@ psutil==6.1.1             # via -r requirements-in.txt
 py==1.11.0                # via retry
 pyclipper==1.3.0.post5    # via ppocr-onnx
 pycparser==2.21           # via cffi
+pycryptodome==3.21.0      # via onepush
 pydantic==2.10.0          # via -r requirements-in.txt, fastapi
 pydantic-core==2.27.0     # via pydantic
 pyelftools==0.30          # via apkutils2
