@@ -23,13 +23,15 @@ class RichManAssets:
 	I_GUILD_SCRAP = RuleImage(roi_front=(570,439,71,68), roi_back=(331,160,559,372), threshold=0.8, method="Template matching", file="./tasks/RichMan/guild/guild_guild_scrap.png")
 	# 皮肤券 
 	I_GUILD_SKIN = RuleImage(roi_front=(795,438,71,72), roi_back=(320,162,573,371), threshold=0.8, method="Template matching", file="./tasks/RichMan/guild/guild_guild_skin.png")
-	# 购买检查 
+	# 皮肤券判断是否到末端
+	I_GUILD_SKIN_CHECK = RuleImage(roi_front=(795,438,71,72), roi_back=(320,162,573,371), threshold=0.8, method="Template matching", file="./tasks/RichMan/guild/guild_guild_skin.png")
+	# 购买检查
 	I_GUILD_CHECK_SCRAP = RuleImage(roi_front=(561,429,90,88), roi_back=(561,429,90,88), threshold=0.8, method="Template matching", file="./tasks/RichMan/guild/guild_guild_check_scrap.png")
 
 
 	# Ocr Rule Assets
 	# 总的功勋 
-	O_GUILD_TOTAL = RuleOcr(roi=(978,16,58,27), area=(978,16,58,27), mode="Digit", method="Default", keyword="", name="guild_total")
+	O_GUILD_TOTAL = RuleOcr(roi=(942,16,94,27), area=(942,16,94,27), mode="Single", method="Default", keyword="", name="guild_total")
 	# Ocr-description 
 	O_GUILD_NUMBER_BLUE = RuleOcr(roi=(888,269,25,33), area=(888,269,25,33), mode="Digit", method="Default", keyword="", name="guild_number_blue")
 	# Ocr-description 
@@ -57,7 +59,8 @@ class RichManAssets:
 
 
 	# Ocr Rule Assets
-	# 御魂剩余 
+	O_BL_RES_SOULS_new = RuleOcr(roi=(88,417,1049,37), area=(88,417,1049,37), mode="Full", method="Default", keyword="随机御魂", name="bl_res_souls_new")
+	# 御魂剩余
 	O_BL_RES_SOULS = RuleOcr(roi=(90,281,31,34), area=(90,281,31,34), mode="Digit", method="Default", keyword="", name="bl_res_souls")
 	# 石头剩余 
 	O_BL_RES_STONE = RuleOcr(roi=(357,284,29,34), area=(357,284,29,34), mode="Digit", method="Default", keyword="", name="bl_res_stone")
@@ -161,7 +164,11 @@ class RichManAssets:
 	I_MALL_SCALES_SURE = RuleImage(roi_front=(1195,100,62,85), roi_back=(1195,100,62,85), threshold=0.8, method="Template matching", file="./tasks/RichMan/mall/navbar/navbar_mall_scales_sure.png")
 	# 契灵商店 
 	I_MALL_BONDLINGS_SURE = RuleImage(roi_front=(1194,421,69,74), roi_back=(1194,421,69,74), threshold=0.8, method="Template matching", file="./tasks/RichMan/mall/navbar/navbar_mall_bondlings_sure.png")
-	# 契灵商店 
+	# 已选中契灵商店
+	I_MALL_BONDLINGS_ON = RuleImage(roi_front=(99,417,1021,37), roi_back=(99,417,1021,37), threshold=0.8, method="Template matching", file="./tasks/RichMan/mall/navbar/navbar_mall_bondlings_on.png")
+	# 随机御魂
+	I_ME_SOULS_NEW = RuleImage(roi_front=(980,417,140,37), roi_back=(980,417,140,37), threshold=0.8, method="Template matching", file="./tasks/RichMan/mall/navbar/navbar_mall_bondlings_over.png")
+	# 契灵商店
 	I_MALL_BONDLINGS_CHECK = RuleImage(roi_front=(355,186,34,104), roi_back=(355,186,34,104), threshold=0.8, method="Template matching", file="./tasks/RichMan/mall/navbar/navbar_mall_bondlings_check.png")
 	# 杂货铺 
 	I_MALL_SUNDRY = RuleImage(roi_front=(880,646,53,54), roi_back=(834,621,116,90), threshold=0.8, method="Template matching", file="./tasks/RichMan/mall/navbar/navbar_mall_sundry.png")
@@ -198,7 +205,7 @@ class RichManAssets:
 	# 左数第二个 
 	O_MALL_RESOURCE_2 = RuleOcr(roi=(326,8,124,39), area=(326,8,124,39), mode="Digit", method="Default", keyword="", name="mall_resource_2")
 	# 左数第二个 
-	O_MALL_RESOURCE_3 = RuleOcr(roi=(533,9,107,38), area=(533,9,107,38), mode="Digit", method="Default", keyword="", name="mall_resource_3")
+	O_MALL_RESOURCE_3 = RuleOcr(roi=(550,9,107,38), area=(550,9,107,38), mode="Single", method="Default", keyword="", name="mall_resource_3")
 	# 左数第二个 
 	O_MALL_RESOURCE_4 = RuleOcr(roi=(739,8,100,39), area=(739,8,100,39), mode="Digit", method="Default", keyword="", name="mall_resource_4")
 	# 左数第二个 
