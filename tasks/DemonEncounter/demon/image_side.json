@@ -115,5 +115,14 @@
     "method": "Template matching",
     "threshold": 0.8,
     "description": "结界-进攻"
+  },
+  {
+    "itemName": "de_find_boss",
+    "imageName": "demon_de_find_boss.png",
+    "roiFront": "1210,425,29,36",
+    "roiBack": "1182,279,93,266",
+    "method": "Template matching",
+    "threshold": 0.7,
+    "description": "发现大boss"
   }
 ]

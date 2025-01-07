@@ -115,5 +115,14 @@
     "method": "Template matching",
     "threshold": 0.8,
     "description": "白色退出"
+  },
+  {
+    "itemName": "boss_killed",
+    "imageName": "boss_boss_killed.png",
+    "roiFront": "654,596,35,68",
+    "roiBack": "614,537,123,176",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "已击败"
   }
 ]

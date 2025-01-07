@@ -26,6 +26,7 @@ class LanternClass(Enum):
     REALM = 3  # 打结界
     EMPTY = 4  # 空
     MYSTERY = 5  # 神秘任务
+    BOSS = 6  # 大鬼王
 
 
 class ScriptTask(GameUi, GeneralBattle, DemonEncounterAssets, SwitchSoul):
@@ -211,6 +212,8 @@ class ScriptTask(GameUi, GeneralBattle, DemonEncounterAssets, SwitchSoul):
                     self._battle(match_click[i])
                 case LanternClass.MYSTERY:
                     self._mystery(match_click[i])
+                case LanternClass.BOSS:
+                    self._boss(match_click[i])
             time.sleep(1)
 
     @cached_property
@@ -239,10 +242,12 @@ class ScriptTask(GameUi, GeneralBattle, DemonEncounterAssets, SwitchSoul):
         self.I_DE_LETTER.roi_back = match_roi[index]
         self.I_DE_MYSTERY.roi_back = match_roi[index]
         self.I_DE_REALM.roi_back = match_roi[index]
+        self.I_DE_FIND_BOSS.roi_back = match_roi[index]
         target_box = self.I_DE_BOX
         target_letter = self.I_DE_LETTER
         target_mystery = self.I_DE_MYSTERY
         target_realm = self.I_DE_REALM
+        target_find_boss = self.I_DE_FIND_BOSS
         target_empty = match_empty[index]
 
         # 开始判断
@@ -262,6 +267,9 @@ class ScriptTask(GameUi, GeneralBattle, DemonEncounterAssets, SwitchSoul):
         elif self.appear(target_empty):
             logger.info(f'Lantern {index} is empty')
             return LanternClass.EMPTY
+        elif self.appear(target_find_boss):
+            logger.info(f'Lantern {index} is boss')
+            return LanternClass.BOSS
         else:
             # 无法判断是否是战斗的还是结界的
             logger.info(f'Lantern {index} is battle')
@@ -284,9 +292,8 @@ class ScriptTask(GameUi, GeneralBattle, DemonEncounterAssets, SwitchSoul):
                 if self.appear_then_click(self.I_DE_FIND, interval=2.5):
                     break
 
-
     def _mail(self, target_click):
-        # 答题，还没有碰到过答题的
+        # 答题
         def answer():
             click_match = {
                 1: self.C_ANSWER_1,
@@ -396,6 +403,22 @@ class ScriptTask(GameUi, GeneralBattle, DemonEncounterAssets, SwitchSoul):
         # 神秘任务， 不做
         pass
 
+    def _boss(self, target_click):
+        # 运气爆表，点灯笼出现大鬼王
+        while 1:
+            self.screenshot()
+            if self.appear(self.I_BOSS_KILLED):
+                # 这个大鬼王已经击败
+                logger.warning('Boss already killed')
+                self.ui_click_until_disappear(self.I_UI_BACK_RED)
+                break
+            if self.appear(self.I_BOSS_FIRE):
+                self.execute_boss()
+                break
+            if self.click(target_click, interval=2.3):
+                continue
+
+
     def check_time(self):
         """
         检查时间是否正确，
@@ -458,7 +481,6 @@ class ScriptTask(GameUi, GeneralBattle, DemonEncounterAssets, SwitchSoul):
 if __name__ == '__main__':
     from module.config.config import Config
     from module.device.device import Device
-    from memory_profiler import profile
 
     c = Config('du')
     d = Device(c)
