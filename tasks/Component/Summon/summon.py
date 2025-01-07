@@ -8,7 +8,7 @@ import random
 from tasks.Component.Summon.assets import SummonAssets
 from tasks.base_task import BaseTask
 from module.logger import logger
-
+import re
 
 class Summon(BaseTask, SummonAssets):
 
@@ -39,39 +39,51 @@ class Summon(BaseTask, SummonAssets):
         """
         logger.info('Summon one')
         self.wait_until_appear(self.I_BLUE_TICKET)
-        ticket_info = self.O_ONE_TICKET.ocr(self.device.image)
-        if '1' not in ticket_info:
-            logger.warning('There is no any one blue ticket')
-            return
-        # 某些情况下滑动异常
-        self.S_RANDOM_SWIPE_1.name = 'S_RANDOM_SWIPE'
-        self.S_RANDOM_SWIPE_2.name = 'S_RANDOM_SWIPE'
-        self.S_RANDOM_SWIPE_3.name = 'S_RANDOM_SWIPE'
-        self.S_RANDOM_SWIPE_4.name = 'S_RANDOM_SWIPE'
-        while 1:
-            self.screenshot()
-            if self.appear(self.I_ONE_TICKET):
-                break
-            if self.appear_then_click(self.I_BLUE_TICKET, interval=1):
-                continue
-
-        # 画一张票
-        time.sleep(0.5)
-        while 1:
-            self.screenshot()
-            if self.appear(self.I_SM_CONFIRM, interval=0.6):
-                self.ui_click_until_disappear(self.I_SM_CONFIRM)
-                break
-            if self.appear(self.I_SM_CONFIRM_2, interval=0.6):
-                self.ui_click_until_disappear(self.I_SM_CONFIRM_2)
-                break
-            if self.appear(self.I_ONE_TICKET, interval=1):
-                # 某些时候会点击到 “语言召唤”
-                if self.appear_then_click(self.I_UI_CANCEL, interval=0.8):
+        while True:
+            ticket_info = self.O_ONE_TICKET.ocr(self.device.image)
+            # 处理 None 和空字符串
+            if ticket_info is None or ticket_info == '':
+                ticket_info = 0
+            else:
+                # 使用正则表达式提取字符串中的数字
+                match = re.search(r'\d+', ticket_info)
+                if match:
+                    ticket_info = int(match.group())
+                else:
+                    logger.warning(f'Invalid ticket_info value: {ticket_info}, expected a numeric string')
+                    ticket_info = 0  # 将无效值设置为默认值 0
+            if ticket_info <= 0:
+                logger.warning('There is no any one blue ticket')
+                return
+            # 某些情况下滑动异常
+            self.S_RANDOM_SWIPE_1.name = 'S_RANDOM_SWIPE'
+            self.S_RANDOM_SWIPE_2.name = 'S_RANDOM_SWIPE'
+            self.S_RANDOM_SWIPE_3.name = 'S_RANDOM_SWIPE'
+            self.S_RANDOM_SWIPE_4.name = 'S_RANDOM_SWIPE'
+            while 1:
+                self.screenshot()
+                if self.appear(self.I_ONE_TICKET):
+                    break
+                if self.appear_then_click(self.I_BLUE_TICKET, interval=1):
                     continue
-                self.summon()
-                continue
-        logger.info('Summon one success')
+
+            # 画一张票
+            time.sleep(0.5)
+            while 1:
+                self.screenshot()
+                if self.appear(self.I_SM_CONFIRM, interval=0.6):
+                    self.ui_click_until_disappear(self.I_SM_CONFIRM)
+                    break
+                if self.appear(self.I_SM_CONFIRM_2, interval=0.6):
+                    self.ui_click_until_disappear(self.I_SM_CONFIRM_2)
+                    break
+                if self.appear(self.I_ONE_TICKET, interval=1):
+                    # 某些时候会点击到 “语言召唤”
+                    if self.appear_then_click(self.I_UI_CANCEL, interval=0.8):
+                        continue
+                    self.summon()
+                    continue
+            logger.info('Summon one success')
 
 
     def back_summon_main(self):

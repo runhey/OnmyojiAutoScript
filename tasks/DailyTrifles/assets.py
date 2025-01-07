@@ -47,3 +47,29 @@ class DailyTriflesAssets:
 	O_STORE_SUSHI_PRICE = RuleOcr(roi=(0,0,0,0), area=(0,0,0,0), mode="Digit", method="Default", keyword="", name="store_sushi_price")
 
 
+	# Image Rule Assets
+	# 点击今忆召唤票 
+	I_RECALL_TICKET = RuleImage(roi_front=(595,586,65,76), roi_back=(595,586,65,76), threshold=0.8, method="Template matching", file="./tasks/DailyTrifles/summonRecall/recall_ticket.png")
+	# 今忆召唤单抽 
+	I_RECALL_ONE_TICKET = RuleImage(roi_front=(459,604,76,76), roi_back=(459,604,76,76), threshold=0.8, method="Template matching", file="./tasks/DailyTrifles/summonRecall/recall_one_ticket.png")
+	# description 
+	I_RECALL_SM_CONFIRM = RuleImage(roi_front=(424,628,174,61), roi_back=(424,628,174,61), threshold=0.8, method="Template matching", file="./tasks/DailyTrifles/summonRecall/recall_sm_confirm.png")
+	# 抽到的时候出现的 
+	I_SM_CONFIRM_2 = RuleImage(roi_front=(377,630,206,62), roi_back=(377,630,206,62), threshold=0.8, method="Template matching", file="./tasks/DailyTrifles/summonRecall/sm_sm_confirm_2.png")
+
+
+	# Ocr Rule Assets
+	# 今忆抽卡区域 
+	O_RECALL_TICKET_AREA = RuleOcr(roi=(590,660,100,32), area=(590,660,100,32), mode="Single", method="Default", keyword="", name="recall_ticket_area")
+	# 选择抽卡区域 
+	O_SELECT_SM = RuleOcr(roi=(0,0,100,720), area=(0,0,100,720), mode="Single", method="Default", keyword="", name="select_sm")
+	# description 
+	O_SELECT_SM1 = RuleOcr(roi=(27,130,45,38), area=(27,130,45,38), mode="Single", method="Default", keyword="", name="select_sm1")
+	# description 
+	O_SELECT_SM2 = RuleOcr(roi=(26,216,45,38), area=(26,216,45,38), mode="Single", method="Default", keyword="", name="select_sm2")
+	# description 
+	O_SELECT_SM3 = RuleOcr(roi=(26,304,45,38), area=(26,304,45,38), mode="Single", method="Default", keyword="", name="select_sm3")
+	# description 
+	O_SELECT_SM4 = RuleOcr(roi=(26,397,45,38), area=(26,397,45,38), mode="Single", method="Default", keyword="", name="select_sm4")
+
+
