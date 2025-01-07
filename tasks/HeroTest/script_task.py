@@ -53,12 +53,16 @@ class ScriptTask(GameUi, BaseActivity, HeroTestAssets, SwitchSoul):
 
         self.ui_get_current_page()
         self.ui_goto(page_main)
+
         # 启动经验加成
-        if is_update:
+        exp_50_buff_enable = config.herotest.exp_50_buff_enable_help
+        exp_100_buff_enable = config.herotest.exp_100_buff_enable_help
+        if exp_50_buff_enable or exp_100_buff_enable:
             self.open_buff()
-            self.exp_100(True)
-            self.exp_50(True)
+            self.exp_100(exp_100_buff_enable)
+            self.exp_50(exp_50_buff_enable)
             self.close_buff()
+
         self.ui_goto(page_exploration)
         self.home_main()
         # 设定是否锁定阵容
@@ -321,7 +325,7 @@ if __name__ == "__main__":
     from module.config.config import Config
     from module.device.device import Device
 
-    c = Config("oas2")
+    c = Config("oas1")
     d = Device(c)
     t = ScriptTask(c, d)
 
