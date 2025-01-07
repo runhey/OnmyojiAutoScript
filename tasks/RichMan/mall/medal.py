@@ -26,15 +26,15 @@ class Medal(FriendshipPoints):
         # 黑蛋
         if con.black_daruma:
             self.buy_mall_one(buy_button=self.I_ME_BLACK, buy_check=self.I_ME_CHECK_BLACK,
-                              money_ocr=self.O_MALL_RESOURCE_5, buy_money=480)
+                              money_ocr=self.O_MALL_RESOURCE_3, buy_money=480)
         # 蓝票
         if con.mystery_amulet:
             self.buy_mall_one(buy_button=self.I_ME_BLUE, buy_check=self.I_ME_CHECK_BLUE,
-                              money_ocr=self.O_MALL_RESOURCE_5, buy_money=180)
+                              money_ocr=self.O_MALL_RESOURCE_3, buy_money=180)
         # 体力100
         if con.ap_100:
             self.buy_mall_one(buy_button=self.I_ME_AP, buy_check=self.I_ME_CHECK_AP,
-                              money_ocr=self.O_MALL_RESOURCE_5, buy_money=120)
+                              money_ocr=self.O_MALL_RESOURCE_3, buy_money=120)
         # 随机御魂
         if con.random_soul:
             pass
@@ -42,21 +42,21 @@ class Medal(FriendshipPoints):
             #                   money_ocr=self.O_MALL_RESOURCE_5, buy_money=320)
         # 两颗白蛋
         if con.white_daruma:
-            self.buy_mall_more(buy_button=self.I_ME_WHITE, remain_number=True, money_ocr=self.O_MALL_RESOURCE_5,
+            self.buy_mall_more(buy_button=self.I_ME_WHITE, remain_number=True, money_ocr=self.O_MALL_RESOURCE_3,
                                buy_number=2, buy_max=2, buy_money=100)
         # 十张挑战券
         if con.challenge_pass:
-            self.buy_mall_more(buy_button=self.I_ME_CHALLENGE_PASS, remain_number=True, money_ocr=self.O_MALL_RESOURCE_5,
+            self.buy_mall_more(buy_button=self.I_ME_CHALLENGE_PASS, remain_number=True, money_ocr=self.O_MALL_RESOURCE_3,
                                buy_number=con.challenge_pass, buy_max=10, buy_money=30)
         # 红蛋
         if con.red_daruma:
             self.buy_mall_more(buy_button=self.I_ME_RED, remain_number=False,
-                               money_ocr=self.O_MALL_RESOURCE_5,
+                               money_ocr=self.O_MALL_RESOURCE_3,
                                buy_number=con.red_daruma, buy_max=99, buy_money=30)
         # 破碎的咒符
         if con.broken_amulet:
             self.buy_mall_more(buy_button=self.I_ME_BROKEN, remain_number=False,
-                               money_ocr=self.O_MALL_RESOURCE_5,
+                               money_ocr=self.O_MALL_RESOURCE_3,
                                buy_number=con.broken_amulet, buy_max=99, buy_money=20)
 
         time.sleep(1)
