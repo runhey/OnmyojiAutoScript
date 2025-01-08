@@ -1,4 +1,4 @@
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, field_validator
 from enum import Enum
 
 from tasks.Component.config_scheduler import Scheduler
@@ -59,6 +59,13 @@ class DebugConfig(ConfigBase):
     # 单独的截屏设置
     hya_screenshot_method: ScreenshotMethod = Field(default=ScreenshotMethod.WINDOW_BACKGROUND,
                                                     description='hya_screenshot')
+
+    @field_validator('continuous_learning', mode='after')
+    @classmethod
+    def false_continuous_learning(cls, v):
+        if v:
+            return False
+        return False
 
 
 class Hyakkiyakou(ConfigBase):
