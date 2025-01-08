@@ -24,7 +24,7 @@ class Scales(Buy, MallNavbar):
         self._enter_scales()
 
         # 朴素的御魂
-        self._scales_orochi_new(con.orochi_scales)
+        self._scales_orochi(con.orochi_scales)
         # 首领御魂
         self._scales_demon(con.demon_souls, con.demon_class, con.demon_position)
         # 海国御魂
@@ -111,39 +111,7 @@ class Scales(Buy, MallNavbar):
             if self.appear_then_click(self.I_SCA_SELECT_1, interval=1.6):
                 continue
 
-    def _scales_orochi_new(self, buy_number: int):
-        """
-        要求必须是在御魂礼盒界面
-        :param buy_number:
-        :return:
-        """
-        logger.hr('Scales orochi', 3)
-        if buy_number == 0:
-            logger.info('The purchase quantity of Scales orochi is 0')
-            return
-        self.screenshot()
-        # 检查是否出现了购买按钮
-        if not self.appear(self.I_SCA_OROCHI_SCALES):
-            logger.warning('Scales orochi is not appear')
-            return
-        while True:
-            self.screenshot()
-            # 检查剩余数量
-            remain_number = self.O_SCA_NUMBER_OROCHI.ocr(self.device.image)
-            if remain_number == 0:
-                logger.warning(f'朴素御魂可购买数量: {remain_number}')
-                return
-            # 检查钱是否够
-            cu, res, total = self.O_SCA_RES_OROCHI.ocr(self.device.image)
-            if cu + res != total:
-                logger.warning('OCR error')
-                continue
-            if cu < 50:
-                logger.warning(f'紫色蛇皮不足,数量:{cu}')
-                return
-            # 购买
-            self._scales_buy_more(self.I_SCA_OROCHI_SCALES)
-            time.sleep(0.5)
+
     def _scales_orochi(self, buy_number: int):
         """
         要求必须是在御魂礼盒界面
@@ -355,7 +323,7 @@ if __name__ == '__main__':
     from module.config.config import Config
     from module.device.device import Device
 
-    c = Config('oas2')
+    c = Config('oas1')
     d = Device(c)
     t = Scales(c, d)
 

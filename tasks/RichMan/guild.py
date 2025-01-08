@@ -16,9 +16,6 @@ from tasks.RichMan.config import GuildStore
 class Guild(Buy, GameUi, RichManAssets):
 
     def execute_guild(self, con: GuildStore=None):
-
-        if not con.enable:
-            return
         logger.hr('Start guild', 1)
         self.ui_get_current_page()
         self.ui_goto(page_guild)
@@ -34,9 +31,7 @@ class Guild(Buy, GameUi, RichManAssets):
         time.sleep(0.5)
         while 1:
             self.screenshot()
-            # 功勋商店 购买皮肤券 现在问题是皮肤券作为下滑判断标志,下滑过程中roi_front[1]发生了变化,
-            # 导致后续识别本周剩余数量位置偏差,现在解决方案是创建一个相同属性的I_GUILD_SKIN_CHECK 来作为判断标志
-            if self.appear(self.I_GUILD_SKIN_CHECK):
+            if self.appear(self.I_GUILD_SKIN):
                 break
             if self.swipe(self.S_GUILD_STORE, interval=1.5):
                 time.sleep(2)
@@ -44,13 +39,10 @@ class Guild(Buy, GameUi, RichManAssets):
 
         # 开始购买
         if con.mystery_amulet:
-            # 蓝票
             self._guild_mystery_amulet()
         if con.black_daruma_scrap:
-            # 黑碎
             self._guild_black_daruma_scrap()
         if con.skin_ticket:
-            # 皮肤券
             self._guild_skin_ticket(con.skin_ticket)
 
         # 回去
@@ -64,7 +56,6 @@ class Guild(Buy, GameUi, RichManAssets):
                 continue
 
     def _guild_mystery_amulet(self):
-        # 蓝票
         logger.hr('Guild mystery amulet', 2)
         self.screenshot()
         if not self.buy_check_money(self.O_GUILD_TOTAL, 240):
@@ -78,7 +69,6 @@ class Guild(Buy, GameUi, RichManAssets):
         return True
 
     def _guild_black_daruma_scrap(self):
-        # 黑碎
         logger.hr('Guild black daruma scrap', 2)
         self.screenshot()
         if not self.buy_check_money(self.O_GUILD_TOTAL, 200):
@@ -91,8 +81,7 @@ class Guild(Buy, GameUi, RichManAssets):
         time.sleep(0.5)
         return True
 
-    def _guild_skin_ticket(self, num: int = 0):
-        # 皮肤券
+    def _guild_skin_ticket(self, num: int=0):
         logger.hr('Guild skin ticket', 2)
         if num == 0:
             logger.warning('No buy skin ticket')
@@ -100,12 +89,10 @@ class Guild(Buy, GameUi, RichManAssets):
         self.screenshot()
         if not self.buy_check_money(self.O_GUILD_TOTAL, 50):
             return False
-        # 检查功勋商店皮肤券 本周剩余数量
         number = self.check_remain(self.I_GUILD_SKIN)
         if number == 0:
             logger.warning('No skin ticket can buy')
             return False
-        # 购买功勋商店皮肤券
         self.buy_more(self.I_GUILD_SKIN, number)
         time.sleep(0.5)
         return True
@@ -117,7 +104,6 @@ class Guild(Buy, GameUi, RichManAssets):
         logger.info(f'Image roi {self.O_GUILD_REMAIN.roi}')
         self.screenshot()
         result = self.O_GUILD_REMAIN.ocr(self.device.image)
-        logger.warning(result)
         result = result.replace('？', '2').replace('?', '2').replace(':', '；')
         try:
             result = re.findall(r'本周剩余数量(\d+)', result)[0]
@@ -132,7 +118,7 @@ if __name__ == '__main__':
     from module.config.config import Config
     from module.device.device import Device
 
-    c = Config('mi')
+    c = Config('oas1')
     d = Device(c)
     t = Guild(c, d)
 
