@@ -1,6 +1,7 @@
 # This Python file uses the following encoding: utf-8
 # @author runhey
 # github https://github.com/runhey
+import re
 import time
 
 from module.logger import logger
@@ -106,6 +107,8 @@ class MallNavbar(GameUi, RichManAssets):
         }
         self.screenshot()
         result = match[index].ocr(self.device.image)
+        match = re.search(r'\d+', result)
+        result = int(match.group())
         if not isinstance(result, int):
             logger.warning(f'Get mall resource {index} error, result: {result}')
         if result == 0:
