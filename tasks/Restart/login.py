@@ -1,6 +1,7 @@
 # This Python file uses the following encoding: utf-8
 # @author runhey
 # github https://github.com/runhey
+from scipy.special import three
 
 from module.base.timer import Timer
 from module.exception import RequestHumanTakeover, GameTooManyClickError, GameStuckError
@@ -239,12 +240,12 @@ class LoginHandler(BaseTask, RestartAssets):
                     self.click(self.I_HARVEST_MAIL_CONFIRM, interval=2)
                     timer_harvest.reset()
                     continue
-                if self.appear(self.I_HARVEST_MAIL_ALL):
+                if self.appear(self.I_HARVEST_MAIL_ALL, threshold=0.9):
                     self.click(self.I_HARVEST_MAIL_ALL, interval=2)
                     self.wait_until_appear(self.I_HARVEST_MAIL_CONFIRM, wait_time=1)
                     timer_harvest.reset()
                     continue
-                if self.appear(self.I_HARVEST_MAIL_OPEN):
+                if self.appear(self.I_HARVEST_MAIL_OPEN, threshold=0.9):
                     self.click(self.I_HARVEST_MAIL_OPEN, interval=0.8)
                     timer_harvest.reset()
                     continue
