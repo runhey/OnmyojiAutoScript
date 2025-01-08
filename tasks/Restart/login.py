@@ -185,6 +185,7 @@ class LoginHandler(BaseTask, RestartAssets):
                 continue
             # 签到
             if self.appear_then_click(self.I_HARVEST_SIGN, interval=1.5):
+                self.wait_until_appear(self.I_LOGIN_RED_CLOSE, wait_time=2)
                 timer_harvest.reset()
                 continue
             # 某些活动的特殊签到，有空看到就删掉
