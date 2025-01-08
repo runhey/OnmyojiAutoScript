@@ -5,7 +5,7 @@
     "roiFront": "595,291,35,38",
     "roiBack": "530,254,181,198",
     "method": "Template matching",
-    "threshold": 0.8,
+    "threshold": 0.7,
     "description": "育成"
   },
   {
