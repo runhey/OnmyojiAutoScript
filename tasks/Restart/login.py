@@ -1,6 +1,7 @@
 # This Python file uses the following encoding: utf-8
 # @author runhey
 # github https://github.com/runhey
+from sympy.plotting.intervalmath import interval
 
 from module.base.timer import Timer
 from module.exception import RequestHumanTakeover, GameTooManyClickError, GameStuckError
@@ -233,14 +234,17 @@ class LoginHandler(BaseTask, RestartAssets):
                 #                 continue
                 #         continue
                 # 体力
-                if self.appear_then_click(self.I_HARVEST_MAIL_CONFIRM, interval=4):
+                if self.appear(self.I_HARVEST_MAIL_CONFIRM):
+                    self.click(self.I_HARVEST_MAIL_CONFIRM, interval=2)
                     timer_harvest.reset()
                     continue
-                if self.appear_then_click(self.I_HARVEST_MAIL_ALL, interval=3):
-                    timer_harvest.reset()
+                if self.appear(self.I_HARVEST_MAIL_ALL):
+                    self.click(self.I_HARVEST_MAIL_ALL, interval=2)
                     self.wait_until_appear(self.I_HARVEST_MAIL_CONFIRM, wait_time=1)
+                    timer_harvest.reset()
                     continue
-                if self.appear_then_click(self.I_HARVEST_MAIL_OPEN, interval=0.8):
+                if self.appear(self.I_HARVEST_MAIL_OPEN):
+                    self.click(self.I_HARVEST_MAIL_OPEN, interval=0.8)
                     timer_harvest.reset()
                     continue
                 if ((self.appear(self.I_HARVEST_MAIL) or self.appear(self.I_HARVEST_MAIL_COPY))
@@ -270,7 +274,8 @@ class LoginHandler(BaseTask, RestartAssets):
                 timer_harvest.reset()
 
             # 红色的关闭
-            if self.appear_then_click(self.I_UI_BACK_RED, interval=4):
+            if self.appear(self.I_LOGIN_RED_CLOSE):
+                self.click(self.I_LOGIN_RED_CLOSE, interval=2)
                 timer_harvest.reset()
                 continue
 
