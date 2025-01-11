@@ -93,9 +93,9 @@ class ScriptTask(GameUi, GeneralBattle, DemonEncounterAssets, SwitchSoul):
             else:
                 group, team = soul_config.demon_namazu.split(",")
         elif today == 5:
-                group, team = soul_config.demon_oboroguruma.split(",")
+            group, team = soul_config.demon_oboroguruma.split(",")
         elif today == 6:
-                group, team = soul_config.demon_nightly_aramitama.split(",")
+            group, team = soul_config.demon_nightly_aramitama.split(",")
         if group and team:
             self.run_switch_soul_by_name(group, team)
         if today == 0:
