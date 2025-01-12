@@ -204,7 +204,7 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AbyssShadowsAssets):
             if current_area == area_name:
                 break
             # 切换区域界面
-            if self.appear(self.I_ABYSS_DRAGON):
+            if self.appear(self.I_ABYSS_DRAGON) or self.appear(self.I_ABYSS_PEACOCK) or self.appear(self.I_ABYSS_FOX) or self.appear(self.I_ABYSS_LEOPARD):
                 self.select_boss(area_name)
                 logger.info(f"Switch to {area_name.name}")
                 continue      
