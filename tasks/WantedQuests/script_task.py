@@ -601,14 +601,15 @@ if __name__ == '__main__':
     c = Config('oas1')
     d = Device(c)
     t = ScriptTask(c, d)
-    img = cv2.imread(r"E:\highlight.png")
-    img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
-    t.device.image = img
-    appear = t.appear_highlight(t.I_WQ_INVITE_DIFF_SVR_HIGHLIGHT)
-
-    img = cv2.imread(r"E:\normal.png")
-    img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
-    t.device.image = img
-    appear_normal = t.appear_highlight(t.I_WQ_INVITE_DIFF_SVR_HIGHLIGHT)
-
-    print(appear)
+    t.run()
+    # img = cv2.imread(r"E:\highlight.png")
+    # img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+    # t.device.image = img
+    # appear = t.appear_highlight(t.I_WQ_INVITE_DIFF_SVR_HIGHLIGHT)
+    #
+    # img = cv2.imread(r"E:\normal.png")
+    # img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+    # t.device.image = img
+    # appear_normal = t.appear_highlight(t.I_WQ_INVITE_DIFF_SVR_HIGHLIGHT)
+    #
+    # print(appear)

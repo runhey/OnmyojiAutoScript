@@ -384,7 +384,7 @@ class ScriptTask(KU, KekkaiActivationAssets):
         self.appear_then_click(self.I_A_HARVEST_FISH_6)  # 斗鱼6
         self.appear_then_click(self.I_A_HARVEST_MOON_3)  # 太阴3
         self.appear_then_click(self.I_A_HARVEST_FISH_3)  # 斗鱼三
-        self.appear_then_click(self.I_A_HARVEST_Oboroguruma)  # 胧车
+        self.appear_then_click(self.I_A_HARVEST_OBOROGURUMA)  # 胧车
 
 
 if __name__ == "__main__":

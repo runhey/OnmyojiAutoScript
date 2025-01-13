@@ -214,5 +214,14 @@
     "method": "Template matching",
     "threshold": 0.8,
     "description": "斗鱼3"
+  },
+  {
+    "itemName": "a_harvest_oboroguruma",
+    "imageName": "a_a_harvest_oboroguruma.png",
+    "roiFront": "891,165,57,39",
+    "roiBack": "854,128,132,124",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "胧车 "
   }
 ]
