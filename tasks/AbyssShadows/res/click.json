@@ -88,5 +88,11 @@
     "roiFront": "1140,190,50,162",
     "roiBack": "1093,143,138,297",
     "description": "狭间_黑豹入口"
+  },
+  {
+    "itemName": "abyss_shenshe_enter_abyss",
+    "roiFront": "740,640,45,15",
+    "roiBack": "740,640,45,15",
+    "description": "刚进入神社时，可点击进入狭间暗域的区域，用于开启狭间暗域"
   }
 ]

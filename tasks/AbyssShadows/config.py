@@ -7,8 +7,10 @@ from datetime import date, datetime
 from enum import Enum
 from pathlib import Path
 
+from exceptiongroup import catch
 from pydantic import BaseModel, Field
 
+from module.base.timer import Timer
 from tasks.AbyssShadows.assets import AbyssShadowsAssets
 from tasks.Component.GeneralBattle.config_general_battle import GeneralBattleConfig
 from tasks.Component.SwitchSoul.switch_soul_config import SwitchSoulConfig
@@ -61,11 +63,17 @@ class CilckArea:
     __repr__ = __str__
 
 
-class EnemyType(Enum):
+class EnemyType(str, Enum):
     """ 敌人类型 """
-    BOSS = 1  # 首领
-    GENERAL = 2  # 副将
-    ELITE = 3  # 精英
+    BOSS = "BOSS"  # 首领
+    GENERAL = "GENERAL"  # 副将
+    ELITE = "ELITE"  # 精英
+
+
+class AbyssShadowsDifficulty(str, Enum):
+    EASY = "EASY"
+    NORMAL = "NORMAL"
+    HARD = "HARD"
 
 
 class AbyssShadowsTime(ConfigBase):
@@ -75,6 +83,8 @@ class AbyssShadowsTime(ConfigBase):
     custom_run_time_sunday: Time = Field(default=Time(hour=19, minute=0, second=0))
     # 尝试主动开启狭间-区别于游戏中的自动开启狭间功能
     try_start_abyss_shadows: bool = Field(default=False, description='try_start_abyss_shadows_help')
+    # 难度
+    difficulty: AbyssShadowsDifficulty = Field(default=AbyssShadowsDifficulty.EASY, description='difficulty_help')
 
 
 class ProcessManage(ConfigBase):
@@ -86,8 +96,8 @@ class ProcessManage(ConfigBase):
     # 小蛇使用E,-后面表示打几只,例如E-2表示打两只小蛇
     # 例如 A-1;B-2;C-3...
     attack_order: str = Field(default='', description='attack_order_help')
-    # 标记主怪,与攻击顺序类似,可以根据类单独设置
-    # 例如 A;2;3;C-4;D-6
+    # 标记主怪
+    # EnemyType,  多个用;分隔
     mark_main: str = Field(default='', description='mark_boss_help')
     # 首领预设
     preset_boss: str = Field(default='', description='preset_boss_help')
@@ -109,15 +119,15 @@ class ProcessManage(ConfigBase):
         result = [str]
         match area:
             case 'A':
-                result.append(AbyssShadowsAssets.C_ABYSS_DRAGON)
+                result.append(AreaType.DRAGON)
             case 'B':
-                result.append(AbyssShadowsAssets.C_ABYSS_PEACOCK)
+                result.append(AreaType.PEACOCK)
             case 'C':
-                result.append(AbyssShadowsAssets.C_ABYSS_FOX)
+                result.append(AreaType.FOX)
             case 'D':
-                result.append(AbyssShadowsAssets.C_ABYSS_LEOPARD)
+                result.append(AreaType.LEOPARD)
             case _:
-                result.append(AbyssShadowsAssets.C_ABYSS_DRAGON)
+                result.append(AreaType.DRAGON)
         match num:
             case '1':
                 result.append(AbyssShadowsAssets.C_BOSS_CLICK_AREA)
@@ -135,7 +145,9 @@ class ProcessManage(ConfigBase):
                 result.append(AbyssShadowsAssets.C_ELITE_1_CLICK_AREA)
         return tuple(result)
 
-    def parse_order(self, value: str) -> list:
+    def parse_order(self, value: str = None) -> list:
+        if value is None or value == '':
+            value = self.attack_order
         if value == '':
             return []
         tmp = value.split(';')
@@ -143,29 +155,49 @@ class ProcessManage(ConfigBase):
             result = self.parse_order_item(item)
             yield result
 
-    def is_need_mark_main(self, code):
-        def expand_mark_main(mark_main_str: str):
-            items = mark_main_str.split(';')
-            expanded = []
-            for item in items:
-                if item == 'A' or item == 'B' or item == 'C' or item == 'D':
-                    expanded.append(item + "-1")
-                    expanded.append(item + "-2")
-                    expanded.append(item + "-3")
-                    expanded.append(item + "-4")
-                    expanded.append(item + "-5")
-                    expanded.append(item + "-6")
-                    continue
-                if item == '1' or item == '2' or item == '3' or item == '4' or item == '5' or item == '6':
-                    expanded.append('A-' + item)
-                    expanded.append('B-' + item)
-                    expanded.append('C-' + item)
-                    expanded.append('D-' + item)
-                    continue
-                expanded.append(item)
-            return expanded
+    def is_need_mark_main(self, enemy_type):
+        return str(enemy_type) in self.mark_main
 
-        return code in expand_mark_main(self.mark_main)
+    def parse_strategy(self, strategy: str):
+        class Condition:
+            _is_time_out: bool = False
+            _time = -1
+            _timer: Timer = None
+            _is_damage_enough: bool = False
+            _damage: int = -1
+
+            _result: bool = False
+
+            def __init__(self, value: str):
+                # 没有策略
+                if value == "TRUE":
+                    self._result = True
+                elif value == "FALSE":
+                    self._result = False
+                elif len(value) <= 3:
+                    # 3位数 当作时间
+                    try:
+                        self._time = int(value)
+                    except ValueError:
+                        self._time = 180
+                    self._timer = Timer(self._time)
+                    self._timer.start()
+                else:
+                    try:
+                        _damage = int(value)
+                    except ValueError:
+                        self._damage = 999999999
+
+            def is_valid(self, damage: int = None):
+                if self._time >= 0:
+                    return self._timer.reached()
+                if self._damage >= 0 and damage is not None:
+                    return self._damage < damage
+                return self._result
+
+        if strategy is None or strategy == '':
+            return False
+        return Condition(strategy)
 
 
 class SavedParams(ConfigBase):
@@ -186,5 +218,7 @@ class SavedParams(ConfigBase):
 class AbyssShadows(ConfigBase):
     scheduler: Scheduler = Field(default_factory=Scheduler)
     abyss_shadows_time: AbyssShadowsTime = Field(default_factory=AbyssShadowsTime)
+    process_manage: ProcessManage = Field(default_factory=ProcessManage)
+    saved_params: SavedParams = Field(default_factory=SavedParams)
     general_battle_config: GeneralBattleConfig = Field(default_factory=GeneralBattleConfig)
     switch_soul_config: SwitchSoulConfig = Field(default_factory=SwitchSoulConfig)

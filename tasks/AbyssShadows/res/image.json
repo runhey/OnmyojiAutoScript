@@ -205,5 +205,59 @@
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"
+  },
+  {
+    "itemName": "select_difficulty",
+    "imageName": "res_select_difficulty.png",
+    "roiFront": "710,650,50,50",
+    "roiBack": "710,650,50,50",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "选择难度按钮"
+  },
+  {
+    "itemName": "difficulty_easy",
+    "imageName": "res_difficulty_easy.png",
+    "roiFront": "620,445,90,210",
+    "roiBack": "620,445,90,210",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "容易难度"
+  },
+  {
+    "itemName": "difficulty_normal",
+    "imageName": "res_difficulty_normal.png",
+    "roiFront": "620,445,90,210",
+    "roiBack": "620,445,90,210",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "普通难度"
+  },
+  {
+    "itemName": "difficulty_hard",
+    "imageName": "res_difficulty_hard.png",
+    "roiFront": "620,445,90,210",
+    "roiBack": "620,445,90,210",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "困难难度"
+  },
+  {
+    "itemName": "btn_start",
+    "imageName": "res_btn_start.png",
+    "roiFront": "1120,570,100,120",
+    "roiBack": "1120,570,100,120",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "开启按钮"
+  },
+  {
+    "itemName": "start_ensure",
+    "imageName": "res_start_ensure.png",
+    "roiFront": "660,390,190,80",
+    "roiBack": "660,390,190,80",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "开启确认按钮"
   }
 ]

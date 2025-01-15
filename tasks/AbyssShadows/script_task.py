@@ -10,7 +10,7 @@ from time import sleep
 from module.exception import TaskEnd
 from module.logger import logger
 from tasks.AbyssShadows.assets import AbyssShadowsAssets
-from tasks.AbyssShadows.config import AbyssShadows, EnemyType, AreaType, CilckArea
+from tasks.AbyssShadows.config import AbyssShadows, EnemyType, AreaType, CilckArea, AbyssShadowsDifficulty
 from tasks.Component.GeneralBattle.general_battle import GeneralBattle
 from tasks.Component.SwitchSoul.switch_soul import SwitchSoul
 from tasks.GameUi.game_ui import GameUi
@@ -21,6 +21,11 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AbyssShadowsAssets):
     boss_fight_count = 0  # 首领战斗次数
     general_fight_count = 0  # 副将战斗次数
     elite_fight_count = 0  # 精英战斗次数
+
+    #
+    cur_area = None
+    #
+    cur_preset = None
 
     def run(self):
         """ 狭间暗域主函数
@@ -295,7 +300,7 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AbyssShadowsAssets):
         return True
 
     def click_emeny_area(self, click_area: CilckArea) -> bool:
-        suceess = True
+        success = True
         ''' 点击敌人区域
         
         :return 
@@ -317,7 +322,8 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AbyssShadowsAssets):
                 # 如果点3次还没进去就表示目标已死亡,跳过
                 if click_times >= 3:
                     logger.warning(f"Failed to click {click_area}")
-                    return
+                    success = False
+                    return success
                 # 出现前往按钮就退出
                 if self.appear(self.I_ABYSS_GOTO_ENEMY):
                     break
@@ -332,6 +338,7 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AbyssShadowsAssets):
                 self.screenshot()
                 if self.appear_then_click(self.I_ABYSS_GOTO_ENEMY, interval=1):
                     logger.info(f"Click {self.I_ABYSS_GOTO_ENEMY.name}")
+                    self.wait_until_appear(self.I_ENSURE_BUTTON, wait_time=1)
                     # 点击敌人后，如果是不同区域会确认框，点击确认                
                     if self.appear_then_click(self.I_ENSURE_BUTTON, interval=1):
                         logger.info(f"Click {self.I_ENSURE_BUTTON.name}")
@@ -359,7 +366,7 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AbyssShadowsAssets):
             if self.appear(self.I_PREPARE_HIGHLIGHT):
                 break
 
-        return suceess
+        return success
 
     def run_general_battle_back(self) -> bool:
         """
@@ -399,14 +406,142 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AbyssShadowsAssets):
         return True
 
     def start_abyss_shadows(self):
+        # 尝试开启狭间暗域
         self.ui_goto(page_guild)
+        from tasks.Dokan.assets import DokanAssets as da
+        self.ui_click_until_disappear(da.I_RYOU_SHENSHE)
+        self.ui_click_until_smt_disappear(self.C_ABYSS_SHENSHE_ENTER_ABYSS, stop=da.I_RYOU_DOKAN, interval=1)
+        # 选择难度
+        self.ui_click(self.I_SELECT_DIFFICULTY, stop=self.I_DIFFICULTY_EASY, interval=2)
+
+        difficulty_btn = None
+        match self.config.model.abyss_shadows.abyss_shadows_time.difficulty:
+            case AbyssShadowsDifficulty.EASY:
+                difficulty_btn = self.I_DIFFICULTY_EASY
+            case AbyssShadowsDifficulty.HARD:
+                difficulty_btn = self.I_DIFFICULTY_HARD
+            case AbyssShadowsDifficulty.NORMAL:
+                difficulty_btn = self.I_DIFFICULTY_NORMAL
+        self.ui_click_until_disappear(difficulty_btn, interval=2)
+        # 开始
+        self.ui_click(self.I_BTN_START, stop=self.I_START_ENSURE, interval=2)
+        self.ui_click_until_disappear(self.I_START_ENSURE, interval=2)
+
+    def process(self):
+        #
+        ps_list = self.config.model.abyss_shadows.process_manage.parse_order()
+        #
+        done_list = self.config.model.abyss_shadows.saved_params.done.split(";")
+        #
+        unavailable_list = self.config.model.abyss_shadows.saved_params.unavailable.split(";")
+
+        def get_next():
+            for ps in ps_list:
+                if ps not in done_list and ps not in unavailable_list:
+                    return ps
+            return None
+
+        def process_item(item):
+
+            return
+
+        while True:
+            next = get_next()
+            if next is None:
+                break
+            process_item(next)
+
+    def open_navigation(self):
+        self.ui_click(self.I_ABYSS_NAVIGATION, self.I_ABYSS_MAP, interval=1)
+
+    def goto(self, item):
+        self.open_navigation()
+        code, area, enemy = item
+        need_change_area = area == self.cur_area
+        if need_change_area:
+            self.change_area(area)
+        #
+
+        self.open_navigation()
+        if not self.click_emeny_area(enemy):
+            # 该单位不可用
+            self.config.model.abyss_shadows.saved_params.unavailable += f"{code};"
+            return False
+        # 战斗
+        self.run_battle(enemy)
+        # 战后统计
+
+    def run_battle(self, enemy):
+        enemy_type = None
+        match enemy:
+            case AbyssShadowsAssets.C_BOSS_CLICK_AREA:
+                enemy_type = EnemyType.BOSS
+            case AbyssShadowsAssets.C_GENERAL_1_CLICK_AREA | AbyssShadowsAssets.C_GENERAL_2_CLICK_AREA:
+                enemy_type = EnemyType.GENERAL
+            case AbyssShadowsAssets.C_ELITE_1_CLICK_AREA | AbyssShadowsAssets.C_ELITE_2_CLICK_AREA | AbyssShadowsAssets.C_ELITE_3_CLICK_AREA:
+                enemy_type = EnemyType.ELITE
+            case _:
+                enemy_type = EnemyType.BOSS
+
+        # 判断是否需要更换预设
+        def get_preset(enemy_type):
+            match enemy_type:
+                case EnemyType.BOSS:
+                    return self.config.model.abyss_shadows.process_manage.preset_boss
+                case EnemyType.ELITE:
+                    return self.config.model.abyss_shadows.process_manage.preset_elite
+                case EnemyType.GENERAL:
+                    return self.config.model.abyss_shadows.process_manage.preset_general
+
+        preset = get_preset(enemy_type)
+        if preset != self.cur_preset:
+            self.switch_preset_team(preset)
+
+        # 点击准备
+        self.ui_click_until_disappear(self.I_PREPARE_HIGHLIGHT, interval=0.3)
+
+        # 标记主怪
+        is_need_mark_main=self.config.model.abyss_shadows.process_manage.is_need_mark_main()
+        if is_need_mark_main:
+            self.ui_click(self.I_MARK_MAIN, interval=0.3)
+
+        # 生成退出条件
+        def generate_quit_condition(enemy_type):
+            strategy = None
+            match enemy_type:
+                case EnemyType.BOSS:
+                    strategy = self.config.model.abyss_shadows.process_manage.strategy_boss
+                case EnemyType.ELITE:
+                    strategy = self.config.model.abyss_shadows.process_manage.strategy_elite
+                case EnemyType.GENERAL:
+                    strategy = self.config.model.abyss_shadows.process_manage.strategy_general
+            return self.config.model.abyss_shadows.process_manage.parse_strategy(strategy)
+
+        condition = generate_quit_condition(enemy_type)
+        cur_damage = 0
+        self.device.screenshot_interval_set(1)
+        while True:
+            self.screenshot()
+            if condition.is_valid(cur_damage):
+                self.quit_battle()
+                break
+            cur_damage = self.O_DAMAGE.ocr_digit(self.device.image)
+        self.device.screenshot_interval_set()
+
+    def quit_battle(self):
+        # TODO quit
+        pass
+
+    def update_state(self, item, info):
+        pass
 
 
 if __name__ == "__main__":
     from module.config.config import Config
     from module.device.device import Device
 
-    config = Config('zhu')
+    config = Config('却把烟花嗅')
     device = Device(config)
     t = ScriptTask(config, device)
-    t.run()
+    t.screenshot()
+    t.start_abyss_shadows()

@@ -41,6 +41,8 @@ class AbyssShadowsAssets:
 	C_ABYSS_FOX = RuleClick(roi_front=(822,184,49,144), roi_back=(789,130,148,249), name="abyss_fox")
 	# 狭间_黑豹入口 
 	C_ABYSS_LEOPARD = RuleClick(roi_front=(1140,190,50,162), roi_back=(1093,143,138,297), name="abyss_leopard")
+	# 刚进入神社时，可点击进入狭间暗域的区域，用于开启狭间暗域 
+	C_ABYSS_SHENSHE_ENTER_ABYSS = RuleClick(roi_front=(740,640,45,15), roi_back=(740,640,45,15), name="abyss_shenshe_enter_abyss")
 
 
 	# Image Rule Assets
@@ -90,6 +92,18 @@ class AbyssShadowsAssets:
 	I_DRAGON_AREA = RuleImage(roi_front=(584,15,111,34), roi_back=(584,15,111,34), threshold=0.8, method="Template matching", file="./tasks/AbyssShadows/res/res_dragon_area.png")
 	# description 
 	I_WAIT_TO_START = RuleImage(roi_front=(588,64,70,26), roi_back=(588,64,70,26), threshold=0.8, method="Template matching", file="./tasks/AbyssShadows/res/res_wait_to_start.png")
+	# 选择难度按钮 
+	I_SELECT_DIFFICULTY = RuleImage(roi_front=(710,650,50,50), roi_back=(710,650,50,50), threshold=0.8, method="Template matching", file="./tasks/AbyssShadows/res/res_select_difficulty.png")
+	# 容易难度 
+	I_DIFFICULTY_EASY = RuleImage(roi_front=(620,445,90,210), roi_back=(620,445,90,210), threshold=0.8, method="Template matching", file="./tasks/AbyssShadows/res/res_difficulty_easy.png")
+	# 普通难度 
+	I_DIFFICULTY_NORMAL = RuleImage(roi_front=(620,445,90,210), roi_back=(620,445,90,210), threshold=0.8, method="Template matching", file="./tasks/AbyssShadows/res/res_difficulty_normal.png")
+	# 困难难度 
+	I_DIFFICULTY_HARD = RuleImage(roi_front=(620,445,90,210), roi_back=(620,445,90,210), threshold=0.8, method="Template matching", file="./tasks/AbyssShadows/res/res_difficulty_hard.png")
+	# 开启按钮 
+	I_BTN_START = RuleImage(roi_front=(1120,570,100,120), roi_back=(1120,570,100,120), threshold=0.8, method="Template matching", file="./tasks/AbyssShadows/res/res_btn_start.png")
+	# 开启确认按钮 
+	I_START_ENSURE = RuleImage(roi_front=(660,390,190,80), roi_back=(660,390,190,80), threshold=0.8, method="Template matching", file="./tasks/AbyssShadows/res/res_start_ensure.png")
 
 
 	# List Rule Assets
