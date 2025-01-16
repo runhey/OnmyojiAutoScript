@@ -3,7 +3,7 @@
     "itemName": "mall_resource_1",
     "roiFront": "144,7,100,43",
     "roiBack": "144,7,100,43",
-    "mode": "Digit",
+    "mode": "Quantity",
     "method": "Default",
     "keyword": "",
     "description": "左数第一个"
@@ -12,7 +12,7 @@
     "itemName": "mall_resource_2",
     "roiFront": "326,8,124,39",
     "roiBack": "326,8,124,39",
-    "mode": "Digit",
+    "mode": "Quantity",
     "method": "Default",
     "keyword": "",
     "description": "左数第二个"
@@ -21,7 +21,7 @@
     "itemName": "mall_resource_3",
     "roiFront": "533,9,107,38",
     "roiBack": "533,9,107,38",
-    "mode": "Digit",
+    "mode": "Quantity",
     "method": "Default",
     "keyword": "",
     "description": "左数第二个"
@@ -30,7 +30,7 @@
     "itemName": "mall_resource_4",
     "roiFront": "739,8,100,39",
     "roiBack": "739,8,100,39",
-    "mode": "Digit",
+    "mode": "Quantity",
     "method": "Default",
     "keyword": "",
     "description": "左数第二个"
@@ -39,7 +39,7 @@
     "itemName": "mall_resource_5",
     "roiFront": "935,11,100,37",
     "roiBack": "935,11,100,37",
-    "mode": "Digit",
+    "mode": "Quantity",
     "method": "Default",
     "keyword": "",
     "description": "左数第二个"
@@ -48,7 +48,7 @@
     "itemName": "mall_resource_6",
     "roiFront": "1129,6,100,41",
     "roiBack": "1129,6,100,41",
-    "mode": "Digit",
+    "mode": "Quantity",
     "method": "Default",
     "keyword": "",
     "description": "左数第二个"
