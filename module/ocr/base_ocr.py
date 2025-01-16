@@ -39,6 +39,7 @@ class OcrMode(Enum):
     DIGIT = 3  # str: "Digit"
     DIGITCOUNTER = 4  # str: "DigitCounter"
     DURATION = 5  # str: "Duration"
+    QUANTITY = 6  # str: "Quantity"
 
 class OcrMethod(Enum):
     DEFAULT = 1  # str: "Default"
