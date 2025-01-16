@@ -184,6 +184,9 @@ class ExtendGreenMark(GeneralBattle):
         for name in name_list:
             # 此处为了获取到OCR模型，随机选择一个了RuleOcr对象，可以使用任意的RuleOcr对象
             res_list = self.O_EXP_50.model.detect_and_ocr(img, 0.7)
+            # 增加日志输出，方便纠错
+            output = [item.ocr_text for item in res_list]
+            logger.info(f"detect res_list:{output}")
             res = [item for item in res_list if similarity(item.ocr_text, name) > 0.5]
             res = sorted(res, key=lambda x: x.score)
             if len(res) <= 0:

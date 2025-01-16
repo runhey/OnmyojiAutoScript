@@ -111,8 +111,8 @@ class ScriptTask(ExtendGreenMark, GameUi, SwitchSoul, DokanSceneDetector):
                 if out_dokan_timer.reached():
                     logger.warning("long hours away from dokan,exit")
                     break
-                sleep(2)
                 logger.info("out of dokan scene,wait for 2 seconds")
+                sleep(2)
                 continue
             out_dokan_timer.clear()
 
@@ -1028,6 +1028,14 @@ class ScriptTask(ExtendGreenMark, GameUi, SwitchSoul, DokanSceneDetector):
                     win = True
                     return win, True
 
+                # 如果出现 寮境顶部“道馆突破”字样，表示已不再战斗中
+                # 可能是截图时绿标，导致没有检测到战斗结束
+                if self.appear(self.I_RYOU_DOKAN_CENTER_TOP):
+                    logger.info("Exit Battle already")
+                    # 因为不确定战斗成功还是失败，姑且当作成功
+                    win = True
+                    return win, True
+
                 return False, False
 
             win, is_battle_end_and_exit = is_battle_end()
@@ -1048,6 +1056,10 @@ class ScriptTask(ExtendGreenMark, GameUi, SwitchSoul, DokanSceneDetector):
 
             # 打完一个小朋友，自动进入下一个小朋友
             if self.appear(self.I_RYOU_DOKAN_IN_FIELD):
+                # 在此处判断战斗次数,防止开启额外的战斗
+                if battle_count_limit <= 0:
+                    win = True
+                    break
                 self.device.click_record_clear()
                 self.device.stuck_record_clear()
 
