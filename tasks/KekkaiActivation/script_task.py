@@ -269,7 +269,11 @@ class ScriptTask(KU, KekkaiActivationAssets):
             if current_best is None:
                 logger.warning('There is no card in the list')
                 break
-
+            # Record best card for future comparison
+            if(card_best is None):
+                card_best = current_best
+            elif self.order_cards.index(current_best) <= self.order_cards.index(card_best):
+                break
             if current_best == self.order_cards[0]:
                 break
             # 为什么找到第二个最优解也是会退出呢？？？

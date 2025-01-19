@@ -239,7 +239,7 @@ class SwitchSoul(BaseTask, SwitchSoulAssets):
             # 有则跳出检测
             if result and len(result) > 0:
                 break
-            self.swipe(self.S_SS_TEAM_SWIPE_UP)
+            self.swipe(self.S_SS_TEAM_SWIPE_UP, 0.3)
         logger.info('Swipe up to find target team')
 
         # 选中分组
