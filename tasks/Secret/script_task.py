@@ -279,7 +279,7 @@ class ScriptTask(GameUi, GeneralBattle, SwitchSoul, SecretAssets):
         if time_now.weekday() == 0 and time_now.hour < 8:
             self.set_next_run(task='Secret',
                               finish=True,
-                              server=time_now.replace(hour=9, minute=0, second=0, microsecond=0))
+                              target=time_now.replace(hour=9, minute=0, second=0, microsecond=0))
             raise TaskEnd('Secret')
 
 
