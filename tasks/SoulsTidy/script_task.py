@@ -85,6 +85,14 @@ class ScriptTask(GameUi, SoulsTidyAssets):
             if self.appear(self.I_ST_CAT):
                 # 出现招财猫
                 break
+            
+            # https://github.com/runhey/OnmyojiAutoScript/issues/662
+            if self.appear(self.I_ST_UNSELECTED):
+                self.ui_click_until_disappear(self.I_ST_UNSELECTED)
+                continue
+            if self.appear_then_click(self.I_UI_CONFIRM, interval=0.5):
+                continue
+
             if self.appear_then_click(self.I_ST_GREED_CLOSE, interval=0.7):
                 continue
             if self.appear_then_click(self.I_ST_BONGNA, interval=1, threshold=0.6):
