@@ -19,7 +19,7 @@
   },
   {
     "itemName": "friends_7",
-    "imageName": "battle6_friends_7.png",
+    "imageName": "battle7_friends_7.png",
     "roiFront": "89,18,35,34",
     "roiBack": "89,18,35,34",
     "method": "Template matching",
