@@ -2,7 +2,7 @@
     "name": "ryou_activity_list",
     "direction": "vertical",
     "type": "ocr",
-    "roiBack": "35,157,37,250",
+    "roiBack": "20,150,170,400",
     "description": "这个是当前活跃的竂活动列表界面",
     "list": [
       {

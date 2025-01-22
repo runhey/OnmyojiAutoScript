@@ -15,8 +15,8 @@ class RuleAnimate(RuleImage):
                  name: str = None):
         if isinstance(rule, RuleImage):
             roi_front = rule.roi_front
-            roi_back = Path(rule.file).stem.upper()
-            self._name = rule.file
+            roi_back = rule.roi_back
+            self._name = Path(rule.file).stem.upper()
             threshold = threshold
         elif isinstance(rule, RuleClick) or isinstance(rule, RuleLongClick):
             roi_front = rule.roi_front

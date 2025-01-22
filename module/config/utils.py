@@ -244,7 +244,7 @@ def dict_to_kv(dictionary, allow_none=True):
     return ', '.join([f'{k}={repr(v)}' for k, v in dictionary.items() if allow_none or v is not None])
 
 
-def parse_tomorrow_server(server_update: time, float_seconds: int = 0) -> datetime:
+def parse_tomorrow_server(server_update: time, delay_date: int = 1, float_seconds: int = 0) -> datetime:
     """
     获取明天的日期，给这个日期加上server_update的时间，返回datetime
     :param server_update:
@@ -254,7 +254,7 @@ def parse_tomorrow_server(server_update: time, float_seconds: int = 0) -> dateti
     if isinstance(server_update, str):
         server_update = time.fromisoformat(server_update)
     now = datetime.now()
-    tomorrow = now + timedelta(days=1)
+    tomorrow = now + timedelta(days=delay_date)
     next_run = datetime.combine(tomorrow, server_update)
     
     # 应用浮动时间

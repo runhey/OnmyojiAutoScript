@@ -1,14 +1,14 @@
 [
   {
     "itemName": "dokan_random_click_area",
-    "roiFront": "142,294,107,555",
-    "roiBack": "142,294,107,555",
+    "roiFront": "142,294,107,150",
+    "roiBack": "142,294,107,150",
     "description": "道馆随机点击安全区域"
   },
   {
     "itemName": "dokan_random_click_area1",
-    "roiFront": "42,594,10,100",
-    "roiBack": "42,594,10,100",
+    "roiFront": "42,594,10,30",
+    "roiBack": "42,594,10,30",
     "description": "道馆随机点击安全区域1：竂友突破信息"
   },
   {
@@ -24,9 +24,39 @@
     "description": "道馆随机点击安全区域3"
   },
   {
+    "itemName": "dokan_toppa_rank_close_area",
+    "roiFront": "1150,380,100,150",
+    "roiBack": "1150,380,100,150",
+    "description": "道馆突破排名弹出时,点击此区域关闭"
+  },
+  {
     "itemName": "dokan_ready_for_battle",
     "roiFront": "42,94,1207,543",
     "roiBack": "42,94,1207,543",
     "description": "准备战斗"
+  },
+  {
+    "itemName": "dokan_cancel_select_dokan",
+    "roiFront": "1070,610,30,90",
+    "roiBack": "1070,610,30,90",
+    "description": "查找道馆时 点击此区域 隐藏道馆详情(显示防守人数,馆主等级等的卡片)"
+  },
+  {
+    "itemName": "dokan_cancel_select_dokan_check_animate",
+    "roiFront": "600,330,80,60",
+    "roiBack": "600,330,80,60",
+    "description": "ruleanimate 用作检测选择道馆时,确定地图区域稳定无动作"
+  },
+  {
+    "itemName": "dokan_refresh",
+    "roiFront": "1140,630,40,30",
+    "roiBack": "1140,630,40,30",
+    "description": "查找道馆时 刷新道馆列表"
+  },
+  {
+    "itemName": "dokan_battle_quit_area",
+    "roiFront": "10,36,50,14",
+    "roiBack": "10,36,50,14",
+    "description": "道馆战斗时,左上角 退出按钮区域"
   }
 ]

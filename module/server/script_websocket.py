@@ -30,7 +30,11 @@ class ScriptWSManager:
     async def broadcast_log(self, log: str):
         # 广播日志
         for connection in self.active_connections:
-            await connection.send_text(log)
+            try:
+                await connection.send_text(log)
+            except RuntimeError as e:
+                print(e)
+                self.active_connections.remove(connection)
 
 
 

@@ -1,0 +1,68 @@
+[
+  {
+    "itemName": "sa_login_form_dropdown_btn",
+    "roiFront": "470,280,350,100",
+    "roiBack": "470,280,350,100",
+    "description": "账号下拉菜单"
+  },
+  {
+    "itemName": "sa_login_form_login_btn",
+    "roiFront": "535,420,240,60",
+    "roiBack": "535,420,240,60",
+    "description": "登录按钮"
+  },
+  {
+    "itemName": "sa_login_form_user_center",
+    "roiFront": "1210,230,40,40",
+    "roiBack": "1210,230,40,40",
+    "description": "登录界面-用户中心按钮默认位置"
+  },
+  {
+    "itemName": "sa_login_form_switch_svr_btn",
+    "roiFront": "550,510,280,35",
+    "roiBack": "550,510,280,35",
+    "description": "登录界面-切换服务器按钮"
+  },
+  {
+    "itemName": "sa_login_form_enter_game_btn",
+    "roiFront": "570,580,130,35",
+    "roiBack": "570,580,130,35",
+    "description": "登录界面-进入游戏按钮"
+  },
+  {
+    "itemName": "sa_login_form_character_area",
+    "roiFront": "260,450,760,160",
+    "roiBack": "260,450,760,160",
+    "description": "登录界面-选择服务器-底部账号信息展开后的区域"
+  },
+  {
+    "itemName": "sa_login_form_cancel_svr_select",
+    "roiFront": "50,70,60,360",
+    "roiBack": "50,70,60,360",
+    "description": "登录界面-选择服务器-点击关闭选择服务器界面的空白区域"
+  },
+  {
+    "itemName": "sa_login_form_user_center_close_btn",
+    "roiFront": "1055,120,20,20",
+    "roiBack": "1055,120,20,20",
+    "description": "登录界面-用户中心-右上角关闭按钮"
+  },
+  {
+    "itemName": "sa_login_form_account_close_btn",
+    "roiFront": "895,165,40,40",
+    "roiBack": "895,165,40,40",
+    "description": "登录界面-账号选择界面-右上角关闭按钮"
+  },
+  {
+    "itemName": "sa_eg_profile_photo",
+    "roiFront": "35,35,55,55",
+    "roiBack": "35,35,55,55",
+    "description": "游戏庭院内 左上角 头像"
+  },
+  {
+    "itemName": "sa_select_svr_character_list",
+    "roiFront": "205,570,815,40",
+    "roiBack": "205,570,815,40",
+    "description": "选择服务器界面 底部角色名 列表---与ocr.json中同名对象区域一致"
+  }
+]

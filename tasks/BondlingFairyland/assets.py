@@ -36,10 +36,14 @@ class BondlingFairylandAssets:
 	O_B_HIGH_NUMBER = RuleOcr(roi=(883,23,100,32), area=(883,23,100,32), mode="DigitCounter", method="Default", keyword="", name="b_high_number")
 	# Ocr-description 
 	O_B_STONE_NUMBER = RuleOcr(roi=(858,22,82,40), area=(858,22,82,40), mode="DigitCounter", method="Default", keyword="", name="b_stone_number")
+	# 好友邀请 
+	O_FRIEND = RuleOcr(roi=(357,89,100,54), area=(357,89,100,54), mode="Single", method="Default", keyword="", name="friend")
+	# 跨区邀请 
+	O_KUAQU = RuleOcr(roi=(472,88,100,54), area=(472,88,100,54), mode="Single", method="Default", keyword="", name="kuaqu")
 
 
 	# Image Rule Assets
-	# description 
+	# 挑战 
 	I_BALL_FIRE = RuleImage(roi_front=(1140,575,100,100), roi_back=(1140,575,100,100), threshold=0.8, method="Template matching", file="./tasks/BondlingFairyland/ball/ball_ball_fire.png")
 	# description 
 	I_BALL_UNLOCK = RuleImage(roi_front=(714,637,31,33), roi_back=(714,637,31,33), threshold=0.8, method="Template matching", file="./tasks/BondlingFairyland/ball/ball_ball_unlock.png")
@@ -49,6 +53,8 @@ class BondlingFairylandAssets:
 	I_BALL_RECORDS = RuleImage(roi_front=(856,566,38,39), roi_back=(856,566,38,39), threshold=0.8, method="Template matching", file="./tasks/BondlingFairyland/ball/ball_ball_records.png")
 	# 求援 
 	I_BALL_HELP = RuleImage(roi_front=(963,571,100,100), roi_back=(963,571,100,100), threshold=0.8, method="Template matching", file="./tasks/BondlingFairyland/ball/ball_ball_help.png")
+	# 契灵创建队伍 
+	I_CREATE_TEAM = RuleImage(roi_front=(569,491,141,50), roi_back=(569,491,141,50), threshold=0.8, method="Template matching", file="./tasks/BondlingFairyland/ball/create_team.png")
 
 
 	# Image Rule Assets
@@ -112,8 +118,19 @@ class BondlingFairylandAssets:
 	I_C_FIRST_DISABLE = RuleImage(roi_front=(713,469,38,34), roi_back=(713,469,38,34), threshold=0.8, method="Template matching", file="./tasks/BondlingFairyland/capture/capture_c_first_disable.png")
 	# description 
 	I_CAPTION_ENSURE = RuleImage(roi_front=(690,532,129,56), roi_back=(690,532,129,56), threshold=0.8, method="Template matching", file="./tasks/BondlingFairyland/capture/capture_caption_ensure.png")
-	# description 
+	# 结契设置 
 	I_CLICK_CAPTION = RuleImage(roi_front=(177,625,59,51), roi_back=(177,625,59,51), threshold=0.8, method="Template matching", file="./tasks/BondlingFairyland/capture/capture_click_caption.png")
+
+
+	# Image Rule Assets
+	# description 
+	I_SELECT_KUAQU_ON = RuleImage(roi_front=(485,124,79,31), roi_back=(485,124,79,31), threshold=0.8, method="Template matching", file="./tasks/BondlingFairyland/invite/select_kuaqu_on.png")
+	# description 
+	I_SELECT_FRIEND_OFF = RuleImage(roi_front=(366,121,78,32), roi_back=(366,121,78,32), threshold=0.8, method="Template matching", file="./tasks/BondlingFairyland/invite/select_friend_off.png")
+	# description 
+	I_SELECT_FRIEND_ON = RuleImage(roi_front=(376,121,63,38), roi_back=(376,121,63,38), threshold=0.8, method="Template matching", file="./tasks/BondlingFairyland/invite/select_friend_on.png")
+	# description 
+	I_SELECT_KUAQU_OFF = RuleImage(roi_front=(490,119,68,33), roi_back=(490,119,68,33), threshold=0.8, method="Template matching", file="./tasks/BondlingFairyland/invite/select_kuaqu_off.png")
 
 
 	# Click Rule Assets

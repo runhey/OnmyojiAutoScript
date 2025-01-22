@@ -7,6 +7,7 @@ from module.base.utils import point2str
 from module.exception import RequestHumanTakeover, GameStuckError
 from tasks.base_task import BaseTask
 
+from tasks.Hyakkiyakou.config import ScreenshotMethod
 
 def image_black(img) -> bool:
     for y, x in [(0, 0), (719, 1279), (719, 0), (0, 1279)]:
@@ -26,10 +27,10 @@ class HyaDevice(BaseTask):
     hya_screenshot_interval = Timer(0.2)  # 300ms
     hya_fs_check_timer = Timer(5 * 60)  # 五分钟跑不完就应该是出问题了
 
-    def fast_screenshot(self):
+    def fast_screenshot(self, screenshot: ScreenshotMethod):
         self.hya_screenshot_interval.wait()
         self.hya_screenshot_interval.reset()
-        self.device.image = self.device.screenshot_window_background()
+        self.device.image = self.device.screenshot_window_background() if screenshot == ScreenshotMethod.WINDOW_BACKGROUND else self.device.screenshot_nemu_ipc()
         if image_black(self.device.image):
             logger.error('Screenshot image is black, try again')
             raise RequestHumanTakeover('Screenshot image is black, try again')

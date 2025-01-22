@@ -88,5 +88,14 @@
     "method": "Template matching",
     "threshold": 0.8,
     "description": "经验的"
+  },
+  {
+    "itemName": "overflow_confirme",
+    "imageName": "tp_overflow_confirme.png",
+    "roiFront": "585,410,116,44",
+    "roiBack": "585,410,116,44",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "溢出确认"
   }
 ]

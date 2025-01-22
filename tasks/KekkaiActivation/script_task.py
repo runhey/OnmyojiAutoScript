@@ -269,7 +269,11 @@ class ScriptTask(KU, KekkaiActivationAssets):
             if current_best is None:
                 logger.warning('There is no card in the list')
                 break
-
+            # Record best card for future comparison
+            if(card_best is None):
+                card_best = current_best
+            elif self.order_cards.index(current_best) <= self.order_cards.index(card_best):
+                break
             if current_best == self.order_cards[0]:
                 break
             # 为什么找到第二个最优解也是会退出呢？？？
@@ -365,7 +369,10 @@ class ScriptTask(KU, KekkaiActivationAssets):
                 if not self.appear(self.I_REALM_SHIN):
                     continue
                 break
-            if self.appear_then_click(self.I_UI_BACK_BLUE, interval=2.5):
+            # 有时候退出动画太久点了两次退出，需要重新进入
+            if self.appear_then_click(self.I_GUILD_REALM, interval=1.5):
+                continue
+            if self.appear_then_click(self.I_UI_BACK_BLUE, interval=5.5):
                 continue
 
     def harvest_card(self):
@@ -381,6 +388,7 @@ class ScriptTask(KU, KekkaiActivationAssets):
         self.appear_then_click(self.I_A_HARVEST_FISH_6)  # 斗鱼6
         self.appear_then_click(self.I_A_HARVEST_MOON_3)  # 太阴3
         self.appear_then_click(self.I_A_HARVEST_FISH_3)  # 斗鱼三
+        self.appear_then_click(self.I_A_HARVEST_OBOROGURUMA)  # 胧车
 
 
 if __name__ == "__main__":

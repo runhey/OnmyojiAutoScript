@@ -66,11 +66,11 @@ class AreaBossAssets:
 	# 右上边选中鬼王的 
 	I_FILTER = RuleImage(roi_front=(1116,33,35,31), roi_back=(1076,19,98,78), threshold=0.8, method="Template matching", file="./tasks/AreaBoss/res/res_filter.png")
 	# 除悬赏外 选中第一个鬼王的 
-	I_BATTLE_1 = RuleImage(roi_front=(1066,210,100,100), roi_back=(1066,210,100,100), threshold=0.8, method="Template matching", file="./tasks/AreaBoss/res/res_battle_1.png")
+	I_BATTLE_1 = RuleImage(roi_front=(1083,235,65,54), roi_back=(1083,235,65,54), threshold=0.8, method="Template matching", file="./tasks/AreaBoss/res/res_battle_1.png")
 	# 除悬赏外 选中第二个鬼王的 
-	I_BATTLE_2 = RuleImage(roi_front=(1068,364,100,100), roi_back=(1068,364,100,100), threshold=0.8, method="Template matching", file="./tasks/AreaBoss/res/res_battle_2.png")
+	I_BATTLE_2 = RuleImage(roi_front=(1086,390,56,53), roi_back=(1086,390,56,53), threshold=0.8, method="Template matching", file="./tasks/AreaBoss/res/res_battle_2.png")
 	# 除悬赏外 选中第三个鬼王的 
-	I_BATTLE_3 = RuleImage(roi_front=(1071,521,100,100), roi_back=(1071,521,100,100), threshold=0.8, method="Template matching", file="./tasks/AreaBoss/res/res_battle_3.png")
+	I_BATTLE_3 = RuleImage(roi_front=(1083,545,66,53), roi_back=(1083,545,66,53), threshold=0.8, method="Template matching", file="./tasks/AreaBoss/res/res_battle_3.png")
 	# 点击挑战 
 	I_FIRE = RuleImage(roi_front=(1109,490,100,73), roi_back=(1075,463,150,158), threshold=0.8, method="Template matching", file="./tasks/AreaBoss/res/res_fire.png")
 	# 跟buff冲突弃用 
@@ -97,6 +97,8 @@ class AreaBossAssets:
 	I_AB_JI_FLOOR_LIST_CHECK = RuleImage(roi_front=(390,150,60,290), roi_back=(390,150,60,290), threshold=0.8, method="Template matching", file="./tasks/AreaBoss/res/ab_ji_floor_list_check.png")
 	# 极地鬼 一层 
 	I_AB_JI_FLOOR_ONE = RuleImage(roi_front=(390,150,60,290), roi_back=(390,150,60,290), threshold=0.8, method="Template matching", file="./tasks/AreaBoss/res/ab_ji_floor_one.png")
+	# 极地鬼 十层 
+	I_AB_JI_FLOOR_TEN = RuleImage(roi_front=(390,370,60,40), roi_back=(390,370,60,40), threshold=0.8, method="Template matching", file="./tasks/AreaBoss/res/ab_ji_floor_ten.png")
 	# 小组内未取得名次 
 	I_AB_GROUP_RANK_NONE = RuleImage(roi_front=(890,415,95,85), roi_back=(890,415,95,85), threshold=0.8, method="Template matching", file="./tasks/AreaBoss/res/ab_rank_none.png")
 
@@ -112,5 +114,7 @@ class AreaBossAssets:
 	O_AB_COLLECTING = RuleOcr(roi=(1190,580,50,120), area=(1190,580,50,120), mode="Single", method="Default", keyword="收藏", name="ab_collecting")
 	# 挑战人数 
 	O_AB_NUM_OF_CHALLENGE = RuleOcr(roi=(270,630,150,36), area=(270,630,150,36), mode="Digit", method="Default", keyword="", name="ab_num_of_challenge")
+	# 地鬼名字 
+	O_AB_BOSS_NAME = RuleOcr(roi=(114,36,248,69), area=(114,36,248,69), mode="Full", method="Default", keyword="", name="ab_boss_name")
 
 

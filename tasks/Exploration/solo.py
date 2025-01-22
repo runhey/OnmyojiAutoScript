@@ -7,10 +7,10 @@ from cached_property import cached_property
 from module.logger import logger
 from module.base.timer import Timer
 
-
 from tasks.Component.GeneralInvite.config_invite import InviteConfig, InviteNumber, FindMode
 from tasks.Exploration.base import BaseExploration, UpType, Scene
-from tasks.Exploration.config import ChooseRarity, AutoRotate, UserStatus
+from tasks.Exploration.config import ChooseRarity, AutoRotate, UserStatus, ExplorationLevel
+
 
 class SoloExploration(BaseExploration):
     INVITE_FLAG_OFF = (157, 109, 83)
@@ -80,7 +80,7 @@ class SoloExploration(BaseExploration):
                 # 向后拉,寻找怪
                 if search_fail_cnt >= 4:
                     search_fail_cnt = 0
-                    if self.appear(self.I_SWIPE_END):
+                    if (self._config.exploration_config.exploration_level == ExplorationLevel.EXPLORATION_28 and self.appear(self.I_SWIPE_END)) or self._match_end.stable(self.device.image):
                         self.quit_explore()
                         continue
                     if self.swipe(self.S_SWIPE_BACKGROUND_RIGHT, interval=3):
@@ -193,6 +193,9 @@ class SoloExploration(BaseExploration):
                         logger.warning('Exit team')
                         self.quit_explore()
                         continue
+                else:
+                    logger.warning('Team emoji appear again, clear friend_leave_timer')
+                    friend_leave_timer = Timer(10)
                 # boss
                 if self.appear(self.I_BOSS_BATTLE_BUTTON):
                     if self.fire(self.I_BOSS_BATTLE_BUTTON):
@@ -207,7 +210,7 @@ class SoloExploration(BaseExploration):
                 # 向后拉,寻找怪
                 if search_fail_cnt >= 4:
                     search_fail_cnt = 0
-                    if self.appear(self.I_SWIPE_END):
+                    if (self._config.exploration_config.exploration_level == ExplorationLevel.EXPLORATION_28 and self.appear(self.I_SWIPE_END)) or self._match_end.stable(self.device.image):
                         self.quit_explore()
                         continue
                     if self.swipe(self.S_SWIPE_BACKGROUND_RIGHT, interval=4.5):
@@ -277,6 +280,9 @@ class SoloExploration(BaseExploration):
                         wait_timer = Timer(50)
                         wait_timer.start()
                         continue
+                else:
+                    logger.warning('Team emoji appear again, clear friend_leave_timer')
+                    friend_leave_timer = Timer(10)
             #
             elif scene == Scene.BATTLE_PREPARE or scene == Scene.BATTLE_FIGHTING:
                 self.check_take_over_battle(is_screenshot=False, config=self._config.general_battle_config)
@@ -437,10 +443,14 @@ class ScriptTask(SoloExploration):
             self.pre_process()
 
         match self._config.exploration_config.user_status:
-            case UserStatus.ALONE: self.run_solo()
-            case UserStatus.LEADER: self.run_leader()
-            case UserStatus.MEMBER: self.run_member()
-            case _: self.run_solo()
+            case UserStatus.ALONE:
+                self.run_solo()
+            case UserStatus.LEADER:
+                self.run_leader()
+            case UserStatus.MEMBER:
+                self.run_member()
+            case _:
+                self.run_solo()
 
         self.post_process()
 
@@ -453,4 +463,3 @@ if __name__ == "__main__":
     device = Device(config)
     t = ScriptTask(config, device)
     t.run()
-

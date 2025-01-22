@@ -1,0 +1,26 @@
+[
+  {
+    "itemName": "click1",
+    "roiFront": "120,138,130,75",
+    "roiBack": "120,138,130,75",
+    "description": "description"
+  },
+  {
+    "itemName": "click2",
+    "roiFront": "121,234,125,81",
+    "roiBack": "121,234,125,81",
+    "description": "description"
+  },
+  {
+    "itemName": "click3",
+    "roiFront": "126,337,118,77",
+    "roiBack": "126,337,118,77",
+    "description": "description"
+  },
+  {
+    "itemName": "click4",
+    "roiFront": "124,438,126,77",
+    "roiBack": "124,438,126,77",
+    "description": "description"
+  }
+]

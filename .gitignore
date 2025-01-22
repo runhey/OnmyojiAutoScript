@@ -26,6 +26,7 @@ test/
 !module/gui/FluentUI/fluentuiplugin.dll
 build-fluentui-Desktop_*/
 module/config/argument/setting.json
+module/config/i18n/*.json
 !fluentui/*
 *.exe
 !dev_tools/*

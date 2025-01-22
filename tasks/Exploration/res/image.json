@@ -122,7 +122,7 @@
     "roiFront": "647,395,31,21",
     "roiBack": "1,1,1278,718",
     "method": "Template matching",
-    "threshold": 0.8,
+    "threshold": 0.9,
     "description": "战后奖励"
   },
   {

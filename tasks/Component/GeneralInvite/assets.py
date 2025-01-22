@@ -26,9 +26,9 @@ class GeneralInviteAssets:
 	# 如果是到时间会退出房间，这个右边显示一个匹配的图片 
 	I_MATCHING = RuleImage(roi_front=(51,574,52,114), roi_back=(51,574,52,114), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralInvite/gi/gi_matching.png")
 	# 永生之海挑战（还未有队友的图片） 
-	I_FIRE_FAIL_SEA = RuleImage(roi_front=(1160,585,100,100), roi_back=(1160,585,100,100), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralInvite/gi/gi_fire_fail_sea.png")
+	I_FIRE_FAIL_SEA = RuleImage(roi_front=(1160,585,100,70), roi_back=(1160,585,100,70), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralInvite/gi/gi_fire_fail_sea.png")
 	# description 
-	I_FIRE_SEA = RuleImage(roi_front=(1160,586,100,97), roi_back=(1160,586,100,97), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralInvite/gi/gi_fire_sea.png")
+	I_FIRE_SEA = RuleImage(roi_front=(1160,586,100,68), roi_back=(1160,586,100,68), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralInvite/gi/gi_fire_sea.png")
 	# description 
 	I_LOCK_SEA = RuleImage(roi_front=(781,658,27,28), roi_back=(781,658,27,28), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralInvite/gi/gi_lock_sea.png")
 	# 永生之海 没有锁定队伍的图片 
@@ -46,9 +46,9 @@ class GeneralInviteAssets:
 	# 左上角退出 
 	I_BACK_YELLOW = RuleImage(roi_front=(19,13,58,55), roi_back=(19,13,58,55), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralInvite/gi/gi_back_yellow.png")
 	# 点击邀请 
-	I_INVITE_ENSURE = RuleImage(roi_front=(500,541,132,60), roi_back=(478,523,378,92), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralInvite/gi/gi_invite_ensure.png")
+	I_INVITE_ENSURE = RuleImage(roi_front=(710,544,132,60), roi_back=(710,544,132,60), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralInvite/gi/gi_invite_ensure.png")
 	# 判断是否点中好友了 
-	I_SELECTED = RuleImage(roi_front=(895,373,33,32), roi_back=(380,157,568,350), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralInvite/gi/gi_selected.png")
+	I_SELECTED = RuleImage(roi_front=(895,373,33,32), roi_back=(895,373,33,32), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralInvite/gi/gi_selected.png")
 	# 用来判断当前的列表是哪儿的 
 	I_FLAG_1_ON = RuleImage(roi_front=(354,126,62,21), roi_back=(354,126,62,21), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralInvite/gi/gi_flag_1_on.png")
 	# description 
@@ -90,7 +90,9 @@ class GeneralInviteAssets:
 	# 所有的组队界面都有加成 
 	I_GI_BUFF = RuleImage(roi_front=(794,38,46,42), roi_back=(794,38,46,42), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralInvite/gi/gi_gi_buff.png")
 	# 三人御魂组队左上角的协站队伍 
-	I_GI_IN_ROOM = RuleImage(roi_front=(92,17,213,64), roi_back=(92,17,213,64), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralInvite/gi/gi_in_room.png")
+	I_GI_IN_ROOM = RuleImage(roi_front=(92,17,213,64), roi_back=(92,17,213,64), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralInvite/gi/gi_gi_in_room.png")
+	# description 
+	I_BACK_YELLOW_SEA = RuleImage(roi_front=(31,16,42,42), roi_back=(31,16,42,42), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralInvite/gi/gi_back_yellow_sea.png")
 
 
 	# Image Rule Assets

@@ -3,6 +3,7 @@ import ctypes
 import os
 import sys
 from functools import partial, wraps
+from pathlib import Path
 
 import cv2
 import numpy as np
@@ -445,7 +446,7 @@ class NemuIpc():
         """
         # Try existing settings first
         if self.config.script.device.emulatorinfo_path:
-            folder = os.path.abspath(os.path.join(self.config.script.device.emulatorinfo_path, '../../'))
+            folder = str(Path(self.config.script.device.emulatorinfo_path).parent.parent)
             index = serial_to_id(self.serial)
             if index is not None:
                 try:

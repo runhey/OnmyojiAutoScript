@@ -56,6 +56,7 @@ class HighlightGif(RuleGif):
     def pre_process(self, image):
         return highlight(image)
 
+
 class HighLight(BaseTask, ExplorationAssets):
 
     @cached_property

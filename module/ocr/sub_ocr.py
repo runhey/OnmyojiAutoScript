@@ -4,6 +4,7 @@
 
 import cv2
 import re
+import cn2an
 
 from datetime import timedelta
 
@@ -195,6 +196,49 @@ class Duration(Single):
             return timedelta(hours=0, minutes=0, seconds=0)
 
         return self.parse_time(result)
+
+class Quantity(BaseCor):
+    """
+    专门用于识别超级多的数量，不支持多个区域的识别
+    可支持负数
+    比如：”6.33亿“ ”1.2万“ “53万/100” -> 530,000
+    """
+    def after_process(self, result):
+        result = super().after_process(result)
+        result = result.replace('I', '1').replace('D', '0').replace('S', '5')
+        result = result.replace('B', '8').replace('？', '2').replace('?', '2').replace('d', '6')
+        result = [char
+                  for char in result
+                  if char.isdigit() or char == '.' or char == '/' or char == '万' or char == '亿' or char == '千']
+        result = ''.join(result)
+
+        if '/' in result:
+            result_split = result.split('/')
+            result = result_split[0]
+        result = cn2an.cn2an(result, 'smart')
+
+        try:
+            result = int(result)
+        except ValueError:
+            logger.warning(f'[{self.name}]: Invalid quantity: {result}')
+            result = 0
+        return result
+
+    def ocr_quantity(self, image) -> int:
+        """
+        返回数量
+        :param image:
+        :return:
+        """
+        boxed_results = self.detect_and_ocr(image)
+        if not boxed_results:
+            logger.warning(f'[{self.name}]: No text detected')
+            return 0
+
+        box = boxed_results[0].box
+        self.area = box[0, 0] + self.roi[0], box[0, 1] + self.roi[1], box[1, 0] - box[0, 0], box[2, 1] - box[0, 1]
+        return boxed_results[0].ocr_text
+
 
 
 if __name__ == '__main__':

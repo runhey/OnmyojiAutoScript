@@ -149,6 +149,11 @@ class RuleImage:
 
         source = self.corp(image)
         mat = self.image
+
+        if mat is None or mat.shape[0] == 0 or mat.shape[1] == 0:
+            logger.error(f"Template image is invalid: {mat.shape}") #检测模板尺寸，不合法则不进行匹配，避免两次截图画面完全相同造成模板不合法
+            return True  # 如果模板图像无效，直接返回 True
+
         res = cv2.matchTemplate(source, mat, cv2.TM_CCOEFF_NORMED)
         min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(res)  # 最小匹配度，最大匹配度，最小匹配度的坐标，最大匹配度的坐标
         # logger.attr(self.name, max_val)

@@ -1,0 +1,8 @@
+[
+  {
+    "itemName": "login_ensure_login_character_in_same_svr",
+    "roiFront": "600,240,500,400",
+    "roiBack": "600,240,500,400",
+    "description": "相同服务器多个角色选择界面,点击空白区域 确认登录"
+  }
+]

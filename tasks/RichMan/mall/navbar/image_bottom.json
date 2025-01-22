@@ -2,7 +2,7 @@
   {
     "itemName": "mall_consignment",
     "imageName": "navbar_mall_consignment.png",
-    "roiFront": "200,626,63,72",
+    "roiFront": "207,639,56,59",
     "roiBack": "175,610,120,103",
     "method": "Template matching",
     "threshold": 0.8,
@@ -20,7 +20,7 @@
   {
     "itemName": "mall_sccales",
     "imageName": "navbar_mall_sccales.png",
-    "roiFront": "447,634,91,64",
+    "roiFront": "470,649,68,49",
     "roiBack": "427,621,147,92",
     "method": "Template matching",
     "threshold": 0.8,
@@ -54,6 +54,15 @@
     "description": "契灵商店"
   },
   {
+    "itemName": "mall_bondlings_on",
+    "imageName": "navbar_mall_bondlings_on.png",
+    "roiFront": "99,417,1021,37",
+    "roiBack": "99,417,1021,37",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "已选中契灵商店"
+  },
+  {
     "itemName": "mall_bondlings_check",
     "imageName": "navbar_mall_bondlings_check.png",
     "roiFront": "355,186,34,104",
@@ -65,7 +74,7 @@
   {
     "itemName": "mall_sundry",
     "imageName": "navbar_mall_sundry.png",
-    "roiFront": "856,639,74,61",
+    "roiFront": "880,646,53,54",
     "roiBack": "834,621,116,90",
     "method": "Template matching",
     "threshold": 0.8,

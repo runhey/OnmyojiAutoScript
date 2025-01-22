@@ -6,7 +6,7 @@
     "roiBack": "1140,575,100,100",
     "method": "Template matching",
     "threshold": 0.8,
-    "description": "description"
+    "description": "挑战"
   },
   {
     "itemName": "ball_unlock",
@@ -43,5 +43,14 @@
     "method": "Template matching",
     "threshold": 0.8,
     "description": "求援"
+  },
+  {
+    "itemName": "create_team",
+    "imageName": "create_team.png",
+    "roiFront": "569,491,141,50",
+    "roiBack": "569,491,141,50",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "契灵创建队伍"
   }
 ]

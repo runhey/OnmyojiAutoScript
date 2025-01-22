@@ -1,0 +1,92 @@
+[
+  {
+    "itemName": "boss_click_area",
+    "roiFront": "679,164,83,54",
+    "roiBack": "679,164,83,54",
+    "description": "首领"
+  },
+  {
+    "itemName": "general_1_click_area",
+    "roiFront": "539,306,64,56",
+    "roiBack": "539,306,64,56",
+    "description": "副将1"
+  },
+  {
+    "itemName": "general_2_click_area",
+    "roiFront": "856,293,58,50",
+    "roiBack": "856,293,58,50",
+    "description": "副将2"
+  },
+  {
+    "itemName": "elite_1_click_area",
+    "roiFront": "453,418,54,45",
+    "roiBack": "453,418,54,45",
+    "description": "精英1"
+  },
+  {
+    "itemName": "elite_2_click_area",
+    "roiFront": "694,420,58,44",
+    "roiBack": "694,420,58,44",
+    "description": "精英2"
+  },
+  {
+    "itemName": "elite_3_click_area",
+    "roiFront": "938,413,60,44",
+    "roiBack": "938,413,60,44",
+    "description": "精英3"
+  },
+  {
+    "itemName": "change_zone",
+    "roiFront": "1000,606,54,54",
+    "roiBack": "1000,606,54,54",
+    "description": "前往阵眼"
+  },
+  {
+    "itemName": "dragon_area",
+    "roiFront": "123,150,75,66",
+    "roiBack": "123,150,75,66",
+    "description": "神龙暗域"
+  },
+  {
+    "itemName": "peacock_area",
+    "roiFront": "125,278,74,62",
+    "roiBack": "125,278,74,62",
+    "description": "孔雀暗域"
+  },
+  {
+    "itemName": "fox_area",
+    "roiFront": "126,409,79,74",
+    "roiBack": "126,409,79,74",
+    "description": "白藏主暗域"
+  },
+  {
+    "itemName": "leopard_area",
+    "roiFront": "122,537,81,76",
+    "roiBack": "122,537,81,76",
+    "description": "黑豹暗域"
+  },
+  {
+    "itemName": "abyss_dragon",
+    "roiFront": "232.5,196,55,151",
+    "roiBack": "190,147,140,283",
+    "description": "狭间_神龙入口"
+  },
+  {
+    "itemName": "abyss_peacock",
+    "roiFront": "526,189,48,165",
+    "roiBack": "476,138,145,312",
+    "description": "狭间_孔雀入口"
+  },
+  {
+    "itemName": "abyss_fox",
+    "roiFront": "822,184,49,144",
+    "roiBack": "789,130,148,249",
+    "description": "狭间_白藏主入口"
+  },
+  {
+    "itemName": "abyss_leopard",
+    "roiFront": "1140,190,50,162",
+    "roiBack": "1093,143,138,297",
+    "description": "狭间_黑豹入口"
+  }
+]

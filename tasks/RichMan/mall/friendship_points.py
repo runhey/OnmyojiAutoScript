@@ -9,7 +9,7 @@ from module.atom.ocr import RuleOcr
 
 from tasks.RichMan.mall.special import Special
 from tasks.RichMan.config import FriendshipPoints as FriendshipPointsConfig
-
+import re
 
 class FriendshipPoints(Special):
 
@@ -27,10 +27,10 @@ class FriendshipPoints(Special):
                               money_ocr=self.O_MALL_RESOURCE_5, buy_money=1000)
         if con.red_daruma != 0:
             self.buy_mall_more(buy_button=self.I_FS_RED, remain_number=False, money_ocr=self.O_MALL_RESOURCE_5,
-                                 buy_number=con.red_daruma, buy_max=99, buy_money=150)
+                               buy_number=con.red_daruma, buy_max=99, buy_money=150)
         if con.broken_amulet != 0:
             self.buy_mall_more(buy_button=self.I_FS_BROKEN, remain_number=False, money_ocr=self.O_MALL_RESOURCE_5,
-                                 buy_number=con.broken_amulet, buy_max=99, buy_money=100)
+                               buy_number=con.broken_amulet, buy_max=99, buy_money=100)
 
     def buy_mall_one(self, buy_button: RuleImage, buy_check: RuleImage, money_ocr: RuleOcr, buy_money: int):
         """
@@ -52,7 +52,7 @@ class FriendshipPoints(Special):
         if _remain == 0:
             logger.warning('Remain number is 0')
             return False
-        # 检查钱
+        # 检查总勋章
         current_money = money_ocr.ocr(self.device.image)
         if not isinstance(current_money, int):
             logger.warning('Money ocr failed')
@@ -65,7 +65,7 @@ class FriendshipPoints(Special):
         return self.buy_one(buy_button, buy_check)
 
     def buy_mall_more(self, buy_button: RuleImage, remain_number: bool, money_ocr: RuleOcr,
-                       buy_number: int, buy_max: int, buy_money: int):
+                      buy_number: int, buy_max: int, buy_money: int):
         """
         针对可以买多个的
         :param money_ocr:  检查钱的第几个

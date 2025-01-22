@@ -1,4 +1,4 @@
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, field_validator
 from enum import Enum
 
 from tasks.Component.config_scheduler import Scheduler
@@ -12,6 +12,10 @@ class ModelPrecision(str, Enum):
 class InferenceEngine(str, Enum):
     ONNXRUNTIME = 'Onnxruntime'
     TENSORRT = 'TensorRT'
+
+class ScreenshotMethod(str, Enum):
+    WINDOW_BACKGROUND = 'window_background'
+    NEMU_IPC = 'nemu_ipc'
 
 
 class HyakkiyakouConfig(ConfigBase):
@@ -52,6 +56,16 @@ class DebugConfig(ConfigBase):
     hya_save_result: bool = Field(default=False, description='hya_save_result_help')
     # 单独的设定截屏间隔, 单位ms
     hya_interval: float = Field(default=300, description='hya_interval_help')
+    # 单独的截屏设置
+    hya_screenshot_method: ScreenshotMethod = Field(default=ScreenshotMethod.WINDOW_BACKGROUND,
+                                                    description='hya_screenshot')
+
+    @field_validator('continuous_learning', mode='after')
+    @classmethod
+    def false_continuous_learning(cls, v):
+        if v:
+            return False
+        return False
 
 
 class Hyakkiyakou(ConfigBase):

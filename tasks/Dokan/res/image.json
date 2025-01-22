@@ -2,38 +2,29 @@
   {
     "itemName": "ryou_shenshe",
     "imageName": "res_ryou_shenshe.png",
-    "roiFront": "476,173,62,24",
-    "roiBack": "476,173,62,24",
+    "roiFront": "850,660,100,60",
+    "roiBack": "850,660,100,60",
     "method": "Template matching",
     "threshold": 0.8,
-    "description": "阴阳竂->神社"
+    "description": "阴阳寮->神社的按钮"
   },
   {
     "itemName": "ryou_dokan",
     "imageName": "res_ryou_dokan.png",
-    "roiFront": "476,173,62,24",
-    "roiBack": "476,173,62,24",
+    "roiFront": "465,160,100,50",
+    "roiBack": "465,160,100,50",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "神社->道馆"
   },
   {
-    "itemName": "ryou_dokan_ryou_select",
-    "imageName": "res_ryou_dokan_ryou_select.png",
-    "roiFront": "567,15,144,42",
-    "roiBack": "567,15,144,42",
+    "itemName": "ryou_dokan_activated",
+    "imageName": "res_ryou_dokan_activated.png",
+    "roiFront": "0,150,200,400",
+    "roiBack": "0,150,200,400",
     "method": "Template matching",
     "threshold": 0.8,
-    "description": "[]选择竂"
-  },
-  {
-    "itemName": "ryou_dokan_ryou_list",
-    "imageName": "res_ryou_dokan_ryou_list.png",
-    "roiFront": "567,15,144,42",
-    "roiBack": "567,15,144,42",
-    "method": "Template matching",
-    "threshold": 0.8,
-    "description": "可选的竂列表"
+    "description": "阴阳寮卡通人界面,左侧已开启的活动 列表"
   },
   {
     "itemName": "ryou_dokan_check",
@@ -43,6 +34,15 @@
     "method": "Template matching",
     "threshold": 0.8,
     "description": "是否已经成功进入道馆，上面中间的“道馆突破”文字"
+  },
+  {
+    "itemName": "ryou_dokan_shikigami",
+    "imageName": "res_ryou_dokan_shikigami.png",
+    "roiFront": "960,580,140,120",
+    "roiBack": "960,580,140,120",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "道馆内式神录"
   },
   {
     "itemName": "ryou_dokan_attack_priority",
@@ -98,8 +98,24 @@
     "threshold": 0.8,
     "description": "优先攻击: 黑脸"
   },
-
-
+  {
+    "itemName": "ryou_dokan_finding_dokan",
+    "imageName": "res_ryou_dokan_finding_dokan.png",
+    "roiFront": "980,60,100,160",
+    "roiBack": "980,60,100,160",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "正在查找道馆,还未选择"
+  },
+  {
+    "itemName": "ryou_dokan_found_dokan",
+    "imageName": "res_ryou_dokan_found_dokan.png",
+    "roiFront": "440,580,360,140",
+    "roiBack": "440,580,360,140",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "已选择道馆"
+  },
   {
     "itemName": "ryou_dokan_gathering",
     "imageName": "res_ryou_dokan_gathering.png",
@@ -112,8 +128,8 @@
   {
     "itemName": "ryou_dokan_start_challenge",
     "imageName": "res_ryou_dokan_start_challenge.png",
-    "roiFront": "1132,572,89,43",
-    "roiBack": "1132,572,89,43",
+    "roiFront": "1100,550,180,80",
+    "roiBack": "1100,550,180,80",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "状态：检查右下角有没有挑战？通常是失败了，并退出来到集结界面，可重新开始点击右下角挑战进入战斗"
@@ -143,28 +159,62 @@
     "roiBack": "1128,536,100,100",
     "method": "Template matching",
     "threshold": 0.8,
-    "description": "状态：进入战斗，待开始，右下角图标。TODO 欠截图。"
+    "description": "状态：进入战斗，待开始，右下角图标。"
   },
   {
     "itemName": "dokan_boss_waiting",
     "imageName": "res_dokan_boss_waiting.png",
-    "roiFront": "603,148,130,32",
-    "roiBack": "603,148,130,32",
+    "roiFront": "460,140,370,80",
+    "roiBack": "460,140,370,80",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "馆主战等待中"
   },
-
+  {
+    "itemName": "ryou_dokan_master_battle",
+    "imageName": "res_ryou_dokan_master_battle.png",
+    "roiFront": "640,0,640,360",
+    "roiBack": "640,0,640,360",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "馆主战 等待 或 进行中时 在寮境中出现的馆主图标"
+  },
+  {
+    "itemName": "dokan_abandoned_toppa",
+    "imageName": "res_ryou_dokan_abandoned_toppa.png",
+    "roiFront": "0,550,180,170",
+    "roiBack": "0,550,180,170",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "放弃突破"
+  },
+  {
+    "itemName": "dokan_abandoned_toppa_ensure",
+    "imageName": "res_ryou_dokan_abandoned_toppa_ensure.png",
+    "roiFront": "0,0,1280,720",
+    "roiBack": "0,0,1280,720",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "放弃突破 确认按钮"
+  },
+  {
+    "itemName": "dokan_abandoned_toppa_title",
+    "imageName": "res_ryou_dokan_abandoned_toppa_title.png",
+    "roiFront": "1020,160,260,80",
+    "roiBack": "1020,160,260,80",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "放弃突破"
+  },
   {
     "itemName": "ryou_dokan_win",
     "imageName": "res_ryou_dokan_win.png",
-    "roiFront": "628,60,45,33",
-    "roiBack": "628,60,45,33",
+    "roiFront": "620,50,100,80",
+    "roiBack": "620,50,100,80",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "状态：道馆胜利"
   },
-
   {
     "itemName": "ryou_dokan_in_field2",
     "imageName": "res_ryou_dokan_in_field2.png",
@@ -175,6 +225,24 @@
     "description": "状态：进入战斗，待开始，右下角图标。"
   },
   {
+    "itemName": "ryou_dokan_battle_master_first",
+    "imageName": "res_ryou_dokan_battle_master_first.png",
+    "roiFront": "1080,180,160,70",
+    "roiBack": "1080,180,160,70",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "馆主战,第一阵容"
+  },
+  {
+    "itemName": "ryou_dokan_battle_master_second",
+    "imageName": "res_ryou_dokan_battle_master_second.png",
+    "roiFront": "1080,180,160,70",
+    "roiBack": "1080,180,160,70",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "馆主战,第二阵容 # TODO 截图"
+  },
+  {
     "itemName": "ryou_dokan_battle_over",
     "imageName": "res_ryou_dokan_battle_over.png",
     "roiFront": "571,503,106,49",
@@ -183,7 +251,6 @@
     "threshold": 0.8,
     "description": "状态：战斗结算，可能是打完小朋友了，也可能是失败了。"
   },
-
   {
     "itemName": "ryou_dokan_fighting",
     "imageName": "res_ryou_dokan_fighting.png",
@@ -203,13 +270,58 @@
     "description": "状态：道馆已经结束"
   },
   {
-    "itemName": "ryou_dokan_failed_vote_no",
-    "imageName": "res_ryou_dokan_failed_vote_no.png",
-    "roiFront": "567,15,144,42",
-    "roiBack": "567,15,144,42",
+    "itemName": "ryou_dokan_toppa_rank",
+    "imageName": "res_ryou_dokan_toppa_rank.png",
+    "roiFront": "110,80,170,70",
+    "roiBack": "110,80,170,70",
     "method": "Template matching",
     "threshold": 0.8,
-    "description": "状态：道馆挑战失败，投票NO"
+    "description": "道馆失败/成功 出现的突破排名 弹窗"
+  },
+  {
+    "itemName": "ryou_dokan_failed_vote_keep_bounty",
+    "imageName": "res_ryou_dokan_failed_vote_keep_bounty.png",
+    "roiFront": "1020,220,260,120",
+    "roiBack": "1020,220,260,120",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "状态：道馆挑战失败，投票 保留赏金"
+  },
+  {
+    "itemName": "ryou_dokan_failed_vote_battle_again",
+    "imageName": "res_ryou_dokan_failed_vote_battle_again.png",
+    "roiFront": "1020,220,260,120",
+    "roiBack": "1020,220,260,120",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "状态：道馆挑战失败，投票 再战道馆"
+  },
+  {
+    "itemName": "ryou_dokan_abandoned_toppa_abandoned",
+    "imageName": "res_ryou_dokan_abandoned_toppa_abandoned.png",
+    "roiFront": "1020,220,260,120",
+    "roiBack": "1020,220,260,120",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "状态：道馆投票 放弃突破"
+  },
+  {
+    "itemName": "ryou_dokan_abandoned_toppa_continue",
+    "imageName": "res_ryou_dokan_abandoned_toppa_continue.png",
+    "roiFront": "1020,220,260,120",
+    "roiBack": "1020,220,260,120",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "状态：道馆投票 继续突破"
+  },
+  {
+    "itemName": "ryou_dokan_quit_battle_ensure",
+    "imageName": "res_ryou_dokan_quit_battle_ensure.png",
+    "roiFront": "0,0,1280,720",
+    "roiBack": "0,0,1280,720",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "道馆战斗界面 点击退出按钮后 弹出的确认按钮"
   },
   {
     "itemName": "ryou_dokan_exit_ensure",
@@ -220,8 +332,6 @@
     "threshold": 0.8,
     "description": "道馆退出确认"
   },
-
-  
   {
     "itemName": "ryou_dokan_cheering_scores",
     "imageName": "res_ryou_dokan_cheering_scores.png",
@@ -240,8 +350,6 @@
     "threshold": 0.8,
     "description": "进入加油相关：前往战斗中的竂友"
   },
-
-
   {
     "itemName": "scene_ryou",
     "imageName": "scene_ryou.png",
@@ -252,13 +360,165 @@
     "description": "场景检测：阴阳竂"
   },
   {
-    "itemName": "scene_ryou",
-    "imageName": "scene_ryou.png",
-    "roiFront": "1161,674,75,31",
-    "roiBack": "1161,674,75,31",
+    "itemName": "scene_shenshe",
+    "imageName": "scene_shenshe.png",
+    "roiFront": "0,100,600,600",
+    "roiBack": "0,100,600,600",
     "method": "Template matching",
     "threshold": 0.8,
-    "description": "场景检测：阴阳竂"
+    "description": "场景检测：神社"
+  },
+  {
+    "itemName": "ryou_dokan_create_dokan",
+    "imageName": "res_ryou_dokan_create_dokan.png",
+    "roiFront": "230,580,130,120",
+    "roiBack": "230,580,130,120",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "道馆 地图界面 建立道馆按钮"
+  },
+  {
+    "itemName": "ryou_dokan_create_dokan_ensure",
+    "imageName": "res_ryou_dokan_create_dokan_ensure.png",
+    "roiFront": "0,0,1280,720",
+    "roiBack": "0,0,1280,720",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "道馆 地图界面 点击建立道馆按钮后弹窗中的 确认按钮"
+  },
+  {
+    "itemName": "ryou_dokan_dokan_info_close",
+    "imageName": "res_ryou_dokan_dokan_info_close.png",
+    "roiFront": "1150,80,100,90",
+    "roiBack": "1150,80,100,90",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "道馆信息 右上角关闭按钮"
+  },
+  {
+    "itemName": "ryou_dokan_today_attack_count",
+    "imageName": "res_ryou_dokan_today_attack_count.png",
+    "roiFront": "500,630,250,50",
+    "roiBack": "500,630,250,50",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "寮境界面,道馆打完后 出现在底部的'今日可挑战机会'字样"
+  },
+  {
+    "itemName": "ryou_dokan_remain_attack_count_done",
+    "imageName": "res_ryou_dokan_remain_attack_count_done.png",
+    "roiFront": "550,610,220,80",
+    "roiBack": "550,610,220,80",
+    "method": "Template matching",
+    "threshold": 0.9,
+    "description": "今日道馆已挑战成功"
+  },
+  {
+    "itemName": "ryou_dokan_remain_attack_count_zero",
+    "imageName": "res_ryou_dokan_remain_attack_count_zero.png",
+    "roiFront": "650,610,110,80",
+    "roiBack": "650,610,110,80",
+    "method": "Template matching",
+    "threshold": 0.9,
+    "description": "今日可挑战次数:0次"
+  },
+  {
+    "itemName": "ryou_dokan_remain_attack_count_one",
+    "imageName": "res_ryou_dokan_remain_attack_count_one.png",
+    "roiFront": "650,610,110,80",
+    "roiBack": "650,610,110,80",
+    "method": "Template matching",
+    "threshold": 0.9,
+    "description": "今日可挑战次数:1次"
+  },
+  {
+    "itemName": "ryou_dokan_remain_attack_count_two",
+    "imageName": "res_ryou_dokan_remain_attack_count_two.png",
+    "roiFront": "650,610,110,80",
+    "roiBack": "650,610,110,80",
+    "method": "Template matching",
+    "threshold": 0.9,
+    "description": "今日可挑战次数:2次"
+  },
+  {
+    "itemName": "center_guanzhu_xiuxi",
+    "imageName": "res_ryou_dokan_center_guanzhu_xiuxi.png",
+    "roiFront": "0,0,1280,720",
+    "roiBack": "0,0,1280,720",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "查找道馆时,中间信息卡片 馆主等级-修习"
+  },
+  {
+    "itemName": "center_point_people_number",
+    "imageName": "res_ryou_dokan_center_point_people_number.png",
+    "roiFront": "0,0,1280,720",
+    "roiBack": "0,0,1280,720",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "查找道馆时,中间防守人数字样,为了定位该图下方的 防守人数数字"
+  },
+  {
+    "itemName": "center_challenge",
+    "imageName": "res_ryou_dokan_center_challenge.png",
+    "roiFront": "0,0,1280,720",
+    "roiBack": "0,0,1280,720",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "查找道馆时,挑战按钮"
+  },
+  {
+    "itemName": "challenge_ensure",
+    "imageName": "res_ryou_dokan_challenge_ensure.png",
+    "roiFront": "0,0,1280,720",
+    "roiBack": "0,0,1280,720",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "查找道馆时,确认挑战按钮"
+  },
+  {
+    "itemName": "refresh_ensure",
+    "imageName": "res_ryou_dokan_refresh_ensure.png",
+    "roiFront": "0,0,1280,720",
+    "roiBack": "0,0,1280,720",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "查找道馆时,确认刷新道馆列表按钮"
+  },
+  {
+    "itemName": "rightpad_point_bounty",
+    "imageName": "res_ryou_dokan_rightpad_point_bounty.png",
+    "roiFront": "1050,0,230,0",
+    "roiBack": "1050,0,230,50",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "查找道馆时,右侧道馆赏金图标,为了定位该图右侧的 赏金金额"
+  },
+  {
+    "itemName": "ryou_dokan_center_top",
+    "imageName": "res_ryou_dokan_center_top.png",
+    "roiFront": "500,20,300,70",
+    "roiBack": "500,20,300,70",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "寮境中上部的标志"
+  },
+  {
+    "itemName": "ryou_dokan_dokan_quit",
+    "imageName": "res_ryou_dokan_dokan_quit.png",
+    "roiFront": "0,2,80,80",
+    "roiBack": "0,2,80,80",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "左上角退出按钮-"
+  },
+  {
+    "itemName": "ryou_dokan_spoils_of_dokan",
+    "imageName": "res_ryou_dokan_spoils_of_dokan.png",
+    "roiFront": "480,400,400,100",
+    "roiBack":  "480,400,400,100",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "道馆攻破后夺得资金界面"
   }
-
 ]

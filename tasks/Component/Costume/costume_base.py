@@ -58,6 +58,11 @@ main_costume_model = {
                               'I_MAIN_GOTO_SUMMON': 'I_MAIN_GOTO_SUMMON_9',
                               'I_MAIN_GOTO_TOWN': 'I_MAIN_GOTO_TOWN_9',
                               'I_PET_HOUSE': 'I_PET_HOUSE_9', },
+    MainType.COSTUME_MAIN_10: {'I_CHECK_MAIN': 'I_CHECK_MAIN_10',
+                               'I_MAIN_GOTO_EXPLORATION': 'I_MAIN_GOTO_EXPLORATION_10',
+                               'I_MAIN_GOTO_SUMMON': 'I_MAIN_GOTO_SUMMON_10',
+                               'I_MAIN_GOTO_TOWN': 'I_MAIN_GOTO_TOWN_10',
+                               'I_PET_HOUSE': 'I_PET_HOUSE_10', },
 }
 
 # 结界皮肤
@@ -102,6 +107,24 @@ battle_theme_model = {
         'I_LOCAL': 'I_LOCAL_6',
         'I_EXIT': 'I_EXIT_6',
         'I_FRIENDS': 'I_FRIENDS_6',
+    },
+    BattleType.COSTUME_BATTLE_7: {
+        'I_LOCAL': 'I_LOCAL_7',
+        'I_EXIT': 'I_EXIT_7',
+        'I_FRIENDS': 'I_FRIENDS_7',
+    },
+    BattleType.COSTUME_BATTLE_8: {
+        'I_LOCAL': 'I_LOCAL_8',
+        'I_EXIT': 'I_EXIT_8',
+        'I_FRIENDS': 'I_FRIENDS_8',
+        'I_WIN': 'I_WIN_8',
+        'I_DE_WIN': 'I_DE_WIN_8',
+        'I_FALSE': 'I_FALSE_8',
+    },
+    BattleType.COSTUME_BATTLE_9: {
+        'I_LOCAL': 'I_LOCAL_9',
+        'I_EXIT': 'I_EXIT_9',
+        'I_FRIENDS': 'I_FRIENDS_9',
     },
 }
 
@@ -163,4 +186,4 @@ class CostumeBase:
 
 if __name__ == '__main__':
     c = CostumeBase()
-    c.check_costume_main(MainType.COSTUME_MAIN_1)
+    c.check_costume_main(MainType.COSTUME_MAIN_2)

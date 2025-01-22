@@ -2,7 +2,7 @@
   {
     "itemName": "shi",
     "imageName": "as_shi.png",
-    "roiFront": "443,169,33,34",
+    "roiFront": "520,265,33,34",
     "roiBack": "64,115,1110,427",
     "method": "Template matching",
     "threshold": 0.7,
@@ -20,8 +20,8 @@
   {
     "itemName": "battle",
     "imageName": "as_battle.png",
-    "roiFront": "896,202,35,165",
-    "roiBack": "844,129,138,315",
+    "roiFront": "641,148,35,145",
+    "roiBack": "583,75,153,315",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "进入爬塔"
@@ -29,8 +29,8 @@
   {
     "itemName": "drum",
     "imageName": "as_drum.png",
-    "roiFront": "885,310,29,145",
-    "roiBack": "860,244,87,232",
+    "roiFront": "327,627,145,28",
+    "roiBack": "256,462,301,232",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "归鹿之途"
@@ -56,8 +56,8 @@
   {
     "itemName": "fire",
     "imageName": "as_fire.png",
-    "roiFront": "1134,587,84,78",
-    "roiBack": "1107,522,142,174",
+    "roiFront": "1135,581,84,78",
+    "roiBack": "1099,522,150,174",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "点击战斗"
@@ -65,8 +65,8 @@
   {
     "itemName": "ap",
     "imageName": "as_ap.png",
-    "roiFront": "1133,505,23,24",
-    "roiBack": "1092,487,103,71",
+    "roiFront": "1138,668,23,24",
+    "roiBack": "1088,638,103,71",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "体力按钮"
@@ -74,8 +74,8 @@
   {
     "itemName": "ap_activity",
     "imageName": "as_ap_activity.png",
-    "roiFront": "1133,509,21,21",
-    "roiBack": "1090,500,84,54",
+    "roiFront": "1141,673,21,21",
+    "roiBack": "1095,654,84,54",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "活动体力"
@@ -83,8 +83,8 @@
   {
     "itemName": "switch",
     "imageName": "as_switch.png",
-    "roiFront": "1226,511,23,23",
-    "roiBack": "1200,497,69,56",
+    "roiFront": "1220,671,23,23",
+    "roiBack": "1191,653,69,56",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "切换按键"

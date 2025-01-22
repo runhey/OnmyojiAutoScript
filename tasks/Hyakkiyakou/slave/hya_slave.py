@@ -226,8 +226,6 @@ class HyaSlave(HyaDevice, HyaColor, HyakkiyakouAssets):
             if not self._invite_friend(False):
                 raise RequestHumanTakeover('Invite friend failed')
 
-
-
     def _invite_friend(self, same: bool = True) -> bool:
         if not same:
             logger.info('Invite different server friend')
@@ -264,6 +262,8 @@ class HyaSlave(HyaDevice, HyaColor, HyakkiyakouAssets):
     def reset_state(self):
         self.slave_state = [250, 36, 10,
                           HyaBuff.BUFF_STATE0, HyaBuff.BUFF_STATE0, HyaBuff.BUFF_STATE0, HyaBuff.BUFF_STATE0]
+
+
 def covert_rgb():
     images_folders: Path = Path(r'E:\Project\OnmyojiAutoScript\tasks\Hyakkiyakou\temp\20240614T214216')
     save_folders = images_folders.parent / 'save14'
@@ -274,6 +274,7 @@ def covert_rgb():
         img = cv2.imread(str(file))
         img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
         cv2.imwrite(str(save_folders / file.name), img)
+
 
 def test_predict_res():
     import timeit
@@ -295,6 +296,7 @@ def test_predict_res():
     # total time is 36.2ms on my computer /cpu:AMD Ryzen 5 3550H with Radeon Vega Mobile
     # 0.362ms per predict_res
 
+
 def test_predict_bean():
     import timeit
     from module.config.config import Config
@@ -312,6 +314,7 @@ def test_predict_bean():
     # execution_time = timeit.timeit(do_test, number=100)
     # print(f"执行总的时间: {execution_time * 1000} ms")
     # total time is 17.9ms on my computer in 100 times
+
 
 def test_predict_buff():
     import timeit

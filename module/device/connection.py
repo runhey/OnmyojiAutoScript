@@ -843,6 +843,18 @@ class Connection(ConnectionAttr):
         packages = [p for p in packages if any([k in p.lower() for k in keywords])]
         return packages
 
+    # def list_known_packages(self, show_log=True):
+    #     """
+    #     Args:
+    #         show_log:
+    #
+    #     Returns:
+    #         list[str]: List of package names
+    #     """
+    #     packages = self.list_package(show_log=show_log)
+    #     packages = [p for p in packages if p in server_.VALID_PACKAGE or p in server_.VALID_CLOUD_PACKAGE]
+    #     return packages
+
     def detect_package(self, keywords=('onmyoji', 'yys'), set_config=True):
         """
         Show all possible packages with the given keyword on this device.

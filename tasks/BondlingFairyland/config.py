@@ -9,6 +9,8 @@ from tasks.Component.SwitchSoul.switch_soul_config import SwitchSoulConfig
 from tasks.Component.config_scheduler import Scheduler
 from tasks.Component.config_base import ConfigBase, DateTime, TimeDelta, Time
 from tasks.BondlingFairyland.config_battle import BattleConfig
+from tasks.Component.GeneralInvite.config_invite import InviteConfig
+from tasks.Component.GeneralBattle.config_general_battle import GeneralBattleConfig
 
 class BondlingMode(str, Enum):
     MODE1 = 'mode_1'
@@ -28,8 +30,16 @@ class BondlingClass(str, Enum):
 # 低级契灵盘 Low Bondling Discs
 # 中级契灵盘 Medium Bondling Discs
 # 高级契灵盘 High Bondling Discs
-
+class UserStatus(str, Enum):
+    LEADER = 'leader'
+    MEMBER = 'member'
+    ALONE = 'alone'
+    handoff1 = 'handoff1'
+    handoff2 = 'handoff2'
+    # WILD = 'wild'  # 还不打算实现
 class BondlingConfig(ConfigBase):
+    # 身份
+    user_status: UserStatus = Field(default=UserStatus.ALONE, description='user_status_help')
     bondling_mode: BondlingMode = Field(default=BondlingMode.MODE1, description='bondling_mode_help')
     limit_time: Time = Field(default=Time(minute=30), description='limit_time_help')
     limit_count: int = Field(default=30, description='limit_count_help')
@@ -51,7 +61,10 @@ class BondlingFairyland(ConfigBase):
     scheduler: Scheduler = Field(default_factory=Scheduler)
     bondling_config: BondlingConfig = Field(default_factory=BondlingConfig)
     bondling_switch_soul: BondlingSwitchSoul = Field(default_factory=BondlingSwitchSoul)
+    invite_config: InviteConfig = Field(default_factory=InviteConfig)
     battle_config: BattleConfig = Field(default_factory=BattleConfig)
+    # battle_config: GeneralBattleConfig = Field(default_factory=GeneralBattleConfig)
+
     switch_soul_config: SwitchSoulConfig = Field(default_factory=SwitchSoulConfig)
 
 
