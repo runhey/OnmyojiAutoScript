@@ -17,6 +17,7 @@ cffi==1.16.0              # via cryptography, gevent
 charset-normalizer==3.3.2  # via requests
 cigam==0.0.3              # via apkutils2
 click==8.1.7              # via uvicorn
+cn2an==0.5.23             # via -r requirements-in.txt
 colorama==0.4.6           # via click, logzero, tqdm
 coloredlogs==15.0.1       # via onnxruntime
 cryptography==42.0.8      # via -r requirements-in.txt
@@ -49,11 +50,14 @@ packaging==20.9           # via deprecation, onnxruntime, uiautomator2
 paho-mqtt==1.6.1          # via -r requirements-in.txt
 pillow==10.2.0            # via ppocr-onnx, uiautomator2
 ppocr-onnx==0.0.3.9       # via -r requirements-in.txt
+proces==0.1.7             # via cn2an
 progress==1.6             # via uiautomator2
 protobuf==4.25.1          # via onnxruntime
+psutil==6.1.1             # via -r requirements-in.txt
 py==1.11.0                # via retry
 pyclipper==1.3.0.post5    # via ppocr-onnx
 pycparser==2.21           # via cffi
+pycryptodome==3.21.0      # via onepush
 pydantic==2.10.0          # via -r requirements-in.txt, fastapi
 pydantic-core==2.27.0     # via pydantic
 pyelftools==0.30          # via apkutils2

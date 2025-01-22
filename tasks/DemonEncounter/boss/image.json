@@ -115,5 +115,23 @@
     "method": "Template matching",
     "threshold": 0.8,
     "description": "白色退出"
+  },
+  {
+    "itemName": "boss_killed",
+    "imageName": "boss_boss_killed.png",
+    "roiFront": "654,596,35,68",
+    "roiBack": "614,537,123,176",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "已击败"
+  },
+  {
+    "itemName": "best_boss_fire",
+    "imageName": "boss_best_boss_fire.png",
+    "roiFront": "1087,562,100,36",
+    "roiBack": "1087,562,100,36",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "极逢魔集结挑战"
   }
 ]

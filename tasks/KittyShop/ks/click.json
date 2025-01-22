@@ -1,0 +1,56 @@
+[
+  {
+    "itemName": "select_1",
+    "roiFront": "225,215,242,303",
+    "roiBack": "225,215,242,303",
+    "description": "description"
+  },
+  {
+    "itemName": "select_2",
+    "roiFront": "471,216,250,300",
+    "roiBack": "471,216,250,300",
+    "description": "description"
+  },
+  {
+    "itemName": "select_3",
+    "roiFront": "735,213,252,307",
+    "roiBack": "735,213,252,307",
+    "description": "description"
+  },
+  {
+    "itemName": "select_4",
+    "roiFront": "990,216,181,303",
+    "roiBack": "990,216,181,303",
+    "description": "description"
+  },
+  {
+    "itemName": "run_1",
+    "roiFront": "240,571,154,143",
+    "roiBack": "240,571,154,143",
+    "description": "description"
+  },
+  {
+    "itemName": "run_2",
+    "roiFront": "394,569,169,148",
+    "roiBack": "394,569,169,148",
+    "description": "description"
+  },
+  {
+    "itemName": "run_3",
+    "roiFront": "563,567,171,141",
+    "roiBack": "563,567,171,141",
+    "description": "description"
+  },
+  {
+    "itemName": "run_4",
+    "roiFront": "731,572,170,142",
+    "roiBack": "731,572,170,142",
+    "description": "description"
+  },
+  {
+    "itemName": "run_5",
+    "roiFront": "900,571,165,136",
+    "roiBack": "900,571,165,136",
+    "description": "description"
+  }
+]

@@ -34,6 +34,8 @@ class UserStatus(str, Enum):
     LEADER = 'leader'
     MEMBER = 'member'
     ALONE = 'alone'
+    handoff1 = 'handoff1'
+    handoff2 = 'handoff2'
     # WILD = 'wild'  # 还不打算实现
 class BondlingConfig(ConfigBase):
     # 身份

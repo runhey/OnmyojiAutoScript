@@ -54,6 +54,14 @@ class Bondlings(Buy, MallNavbar):
             logger.info('Buy number is 0')
             return
         self.screenshot()
+
+        # if buy_button.name == 'BONDLINGS_BL_BUY_SOULS':
+        #     if self.appear(self.I_ME_SOULS_NEW):
+        #         # 契灵御魂已经买光
+        #         logger.warning('本周契灵御魂已经买光')
+        #         return
+        # pos = self.O_BL_RES_SOULS_new.ocr_full(self.device.image)
+
         # 检查是否出现了购买按钮
         if not self.appear(buy_button):
             logger.warning('Buy button is not appear')
@@ -61,7 +69,7 @@ class Bondlings(Buy, MallNavbar):
         # 检查剩余数量
         _remain = remain_number.ocr(self.device.image)
         if _remain == 0:
-            logger.warning('Remain number is 0')
+            logger.warning('本周契灵御魂已经买光')
             return
         if _remain < buy_number:
             logger.warning(f'Remain number is {_remain}, buy number is {buy_number}')

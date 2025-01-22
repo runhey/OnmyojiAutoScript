@@ -22,3 +22,6 @@ class Boss(BaseModel):
     reward_floor: AreaBossFloor = Field(default=AreaBossFloor.ONE, description='reward_floor_help')
     # 是否使用收藏的
     use_collect: bool = Field(default=False, description='use_collect_help')
+
+    # 没有开启极是否拉到60级进行攻打
+    Attack_60: bool = Field(default=False, description='没有开启极是否拉到60级进行攻打')

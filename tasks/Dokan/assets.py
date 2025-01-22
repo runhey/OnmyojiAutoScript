@@ -148,6 +148,8 @@ class DokanAssets:
 	I_RYOU_DOKAN_CENTER_TOP = RuleImage(roi_front=(500,20,300,70), roi_back=(500,20,300,70), threshold=0.8, method="Template matching", file="./tasks/Dokan/res/res_ryou_dokan_center_top.png")
 	# 左上角退出按钮- 
 	I_RYOU_DOKAN_DOKAN_QUIT = RuleImage(roi_front=(0,2,80,80), roi_back=(0,2,80,80), threshold=0.8, method="Template matching", file="./tasks/Dokan/res/res_ryou_dokan_dokan_quit.png")
+	# 道馆攻破后夺得资金界面 
+	I_RYOU_DOKAN_SPOILS_OF_DOKAN = RuleImage(roi_front=(480,400,400,100), roi_back=(480,400,400,100), threshold=0.8, method="Template matching", file="./tasks/Dokan/res/res_ryou_dokan_spoils_of_dokan.png")
 
 
 	# List Rule Assets

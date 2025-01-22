@@ -20,9 +20,13 @@ class ScriptTask(Mall, Guild, ThousandThings, Shrine):
 
     def run(self):
         con: RichMan = self.config.rich_man
+        # 千物宝箱
         self.execute_tt(con.thousand_things)
+        # 神龛
         self.execute_shrine(con.shrine)
+        # 功勋商店
         self.execute_guild(con.guild_store)
+        # 商店
         self.execute_mall()
 
         self.set_next_run(task='RichMan', success=True, finish=False)
@@ -48,8 +52,8 @@ if __name__ == '__main__':
     d = Device(c)
     t = ScriptTask(c, d)
 
-    # t.run()
-    t.execute_mall()
+    t.run()
+    # t.execute_mall()
 
 
 

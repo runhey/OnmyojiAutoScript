@@ -42,6 +42,10 @@ class DemonEncounterAssets:
 	I_BOSS_WIN = RuleImage(roi_front=(380,43,100,100), roi_back=(380,43,100,100), threshold=0.8, method="Template matching", file="./tasks/DemonEncounter/boss/boss_boss_win.png")
 	# 白色退出 
 	I_BOSS_BACK_WHITE = RuleImage(roi_front=(16,12,39,40), roi_back=(16,12,39,40), threshold=0.8, method="Template matching", file="./tasks/DemonEncounter/boss/boss_boss_back_white.png")
+	# 已击败 
+	I_BOSS_KILLED = RuleImage(roi_front=(654,596,35,68), roi_back=(614,537,123,176), threshold=0.8, method="Template matching", file="./tasks/DemonEncounter/boss/boss_boss_killed.png")
+	# 极逢魔集结挑战 
+	I_BEST_BOSS_FIRE = RuleImage(roi_front=(1087,562,100,36), roi_back=(1087,562,100,36), threshold=0.8, method="Template matching", file="./tasks/DemonEncounter/boss/boss_best_boss_fire.png")
 
 
 	# Ocr Rule Assets
@@ -106,6 +110,8 @@ class DemonEncounterAssets:
 	I_DE_REALM = RuleImage(roi_front=(1209,431,30,22), roi_back=(1190,274,88,273), threshold=0.75, method="Template matching", file="./tasks/DemonEncounter/demon/demon_de_realm.png")
 	# 结界-进攻 
 	I_DE_REALM_FIRE = RuleImage(roi_front=(696,421,129,63), roi_back=(162,99,1106,610), threshold=0.8, method="Template matching", file="./tasks/DemonEncounter/demon/demon_de_realm_fire.png")
+	# 发现大boss 
+	I_DE_FIND_BOSS = RuleImage(roi_front=(1210,425,29,36), roi_back=(1182,279,93,266), threshold=0.7, method="Template matching", file="./tasks/DemonEncounter/demon/demon_de_find_boss.png")
 
 
 	# Ocr Rule Assets

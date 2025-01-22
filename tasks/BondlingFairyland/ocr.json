@@ -43,5 +43,23 @@
     "method": "Default",
     "keyword": "",
     "description": "Ocr-description"
+  },
+  {
+    "itemName": "friend",
+    "roiFront": "357,89,100,54",
+    "roiBack": "357,89,100,54",
+    "mode": "Single",
+    "method": "Default",
+    "keyword": "",
+    "description": "好友邀请"
+  },
+  {
+    "itemName": "kuaqu",
+    "roiFront": "472,88,100,54",
+    "roiBack": "472,88,100,54",
+    "mode": "Single",
+    "method": "Default",
+    "keyword": "",
+    "description": "跨区邀请"
   }
 ]

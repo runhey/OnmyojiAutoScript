@@ -17,20 +17,25 @@ from tasks.Component.Summon.summon import Summon
 from module.logger import logger
 from module.exception import TaskEnd
 from module.base.timer import Timer
-
+from tasks.DailyTrifles.config import SummonType
+import re
 
 class ScriptTask(GameUi, Summon, DailyTriflesAssets):
 
     def run(self):
         con = self.config.daily_trifles.trifles_config
+        # 每日召唤
         if con.one_summon:
             self.run_one_summon()
         if con.guild_wish:
             pass
+        # 友情点
         if con.friend_love:
             self.run_friend_love()
+        # 吉闻
         if con.luck_msg:
             self.run_luck_msg()
+        # 商店签到 or 购买寿司
         if con.store_sign or con.buy_sushi_count > 0:
             self.run_store()
         self.set_next_run('DailyTrifles', success=True, finish=False)
@@ -39,8 +44,92 @@ class ScriptTask(GameUi, Summon, DailyTriflesAssets):
     def run_one_summon(self):
         self.ui_get_current_page()
         self.ui_goto(page_summon)
-        self.summon_one()
+        if self.config.daily_trifles.trifles_config.summon_type == SummonType.default:
+            self.summon_one()
+        elif self.config.daily_trifles.trifles_config.summon_type == SummonType.recall:
+            self.summon_recall()
         self.back_summon_main()
+
+    def summon_recall(self):
+        """
+        确保在召唤界面,每日召唤一次
+        召唤结束后回到 召唤主界面
+        :return:
+        """
+        list = [self.O_SELECT_SM2, self.O_SELECT_SM3, self.O_SELECT_SM4]
+        count = 0
+        while True:
+            count += 1
+
+            for i in range(len(list)):
+                sleep(1)
+                self.ui_get_current_page()
+                self.ui_goto(page_main)
+                self.ui_get_current_page()
+                self.ui_goto(page_summon)
+                self.appear_then_click(self.I_UI_BACK_RED, interval=1)
+                x, y = list[i].coord()
+                self.device.click(x, y)
+                sleep(1)
+                self.screenshot()
+                if self.appear(self.I_RECALL_TICKET):
+                    break
+                logger.info("Select preset group RECALL")
+
+            self.screenshot()
+            if self.appear(self.I_RECALL_TICKET):
+                break
+            if count >= 3:
+                self.config.notifier.push(title='今忆召唤抽卡失败', content='每日任务,今忆召唤抽卡失败!!!')
+                return
+
+        logger.info('Summon one RECALL')
+        self.wait_until_appear(self.I_RECALL_TICKET)
+        while True:
+            ticket_info = self.O_RECALL_TICKET_AREA.ocr(self.device.image)
+            # 处理 None 和空字符串
+            if ticket_info is None or ticket_info == '':
+                ticket_info = 0
+            else:
+                # 使用正则表达式提取字符串中的数字
+                match = re.search(r'\d+', ticket_info)
+                if match:
+                    ticket_info = int(match.group())
+                else:
+                    logger.warning(f'Invalid ticket_info value: {ticket_info}, expected a numeric string')
+                    ticket_info = 0  # 将无效值设置为默认值 0
+            if ticket_info <= 0:
+                logger.warning('There is no any one RECALL ticket')
+                return
+            # 某些情况下滑动异常
+            self.S_RANDOM_SWIPE_1.name = 'S_RANDOM_SWIPE'
+            self.S_RANDOM_SWIPE_2.name = 'S_RANDOM_SWIPE'
+            self.S_RANDOM_SWIPE_3.name = 'S_RANDOM_SWIPE'
+            self.S_RANDOM_SWIPE_4.name = 'S_RANDOM_SWIPE'
+            while 1:
+                self.screenshot()
+                if self.appear(self.I_RECALL_ONE_TICKET):
+                    break
+                if self.appear_then_click(self.I_RECALL_TICKET, interval=1):
+                    continue
+
+            # 画一张票
+            sleep(1)
+            while 1:
+                self.screenshot()
+                if self.appear(self.I_RECALL_SM_CONFIRM, interval=0.6):
+                    self.ui_click_until_disappear(self.I_RECALL_SM_CONFIRM)
+                    break
+                if self.appear(self.I_SM_CONFIRM_2, interval=0.6):
+                    self.ui_click_until_disappear(self.I_SM_CONFIRM_2)
+                    break
+                if self.appear(self.I_RECALL_ONE_TICKET, interval=1):
+                    # 某些时候会点击到 “语言召唤”
+                    if self.appear_then_click(self.I_UI_CANCEL, interval=0.8):
+                        continue
+                    self.summon()
+                    continue
+            logger.info('Summon one success')
 
     def run_guild_wish(self):
         pass

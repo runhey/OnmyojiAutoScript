@@ -17,7 +17,6 @@ from win32con import (SRCCOPY, DESKTOPHORZRES, DESKTOPVERTRES, WM_LBUTTONUP,
                       WM_LBUTTONDOWN, WM_ACTIVATE, WA_ACTIVE, MK_LBUTTON,
                       WM_NCHITTEST, WM_SETCURSOR, HTCLIENT, WM_MOUSEMOVE)
 from module.config.config import Config
-from module.exception import RequestHumanTakeover, EmulatorNotRunningError
 from module.logger import logger
 
 
@@ -79,6 +78,12 @@ class WindowNode(NodeMixin):
         self.name = name
         self.num = num
         self.parent = parent
+
+    @classmethod
+    def get_tree_depth(cls, root_node: 'WindowNode'):
+        if not root_node.children:
+            return 1 if root_node else 0
+        return max(node.depth for node in root_node.descendants) + 1
 
 
 class EmulatorFamily(Enum):
@@ -397,6 +402,17 @@ class Handle:
         hAfter = GetSystemMetrics(1)
         # print(wReal, wAfter)
         return round(wReal / wAfter, 2)
+
+
+    @classmethod
+    def handle_has_children(cls, hwnd: int, name: str = 'MuMuPlayer12') -> bool:
+        root_node = WindowNode(name=name, num=hwnd)
+        Handle.handle_tree(hwnd=hwnd, node=root_node)
+        handle_depth = WindowNode.get_tree_depth(root_node)
+        if handle_depth > 1:
+            logger.info(f'Window handle [{hwnd}] depth: {handle_depth}')
+            return True
+        return False
 
 
 if __name__ == '__main__':

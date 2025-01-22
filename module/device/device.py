@@ -1,27 +1,29 @@
-import sys
-import cv2
+
 from collections import deque
 from datetime import datetime
 
+# Patch pkg_resources before importing adbutils and uiautomator2
+from module.device.pkg_resources import get_distribution
+# Just avoid being removed by import optimization
+_ = get_distribution
+
+from module.device.env import IS_WINDOWS
 from module.base.timer import Timer
 from module.config.utils import get_server_next_update
 from module.device.app_control import AppControl
 from module.device.control import Control
-from module.device.method.window import Window
+from module.device.platform2 import Platform
 from module.device.screenshot import Screenshot
-from module.exception import (GameNotRunningError, GameStuckError,
-                              GameTooManyClickError, RequestHumanTakeover)
-# from module.handler.assets import GET_MISSION
+from module.exception import (GameNotRunningError,
+                              GameStuckError,
+                              GameTooManyClickError,
+                              RequestHumanTakeover,
+                              EmulatorNotRunningError)
 from module.logger import logger
 
-if sys.platform == 'win32':
-    from module.device.emulator import EmulatorManager
-else:
-    class EmulatorManager:
-        pass
 
 
-class Device(Screenshot, Control, AppControl, EmulatorManager):
+class Device(Platform, Screenshot, Control, AppControl):
     _screen_size_checked = False
     detect_record = set()
     click_record = deque(maxlen=15)
@@ -30,9 +32,29 @@ class Device(Screenshot, Control, AppControl, EmulatorManager):
     stuck_long_wait_list = ['BATTLE_STATUS_S', 'PAUSE', 'LOGIN_CHECK']
 
     def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+        for trial in range(4):
+            try:
+                super().__init__(*args, **kwargs)
+                break
+            except EmulatorNotRunningError:
+                if trial >= 3:
+                    logger.critical('Failed to start emulator after 3 trial')
+                    raise RequestHumanTakeover
+                # Try to start emulator
+                if self.emulator_instance is not None:
+                    self.emulator_start()
+                else:
+                    logger.critical(
+                        f'No emulator with serial "{self.config.Emulator_Serial}" found, '
+                        f'please set a correct serial'
+                    )
+                    raise RequestHumanTakeover
+
+        # Auto-fill emulator info
+        if IS_WINDOWS and self.config.script.device.emulatorinfo_type == 'auto':
+            _ = self.emulator_instance
+
         self.screenshot_interval_set()
-        # 我不能接受为什么继承了Window但是不会自动初始化
 
         # Auto-select the fastest screenshot method
         if self.config.script.device.screenshot_method == 'auto':
