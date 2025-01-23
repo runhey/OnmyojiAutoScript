@@ -1,0 +1,14 @@
+[
+  {
+    "itemName": "left_click",
+    "roiFront": "129,215,140,360",
+    "roiBack": "129,215,140,360",
+    "description": "左边的随机点击区域"
+  },
+  {
+    "itemName": "right_click",
+    "roiFront": "999,213,120,374",
+    "roiBack": "999,213,120,374",
+    "description": "右边的随机点击区域"
+  }
+]

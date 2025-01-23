@@ -1,0 +1,110 @@
+[
+  {
+    "itemName": "three_points",
+    "imageName": "res_three_points.png",
+    "roiFront": "711,159,308,212",
+    "roiBack": "711,159,308,212",
+    "method": "Template matching",
+    "threshold": 0.7,
+    "description": "庭院三个点入口"
+  },
+  {
+    "itemName": "back",
+    "imageName": "res_back.png",
+    "roiFront": "22,30,37,28",
+    "roiBack": "22,30,37,28",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "返回按钮"
+  },
+  {
+    "itemName": "three_points_2",
+    "imageName": "res_three_points_2.png",
+    "roiFront": "1054,327,51,44",
+    "roiBack": "0,83,1279,609",
+    "method": "Template matching",
+    "threshold": 0.7,
+    "description": "省略号对话"
+  },
+  {
+    "itemName": "mask_back",
+    "imageName": "res_mask_back.png",
+    "roiFront": "863,262,40,43",
+    "roiBack": "4,161,1275,538",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "遮层返回按钮"
+  },
+  {
+    "itemName": "res_battle_in",
+    "imageName": "res_battle_in.png",
+    "roiFront": "850,526,24,22",
+    "roiBack": "1,110,1278,590",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "开始战斗"
+  },
+  {
+    "itemName": "eye",
+    "imageName": "res_eye.png",
+    "roiFront": "635,189,52,34",
+    "roiBack": "6,105,1273,612",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "剧情中眼睛点开对话"
+  },
+  {
+    "itemName": "speed_1_x",
+    "imageName": "res_speed_1_x.png",
+    "roiFront": "1142,38,46,37",
+    "roiBack": "1142,38,46,37",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "回忆视频1倍速"
+  },
+  {
+    "itemName": "speed_2_x",
+    "imageName": "res_speed_2_x.png",
+    "roiFront": "1140,34,50,45",
+    "roiBack": "1140,34,50,45",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "回忆视频2倍速"
+  },
+  {
+    "itemName": "skip_dialogue",
+    "imageName": "res_skip_dialogue.png",
+    "roiFront": "848,524,24,22",
+    "roiBack": "848,524,29,27",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "跳过对话"
+  },
+  {
+    "itemName": "get_shikiagmi",
+    "imageName": "res_get_shikiagmi.png",
+    "roiFront": "3,375.5,57,53",
+    "roiBack": "1,122,1278,560",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "获取式神界面"
+  },
+  {
+    "itemName": "question_dialogue",
+    "imageName": "res_question_dialogue.png",
+    "roiFront": "965,125,35,40",
+    "roiBack": "1,83,1275,630",
+    "method": "Template matching",
+    "threshold": 0.7,
+    "description": "问号对话"
+  },
+  {
+    "itemName": "video_close",
+    "imageName": "res_video_close.png",
+    "roiFront": "1162,12,36,41",
+    "roiBack": "1162,12,36,41",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "关闭视频"
+  }
+]

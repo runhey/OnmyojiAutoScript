@@ -27,6 +27,7 @@ class RuleImage:
         self._kp = None  #
         self._des = None
         self.method = method
+        self.bin_threshold = 127
 
         self.roi_front: list = list(roi_front)
         self.roi_back = roi_back
@@ -105,6 +106,10 @@ class RuleImage:
         return self.method == "Sift Flann"
 
     @cached_property
+    def is_binarize_match(self) -> bool:
+        return self.method == "Binarize matching"
+
+    @cached_property
     def sift(self):
         return cv2.SIFT_create()
 
@@ -143,9 +148,10 @@ class RuleImage:
         if threshold is None:
             threshold = self.threshold
 
-        if not self.is_template_match:
+        if self.is_sift_flann:
             return self.sift_match(image)
-            # raise Exception(f"unknown method {self.method}")
+        if self.is_binarize_match:
+            return self.binarize_matching(image, threshold=threshold)
 
         source = self.corp(image)
         mat = self.image
@@ -221,6 +227,8 @@ class RuleImage:
             return self.match(image)
         if self.is_sift_flann:
             return self.sift_match(image, show=True)
+        if self.is_binarize_match:
+            return self.binarize_matching(image, show=True)
 
     def sift_match(self, image: np.array, show=False) -> bool:
         """
@@ -305,19 +313,122 @@ class RuleImage:
                 return False
         return True
 
+    def binarize_matching(self, image: np.array, show=False, threshold: float = None, bin_threshold: int = None) -> bool:
+        """
+        二值化特征匹配，保留二值化匹配特性
+        :param image: 是游戏的截图，就是转通道后的截图
+        :param show: 测试用的
+        :param threshold: 阈值
+        :return:
+        """
+        source = self.corp(image)
+        mat = self.image
+
+        if threshold is None:
+            threshold = self.threshold
+        if bin_threshold is None:
+            bin_threshold = self.bin_threshold
+        if mat is None or source is None:
+            print("Error: One of the images could not be loaded.")
+            return False
+
+        # 将模板图和全屏图转换为灰度图像
+        gray_template = cv2.cvtColor(mat, cv2.COLOR_BGR2GRAY)
+        gray_full_image = cv2.cvtColor(source, cv2.COLOR_BGR2GRAY)
+
+        # 对模板图和全屏图进行二值化处理
+        _, binary_template = cv2.threshold(gray_template, bin_threshold, 255, cv2.THRESH_BINARY)
+        _, binary_full_image = cv2.threshold(gray_full_image, bin_threshold, 255, cv2.THRESH_BINARY)
+
+        # 使用模板匹配算法进行匹配
+        match_result = cv2.matchTemplate(binary_full_image, binary_template, cv2.TM_CCOEFF_NORMED)
+        min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(match_result)
+
+        result = max_val >= threshold
+        top_left = None
+        bottom_right = None
+        if result:
+            top_left = max_loc
+            h, w = binary_template.shape
+            bottom_right = (top_left[0] + w, top_left[1] + h)
+            self.roi_front[0] = top_left[0] + self.roi_back[0]
+            self.roi_front[1] = top_left[1] + self.roi_back[1]
+            self.roi_front[2] = w
+            self.roi_front[3] = h
+
+        RuleImage.show_combined_image(binary_template, binary_full_image, top_left=top_left,
+                                      bottom_right=bottom_right, show=show)
+        return result
+
+    @staticmethod
+    def show_combined_image(template: np.array, full_image: np.array, top_left=None, bottom_right=None, show=False):
+        """
+        显示拼接后的图像，包括模板图像、分割线和全屏图像，且在拼接后绘制矩形框
+        :param template: 模板图像
+        :param full_image: 全屏图像
+        :param top_left: 矩形框左上角坐标
+        :param bottom_right: 矩形框右下角坐标
+        :param show: 是否显示
+        :return:
+        """
+        if not show:
+            return
+
+        # 计算需要填充的高度差
+        height_diff = full_image.shape[0] - template.shape[0]
+        if height_diff < 0:
+            # 如果模板图比全屏图高，填充全屏图
+            full_image = cv2.copyMakeBorder(full_image, 0, -height_diff, 0, 0, cv2.BORDER_CONSTANT, value=255)
+        elif height_diff > 0:
+            # 如果模板图比全屏图低，填充模板图
+            template = cv2.copyMakeBorder(template, 0, height_diff, 0, 0, cv2.BORDER_CONSTANT, value=255)
+
+        # 创建一条白色的分割线
+        separator_width = 5
+        separator = np.ones((full_image.shape[0], separator_width), dtype=np.uint8) * 255  # 白色分割线
+
+        # 拼接图像
+        combined_image = cv2.hconcat([template, separator, full_image])  # 水平拼接
+
+        color_image = cv2.cvtColor(combined_image, cv2.COLOR_GRAY2BGR)
+
+        # 如果需要绘制矩形框
+        if top_left is not None and bottom_right is not None:
+            # 计算左侧模板图像的宽度
+            template_width = template.shape[1]
+
+            # 考虑到分割线的宽度，计算偏移量
+            adjusted_top_left = (top_left[0] + template_width + separator_width, top_left[1])
+            adjusted_bottom_right = (bottom_right[0] + template_width + separator_width, bottom_right[1])
+
+            # 绘制矩形框
+            rectangle_color = (0, 255, 0)  # 矩形框的颜色（绿色）
+            cv2.rectangle(color_image, adjusted_top_left, adjusted_bottom_right, rectangle_color, 2)
+
+        cv2.imshow('Combined Image', color_image)  # 显示拼接后的图像
+        cv2.waitKey(0)
+        cv2.destroyAllWindows()
+
 
 if __name__ == "__main__":
     from dev_tools.assets_test import detect_image
+    # IMAGE_FILE = './log/error/1737615445526/2025-01-23_14-57-23-277173.png'
+    IMAGE_FILE = './tasks/Story/res/full_1.png'
+    # from tasks.Restart.assets import RestartAssets
+    from tasks.MainStory.assets import StoryAssets
+    # jade = RestartAssets.I_HARVEST_JADE
+    # jade.method = 'Sift Flann'
+    # sign = RestartAssets.I_HARVEST_SIGN
+    # sign.method = 'Sift Flann'
+    # print(jade.roi_front)
+    #
+    # detect_image(IMAGE_FILE, jade)
+    # detect_image(IMAGE_FILE, sign)
+    # print(jade.roi_front)
 
-    IMAGE_FILE = './log/test/QQ截图20240223151924.png'
-    from tasks.Restart.assets import RestartAssets
-    jade = RestartAssets.I_HARVEST_JADE
-    jade.method = 'Sift Flann'
-    sign = RestartAssets.I_HARVEST_SIGN
-    sign.method = 'Sift Flann'
-    print(jade.roi_front)
+    three_points = StoryAssets.I_THREE_POINTS
+    three_points.method = 'Binarize matching'
+    detect_image(IMAGE_FILE, three_points)
+    print(three_points.roi_front)
 
-    detect_image(IMAGE_FILE, jade)
-    detect_image(IMAGE_FILE, sign)
-    print(jade.roi_front)
 
