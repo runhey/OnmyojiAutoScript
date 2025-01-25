@@ -184,13 +184,13 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, RealmRaidAssets):
                 if con.raid_config.exit_four:
                     logger.info('Exit four enable')
                     self.fire(index)
-                    self.run_general_battle_back(con.general_battle_config)
+                    self.run_general_battle_back(con.general_battle_config, exit_four=True)
                     self.fire(index)
-                    self.run_general_battle_back(con.general_battle_config)
+                    self.run_general_battle_back(con.general_battle_config, exit_four=True)
                     self.fire(index)
-                    self.run_general_battle_back(con.general_battle_config)
+                    self.run_general_battle_back(con.general_battle_config, exit_four=True)
                     self.fire(index)
-                    self.run_general_battle_back(con.general_battle_config)
+                    self.run_general_battle_back(con.general_battle_config, exit_four=True)
             elif self.check_medal_is_frog(frog, medal, index):
                 # 如果挑战的这只是呱太的话，就要把锁定改为不锁定
                 con.general_battle_config.lock_team_enable = False
