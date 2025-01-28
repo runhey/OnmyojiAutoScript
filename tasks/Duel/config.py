@@ -15,6 +15,8 @@ from tasks.Component.config_base import ConfigBase, Time
 from tasks.Component.GeneralBattle.config_general_battle import GreenMarkType
 
 class DuelConfig(ConfigBase):
+    # 是否切换阴阳师（神乐）
+    switch_yys: bool = Field(default=True, description='是否切换阴阳师（神乐）')
     # 一键切换斗技御魂
     switch_all_soul: bool = Field(default=False, description='switch_all_soul_help')
     # 限制时间

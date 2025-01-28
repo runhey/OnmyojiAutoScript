@@ -21,8 +21,16 @@ class ScriptTask(GameUi, GeneralBattle, DuelAssets):
         limit_time = con.limit_time
         self.limit_time: timedelta = timedelta(hours=limit_time.hour, minutes=limit_time.minute,
                                                seconds=limit_time.second)
+
+        self.ui_get_current_page()
+        self.ui_goto(page_main)
+        # 切换阴阳师神乐
+        if con.switch_yys:
+            self.switch_shenle()
+
         self.ui_get_current_page()
         self.ui_goto(page_duel)
+        # 切换御魂
         if con.switch_all_soul:
             self.switch_all_soul()
 
@@ -83,6 +91,46 @@ class ScriptTask(GameUi, GeneralBattle, DuelAssets):
                 continue
         logger.info('Souls Switch is complete')
         self.ui_click(self.I_UI_BACK_YELLOW, self.I_D_TEAM)
+
+
+    def switch_shenle(self):
+        click_count = 0  # 计数
+        while 1:
+            self.screenshot()
+            if click_count >= 4:
+                break
+            if self.appear(self.I_YINYANGSHUOK, interval=1):
+                break
+            if self.appear_then_click(self.I_YINYANGSHU, interval=1):
+                click_count += 1
+                continue
+        click_count = 0  # 计数
+        while 1:
+            self.screenshot()
+            if click_count >= 4:
+                break
+            if self.appear(self.I_YYSJIOAHUAN, interval=1):
+                break
+            if self.appear_then_click(self.I_JIAOTI, interval=1):
+                continue
+            if self.appear_then_click(self.I_YINGJIE, interval=1):
+                click_count += 1
+                continue
+        click_count = 0  # 计数
+        while 1:
+            self.screenshot()
+            if click_count >= 4:
+                break
+            if self.appear(self.I_ZHAN, interval=1):
+                break
+            if self.appear_then_click(self.I_JIAOTI, interval=1):
+                continue
+            if self.click(self.C_SHENLE, interval=1):
+                click_count += 1
+                continue
+        logger.info('切换阴阳师神乐')
+        self.ui_get_current_page()
+        self.ui_goto(page_main)
 
     def check_honor(self) -> bool:
         """
