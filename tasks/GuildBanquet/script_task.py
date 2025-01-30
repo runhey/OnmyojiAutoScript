@@ -72,7 +72,6 @@ class ScriptTask(GameUi, GuildBanquetAssets):
                 logger.info("Wait in place or answer the question manually")
             else:
                 logger.info("Guild banquet end")
-                self.set_config()
                 break
             if wait_timer.reached():
                 wait_timer.reset()
@@ -84,6 +83,7 @@ class ScriptTask(GameUi, GuildBanquetAssets):
                 logger.warning('In Guild banquet, wait')
                 self.device.stuck_record_clear()
                 self.device.stuck_record_add('BATTLE_STATUS_S')
+        self.set_config()
         self.ui_get_current_page()
         self.ui_goto(page_main)
         self.plan_next_run()
@@ -167,7 +167,7 @@ class ScriptTask(GameUi, GuildBanquetAssets):
 if __name__ == '__main__':
     from module.config.config import Config
     from module.device.device import Device
-    c = Config('xiaohao')
+    c = Config('oas1')
     d = Device(c)
     t = ScriptTask(c, d)
     t.run()
