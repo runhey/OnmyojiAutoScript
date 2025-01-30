@@ -12,7 +12,7 @@ from tasks.Component.GeneralBattle.general_battle import GeneralBattle
 from tasks.Component.GeneralBattle.config_general_battle import GreenMarkType
 from tasks.GameUi.game_ui import GameUi
 from tasks.GameUi.page import page_main, page_duel
-from tasks.Duel.config import Duel
+from tasks.Duel.config import Duel, Onmyoji
 from tasks.Duel.assets import DuelAssets
 
 class ScriptTask(GameUi, GeneralBattle, DuelAssets):
@@ -24,9 +24,14 @@ class ScriptTask(GameUi, GeneralBattle, DuelAssets):
 
         self.ui_get_current_page()
         self.ui_goto(page_main)
-        # 切换阴阳师神乐
-        if con.switch_yys:
-            self.switch_shenle()
+        # 切换阴阳师
+        if con.switch_enabled:
+            # 神乐
+            if con.switch_onmyoji == Onmyoji.Kagura:
+                self.switch_kagura()
+            # 源赖光
+            if con.switch_onmyoji == Onmyoji.Yorimitsu:
+                self.switch_yorimitsu()
 
         self.ui_get_current_page()
         self.ui_goto(page_duel)
@@ -92,8 +97,7 @@ class ScriptTask(GameUi, GeneralBattle, DuelAssets):
         logger.info('Souls Switch is complete')
         self.ui_click(self.I_UI_BACK_YELLOW, self.I_D_TEAM)
 
-
-    def switch_shenle(self):
+    def switch_kagura(self):
         click_count = 0  # 计数
         while 1:
             self.screenshot()
@@ -129,6 +133,31 @@ class ScriptTask(GameUi, GeneralBattle, DuelAssets):
                 click_count += 1
                 continue
         logger.info('切换阴阳师神乐')
+        self.ui_get_current_page()
+        self.ui_goto(page_main)
+
+    def switch_yorimitsu(self):
+        click_count = 0  # 计数
+        while 1:
+            self.screenshot()
+            if click_count >= 4:
+                break
+            if self.appear(self.I_YINYANGSHUOK, interval=1):
+                break
+            if self.appear_then_click(self.I_YINYANGSHU, interval=1):
+                click_count += 1
+                continue
+        click_count = 0  # 计数
+        while 1:
+            self.screenshot()
+            if click_count >= 4:
+                break
+            if self.appear(self.I_YINGJIE, interval=1):
+                break
+            if self.appear_then_click(self.I_YINYANGSHI, interval=1):
+                click_count += 1
+                continue
+        logger.info('切换英杰')
         self.ui_get_current_page()
         self.ui_goto(page_main)
 
