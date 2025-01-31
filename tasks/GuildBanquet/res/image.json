@@ -1,0 +1,11 @@
+[
+  {
+    "itemName": "flag",
+    "imageName": "res_flag.png",
+    "roiFront": "1035,12,33,60",
+    "roiBack": "1035,12,33,60",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  }
+]
