@@ -192,10 +192,11 @@ class ScriptTask(WQExplore, SecretScriptTask, WantedQuestsAssets):
             if self.special_main and self.click(self.C_SPECIAL_MAIN, interval=3):
                 logger.info('Click special main left to find wanted quests')
                 continue
+            if not (self.appear(self.I_WQ_INVITE_1) or self.appear(self.I_WQ_INVITE_2) or self.appear(
+                    self.I_WQ_INVITE_3)):
+                logger.info("there is no cooperation quest")
+                break
         #
-        if not (self.appear(self.I_WQ_INVITE_1) or self.appear(self.I_WQ_INVITE_2) or self.appear(self.I_WQ_INVITE_3)):
-            logger.info("there is no cooperation quest")
-            return False
 
         # if self.appear(self.I_WQ_INVITE_1):
         #     self.trace_one(self.I_WQ_INVITE_1)

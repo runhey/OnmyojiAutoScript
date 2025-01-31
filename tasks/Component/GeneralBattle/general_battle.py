@@ -73,14 +73,14 @@ class GeneralBattle(GeneralBuff, GeneralBattleAssets):
         else:
             return False
 
-    def run_general_battle_back(self, config: GeneralBattleConfig = None) -> bool:
+    def run_general_battle_back(self, config: GeneralBattleConfig = None, exit_four: bool = False) -> bool:
         """
         进入挑战然后直接返回
         :param config:
         :return:
         """
-        # 如果没有锁定队伍那么在点击准备后才退出的
-        if not config.lock_team_enable:
+        # 如果没有锁定队伍那么在点击准备后才退出的,退四的话就直接退出
+        if not config.lock_team_enable and not exit_four:
             # 点击准备按钮
             self.wait_until_appear(self.I_PREPARE_HIGHLIGHT)
             while 1:

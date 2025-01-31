@@ -63,6 +63,11 @@ main_costume_model = {
                                'I_MAIN_GOTO_SUMMON': 'I_MAIN_GOTO_SUMMON_10',
                                'I_MAIN_GOTO_TOWN': 'I_MAIN_GOTO_TOWN_10',
                                'I_PET_HOUSE': 'I_PET_HOUSE_10', },
+    MainType.COSTUME_MAIN_11: {'I_CHECK_MAIN': 'I_CHECK_MAIN_11',
+                               'I_MAIN_GOTO_EXPLORATION': 'I_MAIN_GOTO_EXPLORATION_11',
+                               'I_MAIN_GOTO_SUMMON': 'I_MAIN_GOTO_SUMMON_11',
+                               'I_MAIN_GOTO_TOWN': 'I_MAIN_GOTO_TOWN_11',
+                               'I_PET_HOUSE': 'I_PET_HOUSE_11', },
 }
 
 # 结界皮肤
