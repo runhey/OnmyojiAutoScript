@@ -3,6 +3,7 @@
 # github https://github.com/ohspecial
 from datetime import datetime ,timedelta
 from enum import Enum
+import time
 
 from module.exception import TaskEnd
 from module.logger import logger
@@ -64,25 +65,42 @@ class ScriptTask(GameUi, GuildBanquetAssets):
                               finish=True,
                               target=time_later)
             raise TaskEnd
-        # 开始宴会
+
+        last_check_time = 0  # 记录上次实际检测时间
+        last_flag_status = False  # 记录上次真实检测结果
+
         while True:
             self.screenshot()
-            # 如果发现集结则表示在宴会中，没有则宴会结束
-            if self.appear(self.I_FLAG, interval=10):
-                logger.info("Wait in place or answer the question manually")
+            # 条件1: 强制检测间隔管理
+            current_time = time.time()
+            if current_time - last_check_time >= 10:
+                # 达到间隔要求时执行真实检测
+                actual_status = self.appear(self.I_FLAG)
+                last_flag_status = actual_status
+                last_check_time = current_time
+                logger.debug(f"Actual detection at {current_time}, status: {actual_status}")
+            else:
+                # 未达间隔时沿用上次结果
+                logger.debug(f"Using cached status: {last_flag_status}")
+
+            # 条件2: 状态判断逻辑
+            if last_flag_status:
+                logger.info("Banquet ongoing, waiting...")
             else:
                 logger.info("Guild banquet end")
-                break
+                break  # 退出循环
+
+            # 条件3: 超时保护
             if wait_timer.reached():
                 wait_timer.reset()
                 if wait_count >= 2:
-                    # 记三次，时间到了就结束
                     logger.info('Guild banquet timeout')
                     break
                 wait_count += 1
-                logger.warning('In Guild banquet, wait')
+                logger.warning('Banquet ongoing, waiting...')
                 self.device.stuck_record_clear()
                 self.device.stuck_record_add('BATTLE_STATUS_S')
+        self.device.stuck_record_clear()
         self.set_config()
         self.ui_get_current_page()
         self.ui_goto(page_main)
@@ -167,7 +185,7 @@ class ScriptTask(GameUi, GuildBanquetAssets):
 if __name__ == '__main__':
     from module.config.config import Config
     from module.device.device import Device
-    c = Config('oas1')
+    c = Config('xiaohao')
     d = Device(c)
     t = ScriptTask(c, d)
     t.run()
