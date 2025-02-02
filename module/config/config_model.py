@@ -308,6 +308,10 @@ class ConfigModel(ConfigBase):
             # 将 groups的参数，同导出的json一起合并, 用于前端显示
             result = []
             for key, value in groups["properties"].items():
+                # deal with exclude 
+                if key in jsons and jsons[key] == 0xABCDEF:
+                    continue
+
                 item = {}
                 item["name"] = key
                 item["title"] = value["title"] if "title" in value else inflection.underscore(key)
@@ -330,7 +334,7 @@ class ConfigModel(ConfigBase):
         groups_value = groups.copy()
 
         result: dict[str, list] = {}
-        for key, value in task.model_dump().items():
+        for key, value in task.model_dump(context={'hide': True}).items():
             if key not in groups:
                 for group_name in groups.keys():
                     if group_name in key:
@@ -436,4 +440,5 @@ if __name__ == "__main__":
         print(e)
         c = ConfigModel()
 
-    c.script_set_arg('Duel', 'test_list_2', 'switch_all_soul', 'false')
+    print(c.script_task('GuildBanquet'))
+

@@ -8,7 +8,9 @@ from typing import Any
 from pydantic import BaseModel
 from pydantic import (BeforeValidator,
                       PlainSerializer,
-                      WithJsonSchema)
+                      WithJsonSchema,
+                      field_serializer,
+                      SerializationInfo)
 from typing_extensions import Annotated
 
 
@@ -65,5 +67,17 @@ Time = Annotated[time,
                  WithJsonSchema({'type': 'time'}),]
 
 # ---------------------------------------------------------------------------------------------------------------------
+
+@classmethod
+def serializer_exclude(cls, value: any, info: SerializationInfo):
+    if info.context and info.context.get('hide', False):
+        return 0xABCDEF
+    return value
+
+
+def dynamic_hide(*fields: str,):
+    return field_serializer(*fields)(serializer_exclude)
+
+
 class ConfigBase(BaseModel):
     pass

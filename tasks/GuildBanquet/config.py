@@ -3,10 +3,10 @@
 # github https://github.com/ohspecial
 from enum import Enum  
 
-from pydantic import Field, BaseModel
+from pydantic import Field, BaseModel, SerializationInfo, field_serializer
 
 from tasks.Component.config_scheduler import Scheduler
-from tasks.Component.config_base import ConfigBase, Time
+from tasks.Component.config_base import ConfigBase, Time, dynamic_hide
 
 
 class Weekday(str,Enum):
@@ -29,9 +29,15 @@ class GuildBanquetTime(BaseModel):
         default=Weekday.Saturday,
         description="每周第2次运行时间设置",
     )
-    run_time_2: Time = Field(default=Time(hour=19, minute=0, second=0))
+    run_time_2: Time = Field(
+        default=Time(hour=19, minute=0, second=0), 
+        description="每周第2次运行时间设置"
+    )
+
+    hide_fileds = dynamic_hide('run_time_1', 'run_time_2')
 
 
 class GuildBanquet(ConfigBase):
     scheduler: Scheduler = Field(default_factory=Scheduler)
     guild_banquet_time: GuildBanquetTime = Field(default_factory=GuildBanquetTime)
+
