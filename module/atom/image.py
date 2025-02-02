@@ -74,7 +74,7 @@ class RuleImage:
         if height != self.roi_front[3] or width != self.roi_front[2]:
             self.roi_front[2] = width
             self.roi_front[3] = height
-            logger.info(f"roi_front size changed to {width}x{height}")
+            logger.info(f"{self.name} roi_front size changed to {width}x{height}")
 
     def load_kp_des(self) -> None:
         if self._kp is not None and self._des is not None:
