@@ -1,0 +1,11 @@
+[
+  {
+    "itemName": "times",
+    "roiFront": "461,388,40,26",
+    "roiBack": "461,388,40,26",
+    "mode": "DigitCounter",
+    "method": "Default",
+    "keyword": "",
+    "description": "本周剩余奖励次数"
+  }
+]

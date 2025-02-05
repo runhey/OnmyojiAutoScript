@@ -60,3 +60,8 @@ class TrueOrochiAssets:
 	I_ST_FRAME = RuleImage(roi_front=(571,442,135,65), roi_back=(571,442,135,65), threshold=0.8, method="Template matching", file="./tasks/TrueOrochi/st/st_st_frame.png")
 
 
+	# Ocr Rule Assets
+	# 本周剩余奖励次数 
+	O_TIMES = RuleOcr(roi=(461,388,40,26), area=(461,388,40,26), mode="DigitCounter", method="Default", keyword="", name="times")
+
+
