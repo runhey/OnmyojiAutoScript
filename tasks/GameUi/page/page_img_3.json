@@ -110,8 +110,8 @@
   {
     "itemName": "check_mall",
     "imageName": "page_check_mall.png",
-    "roiFront": "11,493,93,93",
-    "roiBack": "11,493,93,93",
+    "roiFront": "147,527,82,82",
+    "roiBack": "147,527,82,82",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"
