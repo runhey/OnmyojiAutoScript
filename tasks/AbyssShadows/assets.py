@@ -73,8 +73,6 @@ class AbyssShadowsAssets:
 	# 前往 
 	I_ABYSS_GOTO_ENEMY = RuleImage(roi_front=(1120,610,75,45), roi_back=(1120,610,75,45), threshold=0.8, method="Template matching", file="./tasks/AbyssShadows/res/res_abyss_goto_enemy.png")
 	# description 
-	I_CHANGE_AREA = RuleImage(roi_front=(993,610,63,61), roi_back=(993,610,63,61), threshold=0.8, method="Template matching", file="./tasks/AbyssShadows/res/res_change_area.png")
-	# description 
 	I_ENSURE_BUTTON = RuleImage(roi_front=(672,405,169,55), roi_back=(672,405,169,55), threshold=0.8, method="Template matching", file="./tasks/AbyssShadows/res/res_ensure_button.png")
 	# 进攻中 
 	I_IS_ATTACK = RuleImage(roi_front=(586,62,73,27), roi_back=(586,62,73,27), threshold=0.8, method="Template matching", file="./tasks/AbyssShadows/res/res_is_attack.png")
@@ -90,6 +88,8 @@ class AbyssShadowsAssets:
 	I_DRAGON_AREA = RuleImage(roi_front=(584,15,111,34), roi_back=(584,15,111,34), threshold=0.8, method="Template matching", file="./tasks/AbyssShadows/res/res_dragon_area.png")
 	# description 
 	I_WAIT_TO_START = RuleImage(roi_front=(588,64,70,26), roi_back=(588,64,70,26), threshold=0.8, method="Template matching", file="./tasks/AbyssShadows/res/res_wait_to_start.png")
+	# description 
+	I_EQUIPPING = RuleImage(roi_front=(1126,545,100,83), roi_back=(1126,545,100,83), threshold=0.8, method="Template matching", file="./tasks/AbyssShadows/res/res_equipping.png")
 
 
 	# List Rule Assets
