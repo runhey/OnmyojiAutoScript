@@ -154,10 +154,16 @@ class ScriptTask(GameUi, GuildBanquetAssets):
         UserWarning: Pydantic serializer warnings:
   Expected `enum` but got `Weekday` with value `<Weekday.Thursday: '星期四'>` - serialized value may not be as expected
         """
+        
         try:
             # 当结束宴会时，设置宴会时间的日期及时间，宴会时间设置为运行结束时间提前15分钟
             next_time = datetime.now() - timedelta(minutes=15)
+            next_time = next_time.replace(second=0, microsecond=0)
+            # 计算下次运行时间
+            next_time = datetime.time(next_time)
+            
             today = datetime.now().weekday()          
+            
             # 修改配置文件
             if today == self.banquet_day_1:
                 self.run_time.run_time_1 = next_time
@@ -188,7 +194,7 @@ class ScriptTask(GameUi, GuildBanquetAssets):
 if __name__ == '__main__':
     from module.config.config import Config
     from module.device.device import Device
-    c = Config('xiaohao')
+    c = Config('oas1')
     d = Device(c)
     t = ScriptTask(c, d)
     t.run()
