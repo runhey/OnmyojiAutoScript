@@ -106,6 +106,11 @@ class LoginHandler(BaseTask, RestartAssets):
                     break
                 logger.info('login specific user')
                 continue
+            
+            # 创建角色, 误入新区直接重启
+            if self.appear(self.I_CREATE_ACCOUNT):
+                logger.warning('Appear create account')
+                raise GameStuckError('Appear create account')
             # 点击’进入游戏‘
             if not self.appear(self.I_LOGIN_8):
                 continue

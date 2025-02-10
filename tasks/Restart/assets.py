@@ -87,6 +87,8 @@ class RestartAssets:
 	I_LOGIN_LOGIN_ONMYOJI_GENIE = RuleImage(roi_front=(80,110,280,120), roi_back=(80,110,280,120), threshold=0.8, method="Template matching", file="./tasks/Restart/login/login_login_onmyoji_genie.png")
 	# 已有角色 
 	I_CHARACTARS = RuleImage(roi_front=(246,535,100,31), roi_back=(219,523,173,57), threshold=0.8, method="Template matching", file="./tasks/Restart/login/login_charactars.png")
+	# description 
+	I_CREATE_ACCOUNT = RuleImage(roi_front=(555,636,169,52), roi_back=(504,614,263,100), threshold=0.8, method="Template matching", file="./tasks/Restart/login/login_create_account.png")
 
 
 	# Ocr Rule Assets
