@@ -7,7 +7,7 @@ from module.base.utils import point2str
 from module.exception import RequestHumanTakeover, GameStuckError
 from tasks.base_task import BaseTask
 
-from tasks.Hyakkiyakou.config import ScreenshotMethod
+from tasks.Hyakkiyakou.config import ScreenshotMethod, ControlMethod
 
 def image_black(img) -> bool:
     for y, x in [(0, 0), (719, 1279), (719, 0), (0, 1279)]:
@@ -40,11 +40,14 @@ class HyaDevice(BaseTask):
             raise GameStuckError
         return self.device.image
 
-    def fast_click(self, x: int, y: int) -> None:
+    def fast_click(self, x: int, y: int, control_method: ControlMethod = ControlMethod.WINDOW_MESSAGE) -> None:
         logger.info(
             'Click %s @ %s' % (point2str(x, y), 'Click')
         )
-        self.device.click_window_message(x=x, y=y, fast=True)
+        if control_method == ControlMethod.MINITOUCH:
+            self.device.click_minitouch(x=x, y=y)
+        else:
+            self.device.click_window_message(x=x, y=y, fast=True)
 
     def set_fast_screenshot_interval(self, interval: float):
         """

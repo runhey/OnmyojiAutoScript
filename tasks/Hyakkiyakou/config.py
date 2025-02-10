@@ -17,6 +17,10 @@ class ScreenshotMethod(str, Enum):
     WINDOW_BACKGROUND = 'window_background'
     NEMU_IPC = 'nemu_ipc'
 
+class ControlMethod(str, Enum):
+    MINITOUCH = 'minitouch'
+    WINDOW_MESSAGE = 'window_message'
+
 
 class HyakkiyakouConfig(ConfigBase):
     hya_limit_time: Time = Field(default=Time(minute=20), description='hya_limit_time_help')
@@ -59,6 +63,9 @@ class DebugConfig(ConfigBase):
     # 单独的截屏设置
     hya_screenshot_method: ScreenshotMethod = Field(default=ScreenshotMethod.WINDOW_BACKGROUND,
                                                     description='hya_screenshot')
+    # 单独的点击
+    hya_control_method: ControlMethod = Field(default=ControlMethod.WINDOW_MESSAGE,
+                                              description='hya_control_method')
 
     @field_validator('continuous_learning', mode='after')
     @classmethod

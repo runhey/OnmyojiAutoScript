@@ -3,7 +3,7 @@
 # github https://github.com/runhey
 from enum import Enum
 from typing import Union
-from pydantic import BaseModel, ValidationError, validator, Field
+from pydantic import BaseModel, ValidationError, Field
 
 from module.logger import logger
 
