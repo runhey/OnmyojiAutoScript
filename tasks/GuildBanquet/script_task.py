@@ -43,10 +43,7 @@ class ScriptTask(GameUi, GuildBanquetAssets):
         # 第二天宴会日期及时间
         self.banquet_day_2 = self.get_key_from_value(WEEKDAYDICT, self.run_time.day_2.value)
         self.banquet_day_2_start_time = self.run_time.run_time_2
-        if not self.check_runtime():
-            # 超过10点则设置下次运行时间
-            self.plan_next_run()
-            raise TaskEnd
+        
         
         self.ui_get_current_page()
         self.ui_goto(page_guild)
@@ -58,12 +55,15 @@ class ScriptTask(GameUi, GuildBanquetAssets):
             logger.info("Start guild banquet!")
             self.device.stuck_record_add('BATTLE_STATUS_S')
         else:
-            # 如果没有找到FLAG，可能是宴会时间没开始，5分钟后尝试再次查找
-            time_now = datetime.now()
-            time_later = time_now + timedelta(minutes=5)
-            self.set_next_run(task='GuildBanquet',
+            # 如果没有找到FLAG，并且没超过晚上10点，可能是宴会时间没开始，5分钟后尝试再次查找，超过10点则直接退出
+            if self.check_runtime():
+                time_now = datetime.now()
+                time_later = time_now + timedelta(minutes=5)
+                self.set_next_run(task='GuildBanquet',
                               finish=True,
                               target=time_later)
+            self.ui_get_current_page()
+            self.ui_goto(page_main)
             raise TaskEnd
 
         last_check_time = 0  # 记录上次实际检测时间
@@ -124,6 +124,7 @@ class ScriptTask(GameUi, GuildBanquetAssets):
             self.set_next_run(task="GuildBanquet", success=False)
             logger.error("Guild banquet time config error, set next run fail")
             return False
+        return True
 
     def plan_next_run(self):
         # 安排次日宴会，便于复用
