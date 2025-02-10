@@ -2,8 +2,8 @@
   {
     "itemName": "check_main_11",
     "imageName": "main11_check_main_11.png",
-    "roiFront": "680,128,83,33",
-    "roiBack": "149,109,1099,100",
+    "roiFront": "521,570,53,24",
+    "roiBack": "131,514,1099,100",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"
@@ -29,7 +29,7 @@
   {
     "itemName": "main_goto_town_11",
     "imageName": "main11_main_goto_town_11.png",
-    "roiFront": "701,164,36,20",
+    "roiFront": "703,169,35,20",
     "roiBack": "262,145,999,78",
     "method": "Template matching",
     "threshold": 0.7,
@@ -38,8 +38,8 @@
   {
     "itemName": "pet_house_11",
     "imageName": "main11_pet_house_11.png",
-    "roiFront": "946,335,40,35",
-    "roiBack": "729,323,440,69",
+    "roiFront": "966,323,29,29",
+    "roiBack": "724,295,440,69",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "宠物室"
