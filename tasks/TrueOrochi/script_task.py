@@ -45,6 +45,7 @@ class ScriptTask(OrochiScriptTask, TrueOrochiAssets):
         self.ui_get_current_page()
         self.ui_goto(page_soul_zones)
         self.orochi_enter()
+        sleep(0.5)
         battle = self.check_true_orochi(True)
         if not battle:
             logger.warning('Not find true orochi')
