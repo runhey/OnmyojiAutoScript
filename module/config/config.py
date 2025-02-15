@@ -339,7 +339,7 @@ class Config(ConfigState, ConfigManual, ConfigWatcher, ConfigMenu):
         run = min(run).replace(microsecond=0)
         next_run = run
 
-        if server and hasattr(scheduler, 'server_update') and target is None:
+        if server and hasattr(scheduler, 'server_update'):
             # 加入随机延迟时间
             float_seconds = (scheduler.float_time.hour * 3600 +
                              scheduler.float_time.minute * 60 +
