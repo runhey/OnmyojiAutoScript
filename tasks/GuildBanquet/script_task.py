@@ -50,7 +50,7 @@ class ScriptTask(GameUi, GuildBanquetAssets):
         
         if self.appear(self.I_FLAG):
             wait_count = 0
-            wait_timer = Timer(270)
+            wait_timer = Timer(230)
             wait_timer.start()
             logger.info("Start guild banquet!")
             self.device.stuck_record_add('BATTLE_STATUS_S')
@@ -100,7 +100,8 @@ class ScriptTask(GameUi, GuildBanquetAssets):
             # 条件3: 超时保护
             if wait_timer.reached():
                 wait_timer.reset()
-                if wait_count >= 2:
+                if wait_count >= 3:
+                    # 宴会最长15分钟
                     logger.info('Guild banquet timeout')
                     break
                 wait_count += 1
