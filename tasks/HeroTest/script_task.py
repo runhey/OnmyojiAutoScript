@@ -193,7 +193,8 @@ class ScriptTask(GameUi, BaseActivity, HeroTestAssets, SwitchSoul):
             self.screenshot()
             if win:
                 # 点击赢了
-                action_click = random.choice([self.C_WIN_1, self.C_WIN_2, self.C_WIN_3])
+                # self.C_WIN_2 在掉落的东西过多的时候，会导致点击到掉落的东西，导致卡在结算页
+                action_click = random.choice([self.C_WIN_1, self.C_WIN_3])
                 if self.appear_then_click(
                     self.I_WIN, action=action_click, interval=0.5
                 ):
