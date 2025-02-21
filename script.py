@@ -328,8 +328,11 @@ class Script:
                         continue
                 elif method == 'close_emulator':
                     logger.info('close emulator during wait')
-                    if task.next_run > datetime.now() + timedelta(minutes=30):
+                    limit_time = self.config.script.optimization.limit_time
+                    if task.next_run > datetime.now() + timedelta(hours=limit_time.hour, minutes=limit_time.minute, seconds=limit_time.second):
                         self.device.emulator_stop()
+                    else:
+                        self.run('GotoMain')
                     self.device.release_during_wait()
                     if not self.wait_until(task.next_run):
                         del_cached_property(self, 'config')
