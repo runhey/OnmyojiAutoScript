@@ -193,7 +193,8 @@ class ScriptTask(GameUi, BaseActivity, HeroTestAssets, SwitchSoul):
             self.screenshot()
             if win:
                 # 点击赢了
-                action_click = random.choice([self.C_WIN_1, self.C_WIN_2, self.C_WIN_3])
+                # self.C_WIN_2 在掉落物品过多的时候可能会点击到物品，导致脚本卡死
+                action_click = random.choice([self.C_WIN_1, self.C_WIN_3])
                 if self.appear_then_click(
                     self.I_WIN, action=action_click, interval=0.5
                 ):
@@ -236,8 +237,9 @@ class ScriptTask(GameUi, BaseActivity, HeroTestAssets, SwitchSoul):
         while 1:
             self.screenshot()
             # 如果出现领奖励
+            # self.C_REWARD_2 在掉落物品过多的时候可能会点击到物品，导致脚本卡死
             action_click = random.choice(
-                [self.C_REWARD_1, self.C_REWARD_2, self.C_REWARD_3]
+                [self.C_REWARD_1, self.C_REWARD_3]
             )
             if self.appear_then_click(
                 self.I_REWARD, action=action_click, interval=1.5
