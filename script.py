@@ -35,6 +35,7 @@ from module.server.i18n import I18n
 
 class Script:
     def __init__(self, config_name: str ='oas') -> None:
+        self.device = None
         logger.hr('Start', level=0)
         self.server = None
         self.state_queue: Queue = None
@@ -325,6 +326,14 @@ class Script:
                     if not self.wait_until(task.next_run):
                         del_cached_property(self, 'config')
                         continue
+                elif method == 'close_emulator':
+                    logger.info('close emulator during wait')
+                    if task.next_run > datetime.now() + timedelta(minutes=30):
+                        self.device.emulator_stop()
+                    self.device.release_during_wait()
+                    if not self.wait_until(task.next_run):
+                        del_cached_property(self, 'config')
+                        continue
                 else:
                     logger.warning(f'Invalid Optimization_WhenTaskQueueEmpty: {method}, fallback to stay_there')
                     self.device.release_during_wait()
@@ -424,17 +433,20 @@ class Script:
             #     logger.info('Server or network is recovered. Restart game client')
             #     self.config.task_call('Restart')
 
+            if self.is_first_task:
+                self.device = Device(self.config)
             # Get task
             task = self.get_next_task()
             # 更新 gui的任务
             # Init device and change server
-            _ = self.device
+            # _ = self.device
             # Skip first restart
             if self.is_first_task and task == 'Restart':
                 logger.info('Skip task `Restart` at scheduler start')
                 self.config.task_delay(task='Restart', success=True, server=True)
                 del_cached_property(self, 'config')
                 continue
+            self.device = Device(self.config)
 
             # Run
             logger.info(f'Scheduler: Start task `{task}`')
