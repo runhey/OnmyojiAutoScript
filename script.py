@@ -326,13 +326,18 @@ class Script:
                     if not self.wait_until(task.next_run):
                         del_cached_property(self, 'config')
                         continue
-                elif method == 'close_emulator':
-                    logger.info('close emulator during wait')
+                elif method == 'close_emulator_or_goto_main' or method == 'close_emulator_or_close_game':
                     limit_time = self.config.script.optimization.limit_time
                     if task.next_run > datetime.now() + timedelta(hours=limit_time.hour, minutes=limit_time.minute, seconds=limit_time.second):
+                        logger.info('Close emulator during wait')
                         self.device.emulator_stop()
                     else:
-                        self.run('GotoMain')
+                        if method == 'close_emulator_or_goto_main':
+                            logger.info('Goto main page during wait')
+                            self.run('GotoMain')
+                        else:
+                            logger.info('Close game during wait')
+                            self.device.app_stop()
                     self.device.release_during_wait()
                     if not self.wait_until(task.next_run):
                         del_cached_property(self, 'config')
