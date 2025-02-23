@@ -340,14 +340,14 @@ class Script:
             logger.info('Close game during wait')
             self.device.app_stop()
         else:
-            self._handle_goto_main(task)
+            self._handle_goto_main()
 
     def _handle_close_emulator_or(self, task, close_game_limit_time, close_emulator_limit_time, method):
         if task.next_run > datetime.now() + timedelta(hours=close_emulator_limit_time.hour, minutes=close_emulator_limit_time.minute, seconds=close_emulator_limit_time.second):
             logger.info('Close emulator during wait')
             self.device.emulator_stop()
         elif method == 'close_emulator_or_goto_main':
-            self._handle_goto_main(task)
+            self._handle_goto_main()
         else:
             self._handle_close_game(task, close_game_limit_time)
 
