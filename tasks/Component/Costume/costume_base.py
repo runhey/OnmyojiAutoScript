@@ -131,6 +131,11 @@ battle_theme_model = {
         'I_EXIT': 'I_EXIT_9',
         'I_FRIENDS': 'I_FRIENDS_9',
     },
+    BattleType.COSTUME_BATTLE_10: {
+        'I_LOCAL': 'I_LOCAL_10',
+        'I_EXIT': 'I_EXIT_10',
+        'I_FRIENDS': 'I_FRIENDS_10',
+    },
 }
 
 

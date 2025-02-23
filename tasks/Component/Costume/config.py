@@ -51,6 +51,7 @@ class BattleType(str, Enum):
     COSTUME_BATTLE_7 = 'costume_battle_7'  # 笼梦之境
     COSTUME_BATTLE_8 = 'costume_battle_8'  # 藏金台阁
     COSTUME_BATTLE_9 = 'costume_battle_9'  # 莲华圣域
+    COSTUME_BATTLE_10 = 'costume_battle_10'  # 流焰蝶舞
 
 
 
