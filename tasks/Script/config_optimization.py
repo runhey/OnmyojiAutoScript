@@ -28,6 +28,7 @@ class Optimization(BaseModel):
                                           description='task_hoarding_duration_help')
     when_task_queue_empty: WhenTaskQueueEmpty = Field(default=WhenTaskQueueEmpty.GOTO_MAIN,
                                                       description='when_task_queue_empty_help')
-    limit_time: Time = Field(default=Time(minute=30), description='limit_time_help')
+    close_game_limit_time: Time = Field(default=Time(minute=10), description='关闭游戏等待时间')
+    close_emulator_limit_time: Time = Field(default=Time(minute=30), description='关闭模拟器等待时间')
     schedule_rule: ScheduleRule = Field(default=ScheduleRule.FILTER, description='schedule_rule_help')
 
