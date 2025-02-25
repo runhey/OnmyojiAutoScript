@@ -157,8 +157,8 @@ class ScriptTask(GameUi, GuildBanquetAssets):
         """
         
         try:
-            # 当结束宴会时，设置宴会时间的日期及时间，宴会时间设置为运行结束时间提前15分钟
-            next_time = datetime.now() - timedelta(minutes=15)
+            # 当结束宴会时，设置宴会时间的日期及时间，宴会时间设置为运行结束时间提前15分钟(因识图问题，宴会可能被认为提前关闭几秒钟)
+            next_time = datetime.now() - timedelta(minutes=14, seconds=55)
             next_time = next_time.replace(second=0, microsecond=0)
             # 计算下次运行时间
             next_time = datetime.time(next_time)
