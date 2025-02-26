@@ -48,25 +48,25 @@ class ScriptTask(GameUi, BaseActivity, SwitchSoul, ActivityShikigamiAssets):
 
         # 选择是游戏的体力还是活动的体力
         current_ap = config.general_climb.ap_mode
-        self.switch(current_ap)
+        #self.switch(current_ap)
 
         # 设定是否锁定阵容
-        if config.general_battle.lock_team_enable:
-            logger.info("Lock team")
-            while 1:
-                self.screenshot()
-                if self.appear_then_click(self.I_UNLOCK, interval=1):
-                    continue
-                if self.appear(self.I_LOCK):
-                    break
-        else:
-            logger.info("Unlock team")
-            while 1:
-                self.screenshot()
-                if self.appear_then_click(self.I_LOCK, interval=1):
-                    continue
-                if self.appear(self.I_UNLOCK):
-                    break
+        # if config.general_battle.lock_team_enable:
+        #     logger.info("Lock team")
+        #     while 1:
+        #         self.screenshot()
+        #         if self.appear_then_click(self.I_UNLOCK, interval=1):
+        #             continue
+        #         if self.appear(self.I_LOCK):
+        #             break
+        # else:
+        #     logger.info("Unlock team")
+        #     while 1:
+        #         self.screenshot()
+        #         if self.appear_then_click(self.I_LOCK, interval=1):
+        #             continue
+        #         if self.appear(self.I_UNLOCK):
+        #             break
 
         # 流程应该是 在页面处：
         # 1. 判定计数是否超了，时间是否超了
