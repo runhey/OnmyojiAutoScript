@@ -45,11 +45,11 @@ class ActivityShikigamiAssets:
 
 	# Image Rule Assets
 	# 进入活动 
-	I_SHI = RuleImage(roi_front=(476,387,33,34), roi_back=(64,115,1110,427), threshold=0.7, method="Template matching", file="./tasks/ActivityShikigami/as/as_shi.png")
+	I_SHI = RuleImage(roi_front=(520,265,33,34), roi_back=(64,115,1110,427), threshold=0.7, method="Template matching", file="./tasks/ActivityShikigami/as/as_shi.png")
 	# 左上角返回 
 	I_BACK_GREEN = RuleImage(roi_front=(23,27,44,44), roi_back=(23,27,44,44), threshold=0.8, method="Template matching", file="./tasks/ActivityShikigami/as/as_back_green.png")
 	# 进入爬塔 
-	I_BATTLE = RuleImage(roi_front=(641,148,35,145), roi_back=(583,75,153,315), threshold=0.8, method="Template matching", file="./tasks/ActivityShikigami/as/as_battle.png")
+	I_BATTLE = RuleImage(roi_front=(375,285,35,135), roi_back=(300,200,153,315), threshold=0.8, method="Template matching", file="./tasks/ActivityShikigami/as/as_battle.png")
 	# 归鹿之途 
 	I_DRUM = RuleImage(roi_front=(327,627,145,28), roi_back=(256,462,301,232), threshold=0.8, method="Template matching", file="./tasks/ActivityShikigami/as/as_drum.png")
 	# 上锁图标 
