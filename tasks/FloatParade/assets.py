@@ -18,7 +18,7 @@ class FloatParadeAssets:
 	# description 
 	I_FP_RED_POINT0 = RuleImage(roi_front=(1242,604,22,21), roi_back=(1225,585,53,54), threshold=0.8, method="Template matching", file="./tasks/FloatParade/fp/fp_fp_red_point0.png")
 	# description 
-	I_FP_GETALL1 = RuleImage(roi_front=(1155,560,53,54), roi_back=(1128,507,113,164), threshold=0.8, method="Template matching", file="./tasks/FloatParade/fp/fp_fp_getall1.png")
+	I_FP_GETALL1 = RuleImage(roi_front=(1198,555,53,54), roi_back=(1163,506,113,164), threshold=0.8, method="Template matching", file="./tasks/FloatParade/fp/fp_fp_getall1.png")
 	# description 
 	I_FP_RED_POINT1 = RuleImage(roi_front=(1249,155,21,21), roi_back=(1223,138,56,62), threshold=0.8, method="Template matching", file="./tasks/FloatParade/fp/fp_fp_red_point1.png")
 	# description 

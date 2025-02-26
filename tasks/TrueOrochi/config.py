@@ -23,7 +23,7 @@ class GreenMarkType(str, Enum):
 
 class TrueOrochiScheduler(Scheduler):
     priority: int = Field(default=10, description='priority_help')
-    success_interval: TimeDelta = Field(default=TimeDelta(days=7), description='success_interval_help')
+    success_interval: TimeDelta = Field(default=TimeDelta(days=3), description='success_interval_help')
     failure_interval: TimeDelta = Field(default=TimeDelta(days=1), description='failure_interval_help')
 
 class TrueOrochiConfig(BaseModel):

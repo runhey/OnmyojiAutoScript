@@ -115,5 +115,14 @@
     "method": "Template matching",
     "threshold": 0.8,
     "description": "已有角色"
+  },
+  {
+    "itemName": "create_account",
+    "imageName": "login_create_account.png",
+    "roiFront": "555,636,169,52",
+    "roiBack": "504,614,263,100",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
   }
 ]

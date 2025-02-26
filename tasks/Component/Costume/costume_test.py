@@ -15,12 +15,12 @@ from module.logger import logger
 class ScriptTask(GeneralBattle, GameUi, SwitchSoul, PetsAssets, ):
 
     def run(self):
-        # 探索测试
-        self.ui_click(self.I_MAIN_GOTO_EXPLORATION, self.I_CHECK_EXPLORATION)
-        self.ui_click(self.I_UI_BACK_BLUE, self.I_CHECK_MAIN)
         # 町中测试
         self.ui_click(self.I_MAIN_GOTO_TOWN, self.I_CHECK_TOWN)
         self.ui_click(self.I_TOWN_GOTO_MAIN, self.I_CHECK_MAIN)
+        # 探索测试
+        self.ui_click(self.I_MAIN_GOTO_EXPLORATION, self.I_CHECK_EXPLORATION)
+        self.ui_click(self.I_UI_BACK_BLUE, self.I_CHECK_MAIN)
         # 召唤测试
         self.ui_click(self.I_MAIN_GOTO_SUMMON, self.I_CHECK_SUMMON)
         self.ui_click(self.I_SUMMON_GOTO_MAIN, self.I_CHECK_MAIN)

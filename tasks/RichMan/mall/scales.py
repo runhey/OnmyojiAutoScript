@@ -36,6 +36,8 @@ class Scales(Buy, MallNavbar):
             self.screenshot()
             if self.appear(self.I_BUY_PLUS):
                 break
+            if self.appear(self.I_SCA_SELECT_1) and self.appear(self.I_SCA_SELECT_2):
+                return
             if self.appear_then_click(start_click, interval=1):
                 continue
         # 设置购买的数量
@@ -355,7 +357,7 @@ if __name__ == '__main__':
     from module.config.config import Config
     from module.device.device import Device
 
-    c = Config('oas2')
+    c = Config('oas1')
     d = Device(c)
     t = Scales(c, d)
 

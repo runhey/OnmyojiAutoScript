@@ -20,8 +20,8 @@
   {
     "itemName": "battle",
     "imageName": "as_battle.png",
-    "roiFront": "641,148,35,145",
-    "roiBack": "583,75,153,315",
+    "roiFront": "375,285,35,135",
+    "roiBack": "300,200,153,315",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "进入爬塔"
