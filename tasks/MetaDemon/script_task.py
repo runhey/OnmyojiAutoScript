@@ -10,84 +10,74 @@ from tasks.Component.GeneralBattle.general_battle import GeneralBattle
 from tasks.Component.GeneralBattle.config_general_battle import GeneralBattleConfig
 from tasks.Component.SwitchSoul.switch_soul import SwitchSoul
 from tasks.GameUi.game_ui import GameUi
-from tasks.GameUi.page import page_main
+from tasks.GameUi.page import page_main, page_shikigami_records
 from tasks.MetaDemon.config import MetaDemon
 from tasks.MetaDemon.assets import MetaDemonAssets
 
 from module.logger import logger
 from module.exception import TaskEnd
+from tasks.Restart.assets import RestartAssets
+from tasks.ActivityShikigami.assets import ActivityShikigamiAssets
+from module.base.timer import Timer
+
+"""超鬼王"""
+
 
 class ScriptTask(GeneralBattle, SwitchSoul, GameUi, MetaDemonAssets):
 
     def run(self):
+
+
+        if self.config.meta_demon.switch_soul.enable:
+            self.ui_get_current_page()
+            self.ui_goto(page_shikigami_records)
+            self.run_switch_soul(self.config.meta_demon.switch_soul.switch_group_team)
+
+        if self.config.meta_demon.switch_soul.enable_switch_by_name:
+            self.ui_get_current_page()
+            self.ui_goto(page_shikigami_records)
+            self.run_switch_soul_by_name(self.config.meta_demon.switch_soul.group_name,
+                                         self.config.meta_demon.switch_soul.team_name)
         self.ui_get_current_page()
         self.ui_goto(page_main)
+
+        boss_timer = Timer(200)
+        boss_timer.start()
         while 1:
             self.screenshot()
-            if self.appear(self.I_MD_FIND):
+            sleep(0.1)
+            if boss_timer.reached():
+                self.config.notifier.push(title='超鬼王', message='识别超时退出')
                 break
-            if self.appear(self.I_MD_FIRE):
+            if self.appear(self.I_BACK_CHECK):
+                self.click(self.I_RED_BACK, interval=1.5)
                 break
-            if self.appear_then_click(self.I_MD_ENTER, interval=1.5):
+            if self.appear_then_click(RestartAssets.I_HARVEST_CHAT_CLOSE):
+                boss_timer.reset()
                 continue
-            if self.appear_then_click(self.I_MD_MAIN, interval=1.5):
+            if self.appear_then_click(ActivityShikigamiAssets.I_SHI, interval=1):
+                boss_timer.reset()
+                continue
+            if self.appear_then_click(self.I_A2):
+                boss_timer.reset()
+                continue
+            if self.appear_then_click(self.I_A3, interval=1):
+                boss_timer.reset()
+                continue
+            if self.appear_then_click(self.I_A4, interval=1):
+                boss_timer.reset()
+                continue
+            if self.appear_then_click(self.I_A5, interval=1):
+                self.device.stuck_record_clear()
+                self.device.stuck_record_add('BATTLE_STATUS_S')
+                boss_timer.reset()
+                continue
+            if self.appear_then_click(self.I_A6, interval=1):
+                boss_timer.reset()
                 continue
 
         config: MetaDemon = self.config.model.meta_demon
         # 主循环
-        while 1:
-            self.screenshot()
-            if not self.appear(self.I_MD_GIFT_BOX):
-                continue
-            # 检查是否有票
-            if not self.ensure_ticket():
-                logger.info('There is no common ticket')
-                self.set_next_run('MetaDemon', finish=True,
-                                  target=config.scheduler.interval + datetime.now().replace(second=0, microsecond=0))
-                break
-            # 检查疲劳°
-            if not self.check_exhaustion():
-                logger.info('Exhaustion is more than 100')
-                if config.meta_demon_config.auto_tea:
-                    logger.info('Try to buy tea')
-                    self.buy_tea()
-                    continue
-                else:
-                    logger.info('Stop because of exhaustion is more than 100')
-                    interval_delta = TimeDelta(minutes=self.current_exhaustion())
-                    self.set_next_run('MetaDemon', finish=True,
-                                      target=interval_delta + datetime.now().replace(second=0, microsecond=0))
-                    break
-            # 寻找鬼王
-            if self.appear_then_click(self.I_MD_FIND, interval=1.5):
-                continue
-            #
-            if self.appear(self.I_MD_FIRE) and self.appear(self.I_MD_FIRE_COMMON):
-                if self.ocr_appear(self.O_MD_COUNT_INFO):
-                    # 结算中
-                    logger.info('Waiting for settlement')
-                    sleep(1)
-                    continue
-                # 是否为极
-                if self.appear(self.I_MD_EXTREME):
-                    logger.info('Find extreme Demon')
-                    if config.meta_demon_config.extreme_notify:
-                        self.config.notifier.push(title='超鬼王', content=f"发现极鬼王")
-                        self.set_next_run('MetaDemon', finish=True,
-                                          target=config.scheduler.interval + datetime.now().replace(second=0, microsecond=0))
-                        break
-                    else:
-                        pass
-                while 1:
-                    self.screenshot()
-                    if self.appear(self.I_MD_FIRE) and self.appear(self.I_MD_FIRE_COMMON):
-                        pass
-                    else:
-                        break
-                    if self.appear_then_click(self.I_MD_FIRE, interval=2):
-                        continue
-                self.run_general_battle(config=self.battle_config)
-        # exit
         while 1:
             self.screenshot()
             if self.appear(self.I_CHECK_MAIN):
@@ -95,11 +85,8 @@ class ScriptTask(GeneralBattle, SwitchSoul, GameUi, MetaDemonAssets):
                 break
             if self.appear_then_click(self.I_UI_BACK_YELLOW, interval=1):
                 continue
+        self.set_next_run(task="MetaDemon", success=True)
         raise TaskEnd
-
-
-
-
 
     @cached_property
     def battle_config(self):
@@ -161,12 +148,13 @@ class ScriptTask(GeneralBattle, SwitchSoul, GameUi, MetaDemonAssets):
                 self.ui_click_until_disappear(self.I_MD_BATTLE_FAILURE)
                 return False
 
+
 if __name__ == '__main__':
     from module.config.config import Config
     from module.device.device import Device
+
     c = Config('oas1')
     d = Device(c)
     t = ScriptTask(c, d)
 
     t.run()
-
