@@ -31,6 +31,20 @@ class MetaDemonAssets:
 	I_MD_FIRE_POWER = RuleImage(roi_front=(1159,498,100,37), roi_back=(1159,498,100,37), threshold=0.8, method="Template matching", file="./tasks/MetaDemon/md/md_md_fire_power.png")
 	# 失败 
 	I_MD_BATTLE_FAILURE = RuleImage(roi_front=(412,105,100,100), roi_back=(412,105,100,100), threshold=0.8, method="Template matching", file="./tasks/MetaDemon/md/md_md_battle_failure.png")
+	# 进入鬼王界面 
+	I_A2 = RuleImage(roi_front=(751,137,41,149), roi_back=(751,137,41,149), threshold=0.8, method="Template matching", file="./tasks/MetaDemon/md/Screenshots_a2.png")
+	# 召唤鬼王 
+	I_A3 = RuleImage(roi_front=(1137,581,100,100), roi_back=(1137,581,100,100), threshold=0.8, method="Template matching", file="./tasks/MetaDemon/md/Screenshots_a3.png")
+	# 挑战 
+	I_A4 = RuleImage(roi_front=(1137,581,100,100), roi_back=(1137,581,100,100), threshold=0.8, method="Template matching", file="./tasks/MetaDemon/md/Screenshots_a4.png")
+	# 准备 
+	I_A5 = RuleImage(roi_front=(1129,536,100,100), roi_back=(1129,536,100,100), threshold=0.8, method="Template matching", file="./tasks/MetaDemon/md/Screenshots_a5.png")
+	# description 
+	I_A6 = RuleImage(roi_front=(435,147,100,100), roi_back=(435,147,100,100), threshold=0.8, method="Template matching", file="./tasks/MetaDemon/md/Screenshots_a6.png")
+	# 超鬼王打完了 
+	I_BACK_CHECK = RuleImage(roi_front=(378,257,68,32), roi_back=(378,257,68,32), threshold=0.8, method="Template matching", file="./tasks/MetaDemon/md/md_back_check.png")
+	# 红色的叉叉 
+	I_RED_BACK = RuleImage(roi_front=(925,181,47,48), roi_back=(925,181,47,48), threshold=0.8, method="Template matching", file="./tasks/MetaDemon/md/md_red_back.png")
 
 
 	# Ocr Rule Assets
