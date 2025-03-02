@@ -1,0 +1,11 @@
+[
+  {
+    "itemName": "later_enter_check",
+    "roiFront": "928,16,48,35",
+    "roiBack": "928,16,48,35",
+    "mode": "Single",
+    "method": "Default",
+    "keyword": "",
+    "description": "检查是否迟到"
+  }
+]

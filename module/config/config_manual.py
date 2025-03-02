@@ -11,7 +11,7 @@ class ConfigManual:
         Restart > SoulsTidy
         > KekkaiUtilize > KekkaiActivation > DemonEncounter
         > AreaBoss > GoldYoukai > ExperienceYoukai > Nian > Tako > RealmRaid > RyouToppa > DailyTrifles > Exploration
-        > Dokan > AbyssShadows > Hunt > GuildBanquet
+        > Dokan > AbyssShadows > Hunt > GuildBanquet > DemonRetreat
         > Orochi > OrochiMoans > OrochiJudgement > Sougenbi > FallenSun > EternitySea > SixRealms
         > ActivityShikigami > WantedQuests
         > BondlingFairyland > EvoZone > GoryouRealm > HeroTest
