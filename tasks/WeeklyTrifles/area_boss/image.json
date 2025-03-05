@@ -21,7 +21,7 @@
     "itemName": "wt_share_ab",
     "imageName": "area_boss_wt_share_ab.png",
     "roiFront": "1183,308,45,39",
-    "roiBack": "1136,292,105,79",
+    "roiBack": "1183,308,45,39",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "地鬼分享"
@@ -29,8 +29,8 @@
   {
     "itemName": "wt_ab_jade",
     "imageName": "area_boss_wt_ab_jade.png",
-    "roiFront": "922,554,44,47",
-    "roiBack": "922,554,44,47",
+    "roiFront": "977,552,44,47",
+    "roiBack": "977,552,44,47",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "分享勾玉"
@@ -38,8 +38,8 @@
   {
     "itemName": "wt_ab_wechat",
     "imageName": "area_boss_wt_ab_wechat.png",
-    "roiFront": "1032,643,50,56",
-    "roiBack": "1032,643,50,56",
+    "roiFront": "845,643,50,41",
+    "roiBack": "845,643,50,41",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "微信分享"
