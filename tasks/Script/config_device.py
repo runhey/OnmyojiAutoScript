@@ -70,6 +70,9 @@ class Device(BaseModel):
     emulatorinfo_path: str = Field(default='',
                                    description='emulatorinfo_path_help')
     # 举例, E:\ProgramFiles\MuMuPlayer-12.0\shell\MuMuPlayer.exe
+    # 模拟器启动后最小化
+    emulator_window_minimize: bool = Field(default=False,
+                                             description='emulator_window_minimize_help')
 
 
 
