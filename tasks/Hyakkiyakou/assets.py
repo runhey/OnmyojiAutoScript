@@ -18,22 +18,22 @@ class HyakkiyakouAssets:
 	# description 
 	C_HSELECT_3 = RuleClick(roi_front=(934,298,115,306), roi_back=(934,298,115,306), name="hselect_3")
 	# description 
-	C_FRIEND_1 = RuleClick(roi_front=(466,227,161,67), roi_back=(466,227,161,67), name="friend_1")
+	C_FRIEND_1 = RuleClick(roi_front=(254,223,161,67), roi_back=(254,223,161,67), name="friend_1")
 	# description 
-	C_FRIEND_2 = RuleClick(roi_front=(738,229,158,64), roi_back=(738,229,158,64), name="friend_2")
+	C_FRIEND_2 = RuleClick(roi_front=(532,226,158,64), roi_back=(532,226,158,64), name="friend_2")
 	# description 
-	C_FRIEND_3 = RuleClick(roi_front=(445,310,183,66), roi_back=(445,310,183,66), name="friend_3")
+	C_FRIEND_3 = RuleClick(roi_front=(240,310,183,66), roi_back=(240,310,183,66), name="friend_3")
 	# description 
-	C_FRIEND_4 = RuleClick(roi_front=(712,311,184,62), roi_back=(712,311,184,62), name="friend_4")
+	C_FRIEND_4 = RuleClick(roi_front=(504,311,184,62), roi_back=(504,311,184,62), name="friend_4")
 	# description 
-	C_FRIEND_5 = RuleClick(roi_front=(449,394,178,61), roi_back=(449,394,178,61), name="friend_5")
+	C_FRIEND_5 = RuleClick(roi_front=(241,395,178,61), roi_back=(241,395,178,61), name="friend_5")
 	# description 
-	C_FRIEND_6 = RuleClick(roi_front=(714,397,182,62), roi_back=(714,397,182,62), name="friend_6")
+	C_FRIEND_6 = RuleClick(roi_front=(508,394,182,62), roi_back=(508,394,182,62), name="friend_6")
 
 
 	# Image Rule Assets
 	# 邀请按钮 
-	I_HINVITE = RuleImage(roi_front=(139,569,63,60), roi_back=(139,569,63,60), threshold=0.8, method="Template matching", file="./tasks/Hyakkiyakou/hya/hya_hinvite.png")
+	I_HINVITE = RuleImage(roi_front=(139,593,63,39), roi_back=(105,535,129,147), threshold=0.8, method="Template matching", file="./tasks/Hyakkiyakou/hya/hya_hinvite.png")
 	# 进入 
 	I_HACCESS = RuleImage(roi_front=(1059,554,100,100), roi_back=(1059,554,100,100), threshold=0.8, method="Template matching", file="./tasks/Hyakkiyakou/hya/hya_haccess.png")
 	# 开始 
@@ -135,13 +135,13 @@ class HyakkiyakouAssets:
 
 	# Image Rule Assets
 	# description 
-	I_FRIEND_SAME_1 = RuleImage(roi_front=(375,122,106,62), roi_back=(375,122,106,62), threshold=0.8, method="Template matching", file="./tasks/Hyakkiyakou/hya/hya_friend_same_1.png")
+	I_FRIEND_SAME_1 = RuleImage(roi_front=(167,123,106,62), roi_back=(154,105,132,94), threshold=0.8, method="Template matching", file="./tasks/Hyakkiyakou/hya/hya_friend_same_1.png")
 	# description 
-	I_FRIEND_REMOTE_1 = RuleImage(roi_front=(498,125,106,56), roi_back=(498,125,106,56), threshold=0.8, method="Template matching", file="./tasks/Hyakkiyakou/hya/hya_friend_remote_1.png")
+	I_FRIEND_REMOTE_1 = RuleImage(roi_front=(288,123,106,56), roi_back=(269,106,159,91), threshold=0.8, method="Template matching", file="./tasks/Hyakkiyakou/hya/hya_friend_remote_1.png")
 	# description 
-	I_FRIEND_SAME_2 = RuleImage(roi_front=(377,126,100,60), roi_back=(377,126,100,60), threshold=0.8, method="Template matching", file="./tasks/Hyakkiyakou/hya/hya_friend_same_2.png")
+	I_FRIEND_SAME_2 = RuleImage(roi_front=(168,126,100,60), roi_back=(152,112,133,80), threshold=0.8, method="Template matching", file="./tasks/Hyakkiyakou/hya/hya_friend_same_2.png")
 	# description 
-	I_FRIEND_REMOTE_2 = RuleImage(roi_front=(504,127,100,56), roi_back=(504,127,100,56), threshold=0.8, method="Template matching", file="./tasks/Hyakkiyakou/hya/hya_friend_remote_2.png")
+	I_FRIEND_REMOTE_2 = RuleImage(roi_front=(296,122,100,56), roi_back=(278,115,131,81), threshold=0.8, method="Template matching", file="./tasks/Hyakkiyakou/hya/hya_friend_remote_2.png")
 
 
 	# Ocr Rule Assets

@@ -2,8 +2,8 @@
   {
     "itemName": "hinvite",
     "imageName": "hya_hinvite.png",
-    "roiFront": "139,569,63,60",
-    "roiBack": "139,569,63,60",
+    "roiFront": "139,593,63,39",
+    "roiBack": "105,535,129,147",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "邀请按钮"

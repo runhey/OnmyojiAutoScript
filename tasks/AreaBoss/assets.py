@@ -101,7 +101,7 @@ class AreaBossAssets:
 	I_AB_JI_FLOOR_TEN = RuleImage(roi_front=(390,370,60,40), roi_back=(390,370,60,40), threshold=0.8, method="Template matching", file="./tasks/AreaBoss/res/ab_ji_floor_ten.png")
 	# 小组内未取得名次 
 	I_AB_GROUP_RANK_NONE = RuleImage(roi_front=(890,415,95,85), roi_back=(890,415,95,85), threshold=0.8, method="Template matching", file="./tasks/AreaBoss/res/ab_rank_none.png")
-	# 挑战数进度条
+	# 挑战数进度条 
 	I_AB_NUM_CHALLENGE_RAIL = RuleImage(roi_front=(895,639,14,27), roi_back=(895,639,14,27), threshold=0.8, method="Template matching", file="./tasks/AreaBoss/res/ab_num_challenge_rail.png")
 
 
