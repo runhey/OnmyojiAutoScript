@@ -47,8 +47,8 @@
   {
     "itemName": "main_goto_guild",
     "imageName": "page_main_goto_guild.png",
-    "roiFront": "540,611,50,54",
-    "roiBack": "540,611,50,54",
+    "roiFront": "544,611,50,47",
+    "roiBack": "520,583,99,105",
     "method": "Template matching",
     "threshold": 0.7,
     "description": "description"

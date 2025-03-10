@@ -16,7 +16,8 @@
     "method": "Template matching",
     "threshold": 0.8,
     "description": "庭院卷轴关闭标识"
-  },  {
+  },
+  {
     "itemName": "main_goto_exploration",
     "imageName": "page_main_goto_exploration.png",
     "roiFront": "493,116,45,75",
@@ -55,7 +56,7 @@
   {
     "itemName": "exploration_goto_realm_raid",
     "imageName": "page_exploration_goto_realm_raid.png",
-    "roiFront": "248,636,67,48",
+    "roiFront": "251,636,59,41",
     "roiBack": "229,612,102,87",
     "method": "Template matching",
     "threshold": 0.8,
@@ -82,7 +83,7 @@
   {
     "itemName": "exploration_goto_secret_zones",
     "imageName": "page_exploration_goto_secret_zones.png",
-    "roiFront": "546,628,61,55",
+    "roiFront": "549,633,53,40",
     "roiBack": "524,614,100,87",
     "method": "Template matching",
     "threshold": 0.8,
