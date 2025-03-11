@@ -33,7 +33,7 @@ class SwitchSoulAssets:
 	# 退出式神录 
 	I_RECORD_SOUL_BACK = RuleImage(roi_front=(19,9,51,44), roi_back=(19,9,51,44), threshold=0.8, method="Template matching", file="./tasks/Component/SwitchSoul/ss/ss_record_soul_back.png")
 	# 预设 
-	I_SOUL_PRESET = RuleImage(roi_front=(332,70,90,51), roi_back=(332,70,90,51), threshold=0.8, method="Template matching", file="./tasks/Component/SwitchSoul/ss/ss_soul_preset.png")
+	I_SOUL_PRESET = RuleImage(roi_front=(335,73,90,51), roi_back=(310,57,169,72), threshold=0.8, method="Template matching", file="./tasks/Component/SwitchSoul/ss/ss_soul_preset.png")
 	# description 
 	I_SOU_SWITCH_1 = RuleImage(roi_front=(971,148,37,35), roi_back=(971,148,37,35), threshold=0.8, method="Template matching", file="./tasks/Component/SwitchSoul/ss/ss_sou_switch_1.png")
 	# description 

@@ -38,7 +38,7 @@
   {
     "itemName": "exploration_goto_awake_zone",
     "imageName": "page_exploration_goto_awake_zone.png",
-    "roiFront": "57,628,57,61",
+    "roiFront": "57,628,57,42",
     "roiBack": "33,619,113,79",
     "method": "Template matching",
     "threshold": 0.8,
@@ -65,8 +65,8 @@
   {
     "itemName": "exploration_goto_goryou_realm",
     "imageName": "page_exploration_goto_goryou_realm.png",
-    "roiFront": "353,639,47,45",
-    "roiBack": "346,626,60,67",
+    "roiFront": "353,637,48,40",
+    "roiBack": "329,626,112,67",
     "method": "Template matching",
     "threshold": 0.7,
     "description": "前往御灵"
@@ -74,8 +74,8 @@
   {
     "itemName": "exploration_goto_delegation",
     "imageName": "page_exploration_goto_delegation.png",
-    "roiFront": "445,638,60,50",
-    "roiBack": "445,638,60,50",
+    "roiFront": "453,639,53,37",
+    "roiBack": "409,613,167,75",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "式神委派"
@@ -92,8 +92,8 @@
   {
     "itemName": "exploration_goto_area_boss",
     "imageName": "page_exploration_goto_area_boss.png",
-    "roiFront": "640,638,51,45",
-    "roiBack": "640,638,51,45",
+    "roiFront": "647,638,51,35",
+    "roiBack": "620,621,110,73",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "地狱鬼王"
@@ -101,8 +101,8 @@
   {
     "itemName": "exploration_goto_heian_kitan",
     "imageName": "page_exploration_goto_heian_kitan.png",
-    "roiFront": "739,643,52,44",
-    "roiBack": "739,643,52,44",
+    "roiFront": "748,634,52,44",
+    "roiBack": "702,620,144,80",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "平安奇谭"
@@ -110,8 +110,8 @@
   {
     "itemName": "exploration_goto_six_gates",
     "imageName": "page_exploration_goto_six_gates.png",
-    "roiFront": "838,640,60,49",
-    "roiBack": "818,631,200,66",
+    "roiFront": "940,632,51,44",
+    "roiBack": "808,613,245,87",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "六道之门"
@@ -119,8 +119,8 @@
   {
     "itemName": "exploration_goto_bondling_fairyland",
     "imageName": "page_exploration_goto_bondling_fairyland.png",
-    "roiFront": "937,639,56,49",
-    "roiBack": "928,633,203,64",
+    "roiFront": "1037,635,56,44",
+    "roiBack": "918,623,218,72",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "器灵"
