@@ -7,9 +7,10 @@ from module.exception import RequestHumanTakeover, GameTooManyClickError, GameSt
 from module.logger import logger
 from tasks.Restart.assets import RestartAssets
 from tasks.base_task import BaseTask
+from tasks.Component.LoginHarvest.login_base import LoginBase
 
 
-class LoginHandler(BaseTask, RestartAssets):
+class LoginHandler(LoginBase, BaseTask, RestartAssets):
     character: str
 
     def __init__(self, *wargs, **kwargs):
@@ -130,6 +131,7 @@ class LoginHandler(BaseTask, RestartAssets):
             try:
                 self._app_handle_login()
                 if self.config.restart.harvest_config.enable:
+                    self.check_login(self.config.global_game.costume_config)
                     self.harvest()
                 return True
             except (GameTooManyClickError, GameStuckError) as e:
