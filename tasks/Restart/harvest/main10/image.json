@@ -1,0 +1,47 @@
+[
+  {
+    "itemName": "harvest_jade_10",
+    "imageName": "harvest_harvest_jade_10.png",
+    "roiFront": "508,529,27,30",
+    "roiBack": "508,529,27,30",
+    "method": "Template matching",
+    "threshold": 0.9,
+    "description": "望月幽庭勾玉"
+  },
+  {
+    "itemName": "harvest_sign_10",
+    "imageName": "harvest_harvest_sign_10.png",
+    "roiFront": "422,532,21,27",
+    "roiBack": "422,532,21,27",
+    "method": "Template matching",
+    "threshold": 0.9,
+    "description": "望月幽庭签到"
+  },
+  {
+    "itemName": "harvest_sign_999_10",
+    "imageName": "harvest_harvest_sign_999_10.png",
+    "roiFront": "419,538,25,26",
+    "roiBack": "419,538,25,26",
+    "method": "Template matching",
+    "threshold": 0.9,
+    "description": "望月幽庭福袋"
+  },
+  {
+    "itemName": "harvest_ap_10",
+    "imageName": "harvest_harvest_ap_10.png",
+    "roiFront": "508,531,25,24",
+    "roiBack": "508,531,25,24",
+    "method": "Template matching",
+    "threshold": 0.9,
+    "description": "望月幽庭食盒"
+  },
+  {
+    "itemName": "harvest_soul_10",
+    "imageName": "harvest_harvest_soul_10.png",
+    "roiFront": "418,531,27,30",
+    "roiBack": "418,531,27,30",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "望月幽庭自选御魂"
+  }
+]
