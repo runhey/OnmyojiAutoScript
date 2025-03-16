@@ -40,18 +40,19 @@ class LoginBase:
             asset_before_object.roi_back = asset_after.roi_back
         asset_before_object.threshold = asset_after.threshold
         asset_before_object.file = asset_after.file
-        logger.info(f'Replace {asset_before} to {asset_after}')
-        logger.info(f'{asset_before} roi_front: {asset_before_object.roi_front}')
+        # logger.info(f'Replace {asset_before} to {asset_after}')
+        # logger.info(f'{asset_before} roi_front: {asset_before_object.roi_front}')
 
     def check_login_harvest(self, main_type: MainType):
         if main_type == MainType.COSTUME_MAIN:
             return
-        logger.info(f'Switch main costume to {main_type}')
+        logger.info(f'Switch login harvest to {main_type}')
         restart_assets = RestartAssets()
         for key, value in login_harvest_model[main_type].items():
             if not hasattr(restart_assets, value):
                 return
             assert_value: RuleImage = getattr(restart_assets, value)
+            self.replace_img(key, assert_value)
 
 
 if __name__ == '__main__':
