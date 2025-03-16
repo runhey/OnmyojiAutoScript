@@ -7,7 +7,7 @@ from module.exception import RequestHumanTakeover, GameTooManyClickError, GameSt
 from module.logger import logger
 from tasks.Restart.assets import RestartAssets
 from tasks.base_task import BaseTask
-from tasks.Restart.login_base import LoginBase
+from tasks.Component.LoginHarvest.login_base import LoginBase
 
 
 class LoginHandler(LoginBase, BaseTask, RestartAssets):

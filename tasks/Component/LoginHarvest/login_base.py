@@ -52,7 +52,6 @@ class LoginBase:
             if not hasattr(restart_assets, value):
                 return
             assert_value: RuleImage = getattr(restart_assets, value)
-            self.replace_img(key, assert_value)
 
 
 if __name__ == '__main__':
