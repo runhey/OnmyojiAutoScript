@@ -16,6 +16,7 @@ login_harvest_model = {
         'I_HARVEST_SIGN_999': f'I_HARVEST_SIGN_999_{i}',
         'I_HARVEST_AP': f'I_HARVEST_AP_{i}',
         'I_HARVEST_SOUL': f'I_HARVEST_SOUL_{i}',
+        'I_HARVEST_SOULBUFF': f'I_HARVEST_SOULBUFF_{i}',
     } for i in range(1, 12)
 }
 
@@ -50,7 +51,7 @@ class LoginBase:
         login_harvest_assets = LoginHarvestAssets()
         for key, value in login_harvest_model[main_type].items():
             if not hasattr(login_harvest_assets, value):
-                return
+                continue
             assert_value: RuleImage = getattr(login_harvest_assets, value)
             self.replace_img(key, assert_value)
 

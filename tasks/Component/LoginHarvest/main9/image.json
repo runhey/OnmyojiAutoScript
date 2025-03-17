@@ -1,0 +1,56 @@
+[
+  {
+    "itemName": "harvest_ap_9",
+    "imageName": "harvest_harvest_ap_9.png",
+    "roiFront": "841,488,24,24",
+    "roiBack": "718,447,408,147",
+    "method": "Template matching",
+    "threshold": 0.9,
+    "description": "缘结神社食盒"
+  },
+  {
+    "itemName": "harvest_sign_999_9",
+    "imageName": "harvest_harvest_sign_999_9.png",
+    "roiFront": "427,491,21,21",
+    "roiBack": "267,443,291,145",
+    "method": "Template matching",
+    "threshold": 0.9,
+    "description": "缘结神社999福袋"
+  },
+  {
+    "itemName": "harvest_sign_9",
+    "imageName": "harvest_harvest_sign_9.png",
+    "roiFront": "425,484,26,28",
+    "roiBack": "319,452,254,140",
+    "method": "Template matching",
+    "threshold": 0.9,
+    "description": "缘结神社签到"
+  },
+  {
+    "itemName": "harvest_jade_9",
+    "imageName": "harvest_harvest_jade_9.png",
+    "roiFront": "840,485,25,30",
+    "roiBack": "776,452,326,129",
+    "method": "Template matching",
+    "threshold": 0.9,
+    "description": "缘结神社勾玉"
+  },
+  {
+    "itemName": "harvest_soulbuff_9",
+    "imageName": "harvest_harvest_soulbuff_9.png",
+    "roiFront": "418,480,34,29",
+    "roiBack": "307,454,275,135",
+    "method": "Template matching",
+    "threshold": 0.9,
+    "description": "缘结神社御魂buff"
+  },
+  {
+    "itemName": "harvest_soul_9",
+    "imageName": "harvest_harvest_soul_9.png",
+    "roiFront": "422,476,33,38",
+    "roiBack": "287,452,293,131",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "缘结神社自选御魂"
+  }
+]
