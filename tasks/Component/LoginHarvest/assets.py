@@ -25,16 +25,16 @@ class LoginHarvestAssets:
 
 	# Image Rule Assets
 	# 缘结神社食盒 
-	I_HARVEST_AP_9 = RuleImage(roi_front=(841,488,24,24), roi_back=(718,447,408,147), threshold=0.9, method="Template matching", file="./tasks/Component/LoginHarvest/main9/harvest_harvest_ap_9.png")
+	I_HARVEST_AP_9 = RuleImage(roi_front=(841,488,24,24), roi_back=(718,447,408,147), threshold=0.8, method="Template matching", file="./tasks/Component/LoginHarvest/main9/harvest_harvest_ap_9.png")
 	# 缘结神社999福袋 
-	I_HARVEST_SIGN_999_9 = RuleImage(roi_front=(427,491,21,21), roi_back=(267,443,291,145), threshold=0.9, method="Template matching", file="./tasks/Component/LoginHarvest/main9/harvest_harvest_sign_999_9.png")
+	I_HARVEST_SIGN_999_9 = RuleImage(roi_front=(427,491,21,21), roi_back=(182,443,376,145), threshold=0.8, method="Template matching", file="./tasks/Component/LoginHarvest/main9/harvest_harvest_sign_999_9.png")
 	# 缘结神社签到 
-	I_HARVEST_SIGN_9 = RuleImage(roi_front=(425,484,26,28), roi_back=(319,452,254,140), threshold=0.9, method="Template matching", file="./tasks/Component/LoginHarvest/main9/harvest_harvest_sign_9.png")
+	I_HARVEST_SIGN_9 = RuleImage(roi_front=(259,485,21,21), roi_back=(213,452,360,140), threshold=0.8, method="Template matching", file="./tasks/Component/LoginHarvest/main9/harvest_harvest_sign_9.png")
 	# 缘结神社勾玉 
-	I_HARVEST_JADE_9 = RuleImage(roi_front=(840,485,25,30), roi_back=(776,452,326,129), threshold=0.9, method="Template matching", file="./tasks/Component/LoginHarvest/main9/harvest_harvest_jade_9.png")
+	I_HARVEST_JADE_9 = RuleImage(roi_front=(840,485,25,30), roi_back=(776,452,326,129), threshold=0.8, method="Template matching", file="./tasks/Component/LoginHarvest/main9/harvest_harvest_jade_9.png")
 	# 缘结神社御魂buff 
-	I_HARVEST_SOULBUFF_9 = RuleImage(roi_front=(418,480,34,29), roi_back=(307,454,275,135), threshold=0.9, method="Template matching", file="./tasks/Component/LoginHarvest/main9/harvest_harvest_soulbuff_9.png")
+	I_HARVEST_SOULBUFF_9 = RuleImage(roi_front=(418,480,34,29), roi_back=(178,454,404,135), threshold=0.8, method="Template matching", file="./tasks/Component/LoginHarvest/main9/harvest_harvest_soulbuff_9.png")
 	# 缘结神社自选御魂 
-	I_HARVEST_SOUL_9 = RuleImage(roi_front=(422,476,33,38), roi_back=(287,452,293,131), threshold=0.8, method="Template matching", file="./tasks/Component/LoginHarvest/main9/harvest_harvest_soul_9.png")
+	I_HARVEST_SOUL_9 = RuleImage(roi_front=(422,476,33,38), roi_back=(204,452,376,131), threshold=0.8, method="Template matching", file="./tasks/Component/LoginHarvest/main9/harvest_harvest_soul_9.png")
 
 
