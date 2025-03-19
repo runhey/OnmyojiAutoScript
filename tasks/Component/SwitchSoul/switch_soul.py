@@ -100,7 +100,7 @@ class SwitchSoul(BaseTask, SwitchSoulAssets):
                 break
             cur_text = ocr_text
             # 向上滑动
-            self.swipe(self.S_SS_GROUP_SWIPE_UP, 0.5)
+            self.swipe(self.S_SS_GROUP_SWIPE_UP, 1.5)
             # 等待滑动动画
             sleep(0.5)
 
@@ -129,10 +129,12 @@ class SwitchSoul(BaseTask, SwitchSoulAssets):
                 while 1:
                     self.click(self.I_SOU_SWITCH_SURE, 3)
                     self.screenshot()
+                    if self.appear_then_click(self.I_CHECK_BLOCK, 3):
+                        continue
                     if not self.appear(self.I_SOU_SWITCH_SURE):
                         break
                 continue
-            if not self.appear_then_click(target_team, interval=1):
+            if not self.appear_then_click(target_team, interval=3):
                 logger.warning(f'Click team {team} failed in group {group}')
 
         logger.info(f'Switch soul_one group {group} team {team}')
