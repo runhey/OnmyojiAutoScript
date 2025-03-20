@@ -46,7 +46,7 @@ for i in range(1, 11):
     if i == 8:  # 特殊处理第8项
         entry.update({
             'I_WIN': 'I_WIN_8',
-            'I_DE_WIN': '_DE_WIN_8',
+            'I_DE_WIN': 'I_DE_WIN_8',
             'I_FALSE': 'I_FALSE_8'
         })
     battle_theme_model[getattr(BattleType, f"COSTUME_BATTLE_{i}")] = entry
