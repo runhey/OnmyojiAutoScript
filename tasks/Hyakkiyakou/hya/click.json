@@ -19,38 +19,38 @@
   },
   {
     "itemName": "friend_1",
-    "roiFront": "466,227,161,67",
-    "roiBack": "466,227,161,67",
+    "roiFront": "254,223,161,67",
+    "roiBack": "254,223,161,67",
     "description": "description"
   },
   {
     "itemName": "friend_2",
-    "roiFront": "738,229,158,64",
-    "roiBack": "738,229,158,64",
+    "roiFront": "532,226,158,64",
+    "roiBack": "532,226,158,64",
     "description": "description"
   },
   {
     "itemName": "friend_3",
-    "roiFront": "445,310,183,66",
-    "roiBack": "445,310,183,66",
+    "roiFront": "240,310,183,66",
+    "roiBack": "240,310,183,66",
     "description": "description"
   },
   {
     "itemName": "friend_4",
-    "roiFront": "712,311,184,62",
-    "roiBack": "712,311,184,62",
+    "roiFront": "504,311,184,62",
+    "roiBack": "504,311,184,62",
     "description": "description"
   },
   {
     "itemName": "friend_5",
-    "roiFront": "449,394,178,61",
-    "roiBack": "449,394,178,61",
+    "roiFront": "241,395,178,61",
+    "roiBack": "241,395,178,61",
     "description": "description"
   },
   {
     "itemName": "friend_6",
-    "roiFront": "714,397,182,62",
-    "roiBack": "714,397,182,62",
+    "roiFront": "508,394,182,62",
+    "roiBack": "508,394,182,62",
     "description": "description"
   }
 ]

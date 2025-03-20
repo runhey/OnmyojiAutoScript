@@ -31,16 +31,27 @@ class ScriptTask(GameUi, SwitchSoul, MoonSea):
         return self.config.model.six_realms
 
     def run(self):
-        if self._config.switch_soul_config.enable:
+        if self._config.switch_soul_config_1.enable:
             self.ui_get_current_page()
             self.ui_goto(page_shikigami_records)
-            self.run_switch_soul(self._config.switch_soul_config.switch_group_team)
-        if self._config.switch_soul_config.enable_switch_by_name:
+            self.run_switch_soul(self._config.switch_soul_config_1.switch_group_team)
+        if self._config.switch_soul_config_1.enable_switch_by_name:
             self.ui_get_current_page()
             self.ui_goto(page_shikigami_records)
             self.run_switch_soul_by_name(
-                self._config.switch_soul_config.group_name,
-                self._config.switch_soul_config.team_name
+                self._config.switch_soul_config_1.group_name,
+                self._config.switch_soul_config_1.team_name
+            )
+        if self._config.switch_soul_config_2.enable:
+            self.ui_get_current_page()
+            self.ui_goto(page_shikigami_records)
+            self.run_switch_soul(self._config.switch_soul_config_2.switch_group_team)
+        if self._config.switch_soul_config_2.enable_switch_by_name:
+            self.ui_get_current_page()
+            self.ui_goto(page_shikigami_records)
+            self.run_switch_soul_by_name(
+                self._config.switch_soul_config_2.group_name,
+                self._config.switch_soul_config_2.team_name
             )
         self.ui_get_current_page()
         self.ui_goto(page_six_gates)

@@ -2,8 +2,8 @@
   {
     "itemName": "friend_same_1",
     "imageName": "hya_friend_same_1.png",
-    "roiFront": "375,122,106,62",
-    "roiBack": "375,122,106,62",
+    "roiFront": "167,123,106,62",
+    "roiBack": "154,105,132,94",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"
@@ -11,8 +11,8 @@
   {
     "itemName": "friend_remote_1",
     "imageName": "hya_friend_remote_1.png",
-    "roiFront": "498,125,106,56",
-    "roiBack": "498,125,106,56",
+    "roiFront": "288,123,106,56",
+    "roiBack": "269,106,159,91",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"
@@ -20,8 +20,8 @@
   {
     "itemName": "friend_same_2",
     "imageName": "hya_friend_same_2.png",
-    "roiFront": "377,126,100,60",
-    "roiBack": "377,126,100,60",
+    "roiFront": "168,126,100,60",
+    "roiBack": "152,112,133,80",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"
@@ -29,8 +29,8 @@
   {
     "itemName": "friend_remote_2",
     "imageName": "hya_friend_remote_2.png",
-    "roiFront": "504,127,100,56",
-    "roiBack": "504,127,100,56",
+    "roiFront": "296,122,100,56",
+    "roiBack": "278,115,131,81",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"

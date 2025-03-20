@@ -241,5 +241,14 @@
     "method": "Template matching",
     "threshold": 0.8,
     "description": "绿标-下半部分"
+  },
+  {
+    "itemName": "preset_wit_number",
+    "imageName": "gb_preset_wit_number.png",
+    "roiFront": "40,655,37,37",
+    "roiBack": "9,636,100,74",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "新版本的预设图案带数字"
   }
 ]

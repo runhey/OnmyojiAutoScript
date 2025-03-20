@@ -87,7 +87,7 @@ class GeneralBattle(GeneralBuff, GeneralBattleAssets):
                 self.screenshot()
                 if self.appear_then_click(self.I_PREPARE_HIGHLIGHT, interval=1.5):
                     continue
-                if not self.appear(self.I_PRESET):
+                if not (self.appear(self.I_PRESET) or self.appear(self.I_PRESET_WIT_NUMBER)):
                     break
             logger.info(f"Click {self.I_PREPARE_HIGHLIGHT.name}")
 
@@ -297,6 +297,8 @@ class GeneralBattle(GeneralBuff, GeneralBattleAssets):
                 break
             if self.appear_then_click(self.I_PRESET, threshold=0.8, interval=1):
                 continue
+            if self.appear_then_click(self.I_PRESET_WIT_NUMBER, threshold=0.8, interval=1):
+                continue
             if self.ocr_appear(self.O_PRESET):
                 self.click(self.O_PRESET, interval=1)
                 continue
@@ -417,7 +419,7 @@ class GeneralBattle(GeneralBuff, GeneralBattleAssets):
             return True
         elif self.appear(self.I_PREPARE_DARK):
             return True
-        elif self.appear(self.I_PRESET):
+        elif self.appear(self.I_PRESET) or self.appear(self.I_PRESET_WIT_NUMBER):
             return True
         else:
             return False

@@ -11,8 +11,8 @@
   {
     "itemName": "soul_preset",
     "imageName": "ss_soul_preset.png",
-    "roiFront": "332,70,90,51",
-    "roiBack": "332,70,90,51",
+    "roiFront": "335,73,90,51",
+    "roiBack": "310,57,169,72",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "预设"
@@ -20,8 +20,8 @@
   {
     "itemName": "sou_switch_1",
     "imageName": "ss_sou_switch_1.png",
-    "roiFront": "971,148,37,35",
-    "roiBack": "971,148,37,35",
+    "roiFront": "971,149,34,32",
+    "roiBack": "962,141,51,48",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"
@@ -29,8 +29,8 @@
   {
     "itemName": "sou_switch_2",
     "imageName": "ss_sou_switch_2.png",
-    "roiFront": "978,304,27,29",
-    "roiBack": "978,304,27,29",
+    "roiFront": "967,296,42,39",
+    "roiBack": "961,292,54,49",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"
@@ -38,8 +38,8 @@
   {
     "itemName": "sou_switch_3",
     "imageName": "ss_sou_switch_3.png",
-    "roiFront": "973,454,26,26",
-    "roiBack": "973,454,26,26",
+    "roiFront": "968,448,41,38",
+    "roiBack": "962,442,52,48",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"
@@ -47,8 +47,8 @@
   {
     "itemName": "sou_switch_4",
     "imageName": "ss_sou_switch_4.png",
-    "roiFront": "971,600,37,26",
-    "roiBack": "971,600,37,26",
+    "roiFront": "967,597,42,25",
+    "roiBack": "962,592,53,34",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"
@@ -151,5 +151,14 @@
     "method": "Template matching",
     "threshold": 0.9,
     "description": "需要切换的预设按钮(颜色深一点)"
+  },
+  {
+    "itemName": "check_block",
+    "imageName": "ss_check_block.png",
+    "roiFront": "572,408,137,49",
+    "roiBack": "572,408,137,49",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "误触点到式神检查"
   }
 ]

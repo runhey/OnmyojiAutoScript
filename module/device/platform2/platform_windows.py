@@ -315,15 +315,22 @@ class PlatformWindows(PlatformBase, EmulatorManager):
             # All check passed
             break
 
-        if new_window != 0 and new_window != current_window:
-            logger.info(f'Minimize new window: {new_window}')
-            minimize_window(new_window)
-        if current_window:
-            logger.info(f'De-flash current window: {current_window}')
-            flash_window(current_window, flash=False)
-        if new_window:
-            logger.info(f'Flash new window: {new_window}')
-            flash_window(new_window, flash=True)
+        emulator_window_minimize = self.config.script.device.emulator_window_minimize
+        logger.info(f'Minimize new emulator window: {emulator_window_minimize}')
+        if emulator_window_minimize:
+            if new_window != 0 and new_window != current_window:
+                # 如果有新窗口且新窗口不是当前窗口，最小化新窗口
+                logger.info(f'Minimize new window: {new_window}')
+                minimize_window(new_window)
+            if current_window:
+                # 如果有当前窗口，取消当前窗口的闪烁
+                logger.info(f'De-flash current window: {current_window}')
+                flash_window(current_window, flash=False)
+            if new_window:
+                # 如果有新窗口，使新窗口闪烁
+                logger.info(f'Flash new window: {new_window}')
+                flash_window(new_window, flash=True)
+
         logger.info('Emulator start completed')
         return True
 
