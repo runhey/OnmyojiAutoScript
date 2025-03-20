@@ -15,7 +15,7 @@ jobs:
           ref: dev
           fetch-depth: 0  # 拉取完整提交历史
 
-      - run: git checkout --progress cpr/dev-patch
+      - run: git branch  cpr/dev-patch
       - run: git log cpr/dev-patch -n 20
       - run: git log master -n 20
 
