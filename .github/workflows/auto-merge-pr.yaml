@@ -10,16 +10,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           ref: dev 
 
       - name: Create Pull Request
-        uses: peter-evans/create-pull-request@v5
+        uses: peter-evans/create-pull-request@v7
         with:
-          base: master  
-          head: dev     
+          base: master
           title: "Weekly Auto-Merge: dev → master"
           body: "Automated PR created by GitHub Actions."
-          labels: "automated" # 可选：添加标签
-          token: ${{ secrets.GITHUB_TOKEN }} # 使用默认权限
+          labels: "automated"
+          token: ${{ secrets.GITHUB_TOKEN }}
