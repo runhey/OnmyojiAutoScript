@@ -12,12 +12,14 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
-          ref: dev 
+          ref: dev
+          fetch-depth: 0  # 拉取完整提交历史
 
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v7
         with:
           base: master
+          branch: cpr/dev-patch
           title: "Weekly Auto-Merge: dev → master"
           body: "Automated PR created by GitHub Actions."
           labels: "automated"
