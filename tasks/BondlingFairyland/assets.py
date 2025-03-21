@@ -36,6 +36,8 @@ class BondlingFairylandAssets:
 	O_B_HIGH_NUMBER = RuleOcr(roi=(883,23,100,32), area=(883,23,100,32), mode="DigitCounter", method="Default", keyword="", name="b_high_number")
 	# Ocr-description 
 	O_B_STONE_NUMBER = RuleOcr(roi=(858,22,82,40), area=(858,22,82,40), mode="DigitCounter", method="Default", keyword="", name="b_stone_number")
+	# 抓捕契灵剩余数量 
+	O_B_BALL_NUMBER = RuleOcr(roi=(1183,532,77,30), area=(1183,532,77,30), mode="DigitCounter", method="Default", keyword="", name="b_ball_number")
 	# 好友邀请 
 	O_FRIEND = RuleOcr(roi=(357,89,100,54), area=(357,89,100,54), mode="Single", method="Default", keyword="", name="friend")
 	# 跨区邀请 

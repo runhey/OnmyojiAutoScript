@@ -45,6 +45,15 @@
     "description": "Ocr-description"
   },
   {
+    "itemName": "b_ball_number",
+    "roiFront": "1183,532,77,30",
+    "roiBack": "1183,532,77,30",
+    "mode": "DigitCounter",
+    "method": "Default",
+    "keyword": "",
+    "description": "抓捕契灵剩余数量"
+  },
+  {
     "itemName": "friend",
     "roiFront": "357,89,100,54",
     "roiBack": "357,89,100,54",
