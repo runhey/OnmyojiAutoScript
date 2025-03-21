@@ -24,6 +24,15 @@ class LoginHarvestAssets:
 
 
 	# Image Rule Assets
+	# 源赖光勾玉 
+	I_HARVEST_JADE_11 = RuleImage(roi_front=(427,454,27,30), roi_back=(427,454,27,30), threshold=0.7, method="Template matching", file="./tasks/Component/LoginHarvest/main11/harvest_harvest_jade_11.png")
+	# 源赖光签到 
+	I_HARVEST_SIGN_11 = RuleImage(roi_front=(349,461,21,27), roi_back=(349,461,21,27), threshold=0.7, method="Template matching", file="./tasks/Component/LoginHarvest/main11/harvest_harvest_sign_11.png")
+	# 源赖光食盒 
+	I_HARVEST_AP_11 = RuleImage(roi_front=(426,458,25,24), roi_back=(426,458,25,24), threshold=0.7, method="Template matching", file="./tasks/Component/LoginHarvest/main11/harvest_harvest_ap_11.png")
+
+
+	# Image Rule Assets
 	# 缘结神社食盒 
 	I_HARVEST_AP_9 = RuleImage(roi_front=(841,488,24,24), roi_back=(718,447,408,147), threshold=0.8, method="Template matching", file="./tasks/Component/LoginHarvest/main9/harvest_harvest_ap_9.png")
 	# 缘结神社999福袋 

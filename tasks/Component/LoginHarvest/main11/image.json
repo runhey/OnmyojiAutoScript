@@ -1,0 +1,29 @@
+[
+  {
+    "itemName": "harvest_jade_11",
+    "imageName": "harvest_harvest_jade_11.png",
+    "roiFront": "427,454,27,30",
+    "roiBack": "427,454,27,30",
+    "method": "Template matching",
+    "threshold": 0.7,
+    "description": "源赖光勾玉"
+  },
+  {
+    "itemName": "harvest_sign_11",
+    "imageName": "harvest_harvest_sign_11.png",
+    "roiFront": "349,461,21,27",
+    "roiBack": "349,461,21,27",
+    "method": "Template matching",
+    "threshold": 0.7,
+    "description": "源赖光签到"
+  },
+  {
+    "itemName": "harvest_ap_11",
+    "imageName": "harvest_harvest_ap_11.png",
+    "roiFront": "426,458,25,24",
+    "roiBack": "426,458,25,24",
+    "method": "Template matching",
+    "threshold": 0.7,
+    "description": "源赖光食盒"
+  }
+]
