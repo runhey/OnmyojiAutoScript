@@ -45,6 +45,7 @@ class BondlingConfig(ConfigBase):
     limit_count: int = Field(default=30, description='limit_count_help')
     bondling_stone_enable: bool = Field(default=False, description='bondling_stone_enable_help')
     bondling_stone_class: BondlingClass = Field(default=BondlingClass.TOMB_GUARD, description='bondling_stone_class_help')
+    current_ball_index: int = Field(default=5, description='契灵位置,系统自动记录不需要修改，范围(1-5)')
 
 class BondlingSwitchSoul(ConfigBase):
     auto_switch_soul: bool = Field(default=False, description='auto_switch_soul_help')

@@ -510,7 +510,7 @@ class GeneralInvite(BaseTask, BondlingFairylandAssets, GeneralInviteAssets):
         :param default_invite:
         :return:
         """
-        if not self.appear(self.I_GI_SURE):
+        if not self.appear(self.I_GI_SURE, interval=1.5):
             return False
 
         if default_invite:
