@@ -21,7 +21,7 @@
     "itemName": "prepare_highlight",
     "imageName": "gb_prepare_highlight.png",
     "roiFront": "1128,536,100,100",
-    "roiBack": "1128,536,100,100",
+    "roiBack": "1110,500,169,200",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "准备"
