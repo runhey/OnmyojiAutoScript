@@ -41,7 +41,7 @@ class BondlingNumberMax(Exception):
 class ScriptTask(GameUi, GeneralInvite, GeneralRoom, BondlingBattle, SwitchSoul, BondlingFairylandAssets):
     ball_pos_list = [None, None, None, None, None]  # 用于记录每一个位置的球是否出现
     first_catch = True  # 用于记录是否是第一次捕捉
-
+    current_ball_index = 5
     def run(self):
         # 引用配置
         cong = self.config.bondling_fairyland
@@ -108,7 +108,7 @@ class ScriptTask(GameUi, GeneralInvite, GeneralRoom, BondlingBattle, SwitchSoul,
                 while 1:
                     self.screenshot()
                     if self.appear(self.I_GI_IN_ROOM):
-                        break
+                        return True
                     if click_count >= 6:
                         logger.error('Click fire failed')
                         logger.error(
@@ -124,21 +124,23 @@ class ScriptTask(GameUi, GeneralInvite, GeneralRoom, BondlingBattle, SwitchSoul,
                         self.appear_then_click(self.I_CREATE_TEAM, interval=2)
                         continue
                     # 求援
-                    if self.appear_then_click(self.I_BALL_HELP, interval=1):
-                        # cu, res, total = self.O_B_BALL_NUMBER.ocr(self.device.image)
-                        # logger.info(f'ball is cu {cu}, total {total}')
-                        # if cu == 0 and total == 99:
-                        #     logger.info('ball is not enough')
-                        #     break
-                        # self.screenshot()
-                        # if self.appear_then_click(self.I_BALL_HELP, interval=2):
+                    if self.appear(self.I_BALL_HELP, interval=1):
+                        cu, res, total = self.O_B_BALL_NUMBER.ocr(self.device.image)
+                        logger.info(f'ball is cu {cu}, total {total}')
+                        if cu <= 0 and total == 99:
+                            logger.info('ball is not enough')
+                            return False
+                        if self.appear_then_click(self.I_BALL_HELP, interval=2):
+                            sleep(1)
                             click_count += 1
                             continue
 
             self.screenshot()
+
             if success:
                 is_first = True
-                create_bond_team()
+                if not create_bond_team():
+                    return True
 
             self.check_and_invite(True)
 
@@ -269,43 +271,34 @@ class ScriptTask(GameUi, GeneralInvite, GeneralRoom, BondlingBattle, SwitchSoul,
         bondling_switch_soul = cong.bondling_switch_soul
         battle_config = cong.battle_config
 
-        current_ball_index = 5
-        # current_ball = 5  # 用于记录当前捕捉的球的位置
         success = True
         while 1:
 
             if not self.in_search_ui(screenshot=True):
-                sleep(0.4)
+                self.ui_get_current_page()
+                self.ui_goto(page_bondling_fairyland)
                 continue
-            # if current_ball == 0:
-            #     if self.run_stone(bondling_config.bondling_stone_enable, bondling_config.bondling_stone_class):
-            #         current_ball = 5
-            #         logger.info(f'Current ball number: {current_ball} ')
-            #
-            #     if current_ball == 5:
-            #         continue
-            #     if self.run_search(bondling_config):
-            #         current_ball = 5
-            #         logger.info(f'Current ball number: {current_ball} ')
-            #     else:
-            #         break
 
             if bondling_config.bondling_mode != BondlingMode.MODE1:
-                if self.ball_click(current_ball_index):
-                    logger.info(f'Current ball number: {current_ball_index} ')
+                if self.ball_click(self.current_ball_index):
+                    logger.info(f'Current ball number: {self.current_ball_index} ')
                 else:
                     # 如果点击了3次还是没有进去，那可能说明这个位置没有球
-                    if current_ball_index == 1:
-                        break
+                    if self.current_ball_index == 1:
+                        if self.run_stone(bondling_config.bondling_stone_enable, bondling_config.bondling_stone_class):
+                            self.current_ball_index = 5
+                            continue
+                        else:
+                            break
                     else:
-                        current_ball_index -= 1
-                    logger.info(f'Current ball number: {current_ball_index} ')
+                        self.current_ball_index -= 1
+                    logger.info(f'Current ball number: {self.current_ball_index} ')
                     continue
 
                 try:
                     # 执行捕捉
                     if self.run_catch(bondling_config, bondling_switch_soul, battle_config):
-                        logger.info(f'Catch successful and current ball number: {current_ball_index} ')
+                        logger.info(f'Catch successful and current ball number: {self.current_ball_index} ')
                     else:
                         break
                 except BondlingNumberMax:
@@ -342,7 +335,8 @@ class ScriptTask(GameUi, GeneralInvite, GeneralRoom, BondlingBattle, SwitchSoul,
         """
         if not bondling_stone_enable:
             return False
-
+        self.ui_get_current_page()
+        self.ui_goto(page_bondling_fairyland)
         while 1:
             self.screenshot()
             # 检查是不是在探查界面，
@@ -381,13 +375,28 @@ class ScriptTask(GameUi, GeneralInvite, GeneralRoom, BondlingBattle, SwitchSoul,
                         self.screenshot()
                         if not self.appear(self.I_STONE_SURE):
                             break
+                        for i in range(0, 5):
+                            if self.appear_then_click(self.I_BUY_ADD, interval=1):
+                                sleep(0.5)
+                                continue
+                        if self.appear_then_click(self.I_GI_SURE, interval=1):
+                            continue
+                        # current = self.O_B_SUMMON_BALL_NUMBER.ocr(self.device.image)
+                        # try:
+                        #     if int(current) >= 1:
+                        #         if self.appear_then_click(self.I_STONE_SURE, interval=1):
+                        #             continue
+                        # except ValueError:
+                        #     logger.warning(f'No challenge count, exit')
                         if self.appear_then_click(self.I_STONE_SURE, interval=1):
                             continue
+
                     break
 
                 if self.appear_then_click(self.I_STONE_ENTER, interval=1):
                     click_count += 1
                     continue
+            return True
 
     def run_search(self, bondling_config: BondlingConfig):
         """
@@ -515,21 +524,13 @@ class ScriptTask(GameUi, GeneralInvite, GeneralRoom, BondlingBattle, SwitchSoul,
             # 引用配置
             cong = self.config.bondling_fairyland
             match cong.bondling_config.user_status:
-                case UserStatus.LEADER:
-                    if self.run_leader():
-                        return success
-                case UserStatus.handoff1:
-                    if self.run_leader():
-                        return success
-                case UserStatus.handoff2:
-                    if self.run_leader():
-                        return success
                 case UserStatus.ALONE:
                     self.run_alone()
                     if self.run_battle(battle_config, limit_count=self.limit_count):
                         return success
                 case _:
-                    logger.error('Unknown user status')
+                    if self.run_leader():
+                        return success
 
     def is_room_dead(self) -> bool:
         # 如果在探索界面或者是出现在组队界面，那就是可能房间死了
@@ -916,4 +917,5 @@ if __name__ == '__main__':
     # con = config.bondling_fairyland
     # task.lock_team()
     task.run()
+    # task.run_stone(True,BondlingClass.TOMB_GUARD)
     # task.run_invite(config=config.bondling_fairyland.invite_config, is_over=False, is_first=True)
