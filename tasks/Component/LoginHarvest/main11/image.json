@@ -25,5 +25,14 @@
     "method": "Template matching",
     "threshold": 0.7,
     "description": "源赖光食盒"
+  },
+  {
+  "itemName": "harvest_soulbuff_11",
+  "imageName": "harvest_harvest_soulbuff_11.png",
+  "roiFront": "346,458,31,29",
+  "roiBack": "176,430,404,135",
+  "method": "Template matching",
+  "threshold": 0.8,
+  "description": "源赖光御魂buff"
   }
 ]

@@ -43,5 +43,14 @@
     "method": "Template matching",
     "threshold": 0.8,
     "description": "望月幽庭自选御魂"
+  },
+  {
+    "itemName": "harvest_soulbuff_10",
+    "imageName": "harvest_harvest_soulbuff_10.png",
+    "roiFront": "414,532,30,25",
+    "roiBack": "190,479,404,135",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "望月幽庭御魂buff"
   }
 ]

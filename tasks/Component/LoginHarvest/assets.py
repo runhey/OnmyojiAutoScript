@@ -21,6 +21,8 @@ class LoginHarvestAssets:
 	I_HARVEST_AP_10 = RuleImage(roi_front=(508,531,25,24), roi_back=(508,531,25,24), threshold=0.9, method="Template matching", file="./tasks/Component/LoginHarvest/main10/harvest_harvest_ap_10.png")
 	# 望月幽庭自选御魂 
 	I_HARVEST_SOUL_10 = RuleImage(roi_front=(418,531,27,30), roi_back=(418,531,27,30), threshold=0.8, method="Template matching", file="./tasks/Component/LoginHarvest/main10/harvest_harvest_soul_10.png")
+	# 望月幽庭御魂buff 
+	I_HARVEST_SOULBUFF_10 = RuleImage(roi_front=(414,532,30,25), roi_back=(190,479,404,135), threshold=0.8, method="Template matching", file="./tasks/Component/LoginHarvest/main10/harvest_harvest_soulbuff_10.png")
 
 
 	# Image Rule Assets
@@ -30,6 +32,8 @@ class LoginHarvestAssets:
 	I_HARVEST_SIGN_11 = RuleImage(roi_front=(349,461,21,27), roi_back=(349,461,21,27), threshold=0.7, method="Template matching", file="./tasks/Component/LoginHarvest/main11/harvest_harvest_sign_11.png")
 	# 源赖光食盒 
 	I_HARVEST_AP_11 = RuleImage(roi_front=(426,458,25,24), roi_back=(426,458,25,24), threshold=0.7, method="Template matching", file="./tasks/Component/LoginHarvest/main11/harvest_harvest_ap_11.png")
+	# 源赖光御魂buff 
+	I_HARVEST_SOULBUFF_11 = RuleImage(roi_front=(346,458,31,29), roi_back=(176,430,404,135), threshold=0.8, method="Template matching", file="./tasks/Component/LoginHarvest/main11/harvest_harvest_soulbuff_11.png")
 
 
 	# Image Rule Assets
