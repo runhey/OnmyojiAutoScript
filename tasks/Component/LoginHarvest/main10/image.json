@@ -36,8 +36,8 @@
     "description": "望月幽庭食盒"
   },
   {
-    "itemName": "harvest_soul_10",
-    "imageName": "harvest_harvest_soul_10.png",
+    "itemName": "harvest_soul_1_10",
+    "imageName": "harvest_harvest_soul_1_10.png",
     "roiFront": "418,531,27,30",
     "roiBack": "418,531,27,30",
     "method": "Template matching",
@@ -45,8 +45,8 @@
     "description": "望月幽庭自选御魂"
   },
   {
-    "itemName": "harvest_soulbuff_10",
-    "imageName": "harvest_harvest_soulbuff_10.png",
+    "itemName": "harvest_soul_10",
+    "imageName": "harvest_harvest_soul_10.png",
     "roiFront": "414,532,30,25",
     "roiBack": "190,479,404,135",
     "method": "Template matching",

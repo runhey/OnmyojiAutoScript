@@ -36,8 +36,8 @@
     "description": "缘结神社勾玉"
   },
   {
-    "itemName": "harvest_soulbuff_9",
-    "imageName": "harvest_harvest_soulbuff_9.png",
+    "itemName": "harvest_soul_9",
+    "imageName": "harvest_harvest_soul_9.png",
     "roiFront": "418,480,34,29",
     "roiBack": "178,454,404,135",
     "method": "Template matching",
@@ -45,8 +45,8 @@
     "description": "缘结神社御魂buff"
   },
   {
-    "itemName": "harvest_soul_9",
-    "imageName": "harvest_harvest_soul_9.png",
+    "itemName": "harvest_soul_1_9",
+    "imageName": "harvest_harvest_soul_1_9.png",
     "roiFront": "422,476,33,38",
     "roiBack": "204,452,376,131",
     "method": "Template matching",

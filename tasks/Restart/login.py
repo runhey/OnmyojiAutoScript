@@ -241,7 +241,6 @@ class LoginHandler(LoginBase, BaseTask, RestartAssets):
                 #                 timer_harvest.reset()
                 #                 continue
                 #         continue
-                # 体力
                 if self.appear(self.I_HARVEST_MAIL_CONFIRM):
                     self.click(self.I_HARVEST_MAIL_CONFIRM, interval=2)
                     timer_harvest.reset()
@@ -261,7 +260,7 @@ class LoginHandler(LoginBase, BaseTask, RestartAssets):
                     self.wait_until_appear(self.I_HARVEST_MAIL_ALL, wait_time=2)
                     timer_harvest.reset()
                     continue
-
+            # 体力
             if self.appear_then_click(self.I_HARVEST_AP, interval=1, threshold=0.7):
                 timer_harvest.reset()
                 continue

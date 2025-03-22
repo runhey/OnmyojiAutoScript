@@ -16,7 +16,7 @@ login_harvest_model = {
         'I_HARVEST_SIGN_999': f'I_HARVEST_SIGN_999_{i}',
         'I_HARVEST_AP': f'I_HARVEST_AP_{i}',
         'I_HARVEST_SOUL': f'I_HARVEST_SOUL_{i}',
-        'I_HARVEST_SOULBUFF': f'I_HARVEST_SOULBUFF_{i}',
+        'I_HARVEST_SOUL_1': f'I_HARVEST_SOULBUFF_1_{i}',
     } for i in range(1, 12)
 }
 
