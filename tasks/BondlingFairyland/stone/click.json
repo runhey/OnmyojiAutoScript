@@ -7,20 +7,20 @@
   },
   {
     "itemName": "left_2",
-    "roiFront": "423,190,139,277",
-    "roiBack": "423,190,139,277",
+    "roiFront": "423,226,111,241",
+    "roiBack": "423,226,111,241",
     "description": "description"
   },
   {
     "itemName": "left_3",
-    "roiFront": "676,176,159,307",
-    "roiBack": "676,176,159,307",
+    "roiFront": "676,176,107,275",
+    "roiBack": "676,176,107,275",
     "description": "description"
   },
   {
     "itemName": "left_4",
-    "roiFront": "923,198,155,279",
-    "roiBack": "923,198,155,279",
+    "roiFront": "918,223,108,235",
+    "roiBack": "918,223,108,235",
     "description": "description"
   }
 ]
