@@ -884,14 +884,14 @@ class ScriptTask(ExtendGreenMark, GameUi, SwitchSoul, DokanSceneDetector):
         # 道馆没有开启
         now = datetime.now()
         ser_time: Time = self.config.dokan.scheduler.server_update
+        ser_time = datetime.combine(now.date(), ser_time)
         if not is_dokan_activated:
             # 在服务器时间之前,设置为服务器时间
-            if now.hour < ser_time.hour or (now.hour == ser_time.hour and now.minute < ser_time.minute):
+            if now < ser_time:
                 self.set_next_run(task="Dokan", target=now.replace(hour=ser_time.hour, minute=ser_time.minute))
                 return
             # 在服务器时间之后,如超过两小时,则直接当作成功;未超过则当作失败
-            now_time = now.time()
-            if now_time - ser_time > timedelta(hours=2):
+            if now - ser_time > timedelta(hours=2):
                 self.set_next_run(task="Dokan", finish=False, success=True, server=True)
                 return
             # 时间在道馆开启时间附近，3分钟后执行
