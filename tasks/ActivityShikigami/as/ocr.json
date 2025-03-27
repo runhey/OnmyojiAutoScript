@@ -25,5 +25,14 @@
     "method": "Default",
     "keyword": "",
     "description": "还有多少次购买体力的机会"
+  },
+  {
+    "itemName": "remain_ap_activity2",
+    "roiFront": "775,26,35,29",
+    "roiBack": "775,26,35,29",
+    "mode": "Digit",
+    "method": "Default",
+    "keyword": "",
+    "description": "活动票数（没有百分比）"
   }
 ]

@@ -20,10 +20,10 @@
   {
     "itemName": "battle",
     "imageName": "as_battle.png",
-    "roiFront": "375,285,35,135",
-    "roiBack": "300,200,153,315",
+    "roiFront": "199,292,35,135",
+    "roiBack": "144,205,153,315",
     "method": "Template matching",
-    "threshold": 0.8,
+    "threshold": 0.7,
     "description": "进入爬塔"
   },
   {
@@ -56,10 +56,10 @@
   {
     "itemName": "fire",
     "imageName": "as_fire.png",
-    "roiFront": "1135,581,84,78",
+    "roiFront": "1140,583,84,78",
     "roiBack": "1099,522,150,174",
     "method": "Template matching",
-    "threshold": 0.8,
+    "threshold": 0.7,
     "description": "点击战斗"
   },
   {

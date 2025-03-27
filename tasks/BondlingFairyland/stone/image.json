@@ -2,8 +2,8 @@
   {
     "itemName": "stone_enter",
     "imageName": "stone_stone_enter.png",
-    "roiFront": "1167,472,38,41",
-    "roiBack": "1167,472,38,41",
+    "roiFront": "1172,444,38,41",
+    "roiBack": "1172,444,38,41",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"
@@ -11,8 +11,35 @@
   {
     "itemName": "stone_sure",
     "imageName": "stone_stone_sure.png",
-    "roiFront": "1152,601,75,70",
-    "roiBack": "1152,601,75,70",
+    "roiFront": "644,621,56,39",
+    "roiBack": "618,614,120,52",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "buy_plus",
+    "imageName": "buy_plus.png",
+    "roiFront": "765,543,43,40",
+    "roiBack": "765,543,43,40",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "buy_add",
+    "imageName": "buy_add.png",
+    "roiFront": "678,540,43,40",
+    "roiBack": "678,540,43,40",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "buy_sub",
+    "imageName": "buy_sub.png",
+    "roiFront": "468,540,43,40",
+    "roiBack": "468,540,43,40",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"

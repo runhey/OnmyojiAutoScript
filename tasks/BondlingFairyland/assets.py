@@ -28,14 +28,18 @@ class BondlingFairylandAssets:
 	# Ocr Rule Assets
 	# Ocr-description 
 	O_B_BONDLING_CLASS = RuleOcr(roi=(266,271,79,112), area=(287,271,36,112), mode="Single", method="Default", keyword="", name="b_bondling_class")
-	# Ocr-description 
+	# 小盘子 
 	O_B_LOW_NUMBER = RuleOcr(roi=(490,24,98,36), area=(490,24,98,36), mode="DigitCounter", method="Default", keyword="", name="b_low_number")
-	# Ocr-description 
+	# 中盘子 
 	O_B_MEDIUM_NUMBER = RuleOcr(roi=(687,21,101,36), area=(687,21,101,36), mode="DigitCounter", method="Default", keyword="", name="b_medium_number")
-	# Ocr-description 
+	# 大盘子 
 	O_B_HIGH_NUMBER = RuleOcr(roi=(883,23,100,32), area=(883,23,100,32), mode="DigitCounter", method="Default", keyword="", name="b_high_number")
-	# Ocr-description 
+	# 鸣契石 
 	O_B_STONE_NUMBER = RuleOcr(roi=(858,22,82,40), area=(858,22,82,40), mode="DigitCounter", method="Default", keyword="", name="b_stone_number")
+	# 召唤契灵数量 
+	O_B_SUMMON_BALL_NUMBER = RuleOcr(roi=(546,540,100,45), area=(546,540,100,45), mode="Single", method="Default", keyword="", name="b_summon_ball_number")
+	# 抓捕契灵剩余数量 
+	O_B_BALL_NUMBER = RuleOcr(roi=(1190,532,70,30), area=(1190,532,70,30), mode="DigitCounter", method="Default", keyword="", name="b_ball_number")
 	# 好友邀请 
 	O_FRIEND = RuleOcr(roi=(357,89,100,54), area=(357,89,100,54), mode="Single", method="Default", keyword="", name="friend")
 	# 跨区邀请 
@@ -137,17 +141,23 @@ class BondlingFairylandAssets:
 	# description 
 	C_LEFT_1 = RuleClick(roi_front=(167,198,128,265), roi_back=(167,198,128,265), name="left_1")
 	# description 
-	C_LEFT_2 = RuleClick(roi_front=(423,190,139,277), roi_back=(423,190,139,277), name="left_2")
+	C_LEFT_2 = RuleClick(roi_front=(423,226,111,241), roi_back=(423,226,111,241), name="left_2")
 	# description 
-	C_LEFT_3 = RuleClick(roi_front=(676,176,159,307), roi_back=(676,176,159,307), name="left_3")
+	C_LEFT_3 = RuleClick(roi_front=(676,176,107,275), roi_back=(676,176,107,275), name="left_3")
 	# description 
-	C_LEFT_4 = RuleClick(roi_front=(923,198,155,279), roi_back=(923,198,155,279), name="left_4")
+	C_LEFT_4 = RuleClick(roi_front=(918,223,108,235), roi_back=(918,223,108,235), name="left_4")
 
 
 	# Image Rule Assets
 	# description 
-	I_STONE_ENTER = RuleImage(roi_front=(1167,472,38,41), roi_back=(1167,472,38,41), threshold=0.8, method="Template matching", file="./tasks/BondlingFairyland/stone/stone_stone_enter.png")
+	I_STONE_ENTER = RuleImage(roi_front=(1172,444,38,41), roi_back=(1172,444,38,41), threshold=0.8, method="Template matching", file="./tasks/BondlingFairyland/stone/stone_stone_enter.png")
 	# description 
-	I_STONE_SURE = RuleImage(roi_front=(1152,601,75,70), roi_back=(1152,601,75,70), threshold=0.8, method="Template matching", file="./tasks/BondlingFairyland/stone/stone_stone_sure.png")
+	I_STONE_SURE = RuleImage(roi_front=(644,621,56,39), roi_back=(618,614,120,52), threshold=0.8, method="Template matching", file="./tasks/BondlingFairyland/stone/stone_stone_sure.png")
+	# description 
+	I_BUY_PLUS = RuleImage(roi_front=(765,543,43,40), roi_back=(765,543,43,40), threshold=0.8, method="Template matching", file="./tasks/BondlingFairyland/stone/buy_plus.png")
+	# description 
+	I_BUY_ADD = RuleImage(roi_front=(678,540,43,40), roi_back=(678,540,43,40), threshold=0.8, method="Template matching", file="./tasks/BondlingFairyland/stone/buy_add.png")
+	# description 
+	I_BUY_SUB = RuleImage(roi_front=(468,540,43,40), roi_back=(468,540,43,40), threshold=0.8, method="Template matching", file="./tasks/BondlingFairyland/stone/buy_sub.png")
 
 
