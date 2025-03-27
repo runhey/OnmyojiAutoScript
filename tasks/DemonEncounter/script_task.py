@@ -469,9 +469,9 @@ class ScriptTask(GameUi, GeneralBattle, DemonEncounterAssets, SwitchSoul):
             target_time = datetime(now.year, now.month, now.day, 17, 30, 0)
             self.set_next_run(task='DemonEncounter', success=False, finish=False, target=target_time)
             return False
-        elif now.hour >= 22:
-            # 22点之后，推迟到第二天的17:30
-            logger.info('After 22:00, wait to 17:30')
+        elif now.hour >= 23:
+            # 23点之后，推迟到第二天的17:30
+            logger.info('After 23:00, wait to 17:30')
             target_time = datetime(now.year, now.month, now.day, 17, 30, 0) + timedelta(days=1)
             self.set_next_run(task='DemonEncounter', success=False, finish=False, target=target_time)
             return False
