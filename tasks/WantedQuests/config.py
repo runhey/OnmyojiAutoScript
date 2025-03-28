@@ -92,6 +92,8 @@ class WantedQuestsConfig(BaseModel):
     battle_priority: str = Field(default='挑战 > 秘闻 > 探索', description='battle_priority_help')
     # 只完成协作任务
     cooperation_only: bool = Field(default=False, description="cooperation_only_help")
+    # 忽略任务的任务目标名称（“酒吞童子”等）,多个用逗号“，,"分隔
+    unwanted_boss_names: str = Field(default='酒吞童子,阎魔', description='unwanted_boss_name_help')
 
 
 class WantedQuests(ConfigBase):

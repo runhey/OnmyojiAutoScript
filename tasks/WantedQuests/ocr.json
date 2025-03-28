@@ -142,5 +142,23 @@
     "method": "Default",
     "keyword": "",
     "description": "Ocr-description"
+  },
+  {
+    "itemName": "wq_monster_type",
+    "roiFront": "165,215,45,175",
+    "roiBack": "165,215,45,175",
+    "mode": "Full",
+    "method": "Default",
+    "keyword": "",
+    "description": "怪物名称,如酒吞，阎魔等"
+  },
+  {
+    "itemName": "wq_text_all",
+    "roiFront": "20,140,110,390",
+    "roiBack": "20,140,110,390",
+    "mode": "Full",
+    "method": "Default",
+    "keyword": "",
+    "description": ""
   }
 ]

@@ -1,0 +1,9 @@
+[
+  {
+    "itemName": "wq_list_up",
+    "roiFront": "60,250,2,4",
+    "roiBack": "65,200,2,4",
+    "mode": "default",
+    "description": "手指向上滑动"
+  }
+]
