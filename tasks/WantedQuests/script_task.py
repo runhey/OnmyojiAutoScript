@@ -30,7 +30,7 @@ class ScriptTask(WQExplore, SecretScriptTask, WantedQuestsAssets):
 
     def run(self):
         con = self.config.model.wanted_quests
-        unwanted_boss_names = con.unwanted_boss_names
+        unwanted_boss_names = con.wanted_quests_config.unwanted_boss_names
         if unwanted_boss_names is not None and unwanted_boss_names != '':
             import re
             self.unwanted_boss_name_list = re.split(r"[，,]", unwanted_boss_names)
