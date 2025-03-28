@@ -38,7 +38,6 @@ class ScriptTask(GameUi, GeneralBattle, SwitchSoul, SecretAssets):
     def battle_config(self) -> GeneralBattleConfig:
         conf = self.config.model.secret.general_battle
         conf.lock_team_enable = False
-        conf.preset_enable = True
         return conf
 
     def run(self):
