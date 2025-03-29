@@ -20,6 +20,7 @@ from tasks.Component.SwitchSoul.switch_soul import SwitchSoul
 from tasks.Component.GeneralBuff.config_buff import BuffClass
 from tasks.WeeklyTrifles.assets import WeeklyTriflesAssets
 
+
 class ScriptTask(GameUi, GeneralBattle, SwitchSoul, SecretAssets):
     lay_list = ['壹', '贰', '叁', '肆', '伍', '陆', '柒', '捌', '玖', '拾']
 
@@ -35,7 +36,9 @@ class ScriptTask(GameUi, GeneralBattle, SwitchSoul, SecretAssets):
 
     @cached_property
     def battle_config(self) -> GeneralBattleConfig:
-        return GeneralBattleConfig()
+        conf = self.config.model.secret.general_battle
+        conf.lock_team_enable = False
+        return conf
 
     def run(self):
         self.check_time()
@@ -134,14 +137,16 @@ class ScriptTask(GameUi, GeneralBattle, SwitchSoul, SecretAssets):
         self.set_next_run(task='Secret', success=True, finish=True)
         raise TaskEnd('Secret')
 
-    def find_battle(self, screenshot: bool=False) -> int or None:
+    def find_battle(self, screenshot: bool = False) -> int or None:
         """
         自动寻找挑战的层数并且选定 , 找不到会向下划一点
         :return: 如果找得到返回层数，找不到返回None
         """
+
         def set_layer_roi(ocr_target: RuleOcr, roi: tuple):
             ocr_target.roi[0] = int(roi[0]) - 225
             ocr_target.roi[1] = int(roi[1]) - 40
+
         def check_layer(ocr_target: RuleOcr, roi=None) -> int or None:
             #
             # 手动留了一个bug： 即使匹配到了未通关 但是在判断层数的时候还是会先判断第一个是什么的
@@ -198,7 +203,6 @@ class ScriptTask(GameUi, GeneralBattle, SwitchSoul, SecretAssets):
             except TypeError:
                 logger.warning(f'OCR failed, try again {jade_num}')
                 return None
-
 
         if screenshot:
             self.screenshot()
@@ -286,6 +290,7 @@ class ScriptTask(GameUi, GeneralBattle, SwitchSoul, SecretAssets):
 if __name__ == '__main__':
     from module.config.config import Config
     from module.device.device import Device
+
     c = Config('oas1')
     d = Device(c)
     t = ScriptTask(c, d)
