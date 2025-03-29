@@ -142,5 +142,14 @@
     "method": "Template matching",
     "threshold": 0.8,
     "description": "庭院悬赏任务界面 单个任务点开后的界面 是否为现世任务标志"
+  },
+  {
+    "itemName": "wq_list_top_bottom_check",
+    "imageName": "wq_list_top_bottom_check.png",
+    "roiFront": "120,125,25,425",
+    "roiBack": "120,125,25,425",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "探索界面,左侧任务列表右上角右下角标志"
   }
 ]
