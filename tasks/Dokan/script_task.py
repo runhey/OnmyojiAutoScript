@@ -90,7 +90,7 @@ class ScriptTask(ExtendGreenMark, GameUi, SwitchSoul, DokanSceneDetector):
         out_dokan_timer = Timer(60)
         if not in_dokan:
             out_dokan_timer.start()
-            self.goto_dokan_map()
+            self.goto_dokan_scene()
 
         # 是否已击败馆主第一阵容
         first_master_killed = False
@@ -517,12 +517,14 @@ class ScriptTask(ExtendGreenMark, GameUi, SwitchSoul, DokanSceneDetector):
                 self.click(self.I_BACK_Y, interval=3)
                 continue
 
-    def goto_dokan_map(self):
+    def goto_dokan_scene(self):
+        # 截图速度太快会导致在道馆-神社之间一直循环无法退出,故设置截图间隔
+        self.device.screenshot_interval_set(0.3)
         while 1:
             self.screenshot()
             in_dokan, cur_scene = self.get_current_scene()
             if in_dokan:
-                return True
+                break
             if cur_scene == DokanScene.RYOU_DOKAN_RYOU:
                 self.ui_click_until_disappear(self.I_RYOU_SHENSHE)
                 continue
@@ -533,6 +535,8 @@ class ScriptTask(ExtendGreenMark, GameUi, SwitchSoul, DokanSceneDetector):
                 self.ui_get_current_page()
                 self.ui_goto(page_guild)
                 continue
+        self.device.screenshot_interval_set()
+        return True
 
     def enter_dokan(self):
         """
@@ -660,7 +664,7 @@ class ScriptTask(ExtendGreenMark, GameUi, SwitchSoul, DokanSceneDetector):
                 if item_score > score or item_score < 1.5:
                     logger.info("click to making challenge disappear")
                     continue
-                if p_num< self.config.dokan.dokan_config.min_people_num:
+                if p_num < self.config.dokan.dokan_config.min_people_num:
                     logger.info("people num too small")
                     continue
                 if bounty < self.config.dokan.dokan_config.min_bounty:
