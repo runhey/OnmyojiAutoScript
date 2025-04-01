@@ -705,6 +705,8 @@ class ScriptTask(WQExplore, SecretScriptTask, WantedQuestsAssets):
         reg_fengyin = re.compile(r'.*[封|野]印.*')
         # 由于斜杠'/'经常被误识别为'7',且悬赏封印悬赏怪物总数没有与‘7’相关的数字
         reg_progress = re.compile(r'^(\d+)([7/])(\d+)$')
+        # 没有检测到斜杠，符合格式：前N位与后N位相同,表示已完成
+        reg_XX = re.compile(r'^(\d+)\1$')
         for index, res in enumerate(res_list):
             if reg_fengyin.match(res.ocr_text):
                 continue
@@ -726,6 +728,9 @@ class ScriptTask(WQExplore, SecretScriptTask, WantedQuestsAssets):
                     # 该任务已完成，一般是悬赏任务，邀请人没有做导致的
                     continue
                 return cu, re, total, xywh
+            # 例如：1414 66 1212
+            if reg_XX.match(res.ocr_text):
+                continue
             # 什么都没匹配上，判断上一个识别结果如果为悬赏封印，那么认为该识别结果错误，尝试执行一次
             last_index = (index - 1) if index > 0 else 0
             if reg_fengyin.match(res_list[last_index].ocr_text):
