@@ -90,9 +90,7 @@ class ScriptTask(ExtendGreenMark, GameUi, SwitchSoul, DokanSceneDetector):
         out_dokan_timer = Timer(60)
         if not in_dokan:
             out_dokan_timer.start()
-            if not self.goto_dokan_map():
-                logger.warning("dokan didn`t started")
-                is_dokan_activated = False
+            self.goto_dokan_scene()
 
         # 是否已击败馆主第一阵容
         first_master_killed = False
@@ -130,15 +128,22 @@ class ScriptTask(ExtendGreenMark, GameUi, SwitchSoul, DokanSceneDetector):
 
             # 场景状态：寻找合适道馆中
             if current_scene == DokanScene.RYOU_DOKAN_SCENE_FINDING_DOKAN:
-                # NOTE 只在周一尝试建立道馆
-                if datetime.now().weekday() == 0:
-                    self.creat_dokan()
 
                 # 更新可挑战次数 可挑战次数为<=0,当作道馆成功完成
                 count = self.update_remain_attack_count()
                 if count <= 0:
                     is_dokan_activated = True
                     break
+
+                # 如果没有权限，道馆还未开启
+                try_start_dokan = self.config.dokan.dokan_config.try_start_dokan
+                if not try_start_dokan:
+                    is_dokan_activated = False
+                    break
+                # NOTE 只在周一尝试建立道馆
+                if datetime.now().weekday() == 0:
+                    self.creat_dokan()
+
                 # 寻找合适道馆,找不到直接退出
                 if not self.find_dokan(self.config.dokan.dokan_config.find_dokan_score):
                     is_dokan_activated = False
@@ -191,6 +196,7 @@ class ScriptTask(ExtendGreenMark, GameUi, SwitchSoul, DokanSceneDetector):
                 continue
             # 场景状态：检查右下角有没有挑战？通常是失败了，并退出来到集结界面，可重新开始点击右下角挑战进入战斗
             if current_scene == DokanScene.RYOU_DOKAN_SCENE_START_CHALLENGE:
+                self.switch_soul_in_dokan()
                 self.click(self.I_RYOU_DOKAN_START_CHALLENGE, interval=1)
                 continue
             # 场景状态：馆主第一阵容 且战斗未开始
@@ -511,30 +517,15 @@ class ScriptTask(ExtendGreenMark, GameUi, SwitchSoul, DokanSceneDetector):
                 self.click(self.I_BACK_Y, interval=3)
                 continue
 
-    def goto_dokan_map(self):
-        """
-            任意场景进入道馆地图
-            # 有权限开启道馆 - 通过神社进入道馆地图
-            # 没有权限开启道馆 - 判断阴阳寮界面左侧的已开启活动列表是否存在道馆
-        """
-        try_start_dokan = self.config.dokan.dokan_config.try_start_dokan
+    def goto_dokan_scene(self):
+        # 截图速度太快会导致在道馆-神社之间一直循环无法退出,故设置截图间隔
+        self.device.screenshot_interval_set(0.3)
         while 1:
             self.screenshot()
             in_dokan, cur_scene = self.get_current_scene()
             if in_dokan:
-                return True
+                break
             if cur_scene == DokanScene.RYOU_DOKAN_RYOU:
-                if not try_start_dokan:
-                    # 等待左侧活动列表弹出
-                    self.wait_until_stable(self.I_RYOU_DOKAN_ACTIVATED, Timer(0.5, 2), Timer(5, 10))
-
-                    # 尝试通过已开启活动列表中查找道馆
-                    if self.appear(self.I_RYOU_DOKAN_ACTIVATED):
-                        self.ui_click_until_disappear(self.I_RYOU_DOKAN_ACTIVATED)
-                        return True
-                    # 在已开启活动列表中 没有找到道馆
-                    logger.error(f"can not find dokan in activated list,FAILED")
-                    return False
                 self.ui_click_until_disappear(self.I_RYOU_SHENSHE)
                 continue
             if cur_scene == DokanScene.RYOU_DOKAN_SHENSHE:
@@ -544,6 +535,8 @@ class ScriptTask(ExtendGreenMark, GameUi, SwitchSoul, DokanSceneDetector):
                 self.ui_get_current_page()
                 self.ui_goto(page_guild)
                 continue
+        self.device.screenshot_interval_set()
+        return True
 
     def enter_dokan(self):
         """
@@ -670,6 +663,12 @@ class ScriptTask(ExtendGreenMark, GameUi, SwitchSoul, DokanSceneDetector):
                 # 大于系数 或者 系数过小(文字识别错误导致)
                 if item_score > score or item_score < 1.5:
                     logger.info("click to making challenge disappear")
+                    continue
+                if p_num < self.config.dokan.dokan_config.min_people_num:
+                    logger.info("people num too small")
+                    continue
+                if bounty < self.config.dokan.dokan_config.min_bounty:
+                    logger.info("bounty too small")
                     continue
                 # 馆主不是修习等级的
                 if not self.appear(self.I_CENTER_GUANZHU_XIUXI):
@@ -889,13 +888,14 @@ class ScriptTask(ExtendGreenMark, GameUi, SwitchSoul, DokanSceneDetector):
         # 道馆没有开启
         now = datetime.now()
         ser_time: Time = self.config.dokan.scheduler.server_update
+        ser_time = datetime.combine(now.date(), ser_time)
         if not is_dokan_activated:
             # 在服务器时间之前,设置为服务器时间
-            if now.hour < ser_time.hour or (now.hour == ser_time.hour and now.minute < ser_time.minute):
+            if now < ser_time:
                 self.set_next_run(task="Dokan", target=now.replace(hour=ser_time.hour, minute=ser_time.minute))
                 return
             # 在服务器时间之后,如超过两小时,则直接当作成功;未超过则当作失败
-            if now.hour - ser_time.hour > 2:
+            if now - ser_time > timedelta(hours=2):
                 self.set_next_run(task="Dokan", finish=False, success=True, server=True)
                 return
             # 时间在道馆开启时间附近，3分钟后执行
