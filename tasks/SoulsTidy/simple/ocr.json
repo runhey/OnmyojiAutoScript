@@ -70,14 +70,5 @@
     "method": "Default",
     "keyword": "知道了",
     "description": "Ocr-description"
-  },
-  {
-    "itemName": "st_detail",
-    "roiFront": "1176.6666666666667,310.66666666666674,100,100",
-    "roiBack": "1179.3333333333333,308.66666666666674,100,100",
-    "mode": "Single",
-    "method": "Default",
-    "keyword": "",
-    "description": "detail"
   }
 ]
