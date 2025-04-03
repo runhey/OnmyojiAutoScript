@@ -12,7 +12,7 @@ class SoulsTidyAssets:
 
 	# Click Rule Assets
 	# 御魂详细 
-	C_ST_DETAIL = RuleClick(roi_front=(1162,230,87,74), roi_back=(1164,229,87,74), name="st_detail")
+	C_ST_DETAIL = RuleClick(roi_front=(1188.3333333333333,318.66666666666674,87,74), roi_back=(1190,317.00000000000006,87,74), name="st_detail")
 	# 出现神赐 
 	C_ST_GOD_PRSENT = RuleClick(roi_front=(717,165,100,48), roi_back=(926,165,100,54), name="st_god_prsent")
 
@@ -49,7 +49,7 @@ class SoulsTidyAssets:
 	# 御魂奉纳后获得的金币 
 	I_ST_GOLD = RuleImage(roi_front=(170,100,950,500), roi_back=(170,100,950,500), threshold=0.9, method="Template matching", file="./tasks/SoulsTidy/simple/simple_st_gold.png")
 	# description 
-	I_ST_ABANDONED_NOT_SELECTED = RuleImage(roi_front=(22,108,243,56), roi_back=(21,106,245,60), threshold=0.8, method="Template matching", file="./tasks/SoulsTidy/simple/image_name.png")
+	I_ST_ABANDONED_NOT_SELECTED = RuleImage(roi_front=(22,108,243,56), roi_back=(21,106,245,60), threshold=0.8, method="Template matching", file="./tasks/SoulsTidy/simple/simple_st_abandoned_not_selected.png")
 
 
 	# Long Click Rule Assets

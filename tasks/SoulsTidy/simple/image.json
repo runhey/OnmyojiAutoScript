@@ -136,7 +136,7 @@
   },
   {
     "itemName": "st_abandoned_not_selected",
-    "imageName": "image_name.png",
+    "imageName": "simple_st_abandoned_not_selected.png",
     "roiFront": "22,108,243,56",
     "roiBack": "21,106,245,60",
     "method": "Template matching",
