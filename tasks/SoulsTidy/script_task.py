@@ -100,7 +100,7 @@ class ScriptTask(GameUi, SoulsTidyAssets):
         logger.hr('Enter bongna')
         # 进入已弃置界面
         while True:
-            if not self.appear(self.I_ST_ABANDONED_SELECTED):
+            if self.appear(self.I_ST_ABANDONED_NOT_SELECTED):
                 self.click(self.I_ST_ABANDONED_SELECTED, interval=2)
                 continue
             break
@@ -181,5 +181,5 @@ if __name__ == '__main__':
     d = Device(c)
     t = ScriptTask(c, d)
 
-    t.greed_maneki()
-    # t.run()
+    #t.greed_maneki()
+    t.run()
