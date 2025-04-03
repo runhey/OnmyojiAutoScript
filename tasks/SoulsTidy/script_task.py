@@ -99,12 +99,9 @@ class ScriptTask(GameUi, SoulsTidyAssets):
                 continue
         logger.hr('Enter bongna')
         # 进入已弃置界面
-        while True:
-            self.screenshot()
-            if not self.appear(self.I_ST_ABANDONED_SELECTED):
-                self.click(self.I_ST_ABANDONED_SELECTED, interval=2)
-                continue
-            break
+        """
+        现在默认进入就是已弃置界面,所以不需要点击
+        """
         # 确保是按照等级来排序的
         while 1:
             self.screenshot()
@@ -182,5 +179,5 @@ if __name__ == '__main__':
     d = Device(c)
     t = ScriptTask(c, d)
 
-    t.greed_maneki()
-    # t.run()
+    #t.greed_maneki()
+    t.run()
