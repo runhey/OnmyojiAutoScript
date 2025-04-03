@@ -48,8 +48,6 @@ class SoulsTidyAssets:
 	I_ST_LEVEL_0 = RuleImage(roi_front=(85,235,45,30), roi_back=(85,235,45,30), threshold=0.9, method="Template matching", file="./tasks/SoulsTidy/simple/simple_st_level_0.png")
 	# 御魂奉纳后获得的金币 
 	I_ST_GOLD = RuleImage(roi_front=(170,100,950,500), roi_back=(170,100,950,500), threshold=0.9, method="Template matching", file="./tasks/SoulsTidy/simple/simple_st_gold.png")
-	# description 
-	I_ST_ABANDONED_NOT_SELECTED = RuleImage(roi_front=(22,108,243,56), roi_back=(21,106,245,60), threshold=0.8, method="Template matching", file="./tasks/SoulsTidy/simple/simple_st_abandoned_not_selected.png")
 
 
 	# Long Click Rule Assets

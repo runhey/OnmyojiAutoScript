@@ -133,14 +133,5 @@
     "method": "Template matching",
     "threshold": 0.9,
     "description": "御魂奉纳后获得的金币"
-  },
-  {
-    "itemName": "st_abandoned_not_selected",
-    "imageName": "simple_st_abandoned_not_selected.png",
-    "roiFront": "22,108,243,56",
-    "roiBack": "21,106,245,60",
-    "method": "Template matching",
-    "threshold": 0.8,
-    "description": "description"
   }
 ]
