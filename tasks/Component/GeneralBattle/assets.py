@@ -82,7 +82,7 @@ class GeneralBattleAssets:
 	# 确认预设的队伍 
 	I_PRESET_ENSURE = RuleImage(roi_front=(352,643,141,50), roi_back=(305,625,236,83), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralBattle/gb/gb_preset_ensure.png")
 	# 选择buff 
-	I_BUFF = RuleImage(roi_front=(115,657,42,50), roi_back=(106,641,67,77), threshold=0.7, method="Template matching", file="./tasks/Component/GeneralBattle/gb/gb_buff.png")
+	I_BUFF = RuleImage(roi_front=(115,670,39,36), roi_back=(107,668,55,49), threshold=0.7, method="Template matching", file="./tasks/Component/GeneralBattle/gb/gb_buff.png")
 	# 觉醒加成 
 	I_BUFF_AWAKEN = RuleImage(roi_front=(373,126,383,53), roi_back=(373,126,383,53), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralBattle/gb/gb_buff_awaken.png")
 	# 御魂加成 
@@ -132,7 +132,7 @@ class GeneralBattleAssets:
 
 	# Ocr Rule Assets
 	# 准备 
-	O_BATTLE_PREPARE = RuleOcr(roi=(1122,546,92,51), area=(1122,546,92,51), mode="Single", method="Default", keyword="准备", name="battle_prepare")
+	O_BATTLE_PREPARE = RuleOcr(roi=(1130,561,92,51), area=(1130,561,92,51), mode="Single", method="Default", keyword="准备", name="battle_prepare")
 	# 预设,部分场景预设按钮上的文字为'预设'+数字,导致点击preset失败 
 	O_PRESET = RuleOcr(roi=(20,620,60,80), area=(20,620,60,80), mode="Single", method="Default", keyword="预", name="preset")
 
