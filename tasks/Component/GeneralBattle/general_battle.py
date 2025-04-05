@@ -45,14 +45,14 @@ class GeneralBattle(GeneralBuff, GeneralBattleAssets):
             self.check_buff(buff)
 
             # 点击准备按钮
-            self.wait_until_appear(self.I_PREPARE_HIGHLIGHT)
+            self.ocr_appear(self.O_BATTLE_PREPARE)
             self.wait_until_appear(self.I_BUFF)
             occur_prepare_button = False
             while 1:
                 self.screenshot()
                 if not self.appear(self.I_BUFF):
                     break
-                if self.appear_then_click(self.I_PREPARE_HIGHLIGHT, interval=1.5):
+                if self.ocr_appear_click(self.O_BATTLE_PREPARE, interval=1.5):
                     occur_prepare_button = True
                     continue
                 # if occur_prepare_button and self.ocr_appear_click(self.O_BATTLE_PREPARE, interval=2):
