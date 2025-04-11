@@ -384,6 +384,7 @@ class ScriptTask(WQExplore, SecretScriptTask, WantedQuestsAssets):
         info_wq_list = [item for item in info_wq_list if item not in self.want_strategy_excluding]
         if not info_wq_list:
             logger.warning('No wanted quests can be challenged')
+            self.ui_click(self.I_TRACE_TRUE, self.I_TRACE_FALSE)
             return False
         # sort
         info_wq_list.sort(key=lambda x: x[0])
