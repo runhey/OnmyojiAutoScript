@@ -43,6 +43,7 @@ class WQExplore(BaseExploration, HighLight):
                     if explore_only_boss:
                         raise ExploreWantedBoss
                     break
+                logger.info("点击探索")
                 self.ui_click(self.I_E_EXPLORATION_CLICK, stop=self.I_E_SETTINGS_BUTTON)
                 continue
             # 探索大世界
@@ -59,16 +60,16 @@ class WQExplore(BaseExploration, HighLight):
                 continue
             # 探索里面
             elif scene == Scene.MAIN:
-                if not explore_init:
-                    count=0
-                    while count<5:
-                        if self.appear(self.I_E_AUTO_ROTATE_ON):
-                            break
-                        if self.appear(self.I_E_AUTO_ROTATE_OFF, interval=1.5):
-                            self.click(self.I_E_AUTO_ROTATE_OFF)
-                            count+=1
-                    explore_init = True
-                    continue
+                # if not explore_init:
+                #     count = 0
+                #     while count < 5:
+                #         if self.appear(self.I_E_AUTO_ROTATE_ON):
+                #             break
+                #         if self.appear(self.I_E_AUTO_ROTATE_OFF, interval=1.5):
+                #             self.click(self.I_E_AUTO_ROTATE_OFF)
+                #             count += 1
+                #     explore_init = True
+                #     continue
                 # 小纸人
                 if self.appear(self.I_BATTLE_REWARD):
                     if self.ui_get_reward(self.I_BATTLE_REWARD):
@@ -84,6 +85,7 @@ class WQExplore(BaseExploration, HighLight):
                 if self.appear(self.TEMPLATE_GIF) and self.fire(self.TEMPLATE_GIF):
                     explore_only_boss = False
                     logger.info(f'Fight, minions cnt {self.minions_cnt}')
+                    continue
                 # 向后拉,寻找怪
                 if search_fail_cnt >= 4:
                     search_fail_cnt = 0
@@ -95,6 +97,8 @@ class WQExplore(BaseExploration, HighLight):
                         continue
                 else:
                     search_fail_cnt += 1
+            elif scene==Scene.BATTLE_PREPARE:
+                self.ui_click_until_disappear(self.I_PREPARE_HIGHLIGHT, interval=0.5)
             elif scene == Scene.UNKNOWN:
                 continue
 
