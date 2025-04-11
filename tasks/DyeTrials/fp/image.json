@@ -1,0 +1,48 @@
+[
+  {
+    "itemName": "fp_access",
+    "imageName": "fp_fp_access.png",
+    "roiFront": "1192,317,36,34",
+    "roiBack": "1000,101,261,472",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "从庭院进入灵染试炼活动"
+  },
+  {
+    "itemName": "toggle_button",
+    "imageName": "fp_toggle_button.png",
+    "roiFront": "1202,466,22,21",
+    "roiBack": "1090,127,176,377",
+    "method": "Template matching",
+    "threshold": 0.7,
+    "description": "寻找切换按钮"
+  },
+  {
+    "itemName": "fp_access_1",
+    "imageName": "fp_fp_access_1.png",
+    "roiFront": "264,339,26,95",
+    "roiBack": "129,202,329,380",
+    "method": "Template matching",
+    "threshold": 0.7,
+    "description": "进入灵染试炼战斗界面"
+  },
+  {
+    "itemName": "fp_challenge",
+    "imageName": "fp_fp_challenge.png",
+    "roiFront": "1159,598,60,29",
+    "roiBack": "1159,598,60,29",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "挑战"
+  },
+  {
+    "itemName": "battle_success",
+    "imageName": "battle_success.png",
+    "roiFront": "435,147,100,100",
+    "roiBack": "435,147,100,100",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  }
+]
+
