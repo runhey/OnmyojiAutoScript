@@ -102,6 +102,7 @@ class ScriptTask(GameUi, HyaSlave):
             'weights': weights,
             'priorities': priorities,
             'invite_friend': hya_config.hya_invite_friend,
+            'recall_activity': hya_config.hya_recall_activity,
             'auto_bean': hya_config.hya_auto_bean
         }
         return Agent(strategy=strategy)
