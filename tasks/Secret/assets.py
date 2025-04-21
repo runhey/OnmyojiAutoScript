@@ -49,6 +49,8 @@ class SecretAssets:
 	O_SE_JADE = RuleOcr(roi=(327,230,23,24), area=(327,230,23,24), mode="Digit", method="Default", keyword="", name="se_jade")
 	# 金币 
 	O_SE_GOLD = RuleOcr(roi=(363,226,48,21), area=(363,226,48,21), mode="Digit", method="Default", keyword="", name="se_gold")
+	# 总耗时 
+	O_SE_TOTAL_TIME = RuleOcr(roi=(289,650,149,38), area=(289,650,149,38), mode="Single", method="Default", keyword="", name="se_total_time")
 
 
 	# Swipe Rule Assets
