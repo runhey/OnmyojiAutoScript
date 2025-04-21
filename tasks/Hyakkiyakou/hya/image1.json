@@ -70,5 +70,14 @@
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"
+  },
+  {
+    "itemName": "ensure_recall",
+    "imageName": "hya_ensure_recall.png",
+    "roiFront": "1060,145,66,62",
+    "roiBack": "877,72,307,211",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "回归任务"
   }
 ]
