@@ -216,30 +216,49 @@ class HyaSlave(HyaDevice, HyaColor, HyakkiyakouAssets):
 
     def invite_friend(self, same: bool = True):
         logger.hr('Invite friend', 2)
+        hya_recall_activity = False
         while 1:
             self.screenshot()
-            if self.appear(self.I_FRIEND_SAME_1) or self.appear(self.I_FRIEND_SAME_2):
-                break
+            # 是否有召回活动(星重聚阴阳师)
+            if self.appear(self.I_ENSURE_RECALL):
+                hya_recall_activity = True
+            if hya_recall_activity:
+                if self.appear(self.I_FRIEND_SAME_1_RECALL) or self.appear(self.I_FRIEND_SAME_2_RECALL):
+                    break
+            else:
+                if self.appear(self.I_FRIEND_SAME_1) or self.appear(self.I_FRIEND_SAME_2):
+                    break
             if self.appear_then_click(self.I_HINVITE, interval=4):
                 continue
-        if not self._invite_friend(True):
-            if not self._invite_friend(False):
+        if not self._invite_friend(same=True, hya_recall_activity=hya_recall_activity):
+            if not self._invite_friend(same=False, hya_recall_activity=hya_recall_activity):
                 raise RequestHumanTakeover('Invite friend failed')
 
-    def _invite_friend(self, same: bool = True) -> bool:
+    def _invite_friend(self, same: bool = True, hya_recall_activity: bool = False) -> bool:
         if not same:
             logger.info('Invite different server friend')
-            self.ui_click(self.I_FRIEND_REMOTE_1, self.I_FRIEND_REMOTE_2)
+            # 是否有召回活动
+            if hya_recall_activity:
+                self.ui_click(self.I_FRIEND_REMOTE_1_RECALL, self.I_FRIEND_REMOTE_2_RECALL)
+            else:
+                self.ui_click(self.I_FRIEND_REMOTE_1, self.I_FRIEND_REMOTE_2)
         invite_timer = Timer(8)
         invite_timer.start()
         while 1:
             self.screenshot()
             if not self.appear(self.I_HINVITE):
                 break
-            if self.click(self.C_FRIEND_1, interval=2):
-                continue
-            if self.click(self.C_FRIEND_2, interval=3):
-                continue
+            # 是否有召回活动
+            if hya_recall_activity:
+                if self.click(self.C_FRIEND_1_RECALL, interval=2):
+                    continue
+                if self.click(self.C_FRIEND_2_RECALL, interval=3):
+                    continue
+            else:
+                if self.click(self.C_FRIEND_1, interval=2):
+                    continue
+                if self.click(self.C_FRIEND_2, interval=3):
+                    continue
             if invite_timer.reached():
                 logger.warning('Invite friend timeout, It may be no friend available')
                 return False
