@@ -60,11 +60,11 @@ class AreaBossAssets:
 	# 探索图标 
 	I_EXPLORE = RuleImage(roi_front=(758,122,66,77), roi_back=(339,104,836,120), threshold=0.8, method="Template matching", file="./tasks/AreaBoss/res/res_explore.png")
 	# 地狱鬼王图标 
-	I_AREA_BOSS = RuleImage(roi_front=(639,636,65,68), roi_back=(606,619,145,100), threshold=0.8, method="Template matching", file="./tasks/AreaBoss/res/res_area_boss.png")
+	I_AREA_BOSS = RuleImage(roi_front=(639,636,66,68), roi_back=(606,619,145,100), threshold=0.8, method="Template matching", file="./tasks/AreaBoss/res/res_area_boss.png")
 	# 蓝色的返回 
 	I_BACK_BLUE = RuleImage(roi_front=(51,30,51,52), roi_back=(4,1,128,110), threshold=0.8, method="Template matching", file="./tasks/AreaBoss/res/res_back_blue.png")
 	# 右上边选中鬼王的 
-	I_FILTER = RuleImage(roi_front=(1116,33,35,31), roi_back=(1076,19,98,78), threshold=0.8, method="Template matching", file="./tasks/AreaBoss/res/res_filter.png")
+	I_FILTER = RuleImage(roi_front=(1116,33,35,31), roi_back=(1076,19,98,78), threshold=0.7, method="Template matching", file="./tasks/AreaBoss/res/res_filter.png")
 	# 除悬赏外 选中第一个鬼王的 
 	I_BATTLE_1 = RuleImage(roi_front=(1083,235,65,54), roi_back=(1083,235,65,54), threshold=0.8, method="Template matching", file="./tasks/AreaBoss/res/res_battle_1.png")
 	# 除悬赏外 选中第二个鬼王的 
@@ -72,11 +72,11 @@ class AreaBossAssets:
 	# 除悬赏外 选中第三个鬼王的 
 	I_BATTLE_3 = RuleImage(roi_front=(1083,545,66,53), roi_back=(1083,545,66,53), threshold=0.8, method="Template matching", file="./tasks/AreaBoss/res/res_battle_3.png")
 	# 点击挑战 
-	I_FIRE = RuleImage(roi_front=(1109,490,100,73), roi_back=(1075,463,150,158), threshold=0.8, method="Template matching", file="./tasks/AreaBoss/res/res_fire.png")
+	I_FIRE = RuleImage(roi_front=(1109,490,100,72), roi_back=(1075,463,150,158), threshold=0.8, method="Template matching", file="./tasks/AreaBoss/res/res_fire.png")
 	# 跟buff冲突弃用 
 	I_CLOSE_RED = RuleImage(roi_front=(1190,24,37,38), roi_back=(1190,24,37,38), threshold=0.8, method="Template matching", file="./tasks/AreaBoss/res/res_close_red.png")
 	# 红色关闭 
-	I_AB_CLOSE_RED = RuleImage(roi_front=(1194,24,38,37), roi_back=(1194,24,38,37), threshold=0.8, method="Template matching", file="./tasks/AreaBoss/res/res_ab_close_red.png")
+	I_AB_CLOSE_RED = RuleImage(roi_front=(1194,24,36,38), roi_back=(1194,24,34,36), threshold=0.8, method="Template matching", file="./tasks/AreaBoss/res/res_ab_close_red.png")
 	# 筛选中 选中悬赏标识 
 	I_AB_FILTER_TITLE_REWARD = RuleImage(roi_front=(920,110,190,70), roi_back=(920,110,190,70), threshold=0.8, method="Template matching", file="./tasks/AreaBoss/res/ab_filter_title_reward.png")
 	# 筛选中 选中热门标识 

@@ -74,7 +74,7 @@ class RuleImage:
         if height != self.roi_front[3] or width != self.roi_front[2]:
             self.roi_front[2] = width
             self.roi_front[3] = height
-            logger.debug(f"{self.name} roi_front size changed to {width}x{height}")
+            logger.info(f"{self.name} roi_front size changed to {width}x{height}")
 
     def load_kp_des(self) -> None:
         if self._kp is not None and self._des is not None:
@@ -309,15 +309,27 @@ class RuleImage:
 if __name__ == "__main__":
     from dev_tools.assets_test import detect_image
 
-    IMAGE_FILE = './log/test/QQ截图20240223151924.png'
-    from tasks.Restart.assets import RestartAssets
-    jade = RestartAssets.I_HARVEST_JADE
-    jade.method = 'Sift Flann'
-    sign = RestartAssets.I_HARVEST_SIGN
-    sign.method = 'Sift Flann'
-    print(jade.roi_front)
-
+    IMAGE_FILE = './log/4.png'
+    from tasks.Component.GeneralInvite.assets import GeneralInviteAssets
+    jade = GeneralInviteAssets.I_GI_SURE
+    jade.method = 'Template matching'
     detect_image(IMAGE_FILE, jade)
-    detect_image(IMAGE_FILE, sign)
     print(jade.roi_front)
+    print(jade.roi_back)
+
+
+    IMAGE_FILES='./log/2.png'
+    from tasks.Hyakkiyakou.assets import HyakkiyakouAssets
+    game = HyakkiyakouAssets.I_FRIEND_SAME_1
+    game.method = 'Template matching'
+    detect_image(IMAGE_FILES, game)
+    print(game.roi_front)
+    print(game.roi_back)
+
+
+
+    #sign = RealmRaidAssets.I_MEDAL_0
+    #sign.method = 'Template matching'
+    #detect_image(IMAGE_FILE, sign)
+    #print(sign.roi_front)
 

@@ -11,7 +11,7 @@
   {
     "itemName": "medal_5",
     "imageName": "res_medal_5.png",
-    "roiFront": "238,205,212,53",
+    "roiFront": "238,205,212,54",
     "roiBack": "216,187,919,364",
     "method": "Template matching",
     "threshold": 0.8,
@@ -29,7 +29,7 @@
   {
     "itemName": "medal_3",
     "imageName": "res_medal_3.png",
-    "roiFront": "240,210,193,41",
+    "roiFront": "240,210,194,42",
     "roiBack": "229,189,894,345",
     "method": "Template matching",
     "threshold": 0.8,
@@ -38,7 +38,7 @@
   {
     "itemName": "medal_2",
     "imageName": "res_medal_2.png",
-    "roiFront": "572,478,198,48",
+    "roiFront": "572,478,194,48",
     "roiBack": "217,193,923,354",
     "method": "Template matching",
     "threshold": 0.8,
@@ -47,7 +47,7 @@
   {
     "itemName": "medal_1",
     "imageName": "res_medal_1.png",
-    "roiFront": "570,206,199,52",
+    "roiFront": "570,206,198,52",
     "roiBack": "237,198,892,336",
     "method": "Template matching",
     "threshold": 0.8,
@@ -56,7 +56,7 @@
   {
     "itemName": "medal_0",
     "imageName": "res_medal_0.png",
-    "roiFront": "536,336,176,51",
+    "roiFront": "536,336,198,52",
     "roiBack": "231,200,898,336",
     "method": "Template matching",
     "threshold": 0.8,
@@ -110,7 +110,7 @@
   {
     "itemName": "fire",
     "imageName": "res_fire.png",
-    "roiFront": "982,494,136,63",
+    "roiFront": "982,494,130,58",
     "roiBack": "140,129,1024,584",
     "method": "Template matching",
     "threshold": 0.8,

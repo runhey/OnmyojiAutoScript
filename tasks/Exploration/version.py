@@ -75,10 +75,10 @@ if __name__ == '__main__':
     # image = highlight(image)
     # save_image(image, r'C:\Users\萌萌哒\Desktop\1345.png')
     #
-    IMAGE_FILE = r"C:\Users\萌萌哒\Desktop\QQ20240818-163854.png"
+    IMAGE_FILE = r"D:\Py Program\OnmyojiAutoScript\log\4.png"
     image = load_image(IMAGE_FILE)
     from tasks.Exploration.assets import ExplorationAssets
-    targe = ExplorationAssets.I_UP_COIN
+    targe = ExplorationAssets.I_NORMAL_BATTLE_BUTTON
     print(targe.test_match(image))
 
     # from dev_tools.get_images import GetAnimation

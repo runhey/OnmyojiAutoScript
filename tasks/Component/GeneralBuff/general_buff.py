@@ -312,16 +312,16 @@ if __name__ == '__main__':
     from module.config.config import Config
     from module.device.device import Device
 
-    c = Config('oas1')
+    c = Config('YZJ-JP')
     d = Device(c)
     t = GeneralBuff(c, d)
 
     t.open_buff()
     # t.screenshot()
     #
-    t.awake(is_open=True)
+    #t.awake(is_open=True)
     t.soul(is_open=True)
-    # t.gold_50(is_open=True)
+    t.gold_50(is_open=True)
     t.gold_100(is_open=True)
     t.exp_50(is_open=True)
     t.exp_100(is_open=True)

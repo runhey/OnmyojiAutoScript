@@ -289,10 +289,10 @@ if __name__ == '__main__':
     from module.config.config import Config
     from module.device.device import Device
 
-    c = Config('oas1')
+    c = Config('CDB-JP')
     d = Device(c)
     game = GameUi(config=c, device=d)
 
     game.screenshot()
+    print(game.appear(game.I_REALM_RAID_GOTO_EXPLORATION))
     print(game.appear(game.I_CHECK_AREA_BOSS))
-    print(game.appear(game.I_RECORDS_CLOSE))

@@ -231,7 +231,7 @@ if __name__ == '__main__':
     from module.config.config import Config
     from module.device.device import Device
 
-    c = Config('oas1')
+    c = Config('CDB-JP')
     d = Device(c)
 
     t = ScriptTask(c, d)

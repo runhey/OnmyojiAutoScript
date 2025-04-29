@@ -56,7 +56,6 @@ class ScriptTask(GameUi, BaseActivity, SwitchSoul, ActivityShikigamiAssets):
         self.switch(current_ap)
 
         # 设定是否锁定阵容
-
         if config.general_battle.lock_team_enable:
             logger.info("Lock team")
             while 1:
@@ -189,22 +188,15 @@ class ScriptTask(GameUi, BaseActivity, SwitchSoul, ActivityShikigamiAssets):
             # return True
 
         elif current_ap == ApMode.AP_GAME:
-            cu: int = self.O_REMAIN_AP.ocr_digit(self.device.image)
-            if cu > 0:
-                logger.warning(f'Game ap {cu} more than 0')
-                return True
-            logger.warning(f'Game ap not enough: {cu}')
-            return False
+            cu, res, total = self.O_REMAIN_AP.ocr(image=self.device.image)
+            if cu == total and cu + res == total:
+                if cu > total:
+                    logger.warning(f'Game ap {cu} more than total {total}')
+                    return True
+                logger.warning(f'Game ap not enough: {cu}')
+                return False
 
-            # cu, res, total = self.O_REMAIN_AP.ocr(image=self.device.image)
-            # if cu == total and cu + res == total:
-            #     if cu > total:
-            #         logger.warning(f'Game ap {cu} more than total {total}')
-            #         return True
-            #     logger.warning(f'Game ap not enough: {cu}')
-            #     return False
-            #
-            # return True
+            return True
 
     def switch(self, current_ap: ApMode) -> None:
         """
