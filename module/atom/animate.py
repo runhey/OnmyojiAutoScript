@@ -47,10 +47,11 @@ class RuleAnimate(RuleImage):
     def name(self) -> str:
         return self._name.upper()
 
-    def stable(self, image) -> bool:
+    def stable(self, image, refresh_after_stable: bool = False) -> bool:
         """
         用于判断连续的两张截图，的目标区域是否一致
         @param image:
+        @param refresh_after_stable:
         @return:
         """
         if self._last_image is None:
@@ -62,9 +63,14 @@ class RuleAnimate(RuleImage):
         self._last_image = self.corp(image, self.roi_front)
 
         if matched:
+            if refresh_after_stable:
+                self.refresh()
             logger.info(f'Animation Stable @ {self.name}')
             return True
         return False
+
+    def refresh(self):
+        self._last_image = None
 
 
 if __name__ == '__main__':
