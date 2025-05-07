@@ -16,7 +16,7 @@ class GeneralInviteAssets:
 	# 最右边的邀请 
 	I_ADD_2 = RuleImage(roi_front=(1039,205,100,100), roi_back=(1039,205,70,100), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralInvite/gi/gi_add_2.png")
 	# description 
-	I_FIRE_FAIL = RuleImage(roi_front=(1177,604,81,74), roi_back=(1177,604,81,74), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralInvite/gi/gi_fire_fail.png")
+	I_FIRE_FAIL = RuleImage(roi_front=(1177,604,82,74), roi_back=(1177,604,70,66), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralInvite/gi/gi_fire_fail.png")
 	# description 
 	I_FIRE = RuleImage(roi_front=(1179,602,82,88), roi_back=(1179,602,80,86), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralInvite/gi/gi_fire.png")
 	# 锁定阵容的图片 
@@ -80,7 +80,7 @@ class GeneralInviteAssets:
 	# 队员默认接受邀请 
 	I_I_ACCEPT_DEFAULT = RuleImage(roi_front=(205,223,61,68), roi_back=(205,223,61,297), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralInvite/gi/gi_i_accept_default.png")
 	# 不勾选 默认邀请 
-	I_I_NO_DEFAULT = RuleImage(roi_front=(41,343,36,35), roi_back=(41,343,36,35), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralInvite/gi/gi_i_no_default.png")
+	I_I_NO_DEFAULT = RuleImage(roi_front=(41,343,36,36), roi_back=(41,343,36,36), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralInvite/gi/gi_i_no_default.png")
 	# 勾选 默认邀请 
 	I_I_DEFAULT = RuleImage(roi_front=(41,342,41,39), roi_back=(41,342,41,39), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralInvite/gi/gi_i_default.png")
 	# description 
