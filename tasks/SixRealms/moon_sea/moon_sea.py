@@ -165,13 +165,13 @@ class MoonSea(MoonSeaMap, MoonSeaL101, MoonSeaL102, MoonSeaL103, MoonSeaL104, Mo
             text = self.O_ISLAND_NAME.ocr(self.device.image)
             if '星' in text:
                 return MoonSeaType.island105
-            if '战' in text:
+            if '激' in text:
                 return MoonSeaType.island104
             if '混' in text:
                 return MoonSeaType.island103
             if '神秘' in text:
                 return MoonSeaType.island102
-            if '宁息' in text:
+            if '安息' in text:
                 return MoonSeaType.island101
 
     def boss_team_lock(self):

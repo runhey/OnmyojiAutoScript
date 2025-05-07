@@ -166,7 +166,7 @@ if __name__ == '__main__':
     c = Config('oas1')
     d = Device(c)
     t = MoonSeaMap(c, d)
-    t.device.image = load_image(r'C:\Users\Ryland\Desktop\Desktop\34.png')
+    t.device.image = load_image(r'D:\Py Program\OnmyojiAutoScript\log\3.png')
 
     match = re.search(r'\d{1,2}', '<17回合后迎战月读')
     if match:
