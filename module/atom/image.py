@@ -309,22 +309,21 @@ class RuleImage:
 if __name__ == "__main__":
     from dev_tools.assets_test import detect_image
 
-    IMAGE_FILE = './log/4.png'
+    IMAGE_FILES = r"C:\Users\MG\Desktop\2.png"
+    from tasks.RyouToppa.assets import RyouToppaAssets
+    game = RyouToppaAssets.I_SUCCESS_PENETRATION
+    game.method = 'Template matching'
+    detect_image(IMAGE_FILES, game)
+    print(game.roi_front)
+    print(game.roi_back)
+
+    IMAGE_FILE = r"C:\Users\MG\Desktop\1.png"
     from tasks.Component.GeneralInvite.assets import GeneralInviteAssets
     jade = GeneralInviteAssets.I_GI_SURE
     jade.method = 'Template matching'
     detect_image(IMAGE_FILE, jade)
     print(jade.roi_front)
     print(jade.roi_back)
-
-
-    IMAGE_FILES='./log/2.png'
-    from tasks.Hyakkiyakou.assets import HyakkiyakouAssets
-    game = HyakkiyakouAssets.I_FRIEND_SAME_1
-    game.method = 'Template matching'
-    detect_image(IMAGE_FILES, game)
-    print(game.roi_front)
-    print(game.roi_back)
 
 
 

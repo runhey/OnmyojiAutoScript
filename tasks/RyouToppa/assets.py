@@ -105,9 +105,9 @@ class RyouToppaAssets:
 	# description 
 	I_TOPPA_RECORD = RuleImage(roi_front=(66,628,64,39), roi_back=(66,628,64,39), threshold=0.8, method="Template matching", file="./tasks/RyouToppa/dev/res_toppa_record.png")
 	# description 
-	I_TOPPA_LOCK_TEAM = RuleImage(roi_front=(203,602,26,32), roi_back=(203,602,26,32), threshold=0.8, method="Template matching", file="./tasks/RyouToppa/dev/dev_toppa_lock_team.png")
+	I_TOPPA_LOCK_TEAM = RuleImage(roi_front=(203,602,28,32), roi_back=(203,602,24,32), threshold=0.7, method="Template matching", file="./tasks/RyouToppa/dev/dev_toppa_lock_team.png")
 	# description 
-	I_TOPPA_UNLOCK_TEAM = RuleImage(roi_front=(202,603,25,31), roi_back=(202,603,25,31), threshold=0.8, method="Template matching", file="./tasks/RyouToppa/dev/dev_toppa_unlock_team.png")
+	I_TOPPA_UNLOCK_TEAM = RuleImage(roi_front=(202,603,26,30), roi_back=(202,603,24,30), threshold=0.8, method="Template matching", file="./tasks/RyouToppa/dev/dev_toppa_unlock_team.png")
 
 
 	# Click Rule Assets
@@ -125,15 +125,15 @@ class RyouToppaAssets:
 	# 开始寮突按钮 
 	I_START_TOPPA_BUTTON = RuleImage(roi_front=(832,279,130,43), roi_back=(1,1,1055,718), threshold=0.8, method="Template matching", file="./tasks/RyouToppa/res/res_start_toppa_button.png")
 	# 寮击破奖励 
-	I_RYOU_REWARD = RuleImage(roi_front=(134,417,241,40), roi_back=(134,417,241,40), threshold=0.8, method="Template matching", file="./tasks/RyouToppa/res/res_ryou_reward.png")
+	I_RYOU_REWARD = RuleImage(roi_front=(134,417,242,40), roi_back=(134,417,240,14), threshold=0.8, method="Template matching", file="./tasks/RyouToppa/res/res_ryou_reward.png")
 	# 勋章奖励标题 
 	I_GUILD_ORDERS_REWARDS = RuleImage(roi_front=(1123,31,115,56), roi_back=(1123,31,115,56), threshold=0.8, method="Template matching", file="./tasks/RyouToppa/res/res_guild_orders_rewards.png")
 	# 攻破阴阳寮 
-	I_SUCCESS_PENETRATION = RuleImage(roi_front=(141,374,234,37), roi_back=(141,374,234,37), threshold=0.8, method="Template matching", file="./tasks/RyouToppa/res/res_success_penetration.png")
+	I_SUCCESS_PENETRATION = RuleImage(roi_front=(141,374,234,37), roi_back=(141,374,233,37), threshold=0.8, method="Template matching", file="./tasks/RyouToppa/res/res_success_penetration.png")
 	# 个人突破刷新按钮 
 	I_REAL_RAID_REFRESH = RuleImage(roi_front=(963,569,174,60), roi_back=(963,569,174,60), threshold=0.8, method="Template matching", file="./tasks/RyouToppa/res/res_real_raid_refresh.png")
 	# 击破后的寮奖励 
-	I_RYOU_REWARD_90 = RuleImage(roi_front=(134,415,232,38), roi_back=(134,415,232,38), threshold=0.8, method="Template matching", file="./tasks/RyouToppa/res/res_ryou_reward_90.png")
+	I_RYOU_REWARD_90 = RuleImage(roi_front=(134,415,232,38), roi_back=(134,415,232,38), threshold=0.5, method="Template matching", file="./tasks/RyouToppa/res/res_ryou_reward_90.png")
 
 
 	# Ocr Rule Assets
