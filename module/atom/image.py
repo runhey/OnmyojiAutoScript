@@ -311,7 +311,7 @@ if __name__ == "__main__":
 
     IMAGE_FILES = r"C:\Users\MG\Desktop\2.png"
     from tasks.RyouToppa.assets import RyouToppaAssets
-    game = RyouToppaAssets.I_SUCCESS_PENETRATION
+    game = RyouToppaAssets.I_RYOU_REWARD_90
     game.method = 'Template matching'
     detect_image(IMAGE_FILES, game)
     print(game.roi_front)

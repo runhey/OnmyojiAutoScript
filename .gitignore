@@ -42,7 +42,8 @@ oas-backend.bat
 .eslintignore
 .eslintrc.js
 .prettierrc.js
-
+console.bat
+startoas-jp.bat
 
 
 
