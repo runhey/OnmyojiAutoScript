@@ -309,24 +309,21 @@ class RuleImage:
 if __name__ == "__main__":
     from dev_tools.assets_test import detect_image
 
-    IMAGE_FILES = r"C:\Users\MG\Desktop\2.png"
-    from tasks.RyouToppa.assets import RyouToppaAssets
-    game = RyouToppaAssets.I_RYOU_REWARD_90
+    IMAGE_FILES = r"C:\Users\MG\Desktop\24.png"
+    from tasks.Component.ReplaceShikigami.assets import ReplaceShikigamiAssets
+    game = ReplaceShikigamiAssets.I_RS_N
     game.method = 'Template matching'
     detect_image(IMAGE_FILES, game)
     print(game.roi_front)
     print(game.roi_back)
 
-    IMAGE_FILE = r"C:\Users\MG\Desktop\1.png"
-    from tasks.Component.GeneralInvite.assets import GeneralInviteAssets
-    jade = GeneralInviteAssets.I_GI_SURE
+    IMAGE_FILE = r"C:\Users\MG\Desktop\3.png"
+    from tasks.Exploration.assets import ExplorationAssets
+    jade = ExplorationAssets.I_EXP_CREATE_ENSURE
     jade.method = 'Template matching'
     detect_image(IMAGE_FILE, jade)
     print(jade.roi_front)
     print(jade.roi_back)
-
-
-
     #sign = RealmRaidAssets.I_MEDAL_0
     #sign.method = 'Template matching'
     #detect_image(IMAGE_FILE, sign)

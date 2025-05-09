@@ -63,9 +63,9 @@ class GameUiAssets:
 	# description 
 	I_CHECK_AWAKE = RuleImage(roi_front=(376,565,73,82), roi_back=(376,565,73,82), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_check_awake.png")
 	# description 
-	I_CHECK_SOUL_ZONES = RuleImage(roi_front=(49,105,298,406), roi_back=(49,105,298,404), threshold=0.6, method="Template matching", file="./tasks/GameUi/page/page_check_soul_zones.png")
+	I_CHECK_SOUL_ZONES = RuleImage(roi_front=(53,99,298,406), roi_back=(53,100,298,406), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_check_soul_zones.png")
 	# description 
-	I_CHECK_REALM_RAID = RuleImage(roi_front=(113,625,86,76), roi_back=(113,625,86,70), threshold=0.7, method="Template matching", file="./tasks/GameUi/page/page_check_realm_raid.png")
+	I_CHECK_REALM_RAID = RuleImage(roi_front=(119,617,68,76), roi_back=(119,616,68,76), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_check_realm_raid.png")
 	# description 
 	I_CHECK_GORYOU = RuleImage(roi_front=(881,17,30,39), roi_back=(881,17,30,39), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_check_goryou.png")
 	# description 

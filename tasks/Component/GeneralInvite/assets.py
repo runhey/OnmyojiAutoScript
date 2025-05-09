@@ -80,9 +80,9 @@ class GeneralInviteAssets:
 	# 队员默认接受邀请 
 	I_I_ACCEPT_DEFAULT = RuleImage(roi_front=(205,223,61,68), roi_back=(205,223,61,297), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralInvite/gi/gi_i_accept_default.png")
 	# 不勾选 默认邀请 
-	I_I_NO_DEFAULT = RuleImage(roi_front=(41,343,36,36), roi_back=(41,343,36,36), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralInvite/gi/gi_i_no_default.png")
+	I_I_NO_DEFAULT = RuleImage(roi_front=(510,342,36,36), roi_back=(510,342,36,36), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralInvite/gi/gi_i_no_default.png")
 	# 勾选 默认邀请 
-	I_I_DEFAULT = RuleImage(roi_front=(41,342,41,39), roi_back=(41,342,41,39), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralInvite/gi/gi_i_default.png")
+	I_I_DEFAULT = RuleImage(roi_front=(506,340,42,40), roi_back=(506,340,41,39), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralInvite/gi/gi_i_default.png")
 	# description 
 	I_GI_CANCEL = RuleImage(roi_front=(438,407,171,55), roi_back=(438,407,171,55), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralInvite/gi/gi_gi_cancel.png")
 	# 队长邀请 确定 
@@ -101,9 +101,9 @@ class GeneralInviteAssets:
 	# description 
 	I_GI_EMOJI_2 = RuleImage(roi_front=(27,622,55,51), roi_back=(27,622,55,51), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralInvite/gi/gi_gi_emoji_1.png")
 	# 判断是不是在庭院界面 
-	I_GI_HOME = RuleImage(roi_front=(361,34,34,46), roi_back=(361,34,34,46), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralInvite/gi/gi_gi_home.png")
+	I_GI_HOME = RuleImage(roi_front=(363,31,34,46), roi_back=(363,31,34,46), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralInvite/gi/gi_gi_home.png")
 	# 判断是不是在探索界面 
-	I_GI_EXPLORE = RuleImage(roi_front=(1138,119,41,48), roi_back=(1138,119,41,48), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralInvite/gi/gi_gi_explore.png")
+	I_GI_EXPLORE = RuleImage(roi_front=(1137,119,41,48), roi_back=(1137,119,41,48), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralInvite/gi/gi_gi_explore.png")
 
 
 	# Ocr Rule Assets
