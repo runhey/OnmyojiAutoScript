@@ -311,7 +311,7 @@ if __name__ == "__main__":
 
     IMAGE_FILE = r"C:\Users\MG\Desktop\4.png"
     from tasks.DailyTrifles.assets import DailyTriflesAssets
-    jade = DailyTriflesAssets.I_ROOM_GIFT
+    jade = DailyTriflesAssets.I_CLICK_BLESS
     jade.method = 'Template matching'
     detect_image(IMAGE_FILE, jade)
     print(jade.roi_front)

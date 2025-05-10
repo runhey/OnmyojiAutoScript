@@ -22,7 +22,7 @@ class DailyTriflesAssets:
 	# 一键祝福 
 	I_ONE_CLICK_BLESS = RuleImage(roi_front=(1106,497,100,32), roi_back=(1106,497,100,32), threshold=0.8, method="Template matching", file="./tasks/DailyTrifles/love/Screenshots_one_click_bless.png")
 	# 点击祝福 
-	I_CLICK_BLESS = RuleImage(roi_front=(619,447,92,40), roi_back=(619,447,92,40), threshold=0.8, method="Template matching", file="./tasks/DailyTrifles/love/Screenshots_click_bless.png")
+	I_CLICK_BLESS = RuleImage(roi_front=(616,443,90,40), roi_back=(616,443,90,40), threshold=0.8, method="Template matching", file="./tasks/DailyTrifles/love/Screenshots_click_bless.png")
 	# 吉闻页 
 	I_LUCK_TITLE = RuleImage(roi_front=(602,53,132,66), roi_back=(602,53,132,66), threshold=0.8, method="Template matching", file="./tasks/DailyTrifles/love/Screenshots_luck_title.png")
 	# 好友羁绊提升弹窗 
