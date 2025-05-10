@@ -309,17 +309,9 @@ class RuleImage:
 if __name__ == "__main__":
     from dev_tools.assets_test import detect_image
 
-    IMAGE_FILES = r"C:\Users\MG\Desktop\24.png"
-    from tasks.Component.ReplaceShikigami.assets import ReplaceShikigamiAssets
-    game = ReplaceShikigamiAssets.I_RS_N
-    game.method = 'Template matching'
-    detect_image(IMAGE_FILES, game)
-    print(game.roi_front)
-    print(game.roi_back)
-
-    IMAGE_FILE = r"C:\Users\MG\Desktop\3.png"
-    from tasks.Exploration.assets import ExplorationAssets
-    jade = ExplorationAssets.I_EXP_CREATE_ENSURE
+    IMAGE_FILE = r"C:\Users\MG\Desktop\4.png"
+    from tasks.DailyTrifles.assets import DailyTriflesAssets
+    jade = DailyTriflesAssets.I_ROOM_GIFT
     jade.method = 'Template matching'
     detect_image(IMAGE_FILE, jade)
     print(jade.roi_front)
@@ -328,4 +320,11 @@ if __name__ == "__main__":
     #sign.method = 'Template matching'
     #detect_image(IMAGE_FILE, sign)
     #print(sign.roi_front)
+    IMAGE_FILE = r"C:\Users\MG\Desktop\4.png"
+    from tasks.GameUi.assets import GameUiAssets
+    jade = GameUiAssets.I_CHECK_MALL
+    jade.method = 'Template matching'
+    detect_image(IMAGE_FILE, jade)
+    print(jade.roi_front)
+    print(jade.roi_back)
 
