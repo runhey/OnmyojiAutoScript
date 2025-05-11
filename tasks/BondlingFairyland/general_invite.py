@@ -343,26 +343,17 @@ class GeneralInvite(BaseTask, BondlingFairylandAssets, GeneralInviteAssets):
             if self.appear_then_click(self.I_ADD_5_4, interval=1):
                 continue
 
-        friend_class = []
-        class_ocr = [self.O_F_LIST_1, self.O_F_LIST_2, self.O_F_LIST_3, self.O_F_LIST_4]
+        friend_class = ['友速']
+        class_ocr = [self.O_F_LIST_1]
         class_index = 0
         list_1 = self.O_FRIEND.ocr(self.device.image)
-        list_2 = self.O_KUAQU.ocr(self.device.image)
         list_1 = list_1.replace(' ', '').replace('、', '')
-        list_2 = list_2.replace(' ', '').replace('、', '')
         if list_1 is not None and list_1 != '' and list_1 in self.friend_class:
             friend_class.append(list_1)
-        if list_2 is not None and list_2 != '' and list_2 in self.friend_class:
-            friend_class.append(list_2)
         for i in range(len(friend_class)):
-            if friend_class[i] == '蔡友':
-                friend_class[i] = '寮友'
-            elif friend_class[i] == '路区':
-                friend_class[i] = '跨区'
-            elif friend_class[i] == '察友':
-                friend_class[i] = '寮友'
-            elif friend_class[i] == '区':
-                friend_class[i] = '跨区'
+            if friend_class[i] == '友达':
+                friend_class[i] = '友速'
+
         logger.info(f'Friend class: {friend_class}')
 
         is_select: bool = False  # 是否选中了好友
@@ -403,12 +394,6 @@ class GeneralInvite(BaseTask, BondlingFairylandAssets, GeneralInviteAssets):
                 if self.appear(self.I_SELECT_FRIEND_ON):
                     break
                 if self.appear_then_click(self.I_SELECT_FRIEND_OFF, interval=1):
-                    continue
-            while index == 1:
-                self.screenshot()
-                if self.appear(self.I_SELECT_KUAQU_ON):
-                    break
-                if self.appear_then_click(self.I_SELECT_KUAQU_OFF, interval=1):
                     continue
 
             # 选中好友， 在这里游戏获取在线的好友并不是很快，根据不同的设备会有不同的时间，而且没有什么元素提供我们来判断

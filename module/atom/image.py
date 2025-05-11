@@ -310,8 +310,8 @@ if __name__ == "__main__":
     from dev_tools.assets_test import detect_image
 
     IMAGE_FILE = r"C:\Users\MG\Desktop\4.png"
-    from tasks.Sougenbi.assets import SougenbiAssets
-    jade = SougenbiAssets.I_S_CHECK_SOUGENBI
+    from tasks.BondlingFairyland.assets import BondlingFairylandAssets
+    jade = BondlingFairylandAssets.I_SELECT_FRIEND_ON
     jade.method = 'Template matching'
     detect_image(IMAGE_FILE, jade)
     print(jade.roi_front)
@@ -321,8 +321,8 @@ if __name__ == "__main__":
     #detect_image(IMAGE_FILE, sign)
     #print(sign.roi_front)
     IMAGE_FILE = r"C:\Users\MG\Desktop\4.png"
-    from tasks.GameUi.assets import GameUiAssets
-    jade = GameUiAssets.I_CHECK_GUILD
+    from tasks.Component.GeneralInvite.assets import GeneralInviteAssets
+    jade = GeneralInviteAssets.I_FLAG_1_ON
     jade.method = 'Template matching'
     detect_image(IMAGE_FILE, jade)
     print(jade.roi_front)

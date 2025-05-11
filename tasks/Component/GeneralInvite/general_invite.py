@@ -300,7 +300,7 @@ class GeneralInvite(BaseTask, GeneralInviteAssets):
 
     @cached_property
     def friend_class(self) -> list[str]:
-        return ['好友', '最近', '跨区', '寮友', '蔡友', '路区', '察友', '区']
+        return ['友速', '最近', '寮の', '会员']
 
     def detect_select(self, name: str = None) -> bool:
         """
@@ -351,12 +351,11 @@ class GeneralInvite(BaseTask, GeneralInviteAssets):
                 continue
 
         friend_class = []
-        class_ocr = [self.O_F_LIST_1, self.O_F_LIST_2, self.O_F_LIST_3, self.O_F_LIST_4]
+        class_ocr = [self.O_F_LIST_1, self.O_F_LIST_2, self.O_F_LIST_3]
         class_index = 0
         list_1 = self.O_F_LIST_1.ocr(self.device.image)
         list_2 = self.O_F_LIST_2.ocr(self.device.image)
         list_3 = self.O_F_LIST_3.ocr(self.device.image)
-        list_4 = self.O_F_LIST_4.ocr(self.device.image)
         list_1 = list_1.replace(' ', '').replace('、', '')
         list_2 = list_2.replace(' ', '').replace('、', '')
         list_3 = list_3.replace(' ', '').replace('、', '')
@@ -366,17 +365,11 @@ class GeneralInvite(BaseTask, GeneralInviteAssets):
             friend_class.append(list_2)
         if list_3 is not None and list_3 != '' and list_3 in self.friend_class:
             friend_class.append(list_3)
-        if list_4 is not None and list_4 != '' and list_4 in self.friend_class:
-            friend_class.append(list_4)
         for i in range(len(friend_class)):
-            if friend_class[i] == '蔡友':
-                friend_class[i] = '寮友'
-            elif friend_class[i] == '路区':
-                friend_class[i] = '跨区'
-            elif friend_class[i] == '察友':
-                friend_class[i] = '寮友'
-            elif friend_class[i] == '区':
-                friend_class[i] = '跨区'
+            if friend_class[i] == '友达':
+                friend_class[i] = '友速'
+            elif friend_class[i] == 'の会员':
+                friend_class[i] = '会员'
         logger.info(f'Friend class: {friend_class}')
 
         is_select: bool = False  # 是否选中了好友
@@ -429,12 +422,6 @@ class GeneralInvite(BaseTask, GeneralInviteAssets):
                 if self.appear(self.I_FLAG_3_ON):
                     break
                 if self.appear_then_click(self.I_FLAG_3_OFF, interval=1):
-                    continue
-            while index == 3:
-                self.screenshot()
-                if self.appear(self.I_FLAG_4_ON):
-                    break
-                if self.appear_then_click(self.I_FLAG_4_OFF, interval=1):
                     continue
 
             # 选中好友， 在这里游戏获取在线的好友并不是很快，根据不同的设备会有不同的时间，而且没有什么元素提供我们来判断
@@ -641,7 +628,7 @@ if __name__ == '__main__':
     from module.device.device import Device
     import cv2
 
-    c = Config('oas1')
+    c = Config('')
     d = Device(c)
     t = GeneralInvite(c, d)
 
