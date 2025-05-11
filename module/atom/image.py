@@ -310,8 +310,8 @@ if __name__ == "__main__":
     from dev_tools.assets_test import detect_image
 
     IMAGE_FILE = r"C:\Users\MG\Desktop\4.png"
-    from tasks.DailyTrifles.assets import DailyTriflesAssets
-    jade = DailyTriflesAssets.I_CLICK_BLESS
+    from tasks.AbyssShadows.assets import AbyssShadowsAssets
+    jade = AbyssShadowsAssets.I_ABYSS_FIRE
     jade.method = 'Template matching'
     detect_image(IMAGE_FILE, jade)
     print(jade.roi_front)
@@ -322,7 +322,7 @@ if __name__ == "__main__":
     #print(sign.roi_front)
     IMAGE_FILE = r"C:\Users\MG\Desktop\4.png"
     from tasks.GameUi.assets import GameUiAssets
-    jade = GameUiAssets.I_CHECK_MALL
+    jade = GameUiAssets.I_CHECK_GUILD
     jade.method = 'Template matching'
     detect_image(IMAGE_FILE, jade)
     print(jade.roi_front)

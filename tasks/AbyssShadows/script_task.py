@@ -517,7 +517,7 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AbyssShadowsAssets):
             if not self.appear(self.I_EQUIPPING):
                 break
         logger.info(f"Click {self.I_EQUIPPING.name}")
-        logger.info(f"点击准备了")
+        logger.info(f"Click Preparation")
 
         # 进入战斗后，开始计时
         start_time = time.time()
