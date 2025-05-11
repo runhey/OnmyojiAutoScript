@@ -310,8 +310,8 @@ if __name__ == "__main__":
     from dev_tools.assets_test import detect_image
 
     IMAGE_FILE = r"C:\Users\MG\Desktop\4.png"
-    from tasks.AbyssShadows.assets import AbyssShadowsAssets
-    jade = AbyssShadowsAssets.I_ABYSS_FIRE
+    from tasks.Sougenbi.assets import SougenbiAssets
+    jade = SougenbiAssets.I_S_CHECK_SOUGENBI
     jade.method = 'Template matching'
     detect_image(IMAGE_FILE, jade)
     print(jade.roi_front)
