@@ -68,7 +68,7 @@ class ScriptTask(GameUi, GeneralBattle, GeneralInvite, SwitchSoul, HuntAssets):
 
         now = datetime.now()
         # 如果时间在00:00-19:00 之间则设定时间为当天的自定义时间，返回False
-        if now.time() < time(19, 0):
+        if now.time() < time(18, 0):
             if self.kirin_day:
                 logger.info('Today is the Kirin day')
                 self.custom_next_run(task='Hunt', custom_time=self.con_time.kirin_time, time_delta=0)
