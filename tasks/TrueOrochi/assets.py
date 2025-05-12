@@ -37,7 +37,7 @@ class TrueOrochiAssets:
 	# 确认挑战 
 	I_ST_FIRE_CONFIRM = RuleImage(roi_front=(671,406,176,53), roi_back=(671,406,176,53), threshold=0.8, method="Template matching", file="./tasks/TrueOrochi/st/st_st_fire_confirm.png")
 	# 十个式神的准备 
-	I_ST_FIRE_PREPARE = RuleImage(roi_front=(1118,548,100,100), roi_back=(1118,548,100,100), threshold=0.8, method="Template matching", file="./tasks/TrueOrochi/st/st_st_fire_prepare.png")
+	I_ST_FIRE_PREPARE = RuleImage(roi_front=(1121,549,100,100), roi_back=(1121,549,100,100), threshold=0.8, method="Template matching", file="./tasks/TrueOrochi/st/st_st_fire_prepare.png")
 	# description 
 	I_ST_AUTO_FALSE = RuleImage(roi_front=(1112,463,33,34), roi_back=(1112,463,33,34), threshold=0.8, method="Template matching", file="./tasks/TrueOrochi/st/st_st_auto_false.png")
 	# description 
@@ -55,7 +55,7 @@ class TrueOrochiAssets:
 	# description 
 	I_ST_GREEN_6 = RuleImage(roi_front=(930,247,24,47), roi_back=(894,224,100,100), threshold=0.8, method="Template matching", file="./tasks/TrueOrochi/st/st_st_green_6.png")
 	# 60体力创建 
-	I_ST_CREATE_ROOM = RuleImage(roi_front=(528,482,223,62), roi_back=(528,482,223,62), threshold=0.8, method="Template matching", file="./tasks/TrueOrochi/st/st_st_create_room.png")
+	I_ST_CREATE_ROOM = RuleImage(roi_front=(529,483,220,64), roi_back=(529,483,220,64), threshold=0.8, method="Template matching", file="./tasks/TrueOrochi/st/st_st_create_room.png")
 	# 头像框 
 	I_ST_FRAME = RuleImage(roi_front=(571,442,135,65), roi_back=(571,442,135,65), threshold=0.8, method="Template matching", file="./tasks/TrueOrochi/st/st_st_frame.png")
 

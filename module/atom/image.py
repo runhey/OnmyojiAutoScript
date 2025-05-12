@@ -310,8 +310,8 @@ if __name__ == "__main__":
     from dev_tools.assets_test import detect_image
 
     IMAGE_FILE = r"C:\Users\MG\Desktop\4.png"
-    from tasks.BondlingFairyland.assets import BondlingFairylandAssets
-    jade = BondlingFairylandAssets.I_SELECT_FRIEND_ON
+    from tasks.Hunt.assets import HuntAssets
+    jade = HuntAssets.I_NW
     jade.method = 'Template matching'
     detect_image(IMAGE_FILE, jade)
     print(jade.roi_front)
