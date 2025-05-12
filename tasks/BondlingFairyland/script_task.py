@@ -376,7 +376,7 @@ class ScriptTask(GameUi, GeneralInvite, GeneralRoom, BondlingBattle, SwitchSoul,
                         if not self.appear(self.I_STONE_SURE):
                             break
                         for i in range(0, 5):
-                            if self.appear_then_click(self.I_BUY_ADD, interval=1):
+                            if self.appear_then_click(self.I_BUY_PLUS, interval=1):
                                 sleep(0.5)
                                 continue
                         if self.appear_then_click(self.I_GI_SURE, interval=1):
