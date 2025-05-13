@@ -34,7 +34,7 @@ def detect_ocr(file: str, target: RuleOcr):
 
 
 # 图片文件路径 可以是相对路径
-IMAGE_FILE =  r"C:\Users\MG\Desktop\3.png"
+IMAGE_FILE =  r"C:\Users\MG\Desktop\4.png"
 if __name__ == '__main__':
 
     # from tasks.RyouToppa.script_task import ScriptTask
@@ -42,6 +42,6 @@ if __name__ == '__main__':
     # print(detect_image(IMAGE_FILE, targe))
 
      #ocr demo
-     from tasks.Component.GeneralInvite.assets import GeneralInviteAssets
-     target = GeneralInviteAssets.O_F_LIST_1
+     from tasks.WantedQuests.assets import WantedQuestsAssets
+     target = WantedQuestsAssets.O_WQ_TYPE_2
      print(detect_ocr(IMAGE_FILE, target))

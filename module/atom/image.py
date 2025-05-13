@@ -311,7 +311,7 @@ if __name__ == "__main__":
 
     IMAGE_FILE = r"C:\Users\MG\Desktop\4.png"
     from tasks.GameUi.assets import GameUiAssets
-    jade = GameUiAssets.I_CHECK_HUNT
+    jade = GameUiAssets.I_MAIN_GOTO_FRIENDS
     jade.method = 'Template matching'
     detect_image(IMAGE_FILE, jade)
     print(jade.roi_front)
