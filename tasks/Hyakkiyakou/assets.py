@@ -41,7 +41,7 @@ class HyakkiyakouAssets:
 	# 押注 
 	I_HSELECTED = RuleImage(roi_front=(980,265,42,44), roi_back=(226,53,836,348), threshold=0.8, method="Template matching", file="./tasks/Hyakkiyakou/hya/hya_hselected.png")
 	# 结束 
-	I_HEND = RuleImage(roi_front=(81,164,86,299), roi_back=(81,164,86,299), threshold=0.8, method="Template matching", file="./tasks/Hyakkiyakou/hya/hya_hend.png")
+	I_HEND = RuleImage(roi_front=(81,164,86,300), roi_back=(81,164,86,300), threshold=0.8, method="Template matching", file="./tasks/Hyakkiyakou/hya/hya_hend.png")
 	# 冰冻 
 	I_HFREEZE = RuleImage(roi_front=(1092,665,187,54), roi_back=(1092,665,187,54), threshold=0.8, method="Template matching", file="./tasks/Hyakkiyakou/hya/hya_hfreeze.png")
 	# description 
@@ -135,7 +135,7 @@ class HyakkiyakouAssets:
 
 	# Image Rule Assets
 	# description 
-	I_FRIEND_SAME_1 = RuleImage(roi_front=(167,123,106,62), roi_back=(154,105,132,94), threshold=0.8, method="Template matching", file="./tasks/Hyakkiyakou/hya/hya_friend_same_1.png")
+	I_FRIEND_SAME_1 = RuleImage(roi_front=(378,126,100,60), roi_back=(378,126,132,94), threshold=0.8, method="Template matching", file="./tasks/Hyakkiyakou/hya/hya_friend_same_1.png")
 	# description 
 	I_FRIEND_REMOTE_1 = RuleImage(roi_front=(288,123,106,56), roi_back=(269,106,159,91), threshold=0.8, method="Template matching", file="./tasks/Hyakkiyakou/hya/hya_friend_remote_1.png")
 	# description 

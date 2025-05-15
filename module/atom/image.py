@@ -310,8 +310,8 @@ if __name__ == "__main__":
     from dev_tools.assets_test import detect_image
 
     IMAGE_FILE = r"C:\Users\MG\Desktop\4.png"
-    from tasks.GameUi.assets import GameUiAssets
-    jade = GameUiAssets.I_MAIN_GOTO_FRIENDS
+    from tasks.Hyakkiyakou.assets import HyakkiyakouAssets
+    jade = HyakkiyakouAssets.I_HFREEZE
     jade.method = 'Template matching'
     detect_image(IMAGE_FILE, jade)
     print(jade.roi_front)
