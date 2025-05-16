@@ -309,20 +309,14 @@ class RuleImage:
 if __name__ == "__main__":
     from dev_tools.assets_test import detect_image
 
-    IMAGE_FILE = r"C:\Users\MG\Desktop\4.png"
-    from tasks.Hyakkiyakou.assets import HyakkiyakouAssets
-    jade = HyakkiyakouAssets.I_HFREEZE
-    jade.method = 'Template matching'
-    detect_image(IMAGE_FILE, jade)
-    print(jade.roi_front)
-    print(jade.roi_back)
+
     #sign = RealmRaidAssets.I_MEDAL_0
     #sign.method = 'Template matching'
     #detect_image(IMAGE_FILE, sign)
     #print(sign.roi_front)
     IMAGE_FILE = r"C:\Users\MG\Desktop\4.png"
     from tasks.GameUi.assets import GameUiAssets
-    jade = GameUiAssets.I_CHECK_KYAKKIYAKOU
+    jade = GameUiAssets.I_EXPLORATION_GOTO_SOUL_ZONE
     jade.method = 'Template matching'
     detect_image(IMAGE_FILE, jade)
     print(jade.roi_front)
