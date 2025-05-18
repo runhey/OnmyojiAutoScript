@@ -42,6 +42,6 @@ if __name__ == '__main__':
     # print(detect_image(IMAGE_FILE, targe))
 
      #ocr demo
-     from tasks.WantedQuests.assets import WantedQuestsAssets
-     target = WantedQuestsAssets.O_WQ_TYPE_2
+     from tasks.SoulsTidy.assets import SoulsTidyAssets
+     target = SoulsTidyAssets.O_ST_FIRSET_LEVEL
      print(detect_ocr(IMAGE_FILE, target))

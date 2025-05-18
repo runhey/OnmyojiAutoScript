@@ -28,7 +28,7 @@ class RealmRaidAssets:
 	# 右上角红色的关闭 
 	I_BACK_RED = RuleImage(roi_front=(1178,101,57,64), roi_back=(1178,101,57,64), threshold=0.7, method="Template matching", file="./tasks/RealmRaid/res/res_back_red.png")
 	# 没有锁的状态图标 
-	I_UNLOCK = RuleImage(roi_front=(818,579,38,42), roi_back=(818,579,38,42), threshold=0.8, method="Template matching", file="./tasks/RealmRaid/res/res_unlock.png")
+	I_UNLOCK = RuleImage(roi_front=(815,578,38,42), roi_back=(815,578,38,42), threshold=0.8, method="Template matching", file="./tasks/RealmRaid/res/res_unlock.png")
 	# 以锁的状态图片 
 	I_LOCK = RuleImage(roi_front=(818,579,36,40), roi_back=(818,579,36,40), threshold=0.5, method="Template matching", file="./tasks/RealmRaid/res/res_lock.png")
 	# 刷新按钮 

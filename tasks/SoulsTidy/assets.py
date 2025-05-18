@@ -19,17 +19,17 @@ class SoulsTidyAssets:
 
 	# Image Rule Assets
 	# 点击御魂 
-	I_ST_SOULS = RuleImage(roi_front=(1170,226,70,80), roi_back=(1170,226,70,80), threshold=0.8, method="Template matching", file="./tasks/SoulsTidy/simple/simple_st_souls.png")
+	I_ST_SOULS = RuleImage(roi_front=(1173,226,70,80), roi_back=(1173,226,70,80), threshold=0.8, method="Template matching", file="./tasks/SoulsTidy/simple/simple_st_souls.png")
 	# 更换 
 	I_ST_REPLACE = RuleImage(roi_front=(856,170,100,100), roi_back=(856,170,100,100), threshold=0.8, method="Template matching", file="./tasks/SoulsTidy/simple/simple_st_replace.png")
 	# 奉纳 
-	I_ST_BONGNA = RuleImage(roi_front=(1154,202,77,97), roi_back=(1154,202,77,97), threshold=0.8, method="Template matching", file="./tasks/SoulsTidy/simple/simple_st_bongna.png")
+	I_ST_BONGNA = RuleImage(roi_front=(1147,202,78,96), roi_back=(1147,202,78,96), threshold=0.8, method="Template matching", file="./tasks/SoulsTidy/simple/simple_st_bongna.png")
 	# 贪吃鬼 
-	I_ST_GREED = RuleImage(roi_front=(1157,611,65,60), roi_back=(1157,611,65,60), threshold=0.8, method="Template matching", file="./tasks/SoulsTidy/simple/simple_st_greed.png")
+	I_ST_GREED = RuleImage(roi_front=(1155,608,65,60), roi_back=(1155,608,65,60), threshold=0.8, method="Template matching", file="./tasks/SoulsTidy/simple/simple_st_greed.png")
 	# 整理 
-	I_ST_TIDY = RuleImage(roi_front=(1155,328,74,100), roi_back=(1155,328,74,100), threshold=0.8, method="Template matching", file="./tasks/SoulsTidy/simple/simple_st_tidy.png")
+	I_ST_TIDY = RuleImage(roi_front=(1153,330,74,100), roi_back=(1153,330,74,100), threshold=0.8, method="Template matching", file="./tasks/SoulsTidy/simple/simple_st_tidy.png")
 	# 进食习惯 
-	I_ST_GREED_HABIT = RuleImage(roi_front=(817,529,165,61), roi_back=(817,529,165,61), threshold=0.8, method="Template matching", file="./tasks/SoulsTidy/simple/simple_st_greed_habit.png")
+	I_ST_GREED_HABIT = RuleImage(roi_front=(817,528,164,58), roi_back=(817,528,164,58), threshold=0.8, method="Template matching", file="./tasks/SoulsTidy/simple/simple_st_greed_habit.png")
 	# 立即进食 
 	I_ST_FEED_NOW = RuleImage(roi_front=(929,593,73,65), roi_back=(929,593,73,65), threshold=0.8, method="Template matching", file="./tasks/SoulsTidy/simple/simple_st_feed_now.png")
 	# 未选中 
@@ -39,17 +39,25 @@ class SoulsTidyAssets:
 	# 招财猫 
 	I_ST_CAT = RuleImage(roi_front=(799,269,147,133), roi_back=(799,269,147,133), threshold=0.7, method="Template matching", file="./tasks/SoulsTidy/simple/simple_st_cat.png")
 	# 奉纳 
-	I_ST_DONATE = RuleImage(roi_front=(813,628,126,68), roi_back=(813,628,126,68), threshold=0.8, method="Template matching", file="./tasks/SoulsTidy/simple/simple_st_donate.png")
+	I_ST_DONATE = RuleImage(roi_front=(811,629,130,70), roi_back=(811,629,130,70), threshold=0.8, method="Template matching", file="./tasks/SoulsTidy/simple/simple_st_donate.png")
 	# 神赐 
 	I_ST_GOD_PRESENT = RuleImage(roi_front=(578,234,131,73), roi_back=(542,117,204,219), threshold=0.8, method="Template matching", file="./tasks/SoulsTidy/simple/simple_st_god_present.png")
 	# 已弃置被选中 
-	I_ST_ABANDONED_SELECTED = RuleImage(roi_front=(20,110,140,50), roi_back=(20,110,140,50), threshold=0.8, method="Template matching", file="./tasks/SoulsTidy/simple/simple_st_abandoned_selected.png")
+	I_ST_ABANDONED_SELECTED = RuleImage(roi_front=(31,114,106,48), roi_back=(31,114,106,48), threshold=0.8, method="Template matching", file="./tasks/SoulsTidy/simple/simple_st_abandoned_selected.png")
 	# 第一个御魂是+0的 
-	I_ST_LEVEL_0 = RuleImage(roi_front=(85,235,45,30), roi_back=(85,235,45,30), threshold=0.9, method="Template matching", file="./tasks/SoulsTidy/simple/simple_st_level_0.png")
+	I_ST_LEVEL_0 = RuleImage(roi_front=(90,240,36,20), roi_back=(90,240,45,30), threshold=0.9, method="Template matching", file="./tasks/SoulsTidy/simple/simple_st_level_0.png")
 	# 御魂奉纳后获得的金币 
 	I_ST_GOLD = RuleImage(roi_front=(170,100,950,500), roi_back=(170,100,950,500), threshold=0.9, method="Template matching", file="./tasks/SoulsTidy/simple/simple_st_gold.png")
-
-
+	# 入手顺序
+	I_ST_SORT_TIME = RuleImage(roi_front=(352,104,170,60),roi_back=(352,104,170,60),threshold=0.8,method="Template matching", file="./tasks/SoulsTidy/simple/simple_st_time")
+	#等级/星级 最上边的
+	#I_ST_SORT_LEVEL_1 = RuleImage(roi_front=(350,116,178,46),roi_back=(350,116,178,46),threshold=0.8,method="Template matching", file="./tasks/SoulsTidy/simple/simple_st_level_1")
+	#等级/星级 下边的
+	#I_ST_SORT_LEVEL_2 = RuleImage(roi_front=(374,280,180,62),roi_back=(374,280,180,62),threshold=0.8,method="Template matching", file="./tasks/SoulsTidy/simple/simple_st_level_2")
+	#类型
+	#I_ST_SORT_TYPE = RuleImage(roi_front=(374,444,178,62),roi_back=(374,444,178,62),threshold=0.8,method="Template matching", file="./tasks/SoulsTidy/simple/simple_st_type")
+	#位置
+	#I_ST_SORT_LOCATION = RuleImage(roi_front=(374,362,178,60),roi_back=(374,362,178,60),threshold=0.8,method="Template matching", file="./tasks/SoulsTidy/simple/simple_st_location")
 	# Long Click Rule Assets
 	# description 
 	L_ONE = RuleLongClick(roi_front=(88,272,100,78), roi_back=(88,272,100,78), duration=1500, name="one")
@@ -61,11 +69,11 @@ class SoulsTidyAssets:
 	# 奉纳的御魂等级 
 	O_ST_FIRSET_LEVEL = RuleOcr(roi=(91,237,35,28), area=(91,237,35,28), mode="Single", method="Default", keyword="", name="st_firset_level")
 	# 入手顺序 
-	O_ST_SORT_TIME = RuleOcr(roi=(387,118,110,42), area=(387,118,110,42), mode="Single", method="Default", keyword="入手顺序", name="st_sort_time")
+	O_ST_SORT_TIME = RuleOcr(roi=(387,118,110,42), area=(387,118,110,42), mode="Single", method="Default", keyword="入手顺", name="st_sort_time")
 	# 等级/星级 最上边的 
-	O_ST_SORT_LEVEL_1 = RuleOcr(roi=(384,115,121,45), area=(384,115,121,45), mode="Single", method="Default", keyword="等级/星级", name="st_sort_level_1")
+	O_ST_SORT_LEVEL_1 = RuleOcr(roi=(384,115,121,45), area=(384,115,121,45), mode="Single", method="Default", keyword="", name="st_sort_level_1")
 	# 等级/星 下边的 
-	O_ST_SORT_LEVEL_2 = RuleOcr(roi=(400,290,128,42), area=(400,290,128,42), mode="Single", method="Default", keyword="等级/星级", name="st_sort_level_2")
+	O_ST_SORT_LEVEL_2 = RuleOcr(roi=(400,290,128,42), area=(400,290,128,42), mode="Single", method="Default", keyword="", name="st_sort_level_2")
 	# 类型 
 	O_ST_SORT_TYPE = RuleOcr(roi=(414,118,64,43), area=(414,118,64,43), mode="Single", method="Default", keyword="类型", name="st_sort_type")
 	# 位置 
