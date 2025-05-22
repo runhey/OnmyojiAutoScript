@@ -315,8 +315,8 @@ if __name__ == "__main__":
     #detect_image(IMAGE_FILE, sign)
     #print(sign.roi_front)
     IMAGE_FILE = r"C:\Users\MG\Desktop\4.png"
-    from tasks.SoulsCTidy.assets import SoulsTidyAssets
-    jade = SoulsTidyAssets.I_ST_LEVEL_0
+    from tasks.Exploration.assets import ExplorationAssets
+    jade = ExplorationAssets.I_E_SETTINGS_BUTTON
     jade.method = 'Template matching'
     detect_image(IMAGE_FILE, jade)
     print(jade.roi_front)
