@@ -52,7 +52,7 @@ class ScriptTask(GameUi, GeneralBattle, GeneralInvite, SwitchSoul, HuntAssets):
     def check_datetime(self) -> bool:
         """
         检查日期和时间, 会设置是麒麟还是阴界之门
-        :return: 符合19:00-21:00的时间返回True, 否则返回False
+        :return: 符合麒麟19:00-21:00、阴界19:00-23:00的时间返回True, 否则返回False
         """
         now = datetime.now()
         day_of_week = now.weekday()
@@ -76,8 +76,12 @@ class ScriptTask(GameUi, GeneralBattle, GeneralInvite, SwitchSoul, HuntAssets):
                 logger.info('Today is the Netherworld day')
                 self.custom_next_run(task='Hunt', custom_time=self.con_time.netherworld_time, time_delta=0)
             raise TaskEnd('Hunt')
-        # 如果是在21:00-23:59之间则设定时间为明天的自定义时间，返回False
-        elif now.time() > time(21, 0):
+        # 如果是麒麟日在21:00-23:59之间则设定时间为明天的自定义时间，返回False
+        elif now.time() > time(21, 0) and self.kirin_day:
+            self.plan_tomorrow_hunt()
+            raise TaskEnd('Hunt')
+        # 如果是阴界日在23:00-23:59之间则设定时间为明天的自定义时间，返回False
+        elif now.time() > time(23, 0) and not self.kirin_day:
             self.plan_tomorrow_hunt()
             raise TaskEnd('Hunt')
         # 如果是在19:00-21:00之间则返回True
