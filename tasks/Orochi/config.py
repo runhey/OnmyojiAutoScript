@@ -28,7 +28,7 @@ class Layer(str, Enum):
     SEVEN = '柒层'
     EIGHT = '捌层'
     NINE = '玖层'
-    TEN = '拾层'
+    TEN = '拾偕'
     ELEVEN = '悲鸣'
     TWELVE = '神罚'
 
