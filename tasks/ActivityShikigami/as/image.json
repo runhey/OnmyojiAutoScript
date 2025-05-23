@@ -2,7 +2,7 @@
   {
     "itemName": "shi",
     "imageName": "as_shi.png",
-    "roiFront": "186,255,33,34",
+    "roiFront": "519,165,33,34",
     "roiBack": "64,115,1110,427",
     "method": "Template matching",
     "threshold": 0.7,
@@ -11,8 +11,8 @@
   {
     "itemName": "back_green",
     "imageName": "as_back_green.png",
-    "roiFront": "23,27,44,44",
-    "roiBack": "23,27,44,44",
+    "roiFront": "27,19,34,38",
+    "roiBack": "2,1,170,75",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "左上角返回"
@@ -20,8 +20,8 @@
   {
     "itemName": "battle",
     "imageName": "as_battle.png",
-    "roiFront": "285,282,35,135",
-    "roiBack": "223,196,153,315",
+    "roiFront": "1081,301,35,135",
+    "roiBack": "1042,208,153,315",
     "method": "Template matching",
     "threshold": 0.7,
     "description": "进入爬塔"

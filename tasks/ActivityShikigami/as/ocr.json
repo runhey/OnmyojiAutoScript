@@ -1,8 +1,8 @@
 [
   {
     "itemName": "remain_ap",
-    "roiFront": "131,572,42,25",
-    "roiBack": "131,572,42,25",
+    "roiFront": "98,583,42,25",
+    "roiBack": "98,583,42,25",
     "mode": "DigitCounter",
     "method": "Default",
     "keyword": "",
@@ -34,5 +34,14 @@
     "method": "Default",
     "keyword": "",
     "description": "活动票数（没有百分比）"
+  },
+  {
+    "itemName": "entry_activity",
+    "roiFront": "71,241,98,32",
+    "roiBack": "71,241,98,32",
+    "mode": "Single",
+    "method": "Default",
+    "keyword": "阵练演武",
+    "description": "Ocr-description"
   }
 ]
