@@ -1,7 +1,7 @@
 [
   {
     "itemName": "ms_enter",
-    "imageName": "ms_enter.png",
+    "imageName": "ms_ms_enter.png",
     "roiFront": "1169,155,24,55",
     "roiBack": "1169,155,24,55",
     "method": "Template matching",
@@ -19,7 +19,7 @@
   },
   {
     "itemName": "ms_back",
-    "imageName": "ms_back.png",
+    "imageName": "ms_ms_back.png",
     "roiFront": "32,31,43,45",
     "roiBack": "32,31,43,45",
     "method": "Template matching",
@@ -28,7 +28,7 @@
   },
   {
     "itemName": "ms_close",
-    "imageName": "ms_close.png",
+    "imageName": "ms_ms_close.png",
     "roiFront": "1145,48,39,41",
     "roiBack": "1145,48,39,41",
     "method": "Template matching",
@@ -36,17 +36,8 @@
     "description": "关闭分卷捐献界面"
   },
   {
-    "itemName": "ms_matter",
-    "imageName": "ms_matter.png",
-    "roiFront": "834,338,47,53",
-    "roiBack": "834,338,47,53",
-    "method": "Template matching",
-    "threshold": 0.8,
-    "description": "滑块（在捐献界面且未完成）"
-  },
-  {
     "itemName": "ms_contribute",
-    "imageName": "ms_contribute.png",
+    "imageName": "ms_ms_contribute.png",
     "roiFront": "1013,583,125,35",
     "roiBack": "1013,583,125,35",
     "method": "Template matching",
@@ -55,7 +46,7 @@
   },
   {
     "itemName": "ms_contributed",
-    "imageName": "ms_contributed.png",
+    "imageName": "ms_ms_contributed.png",
     "roiFront": "493,232,63,40",
     "roiBack": "493,232,63,40",
     "method": "Template matching",
@@ -64,7 +55,7 @@
   },
   {
     "itemName": "ms_complete",
-    "imageName": "ms_complete.png",
+    "imageName": "ms_ms_complete.png",
     "roiFront": "397,593,100,21",
     "roiBack": "397,593,100,21",
     "method": "Template matching",
@@ -73,7 +64,7 @@
   },
   {
     "itemName": "ms_zero_s",
-    "imageName": "ms_zero_s.png",
+    "imageName": "ms_ms_zero_s.png",
     "roiFront": "968,160,51,27",
     "roiBack": "968,160,51,27",
     "method": "Template matching",
@@ -82,7 +73,7 @@
   },
   {
     "itemName": "ms_zero_m",
-    "imageName": "ms_zero_m.png",
+    "imageName": "ms_ms_zero_m.png",
     "roiFront": "967,312,54,26",
     "roiBack": "967,312,54,26",
     "method": "Template matching",
@@ -91,7 +82,7 @@
   },
   {
     "itemName": "ms_zero_l",
-    "imageName": "ms_zero_l.png",
+    "imageName": "ms_ms_zero_l.png",
     "roiFront": "968,464,51,27",
     "roiBack": "968,464,51,27",
     "method": "Template matching",

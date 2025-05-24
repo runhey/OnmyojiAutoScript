@@ -1,11 +1,5 @@
 [
   {
-    "itemName": "ms_enter",
-    "roiFront": "1166,148,29,78",
-    "roiBack": "1166,148,29,78",
-    "description": "进入绘卷主界面"
-  },
-  {
     "itemName": "ms_scroll_1",
     "roiFront": "170,157,279,192",
     "roiBack": "170,157,279,192",
@@ -40,24 +34,6 @@
     "roiFront": "835,389,303,204",
     "roiBack": "835,389,303,204",
     "description": "进入卷六"
-  },
-  {
-    "itemName": "ms_back",
-    "roiFront": "26,32,49,42",
-    "roiBack": "26,32,49,42",
-    "description": "退出绘卷主界面"
-  },
-  {
-    "itemName": "ms_close",
-    "roiFront": "1142,48,45,36",
-    "roiBack": "1142,48,45,36",
-    "description": "退出捐献界面"
-  },
-  {
-    "itemName": "ms_contribute",
-    "roiFront": "991,572,168,53",
-    "roiBack": "991,572,168,53",
-    "description": "贡献碎片"
   },
   {
     "itemName": "ms_contributed",
