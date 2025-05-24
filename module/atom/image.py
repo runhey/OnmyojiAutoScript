@@ -146,7 +146,10 @@ class RuleImage:
         if not self.is_template_match:
             return self.sift_match(image)
             # raise Exception(f"unknown method {self.method}")
-
+        # if self.name == 'SCENE_SHENSHE':
+        #     source = image
+        # else:
+        #     source = self.corp(image)
         source = self.corp(image)
         mat = self.image
 
@@ -157,6 +160,19 @@ class RuleImage:
         res = cv2.matchTemplate(source, mat, cv2.TM_CCOEFF_NORMED)
         min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(res)  # 最小匹配度，最大匹配度，最小匹配度的坐标，最大匹配度的坐标
         # logger.attr(self.name, max_val)
+        # if self.name == 'SCENE_SHENSHE' and max_val > threshold:
+        #     self.roi_front[0] = max_loc[0]
+        #     self.roi_front[1] = max_loc[1]
+        #     self.roi_front[2] = mat.shape[1]
+        #     self.roi_front[3] = mat.shape[0]
+        #     return True
+        # elif max_val > threshold:
+        #     self.roi_front[0] = max_loc[0] + self.roi_back[0]
+        #     self.roi_front[1] = max_loc[1] + self.roi_back[1]
+        #     return True
+        # else:
+        #     return False
+
         if max_val > threshold:
             self.roi_front[0] = max_loc[0] + self.roi_back[0]
             self.roi_front[1] = max_loc[1] + self.roi_back[1]
