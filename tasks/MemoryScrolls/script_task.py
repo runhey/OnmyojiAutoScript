@@ -34,7 +34,6 @@ class ScriptTask(GameUi, MemoryScrollsAssets):
                 continue
         # 进入指定分卷
         con = self.config.memory_scrolls.memory_scrolls_config
-        # self.goto_scroll(ScrollNumber.FOUR)
         self.goto_scroll(con.scroll_number)
         # 返回召唤界面，目前只发现此种返回按键
         self.ui_click_until_disappear(self.I_MS_BACK, interval=1)
@@ -80,13 +79,13 @@ class ScriptTask(GameUi, MemoryScrollsAssets):
         :return: None
         """
         while 1:
-            self.swipe(self.S_MS_SWIPE_S, interval=1)
-            self.swipe(self.S_MS_SWIPE_M, interval=1)
-            self.swipe(self.S_MS_SWIPE_L, interval=1)
             self.screenshot()
             if self.appear(self.I_MS_ZERO_S) and self.appear(self.I_MS_ZERO_M) and self.appear(self.I_MS_ZERO_L):
                 logger.info('Memory Scrolls contribution is already completed')
                 return
+            self.swipe(self.S_MS_SWIPE_S, interval=1)
+            self.swipe(self.S_MS_SWIPE_M, interval=1)
+            self.swipe(self.S_MS_SWIPE_L, interval=1)
             if self.appear_then_click(self.I_MS_CONTRIBUTE, interval=3):
                 logger.info('Contributed Memory Scrolls')
                 # 等待捐献动画结束
