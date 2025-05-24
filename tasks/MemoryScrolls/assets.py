@@ -14,7 +14,7 @@ class MemoryScrollsAssets:
 	# 进入绘卷主界面 
 	C_MS_ENTER = RuleClick(roi_front=(1166,148,29,78), roi_back=(1166,148,29,78), name="ms_enter")
 	# 进入卷一 
-	C_MS_SCROLL_1 = RuleClick(roi_front=(141,134,308,215), roi_back=(141,134,308,215), name="ms_scroll_1")
+	C_MS_SCROLL_1 = RuleClick(roi_front=(170,157,279,192), roi_back=(170,157,279,192), name="ms_scroll_1")
 	# 进入卷二 
 	C_MS_SCROLL_2 = RuleClick(roi_front=(490,135,297,210), roi_back=(490,135,297,210), name="ms_scroll_2")
 	# 进入卷三 
@@ -39,7 +39,7 @@ class MemoryScrollsAssets:
 	# 进入绘卷主界面 
 	I_MS_ENTER = RuleImage(roi_front=(1169,155,24,55), roi_back=(1169,155,24,55), threshold=0.5, method="Template matching", file="./tasks/MemoryScrolls/ms/ms_enter.png")
 	# 使用！来确定处于绘卷主界面 
-	I_MS_MAIN = RuleImage(roi_front=(1076,667,50,50), roi_back=(1076,667,50,50), threshold=0.8, method="Template matching", file="./tasks/MemoryScrolls/ms/ms_main.png")
+	I_MS_MAIN = RuleImage(roi_front=(689,3,40,50), roi_back=(689,3,40,50), threshold=0.8, method="Template matching", file="./tasks/MemoryScrolls/ms/ms_main.png")
 	# 退出到召唤界面 
 	I_MS_BACK = RuleImage(roi_front=(32,31,43,45), roi_back=(32,31,43,45), threshold=0.8, method="Template matching", file="./tasks/MemoryScrolls/ms/ms_back.png")
 	# 关闭分卷捐献界面 

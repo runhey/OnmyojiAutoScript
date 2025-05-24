@@ -10,12 +10,12 @@
   },
   {
     "itemName": "ms_main",
-    "imageName": "ms_main.png",
-    "roiFront": "1076,667,50,50",
-    "roiBack": "1076,667,50,50",
+    "imageName": "ms_ms_main.png",
+    "roiFront": "689,3,40,50",
+    "roiBack": "689,3,40,50",
     "method": "Template matching",
     "threshold": 0.8,
-    "description": "使用！来确定处于绘卷主界面"
+    "description": "判断是否处于绘卷主界面"
   },
   {
     "itemName": "ms_back",
