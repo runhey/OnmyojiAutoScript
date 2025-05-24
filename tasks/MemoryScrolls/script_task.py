@@ -91,7 +91,7 @@ class ScriptTask(GameUi, MemoryScrollsAssets):
                 # 等待捐献动画结束
                 while 1:
                     self.screenshot()
-                    if self.wait_until_appear(self.I_MS_CONTRIBUTED, interval=5):
+                    if self.wait_until_appear(self.I_MS_CONTRIBUTED, wait_time=5):
                         self.click(self.C_MS_CONTRIBUTED, interval=1)
                     else:
                         break
