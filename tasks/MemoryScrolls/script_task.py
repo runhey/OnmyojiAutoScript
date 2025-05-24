@@ -18,9 +18,7 @@ class ScriptTask(GameUi, MemoryScrollsAssets):
         self.ui_get_current_page()
         self.ui_goto(page_summon)
         # 进入绘卷主界面
-        self.goto_memoryscrolls_main()
-        # 设置下一次运行时间
-        self.set_next_run(task='MemoryScrolls', success=True)
+        self.goto_memoryscrolls_main()        
         raise TaskEnd
     
     def goto_memoryscrolls_main(self):
@@ -67,6 +65,8 @@ class ScriptTask(GameUi, MemoryScrollsAssets):
         if self.appear(self.I_MS_CONTRIBUTE) or not self.appear(self.I_MS_COMPLETE):
             logger.info(f'Contributing Memory Scrolls for scroll {scroll_number.name}')
             self.contribute_memoryscrolls()
+            # 设置下一次运行时间
+            self.set_next_run(task='MemoryScrolls', success=True)
         else:
             logger.info(f'Scroll {scroll_number.name} is already completed')
             self.set_next_run(task='MemoryScrolls', success=False)
