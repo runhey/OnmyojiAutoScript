@@ -69,6 +69,7 @@ class ScriptTask(GameUi, MemoryScrollsAssets):
             self.contribute_memoryscrolls()
         else:
             logger.info(f'Scroll {scroll_number.name} is already completed')
+            self.set_next_run(task='MemoryScrolls', success=False)
         # 返回绘卷主界面
         self.ui_click_until_disappear(self.I_MS_CLOSE, interval=1)
         logger.info('Closed Memory Scrolls contribution page')
