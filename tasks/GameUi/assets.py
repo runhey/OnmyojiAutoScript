@@ -85,7 +85,7 @@ class GameUiAssets:
 	# description 
 	I_BONDLING_GOTO_EXPLORATION = RuleImage(roi_front=(20,13,60,59), roi_back=(20,13,60,59), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_bondling_goto_exploration.png")
 	# description 
-	I_RYOUTOPPA_GOTO_REALMRAID = RuleImage(roi_front=(1201,234,62,105), roi_back=(1201,234,62,105), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_ryoutoppa_goto_realmraid.png")
+	I_RYOUTOPPA_GOTO_REALMRAID = RuleImage(roi_front=(1198,232,62,106), roi_back=(1198,232,62,106), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_ryoutoppa_goto_realmraid.png")
 
 
 	# Image Rule Assets
@@ -133,13 +133,13 @@ class GameUiAssets:
 	# description 
 	I_MAIN_GOTO_ONMYODO = RuleImage(roi_front=(992,614,51,60), roi_back=(992,614,51,60), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_main_goto_onmyodo.png")
 	# description 
-	I_MAIN_GOTO_FRIENDS = RuleImage(roi_front=(880,617,56,56), roi_back=(880,617,56,56), threshold=0.7, method="Template matching", file="./tasks/GameUi/page/page_main_goto_friends.png")
-	# 进入花合战 
-	I_MAIN_GOTO_DAILY = RuleImage(roi_front=(792,609,52,68), roi_back=(792,609,89,97), threshold=0.7, method="Template matching", file="./tasks/GameUi/page/page_main_goto_daily.png")
+	I_MAIN_GOTO_FRIENDS = RuleImage(roi_front=(879,623,56,56), roi_back=(867,606,79,77), threshold=0.7, method="Template matching", file="./tasks/GameUi/page/page_main_goto_friends.png")
+	# 进入花合战
+	I_MAIN_GOTO_DAILY = RuleImage(roi_front=(779,612,52,68), roi_back=(754,595,89,97), threshold=0.7, method="Template matching", file="./tasks/GameUi/page/page_main_goto_daily.png")
 	# description 
 	I_MAIN_GOTO_MALL = RuleImage(roi_front=(662,657,40,22), roi_back=(662,657,81,78), threshold=0.7, method="Template matching", file="./tasks/GameUi/page/page_main_goto_mall.png")
 	# description 
-	I_MAIN_GOTO_GUILD = RuleImage(roi_front=(551,613,52,54), roi_back=(551,613,52,54), threshold=0.7, method="Template matching", file="./tasks/GameUi/page/page_main_goto_guild.png")
+	I_MAIN_GOTO_GUILD = RuleImage(roi_front=(540,613,52,54), roi_back=(540,613,52,54), threshold=0.7, method="Template matching", file="./tasks/GameUi/page/page_main_goto_guild.png")
 	# description 
 	I_MAIN_GOTO_TEAM = RuleImage(roi_front=(437,625,38,48), roi_back=(366,606,192,83), threshold=0.7, method="Template matching", file="./tasks/GameUi/page/page_main_goto_team.png")
 	# description 

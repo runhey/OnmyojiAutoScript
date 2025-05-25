@@ -315,8 +315,8 @@ if __name__ == "__main__":
     #detect_image(IMAGE_FILE, sign)
     #print(sign.roi_front)
     IMAGE_FILE = r"C:\Users\MG\Desktop\4.png"
-    from tasks.RyouToppa.assets import RyouToppaAssets
-    jade = RyouToppaAssets.I_RYOU_REWARD_90
+    from tasks.GameUi.assets import GameUiAssets
+    jade = GameUiAssets.I_RYOUTOPPA_GOTO_REALMRAID
     jade.method = 'Template matching'
     detect_image(IMAGE_FILE, jade)
     print(jade.roi_front)
