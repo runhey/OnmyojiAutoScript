@@ -6,6 +6,8 @@ from enum import Enum
 from module.logger import logger
 from module.exception import TaskEnd
 from module.base.timer import Timer
+from datetime import timedelta, datetime
+
 from tasks.GameUi.game_ui import GameUi
 from tasks.GameUi.page import page_summon
 from tasks.MemoryScrolls.assets import MemoryScrollsAssets
@@ -17,27 +19,32 @@ class ScriptTask(GameUi, MemoryScrollsAssets):
     def run(self):        
         self.ui_get_current_page()
         self.ui_goto(page_summon)
+        con = self.config.memory_scrolls.memory_scrolls_config
         # 进入绘卷主界面
-        self.goto_memoryscrolls_main()        
+        self.goto_memoryscrolls_main(con) 
         raise TaskEnd
     
-    def goto_memoryscrolls_main(self):
+    def goto_memoryscrolls_main(self, con):
         # 循环寻找&点击绘卷入口
-        while 1:
-            self.screenshot()
-            if self.appear(self.I_MS_MAIN):
-                logger.info('Entered Memory Scrolls main page')
-                break
-            if self.appear_then_click(self.I_MS_ENTER, interval=1):
-                continue
+        if self.wait_until_appear(self.I_MS_ENTER, wait_time=30):
+            while 1:
+                self.screenshot()
+                if self.appear(self.I_MS_MAIN):
+                    logger.info('Entered Memory Scrolls main page')
+                    break
+                if self.appear_then_click(self.I_MS_ENTER, interval=1):
+                    continue
+        else:
+            logger.error('Failed to enter Memory Scrolls main page')
+            self.set_next_run(task='MemoryScrolls', success=False)
+            raise TaskEnd
         # 进入指定分卷
-        con = self.config.memory_scrolls.memory_scrolls_config
-        self.goto_scroll(con.scroll_number)
+        self.goto_scroll(con)
         # 返回召唤界面，目前只发现此种返回按键
         self.ui_click_until_disappear(self.I_MS_BACK, interval=1)
         logger.info('Return to Summon page')
     
-    def goto_scroll(self, scroll_number: ScrollNumber):
+    def goto_scroll(self, con):
         """
         进入指定分卷
         :param scroll_number: 分卷编号
@@ -48,28 +55,38 @@ class ScriptTask(GameUi, MemoryScrollsAssets):
             if self.appear(self.I_MS_CLOSE):
                 logger.info('Entered Memory Scrolls contribution page')
                 break
-            if scroll_number == ScrollNumber.ONE:
-                self.click(self.C_MS_SCROLL_1, interval=1)
-            elif scroll_number == ScrollNumber.TWO:
-                self.click(self.C_MS_SCROLL_2, interval=1)
-            elif scroll_number == ScrollNumber.THREE:
-                self.click(self.C_MS_SCROLL_3, interval=1)
-            elif scroll_number == ScrollNumber.FOUR:
-                self.click(self.C_MS_SCROLL_4, interval=1)
-            elif scroll_number == ScrollNumber.FIVE:
-                self.click(self.C_MS_SCROLL_5, interval=1)
-            elif scroll_number == ScrollNumber.SIX:
-                self.click(self.C_MS_SCROLL_6, interval=1)
+            match con.scroll_number:
+                case ScrollNumber.ONE:
+                    self.click(self.C_MS_SCROLL_1, interval=1)
+                case ScrollNumber.TWO:
+                    self.click(self.C_MS_SCROLL_2, interval=1)
+                case ScrollNumber.THREE:
+                    self.click(self.C_MS_SCROLL_3, interval=1)
+                case ScrollNumber.FOUR:
+                    self.click(self.C_MS_SCROLL_4, interval=1)
+                case ScrollNumber.FIVE:
+                    self.click(self.C_MS_SCROLL_5, interval=1)
+                case ScrollNumber.SIX:
+                    self.click(self.C_MS_SCROLL_6, interval=1)
+                case _:
+                    logger.error(f'Unknown scroll number: {con.scroll_number.name}')
+                    self.set_next_run(task='MemoryScrolls', success=False)
+                    raise TaskEnd
         
         # 判断是否需要捐献碎片
         if self.appear(self.I_MS_CONTRIBUTE) or not self.appear(self.I_MS_COMPLETE):
-            logger.info(f'Contributing Memory Scrolls for scroll {scroll_number.name}')
+            logger.info(f'Contributing Memory Scrolls for scroll {con.scroll_number.name}')
             self.contribute_memoryscrolls()
             # 设置下一次运行时间
             self.set_next_run(task='MemoryScrolls', success=True)
         else:
-            logger.info(f'Scroll {scroll_number.name} is already completed')
+            logger.info(f'Scroll {con.scroll_number.name} is already completed')
             self.set_next_run(task='MemoryScrolls', success=False)
+            if con.auto_delay_exploration:
+                # 自动延迟探索任务
+                logger.info('Auto delay exploration task after Memory Scrolls completion')
+                next_run=datetime.now() + timedelta(days=1)
+                self.set_next_run(task='Exploration', success=False, finish=False, target=next_run)
         # 返回绘卷主界面
         self.ui_click_until_disappear(self.I_MS_CLOSE, interval=1)
         logger.info('Closed Memory Scrolls contribution page')
