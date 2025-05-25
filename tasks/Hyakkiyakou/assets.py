@@ -18,9 +18,9 @@ class HyakkiyakouAssets:
 	# description 
 	C_HSELECT_3 = RuleClick(roi_front=(934,298,115,306), roi_back=(934,298,115,306), name="hselect_3")
 	# description 
-	C_FRIEND_1 = RuleClick(roi_front=(254,223,161,66), roi_back=(254,223,161,66), name="friend_1")
+	C_FRIEND_1 = RuleClick(roi_front=(445,231,160,58), roi_back=(445,231,160,58), name="friend_1")
 	# description 
-	C_FRIEND_2 = RuleClick(roi_front=(532,226,158,64), roi_back=(532,226,158,64), name="friend_2")
+	C_FRIEND_2 = RuleClick(roi_front=(716,230,160,56), roi_back=(716,230,160,56), name="friend_2")
 	# description 
 	C_FRIEND_3 = RuleClick(roi_front=(240,310,183,66), roi_back=(240,310,183,66), name="friend_3")
 	# description 
