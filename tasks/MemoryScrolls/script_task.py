@@ -6,6 +6,8 @@ from enum import Enum
 from module.logger import logger
 from module.exception import TaskEnd
 from module.base.timer import Timer
+from datetime import timedelta, datetime
+
 from tasks.GameUi.game_ui import GameUi
 from tasks.GameUi.page import page_summon
 from tasks.MemoryScrolls.assets import MemoryScrollsAssets
@@ -67,23 +69,24 @@ class ScriptTask(GameUi, MemoryScrollsAssets):
                 case ScrollNumber.SIX:
                     self.click(self.C_MS_SCROLL_6, interval=1)
                 case _:
-                    logger.error(f'Unknown scroll number: {con.scroll_number}')
+                    logger.error(f'Unknown scroll number: {con.scroll_number.name}')
                     self.set_next_run(task='MemoryScrolls', success=False)
                     raise TaskEnd
         
         # 判断是否需要捐献碎片
         if self.appear(self.I_MS_CONTRIBUTE) or not self.appear(self.I_MS_COMPLETE):
-            logger.info(f'Contributing Memory Scrolls for scroll {con.scroll_number}')
+            logger.info(f'Contributing Memory Scrolls for scroll {con.scroll_number.name}')
             self.contribute_memoryscrolls()
             # 设置下一次运行时间
             self.set_next_run(task='MemoryScrolls', success=True)
         else:
-            logger.info(f'Scroll {con.scroll_number} is already completed')
+            logger.info(f'Scroll {con.scroll_number.name} is already completed')
             self.set_next_run(task='MemoryScrolls', success=False)
-            if con.auto_close_exploration:
-                logger.info('Auto closing exploration task after Memory Scrolls completion')
-                # 自动关闭探索任务
-                self.config.exploration.scheduler.enable = False
+            if con.auto_delay_exploration:
+                # 自动延迟探索任务
+                logger.info('Auto delay exploration task after Memory Scrolls completion')
+                next_run=datetime.now() + timedelta(days=1)
+                self.set_next_run(task='Exploration', success=False, finish=False, target=next_run)
         # 返回绘卷主界面
         self.ui_click_until_disappear(self.I_MS_CLOSE, interval=1)
         logger.info('Closed Memory Scrolls contribution page')
