@@ -92,7 +92,7 @@ class ExplorationAssets:
 	# 确定按钮 
 	I_E_SURE_BUTTON = RuleImage(roi_front=(1139,429,44,38), roi_back=(1139,428,44,38), threshold=0.8, method="Template matching", file="./tasks/Exploration/res/res_e_sure_button.png")
 	# 设置按钮 
-	I_E_SETTINGS_BUTTON = RuleImage(roi_front=(36,691,54,28), roi_back=(36,691,54,28), threshold=0.8, method="Template matching", file="./tasks/Exploration/res/res_e_settings_button.png")
+	I_E_SETTINGS_BUTTON = RuleImage(roi_front=(36,692,54,28), roi_back=(36,692,54,28), threshold=0.8, method="Template matching", file="./tasks/Exploration/res/res_e_settings_button.png")
 	# 普通怪 
 	I_NORMAL_BATTLE_BUTTON = RuleImage(roi_front=(636,263,42,39), roi_back=(0,0,1279,719), threshold=0.8, method="Template matching", file="./tasks/Exploration/res/res_normal_battle_button.png")
 	# boss 
@@ -104,7 +104,7 @@ class ExplorationAssets:
 	# description 
 	I_BATTLE_START = RuleImage(roi_front=(555,688,39,27.5), roi_back=(221,677,561,41), threshold=0.8, method="Template matching", file="./tasks/Exploration/res/res_battle_start.png")
 	# description 
-	I_GET_REWARD = RuleImage(roi_front=(464,231,338,44), roi_back=(464,231,338,44), threshold=0.8, method="Template matching", file="./tasks/Exploration/res/res_get_reward.png")
+	I_GET_REWARD = RuleImage(roi_front=(476,224,338,44), roi_back=(476,224,338,44), threshold=0.8, method="Template matching", file="./tasks/Exploration/res/res_get_reward.png")
 	# description 
 	I_RED_CLOSE = RuleImage(roi_front=(1025,127,41,42), roi_back=(1025,127,41,42), threshold=0.8, method="Template matching", file="./tasks/Exploration/res/res_red_close.png")
 	# description 
