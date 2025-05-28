@@ -80,7 +80,7 @@ class ExplorationAssets:
 	# 自动轮换关闭 
 	I_E_AUTO_ROTATE_OFF = RuleImage(roi_front=(105,649,150,46), roi_back=(105,649,150,46), threshold=0.8, method="Template matching", file="./tasks/Exploration/res/res_e_auto_rotate_off.png")
 	# 成功打开设置 
-	I_E_OPEN_SETTINGS = RuleImage(roi_front=(468,111,170,50), roi_back=(468,111,170,50), threshold=0.8, method="Template matching", file="./tasks/Exploration/res/res_e_open_settings.png")
+	I_E_OPEN_SETTINGS = RuleImage(roi_front=(468,112,170,50), roi_back=(468,112,170,50), threshold=0.8, method="Template matching", file="./tasks/Exploration/res/res_e_open_settings.png")
 	# 选择式神稀有度 
 	I_E_ENTER_CHOOSE_RARITY = RuleImage(roi_front=(34,288,62,47), roi_back=(34,288,62,47), threshold=0.8, method="Template matching", file="./tasks/Exploration/res/res_e_enter_choose_rarity.png")
 	# 候补N卡 
