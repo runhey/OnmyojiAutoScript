@@ -288,10 +288,39 @@ class ScriptTask(GameUi, ReplaceShikigami, KekkaiUtilizeAssets):
 
     def switch_friend_list(self, friend: SelectFriendList = SelectFriendList.SAME_SERVER) -> bool:
         """
-        切换不同的服务区
-        :param friend:
+        确保在同服好友列表
+        :param friend: 只支持 SAME_SERVER
         :return:
         """
+        logger.info('Ensure in same server friend list')
+        check_image = self.I_UTILIZE_FRIEND_GROUP
+
+        self.screenshot()
+        if self.appear(check_image):
+            logger.info('Already in same server friend list')
+            return True
+
+     # 切换到同服列表
+        timer_click = Timer(1)
+        timer_click.start()
+        while 1:
+            self.screenshot()
+            if self.appear(check_image):
+                break
+        if timer_click.reached():
+            timer_click.reset()
+            x, y = check_image.coord()
+            self.device.click(x=x, y=y, control_name=check_image.name)
+
+        time.sleep(0.5)
+        return True
+
+
+        """
+        def switch_friend_list(self, friend: SelectFriendList = SelectFriendList.SAME_SERVER) -> bool:
+        #切换不同的服务区
+        #:param friend:
+        #:return:
         logger.info('Switch friend list to %s', friend)
         if friend == SelectFriendList.SAME_SERVER:
             check_image = self.I_UTILIZE_FRIEND_GROUP
@@ -311,7 +340,7 @@ class ScriptTask(GameUi, ReplaceShikigami, KekkaiUtilizeAssets):
         if friend == SelectFriendList.DIFFERENT_SERVER:
             time.sleep(1)
         time.sleep(0.5)
-
+        """
     @cached_property
     def order_targets(self) -> ImageGrid:
         rule = self.config.kekkai_utilize.utilize_config.utilize_rule
@@ -386,14 +415,15 @@ class ScriptTask(GameUi, ReplaceShikigami, KekkaiUtilizeAssets):
             return card_class
 
         logger.hr('Start utilize')
-        self.switch_friend_list(friend)
-        self.swipe(self.S_U_END, interval=3)
-        if friend == SelectFriendList.SAME_SERVER:
-            self.switch_friend_list(SelectFriendList.DIFFERENT_SERVER)
-            self.switch_friend_list(SelectFriendList.SAME_SERVER)
-        else:
-            self.switch_friend_list(SelectFriendList.SAME_SERVER)
-            self.switch_friend_list(SelectFriendList.DIFFERENT_SERVER)
+        self.switch_friend_list(friend)  # 只确保在同服列表
+        #self.swipe(self.S_U_END, interval=3)
+        # 删除以下冗余的切换逻辑：
+        # if friend == SelectFriendList.SAME_SERVER:
+        #     self.switch_friend_list(SelectFriendList.DIFFERENT_SERVER)
+        #     self.switch_friend_list(SelectFriendList.SAME_SERVER)
+        # else:
+        #     self.switch_friend_list(SelectFriendList.SAME_SERVER)
+        #     self.switch_friend_list(SelectFriendList.DIFFERENT_SERVER)
         card_best = None
         swipe_count = 0
         while 1:
@@ -484,7 +514,7 @@ if __name__ == "__main__":
     from module.config.config import Config
     from module.device.device import Device
 
-    c = Config('oas1')
+    c = Config('YZJ-JP')
     d = Device(c)
     t = ScriptTask(c, d)
 

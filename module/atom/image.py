@@ -315,8 +315,8 @@ if __name__ == "__main__":
     #detect_image(IMAGE_FILE, sign)
     #print(sign.roi_front)
     IMAGE_FILE = r"C:\Users\MG\Desktop\4.png"
-    from tasks.Exploration.assets import ExplorationAssets
-    jade = ExplorationAssets.I_E_OPEN_SETTINGS
+    from tasks.Component.ReplaceShikigami.assets import ReplaceShikigamiAssets
+    jade = ReplaceShikigamiAssets.I_U_CONFIRM_SMALL
     jade.method = 'Template matching'
     detect_image(IMAGE_FILE, jade)
     print(jade.roi_front)

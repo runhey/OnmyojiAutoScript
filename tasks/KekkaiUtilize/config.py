@@ -11,7 +11,7 @@ from tasks.Utils.config_enum import ShikigamiClass
 
 class SelectFriendList(str, Enum):
     SAME_SERVER = 'same_server'
-    DIFFERENT_SERVER = 'different_server'
+    # 删除 DIFFERENT_SERVER = 'different_server'
 
 class UtilizeRule(str, Enum):
     DEFAULT = 'default'  # 默认就好
