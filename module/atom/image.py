@@ -317,8 +317,8 @@ if __name__ == "__main__":
     #print(jade.roi_front)
     #print(jade.roi_back)
 
-    from tasks.Component.GeneralRoom.assets import GeneralRoomAssets
-    jade = GeneralRoomAssets.I_GR_AUTO_MATCH
+    from tasks.AbyssShadows.assets import AbyssShadowsAssets
+    jade = AbyssShadowsAssets.I_PEACOCK_AREA
     jade.method = 'Template matching'
     detect_image(IMAGE_FILE, jade)
     print(jade.roi_front)
