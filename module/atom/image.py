@@ -315,10 +315,16 @@ if __name__ == "__main__":
     #detect_image(IMAGE_FILE, sign)
     #print(sign.roi_front)
     IMAGE_FILE = r"C:\Users\MG\Desktop\4.png"
-    from tasks.Component.ReplaceShikigami.assets import ReplaceShikigamiAssets
-    jade = ReplaceShikigamiAssets.I_U_CONFIRM_SMALL
+    #from tasks.Component.ReplaceShikigami.assets import ReplaceShikigamiAssets
+    #jade = ReplaceShikigamiAssets.I_U_CONFIRM_ALTERNATE
+    #jade.method = 'Template matching'
+    #detect_image(IMAGE_FILE, jade)
+    #print(jade.roi_front)
+    #print(jade.roi_back)
+
+    from tasks.KekkaiActivation.assets import KekkaiActivationAssets
+    jade = KekkaiActivationAssets.I_A_DEMOUNT
     jade.method = 'Template matching'
     detect_image(IMAGE_FILE, jade)
     print(jade.roi_front)
     print(jade.roi_back)
-

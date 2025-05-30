@@ -41,7 +41,7 @@ class SoulsTidyAssets:
 	# 奉纳 
 	I_ST_DONATE = RuleImage(roi_front=(811,629,130,70), roi_back=(811,629,130,70), threshold=0.8, method="Template matching", file="./tasks/SoulsTidy/simple/simple_st_donate.png")
 	# 神赐 
-	I_ST_GOD_PRESENT = RuleImage(roi_front=(578,234,131,73), roi_back=(542,117,204,219), threshold=0.8, method="Template matching", file="./tasks/SoulsTidy/simple/simple_st_god_present.png")
+	I_ST_GOD_PRESENT = RuleImage(roi_front=(578,201,131,73), roi_back=(542,117,204,219), threshold=0.8, method="Template matching", file="./tasks/SoulsTidy/simple/simple_st_god_present.png")
 	# 已弃置被选中 
 	I_ST_ABANDONED_SELECTED = RuleImage(roi_front=(31,114,106,48), roi_back=(31,114,106,48), threshold=0.8, method="Template matching", file="./tasks/SoulsTidy/simple/simple_st_abandoned_selected.png")
 	# 第一个御魂是+0的 

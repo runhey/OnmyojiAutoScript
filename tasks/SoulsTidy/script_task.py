@@ -130,7 +130,8 @@ class ScriptTask(GameUi, SoulsTidyAssets):
             if firvel is None or firvel == '':
                 logger.info('ocr result is Null')
                 continue
-            if firvel != '古':
+            # 添加其他可能识别的结果
+            if firvel not in ['古', '+O', '+0', '0']:
                 # 问就是 把 +0 识别成了 古
                 logger.info('No zero level, bongna done')
                 break
