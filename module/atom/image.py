@@ -309,11 +309,6 @@ class RuleImage:
 if __name__ == "__main__":
     from dev_tools.assets_test import detect_image
 
-
-    #sign = RealmRaidAssets.I_MEDAL_0
-    #sign.method = 'Template matching'
-    #detect_image(IMAGE_FILE, sign)
-    #print(sign.roi_front)
     IMAGE_FILE = r"C:\Users\MG\Desktop\4.png"
     #from tasks.Component.ReplaceShikigami.assets import ReplaceShikigamiAssets
     #jade = ReplaceShikigamiAssets.I_U_CONFIRM_ALTERNATE
@@ -322,8 +317,8 @@ if __name__ == "__main__":
     #print(jade.roi_front)
     #print(jade.roi_back)
 
-    from tasks.KekkaiActivation.assets import KekkaiActivationAssets
-    jade = KekkaiActivationAssets.I_A_DEMOUNT
+    from tasks.Component.GeneralRoom.assets import GeneralRoomAssets
+    jade = GeneralRoomAssets.I_GR_AUTO_MATCH
     jade.method = 'Template matching'
     detect_image(IMAGE_FILE, jade)
     print(jade.roi_front)
