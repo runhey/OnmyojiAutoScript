@@ -318,7 +318,7 @@ if __name__ == "__main__":
     #print(jade.roi_back)
 
     from tasks.KekkaiActivation.assets import KekkaiActivationAssets
-    jade = KekkaiActivationAssets.I_A_ACTIVATE_GRAY
+    jade = KekkaiActivationAssets.I_A_ACTIVATE_YELLOW
     jade.method = 'Template matching'
     detect_image(IMAGE_FILE, jade)
     print(jade.roi_front)
