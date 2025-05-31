@@ -17,6 +17,7 @@ from tasks.KekkaiUtilize.config import UtilizeRule, SelectFriendList
 from tasks.KekkaiUtilize.utils import CardClass, target_to_card_class
 from tasks.Component.ReplaceShikigami.replace_shikigami import ReplaceShikigami
 from tasks.GameUi.page import page_main, page_guild
+from toolkit.Lib.asyncio import sleep
 
 
 class ScriptTask(GameUi, ReplaceShikigami, KekkaiUtilizeAssets):
@@ -278,7 +279,7 @@ class ScriptTask(GameUi, ReplaceShikigami, KekkaiUtilizeAssets):
 
         while 1:
             self.screenshot()
-
+            sleep(0.5)
             if self.appear(self.I_U_ENTER_REALM):
                 break
             if self.appear_then_click(self.I_UTILIZE_ADD, interval=2):

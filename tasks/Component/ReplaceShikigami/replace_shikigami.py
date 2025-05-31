@@ -8,6 +8,7 @@ from module.logger import logger
 from tasks.base_task import BaseTask
 from tasks.Utils.config_enum import ShikigamiClass
 from tasks.Component.ReplaceShikigami.assets import ReplaceShikigamiAssets
+from toolkit.Lib.asyncio import sleep
 
 
 class ReplaceShikigami(BaseTask, ReplaceShikigamiAssets):
@@ -90,7 +91,7 @@ class ReplaceShikigami(BaseTask, ReplaceShikigamiAssets):
 
             if not self.appear(stop_image):
                 break
-
+            sleep(1)
             if self.appear_then_click(self.I_U_CONFIRM_SMALL, interval=0.5):
                 continue
 

@@ -33,7 +33,7 @@ class KekkaiUtilizeAssets:
 	# 结界卡 
 	I_SHI_CARD = RuleImage(roi_front=(892,287,38,56), roi_back=(870,276,75,86), threshold=0.7, method="Template matching", file="./tasks/KekkaiUtilize/realm/realm_shi_card.png")
 	# description 
-	I_SHI_DEFENSE = RuleImage(roi_front=(294,298,49,56), roi_back=(215,207,208,221), threshold=0.8, method="Template matching", file="./tasks/KekkaiUtilize/realm/realm_shi_defense.png")
+	I_SHI_DEFENSE = RuleImage(roi_front=(294,298,48,56), roi_back=(215,207,208,221), threshold=0.8, method="Template matching", file="./tasks/KekkaiUtilize/realm/realm_shi_defense.png")
 	# 收取经验（没有满的图） 
 	I_CARD_EXP = RuleImage(roi_front=(889,151,57,54), roi_back=(829,107,199,185), threshold=0.8, method="Template matching", file="./tasks/KekkaiUtilize/realm/realm_card_exp.png")
 	# 收取体力（没有满） 

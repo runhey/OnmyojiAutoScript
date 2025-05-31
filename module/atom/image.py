@@ -317,8 +317,8 @@ if __name__ == "__main__":
     #print(jade.roi_front)
     #print(jade.roi_back)
 
-    from tasks.Component.ReplaceShikigami.assets import ReplaceShikigamiAssets
-    jade = ReplaceShikigamiAssets.I_RS_LEVEL_MAX
+    from tasks.DemonEncounter.assets import DemonEncounterAssets
+    jade = DemonEncounterAssets.I_BOSS_FIRE
     jade.method = 'Template matching'
     detect_image(IMAGE_FILE, jade)
     print(jade.roi_front)
