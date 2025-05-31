@@ -30,6 +30,6 @@ class EternitySeaAssets:
 	# List Rule Assets
 	# 永生之海层数列表 
 	L_LAYER_LIST = RuleList(folder="./tasks/EternitySea/res", direction="vertical", mode="ocr", roi_back=(138,127,353,435), size=(56, 68), 
-					 array=["壹", "贰", "叁", "肆", "壹偕", "贰偕", "叁偕", "肆偕", "式偕", "参偕"])
+					 array=["壹", "贰", "叁", "肆"])
 
 

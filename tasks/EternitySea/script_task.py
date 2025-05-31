@@ -278,26 +278,12 @@ class ScriptTask(
     def check_layer(self, layer: str) -> bool:
         """
         检查挑战的层数, 并选中挑战的层
-        支持OCR误识别的容错处理
+        :return:
         """
-        # 创建标准层数到OCR可能识别结果的映射
-        layer_mapping = {
-        '壹层': ['壹', '壹偕'],
-        '贰层': ['贰', '贰偕'],
-        '叁层': ['叁', '叁偕', '参偕'],
-        '肆层': ['肆', '肆偕', '式偕']
-    }
-
-        # 获取当前层数的所有可能识别结果
-        possible_variants = layer_mapping.get(layer, [layer])
-        logger.info(f'Searching for layer: {layer}, variants: {possible_variants}')
-        for variant in possible_variants:
-            pos = self.list_find(self.L_LAYER_LIST, variant)
-            if pos:
-                self.device.click(x=pos[0], y=pos[1])
-                return True
-
-        return False
+        pos = self.list_find(self.L_LAYER_LIST, layer)
+        if pos:
+            self.device.click(x=pos[0], y=pos[1])
+            return True
 
     def check_lock(self, lock: bool = True) -> bool:
         """
@@ -325,7 +311,7 @@ if __name__ == "__main__":
     from module.config.config import Config
     from module.device.device import Device
 
-    c = Config('oas1')
+    c = Config("oas1")
     d = Device(c)
     t = ScriptTask(c, d)
     t.screenshot()

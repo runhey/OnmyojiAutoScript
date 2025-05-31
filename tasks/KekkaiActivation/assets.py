@@ -55,10 +55,10 @@ class KekkaiActivationAssets:
 	# 位置2，空人的 
 	I_A_FRIEND_2 = RuleImage(roi_front=(741,572,70,69), roi_back=(741,572,70,69), threshold=0.8, method="Template matching", file="./tasks/KekkaiActivation/a/a_a_friend_2.png")
 	# 激活, 黄色的可以激活 
-	I_A_ACTIVATE_YELLOW = RuleImage(roi_front=(1046,552,100,100), roi_back=(1046,552,100,100), threshold=0.8, method="Template matching", file="./tasks/KekkaiActivation/a/a_a_activate_yellow.png")
-	# 激活, 灰色不可激活 
-	I_A_ACTIVATE_GRAY = RuleImage(roi_front=(1048,554,100,100), roi_back=(1048,554,100,100), threshold=0.8, method="Template matching", file="./tasks/KekkaiActivation/a/a_a_activate_gray.png")
-	# 空着的表示没有卡在里面 
+	I_A_ACTIVATE_YELLOW = RuleImage(roi_front=(1066,563,100,100), roi_back=(1065,562,100,100), threshold=0.8, method="Template matching", file="./tasks/KekkaiActivation/a/a_a_activate_yellow.png")
+	# 激活, 灰色不可激活
+	I_A_ACTIVATE_GRAY = RuleImage(roi_front=(1048,554,100,100), roi_back=(1047,553,100,100), threshold=0.8, method="Template matching", file="./tasks/KekkaiActivation/a/a_a_activate_gray.png")
+	# 空着的表示没有卡在里面
 	I_A_EMPTY = RuleImage(roi_front=(675,254,353,128), roi_back=(675,254,353,128), threshold=0.8, method="Template matching", file="./tasks/KekkaiActivation/a/a_a_empty.png")
 	# description 
 	I_A_CHECK_CARD = RuleImage(roi_front=(510,33,260,50), roi_back=(510,33,260,50), threshold=0.8, method="Template matching", file="./tasks/KekkaiActivation/a/a_a_check_card.png")

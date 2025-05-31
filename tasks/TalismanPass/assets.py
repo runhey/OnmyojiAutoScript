@@ -12,7 +12,7 @@ class TalismanPassAssets:
 
 	# Image Rule Assets
 	# 领取全部 
-	I_TP_GET_ALL = RuleImage(roi_front=(903,599,70,71), roi_back=(903,599,70,71), threshold=0.8, method="Template matching", file="./tasks/TalismanPass/tp/tp_tp_get_all.png")
+	I_TP_GET_ALL = RuleImage(roi_front=(908,604,70,70), roi_back=(908,604,70,70), threshold=0.8, method="Template matching", file="./tasks/TalismanPass/tp/tp_tp_get_all.png")
 	# 任务 的右上方红点 
 	I_RED_POINT_TASK = RuleImage(roi_front=(1226,312,23,24), roi_back=(1226,312,23,24), threshold=0.8, method="Template matching", file="./tasks/TalismanPass/tp/tp_red_point_task.png")
 	# 今日 的右上方红点 
