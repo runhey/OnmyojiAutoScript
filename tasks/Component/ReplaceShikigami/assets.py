@@ -78,15 +78,15 @@ class ReplaceShikigamiAssets:
 	# description
 	I_RS_RECORDS_SHIKI = RuleImage(roi_front=(1146,546,49,43), roi_back=(1146,546,49,43), threshold=0.8, method="Template matching", file="./tasks/Component/ReplaceShikigami/rs/rs_rs_records_shiki.png")
 	# 检测到已经满级了 
-	I_RS_LEVEL_MAX = RuleImage(roi_front=(487,248,23,21), roi_back=(52,238,1118,37), threshold=0.8, method="Template matching", file="./tasks/Component/ReplaceShikigami/rs/rs_rs_level_max.png")
+	I_RS_LEVEL_MAX = RuleImage(roi_front=(487,239,42,24), roi_back=(45,239,1118,37), threshold=0.8, method="Template matching", file="./tasks/Component/ReplaceShikigami/rs/rs_rs_level_max.png")
 
 
 	# Image Rule Assets
 	# 小一个尺寸的 确认按钮 
 	I_U_CONFIRM_SMALL = RuleImage(roi_front=(670,514,130,60), roi_back=(670,514,130,60), threshold=0.8, method="Template matching", file="./tasks/Component/ReplaceShikigami/rs/utilize_u_confirm_small.png")
 	# 候补式神确认 
-	I_U_CONFIRM_ALTERNATE = RuleImage(roi_front=(692,407,134,47), roi_back=(692,407,134,47), threshold=0.8, method="Template matching", file="./tasks/Component/ReplaceShikigami/rs/rs_u_confirm_alternate.png")
+	I_U_CONFIRM_ALTERNATE = RuleImage(roi_front=(668,399,176,62), roi_back=(669,399,176,62), threshold=0.8, method="Template matching", file="./tasks/Component/ReplaceShikigami/rs/rs_u_confirm_alternate.png")
 	# 候补式神圆圈 
-	I_U_CIRCLE_ALTERNATE = RuleImage(roi_front=(535,339,41,43), roi_back=(535,339,41,43), threshold=0.8, method="Template matching", file="./tasks/Component/ReplaceShikigami/rs/rs_u_circle_alternate.png")
+	I_U_CIRCLE_ALTERNATE = RuleImage(roi_front=(535,338,41,43), roi_back=(535,338,41,43), threshold=0.8, method="Template matching", file="./tasks/Component/ReplaceShikigami/rs/rs_u_circle_alternate.png")
 
 
