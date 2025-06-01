@@ -1,0 +1,11 @@
+[
+  {
+    "itemName": "exp_win",
+    "imageName": "ey_exp_win.png",
+    "roiFront": "380,44,100,100",
+    "roiBack": "380,44,100,100",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "经验妖怪的赢"
+  }
+]

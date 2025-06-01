@@ -153,6 +153,8 @@ class ScriptTask(GameUi, BaseActivity, SwitchSoul, ActivityShikigamiAssets):
                 continue
             if self.appear_then_click(self.I_BATTLE, interval=1):
                 continue
+            if self.appear_then_click(self.I_BATTLE_1, interval=1):
+                continue
 
     def main_home(self) -> bool:
         """

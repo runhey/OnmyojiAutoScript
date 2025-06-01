@@ -115,7 +115,7 @@ class DokanAssets:
 	# 场景检测：阴阳竂 
 	I_SCENE_RYOU = RuleImage(roi_front=(1161,674,75,31), roi_back=(1161,674,75,31), threshold=0.8, method="Template matching", file="./tasks/Dokan/res/scene_ryou.png")
 	# 场景检测：神社 
-	I_SCENE_SHENSHE = RuleImage(roi_front=(0,100,600,600), roi_back=(0,100,600,600), threshold=0.8, method="Template matching", file="./tasks/Dokan/res/scene_shenshe.png")
+	I_SCENE_SHENSHE = RuleImage(roi_front=(477,165,63,65), roi_back=(477,165,63,65), threshold=0.8, method="Template matching", file="./tasks/Dokan/res/scene_shenshe.png")
 	# 道馆 地图界面 建立道馆按钮 
 	I_RYOU_DOKAN_CREATE_DOKAN = RuleImage(roi_front=(230,580,130,120), roi_back=(230,580,130,120), threshold=0.8, method="Template matching", file="./tasks/Dokan/res/res_ryou_dokan_create_dokan.png")
 	# 道馆 地图界面 点击建立道馆按钮后弹窗中的 确认按钮 
