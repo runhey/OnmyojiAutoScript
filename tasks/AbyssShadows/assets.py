@@ -43,6 +43,8 @@ class AbyssShadowsAssets:
 	C_ABYSS_LEOPARD = RuleClick(roi_front=(1140,190,50,162), roi_back=(1093,143,138,297), name="abyss_leopard")
 	# 刚进入神社时，可点击进入狭间暗域的区域，用于开启狭间暗域 
 	C_ABYSS_SHENSHE_ENTER_ABYSS = RuleClick(roi_front=(740,640,45,15), roi_back=(740,640,45,15), name="abyss_shenshe_enter_abyss")
+	# 战斗时，左上角退出战斗按钮区域 下半部分 
+	C_QUIT_AREA = RuleClick(roi_front=(20,36,30,14), roi_back=(20,36,30,14), name="quit_area")
 
 
 	# Image Rule Assets
@@ -52,6 +54,8 @@ class AbyssShadowsAssets:
 	I_RYOU_ABYSS_SHADOWS = RuleImage(roi_front=(707,492,110,27), roi_back=(707,492,110,27), threshold=0.8, method="Template matching", file="./tasks/AbyssShadows/res/res_ryou_abyss_shadows.png")
 	# 狭间_神龙入口 
 	I_ABYSS_DRAGON = RuleImage(roi_front=(227,211,55,151), roi_back=(190,147,140,283), threshold=0.8, method="Template matching", file="./tasks/AbyssShadows/res/res_abyss_dragon.png")
+	# 狭间_神龙入口_已封印 
+	I_ABYSS_DRAGON_OVER = RuleImage(roi_front=(253,185,33,100), roi_back=(253,185,33,100), threshold=0.8, method="Template matching", file="./tasks/AbyssShadows/res/res_abyss_dragon_over.png")
 	# 狭间_孔雀入口 
 	I_ABYSS_PEACOCK = RuleImage(roi_front=(521,152,48,165), roi_back=(465,104,145,312), threshold=0.8, method="Template matching", file="./tasks/AbyssShadows/res/res_abyss_peacock.png")
 	# 狭间_白藏主入口 
@@ -70,6 +74,8 @@ class AbyssShadowsAssets:
 	I_ABYSS_MAP = RuleImage(roi_front=(306,147,170,48), roi_back=(306,147,170,48), threshold=0.8, method="Template matching", file="./tasks/AbyssShadows/res/res_abyss_map.png")
 	# 战报退出按钮 
 	I_ABYSS_MAP_EXIT = RuleImage(roi_front=(1154,96,32,32), roi_back=(1154,96,32,32), threshold=0.8, method="Template matching", file="./tasks/AbyssShadows/res/res_abyss_map_exit.png")
+	# 怪物信息页面退出按钮 
+	I_ABYSS_ENEMY_INFO_EXIT = RuleImage(roi_front=(975,80,90,70), roi_back=(975,80,90,70), threshold=0.8, method="Template matching", file="./tasks/AbyssShadows/res/res_abyss_enemy_info_exit.png")
 	# 挑战按钮 
 	I_ABYSS_FIRE = RuleImage(roi_front=(1121,605,77,50), roi_back=(1121,605,77,50), threshold=0.8, method="Template matching", file="./tasks/AbyssShadows/res/res_abyss_fire.png")
 	# 前往 
@@ -104,12 +110,21 @@ class AbyssShadowsAssets:
 	I_BTN_START = RuleImage(roi_front=(1120,570,100,120), roi_back=(1120,570,100,120), threshold=0.8, method="Template matching", file="./tasks/AbyssShadows/res/res_btn_start.png")
 	# 开启确认按钮 
 	I_START_ENSURE = RuleImage(roi_front=(660,390,190,80), roi_back=(660,390,190,80), threshold=0.8, method="Template matching", file="./tasks/AbyssShadows/res/res_start_ensure.png")
+	# 当附近有可用怪物时，右下角出现的开始战斗按钮 
+	I_ABYSS_ENEMY_FIRE = RuleImage(roi_front=(1100,560,130,130), roi_back=(1100,560,130,130), threshold=0.8, method="Template matching", file="./tasks/AbyssShadows/res/res_abyss_enemy_fire.png")
+	# 红标主怪 
+	I_MARK_MAIN = RuleImage(roi_front=(375,40,60,30), roi_back=(375,40,60,30), threshold=0.8, method="Template matching", file="./tasks/AbyssShadows/res/res_mark_main.png")
 
 
 	# List Rule Assets
 	# 这个是当前活跃的竂活动列表界面 
 	L_RYOU_ACTIVITY_LIST = RuleList(folder="./tasks/AbyssShadows/res", direction="vertical", mode="ocr", roi_back=(35,157,37,250), size=(42, 27), 
 					 array=["道馆", "首领", "狭间"])
+
+
+	# Ocr Rule Assets
+	# 伤害 
+	O_DAMAGE = RuleOcr(roi=(50,110,300,50), area=(50,110,300,50), mode="Digit", method="Default", keyword="", name="damage")
 
 
 	# Swipe Rule Assets

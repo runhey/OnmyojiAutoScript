@@ -27,6 +27,15 @@
     "description": "狭间_神龙入口"
   },
   {
+    "itemName": "abyss_dragon_over",
+    "imageName": "res_abyss_dragon_over.png",
+    "roiFront": "253,185,33,100",
+    "roiBack": "253,185,33,100",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "狭间_神龙入口_已封印"
+  },
+  {
     "itemName": "abyss_peacock",
     "imageName": "res_abyss_peacock.png",
     "roiFront": "521,152,48,165",
@@ -106,6 +115,15 @@
     "method": "Template matching",
     "threshold": 0.8,
     "description": "战报退出按钮"
+  },
+  {
+    "itemName": "abyss_enemy_info_exit",
+    "imageName": "res_abyss_enemy_info_exit.png",
+    "roiFront": "975,80,90,70",
+    "roiBack": "975,80,90,70",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "怪物信息页面退出按钮"
   },
   {
     "itemName": "abyss_fire",
@@ -259,5 +277,23 @@
     "method": "Template matching",
     "threshold": 0.8,
     "description": "开启确认按钮"
+  },
+  {
+    "itemName": "abyss_enemy_fire",
+    "imageName": "res_abyss_enemy_fire.png",
+    "roiFront": "1100,560,130,130",
+    "roiBack": "1100,560,130,130",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "当附近有可用怪物时，右下角出现的开始战斗按钮"
+  },
+  {
+    "itemName": "mark_main",
+    "imageName": "res_mark_main.png",
+    "roiFront": "375,40,60,30",
+    "roiBack": "375,40,60,30",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "红标主怪"
   }
 ]

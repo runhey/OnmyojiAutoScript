@@ -1,0 +1,11 @@
+[
+  {
+    "itemName": "damage",
+    "roiFront": "50,110,300,50",
+    "roiBack": "50,110,300,50",
+    "mode": "Digit",
+    "method": "Default",
+    "keyword": "",
+    "description": "伤害"
+  }
+]
