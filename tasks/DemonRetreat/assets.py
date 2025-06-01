@@ -16,13 +16,13 @@ class DemonRetreatAssets:
 	# 首领退治 
 	I_HUNT = RuleImage(roi_front=(661,164,187,165), roi_back=(661,164,187,165), threshold=0.8, method="Template matching", file="./tasks/DemonRetreat/DemonRetreat/DemonRetreat_hunt.png")
 	# 检查是否成功进入首领退治 
-	I_HUNT_CHECK = RuleImage(roi_front=(570,12,143,46), roi_back=(570,12,143,46), threshold=0.8, method="Template matching", file="./tasks/DemonRetreat/DemonRetreat/DemonRetreat_hunt_check.png")
+	I_HUNT_CHECK = RuleImage(roi_front=(572,10,144,46), roi_back=(572,10,144,46), threshold=0.8, method="Template matching", file="./tasks/DemonRetreat/DemonRetreat/DemonRetreat_hunt_check.png")
 	# description 
 	I_DEMON_GATHER = RuleImage(roi_front=(26,487,76,48), roi_back=(26,487,76,48), threshold=0.8, method="Template matching", file="./tasks/DemonRetreat/DemonRetreat/DemonRetreat_demon_gather.png")
 	# 非退治时间进行检查 
 	I_DEMON_BACK_CHECK = RuleImage(roi_front=(27,26,42,36), roi_back=(14,2,86,86), threshold=0.7, method="Template matching", file="./tasks/DemonRetreat/DemonRetreat/DemonRetreat_demon_back_check.png")
 	# 迟到直接进入战斗 
-	I_ENTER_FIRE = RuleImage(roi_front=(1141,581,100,67), roi_back=(1141,581,100,67), threshold=0.8, method="Template matching", file="./tasks/DemonRetreat/DemonRetreat/DemonRetreat_enter_fire.png")
+	I_ENTER_FIRE = RuleImage(roi_front=(1141,579,100,68), roi_back=(1141,579,100,68), threshold=0.8, method="Template matching", file="./tasks/DemonRetreat/DemonRetreat/DemonRetreat_enter_fire.png")
 	# 取消退出 
 	I_QUIT_BACK = RuleImage(roi_front=(488,401,100,44), roi_back=(488,401,100,44), threshold=0.8, method="Template matching", file="./tasks/DemonRetreat/DemonRetreat/DemonRetreat_new.png")
 	# 退治排行榜 

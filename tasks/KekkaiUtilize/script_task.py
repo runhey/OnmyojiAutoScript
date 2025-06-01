@@ -279,7 +279,7 @@ class ScriptTask(GameUi, ReplaceShikigami, KekkaiUtilizeAssets):
 
         while 1:
             self.screenshot()
-            sleep(0.5)
+            sleep(1)  # 添加1秒的延迟
             if self.appear(self.I_U_ENTER_REALM):
                 break
             if self.appear_then_click(self.I_UTILIZE_ADD, interval=2):

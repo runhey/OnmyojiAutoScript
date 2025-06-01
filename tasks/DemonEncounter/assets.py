@@ -37,7 +37,7 @@ class DemonEncounterAssets:
 	# 还没选中 
 	I_BOSS_NO_SELECT = RuleImage(roi_front=(544,337,37,43), roi_back=(544,337,37,43), threshold=0.8, method="Template matching", file="./tasks/DemonEncounter/boss/boss_boss_no_select.png")
 	# 集结 
-	I_BOSS_GATHER = RuleImage(roi_front=(801,589,100,100), roi_back=(801,589,100,100), threshold=0.8, method="Template matching", file="./tasks/DemonEncounter/boss/boss_boss_gather.png")
+	I_BOSS_GATHER = RuleImage(roi_front=(802,588,100,100), roi_back=(802,588,100,100), threshold=0.8, method="Template matching", file="./tasks/DemonEncounter/boss/boss_boss_gather.png")
 	# 战斗胜利 
 	I_BOSS_WIN = RuleImage(roi_front=(380,43,100,100), roi_back=(380,43,100,100), threshold=0.8, method="Template matching", file="./tasks/DemonEncounter/boss/boss_boss_win.png")
 	# 白色退出 
@@ -103,7 +103,7 @@ class DemonEncounterAssets:
 	# 关闭封魔密信 
 	I_LETTER_CLOSE = RuleImage(roi_front=(851,43,45,45), roi_back=(851,43,45,45), threshold=0.8, method="Template matching", file="./tasks/DemonEncounter/demon/demon_letter_close.png")
 	# 小鬼王的挑战 
-	I_DE_SMALL_FIRE = RuleImage(roi_front=(1064,549,100,100), roi_back=(1064,549,100,100), threshold=0.8, method="Template matching", file="./tasks/DemonEncounter/demon/demon_de_small_fire.png")
+	I_DE_SMALL_FIRE = RuleImage(roi_front=(1064,551,100,100), roi_back=(1064,551,100,100), threshold=0.8, method="Template matching", file="./tasks/DemonEncounter/demon/demon_de_small_fire.png")
 	# 神秘任务 
 	I_DE_MYSTERY = RuleImage(roi_front=(1216,296,27,29), roi_back=(1192,278,85,261), threshold=0.8, method="Template matching", file="./tasks/DemonEncounter/demon/demon_de_mystery.png")
 	# 打结界的 

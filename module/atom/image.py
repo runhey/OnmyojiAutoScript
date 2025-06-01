@@ -317,8 +317,8 @@ if __name__ == "__main__":
     #print(jade.roi_front)
     #print(jade.roi_back)
 
-    from tasks.DemonEncounter.assets import DemonEncounterAssets
-    jade = DemonEncounterAssets.I_BOSS_FIRE
+    from tasks.DemonRetreat.assets import DemonRetreatAssets
+    jade = DemonRetreatAssets.I_DEMON_GATHER
     jade.method = 'Template matching'
     detect_image(IMAGE_FILE, jade)
     print(jade.roi_front)
