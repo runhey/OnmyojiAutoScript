@@ -538,31 +538,58 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AbyssShadowsAssets):
                     break
             logger.info("Combat time ended, proceeding to exit.")
             self.device.stuck_record_clear()
-        # 战斗提前结束这时没有返回按钮
-        if self.appear_then_click(self.I_WIN, interval=1.5):
-            return True
-
-        # 点击返回
-        while 1:
-            self.screenshot()
-            if self.appear_then_click(self.I_EXIT, interval=1.5):
-                continue
-            if self.appear(self.I_EXIT_ENSURE):
-                break
-        logger.info(f"Click {self.I_EXIT.name}")
-
-        # 点击返回确认
-        while 1:
-            self.screenshot()
-            if self.appear_then_click(self.I_EXIT_ENSURE, interval=1.5):
-                continue
+            
+            # 战斗提前结束这时没有返回按钮
             if self.appear_then_click(self.I_WIN, interval=1.5):
-                continue
-            if self.appear(self.I_ABYSS_NAVIGATION):
-                break
-        logger.info(f"Click {self.I_EXIT_ENSURE.name}")
+                return True
 
-        return True
+            # 点击返回
+            while 1:
+                self.screenshot()
+                if self.appear_then_click(self.I_EXIT, interval=1.5):
+                    continue
+                if self.appear(self.I_EXIT_ENSURE):
+                    break
+            logger.info(f"Click {self.I_EXIT.name}")
+
+            # 点击返回确认
+            while 1:
+                self.screenshot()
+                if self.appear_then_click(self.I_EXIT_ENSURE, interval=1.5):
+                    continue
+                if self.appear_then_click(self.I_WIN, interval=1.5):
+                    continue
+                if self.appear(self.I_ABYSS_NAVIGATION):
+                    break
+            logger.info(f"Click {self.I_EXIT_ENSURE.name}")
+
+            return True
+        else:
+            # 战斗提前结束这时没有返回按钮
+            if self.appear_then_click(self.I_WIN, interval=1.5):
+                return True
+
+            # 点击返回
+            while 1:
+                self.screenshot()
+                if self.appear_then_click(self.I_EXIT, interval=1.5):
+                    continue
+                if self.appear(self.I_EXIT_ENSURE):
+                    break
+            logger.info(f"Click {self.I_EXIT.name}")
+
+            # 点击返回确认
+            while 1:
+                self.screenshot()
+                if self.appear_then_click(self.I_EXIT_ENSURE, interval=1.5):
+                    continue
+                if self.appear_then_click(self.I_WIN, interval=1.5):
+                    continue
+                if self.appear(self.I_ABYSS_NAVIGATION):
+                    break
+            logger.info(f"Click {self.I_EXIT_ENSURE.name}")
+
+            return True
 
 
 
