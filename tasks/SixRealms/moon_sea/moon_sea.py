@@ -207,6 +207,9 @@ class MoonSea(MoonSeaMap, MoonSeaL101, MoonSeaL102, MoonSeaL103, MoonSeaL104, Mo
             if self.appear_then_click(self.I_BOSS_GET_EXP, interval=1):
                 logger.info('Get EXP')
                 continue
+            if self.appear_then_click(self.I_BOSS_SKILL_UP, interval=1):
+                logger.info('Get SKILL UP')
+                continue
             if self.appear_then_click(self.I_UI_CANCEL, interval=1):
                 # 取消购买 万相赐福
                 continue

@@ -60,7 +60,7 @@ class WantedQuestsAssets:
 	# description 
 	I_WQC_UNLOCK = RuleImage(roi_front=(621,527,26,28), roi_back=(621,527,26,28), threshold=0.8, method="Template matching", file="./tasks/WantedQuests/chanllenge/chanllenge_wqc_unlock.png")
 	# 挑战 
-	I_WQC_FIRE = RuleImage(roi_front=(893,503,123,64), roi_back=(871,485,164,91), threshold=0.7, method="Template matching", file="./tasks/WantedQuests/chanllenge/chanllenge_wqc_fire.png")
+	I_WQC_FIRE = RuleImage(roi_front=(878,508,132,58), roi_back=(871,485,164,91), threshold=0.7, method="Template matching", file="./tasks/WantedQuests/chanllenge/chanllenge_wqc_fire.png")
 
 
 	# Image Rule Assets

@@ -30,7 +30,9 @@ class SixRealmsAssets:
 	I_BOSS_USE_DOUBLE = RuleImage(roi_front=(669,417,126,53), roi_back=(651,407,164,71), threshold=0.8, method="Template matching", file="./tasks/SixRealms/gate1/gate1_boss_use_double.png")
 	# 御神获得经验 
 	I_BOSS_GET_EXP = RuleImage(roi_front=(538,112,220,46), roi_back=(492,86,281,100), threshold=0.8, method="Template matching", file="./tasks/SixRealms/gate1/gate1_boss_get_exp.png")
-	# description 
+	# 御神技能升级
+	I_BOSS_SKILL_UP = RuleImage(roi_front=(650,136,100,54), roi_back=(650,136,100,54), threshold=0.8, method="Template matching", file="./tasks/SixRealms/gate1/gate1_boss_skill_up.png")
+	# description
 	I_BOSS_SHARE = RuleImage(roi_front=(1090,604,80,74), roi_back=(1074,587,100,100), threshold=0.8, method="Template matching", file="./tasks/SixRealms/gate1/gate1_boss_share.png")
 	# 结算的椒图 
 	I_BOSS_SHUTU = RuleImage(roi_front=(105,136,174,124), roi_back=(105,136,174,124), threshold=0.8, method="Template matching", file="./tasks/SixRealms/gate1/gate1_boss_shutu.png")
