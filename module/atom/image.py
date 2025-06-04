@@ -317,8 +317,8 @@ if __name__ == "__main__":
     #print(jade.roi_front)
     #print(jade.roi_back)
 
-    from tasks.WantedQuests.assets import WantedQuestsAssets
-    jade = WantedQuestsAssets.I_GOTO_4
+    from tasks.Hyakkiyakou.assets import HyakkiyakouAssets
+    jade = HyakkiyakouAssets.I_FRIEND_SAME_1
     jade.method = 'Template matching'
     detect_image(IMAGE_FILE, jade)
     print(jade.roi_front)
