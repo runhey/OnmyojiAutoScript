@@ -144,6 +144,12 @@ class DokanConfig(BaseModel):
     # 道馆系数,赏金/人数 根据喜好配置
     find_dokan_score: float = Field(default=4.6, description='dokan_score_help')
 
+    # 道馆最小人数限制
+    min_people_num: int = Field(default=-1, description='min_people_num_help')
+
+    # 最少赏金设置
+    min_bounty: int = Field(default=0, description='min_bounty_help')
+
     # 单次查找道馆时,最大刷新次数.超过此次数后,若还未找到符合要求的,会随机选择一个道馆
     find_dokan_refresh_count: int = Field(default=7, description='find_dokan_refresh_count_help')
 

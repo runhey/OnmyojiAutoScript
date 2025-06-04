@@ -17,9 +17,9 @@ class SecretAssets:
 
 	# Image Rule Assets
 	# 进入 
-	I_SE_ENTER = RuleImage(roi_front=(1145,593,100,100), roi_back=(1145,593,100,100), threshold=0.8, method="Template matching", file="./tasks/Secret/se/se_se_enter.png")
+	I_SE_ENTER = RuleImage(roi_front=(1141,594,100,100), roi_back=(1141,594,100,100), threshold=0.8, method="Template matching", file="./tasks/Secret/se/se_se_enter.png")
 	# 秘闻挑战 
-	I_SE_FIRE = RuleImage(roi_front=(1108,551,100,100), roi_back=(1100,541,120,120), threshold=0.7, method="Template matching", file="./tasks/Secret/se/se_se_fire.png")
+	I_SE_FIRE = RuleImage(roi_front=(1107,548,100,100), roi_back=(1100,541,120,120), threshold=0.7, method="Template matching", file="./tasks/Secret/se/se_se_fire.png")
 	# 排行 
 	I_SE_PLACEMENT = RuleImage(roi_front=(1013,570,50,48), roi_back=(996,555,79,81), threshold=0.8, method="Template matching", file="./tasks/Secret/se/se_se_placement.png")
 	# 勾玉 

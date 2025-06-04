@@ -149,7 +149,7 @@ class HyakkiyakouAssets:
 
 	# Image Rule Assets
 	# 好友
-	I_FRIEND_SAME_1 = RuleImage(roi_front=(375,122,100,60), roi_back=(375,122,106,62), threshold=0.8, method="Template matching", file="./tasks/Hyakkiyakou/hya/hya_friend_same_1.png")
+	I_FRIEND_SAME_1 = RuleImage(roi_front=(378,126,100,60), roi_back=(378,126,100,60), threshold=0.8, method="Template matching", file="./tasks/Hyakkiyakou/hya/hya_friend_same_1.png")
 	# 好友 选定
 	#I_FRIEND_SAME_2 = RuleImage(roi_front=(377,126,100,60), roi_back=(377,126,100,60), threshold=0.8, method="Template matching", file="./tasks/Hyakkiyakou/hya/hya_friend_same_2.png")
 	# 回归活动使用 好友
