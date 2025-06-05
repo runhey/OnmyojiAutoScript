@@ -82,11 +82,13 @@ class ScriptTask(GameUi, MemoryScrollsAssets):
         else:
             logger.info(f'Scroll {con.scroll_number.name} is already completed')
             self.set_next_run(task='MemoryScrolls', success=False)
-            if con.auto_delay_exploration:
-                # 自动延迟探索任务
-                logger.info('Auto delay exploration task after Memory Scrolls completion')
-                next_run=datetime.now() + timedelta(days=1)
-                self.set_next_run(task='Exploration', success=False, finish=False, target=next_run)
+            if con.auto_close_exploration:
+                # 自动关闭探索任务
+                logger.info('Auto close exploration task after Memory Scrolls completion')
+                self.config.exploration.scheduler.enable = False
+                self.config.save()
+                # next_run=datetime.now() + timedelta(days=1)
+                # self.set_next_run(task='Exploration', success=False, finish=False, target=next_run)
         # 返回绘卷主界面
         self.ui_click_until_disappear(self.I_MS_CLOSE, interval=1)
         logger.info('Closed Memory Scrolls contribution page')

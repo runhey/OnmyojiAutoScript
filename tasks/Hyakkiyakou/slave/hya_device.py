@@ -1,5 +1,6 @@
 import timeit
 import numpy as np
+from datetime import datetime
 
 from module.base.timer import Timer
 from module.logger import logger
@@ -38,6 +39,8 @@ class HyaDevice(BaseTask):
             logger.error('Fast screenshot check timer reached')
             logger.error('Five minutes have not ended, the game is probably stuck, please check the game')
             raise GameStuckError
+        if self.config.script.error.save_error:
+            self.device.screenshot_deque.append({'time': datetime.now(), 'image': self.device.image})
         return self.device.image
 
     def fast_click(self, x: int, y: int, control_method: ControlMethod = ControlMethod.WINDOW_MESSAGE) -> None:

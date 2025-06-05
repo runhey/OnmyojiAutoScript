@@ -15,10 +15,11 @@ class ConfigManual:
         > Orochi > OrochiMoans > OrochiJudgement > Sougenbi > FallenSun > EternitySea > SixRealms
         > ActivityShikigami > WantedQuests
         > BondlingFairyland > EvoZone > GoryouRealm > HeroTest
-        > TrueOrochi > RichMan
-        > CollectiveMissions
+        > CollectiveMissionsr
         > Pets > TalismanPass > Delegation > Hyakkiyakou
-        > Secret > WeeklyTrifles > MysteryShop > Duel > MetaDemon > FrogBoss > FloatParade > Quiz > KittyShop > DyeTrials
+        > Secret > WeeklyTrifles > MysteryShop > Duel 
+        > TrueOrochi > RichMan
+        > MetaDemon > FrogBoss > FloatParade > Quiz > KittyShop > DyeTrials
         """
 
     DEVICE_OVER_HTTP = False

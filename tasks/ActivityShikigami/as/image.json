@@ -3,7 +3,7 @@
     "itemName": "shi",
     "imageName": "as_shi.png",
     "roiFront": "519,165,33,34",
-    "roiBack": "64,115,1110,427",
+    "roiBack": "507,150,66,67",
     "method": "Template matching",
     "threshold": 0.7,
     "description": "进入活动"
@@ -20,11 +20,20 @@
   {
     "itemName": "battle",
     "imageName": "as_battle.png",
-    "roiFront": "1081,301,35,135",
-    "roiBack": "1042,208,153,315",
+    "roiFront": "937,308,35,135",
+    "roiBack": "892,214,153,315",
     "method": "Template matching",
     "threshold": 0.7,
     "description": "进入爬塔"
+  },
+  {
+    "itemName": "battle_1",
+    "imageName": "as_battle_1.png",
+    "roiFront": "541,663,191,26",
+    "roiBack": "506,622,273,96",
+    "method": "Template matching",
+    "threshold": 0.7,
+    "description": "进入爬塔1"
   },
   {
     "itemName": "drum",
@@ -38,8 +47,8 @@
   {
     "itemName": "lock",
     "imageName": "as_lock.png",
-    "roiFront": "827,655,25,32",
-    "roiBack": "749,592,139,116",
+    "roiFront": "732,613,25,28",
+    "roiBack": "707,592,76,80",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "上锁图标"
@@ -47,8 +56,8 @@
   {
     "itemName": "unlock",
     "imageName": "as_unlock.png",
-    "roiFront": "823,654,28,28",
-    "roiBack": "776,610,112,87",
+    "roiFront": "730,613,28,28",
+    "roiBack": "704,595,78,74",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "还未上锁图片"
@@ -56,8 +65,8 @@
   {
     "itemName": "fire",
     "imageName": "as_fire.png",
-    "roiFront": "1140,583,84,78",
-    "roiBack": "1099,536,150,160",
+    "roiFront": "1052,562,84,46",
+    "roiBack": "1021,521,150,160",
     "method": "Template matching",
     "threshold": 0.7,
     "description": "点击战斗"
@@ -65,8 +74,8 @@
   {
     "itemName": "ap",
     "imageName": "as_ap.png",
-    "roiFront": "1093,667,23,24",
-    "roiBack": "1088,638,103,71",
+    "roiFront": "1065,612,23,24",
+    "roiBack": "1044,589,103,71",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "体力按钮"

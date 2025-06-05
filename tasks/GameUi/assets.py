@@ -159,7 +159,7 @@ class GameUiAssets:
 	# description 
 	I_CHECK_TEAM = RuleImage(roi_front=(32,585,82,90), roi_back=(32,585,82,90), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_check_team.png")
 	# description 
-	I_CHECK_COLLECTION = RuleImage(roi_front=(471,618,100,100), roi_back=(471,618,100,100), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_check_collection.png")
+	I_CHECK_COLLECTION = RuleImage(roi_front=(380,620,100,100), roi_back=(380,620,100,100), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_check_collection.png")
 	# description 
 	I_BACK_Y = RuleImage(roi_front=(15,4,57,52), roi_back=(1,2,100,91), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_back_y.png")
 	# description 

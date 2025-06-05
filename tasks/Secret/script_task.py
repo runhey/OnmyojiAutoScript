@@ -84,7 +84,7 @@ class ScriptTask(GameUi, GeneralBattle, SwitchSoul, SecretAssets):
                     logger.warning('You have completed the weekly trifles, skip')
                     break
                 text = self.O_SE_TOTAL_TIME.ocr_single(self.device.image)
-                if '总耗时' in text:
+                if '尚未' not in text:
                     logger.warning('You have completed the weekly trifles, skip')
                     break
                 continue
