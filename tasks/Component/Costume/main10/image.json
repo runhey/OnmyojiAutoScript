@@ -11,7 +11,7 @@
   {
     "itemName": "main_goto_exploration_10",
     "imageName": "main10_main_goto_exploration_10.png",
-    "roiFront": "444,170,31,30",
+    "roiFront": "449,166,30,42",
     "roiBack": "193,143,904,66",
     "method": "Template matching",
     "threshold": 0.6,
@@ -20,7 +20,7 @@
   {
     "itemName": "main_goto_summon_10",
     "imageName": "main10_main_goto_summon_10.png",
-    "roiFront": "899,139,35,29",
+    "roiFront": "891,135,36,38",
     "roiBack": "515,115,623,68",
     "method": "Template matching",
     "threshold": 0.6,
