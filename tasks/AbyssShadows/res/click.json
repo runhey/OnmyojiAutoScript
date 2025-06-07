@@ -100,5 +100,11 @@
     "roiFront": "20,36,30,14",
     "roiBack": "20,36,30,14",
     "description": "战斗时，左上角退出战斗按钮区域 下半部分"
+  },
+  {
+    "itemName": "mark_main",
+    "roiFront": "380,15,45,30",
+    "roiBack": "380,15,45,30",
+    "description": "红标主怪点击区域"
   }
 ]

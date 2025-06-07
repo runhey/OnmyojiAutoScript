@@ -5,43 +5,44 @@
 # github    https://github.com/roarhill/oas
 
 from datetime import datetime
-from time import sleep
 
 from future.backports.datetime import timedelta
-from module.atom.click import RuleClick
 from module.exception import TaskEnd
+from module.base.timer import Timer
 from module.logger import logger
-from sympy.physics.units import hours
 from sympy.plotting.intervalmath import interval
-from sympy.strategies.core import switch
 from tasks.AbyssShadows.assets import AbyssShadowsAssets
-from tasks.AbyssShadows.config import AbyssShadows, EnemyType, AreaType, ClickArea, Code, AbyssShadowsDifficulty, \
-    CodeList
+from tasks.AbyssShadows.config import AbyssShadows, EnemyType, AreaType, Code, AbyssShadowsDifficulty, \
+    CodeList, IndexMap
+import numpy as np
+import cv2
+from tasks.Component.GeneralBattle.config_general_battle import GreenMarkType
 from tasks.Component.GeneralBattle.general_battle import GeneralBattle
 from tasks.Component.SwitchSoul.switch_soul import SwitchSoul
 from tasks.GameUi.game_ui import GameUi
-from tasks.GameUi.page import page_main, page_shikigami_records, page_guild
+from tasks.GameUi.page import page_main, page_guild
 
 # 单个首领/副将/精英 一次无法完成目标（一般是一次没打掉） 的情况下，最大战斗次数
 MAX_BATTLE_COUNT = 2
 
 
 class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AbyssShadowsAssets):
-    # TODO 完善战斗次数限制
-    boss_fight_count = 0  # 首领战斗次数
-    general_fight_count = 0  # 副将战斗次数
-    elite_fight_count = 0  # 精英战斗次数
-
+    #
+    min_count = {
+        EnemyType.BOSS: 2,  # 最少首领战斗次数
+        EnemyType.GENERAL: 4,  # 最少副将战斗次数
+        EnemyType.ELITE: 6  # 最少精英战斗次数
+    }
     #
     cur_area = None
     #
     cur_preset = None
     # process list
-    ps_list = []
+    ps_list: CodeList = CodeList('')
     # 已完成 列表
-    done_list = []
+    done_list: CodeList = CodeList('')
     # 已知的 已经被打完的  列表
-    unavailable_list = []
+    unavailable_list: CodeList = CodeList('')
     #
     switch_soul_done = False
 
@@ -73,11 +74,22 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AbyssShadowsAssets):
         if cfg.abyss_shadows_time.try_start_abyss_shadows:
             self.start_abyss_shadows()
 
-        #
+        # 判断各个区域是否可用
+        area_available = None
+        for area in AreaType:
+            if self.is_area_done(area):
+                self.unavailable_list.append(IndexMap[area.name].value)
+                continue
+            area_available = area
+
         self.update_list()
+
         _next = self.get_next()
-        # TODO 增加等待时长
-        if not self.select_boss(_next.get_areatype()):
+        if _next is not None:
+            area_available = _next.get_areatype()
+
+        # 通过能否进入，检测狭间是否开启
+        if not self.select_boss(area_available):
             logger.warning("Failed to enter abyss shadows")
             self.goto_main()
             self.set_next_run(task='AbyssShadows', finish=False, server=True, success=False)
@@ -99,16 +111,13 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AbyssShadowsAssets):
         self.goto_main()
 
         # 设置下次运行时间
-        # TODO 添加周四周五周六周天不同的处理方式
-        self.set_next_run(task='AbyssShadows', finish=False, server=True, success=True)
+        self.set_next_run(task='AbyssShadows', finish=True, server=True, success=True)
+
+        self.clear_saved_params()
+
         raise TaskEnd
 
     def update_list(self):
-        # BUG 跨天可能有问题
-        if self.config.model.abyss_shadows.saved_params.save_time != datetime.now().strftime("%Y-%m-%d"):
-            logger.warning("there isn`t params saved today")
-            return
-        #
         self.ps_list = CodeList(self.config.model.abyss_shadows.process_manage.attack_order)
         #
         self.done_list = CodeList(self.config.model.abyss_shadows.saved_params.done)
@@ -116,12 +125,16 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AbyssShadowsAssets):
         self.unavailable_list = CodeList(self.config.model.abyss_shadows.saved_params.unavailable)
 
     def flash_list(self):
-        self.ps_list.save_to_obj(self.config.model.abyss_shadows.process_manage.attack_order)
-        self.done_list.save_to_obj(self.config.model.abyss_shadows.saved_params.done)
-        self.unavailable_list.save_to_obj(self.config.model.abyss_shadows.saved_params.unavailable)
-        self.config.model.abyss_shadows.saved_params.save_time = datetime.now().strftime("%Y-%m-%d")
+        self.config.model.abyss_shadows.saved_params.done = self.done_list.parse2str()
+        self.config.model.abyss_shadows.saved_params.unavailable = self.unavailable_list.parse2str()
         self.config.save()
         logger.info("Flash list done")
+
+    def clear_saved_params(self):
+        self.config.model.abyss_shadows.saved_params.done = ''
+        self.config.model.abyss_shadows.saved_params.unavailable = ''
+        self.config.save()
+        logger.info("Clear saved params done")
 
     def check_current_area(self) -> AreaType:
         ''' 获取当前区域
@@ -129,6 +142,13 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AbyssShadowsAssets):
         '''
         while 1:
             self.screenshot()
+            # 关闭战报界面
+            if self.appear(self.I_ABYSS_MAP_EXIT):
+                self.click(self.I_ABYSS_MAP_EXIT, interval=2)
+                continue
+            if self.appear(self.I_ABYSS_ENEMY_INFO_EXIT):
+                self.click(self.I_ABYSS_ENEMY_INFO_EXIT, interval=2)
+                continue
             if self.appear(self.I_PEACOCK_AREA):
                 return AreaType.PEACOCK
             elif self.appear(self.I_DRAGON_AREA):
@@ -203,6 +223,7 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AbyssShadowsAssets):
             # 区域图片与入口图片不一致，使用点击进去
 
             if self.appear(self.I_ABYSS_DRAGON_OVER) or self.appear(self.I_ABYSS_DRAGON):
+                is_click = False
                 match area_name:
                     case AreaType.DRAGON:
                         is_click = self.click(self.C_ABYSS_DRAGON, interval=2)
@@ -289,9 +310,12 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AbyssShadowsAssets):
 
     def start_abyss_shadows(self):
         # 尝试开启狭间暗域
-
+        self.wait_until_appear(self.I_SELECT_DIFFICULTY, wait_time=2)
         if not self.appear(self.I_SELECT_DIFFICULTY):
             logger.info("Failed to Open abyss_shadows ,cause not found I_SELECT_DIFFICULTY")
+            return
+        if not self.appear(self.I_BTN_START):
+            logger.info("Failed to Open abyss_shadows ,cause not found I_BTN_START")
             return
         # 选择难度
         self.ui_click(self.I_SELECT_DIFFICULTY, stop=self.I_DIFFICULTY_EASY, interval=2)
@@ -312,17 +336,59 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AbyssShadowsAssets):
     def process(self):
         while True:
             self.update_list()
-            next = self.get_next()
-            if next is None:
+            _next = self.get_next()
+            if _next is None:
                 break
-            self.execute(next)
+            self.execute(_next)
             self.flash_list()
 
-    def get_next(self) -> Code:
+    def get_next(self) -> [Code, None]:
         # 获取下一个任务目标
         for ps in self.ps_list:
             if ps not in self.done_list and ps not in self.unavailable_list:
                 return ps
+
+        if not self.config.model.abyss_shadows.abyss_shadows_time.try_complete_enemy_count:
+            #
+            logger.info("All done, don`t need to fix 246")
+            return None
+
+        # 已配置的已完成,若未打满奖励,尝试补全
+        # 统计已完成的各类型数量
+        done_counts = {
+            EnemyType.BOSS: 0,
+            EnemyType.GENERAL: 0,
+            EnemyType.ELITE: 0
+        }
+
+        for code in self.done_list:
+            enemy_type = code.get_enemy_type()
+            done_counts[enemy_type] += 1
+
+        need_boss = done_counts[EnemyType.BOSS] < self.min_count[EnemyType.BOSS]
+        need_general = done_counts[EnemyType.GENERAL] < self.min_count[EnemyType.GENERAL]
+        need_elite = done_counts[EnemyType.ELITE] < self.min_count[EnemyType.ELITE]
+
+        logger.info(f"Need boss: {need_boss}, need general: {need_general}, need elite: {need_elite}")
+        all_possible_codes = []
+        for area in AreaType:
+            area_code = IndexMap[area.name].value  # 如 DRAGON -> 'A'
+            for num in ['1', '2', '3', '4', '5', '6']:
+                all_possible_codes.append(Code(f"{area_code}-{num}"))
+
+        for code in all_possible_codes:
+            if code in self.done_list or code in self.unavailable_list:
+                continue
+
+            enemy_type = code.get_enemy_type()
+
+            if enemy_type == EnemyType.BOSS and need_boss:
+                return code
+            elif enemy_type == EnemyType.GENERAL and need_general:
+                return code
+            elif enemy_type == EnemyType.ELITE and need_elite:
+                return code
+
         return None
 
     def open_navigation(self):
@@ -331,16 +397,15 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AbyssShadowsAssets):
             if self.appear(self.I_ABYSS_MAP):
                 break
             if self.appear(self.I_ABYSS_NAVIGATION):
-                self.click(self.I_ABYSS_NAVIGATION,interval=1)
+                self.click(self.I_ABYSS_NAVIGATION, interval=1)
                 continue
             if self.appear(self.I_ABYSS_FIRE) or self.appear(self.I_ABYSS_GOTO_ENEMY):
-                self.click(self.I_ABYSS_ENEMY_INFO_EXIT,interval=2)
+                self.click(self.I_ABYSS_ENEMY_INFO_EXIT, interval=2)
                 continue
-
 
     def execute(self, item_code: Code):
         area = item_code.get_areatype()
-        need_change_area = (self.cur_area is None) or (area == self.cur_area)
+        need_change_area = (self.cur_area is None) or (area != self.cur_area)
         if need_change_area:
             self.change_area(area)
             self.cur_area = area
@@ -359,38 +424,40 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AbyssShadowsAssets):
             self.attack_enemy()
             # 战斗
             suc = self.run_battle(item_code)
+            self.device.stuck_record_clear()
             if suc:
                 break
             battle_count -= 1
+        logger.info(f"{item_code} push into done_list")
+        self.done_list.append(item_code)
         return True
 
     def run_battle(self, item_code: Code):
         success = False
         enemy = item_code.get_enemy_click()
-        enemy_type = enemy.get_enemy_type()
+        enemy_type = item_code.get_enemy_type()
 
         # 判断是否需要更换预设
-        def get_preset(enemy_type):
+        def get_preset(enemy_type: EnemyType):
             match enemy_type:
                 case EnemyType.BOSS:
                     return self.config.model.abyss_shadows.process_manage.preset_boss
-                case EnemyType.ELITE:
-                    return self.config.model.abyss_shadows.process_manage.preset_elite
                 case EnemyType.GENERAL:
                     return self.config.model.abyss_shadows.process_manage.preset_general
+                case EnemyType.ELITE:
+                    return self.config.model.abyss_shadows.process_manage.preset_elite
 
         preset = get_preset(enemy_type)
         if preset != self.cur_preset:
+            logger.info(f"enemyType{enemy_type}--Switch preset to {preset} and {self.cur_preset=}")
             self.switch_preset_team_with_str(preset)
             self.cur_preset = preset
 
         # 点击准备
-        self.ui_click_until_disappear(self.I_PREPARE_HIGHLIGHT, interval=0.3)
-
-        # 标记主怪
-        is_need_mark_main = self.config.model.abyss_shadows.process_manage.is_need_mark_main()
-        if is_need_mark_main:
-            self.ui_click(self.I_MARK_MAIN, interval=1)
+        _timer_battle = Timer(180)
+        self.wait_until_appear(self.I_PREPARE_HIGHLIGHT, wait_time=3)
+        self.ui_click_until_disappear(self.I_PREPARE_HIGHLIGHT, interval=0.6)
+        _timer_battle.start()
 
         # 生成退出条件
         def generate_quit_condition(enemy_type):
@@ -404,41 +471,73 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AbyssShadowsAssets):
                     strategy = self.config.model.abyss_shadows.process_manage.strategy_general
             return self.config.model.abyss_shadows.process_manage.parse_strategy(strategy)
 
+        # 因为条件中存在时间相关,所以在点击准备按钮后直接生成
         condition = generate_quit_condition(enemy_type)
+        logger.info(f"enemyType{enemy_type}--{condition}")
+
+        # 标记主怪
+        is_need_mark_main = self.config.model.abyss_shadows.process_manage.is_need_mark_main(enemy_type)
+        if is_need_mark_main:
+            logger.info(f"enemyType{enemy_type}--Mark main")
+            self.ui_click(self.C_MARK_MAIN, stop=self.I_MARK_MAIN, interval=1.5)
+
+        # 绿标
+        # self.green_mark(True,GreenMarkType.GREEN_LEFT1)
+
         _cur_damage = 0
+        need_check_damage = condition.is_need_damage_value()
         self.device.screenshot_interval_set(1)
+        self.device.stuck_record_add('BATTLE_STATUS_S')
         while True:
             self.screenshot()
-            if condition.is_need_damage_value():
-                _cur_damage = self.O_DAMAGE.ocr_digit(self.device.image)
-                logger.info(f"Damage Done: {_cur_damage}")
+            if need_check_damage:
+                _cur_damage = self.get_damage(self.device.image)
             if condition.is_valid(_cur_damage):
+                logger.info(f"Condition Validated,try to quit battle")
                 self.device.screenshot_interval_set()
                 self.quit_battle()
                 break
+            if self.appear_then_click(self.I_PREPARE_HIGHLIGHT, interval=3):
+                # 正常来讲，此处不应该出现准备按钮，以防万一
+                continue
             # 战斗胜利标志
             if self.appear_then_click(self.I_WIN, interval=1):
                 self.device.screenshot_interval_set()
+                need_check_damage = False
                 continue
             # 战斗奖励标志
             if self.appear_then_click(self.I_REWARD, interval=1):
                 self.device.screenshot_interval_set()
+                need_check_damage = False
                 continue
             if self.appear(self.I_ABYSS_NAVIGATION):
                 self.device.screenshot_interval_set()
                 break
-        if condition.is_passed():
-            # 通过条件结束的,视其为 完成，加入完成队列
-            self.done_list.append(item_code)
+        if condition.is_passed() or (not _timer_battle.reached()):
+            # 通过条件结束的,视其为完成
             success = True
 
         logger.info(f"{enemy_type.name} DONE")
         return success
 
     def quit_battle(self):
-        # TODO quit
-        self.ui_click(self.C_QUIT_AREA, self.I_EXIT_ENSURE, interval=2)
-        self.ui_click_until_disappear(self.I_EXIT_ENSURE, interval=2)
+        logger.info("Quitting battle")
+        while True:
+            self.screenshot()
+            if self.appear(self.I_EXIT_ENSURE):
+                self.click(self.I_EXIT_ENSURE, interval=1)
+                continue
+            if self.appear(self.I_ABYSS_NAVIGATION):
+                break
+            if self.appear(self.I_WIN):
+                self.click(self.I_WIN, interval=1)
+                continue
+            if self.appear(self.I_REWARD):
+                self.click(self.I_REWARD, interval=1)
+                continue
+            if self.appear(self.I_EXIT):
+                self.click(self.I_EXIT, interval=1)
+                continue
         return
 
     def switch_preset_team_with_str(self, v: str):
@@ -462,13 +561,17 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AbyssShadowsAssets):
             if len(l) != 2:
                 logger.error(f"Due to a configuration error (value: {v}), an error occurred while switch soul.")
                 return
-            self.switch_soul_one(int(l[0]), int(l[1]))
+            self.run_switch_soul((int(l[0]), int(l[1])))
 
         self.ui_click_until_disappear(self.I_ABYSS_SHIKI, interval=2)
+        soul_set: set[str] = set()
+        soul_set.add(self.config.model.abyss_shadows.process_manage.preset_boss)
+        soul_set.add(self.config.model.abyss_shadows.process_manage.preset_general)
+        soul_set.add(self.config.model.abyss_shadows.process_manage.preset_elite)
 
-        switch_soul(self.config.model.abyss_shadows.process_manage.preset_boss)
-        switch_soul(self.config.model.abyss_shadows.process_manage.preset_general)
-        switch_soul(self.config.model.abyss_shadows.process_manage.preset_elite)
+        for v in soul_set:
+            switch_soul(v)
+
         self.switch_soul_done = True
         # 退出式神录
         from tasks.GameUi.assets import GameUiAssets as gua
@@ -487,27 +590,85 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AbyssShadowsAssets):
 
         return True
 
+    def is_area_done(self, area_type: AreaType):
+        self.screenshot()
+        # 去除背景杂色
+        lower_green = np.array([240, 240, 240])
+        upper_green = np.array([255, 255, 255])
+        mask = cv2.inRange(self.device.image, lower_green, upper_green)
+        res_img = cv2.bitwise_and(self.device.image, self.device.image, mask=mask)
+        res_img = cv2.cvtColor(res_img, cv2.COLOR_RGB2BGR)
+
+        match area_type:
+            case AreaType.DRAGON:
+                ocr_res = self.O_DRAGON_DONE.ocr(res_img)
+                return ocr_res.find('封印') != -1
+            case AreaType.FOX:
+                ocr_res = self.O_FOX_DONE.ocr(res_img)
+                return ocr_res.find('封印') != -1
+            case AreaType.LEOPARD:
+                ocr_res = self.O_LEOPARD_DONE.ocr(res_img)
+                return ocr_res.find('封印') != -1
+            case AreaType.PEACOCK:
+                ocr_res = self.O_PEACOCK_DONE.ocr(res_img)
+                return ocr_res.find('封印') != -1
+
+        return False
+
+    def get_damage(self, image):
+        hsv_image = cv2.cvtColor(image, cv2.COLOR_RGB2HSV)
+        # Note 默认战斗场景伤害数字颜色
+        lower_green = np.array([9, 128, 180])
+        upper_green = np.array([30, 210, 255])
+        mask = cv2.inRange(hsv_image, lower_green, upper_green)
+        res_img = cv2.bitwise_and(image, image, mask=mask)
+
+        damage = self.O_DAMAGE.ocr_digit(res_img)
+        return damage
+
 
 if __name__ == "__main__":
+    import cv2, numpy as np
     from module.config.config import Config
     from module.device.device import Device
 
-    import cv2, numpy as np
+    config = Config('oas1')
+    device = Device(config)
 
-    # config = Config('却把烟花嗅')
-    # device = Device(config)
+    # image = cv2.imread('E:/5.png')
+    # image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+    #
+    # hsv_image = cv2.cvtColor(image, cv2.COLOR_RGB2HSV)
+    #
+    # lower_green = np.array([9, 128, 180])
+    # upper_green = np.array([30, 210, 255])
+    # mask = cv2.inRange(hsv_image, lower_green, upper_green)
+    # res_img = cv2.bitwise_and(image, image, mask=mask)
+    # res_img = cv2.cvtColor(res_img, cv2.COLOR_RGB2BGR)
+    # cv2.imshow('res', res_img)
+    # cv2.waitKey()
 
-    image = cv2.imread('E:/5.png')
-    image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+    t = ScriptTask(config, device)
+    # damage = t.O_DAMAGE.ocr(res_img)
+    # print(damage)
 
-    hsv_image = cv2.cvtColor(image, cv2.COLOR_RGB2HSV)
-    lower_green = np.array([167, 100, 200])
-    upper_green = np.array([180, 225, 225])
-    mask = cv2.inRange(hsv_image, lower_green, upper_green)
-    res_img = cv2.bitwise_and(image, image, mask=mask)
-    cv2.imshow('res', res_img)
-    cv2.waitKey()
+    # t.done_list = CodeList('A-4')
+    # t.unavailable_list  = CodeList('D-3')
+    # t.flash_list()
 
-    # t = ScriptTask(config, device)
+    code = Code('D-1')
+    a = code.get_enemy_type()
+    b = code.get_enemy_click()
+    c = code.get_areatype()
+    print(a, b, c)
+
+    t.is_area_done(AreaType.DRAGON)
     # t.screenshot()
     # t.start_abyss_shadows()
+    # hsv_image = cv2.cvtColor(image, cv2.COLOR_RGB2HSV)
+    #
+    # lower_green = np.array([9, 128, 180])
+    # upper_green = np.array([30, 210, 255])
+    # mask = cv2.inRange(hsv_image, lower_green, upper_green)
+    # res_img = cv2.bitwise_and(image, image, mask=mask)
+    # res_img = cv2.cvtColor(res_img, cv2.COLOR_RGB2BGR)

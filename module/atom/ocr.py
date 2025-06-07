@@ -17,6 +17,7 @@ class RuleOcr(Digit, DigitCounter, Duration, Single, Full):
         super().__init__(*args, **kwargs)
 
 
+
     def after_process(self, result):
         match self.mode:
             case OcrMode.FULL: return Full.after_process(self, result)
@@ -35,6 +36,8 @@ class RuleOcr(Digit, DigitCounter, Duration, Single, Full):
             case OcrMode.DIGITCOUNTER: return DigitCounter.ocr_digit_counter(self, image)
             case OcrMode.DURATION: return Duration.ocr_duration(self, image)
             case _: return None
+
+
 
     def coord(self) -> tuple:
         """

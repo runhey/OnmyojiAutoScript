@@ -20,8 +20,8 @@
   {
     "itemName": "abyss_dragon",
     "imageName": "res_abyss_dragon.png",
-    "roiFront": "227,211,55,151",
-    "roiBack": "190,147,140,283",
+    "roiFront": "200,150,110,270",
+    "roiBack": "200,150,110,270",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "狭间_神龙入口"
@@ -29,8 +29,8 @@
   {
     "itemName": "abyss_dragon_over",
     "imageName": "res_abyss_dragon_over.png",
-    "roiFront": "253,185,33,100",
-    "roiBack": "253,185,33,100",
+    "roiFront": "200,150,110,270",
+    "roiBack": "200,150,110,270",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "狭间_神龙入口_已封印"
@@ -227,8 +227,8 @@
   {
     "itemName": "select_difficulty",
     "imageName": "res_select_difficulty.png",
-    "roiFront": "710,650,50,50",
-    "roiBack": "710,650,50,50",
+    "roiFront": "703,645,50,55",
+    "roiBack": "703,645,50,55",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "选择难度按钮"

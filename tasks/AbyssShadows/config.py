@@ -24,36 +24,29 @@ class AreaType(Enum):
     FOX = AbyssShadowsAssets.I_ABYSS_FOX  # 白藏主暗域
     LEOPARD = AbyssShadowsAssets.I_ABYSS_LEOPARD  # 黑豹暗域
 
-    # @classmethod
-    # def __str__(cls, value):
-    #     # 遍历类属性，找到匹配值对应的属性名
-    #     for name, attr_value in vars(cls).items():
-    #         if attr_value == value and not name.startswith('__'):
-    #             return name
-    #     return str(value)  # 默认行为
-
 
 class ClickArea(Enum):
     """ 点击区域 """
+    BOSS = AbyssShadowsAssets.C_BOSS_CLICK_AREA
     GENERAL_1 = AbyssShadowsAssets.C_GENERAL_1_CLICK_AREA
     GENERAL_2 = AbyssShadowsAssets.C_GENERAL_2_CLICK_AREA
     ELITE_1 = AbyssShadowsAssets.C_ELITE_1_CLICK_AREA
     ELITE_2 = AbyssShadowsAssets.C_ELITE_2_CLICK_AREA
     ELITE_3 = AbyssShadowsAssets.C_ELITE_3_CLICK_AREA
-    BOSS = AbyssShadowsAssets.C_BOSS_CLICK_AREA
 
-    # @cached_property
-    # def name(self) -> str:
-    #     """
-    #
-    #     :return:
-    #     """
-    #     return Path(self.file).stem.upper()
-    #
-    # def __str__(self):
-    #     return self.name
-    #
-    # __repr__ = __str__
+
+class IndexMap(str, Enum):
+    """ 索引映射 """
+    DRAGON = "A"  # 神龙暗域
+    PEACOCK = "B"  # 孔雀暗域
+    FOX = "C"  # 白藏主暗域
+    LEOPARD = "D"  # 黑豹暗域
+    BOSS = "1"  # BOSS
+    GENERAL_1 = "2"  # 副将
+    GENERAL_2 = "3"
+    ELITE_1 = "4"  # 精英
+    ELITE_2 = "5"
+    ELITE_3 = "6"
 
 
 class EnemyType(str, Enum):
@@ -69,59 +62,61 @@ class AbyssShadowsDifficulty(str, Enum):
     HARD = "HARD"
 
 
+class MarkMainConfig(str, Enum):
+    """ 标记主怪策略 """
+    NONE = "NONE"  # 不需要标记
+    BOSS_ONLY = "BOSS_ONLY"  # 仅标记首领
+    GENERAL_ONLY = "GENERAL_ONLY"  # 仅标记副将
+    ELITE_ONLY = "ELITE_ONLY"  # 仅标记精英怪
+
+    BOSS_AND_GENERAL = "BOSS_AND_GENERAL"  # 标记首领和副将
+    ELITE_AND_GENERAL = "ELITE_AND_GENERAL"  # 标记精英怪和副将
+    ELITE_AND_BOSS = "ELITE_AND_BOSS"  # 标记精英怪和首领
+
+    ALL = "ALL"  # 标记所有敌人
+
+
 class Code(str):
     def __init__(self, value: str):
         self.value = value
 
     def get_areatype(self):
         area, num = self.value.split('-')
-        match area:
-            case 'A':
-                return AreaType.DRAGON
-            case 'B':
-                return AreaType.PEACOCK
-            case 'C':
-                return AreaType.FOX
-            case 'D':
-                return AreaType.LEOPARD
-            case _:
-                return AreaType.DRAGON
 
-    def get_enemy_click(self):
-        area, num = self.value.split('-')
-        match num:
-            case '1':
-                return AbyssShadowsAssets.C_BOSS_CLICK_AREA
-            case '2':
-                return AbyssShadowsAssets.C_GENERAL_1_CLICK_AREA
-            case '3':
-                return AbyssShadowsAssets.C_GENERAL_2_CLICK_AREA
-            case '4':
-                return AbyssShadowsAssets.C_ELITE_1_CLICK_AREA
-            case '5':
-                return AbyssShadowsAssets.C_ELITE_2_CLICK_AREA
-            case '6':
-                return AbyssShadowsAssets.C_ELITE_3_CLICK_AREA
-            case _:
-                return AbyssShadowsAssets.C_ELITE_1_CLICK_AREA
+        area_name = ""
+        for item in IndexMap:
+            if item.value == area:
+                area_name = item.name
+                break
+
+        return AreaType[area_name]
+
+    def get_enemy_click(self) -> RuleClick:
+        _, num = self.value.split('-')
+
+        # 查找 IndexMap 中 value == num 的项
+        for item in IndexMap:
+            if item.value == num:
+                try:
+                    # 返回 ClickArea 中同名项
+                    return ClickArea[item.name].value
+                except KeyError:
+                    break  # 没找到就走默认逻辑
+
+        # 默认返回精英怪1的点击区域
+        return ClickArea.ELITE_1.value
 
     def get_enemy_type(self):
         area, num = self.value.split('-')
-        match num:
-            case '1':
-                return EnemyType.BOSS
-            case '2':
-                return EnemyType.GENERAL
-            case '3':
-                return EnemyType.GENERAL
-            case '4':
-                return EnemyType.ELITE
-            case '5':
-                return EnemyType.ELITE
-            case '6':
-                return EnemyType.ELITE
-            case _:
-                return EnemyType.ELITE
+        # 查找 IndexMap 中 value == num 的枚举项
+        for item in IndexMap:
+            if item.value == num:
+                try:
+                    return EnemyType[item.name.split("_")[0]]
+                except KeyError:
+                    return EnemyType.ELITE  # 默认值
+
+        return EnemyType.ELITE  # 未找到时默认返回 ELITE
 
 
 class CodeList(list[Code]):
@@ -130,10 +125,18 @@ class CodeList(list[Code]):
         def expand_str(v: str):
             if v.find('-') != -1:
                 return [v]
-            if v in ['A', 'B', 'C', 'D']:
+
+            VALID_AREAS = [area.value for area in IndexMap if area.name in AreaType.__members__]
+            VALID_NUMBERS = [str(i) for i in range(1, 7)]
+
+            if v in VALID_AREAS:
                 return [f'{v}-4', f'{v}-5', f'{v}-6', f'{v}-2', f'{v}-3', f'{v}-1']
-            if v in ['1', '2', '3', '4', '5', '6']:
-                return [f'A-{v}', f'B-{v}', f'C-{v}', f'D-{v}']
+
+            if v in VALID_NUMBERS:
+                # areas = [area.value for area in IndexMap if area.name in AreaType.__members__]
+                return [f'{area}-{v}' for area in VALID_AREAS]
+
+            return []
 
         def parse_order(value: str = None) -> list:
             if value == '':
@@ -145,13 +148,12 @@ class CodeList(list[Code]):
 
         super().__init__(parse_order(v))
 
-    def save_to_obj(self, config_obj: str):
+    def parse2str(self):
         ret = ""
         for item in self:
             ret += ';'
             ret += item.value
-        ret = ret[1:]
-        config_obj = ret
+        return ret[1:]
 
 
 class Condition:
@@ -160,7 +162,8 @@ class Condition:
     _timer: Timer = None
     # _is_damage_enough: bool = False
     _damage_max: int = -1
-
+    # True 立即退出
+    # False     任何情况下,该条件检查不通过
     _dont_need_check: bool = False
 
     # 存储结果,用于后期查询
@@ -180,9 +183,10 @@ class Condition:
             except ValueError:
                 self._time = 180
             self._timer = Timer(self._time)
+            self._timer.start()
         else:
             try:
-                _damage = int(value)
+                self._damage_max = int(value)
             except ValueError:
                 self._damage_max = 999999999
 
@@ -190,8 +194,8 @@ class Condition:
     def is_valid(self, damage: int = None):
 
         if self._time >= 0:
-            if not self._timer.started():
-                self._timer.start()
+            # if not self._timer.started():
+            #     self._timer.start()
             if self._timer.started() and self._timer.reached():
                 self._condition_result = True
                 return True
@@ -202,6 +206,7 @@ class Condition:
         if self._dont_need_check:
             self._condition_result = True
             return True
+        self._condition_result = False
         return False
 
     def is_need_damage_value(self):
@@ -209,6 +214,9 @@ class Condition:
 
     def is_passed(self):
         return self._condition_result
+
+    def __repr__(self):
+        return f"Condition(time={self._time},damage_max={self._damage_max},dont_need_check={self._dont_need_check})"
 
 
 class AbyssShadowsTime(ConfigBase):
@@ -220,6 +228,8 @@ class AbyssShadowsTime(ConfigBase):
     try_start_abyss_shadows: bool = Field(default=False, description='try_start_abyss_shadows_help')
     # 难度
     difficulty: AbyssShadowsDifficulty = Field(default=AbyssShadowsDifficulty.EASY, description='difficulty_help')
+    # 是否尝试补全首领副将精英 2/4/6 数量限制
+    try_complete_enemy_count: bool = Field(default=False, description='try_complete_enemy_count_help')
 
 
 class ProcessManage(ConfigBase):
@@ -233,7 +243,7 @@ class ProcessManage(ConfigBase):
     attack_order: str = Field(default='', description='attack_order_help')
     # 标记主怪
     # EnemyType,  多个用;分隔
-    mark_main: str = Field(default='', description='mark_boss_help')
+    mark_main: MarkMainConfig = Field(default=MarkMainConfig.BOSS_ONLY, description='mark_main_help')
     # 首领预设
     preset_boss: str = Field(default='', description='preset_boss_help')
     # 副将预设
@@ -249,8 +259,26 @@ class ProcessManage(ConfigBase):
     # 精英策略
     strategy_elite: str = Field(default='', description='strategy_elite_help')
 
-    def is_need_mark_main(self, enemy_type):
-        return str(enemy_type) in self.mark_main
+    def is_need_mark_main(self, enemy_type: EnemyType) -> bool:
+        strategy = self.mark_main  # 获取 MarkMainConfig 枚举值
+
+        match strategy:
+            case MarkMainConfig.BOSS_ONLY:
+                return enemy_type == EnemyType.BOSS
+            case MarkMainConfig.GENERAL_ONLY:
+                return enemy_type == EnemyType.GENERAL
+            case MarkMainConfig.ELITE_ONLY:
+                return enemy_type == EnemyType.ELITE
+            case MarkMainConfig.BOSS_AND_GENERAL:
+                return enemy_type in (EnemyType.BOSS, EnemyType.GENERAL)
+            case MarkMainConfig.ELITE_AND_GENERAL:
+                return enemy_type in (EnemyType.ELITE, EnemyType.GENERAL)
+            case MarkMainConfig.ELITE_AND_BOSS:
+                return enemy_type in (EnemyType.ELITE, EnemyType.BOSS)
+            case MarkMainConfig.ALL:
+                return True
+            case _:
+                return False
 
     def parse_strategy(self, strategy: str):
         if strategy is None or strategy == '':
@@ -265,8 +293,6 @@ class SavedParams(ConfigBase):
     fail: str = Field(default='', description='fail_help')
     # 已知的已经打完的
     unavailable: str = Field(default='', description='unavailable_help')
-    # 当前时间，用于判断存储参数有效性
-    save_time: str = Field(default='2023-01-01', description='today_help')
 
     # def save(self):
     #     self.today = datetime.today().strftime('yyyy-mm-dd')
