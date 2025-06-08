@@ -164,8 +164,8 @@
   {
     "itemName": "is_attack",
     "imageName": "res_is_attack.png",
-    "roiFront": "586,62,73,27",
-    "roiBack": "586,62,73,27",
+    "roiFront": "576,54,91,45",
+    "roiBack": "576,54,91,45",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "进攻中"

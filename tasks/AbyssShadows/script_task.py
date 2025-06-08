@@ -91,7 +91,7 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AbyssShadowsAssets):
         if not self.select_boss(area_available):
             logger.warning("Failed to enter abyss shadows")
             self.goto_main()
-            self.set_next_run(task='AbyssShadows', finish=False, server=True, success=False)
+            self.set_next_run(task='AbyssShadows', finish=False, server=False, success=False)
             raise TaskEnd
 
         # 集结中图片
@@ -660,7 +660,7 @@ if __name__ == "__main__":
     t = ScriptTask(config, device)
 
     area_type = AreaType.DRAGON
-    t.unavailable_list+=CodeList(IndexMap[area_type.name].value)
+    t.unavailable_list += CodeList(IndexMap[area_type.name].value)
     print(f"{t.unavailable_list=}")
     # t.screenshot()
 
