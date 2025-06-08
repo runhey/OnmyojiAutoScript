@@ -149,31 +149,39 @@ class CodeList(list[Code]):
         super().__init__(parse_order(v))
 
     def parse2str(self):
-        ret = ""
-        for item in self:
-            ret += ';'
-            ret += item.value
-        return ret[1:]
+        return ';'.join(item.value for item in self)
 
 
 class Condition:
-    # _is_time_out: bool = False
-    _time = -1
-    _timer: Timer = None
-    # _is_damage_enough: bool = False
-    _damage_max: int = -1
-    # True 立即退出
-    # False     任何情况下,该条件检查不通过
-    _dont_need_check: bool = False
-
-    # 存储结果,用于后期查询
-    _condition_result: bool = False
+    """
+    Condition类用于管理一个条件对象，该对象可以基于时间或伤害值来判断条件是否满足。
+    它支持立即满足条件、基于时间满足条件和基于伤害值满足条件三种方式。
+    """
 
     def __init__(self, value: str):
-        # 为True时,相当于没有策略(所有情况都通过条件检查)
-        if value == "TRUE":
+        """
+        初始化Condition对象。
+
+        参数:
+        value (str): 用于设置条件的字符串值，可以是'TRUE', 'FALSE', 时间（秒），或最大伤害值。
+        """
+        # True 立即退出
+        # False     任何情况下,该条件检查不通过
+        self._dont_need_check: bool = False
+        # 时间,单位秒.时间到达时,条件满足
+        # Note 在对象生成时，_timer 即开始运行
+        self._time = -1
+        self._timer: Timer = None
+        # 最大伤害,伤害达到该数值时,条件满足
+        self._damage_max: int = -1
+        # 存储结果,用于后期查询
+        self._condition_result: bool = False
+
+        # 根据输入值设置条件
+        if value.upper() == "TRUE":
+            # 为True时,相当于没有策略(所有情况都通过条件检查)
             self._dont_need_check = True
-        elif value == "FALSE":
+        elif value.upper() == "FALSE":
             # 任何情况都不通过条件检查
             self._dont_need_check = False
         elif len(value) <= 3:
@@ -190,40 +198,65 @@ class Condition:
             except ValueError:
                 self._damage_max = 999999999
 
-    #  检查条件
     def is_valid(self, damage: int = None):
+        """
+        检查当前条件是否满足。
 
+        参数:
+        damage (int, 可选): 当前的伤害值。默认为None。
+
+        返回:
+        bool: 如果条件满足则返回True，否则返回False。
+        """
+        # 检查时间条件
         if self._time >= 0:
             # if not self._timer.started():
             #     self._timer.start()
             if self._timer.started() and self._timer.reached():
                 self._condition_result = True
                 return True
+        # 检查伤害条件
         if self._damage_max >= 0 and damage is not None:
             if self._damage_max < damage:
                 self._condition_result = True
                 return True
+        # 检查是否无需检查条件
         if self._dont_need_check:
             self._condition_result = True
             return True
+        # 如果以上条件都不满足
         self._condition_result = False
         return False
 
     def is_need_damage_value(self):
+        """
+        检查是否需要伤害值来判断条件。
+
+        返回:
+        bool: 如果需要伤害值则返回True，否则返回False。
+        """
         return self._damage_max >= 0
 
     def is_passed(self):
+        """
+        检查条件是否已满足。
+
+        返回:
+        bool: 如果条件已满足则返回True，否则返回False。
+        """
         return self._condition_result
 
     def __repr__(self):
+        """
+        返回Condition对象的字符串表示。
+
+        返回:
+        str: Condition对象的字符串表示。
+        """
         return f"Condition(time={self._time},damage_max={self._damage_max},dont_need_check={self._dont_need_check})"
 
 
 class AbyssShadowsTime(ConfigBase):
-    # 自定义运行时间
-    custom_run_time_friday: Time = Field(default=Time(hour=19, minute=0, second=0))
-    custom_run_time_saturday: Time = Field(default=Time(hour=19, minute=0, second=0))
-    custom_run_time_sunday: Time = Field(default=Time(hour=19, minute=0, second=0))
     # 尝试主动开启狭间-区别于游戏中的自动开启狭间功能
     try_start_abyss_shadows: bool = Field(default=False, description='try_start_abyss_shadows_help')
     # 难度
@@ -238,12 +271,14 @@ class ProcessManage(ConfigBase):
     #       2       3
     #   4       5       6
     # 之间用-分隔，不同怪物用;分隔
-    # 小蛇使用E,-后面表示打几只,例如E-2表示打两只小蛇
+    # 未实现-->小蛇使用E,-后面表示打几只,例如E-2表示打两只小蛇
     # 例如 A-1;B-2;C-3...
     attack_order: str = Field(default='', description='attack_order_help')
     # 标记主怪
     # EnemyType,  多个用;分隔
     mark_main: MarkMainConfig = Field(default=MarkMainConfig.BOSS_ONLY, description='mark_main_help')
+    # 是否启用切换御魂
+    switch_group_team: bool = Field(default=False, description='switch_group_team_help')
     # 首领预设
     preset_boss: str = Field(default='', description='preset_boss_help')
     # 副将预设
@@ -251,7 +286,7 @@ class ProcessManage(ConfigBase):
     # 精英预设
     preset_elite: str = Field(default='', description='preset_elite_help')
     # 小蛇预设
-    preset_snake: str = Field(default='', description='preset_snake_help')
+    # preset_snake: str = Field(default='', description='preset_snake_help')
     # 首领策略 等待打完/时间到了退出/伤害足够退出/秒退
     strategy_boss: str = Field(default='', description='strategy_boss_help')
     # 副将策略
@@ -280,7 +315,15 @@ class ProcessManage(ConfigBase):
             case _:
                 return False
 
-    def parse_strategy(self, strategy: str):
+    def generate_quit_condition(self, enemy_type: EnemyType):
+        strategy = None
+        match enemy_type:
+            case EnemyType.BOSS:
+                strategy = self.strategy_boss
+            case EnemyType.ELITE:
+                strategy = self.strategy_elite
+            case EnemyType.GENERAL:
+                strategy = self.strategy_general
         if strategy is None or strategy == '':
             return False
         return Condition(strategy)

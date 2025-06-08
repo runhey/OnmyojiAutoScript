@@ -7,15 +7,12 @@
 from datetime import datetime
 
 from future.backports.datetime import timedelta
-from module.exception import TaskEnd
+from module.exception import TaskEnd, RequestHumanTakeover
 from module.base.timer import Timer
 from module.logger import logger
-from sympy.plotting.intervalmath import interval
 from tasks.AbyssShadows.assets import AbyssShadowsAssets
 from tasks.AbyssShadows.config import AbyssShadows, EnemyType, AreaType, Code, AbyssShadowsDifficulty, \
     CodeList, IndexMap
-import numpy as np
-import cv2
 from tasks.Component.GeneralBattle.config_general_battle import GreenMarkType
 from tasks.Component.GeneralBattle.general_battle import GeneralBattle
 from tasks.Component.SwitchSoul.switch_soul import SwitchSoul
@@ -55,15 +52,14 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AbyssShadowsAssets):
 
         today = datetime.now().weekday()
         if today not in [4, 5, 6]:
+            # 非周五六日，直接退出
             logger.info(f"Today is not abyss shadows day, exit")
-            # 设置下次运行时间为本周五
-            self.custom_next_run(task='AbyssShadows', custom_time=cfg.abyss_shadows_time.custom_run_time_friday,
-                                 time_delta=4 - today)
+            self.set_next_run(task='AbyssShadows', finish=False, server=True, success=True)
             raise TaskEnd
         server_time = datetime.combine(datetime.now().date(), cfg.scheduler.server_update)
         if datetime.now() - server_time > timedelta(hours=2):
             # 超时两小时未开始,直接退出
-            logger.info("")
+            logger.info("Timeout threshold: 2h (force quit if not started)")
             self.set_next_run(task='AbyssShadows', finish=False, server=True, success=True)
             raise TaskEnd
 
@@ -76,11 +72,14 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AbyssShadowsAssets):
 
         # 判断各个区域是否可用
         area_available = None
+        self.screenshot()
         for area in AreaType:
             if self.is_area_done(area):
-                self.unavailable_list.append(IndexMap[area.name].value)
+                self.unavailable_list += CodeList(IndexMap[area.name].value)
+                logger.info(f"{area.name} unavailable")
                 continue
             area_available = area
+            logger.info(f"{area.name} available")
 
         self.update_list()
 
@@ -95,16 +94,16 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AbyssShadowsAssets):
             self.set_next_run(task='AbyssShadows', finish=False, server=True, success=False)
             raise TaskEnd
 
-        # 等待可进攻时间  
-        self.device.stuck_record_add('BATTLE_STATUS_S')
         # 集结中图片
         self.wait_until_appear(self.I_WAIT_TO_START, wait_time=2)
         # 切换御魂
         self.switch_soul_in_as()
-        #
-        self.wait_until_disappear(self.I_WAIT_TO_START)
+        # 等待可进攻时间
+        self.device.stuck_record_add('BATTLE_STATUS_S')
+        # 等待战斗开始
+        self.wait_until_appear(self.I_IS_ATTACK, wait_time=180)
         self.device.stuck_record_clear()
-
+        #
         self.process()
 
         # 保持好习惯，一个任务结束了就返回到庭院，方便下一任务的开始
@@ -123,12 +122,13 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AbyssShadowsAssets):
         self.done_list = CodeList(self.config.model.abyss_shadows.saved_params.done)
         #
         self.unavailable_list = CodeList(self.config.model.abyss_shadows.saved_params.unavailable)
+        logger.info(f"update list done!{self.done_list=} {self.unavailable_list=}")
 
     def flash_list(self):
         self.config.model.abyss_shadows.saved_params.done = self.done_list.parse2str()
         self.config.model.abyss_shadows.saved_params.unavailable = self.unavailable_list.parse2str()
         self.config.save()
-        logger.info("Flash list done")
+        logger.info(f"Flash list done!{self.done_list=} {self.unavailable_list=}")
 
     def clear_saved_params(self):
         self.config.model.abyss_shadows.saved_params.done = ''
@@ -170,6 +170,11 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AbyssShadowsAssets):
             current_area = self.check_current_area()
             if current_area == area_name:
                 break
+
+            if self.is_area_done(area_name):
+                logger.info(f"change area:{area_name.name} is done")
+                self.unavailable_list += CodeList(IndexMap[area_name.name].value)
+                return False
             # 切换区域界面
             if self.appear(self.I_ABYSS_DRAGON_OVER) or self.appear(self.I_ABYSS_DRAGON):
                 self.select_boss(area_name)
@@ -178,6 +183,14 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AbyssShadowsAssets):
             # 点击战报按钮
             if self.appear_then_click(self.I_CHANGE_AREA, interval=4):
                 logger.info(f"Click {self.I_CHANGE_AREA.name}")
+                continue
+            # 大概率没用,保险点加上吧
+            if self.appear(self.I_ABYSS_MAP_EXIT):
+                self.click(self.I_ABYSS_MAP_EXIT, interval=2)
+                continue
+            # 大概率没用,保险点加上吧
+            if self.appear(self.I_ABYSS_ENEMY_INFO_EXIT):
+                self.click(self.I_ABYSS_ENEMY_INFO_EXIT, interval=2)
                 continue
 
         return True
@@ -221,7 +234,6 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AbyssShadowsAssets):
         while 1:
             self.screenshot()
             # 区域图片与入口图片不一致，使用点击进去
-
             if self.appear(self.I_ABYSS_DRAGON_OVER) or self.appear(self.I_ABYSS_DRAGON):
                 is_click = False
                 match area_name:
@@ -460,19 +472,8 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AbyssShadowsAssets):
         _timer_battle.start()
 
         # 生成退出条件
-        def generate_quit_condition(enemy_type):
-            strategy = None
-            match enemy_type:
-                case EnemyType.BOSS:
-                    strategy = self.config.model.abyss_shadows.process_manage.strategy_boss
-                case EnemyType.ELITE:
-                    strategy = self.config.model.abyss_shadows.process_manage.strategy_elite
-                case EnemyType.GENERAL:
-                    strategy = self.config.model.abyss_shadows.process_manage.strategy_general
-            return self.config.model.abyss_shadows.process_manage.parse_strategy(strategy)
-
-        # 因为条件中存在时间相关,所以在点击准备按钮后直接生成
-        condition = generate_quit_condition(enemy_type)
+        # 因为条件中可能是时间相关,所以在点击准备按钮后直接生成,尽量减小误差
+        condition = self.config.model.abyss_shadows.process_manage.generate_quit_condition(enemy_type)
         logger.info(f"enemyType{enemy_type}--{condition}")
 
         # 标记主怪
@@ -491,7 +492,7 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AbyssShadowsAssets):
         while True:
             self.screenshot()
             if need_check_damage:
-                _cur_damage = self.get_damage(self.device.image)
+                _cur_damage = self.O_DAMAGE.ocr_digit(self.device.image)
             if condition.is_valid(_cur_damage):
                 logger.info(f"Condition Validated,try to quit battle")
                 self.device.screenshot_interval_set()
@@ -499,6 +500,8 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AbyssShadowsAssets):
                 break
             if self.appear_then_click(self.I_PREPARE_HIGHLIGHT, interval=3):
                 # 正常来讲，此处不应该出现准备按钮，以防万一
+                self.device.stuck_record_add("BATTLE_STATUS_S")
+                _timer_battle.reset()
                 continue
             # 战斗胜利标志
             if self.appear_then_click(self.I_WIN, interval=1):
@@ -515,6 +518,7 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AbyssShadowsAssets):
                 break
         if condition.is_passed() or (not _timer_battle.reached()):
             # 通过条件结束的,视其为完成
+            # 条件未通过且战斗时间不足3分钟的,极大可能是打死了,视之为完成
             success = True
 
         logger.info(f"{enemy_type.name} DONE")
@@ -550,7 +554,7 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AbyssShadowsAssets):
     def switch_soul_in_as(self):
         if self.switch_soul_done:
             return
-        if not self.config.model.abyss_shadows.switch_soul_config.enable:
+        if not self.config.model.abyss_shadows.process_manage.switch_group_team:
             self.switch_soul_done = True
             return
 
@@ -560,7 +564,7 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AbyssShadowsAssets):
             l = v.split(',')
             if len(l) != 2:
                 logger.error(f"Due to a configuration error (value: {v}), an error occurred while switch soul.")
-                return
+                raise RequestHumanTakeover
             self.run_switch_soul((int(l[0]), int(l[1])))
 
         self.ui_click_until_disappear(self.I_ABYSS_SHIKI, interval=2)
@@ -578,6 +582,7 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AbyssShadowsAssets):
         self.ui_click_until_disappear(gua.I_BACK_Y, interval=2)
 
     def check_available(self, item_code: Code):
+        # 判断该怪物是否可用
         # TODO 设想使用平均亮度分辨 是否可用
         self.change_area(item_code.get_areatype())
 
@@ -591,13 +596,17 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AbyssShadowsAssets):
         return True
 
     def is_area_done(self, area_type: AreaType):
-        self.screenshot()
+        # 不再切换区域界面直接返回
+        if not self.appear(self.I_ABYSS_DRAGON) and not self.appear(self.I_ABYSS_DRAGON_OVER):
+            return False
+        #
+        res_img = self.device.image
         # 去除背景杂色
-        lower_green = np.array([240, 240, 240])
-        upper_green = np.array([255, 255, 255])
-        mask = cv2.inRange(self.device.image, lower_green, upper_green)
-        res_img = cv2.bitwise_and(self.device.image, self.device.image, mask=mask)
-        res_img = cv2.cvtColor(res_img, cv2.COLOR_RGB2BGR)
+        # lower_green = np.array([240, 240, 240])
+        # upper_green = np.array([255, 255, 255])
+        # mask = cv2.inRange(self.device.image, lower_green, upper_green)
+        # res_img = cv2.bitwise_and(self.device.image, self.device.image, mask=mask)
+        # res_img = cv2.cvtColor(res_img, cv2.COLOR_RGB2BGR)
 
         match area_type:
             case AreaType.DRAGON:
@@ -615,16 +624,16 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AbyssShadowsAssets):
 
         return False
 
-    def get_damage(self, image):
-        hsv_image = cv2.cvtColor(image, cv2.COLOR_RGB2HSV)
-        # Note 默认战斗场景伤害数字颜色
-        lower_green = np.array([9, 128, 180])
-        upper_green = np.array([30, 210, 255])
-        mask = cv2.inRange(hsv_image, lower_green, upper_green)
-        res_img = cv2.bitwise_and(image, image, mask=mask)
-
-        damage = self.O_DAMAGE.ocr_digit(res_img)
-        return damage
+    # def get_damage(self, image):
+    #     hsv_image = cv2.cvtColor(image, cv2.COLOR_RGB2HSV)
+    #     # Note 默认战斗场景伤害数字颜色
+    #     lower_green = np.array([9, 128, 180])
+    #     upper_green = np.array([30, 210, 255])
+    #     mask = cv2.inRange(hsv_image, lower_green, upper_green)
+    #     res_img = cv2.bitwise_and(image, image, mask=mask)
+    #
+    #     damage =self.O_DAMAGE.ocr(res_img)
+    #     return damage
 
 
 if __name__ == "__main__":
@@ -635,8 +644,8 @@ if __name__ == "__main__":
     config = Config('oas1')
     device = Device(config)
 
-    # image = cv2.imread('E:/5.png')
-    # image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+    image = cv2.imread('E:/f.png')
+    image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
     #
     # hsv_image = cv2.cvtColor(image, cv2.COLOR_RGB2HSV)
     #
@@ -649,6 +658,17 @@ if __name__ == "__main__":
     # cv2.waitKey()
 
     t = ScriptTask(config, device)
+
+    area_type = AreaType.DRAGON
+    t.unavailable_list+=CodeList(IndexMap[area_type.name].value)
+    print(f"{t.unavailable_list=}")
+    # t.screenshot()
+
+    # cv2.imshow("origin", t.device.image)
+    # cv2.waitKey()
+
+    # res = t.O_TEST_PRE.ocr(image)
+    # print(res)
     # damage = t.O_DAMAGE.ocr(res_img)
     # print(damage)
 
@@ -656,13 +676,13 @@ if __name__ == "__main__":
     # t.unavailable_list  = CodeList('D-3')
     # t.flash_list()
 
-    code = Code('D-1')
-    a = code.get_enemy_type()
-    b = code.get_enemy_click()
-    c = code.get_areatype()
-    print(a, b, c)
-
-    t.is_area_done(AreaType.DRAGON)
+    # code = Code('D-1')
+    # a = code.get_enemy_type()
+    # b = code.get_enemy_click()
+    # c = code.get_areatype()
+    # print(a, b, c)
+    #
+    # t.is_area_done(AreaType.DRAGON)
     # t.screenshot()
     # t.start_abyss_shadows()
     # hsv_image = cv2.cvtColor(image, cv2.COLOR_RGB2HSV)
