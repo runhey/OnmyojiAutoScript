@@ -126,15 +126,15 @@ class AbyssShadowsAssets:
 
 	# Ocr Rule Assets
 	# 伤害 
-	O_DAMAGE = RuleOcr(roi=(50,110,300,50), area=(50,110,300,50), mode="Digit", method="Default", keyword="", name="damage")
+	O_DAMAGE = RuleOcr(roi=(50,110,300,50), area=(50,110,300,50), mode="Digit", method="CF_HSV(0980B4,1ED2FF)", keyword="", name="damage")
 	# 神龙暗域已完成 
-	O_DRAGON_DONE = RuleOcr(roi=(130,160,180,360), area=(130,160,180,360), mode="Single", method="Default", keyword="封印", name="dragon_done")
+	O_DRAGON_DONE = RuleOcr(roi=(130,160,180,360), area=(130,160,180,360), mode="Single", method="CF_RGB(CCCCCC,FFFFFF)", keyword="封印", name="dragon_done")
 	# 孔雀暗域已完成 
-	O_PEACOCK_DONE = RuleOcr(roi=(420,160,180,360), area=(420,160,180,360), mode="Single", method="Default", keyword="封印", name="peacock_done")
+	O_PEACOCK_DONE = RuleOcr(roi=(420,160,180,360), area=(420,160,180,360), mode="Single", method="CF_RGB(CCCCCC,FFFFFF)", keyword="封印", name="peacock_done")
 	# 白藏主暗域已完成 
-	O_FOX_DONE = RuleOcr(roi=(680,160,180,360), area=(680,160,180,360), mode="Single", method="Default", keyword="封印", name="fox_done")
+	O_FOX_DONE = RuleOcr(roi=(680,160,180,360), area=(680,160,180,360), mode="Single", method="CF_RGB(CCCCCC,FFFFFF)", keyword="封印", name="fox_done")
 	# 黑豹暗域已完成 
-	O_LEOPARD_DONE = RuleOcr(roi=(1000,160,180,360), area=(1000,160,180,360), mode="Single", method="Default", keyword="封印", name="leopard_done")
+	O_LEOPARD_DONE = RuleOcr(roi=(1000,160,180,360), area=(1000,160,180,360), mode="Single", method="CF_RGB(CCCCCC,FFFFFF)", keyword="封印", name="leopard_done")
 
 
 	# Swipe Rule Assets

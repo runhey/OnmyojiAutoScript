@@ -4,7 +4,7 @@
     "roiFront": "50,110,300,50",
     "roiBack": "50,110,300,50",
     "mode": "Digit",
-    "method": "Default",
+    "method": "CF_HSV(0980B4,1ED2FF)",
     "keyword": "",
     "description": "伤害"
   },
@@ -13,7 +13,7 @@
     "roiFront": "130,160,180,360",
     "roiBack": "130,160,180,360",
     "mode": "Single",
-    "method": "Default",
+    "method": "CF_RGB(CCCCCC,FFFFFF)",
     "keyword": "封印",
     "description": "神龙暗域已完成"
   },
@@ -22,7 +22,7 @@
     "roiFront": "420,160,180,360",
     "roiBack": "420,160,180,360",
     "mode": "Single",
-    "method": "Default",
+    "method": "CF_RGB(CCCCCC,FFFFFF)",
     "keyword": "封印",
     "description": "孔雀暗域已完成"
   },
@@ -31,7 +31,7 @@
     "roiFront": "680,160,180,360",
     "roiBack": "680,160,180,360",
     "mode": "Single",
-    "method": "Default",
+    "method": "CF_RGB(CCCCCC,FFFFFF)",
     "keyword": "封印",
     "description": "白藏主暗域已完成"
   },
@@ -40,7 +40,7 @@
     "roiFront": "1000,160,180,360",
     "roiBack": "1000,160,180,360",
     "mode": "Single",
-    "method": "Default",
+    "method": "CF_RGB(CCCCCC,FFFFFF)",
     "keyword": "封印",
     "description": "黑豹暗域已完成"
   }

@@ -39,26 +39,41 @@ class OcrMode(Enum):
     DURATION = 5  # str: "Duration"
 
 
-class OcrMethod():
-    _reg = r"^([^()]+)(?:$(.*?)$)?$"
-    _METHODS = {
-        "Default": 1,
-        "ColorFilter": 2,
-    }
-    _method = "Default"
-    _val = None
+class OcrMethodType(Enum):
+    # 默认，不需要预处理
+    DEFAULT = "DEFAULT"
+    # # 颜色过滤Color Filter
+    # 配置相关CF_RGB(lower, upper)
+    # lower ,upper 格式为6位16进制，例如FFFFFF
+    # 过滤图片中颜色，仅保留符合指定范围（lower到upper）的颜色
+    CF_HSV = "CF_HSV"
+    # 与CF_HSV  相似
+    CF_RGB = "CF_RGB"
+
+
+class OcrMethod:
+    _reg = r"([^()]+)\((.*?)\)?$"
 
     def __init__(self, val: str = None):
+        self._method_type: OcrMethodType = OcrMethodType.DEFAULT
+        self._val: str = val
         if val is None:
-            self._method = "Default"
             return
         import re
         match = re.match(self._reg, val)
         if not match:
-            self._method = "Default"
             return
-        self._method = match.group(1)
+        type_str = match.group(1).upper()
+        if type_str not in OcrMethodType.__members__:
+            return
+        self._method_type = OcrMethodType[type_str]
         self._val = match.group(2)
+
+    def get_method_type(self):
+        return self._method_type
+
+    def get_val(self):
+        return self._val
 
 
 class BaseCor:
@@ -279,6 +294,7 @@ class BaseCor:
                     text=f'[{results}]')
         return results
 
+
 # def test():
 #     # strings = ["探", "索"]
 #     # keyword = "探索"
@@ -304,3 +320,6 @@ class BaseCor:
 #     else:
 #         return None
 # print(test())
+
+if __name__ == '__main__':
+    print(OcrMethod.DEFAULT)

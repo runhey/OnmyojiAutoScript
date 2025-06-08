@@ -125,6 +125,8 @@ class BaseTask(GlobalGameAssets, CostumeBase):
         截图 引入中间函数的目的是 为了解决如协作的这类突发的事件
         :return:
         """
+        # nemu_ipc 返回为RGB
+        # 其他方式未知
         self.device.screenshot()
         # 判断勾协
         self._burst()
