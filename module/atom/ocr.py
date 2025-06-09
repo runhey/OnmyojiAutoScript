@@ -5,7 +5,7 @@
 import numpy as np
 import cv2
 
-from module.ocr.base_ocr import BaseCor, OcrMode, OcrMethod
+from module.ocr.base_ocr import BaseCor, OcrMode, OcrMethod, OcrMethodType
 from module.ocr.sub_ocr import Full, Single, Digit, DigitCounter, Duration, Quantity
 from module.logger import logger
 
