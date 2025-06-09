@@ -7,5 +7,14 @@
     "method": "Default",
     "keyword": "",
     "description": "人数"
+  },
+  {
+    "itemName": "de_best_boss_people",
+    "roiFront": "902,564,100,31",
+    "roiBack": "902,564,100,31",
+    "mode": "DigitCounter",
+    "method": "Default",
+    "keyword": "",
+    "description": "Ocr-description"
   }
 ]

@@ -20,8 +20,8 @@
   {
     "itemName": "login_red_close",
     "imageName": "login_login_red_close.png",
-    "roiFront": "912,0,360,290",
-    "roiBack": "912,0,360,290",
+    "roiFront": "800,0,480,290",
+    "roiBack": "800,0,480,290",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"
@@ -115,5 +115,14 @@
     "method": "Template matching",
     "threshold": 0.8,
     "description": "已有角色"
+  },
+  {
+    "itemName": "create_account",
+    "imageName": "login_create_account.png",
+    "roiFront": "555,636,169,52",
+    "roiBack": "504,614,263,100",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
   }
 ]

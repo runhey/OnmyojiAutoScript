@@ -1,0 +1,47 @@
+[
+  {
+    "itemName": "check_main_11",
+    "imageName": "main11_check_main_11.png",
+    "roiFront": "521,570,53,24",
+    "roiBack": "131,514,1099,100",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "main_goto_exploration_11",
+    "imageName": "main11_main_goto_exploration_11.png",
+    "roiFront": "522,113,21,34",
+    "roiBack": "192,105,904,66",
+    "method": "Template matching",
+    "threshold": 0.6,
+    "description": "description"
+  },
+  {
+    "itemName": "main_goto_summon_11",
+    "imageName": "main11_main_goto_summon_11.png",
+    "roiFront": "946,111,20,37",
+    "roiBack": "500,102,623,68",
+    "method": "Template matching",
+    "threshold": 0.6,
+    "description": ""
+  },
+  {
+    "itemName": "main_goto_town_11",
+    "imageName": "main11_main_goto_town_11.png",
+    "roiFront": "703,169,35,20",
+    "roiBack": "262,145,999,78",
+    "method": "Template matching",
+    "threshold": 0.7,
+    "description": "町中"
+  },
+  {
+    "itemName": "pet_house_11",
+    "imageName": "main11_pet_house_11.png",
+    "roiFront": "966,323,29,29",
+    "roiBack": "724,295,440,69",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "宠物室"
+  }
+]

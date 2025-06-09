@@ -1,0 +1,92 @@
+[
+  {
+    "itemName": "ms_enter",
+    "imageName": "ms_ms_enter.png",
+    "roiFront": "1169,155,24,55",
+    "roiBack": "1169,155,24,55",
+    "method": "Template matching",
+    "threshold": 0.5,
+    "description": "进入绘卷主界面"
+  },
+  {
+    "itemName": "ms_main",
+    "imageName": "ms_ms_main.png",
+    "roiFront": "689,3,40,50",
+    "roiBack": "689,3,40,50",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "判断是否处于绘卷主界面"
+  },
+  {
+    "itemName": "ms_back",
+    "imageName": "ms_ms_back.png",
+    "roiFront": "32,31,43,45",
+    "roiBack": "32,31,43,45",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "退出到召唤界面"
+  },
+  {
+    "itemName": "ms_close",
+    "imageName": "ms_ms_close.png",
+    "roiFront": "1145,48,39,41",
+    "roiBack": "1145,48,39,41",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "关闭分卷捐献界面"
+  },
+  {
+    "itemName": "ms_contribute",
+    "imageName": "ms_ms_contribute.png",
+    "roiFront": "1013,583,125,35",
+    "roiBack": "1013,583,125,35",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "贡献碎片"
+  },
+  {
+    "itemName": "ms_contributed",
+    "imageName": "ms_ms_contributed.png",
+    "roiFront": "493,232,63,40",
+    "roiBack": "493,232,63,40",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "贡献碎片完成"
+  },
+  {
+    "itemName": "ms_complete",
+    "imageName": "ms_ms_complete.png",
+    "roiFront": "397,593,100,21",
+    "roiBack": "397,593,100,21",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "绘卷100%"
+  },
+  {
+    "itemName": "ms_zero_s",
+    "imageName": "ms_ms_zero_s.png",
+    "roiFront": "968,160,51,27",
+    "roiBack": "968,160,51,27",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "小绘卷不足"
+  },
+  {
+    "itemName": "ms_zero_m",
+    "imageName": "ms_ms_zero_m.png",
+    "roiFront": "967,312,54,26",
+    "roiBack": "967,312,54,26",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "中绘卷不足"
+  },
+  {
+    "itemName": "ms_zero_l",
+    "imageName": "ms_ms_zero_l.png",
+    "roiFront": "968,464,51,27",
+    "roiBack": "968,464,51,27",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "大绘卷不足"
+  }
+]

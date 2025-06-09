@@ -44,6 +44,11 @@ class ScriptTask(GameUi, BaseActivity, SwitchSoul, ActivityShikigamiAssets):
 
         self.ui_get_current_page()
         self.ui_goto(page_main)
+
+        # self.open_buff()
+        # self.soul(is_open=True)
+        # self.close_buff()
+
         self.home_main()
 
         # 选择是游戏的体力还是活动的体力
@@ -51,6 +56,7 @@ class ScriptTask(GameUi, BaseActivity, SwitchSoul, ActivityShikigamiAssets):
         self.switch(current_ap)
 
         # 设定是否锁定阵容
+
         if config.general_battle.lock_team_enable:
             logger.info("Lock team")
             while 1:
@@ -100,7 +106,7 @@ class ScriptTask(GameUi, BaseActivity, SwitchSoul, ActivityShikigamiAssets):
 
             # 随机休息
             if config.general_climb.random_sleep:
-                random_sleep()
+                random_sleep(probability=0.2)
             # 点击战斗
             logger.info("Click battle")
             while 1:
@@ -122,6 +128,9 @@ class ScriptTask(GameUi, BaseActivity, SwitchSoul, ActivityShikigamiAssets):
                 logger.info("General battle success")
 
         self.main_home()
+        self.open_buff()
+        self.soul(is_open=False)
+        self.close_buff()
         if config.general_climb.active_souls_clean:
             self.set_next_run(task='SoulsTidy', success=False, finish=False, target=datetime.now())
         self.set_next_run(task="ActivityShikigami", success=True)
@@ -140,9 +149,11 @@ class ScriptTask(GameUi, BaseActivity, SwitchSoul, ActivityShikigamiAssets):
                 break
             if self.appear_then_click(self.I_SHI, interval=1):
                 continue
-            if self.appear_then_click(self.I_DRUM, interval=1):
+            if self.ocr_appear_click(self.O_ENTRY_ACTIVITY, interval=1):
                 continue
             if self.appear_then_click(self.I_BATTLE, interval=1):
+                continue
+            if self.appear_then_click(self.I_BATTLE_1, interval=1):
                 continue
 
     def main_home(self) -> bool:
@@ -161,6 +172,8 @@ class ScriptTask(GameUi, BaseActivity, SwitchSoul, ActivityShikigamiAssets):
                 continue
             if self.appear_then_click(self.I_BACK_GREEN, interval=2):
                 continue
+            if self.appear_then_click(self.I_EXIT, interval=2.2, threshold=0.6):
+                continue
 
     def check_ap_remain(self, current_ap: ApMode) -> bool:
         """
@@ -169,22 +182,34 @@ class ScriptTask(GameUi, BaseActivity, SwitchSoul, ActivityShikigamiAssets):
         """
         self.screenshot()
         if current_ap == ApMode.AP_ACTIVITY:
-            cu, res, total = self.O_REMAIN_AP_ACTIVITY.ocr(image=self.device.image)
-            if cu == 0 and cu + res == total:
-                logger.warning("Activity ap not enough")
+            res: int = self.O_REMAIN_AP_ACTIVITY2.ocr_digit(self.device.image)
+            if res <= 0:
+                logger.warning(f'Activity ap {res} not enough')
                 return False
             return True
+            # cu, res, total = self.O_REMAIN_AP_ACTIVITY.ocr(image=self.device.image)
+            # if cu == 0 and cu + res == total:
+            #     logger.warning("Activity ap not enough")
+            #     return False
+            # return True
 
         elif current_ap == ApMode.AP_GAME:
-            cu, res, total = self.O_REMAIN_AP.ocr(image=self.device.image)
-            if cu == total and cu + res == total:
-                if cu > total:
-                    logger.warning(f'Game ap {cu} more than total {total}')
-                    return True
-                logger.warning(f'Game ap not enough: {cu}')
-                return False
+            cu: int = self.O_REMAIN_AP.ocr_digit(self.device.image)
+            if cu > 0:
+                logger.warning(f'Game ap {cu} more than 0')
+                return True
+            logger.warning(f'Game ap not enough: {cu}')
+            return False
 
-            return True
+            # cu, res, total = self.O_REMAIN_AP.ocr(image=self.device.image)
+            # if cu == total and cu + res == total:
+            #     if cu > total:
+            #         logger.warning(f'Game ap {cu} more than total {total}')
+            #         return True
+            #     logger.warning(f'Game ap not enough: {cu}')
+            #     return False
+            #
+            # return True
 
     def switch(self, current_ap: ApMode) -> None:
         """

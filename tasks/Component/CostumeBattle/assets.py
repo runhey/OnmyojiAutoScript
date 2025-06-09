@@ -20,6 +20,15 @@ class CostumeBattleAssets:
 
 
 	# Image Rule Assets
+	# 左上角退出 
+	I_EXIT_10 = RuleImage(roi_front=(16,15,38,36), roi_back=(16,15,38,36), threshold=0.8, method="Template matching", file="./tasks/Component/CostumeBattle/battle10/battle10_exit_10.png")
+	# 左上角好友 
+	I_FRIENDS_10 = RuleImage(roi_front=(90,14,35,37), roi_back=(90,14,35,37), threshold=0.8, method="Template matching", file="./tasks/Component/CostumeBattle/battle10/battle10_friends_10.png")
+	# 指针 
+	I_LOCAL_10 = RuleImage(roi_front=(29,566,23,26), roi_back=(29,566,23,26), threshold=0.8, method="Template matching", file="./tasks/Component/CostumeBattle/battle10/battle10_local_10.png")
+
+
+	# Image Rule Assets
 	# description 
 	I_LOCAL_2 = RuleImage(roi_front=(30,569,21,22), roi_back=(30,569,21,22), threshold=0.8, method="Template matching", file="./tasks/Component/CostumeBattle/battle2/battle2_local_2.png")
 	# description 
@@ -70,7 +79,7 @@ class CostumeBattleAssets:
 	# 左上角退出 
 	I_EXIT_7 = RuleImage(roi_front=(22,17,27,31), roi_back=(22,17,27,31), threshold=0.8, method="Template matching", file="./tasks/Component/CostumeBattle/battle7/battle7_exit_7.png")
 	# 左上角好友 
-	I_FRIENDS_7 = RuleImage(roi_front=(89,18,35,34), roi_back=(89,18,35,34), threshold=0.8, method="Template matching", file="./tasks/Component/CostumeBattle/battle7/battle6_friends_7.png")
+	I_FRIENDS_7 = RuleImage(roi_front=(89,18,35,34), roi_back=(89,18,35,34), threshold=0.8, method="Template matching", file="./tasks/Component/CostumeBattle/battle7/battle7_friends_7.png")
 
 
 	# Image Rule Assets

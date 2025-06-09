@@ -8,12 +8,14 @@ import numpy as np
 from ppocronnx.predict_system import BoxedResult
 from enum import Enum
 
+
 from module.base.decorator import cached_property
 from module.base.utils import area_pad, crop, float2str
 from module.ocr.ppocr import TextSystem
 from module.ocr.models import OCR_MODEL
 from module.exception import ScriptError
 from module.logger import logger
+
 
 
 def enlarge_canvas(image):
@@ -78,6 +80,7 @@ class OcrMethod:
 
 
 class BaseCor:
+
     lang: str = "ch"
     score: float = 0.6  # 阈值默认为0.5
 
@@ -87,6 +90,7 @@ class BaseCor:
     roi: list = []  # [x, y, width, height]
     area: list = []  # [x, y, width, height]
     keyword: str = ""  # 默认为空
+
 
     def __init__(self,
                  name: str,
@@ -217,7 +221,7 @@ class BaseCor:
                     text=str([result.ocr_text for result in results]))
         return results
 
-    def match(self, result: str, included: bool = False) -> bool:
+    def match(self, result: str, included: bool=False) -> bool:
         """
         使用ocr获取结果后和keyword进行匹配
         :param result:
@@ -229,7 +233,7 @@ class BaseCor:
         else:
             return self.keyword == result
 
-    def filter(self, boxed_results: list[BoxedResult], keyword: str = None) -> list or None:
+    def filter(self, boxed_results: list[BoxedResult], keyword: str=None) -> list or None:
         """
         使用ocr获取结果后和keyword进行匹配. 返回匹配的index list
         :param keyword: 如果不指定默认适用对象的keyword
@@ -321,6 +325,3 @@ class BaseCor:
 #     else:
 #         return None
 # print(test())
-
-if __name__ == '__main__':
-    print(OcrMethod.DEFAULT)

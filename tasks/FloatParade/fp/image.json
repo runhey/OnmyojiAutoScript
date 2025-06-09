@@ -2,8 +2,8 @@
   {
     "itemName": "fp_access",
     "imageName": "fp_fp_access.png",
-    "roiFront": "183,413,36,34",
-    "roiBack": "95,344,1042,229",
+    "roiFront": "1192,317,36,34",
+    "roiBack": "1000,101,261,472",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "从庭院进入花车活动"
@@ -29,8 +29,8 @@
   {
     "itemName": "fp_getall1",
     "imageName": "fp_fp_getall1.png",
-    "roiFront": "1196,544,53,54",
-    "roiBack": "1159,489,113,164",
+    "roiFront": "1198,555,53,54",
+    "roiBack": "1163,506,113,164",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"
@@ -92,7 +92,7 @@
   {
     "itemName": "fp_upgrade",
     "imageName": "fp_fp_upgrade.png",
-    "roiFront": "1075,75,116,49",
+    "roiFront": "1086,74,116,49",
     "roiBack": "1040,52,169,100",
     "method": "Template matching",
     "threshold": 0.8,
@@ -106,5 +106,32 @@
     "method": "Template matching",
     "threshold": 0.8,
     "description": "红色关闭"
+  },
+  {
+    "itemName": "toggle_button",
+    "imageName": "fp_toggle_button.png",
+    "roiFront": "1202,466,22,21",
+    "roiBack": "1090,127,176,377",
+    "method": "Template matching",
+    "threshold": 0.7,
+    "description": "寻找花车的切换按钮"
+  },
+  {
+    "itemName": "batch_selection",
+    "imageName": "fp_batch_selection.png",
+    "roiFront": "933,517,44,40",
+    "roiBack": "933,517,44,40",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "批量选择"
+  },
+  {
+    "itemName": "batch_selection_confirm",
+    "imageName": "fp_batch_selection_confirm.png",
+    "roiFront": "676,392,130,63",
+    "roiBack": "676,392,130,63",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "批量选择确认"
   }
 ]

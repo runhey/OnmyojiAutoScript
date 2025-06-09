@@ -90,7 +90,7 @@ class GameUiAssets:
 
 	# Image Rule Assets
 	# description 
-	I_MAIN_GOTO_TOWN = RuleImage(roi_front=(706,249,61,57), roi_back=(200,120,951,298), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_main_goto_town.png")
+	I_MAIN_GOTO_TOWN = RuleImage(roi_front=(706,249,61,57), roi_back=(200,120,951,298), threshold=0.6, method="Template matching", file="./tasks/GameUi/page/page_main_goto_town.png")
 	# description 
 	I_CHECK_TOWN = RuleImage(roi_front=(1026,106,68,82), roi_back=(765,98,402,96), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_check_town.png")
 	# description 
@@ -151,15 +151,15 @@ class GameUiAssets:
 	# description 
 	I_CHECK_FRIENDS = RuleImage(roi_front=(1011,592,133,60), roi_back=(1011,592,133,60), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_check_friends.png")
 	# description 
-	I_CHECK_DAILY = RuleImage(roi_front=(27,515,69,62), roi_back=(1,489,155,127), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_check_daily.png")
+	I_CHECK_DAILY = RuleImage(roi_front=(28,515,58,62), roi_back=(1,487,154,145), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_check_daily.png")
 	# description 
-	I_CHECK_MALL = RuleImage(roi_front=(239,502,100,100), roi_back=(239,502,100,100), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_check_mall.png")
+	I_CHECK_MALL = RuleImage(roi_front=(147,527,82,82), roi_back=(147,527,82,82), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_check_mall.png")
 	# description 
 	I_CHECK_GUILD = RuleImage(roi_front=(1072,630,49,46), roi_back=(1072,630,49,46), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_check_guild.png")
 	# description 
 	I_CHECK_TEAM = RuleImage(roi_front=(32,585,82,90), roi_back=(32,585,82,90), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_check_team.png")
 	# description 
-	I_CHECK_COLLECTION = RuleImage(roi_front=(471,618,100,100), roi_back=(471,618,100,100), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_check_collection.png")
+	I_CHECK_COLLECTION = RuleImage(roi_front=(380,620,100,100), roi_back=(380,620,100,100), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_check_collection.png")
 	# description 
 	I_BACK_Y = RuleImage(roi_front=(15,4,57,52), roi_back=(1,2,100,91), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_back_y.png")
 	# description 

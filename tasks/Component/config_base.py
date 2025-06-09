@@ -5,10 +5,12 @@ import re
 from datetime import timedelta, time, datetime
 from typing import Any
 
-from pydantic import BaseModel
+from pydantic import BaseModel, ValidationError
 from pydantic import (BeforeValidator,
                       PlainSerializer,
-                      WithJsonSchema)
+                      WithJsonSchema,
+                      field_serializer,
+                      SerializationInfo)
 from typing_extensions import Annotated
 
 
@@ -65,5 +67,46 @@ Time = Annotated[time,
                  WithJsonSchema({'type': 'time'}),]
 
 # ---------------------------------------------------------------------------------------------------------------------
+
+@classmethod
+def serializer_exclude(cls, value: any, info: SerializationInfo):
+    if info.context and info.context.get('hide', False):
+        return 0xABCDEF
+    return value
+
+
+def dynamic_hide(*fields: str,):
+    return field_serializer(*fields)(serializer_exclude)
+
+
 class ConfigBase(BaseModel):
-    pass
+    def __init__(self, *args, **kwargs):
+        try:
+            super().__init__(*args, **kwargs)
+        except ValidationError as exc:
+            """
+            During the initialization of the ConfigBase class, 
+            if a ValidationError occurs, the default value of the field is used to initialize the field, 
+            and the exception is re-raised after the initialization is complete.
+            """
+            exc_info = exc.errors()[0]
+            val_error_type = exc_info.get('type', None)
+            val_error_key = exc_info.get('loc', None)[0]
+            if val_error_type not in ['greater_than_equal',
+                                      'greater_than',
+                                      'less_than',
+                                      'less_than_equal',]:
+                raise exc
+            from module.logger import logger
+
+            try:
+                default_value = self.model_fields[val_error_key].default
+                kwargs[val_error_key] = self.model_fields[val_error_key].default
+                logger.warning(f'Field {val_error_key} is out of range, using default value {default_value}')
+                logger.warning(repr(exc))
+                logger.warning(str(kwargs))
+                super().__init__(*args, **kwargs)
+            except Exception as e:
+                raise
+
+

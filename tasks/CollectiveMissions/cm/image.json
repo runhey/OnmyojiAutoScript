@@ -29,8 +29,8 @@
   {
     "itemName": "cm_records",
     "imageName": "cm_cm_records.png",
-    "roiFront": "1105,626,54,63",
-    "roiBack": "1105,626,54,63",
+    "roiFront": "1032,617,54,63",
+    "roiBack": "960,562,193,138",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "判断是否到达"

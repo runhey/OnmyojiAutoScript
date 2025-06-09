@@ -12,13 +12,13 @@ class FloatParadeAssets:
 
 	# Image Rule Assets
 	# 从庭院进入花车活动 
-	I_FP_ACCESS = RuleImage(roi_front=(183,413,36,34), roi_back=(95,344,1042,229), threshold=0.8, method="Template matching", file="./tasks/FloatParade/fp/fp_fp_access.png")
+	I_FP_ACCESS = RuleImage(roi_front=(1192,317,36,34), roi_back=(1000,101,261,472), threshold=0.8, method="Template matching", file="./tasks/FloatParade/fp/fp_fp_access.png")
 	# description 
 	I_FP_GETALL0 = RuleImage(roi_front=(1153,287,65,56), roi_back=(1134,261,100,100), threshold=0.8, method="Template matching", file="./tasks/FloatParade/fp/fp_fp_getall0.png")
 	# description 
 	I_FP_RED_POINT0 = RuleImage(roi_front=(1242,604,22,21), roi_back=(1225,585,53,54), threshold=0.8, method="Template matching", file="./tasks/FloatParade/fp/fp_fp_red_point0.png")
 	# description 
-	I_FP_GETALL1 = RuleImage(roi_front=(1196,544,53,54), roi_back=(1159,489,113,164), threshold=0.8, method="Template matching", file="./tasks/FloatParade/fp/fp_fp_getall1.png")
+	I_FP_GETALL1 = RuleImage(roi_front=(1198,555,53,54), roi_back=(1163,506,113,164), threshold=0.8, method="Template matching", file="./tasks/FloatParade/fp/fp_fp_getall1.png")
 	# description 
 	I_FP_RED_POINT1 = RuleImage(roi_front=(1249,155,21,21), roi_back=(1223,138,56,62), threshold=0.8, method="Template matching", file="./tasks/FloatParade/fp/fp_fp_red_point1.png")
 	# description 
@@ -32,8 +32,14 @@ class FloatParadeAssets:
 	# 右下角的任务 
 	I_FP_TASKS = RuleImage(roi_front=(1175,617,79,76), roi_back=(1162,605,100,100), threshold=0.8, method="Template matching", file="./tasks/FloatParade/fp/fp_fp_tasks.png")
 	# 升级 
-	I_FP_UPGRADE = RuleImage(roi_front=(1075,75,116,49), roi_back=(1040,52,169,100), threshold=0.8, method="Template matching", file="./tasks/FloatParade/fp/fp_fp_upgrade.png")
+	I_FP_UPGRADE = RuleImage(roi_front=(1086,74,116,49), roi_back=(1040,52,169,100), threshold=0.8, method="Template matching", file="./tasks/FloatParade/fp/fp_fp_upgrade.png")
 	# 红色关闭 
 	I_FP_RED_CLOSE = RuleImage(roi_front=(1170,109,43,44), roi_back=(1157,101,72,62), threshold=0.8, method="Template matching", file="./tasks/FloatParade/fp/fp_fp_red_close.png")
+	# 寻找花车的切换按钮 
+	I_TOGGLE_BUTTON = RuleImage(roi_front=(1202,466,22,21), roi_back=(1090,127,176,377), threshold=0.7, method="Template matching", file="./tasks/FloatParade/fp/fp_toggle_button.png")
+	# 批量选择 
+	I_BATCH_SELECTION = RuleImage(roi_front=(933,517,44,40), roi_back=(933,517,44,40), threshold=0.8, method="Template matching", file="./tasks/FloatParade/fp/fp_batch_selection.png")
+	# 批量选择确认 
+	I_BATCH_SELECTION_CONFIRM = RuleImage(roi_front=(676,392,130,63), roi_back=(676,392,130,63), threshold=0.8, method="Template matching", file="./tasks/FloatParade/fp/fp_batch_selection_confirm.png")
 
 

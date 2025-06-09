@@ -73,21 +73,21 @@ class GeneralBattle(GeneralBuff, GeneralBattleAssets):
         else:
             return False
 
-    def run_general_battle_back(self, config: GeneralBattleConfig = None) -> bool:
+    def run_general_battle_back(self, config: GeneralBattleConfig = None, exit_four: bool = False) -> bool:
         """
         进入挑战然后直接返回
         :param config:
         :return:
         """
-        # 如果没有锁定队伍那么在点击准备后才退出的
-        if not config.lock_team_enable:
+        # 如果没有锁定队伍那么在点击准备后才退出的,退四的话就直接退出
+        if not config.lock_team_enable and not exit_four:
             # 点击准备按钮
             self.wait_until_appear(self.I_PREPARE_HIGHLIGHT)
             while 1:
                 self.screenshot()
                 if self.appear_then_click(self.I_PREPARE_HIGHLIGHT, interval=1.5):
                     continue
-                if not self.appear(self.I_PRESET):
+                if not (self.appear(self.I_PRESET) or self.appear(self.I_PRESET_WIT_NUMBER)):
                     break
             logger.info(f"Click {self.I_PREPARE_HIGHLIGHT.name}")
 
@@ -223,10 +223,25 @@ class GeneralBattle(GeneralBuff, GeneralBattleAssets):
             self.screenshot()
             # 如果出现领奖励
             action_click = random.choice([self.C_REWARD_1, self.C_REWARD_2, self.C_REWARD_3])
-            if self.appear_then_click(self.I_REWARD, action=action_click, interval=1.5) or \
-                    self.appear_then_click(self.I_REWARD_GOLD, action=action_click, interval=1.5):
+            if (self.appear_then_click(self.I_REWARD, action=action_click, interval=1.5) or
+                self.appear_then_click(self.I_REWARD_GOLD, action=action_click, interval=1.5)#  or
+                # self.appear_then_click(self.I_REWARD_STATISTICS, action=action_click, interval=1.5) or
+                # self.appear_then_click(self.I_REWARD_PURPLE_SNAKE_SKIN, action=action_click, interval=1.5) or
+                # self.appear_then_click(self.I_REWARD_GOLD_SNAKE_SKIN, action=action_click, interval=1.5) or
+                # self.appear_then_click(self.I_REWARD_EXP_SOUL_4, action=action_click, interval=1.5) or
+                # self.appear_then_click(self.I_REWARD_SOUL_5, action=action_click, interval=1.5) or
+                # self.appear_then_click(self.I_REWARD_SOUL_6, action=action_click, interval=1.5)
+                ):
                 continue
-            if not self.appear(self.I_REWARD) and not self.appear(self.I_REWARD_GOLD):
+            if (not self.appear(self.I_REWARD) and
+                not self.appear(self.I_REWARD_GOLD)#  and
+                # not self.appear(self.I_REWARD_STATISTICS) and
+                # not self.appear(self.I_REWARD_PURPLE_SNAKE_SKIN) and
+                # not self.appear(self.I_REWARD_GOLD_SNAKE_SKIN) and
+                # not self.appear(self.I_REWARD_EXP_SOUL_4) and
+                # not self.appear(self.I_REWARD_SOUL_5) and
+                # not self.appear(self.I_REWARD_SOUL_6)
+                ):
                 break
 
         return win
@@ -296,6 +311,8 @@ class GeneralBattle(GeneralBuff, GeneralBattleAssets):
             if self.appear(self.I_PRESENT_LESS_THAN_5):
                 break
             if self.appear_then_click(self.I_PRESET, threshold=0.8, interval=1):
+                continue
+            if self.appear_then_click(self.I_PRESET_WIT_NUMBER, threshold=0.8, interval=1):
                 continue
             if self.ocr_appear(self.O_PRESET):
                 self.click(self.O_PRESET, interval=1)
@@ -417,7 +434,7 @@ class GeneralBattle(GeneralBuff, GeneralBattleAssets):
             return True
         elif self.appear(self.I_PREPARE_DARK):
             return True
-        elif self.appear(self.I_PRESET):
+        elif self.appear(self.I_PRESET) or self.appear(self.I_PRESET_WIT_NUMBER):
             return True
         else:
             return False

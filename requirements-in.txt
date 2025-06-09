@@ -12,6 +12,7 @@ pywin32==306
 
 # OCR
 ppocr-onnx==0.0.3.9
+cn2an==0.5.23
 
 # Web
 paho-mqtt==1.6.1

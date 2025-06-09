@@ -12,58 +12,17 @@ from tasks.Component.CostumeRealm.assets import CostumeRealmAssets
 from tasks.Component.CostumeBattle.assets import CostumeBattleAssets
 
 # 庭院皮肤
+# 主界面皮肤（使用字典推导式动态生成）
 main_costume_model = {
-    MainType.COSTUME_MAIN_1: {'I_CHECK_MAIN': 'I_CHECK_MAIN_1',
-                              'I_MAIN_GOTO_EXPLORATION': 'I_MAIN_GOTO_EXPLORATION_1',
-                              'I_MAIN_GOTO_SUMMON': 'I_MAIN_GOTO_SUMMON_1',
-                              'I_MAIN_GOTO_TOWN': 'I_MAIN_GOTO_TOWN_1',
-                              'I_PET_HOUSE': 'I_PET_HOUSE_1', },
-    MainType.COSTUME_MAIN_2: {'I_CHECK_MAIN': 'I_CHECK_MAIN_2',
-                              'I_MAIN_GOTO_EXPLORATION': 'I_MAIN_GOTO_EXPLORATION_2',
-                              'I_MAIN_GOTO_SUMMON': 'I_MAIN_GOTO_SUMMON_2',
-                              'I_MAIN_GOTO_TOWN': 'I_MAIN_GOTO_TOWN_2',
-                              'I_PET_HOUSE': 'I_PET_HOUSE_2', },
-    MainType.COSTUME_MAIN_3: {'I_CHECK_MAIN': 'I_CHECK_MAIN_3',
-                              'I_MAIN_GOTO_EXPLORATION': 'I_MAIN_GOTO_EXPLORATION_3',
-                              'I_MAIN_GOTO_SUMMON': 'I_MAIN_GOTO_SUMMON_3',
-                              'I_MAIN_GOTO_TOWN': 'I_MAIN_GOTO_TOWN_3',
-                              'I_PET_HOUSE': 'I_PET_HOUSE_3', },
-    MainType.COSTUME_MAIN_4: {'I_CHECK_MAIN': 'I_CHECK_MAIN_4',
-                              'I_MAIN_GOTO_EXPLORATION': 'I_MAIN_GOTO_EXPLORATION_4',
-                              'I_MAIN_GOTO_SUMMON': 'I_MAIN_GOTO_SUMMON_4',
-                              'I_MAIN_GOTO_TOWN': 'I_MAIN_GOTO_TOWN_4',
-                              'I_PET_HOUSE': 'I_PET_HOUSE_4', },
-    MainType.COSTUME_MAIN_5: {'I_CHECK_MAIN': 'I_CHECK_MAIN_5',
-                              'I_MAIN_GOTO_EXPLORATION': 'I_MAIN_GOTO_EXPLORATION_5',
-                              'I_MAIN_GOTO_SUMMON': 'I_MAIN_GOTO_SUMMON_5',
-                              'I_MAIN_GOTO_TOWN': 'I_MAIN_GOTO_TOWN_5',
-                              'I_PET_HOUSE': 'I_PET_HOUSE_5', },
-    MainType.COSTUME_MAIN_6: {'I_CHECK_MAIN': 'I_CHECK_MAIN_6',
-                              'I_MAIN_GOTO_EXPLORATION': 'I_MAIN_GOTO_EXPLORATION_6',
-                              'I_MAIN_GOTO_SUMMON': 'I_MAIN_GOTO_SUMMON_6',
-                              'I_MAIN_GOTO_TOWN': 'I_MAIN_GOTO_TOWN_6',
-                              'I_PET_HOUSE': 'I_PET_HOUSE_6', },
-    MainType.COSTUME_MAIN_7: {'I_CHECK_MAIN': 'I_CHECK_MAIN_7',
-                              'I_MAIN_GOTO_EXPLORATION': 'I_MAIN_GOTO_EXPLORATION_7',
-                              'I_MAIN_GOTO_SUMMON': 'I_MAIN_GOTO_SUMMON_7',
-                              'I_MAIN_GOTO_TOWN': 'I_MAIN_GOTO_TOWN_7',
-                              'I_PET_HOUSE': 'I_PET_HOUSE_7', },
-    MainType.COSTUME_MAIN_8: {'I_CHECK_MAIN': 'I_CHECK_MAIN_8',
-                              'I_MAIN_GOTO_EXPLORATION': 'I_MAIN_GOTO_EXPLORATION_8',
-                              'I_MAIN_GOTO_SUMMON': 'I_MAIN_GOTO_SUMMON_8',
-                              'I_MAIN_GOTO_TOWN': 'I_MAIN_GOTO_TOWN_8',
-                              'I_PET_HOUSE': 'I_PET_HOUSE_8', },
-    MainType.COSTUME_MAIN_9: {'I_CHECK_MAIN': 'I_CHECK_MAIN_9',
-                              'I_MAIN_GOTO_EXPLORATION': 'I_MAIN_GOTO_EXPLORATION_9',
-                              'I_MAIN_GOTO_SUMMON': 'I_MAIN_GOTO_SUMMON_9',
-                              'I_MAIN_GOTO_TOWN': 'I_MAIN_GOTO_TOWN_9',
-                              'I_PET_HOUSE': 'I_PET_HOUSE_9', },
-    MainType.COSTUME_MAIN_10: {'I_CHECK_MAIN': 'I_CHECK_MAIN_10',
-                               'I_MAIN_GOTO_EXPLORATION': 'I_MAIN_GOTO_EXPLORATION_10',
-                               'I_MAIN_GOTO_SUMMON': 'I_MAIN_GOTO_SUMMON_10',
-                               'I_MAIN_GOTO_TOWN': 'I_MAIN_GOTO_TOWN_10',
-                               'I_PET_HOUSE': 'I_PET_HOUSE_10', },
+    getattr(MainType, f"COSTUME_MAIN_{i}"): {
+        'I_CHECK_MAIN': f'I_CHECK_MAIN_{i}',
+        'I_MAIN_GOTO_EXPLORATION': f'I_MAIN_GOTO_EXPLORATION_{i}',
+        'I_MAIN_GOTO_SUMMON': f'I_MAIN_GOTO_SUMMON_{i}',
+        'I_MAIN_GOTO_TOWN': f'I_MAIN_GOTO_TOWN_{i}',
+        'I_PET_HOUSE': f'I_PET_HOUSE_{i}'
+    } for i in range(1, 12)
 }
+
 
 # 结界皮肤
 realm_costume_model = {
@@ -76,57 +35,21 @@ realm_costume_model = {
                                 'I_BOX_EXP': 'I_BOX_EXP_2'},
 }
 
-# 战斗主题
-battle_theme_model = {
-    BattleType.COSTUME_BATTLE_1: {
-        'I_LOCAL': 'I_LOCAL_1',
-        'I_EXIT': 'I_EXIT_1',
-        'I_FRIENDS': 'I_FRIENDS_1',
-    },
-    BattleType.COSTUME_BATTLE_2: {
-        'I_LOCAL': 'I_LOCAL_2',
-        'I_EXIT': 'I_EXIT_2',
-        'I_FRIENDS': 'I_FRIENDS_2',
-    },
-    BattleType.COSTUME_BATTLE_3: {
-        'I_LOCAL': 'I_LOCAL_3',
-        'I_EXIT': 'I_EXIT_3',
-        'I_FRIENDS': 'I_FRIENDS_3',
-    },
-    BattleType.COSTUME_BATTLE_4: {
-        'I_LOCAL': 'I_LOCAL_4',
-        'I_EXIT': 'I_EXIT_4',
-        'I_FRIENDS': 'I_FRIENDS_4',
-    },
-    BattleType.COSTUME_BATTLE_5: {
-        'I_LOCAL': 'I_LOCAL_5',
-        'I_EXIT': 'I_EXIT_5',
-        'I_FRIENDS': 'I_FRIENDS_5',
-    },
-    BattleType.COSTUME_BATTLE_6: {
-        'I_LOCAL': 'I_LOCAL_6',
-        'I_EXIT': 'I_EXIT_6',
-        'I_FRIENDS': 'I_FRIENDS_6',
-    },
-    BattleType.COSTUME_BATTLE_7: {
-        'I_LOCAL': 'I_LOCAL_7',
-        'I_EXIT': 'I_EXIT_7',
-        'I_FRIENDS': 'I_FRIENDS_7',
-    },
-    BattleType.COSTUME_BATTLE_8: {
-        'I_LOCAL': 'I_LOCAL_8',
-        'I_EXIT': 'I_EXIT_8',
-        'I_FRIENDS': 'I_FRIENDS_8',
-        'I_WIN': 'I_WIN_8',
-        'I_DE_WIN': 'I_DE_WIN_8',
-        'I_FALSE': 'I_FALSE_8',
-    },
-    BattleType.COSTUME_BATTLE_9: {
-        'I_LOCAL': 'I_LOCAL_9',
-        'I_EXIT': 'I_EXIT_9',
-        'I_FRIENDS': 'I_FRIENDS_9',
-    },
-}
+# 战斗主题（使用循环处理常规情况 + 特例处理）
+battle_theme_model = {}
+for i in range(1, 11):
+    entry = {
+        'I_LOCAL': f'I_LOCAL_{i}',
+        'I_EXIT': f'I_EXIT_{i}',
+        'I_FRIENDS': f'I_FRIENDS_{i}',
+    }
+    if i == 8:  # 特殊处理第8项
+        entry.update({
+            'I_WIN': 'I_WIN_8',
+            'I_DE_WIN': 'I_DE_WIN_8',
+            'I_FALSE': 'I_FALSE_8'
+        })
+    battle_theme_model[getattr(BattleType, f"COSTUME_BATTLE_{i}")] = entry
 
 
 class CostumeBase:

@@ -52,5 +52,41 @@
     "roiFront": "714,397,182,62",
     "roiBack": "714,397,182,62",
     "description": "description"
+  },
+  {
+    "itemName": "friend_1_recall",
+    "roiFront": "254,223,161,67",
+    "roiBack": "254,223,161,67",
+    "description": "回归活动使用"
+  },
+  {
+    "itemName": "friend_2_recall",
+    "roiFront": "532,226,158,64",
+    "roiBack": "532,226,158,64",
+    "description": "回归活动使用"
+  },
+  {
+    "itemName": "friend_3_recall",
+    "roiFront": "240,310,183,66",
+    "roiBack": "240,310,183,66",
+    "description": "回归活动使用"
+  },
+  {
+    "itemName": "friend_4_recall",
+    "roiFront": "504,311,184,62",
+    "roiBack": "504,311,184,62",
+    "description": "回归活动使用"
+  },
+  {
+    "itemName": "friend_5_recall",
+    "roiFront": "241,395,178,61",
+    "roiBack": "241,395,178,61",
+    "description": "回归活动使用"
+  },
+  {
+    "itemName": "friend_6_recall",
+    "roiFront": "508,394,182,62",
+    "roiBack": "508,394,182,62",
+    "description": "回归活动使用"
   }
 ]

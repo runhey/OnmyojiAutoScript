@@ -224,7 +224,7 @@ class ScriptTask(GameUi, HyaSlave):
             return
         if state[0] <= 0:
             return
-        self.fast_click(x=x, y=y)
+        self.fast_click(x=x, y=y, control_method=self._config.debug_config.hya_control_method)
 
 
 if __name__ == '__main__':

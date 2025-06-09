@@ -3,7 +3,7 @@
 # github https://github.com/runhey
 from enum import Enum
 from typing import Union
-from pydantic import BaseModel, ValidationError, validator, Field
+from pydantic import BaseModel, ValidationError, Field
 
 from module.logger import logger
 
@@ -70,6 +70,9 @@ class Device(BaseModel):
     emulatorinfo_path: str = Field(default='',
                                    description='emulatorinfo_path_help')
     # 举例, E:\ProgramFiles\MuMuPlayer-12.0\shell\MuMuPlayer.exe
+    # 模拟器启动后最小化
+    emulator_window_minimize: bool = Field(default=False,
+                                             description='emulator_window_minimize_help')
 
 
 

@@ -15,7 +15,7 @@
     "mode": "DigitCounter",
     "method": "Default",
     "keyword": "",
-    "description": "Ocr-description"
+    "description": "小盘子"
   },
   {
     "itemName": "b_medium_number",
@@ -24,7 +24,7 @@
     "mode": "DigitCounter",
     "method": "Default",
     "keyword": "",
-    "description": "Ocr-description"
+    "description": "中盘子"
   },
   {
     "itemName": "b_high_number",
@@ -33,7 +33,7 @@
     "mode": "DigitCounter",
     "method": "Default",
     "keyword": "",
-    "description": "Ocr-description"
+    "description": "大盘子"
   },
   {
     "itemName": "b_stone_number",
@@ -42,7 +42,25 @@
     "mode": "DigitCounter",
     "method": "Default",
     "keyword": "",
-    "description": "Ocr-description"
+    "description": "鸣契石"
+  },
+  {
+    "itemName": "b_summon_ball_number",
+    "roiFront": "546,540,100,45",
+    "roiBack": "546,540,100,45",
+    "mode": "Single",
+    "method": "Default",
+    "keyword": "",
+    "description": "召唤契灵数量"
+  },
+  {
+    "itemName": "b_ball_number",
+    "roiFront": "1190,532,70,30",
+    "roiBack": "1190,532,70,30",
+    "mode": "DigitCounter",
+    "method": "Default",
+    "keyword": "",
+    "description": "抓捕契灵剩余数量"
   },
   {
     "itemName": "friend",

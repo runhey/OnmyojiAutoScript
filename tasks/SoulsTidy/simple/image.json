@@ -106,5 +106,32 @@
     "method": "Template matching",
     "threshold": 0.8,
     "description": "神赐"
+  },
+  {
+    "itemName": "st_abandoned_selected",
+    "imageName": "simple_st_abandoned_selected.png",
+    "roiFront": "47,118,84,33",
+    "roiBack": "45,119,85,34",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "已弃置被选中"
+  },
+  {
+    "itemName": "st_level_0",
+    "imageName": "simple_st_level_0.png",
+    "roiFront": "85,235,45,30",
+    "roiBack": "85,235,45,30",
+    "method": "Template matching",
+    "threshold": 0.9,
+    "description": "第一个御魂是+0的"
+  },
+  {
+    "itemName": "st_gold",
+    "imageName": "simple_st_gold.png",
+    "roiFront": "170,100,950,500",
+    "roiBack": "170,100,950,500",
+    "method": "Template matching",
+    "threshold": 0.9,
+    "description": "御魂奉纳后获得的金币"
   }
 ]

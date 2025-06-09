@@ -55,6 +55,8 @@ class ScriptTask(GameUi, FloatParadeAssets, TalismanPassAssets):
                 continue
             if self.appear_then_click(self.I_FP_TASKS, interval=1.8):
                 continue
+            if self.appear_then_click(self.I_TOGGLE_BUTTON, interval=3):
+                continue
         logger.info('Enter float parade')
         logger.info('Click get all reward')
         if not self.appear(self.I_FP_GETALL1):
@@ -84,8 +86,16 @@ class ScriptTask(GameUi, FloatParadeAssets, TalismanPassAssets):
         check_timer.start()
         while 1:
             self.screenshot()
+            # 批量选择
+            if self.appear_then_click(self.I_BATCH_SELECTION, interval=1.5):
+                continue
+            if self.appear_then_click(self.I_BATCH_SELECTION_CONFIRM, interval=0.8):
+                continue
+
             if self.appear_then_click(match_level[level], interval=0.8):
                 logger.info(f'Select {level} reward')
+                if self.appear_then_click(self.I_OVERFLOW_CONFIRME, interval=0.8):
+                    pass
                 check_timer.reset()
                 continue
 

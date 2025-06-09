@@ -1,8 +1,8 @@
 [
   {
     "itemName": "remain_ap",
-    "roiFront": "1152,556,97,25",
-    "roiBack": "1152,556,97,25",
+    "roiFront": "1102,26,57,26",
+    "roiBack": "1102,26,57,26",
     "mode": "DigitCounter",
     "method": "Default",
     "keyword": "",
@@ -10,8 +10,8 @@
   },
   {
     "itemName": "remain_ap_activity",
-    "roiFront": "713,25,95,30",
-    "roiBack": "713,25,95,30",
+    "roiFront": "715,18,95,28",
+    "roiBack": "715,18,95,28",
     "mode": "DigitCounter",
     "method": "Default",
     "keyword": "",
@@ -25,5 +25,23 @@
     "method": "Default",
     "keyword": "",
     "description": "还有多少次购买体力的机会"
+  },
+  {
+    "itemName": "remain_ap_activity2",
+    "roiFront": "756,17,52,29",
+    "roiBack": "756,17,52,29",
+    "mode": "Digit",
+    "method": "Default",
+    "keyword": "",
+    "description": "活动票数（没有百分比）"
+  },
+  {
+    "itemName": "entry_activity",
+    "roiFront": "71,241,98,32",
+    "roiBack": "71,241,98,32",
+    "mode": "Single",
+    "method": "Default",
+    "keyword": "阵练演武",
+    "description": "Ocr-description"
   }
 ]

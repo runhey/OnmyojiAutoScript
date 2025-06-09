@@ -88,5 +88,68 @@
     "method": "Template matching",
     "threshold": 0.8,
     "description": "失败"
+  },
+  {
+    "itemName": "a2",
+    "imageName": "Screenshots_a2.png",
+    "roiFront": "751,137,41,149",
+    "roiBack": "751,137,41,149",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "进入鬼王界面"
+  },
+  {
+    "itemName": "a3",
+    "imageName": "Screenshots_a3.png",
+    "roiFront": "1137,581,100,100",
+    "roiBack": "1137,581,100,100",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "召唤鬼王"
+  },
+  {
+    "itemName": "a4",
+    "imageName": "Screenshots_a4.png",
+    "roiFront": "1137,581,100,100",
+    "roiBack": "1137,581,100,100",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "挑战"
+  },
+  {
+    "itemName": "a5",
+    "imageName": "Screenshots_a5.png",
+    "roiFront": "1129,536,100,100",
+    "roiBack": "1129,536,100,100",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "准备"
+  },
+  {
+    "itemName": "a6",
+    "imageName": "Screenshots_a6.png",
+    "roiFront": "435,147,100,100",
+    "roiBack": "435,147,100,100",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "back_check",
+    "imageName": "md_back_check.png",
+    "roiFront": "378,257,68,32",
+    "roiBack": "378,257,68,32",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "超鬼王打完了"
+  },
+  {
+    "itemName": "red_back",
+    "imageName": "md_red_back.png",
+    "roiFront": "925,181,47,48",
+    "roiBack": "925,181,47,48",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "红色的叉叉"
   }
 ]

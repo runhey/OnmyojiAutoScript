@@ -1,0 +1,36 @@
+name: Auto Create PR from dev to master
+
+on:
+  schedule:
+    # 每周四北京时间21点触发（UTC时间13点）
+    - cron: '0 13 * * 4'
+  workflow_dispatch:
+
+jobs:
+  create-pr:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install GitHub CLI
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y curl
+          curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | sudo dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg
+          echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null
+          sudo apt-get update
+          sudo apt-get install -y gh
+
+      - name: Create Pull Request
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TZ: Asia/Shanghai
+        run: |
+          CURRENT_DATE=$(date +%Y.%m.%d)
+          gh pr create \
+            --base master \
+            --head dev \
+            --title "Automated PR $CURRENT_DATE" \
+            --body "Automated PR created by GitHub Actions. Merge dev into master" \
+            --label automated

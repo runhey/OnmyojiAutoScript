@@ -11,14 +11,15 @@ class ConfigManual:
         Restart > SoulsTidy
         > KekkaiUtilize > KekkaiActivation > DemonEncounter
         > AreaBoss > GoldYoukai > ExperienceYoukai > Nian > Tako > RealmRaid > RyouToppa > DailyTrifles > Exploration
-        > Dokan > AbyssShadows > Hunt 
+        > Dokan > AbyssShadows > Hunt > GuildBanquet > DemonRetreat
         > Orochi > OrochiMoans > OrochiJudgement > Sougenbi > FallenSun > EternitySea > SixRealms
         > ActivityShikigami > WantedQuests
         > BondlingFairyland > EvoZone > GoryouRealm > HeroTest
-        > TrueOrochi > RichMan
-        > CollectiveMissions
+        > CollectiveMissionsr
         > Pets > TalismanPass > Delegation > Hyakkiyakou
-        > Secret > WeeklyTrifles > MysteryShop > Duel > MetaDemon > FrogBoss > FloatParade > Quiz > KittyShop
+        > Secret > WeeklyTrifles > MysteryShop > Duel 
+        > TrueOrochi > RichMan
+        > MetaDemon > FrogBoss > FloatParade > Quiz > KittyShop > DyeTrials
         """
 
     DEVICE_OVER_HTTP = False

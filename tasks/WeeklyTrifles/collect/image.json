@@ -2,8 +2,8 @@
   {
     "itemName": "wt_shikiagmi",
     "imageName": "collect_wt_shikiagmi.png",
-    "roiFront": "494,650,56,49",
-    "roiBack": "494,650,56,49",
+    "roiFront": "280,620,920,100",
+    "roiBack": "280,620,920,100",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "点击“式神”"
@@ -47,8 +47,8 @@
   {
     "itemName": "wt_collect_wechat",
     "imageName": "collect_wt_collect_wechat.png",
-    "roiFront": "640,617,70,63",
-    "roiBack": "640,617,70,63",
+    "roiFront": "280,600,440,100",
+    "roiBack": "280,600,440,100",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "微信分享"

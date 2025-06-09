@@ -27,10 +27,10 @@ class FriendshipPoints(Special):
                               money_ocr=self.O_MALL_RESOURCE_5, buy_money=1000)
         if con.red_daruma != 0:
             self.buy_mall_more(buy_button=self.I_FS_RED, remain_number=False, money_ocr=self.O_MALL_RESOURCE_5,
-                                 buy_number=con.red_daruma, buy_max=99, buy_money=150)
+                               buy_number=con.red_daruma, buy_max=99, buy_money=150)
         if con.broken_amulet != 0:
             self.buy_mall_more(buy_button=self.I_FS_BROKEN, remain_number=False, money_ocr=self.O_MALL_RESOURCE_5,
-                                 buy_number=con.broken_amulet, buy_max=99, buy_money=100)
+                               buy_number=con.broken_amulet, buy_max=99, buy_money=100)
 
     def buy_mall_one(self, buy_button: RuleImage, buy_check: RuleImage, money_ocr: RuleOcr, buy_money: int):
         """
@@ -54,14 +54,9 @@ class FriendshipPoints(Special):
             return False
         # 检查总勋章
         current_money = money_ocr.ocr(self.device.image)
-        if '万' in current_money:
-            # 点击购买
-            return self.buy_one(buy_button, buy_check)
-        else:
-            current_money = int(current_money)
-        # if not isinstance(current_money, int):
-        #     logger.warning('Money ocr failed')
-        #     return False
+        if not isinstance(current_money, int):
+            logger.warning('Money ocr failed')
+            return False
         money_enough = current_money >= buy_money
         if not money_enough:
             logger.warning(f'No enough money {current_money}')
@@ -70,7 +65,7 @@ class FriendshipPoints(Special):
         return self.buy_one(buy_button, buy_check)
 
     def buy_mall_more(self, buy_button: RuleImage, remain_number: bool, money_ocr: RuleOcr,
-                       buy_number: int, buy_max: int, buy_money: int):
+                      buy_number: int, buy_max: int, buy_money: int):
         """
         针对可以买多个的
         :param money_ocr:  检查钱的第几个
@@ -101,16 +96,9 @@ class FriendshipPoints(Special):
                 buy_number = _remain
         # 检查钱够不够
         current_money = money_ocr.ocr(self.device.image)
-        if '万' in current_money:
-            # 使用正则表达式提取字符串中的数字
-            match = re.search(r'\d+', current_money)
-            if match:
-                current_money = int(match.group()) * 10000
-        else:
-            current_money = int(current_money)
-        # if not isinstance(current_money, int):
-        #     logger.warning('Money ocr failed')
-        #     return
+        if not isinstance(current_money, int):
+            logger.warning('Money ocr failed')
+            return
         money_enough = current_money >= buy_money * buy_number
         if not money_enough:
             logger.warning(f'Money is not enough {current_money}')
