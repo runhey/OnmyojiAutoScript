@@ -30,18 +30,20 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AbyssShadowsAssets):
         EnemyType.GENERAL: 4,  # 最少副将战斗次数
         EnemyType.ELITE: 6  # 最少精英战斗次数
     }
-    #
-    cur_area = None
-    #
-    cur_preset = None
-    # process list
-    ps_list: CodeList = CodeList('')
-    # 已完成 列表
-    done_list: CodeList = CodeList('')
-    # 已知的 已经被打完的  列表
-    unavailable_list: CodeList = CodeList('')
-    #
-    switch_soul_done = False
+    def __init__(self):
+        super().__init__()
+        #
+        self.cur_area = None
+        #
+        self.cur_preset = None
+        # process list
+        self.ps_list: CodeList = CodeList('')
+        # 已完成 列表
+        self.done_list: CodeList = CodeList('')
+        # 已知的 已经被打完的  列表
+        self.unavailable_list: CodeList = CodeList('')
+        #
+        self.switch_soul_done = False
 
     def run(self):
         """ 狭间暗域主函数
@@ -98,7 +100,7 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AbyssShadowsAssets):
         self.wait_until_appear(self.I_WAIT_TO_START, wait_time=2)
         # 切换御魂
         self.switch_soul_in_as()
-        # 等待可进攻时间
+        #
         self.device.stuck_record_add('BATTLE_STATUS_S')
         # 等待战斗开始
         self.wait_until_appear(self.I_IS_ATTACK, wait_time=180)
@@ -554,7 +556,7 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AbyssShadowsAssets):
     def switch_soul_in_as(self):
         if self.switch_soul_done:
             return
-        if not self.config.model.abyss_shadows.process_manage.switch_group_team:
+        if not self.config.model.abyss_shadows.process_manage.enable_switch_soul_in_as:
             self.switch_soul_done = True
             return
 
@@ -601,12 +603,6 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AbyssShadowsAssets):
             return False
         #
         res_img = self.device.image
-        # 去除背景杂色
-        # lower_green = np.array([240, 240, 240])
-        # upper_green = np.array([255, 255, 255])
-        # mask = cv2.inRange(self.device.image, lower_green, upper_green)
-        # res_img = cv2.bitwise_and(self.device.image, self.device.image, mask=mask)
-        # res_img = cv2.cvtColor(res_img, cv2.COLOR_RGB2BGR)
 
         match area_type:
             case AreaType.DRAGON:
@@ -624,16 +620,8 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AbyssShadowsAssets):
 
         return False
 
-    # def get_damage(self, image):
-    #     hsv_image = cv2.cvtColor(image, cv2.COLOR_RGB2HSV)
-    #     # Note 默认战斗场景伤害数字颜色
-    #     lower_green = np.array([9, 128, 180])
-    #     upper_green = np.array([30, 210, 255])
-    #     mask = cv2.inRange(hsv_image, lower_green, upper_green)
-    #     res_img = cv2.bitwise_and(image, image, mask=mask)
-    #
-    #     damage =self.O_DAMAGE.ocr(res_img)
-    #     return damage
+
+
 
 
 if __name__ == "__main__":

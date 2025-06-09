@@ -273,26 +273,28 @@ class ProcessManage(ConfigBase):
     # 之间用-分隔，不同怪物用;分隔
     # 未实现-->小蛇使用E,-后面表示打几只,例如E-2表示打两只小蛇
     # 例如 A-1;B-2;C-3...
-    attack_order: str = Field(default='', description='attack_order_help')
+    attack_order: str = Field(default='A-1;B-1;B;A-2;A-3;A-4;A-5;A-6', description='attack_order_help')
     # 标记主怪
     # EnemyType,  多个用;分隔
     mark_main: MarkMainConfig = Field(default=MarkMainConfig.BOSS_ONLY, description='mark_main_help')
     # 是否启用切换御魂
-    switch_group_team: bool = Field(default=False, description='switch_group_team_help')
+    enable_switch_soul_in_as: bool = Field(default=False, description='enable_switch_soul_in_as_help')
     # 首领预设
-    preset_boss: str = Field(default='', description='preset_boss_help')
+    preset_boss: str = Field(default='6,1', description='preset_boss_help')
     # 副将预设
-    preset_general: str = Field(default='', description='preset_general_help')
+    preset_general: str = Field(default='6,2', description='preset_general_help')
     # 精英预设
-    preset_elite: str = Field(default='', description='preset_elite_help')
+    preset_elite: str = Field(default='6,3', description='preset_elite_help')
     # 小蛇预设
     # preset_snake: str = Field(default='', description='preset_snake_help')
     # 首领策略 等待打完/时间到了退出/伤害足够退出/秒退
-    strategy_boss: str = Field(default='', description='strategy_boss_help')
+    # 可用值: 'TRUE', 'FALSE', 时间（秒），或最大伤害值
+    # 详见类 {Condition}
+    strategy_boss: str = Field(default='FALSE', description='strategy_boss_help')
     # 副将策略
-    strategy_general: str = Field(default='', description='strategy_general_help')
+    strategy_general: str = Field(default='30', description='strategy_general_help')
     # 精英策略
-    strategy_elite: str = Field(default='', description='strategy_elite_help')
+    strategy_elite: str = Field(default='4380000', description='strategy_elite_help')
 
     def is_need_mark_main(self, enemy_type: EnemyType) -> bool:
         strategy = self.mark_main  # 获取 MarkMainConfig 枚举值
@@ -332,19 +334,10 @@ class ProcessManage(ConfigBase):
 class SavedParams(ConfigBase):
     # 已完成
     done: str = Field(default='', description='done_help')
-    # 失败
-    fail: str = Field(default='', description='fail_help')
     # 已知的已经打完的
     unavailable: str = Field(default='', description='unavailable_help')
 
-    # def save(self):
-    #     self.today = datetime.today().strftime('yyyy-mm-dd')
-    #     self.config.save()
 
-    def push_to(self, item, l):
-        if len(l) > 0:
-            l += ';'
-        l += item
 
 
 class AbyssShadows(ConfigBase):
@@ -352,5 +345,5 @@ class AbyssShadows(ConfigBase):
     abyss_shadows_time: AbyssShadowsTime = Field(default_factory=AbyssShadowsTime)
     process_manage: ProcessManage = Field(default_factory=ProcessManage)
     saved_params: SavedParams = Field(default_factory=SavedParams)
-    general_battle_config: GeneralBattleConfig = Field(default_factory=GeneralBattleConfig)
-    switch_soul_config: SwitchSoulConfig = Field(default_factory=SwitchSoulConfig)
+    # general_battle_config: GeneralBattleConfig = Field(default_factory=GeneralBattleConfig)
+    # switch_soul_config: SwitchSoulConfig = Field(default_factory=SwitchSoulConfig)
