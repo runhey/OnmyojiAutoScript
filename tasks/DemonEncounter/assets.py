@@ -109,7 +109,7 @@ class DemonEncounterAssets:
 	# 打结界的 
 	I_DE_REALM = RuleImage(roi_front=(1209,431,30,22), roi_back=(1190,274,88,273), threshold=0.75, method="Template matching", file="./tasks/DemonEncounter/demon/demon_de_realm.png")
 	# 结界-进攻 
-	I_DE_REALM_FIRE = RuleImage(roi_front=(696,421,129,63), roi_back=(162,99,1106,610), threshold=0.8, method="Template matching", file="./tasks/DemonEncounter/demon/demon_de_realm_fire.png")
+	I_DE_REALM_FIRE = RuleImage(roi_front=(696,421,130,62), roi_back=(162,99,1106,610), threshold=0.8, method="Template matching", file="./tasks/DemonEncounter/demon/demon_de_realm_fire.png")
 	# 发现大boss 
 	I_DE_FIND_BOSS = RuleImage(roi_front=(1210,425,29,36), roi_back=(1182,279,93,266), threshold=0.7, method="Template matching", file="./tasks/DemonEncounter/demon/demon_de_find_boss.png")
 

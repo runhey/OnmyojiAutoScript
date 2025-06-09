@@ -250,9 +250,10 @@ class ScriptTask(WQExplore, SecretScriptTask, WantedQuestsAssets):
         OCR_WQ_INFO = [self.O_WQ_INFO_1, self.O_WQ_INFO_2, self.O_WQ_INFO_3, self.O_WQ_INFO_4]
         GOTO_BUTTON = [self.I_GOTO_1, self.I_GOTO_2, self.I_GOTO_3, self.I_GOTO_4]
         name_funcs: dict = {
-            '挑聘': self.challenge,
+            '挑聘': self.challenge,  # 添加
+            '挑战': self.challenge,
             '探索': self.explore,
-            ' ': self.secret
+            '秘闻': self.secret
         }
 
         def extract_info(index: int) -> tuple or None:

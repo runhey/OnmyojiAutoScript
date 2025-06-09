@@ -89,7 +89,7 @@ class WantedQuestsConfig(BaseModel):
     cooperation_type: CooperationSelectMaskDescription = Field(default=CooperationSelectMaskDescription.Any,
                                                                description="cooperation_type_help")
     # 找怪优先级  挑战 > 秘闻 > 探索
-    battle_priority: str = Field(default='挑战 > 秘闻 > 探索', description='battle_priority_help')
+    battle_priority: str = Field(default='挑聘 > 挑战 > 秘闻 > 探索', description='battle_priority_help')
     # 只完成协作任务
     cooperation_only: bool = Field(default=False, description="cooperation_only_help")
 
