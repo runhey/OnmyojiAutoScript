@@ -293,7 +293,7 @@ class GeneralInvite(BaseTask, BondlingFairylandAssets, GeneralInviteAssets):
 
     @cached_property
     def friend_class(self) -> list[str]:
-        return ['好友', '最近', '跨区', '寮友', '蔡友', '路区', '察友', '区']
+        return ['好友', '最近', '寮友', '蔡友', '察友','友速','友达']
 
     def detect_select(self, name: str = None) -> bool:
         """
@@ -343,7 +343,7 @@ class GeneralInvite(BaseTask, BondlingFairylandAssets, GeneralInviteAssets):
             if self.appear_then_click(self.I_ADD_5_4, interval=1):
                 continue
 
-        friend_class = ['友速']
+        friend_class = []
         class_ocr = [self.O_F_LIST_1]
         class_index = 0
         list_1 = self.O_FRIEND.ocr(self.device.image)
