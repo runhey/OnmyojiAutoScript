@@ -19,7 +19,7 @@ class ScrollNumber(str, Enum):
 
 class MemoryScrollsConfig(ConfigBase):
     scroll_number: ScrollNumber = Field(default=ScrollNumber.ONE, description='scroll_number_help')
-    auto_delay_exploration: bool = Field(default=True, description='指定绘卷结束后，自动延迟探索任务，避免长时间无意义执行')
+    auto_close_exploration: bool = Field(default=False, description='指定绘卷结束后，自动关闭探索任务，避免长时间无意义执行')
 
 class MemoryScrolls(ConfigBase):
     scheduler: Scheduler = Field(default_factory=Scheduler)

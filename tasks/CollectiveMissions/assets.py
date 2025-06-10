@@ -27,7 +27,7 @@ class CollectiveMissionsAssets:
 	# 提交 
 	I_CM_PRESENT = RuleImage(roi_front=(559,594,160,66), roi_back=(559,594,160,66), threshold=0.8, method="Template matching", file="./tasks/CollectiveMissions/cm/cm_cm_present.png")
 	# 判断是否到达 
-	I_CM_RECORDS = RuleImage(roi_front=(1105,626,54,63), roi_back=(1105,626,54,63), threshold=0.8, method="Template matching", file="./tasks/CollectiveMissions/cm/cm_cm_records.png")
+	I_CM_RECORDS = RuleImage(roi_front=(1032,617,54,63), roi_back=(960,562,193,138), threshold=0.8, method="Template matching", file="./tasks/CollectiveMissions/cm/cm_cm_records.png")
 	# 将材料拉满的按钮，用来判断是否拉满 
 	I_CM_MATTER = RuleImage(roi_front=(860,396,36,37), roi_back=(843,119,66,459), threshold=0.8, method="Template matching", file="./tasks/CollectiveMissions/cm/cm_cm_matter.png")
 	# description 

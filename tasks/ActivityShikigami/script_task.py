@@ -106,7 +106,7 @@ class ScriptTask(GameUi, BaseActivity, SwitchSoul, ActivityShikigamiAssets):
 
             # 随机休息
             if config.general_climb.random_sleep:
-                random_sleep()
+                random_sleep(probability=0.2)
             # 点击战斗
             logger.info("Click battle")
             while 1:
@@ -152,6 +152,8 @@ class ScriptTask(GameUi, BaseActivity, SwitchSoul, ActivityShikigamiAssets):
             if self.ocr_appear_click(self.O_ENTRY_ACTIVITY, interval=1):
                 continue
             if self.appear_then_click(self.I_BATTLE, interval=1):
+                continue
+            if self.appear_then_click(self.I_BATTLE_1, interval=1):
                 continue
 
     def main_home(self) -> bool:
