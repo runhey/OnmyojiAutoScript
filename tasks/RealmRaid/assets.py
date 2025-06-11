@@ -42,9 +42,9 @@ class RealmRaidAssets:
 	# 刷新确认 
 	I_FRESH_ENSURE = RuleImage(roi_front=(672,403,176,60), roi_back=(672,403,173,58), threshold=0.8, method="Template matching", file="./tasks/RealmRaid/res/res_fresh_ensure.png")
 	# 没有锁图片，适配呱太入侵 
-	I_UNLOCK_2 = RuleImage(roi_front=(1002,643,30,41), roi_back=(1002,643,26,41), threshold=0.8, method="Template matching", file="./tasks/RealmRaid/res/res_unlock_2.png")
+	I_UNLOCK_2 = RuleImage(roi_front=(998,642,30,41), roi_back=(998,642,30,41), threshold=0.8, method="Template matching", file="./tasks/RealmRaid/res/res_unlock_2.png")
 	# 以锁图片，适配呱太 
-	I_LOCK_2 = RuleImage(roi_front=(1002,645,34,38), roi_back=(1002,645,30,37), threshold=0.8, method="Template matching", file="./tasks/RealmRaid/res/res_lock_2.png")
+	I_LOCK_2 = RuleImage(roi_front=(998,643,34,38), roi_back=(998,643,34,38), threshold=0.8, method="Template matching", file="./tasks/RealmRaid/res/res_lock_2.png")
 	# description 
 	I_MEDAL_5_FROG = RuleImage(roi_front=(903,479,201,49), roi_back=(189,182,967,376), threshold=0.8, method="Template matching", file="./tasks/RealmRaid/res/res_medal_5_frog.png")
 	# 3徽章新图2号 
@@ -59,7 +59,7 @@ class RealmRaidAssets:
 	# 已经进攻三次了 
 	I_RR_THREE = RuleImage(roi_front=(346,584,42,44), roi_back=(346,584,42,44), threshold=0.8, method="Template matching", file="./tasks/RealmRaid/res/res_rr_three.png")
 	# 呱太入侵， 第一次进入结界时候出现 
-	I_FROG_RAID = RuleImage(roi_front=(511,301,282,100), roi_back=(511,301,282,100), threshold=0.8, method="Template matching", file="./tasks/RealmRaid/res/res_frog_raid.png")
+	I_FROG_RAID = RuleImage(roi_front=(520,310,290,100), roi_back=(520,310,290,100), threshold=0.8, method="Template matching", file="./tasks/RealmRaid/res/res_frog_raid.png")
 	# 个人 
 	I_RR_PERSON = RuleImage(roi_front=(1203,236,56,100), roi_back=(1203,236,56,100), threshold=0.8, method="Template matching", file="./tasks/RealmRaid/res/res_rr_person.png")
 

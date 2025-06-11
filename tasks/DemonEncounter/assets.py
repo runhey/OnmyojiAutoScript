@@ -45,7 +45,7 @@ class DemonEncounterAssets:
 	# 已击败 
 	I_BOSS_KILLED = RuleImage(roi_front=(654,596,35,68), roi_back=(614,537,123,176), threshold=0.8, method="Template matching", file="./tasks/DemonEncounter/boss/boss_boss_killed.png")
 	# 极逢魔集结挑战 
-	I_BEST_BOSS_FIRE = RuleImage(roi_front=(1087,562,100,36), roi_back=(1087,562,100,36), threshold=0.8, method="Template matching", file="./tasks/DemonEncounter/boss/boss_best_boss_fire.png")
+	I_BEST_BOSS_FIRE = RuleImage(roi_front=(1086,562,100,36), roi_back=(1086,562,100,36), threshold=0.8, method="Template matching", file="./tasks/DemonEncounter/boss/boss_best_boss_fire.png")
 
 
 	# Ocr Rule Assets
@@ -72,7 +72,7 @@ class DemonEncounterAssets:
 	# 点击首领 
 	I_DE_BOSS = RuleImage(roi_front=(998,644,45,45), roi_back=(998,644,45,45), threshold=0.8, method="Template matching", file="./tasks/DemonEncounter/demon/demon_de_boss.png")
 	# 点击封魔极 
-	I_DE_BOSS_BEST = RuleImage(roi_front=(900,644,45,50), roi_back=(900,644,45,50), threshold=0.8, method="Template matching", file="./tasks/DemonEncounter/demon/demon_de_boss_best.png")
+	I_DE_BOSS_BEST = RuleImage(roi_front=(898,643,45,50), roi_back=(898,643,45,50), threshold=0.8, method="Template matching", file="./tasks/DemonEncounter/demon/demon_de_boss_best.png")
 	# 式神录 
 	I_DE_SHI_RECORDS = RuleImage(roi_front=(789,639,48,48), roi_back=(789,639,48,48), threshold=0.8, method="Template matching", file="./tasks/DemonEncounter/demon/demon_de_shi_records.png")
 	# 左下角小指针 

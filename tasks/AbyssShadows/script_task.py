@@ -543,17 +543,6 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AbyssShadowsAssets):
             return True
         logger.info("Click Win button")
 
-        #战斗结束后，优先点掉胜利界面
-        while self.appear(self.I_WIN):
-            self.appear_then_click(self.I_WIN, interval=1.5)
-            time.sleep(0.5)  # 防止过快
-
-        # 然后再去找返回按钮
-        while not self.appear(self.I_EXIT):
-            self.screenshot()
-            time.sleep(0.5)
-
-
         while 1:
             self.screenshot()
             if self.appear_then_click(self.I_EXIT, interval=1.5):
