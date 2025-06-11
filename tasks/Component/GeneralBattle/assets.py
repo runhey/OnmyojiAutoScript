@@ -82,7 +82,7 @@ class GeneralBattleAssets:
 	# 确认预设的队伍 
 	I_PRESET_ENSURE = RuleImage(roi_front=(352,643,141,50), roi_back=(305,625,236,83), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralBattle/gb/gb_preset_ensure.png")
 	# 选择buff 
-	I_BUFF = RuleImage(roi_front=(115,657,42,50), roi_back=(106,641,67,77), threshold=0.7, method="Template matching", file="./tasks/Component/GeneralBattle/gb/gb_buff.png")
+	I_BUFF = RuleImage(roi_front=(115,670,39,36), roi_back=(107,668,55,49), threshold=0.7, method="Template matching", file="./tasks/Component/GeneralBattle/gb/gb_buff.png")
 	# 觉醒加成 
 	I_BUFF_AWAKEN = RuleImage(roi_front=(373,126,383,53), roi_back=(373,126,383,53), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralBattle/gb/gb_buff_awaken.png")
 	# 御魂加成 
