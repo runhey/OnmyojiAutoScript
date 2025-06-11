@@ -106,7 +106,7 @@ class ScriptTask(GameUi, BaseActivity, SwitchSoul, ActivityShikigamiAssets):
 
             # 随机休息
             if config.general_climb.random_sleep:
-                random_sleep()
+                random_sleep(probability=0.2)
             # 点击战斗
             logger.info("Click battle")
             while 1:
