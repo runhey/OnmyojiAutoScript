@@ -10,6 +10,8 @@ from future.backports.datetime import timedelta
 from module.exception import TaskEnd, RequestHumanTakeover
 from module.base.timer import Timer
 from module.logger import logger
+from module.config.config import Config
+from module.device.device import Device
 from tasks.AbyssShadows.assets import AbyssShadowsAssets
 from tasks.AbyssShadows.config import AbyssShadows, EnemyType, AreaType, Code, AbyssShadowsDifficulty, \
     CodeList, IndexMap
@@ -30,8 +32,9 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AbyssShadowsAssets):
         EnemyType.GENERAL: 4,  # 最少副将战斗次数
         EnemyType.ELITE: 6  # 最少精英战斗次数
     }
-    def __init__(self):
-        super().__init__()
+
+    def __init__(self, config: Config, device: Device):
+        super().__init__(config, device)
         #
         self.cur_area = None
         #
@@ -619,9 +622,6 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AbyssShadowsAssets):
                 return ocr_res.find('封印') != -1
 
         return False
-
-
-
 
 
 if __name__ == "__main__":
