@@ -203,7 +203,23 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AbyssShadowsAssets):
     def goto_main(self):
         ''' 保持好习惯，一个任务结束了就返回庭院，方便下一任务的开始或者是出错重启
         '''
-        self.ui_get_current_page()
+
+        # 保证在狭间暗域界面
+        while 1:
+            self.screenshot()
+            if self.appear(self.I_ABYSS_NAVIGATION):
+                break
+            if self.appear(self.I_ABYSS_DRAGON) or self.appear(self.I_ABYSS_DRAGON_OVER):
+                # 在切换区域界面
+                self.device.click(x=600, y=600)
+                self.wait_until_appear(self.I_ABYSS_NAVIGATION, timeout=2)
+                continue
+            if self.appear_then_click(self.I_ABYSS_MAP_EXIT, interval=2):
+                continue
+            if self.appear_then_click(self.I_ABYSS_ENEMY_INFO_EXIT, interval=2):
+                continue
+
+        #
         logger.info("Exiting abyss_shadows")
         self.ui_goto(page_main)
 
@@ -423,8 +439,10 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AbyssShadowsAssets):
     def execute(self, item_code: Code):
         area = item_code.get_areatype()
         need_change_area = (self.cur_area is None) or (area != self.cur_area)
+
         if need_change_area:
-            self.change_area(area)
+            if not self.change_area(area):
+                return False
             self.cur_area = area
         # 当前应当在正确的区域
         #

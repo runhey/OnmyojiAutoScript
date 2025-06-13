@@ -10,7 +10,6 @@ from module.ocr.sub_ocr import Full, Single, Digit, DigitCounter, Duration, Quan
 from module.logger import logger
 
 
-
 class RuleOcr(Digit, DigitCounter, Duration, Single, Full, Quantity):
 
     def __init__(self, *args, **kwargs):
@@ -28,7 +27,7 @@ class RuleOcr(Digit, DigitCounter, Duration, Single, Full, Quantity):
                 mask = cv2.inRange(image, lower, upper)
                 res_img = cv2.bitwise_and(image, image, mask=mask)
                 return res_img
-            case OcrMethodType.CF_RGB:
+            case OcrMethodType.CF_HSV:
                 _val = self.method.get_val()
                 lower, upper = _val.split(',')
                 lower = np.array([int(lower[i:i + 2], 16) for i in (0, 2, 4)])
@@ -42,24 +41,38 @@ class RuleOcr(Digit, DigitCounter, Duration, Single, Full, Quantity):
 
     def after_process(self, result):
         match self.mode:
-            case OcrMode.FULL: return Full.after_process(self, result)
-            case OcrMode.SINGLE: return Single.after_process(self, result)
-            case OcrMode.DIGIT: return Digit.after_process(self, result)
-            case OcrMode.DIGITCOUNTER: return DigitCounter.after_process(self, result)
-            case OcrMode.DURATION: return Duration.after_process(self, result)
-            case OcrMode.QUANTITY: return Quantity.after_process(self, result)
-            case _: return result
+            case OcrMode.FULL:
+                return Full.after_process(self, result)
+            case OcrMode.SINGLE:
+                return Single.after_process(self, result)
+            case OcrMode.DIGIT:
+                return Digit.after_process(self, result)
+            case OcrMode.DIGITCOUNTER:
+                return DigitCounter.after_process(self, result)
+            case OcrMode.DURATION:
+                return Duration.after_process(self, result)
+            case OcrMode.QUANTITY:
+                return Quantity.after_process(self, result)
+            case _:
+                return result
 
     def ocr(self, image, keyword=None):
 
         match self.mode:
-            case OcrMode.FULL: return Full.ocr_full(self, image, keyword)
-            case OcrMode.SINGLE: return Single.ocr_single(self, image)
-            case OcrMode.DIGIT: return Digit.ocr_digit(self, image)
-            case OcrMode.DIGITCOUNTER: return DigitCounter.ocr_digit_counter(self, image)
-            case OcrMode.DURATION: return Duration.ocr_duration(self, image)
-            case OcrMode.QUANTITY: return Quantity.ocr_quantity(self, image)
-            case _: return None
+            case OcrMode.FULL:
+                return Full.ocr_full(self, image, keyword)
+            case OcrMode.SINGLE:
+                return Single.ocr_single(self, image)
+            case OcrMode.DIGIT:
+                return Digit.ocr_digit(self, image)
+            case OcrMode.DIGITCOUNTER:
+                return DigitCounter.ocr_digit_counter(self, image)
+            case OcrMode.DURATION:
+                return Duration.ocr_duration(self, image)
+            case OcrMode.QUANTITY:
+                return Quantity.ocr_quantity(self, image)
+            case _:
+                return None
 
     def coord(self) -> tuple:
         """
@@ -78,7 +91,5 @@ class RuleOcr(Digit, DigitCounter, Duration, Single, Full, Quantity):
         return x, y
 
 
-
 if __name__ == "__main__":
     pass
-
