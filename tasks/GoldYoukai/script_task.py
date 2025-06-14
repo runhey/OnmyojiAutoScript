@@ -88,6 +88,8 @@ class ScriptTask(GameUi, GeneralBattle, GeneralRoom, GeneralInvite, SwitchSoul, 
         logger.info("Start battle process")
         while 1:
             self.screenshot()
+            if self.appear_then_click(self.I_PREPARE_HIGHLIGHT, interval=1):
+                logger.info('click prepare')
             if self.appear(self.I_DE_WIN):
                 logger.info('Win battle')
                 self.ui_click_until_disappear(self.I_DE_WIN)
