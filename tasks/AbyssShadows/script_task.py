@@ -15,7 +15,6 @@ from module.device.device import Device
 from tasks.AbyssShadows.assets import AbyssShadowsAssets
 from tasks.AbyssShadows.config import AbyssShadows, EnemyType, AreaType, Code, AbyssShadowsDifficulty, \
     CodeList, IndexMap
-from tasks.Component.GeneralBattle.config_general_battle import GreenMarkType
 from tasks.Component.GeneralBattle.general_battle import GeneralBattle
 from tasks.Component.SwitchSoul.switch_soul import SwitchSoul
 from tasks.GameUi.game_ui import GameUi
@@ -23,6 +22,10 @@ from tasks.GameUi.page import page_main, page_guild
 
 # 单个首领/副将/精英 一次无法完成目标（一般是一次没打掉） 的情况下，最大战斗次数
 MAX_BATTLE_COUNT = 2
+
+
+class AbyssShadowsFinished(Exception):
+    pass
 
 
 class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AbyssShadowsAssets):
@@ -77,8 +80,8 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AbyssShadowsAssets):
 
         # 判断各个区域是否可用
         area_available = None
-        self.screenshot()
         for area in AreaType:
+            self.screenshot()
             if self.is_area_done(area):
                 self.unavailable_list += CodeList(IndexMap[area.name].value)
                 logger.info(f"{area.name} unavailable")
@@ -109,7 +112,10 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AbyssShadowsAssets):
         self.wait_until_appear(self.I_IS_ATTACK, wait_time=180)
         self.device.stuck_record_clear()
         #
-        self.process()
+        try:
+            self.process()
+        except AbyssShadowsFinished:
+            pass
 
         # 保持好习惯，一个任务结束了就返回到庭院，方便下一任务的开始
         self.goto_main()
@@ -171,6 +177,8 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AbyssShadowsAssets):
         '''
         while 1:
             self.screenshot()
+            if self.appear(self.I_CHECK_FINISH):
+                raise AbyssShadowsFinished
             # 判断当前区域是否正确
             current_area = self.check_current_area()
             if current_area == area_name:
@@ -310,6 +318,8 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AbyssShadowsAssets):
             # 点击前往按钮,知道该按钮消失或出现"挑战"字样
             while 1:
                 self.screenshot()
+                if self.appear(self.I_CHECK_FINISH):
+                    raise AbyssShadowsFinished
                 if self.appear(self.I_ABYSS_FIRE):
                     break
                 if self.appear(self.I_ENSURE_BUTTON):
@@ -326,6 +336,8 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AbyssShadowsAssets):
         # 点击战斗按钮
         while 1:
             self.screenshot()
+            if self.appear(self.I_CHECK_FINISH):
+                raise AbyssShadowsFinished
             #
             if self.appear(self.I_ABYSS_ENEMY_FIRE):
                 self.click(self.I_ABYSS_ENEMY_FIRE, interval=0.4)
@@ -427,6 +439,8 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AbyssShadowsAssets):
     def open_navigation(self):
         while True:
             self.screenshot()
+            if self.appear(self.I_CHECK_FINISH):
+                raise AbyssShadowsFinished
             if self.appear(self.I_ABYSS_MAP):
                 break
             if self.appear(self.I_ABYSS_NAVIGATION):

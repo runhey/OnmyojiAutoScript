@@ -171,6 +171,15 @@
     "description": "进攻中"
   },
   {
+    "itemName": "check_finish",
+    "imageName": "res_check_finish.png",
+    "roiFront": "570,50,120,60",
+    "roiBack": "570,50,120,60",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "狭间暗域 挑战结束"
+  },
+  {
     "itemName": "peacock_area",
     "imageName": "res_peacock_area.png",
     "roiFront": "577,14,127,36",

@@ -88,6 +88,8 @@ class AbyssShadowsAssets:
 	I_ENSURE_BUTTON = RuleImage(roi_front=(672,405,169,55), roi_back=(672,405,169,55), threshold=0.8, method="Template matching", file="./tasks/AbyssShadows/res/res_ensure_button.png")
 	# 进攻中 
 	I_IS_ATTACK = RuleImage(roi_front=(576,54,91,45), roi_back=(576,54,91,45), threshold=0.8, method="Template matching", file="./tasks/AbyssShadows/res/res_is_attack.png")
+	# 狭间暗域 挑战结束 
+	I_CHECK_FINISH = RuleImage(roi_front=(570,50,120,60), roi_back=(570,50,120,60), threshold=0.8, method="Template matching", file="./tasks/AbyssShadows/res/res_check_finish.png")
 	# description 
 	I_PEACOCK_AREA = RuleImage(roi_front=(577,14,127,36), roi_back=(577,14,127,36), threshold=0.8, method="Template matching", file="./tasks/AbyssShadows/res/res_peacock_area.png")
 	# 黑豹领域 
