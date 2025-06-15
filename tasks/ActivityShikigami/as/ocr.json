@@ -1,47 +1,47 @@
 [
   {
     "itemName": "remain_ap",
-    "roiFront": "1102,26,57,26",
-    "roiBack": "1102,26,57,26",
-    "mode": "DigitCounter",
+    "imageName": "as_remain_ap.png",
+    "roiFront": "1101,17,68,29",
+    "roiBack": "1101,17,68,29",
     "method": "Default",
-    "keyword": "",
+    "threshold": 0,
     "description": "体力的数量检测"
   },
   {
     "itemName": "remain_ap_activity",
-    "roiFront": "715,18,95,28",
-    "roiBack": "715,18,95,28",
-    "mode": "DigitCounter",
+    "imageName": "as_remain_ap_activity.png",
+    "roiFront": "942.2,17.39999999999992,73.60000000000014,29.799999999999926",
+    "roiBack": "942.2,17.39999999999992,73.60000000000014,29.799999999999926",
     "method": "Default",
-    "keyword": "",
+    "threshold": 0,
     "description": "活动体力的剩余检测"
   },
   {
     "itemName": "remain_buy",
+    "imageName": "as_remain_buy.png",
     "roiFront": "808,531,39,42",
     "roiBack": "808,531,39,42",
-    "mode": "DigitCounter",
     "method": "Default",
-    "keyword": "",
+    "threshold": 0,
     "description": "还有多少次购买体力的机会"
   },
   {
     "itemName": "remain_ap_activity2",
-    "roiFront": "756,17,52,29",
-    "roiBack": "756,17,52,29",
-    "mode": "Digit",
+    "imageName": "as_remain_ap_activity2.png",
+    "roiFront": "936,18,77,29",
+    "roiBack": "936,18,77,29",
     "method": "Default",
-    "keyword": "",
+    "threshold": 0,
     "description": "活动票数（没有百分比）"
   },
   {
     "itemName": "entry_activity",
+    "imageName": "",
     "roiFront": "71,241,98,32",
     "roiBack": "71,241,98,32",
-    "mode": "Single",
     "method": "Default",
-    "keyword": "阵练演武",
+    "threshold": 0,
     "description": "Ocr-description"
   }
 ]
