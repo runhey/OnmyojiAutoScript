@@ -74,16 +74,16 @@ class ActivityShikigamiAssets:
 	I_NEW = RuleImage(roi_front=(1004,192,65,52), roi_back=(0,0,100,100), threshold=0.8, method="Template matching", file="./tasks/ActivityShikigami/as/as_new.png")
 
 
-	# Image Rule Assets
+	# Ocr Rule Assets
 	# 体力的数量检测 
-	I_REMAIN_AP = RuleImage(roi_front=(1101,17,68,29), roi_back=(1101,17,68,29), threshold=0, method="Default", file="./tasks/ActivityShikigami/as/as_remain_ap.png")
+	O_REMAIN_AP = RuleOcr(roi=(1100,16,68,32), area=(1100,16,68,32), mode="DigitCounter", method="Default", keyword="", name="remain_ap")
 	# 活动体力的剩余检测 
-	I_REMAIN_AP_ACTIVITY = RuleImage(roi_front=(942.2,17.39999999999992,73.60000000000014,29.799999999999926), roi_back=(942.2,17.39999999999992,73.60000000000014,29.799999999999926), threshold=0, method="Default", file="./tasks/ActivityShikigami/as/as_remain_ap_activity.png")
+	O_REMAIN_AP_ACTIVITY = RuleOcr(roi=(534,18,70,28), area=(534,18,70,28), mode="DigitCounter", method="Default", keyword="", name="remain_ap_activity")
 	# 还有多少次购买体力的机会 
-	I_REMAIN_BUY = RuleImage(roi_front=(808,531,39,42), roi_back=(808,531,39,42), threshold=0, method="Default", file="./tasks/ActivityShikigami/as/as_remain_buy.png")
+	O_REMAIN_BUY = RuleOcr(roi=(808,531,39,42), area=(808,531,39,42), mode="DigitCounter", method="Default", keyword="", name="remain_buy")
 	# 活动票数（没有百分比） 
-	I_REMAIN_AP_ACTIVITY2 = RuleImage(roi_front=(936,18,77,29), roi_back=(936,18,77,29), threshold=0, method="Default", file="./tasks/ActivityShikigami/as/as_remain_ap_activity2.png")
+	O_REMAIN_AP_ACTIVITY2 = RuleOcr(roi=(534,18,71,29), area=(534,18,71,29), mode="Digit", method="Default", keyword="", name="remain_ap_activity2")
 	# Ocr-description 
-	I_ENTRY_ACTIVITY = RuleImage(roi_front=(71,241,98,32), roi_back=(71,241,98,32), threshold=0, method="Default", file="./tasks/ActivityShikigami/as/")
+	O_ENTRY_ACTIVITY = RuleOcr(roi=(71,241,98,32), area=(71,241,98,32), mode="Single", method="Default", keyword="阵练演武", name="entry_activity")
 
 
