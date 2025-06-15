@@ -1,8 +1,9 @@
 # This Python file uses the following encoding: utf-8
-# @brief    Ryou Dokan Toppa (阴阳竂道馆突破功能)
+# @brief    AbyssShadows(阴阳竂狭间暗域功能)
 # @author   jackyhwei
 # @note     draft version without full test
 # github    https://github.com/roarhill/oas
+from time import sleep
 
 from datetime import datetime
 
@@ -12,6 +13,7 @@ from module.base.timer import Timer
 from module.logger import logger
 from module.config.config import Config
 from module.device.device import Device
+from random import random
 from tasks.AbyssShadows.assets import AbyssShadowsAssets
 from tasks.AbyssShadows.config import AbyssShadows, EnemyType, AreaType, Code, AbyssShadowsDifficulty, \
     CodeList, IndexMap
@@ -38,9 +40,9 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AbyssShadowsAssets):
 
     def __init__(self, config: Config, device: Device):
         super().__init__(config, device)
-        #
+        # 当前所处区域
         self.cur_area = None
-        #
+        # 当前所用队伍预设
         self.cur_preset = None
         # process list
         self.ps_list: CodeList = CodeList('')
@@ -48,7 +50,7 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AbyssShadowsAssets):
         self.done_list: CodeList = CodeList('')
         # 已知的 已经被打完的  列表
         self.unavailable_list: CodeList = CodeList('')
-        #
+        # 是否已经切换过御魂
         self.switch_soul_done = False
 
     def run(self):
@@ -78,6 +80,7 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AbyssShadowsAssets):
         if cfg.abyss_shadows_time.try_start_abyss_shadows:
             self.start_abyss_shadows()
 
+        self.init_list_from_cfg()
         # 判断各个区域是否可用
         area_available = None
         for area in AreaType:
@@ -89,7 +92,6 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AbyssShadowsAssets):
             area_available = area
             logger.info(f"{area.name} available")
 
-        self.update_list()
 
         _next = self.get_next()
         if _next is not None:
@@ -102,22 +104,30 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AbyssShadowsAssets):
             self.set_next_run(task='AbyssShadows', finish=False, server=False, success=False)
             raise TaskEnd
 
-        # 集结中图片
-        self.wait_until_appear(self.I_WAIT_TO_START, wait_time=2)
-        # 切换御魂
-        self.switch_soul_in_as()
-        #
-        self.device.stuck_record_add('BATTLE_STATUS_S')
-        # 等待战斗开始
-        self.wait_until_appear(self.I_IS_ATTACK, wait_time=180)
-        self.device.stuck_record_clear()
-        #
         try:
+            # 集结中图片
+            self.wait_until_appear(self.I_WAIT_TO_START, wait_time=2)
+
+            # 检查活动是否结束
+            if self.appear(self.I_CHECK_FINISH):
+                logger.info(f"{self.I_CHECK_FINISH} appear,abyss shadows finished")
+                raise AbyssShadowsFinished
+            # 切换御魂
+            self.switch_soul_in_as()
+            #
+            self.device.stuck_record_add('BATTLE_STATUS_S')
+            # 等待战斗开始
+            self.wait_until_appear(self.I_IS_ATTACK, wait_time=180)
+            self.device.stuck_record_clear()
+            #
             self.process()
         except AbyssShadowsFinished:
+            logger.info("Abyss shadows finished with Exception AbyssShadowsFinished")
             pass
+        logger.info("Abyss shadows process done")
 
         # 保持好习惯，一个任务结束了就返回到庭院，方便下一任务的开始
+        self.ui_get_current_page()
         self.goto_main()
 
         # 设置下次运行时间
@@ -127,7 +137,11 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AbyssShadowsAssets):
 
         raise TaskEnd
 
-    def update_list(self):
+    def init_list_from_cfg(self):
+        if datetime.today().strftime('%Y-%m-%d') != self.config.model.abyss_shadows.saved_params.save_time:
+            logger.info("Today is not saved date, clear saved params")
+            self.clear_saved_params()
+        #
         self.ps_list = CodeList(self.config.model.abyss_shadows.process_manage.attack_order)
         #
         self.done_list = CodeList(self.config.model.abyss_shadows.saved_params.done)
@@ -136,8 +150,15 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AbyssShadowsAssets):
         logger.info(f"update list done!{self.done_list=} {self.unavailable_list=}")
 
     def flash_list(self):
+        """
+            NOTE 导致该任务运行过程中，从前端修改的配置将会丢失
+        @return:
+        """
+        # BUG 跨天会出问题
+        self.config.model.abyss_shadows.saved_params.save_time = datetime.today().strftime('%Y-%m-%d')
         self.config.model.abyss_shadows.saved_params.done = self.done_list.parse2str()
         self.config.model.abyss_shadows.saved_params.unavailable = self.unavailable_list.parse2str()
+
         self.config.save()
         logger.info(f"Flash list done!{self.done_list=} {self.unavailable_list=}")
 
@@ -148,9 +169,9 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AbyssShadowsAssets):
         logger.info("Clear saved params done")
 
     def check_current_area(self) -> AreaType:
-        ''' 获取当前区域
+        """ 获取当前区域
         :return AreaType
-        '''
+        """
         while 1:
             self.screenshot()
             # 关闭战报界面
@@ -172,9 +193,9 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AbyssShadowsAssets):
                 continue
 
     def change_area(self, area_name: AreaType) -> bool:
-        ''' 切换到下个区域
+        """ 切换到下个区域
         :return
-        '''
+        """
         while 1:
             self.screenshot()
             if self.appear(self.I_CHECK_FINISH):
@@ -209,18 +230,23 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AbyssShadowsAssets):
         return True
 
     def goto_main(self):
-        ''' 保持好习惯，一个任务结束了就返回庭院，方便下一任务的开始或者是出错重启
-        '''
+        """ 保持好习惯，一个任务结束了就返回庭院，方便下一任务的开始或者是出错重启
+        """
 
-        # 保证在狭间暗域界面
+        # 可能在狭间，也可能在其他界面
+        timer_quit_abyss_shadows = Timer(30)
+        timer_quit_abyss_shadows.start()
         while 1:
             self.screenshot()
-            if self.appear(self.I_ABYSS_NAVIGATION):
+            if timer_quit_abyss_shadows.reached():
+                logger.info("timer_quit_abyss_shadows reached,")
+                break
+            if self.appear(self.I_ABYSS_NAVIGATION) or self.appear(self.I_CHECK_FINISH):
                 break
             if self.appear(self.I_ABYSS_DRAGON) or self.appear(self.I_ABYSS_DRAGON_OVER):
                 # 在切换区域界面
                 self.device.click(x=600, y=600)
-                self.wait_until_appear(self.I_ABYSS_NAVIGATION, timeout=2)
+                self.wait_until_appear(self.I_ABYSS_NAVIGATION, wait_time=2)
                 continue
             if self.appear_then_click(self.I_ABYSS_MAP_EXIT, interval=2):
                 continue
@@ -232,9 +258,9 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AbyssShadowsAssets):
         self.ui_goto(page_main)
 
     def goto_abyss_shadows(self) -> bool:
-        ''' 进入狭间
+        """ 进入狭间
         :return bool
-        '''
+        """
         self.ui_get_current_page()
         logger.info("Entering abyss_shadows")
         self.ui_goto(page_guild)
@@ -256,9 +282,9 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AbyssShadowsAssets):
         return True
 
     def select_boss(self, area_name: AreaType) -> bool:
-        ''' 选择暗域类型
+        """ 选择暗域类型
         :return
-        '''
+        """
         click_times = 0
         while 1:
             self.screenshot()
@@ -290,12 +316,18 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AbyssShadowsAssets):
         # 前往当前区域 的某个 敌人
         click_area = item_code.get_enemy_click()
         logger.info(f"Click emeny area: {click_area.name}")
+        # 点击前往按钮的次数，阴阳师BUG:点击后不动，
+        # 所以如果失败了，在点击前，尝试使用左下方的摇杆移动一点点
+        count_click_goto_enemy = 0
         # 点击战报
         while 1:
             self.screenshot()
             if self.appear(self.I_ABYSS_FIRE):
                 break
-
+            # 尝试使用左下方摇杆移动
+            if count_click_goto_enemy > 0 and self.appear(self.I_ABYSS_NAVIGATION):
+                self.move_a_little()
+            # 打开导航页面
             self.open_navigation()
 
             click_times = 0
@@ -316,6 +348,7 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AbyssShadowsAssets):
                     continue
 
             # 点击前往按钮,知道该按钮消失或出现"挑战"字样
+
             while 1:
                 self.screenshot()
                 if self.appear(self.I_CHECK_FINISH):
@@ -327,6 +360,7 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AbyssShadowsAssets):
                     continue
                 if self.appear(self.I_ABYSS_GOTO_ENEMY):
                     self.click(self.I_ABYSS_GOTO_ENEMY, interval=1)
+                    count_click_goto_enemy += 1
                     continue
                 if not self.wait_until_appear(self.I_ABYSS_FIRE, wait_time=10):
                     break
@@ -380,7 +414,7 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AbyssShadowsAssets):
 
     def process(self):
         while True:
-            self.update_list()
+            self.init_list_from_cfg()
             _next = self.get_next()
             if _next is None:
                 break
@@ -483,12 +517,11 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AbyssShadowsAssets):
 
     def run_battle(self, item_code: Code):
         success = False
-        enemy = item_code.get_enemy_click()
         enemy_type = item_code.get_enemy_type()
 
         # 判断是否需要更换预设
-        def get_preset(enemy_type: EnemyType):
-            match enemy_type:
+        def get_preset(_enemy_type: EnemyType):
+            match _enemy_type:
                 case EnemyType.BOSS:
                     return self.config.model.abyss_shadows.process_manage.preset_boss
                 case EnemyType.GENERAL:
@@ -597,10 +630,10 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AbyssShadowsAssets):
 
         logger.info("start switch soul...")
 
-        def switch_soul(v: str):
-            l = v.split(',')
+        def switch_soul(_v: str):
+            l = _v.split(',')
             if len(l) != 2:
-                logger.error(f"Due to a configuration error (value: {v}), an error occurred while switch soul.")
+                logger.error(f"Due to a configuration error (value: {_v}), an error occurred while switch soul.")
                 raise RequestHumanTakeover
             self.run_switch_soul((int(l[0]), int(l[1])))
 
@@ -655,17 +688,26 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AbyssShadowsAssets):
 
         return False
 
+    def move_a_little(self):
+        radius = 150
+        # 寮里面摇杆的中心点
+        p1 = (197, 568)
+        import random
+        dx, dy = random.randint(-radius, radius), random.randint(-radius, radius)
+        self.device.swipe_adb(p1, (p1[0] + dx, p1[1] + dy), duration=0.5)
+        logger.info(f"Swipe {p1} to {(p1[0] + dx, p1[1] + dy)}")
+
 
 if __name__ == "__main__":
     import cv2, numpy as np
     from module.config.config import Config
     from module.device.device import Device
 
-    config = Config('oas1')
+    config = Config('oas')
     device = Device(config)
 
-    image = cv2.imread('E:/f.png')
-    image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+    # image = cv2.imread('E:/f.png')
+    # image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
     #
     # hsv_image = cv2.cvtColor(image, cv2.COLOR_RGB2HSV)
     #
@@ -678,10 +720,19 @@ if __name__ == "__main__":
     # cv2.waitKey()
 
     t = ScriptTask(config, device)
+    radius = 150
+    p1 = (197, 568)
+    import random
 
-    area_type = AreaType.DRAGON
-    t.unavailable_list += CodeList(IndexMap[area_type.name].value)
-    print(f"{t.unavailable_list=}")
+    while True:
+        dx, dy = random.randint(-radius, radius), random.randint(-radius, radius)
+        t.device.swipe_adb(p1, (p1[0] + dx, p1[1] + dy), duration=0.5)
+        logger.info(f"Swipe {p1} to {(p1[0] + dx, p1[1] + dy)}")
+        sleep(5)
+
+    # area_type = AreaType.DRAGON
+    # t.unavailable_list += CodeList(IndexMap[area_type.name].value)
+    # print(f"{t.unavailable_list=}")
     # t.screenshot()
 
     # cv2.imshow("origin", t.device.image)

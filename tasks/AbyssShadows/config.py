@@ -332,12 +332,12 @@ class ProcessManage(ConfigBase):
 
 
 class SavedParams(ConfigBase):
+    # 参数保存的时间,用于判断是不是当天的数据
+    save_date: str = Field(default='', description='save_date_help')
     # 已完成
     done: str = Field(default='', description='done_help')
     # 已知的已经打完的
     unavailable: str = Field(default='', description='unavailable_help')
-
-
 
 
 class AbyssShadows(ConfigBase):
