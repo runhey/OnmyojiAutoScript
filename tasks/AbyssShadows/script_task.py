@@ -13,7 +13,6 @@ from module.base.timer import Timer
 from module.logger import logger
 from module.config.config import Config
 from module.device.device import Device
-from random import random
 from tasks.AbyssShadows.assets import AbyssShadowsAssets
 from tasks.AbyssShadows.config import AbyssShadows, EnemyType, AreaType, Code, AbyssShadowsDifficulty, \
     CodeList, IndexMap
@@ -40,8 +39,6 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AbyssShadowsAssets):
 
     def __init__(self, config: Config, device: Device):
         super().__init__(config, device)
-        # 当前所处区域
-        self.cur_area = None
         # 当前所用队伍预设
         self.cur_preset = None
         # process list
@@ -80,31 +77,28 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AbyssShadowsAssets):
         if cfg.abyss_shadows_time.try_start_abyss_shadows:
             self.start_abyss_shadows()
 
-        self.init_list_from_cfg()
-        # 判断各个区域是否可用
-        area_available = None
-        for area in AreaType:
-            self.screenshot()
-            if self.is_area_done(area):
-                self.unavailable_list += CodeList(IndexMap[area.name].value)
-                logger.info(f"{area.name} unavailable")
-                continue
-            area_available = area
-            logger.info(f"{area.name} available")
-
-
-        _next = self.get_next()
-        if _next is not None:
-            area_available = _next.get_areatype()
-
-        # 通过能否进入，检测狭间是否开启
-        if not self.select_boss(area_available):
-            logger.warning("Failed to enter abyss shadows")
-            self.goto_main()
-            self.set_next_run(task='AbyssShadows', finish=False, server=False, success=False)
-            raise TaskEnd
-
         try:
+            self.init_list_from_cfg()
+            # 判断各个区域是否可用
+            available_areas, unavailable_areas = self.detect_area_status()
+            for area in unavailable_areas:
+                self.unavailable_list += CodeList(IndexMap[area.name].value)
+            if unavailable_areas:
+                self.flash_list()
+
+            # 获取需要进入的区域类型
+            _next = self.get_next()
+            if _next is None:
+                raise AbyssShadowsFinished
+            area_enter = _next.get_areatype()
+
+            # 通过能否进入，检测狭间是否开启
+            if not self.select_boss(area_enter):
+                logger.warning("Failed to enter abyss shadows")
+                self.goto_main()
+                self.set_next_run(task='AbyssShadows', finish=False, server=False, success=False)
+                raise TaskEnd
+
             # 集结中图片
             self.wait_until_appear(self.I_WAIT_TO_START, wait_time=2)
 
@@ -127,7 +121,6 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AbyssShadowsAssets):
         logger.info("Abyss shadows process done")
 
         # 保持好习惯，一个任务结束了就返回到庭院，方便下一任务的开始
-        self.ui_get_current_page()
         self.goto_main()
 
         # 设置下次运行时间
@@ -138,7 +131,7 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AbyssShadowsAssets):
         raise TaskEnd
 
     def init_list_from_cfg(self):
-        if datetime.today().strftime('%Y-%m-%d') != self.config.model.abyss_shadows.saved_params.save_time:
+        if datetime.today().strftime('%Y-%m-%d') != self.config.model.abyss_shadows.saved_params.save_date:
             logger.info("Today is not saved date, clear saved params")
             self.clear_saved_params()
         #
@@ -155,7 +148,7 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AbyssShadowsAssets):
         @return:
         """
         # BUG 跨天会出问题
-        self.config.model.abyss_shadows.saved_params.save_time = datetime.today().strftime('%Y-%m-%d')
+        self.config.model.abyss_shadows.saved_params.save_date = datetime.today().strftime('%Y-%m-%d')
         self.config.model.abyss_shadows.saved_params.done = self.done_list.parse2str()
         self.config.model.abyss_shadows.saved_params.unavailable = self.unavailable_list.parse2str()
 
@@ -181,6 +174,9 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AbyssShadowsAssets):
             if self.appear(self.I_ABYSS_ENEMY_INFO_EXIT):
                 self.click(self.I_ABYSS_ENEMY_INFO_EXIT, interval=2)
                 continue
+            if not self.appear(self.I_ABYSS_NAVIGATION):
+                # 确定不在战报界面后依旧没有在某一区域，则返回None
+                return None
             if self.appear(self.I_PEACOCK_AREA):
                 return AreaType.PEACOCK
             elif self.appear(self.I_DRAGON_AREA):
@@ -189,52 +185,75 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AbyssShadowsAssets):
                 return AreaType.FOX
             elif self.appear(self.I_LEOPARD_AREA):
                 return AreaType.LEOPARD
-            else:
-                continue
 
     def change_area(self, area_name: AreaType) -> bool:
-        """ 切换到下个区域
+        """ 切换到下个区域,不管成功与否,只要存在可用区域,就进入,不会停留在选择区域页面
         :return
         """
+        # 确保进入区域,有 切换区域 按钮
         while 1:
             self.screenshot()
+            # 如果出现挑战完成，直接退出
             if self.appear(self.I_CHECK_FINISH):
                 raise AbyssShadowsFinished
-            # 判断当前区域是否正确
-            current_area = self.check_current_area()
-            if current_area == area_name:
-                break
 
-            if self.is_area_done(area_name):
-                logger.info(f"change area:{area_name.name} is done")
-                self.unavailable_list += CodeList(IndexMap[area_name.name].value)
-                return False
-            # 切换区域界面
-            if self.appear(self.I_ABYSS_DRAGON_OVER) or self.appear(self.I_ABYSS_DRAGON):
-                self.select_boss(area_name)
-                logger.info(f"Switch to {area_name.name}")
-                continue
-            # 点击战报按钮
-            if self.appear_then_click(self.I_CHANGE_AREA, interval=4):
-                logger.info(f"Click {self.I_CHANGE_AREA.name}")
-                continue
-            # 大概率没用,保险点加上吧
+            if self.appear(self.I_ABYSS_NAVIGATION) or self.appear(self.I_CHANGE_AREA):
+                break
+            #
             if self.appear(self.I_ABYSS_MAP_EXIT):
                 self.click(self.I_ABYSS_MAP_EXIT, interval=2)
                 continue
-            # 大概率没用,保险点加上吧
+            #
             if self.appear(self.I_ABYSS_ENEMY_INFO_EXIT):
                 self.click(self.I_ABYSS_ENEMY_INFO_EXIT, interval=2)
                 continue
 
-        return True
+        # 判断当前区域是否正确
+        current_area = self.check_current_area()
+        if current_area == area_name:
+            return True
+
+        # 切换到选择区域界面
+        while 1:
+            self.screenshot()
+            # 如果出现挑战完成，直接退出
+            if self.appear(self.I_CHECK_FINISH):
+                raise AbyssShadowsFinished
+
+            # 出现切换区域界面
+            if self.appear(self.I_ABYSS_DRAGON_OVER) or self.appear(self.I_ABYSS_DRAGON):
+                break
+            # 点击切换区域按钮
+            if self.appear_then_click(self.I_CHANGE_AREA, interval=4):
+                logger.info(f"Click {self.I_CHANGE_AREA.name}")
+                continue
+
+        # 判断区域是否可用，并进入一个区域
+        available_areas, unavailable_areas = self.detect_area_status()
+        success = area_name in available_areas
+        if not success:
+            # 更新配置
+            for area in unavailable_areas:
+                self.unavailable_list += CodeList(IndexMap[area.name].value)
+
+        if available_areas is None or available_areas == []:
+            # 所有区域均不可用
+            raise AbyssShadowsFinished
+
+        if not success:
+            # 原参数表示的 区域 已完成，则选择第一个未完成的区域
+            area_name = available_areas[0]
+
+        self.select_boss(area_name)
+        logger.info(f"Switch to {area_name.name}")
+
+        return success
 
     def goto_main(self):
         """ 保持好习惯，一个任务结束了就返回庭院，方便下一任务的开始或者是出错重启
         """
-
         # 可能在狭间，也可能在其他界面
-        timer_quit_abyss_shadows = Timer(30)
+        timer_quit_abyss_shadows = Timer(16)
         timer_quit_abyss_shadows.start()
         while 1:
             self.screenshot()
@@ -242,6 +261,8 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AbyssShadowsAssets):
                 logger.info("timer_quit_abyss_shadows reached,")
                 break
             if self.appear(self.I_ABYSS_NAVIGATION) or self.appear(self.I_CHECK_FINISH):
+                break
+            if self.appear(self.I_CHECK_SUMMON):
                 break
             if self.appear(self.I_ABYSS_DRAGON) or self.appear(self.I_ABYSS_DRAGON_OVER):
                 # 在切换区域界面
@@ -252,9 +273,14 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AbyssShadowsAssets):
                 continue
             if self.appear_then_click(self.I_ABYSS_ENEMY_INFO_EXIT, interval=2):
                 continue
+            if self.appear_then_click(self.I_UI_BACK_BLUE, interval=2):
+                continue
+            if self.appear_then_click(self.I_UI_BACK_YELLOW, interval=2):
+                continue
 
         #
         logger.info("Exiting abyss_shadows")
+        self.ui_get_current_page()
         self.ui_goto(page_main)
 
     def goto_abyss_shadows(self) -> bool:
@@ -309,7 +335,6 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AbyssShadowsAssets):
                 continue
             if self.appear(self.I_ABYSS_NAVIGATION):
                 break
-        self.cur_area = area_name
         return True
 
     def goto_enemy(self, item_code: Code) -> bool:
@@ -486,12 +511,9 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AbyssShadowsAssets):
 
     def execute(self, item_code: Code):
         area = item_code.get_areatype()
-        need_change_area = (self.cur_area is None) or (area != self.cur_area)
 
-        if need_change_area:
-            if not self.change_area(area):
-                return False
-            self.cur_area = area
+        if not self.change_area(area):
+            return False
         # 当前应当在正确的区域
         #
         # if not self.check_available(item_code):
@@ -550,7 +572,15 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AbyssShadowsAssets):
         is_need_mark_main = self.config.model.abyss_shadows.process_manage.is_need_mark_main(enemy_type)
         if is_need_mark_main:
             logger.info(f"enemyType{enemy_type}--Mark main")
-            self.ui_click(self.C_MARK_MAIN, stop=self.I_MARK_MAIN, interval=1.5)
+            # 需要处理主怪没了的情况,增加最大次数
+            count_click_mark_main = 0
+            while count_click_mark_main < 5:
+                if self.appear(self.I_MARK_MAIN):
+                    break
+                if self.click(self.C_MARK_MAIN, interval=1):
+                    count_click_mark_main += 1
+                    self.wait_until_appear(self.I_MARK_MAIN, wait_time=1)
+                    continue
 
         # 绿标
         # self.green_mark(True,GreenMarkType.GREEN_LEFT1)
@@ -664,6 +694,22 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AbyssShadowsAssets):
                 break
 
         return True
+
+    def detect_area_status(self):
+        # 在切换区域界面检查各个区域是否可用
+        #
+        available_areas = []
+        unavailable_areas = []
+        self.screenshot()
+        for area in AreaType:
+            if self.is_area_done(area):
+                unavailable_areas.append(area)
+                # self.unavailable_list += CodeList(IndexMap[area.name].value)
+                logger.info(f"{area.name} unavailable")
+                continue
+            available_areas.append(area)
+            logger.info(f"{area.name} available")
+        return available_areas, unavailable_areas
 
     def is_area_done(self, area_type: AreaType):
         # 不再切换区域界面直接返回
