@@ -5,7 +5,6 @@ import time
 
 from tasks.GameUi.game_ui import GameUi
 from tasks.GameUi.page import page_main, page_daily
-from tasks.Restart.assets import RestartAssets
 from tasks.TalismanPass.assets import TalismanPassAssets
 from tasks.TalismanPass.config import TalismanConfig, LevelReward
 
@@ -13,7 +12,7 @@ from module.logger import logger
 from module.exception import TaskEnd
 from module.base.timer import Timer
 
-class ScriptTask(GameUi, TalismanPassAssets, RestartAssets):
+class ScriptTask(GameUi, TalismanPassAssets):
 
     def run(self):
         self.ui_get_current_page()
@@ -105,20 +104,12 @@ class ScriptTask(GameUi, TalismanPassAssets, RestartAssets):
         timer_harvest = Timer(5)  # 如果连续5秒没有发现任何奖励，退出
         while 1:
             self.screenshot()
-            # 点击'获得奖励'
-            if self.ui_reward_appear_click():
-                timer_harvest.reset()
-                continue
-            # 获得奖励
-            if self.appear_then_click(self.I_UI_AWARD, interval=0.2):
-                timer_harvest.reset()
-                continue            
             # 自选御魂
-            if self.appear(self.I_HARVEST_SOUL_1):
-                logger.info('Select soul 1')
-                self.ui_click(self.I_HARVEST_SOUL_1, stop=self.I_HARVEST_SOUL_2)
-                self.ui_click(self.I_HARVEST_SOUL_2, stop=self.I_HARVEST_SOUL_3, interval=3)
-                self.ui_click_until_disappear(click=self.I_HARVEST_SOUL_3)
+            if self.appear(self.I_TP_SOUL_1):
+                logger.info('Select soul 2')
+                self.ui_click(self.I_TP_SOUL_1, stop=self.I_TP_SOUL_2)
+                self.ui_click(self.I_TP_SOUL_2, stop=self.I_TP_SOUL_3, interval=3)
+                self.ui_click_until_disappear(click=self.I_TP_SOUL_3)
                 timer_harvest.reset()
             # 五秒内没有发现任何奖励，退出
             if not timer_harvest.started():

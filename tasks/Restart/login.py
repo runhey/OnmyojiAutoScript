@@ -273,7 +273,7 @@ class LoginHandler(BaseTask, RestartAssets):
                 continue
             # 自选御魂
             if self.appear(self.I_HARVEST_SOUL_1):
-                logger.info('Select soul 1')
+                logger.info('Select soul 2')
                 self.ui_click(self.I_HARVEST_SOUL_1, stop=self.I_HARVEST_SOUL_2)
                 self.ui_click(self.I_HARVEST_SOUL_2, stop=self.I_HARVEST_SOUL_3, interval=3)
                 self.ui_click_until_disappear(click=self.I_HARVEST_SOUL_3)
