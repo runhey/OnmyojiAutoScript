@@ -38,8 +38,8 @@
   {
     "itemName": "ryou_reward",
     "imageName": "res_ryou_reward.png",
-    "roiFront": "134,417,241,40",
-    "roiBack": "134,417,241,40",
+    "roiFront": "136,415,242,40",
+    "roiBack": "136,415,240,14",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "寮击破奖励"
@@ -56,8 +56,8 @@
   {
     "itemName": "success_penetration",
     "imageName": "res_success_penetration.png",
-    "roiFront": "141,374,234,37",
-    "roiBack": "141,374,234,37",
+    "roiFront": "139,374,234,36",
+    "roiBack": "139,374,234,36",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "攻破阴阳寮"
@@ -74,8 +74,8 @@
   {
     "itemName": "ryou_reward_90",
     "imageName": "res_ryou_reward_90.png",
-    "roiFront": "134,415,232,38",
-    "roiBack": "134,415,232,38",
+    "roiFront": "133,418,232,38",
+    "roiBack": "133,418,232,38",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "击破后的寮奖励"

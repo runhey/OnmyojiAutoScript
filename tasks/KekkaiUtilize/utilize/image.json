@@ -11,8 +11,8 @@
   {
     "itemName": "utilize_friend_group",
     "imageName": "utilize_utilize_friend_group.png",
-    "roiFront": "216,92,109,70",
-    "roiBack": "216,92,109,70",
+    "roiFront": "217,92,110,68",
+    "roiBack": "217,92,110,68",
     "method": "Template matching",
     "threshold": 0.9,
     "description": "好友这组"
@@ -101,8 +101,8 @@
   {
     "itemName": "u_enter_realm",
     "imageName": "utilize_u_enter_realm.png",
-    "roiFront": "792,531,178,67",
-    "roiBack": "792,531,178,67",
+    "roiFront": "792,531,178,66",
+    "roiBack": "792,531,178,66",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "进入结界"
@@ -146,8 +146,8 @@
   {
     "itemName": "u_add_1",
     "imageName": "utilize_u_add_1.png",
-    "roiFront": "1144,59,86,69",
-    "roiBack": "1144,59,86,69",
+    "roiFront": "1141,58,86,69",
+    "roiBack": "1141,58,86,69",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "右上，右数第一个"
@@ -155,8 +155,8 @@
   {
     "itemName": "u_add_2",
     "imageName": "utilize_u_add_2.png",
-    "roiFront": "979,52,76,69",
-    "roiBack": "979,52,76,69",
+    "roiFront": "976,51,76,69",
+    "roiBack": "976,51,76,69",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "右上，右数第二个"

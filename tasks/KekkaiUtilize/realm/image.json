@@ -11,7 +11,7 @@
   {
     "itemName": "shi_card",
     "imageName": "realm_shi_card.png",
-    "roiFront": "886,290,38,56",
+    "roiFront": "892,287,38,56",
     "roiBack": "870,276,75,86",
     "method": "Template matching",
     "threshold": 0.7,
@@ -20,7 +20,7 @@
   {
     "itemName": "shi_defense",
     "imageName": "realm_shi_defense.png",
-    "roiFront": "294,298,49,56",
+    "roiFront": "294,298,48,56",
     "roiBack": "215,207,208,221",
     "method": "Template matching",
     "threshold": 0.8,
@@ -74,8 +74,8 @@
   {
     "itemName": "ap_extract",
     "imageName": "realm_ap_extract.png",
-    "roiFront": "592,501,100,75",
-    "roiBack": "592,501,100,75",
+    "roiFront": "583,502,100,74",
+    "roiBack": "583,502,100,74",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "取出"
@@ -83,8 +83,8 @@
   {
     "itemName": "exp_extract",
     "imageName": "realm_exp_extract.png",
-    "roiFront": "592,448,100,73",
-    "roiBack": "592,448,100,73",
+    "roiFront": "589,448,100,74",
+    "roiBack": "589,448,100,74",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "提取"

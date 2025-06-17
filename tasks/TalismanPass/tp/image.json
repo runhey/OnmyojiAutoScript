@@ -2,8 +2,8 @@
   {
     "itemName": "tp_get_all",
     "imageName": "tp_tp_get_all.png",
-    "roiFront": "903,599,70,71",
-    "roiBack": "903,599,70,71",
+    "roiFront": "908,604,70,70",
+    "roiBack": "908,604,70,70",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "领取全部"

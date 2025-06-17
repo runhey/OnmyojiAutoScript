@@ -20,8 +20,8 @@
   {
     "itemName": "frog_raid",
     "imageName": "res_frog_raid.png",
-    "roiFront": "511,301,282,100",
-    "roiBack": "511,301,282,100",
+    "roiFront": "520,310,290,100",
+    "roiBack": "520,310,290,100",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "呱太入侵， 第一次进入结界时候出现"

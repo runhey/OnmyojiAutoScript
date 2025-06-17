@@ -29,8 +29,8 @@
   {
     "itemName": "st_fire_prepare",
     "imageName": "st_st_fire_prepare.png",
-    "roiFront": "1118,548,100,100",
-    "roiBack": "1118,548,100,100",
+    "roiFront": "1121,549,100,100",
+    "roiBack": "1121,549,100,100",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "十个式神的准备"
@@ -42,7 +42,7 @@
     "roiBack": "1112,463,33,34",
     "method": "Template matching",
     "threshold": 0.8,
-    "description": "description"
+    "description": "未勾选自动下一轮按钮"
   },
   {
     "itemName": "st_auto_true",
@@ -51,7 +51,7 @@
     "roiBack": "1112,461,34,37",
     "method": "Template matching",
     "threshold": 0.8,
-    "description": "description"
+    "description": "勾选自动下一轮按钮"
   },
   {
     "itemName": "st_green_1",
@@ -60,7 +60,7 @@
     "roiBack": "188,192,69,87",
     "method": "Template matching",
     "threshold": 0.8,
-    "description": "description"
+    "description": "绿标1"
   },
   {
     "itemName": "st_green_2",
@@ -69,7 +69,7 @@
     "roiBack": "273,282,70,91",
     "method": "Template matching",
     "threshold": 0.8,
-    "description": "description"
+    "description": "绿标2"
   },
   {
     "itemName": "st_green_3",
@@ -78,7 +78,7 @@
     "roiBack": "457,245,56,89",
     "method": "Template matching",
     "threshold": 0.8,
-    "description": "description"
+    "description": "绿标3"
   },
   {
     "itemName": "st_green_4",
@@ -87,7 +87,7 @@
     "roiBack": "662,235,83,83",
     "method": "Template matching",
     "threshold": 0.8,
-    "description": "description"
+    "description": "绿标4"
   },
   {
     "itemName": "st_green_5",
@@ -96,7 +96,7 @@
     "roiBack": "814,302,100,100",
     "method": "Template matching",
     "threshold": 0.8,
-    "description": "description"
+    "description": "绿标5"
   },
   {
     "itemName": "st_green_6",
@@ -105,13 +105,13 @@
     "roiBack": "894,224,100,100",
     "method": "Template matching",
     "threshold": 0.8,
-    "description": "description"
+    "description": "绿标6"
   },
   {
     "itemName": "st_create_room",
     "imageName": "st_st_create_room.png",
-    "roiFront": "528,482,223,62",
-    "roiBack": "528,482,223,62",
+    "roiFront": "529,483,220,64",
+    "roiBack": "529,483,220,64",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "60体力创建"

@@ -2,8 +2,8 @@
   {
     "itemName": "menter",
     "imageName": "gate1_menter.png",
-    "roiFront": "346,167,30,100",
-    "roiBack": "346,167,30,100",
+    "roiFront": "346,160,30,100",
+    "roiBack": "346,160,30,100",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"
@@ -29,8 +29,8 @@
   {
     "itemName": "mshouzu",
     "imageName": "gate1_mshouzu.png",
-    "roiFront": "43,608,73,67",
-    "roiBack": "43,608,73,67",
+    "roiFront": "42,607,73,67",
+    "roiBack": "42,607,73,67",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "椒图"
@@ -78,13 +78,13 @@
     "roiBack": "1117,28,58,36",
     "method": "Template matching",
     "threshold": 0.8,
-    "description": ""
+    "description": "跳过"
   },
   {
     "itemName": "prepare_battle",
     "imageName": "gate1_prepare_battle.png",
-    "roiFront": "33,640,48,54",
-    "roiBack": "33,640,48,54",
+    "roiFront": "22,638,56,56",
+    "roiBack": "22,638,56,56",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "左下角备战"
@@ -92,8 +92,8 @@
   {
     "itemName": "mconinue",
     "imageName": "gate1_mconinue.png",
-    "roiFront": "1121,578,100,100",
-    "roiBack": "1121,578,100,100",
+    "roiFront": "1121,576,100,100",
+    "roiBack": "1121,576,100,100",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "继续执行"
@@ -101,7 +101,7 @@
   {
     "itemName": "mfirst_skill",
     "imageName": "gate1_mfirst_skill.png",
-    "roiFront": "255,577,141,39",
+    "roiFront": "255,577,142,40",
     "roiBack": "206,550,227,100",
     "method": "Template matching",
     "threshold": 0.8,
@@ -137,7 +137,7 @@
   {
     "itemName": "mstart_confirm2",
     "imageName": "gate1_mstart_confirm2.png",
-    "roiFront": "1154,581,74,85",
+    "roiFront": "1154,581,74,86",
     "roiBack": "1079,535,196,177",
     "method": "Template matching",
     "threshold": 0.8,
@@ -155,8 +155,8 @@
   {
     "itemName": "exit_sixrealms",
     "imageName": "gate1_exit_sixrealms.png",
-    "roiFront": "507.5,308,100,100",
-    "roiBack": "507.5,308,100,100",
+    "roiFront": "509,305,100,100",
+    "roiBack": "509,305,100,100",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "暂时离开六道之门"

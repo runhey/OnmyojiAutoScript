@@ -29,8 +29,8 @@
   {
     "itemName": "a_card_all",
     "imageName": "a_a_card_all.png",
-    "roiFront": "357,175,167,59",
-    "roiBack": "357,175,167,59",
+    "roiFront": "355,173,168,56",
+    "roiBack": "355,173,168,56",
     "method": "Template matching",
     "threshold": 0.9,
     "description": "description"
@@ -38,8 +38,8 @@
   {
     "itemName": "a_card_kaiko",
     "imageName": "a_a_card_kaiko.png",
-    "roiFront": "355,237,169,62",
-    "roiBack": "355,237,169,62",
+    "roiFront": "354,236,170,60",
+    "roiBack": "354,236,170,60",
     "method": "Template matching",
     "threshold": 0.9,
     "description": "description"
@@ -47,8 +47,8 @@
   {
     "itemName": "a_card_fish",
     "imageName": "a_a_card_fish.png",
-    "roiFront": "352,303,173,62",
-    "roiBack": "352,303,173,62",
+    "roiFront": "355,303,168,58",
+    "roiBack": "355,303,168,58",
     "method": "Template matching",
     "threshold": 0.9,
     "description": "description"
@@ -56,8 +56,8 @@
   {
     "itemName": "a_card_room",
     "imageName": "a_a_card_room.png",
-    "roiFront": "355,370,167,59",
-    "roiBack": "355,370,167,59",
+    "roiFront": "355,369,168,58",
+    "roiBack": "355,369,168,58",
     "method": "Template matching",
     "threshold": 0.9,
     "description": "description"
@@ -65,8 +65,8 @@
   {
     "itemName": "a_card_moon",
     "imageName": "a_a_card_moon.png",
-    "roiFront": "354,439,171,59",
-    "roiBack": "354,439,171,59",
+    "roiFront": "353,435,170,60",
+    "roiBack": "353,435,170,60",
     "method": "Template matching",
     "threshold": 0.9,
     "description": "description"
@@ -74,8 +74,8 @@
   {
     "itemName": "a_card_other",
     "imageName": "a_a_card_other.png",
-    "roiFront": "353,502,173,61",
-    "roiBack": "353,502,173,61",
+    "roiFront": "353,501,170,60",
+    "roiBack": "353,501,170,60",
     "method": "Template matching",
     "threshold": 0.9,
     "description": "其他变异"
@@ -105,7 +105,7 @@
     "roiBack": "590,573,64,73",
     "method": "Template matching",
     "threshold": 0.8,
-    "description": "description"
+    "description": "位置1"
   },
   {
     "itemName": "a_friend_2",
@@ -119,8 +119,8 @@
   {
     "itemName": "a_activate_yellow",
     "imageName": "a_a_activate_yellow.png",
-    "roiFront": "1047,560,100,100",
-    "roiBack": "1047,560,100,100",
+    "roiFront": "1066,563,100,100",
+    "roiBack": "1066,563,100,100",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "激活, 黄色的可以激活"
@@ -128,8 +128,8 @@
   {
     "itemName": "a_activate_gray",
     "imageName": "a_a_activate_gray.png",
-    "roiFront": "1046,556,100,100",
-    "roiBack": "1046,556,100,100",
+    "roiFront": "1048,554,100,100",
+    "roiBack": "1047,554,100,100",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "激活, 灰色不可激活"
@@ -137,8 +137,8 @@
   {
     "itemName": "a_empty",
     "imageName": "a_a_empty.png",
-    "roiFront": "677,255,353,128",
-    "roiBack": "677,255,353,128",
+    "roiFront": "675,254,353,128",
+    "roiBack": "675,254,353,128",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "空着的表示没有卡在里面"
@@ -146,8 +146,8 @@
   {
     "itemName": "a_check_card",
     "imageName": "a_a_check_card.png",
-    "roiFront": "513,32,260,49",
-    "roiBack": "513,32,260,49",
+    "roiFront": "510,33,260,50",
+    "roiBack": "510,33,260,50",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"

@@ -2,8 +2,8 @@
   {
     "itemName": "guild_info",
     "imageName": "ku_guild_info.png",
-    "roiFront": "1157,599,97,91",
-    "roiBack": "1157,599,97,91",
+    "roiFront": "1156,598,97,91",
+    "roiBack": "1156,598,97,91",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "寮信息"
@@ -11,8 +11,8 @@
   {
     "itemName": "guild_realm",
     "imageName": "ku_guild_realm.png",
-    "roiFront": "1065,620,67,61",
-    "roiBack": "1065,620,67,61",
+    "roiFront": "1064,619,67,61",
+    "roiBack": "1064,619,67,61",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "寮结界"

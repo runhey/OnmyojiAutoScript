@@ -48,18 +48,8 @@ class SoulsTidyAssets:
 	I_ST_LEVEL_0 = RuleImage(roi_front=(90,240,36,20), roi_back=(90,240,45,30), threshold=0.9, method="Template matching", file="./tasks/SoulsTidy/simple/simple_st_level_0.png")
 	# 御魂奉纳后获得的金币 
 	I_ST_GOLD = RuleImage(roi_front=(170,100,950,500), roi_back=(170,100,950,500), threshold=0.9, method="Template matching", file="./tasks/SoulsTidy/simple/simple_st_gold.png")
-	# 入手顺序
-	I_ST_SORT_TIME = RuleImage(roi_front=(352,104,170,60),roi_back=(352,104,170,60),threshold=0.8,method="Template matching", file="./tasks/SoulsTidy/simple/simple_st_time")
-	#等级/星级 最上边的
-	#I_ST_SORT_LEVEL_1 = RuleImage(roi_front=(350,116,178,46),roi_back=(350,116,178,46),threshold=0.8,method="Template matching", file="./tasks/SoulsTidy/simple/simple_st_level_1")
-	#等级/星级 下边的
-	#I_ST_SORT_LEVEL_2 = RuleImage(roi_front=(374,280,180,62),roi_back=(374,280,180,62),threshold=0.8,method="Template matching", file="./tasks/SoulsTidy/simple/simple_st_level_2")
-	#类型
-	#I_ST_SORT_TYPE = RuleImage(roi_front=(374,444,178,62),roi_back=(374,444,178,62),threshold=0.8,method="Template matching", file="./tasks/SoulsTidy/simple/simple_st_type")
-	#位置
-	#I_ST_SORT_LOCATION = RuleImage(roi_front=(374,362,178,60),roi_back=(374,362,178,60),threshold=0.8,method="Template matching", file="./tasks/SoulsTidy/simple/simple_st_location")
 	# Long Click Rule Assets
-	# description 
+	# description
 	L_ONE = RuleLongClick(roi_front=(88,272,100,78), roi_back=(88,272,100,78), duration=1500, name="one")
 
 

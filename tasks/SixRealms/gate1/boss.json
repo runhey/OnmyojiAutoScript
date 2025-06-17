@@ -11,7 +11,7 @@
   {
     "itemName": "boss_team_lock",
     "imageName": "gate1_boss_team_lock.png",
-    "roiFront": "1139,493,21,21",
+    "roiFront": "1139,493,26,26",
     "roiBack": "1130,487,38,43",
     "method": "Template matching",
     "threshold": 0.95,
@@ -20,7 +20,7 @@
   {
     "itemName": "boss_team_unlock",
     "imageName": "gate1_boss_team_unlock.png",
-    "roiFront": "1138,497,22,21",
+    "roiFront": "1138,497,26,26",
     "roiBack": "1127,491,40,41",
     "method": "Template matching",
     "threshold": 0.95,
@@ -29,7 +29,7 @@
   {
     "itemName": "boss_skip",
     "imageName": "gate1_boss_skip.png",
-    "roiFront": "1131,13,100,42",
+    "roiFront": "1123,15,120,34",
     "roiBack": "1113,5,136,62",
     "method": "Template matching",
     "threshold": 0.8,
@@ -47,16 +47,25 @@
   {
     "itemName": "boss_get_exp",
     "imageName": "gate1_boss_get_exp.png",
-    "roiFront": "561,109,171,45",
+    "roiFront": "538,112,220,46",
     "roiBack": "492,86,281,100",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "御神获得经验"
   },
   {
+    "itemName": "boss_skill_up",
+    "imageName": "gate1_boss_skill_up.png",
+    "roiFront": "650,136,100,54",
+    "roiBack": "650,136,100,54",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "御神技能升级"
+  },
+  {
     "itemName": "boss_share",
     "imageName": "gate1_boss_share.png",
-    "roiFront": "1090,604,70,74",
+    "roiFront": "1090,604,80,74",
     "roiBack": "1074,587,100,100",
     "method": "Template matching",
     "threshold": 0.8,
@@ -65,8 +74,8 @@
   {
     "itemName": "boss_shutu",
     "imageName": "gate1_boss_shutu.png",
-    "roiFront": "108,141,173,122",
-    "roiBack": "108,141,173,122",
+    "roiFront": "105,136,174,124)",
+    "roiBack": "105,136,174,124)",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "结算的椒图"
@@ -74,19 +83,19 @@
   {
     "itemName": "boss_battle_again",
     "imageName": "gate1_boss_battle_again.png",
-    "roiFront": "435,403,173,64",
+    "roiFront": "432,402,178,64",
     "roiBack": "409,390,212,100",
     "method": "Template matching",
     "threshold": 0.8,
-    "description": "description"
+    "description": "再次挑战boss"
   },
   {
     "itemName": "boss_battle_giveup",
     "imageName": "gate1_boss_battle_giveup.png",
-    "roiFront": "671,399,175,59",
+    "roiFront": "668,400,178,66",
     "roiBack": "649,381,219,100",
     "method": "Template matching",
     "threshold": 0.8,
-    "description": "description"
+    "description": "放弃挑战boss"
   }
 ]

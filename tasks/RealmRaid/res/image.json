@@ -74,8 +74,8 @@
   {
     "itemName": "unlock",
     "imageName": "res_unlock.png",
-    "roiFront": "818,579,38,42",
-    "roiBack": "818,579,38,42",
+    "roiFront": "815,578,38,42",
+    "roiBack": "815,578,38,42",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "没有锁的状态图标"
@@ -83,8 +83,8 @@
   {
     "itemName": "lock",
     "imageName": "res_lock.png",
-    "roiFront": "818,579,36,41",
-    "roiBack": "818,579,36,41",
+    "roiFront": "818,579,36,40",
+    "roiBack": "818,579,36,40",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "以锁的状态图片"
@@ -92,8 +92,8 @@
   {
     "itemName": "fresh",
     "imageName": "res_fresh.png",
-    "roiFront": "957,564,182,66",
-    "roiBack": "957,564,182,66",
+    "roiFront": "960,567,178,64",
+    "roiBack": "960,567,178,64",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "刷新按钮"
@@ -128,8 +128,8 @@
   {
     "itemName": "fresh_ensure",
     "imageName": "res_fresh_ensure.png",
-    "roiFront": "672,403,173,59",
-    "roiBack": "672,403,173,59",
+    "roiFront": "668,401,176,60",
+    "roiBack": "668,401,176,60",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "刷新确认"
@@ -137,8 +137,8 @@
   {
     "itemName": "unlock_2",
     "imageName": "res_unlock_2.png",
-    "roiFront": "1002,643,30,41",
-    "roiBack": "1002,643,30,41",
+    "roiFront": "998,642,30,41",
+    "roiBack": "998,642,30,41",
     "method": "Template matching",
     "threshold": 0.9,
     "description": "没有锁图片，适配呱太入侵"
@@ -146,8 +146,8 @@
   {
     "itemName": "lock_2",
     "imageName": "res_lock_2.png",
-    "roiFront": "1002,645,34,38",
-    "roiBack": "1002,645,34,38",
+    "roiFront": "998,643,34,38",
+    "roiBack": "998,643,34,38",
     "method": "Template matching",
     "threshold": 0.9,
     "description": "以锁图片，适配呱太"

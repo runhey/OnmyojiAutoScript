@@ -2,8 +2,8 @@
   {
     "itemName": "orochi",
     "imageName": "o_orochi.png",
-    "roiFront": "55,104,295,406",
-    "roiBack": "55,104,295,406",
+    "roiFront": "53,101,294,406",
+    "roiBack": "53,101,294,406",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "八级大蛇进入"
@@ -11,8 +11,8 @@
   {
     "itemName": "form_team",
     "imageName": "o_form_team.png",
-    "roiFront": "937,591,100,100",
-    "roiBack": "937,591,100,100",
+    "roiFront": "939,589,100,100",
+    "roiBack": "939,589,100,100",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "组队"
@@ -38,8 +38,8 @@
   {
     "itemName": "orochi_fire",
     "imageName": "o_orochi_fire.png",
-    "roiFront": "1095,577,131,124",
-    "roiBack": "1095,577,131,124",
+    "roiFront": "1088,571,130,124",
+    "roiBack": "1088,571,130,124",
     "method": "Template matching",
     "threshold": 0.6,
     "description": "点击挑战"

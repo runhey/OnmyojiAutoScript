@@ -56,7 +56,7 @@
   {
     "itemName": "select_1",
     "imageName": "gate1_select_1.png",
-    "roiFront": "424,573,137,46",
+    "roiFront": "424,573,138,46",
     "roiBack": "382,544,196,100",
     "method": "Template matching",
     "threshold": 0.8,
@@ -65,7 +65,7 @@
   {
     "itemName": "select_2",
     "imageName": "gate1_select_2.png",
-    "roiFront": "696,572,140,47",
+    "roiFront": "696,572,140,42",
     "roiBack": "666,546,196,100",
     "method": "Template matching",
     "threshold": 0.8,
@@ -74,7 +74,7 @@
   {
     "itemName": "select_3",
     "imageName": "gate1_select_3.png",
-    "roiFront": "1016,581,145,43",
+    "roiFront": "1016,581,146,44",
     "roiBack": "1000,550,173,100",
     "method": "Template matching",
     "threshold": 0.8,

@@ -32,7 +32,7 @@ class RealmRaidAssets:
 	# 以锁的状态图片 
 	I_LOCK = RuleImage(roi_front=(818,579,36,40), roi_back=(818,579,36,40), threshold=0.5, method="Template matching", file="./tasks/RealmRaid/res/res_lock.png")
 	# 刷新按钮 
-	I_FRESH = RuleImage(roi_front=(957,564,178,64), roi_back=(957,564,182,66), threshold=0.8, method="Template matching", file="./tasks/RealmRaid/res/res_fresh.png")
+	I_FRESH = RuleImage(roi_front=(960,567,178,64), roi_back=(960,567,178,64), threshold=0.8, method="Template matching", file="./tasks/RealmRaid/res/res_fresh.png")
 	# 点击的式神录 
 	I_SHIKIGAMI = RuleImage(roi_front=(1206,608,54,51), roi_back=(1206,608,54,51), threshold=0.8, method="Template matching", file="./tasks/RealmRaid/res/res_shikigami.png")
 	# 进攻 
@@ -40,7 +40,7 @@ class RealmRaidAssets:
 	# 打完个后出现的领取奖励 
 	I_SOUL_RAID = RuleImage(roi_front=(577,502,100,100), roi_back=(577,502,100,100), threshold=0.8, method="Template matching", file="./tasks/RealmRaid/res/res_soul_raid.png")
 	# 刷新确认 
-	I_FRESH_ENSURE = RuleImage(roi_front=(672,403,176,60), roi_back=(672,403,173,58), threshold=0.8, method="Template matching", file="./tasks/RealmRaid/res/res_fresh_ensure.png")
+	I_FRESH_ENSURE = RuleImage(roi_front=(668,401,176,60), roi_back=(668,401,176,60), threshold=0.8, method="Template matching", file="./tasks/RealmRaid/res/res_fresh_ensure.png")
 	# 没有锁图片，适配呱太入侵 
 	I_UNLOCK_2 = RuleImage(roi_front=(998,642,30,41), roi_back=(998,642,30,41), threshold=0.8, method="Template matching", file="./tasks/RealmRaid/res/res_unlock_2.png")
 	# 以锁图片，适配呱太 
