@@ -65,18 +65,18 @@ class AbyssShadowsAssets:
 	# 开启狭间暗域 
 	I_OPEN_ABYSS_SHADOWS = RuleImage(roi_front=(1133,602,74,58), roi_back=(1133,602,74,58), threshold=0.8, method="Template matching", file="./tasks/AbyssShadows/res/res_open_abyss_shadows.png")
 	# 战报页面 
-	I_ABYSS_MAP = RuleImage(roi_front=(310,147,170,48), roi_back=(310,147,170,48), threshold=0.8, method="Template matching", file="./tasks/AbyssShadows/res/res_abyss_map.png")
+	I_ABYSS_MAP = RuleImage(roi_front=(306,147,170,48), roi_back=(306,147,170,48), threshold=0.8, method="Template matching", file="./tasks/AbyssShadows/res/res_abyss_map.png")
 	# 战报退出按钮 
 	I_ABYSS_MAP_EXIT = RuleImage(roi_front=(1154,96,32,32), roi_back=(1154,96,32,32), threshold=0.8, method="Template matching", file="./tasks/AbyssShadows/res/res_abyss_map_exit.png")
 	# 挑战按钮 
 	I_ABYSS_FIRE = RuleImage(roi_front=(1118,602,78,54), roi_back=(1118,602,78,54), threshold=0.8, method="Template matching", file="./tasks/AbyssShadows/res/res_abyss_fire.png")
 	# 前往 
 	I_ABYSS_GOTO_ENEMY = RuleImage(roi_front=(1121,605,76,46), roi_back=(1121,605,76,46), threshold=0.8, method="Template matching", file="./tasks/AbyssShadows/res/res_abyss_goto_enemy.png")
-	# description 
+	# 确认 
 	I_ENSURE_BUTTON = RuleImage(roi_front=(672,405,169,55), roi_back=(672,405,169,55), threshold=0.8, method="Template matching", file="./tasks/AbyssShadows/res/res_ensure_button.png")
 	# 进攻中 
 	I_IS_ATTACK = RuleImage(roi_front=(588,62,70,28), roi_back=(588,62,70,28), threshold=0.8, method="Template matching", file="./tasks/AbyssShadows/res/res_is_attack.png")
-	# 孔雀暗域
+	# description 
 	I_PEACOCK_AREA = RuleImage(roi_front=(577,15,127,36), roi_back=(577,15,127,36), threshold=0.8, method="Template matching", file="./tasks/AbyssShadows/res/res_peacock_area.png")
 	# 黑豹领域 
 	I_LEOPARD_AREA = RuleImage(roi_front=(589,14,104,39), roi_back=(589,14,104,39), threshold=0.8, method="Template matching", file="./tasks/AbyssShadows/res/res_leopard_area.png")
@@ -86,9 +86,9 @@ class AbyssShadowsAssets:
 	I_CHANGE_AREA = RuleImage(roi_front=(508,24,27,27), roi_back=(508,24,27,27), threshold=0.8, method="Template matching", file="./tasks/AbyssShadows/res/res_change_area.png")
 	# 神龙领域 
 	I_DRAGON_AREA = RuleImage(roi_front=(582,14,112,34), roi_back=(582,14,112,34), threshold=0.8, method="Template matching", file="./tasks/AbyssShadows/res/res_dragon_area.png")
-	# description 
+	# 集结中 
 	I_WAIT_TO_START = RuleImage(roi_front=(586,66,70,26), roi_back=(586,66,70,26), threshold=0.8, method="Template matching", file="./tasks/AbyssShadows/res/res_wait_to_start.png")
-	# description 
+	# 准备 
 	I_EQUIPPING = RuleImage(roi_front=(1126,545,100,84), roi_back=(1126,545,100,84), threshold=0.8, method="Template matching", file="./tasks/AbyssShadows/res/res_equipping.png")
 
 

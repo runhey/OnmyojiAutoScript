@@ -64,7 +64,7 @@ class AreaBossAssets:
 	# 蓝色的返回 
 	I_BACK_BLUE = RuleImage(roi_front=(51,30,51,52), roi_back=(4,1,128,110), threshold=0.8, method="Template matching", file="./tasks/AreaBoss/res/res_back_blue.png")
 	# 右上边选中鬼王的 
-	I_FILTER = RuleImage(roi_front=(1116,33,35,31), roi_back=(1076,19,98,78), threshold=0.7, method="Template matching", file="./tasks/AreaBoss/res/res_filter.png")
+	I_FILTER = RuleImage(roi_front=(1116,33,35,31), roi_back=(1076,19,98,78), threshold=0.8, method="Template matching", file="./tasks/AreaBoss/res/res_filter.png")
 	# 除悬赏外 选中第一个鬼王的 
 	I_BATTLE_1 = RuleImage(roi_front=(1083,235,65,54), roi_back=(1083,235,65,54), threshold=0.8, method="Template matching", file="./tasks/AreaBoss/res/res_battle_1.png")
 	# 除悬赏外 选中第二个鬼王的 

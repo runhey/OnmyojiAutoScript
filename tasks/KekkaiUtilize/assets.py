@@ -54,12 +54,12 @@ class KekkaiUtilizeAssets:
 
 	# Image Rule Assets
 	# 右上角的放置好友寄养 
-	I_UTILIZE_ADD = RuleImage(roi_front=(1147,52,74,67), roi_back=(1147,52,74,67), threshold=0.8, method="Template matching", file="./tasks/KekkaiUtilize/utilize/utilize_utilize_add.png")
+	I_UTILIZE_ADD = RuleImage(roi_front=(1149,54,74,67), roi_back=(1149,54,74,67), threshold=0.8, method="Template matching", file="./tasks/KekkaiUtilize/utilize/utilize_utilize_add.png")
 	# 好友这组 
 	I_UTILIZE_FRIEND_GROUP = RuleImage(roi_front=(217,92,110,68), roi_back=(217,92,110,68), threshold=0.9, method="Template matching", file="./tasks/KekkaiUtilize/utilize/utilize_utilize_friend_group.png")
 	# 跨区 
-	I_UTILIZE_ZONES_GROUP = RuleImage(roi_front=(217,92,110,68), roi_back=(217,92,110,68), threshold=0.9, method="Template matching", file="./tasks/KekkaiUtilize/utilize/utilize_utilize_friend_group.png")
-	# description
+	I_UTILIZE_ZONES_GROUP = RuleImage(roi_front=(337,92,109,66), roi_back=(337,92,109,66), threshold=0.9, method="Template matching", file="./tasks/KekkaiUtilize/utilize/utilize_utilize_zones_group.png")
+	# description 
 	I_U_TAIKO_3 = RuleImage(roi_front=(548,424,47,44), roi_back=(541,183,75,398), threshold=0.8, method="Template matching", file="./tasks/KekkaiUtilize/utilize/utilize_u_taiko_3.png")
 	# description 
 	I_U_TAIKO_4 = RuleImage(roi_front=(543,316,60,43), roi_back=(541,171,73,438), threshold=0.8, method="Template matching", file="./tasks/KekkaiUtilize/utilize/utilize_u_taiko_4.png")

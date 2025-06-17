@@ -22,33 +22,33 @@ class GeneralRoomAssets:
 
 
 	# Image Rule Assets
-	# description 
+	# 创建房间 
 	I_CREATE_ROOM = RuleImage(roi_front=(982,596,176,60), roi_back=(396,569,813,100), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralRoom/gr/gr_create_room.png")
-	# description 
-	I_CREATE_ENSURE = RuleImage(roi_front=(811,558,128,62), roi_back=(811,558,128,60), threshold=0.7, method="Template matching", file="./tasks/Component/GeneralRoom/gr/gr_create_ensure.png")
-	# 勾选不公开的图 
+	# 创建确认 
+	I_CREATE_ENSURE = RuleImage(roi_front=(813,560,129,63), roi_back=(813,560,129,63), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralRoom/gr/gr_create_ensure.png")
+	# 勾选私人组队 
 	I_ENSURE_PRIVATE = RuleImage(roi_front=(748,489,36,40), roi_back=(748,489,36,40), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralRoom/gr/gr_ensure_private.png")
 	# 这个是还没勾选的图 
 	I_ENSURE_PRIVATE_FALSE = RuleImage(roi_front=(747,489,37,40), roi_back=(747,489,37,40), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralRoom/gr/gr_ensure_private_false.png")
-	# description 
+	# 勾选私人组队 
 	I_ENSURE_PRIVATE_2 = RuleImage(roi_front=(401,409,34,40), roi_back=(401,409,34,40), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralRoom/gr/gr_ensure_private_2.png")
-	# description 
+	# 未勾选私人组队 
 	I_ENSURE_PRIVATE_FALSE_2 = RuleImage(roi_front=(400,408,36,38), roi_back=(400,408,36,38), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralRoom/gr/gr_ensure_private_false_2.png")
 	# description 
 	I_CREATE_ENSURE_2 = RuleImage(roi_front=(552,489,42,55), roi_back=(552,489,42,55), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralRoom/gr/gr_create_ensure_2.png")
-	# description 
+	# 黄色返回按钮 
 	I_GR_BACK_YELLOW = RuleImage(roi_front=(19,13,53,53), roi_back=(19,13,53,53), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralRoom/gr/gr_gr_back_yellow.png")
 	# 自动匹配 
-	I_GR_AUTO_MATCH = RuleImage(roi_front=(697,596,180,66), roi_back=(697,596,180,66), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralRoom/gr/gr_gr_auto_match.png")
+	I_GR_AUTO_MATCH = RuleImage(roi_front=(696,596,180,66), roi_back=(696,596,180,66), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralRoom/gr/gr_gr_auto_match.png")
 	# 刷新 
 	I_GR_REFRESH = RuleImage(roi_front=(416,596,176,64), roi_back=(416,596,176,64), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralRoom/gr/gr_gr_refresh.png")
-	# description 
+	# 勾选公开组队 
 	I_ENSURE_PUBLIC = RuleImage(roi_front=(400,282,35,37), roi_back=(400,282,35,37), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralRoom/gr/gr_ensure_public.png")
-	# description 
+	# 未勾选公开组队 
 	I_ENSURE_PUBLIC_FALSE = RuleImage(roi_front=(399,285,37,35), roi_back=(399,285,37,35), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralRoom/gr/gr_ensure_public_false.png")
-	# description 
+	# 勾选公开组队 
 	I_ENSURE_PUBLIC_2 = RuleImage(roi_front=(307,490,37,40), roi_back=(307,490,37,40), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralRoom/gr/gr_ensure_public_2.png")
-	# description 
+	# 未勾选公开组队 
 	I_ENSURE_PUBLIC_FALSE_2 = RuleImage(roi_front=(307,491,38,37), roi_back=(307,491,38,37), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralRoom/gr/gr_ensure_public_false_2.png")
 
 

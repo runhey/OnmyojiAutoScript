@@ -34,131 +34,131 @@ class GameUiAssets:
 	I_CHECK_MAIN = RuleImage(roi_front=(801,109,38,37), roi_back=(49,98,1033,61), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_check_main.png")
 	# 庭院卷轴关闭标识 
 	I_MAIN_SCROLL_CLOSE = RuleImage(roi_front=(1181,634,28,39), roi_back=(1162,595,77,112), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_main_scroll_close.png")
-	# description 
+	# 庭院前往探索 
 	I_MAIN_GOTO_EXPLORATION = RuleImage(roi_front=(493,116,45,75), roi_back=(243,100,933,211), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_main_goto_exploration.png")
-	# description 
+	# 判断是否在探索界面 
 	I_CHECK_EXPLORATION = RuleImage(roi_front=(1146,175,21,22), roi_back=(1146,175,21,22), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_check_exploration.png")
-	# description 
+	# 探索前往觉醒 
 	I_EXPLORATION_GOTO_AWAKE_ZONE = RuleImage(roi_front=(57,628,57,61), roi_back=(33,619,113,79), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_exploration_goto_awake_zone.png")
-	# description 
-	I_EXPLORATION_GOTO_SOUL_ZONE = RuleImage(roi_front=(155,636,56,54), roi_back=(138,620,89,75), threshold=0.7, method="Template matching", file="./tasks/GameUi/page/page_exploration_goto_soul_zone.png")
-	# description 
+	# 探索前往御魂 
+	I_EXPLORATION_GOTO_SOUL_ZONE = RuleImage(roi_front=(155,636,56,54), roi_back=(138,620,89,75), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_exploration_goto_soul_zone.png")
+	# 探索前往结界突破 
 	I_EXPLORATION_GOTO_REALM_RAID = RuleImage(roi_front=(246,639,66,48), roi_back=(229,612,102,87), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_exploration_goto_realm_raid.png")
 	# 前往御灵 
 	I_EXPLORATION_GOTO_GORYOU_REALM = RuleImage(roi_front=(353,639,48,46), roi_back=(346,626,60,67), threshold=0.7, method="Template matching", file="./tasks/GameUi/page/page_exploration_goto_goryou_realm.png")
 	# 式神委派 
-	I_EXPLORATION_GOTO_DELEGATION = RuleImage(roi_front=(445,638,60,50), roi_back=(445,638,60,50), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_exploration_goto_delegation.png")
-	# 秘闻 
+	I_EXPLORATION_GOTO_DELEGATION = RuleImage(roi_front=(449,641,60,50), roi_back=(449,641,60,50), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_exploration_goto_delegation.png")
+	# 前往秘闻 
 	I_EXPLORATION_GOTO_SECRET_ZONES = RuleImage(roi_front=(548,632,62,54), roi_back=(524,614,100,87), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_exploration_goto_secret_zones.png")
-	# 地狱鬼王 
+	# 前往地狱鬼王 
 	I_EXPLORATION_GOTO_AREA_BOSS = RuleImage(roi_front=(651,631,52,46), roi_back=(651,631,52,46), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_exploration_goto_area_boss.png")
-	# 平安奇谭 
-	I_EXPLORATION_GOTO_HEIAN_KITAN = RuleImage(roi_front=(739,643,52,44), roi_back=(739,643,52,44), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_exploration_goto_heian_kitan.png")
-	# 六道之门 
+	# 前往平安奇谭 
+	I_EXPLORATION_GOTO_HEIAN_KITAN = RuleImage(roi_front=(748,634,52,44), roi_back=(748,634,52,44), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_exploration_goto_heian_kitan.png")
+	# 前往六道之门 
 	I_EXPLORATION_GOTO_SIX_GATES = RuleImage(roi_front=(838,640,60,50), roi_back=(818,631,200,66), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_exploration_goto_six_gates.png")
-	# 器灵 
-	I_EXPLORATION_GOTO_BONDLING_FAIRYLAND = RuleImage(roi_front=(1037,627,60,54), roi_back=(1037,627,203,64), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_exploration_goto_bondling_fairyland.png")
-	# description 
+	# 前往契灵 
+	I_EXPLORATION_GOTO_BONDLING_FAIRYLAND = RuleImage(roi_front=(1037,627,60,54), roi_back=(928,633,203,64), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_exploration_goto_bondling_fairyland.png")
+	# 蓝色返回 
 	I_BACK_BLUE = RuleImage(roi_front=(32,37,54,52), roi_back=(3,2,130,114), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_back_blue.png")
-	# description 
+	# 检查是否在觉醒界面 
 	I_CHECK_AWAKE = RuleImage(roi_front=(376,565,73,82), roi_back=(376,565,73,82), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_check_awake.png")
-	# description 
+	# 检查是否在御魂界面 
 	I_CHECK_SOUL_ZONES = RuleImage(roi_front=(53,99,298,406), roi_back=(53,99,298,406), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_check_soul_zones.png")
-	# description 
+	# 检查是否在结界突破界面 
 	I_CHECK_REALM_RAID = RuleImage(roi_front=(119,617,52,54), roi_back=(119,616,68,76), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_check_realm_raid.png")
-	# description 
-	I_CHECK_GORYOU = RuleImage(roi_front=(882,18,30,39), roi_back=(882,18,30,39), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_check_goryou.png")
-	# description 
+	# 检查是否在御灵界面 
+	I_CHECK_GORYOU = RuleImage(roi_front=(881,17,30,39), roi_back=(881,17,30,39), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_check_goryou.png")
+	# 检查是否在委派界面 
 	I_CHECK_DELEGATION = RuleImage(roi_front=(839,132,49,45), roi_back=(839,132,49,45), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_check_delegation.png")
-	# description 
+	# 检查是否在秘闻界面 
 	I_CHECK_SECRET_ZONES = RuleImage(roi_front=(1145,592,110,119), roi_back=(1145,592,110,119), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_check_secret_zones.png")
-	# description 
+	# 检查是否在地鬼界面 
 	I_CHECK_AREA_BOSS = RuleImage(roi_front=(20,320,150,130), roi_back=(20,320,150,130), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_check_area_boss.png")
-	# description 
+	# 检查是否在平安奇谭页面 
 	I_CHECK_HEIAN_KITAN = RuleImage(roi_front=(27,48,47,39), roi_back=(27,48,47,39), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_check_heian_kitan.png")
-	# description 
+	# 检查是否在六道界面 
 	I_CHECK_SIX_GATES = RuleImage(roi_front=(1174,614,56,54), roi_back=(1174,614,56,54), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_check_six_gates.png")
-	# description 
+	# 检查是否在契灵界面 
 	I_CHECK_BONDLING_FAIRYLAND = RuleImage(roi_front=(614,660,56,49), roi_back=(614,660,56,49), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_check_bondling_fairyland.png")
-	# description 
+	# 六道返回探索按钮 
 	I_SIX_GATES_GOTO_EXPLORATION = RuleImage(roi_front=(9,18,52,55), roi_back=(9,18,52,55), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_six_gates_goto_exploration.png")
-	# description 
+	# 契灵返回探索按钮 
 	I_BONDLING_GOTO_EXPLORATION = RuleImage(roi_front=(20,13,60,59), roi_back=(20,13,60,59), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_bondling_goto_exploration.png")
-	# description 
+	# 寮突破返回结界突破按钮 
 	I_RYOUTOPPA_GOTO_REALMRAID = RuleImage(roi_front=(1198,232,62,106), roi_back=(1198,232,62,106), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_ryoutoppa_goto_realmraid.png")
 
 
 	# Image Rule Assets
-	# description 
+	# 庭院前往町中 
 	I_MAIN_GOTO_TOWN = RuleImage(roi_front=(706,249,61,57), roi_back=(200,120,951,298), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_main_goto_town.png")
-	# description 
+	# 判断是否在町中 
 	I_CHECK_TOWN = RuleImage(roi_front=(1026,106,68,82), roi_back=(765,98,402,96), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_check_town.png")
-	# description 
+	# 町中返回庭院 
 	I_TOWN_GOTO_MAIN = RuleImage(roi_front=(1017,231,78,73), roi_back=(302,216,868,127), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_town_goto_main.png")
-	# description 
-	I_TOWN_GOTO_DUEL = RuleImage(roi_front=(756,140,48,68), roi_back=(357,126,657,100), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_town_goto_duel.png")
-	# description 
+	# 町中前往斗技 
+	I_TOWN_GOTO_DUEL = RuleImage(roi_front=(756,142,48,68), roi_back=(357,126,657,100), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_town_goto_duel.png")
+	# 町中前往逢魔 
 	I_TOWN_GOTO_DEMON_ENCOUNTER = RuleImage(roi_front=(618,132,52,78), roi_back=(232,121,873,100), threshold=0.7, method="Template matching", file="./tasks/GameUi/page/page_town_goto_demon_encounter.png")
-	# description 
-	I_TOWN_GOTO_HUNT = RuleImage(roi_front=(477,132,46,70), roi_back=(477,132,520,100), threshold=0.7, method="Template matching", file="./tasks/GameUi/page/page_town_goto_hunt.png")
-	# 协同对弈 
+	# 町中前往狩猎战 
+	I_TOWN_GOTO_HUNT = RuleImage(roi_front=(477,132,46,70), roi_back=(275,122,520,100), threshold=0.7, method="Template matching", file="./tasks/GameUi/page/page_town_goto_hunt.png")
+	# 町中前往协同对弈 
 	I_TOWN_GOTO_DRAFT_DUEL = RuleImage(roi_front=(335,159,55,72), roi_back=(170,145,567,100), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_town_goto_draft_duel.png")
-	# 百鬼奕 
+	# 町中前往百鬼奕 
 	I_TOWN_GOTO_HYAKKISEN = RuleImage(roi_front=(192,145,48,67), roi_back=(86,130,447,100), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_town_goto_hyakkisen.png")
-	# description 
+	# 检查是否在斗技界面 
 	I_CHECK_DUEL = RuleImage(roi_front=(110,10,64,38), roi_back=(79,1,110,74), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_check_duel.png")
-	# description 
+	# 检查是否在逢魔界面 
 	I_CHECK_DEMON_ENCOUNTER = RuleImage(roi_front=(26,658,42,43), roi_back=(2,619,100,100), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_check_demon_encounter.png")
-	# description 
-	I_CHECK_HUNT = RuleImage(roi_front=(578,31,52,30), roi_back=(578,31,52,30), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_check_hunt.png")
-	# description 
+	# 检查是否在狩猎战界面 
+	I_CHECK_HUNT = RuleImage(roi_front=(575,30,46,25), roi_back=(553,1,81,68), threshold=0.7, method="Template matching", file="./tasks/GameUi/page/page_check_hunt.png")
+	# 检查是否在百鬼弈界面 
 	I_CHECK_HYAKKISEN = RuleImage(roi_front=(1014,607,53,55), roi_back=(986,587,100,100), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_check_hyakkisen.png")
-	# description 
+	# 检查是否在协同对弈界面 
 	I_CHECK_DRAFT_DUEL = RuleImage(roi_front=(1051,612,56,58), roi_back=(1029,594,100,100), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_check_draft_duel.png")
-	# description 
+	# 黄色返回 
 	I_BACK_YOLLOW = RuleImage(roi_front=(24,16,48,55), roi_back=(0,0,100,100), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_back_yollow.png")
-	# description 
+	# 逢魔返回町中 
 	I_DEMON_ENCOUNTER_GOTO_TOWN = RuleImage(roi_front=(28,20,56,52), roi_back=(3,4,100,100), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_demon_encounter_goto_town.png")
-	# description 
+	# 町中前往百鬼夜行 
 	I_TOWN_GOTO_HYAKKIYAKOU = RuleImage(roi_front=(880,165,54,80), roi_back=(827,149,148,100), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_town_goto_hyakkiyakou.png")
-	# description 
+	# 检查是否在百鬼夜行界面 
 	I_CHECK_KYAKKIYAKOU = RuleImage(roi_front=(305,567,56,64), roi_back=(280,545,100,100), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_check_kyakkiyakou.png")
-	# description 
-	I_HYAKKIYAKOU_CLOSE = RuleImage(roi_front=(1061,179,47,43), roi_back=(1061,179,47,43), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_hyakkiyakou_close.png")
+	# 退出百鬼夜行 
+	I_HYAKKIYAKOU_CLOSE = RuleImage(roi_front=(1063,181,47,43), roi_back=(1063,181,47,43), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_hyakkiyakou_close.png")
 
 
 	# Image Rule Assets
 	# 式神录 
 	I_MAIN_GOTO_SHIKIGAMI_RECORDS = RuleImage(roi_front=(1098,611,56,64), roi_back=(1084,589,93,106), threshold=0.7, method="Template matching", file="./tasks/GameUi/page/page_main_goto_shikigami_records.png")
-	# description 
+	# 庭院前往阴阳术 
 	I_MAIN_GOTO_ONMYODO = RuleImage(roi_front=(992,614,51,60), roi_back=(992,614,51,60), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_main_goto_onmyodo.png")
-	# description 
+	# 庭院前往好友 
 	I_MAIN_GOTO_FRIENDS = RuleImage(roi_front=(879,623,56,56), roi_back=(867,606,79,77), threshold=0.7, method="Template matching", file="./tasks/GameUi/page/page_main_goto_friends.png")
-	# 进入花合战
+	# 庭院前往花合战 
 	I_MAIN_GOTO_DAILY = RuleImage(roi_front=(779,612,52,68), roi_back=(754,595,89,97), threshold=0.7, method="Template matching", file="./tasks/GameUi/page/page_main_goto_daily.png")
-	# description 
-	I_MAIN_GOTO_MALL = RuleImage(roi_front=(662,657,40,22), roi_back=(662,657,81,78), threshold=0.7, method="Template matching", file="./tasks/GameUi/page/page_main_goto_mall.png")
-	# description 
+	# 庭院前往商店 
+	I_MAIN_GOTO_MALL = RuleImage(roi_front=(662,657,40,22), roi_back=(644,613,81,78), threshold=0.7, method="Template matching", file="./tasks/GameUi/page/page_main_goto_mall.png")
+	# 庭院前往阴阳寮 
 	I_MAIN_GOTO_GUILD = RuleImage(roi_front=(540,613,52,54), roi_back=(540,613,52,54), threshold=0.7, method="Template matching", file="./tasks/GameUi/page/page_main_goto_guild.png")
-	# description 
+	# 庭院前往组队 
 	I_MAIN_GOTO_TEAM = RuleImage(roi_front=(437,625,38,48), roi_back=(366,606,192,83), threshold=0.7, method="Template matching", file="./tasks/GameUi/page/page_main_goto_team.png")
-	# description 
+	# 庭院前往图鉴 
 	I_MAIN_GOTO_COLLECTION = RuleImage(roi_front=(92,621,36,41), roi_back=(51,596,159,85), threshold=0.7, method="Template matching", file="./tasks/GameUi/page/page_main_goto_collection.png")
 	# description 
 	I_CHECK_RECORDS = RuleImage(roi_front=(269,71,55,50), roi_back=(269,71,55,50), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_check_records.png")
-	# description 
+	# 检查是否在阴阳术 
 	I_CHECK_ONMYODO = RuleImage(roi_front=(1166,117,84,547), roi_back=(1166,117,84,547), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_check_onmyodo.png")
-	# description 
+	# 检查是否在好友界面 
 	I_CHECK_FRIENDS = RuleImage(roi_front=(1002,593,132,60), roi_back=(1002,593,132,60), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_check_friends.png")
-	# description 
+	# 检查是否在花合战界面 
 	I_CHECK_DAILY = RuleImage(roi_front=(26,513,58,62), roi_back=(1,487,154,145), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_check_daily.png")
-	# description 
+	# 检查是否在商店界面 
 	I_CHECK_MALL = RuleImage(roi_front=(147,526,82,82), roi_back=(147,526,82,82), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_check_mall.png")
-	# description 
-	I_CHECK_GUILD = RuleImage(roi_front=(1071,630,49,46), roi_back=(1071,630,49,46), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_check_guild.png")
-	# description 
+	# 检查是否在阴阳寮界面 
+	I_CHECK_GUILD = RuleImage(roi_front=(1072,630,49,46), roi_back=(1072,630,49,46), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_check_guild.png")
+	# 检查是否在组队界面 
 	I_CHECK_TEAM = RuleImage(roi_front=(9,564,120,110), roi_back=(9,564,120,110), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_check_team.png")
-	# description 
+	# 检查是否在图鉴 
 	I_CHECK_COLLECTION = RuleImage(roi_front=(471,618,100,100), roi_back=(471,618,100,100), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_check_collection.png")
 	# description 
 	I_BACK_Y = RuleImage(roi_front=(15,4,57,52), roi_back=(1,2,100,91), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_back_y.png")

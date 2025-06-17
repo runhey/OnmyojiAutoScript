@@ -14,10 +14,10 @@ class DemonRetreatAssets:
 	# 神社 
 	I_SHRINE = RuleImage(roi_front=(870,624,65,61), roi_back=(870,624,65,61), threshold=0.8, method="Template matching", file="./tasks/DemonRetreat/DemonRetreat/DemonRetreat_shrine.png")
 	# 首领退治 
-	I_HUNT = RuleImage(roi_front=(418,162,186,166), roi_back=(418,162,186,166), threshold=0.8, method="Template matching", file="./tasks/DemonRetreat/DemonRetreat/DemonRetreat_hunt.png")
+	I_HUNT = RuleImage(roi_front=(18,162,186,166), roi_back=(18,162,186,166), threshold=0.8, method="Template matching", file="./tasks/DemonRetreat/DemonRetreat/DemonRetreat_hunt.png")
 	# 检查是否成功进入首领退治 
 	I_HUNT_CHECK = RuleImage(roi_front=(572,10,144,46), roi_back=(572,10,144,46), threshold=0.8, method="Template matching", file="./tasks/DemonRetreat/DemonRetreat/DemonRetreat_hunt_check.png")
-	# description 
+	# 集结 
 	I_DEMON_GATHER = RuleImage(roi_front=(26,487,76,48), roi_back=(26,487,76,48), threshold=0.8, method="Template matching", file="./tasks/DemonRetreat/DemonRetreat/DemonRetreat_demon_gather.png")
 	# 非退治时间进行检查 
 	I_DEMON_BACK_CHECK = RuleImage(roi_front=(27,26,42,36), roi_back=(14,2,86,86), threshold=0.7, method="Template matching", file="./tasks/DemonRetreat/DemonRetreat/DemonRetreat_demon_back_check.png")
@@ -30,7 +30,7 @@ class DemonRetreatAssets:
 	# 全部领取 
 	I_REWARD_ALL = RuleImage(roi_front=(534,540,176,60), roi_back=(534,540,176,60), threshold=0.8, method="Template matching", file="./tasks/DemonRetreat/DemonRetreat/DemonRetreat_reward_all.png")
 	# 祈愿 
-	I_PRAY = RuleImage(roi_front=(1178,380,42,70), roi_back=(1176,380,42,70), threshold=0.8, method="Template matching", file="./tasks/DemonRetreat/DemonRetreat/DemonRetreat_pray.png")
+	I_PRAY = RuleImage(roi_front=(1178,380,42,70), roi_back=(1178,380,42,70), threshold=0.8, method="Template matching", file="./tasks/DemonRetreat/DemonRetreat/DemonRetreat_pray.png")
 
 
 	# Ocr Rule Assets

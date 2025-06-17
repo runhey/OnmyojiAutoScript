@@ -31,10 +31,10 @@ class DailyTriflesAssets:
 
 	# Image Rule Assets
 	# 礼包屋 
-	I_ROOM_GIFT = RuleImage(roi_front=(1142,647,52,54), roi_back=(1142,647,103,94), threshold=0.8, method="Template matching", file="./tasks/DailyTrifles/store/store_room_gift.png")
+	I_ROOM_GIFT = RuleImage(roi_front=(1142,647,52,54), roi_back=(1127,611,103,94), threshold=0.8, method="Template matching", file="./tasks/DailyTrifles/store/store_room_gift.png")
 	# description 
 	I_GIFT_RECOMMEND = RuleImage(roi_front=(1184,189,54,64), roi_back=(1172,83,83,306), threshold=0.8, method="Template matching", file="./tasks/DailyTrifles/store/store_gift_recommend.png")
-	# 免费一抽 
+	# 免费黑蛋 
 	I_GIFT_SIGN = RuleImage(roi_front=(222,125,306,218), roi_back=(222,125,306,218), threshold=0.8, method="Template matching", file="./tasks/DailyTrifles/store/store_gift_sign.png")
 	# 体力 
 	I_SPECIAL_SUSHI = RuleImage(roi_front=(180,130,800,460), roi_back=(180,130,800,460), threshold=0.8, method="Template matching", file="./tasks/DailyTrifles/store/store_sushi.png")

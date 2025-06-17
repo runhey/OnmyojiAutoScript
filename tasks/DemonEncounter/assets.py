@@ -37,7 +37,7 @@ class DemonEncounterAssets:
 	# 还没选中 
 	I_BOSS_NO_SELECT = RuleImage(roi_front=(544,337,37,43), roi_back=(544,337,37,43), threshold=0.8, method="Template matching", file="./tasks/DemonEncounter/boss/boss_boss_no_select.png")
 	# 集结 
-	I_BOSS_GATHER = RuleImage(roi_front=(802,588,100,100), roi_back=(802,588,100,100), threshold=0.8, method="Template matching", file="./tasks/DemonEncounter/boss/boss_boss_gather.png")
+	I_BOSS_GATHER = RuleImage(roi_front=(801,589,100,100), roi_back=(801,589,100,100), threshold=0.8, method="Template matching", file="./tasks/DemonEncounter/boss/boss_boss_gather.png")
 	# 战斗胜利 
 	I_BOSS_WIN = RuleImage(roi_front=(380,43,100,100), roi_back=(380,43,100,100), threshold=0.8, method="Template matching", file="./tasks/DemonEncounter/boss/boss_boss_win.png")
 	# 白色退出 
@@ -70,9 +70,9 @@ class DemonEncounterAssets:
 	# 点击右下角的寻找封魔 
 	I_DE_FIND = RuleImage(roi_front=(1136,593,100,100), roi_back=(1136,593,100,100), threshold=0.8, method="Template matching", file="./tasks/DemonEncounter/demon/demon_de_find.png")
 	# 点击首领 
-	I_DE_BOSS = RuleImage(roi_front=(998,644,45,45), roi_back=(998,644,45,45), threshold=0.8, method="Template matching", file="./tasks/DemonEncounter/demon/demon_de_boss.png")
+	I_DE_BOSS = RuleImage(roi_front=(1001,645,45,45), roi_back=(1001,645,45,45), threshold=0.8, method="Template matching", file="./tasks/DemonEncounter/demon/demon_de_boss.png")
 	# 点击封魔极 
-	I_DE_BOSS_BEST = RuleImage(roi_front=(898,643,45,50), roi_back=(898,643,45,50), threshold=0.8, method="Template matching", file="./tasks/DemonEncounter/demon/demon_de_boss_best.png")
+	I_DE_BOSS_BEST = RuleImage(roi_front=(900,644,45,50), roi_back=(900,644,45,50), threshold=0.8, method="Template matching", file="./tasks/DemonEncounter/demon/demon_de_boss_best.png")
 	# 式神录 
 	I_DE_SHI_RECORDS = RuleImage(roi_front=(789,639,48,48), roi_back=(789,639,48,48), threshold=0.8, method="Template matching", file="./tasks/DemonEncounter/demon/demon_de_shi_records.png")
 	# 左下角小指针 
@@ -88,10 +88,10 @@ class DemonEncounterAssets:
 	I_DE_BALLOON = RuleImage(roi_front=(1214,295,28,27), roi_back=(1198,269,81,266), threshold=0.8, method="Template matching", file="./tasks/DemonEncounter/demon/demon_de_balloon.png")
 	# 右侧的宝箱 
 	I_DE_BOX = RuleImage(roi_front=(1210,295,34,33), roi_back=(1183,278,96,277), threshold=0.8, method="Template matching", file="./tasks/DemonEncounter/demon/demon_de_box.png")
-	# 挑战某一个后的封印图片 
-	I_DE_DEFEAT_2 = RuleImage(roi_front=(1209,421,28,35), roi_back=(1209,421,28,35), threshold=0.7, method="Template matching", file="./tasks/DemonEncounter/demon/demon_de_defeat_2.png")
 	# description 
 	I_DE_DEFEAT_1 = RuleImage(roi_front=(1221,488,42,41), roi_back=(1221,488,42,41), threshold=0.7, method="Template matching", file="./tasks/DemonEncounter/demon/demon_de_defeat_1.png")
+	# 挑战某一个后的封印图片 
+	I_DE_DEFEAT_2 = RuleImage(roi_front=(1209,421,28,35), roi_back=(1209,421,28,35), threshold=0.7, method="Template matching", file="./tasks/DemonEncounter/demon/demon_de_defeat_2.png")
 	# description 
 	I_DE_DEFEAT_3 = RuleImage(roi_front=(1229,357,38,35), roi_back=(1229,357,38,35), threshold=0.7, method="Template matching", file="./tasks/DemonEncounter/demon/demon_de_defeat_3.png")
 	# description 

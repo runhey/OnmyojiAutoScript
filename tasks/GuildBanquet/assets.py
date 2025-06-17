@@ -12,6 +12,6 @@ class GuildBanquetAssets:
 
 	# Image Rule Assets
 	# description 
-	I_FLAG = RuleImage(roi_front=(1034,12,33,60), roi_back=(1034,12,33,60), threshold=0.8, method="Template matching", file="./tasks/GuildBanquet/res/res_flag.png")
+	I_FLAG = RuleImage(roi_front=(1035,12,33,60), roi_back=(1035,12,33,60), threshold=0.8, method="Template matching", file="./tasks/GuildBanquet/res/res_flag.png")
 
 

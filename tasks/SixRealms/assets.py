@@ -21,7 +21,7 @@ class SixRealmsAssets:
 	# 大boss挑战 
 	I_BOSS_FIRE = RuleImage(roi_front=(1128,576,100,100), roi_back=(1091,557,156,147), threshold=0.8, method="Template matching", file="./tasks/SixRealms/gate1/gate1_boss_fire.png")
 	# description 
-	I_BOSS_TEAM_LOCK = RuleImage(roi_front=(1139,493,26,26), roi_back=(1130,487,38,42), threshold=0.95, method="Template matching", file="./tasks/SixRealms/gate1/gate1_boss_team_lock.png")
+	I_BOSS_TEAM_LOCK = RuleImage(roi_front=(1139,493,26,26), roi_back=(1130,487,38,43), threshold=0.95, method="Template matching", file="./tasks/SixRealms/gate1/gate1_boss_team_lock.png")
 	# description 
 	I_BOSS_TEAM_UNLOCK = RuleImage(roi_front=(1138,497,26,26), roi_back=(1127,491,40,41), threshold=0.95, method="Template matching", file="./tasks/SixRealms/gate1/gate1_boss_team_unlock.png")
 	# description 
@@ -30,15 +30,15 @@ class SixRealmsAssets:
 	I_BOSS_USE_DOUBLE = RuleImage(roi_front=(669,417,126,53), roi_back=(651,407,164,71), threshold=0.8, method="Template matching", file="./tasks/SixRealms/gate1/gate1_boss_use_double.png")
 	# 御神获得经验 
 	I_BOSS_GET_EXP = RuleImage(roi_front=(538,112,220,46), roi_back=(492,86,281,100), threshold=0.8, method="Template matching", file="./tasks/SixRealms/gate1/gate1_boss_get_exp.png")
-	# 御神技能升级
+	# 御神技能升级 
 	I_BOSS_SKILL_UP = RuleImage(roi_front=(650,136,100,54), roi_back=(650,136,100,54), threshold=0.8, method="Template matching", file="./tasks/SixRealms/gate1/gate1_boss_skill_up.png")
-	# description
+	# description 
 	I_BOSS_SHARE = RuleImage(roi_front=(1090,604,80,74), roi_back=(1074,587,100,100), threshold=0.8, method="Template matching", file="./tasks/SixRealms/gate1/gate1_boss_share.png")
 	# 结算的椒图 
 	I_BOSS_SHUTU = RuleImage(roi_front=(105,136,174,124), roi_back=(105,136,174,124), threshold=0.8, method="Template matching", file="./tasks/SixRealms/gate1/gate1_boss_shutu.png")
-	# description 
+	# 再次挑战boss 
 	I_BOSS_BATTLE_AGAIN = RuleImage(roi_front=(432,402,178,64), roi_back=(409,390,212,100), threshold=0.8, method="Template matching", file="./tasks/SixRealms/gate1/gate1_boss_battle_again.png")
-	# description 
+	# 放弃挑战boss 
 	I_BOSS_BATTLE_GIVEUP = RuleImage(roi_front=(668,400,178,66), roi_back=(649,381,219,100), threshold=0.8, method="Template matching", file="./tasks/SixRealms/gate1/gate1_boss_battle_giveup.png")
 
 
@@ -82,7 +82,7 @@ class SixRealmsAssets:
 	I_MSTART_UNCHECK = RuleImage(roi_front=(543,340,38,40), roi_back=(543,340,38,40), threshold=0.8, method="Template matching", file="./tasks/SixRealms/gate1/gate1_mstart_uncheck.png")
 	# description 
 	I_MSTART_CHECK = RuleImage(roi_front=(542,340,39,41), roi_back=(542,340,39,41), threshold=0.8, method="Template matching", file="./tasks/SixRealms/gate1/gate1_mstart_check.png")
-	#  
+	# 跳过 
 	I_MSKIP = RuleImage(roi_front=(1117,28,58,36), roi_back=(1117,28,58,36), threshold=0.8, method="Template matching", file="./tasks/SixRealms/gate1/gate1_mskip.png")
 	# 左下角备战 
 	I_PREPARE_BATTLE = RuleImage(roi_front=(22,638,56,56), roi_back=(22,638,56,56), threshold=0.8, method="Template matching", file="./tasks/SixRealms/gate1/gate1_prepare_battle.png")
@@ -95,7 +95,7 @@ class SixRealmsAssets:
 	# 左上角退出 
 	I_BACK_EXIT = RuleImage(roi_front=(11,18,51,47), roi_back=(0,0,100,100), threshold=0.8, method="Template matching", file="./tasks/SixRealms/gate1/gate1_back_exit.png")
 	# 可以购买的幻息 
-	I_M_STORE_ACTIVITY = RuleImage(roi_front=(1121,596,72,57), roi_back=(1121,596,72,57), threshold=0.8, method="Template matching", file="./tasks/SixRealms/gate1/gate1_m_store_activity.png")
+	I_M_STORE_ACTIVITY = RuleImage(roi_front=(1121,596,72,57), roi_back=(1107,573,100,100), threshold=0.8, method="Template matching", file="./tasks/SixRealms/gate1/gate1_m_store_activity.png")
 	# description 
 	I_MSTART_CONFIRM2 = RuleImage(roi_front=(1154,581,74,86), roi_back=(1079,535,196,177), threshold=0.8, method="Template matching", file="./tasks/SixRealms/gate1/gate1_mstart_confirm2.png")
 	# 动画完了就有这个东西 

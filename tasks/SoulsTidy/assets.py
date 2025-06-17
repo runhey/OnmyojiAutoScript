@@ -45,11 +45,13 @@ class SoulsTidyAssets:
 	# 已弃置被选中 
 	I_ST_ABANDONED_SELECTED = RuleImage(roi_front=(31,114,106,48), roi_back=(31,114,106,48), threshold=0.8, method="Template matching", file="./tasks/SoulsTidy/simple/simple_st_abandoned_selected.png")
 	# 第一个御魂是+0的 
-	I_ST_LEVEL_0 = RuleImage(roi_front=(90,240,36,20), roi_back=(90,240,45,30), threshold=0.9, method="Template matching", file="./tasks/SoulsTidy/simple/simple_st_level_0.png")
+	I_ST_LEVEL_0 = RuleImage(roi_front=(90,240,36,20), roi_back=(90,240,36,20), threshold=0.9, method="Template matching", file="./tasks/SoulsTidy/simple/simple_st_level_0.png")
 	# 御魂奉纳后获得的金币 
 	I_ST_GOLD = RuleImage(roi_front=(170,100,950,500), roi_back=(170,100,950,500), threshold=0.9, method="Template matching", file="./tasks/SoulsTidy/simple/simple_st_gold.png")
+
+
 	# Long Click Rule Assets
-	# description
+	# description 
 	L_ONE = RuleLongClick(roi_front=(88,272,100,78), roi_back=(88,272,100,78), duration=1500, name="one")
 
 
@@ -59,11 +61,11 @@ class SoulsTidyAssets:
 	# 奉纳的御魂等级 
 	O_ST_FIRSET_LEVEL = RuleOcr(roi=(91,237,35,28), area=(91,237,35,28), mode="Single", method="Default", keyword="", name="st_firset_level")
 	# 入手顺序 
-	O_ST_SORT_TIME = RuleOcr(roi=(387,118,110,42), area=(387,118,110,42), mode="Single", method="Default", keyword="入手顺", name="st_sort_time")
+	O_ST_SORT_TIME = RuleOcr(roi=(387,118,110,42), area=(387,118,110,42), mode="Single", method="Default", keyword="入手顺序", name="st_sort_time")
 	# 等级/星级 最上边的 
-	O_ST_SORT_LEVEL_1 = RuleOcr(roi=(384,115,121,45), area=(384,115,121,45), mode="Single", method="Default", keyword="", name="st_sort_level_1")
+	O_ST_SORT_LEVEL_1 = RuleOcr(roi=(384,115,121,45), area=(384,115,121,45), mode="Single", method="Default", keyword="等级/星级", name="st_sort_level_1")
 	# 等级/星 下边的 
-	O_ST_SORT_LEVEL_2 = RuleOcr(roi=(400,290,128,42), area=(400,290,128,42), mode="Single", method="Default", keyword="", name="st_sort_level_2")
+	O_ST_SORT_LEVEL_2 = RuleOcr(roi=(400,290,128,42), area=(400,290,128,42), mode="Single", method="Default", keyword="等级/星级", name="st_sort_level_2")
 	# 类型 
 	O_ST_SORT_TYPE = RuleOcr(roi=(414,118,64,43), area=(414,118,64,43), mode="Single", method="Default", keyword="类型", name="st_sort_type")
 	# 位置 

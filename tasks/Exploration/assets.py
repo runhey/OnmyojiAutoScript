@@ -74,23 +74,23 @@ class ExplorationAssets:
 	# 进入难度选择界面 
 	I_E_EXPLORATION_OPEN = RuleImage(roi_front=(1077,248,37,80), roi_back=(1072,242,47,92), threshold=0.8, method="Template matching", file="./tasks/Exploration/res/res_e_exploration_open.png")
 	# 探索按钮 
-	I_E_EXPLORATION_CLICK = RuleImage(roi_front=(898,518,96,42), roi_back=(898,518,96,42), threshold=0.7, method="Template matching", file="./tasks/Exploration/res/res_e_exploration_click.png")
+	I_E_EXPLORATION_CLICK = RuleImage(roi_front=(898,518,96,42), roi_back=(898,518,96,42), threshold=0.8, method="Template matching", file="./tasks/Exploration/res/res_e_exploration_click.png")
 	# 自动轮换开着 
-	I_E_AUTO_ROTATE_ON = RuleImage(roi_front=(108,647,152,44), roi_back=(108,647,152,44), threshold=0.8, method="Template matching", file="./tasks/Exploration/res/res_e_auto_rotate_on.png")
+	I_E_AUTO_ROTATE_ON = RuleImage(roi_front=(108,647,152,44), roi_back=(108,647,152,44), threshold=0.9, method="Template matching", file="./tasks/Exploration/res/res_e_auto_rotate_on.png")
 	# 自动轮换关闭 
-	I_E_AUTO_ROTATE_OFF = RuleImage(roi_front=(105,649,150,46), roi_back=(105,649,150,46), threshold=0.8, method="Template matching", file="./tasks/Exploration/res/res_e_auto_rotate_off.png")
+	I_E_AUTO_ROTATE_OFF = RuleImage(roi_front=(105,649,150,46), roi_back=(105,649,150,46), threshold=0.85, method="Template matching", file="./tasks/Exploration/res/res_e_auto_rotate_off.png")
 	# 成功打开设置 
 	I_E_OPEN_SETTINGS = RuleImage(roi_front=(468,112,170,50), roi_back=(468,112,170,50), threshold=0.8, method="Template matching", file="./tasks/Exploration/res/res_e_open_settings.png")
 	# 选择式神稀有度 
 	I_E_ENTER_CHOOSE_RARITY = RuleImage(roi_front=(34,288,62,47), roi_back=(34,288,62,47), threshold=0.8, method="Template matching", file="./tasks/Exploration/res/res_e_enter_choose_rarity.png")
 	# 候补N卡 
-	I_E_N_RARITY = RuleImage(roi_front=(144,302,46,49), roi_back=(144,302,46,49), threshold=0.8, method="Template matching", file="./tasks/Exploration/res/res_e_n_rarity.png")
+	I_E_N_RARITY = RuleImage(roi_front=(42,625,46,49), roi_back=(42,625,46,49), threshold=0.8, method="Template matching", file="./tasks/Exploration/res/res_e_n_rarity.png")
 	# 候补素材 
-	I_E_S_RARITY = RuleImage(roi_front=(33,281,63,59), roi_back=(33,281,63,59), threshold=0.8, method="Template matching", file="./tasks/Exploration/res/res_e_s_rarity.png")
+	I_E_S_RARITY = RuleImage(roi_front=(33,620,63,59), roi_back=(33,620,63,59), threshold=0.8, method="Template matching", file="./tasks/Exploration/res/res_e_s_rarity.png")
 	# 已候补出战的狗粮 
 	I_E_RATATE_EXSIT = RuleImage(roi_front=(108,580,995,32), roi_back=(108,580,995,32), threshold=0.8, method="Template matching", file="./tasks/Exploration/res/res_e_ratate_exsit.png")
 	# 确定按钮 
-	I_E_SURE_BUTTON = RuleImage(roi_front=(1139,429,44,38), roi_back=(1139,428,44,38), threshold=0.8, method="Template matching", file="./tasks/Exploration/res/res_e_sure_button.png")
+	I_E_SURE_BUTTON = RuleImage(roi_front=(1139,429,44,38), roi_back=(1139,429,44,38), threshold=0.8, method="Template matching", file="./tasks/Exploration/res/res_e_sure_button.png")
 	# 设置按钮 
 	I_E_SETTINGS_BUTTON = RuleImage(roi_front=(36,692,54,28), roi_back=(36,692,54,28), threshold=0.8, method="Template matching", file="./tasks/Exploration/res/res_e_settings_button.png")
 	# 普通怪 
@@ -106,7 +106,7 @@ class ExplorationAssets:
 	# description 
 	I_GET_REWARD = RuleImage(roi_front=(476,224,338,44), roi_back=(476,224,338,44), threshold=0.8, method="Template matching", file="./tasks/Exploration/res/res_get_reward.png")
 	# description 
-	I_RED_CLOSE = RuleImage(roi_front=(1025,127,41,42), roi_back=(1025,127,41,42), threshold=0.8, method="Template matching", file="./tasks/Exploration/res/res_red_close.png")
+	I_RED_CLOSE = RuleImage(roi_front=(1027,129,41,42), roi_back=(1021,121,54,55), threshold=0.6, method="Template matching", file="./tasks/Exploration/res/res_red_close.png")
 	# description 
 	I_E_EXIT_CONFIRM = RuleImage(roi_front=(692,378,164,54), roi_back=(692,378,164,54), threshold=0.8, method="Template matching", file="./tasks/Exploration/res/res_e_exit_confirm.png")
 	# 宝箱 

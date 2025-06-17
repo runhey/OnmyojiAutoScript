@@ -38,21 +38,21 @@ class TrueOrochiAssets:
 	I_ST_FIRE_CONFIRM = RuleImage(roi_front=(671,406,176,53), roi_back=(671,406,176,53), threshold=0.8, method="Template matching", file="./tasks/TrueOrochi/st/st_st_fire_confirm.png")
 	# 十个式神的准备 
 	I_ST_FIRE_PREPARE = RuleImage(roi_front=(1121,549,100,100), roi_back=(1121,549,100,100), threshold=0.8, method="Template matching", file="./tasks/TrueOrochi/st/st_st_fire_prepare.png")
-	# description 
+	# 未勾选自动下一轮按钮 
 	I_ST_AUTO_FALSE = RuleImage(roi_front=(1112,463,33,34), roi_back=(1112,463,33,34), threshold=0.8, method="Template matching", file="./tasks/TrueOrochi/st/st_st_auto_false.png")
-	# description 
+	# 勾选自动下一轮按钮 
 	I_ST_AUTO_TRUE = RuleImage(roi_front=(1112,461,34,37), roi_back=(1112,461,34,37), threshold=0.8, method="Template matching", file="./tasks/TrueOrochi/st/st_st_auto_true.png")
-	# description 
+	# 绿标1 
 	I_ST_GREEN_1 = RuleImage(roi_front=(209,216,22,48), roi_back=(188,192,69,87), threshold=0.8, method="Template matching", file="./tasks/TrueOrochi/st/st_st_green_1.png")
-	# description 
+	# 绿标2 
 	I_ST_GREEN_2 = RuleImage(roi_front=(294,311,21,46), roi_back=(273,282,70,91), threshold=0.8, method="Template matching", file="./tasks/TrueOrochi/st/st_st_green_2.png")
-	# description 
+	# 绿标3 
 	I_ST_GREEN_3 = RuleImage(roi_front=(473,269,21,49), roi_back=(457,245,56,89), threshold=0.8, method="Template matching", file="./tasks/TrueOrochi/st/st_st_green_3.png")
-	# description 
+	# 绿标4 
 	I_ST_GREEN_4 = RuleImage(roi_front=(690,258,27,49), roi_back=(662,235,83,83), threshold=0.8, method="Template matching", file="./tasks/TrueOrochi/st/st_st_green_4.png")
-	# description 
+	# 绿标5 
 	I_ST_GREEN_5 = RuleImage(roi_front=(841,335,26,44), roi_back=(814,302,100,100), threshold=0.8, method="Template matching", file="./tasks/TrueOrochi/st/st_st_green_5.png")
-	# description 
+	# 绿标6 
 	I_ST_GREEN_6 = RuleImage(roi_front=(930,247,24,47), roi_back=(894,224,100,100), threshold=0.8, method="Template matching", file="./tasks/TrueOrochi/st/st_st_green_6.png")
 	# 60体力创建 
 	I_ST_CREATE_ROOM = RuleImage(roi_front=(529,483,220,64), roi_back=(529,483,220,64), threshold=0.8, method="Template matching", file="./tasks/TrueOrochi/st/st_st_create_room.png")

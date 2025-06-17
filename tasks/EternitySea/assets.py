@@ -12,11 +12,11 @@ class EternitySeaAssets:
 
 	# Image Rule Assets
 	# 选择永生之海 
-	I_ETERNITY_SEA = RuleImage(roi_front=(1141,93,130,420), roi_back=(1141,93,130,420), threshold=0.8, method="Template matching", file="./tasks/EternitySea/res/res_eternity_sea.png")
+	I_ETERNITY_SEA = RuleImage(roi_front=(1139,93,127,416), roi_back=(1139,93,127,416), threshold=0.8, method="Template matching", file="./tasks/EternitySea/res/res_eternity_sea.png")
 	# 组队 
-	I_FORM_TEAM = RuleImage(roi_front=(935,586,96,90), roi_back=(935,586,96,90), threshold=0.8, method="Template matching", file="./tasks/EternitySea/res/res_form_team.png")
+	I_FORM_TEAM = RuleImage(roi_front=(939,594,96,90), roi_back=(939,594,96,90), threshold=0.8, method="Template matching", file="./tasks/EternitySea/res/res_form_team.png")
 	# 挑战 
-	I_ETERNITY_SEA_FIRE = RuleImage(roi_front=(1107,590,96,94), roi_back=(1107,590,96,94), threshold=0.8, method="Template matching", file="./tasks/EternitySea/res/res_eternity_sea_fire.png")
+	I_ETERNITY_SEA_FIRE = RuleImage(roi_front=(1108,592,96,93), roi_back=(1108,592,96,93), threshold=0.8, method="Template matching", file="./tasks/EternitySea/res/res_eternity_sea_fire.png")
 	# 开锁 
 	I_ETERNITYSEA_UNLOCK = RuleImage(roi_front=(556,560,35,34), roi_back=(556,560,35,34), threshold=0.8, method="Template matching", file="./tasks/EternitySea/res/res_eternitysea_unlock.png")
 	# 关锁 
