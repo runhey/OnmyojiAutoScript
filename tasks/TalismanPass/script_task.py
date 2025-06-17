@@ -25,7 +25,10 @@ class ScriptTask(GameUi, TalismanPassAssets):
             self.get_all()
         # 收取花合战等级奖励
         self.get_flower(con.level_reward)
-
+        # 收取1500签御魂
+        if con.harvest_soul:
+            self.ui_goto(page_main)
+            self.harvest_soul()
         self.set_next_run(task='TalismanPass', success=True, finish=True)
         raise TaskEnd('TalismanPass')
 
@@ -91,6 +94,30 @@ class ScriptTask(GameUi, TalismanPassAssets):
         if self.appear(self.I_TP_GOTO) or self.appear(self.I_TP_EXP):
             return True
         return False
+    
+    def harvest_soul(self):
+        """
+        获得1500签御魂奖励
+        :return: 如果没有发现御魂奖励则退出
+        """
+        logger.hr('Harvest soul')
+        timer_harvest = Timer(5)  # 如果连续5秒没有发现任何奖励，退出
+        while 1:
+            self.screenshot()
+            # 自选御魂
+            if self.appear(self.I_TP_SOUL_1):
+                logger.info('Select soul 2')
+                self.ui_click(self.I_TP_SOUL_1, stop=self.I_TP_SOUL_2)
+                self.ui_click(self.I_TP_SOUL_2, stop=self.I_TP_SOUL_3, interval=3)
+                self.ui_click_until_disappear(click=self.I_TP_SOUL_3)
+                timer_harvest.reset()
+            # 五秒内没有发现任何奖励，退出
+            if not timer_harvest.started():
+                timer_harvest.start()
+            else:
+                if timer_harvest.reached():
+                    logger.info('No more reward')
+                    return
 
 
 
