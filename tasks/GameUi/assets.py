@@ -43,7 +43,7 @@ class GameUiAssets:
 	# description 
 	I_EXPLORATION_GOTO_SOUL_ZONE = RuleImage(roi_front=(155,636,56,54), roi_back=(138,620,89,75), threshold=0.7, method="Template matching", file="./tasks/GameUi/page/page_exploration_goto_soul_zone.png")
 	# description 
-	I_EXPLORATION_GOTO_REALM_RAID = RuleImage(roi_front=(248,636,67,48), roi_back=(229,612,102,87), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_exploration_goto_realm_raid.png")
+	I_EXPLORATION_GOTO_REALM_RAID = RuleImage(roi_front=(246,639,66,48), roi_back=(229,612,102,87), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_exploration_goto_realm_raid.png")
 	# 前往御灵 
 	I_EXPLORATION_GOTO_GORYOU_REALM = RuleImage(roi_front=(353,639,48,46), roi_back=(346,626,60,67), threshold=0.7, method="Template matching", file="./tasks/GameUi/page/page_exploration_goto_goryou_realm.png")
 	# 式神委派 
@@ -51,7 +51,7 @@ class GameUiAssets:
 	# 秘闻 
 	I_EXPLORATION_GOTO_SECRET_ZONES = RuleImage(roi_front=(548,632,62,54), roi_back=(524,614,100,87), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_exploration_goto_secret_zones.png")
 	# 地狱鬼王 
-	I_EXPLORATION_GOTO_AREA_BOSS = RuleImage(roi_front=(640,638,51,45), roi_back=(640,638,51,38), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_exploration_goto_area_boss.png")
+	I_EXPLORATION_GOTO_AREA_BOSS = RuleImage(roi_front=(651,631,52,46), roi_back=(651,631,52,46), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_exploration_goto_area_boss.png")
 	# 平安奇谭 
 	I_EXPLORATION_GOTO_HEIAN_KITAN = RuleImage(roi_front=(739,643,52,44), roi_back=(739,643,52,44), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_exploration_goto_heian_kitan.png")
 	# 六道之门 
@@ -63,7 +63,7 @@ class GameUiAssets:
 	# description 
 	I_CHECK_AWAKE = RuleImage(roi_front=(376,565,73,82), roi_back=(376,565,73,82), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_check_awake.png")
 	# description 
-	I_CHECK_SOUL_ZONES = RuleImage(roi_front=(53,99,298,406), roi_back=(53,100,298,406), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_check_soul_zones.png")
+	I_CHECK_SOUL_ZONES = RuleImage(roi_front=(53,99,298,406), roi_back=(53,99,298,406), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_check_soul_zones.png")
 	# description 
 	I_CHECK_REALM_RAID = RuleImage(roi_front=(119,617,52,54), roi_back=(119,616,68,76), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_check_realm_raid.png")
 	# description 
@@ -77,7 +77,7 @@ class GameUiAssets:
 	# description 
 	I_CHECK_HEIAN_KITAN = RuleImage(roi_front=(27,48,47,39), roi_back=(27,48,47,39), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_check_heian_kitan.png")
 	# description 
-	I_CHECK_SIX_GATES = RuleImage(roi_front=(1174,621,56,54), roi_back=(1174,621,55,48), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_check_six_gates.png")
+	I_CHECK_SIX_GATES = RuleImage(roi_front=(1174,614,56,54), roi_back=(1174,614,56,54), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_check_six_gates.png")
 	# description 
 	I_CHECK_BONDLING_FAIRYLAND = RuleImage(roi_front=(614,660,56,49), roi_back=(614,660,56,49), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_check_bondling_fairyland.png")
 	# description 

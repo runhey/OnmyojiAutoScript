@@ -11,8 +11,8 @@
   {
     "itemName": "haccess",
     "imageName": "hya_haccess.png",
-    "roiFront": "1059,554,100,100",
-    "roiBack": "1059,554,100,100",
+    "roiFront": "1055,551,100,100",
+    "roiBack": "1055,551,100,100",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "进入"
@@ -20,8 +20,8 @@
   {
     "itemName": "hstart",
     "imageName": "hya_hstart.png",
-    "roiFront": "1119,555,100,100",
-    "roiBack": "1119,555,100,100",
+    "roiFront": "1117,549,100,100",
+    "roiBack": "1117,549,100,100",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "开始"
@@ -38,8 +38,8 @@
   {
     "itemName": "hend",
     "imageName": "hya_hend.png",
-    "roiFront": "81,164,86,299",
-    "roiBack": "81,164,86,299",
+    "roiFront": "81,164,86,300",
+    "roiBack": "81,164,86,300",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "结束"
@@ -70,5 +70,14 @@
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"
+  },
+  {
+    "itemName": "ensure_recall",
+    "imageName": "hya_ensure_recall.png",
+    "roiFront": "1071,151,50,50",
+    "roiBack": "877,72,307,211",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "判断是否是回归活动"
   }
 ]

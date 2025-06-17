@@ -20,8 +20,8 @@
   {
     "itemName": "e_auto_rotate_on",
     "imageName": "res_e_auto_rotate_on.png",
-    "roiFront": "104,649,153,44",
-    "roiBack": "104,649,153,44",
+    "roiFront": "108,647,152,44",
+    "roiBack": "108,647,152,44",
     "method": "Template matching",
     "threshold": 0.9,
     "description": "自动轮换开着"
@@ -29,8 +29,8 @@
   {
     "itemName": "e_auto_rotate_off",
     "imageName": "res_e_auto_rotate_off.png",
-    "roiFront": "108,650,150,46",
-    "roiBack": "108,650,150,46",
+    "roiFront": "105,649,150,46",
+    "roiBack": "105,649,150,46",
     "method": "Template matching",
     "threshold": 0.85,
     "description": "自动轮换关闭"
@@ -38,8 +38,8 @@
   {
     "itemName": "e_open_settings",
     "imageName": "res_e_open_settings.png",
-    "roiFront": "466,110,170,50",
-    "roiBack": "466,110,170,50",
+    "roiFront": "468,112,170,50",
+    "roiBack": "468,112,170,50",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "成功打开设置"
@@ -83,8 +83,8 @@
   {
     "itemName": "e_sure_button",
     "imageName": "res_e_sure_button.png",
-    "roiFront": "1135,426,43,37",
-    "roiBack": "1135,426,43,37",
+    "roiFront": "1139,429,44,38",
+    "roiBack": "1139,429,44,38",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "确定按钮"
@@ -92,8 +92,8 @@
   {
     "itemName": "e_settings_button",
     "imageName": "res_e_settings_button.png",
-    "roiFront": "37,692,53,26",
-    "roiBack": "37,692,53,26",
+    "roiFront": "36,692,54,28",
+    "roiBack": "36,692,54,28",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "设置按钮"
@@ -146,8 +146,8 @@
   {
     "itemName": "get_reward",
     "imageName": "res_get_reward.png",
-    "roiFront": "464,231,339,44",
-    "roiBack": "464,231,339,44",
+    "roiFront": "476,224,338,44",
+    "roiBack": "476,224,338,44",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"
@@ -164,8 +164,8 @@
   {
     "itemName": "e_exit_confirm",
     "imageName": "res_e_exit_confirm.png",
-    "roiFront": "694,380,163,49",
-    "roiBack": "694,380,163,49",
+    "roiFront": "692,378,164,54",
+    "roiBack": "692,378,164,54",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"
@@ -200,7 +200,7 @@
   {
     "itemName": "exp_create_team",
     "imageName": "res_exp_create_team.png",
-    "roiFront": "590,514,122,52",
+    "roiFront": "584,508,132,60",
     "roiBack": "543,490,192,100",
     "method": "Template matching",
     "threshold": 0.8,
@@ -209,7 +209,7 @@
   {
     "itemName": "exp_create_ensure",
     "imageName": "res_exp_create_ensure.png",
-    "roiFront": "534,486,218,59",
+    "roiFront": "528,484,222,60",
     "roiBack": "516,475,244,85",
     "method": "Template matching",
     "threshold": 0.8,

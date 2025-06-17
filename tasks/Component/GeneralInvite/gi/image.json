@@ -11,8 +11,8 @@
   {
     "itemName": "add_2",
     "imageName": "gi_add_2.png",
-    "roiFront": "1039,205,100,100",
-    "roiBack": "1039,205,100,100",
+    "roiFront": "1016,202,100,100",
+    "roiBack": "1016,202,100,100",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "最右边的邀请"
@@ -20,8 +20,8 @@
   {
     "itemName": "fire_fail",
     "imageName": "gi_fire_fail.png",
-    "roiFront": "1177,604,81,74",
-    "roiBack": "1177,604,81,74",
+    "roiFront": "1177,604,82,74",
+    "roiBack": "1177,604,82,74",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"
@@ -29,8 +29,8 @@
   {
     "itemName": "fire",
     "imageName": "gi_fire.png",
-    "roiFront": "1179,602,81,87",
-    "roiBack": "1179,602,81,87",
+    "roiFront": "1176,600,82,88",
+    "roiBack": "1176,600,82,88",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"
@@ -155,8 +155,8 @@
   {
     "itemName": "invite_ensure",
     "imageName": "gi_invite_ensure.png",
-    "roiFront": "710,544,132,60",
-    "roiBack": "710,544,132,60",
+    "roiFront": "708,545,132,60",
+    "roiBack": "708,545,132,60",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "点击邀请"
@@ -308,8 +308,8 @@
   {
     "itemName": "i_no_default",
     "imageName": "gi_i_no_default.png",
-    "roiFront": "542,343,36,35",
-    "roiBack": "542,343,36,35",
+    "roiFront": "510,342,36,36",
+    "roiBack": "510,342,36,36",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "不勾选 默认邀请"
@@ -317,8 +317,8 @@
   {
     "itemName": "i_default",
     "imageName": "gi_i_default.png",
-    "roiFront": "541,342,41,39",
-    "roiBack": "541,342,41,39",
+    "roiFront": "506,340,42,40",
+    "roiBack": "506,340,42,40",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "勾选 默认邀请"
@@ -335,8 +335,8 @@
   {
     "itemName": "gi_sure",
     "imageName": "gi_gi_sure.png",
-    "roiFront": "670,402,175,60",
-    "roiBack": "670,402,175,60",
+    "roiFront": "670,398,176,62",
+    "roiBack": "670,398,176,62",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "队长邀请 确定"
@@ -353,8 +353,8 @@
   {
     "itemName": "gi_in_room",
     "imageName": "gi_gi_in_room.png",
-    "roiFront": "92,17,213,64",
-    "roiBack": "92,17,213,64",
+    "roiFront": "84,16,142,52",
+    "roiBack": "84,16,142,52",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "三人御魂组队左上角的协站队伍"

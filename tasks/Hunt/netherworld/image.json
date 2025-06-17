@@ -11,8 +11,8 @@
   {
     "itemName": "nw_challage",
     "imageName": "netherworld_nw_challage.png",
-    "roiFront": "306,590,171,63",
-    "roiBack": "306,590,171,63",
+    "roiFront": "305,589,172,66",
+    "roiBack": "305,589,172,66",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "点击挑战"
@@ -20,8 +20,8 @@
   {
     "itemName": "nw_done",
     "imageName": "netherworld_nw_done.png",
-    "roiFront": "308,600,156,41",
-    "roiBack": "308,600,156,41",
+    "roiFront": "237,603,160,42",
+    "roiBack": "237,603,160,42",
     "method": "Template matching",
     "threshold": 0.9,
     "description": "今日已挑战"

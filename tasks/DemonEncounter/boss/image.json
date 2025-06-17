@@ -128,8 +128,8 @@
   {
     "itemName": "best_boss_fire",
     "imageName": "boss_best_boss_fire.png",
-    "roiFront": "1087,562,100,36",
-    "roiBack": "1087,562,100,36",
+    "roiFront": "1086,562,100,36",
+    "roiBack": "1086,562,100,36",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "极逢魔集结挑战"

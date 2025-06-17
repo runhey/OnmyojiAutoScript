@@ -6,7 +6,7 @@
     "roiBack": "200,120,951,298",
     "method": "Template matching",
     "threshold": 0.8,
-    "description": "description"
+    "description": "庭院前往町中"
   },
   {
     "itemName": "check_town",
@@ -15,7 +15,7 @@
     "roiBack": "765,98,402,96",
     "method": "Template matching",
     "threshold": 0.8,
-    "description": "description"
+    "description": "判断是否在町中"
   },
   {
     "itemName": "town_goto_main",
@@ -24,7 +24,7 @@
     "roiBack": "302,216,868,127",
     "method": "Template matching",
     "threshold": 0.8,
-    "description": "description"
+    "description": "町中返回庭院"
   },
   {
     "itemName": "town_goto_duel",
@@ -33,25 +33,25 @@
     "roiBack": "357,126,657,100",
     "method": "Template matching",
     "threshold": 0.8,
-    "description": "description"
+    "description": "町中前往斗技"
   },
   {
     "itemName": "town_goto_demon_encounter",
     "imageName": "page_town_goto_demon_encounter.png",
-    "roiFront": "617,135,51,75",
+    "roiFront": "618,132,52,78",
     "roiBack": "232,121,873,100",
     "method": "Template matching",
     "threshold": 0.7,
-    "description": "description"
+    "description": "町中前往逢魔"
   },
   {
     "itemName": "town_goto_hunt",
     "imageName": "page_town_goto_hunt.png",
-    "roiFront": "475,138,46,69",
+    "roiFront": "477,132,46,70",
     "roiBack": "275,122,520,100",
     "method": "Template matching",
     "threshold": 0.7,
-    "description": "description"
+    "description": "町中前往狩猎战"
   },
   {
     "itemName": "town_goto_draft_duel",
@@ -60,7 +60,7 @@
     "roiBack": "170,145,567,100",
     "method": "Template matching",
     "threshold": 0.8,
-    "description": "协同对弈"
+    "description": "町中前往协同对弈"
   },
   {
     "itemName": "town_goto_hyakkisen",
@@ -69,7 +69,7 @@
     "roiBack": "86,130,447,100",
     "method": "Template matching",
     "threshold": 0.8,
-    "description": "百鬼奕"
+    "description": "町中前往百鬼奕"
   },
   {
     "itemName": "check_duel",
@@ -78,7 +78,7 @@
     "roiBack": "79,1,110,74",
     "method": "Template matching",
     "threshold": 0.8,
-    "description": "description"
+    "description": "检查是否在斗技界面"
   },
   {
     "itemName": "check_demon_encounter",
@@ -87,7 +87,7 @@
     "roiBack": "2,619,100,100",
     "method": "Template matching",
     "threshold": 0.8,
-    "description": "description"
+    "description": "检查是否在逢魔界面"
   },
   {
     "itemName": "check_hunt",
@@ -96,7 +96,7 @@
     "roiBack": "553,1,81,68",
     "method": "Template matching",
     "threshold": 0.7,
-    "description": "description"
+    "description": "检查是否在狩猎战界面"
   },
   {
     "itemName": "check_hyakkisen",
@@ -105,7 +105,7 @@
     "roiBack": "986,587,100,100",
     "method": "Template matching",
     "threshold": 0.8,
-    "description": "description"
+    "description": "检查是否在百鬼弈界面"
   },
   {
     "itemName": "check_draft_duel",
@@ -114,7 +114,7 @@
     "roiBack": "1029,594,100,100",
     "method": "Template matching",
     "threshold": 0.8,
-    "description": "description"
+    "description": "检查是否在协同对弈界面"
   },
   {
     "itemName": "back_yollow",
@@ -123,7 +123,7 @@
     "roiBack": "0,0,100,100",
     "method": "Template matching",
     "threshold": 0.8,
-    "description": "description"
+    "description": "黄色返回"
   },
   {
     "itemName": "demon_encounter_goto_town",
@@ -132,16 +132,16 @@
     "roiBack": "3,4,100,100",
     "method": "Template matching",
     "threshold": 0.8,
-    "description": "description"
+    "description": "逢魔返回町中"
   },
   {
     "itemName": "town_goto_hyakkiyakou",
     "imageName": "page_town_goto_hyakkiyakou.png",
-    "roiFront": "880,165,53,69",
+    "roiFront": "880,165,54,80",
     "roiBack": "827,149,148,100",
     "method": "Template matching",
     "threshold": 0.8,
-    "description": "description"
+    "description": "町中前往百鬼夜行"
   },
   {
     "itemName": "check_kyakkiyakou",
@@ -150,7 +150,7 @@
     "roiBack": "280,545,100,100",
     "method": "Template matching",
     "threshold": 0.8,
-    "description": "description"
+    "description": "检查是否在百鬼夜行界面"
   },
   {
     "itemName": "hyakkiyakou_close",
@@ -159,6 +159,6 @@
     "roiBack": "1063,181,47,43",
     "method": "Template matching",
     "threshold": 0.8,
-    "description": "description"
+    "description": "退出百鬼夜行"
   }
 ]

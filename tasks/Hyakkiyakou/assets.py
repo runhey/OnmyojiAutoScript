@@ -47,9 +47,9 @@ class HyakkiyakouAssets:
 	# 邀请按钮 
 	I_HINVITE = RuleImage(roi_front=(139,593,63,39), roi_back=(105,535,129,147), threshold=0.8, method="Template matching", file="./tasks/Hyakkiyakou/hya/hya_hinvite.png")
 	# 进入 
-	I_HACCESS = RuleImage(roi_front=(1059,554,100,100), roi_back=(1059,554,96,98), threshold=0.8, method="Template matching", file="./tasks/Hyakkiyakou/hya/hya_haccess.png")
+	I_HACCESS = RuleImage(roi_front=(1055,551,100,100), roi_back=(1059,554,96,98), threshold=0.8, method="Template matching", file="./tasks/Hyakkiyakou/hya/hya_haccess.png")
 	# 开始
-	I_HSTART = RuleImage(roi_front=(1119,555,100,100), roi_back=(1119,555,99,90), threshold=0.8, method="Template matching", file="./tasks/Hyakkiyakou/hya/hya_hstart.png")
+	I_HSTART = RuleImage(roi_front=(1117,549,100,100), roi_back=(1119,555,99,90), threshold=0.8, method="Template matching", file="./tasks/Hyakkiyakou/hya/hya_hstart.png")
 	# 押注
 	I_HSELECTED = RuleImage(roi_front=(980,265,42,44), roi_back=(226,53,836,348), threshold=0.8, method="Template matching", file="./tasks/Hyakkiyakou/hya/hya_hselected.png")
 	# 结束

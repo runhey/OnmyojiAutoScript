@@ -76,7 +76,7 @@ class AreaBossAssets:
 	# 跟buff冲突弃用 
 	I_CLOSE_RED = RuleImage(roi_front=(1190,24,37,38), roi_back=(1190,24,37,38), threshold=0.8, method="Template matching", file="./tasks/AreaBoss/res/res_close_red.png")
 	# 红色关闭 
-	I_AB_CLOSE_RED = RuleImage(roi_front=(1194,24,36,38), roi_back=(1194,24,34,36), threshold=0.8, method="Template matching", file="./tasks/AreaBoss/res/res_ab_close_red.png")
+	I_AB_CLOSE_RED = RuleImage(roi_front=(1190,22,36,38), roi_back=(1190,22,36,38), threshold=0.8, method="Template matching", file="./tasks/AreaBoss/res/res_ab_close_red.png")
 	# 筛选中 选中悬赏标识 
 	I_AB_FILTER_TITLE_REWARD = RuleImage(roi_front=(920,110,190,70), roi_back=(920,110,190,70), threshold=0.8, method="Template matching", file="./tasks/AreaBoss/res/ab_filter_title_reward.png")
 	# 筛选中 选中热门标识 

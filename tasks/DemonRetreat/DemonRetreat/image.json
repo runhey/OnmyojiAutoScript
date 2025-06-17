@@ -11,8 +11,8 @@
   {
     "itemName": "hunt",
     "imageName": "DemonRetreat_hunt.png",
-    "roiFront": "661,164,187,165",
-    "roiBack": "661,164,187,165",
+    "roiFront": "18,162,186,166",
+    "roiBack": "18,162,186,166",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "首领退治"
@@ -20,8 +20,8 @@
   {
     "itemName": "hunt_check",
     "imageName": "DemonRetreat_hunt_check.png",
-    "roiFront": "570,12,143,46",
-    "roiBack": "570,12,143,46",
+    "roiFront": "572,10,144,46",
+    "roiBack": "572,10,144,46",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "检查是否成功进入首领退治"
@@ -33,7 +33,7 @@
     "roiBack": "26,487,76,48",
     "method": "Template matching",
     "threshold": 0.8,
-    "description": "description"
+    "description": "集结"
   },
   {
     "itemName": "demon_back_check",
@@ -47,8 +47,8 @@
   {
     "itemName": "enter_fire",
     "imageName": "DemonRetreat_enter_fire.png",
-    "roiFront": "1141,581,100,67",
-    "roiBack": "1141,581,100,67",
+    "roiFront": "1141,579,100,68",
+    "roiBack": "1141,579,100,68",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "迟到直接进入战斗"
@@ -65,8 +65,8 @@
   {
     "itemName": "rank_lsit",
     "imageName": "DemonRetreat_rank_lsit.png",
-    "roiFront": "542,5,200,54",
-    "roiBack": "542,5,200,54",
+    "roiFront": "538,6,200,54",
+    "roiBack": "538,6,200,54",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "退治排行榜"
@@ -74,8 +74,8 @@
   {
     "itemName": "reward_all",
     "imageName": "DemonRetreat_reward_all.png",
-    "roiFront": "535,540,177,60",
-    "roiBack": "535,540,177,60",
+    "roiFront": "534,540,176,60",
+    "roiBack": "534,540,176,60",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "全部领取"
@@ -83,8 +83,8 @@
   {
     "itemName": "pray",
     "imageName": "DemonRetreat_pray.png",
-    "roiFront": "1176,385,43,70",
-    "roiBack": "1176,385,43,70",
+    "roiFront": "1178,380,42,70",
+    "roiBack": "1178,380,42,70",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "祈愿"

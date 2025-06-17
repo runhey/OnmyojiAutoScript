@@ -2,8 +2,8 @@
   {
     "itemName": "l_friends",
     "imageName": "love_l_friends.png",
-    "roiFront": "67,625,70,72",
-    "roiBack": "67,625,70,72",
+    "roiFront": "64,625,70,72",
+    "roiBack": "64,625,70,72",
     "method": "Template matching",
     "threshold": 0.9,
     "description": "description"
@@ -11,8 +11,8 @@
   {
     "itemName": "l_love",
     "imageName": "love_l_love.png",
-    "roiFront": "123,625,67,72",
-    "roiBack": "123,625,67,72",
+    "roiFront": "122,629,68,72",
+    "roiBack": "122,629,68,72",
     "method": "Template matching",
     "threshold": 0.9,
     "description": "description"
@@ -20,8 +20,8 @@
   {
     "itemName": "l_collect",
     "imageName": "love_l_collect.png",
-    "roiFront": "47,537,129,56",
-    "roiBack": "47,537,129,56",
+    "roiFront": "54,537,130,52",
+    "roiBack": "54,537,130,52",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "一键收取"
@@ -29,8 +29,8 @@
   {
     "itemName": "luck_msg",
     "imageName": "Screenshots_luck_msg.png",
-    "roiFront": "22,47,46,27",
-    "roiBack": "22,47,46,27",
+    "roiFront": "22,47,50,30",
+    "roiBack": "22,47,50,30",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "吉闻"
@@ -38,8 +38,8 @@
   {
     "itemName": "one_click_bless",
     "imageName": "Screenshots_one_click_bless.png",
-    "roiFront": "1115,500,93,33",
-    "roiBack": "1115,500,93,33",
+    "roiFront": "1106,497,100,32",
+    "roiBack": "1106,497,100,32",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "一键祝福"
@@ -47,8 +47,8 @@
   {
     "itemName": "click_bless",
     "imageName": "Screenshots_click_bless.png",
-    "roiFront": "617,442,92,39",
-    "roiBack": "617,442,92,39",
+    "roiFront": "616,443,90,40",
+    "roiBack": "616,443,90,40",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "点击祝福"
@@ -56,8 +56,8 @@
   {
     "itemName": "luck_title",
     "imageName": "Screenshots_luck_title.png",
-    "roiFront": "600,52,131,67",
-    "roiBack": "600,52,131,67",
+    "roiFront": "602,53,132,66",
+    "roiBack": "602,53,132,66",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "吉闻页"

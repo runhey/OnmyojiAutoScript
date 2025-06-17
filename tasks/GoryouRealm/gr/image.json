@@ -2,8 +2,8 @@
   {
     "itemName": "gr_fire",
     "imageName": "gr_gr_fire.png",
-    "roiFront": "1097,582,100,100",
-    "roiBack": "1097,582,100,100",
+    "roiFront": "1097,585,100,100",
+    "roiBack": "1097,585,100,100",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "点击挑战"

@@ -72,7 +72,7 @@ class GeneralBattleAssets:
 	# 预设的小图标 
 	I_PRESET = RuleImage(roi_front=(37,660,46,46), roi_back=(37,660,46,46), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralBattle/gb/gb_preset.png")
 	# 准备 
-	I_PREPARE_HIGHLIGHT = RuleImage(roi_front=(1128,536,100,100), roi_back=(1110,500,169,200), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralBattle/gb/gb_prepare_highlight.png")
+	I_PREPARE_HIGHLIGHT = RuleImage(roi_front=(1125,536,100,100), roi_back=(1110,500,169,200), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralBattle/gb/gb_prepare_highlight.png")
 	# 战斗胜利 
 	I_WIN = RuleImage(roi_front=(385,47,100,100), roi_back=(296,33,414,224), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralBattle/gb/gb_win.png")
 	# 准备但是界面还未加载这个时候是黑色的 
@@ -82,7 +82,7 @@ class GeneralBattleAssets:
 	# 确认预设的队伍 
 	I_PRESET_ENSURE = RuleImage(roi_front=(352,643,141,50), roi_back=(305,625,236,83), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralBattle/gb/gb_preset_ensure.png")
 	# 选择buff 
-	I_BUFF = RuleImage(roi_front=(115,657,42,50), roi_back=(106,641,67,77), threshold=0.7, method="Template matching", file="./tasks/Component/GeneralBattle/gb/gb_buff.png")
+	I_BUFF = RuleImage(roi_front=(117,657,42,50), roi_back=(106,641,67,77), threshold=0.7, method="Template matching", file="./tasks/Component/GeneralBattle/gb/gb_buff.png")
 	# 觉醒加成 
 	I_BUFF_AWAKEN = RuleImage(roi_front=(373,126,383,53), roi_back=(373,126,383,53), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralBattle/gb/gb_buff_awaken.png")
 	# 御魂加成 

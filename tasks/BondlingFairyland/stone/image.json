@@ -6,7 +6,7 @@
     "roiBack": "1172,444,38,41",
     "method": "Template matching",
     "threshold": 0.8,
-    "description": "description"
+    "description": "进入鸣契"
   },
   {
     "itemName": "stone_sure",
@@ -15,16 +15,16 @@
     "roiBack": "618,614,120,52",
     "method": "Template matching",
     "threshold": 0.8,
-    "description": "description"
+    "description": "鸣契"
   },
   {
     "itemName": "buy_plus",
     "imageName": "buy_plus.png",
-    "roiFront": "765,543,43,40",
-    "roiBack": "765,543,43,40",
+    "roiFront": "763,541,43,40",
+    "roiBack": "763,541,43,40",
     "method": "Template matching",
     "threshold": 0.8,
-    "description": "description"
+    "description": "最大购买"
   },
   {
     "itemName": "buy_add",
@@ -33,7 +33,7 @@
     "roiBack": "678,540,43,40",
     "method": "Template matching",
     "threshold": 0.8,
-    "description": "description"
+    "description": "增加购买数量"
   },
   {
     "itemName": "buy_sub",
@@ -42,6 +42,6 @@
     "roiBack": "468,540,43,40",
     "method": "Template matching",
     "threshold": 0.8,
-    "description": "description"
+    "description": "减少购买数量"
   }
 ]

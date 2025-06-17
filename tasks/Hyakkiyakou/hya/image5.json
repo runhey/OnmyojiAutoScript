@@ -2,17 +2,17 @@
   {
     "itemName": "friend_same_1",
     "imageName": "hya_friend_same_1.png",
-    "roiFront": "167,123,106,62",
-    "roiBack": "154,105,132,94",
+    "roiFront": "378,126,100,60",
+    "roiBack": "378,126,100,60",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"
   },
   {
-    "itemName": "friend_remote_1",
-    "imageName": "hya_friend_remote_1.png",
-    "roiFront": "288,123,106,56",
-    "roiBack": "269,106,159,91",
+    "itemName": "friend_same_1_recall",
+    "imageName": "hya_friend_same_2.png",
+    "roiFront": "170,126,100,60",
+    "roiBack": "154,105,132,94",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"

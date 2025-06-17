@@ -11,8 +11,8 @@
   {
     "itemName": "preset",
     "imageName": "gb_preset.png",
-    "roiFront": "32,650,47,45",
-    "roiBack": "32,650,47,45",
+    "roiFront": "37,660,46,46",
+    "roiBack": "37,660,46,46",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "预设的小图标"
@@ -20,7 +20,7 @@
   {
     "itemName": "prepare_highlight",
     "imageName": "gb_prepare_highlight.png",
-    "roiFront": "1128,536,100,100",
+    "roiFront": "1125,536,100,100",
     "roiBack": "1110,500,169,200",
     "method": "Template matching",
     "threshold": 0.8,
@@ -65,7 +65,7 @@
   {
     "itemName": "buff",
     "imageName": "gb_buff.png",
-    "roiFront": "115,657,42,50",
+    "roiFront": "117,657,42,50",
     "roiBack": "106,641,67,77",
     "method": "Template matching",
     "threshold": 0.7,
@@ -155,8 +155,8 @@
   {
     "itemName": "exit_ensure",
     "imageName": "gb_exit_ensure.png",
-    "roiFront": "674,388,135,63",
-    "roiBack": "674,388,135,63",
+    "roiFront": "674,388,134,66",
+    "roiBack": "674,388,134,66",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "退出确认"
@@ -191,7 +191,7 @@
   {
     "itemName": "de_win",
     "imageName": "gb_de_win.png",
-    "roiFront": "472,49,100,100",
+    "roiFront": "502,50,100,100",
     "roiBack": "239,36,399,133",
     "method": "Template matching",
     "threshold": 0.8,

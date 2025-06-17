@@ -19,15 +19,15 @@
   },
   {
     "itemName": "friend_1",
-    "roiFront": "254,223,161,67",
-    "roiBack": "254,223,161,67",
-    "description": "description"
+    "roiFront": "445,231,160,58",
+    "roiBack": "445,231,160,58",
+    "description": "日常使用"
   },
   {
     "itemName": "friend_2",
-    "roiFront": "532,226,158,64",
-    "roiBack": "532,226,158,64",
-    "description": "description"
+    "roiFront": "716,230,160,56",
+    "roiBack": "716,230,160,56",
+    "description": "日常使用"
   },
   {
     "itemName": "friend_3",
@@ -45,12 +45,23 @@
     "itemName": "friend_5",
     "roiFront": "241,395,178,61",
     "roiBack": "241,395,178,61",
-    "description": "description"
+    "description": "日常使用"
   },
   {
     "itemName": "friend_6",
     "roiFront": "508,394,182,62",
     "roiBack": "508,394,182,62",
-    "description": "description"
+    "description": "日常使用"
+  },
+  {
+    "itemName": "friend_1_recall",
+    "roiFront": "234,228,180,56",
+    "roiBack": "234,228,180,56",
+    "description": "回归活动使用"
+  },{
+    "itemName": "friend_2_recall",
+    "roiFront": "506,228,178,54",
+    "roiBack": "532,226,178,54",
+    "description": "回归活动使用"
   }
 ]

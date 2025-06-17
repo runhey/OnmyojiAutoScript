@@ -2,8 +2,8 @@
   {
     "itemName": "ball_fire",
     "imageName": "ball_ball_fire.png",
-    "roiFront": "1140,575,100,100",
-    "roiBack": "1140,575,100,100",
+    "roiFront": "1149,575,100,100",
+    "roiBack": "1149,575,100,100",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "挑战"
@@ -15,7 +15,7 @@
     "roiBack": "714,637,31,33",
     "method": "Template matching",
     "threshold": 0.8,
-    "description": "description"
+    "description": "探查未锁"
   },
   {
     "itemName": "ball_lock",
@@ -24,7 +24,7 @@
     "roiBack": "715,637,29,32",
     "method": "Template matching",
     "threshold": 0.8,
-    "description": "description"
+    "description": "探查锁"
   },
   {
     "itemName": "ball_records",
@@ -38,8 +38,8 @@
   {
     "itemName": "ball_help",
     "imageName": "ball_ball_help.png",
-    "roiFront": "963,571,100,100",
-    "roiBack": "963,571,100,100",
+    "roiFront": "963,581,100,100",
+    "roiBack": "963,581,100,100",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "求援"
@@ -47,8 +47,8 @@
   {
     "itemName": "create_team",
     "imageName": "create_team.png",
-    "roiFront": "569,491,141,50",
-    "roiBack": "569,491,141,50",
+    "roiFront": "529,483,222,60",
+    "roiBack": "529,483,222,60",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "契灵创建队伍"

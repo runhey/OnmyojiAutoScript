@@ -110,8 +110,8 @@
   {
     "itemName": "rs_sp_selected",
     "imageName": "rs_rs_sp_selected.png",
-    "roiFront": "31,622,62,59",
-    "roiBack": "31,622,62,59",
+    "roiFront": "31,622,62,60",
+    "roiBack": "31,622,62,60",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"
@@ -128,7 +128,7 @@
   {
     "itemName": "rs_level_max",
     "imageName": "rs_rs_level_max.png",
-    "roiFront": "487,248,23,21",
+    "roiFront": "487,239,42,24",
     "roiBack": "52,238,1118,37",
     "method": "Template matching",
     "threshold": 0.8,

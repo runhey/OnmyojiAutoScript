@@ -15,43 +15,43 @@
     "roiBack": "992,614,51,60",
     "method": "Template matching",
     "threshold": 0.8,
-    "description": "description"
+    "description": "庭院前往阴阳术"
   },
   {
     "itemName": "main_goto_friends",
     "imageName": "page_main_goto_friends.png",
-    "roiFront": "879,623,55,55",
+    "roiFront": "879,623,56,56",
     "roiBack": "867,606,79,77",
     "method": "Template matching",
     "threshold": 0.7,
-    "description": "description"
+    "description": "庭院前往好友"
   },
   {
     "itemName": "main_goto_daily",
     "imageName": "page_main_goto_daily.png",
-    "roiFront": "779,612,51,67",
+    "roiFront": "779,612,52,68",
     "roiBack": "754,595,89,97",
     "method": "Template matching",
     "threshold": 0.7,
-    "description": "进入花合战"
+    "description": "庭院前往花合战"
   },
   {
     "itemName": "main_goto_mall",
     "imageName": "page_main_goto_mall.png",
-    "roiFront": "663,661,41,22",
+    "roiFront": "662,657,40,22",
     "roiBack": "644,613,81,78",
     "method": "Template matching",
     "threshold": 0.7,
-    "description": "description"
+    "description": "庭院前往商店"
   },
   {
     "itemName": "main_goto_guild",
     "imageName": "page_main_goto_guild.png",
-    "roiFront": "540,611,50,54",
-    "roiBack": "540,611,50,54",
+    "roiFront": "540,613,52,54",
+    "roiBack": "540,613,52,54",
     "method": "Template matching",
     "threshold": 0.7,
-    "description": "description"
+    "description": "庭院前往阴阳寮"
   },
   {
     "itemName": "main_goto_team",
@@ -60,7 +60,7 @@
     "roiBack": "366,606,192,83",
     "method": "Template matching",
     "threshold": 0.7,
-    "description": "description"
+    "description": "庭院前往组队"
   },
   {
     "itemName": "main_goto_collection",
@@ -69,7 +69,7 @@
     "roiBack": "51,596,159,85",
     "method": "Template matching",
     "threshold": 0.7,
-    "description": "description"
+    "description": "庭院前往图鉴"
   },
   {
     "itemName": "check_records",
@@ -87,34 +87,34 @@
     "roiBack": "1166,117,84,547",
     "method": "Template matching",
     "threshold": 0.8,
-    "description": "description"
+    "description": "检查是否在阴阳术"
   },
   {
     "itemName": "check_friends",
     "imageName": "page_check_friends.png",
-    "roiFront": "1011,592,133,60",
-    "roiBack": "1011,592,133,60",
+    "roiFront": "1002,593,132,60",
+    "roiBack": "1002,593,132,60",
     "method": "Template matching",
     "threshold": 0.8,
-    "description": "description"
+    "description": "检查是否在好友界面"
   },
   {
     "itemName": "check_daily",
     "imageName": "page_check_daily.png",
-    "roiFront": "28,515,58,62",
+    "roiFront": "26,513,58,62",
     "roiBack": "1,487,154,145",
     "method": "Template matching",
     "threshold": 0.8,
-    "description": "description"
+    "description": "检查是否在花合战界面"
   },
   {
     "itemName": "check_mall",
     "imageName": "page_check_mall.png",
-    "roiFront": "147,527,82,82",
-    "roiBack": "147,527,82,82",
+    "roiFront": "147,526,82,82",
+    "roiBack": "147,526,82,82",
     "method": "Template matching",
     "threshold": 0.8,
-    "description": "description"
+    "description": "检查是否在商店界面"
   },
   {
     "itemName": "check_guild",
@@ -123,16 +123,16 @@
     "roiBack": "1072,630,49,46",
     "method": "Template matching",
     "threshold": 0.8,
-    "description": "description"
+    "description": "检查是否在阴阳寮界面"
   },
   {
     "itemName": "check_team",
     "imageName": "page_check_team.png",
-    "roiFront": "32,585,82,90",
-    "roiBack": "32,585,82,90",
+    "roiFront": "9,564,120,110",
+    "roiBack": "9,564,120,110",
     "method": "Template matching",
     "threshold": 0.8,
-    "description": "description"
+    "description": "检查是否在组队界面"
   },
   {
     "itemName": "check_collection",
@@ -141,7 +141,7 @@
     "roiBack": "471,618,100,100",
     "method": "Template matching",
     "threshold": 0.8,
-    "description": "description"
+    "description": "检查是否在图鉴"
   },
   {
     "itemName": "back_y",

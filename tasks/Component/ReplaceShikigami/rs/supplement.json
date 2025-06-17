@@ -2,8 +2,8 @@
   {
     "itemName": "u_confirm_small",
     "imageName": "utilize_u_confirm_small.png",
-    "roiFront": "672,513,131,60",
-    "roiBack": "672,513,131,60",
+    "roiFront": "670,514,130,60",
+    "roiBack": "670,514,130,60",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "小一个尺寸的 确认按钮"
@@ -11,8 +11,8 @@
   {
     "itemName": "u_confirm_alternate",
     "imageName": "rs_u_confirm_alternate.png",
-    "roiFront": "692,407,134,47",
-    "roiBack": "692,407,134,47",
+    "roiFront": "668,399,176,62",
+    "roiBack": "668,399,176,62",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "候补式神确认"
