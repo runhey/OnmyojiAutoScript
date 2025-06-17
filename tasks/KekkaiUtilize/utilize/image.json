@@ -2,8 +2,8 @@
   {
     "itemName": "utilize_add",
     "imageName": "utilize_utilize_add.png",
-    "roiFront": "1149,54,74,67",
-    "roiBack": "1149,54,74,67",
+    "roiFront": "1147,52,74,67",
+    "roiBack": "1147,52,74,67",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "右上角的放置好友寄养"
