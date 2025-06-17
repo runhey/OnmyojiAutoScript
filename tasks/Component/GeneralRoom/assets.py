@@ -25,7 +25,7 @@ class GeneralRoomAssets:
 	# 创建房间 
 	I_CREATE_ROOM = RuleImage(roi_front=(982,596,176,60), roi_back=(396,569,813,100), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralRoom/gr/gr_create_room.png")
 	# 创建确认 
-	I_CREATE_ENSURE = RuleImage(roi_front=(813,560,129,63), roi_back=(813,560,129,63), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralRoom/gr/gr_create_ensure.png")
+	I_CREATE_ENSURE = RuleImage(roi_front=(811,558,128,62), roi_back=(811,558,128,62), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralRoom/gr/gr_create_ensure.png")
 	# 勾选私人组队 
 	I_ENSURE_PRIVATE = RuleImage(roi_front=(748,489,36,40), roi_back=(748,489,36,40), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralRoom/gr/gr_ensure_private.png")
 	# 这个是还没勾选的图 

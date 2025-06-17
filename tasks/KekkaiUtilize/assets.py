@@ -54,7 +54,7 @@ class KekkaiUtilizeAssets:
 
 	# Image Rule Assets
 	# 右上角的放置好友寄养 
-	I_UTILIZE_ADD = RuleImage(roi_front=(1149,54,74,67), roi_back=(1149,54,74,67), threshold=0.8, method="Template matching", file="./tasks/KekkaiUtilize/utilize/utilize_utilize_add.png")
+	I_UTILIZE_ADD = RuleImage(roi_front=(1147,52,74,67), roi_back=(1147,52,74,67), threshold=0.8, method="Template matching", file="./tasks/KekkaiUtilize/utilize/utilize_utilize_add.png")
 	# 好友这组 
 	I_UTILIZE_FRIEND_GROUP = RuleImage(roi_front=(217,92,110,68), roi_back=(217,92,110,68), threshold=0.9, method="Template matching", file="./tasks/KekkaiUtilize/utilize/utilize_utilize_friend_group.png")
 	# 跨区 
