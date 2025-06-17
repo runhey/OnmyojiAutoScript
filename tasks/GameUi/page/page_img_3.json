@@ -119,8 +119,8 @@
   {
     "itemName": "check_guild",
     "imageName": "page_check_guild.png",
-    "roiFront": "1072,630,49,46",
-    "roiBack": "1072,630,49,46",
+    "roiFront": "1071,629,49,46",
+    "roiBack": "1071,629,49,46",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "检查是否在阴阳寮界面"

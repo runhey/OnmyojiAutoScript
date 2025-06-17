@@ -125,7 +125,6 @@ class ScriptTask(GameUi, ReplaceShikigami, KekkaiUtilizeAssets):
                 break
             if self.appear(self.I_SHI_DEFENSE):
                 break
-
             if self.appear_then_click(self.I_GUILD_REALM, interval=1):
                 continue
 
