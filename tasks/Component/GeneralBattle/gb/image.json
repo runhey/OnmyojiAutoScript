@@ -9,6 +9,15 @@
     "description": "奖励，就是那个魂"
   },
   {
+    "itemName": "activity_items",
+    "imageName": "gb_activity_items.png",
+    "roiFront": "609,252,62,58",
+    "roiBack": "609,252,62,58",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "活动掉落"
+  },
+  {
     "itemName": "preset",
     "imageName": "gb_preset.png",
     "roiFront": "37,660,46,46",

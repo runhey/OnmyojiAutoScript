@@ -14,7 +14,7 @@
     "roiFront": "898,518,96,42",
     "roiBack": "898,518,96,42",
     "method": "Template matching",
-    "threshold": 0.8,
+    "threshold": 0.7,
     "description": "探索按钮"
   },
   {
@@ -23,7 +23,7 @@
     "roiFront": "108,647,152,44",
     "roiBack": "108,647,152,44",
     "method": "Template matching",
-    "threshold": 0.9,
+    "threshold": 0.8,
     "description": "自动轮换开着"
   },
   {
@@ -32,7 +32,7 @@
     "roiFront": "105,649,150,46",
     "roiBack": "105,649,150,46",
     "method": "Template matching",
-    "threshold": 0.85,
+    "threshold": 0.8,
     "description": "自动轮换关闭"
   },
   {
@@ -56,8 +56,8 @@
   {
     "itemName": "e_n_rarity",
     "imageName": "res_e_n_rarity.png",
-    "roiFront": "42,625,46,49",
-    "roiBack": "42,625,46,49",
+    "roiFront": "144,302,46,49",
+    "roiBack": "144,302,46,49",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "候补N卡"
@@ -65,8 +65,8 @@
   {
     "itemName": "e_s_rarity",
     "imageName": "res_e_s_rarity.png",
-    "roiFront": "33,620,63,59",
-    "roiBack": "33,620,63,59",
+    "roiFront": "33,281,63,59",
+    "roiBack": "33,281,63,59",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "候补素材"
@@ -83,8 +83,8 @@
   {
     "itemName": "e_sure_button",
     "imageName": "res_e_sure_button.png",
-    "roiFront": "1139,429,44,38",
-    "roiBack": "1139,429,44,38",
+    "roiFront": "1139,428,44,38",
+    "roiBack": "1139,428,44,38",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "确定按钮"
@@ -155,10 +155,10 @@
   {
     "itemName": "red_close",
     "imageName": "res_red_close.png",
-    "roiFront": "1027,129,41,42",
-    "roiBack": "1021,121,54,55",
+    "roiFront": "1025,127,41,42",
+    "roiBack": "1025,127,41,42",
     "method": "Template matching",
-    "threshold": 0.6,
+    "threshold": 0.8,
     "description": "description"
   },
   {
