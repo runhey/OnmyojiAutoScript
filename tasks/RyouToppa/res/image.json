@@ -38,8 +38,8 @@
   {
     "itemName": "ryou_reward",
     "imageName": "res_ryou_reward.png",
-    "roiFront": "136,415,242,40",
-    "roiBack": "136,415,240,14",
+    "roiFront": "136,416,242,40",
+    "roiBack": "136,416,242,40",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "寮击破奖励"

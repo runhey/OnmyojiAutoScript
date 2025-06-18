@@ -24,7 +24,7 @@
     "roiBack": "166,292,300,100",
     "method": "Template matching",
     "threshold": 0.8,
-    "description": ""
+    "description": "嗔"
   },
   {
     "itemName": "s_foolery",
@@ -39,7 +39,7 @@
     "itemName": "s_team_lock",
     "imageName": "s_s_team_lock.png",
     "roiFront": "559,561,31,36",
-    "roiBack": "559,562,31,36",
+    "roiBack": "559,561,31,36",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"
@@ -47,8 +47,8 @@
   {
     "itemName": "s_team_unlock",
     "imageName": "s_s_team_unlock.png",
-    "roiFront": "555,561,33,33",
-    "roiBack": "555,561,33,33",
+    "roiFront": "555,560,33,33",
+    "roiBack": "555,560,33,33",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"
@@ -56,8 +56,8 @@
   {
     "itemName": "s_fire",
     "imageName": "s_s_fire.png",
-    "roiFront": "1104,583,100,100)",
-    "roiBack": "1104,583,100,100)",
+    "roiFront": "1104,583,100,100",
+    "roiBack": "1104,583,100,100",
     "method": "Template matching",
     "threshold": 0.7,
     "description": "挑战"
@@ -78,7 +78,7 @@
     "roiBack": "359,31,20,32",
     "method": "Template matching",
     "threshold": 0.8,
-    "description": "贪"
+    "description": "贪劵数量"
   },
   {
     "itemName": "s_fire_anger",
@@ -87,7 +87,7 @@
     "roiBack": "539,25,20,30",
     "method": "Template matching",
     "threshold": 0.8,
-    "description": "description"
+    "description": "嗔劵数量"
   },
   {
     "itemName": "s_fire_foolery",
@@ -96,6 +96,6 @@
     "roiBack": "715,27,20,32",
     "method": "Template matching",
     "threshold": 0.8,
-    "description": "痴"
+    "description": "痴劵数量"
   }
 ]

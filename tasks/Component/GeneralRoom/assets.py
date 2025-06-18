@@ -37,7 +37,7 @@ class GeneralRoomAssets:
 	# description 
 	I_CREATE_ENSURE_2 = RuleImage(roi_front=(552,489,42,55), roi_back=(552,489,42,55), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralRoom/gr/gr_create_ensure_2.png")
 	# 黄色返回按钮 
-	I_GR_BACK_YELLOW = RuleImage(roi_front=(19,13,53,53), roi_back=(19,13,53,53), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralRoom/gr/gr_gr_back_yellow.png")
+	I_GR_BACK_YELLOW = RuleImage(roi_front=(19,14,53,53), roi_back=(19,14,53,53), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralRoom/gr/gr_gr_back_yellow.png")
 	# 自动匹配 
 	I_GR_AUTO_MATCH = RuleImage(roi_front=(696,596,180,66), roi_back=(696,596,180,66), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralRoom/gr/gr_gr_auto_match.png")
 	# 刷新 

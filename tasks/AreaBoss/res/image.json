@@ -29,7 +29,7 @@
   {
     "itemName": "filter",
     "imageName": "res_filter.png",
-    "roiFront": "1116,33,35,31",
+    "roiFront": "1107,27,42,40",
     "roiBack": "1076,19,98,78",
     "method": "Template matching",
     "threshold": 0.8,
@@ -101,7 +101,7 @@
   {
     "itemName": "ab_filter_title_famous",
     "imageName": "ab_filter_title_famous.png",
-    "roiFront": "920,110,190,70",
+    "roiFront": "954,124,124,38",
     "roiBack": "920,110,190,70",
     "method": "Template matching",
     "threshold": 0.8,
@@ -119,8 +119,8 @@
   {
     "itemName": "ab_filter_opened",
     "imageName": "ab_filter_opened.png",
-    "roiFront": "840,110,130,70",
-    "roiBack": "840,110,130,70",
+    "roiFront": "849,129,74,30",
+    "roiBack": "849,129,74,30",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "筛选界面打开标识"

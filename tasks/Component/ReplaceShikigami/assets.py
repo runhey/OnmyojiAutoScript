@@ -52,17 +52,17 @@ class ReplaceShikigamiAssets:
 	# description 
 	I_RS_NO_ADD = RuleImage(roi_front=(276,222,100,212), roi_back=(28,181,1232,293), threshold=0.8, method="Template matching", file="./tasks/Component/ReplaceShikigami/rs/rs_rs_no_add.png")
 	# 素材 
-	I_RS_MATERIAL = RuleImage(roi_front=(32,283,59,56), roi_back=(32,283,59,56), threshold=0.8, method="Template matching", file="./tasks/Component/ReplaceShikigami/rs/rs_rs_material.png")
+	I_RS_MATERIAL = RuleImage(roi_front=(32,281,59,56), roi_back=(32,281,59,56), threshold=0.8, method="Template matching", file="./tasks/Component/ReplaceShikigami/rs/rs_rs_material.png")
 	# description 
-	I_RS_N = RuleImage(roi_front=(138,299,57,59), roi_back=(138,299,57,59), threshold=0.8, method="Template matching", file="./tasks/Component/ReplaceShikigami/rs/rs_rs_n.png")
+	I_RS_N = RuleImage(roi_front=(137,297,57,59), roi_back=(137,297,57,59), threshold=0.8, method="Template matching", file="./tasks/Component/ReplaceShikigami/rs/rs_rs_n.png")
 	# description 
-	I_RS_R = RuleImage(roi_front=(230,344,64,61), roi_back=(230,344,64,61), threshold=0.8, method="Template matching", file="./tasks/Component/ReplaceShikigami/rs/rs_rs_r.png")
+	I_RS_R = RuleImage(roi_front=(229,342,64,61), roi_back=(229,342,64,61), threshold=0.8, method="Template matching", file="./tasks/Component/ReplaceShikigami/rs/rs_rs_r.png")
 	# description 
-	I_RS_SR = RuleImage(roi_front=(307,421,62,58), roi_back=(307,421,62,58), threshold=0.8, method="Template matching", file="./tasks/Component/ReplaceShikigami/rs/rs_rs_sr.png")
+	I_RS_SR = RuleImage(roi_front=(305,420,62,58), roi_back=(305,420,62,58), threshold=0.8, method="Template matching", file="./tasks/Component/ReplaceShikigami/rs/rs_rs_sr.png")
 	# description 
-	I_RS_SSR = RuleImage(roi_front=(354,517,63,58), roi_back=(354,517,63,58), threshold=0.8, method="Template matching", file="./tasks/Component/ReplaceShikigami/rs/rs_rs_ssr.png")
+	I_RS_SSR = RuleImage(roi_front=(352,517,663,58), roi_back=(352,517,663,58), threshold=0.8, method="Template matching", file="./tasks/Component/ReplaceShikigami/rs/rs_rs_ssr.png")
 	# description 
-	I_RS_SP = RuleImage(roi_front=(372,621,58,60), roi_back=(372,621,58,60), threshold=0.8, method="Template matching", file="./tasks/Component/ReplaceShikigami/rs/rs_rs_sp.png")
+	I_RS_SP = RuleImage(roi_front=(372,619,58,60), roi_back=(372,619,58,60), threshold=0.8, method="Template matching", file="./tasks/Component/ReplaceShikigami/rs/rs_rs_sp.png")
 	# description 
 	I_RS_MATERIAL_SELECTED = RuleImage(roi_front=(27,620,68,65), roi_back=(27,620,68,65), threshold=0.8, method="Template matching", file="./tasks/Component/ReplaceShikigami/rs/rs_rs_material_selected.png")
 	# description 
@@ -74,9 +74,9 @@ class ReplaceShikigamiAssets:
 	# description 
 	I_RS_SSR_SELECTED = RuleImage(roi_front=(29,622,66,59), roi_back=(29,622,66,59), threshold=0.8, method="Template matching", file="./tasks/Component/ReplaceShikigami/rs/rs_rs_ssr_selected.png")
 	# description 
-	I_RS_SP_SELECTED = RuleImage(roi_front=(31,622,62,60), roi_back=(31,622,62,60), threshold=0.8, method="Template matching", file="./tasks/Component/ReplaceShikigami/rs/rs_rs_sp_selected.png")
+	I_RS_SP_SELECTED = RuleImage(roi_front=(31,622,62,59), roi_back=(31,622,62,59), threshold=0.8, method="Template matching", file="./tasks/Component/ReplaceShikigami/rs/rs_rs_sp_selected.png")
 	# description 
-	I_RS_RECORDS_SHIKI = RuleImage(roi_front=(1148,548,49,43), roi_back=(1148,548,49,43), threshold=0.8, method="Template matching", file="./tasks/Component/ReplaceShikigami/rs/rs_rs_records_shiki.png")
+	I_RS_RECORDS_SHIKI = RuleImage(roi_front=(1146,546,49,43), roi_back=(1146,546,49,43), threshold=0.8, method="Template matching", file="./tasks/Component/ReplaceShikigami/rs/rs_rs_records_shiki.png")
 	# 检测到已经满级了 
 	I_RS_LEVEL_MAX = RuleImage(roi_front=(487,239,42,24), roi_back=(52,238,1118,37), threshold=0.8, method="Template matching", file="./tasks/Component/ReplaceShikigami/rs/rs_rs_level_max.png")
 

@@ -5,7 +5,7 @@
     "roiFront": "667,398,178,66",
     "roiBack": "667,398,178,66",
     "method": "Template matching",
-    "threshold": 0.8,
+    "threshold": 0.7,
     "description": "长一点的确认"
   },
   {
@@ -68,7 +68,7 @@
     "roiFront": "675,390,130,62",
     "roiBack": "675,390,130,62",
     "method": "Template matching",
-    "threshold": 0.8,
+    "threshold": 0.7,
     "description": "短一点的确认"
   },
   {
@@ -77,7 +77,7 @@
     "roiFront": "469,390,130,62",
     "roiBack": "469,390,130,62",
     "method": "Template matching",
-    "threshold": 0.8,
+    "threshold": 0.7,
     "description": "短一点的取消"
   },
   {

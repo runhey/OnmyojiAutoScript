@@ -11,8 +11,8 @@
   {
     "itemName": "rs_material",
     "imageName": "rs_rs_material.png",
-    "roiFront": "32,283,59,56",
-    "roiBack": "32,283,59,56",
+    "roiFront": "32,281,59,56",
+    "roiBack": "32,281,59,56",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "素材"
@@ -20,8 +20,8 @@
   {
     "itemName": "rs_n",
     "imageName": "rs_rs_n.png",
-    "roiFront": "138,299,57,59",
-    "roiBack": "138,299,57,59",
+    "roiFront": "137,297,57,59",
+    "roiBack": "137,297,57,59",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"
@@ -29,8 +29,8 @@
   {
     "itemName": "rs_r",
     "imageName": "rs_rs_r.png",
-    "roiFront": "230,344,64,61",
-    "roiBack": "230,344,64,61",
+    "roiFront": "229,342,64,61",
+    "roiBack": "229,342,64,61",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"
@@ -38,8 +38,8 @@
   {
     "itemName": "rs_sr",
     "imageName": "rs_rs_sr.png",
-    "roiFront": "307,421,62,58",
-    "roiBack": "307,421,62,58",
+    "roiFront": "305,420,62,58",
+    "roiBack": "305,420,62,58",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"
@@ -47,8 +47,8 @@
   {
     "itemName": "rs_ssr",
     "imageName": "rs_rs_ssr.png",
-    "roiFront": "354,517,63,58",
-    "roiBack": "354,517,63,58",
+    "roiFront": "352,517,663,58",
+    "roiBack": "352,517,663,58",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"
@@ -56,8 +56,8 @@
   {
     "itemName": "rs_sp",
     "imageName": "rs_rs_sp.png",
-    "roiFront": "372,621,58,60",
-    "roiBack": "372,621,58,60",
+    "roiFront": "372,619,58,60",
+    "roiBack": "372,619,58,60",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"
@@ -110,8 +110,8 @@
   {
     "itemName": "rs_sp_selected",
     "imageName": "rs_rs_sp_selected.png",
-    "roiFront": "31,622,62,60",
-    "roiBack": "31,622,62,60",
+    "roiFront": "31,622,62,59",
+    "roiBack": "31,622,62,59",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"
@@ -119,8 +119,8 @@
   {
     "itemName": "rs_records_shiki",
     "imageName": "rs_rs_records_shiki.png",
-    "roiFront": "1148,548,49,43",
-    "roiBack": "1148,548,49,43",
+    "roiFront": "1146,546,49,43",
+    "roiBack": "1146,546,49,43",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"

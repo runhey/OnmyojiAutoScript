@@ -61,11 +61,11 @@ class SoulsTidyAssets:
 	# 奉纳的御魂等级 
 	O_ST_FIRSET_LEVEL = RuleOcr(roi=(91,237,35,28), area=(91,237,35,28), mode="Single", method="Default", keyword="", name="st_firset_level")
 	# 入手顺序 
-	O_ST_SORT_TIME = RuleOcr(roi=(387,118,110,42), area=(387,118,110,42), mode="Single", method="Default", keyword="入手顺序", name="st_sort_time")
+	O_ST_SORT_TIME = RuleOcr(roi=(387,118,110,42), area=(387,118,110,42), mode="Single", method="Default", keyword="入手顺", name="st_sort_time")
 	# 等级/星级 最上边的 
-	O_ST_SORT_LEVEL_1 = RuleOcr(roi=(384,115,121,45), area=(384,115,121,45), mode="Single", method="Default", keyword="等级/星级", name="st_sort_level_1")
+	O_ST_SORT_LEVEL_1 = RuleOcr(roi=(384,115,121,45), area=(384,115,121,45), mode="Single", method="Default", keyword="", name="st_sort_level_1")
 	# 等级/星 下边的 
-	O_ST_SORT_LEVEL_2 = RuleOcr(roi=(400,290,128,42), area=(400,290,128,42), mode="Single", method="Default", keyword="等级/星级", name="st_sort_level_2")
+	O_ST_SORT_LEVEL_2 = RuleOcr(roi=(400,290,128,42), area=(400,290,128,42), mode="Single", method="Default", keyword="", name="st_sort_level_2")
 	# 类型 
 	O_ST_SORT_TYPE = RuleOcr(roi=(414,118,64,43), area=(414,118,64,43), mode="Single", method="Default", keyword="类型", name="st_sort_type")
 	# 位置 

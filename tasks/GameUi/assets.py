@@ -57,7 +57,7 @@ class GameUiAssets:
 	# 前往六道之门 
 	I_EXPLORATION_GOTO_SIX_GATES = RuleImage(roi_front=(838,640,60,50), roi_back=(818,631,200,66), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_exploration_goto_six_gates.png")
 	# 前往契灵 
-	I_EXPLORATION_GOTO_BONDLING_FAIRYLAND = RuleImage(roi_front=(1037,627,60,54), roi_back=(928,633,203,64), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_exploration_goto_bondling_fairyland.png")
+	I_EXPLORATION_GOTO_BONDLING_FAIRYLAND = RuleImage(roi_front=(1037,627,60,54), roi_back=(1037,627,203,64), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_exploration_goto_bondling_fairyland.png")
 	# 蓝色返回 
 	I_BACK_BLUE = RuleImage(roi_front=(32,37,54,52), roi_back=(3,2,130,114), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_back_blue.png")
 	# 检查是否在觉醒界面 
@@ -73,7 +73,7 @@ class GameUiAssets:
 	# 检查是否在秘闻界面 
 	I_CHECK_SECRET_ZONES = RuleImage(roi_front=(1145,592,110,119), roi_back=(1145,592,110,119), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_check_secret_zones.png")
 	# 检查是否在地鬼界面 
-	I_CHECK_AREA_BOSS = RuleImage(roi_front=(20,320,150,130), roi_back=(20,320,150,130), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_check_area_boss.png")
+	I_CHECK_AREA_BOSS = RuleImage(roi_front=(37,365,68,76), roi_back=(37,365,68,76), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_check_area_boss.png")
 	# 检查是否在平安奇谭页面 
 	I_CHECK_HEIAN_KITAN = RuleImage(roi_front=(27,48,47,39), roi_back=(27,48,47,39), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_check_heian_kitan.png")
 	# 检查是否在六道界面 
@@ -110,7 +110,7 @@ class GameUiAssets:
 	# 检查是否在逢魔界面 
 	I_CHECK_DEMON_ENCOUNTER = RuleImage(roi_front=(26,658,42,43), roi_back=(2,619,100,100), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_check_demon_encounter.png")
 	# 检查是否在狩猎战界面 
-	I_CHECK_HUNT = RuleImage(roi_front=(575,30,46,25), roi_back=(553,1,81,68), threshold=0.7, method="Template matching", file="./tasks/GameUi/page/page_check_hunt.png")
+	I_CHECK_HUNT = RuleImage(roi_front=(578,31,52,30), roi_back=(578,31,52,30), threshold=0.7, method="Template matching", file="./tasks/GameUi/page/page_check_hunt.png")
 	# 检查是否在百鬼弈界面 
 	I_CHECK_HYAKKISEN = RuleImage(roi_front=(1014,607,53,55), roi_back=(986,587,100,100), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_check_hyakkisen.png")
 	# 检查是否在协同对弈界面 

@@ -119,7 +119,7 @@
     "itemName": "exploration_goto_bondling_fairyland",
     "imageName": "page_exploration_goto_bondling_fairyland.png",
     "roiFront": "1037,627,60,54",
-    "roiBack": "928,633,203,64",
+    "roiBack": "1037,627,203,64",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "前往契灵"
@@ -190,8 +190,8 @@
   {
     "itemName": "check_area_boss",
     "imageName": "page_check_area_boss.png",
-    "roiFront": "20,320,150,130",
-    "roiBack": "20,320,150,130",
+    "roiFront": "37,365,68,76",
+    "roiBack": "37,365,68,76",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "检查是否在地鬼界面"

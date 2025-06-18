@@ -65,8 +65,8 @@
   {
     "itemName": "gr_back_yellow",
     "imageName": "gr_gr_back_yellow.png",
-    "roiFront": "19,13,53,53",
-    "roiBack": "19,13,53,53",
+    "roiFront": "19,14,53,53",
+    "roiBack": "19,14,53,53",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "黄色返回按钮"

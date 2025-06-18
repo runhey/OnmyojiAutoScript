@@ -58,7 +58,7 @@ class BondlingFairylandAssets:
 	# 求援 
 	I_BALL_HELP = RuleImage(roi_front=(963,581,100,100), roi_back=(963,581,100,100), threshold=0.8, method="Template matching", file="./tasks/BondlingFairyland/ball/ball_ball_help.png")
 	# 契灵创建队伍 
-	I_CREATE_TEAM = RuleImage(roi_front=(529,483,222,60), roi_back=(529,483,222,60), threshold=0.8, method="Template matching", file="./tasks/BondlingFairyland/ball/create_team.png")
+	I_CREATE_TEAM = RuleImage(roi_front=(528,484,220,60), roi_back=(528,484,220,60), threshold=0.8, method="Template matching", file="./tasks/BondlingFairyland/ball/create_team.png")
 
 
 	# Image Rule Assets

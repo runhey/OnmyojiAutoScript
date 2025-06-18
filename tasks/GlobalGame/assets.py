@@ -40,7 +40,7 @@ class GlobalGameAssets:
 
 	# Image Rule Assets
 	# 长一点的确认 
-	I_UI_CONFIRM = RuleImage(roi_front=(667,398,178,66), roi_back=(667,398,178,66), threshold=0.8, method="Template matching", file="./tasks/GlobalGame/ui/ui_ui_confirm.png")
+	I_UI_CONFIRM = RuleImage(roi_front=(667,398,178,66), roi_back=(667,398,178,66), threshold=0.7, method="Template matching", file="./tasks/GlobalGame/ui/ui_ui_confirm.png")
 	# 长一点的取消 
 	I_UI_CANCEL = RuleImage(roi_front=(432,403,178,62), roi_back=(432,403,177,62), threshold=0.8, method="Template matching", file="./tasks/GlobalGame/ui/ui_ui_cancel.png")
 	# '获得奖励' 四个大字 
@@ -54,9 +54,9 @@ class GlobalGameAssets:
 	# '魂'的结算标志 
 	I_UI_AWARD = RuleImage(roi_front=(577,499,100,100), roi_back=(530,408,199,220), threshold=0.8, method="Template matching", file="./tasks/GlobalGame/ui/ui_ui_award.png")
 	# 短一点的确认 
-	I_UI_CONFIRM_SAMLL = RuleImage(roi_front=(675,390,130,62), roi_back=(675,390,130,62), threshold=0.8, method="Template matching", file="./tasks/GlobalGame/ui/ui_ui_confirm_samll.png")
+	I_UI_CONFIRM_SAMLL = RuleImage(roi_front=(675,390,130,62), roi_back=(675,390,130,62), threshold=0.7, method="Template matching", file="./tasks/GlobalGame/ui/ui_ui_confirm_samll.png")
 	# 短一点的取消 
-	I_UI_CANCEL_SAMLL = RuleImage(roi_front=(469,390,130,62), roi_back=(469,390,130,62), threshold=0.8, method="Template matching", file="./tasks/GlobalGame/ui/ui_ui_cancel_samll.png")
+	I_UI_CANCEL_SAMLL = RuleImage(roi_front=(469,390,130,62), roi_back=(469,390,130,62), threshold=0.7, method="Template matching", file="./tasks/GlobalGame/ui/ui_ui_cancel_samll.png")
 	# 六道未勾选 
 	I_UI_UNCHECK = RuleImage(roi_front=(567,343,33,36), roi_back=(497,303,216,100), threshold=0.8, method="Template matching", file="./tasks/GlobalGame/ui/ui_ui_uncheck.png")
 	# 六道勾选 

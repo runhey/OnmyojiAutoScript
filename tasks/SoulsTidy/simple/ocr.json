@@ -23,7 +23,7 @@
     "roiBack": "387,118,110,42",
     "mode": "Single",
     "method": "Default",
-    "keyword": "入手顺序",
+    "keyword": "入手顺",
     "description": "入手顺序"
   },
   {
@@ -32,7 +32,7 @@
     "roiBack": "384,115,121,45",
     "mode": "Single",
     "method": "Default",
-    "keyword": "等级/星级",
+    "keyword": "",
     "description": "等级/星级 最上边的"
   },
   {
@@ -41,7 +41,7 @@
     "roiBack": "400,290,128,42",
     "mode": "Single",
     "method": "Default",
-    "keyword": "等级/星级",
+    "keyword": "",
     "description": "等级/星 下边的"
   },
   {

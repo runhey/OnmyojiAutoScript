@@ -47,8 +47,8 @@
   {
     "itemName": "create_team",
     "imageName": "create_team.png",
-    "roiFront": "529,483,222,60",
-    "roiBack": "529,483,222,60",
+    "roiFront": "528,484,220,60",
+    "roiBack": "528,484,220,60",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "契灵创建队伍"

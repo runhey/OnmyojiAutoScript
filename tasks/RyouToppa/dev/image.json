@@ -11,8 +11,8 @@
   {
     "itemName": "toppa_lock_team",
     "imageName": "dev_toppa_lock_team.png",
-    "roiFront": "203,602,26,32",
-    "roiBack": "203,602,26,32",
+    "roiFront": "199,603,28,32",
+    "roiBack": "199,603,28,32",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"
@@ -20,8 +20,8 @@
   {
     "itemName": "toppa_unlock_team",
     "imageName": "dev_toppa_unlock_team.png",
-    "roiFront": "202,603,25,31",
-    "roiBack": "202,603,25,31",
+    "roiFront": "200,602,26,30",
+    "roiBack": "200,602,26,30",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"
