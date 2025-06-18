@@ -52,7 +52,9 @@ class ScriptTask(GameUi, BaseActivity, SwitchSoul, ActivityShikigamiAssets):
         self.home_main()
 
         # 选择是游戏的体力还是活动的体力
-        current_ap = config.general_climb.ap_mode
+        current_ap = 'ap_activity'
+        logger.info(f'Check current ap {current_ap}')
+
         self.switch(current_ap)
 
         # 设定是否锁定阵容
@@ -148,8 +150,6 @@ class ScriptTask(GameUi, BaseActivity, SwitchSoul, ActivityShikigamiAssets):
             if self.appear(self.I_FIRE):
                 break
             if self.appear_then_click(self.I_SHI, interval=1):
-                continue
-            if self.ocr_appear_click(self.O_ENTRY_ACTIVITY, interval=1):
                 continue
             if self.appear_then_click(self.I_BATTLE, interval=1):
                 continue
