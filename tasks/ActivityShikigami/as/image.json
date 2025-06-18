@@ -2,8 +2,8 @@
   {
     "itemName": "shi",
     "imageName": "as_shi.png",
-    "roiFront": "549,212,33,34",
-    "roiBack": "173,150,740,166",
+    "roiFront": "548,209,33,34",
+    "roiBack": "118,182,883,93",
     "method": "Template matching",
     "threshold": 0.7,
     "description": "进入活动"
@@ -20,8 +20,8 @@
   {
     "itemName": "battle",
     "imageName": "as_battle.png",
-    "roiFront": "460,243,33,131",
-    "roiBack": "408,164,138,284",
+    "roiFront": "458,238,35,135",
+    "roiBack": "407,147,153,315",
     "method": "Template matching",
     "threshold": 0.7,
     "description": "进入爬塔"
@@ -47,8 +47,8 @@
   {
     "itemName": "lock",
     "imageName": "as_lock.png",
-    "roiFront": "803,659,25,28",
-    "roiBack": "777,634,76,80",
+    "roiFront": "801,662,25,28",
+    "roiBack": "774,639,76,80",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "上锁图标"
@@ -56,8 +56,8 @@
   {
     "itemName": "unlock",
     "imageName": "as_unlock.png",
-    "roiFront": "801,661,28,28",
-    "roiBack": "777,643,78,74",
+    "roiFront": "799,661,28,28",
+    "roiBack": "774,645,78,74",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "还未上锁图片"
@@ -65,8 +65,8 @@
   {
     "itemName": "fire",
     "imageName": "as_fire.png",
-    "roiFront": "1135,615,84,46",
-    "roiBack": "1099,545,150,160",
+    "roiFront": "1129,611,84,46",
+    "roiBack": "1097,552,150,160",
     "method": "Template matching",
     "threshold": 0.7,
     "description": "点击战斗"
@@ -74,8 +74,8 @@
   {
     "itemName": "ap",
     "imageName": "as_ap.png",
-    "roiFront": "1091,558,24,24",
-    "roiBack": "1083,541,181,71",
+    "roiFront": "1091,557,23,24",
+    "roiBack": "1081,532,103,71",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "体力按钮"
@@ -83,8 +83,8 @@
   {
     "itemName": "ap_activity",
     "imageName": "as_ap_activity.png",
-    "roiFront": "1134,559,21,27",
-    "roiBack": "1121,546,127,54",
+    "roiFront": "1133,557,21,27",
+    "roiBack": "1108,542,84,54",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "活动体力"
@@ -92,8 +92,8 @@
   {
     "itemName": "switch",
     "imageName": "as_switch.png",
-    "roiFront": "1213,559,23,23",
-    "roiBack": "1197,542,69,56",
+    "roiFront": "1214,559,23,23",
+    "roiBack": "1204,541,69,56",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "切换按键"
@@ -101,8 +101,8 @@
   {
     "itemName": "buy_jade",
     "imageName": "as_buy_jade.png",
-    "roiFront": "607,14,38,42",
-    "roiBack": "463,12,38,42",
+    "roiFront": "1004,192,38,42",
+    "roiBack": "836,619,38,42",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "购买活动的体力"

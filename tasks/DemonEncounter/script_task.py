@@ -461,14 +461,14 @@ class ScriptTask(GameUi, GeneralBattle, DemonEncounterAssets, SwitchSoul):
                     break
                 # 如果没有出现红色关闭按钮，说明答题结束
                 if not self.appear(self.I_LETTER_CLOSE):
-                    time.sleep(0.5)
+                    time.sleep(1.8)
                     self.screenshot()
                     if not self.appear(self.I_LETTER_CLOSE):
                         logger.warning('Answer finish')
                         return
 
                 # 一直点击
-                self.click(answer_click, interval=1)
+                self.click(answer_click, interval=1.5)
             time.sleep(0.5)
 
     def _battle(self, target_click):

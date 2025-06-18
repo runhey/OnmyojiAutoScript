@@ -1,17 +1,17 @@
 [
   {
     "itemName": "remain_ap",
-    "roiFront": "1097,19,123,28",
-    "roiBack": "1096,17,127,31",
-    "mode": "Digit",
+    "roiFront": "1100,16,68,32",
+    "roiBack": "1100,16,68,32",
+    "mode": "DigitCounter",
     "method": "Default",
     "keyword": "",
     "description": "体力的数量检测"
   },
   {
     "itemName": "remain_ap_activity",
-    "roiFront": "933,18,95,27",
-    "roiBack": "931,17,98,31",
+    "roiFront": "534,18,70,28",
+    "roiBack": "534,18,70,28",
     "mode": "DigitCounter",
     "method": "Default",
     "keyword": "",
@@ -28,17 +28,17 @@
   },
   {
     "itemName": "remain_ap_activity2",
-    "roiFront": "554,19,56,27",
-    "roiBack": "523,16,87,32",
-    "mode": "Full",
+    "roiFront": "534,18,71,29",
+    "roiBack": "534,18,71,29",
+    "mode": "Digit",
     "method": "Default",
     "keyword": "",
     "description": "活动票数（没有百分比）"
   },
   {
     "itemName": "entry_activity",
-    "roiFront": "153,176,98,32",
-    "roiBack": "153,176,98,32",
+    "roiFront": "71,241,98,32",
+    "roiBack": "71,241,98,32",
     "mode": "Single",
     "method": "Default",
     "keyword": "阵练演武",
