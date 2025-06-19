@@ -67,6 +67,11 @@ from tasks.Hyakkiyakou.config import Hyakkiyakou
 from tasks.HeroTest.config import HeroTest
 from tasks.FindJade.config import FindJade
 from tasks.MemoryScrolls.config import MemoryScrolls
+
+from tasks.OrochiNew.config import OrochiNew
+from tasks.ExportWanted.config import ExportWanted
+from tasks.ActivityCommon.config import ActivityCommon
+
 # ----------------------------------------------------------------------------------------------------------------------
 
 # 每周任务---------------------------------------------------------------------------------------------------------------
@@ -128,6 +133,9 @@ class ConfigModel(ConfigBase):
     hero_test: HeroTest = Field(default_factory=HeroTest)
     find_jade: FindJade = Field(default_factory=FindJade)
     memory_scrolls: MemoryScrolls = Field(default_factory=MemoryScrolls)
+    orochi_new: OrochiNew = Field(default_factory=OrochiNew)
+    export_wanted: ExportWanted = Field(default_factory=ExportWanted)
+    activity_common: ActivityCommon = Field(default_factory=ActivityCommon)
 
     # 这些是每周任务
     true_orochi: TrueOrochi = Field(default_factory=TrueOrochi)
