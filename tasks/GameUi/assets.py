@@ -9,6 +9,9 @@ from module.atom.list import RuleList
 # Don't modify it manually.
 class GameUiAssets: 
 
+	# 道馆随机点击安全区域 
+	C_DOKAN_RANDOM_CLICK_AREA = RuleClick(roi_front=(142,294,107,150), roi_back=(142,294,107,150), name="dokan_random_click_area")
+
 
 	# Ocr Rule Assets
 	# 点击空白处关闭此界面 
@@ -170,6 +173,8 @@ class GameUiAssets:
 	I_BACK_DAILY = RuleImage(roi_front=(33,13,39,50), roi_back=(33,13,39,50), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_back_daily.png")
 	# description 
 	I_NEW = RuleImage(roi_front=(0,0,100,100), roi_back=(0,0,100,100), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/image_name.png")
+	# 重启进庭院后，异常跳出来的一个切换庭院界面 
+	I_SWITCH_HOME = RuleImage(roi_front=(617,246,61,54), roi_back=(617,246,61,54), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/617_246_61_54.png")
 	# 下载拓展包弹窗 
 	I_DLC_CLOSE = RuleImage(roi_front=(916,147,24,25), roi_back=(916,147,24,25), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/store_dlc_close.png")
 

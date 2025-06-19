@@ -189,6 +189,15 @@
     "description": "description"
   },
   {
+    "itemName": "switch_home",
+    "imageName": "617_246_61_54.png",
+    "roiFront": "617,246,61,54",
+    "roiBack": "617,246,61,54",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "重启进庭院后，异常跳出来的一个切换庭院界面"
+  },
+  {
     "itemName": "dlc_close",
     "imageName": "store_dlc_close.png",
     "roiFront": "916,147,24,25",

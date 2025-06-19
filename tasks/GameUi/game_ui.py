@@ -149,6 +149,12 @@ class GameUi(BaseTask, GameUiAssets):
             #     timeout.reset()
             #     continue
 
+            if self.appear(GameUiAssets.I_SWITCH_HOME):
+                logger.error("switch home UI detected, try ignore it, start")
+                self.ui_click_until_smt_disappear(GameUiAssets.C_DOKAN_RANDOM_CLICK_AREA, GameUiAssets.I_SWITCH_HOME, 2)
+                logger.error("switch home UI detected, try ignore it, done")
+                continue
+
             app_check()
             minicap_check()
             rotation_check()
