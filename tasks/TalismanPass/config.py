@@ -19,6 +19,7 @@ class LevelReward(str, Enum):
 
 class TalismanConfig(BaseModel):
     level_reward: LevelReward = Field(default=LevelReward.TWO)
+    harvest_soul: bool = Field(default=False, description='收获1500签御魂')
 
 class TalismanPass(ConfigBase):
     scheduler: Scheduler = Field(default_factory=Scheduler)

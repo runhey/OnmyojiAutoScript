@@ -148,7 +148,7 @@ class LoginHandler(BaseTask, RestartAssets):
         :return: 如果没有发现任何奖励后退出
         """
         logger.hr('Harvest')
-        timer_harvest = Timer(5)  # 如果连续3秒没有发现任何奖励，退出
+        timer_harvest = Timer(5)  # 如果连续5秒没有发现任何奖励，退出
         while 1:
             self.screenshot()
 
@@ -273,7 +273,7 @@ class LoginHandler(BaseTask, RestartAssets):
                 continue
             # 自选御魂
             if self.appear(self.I_HARVEST_SOUL_1):
-                logger.info('Select soul 1')
+                logger.info('Select soul 2')
                 self.ui_click(self.I_HARVEST_SOUL_1, stop=self.I_HARVEST_SOUL_2)
                 self.ui_click(self.I_HARVEST_SOUL_2, stop=self.I_HARVEST_SOUL_3, interval=3)
                 self.ui_click_until_disappear(click=self.I_HARVEST_SOUL_3)
@@ -285,7 +285,7 @@ class LoginHandler(BaseTask, RestartAssets):
                 timer_harvest.reset()
                 continue
 
-            # 三秒内没有发现任何奖励，退出
+            # 五秒内没有发现任何奖励，退出
             if not timer_harvest.started():
                 timer_harvest.start()
             else:

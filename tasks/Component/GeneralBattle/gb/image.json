@@ -65,8 +65,8 @@
   {
     "itemName": "buff",
     "imageName": "gb_buff.png",
-    "roiFront": "115,657,42,50",
-    "roiBack": "106,641,67,77",
+    "roiFront": "115,670,39,36",
+    "roiBack": "107,668,55,49",
     "method": "Template matching",
     "threshold": 0.7,
     "description": "选择buff"
