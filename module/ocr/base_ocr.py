@@ -41,8 +41,43 @@ class OcrMode(Enum):
     DURATION = 5  # str: "Duration"
     QUANTITY = 6  # str: "Quantity"
 
-class OcrMethod(Enum):
-    DEFAULT = 1  # str: "Default"
+
+class OcrMethodType(Enum):
+    # 默认，不需要预处理
+    DEFAULT = "DEFAULT"
+    # # 颜色过滤Color Filter
+    # 配置相关CF_RGB(lower, upper)
+    # lower ,upper 格式为6位16进制，例如FFFFFF
+    # 过滤图片中颜色，仅保留符合指定范围（lower到upper）的颜色
+    CF_HSV = "CF_HSV"
+    # 与CF_HSV  相似
+    CF_RGB = "CF_RGB"
+
+
+class OcrMethod:
+    _reg = r"([^()]+)\((.*?)\)?$"
+
+    def __init__(self, val: str = None):
+        self._method_type: OcrMethodType = OcrMethodType.DEFAULT
+        self._val: str = val
+        if val is None:
+            return
+        import re
+        match = re.match(self._reg, val)
+        if not match:
+            return
+        type_str = match.group(1).upper()
+        if type_str not in OcrMethodType.__members__:
+            return
+        self._method_type = OcrMethodType[type_str]
+        self._val = match.group(2)
+
+    def get_method_type(self):
+        return self._method_type
+
+    def get_val(self):
+        return self._val
+
 
 class BaseCor:
 
@@ -51,7 +86,7 @@ class BaseCor:
 
     name: str = "ocr"
     mode: OcrMode = OcrMode.FULL
-    method: OcrMethod = OcrMethod.DEFAULT  # 占位符
+    method: OcrMethod = OcrMethod()
     roi: list = []  # [x, y, width, height]
     area: list = []  # [x, y, width, height]
     keyword: str = ""  # 默认为空
@@ -79,7 +114,7 @@ class BaseCor:
         elif isinstance(mode, OcrMode):
             self.mode = mode
         if isinstance(method, str):
-            self.method = OcrMethod[method.upper()]
+            self.method = OcrMethod(method.upper())
         elif isinstance(method, OcrMethod):
             self.method = method
         self.roi: list = list(roi)
