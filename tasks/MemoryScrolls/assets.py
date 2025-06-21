@@ -50,12 +50,12 @@ class MemoryScrollsAssets:
 	I_MS_ZERO_L = RuleImage(roi_front=(968,464,51,27), roi_back=(968,464,51,27), threshold=0.8, method="Template matching", file="./tasks/MemoryScrolls/ms/ms_ms_zero_l.png")
 
 
-	# Swipe Rule Assets
+	# Click Rule Assets
 	# 小碎片拉满 
-	S_MS_SWIPE_S = RuleSwipe(roi_front=(838,199,37,27), roi_back=(1131,188,66,52), mode="default", name="ms_swipe_s")
+	C_MS_SWIPE_S = RuleClick(roi_front=(838,199,37,27), roi_back=(1177,172,74,77), name="ms_swipe_s")
 	# 中碎片拉满 
-	S_MS_SWIPE_M = RuleSwipe(roi_front=(838,352,37,23), roi_back=(1133,339,56,53), mode="default", name="ms_swipe_m")
+	C_MS_SWIPE_M = RuleClick(roi_front=(838,352,37,23), roi_back=(1175,328,72,75), name="ms_swipe_m")
 	# 大碎片拉满 
-	S_MS_SWIPE_L = RuleSwipe(roi_front=(839,503,34,25), roi_back=(1130,492,51,48), mode="default", name="ms_swipe_l")
+	C_MS_SWIPE_L = RuleClick(roi_front=(839,503,34,25), roi_back=(1175,481,77,73), name="ms_swipe_l")
 
 
