@@ -141,7 +141,7 @@
     "roiBack": "570,547,139,71",
     "method": "Template matching",
     "threshold": 0.8,
-    "description": "选择第一个御魂"
+    "description": "选择中间第二个御魂"
   },
   {
     "itemName": "harvest_soul_3",
@@ -150,7 +150,7 @@
     "roiBack": "302,472,216,60",
     "method": "Template matching",
     "threshold": 0.8,
-    "description": "description"
+    "description": "六星御魂标志"
   },
   {
     "itemName": "harvest_guild_reward",
