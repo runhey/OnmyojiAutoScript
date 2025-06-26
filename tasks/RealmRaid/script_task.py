@@ -296,7 +296,7 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, RealmRaidAssets):
         cu, res, total = self.O_NUMBER.ocr(self.device.image)
 
         if total == 0:
-            self.reward_detect_click(False)
+            self.reward_detect_click(True)
             # 增加出现聊天框遮挡，处理奖励之后，重新识别票数
             cu, res, total = self.O_NUMBER.ocr(self.device.image)
         if cu == 0 and cu + res == total:
