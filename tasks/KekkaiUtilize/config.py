@@ -18,6 +18,7 @@ class UtilizeRule(str, Enum):
     TAIKO = 'kaiko'  # 太鼓优先
     FISH = 'fish'  # 斗鱼优先
     AUTO = 'auto'  # 自动 兼容代码罢了
+    FRIEND = 'friend'  # 好友选定
 
 
 
@@ -28,6 +29,7 @@ class UtilizeScheduler(Scheduler):
 
 class UtilizeConfig(BaseModel):
     utilize_rule: UtilizeRule = Field(default=UtilizeRule.DEFAULT, description='utilize_rule_help')
+    utilize_friend: str = Field(default= '',description='utilize_friend_help')
     select_friend_list: SelectFriendList = Field(default=SelectFriendList.SAME_SERVER, description='select_friend_list_help')
     shikigami_class: ShikigamiClass = Field(default=ShikigamiClass.N, description='shikigami_class_help')
     shikigami_order: int = Field(default=4, description='shikigami_order_help')

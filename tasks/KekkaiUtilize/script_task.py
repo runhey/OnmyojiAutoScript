@@ -384,6 +384,22 @@ class ScriptTask(GameUi, ReplaceShikigami, KekkaiUtilizeAssets):
             # while 1:
             #     self.screenshot()
             return card_class
+        def select_friend(friend_name: str) -> bool:
+            """
+            尝试在当前界面中识别并选择指定名称的好友
+            :param friend_name: 要选择的好友名称
+            :return: 成功选择返回True
+            """
+            logger.info(f"尝试选择好友: {friend_name}")
+            while 1:
+                self.screenshot()
+                self.O_UTILIZE_F_LIST.keyword = friend_name
+                if self.ocr_appear_click(self.O_UTILIZE_F_LIST):
+                    logger.info(f"成功选择好友: {friend_name}")
+                    return True
+                else:
+                    return False
+
 
         logger.hr('Start utilize')
         self.switch_friend_list(friend)
@@ -394,28 +410,49 @@ class ScriptTask(GameUi, ReplaceShikigami, KekkaiUtilizeAssets):
         else:
             self.switch_friend_list(SelectFriendList.SAME_SERVER)
             self.switch_friend_list(SelectFriendList.DIFFERENT_SERVER)
-        card_best = None
-        swipe_count = 0
-        while 1:
-            self.screenshot()
-            current_card = _current_select_best(card_best)
 
-            if current_card is None:
-                break
-            else:
-                card_best = current_card
+        rule = self.config.kekkai_utilize.utilize_config.utilize_rule
+        friend_name = self.config.kekkai_utilize.utilize_config.utilize_friend
+        if rule == UtilizeRule.FRIEND:
+            swipe_count = 0
+            while 1:
+                self.screenshot()
+                if select_friend(friend_name):
+                    break
 
-            # 超过十次就退出
-            if swipe_count > 10:
-                logger.warning('Swipe count is more than 10')
-                break
+                # 超过十次就退出
+                if swipe_count > 10:
+                    logger.warning('Swipe count is more than 10')
+                    break
 
-            # 一直向下滑动
-            self.swipe(self.S_U_UP, interval=0.9)
-            swipe_count += 1
-            time.sleep(3)
-        # 最好的结界卡
-        logger.info('End best card is %s', card_best)
+                # 一直向下滑动
+                self.swipe(self.S_U_UP, interval=0.9)
+                swipe_count += 1
+                time.sleep(3)
+
+        else:
+            card_best = None
+            swipe_count = 0
+            while 1:
+                self.screenshot()
+                current_card = _current_select_best(card_best)
+
+                if current_card is None:
+                    break
+                else:
+                    card_best = current_card
+
+                # 超过十次就退出
+                if swipe_count > 10:
+                    logger.warning('Swipe count is more than 10')
+                    break
+
+                # 一直向下滑动
+                self.swipe(self.S_U_UP, interval=0.9)
+                swipe_count += 1
+                time.sleep(3)
+            # 最好的结界卡
+            logger.info('End best card is %s', card_best)
 
         # 进入结界
         self.screenshot()
