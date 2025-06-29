@@ -260,23 +260,27 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AbyssShadowsAssets):
             if timer_quit_abyss_shadows.reached():
                 logger.info("timer_quit_abyss_shadows reached,")
                 break
-            if self.appear(self.I_ABYSS_NAVIGATION) or self.appear(self.I_CHECK_FINISH):
-                break
-            if self.appear(self.I_CHECK_SUMMON):
-                break
+
             if self.appear(self.I_ABYSS_DRAGON) or self.appear(self.I_ABYSS_DRAGON_OVER):
                 # 在切换区域界面
                 self.device.click(x=600, y=600)
                 self.wait_until_appear(self.I_ABYSS_NAVIGATION, wait_time=2)
                 continue
             if self.appear_then_click(self.I_ABYSS_MAP_EXIT, interval=2):
+                self.wait_until_appear(self.I_ABYSS_NAVIGATION, wait_time=2)
                 continue
             if self.appear_then_click(self.I_ABYSS_ENEMY_INFO_EXIT, interval=2):
+                self.wait_until_appear(self.I_ABYSS_MAP_EXIT, wait_time=2)
                 continue
             if self.appear_then_click(self.I_UI_BACK_BLUE, interval=2):
+                self.wait_until_appear(self.I_ABYSS_NAVIGATION, wait_time=1)
                 continue
             if self.appear_then_click(self.I_UI_BACK_YELLOW, interval=2):
                 continue
+            if self.appear(self.I_ABYSS_NAVIGATION, threshold=0.85) or self.appear(self.I_CHECK_FINISH, threshold=0.85):
+                break
+            if self.appear(self.I_CHECK_SUMMON):
+                break
 
         #
         logger.info("Exiting abyss_shadows")
@@ -397,20 +401,32 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AbyssShadowsAssets):
             self.screenshot()
             if self.appear(self.I_CHECK_FINISH):
                 raise AbyssShadowsFinished
+            # 挑战敌人后，如果是奖励次数上限，会出现确认框
+            if self.appear(self.I_ENSURE_BUTTON):
+                self.click(self.I_ENSURE_BUTTON, interval=2)
+                continue
             #
             if self.appear(self.I_ABYSS_ENEMY_FIRE):
                 self.click(self.I_ABYSS_ENEMY_FIRE, interval=0.4)
+                self.wait_until_appear(self.I_ABYSS_FIRE, wait_time=1)
                 continue
             #
-            if self.appear_then_click(self.I_ABYSS_FIRE, interval=1):
-                continue
-            # 挑战敌人后，如果是奖励次数上限，会出现确认框
-            if self.appear_then_click(self.I_ENSURE_BUTTON, interval=1):
+            if self.appear(self.I_ABYSS_FIRE):
+                self.click(self.I_ABYSS_FIRE, interval=0.4)
                 continue
             #
             if self.appear(self.I_PREPARE_HIGHLIGHT):
-                break
-        return
+                return True
+            if self.appear(self.I_ABYSS_NAVIGATION, threshold=0.85):
+                # 已返回主界面
+                logger.info("Return to main page while try to attack enemy")
+                return False
+            if self.appear(self.I_ABYSS_GOTO_ENEMY):
+                # 为了修复问题:开始从一个怪物跑到另一个怪物时，还是可以打的，等小人到了之后，发现已经打死了
+                # 就会出现这个前往按钮
+                logger.info("Found goto enemy button while try to attack enemy")
+                return False
+        return True
 
     def start_abyss_shadows(self):
         # 尝试开启狭间暗域
@@ -526,7 +542,16 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AbyssShadowsAssets):
 
         battle_count = MAX_BATTLE_COUNT
         while battle_count > 0:
-            self.attack_enemy()
+            self.screenshot()
+
+            if not self.attack_enemy():
+                # 根据战斗次数判断该 item_code 是否已被消灭
+                if battle_count == MAX_BATTLE_COUNT:
+                    # 没战斗过直接返回重试
+                    return
+                # 如果曾经战斗过，则认为该 item_code 已完成
+                logger.info(f"{item_code} has been killed")
+                break
             # 战斗
             suc = self.run_battle(item_code)
             self.device.stuck_record_clear()
@@ -619,6 +644,7 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AbyssShadowsAssets):
         if condition.is_passed() or (not _timer_battle.reached()):
             # 通过条件结束的,视其为完成
             # 条件未通过且战斗时间不足3分钟的,极大可能是打死了,视之为完成
+            logger.info(f"{enemy_type.name} battle result SUCCESS")
             success = True
 
         logger.info(f"{enemy_type.name} DONE")
@@ -629,7 +655,8 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AbyssShadowsAssets):
         while True:
             self.screenshot()
             if self.appear(self.I_EXIT_ENSURE):
-                self.click(self.I_EXIT_ENSURE, interval=1)
+                if self.click(self.I_EXIT_ENSURE, interval=1):
+                    self.wait_until_appear(self.I_ABYSS_NAVIGATION, wait_time=1)
                 continue
             if self.appear(self.I_ABYSS_NAVIGATION):
                 break
@@ -640,7 +667,8 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AbyssShadowsAssets):
                 self.click(self.I_REWARD, interval=1)
                 continue
             if self.appear(self.I_EXIT):
-                self.click(self.I_EXIT, interval=1)
+                if self.click(self.I_EXIT, interval=2):
+                    self.wait_until_appear(self.I_EXIT_ENSURE, wait_time=1)
                 continue
         return
 

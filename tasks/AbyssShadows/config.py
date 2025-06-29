@@ -287,9 +287,10 @@ class ProcessManage(ConfigBase):
     preset_elite: str = Field(default='6,3', description='preset_elite_help')
     # 小蛇预设
     # preset_snake: str = Field(default='', description='preset_snake_help')
-    # 首领策略 等待打完/时间到了退出/伤害足够退出/秒退
-    # 可用值: 'TRUE', 'FALSE', 时间（秒），或最大伤害值
-    # 详见类 {Condition}
+
+    # 首领策略 秒退/直到消灭/时间到了退出/伤害足够退出
+    # 可用值: 'TRUE', 'FALSE', 时间（秒）(1-999)，或最大伤害值(1000-)
+    # 详见类 :class:`~tasks.AbyssShadows.config.Condition
     strategy_boss: str = Field(default='FALSE', description='strategy_boss_help')
     # 副将策略
     strategy_general: str = Field(default='30', description='strategy_general_help')
