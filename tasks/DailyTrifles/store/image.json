@@ -2,8 +2,8 @@
   {
     "itemName": "room_gift",
     "imageName": "store_room_gift.png",
-    "roiFront": "1152,644,52,53",
-    "roiBack": "1127,611,103,94",
+    "roiFront": "1138,658,52,40",
+    "roiBack": "1119,621,103,94",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "礼包屋"
@@ -11,8 +11,8 @@
   {
     "itemName": "gift_recommend",
     "imageName": "store_gift_recommend.png",
-    "roiFront": "1186,98,53,64",
-    "roiBack": "1172,83,83,306",
+    "roiFront": "1183,454,53,64",
+    "roiBack": "1162,77,98,457",
     "method": "Template matching",
     "threshold": 0.7,
     "description": "description"
@@ -20,15 +20,15 @@
   {
     "itemName": "gift_sign",
     "imageName": "store_gift_sign.png",
-    "roiFront": "236,129,306,218",
-    "roiBack": "236,129,306,218",
+    "roiFront": "629,192,129,149",
+    "roiBack": "629,192,129,149",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "免费一抽"
   },
   {
     "itemName": "special_sushi",
-    "imageName": "store_sushi.png",
+    "imageName": "store_special_sushi.png",
     "roiFront": "180,130,800,460",
     "roiBack": "180,130,800,460",
     "method": "Template matching",
