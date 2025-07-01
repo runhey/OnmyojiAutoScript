@@ -91,7 +91,7 @@
   },
   {
     "itemName": "login_login_cancel_bind_phone",
-    "imageName": "login_login_login_cancel_bind_phone.png",
+    "imageName": "login_login_cancel_bind_phone.png",
     "roiFront": "450,460,160,100",
     "roiBack": "450,460,160,100",
     "method": "Template matching",
@@ -100,7 +100,7 @@
   },
   {
     "itemName": "login_login_onmyoji_genie",
-    "imageName": "login_login_login_onmyoji_genie.png",
+    "imageName": "login_login_onmyoji_genie.png",
     "roiFront": "80,110,280,120",
     "roiBack": "80,110,280,120",
     "method": "Template matching",
@@ -120,7 +120,7 @@
     "itemName": "create_account",
     "imageName": "login_create_account.png",
     "roiFront": "555,636,169,52",
-    "roiBack": "555,636,169,52",
+    "roiBack": "504,614,263,100",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"
