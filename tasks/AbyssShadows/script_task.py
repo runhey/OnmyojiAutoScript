@@ -1,93 +1,55 @@
 # This Python file uses the following encoding: utf-8
-# @brief    Ryou Dokan Toppa (阴阳竂道馆突破功能)
+# @brief    AbyssShadows(阴阳竂狭间暗域功能)
 # @author   jackyhwei
 # @note     draft version without full test
 # github    https://github.com/roarhill/oas
-
-from datetime import datetime, timedelta
-import random
-import numpy as np
-import time
-from enum import Enum
-from cached_property import cached_property
 from time import sleep
 
-from tasks.Component.GeneralBattle.config_general_battle import GeneralBattleConfig
-from tasks.Component.SwitchSoul.switch_soul import SwitchSoul
-from tasks.Component.GeneralBattle.general_battle import GeneralBattle
-from tasks.Component.config_base import ConfigBase, Time
-from tasks.GameUi.game_ui import GameUi
-from tasks.GameUi.page import page_main, page_kekkai_toppa, page_shikigami_records, page_guild
-from tasks.RealmRaid.assets import RealmRaidAssets
+from datetime import datetime
 
-from module.logger import logger
-from module.exception import TaskEnd
-from module.atom.image_grid import ImageGrid
-from module.base.utils import point2str
+from future.backports.datetime import timedelta
+from module.exception import TaskEnd, RequestHumanTakeover
 from module.base.timer import Timer
-from module.exception import GamePageUnknownError
-from pathlib import Path
-from tasks.AbyssShadows.config import AbyssShadows
+from module.logger import logger
+from module.config.config import Config
+from module.device.device import Device
 from tasks.AbyssShadows.assets import AbyssShadowsAssets
+from tasks.AbyssShadows.config import AbyssShadows, EnemyType, AreaType, Code, AbyssShadowsDifficulty, \
+    CodeList, IndexMap
+from tasks.Component.GeneralBattle.general_battle import GeneralBattle
+from tasks.Component.SwitchSoul.switch_soul import SwitchSoul
+from tasks.GameUi.game_ui import GameUi
+from tasks.GameUi.page import page_main, page_guild
 
-class AreaType:
-    """ 暗域类型 """
-    DRAGON = AbyssShadowsAssets.I_ABYSS_DRAGON  # 神龙暗域
-    PEACOCK = AbyssShadowsAssets.I_ABYSS_PEACOCK  # 孔雀暗域
-    FOX = AbyssShadowsAssets.I_ABYSS_FOX  # 白藏主暗域
-    LEOPARD = AbyssShadowsAssets.I_ABYSS_LEOPARD # 黑豹暗域
-
-    @cached_property
-    def name(self) -> str:
-        """
-
-        :return:
-        """
-        return Path(self.file).stem.upper()
-
-    def __str__(self):
-        return self.name
-
-    __repr__ = __str__
-
-class EmemyType(Enum):
-
-    """ 敌人类型 """
-    BOSS = 1  #  首领
-    GENERAL = 2  #  副将
-    ELITE = 3  #  精英
+# 单个首领/副将/精英 一次无法完成目标（一般是一次没打掉） 的情况下，最大战斗次数
+MAX_BATTLE_COUNT = 2
 
 
-class CilckArea:
-    """ 点击区域 """
-    GENERAL_1 = AbyssShadowsAssets.C_GENERAL_1_CLICK_AREA
-    GENERAL_2 = AbyssShadowsAssets.C_GENERAL_2_CLICK_AREA
-    ELITE_1 = AbyssShadowsAssets.C_ELITE_1_CLICK_AREA
-    ELITE_2 = AbyssShadowsAssets.C_ELITE_2_CLICK_AREA
-    ELITE_3 = AbyssShadowsAssets.C_ELITE_3_CLICK_AREA
-    BOSS= AbyssShadowsAssets.C_BOSS_CLICK_AREA
-
-    @cached_property
-    def name(self) -> str:
-        """
-
-        :return:
-        """
-        return Path(self.file).stem.upper()
-
-    def __str__(self):
-        return self.name
-
-    __repr__ = __str__
+class AbyssShadowsFinished(Exception):
+    pass
 
 
 class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AbyssShadowsAssets):
-    
+    #
+    min_count = {
+        EnemyType.BOSS: 2,  # 最少首领战斗次数
+        EnemyType.GENERAL: 4,  # 最少副将战斗次数
+        EnemyType.ELITE: 6  # 最少精英战斗次数
+    }
 
-    boss_fight_count = 0  # 首领战斗次数
-    general_fight_count = 0  # 副将战斗次数
-    elite_fight_count = 0  # 精英战斗次数
-    
+    def __init__(self, config: Config, device: Device):
+        super().__init__(config, device)
+        # 当前所用队伍预设
+        self.cur_preset = None
+        # process list
+        self.ps_list: CodeList = CodeList('')
+        # 已完成 列表
+        self.done_list: CodeList = CodeList('')
+        # 已知的 已经被打完的  列表
+        self.unavailable_list: CodeList = CodeList('')
+        # 是否已经切换过御魂
+        self.switch_soul_done = False
+
     def run(self):
         """ 狭间暗域主函数
 
@@ -95,175 +57,126 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AbyssShadowsAssets):
         """
         cfg: AbyssShadows = self.config.abyss_shadows
 
-        if cfg.switch_soul_config.enable:
-            self.ui_get_current_page()
-            self.ui_goto(page_shikigami_records)
-            self.run_switch_soul(cfg.switch_soul_config.switch_group_team)
-        if cfg.switch_soul_config.enable_switch_by_name:
-            self.ui_get_current_page()
-            self.ui_goto(page_shikigami_records)
-            self.run_switch_soul_by_name(cfg.switch_soul_config.group_name, cfg.switch_soul_config.team_name)
         today = datetime.now().weekday()
         if today not in [4, 5, 6]:
+            # 非周五六日，直接退出
             logger.info(f"Today is not abyss shadows day, exit")
-            # 设置下次运行时间为本周五
-            self.custom_next_run(task='AbyssShadows', custom_time=cfg.abyss_shadows_time.custom_run_time_friday, time_delta=4-today)
+            self.set_next_run(task='AbyssShadows', finish=False, server=True, success=True)
             raise TaskEnd
-        success = True
+        server_time = datetime.combine(datetime.now().date(), cfg.scheduler.server_update)
+        if datetime.now() - server_time > timedelta(hours=2):
+            # 超时两小时未开始,直接退出
+            logger.info("Timeout threshold: 2h (force quit if not started)")
+            self.set_next_run(task='AbyssShadows', finish=False, server=True, success=True)
+            raise TaskEnd
+
         # 进入狭间
         self.goto_abyss_shadows()
-        # 第一次默认选择神龙暗域
-        if not self.select_boss(AreaType.DRAGON):
-            logger.warning("Failed to enter abyss shadows")
-            self.goto_main()
-            self.set_next_run(task='AbyssShadows', finish=False, server=True, success=False)
-            raise TaskEnd
-        
-        # 等待可进攻时间  
-        self.device.stuck_record_add('BATTLE_STATUS_S')
-        # 集结中图片
-        self.wait_until_disappear(self.I_WAIT_TO_START)
-        self.device.stuck_record_clear()
 
-        # 未开启智能伤害准备攻打精英、副将、首领
-        if not cfg.abyss_shadows_combat_time.CombatTime_enable:
-            while 1:
-                # 点击战报按钮
-                find_list = [EmemyType.BOSS, EmemyType.GENERAL, EmemyType.ELITE]
-                for enemy_type in find_list:
-                    # 寻找敌人并开始战斗,
-                    if not self.find_enemy(enemy_type):
-                        logger.warning(f"Failed to find {enemy_type.name} enemy, exit")
-                        break
-                logger.info(f"Current fight times: boss {self.boss_fight_count} times, general {self.general_fight_count}  times, elite {self.elite_fight_count} times")
-                # 正常应该打完一个区域了，检查攻打次数，如没打够则切换到下一个区域，默认神龙 -> 孔雀 -> 白藏主 -> 黑豹
-                if self.boss_fight_count >= 2 and self.general_fight_count >= 4 and self.elite_fight_count >= 6:
-                    success = True
-                    break
-                else:
-                    #切换区域之前关闭战报
-                    self.appear_then_click(self.I_ABYSS_MAP_EXIT, interval=1)
-                    current_area = self.check_current_area()
-                    logger.info(f"Current area is {current_area}, switch to next area")
-                    if current_area == AreaType.DRAGON:
-                        self.change_area(AreaType.PEACOCK)
-                        continue
-                    elif current_area == AreaType.PEACOCK:
-                        self.change_area(AreaType.FOX)
-                        continue
-                    elif current_area == AreaType.FOX:
-                        self.change_area(AreaType.LEOPARD)
-                        continue
-                    else:
-                        logger.warning("All enemy types have been defeated, but not enough emeny to fight, exit")
-                        break
+        # 尝试开启狭间
+        if cfg.abyss_shadows_time.try_start_abyss_shadows:
+            self.start_abyss_shadows()
 
-        # 开启智能伤害
-        if cfg.abyss_shadows_combat_time.CombatTime_enable:
-            while True:
-                # 1. 先攻打 1 个 BOSS
-                if self.boss_fight_count < 2:
-                    self.boss_fight_count = self.fight_and_switch(EmemyType.BOSS, 2, self.boss_fight_count,
-                                                             lambda: self.switch_area())
+        try:
+            self.init_list_from_cfg()
+            # 判断各个区域是否可用
+            available_areas, unavailable_areas = self.detect_area_status()
+            for area in unavailable_areas:
+                self.unavailable_list += CodeList(IndexMap[area.name].value)
+            if unavailable_areas:
+                self.flash_list()
 
-                # 2. 攻打 2 个 GENERAL
-                if self.general_fight_count < 4:
-                    self.general_fight_count = self.fight_and_switch(EmemyType.GENERAL, 4, self.general_fight_count,
-                                                                lambda: self.switch_area())
+            # 获取需要进入的区域类型
+            _next = self.get_next()
+            if _next is None:
+                raise AbyssShadowsFinished
+            area_enter = _next.get_areatype()
 
-                # 3. 攻打 3 个 ELITE
-                if self.elite_fight_count < 6:
-                    self.elite_fight_count = self.fight_and_switch(EmemyType.ELITE, 6, self.elite_fight_count,
-                                                              lambda: self.switch_area())
+            # 通过能否进入，检测狭间是否开启
+            if not self.select_boss(area_enter):
+                logger.warning("Failed to enter abyss shadows")
+                self.goto_main()
+                self.set_next_run(task='AbyssShadows', finish=False, server=False, success=False)
+                raise TaskEnd
 
-                # 检查是否已完成所有任务
-                print(f"Current fight times: boss {self.boss_fight_count} times, general {self.general_fight_count} times, elite {self.elite_fight_count} times")
-                if self.boss_fight_count >= 2 and self.general_fight_count >= 4 and self.elite_fight_count >= 6:
-                    logger.info("All fights completed")
-                    success = True
-                    break
-                else:
-                    #没打满我也没办法就最后一张图，看看有没有剩余的吧没有也不想跑了
-                    find_list = [EmemyType.BOSS, EmemyType.GENERAL, EmemyType.ELITE]
-                    for enemy_type in find_list:
-                        # 寻找敌人并开始战斗,
-                        if not self.find_enemy(enemy_type):
-                            logger.warning(f"Failed to find {enemy_type.name} enemy, exit")
-                            break
-                    logger.info(f"Current fight times: boss {self.boss_fight_count} times, general {self.general_fight_count}  times, elite {self.elite_fight_count} times")
-                    logger.warning("All enemy types have been defeated, but not enough emeny to fight, exit")
-                    success = True
-                    break
+            # 集结中图片
+            self.wait_until_appear(self.I_WAIT_TO_START, wait_time=2)
+
+            # 检查活动是否结束
+            if self.appear(self.I_CHECK_FINISH):
+                logger.info(f"{self.I_CHECK_FINISH} appear,abyss shadows finished")
+                raise AbyssShadowsFinished
+            # 切换御魂
+            self.switch_soul_in_as()
+            #
+            self.device.stuck_record_add('BATTLE_STATUS_S')
+            # 等待战斗开始
+            self.wait_until_appear(self.I_IS_ATTACK, wait_time=180)
+            self.device.stuck_record_clear()
+            #
+            self.process()
+        except AbyssShadowsFinished:
+            logger.info("Abyss shadows finished with Exception AbyssShadowsFinished")
+            pass
+        logger.info("Abyss shadows process done")
 
         # 保持好习惯，一个任务结束了就返回到庭院，方便下一任务的开始
         self.goto_main()
 
         # 设置下次运行时间
-        if success:
-            print("我要重新设置时间了")
-            if today == 4:
-                # 周五推迟到周六
-                logger.info(f"The next abyss shadows day is Saturday")
-                self.custom_next_run(task='AbyssShadows', custom_time=cfg.abyss_shadows_time.custom_run_time_saturday, time_delta=1)
-            elif today == 5:
-                # 周六推迟到周日
-                logger.info(f"The next abyss shadows day is Sunday")
-                self.custom_next_run(task='AbyssShadows', custom_time=cfg.abyss_shadows_time.custom_run_time_sunday, time_delta=1)
-            elif today == 6:
-                # 周日推迟到下周五
-                logger.info(f"The next abyss shadows day is Friday")
-                self.custom_next_run(task='AbyssShadows', custom_time=cfg.abyss_shadows_time.custom_run_time_friday, time_delta=5)
-        else:
-            self.set_next_run(task='AbyssShadows', finish=True, server=True, success=False)
+        self.set_next_run(task='AbyssShadows', finish=True, server=True, success=True)
+
+        self.clear_saved_params()
+
         raise TaskEnd
 
+    def init_list_from_cfg(self):
+        if datetime.today().strftime('%Y-%m-%d') != self.config.model.abyss_shadows.saved_params.save_date:
+            logger.info("Today is not saved date, clear saved params")
+            self.clear_saved_params()
+        #
+        self.ps_list = CodeList(self.config.model.abyss_shadows.process_manage.attack_order)
+        #
+        self.done_list = CodeList(self.config.model.abyss_shadows.saved_params.done)
+        #
+        self.unavailable_list = CodeList(self.config.model.abyss_shadows.saved_params.unavailable)
+        logger.info(f"update list done!{self.done_list=} {self.unavailable_list=}")
 
+    def flash_list(self):
+        """
+            NOTE 导致该任务运行过程中，从前端修改的配置将会丢失
+        @return:
+        """
+        # BUG 跨天会出问题
+        self.config.model.abyss_shadows.saved_params.save_date = datetime.today().strftime('%Y-%m-%d')
+        self.config.model.abyss_shadows.saved_params.done = self.done_list.parse2str()
+        self.config.model.abyss_shadows.saved_params.unavailable = self.unavailable_list.parse2str()
 
-    #攻击并进行区域切换
-    def fight_and_switch(self, enemy_type, required_count, fight_count, next_area_func):
-        while fight_count < required_count: # 0-2
-            if not self.find_enemy(enemy_type):
-                logger.warning(f"Failed to find {enemy_type.name} enemy, exit")
-                return fight_count
-            else:
-                if enemy_type == EmemyType.BOSS:
-                    fight_count += 1
-                elif enemy_type == EmemyType.GENERAL:
-                    fight_count += 2
-                elif enemy_type == EmemyType.ELITE:
-                    fight_count += 3
-            logger.info(
-                f"Current fight times: boss {self.boss_fight_count} times, general {self.general_fight_count} times, elite {self.elite_fight_count} times")
+        self.config.save()
+        logger.info(f"Flash list done!{self.done_list=} {self.unavailable_list=}")
 
-            # 完成攻打后切换区域
-            current_area = self.check_current_area()
-            if fight_count < required_count and current_area != AreaType.LEOPARD:
-                next_area_func()
-        return fight_count
-
-    def switch_area(self):
-        #确保没有战报页面
-        self.appear_then_click(self.I_ABYSS_MAP_EXIT, interval=1)
-        current_area = self.check_current_area()
-        logger.info(f"Current area is {current_area}, switch to next area")
-        if current_area == AreaType.DRAGON:
-            self.change_area(AreaType.PEACOCK)
-        elif current_area == AreaType.PEACOCK:
-            self.change_area(AreaType.FOX)
-        elif current_area == AreaType.FOX:
-            self.change_area(AreaType.LEOPARD)
-        else:
-            logger.warning("All areas have been completed, exit")
-            raise StopIteration  # 退出循环
-
-
+    def clear_saved_params(self):
+        self.config.model.abyss_shadows.saved_params.done = ''
+        self.config.model.abyss_shadows.saved_params.unavailable = ''
+        self.config.save()
+        logger.info("Clear saved params done")
 
     def check_current_area(self) -> AreaType:
-        ''' 获取当前区域
+        """ 获取当前区域
         :return AreaType
-        '''
+        """
         while 1:
             self.screenshot()
+            # 关闭战报界面
+            if self.appear(self.I_ABYSS_MAP_EXIT):
+                self.click(self.I_ABYSS_MAP_EXIT, interval=2)
+                continue
+            if self.appear(self.I_ABYSS_ENEMY_INFO_EXIT):
+                self.click(self.I_ABYSS_ENEMY_INFO_EXIT, interval=2)
+                continue
+            if not self.appear(self.I_ABYSS_NAVIGATION):
+                # 确定不在战报界面后依旧没有在某一区域，则返回None
+                return None
             if self.appear(self.I_PEACOCK_AREA):
                 return AreaType.PEACOCK
             elif self.appear(self.I_DRAGON_AREA):
@@ -272,80 +185,147 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AbyssShadowsAssets):
                 return AreaType.FOX
             elif self.appear(self.I_LEOPARD_AREA):
                 return AreaType.LEOPARD
-            else:
-                continue
 
     def change_area(self, area_name: AreaType) -> bool:
-        ''' 切换到下个区域
-        :return 
-        '''
+        """ 切换到下个区域,不管成功与否,只要存在可用区域,就进入,不会停留在选择区域页面
+        :return
+        """
+        # 确保进入区域,有 切换区域 按钮
         while 1:
-            # 确保切换区域前不在战报页面
-            if self.appear_then_click(self.I_ABYSS_MAP_EXIT, interval=1):
-                continue
             self.screenshot()
-            # 判断当前区域是否正确
-            current_area = self.check_current_area()
-            if current_area == area_name:
+            # 如果出现挑战完成，直接退出
+            if self.appear(self.I_CHECK_FINISH):
+                raise AbyssShadowsFinished
+
+            if self.appear(self.I_ABYSS_NAVIGATION) or self.appear(self.I_CHANGE_AREA):
                 break
-            # 切换区域界面
-            if self.appear(self.I_ABYSS_DRAGON):
-                self.select_boss(area_name)
-                logger.info(f"Switch to {area_name.name}")
-                continue      
-            # 点击更换领域按钮
-            if self.appear_then_click(self.I_CHANGE_AREA,interval=4):
+            #
+            if self.appear(self.I_ABYSS_MAP_EXIT):
+                self.click(self.I_ABYSS_MAP_EXIT, interval=2)
+                continue
+            #
+            if self.appear(self.I_ABYSS_ENEMY_INFO_EXIT):
+                self.click(self.I_ABYSS_ENEMY_INFO_EXIT, interval=2)
+                continue
+
+        # 判断当前区域是否正确
+        current_area = self.check_current_area()
+        if current_area == area_name:
+            return True
+
+        # 切换到选择区域界面
+        while 1:
+            self.screenshot()
+            # 如果出现挑战完成，直接退出
+            if self.appear(self.I_CHECK_FINISH):
+                raise AbyssShadowsFinished
+
+            # 出现切换区域界面
+            if self.appear(self.I_ABYSS_DRAGON_OVER) or self.appear(self.I_ABYSS_DRAGON):
+                break
+            # 点击切换区域按钮
+            if self.appear_then_click(self.I_CHANGE_AREA, interval=4):
                 logger.info(f"Click {self.I_CHANGE_AREA.name}")
                 continue
-                  
-        return True
-    
+
+        # 判断区域是否可用，并进入一个区域
+        available_areas, unavailable_areas = self.detect_area_status()
+        success = area_name in available_areas
+        if not success:
+            # 更新配置
+            for area in unavailable_areas:
+                self.unavailable_list += CodeList(IndexMap[area.name].value)
+
+        if available_areas is None or available_areas == []:
+            # 所有区域均不可用
+            raise AbyssShadowsFinished
+
+        if not success:
+            # 原参数表示的 区域 已完成，则选择第一个未完成的区域
+            area_name = available_areas[0]
+
+        self.select_boss(area_name)
+        logger.info(f"Switch to {area_name.name}")
+
+        return success
+
     def goto_main(self):
-        ''' 保持好习惯，一个任务结束了就返回庭院，方便下一任务的开始或者是出错重启
-        '''
-        self.ui_get_current_page()
+        """ 保持好习惯，一个任务结束了就返回庭院，方便下一任务的开始或者是出错重启
+        """
+        # 可能在狭间，也可能在其他界面
+        timer_quit_abyss_shadows = Timer(16)
+        timer_quit_abyss_shadows.start()
+        while 1:
+            self.screenshot()
+            if timer_quit_abyss_shadows.reached():
+                logger.info("timer_quit_abyss_shadows reached,")
+                break
+            if self.appear(self.I_ABYSS_NAVIGATION) or self.appear(self.I_CHECK_FINISH):
+                break
+            if self.appear(self.I_CHECK_SUMMON):
+                break
+            if self.appear(self.I_ABYSS_DRAGON) or self.appear(self.I_ABYSS_DRAGON_OVER):
+                # 在切换区域界面
+                self.device.click(x=600, y=600)
+                self.wait_until_appear(self.I_ABYSS_NAVIGATION, wait_time=2)
+                continue
+            if self.appear_then_click(self.I_ABYSS_MAP_EXIT, interval=2):
+                continue
+            if self.appear_then_click(self.I_ABYSS_ENEMY_INFO_EXIT, interval=2):
+                continue
+            if self.appear_then_click(self.I_UI_BACK_BLUE, interval=2):
+                continue
+            if self.appear_then_click(self.I_UI_BACK_YELLOW, interval=2):
+                continue
+
+        #
         logger.info("Exiting abyss_shadows")
+        self.ui_get_current_page()
         self.ui_goto(page_main)
 
     def goto_abyss_shadows(self) -> bool:
-        ''' 进入狭间
+        """ 进入狭间
         :return bool
-        '''
+        """
         self.ui_get_current_page()
         logger.info("Entering abyss_shadows")
         self.ui_goto(page_guild)
-        
+
         while 1:
             self.screenshot()
             # 进入神社
-            if self.appear_then_click(self.I_RYOU_SHENSHE,interval=1):
+            if self.appear_then_click(self.I_RYOU_SHENSHE, interval=1):
                 logger.info("Enter Shenshe")
                 continue
             # 查找狭间
             if not self.appear(self.I_ABYSS_SHADOWS, threshold=0.8):
-                self.swipe(self.S_TO_ABBSY_SHADOWS,interval=3)
+                self.swipe(self.S_TO_ABBSY_SHADOWS, interval=3)
                 continue
             # 进入狭间
             if self.appear_then_click(self.I_ABYSS_SHADOWS):
                 logger.info("Enter abyss_shadows")
                 break
         return True
- 
+
     def select_boss(self, area_name: AreaType) -> bool:
-        ''' 选择暗域类型
-        :return 
-        '''
+        """ 选择暗域类型
+        :return
+        """
         click_times = 0
         while 1:
             self.screenshot()
             # 区域图片与入口图片不一致，使用点击进去
-            
-            if self.appear(self.I_ABYSS_DRAGON):
+            if self.appear(self.I_ABYSS_DRAGON_OVER) or self.appear(self.I_ABYSS_DRAGON):
+                is_click = False
                 match area_name:
-                    case AreaType.DRAGON: is_click = self.click(self.C_ABYSS_DRAGON,interval=2)
-                    case AreaType.PEACOCK: is_click = self.click(self.C_ABYSS_PEACOCK,interval=2)
-                    case AreaType.FOX: is_click = self.click(self.C_ABYSS_FOX,interval=2)
-                    case AreaType.LEOPARD: is_click = self.click(self.C_ABYSS_LEOPARD,interval=2)
+                    case AreaType.DRAGON:
+                        is_click = self.click(self.C_ABYSS_DRAGON, interval=2)
+                    case AreaType.PEACOCK:
+                        is_click = self.click(self.C_ABYSS_PEACOCK, interval=2)
+                    case AreaType.FOX:
+                        is_click = self.click(self.C_ABYSS_FOX, interval=2)
+                    case AreaType.LEOPARD:
+                        is_click = self.click(self.C_ABYSS_LEOPARD, interval=2)
                 if is_click:
                     click_times += 1
                     logger.info(f"Click {area_name.name} {click_times} times")
@@ -357,220 +337,475 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AbyssShadowsAssets):
                 break
         return True
 
-    def find_enemy(self, enemy_type: EmemyType) -> bool:
-        ''' 寻找敌人,并开始寻路进入战斗
-        :return 是否找到敌人，若目标已死亡则返回False，否则返回True
-        True 找到敌人，并已经战斗完成
-        '''
-        print(f"Find enemy: {enemy_type}")
-        while 1:
-            self.screenshot()
-            # 点击战报按钮
-            if self.appear(self.I_ABYSS_MAP):
-                break
-            if self.appear_then_click(self.I_ABYSS_NAVIGATION,interval=1):
-                continue
- 
-        match enemy_type:
-            case EmemyType.BOSS: success = self.run_boss_fight()
-            case EmemyType.GENERAL: success = self.run_general_fight()
-            case EmemyType.ELITE: success = self.run_elite_fight()
-            
-        return success    
-
-    def run_boss_fight(self) -> bool:
-        ''' 首领战斗
-        只要进入了战斗都返回成功
-        :return 
-        '''
-        if self.boss_fight_count >= 2:
-            logger.info(f"boss fight count {self.boss_fight_count} times, skip")
-            return True
-        success = True
-        logger.info(f"Run boss fight") 
-        if self.click_emeny_area(CilckArea.BOSS):
-            logger.info(f"Click {CilckArea.BOSS.name}")
-            self.run_general_battle_back(Monster_type="BOSS")
-            self.boss_fight_count += 1
-            logger.info(f'Fight, boss_fight_count {self.boss_fight_count} times')
-        else:
-            success = False
-        return success
-
-    def run_general_fight(self) -> bool:
-        ''' 副将战斗
-        :return 
-        '''
-        general_list = [CilckArea.GENERAL_1, CilckArea.GENERAL_2]
-        logger.info(f"Run general fight") 
-        for general in general_list:
-            # 副将战斗次数达到4个时，退出循环
-            if self.general_fight_count >= 4:
-                logger.info(f"general fight count {self.general_fight_count} times, skip")
-                break
-            if self.click_emeny_area(general):
-                logger.info(f"Click {general.name}")
-                self.general_fight_count += 1
-                self.run_general_battle_back(Monster_type="GENERAL")
-                logger.info(f'Fight, general_fight_count {self.general_fight_count} times')
-        return True
-
-
-    def run_elite_fight(self) -> bool:
-        ''' 精英战斗
-        :return 
-        '''
-        elite_list = [CilckArea.ELITE_1, CilckArea.ELITE_2, CilckArea.ELITE_3]
-        logger.info(f"Run elite fight")  
-        for elite in elite_list:
-            # 精英战斗次数达到6个时，退出循环
-            if self.elite_fight_count >= 6:
-                logger.info(f"Elite fight count {self.elite_fight_count} times, skip")
-                break
-            if self.click_emeny_area(elite):
-                logger.info(f"Click {elite.name}")
-                self.elite_fight_count += 1
-                self.run_general_battle_back(Monster_type="ELITE")
-                logger.info(f'Fight, elite_fight_count {self.elite_fight_count} times')
-        return True
-
-    def click_emeny_area(self, click_area: CilckArea) -> bool:
-        suceess = True
-        ''' 点击敌人区域
-        
-        :return 
-        '''
+    def goto_enemy(self, item_code: Code) -> bool:
+        # 前往当前区域 的某个 敌人
+        click_area = item_code.get_enemy_click()
         logger.info(f"Click emeny area: {click_area.name}")
+        # 点击前往按钮的次数，阴阳师BUG:点击后不动，
+        # 所以如果失败了，在点击前，尝试使用左下方的摇杆移动一点点
+        count_click_goto_enemy = 0
         # 点击战报
         while 1:
             self.screenshot()
-            if self.appear_then_click(self.I_ABYSS_NAVIGATION, interval=1.5):
-                logger.info(f"Click {self.I_ABYSS_NAVIGATION.name}")
-                continue
-            if self.appear(self.I_ABYSS_MAP):
-                logger.info("Find abyss map, exit")
-            
+            if self.appear(self.I_ABYSS_FIRE):
+                break
+            # 尝试使用左下方摇杆移动
+            if count_click_goto_enemy > 0 and self.appear(self.I_ABYSS_NAVIGATION):
+                self.move_a_little()
+            # 打开导航页面
+            self.open_navigation()
+
             click_times = 0
-            # 点击攻打区域
+            # 点击攻打区域,直到出现"前往"字样
             while 1:
                 self.screenshot()
                 # 如果点3次还没进去就表示目标已死亡,跳过
                 if click_times >= 3:
                     logger.warning(f"Failed to click {click_area}")
-                    return
+                    return False
                 # 出现前往按钮就退出
                 if self.appear(self.I_ABYSS_GOTO_ENEMY):
                     break
-                if self.click(click_area,interval=1.5):
+                if self.click(click_area, interval=1.5):
                     click_times += 1
                     continue
-                if self.appear_then_click(self.I_ENSURE_BUTTON,interval=1):
+                if self.appear_then_click(self.I_ENSURE_BUTTON, interval=1):
                     continue
-        
-            # 点击前往按钮
+
+            # 点击前往按钮,知道该按钮消失或出现"挑战"字样
+
             while 1:
                 self.screenshot()
-                if self.appear_then_click(self.I_ABYSS_GOTO_ENEMY,interval=1):
-                    logger.info(f"Click {self.I_ABYSS_GOTO_ENEMY.name}")
-                    # 点击敌人后，如果是不同区域会确认框，点击确认                
-                    if self.appear_then_click(self.I_ENSURE_BUTTON, interval=1):
-                        logger.info(f"Click {self.I_ENSURE_BUTTON.name}")
-                    # 跑动画比较花时间
-                    sleep(3)
-                    continue
-                else:
+                if self.appear(self.I_CHECK_FINISH):
+                    raise AbyssShadowsFinished
+                if self.appear(self.I_ABYSS_FIRE):
                     break
-            
-            # 如果遇到点击前往按钮后不动的 bug，则再次尝试进入
-            if self.wait_until_appear(self.I_ABYSS_FIRE, wait_time=20):
-                break
-            logger.warning("Failed to enter fire")
-        
+                if self.appear(self.I_ENSURE_BUTTON):
+                    self.click(self.I_ENSURE_BUTTON, interval=1)
+                    continue
+                if self.appear(self.I_ABYSS_GOTO_ENEMY):
+                    self.click(self.I_ABYSS_GOTO_ENEMY, interval=1)
+                    count_click_goto_enemy += 1
+                    continue
+                if not self.wait_until_appear(self.I_ABYSS_FIRE, wait_time=10):
+                    break
+        return True
+
+    def attack_enemy(self):
         # 点击战斗按钮
         while 1:
             self.screenshot()
-            if self.appear_then_click(self.I_ABYSS_FIRE,interval=1):
-                  
-                logger.info(f"Click {self.I_ABYSS_FIRE.name}")        
-                # 挑战敌人后，如果是奖励次数上限，会出现确认框   
-                if self.appear_then_click(self.I_ENSURE_BUTTON, interval=1):
-                    logger.info(f"Click {self.I_ENSURE_BUTTON.name}")
+            if self.appear(self.I_CHECK_FINISH):
+                raise AbyssShadowsFinished
+            #
+            if self.appear(self.I_ABYSS_ENEMY_FIRE):
+                self.click(self.I_ABYSS_ENEMY_FIRE, interval=0.4)
                 continue
+            #
+            if self.appear_then_click(self.I_ABYSS_FIRE, interval=1):
+                continue
+            # 挑战敌人后，如果是奖励次数上限，会出现确认框
+            if self.appear_then_click(self.I_ENSURE_BUTTON, interval=1):
+                continue
+            #
             if self.appear(self.I_PREPARE_HIGHLIGHT):
                 break
-            
-        return suceess
+        return
 
-    def run_general_battle_back(self, Monster_type: str) -> bool:
-        """
-        重写父类方法，因为狭间暗域的准备和战斗流程不一样
-        进入挑战然后直接返回
-        :param config:
-        :return:
-        """
-        cfg: AbyssShadows = self.config.abyss_shadows
-        while 1:
-            #确保进入战斗
-            self.screenshot()
-            if self.wait_until_appear(self.I_EQUIPPING, wait_time=4):
-                self.click(self.I_EQUIPPING, interval=1.5)
-            if not self.appear(self.I_EQUIPPING):
+    def start_abyss_shadows(self):
+        # 尝试开启狭间暗域
+        self.wait_until_appear(self.I_SELECT_DIFFICULTY, wait_time=2)
+        if not self.appear(self.I_SELECT_DIFFICULTY):
+            logger.info("Failed to Open abyss_shadows ,cause not found I_SELECT_DIFFICULTY")
+            return
+        if not self.appear(self.I_BTN_START):
+            logger.info("Failed to Open abyss_shadows ,cause not found I_BTN_START")
+            return
+        # 选择难度
+        self.ui_click(self.I_SELECT_DIFFICULTY, stop=self.I_DIFFICULTY_EASY, interval=2)
+
+        difficulty_btn = None
+        match self.config.model.abyss_shadows.abyss_shadows_time.difficulty:
+            case AbyssShadowsDifficulty.EASY:
+                difficulty_btn = self.I_DIFFICULTY_EASY
+            case AbyssShadowsDifficulty.HARD:
+                difficulty_btn = self.I_DIFFICULTY_HARD
+            case AbyssShadowsDifficulty.NORMAL:
+                difficulty_btn = self.I_DIFFICULTY_NORMAL
+        self.ui_click_until_disappear(difficulty_btn, interval=2)
+        # 开始
+        self.ui_click(self.I_BTN_START, stop=self.I_START_ENSURE, interval=2)
+        self.ui_click_until_disappear(self.I_START_ENSURE, interval=2)
+
+    def process(self):
+        while True:
+            self.init_list_from_cfg()
+            _next = self.get_next()
+            if _next is None:
                 break
-        logger.info(f"Click {self.I_EQUIPPING.name}")
-        logger.info(f"点击准备了")
+            self.execute(_next)
+            self.flash_list()
 
-        # 进入战斗后，开始计时
-        start_time = time.time()
-        if cfg.abyss_shadows_combat_time.CombatTime_enable:
-            self.device.stuck_record_add('BATTLE_STATUS_S')
-            if Monster_type == "BOSS":  # BOSS战斗
-                combat_time = cfg.abyss_shadows_combat_time.boss_combat_time
-            elif Monster_type == "GENERAL":  # 是副将战斗
-                combat_time = cfg.abyss_shadows_combat_time.general_combat_time
-            elif Monster_type == "ELITE":  #  精英战斗
-                combat_time = cfg.abyss_shadows_combat_time.elite_combat_time
-            else:
-                combat_time = 60  # 默认为 60 秒
-            # 等待设定的战斗时间
-            while time.time() - start_time < combat_time:
-                self.screenshot()
-                if self.appear_then_click(self.I_WIN, interval=1.5):
-                    break
-            logger.info("Combat time ended, proceeding to exit.")
+    def get_next(self) -> [Code, None]:
+        # 获取下一个任务目标
+        for ps in self.ps_list:
+            if ps not in self.done_list and ps not in self.unavailable_list:
+                return ps
+
+        if not self.config.model.abyss_shadows.abyss_shadows_time.try_complete_enemy_count:
+            #
+            logger.info("All done, don`t need to fix 246")
+            return None
+
+        # 已配置的已完成,若未打满奖励,尝试补全
+        # 统计已完成的各类型数量
+        done_counts = {
+            EnemyType.BOSS: 0,
+            EnemyType.GENERAL: 0,
+            EnemyType.ELITE: 0
+        }
+
+        for code in self.done_list:
+            enemy_type = code.get_enemy_type()
+            done_counts[enemy_type] += 1
+
+        need_boss = done_counts[EnemyType.BOSS] < self.min_count[EnemyType.BOSS]
+        need_general = done_counts[EnemyType.GENERAL] < self.min_count[EnemyType.GENERAL]
+        need_elite = done_counts[EnemyType.ELITE] < self.min_count[EnemyType.ELITE]
+
+        logger.info(f"Need boss: {need_boss}, need general: {need_general}, need elite: {need_elite}")
+        all_possible_codes = []
+        for area in AreaType:
+            area_code = IndexMap[area.name].value  # 如 DRAGON -> 'A'
+            for num in ['1', '2', '3', '4', '5', '6']:
+                all_possible_codes.append(Code(f"{area_code}-{num}"))
+
+        for code in all_possible_codes:
+            if code in self.done_list or code in self.unavailable_list:
+                continue
+
+            enemy_type = code.get_enemy_type()
+
+            if enemy_type == EnemyType.BOSS and need_boss:
+                return code
+            elif enemy_type == EnemyType.GENERAL and need_general:
+                return code
+            elif enemy_type == EnemyType.ELITE and need_elite:
+                return code
+
+        return None
+
+    def open_navigation(self):
+        while True:
+            self.screenshot()
+            if self.appear(self.I_CHECK_FINISH):
+                raise AbyssShadowsFinished
+            if self.appear(self.I_ABYSS_MAP):
+                break
+            if self.appear(self.I_ABYSS_NAVIGATION):
+                self.click(self.I_ABYSS_NAVIGATION, interval=1)
+                continue
+            if self.appear(self.I_ABYSS_FIRE) or self.appear(self.I_ABYSS_GOTO_ENEMY):
+                self.click(self.I_ABYSS_ENEMY_INFO_EXIT, interval=2)
+                continue
+
+    def execute(self, item_code: Code):
+        area = item_code.get_areatype()
+
+        if not self.change_area(area):
+            return False
+        # 当前应当在正确的区域
+        #
+        # if not self.check_available(item_code):
+        #     return
+
+        if not self.goto_enemy(item_code):
+            # 前往失败，添加进unavailable_list
+            self.unavailable_list.append(item_code)
+            return False
+
+        battle_count = MAX_BATTLE_COUNT
+        while battle_count > 0:
+            self.attack_enemy()
+            # 战斗
+            suc = self.run_battle(item_code)
             self.device.stuck_record_clear()
-        # 战斗提前结束这时没有返回按钮
-        if self.appear_then_click(self.I_WIN, interval=1.5):
-            return True
-
-        # 点击返回
-        while 1:
-            self.screenshot()
-            if self.appear_then_click(self.I_EXIT, interval=1.5):
-                continue
-            if self.appear(self.I_EXIT_ENSURE):
+            if suc:
                 break
-        logger.info(f"Click {self.I_EXIT.name}")
+            battle_count -= 1
+        logger.info(f"{item_code} push into done_list")
+        self.done_list.append(item_code)
+        return True
 
-        # 点击返回确认
-        while 1:
+    def run_battle(self, item_code: Code):
+        success = False
+        enemy_type = item_code.get_enemy_type()
+
+        # 判断是否需要更换预设
+        def get_preset(_enemy_type: EnemyType):
+            match _enemy_type:
+                case EnemyType.BOSS:
+                    return self.config.model.abyss_shadows.process_manage.preset_boss
+                case EnemyType.GENERAL:
+                    return self.config.model.abyss_shadows.process_manage.preset_general
+                case EnemyType.ELITE:
+                    return self.config.model.abyss_shadows.process_manage.preset_elite
+
+        preset = get_preset(enemy_type)
+        if preset != self.cur_preset:
+            logger.info(f"enemyType{enemy_type}--Switch preset to {preset} and {self.cur_preset=}")
+            self.switch_preset_team_with_str(preset)
+            self.cur_preset = preset
+
+        # 点击准备
+        _timer_battle = Timer(180)
+        self.wait_until_appear(self.I_PREPARE_HIGHLIGHT, wait_time=3)
+        self.ui_click_until_disappear(self.I_PREPARE_HIGHLIGHT, interval=0.6)
+        _timer_battle.start()
+
+        # 生成退出条件
+        # 因为条件中可能是时间相关,所以在点击准备按钮后直接生成,尽量减小误差
+        condition = self.config.model.abyss_shadows.process_manage.generate_quit_condition(enemy_type)
+        logger.info(f"enemyType{enemy_type}--{condition}")
+
+        # 标记主怪
+        is_need_mark_main = self.config.model.abyss_shadows.process_manage.is_need_mark_main(enemy_type)
+        if is_need_mark_main:
+            logger.info(f"enemyType{enemy_type}--Mark main")
+            # 需要处理主怪没了的情况,增加最大次数
+            count_click_mark_main = 0
+            while count_click_mark_main < 5:
+                if self.appear(self.I_MARK_MAIN):
+                    break
+                if self.click(self.C_MARK_MAIN, interval=1):
+                    count_click_mark_main += 1
+                    self.wait_until_appear(self.I_MARK_MAIN, wait_time=1)
+                    continue
+
+        # 绿标
+        # self.green_mark(True,GreenMarkType.GREEN_LEFT1)
+
+        _cur_damage = 0
+        need_check_damage = condition.is_need_damage_value()
+        self.device.screenshot_interval_set(1)
+        self.device.stuck_record_add('BATTLE_STATUS_S')
+        while True:
             self.screenshot()
-            if self.appear_then_click(self.I_EXIT_ENSURE, interval=1.5):
+            if need_check_damage:
+                _cur_damage = self.O_DAMAGE.ocr_digit(self.device.image)
+            if condition.is_valid(_cur_damage):
+                logger.info(f"Condition Validated,try to quit battle")
+                self.device.screenshot_interval_set()
+                self.quit_battle()
+                break
+            if self.appear_then_click(self.I_PREPARE_HIGHLIGHT, interval=3):
+                # 正常来讲，此处不应该出现准备按钮，以防万一
+                self.device.stuck_record_add("BATTLE_STATUS_S")
+                _timer_battle.reset()
                 continue
-            if self.appear_then_click(self.I_WIN, interval=1.5):
+            # 战斗胜利标志
+            if self.appear_then_click(self.I_WIN, interval=1):
+                self.device.screenshot_interval_set()
+                need_check_damage = False
+                continue
+            # 战斗奖励标志
+            if self.appear_then_click(self.I_REWARD, interval=1):
+                self.device.screenshot_interval_set()
+                need_check_damage = False
+                continue
+            if self.appear(self.I_ABYSS_NAVIGATION):
+                self.device.screenshot_interval_set()
+                break
+        if condition.is_passed() or (not _timer_battle.reached()):
+            # 通过条件结束的,视其为完成
+            # 条件未通过且战斗时间不足3分钟的,极大可能是打死了,视之为完成
+            success = True
+
+        logger.info(f"{enemy_type.name} DONE")
+        return success
+
+    def quit_battle(self):
+        logger.info("Quitting battle")
+        while True:
+            self.screenshot()
+            if self.appear(self.I_EXIT_ENSURE):
+                self.click(self.I_EXIT_ENSURE, interval=1)
                 continue
             if self.appear(self.I_ABYSS_NAVIGATION):
                 break
-        logger.info(f"Click {self.I_EXIT_ENSURE.name}")
+            if self.appear(self.I_WIN):
+                self.click(self.I_WIN, interval=1)
+                continue
+            if self.appear(self.I_REWARD):
+                self.click(self.I_REWARD, interval=1)
+                continue
+            if self.appear(self.I_EXIT):
+                self.click(self.I_EXIT, interval=1)
+                continue
+        return
+
+    def switch_preset_team_with_str(self, v: str):
+        tmp = v.split(',')
+        if not tmp or len(tmp) != 2:
+            logger.error(f"Due to a configuration error (value: {v}), an error occurred while switch preset team.")
+            return
+        self.switch_preset_team(True, int(tmp[0]), int(tmp[1]))
+
+    def switch_soul_in_as(self):
+        if self.switch_soul_done:
+            return
+        if not self.config.model.abyss_shadows.process_manage.enable_switch_soul_in_as:
+            self.switch_soul_done = True
+            return
+
+        logger.info("start switch soul...")
+
+        def switch_soul(_v: str):
+            l = _v.split(',')
+            if len(l) != 2:
+                logger.error(f"Due to a configuration error (value: {_v}), an error occurred while switch soul.")
+                raise RequestHumanTakeover
+            self.run_switch_soul((int(l[0]), int(l[1])))
+
+        self.ui_click_until_disappear(self.I_ABYSS_SHIKI, interval=2)
+        soul_set: set[str] = set()
+        soul_set.add(self.config.model.abyss_shadows.process_manage.preset_boss)
+        soul_set.add(self.config.model.abyss_shadows.process_manage.preset_general)
+        soul_set.add(self.config.model.abyss_shadows.process_manage.preset_elite)
+
+        for v in soul_set:
+            switch_soul(v)
+
+        self.switch_soul_done = True
+        # 退出式神录
+        from tasks.GameUi.assets import GameUiAssets as gua
+        self.ui_click_until_disappear(gua.I_BACK_Y, interval=2)
+
+    def check_available(self, item_code: Code):
+        # 判断该怪物是否可用
+        # TODO 设想使用平均亮度分辨 是否可用
+        self.change_area(item_code.get_areatype())
+
+        while True:
+            if self.appear(self.I_ABYSS_NAVIGATION):
+                self.click(self.I_ABYSS_NAVIGATION, interval=2)
+                continue
+            if self.appear(self.I_ABYSS_MAP):
+                break
 
         return True
 
+    def detect_area_status(self):
+        # 在切换区域界面检查各个区域是否可用
+        #
+        available_areas = []
+        unavailable_areas = []
+        self.screenshot()
+        for area in AreaType:
+            if self.is_area_done(area):
+                unavailable_areas.append(area)
+                # self.unavailable_list += CodeList(IndexMap[area.name].value)
+                logger.info(f"{area.name} unavailable")
+                continue
+            available_areas.append(area)
+            logger.info(f"{area.name} available")
+        return available_areas, unavailable_areas
+
+    def is_area_done(self, area_type: AreaType):
+        # 不再切换区域界面直接返回
+        if not self.appear(self.I_ABYSS_DRAGON) and not self.appear(self.I_ABYSS_DRAGON_OVER):
+            return False
+        #
+        res_img = self.device.image
+
+        match area_type:
+            case AreaType.DRAGON:
+                ocr_res = self.O_DRAGON_DONE.ocr(res_img)
+                return ocr_res.find('封印') != -1
+            case AreaType.FOX:
+                ocr_res = self.O_FOX_DONE.ocr(res_img)
+                return ocr_res.find('封印') != -1
+            case AreaType.LEOPARD:
+                ocr_res = self.O_LEOPARD_DONE.ocr(res_img)
+                return ocr_res.find('封印') != -1
+            case AreaType.PEACOCK:
+                ocr_res = self.O_PEACOCK_DONE.ocr(res_img)
+                return ocr_res.find('封印') != -1
+
+        return False
+
+    def move_a_little(self):
+        radius = 150
+        # 寮里面摇杆的中心点
+        p1 = (197, 568)
+        import random
+        dx, dy = random.randint(-radius, radius), random.randint(-radius, radius)
+        self.device.swipe_adb(p1, (p1[0] + dx, p1[1] + dy), duration=0.5)
+        logger.info(f"Swipe {p1} to {(p1[0] + dx, p1[1] + dy)}")
 
 
 if __name__ == "__main__":
+    import cv2, numpy as np
     from module.config.config import Config
     from module.device.device import Device
 
-    config = Config('zhu')
+    config = Config('oas')
     device = Device(config)
+
+    # image = cv2.imread('E:/f.png')
+    # image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+    #
+    # hsv_image = cv2.cvtColor(image, cv2.COLOR_RGB2HSV)
+    #
+    # lower_green = np.array([9, 128, 180])
+    # upper_green = np.array([30, 210, 255])
+    # mask = cv2.inRange(hsv_image, lower_green, upper_green)
+    # res_img = cv2.bitwise_and(image, image, mask=mask)
+    # res_img = cv2.cvtColor(res_img, cv2.COLOR_RGB2BGR)
+    # cv2.imshow('res', res_img)
+    # cv2.waitKey()
+
     t = ScriptTask(config, device)
-    t.run()
+    radius = 150
+    p1 = (197, 568)
+    import random
+
+    while True:
+        dx, dy = random.randint(-radius, radius), random.randint(-radius, radius)
+        t.device.swipe_adb(p1, (p1[0] + dx, p1[1] + dy), duration=0.5)
+        logger.info(f"Swipe {p1} to {(p1[0] + dx, p1[1] + dy)}")
+        sleep(5)
+
+    # area_type = AreaType.DRAGON
+    # t.unavailable_list += CodeList(IndexMap[area_type.name].value)
+    # print(f"{t.unavailable_list=}")
+    # t.screenshot()
+
+    # cv2.imshow("origin", t.device.image)
+    # cv2.waitKey()
+
+    # res = t.O_TEST_PRE.ocr(image)
+    # print(res)
+    # damage = t.O_DAMAGE.ocr(res_img)
+    # print(damage)
+
+    # t.done_list = CodeList('A-4')
+    # t.unavailable_list  = CodeList('D-3')
+    # t.flash_list()
+
+    # code = Code('D-1')
+    # a = code.get_enemy_type()
+    # b = code.get_enemy_click()
+    # c = code.get_areatype()
+    # print(a, b, c)
+    #
+    # t.is_area_done(AreaType.DRAGON)
+    # t.screenshot()
+    # t.start_abyss_shadows()
+    # hsv_image = cv2.cvtColor(image, cv2.COLOR_RGB2HSV)
+    #
+    # lower_green = np.array([9, 128, 180])
+    # upper_green = np.array([30, 210, 255])
+    # mask = cv2.inRange(hsv_image, lower_green, upper_green)
+    # res_img = cv2.bitwise_and(image, image, mask=mask)
+    # res_img = cv2.cvtColor(res_img, cv2.COLOR_RGB2BGR)
