@@ -88,5 +88,41 @@
     "method": "Template matching",
     "threshold": 0.8,
     "description": "大绘卷不足"
+  },
+  {
+    "itemName": "ms_complete_95",
+    "imageName": "ms_ms_complete_100.png",
+    "roiFront": "655,594,4,18",
+    "roiBack": "655,594,4,18",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "绘卷到达95%进度"
+  },
+  {
+    "itemName": "ms_fragment_s",
+    "imageName": "ms_ms_fragment_s.png",
+    "roiFront": "290,677,40,35",
+    "roiBack": "290,677,40,35",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "小碎片"
+  },
+  {
+    "itemName": "ms_fragment_s_50",
+    "imageName": "ms_ms_fragment_s_50.png",
+    "roiFront": "473,517,60,25",
+    "roiBack": "473,517,60,25",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "小碎片满50"
+  },
+  {
+    "itemName": "ms_fragment_s_verification",
+    "imageName": "ms_ms_fragment_s_verification.png",
+    "roiFront": "522,318,100,100",
+    "roiBack": "522,318,100,100",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
   }
 ]
