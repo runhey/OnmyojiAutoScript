@@ -25,5 +25,14 @@
     "method": "Default",
     "keyword": "",
     "description": "今日已领取经验（招财上宾）"
+  },
+  {
+    "itemName": "utilize_f_list",
+    "roiFront": "307,171,213,416",
+    "roiBack": "307,171,213,416",
+    "mode": "Full",
+    "method": "Default",
+    "keyword": "",
+    "description": "Ocr-description"
   }
 ]

@@ -119,11 +119,13 @@ class KekkaiUtilizeAssets:
 	O_BOX_EXP = RuleOcr(roi=(654,538,179,39), area=(654,538,179,39), mode="DigitCounter", method="Default", keyword="", name="box_exp")
 	# 今日已领取经验（招财上宾） 
 	O_BOX_EXP_ZCSB = RuleOcr(roi=(584,542,181,35), area=(584,542,181,35), mode="DigitCounter", method="Default", keyword="", name="box_exp_zcsb")
+	# Ocr-description 
+	O_UTILIZE_F_LIST = RuleOcr(roi=(307,171,213,416), area=(307,171,213,416), mode="Full", method="Default", keyword="", name="utilize_f_list")
 
 
 	# Swipe Rule Assets
 	# 向下滑动 
-	S_U_UP = RuleSwipe(roi_front=(235,419,50,21), roi_back=(225,177,72,21), mode="default", name="u_up")
+	S_U_UP = RuleSwipe(roi_front=(237,349,50,21), roi_back=(225,177,72,21), mode="default", name="u_up")
 	# 滑动到底部 
 	S_U_END = RuleSwipe(roi_front=(175,179,26,26), roi_back=(164,518,49,102), mode="default", name="u_end")
 
