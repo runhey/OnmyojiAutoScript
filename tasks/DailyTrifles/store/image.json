@@ -21,10 +21,10 @@
     "itemName": "gift_sign",
     "imageName": "store_gift_sign.png",
     "roiFront": "629,192,129,149",
-    "roiBack": "629,192,129,149",
+    "roiBack": "130,129,891,473",
     "method": "Template matching",
     "threshold": 0.8,
-    "description": "免费一抽"
+    "description": "免费一抽领黑蛋"
   },
   {
     "itemName": "special_sushi",
