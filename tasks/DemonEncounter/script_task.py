@@ -398,7 +398,7 @@ class ScriptTask(GameUi, GeneralBattle, DemonEncounterAssets, SwitchSoul):
                 continue
         while 1:
             self.screenshot()
-            if not self.appear(self.I_MYSTERY_AMULET) or not self.appear(self.I_SUSHI):
+            if not self.appear(self.I_MYSTERY_AMULET) and not self.appear(self.I_SUSHI):
                 if self.appear_then_click(self.I_DE_FIND, interval=2.5):
                     break
             # 默认购买蓝票
