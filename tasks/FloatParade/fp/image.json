@@ -2,8 +2,8 @@
   {
     "itemName": "fp_access",
     "imageName": "fp_fp_access.png",
-    "roiFront": "1192,317,36,34",
-    "roiBack": "1000,101,261,472",
+    "roiFront": "1178,168,43,34",
+    "roiBack": "1051,101,210,472",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "从庭院进入花车活动"
@@ -18,37 +18,10 @@
     "description": "description"
   },
   {
-    "itemName": "fp_red_point0",
-    "imageName": "fp_fp_red_point0.png",
-    "roiFront": "1242,604,22,21",
-    "roiBack": "1225,585,53,54",
-    "method": "Template matching",
-    "threshold": 0.8,
-    "description": "description"
-  },
-  {
     "itemName": "fp_getall1",
     "imageName": "fp_fp_getall1.png",
     "roiFront": "1198,555,53,54",
     "roiBack": "1163,506,113,164",
-    "method": "Template matching",
-    "threshold": 0.8,
-    "description": "description"
-  },
-  {
-    "itemName": "fp_red_point1",
-    "imageName": "fp_fp_red_point1.png",
-    "roiFront": "1249,155,21,21",
-    "roiBack": "1223,138,56,62",
-    "method": "Template matching",
-    "threshold": 0.8,
-    "description": "description"
-  },
-  {
-    "itemName": "fp_red_point2",
-    "imageName": "fp_fp_red_point2.png",
-    "roiFront": "1246,288,22,21",
-    "roiBack": "1232,278,43,41",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"
@@ -110,8 +83,8 @@
   {
     "itemName": "toggle_button",
     "imageName": "fp_toggle_button.png",
-    "roiFront": "1202,466,22,21",
-    "roiBack": "1090,127,176,377",
+    "roiFront": "1193,462,21,23",
+    "roiBack": "1116,127,150,377",
     "method": "Template matching",
     "threshold": 0.7,
     "description": "寻找花车的切换按钮"
@@ -133,5 +106,32 @@
     "method": "Template matching",
     "threshold": 0.8,
     "description": "批量选择确认"
+  },
+  {
+    "itemName": "fp_gift_close",
+    "imageName": "fp_fp_gift_close.png",
+    "roiFront": "1056,96,36,38",
+    "roiBack": "1046,89,60,60",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "礼包关闭"
+  },
+  {
+    "itemName": "fp_gift_flag1",
+    "imageName": "fp_fp_gift_flag1.png",
+    "roiFront": "559,295,55,44",
+    "roiBack": "559,295,55,44",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "礼包类型1"
+  },
+  {
+    "itemName": "fp_gift_flag2",
+    "imageName": "fp_fp_gift_flag2.png",
+    "roiFront": "557,293,58,47",
+    "roiBack": "557,293,58,47",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "礼包类型2"
   }
 ]
