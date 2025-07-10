@@ -389,6 +389,7 @@ class ScriptTask(GameUi, GeneralBattle, DemonEncounterAssets, SwitchSoul):
             return LanternClass.BATTLE
 
     def _box(self, target_click):
+        box_buy_config = self.config.demon_encounter.box_buy_config
         while 1:
             self.screenshot()
             if self.appear(self.I_JADE_50):
@@ -397,13 +398,20 @@ class ScriptTask(GameUi, GeneralBattle, DemonEncounterAssets, SwitchSoul):
                 continue
         while 1:
             self.screenshot()
-            if self.appear(self.I_BLUE_PIAO):
-                if self.click(self.I_JADE_50):
-                    logger.info('Buy a mystery amulet for 50 jade')
-                    continue
-            if not self.appear(self.I_BLUE_PIAO):
+            if not self.appear(self.I_MYSTERY_AMULET) and not (box_buy_config.box_buy_sushi and self.appear(self.I_SUSHI)):
                 if self.appear_then_click(self.I_DE_FIND, interval=2.5):
                     break
+            # 默认购买蓝票
+            if self.appear(self.I_MYSTERY_AMULET):
+                logger.info('Buy a mystery amulet for 50 jade')
+                self.click(self.I_JADE_50)
+                continue
+            # 可选购买体力
+            if box_buy_config.box_buy_sushi and self.appear(self.I_SUSHI):
+                logger.info('Buy one hundred sushi for 50 jade')
+                self.click(self.I_JADE_50)
+                continue
+            
 
     def _mail(self, target_click):
         # 答题

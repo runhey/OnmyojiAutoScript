@@ -10,6 +10,11 @@ from tasks.Component.config_base import ConfigBase, TimeDelta
 from tasks.Component.GeneralBattle.config_general_battle import GeneralBattleConfig
 from tasks.Utils.config_enum import ShikigamiClass
 
+# 宝箱购买项目
+class BoxBuyConfig(BaseModel):
+    # 默认购买蓝票，未添加选项，没人会不买吧！
+    box_buy_sushi: bool = Field(default=False, description='逢魔宝箱是否购买体力')
+
 class BestDemonBossSelect(BaseModel):
     enable: bool = Field(
         default=False,
@@ -70,6 +75,7 @@ class UtilizeScheduler(Scheduler):
 
 class DemonEncounter(ConfigBase):
     scheduler: UtilizeScheduler = Field(default_factory=UtilizeScheduler)
+    box_buy_config: BoxBuyConfig = Field(default_factory=BoxBuyConfig)
     best_demon_boss_config: BestDemonBossSelect = Field(default_factory=BestDemonBossSelect)
     demon_soul_config: DemonConfig = Field(default_factory=DemonConfig)
     best_demon_soul_config: BestDemonConfig = Field(default_factory=BestDemonConfig)
