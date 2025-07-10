@@ -89,6 +89,10 @@ class RestartAssets:
 	I_CHARACTARS = RuleImage(roi_front=(246,535,100,31), roi_back=(219,523,173,57), threshold=0.8, method="Template matching", file="./tasks/Restart/login/login_charactars.png")
 	# description 
 	I_CREATE_ACCOUNT = RuleImage(roi_front=(555,636,169,52), roi_back=(504,614,263,100), threshold=0.8, method="Template matching", file="./tasks/Restart/login/login_create_account.png")
+	# 进入体验服过快出现弹窗 
+	I_EARLY_SERVER = RuleImage(roi_front=(596,269,115,33), roi_back=(596,269,115,33), threshold=0.8, method="Template matching", file="./tasks/Restart/login/login_early_server.png")
+	# 取消体验服切换弹窗 
+	I_EARLY_SERVER_CANCEL = RuleImage(roi_front=(435,404,172,56), roi_back=(435,404,172,56), threshold=0.8, method="Template matching", file="./tasks/Restart/login/login_early_server_cancel.png")
 
 
 	# Ocr Rule Assets
