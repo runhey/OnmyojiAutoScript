@@ -83,10 +83,10 @@
   {
     "itemName": "e_sure_button",
     "imageName": "res_e_sure_button.png",
-    "roiFront": "1135,426,43,37",
-    "roiBack": "1135,426,43,37",
+    "roiFront": "1131,425,43,37",
+    "roiBack": "1077,367,165,152",
     "method": "Template matching",
-    "threshold": 0.8,
+    "threshold": 0.65,
     "description": "确定按钮"
   },
   {
