@@ -3,7 +3,7 @@
     "itemName": "shi",
     "imageName": "as_shi.png",
     "roiFront": "450,205,37,34",
-    "roiBack": "35.666666666666686,144.33333333333326,483.66666666666663,413.66666666666663",
+    "roiBack": "35,144,483,413",
     "method": "Template matching",
     "threshold": 0.7,
     "description": "进入活动"
