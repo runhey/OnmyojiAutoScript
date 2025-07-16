@@ -292,27 +292,31 @@ class ScriptTask(GameUi, BaseActivity, SwitchSoul, ActivityShikigamiAssets):
         self.C_RANDOM_RIGHT.name = "BATTLE_RANDOM"
         self.C_RANDOM_TOP.name = "BATTLE_RANDOM"
         self.C_RANDOM_BOTTOM.name = "BATTLE_RANDOM"
+        click_count = 0
         while 1:
             self.screenshot()
             # 如果出现了 “鼓”
-            if self.appear_then_click(self.I_WIN, interval=1):
+            if self.appear_then_click(self.I_WIN, interval=2.3):
                 logger.info("Win")
                 continue
-            # 出现了魂
+            #  出现 “魂” 和 紫色皮
             if self.appear(self.I_REWARD):
                 logger.info('Win battle')
-                self.ui_click_until_disappear(self.I_REWARD)
-                return True
-            # 紫色皮
-            if self.appear(self.I_REWARD_PURPLE_SNAKE_SKIN):
-                logger.info("Purple snake skin")
+                self.wait_until_appear(self.I_REWARD_PURPLE_SNAKE_SKIN, wait_time=5)
                 while 1:
                     self.screenshot()
-                    if not self.appear(self.I_REWARD_PURPLE_SNAKE_SKIN):
+                    appear_reward = self.appear(self.I_REWARD)
+                    appear_reward_purple_snake_skin = self.appear(self.I_REWARD_PURPLE_SNAKE_SKIN)
+                    if not appear_reward and not appear_reward_purple_snake_skin and click_count >= 1:
                         break
-                    if self.appear_then_click(self.I_REWARD_PURPLE_SNAKE_SKIN, action=self.C_RANDOM_TOP, interval=1.1):
+                    if appear_reward or appear_reward_purple_snake_skin:
+                        reward_click = random.choice(
+                            [self.C_RANDOM_LEFT, self.C_RANDOM_RIGHT, self.C_RANDOM_TOP])
+                        self.click(reward_click, interval=1.8)
+                        click_count += 1
                         continue
                 return True
+
             # 失败 -> 正常人不会失败
             if self.appear(self.I_FALSE):
                 logger.warning('False battle')
