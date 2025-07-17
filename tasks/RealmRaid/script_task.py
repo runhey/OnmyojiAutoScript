@@ -420,7 +420,8 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, RealmRaidAssets):
                 while 1:
                     self.screenshot()
                     result = self.O_TEXT.ocr(self.device.image)
-                    if not re.search(r'[\u4e00-\u9fff]', result) and re.search(r'(\d+)/(\d+)', result):
+                    # 这里的聊天框有可能不会遮挡突破卷，所以增加一个红达摩判断
+                    if not re.search(r'[\u4e00-\u9fff]', result) and re.search(r'(\d+)/(\d+)', result) and not self.appear(self.I_SOUL_RAID):
                         return True
                     if self.appear_then_click(self.I_SOUL_RAID, interval=1.5):
                         continue
