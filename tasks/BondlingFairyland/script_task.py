@@ -41,6 +41,7 @@ class BondlingNumberMax(Exception):
 class ScriptTask(GameUi, GeneralInvite, GeneralRoom, BondlingBattle, SwitchSoul, BondlingFairylandAssets):
     ball_pos_list = [None, None, None, None, None]  # 用于记录每一个位置的球是否出现
     first_catch = True  # 用于记录是否是第一次捕捉
+    first_win = False  # 用于记录是不是第一次捕获成功
     current_ball_index = 5
     def run(self):
         # 引用配置
@@ -273,11 +274,11 @@ class ScriptTask(GameUi, GeneralInvite, GeneralRoom, BondlingBattle, SwitchSoul,
 
         success = True
         while 1:
-
-            if not self.in_search_ui(screenshot=True):
-                self.ui_get_current_page()
-                self.ui_goto(page_bondling_fairyland)
-                continue
+            if not self.first_win:
+                if not self.in_search_ui(screenshot=True):
+                    self.ui_get_current_page()
+                    self.ui_goto(page_bondling_fairyland)
+                    continue
 
             if bondling_config.bondling_mode != BondlingMode.MODE1:
                 if self.ball_click(self.current_ball_index):
@@ -299,6 +300,7 @@ class ScriptTask(GameUi, GeneralInvite, GeneralRoom, BondlingBattle, SwitchSoul,
                     # 执行捕捉
                     if self.run_catch(bondling_config, bondling_switch_soul, battle_config):
                         logger.info(f'Catch successful and current ball number: {self.current_ball_index} ')
+                        self.first_win = True
                     else:
                         break
                 except BondlingNumberMax:
