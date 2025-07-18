@@ -28,7 +28,7 @@
   },
   {
     "itemName": "special_sushi",
-    "imageName": "store_special_sushi.png",
+    "imageName": "store_sushi.png",
     "roiFront": "180,130,800,460",
     "roiBack": "180,130,800,460",
     "method": "Template matching",
