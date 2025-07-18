@@ -88,5 +88,14 @@
     "method": "Template matching",
     "threshold": 0.8,
     "description": "领取奖励"
+  },
+  {
+    "itemName": "cm_switch",
+    "imageName": "cm_cm_switch.png",
+    "roiFront": "414,478,43,58",
+    "roiBack": "310,453,282,114",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
   }
 ]
