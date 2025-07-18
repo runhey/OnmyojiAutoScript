@@ -1,5 +1,29 @@
 # This Python file uses the following encoding: utf-8
 # Copy from https://github.com/LmeSzinc/AzurLaneAutoScript/gui.py
+
+
+"""
+在任何平台把当前 Python 进程（含子线程、子进程）切到北京时间。
+• Linux/macOS/WSL 及 Win-Py 3.11+ → TZ='Asia/Shanghai' + time.tzset()
+• Win-Py ≤ 3.10            → TZ='CST-8'       + _tzset()（POSIX 语法）
+"""
+import os, sys, time
+
+if hasattr(time, "tzset"):
+    # Unix 全系  /  Windows 3.11+ 走这条
+    os.environ["TZ"] = "Asia/Shanghai"     # IANA 名称，glibc/Apple libc 都认识
+    time.tzset()
+else:
+    # 只有旧 Windows 才会落到这里
+    import ctypes
+    os.environ["TZ"] = "CST-8"             # POSIX 字符串：UTC+8 且无 DST
+    for dll in ("ucrtbase", "msvcrt"):     # 新旧 CRT 都试一遍
+        try:
+            ctypes.CDLL(dll)._tzset()
+            break
+        except (OSError, AttributeError):
+            continue
+        
 import threading
 
 from module.logger import logger
