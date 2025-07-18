@@ -155,8 +155,7 @@ class ScriptTask(GameUi, GeneralBattle, DuelAssets):
                 break
             if current_score <= 1800 and self.appear(self.I_D_PREPARE):
                 # 低段位有的准备
-                self.ui_click(self.I_D_PREPARE, self.I_D_PREPARE_DONE)
-                self.wait_until_disappear(self.I_D_PREPARE_DONE)
+                self.ui_click_until_disappear(self.I_D_PREPARE)
                 logger.info('Duel prepare')
                 break
         # 正式进入战斗
