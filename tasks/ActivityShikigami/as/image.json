@@ -47,8 +47,8 @@
   {
     "itemName": "lock",
     "imageName": "as_lock.png",
-    "roiFront": "877,647,25,26",
-    "roiBack": "761,613,255,76",
+    "roiFront": "877,647,25,22",
+    "roiBack": "761,639,255,50",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "上锁图标"
@@ -56,8 +56,8 @@
   {
     "itemName": "unlock",
     "imageName": "as_unlock.png",
-    "roiFront": "875,647,28,25",
-    "roiBack": "758,607,242,85",
+    "roiFront": "804,646,28,25",
+    "roiBack": "768,633,150,58",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "还未上锁图片"
@@ -142,5 +142,14 @@
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"
+  },
+  {
+    "itemName": "reward_purple",
+    "imageName": "as_reward_purple.png",
+    "roiFront": "139,208,56,49",
+    "roiBack": "103,0,1056,719",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "紫蛇皮"
   }
 ]

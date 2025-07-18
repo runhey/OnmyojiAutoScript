@@ -55,9 +55,9 @@ class ActivityShikigamiAssets:
 	# 归鹿之途 
 	I_DRUM = RuleImage(roi_front=(327,627,145,28), roi_back=(256,462,301,232), threshold=0.8, method="Template matching", file="./tasks/ActivityShikigami/as/as_drum.png")
 	# 上锁图标 
-	I_LOCK = RuleImage(roi_front=(877,647,25,26), roi_back=(761,613,255,76), threshold=0.8, method="Template matching", file="./tasks/ActivityShikigami/as/as_lock.png")
+	I_LOCK = RuleImage(roi_front=(877,647,25,22), roi_back=(761,639,255,50), threshold=0.8, method="Template matching", file="./tasks/ActivityShikigami/as/as_lock.png")
 	# 还未上锁图片 
-	I_UNLOCK = RuleImage(roi_front=(875,647,28,25), roi_back=(758,607,242,85), threshold=0.8, method="Template matching", file="./tasks/ActivityShikigami/as/as_unlock.png")
+	I_UNLOCK = RuleImage(roi_front=(804,646,28,25), roi_back=(768,633,150,58), threshold=0.8, method="Template matching", file="./tasks/ActivityShikigami/as/as_unlock.png")
 	# 点击战斗 
 	I_FIRE = RuleImage(roi_front=(1131,598,103,54), roi_back=(1123,589,124,88), threshold=0.7, method="Template matching", file="./tasks/ActivityShikigami/as/as_fire.png")
 	# 寿司体力 
@@ -76,6 +76,8 @@ class ActivityShikigamiAssets:
 	I_RED_EXIT = RuleImage(roi_front=(1071,141,49,46), roi_back=(1071,141,49,46), threshold=0.8, method="Template matching", file="./tasks/ActivityShikigami/as/as_red_exit.png")
 	# description 
 	I_TOGGLE_BUTTON = RuleImage(roi_front=(1193,463,27,25), roi_back=(1169,146,73,403), threshold=0.8, method="Template matching", file="./tasks/ActivityShikigami/as/as_toggle_button.png")
+	# 紫蛇皮 
+	I_REWARD_PURPLE = RuleImage(roi_front=(139,208,56,49), roi_back=(103,0,1056,719), threshold=0.8, method="Template matching", file="./tasks/ActivityShikigami/as/as_reward_purple.png")
 
 
 	# Ocr Rule Assets
@@ -86,7 +88,7 @@ class ActivityShikigamiAssets:
 	# 还有多少次购买体力的机会 
 	O_REMAIN_BUY = RuleOcr(roi=(808,531,39,42), area=(808,531,39,42), mode="DigitCounter", method="Default", keyword="", name="remain_buy")
 	# 活动票数（没有百分比） 
-	O_REMAIN_AP_ACTIVITY2 = RuleOcr(roi=(740,25,71,29), area=(740,25,71,29), mode="Digit", method="Default", keyword="", name="remain_ap_activity2")
+	O_REMAIN_AP_ACTIVITY2 = RuleOcr(roi=(759,25,51,29), area=(759,25,51,29), mode="Digit", method="Default", keyword="", name="remain_ap_activity2")
 	# Ocr-description 
 	O_ENTRY_ACTIVITY = RuleOcr(roi=(71,241,98,32), area=(71,241,98,32), mode="Single", method="Default", keyword="阵练演武", name="entry_activity")
 
