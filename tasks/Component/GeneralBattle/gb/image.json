@@ -191,7 +191,7 @@
   {
     "itemName": "reward_purple_snake_skin",
     "imageName": "gb_reward_purple_snake_skin.png",
-    "roiFront": "403,177,97,73",
+    "roiFront": "283,214,67,37",
     "roiBack": "254,163,797,261",
     "method": "Template matching",
     "threshold": 0.8,
