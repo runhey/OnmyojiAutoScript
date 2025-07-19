@@ -191,8 +191,8 @@
   {
     "itemName": "reward_purple_snake_skin",
     "imageName": "gb_reward_purple_snake_skin.png",
-    "roiFront": "403,177,97,73",
-    "roiBack": "254,163,797,261",
+    "roiFront": "604,213,67,37",
+    "roiBack": "108,163,1070,261",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "结算紫蛇皮"

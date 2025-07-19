@@ -299,7 +299,7 @@ class ScriptTask(GameUi, BaseActivity, SwitchSoul, ActivityShikigamiAssets):
             if self.appear_then_click(self.I_WIN, interval=2.3):
                 logger.info("Win")
                 continue
-            #  出现 “魂” 和 紫色皮
+            #  出现 “魂” 和 紫蛇皮
             if self.appear(self.I_REWARD):
                 logger.info('Win battle')
                 self.wait_until_appear(self.I_REWARD_PURPLE_SNAKE_SKIN, wait_time=5)
