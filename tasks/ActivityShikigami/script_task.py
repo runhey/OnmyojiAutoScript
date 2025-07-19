@@ -139,22 +139,32 @@ class ScriptTask(GameUi, BaseActivity, SwitchSoul, ActivityShikigamiAssets):
 
     def home_main(self) -> bool:
         """
-        从庭院到活动的爬塔界面
+        从庭院到活动的爬塔界面，统一入口
         :return:
         """
 
         logger.hr("Enter Shikigami", 2)
         while 1:
             self.screenshot()
+            self.C_RANDOM_LEFT.name = "BATTLE_RANDOM"
+            self.C_RANDOM_RIGHT.name = "BATTLE_RANDOM"
+            self.C_RANDOM_TOP.name = "BATTLE_RANDOM"
+            self.C_RANDOM_BOTTOM.name = "BATTLE_RANDOM"
             if self.appear(self.I_FIRE):
                 break
             if self.appear_then_click(self.I_SHI, interval=1):
                 continue
-            if self.ocr_appear_click(self.O_ENTRY_ACTIVITY, interval=1):
+            if self.appear_then_click(self.I_TOGGLE_BUTTON, interval=3):
                 continue
-            if self.appear_then_click(self.I_BATTLE, interval=1):
+            if self.appear_then_click(self.I_SKIP_BUTTON, interval=1.5):
                 continue
-            if self.appear_then_click(self.I_BATTLE_1, interval=1):
+            # 如果出现了 “获得奖励”
+            reward_click = random.choice([self.C_RANDOM_LEFT, self.C_RANDOM_RIGHT, self.C_RANDOM_TOP, self.C_RANDOM_BOTTOM])
+            if self.appear_then_click(self.I_UI_REWARD, action=reward_click, interval=1.3):
+                continue
+            if self.appear_then_click(self.I_RED_EXIT, interval=1.5):
+                continue
+            if self.appear_then_click(self.I_BATTLE, interval=2):
                 continue
 
     def main_home(self) -> bool:
@@ -272,6 +282,49 @@ class ScriptTask(GameUi, BaseActivity, SwitchSoul, ActivityShikigamiAssets):
     #         # 如果开启战斗过程随机滑动
     #         if random_click_swipt_enable:
     #             self.random_click_swipt()
+
+    def battle_wait(self, random_click_swipt_enable: bool) -> bool:
+        # 重写
+        self.device.stuck_record_add('BATTLE_STATUS_S')
+        self.device.click_record_clear()
+        logger.info("Start battle process")
+        self.C_RANDOM_LEFT.name = "BATTLE_RANDOM"
+        self.C_RANDOM_RIGHT.name = "BATTLE_RANDOM"
+        self.C_RANDOM_TOP.name = "BATTLE_RANDOM"
+        self.C_RANDOM_BOTTOM.name = "BATTLE_RANDOM"
+        click_count = 0
+        while 1:
+            self.screenshot()
+            # 如果出现了 “鼓”
+            if self.appear_then_click(self.I_WIN, interval=2.3):
+                logger.info("Win")
+                continue
+            #  出现 “魂” 和 紫蛇皮
+            if self.appear(self.I_REWARD):
+                logger.info('Win battle')
+                self.wait_until_appear(self.I_REWARD_PURPLE_SNAKE_SKIN, wait_time=5)
+                while 1:
+                    self.screenshot()
+                    appear_reward = self.appear(self.I_REWARD)
+                    appear_reward_purple_snake_skin = self.appear(self.I_REWARD_PURPLE_SNAKE_SKIN)
+                    if not appear_reward and not appear_reward_purple_snake_skin and click_count >= 1:
+                        break
+                    if appear_reward or appear_reward_purple_snake_skin:
+                        reward_click = random.choice(
+                            [self.C_RANDOM_LEFT, self.C_RANDOM_RIGHT, self.C_RANDOM_TOP])
+                        self.click(reward_click, interval=1.8)
+                        click_count += 1
+                        continue
+                return True
+
+            # 失败 -> 正常人不会失败
+            if self.appear(self.I_FALSE):
+                logger.warning('False battle')
+                self.ui_click_until_disappear(self.I_FALSE)
+                return False
+            # 如果开启战斗过程随机滑动
+            if random_click_swipt_enable:
+                self.random_click_swipt()
 
 
 if __name__ == '__main__':

@@ -30,7 +30,7 @@ class GeneralBuffAssets:
 	# description 
 	I_CLOSE_RED = RuleImage(roi_front=(774,143,21,21), roi_back=(764,134,38,369), threshold=0.63, method="Template matching", file="./tasks/Component/GeneralBuff/gb/gb_close_red.png")
 	# 用来判定是否点击的那个 
-	I_CLOUD = RuleImage(roi_front=(356,505,65,38), roi_back=(356,505,65,38), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralBuff/gb/gb_cloud.png")
+	I_CLOUD = RuleImage(roi_front=(357,505,65,38), roi_back=(313,484,158,75), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralBuff/gb/gb_cloud.png")
 
 
 	# Ocr Rule Assets

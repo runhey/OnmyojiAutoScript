@@ -90,7 +90,7 @@ class ExplorationAssets:
 	# 已候补出战的狗粮 
 	I_E_RATATE_EXSIT = RuleImage(roi_front=(108,580,995,32), roi_back=(108,580,995,32), threshold=0.8, method="Template matching", file="./tasks/Exploration/res/res_e_ratate_exsit.png")
 	# 确定按钮 
-	I_E_SURE_BUTTON = RuleImage(roi_front=(1135,426,43,37), roi_back=(1135,426,43,37), threshold=0.8, method="Template matching", file="./tasks/Exploration/res/res_e_sure_button.png")
+	I_E_SURE_BUTTON = RuleImage(roi_front=(1131,425,43,37), roi_back=(1077,367,165,152), threshold=0.65, method="Template matching", file="./tasks/Exploration/res/res_e_sure_button.png")
 	# 设置按钮 
 	I_E_SETTINGS_BUTTON = RuleImage(roi_front=(37,692,53,26), roi_back=(37,692,53,26), threshold=0.8, method="Template matching", file="./tasks/Exploration/res/res_e_settings_button.png")
 	# 普通怪 

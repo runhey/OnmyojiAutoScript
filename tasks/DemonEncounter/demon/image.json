@@ -54,19 +54,28 @@
     "description": "左下角小指针"
   },
   {
-    "itemName": "blue_piao",
-    "imageName": "blue_piao.png",
-    "roiFront": "420,226,444,262",
-    "roiBack": "420,226,444,262",
+    "itemName": "mystery_amulet",
+    "imageName": "demon_mystery_amulet.png",
+    "roiFront": "596,314,84,82",
+    "roiBack": "581,294,115,116",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "逢魔蓝票"
   },
   {
+    "itemName": "sushi",
+    "imageName": "demon_sushi.png",
+    "roiFront": "602,318,72,54",
+    "roiBack": "581,294,115,116",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "逢魔体力"
+  },
+  {
     "itemName": "jade_50",
-    "imageName": "jade_50.png",
-    "roiFront": "420,226,444,262",
-    "roiBack": "420,226,444,262",
+    "imageName": "demon_jade_50.png",
+    "roiFront": "593,425,84,46",
+    "roiBack": "548,405,182,83",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "50勾玉购买"

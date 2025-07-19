@@ -83,8 +83,8 @@
   {
     "itemName": "cloud",
     "imageName": "gb_cloud.png",
-    "roiFront": "356,505,65,38",
-    "roiBack": "356,505,65,38",
+    "roiFront": "357,505,65,38",
+    "roiBack": "313,484,158,75",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "用来判定是否点击的那个"

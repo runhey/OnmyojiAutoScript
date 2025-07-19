@@ -18,7 +18,8 @@ class LevelReward(str, Enum):
     THREE = '体力/樱饼'
 
 class FloatParadeConfig(BaseModel):
-    level_reward: LevelReward = Field(default=LevelReward.TWO)
+    level_reward1: LevelReward = Field(default=LevelReward.THREE)
+    level_reward2: LevelReward = Field(default=LevelReward.ONE)
 
 class FloatParade(ConfigBase):
     scheduler: Scheduler = Field(default_factory=Scheduler)

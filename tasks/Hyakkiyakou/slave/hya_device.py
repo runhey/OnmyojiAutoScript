@@ -26,7 +26,7 @@ class HyaDevice(BaseTask):
     我宣布世界上最好的 Linux 系统是 Windows
     """
     hya_screenshot_interval = Timer(0.2)  # 300ms
-    hya_fs_check_timer = Timer(5 * 60)  # 五分钟跑不完就应该是出问题了
+    hya_fs_check_timer = Timer(3 * 60)  # 五分钟跑不完就应该是出问题了
 
     def fast_screenshot(self, screenshot: ScreenshotMethod):
         self.hya_screenshot_interval.wait()

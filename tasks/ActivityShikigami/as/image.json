@@ -2,8 +2,8 @@
   {
     "itemName": "shi",
     "imageName": "as_shi.png",
-    "roiFront": "520,202,33,34",
-    "roiBack": "506,185,66,67",
+    "roiFront": "1183,241,47,38",
+    "roiBack": "1164,134,83,318",
     "method": "Template matching",
     "threshold": 0.7,
     "description": "进入活动"
@@ -20,11 +20,11 @@
   {
     "itemName": "battle",
     "imageName": "as_battle.png",
-    "roiFront": "458,238,35,135",
-    "roiBack": "407,147,153,315",
+    "roiFront": "744,327,35,135",
+    "roiBack": "680,230,154,315",
     "method": "Template matching",
     "threshold": 0.7,
-    "description": "进入爬塔"
+    "description": "不尽山途"
   },
   {
     "itemName": "battle_1",
@@ -47,8 +47,8 @@
   {
     "itemName": "lock",
     "imageName": "as_lock.png",
-    "roiFront": "801,662,25,28",
-    "roiBack": "774,639,76,80",
+    "roiFront": "877,647,25,26",
+    "roiBack": "761,613,255,76",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "上锁图标"
@@ -56,8 +56,8 @@
   {
     "itemName": "unlock",
     "imageName": "as_unlock.png",
-    "roiFront": "799,661,28,28",
-    "roiBack": "774,645,78,74",
+    "roiFront": "875,647,28,25",
+    "roiBack": "758,607,242,85",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "还未上锁图片"
@@ -65,8 +65,8 @@
   {
     "itemName": "fire",
     "imageName": "as_fire.png",
-    "roiFront": "1129,611,84,46",
-    "roiBack": "1097,552,150,160",
+    "roiFront": "1131,598,103,54",
+    "roiBack": "1123,589,124,88",
     "method": "Template matching",
     "threshold": 0.7,
     "description": "点击战斗"
@@ -74,16 +74,16 @@
   {
     "itemName": "ap",
     "imageName": "as_ap.png",
-    "roiFront": "1091,557,23,24",
+    "roiFront": "1091,550,23,24",
     "roiBack": "1081,532,103,71",
     "method": "Template matching",
     "threshold": 0.8,
-    "description": "体力按钮"
+    "description": "寿司体力"
   },
   {
     "itemName": "ap_activity",
     "imageName": "as_ap_activity.png",
-    "roiFront": "1133,557,21,27",
+    "roiFront": "1152,552,21,25",
     "roiBack": "1108,542,84,54",
     "method": "Template matching",
     "threshold": 0.8,
@@ -92,8 +92,8 @@
   {
     "itemName": "switch",
     "imageName": "as_switch.png",
-    "roiFront": "1214,559,23,23",
-    "roiBack": "1204,541,69,56",
+    "roiFront": "1242,553,23,23",
+    "roiBack": "1222,541,54,49",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "切换按键"
@@ -117,10 +117,28 @@
     "description": "增加到最大"
   },
   {
-    "itemName": "new",
-    "imageName": "as_new.png",
-    "roiFront": "1004,192,65,52",
-    "roiBack": "0,0,100,100",
+    "itemName": "skip_button",
+    "imageName": "as_skip_button.png",
+    "roiFront": "1154,34,64,30",
+    "roiBack": "1154,34,64,30",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "右上跳过按钮"
+  },
+  {
+    "itemName": "red_exit",
+    "imageName": "as_red_exit.png",
+    "roiFront": "1071,141,49,46",
+    "roiBack": "1071,141,49,46",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "红色退出"
+  },
+  {
+    "itemName": "toggle_button",
+    "imageName": "as_toggle_button.png",
+    "roiFront": "1193,463,27,25",
+    "roiBack": "1169,146,73,403",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"
