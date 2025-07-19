@@ -8,8 +8,8 @@ from module.logger import logger
 from tasks.base_task import BaseTask
 from tasks.Utils.config_enum import ShikigamiClass
 from tasks.Component.ReplaceShikigami.assets import ReplaceShikigamiAssets
-
-
+import time
+from module.exception import GameStuckError
 class ReplaceShikigami(BaseTask, ReplaceShikigamiAssets):
 
 
@@ -85,7 +85,14 @@ class ReplaceShikigami(BaseTask, ReplaceShikigamiAssets):
                         6: self.C_SHIKIGAMI_LEFT_6,
                         7: self.C_SHIKIGAMI_LEFT_7}
         click_match = _click_match[shikigami_order]
+        TIMEOUT_SEC = 120          # 超时时长（秒）
+        start_time = time.time()   # 记录起始时间
         while 1:
+            # ——1. 先做超时检查——
+            if time.time() - start_time > TIMEOUT_SEC:
+                logger.error('寄养等待超过 2 分钟，自动退出')
+                raise GameStuckError('寄养超时（>120 s）')
+            
             self.screenshot()
 
             if not self.appear(stop_image):
