@@ -85,7 +85,7 @@ class ReplaceShikigami(BaseTask, ReplaceShikigamiAssets):
                         6: self.C_SHIKIGAMI_LEFT_6,
                         7: self.C_SHIKIGAMI_LEFT_7}
         click_match = _click_match[shikigami_order]
-        TIMEOUT_SEC = 60          # 超时时长（秒）
+        TIMEOUT_SEC = 120          # 超时时长（秒）
         start_time = time.time()   # 记录起始时间
         while 1:
             # ——1. 先做超时检查——
