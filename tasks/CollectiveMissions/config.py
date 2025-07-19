@@ -17,6 +17,8 @@ class MissionsConfig(BaseModel):
     missions_rule: MultiLine = Field(default='契灵 > 觉醒三 > 觉醒二 > 觉醒一 > 御灵三 > 御灵二 > 御灵一 > 御魂二 > 御魂一 > 远远不够',
                                      description='missions_rule_help')
     setup_when_bondling: bool = Field(default=True, description='setup_when_bondling_help')
+    missions_select: str = Field(default='觉醒三',
+                                description='指定的任务')
 
     @validator('missions_rule', pre=True, always=True)
     def mr_validator(cls, v):
