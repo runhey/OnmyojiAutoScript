@@ -19,6 +19,28 @@ from rich.style import Style
 from rich.theme import Theme
 from rich.traceback import Traceback
 
+import time
+from pathlib import Path
+
+SECONDS_IN_DAY = 24 * 60 * 60
+
+def cleanup_logs(log_dir: str = "./log", keep_days: int = 7):
+    """删除 log_dir 下所有早于 keep_days 的普通文件"""
+    cutoff_ts = time.time() - keep_days * SECONDS_IN_DAY
+
+    log_path = Path(log_dir)
+    if not log_path.exists():
+        return  # 目录都没有，直接退出
+
+    for p in log_path.iterdir():
+        # 只处理文件；子文件夹一律跳过
+        if p.is_file():
+            try:
+                if p.stat().st_mtime < cutoff_ts:
+                    p.unlink()
+                    logger.info(f"Removed old log finish: {p.name}")
+            except Exception as e:
+                logger.warning(f"Failed to delete {p}: {e}")
 
 def empty_function(*args, **kwargs):
     pass
@@ -99,6 +121,7 @@ pyw_name = os.path.splitext(os.path.basename(sys.argv[0]))[0]
 
 
 def set_file_logger(name=pyw_name):
+    cleanup_logs("./log", keep_days=7)   # 先清理旧日志
     if '_' in name:
         name = name.split('_', 1)[0]
     log_file = f'./log/{datetime.date.today()}_{name}.txt'
