@@ -13,6 +13,7 @@ import os
 import inflection
 import asyncio
 import json
+import shutil
 
 from typing import Callable
 from datetime import datetime, timedelta
@@ -36,6 +37,7 @@ from module.server.i18n import I18n
 class Script:
     def __init__(self, config_name: str ='oas') -> None:
         logger.hr('Start', level=0)
+        self._cleanup_old_logs() # 日志清理函数
         self.server = None
         self.state_queue: Queue = None
         self.gui_update_task: Callable = None  # 回调函数, gui进程注册当每次config更新任务的时候更新gui的信息
@@ -47,6 +49,44 @@ class Script:
         self.failure_record = {}
         # 运行loop的线程
         self.loop_thread: Thread = None
+
+    def _cleanup_old_logs(self, days_to_keep: int = 3) -> None:
+        """
+        清理旧的日志文件和错误快照文件夹。
+        :param days_to_keep: 要保留的最近天数。
+        """
+        today = datetime.now()
+        limit_date = today - timedelta(days=days_to_keep)
+
+        log_dir = './log'
+        if os.path.exists(log_dir):
+            try:
+                log_file_pattern = re.compile(r"(\d{4}-\d{2}-\d{2})_.*\.txt")
+                for filename in os.listdir(log_dir):
+                    file_path = os.path.join(log_dir, filename)
+                    if os.path.isfile(file_path):
+                        match = log_file_pattern.match(filename)
+                        if match:
+                            log_date_str = match.group(1)
+                            log_date = datetime.strptime(log_date_str, "%Y-%m-%d")
+                            if log_date < limit_date:
+                                os.remove(file_path)
+            except Exception as e:
+                logger.warning(f"An error occurred while cleaning up the regular logs: {e}")
+
+        error_dir = './log/error'
+        if os.path.exists(error_dir):
+            try:
+                for foldername in os.listdir(error_dir):
+                    folder_path = os.path.join(error_dir, foldername)
+                    if os.path.isdir(folder_path) and foldername.isdigit():
+                        timestamp_ms = int(foldername)
+                        folder_date = datetime.fromtimestamp(timestamp_ms / 1000)
+                        if folder_date < limit_date:
+                            shutil.rmtree(folder_path)
+            except Exception as e:
+                logger.warning(f"An error occurred when cleaning up the erroneous snapshot: {e}")
+        logger.info("The log cleaning task has been completed")
 
     @cached_property
     def config(self) -> "Config":
