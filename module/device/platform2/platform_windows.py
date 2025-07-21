@@ -19,22 +19,32 @@ from ctypes import wintypes
 class EmulatorUnknown(Exception):
     pass
 
-def minimize_by_name(window_name):
+def minimize_by_name(window_name, convert_hidden=True):
     """
-    最简单的按名称最小化窗口函数
+    按名称处理窗口状态
     Args:
         window_name (str): 窗口名称（支持部分匹配）
+        convert_hidden (bool): 是否将隐藏窗口改为最小化
     """
     def callback(hwnd, lParam):
-        if ctypes.windll.user32.IsWindowVisible(hwnd):
-            title = get_window_title(hwnd)
-            if window_name.lower() in title.lower():
+        title = get_window_title(hwnd)
+        if window_name.lower() in title.lower():
+            # 检查窗口当前状态
+            is_visible = ctypes.windll.user32.IsWindowVisible(hwnd)
+            
+            if is_visible:
+                # 可见窗口 → 最小化
                 minimize_window(hwnd)
-                print(f'最小化窗口: {title}')
+                print(f'最小化可见窗口: {title}')
+            elif convert_hidden:
+                # 隐藏窗口 → 改为最小化不激活
+                ctypes.windll.user32.ShowWindow(hwnd, 6)  # SW_SHOWMINNOACTIVE
+                print(f'隐藏窗口改为最小化: {title}')
         return True
     
     WNDENUMPROC = ctypes.WINFUNCTYPE(ctypes.c_bool, wintypes.HWND, ctypes.POINTER(ctypes.c_int))
     ctypes.windll.user32.EnumWindows(WNDENUMPROC(callback), None)
+
 
 def get_focused_window():
     return ctypes.windll.user32.GetForegroundWindow()
@@ -76,7 +86,7 @@ class AdbDeviceWithStatus(AdbDevice):
 
 class PlatformWindows(PlatformBase, EmulatorManager):
     @classmethod
-    def execute(cls, command):
+    def execute(cls, command, show_window=True):
         """
         Args:
             command (str):
@@ -84,9 +94,24 @@ class PlatformWindows(PlatformBase, EmulatorManager):
         Returns:
             subprocess.Popen:
         """
+
+        startupinfo = subprocess.STARTUPINFO()
+        startupinfo.dwFlags |= subprocess.STARTF_USESHOWWINDOW
+
+        if not show_window:
+            startupinfo.wShowWindow = 0  # SW_MINIMIZE - 不显示窗口
+        else:
+            startupinfo.wShowWindow = 1  # SW_SHOWNORMAL - 正常显示
+
+
         command = command.replace(r"\\", "/").replace("\\", "/").replace('"', '"')
         logger.info(f'Execute: {command}')
-        return subprocess.Popen(command, close_fds=True)  # only work on Windows
+        return subprocess.Popen(
+        command,
+        close_fds=True,
+        startupinfo=startupinfo
+        )
+        #return subprocess.Popen(command, close_fds=True)  # only work on Windows
 
     @classmethod
     def kill_process_by_regex(cls, regex: str) -> int:
@@ -114,33 +139,34 @@ class PlatformWindows(PlatformBase, EmulatorManager):
         """
         Start a emulator without error handling
         """
+        show_window=not self.config.script.device.emulator_window_minimize
         exe: str = instance.emulator.path
         if instance == Emulator.MuMuPlayer:
             # NemuPlayer.exe
-            self.execute(exe)
+            self.execute(exe, show_window=show_window)
         elif instance == Emulator.MuMuPlayerX:
             # NemuPlayer.exe -m nemu-12.0-x64-default
-            self.execute(f'"{exe}" -m {instance.name}')
+            self.execute(f'"{exe}" -m {instance.name}', show_window=show_window)
         elif instance == Emulator.MuMuPlayer12:
             # MuMuPlayer.exe -v 0
             if instance.MuMuPlayer12_id is None:
                 logger.warning(f'Cannot get MuMu instance index from name {instance.name}')
-            self.execute(f'"{exe}" -v {instance.MuMuPlayer12_id}')
+            self.execute(f'"{exe}" -v {instance.MuMuPlayer12_id}', show_window=show_window)
         elif instance == Emulator.LDPlayerFamily:
             # ldconsole.exe launch --index 0
-            self.execute(f'"{Emulator.single_to_console(exe)}" launch --index {instance.LDPlayer_id}')
+            self.execute(f'"{Emulator.single_to_console(exe)}" launch --index {instance.LDPlayer_id}', show_window=show_window)
         elif instance == Emulator.NoxPlayerFamily:
             # Nox.exe -clone:Nox_1
-            self.execute(f'"{exe}" -clone:{instance.name}')
+            self.execute(f'"{exe}" -clone:{instance.name}', show_window=show_window)
         elif instance == Emulator.BlueStacks5:
             # HD-Player.exe --instance Pie64
-            self.execute(f'"{exe}" --instance {instance.name}')
+            self.execute(f'"{exe}" --instance {instance.name}', show_window=show_window)
         elif instance == Emulator.BlueStacks4:
             # Bluestacks.exe -vmname Android_1
-            self.execute(f'"{exe}" -vmname {instance.name}')
+            self.execute(f'"{exe}" -vmname {instance.name}', show_window=show_window)
         elif instance == Emulator.MEmuPlayer:
             # MEmu.exe MEmu_0
-            self.execute(f'"{exe}" {instance.name}')
+            self.execute(f'"{exe}" {instance.name}', show_window=show_window)
         else:
             raise EmulatorUnknown(f'Cannot start an unknown emulator instance: {instance}')
 
@@ -342,9 +368,9 @@ class PlatformWindows(PlatformBase, EmulatorManager):
             target_window_name = self.config.script.device.handle  # 在这里输入你的具体窗口名称
             minimize_by_name(target_window_name)
             logger.info(f'最小化窗口: {target_window_name}')
-            if current_window:
-                logger.info(f'De-flash current window: {current_window}')
-                flash_window(current_window, flash=False)
+            # if current_window:
+            #     logger.info(f'De-flash current window: {current_window}')
+            #     flash_window(current_window, flash=False)
 
         logger.info('Emulator start completed')
         return True
