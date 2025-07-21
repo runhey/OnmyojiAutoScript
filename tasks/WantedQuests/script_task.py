@@ -693,7 +693,7 @@ class ScriptTask(WQExplore, SecretScriptTask, WantedQuestsAssets):
 
     def find_wq(self, img):
         def calc_xywh(box):
-            rec_x, rec_y, rec_w, rec_h = box[0, 0], box[0, 1], box[1, 0] - box[0, 0], box[2, 1] - box[0, 1]
+            rec_x, rec_y, rec_w, rec_h = box[0][0], box[0][1], box[1][0] - box[0][0], box[2][1] - box[0][1]
             x = rec_x + self.O_WQ_TEXT_ALL.roi[0]
             y = rec_y + self.O_WQ_TEXT_ALL.roi[1]
             w = rec_w

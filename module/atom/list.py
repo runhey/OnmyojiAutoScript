@@ -183,7 +183,7 @@ class RuleList:
                 box = item.box
                 break
         if box is not None:
-            rec_x, rec_y, rec_w, rec_h = box[0, 0], box[0, 1], box[1, 0] - box[0, 0], box[2, 1] - box[0, 1]
+            rec_x, rec_y, rec_w, rec_h = box[0][0], box[0][1], box[1][0] - box[0][0], box[2][1] - box[0][1]
             x = rec_x + rec_w // 2 + self.roi_back[0]
             y = rec_y + rec_h // 2 + self.roi_back[1]
             logger.info(f'Ocr {name} appear in current screen, do not need to scroll')
