@@ -120,8 +120,7 @@ class RichFileHandler(RichHandler):
 pyw_name = os.path.splitext(os.path.basename(sys.argv[0]))[0]
 
 
-def set_file_logger(name=pyw_name):
-    cleanup_logs("./log", keep_days=7)   # 先清理旧日志
+def set_file_logger(name=pyw_name, *, do_cleanup=False):
     if '_' in name:
         name = name.split('_', 1)[0]
     log_file = f'./log/{datetime.date.today()}_{name}.txt'
@@ -155,6 +154,12 @@ def set_file_logger(name=pyw_name):
         h, (logging.FileHandler, RichFileHandler))]
     logger.addHandler(hdlr)
     logger.log_file = log_file
+
+    # ---------- 可选：清理旧文件 ----------
+    if do_cleanup:
+        cleanup_logs()
+    if do_cleanup:
+        logger.info("Log cleanup finished")   
 
 
 # ======================================================================================================================
