@@ -14,8 +14,6 @@ import inflection
 import asyncio
 import json
 
-from datetime import date
-import threading
 from typing import Callable
 from datetime import datetime, timedelta
 from pathlib import Path
@@ -35,13 +33,8 @@ from module.logger import logger
 from module.exception import *
 from module.server.i18n import I18n
 
-from module.device.platform2.platform_windows import minimize_by_name,show_window_by_name
-
-_log_switch_lock = threading.Lock()#线程锁
-
 class Script:
     def __init__(self, config_name: str ='oas') -> None:
-        self.device = None
         logger.hr('Start', level=0)
         self.server = None
         self.state_queue: Queue = None
@@ -317,45 +310,30 @@ class Script:
                 logger.info(f'Wait until {task.next_run} for task `{task.command}`')
                 # self.is_first_task = False
                 method = self.config.script.optimization.when_task_queue_empty
-                close_game_limit_time = self.config.script.optimization.close_game_limit_time
-                close_emulator_limit_time = self.config.script.optimization.close_emulator_limit_time
-
-                if method == 'goto_main':
-                    self._handle_goto_main()
-                elif method == 'close_game':
-                    self._handle_close_game(task, close_game_limit_time)
-                elif method in ['close_emulator_or_goto_main', 'close_emulator_or_close_game']:
-                    self._handle_close_emulator_or(task, close_game_limit_time, close_emulator_limit_time, method)
+                if method == 'close_game':
+                    logger.info('Close game during wait')
+                    self.device.app_stop()
+                    self.device.release_during_wait()
+                    if not self.wait_until(task.next_run):
+                        del_cached_property(self, 'config')
+                        continue
+                    self.run('Restart')
+                elif method == 'goto_main':
+                    logger.info('Goto main page during wait')
+                    self.run('GotoMain')
+                    self.device.release_during_wait()
+                    if not self.wait_until(task.next_run):
+                        del_cached_property(self, 'config')
+                        continue
                 else:
                     logger.warning(f'Invalid Optimization_WhenTaskQueueEmpty: {method}, fallback to stay_there')
-
-                self.device.release_during_wait()
-                if not self.wait_until(task.next_run):
-                    del_cached_property(self, 'config')
-                    continue
+                    self.device.release_during_wait()
+                    if not self.wait_until(task.next_run):
+                        del_cached_property(self, 'config')
+                        continue
             break
 
         return task.command
-
-    def _handle_goto_main(self):
-        logger.info('Goto main page during wait')
-        self.run('GotoMain')
-
-    def _handle_close_game(self, task, close_game_limit_time):
-        if task.next_run > datetime.now() + timedelta(hours=close_game_limit_time.hour, minutes=close_game_limit_time.minute, seconds=close_game_limit_time.second):
-            logger.info('Close game during wait')
-            self.device.app_stop()
-        else:
-            self._handle_goto_main()
-
-    def _handle_close_emulator_or(self, task, close_game_limit_time, close_emulator_limit_time, method):
-        if task.next_run > datetime.now() + timedelta(hours=close_emulator_limit_time.hour, minutes=close_emulator_limit_time.minute, seconds=close_emulator_limit_time.second):
-            logger.info('Close emulator during wait')
-            self.device.emulator_stop()
-        elif method == 'close_emulator_or_goto_main':
-            self._handle_goto_main()
-        else:
-            self._handle_close_game(task, close_game_limit_time)
 
     def run(self, command: str) -> bool:
         """
@@ -424,29 +402,10 @@ class Script:
         Main loop of scheduler.
         :return:
         """
-
-
-        with _log_switch_lock:
-            logger.set_file_logger(self.config_name)
-        start_day = date.today()
+        logger.set_file_logger(self.config_name)
         logger.info(f'Start scheduler loop: {self.config_name}')
-        
-
-        # Update GUI 防呆, 读取设置并立刻显示后台模拟器到前台
-        if not self.config.script.device.run_background_only:
-            target_window_name = self.config.script.device.handle  # 在这里输入你的具体窗口名称
-            if self.config.script.device.emulator_window_minimize:
-                minimize_by_name(target_window_name)
-                logger.info(f'重新显示: {target_window_name}')
-            else:
-                show_window_by_name(target_window_name)
-                
 
         while 1:
-            if date.today() > start_day:
-                with _log_switch_lock:
-                    logger.set_file_logger(self.config_name, do_cleanup=True)
-                start_day = date.today()
             # Check update event from GUI
             # if self.stop_event is not None:
             #     if self.stop_event.is_set():
@@ -465,20 +424,17 @@ class Script:
             #     logger.info('Server or network is recovered. Restart game client')
             #     self.config.task_call('Restart')
 
-            if self.is_first_task:
-                self.device = Device(self.config)
             # Get task
             task = self.get_next_task()
             # 更新 gui的任务
             # Init device and change server
-            # _ = self.device
+            _ = self.device
             # Skip first restart
             if self.is_first_task and task == 'Restart':
                 logger.info('Skip task `Restart` at scheduler start')
                 self.config.task_delay(task='Restart', success=True, server=True)
                 del_cached_property(self, 'config')
                 continue
-            self.device = Device(self.config)
 
             # Run
             logger.info(f'Scheduler: Start task `{task}`')
