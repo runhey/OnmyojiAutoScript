@@ -12,10 +12,29 @@ from module.device.platform2.platform_base import PlatformBase
 from module.device.platform2.emulator_windows import Emulator, EmulatorInstance, EmulatorManager
 from module.logger import logger
 
+import ctypes
+from ctypes import wintypes
+
 
 class EmulatorUnknown(Exception):
     pass
 
+def minimize_by_name(window_name):
+    """
+    最简单的按名称最小化窗口函数
+    Args:
+        window_name (str): 窗口名称（支持部分匹配）
+    """
+    def callback(hwnd, lParam):
+        if ctypes.windll.user32.IsWindowVisible(hwnd):
+            title = get_window_title(hwnd)
+            if window_name.lower() in title.lower():
+                minimize_window(hwnd)
+                print(f'最小化窗口: {title}')
+        return True
+    
+    WNDENUMPROC = ctypes.WINFUNCTYPE(ctypes.c_bool, wintypes.HWND, ctypes.POINTER(ctypes.c_int))
+    ctypes.windll.user32.EnumWindows(WNDENUMPROC(callback), None)
 
 def get_focused_window():
     return ctypes.windll.user32.GetForegroundWindow()
@@ -317,22 +336,19 @@ class PlatformWindows(PlatformBase, EmulatorManager):
 
         emulator_window_minimize = self.config.script.device.emulator_window_minimize
         logger.info(f'Minimize new emulator window: {emulator_window_minimize}')
+        
         if emulator_window_minimize:
-            if new_window != 0 and new_window != current_window:
-                # 如果有新窗口且新窗口不是当前窗口，最小化新窗口
-                logger.info(f'Minimize new window: {new_window}')
-                minimize_window(new_window)
+            # 直接使用窗口名称最小化
+            target_window_name = self.config.script.device.handle  # 在这里输入你的具体窗口名称
+            minimize_by_name(target_window_name)
+            logger.info(f'最小化窗口: {target_window_name}')
             if current_window:
-                # 如果有当前窗口，取消当前窗口的闪烁
                 logger.info(f'De-flash current window: {current_window}')
                 flash_window(current_window, flash=False)
-            if new_window:
-                # 如果有新窗口，使新窗口闪烁
-                logger.info(f'Flash new window: {new_window}')
-                flash_window(new_window, flash=True)
 
         logger.info('Emulator start completed')
         return True
+
 
     def emulator_start(self):
         logger.hr('Emulator start', level=1)
