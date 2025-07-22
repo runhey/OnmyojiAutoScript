@@ -158,11 +158,12 @@ class BaseCor:
                     text=f'[{result}]')
         return result
 
-    def detect_and_ocr(self, image) -> list[BoxedResult]:
+    def detect_and_ocr(self, image, drop_score = None) -> list[BoxedResult]:
         """
         注意：这里使用了预处理和后处理
         :param image:
-        :return:
+        :param drop_score: 如果不指定，则使用对象的score属性
+        :return: list[BoxedResult]
         """
         # pre process
         start_time = time.time()
@@ -170,14 +171,13 @@ class BaseCor:
         image = self.pre_process(image)
         image = enlarge_canvas(image)
 
+        if drop_score is None:
+            drop_score = self.score
         # ocr
-        boxed_results: list[BoxedResult] = self.model.detect_and_ocr(image)
+        boxed_results: list[BoxedResult] = self.model.detect_and_ocr(image,drop_score)
         results = []
         # after proces
         for result in boxed_results:
-            # logger.info("ocr result score: %s" % result.score)
-            if result.score < self.score:
-                continue
             result.ocr_text = self.after_process(result.ocr_text)
             results.append(result)
 

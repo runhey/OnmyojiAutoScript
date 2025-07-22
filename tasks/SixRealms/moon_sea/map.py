@@ -1,3 +1,5 @@
+import time
+
 import cv2
 import re
 import numpy as np
@@ -29,6 +31,8 @@ class MoonSeaMap(MoonSeaSkills):
         这个玩意，检测不是很准
         @return: 岛屿的类型，剩余多少回合, (x，y, w, h)
         """
+        # 等待过场动画
+        time.sleep(2.5)
         self.screenshot()
         if self.appear(self.I_BOSS_FIRE):
             # 最后的boss
@@ -65,7 +69,7 @@ class MoonSeaMap(MoonSeaSkills):
             elif isl_type == MoonSeaType.island100 and self.contains_any_char(result.ocr_text, chars='神秘'):
                 isl_type = MoonSeaType.island102
                 isl_roi = x1, y1, w, h
-            elif isl_type == MoonSeaType.island100 and self.contains_any_char(result.ocr_text, chars='回混范'):
+            elif isl_type == MoonSeaType.island100 and self.contains_any_char(result.ocr_text, chars='混范'):
                 isl_type = MoonSeaType.island103
                 isl_roi = x1, y1, w, h
             elif isl_type == MoonSeaType.island100 and self.contains_any_char(result.ocr_text, chars='蜜馨屡战'):

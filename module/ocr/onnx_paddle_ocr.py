@@ -48,20 +48,26 @@ class ONNXPaddleOcr(onnxocr.ONNXPaddleOcr):
             use_onnx=use_onnx
         )
 
-    def detect_and_ocr(self,img: np.ndarray):
+    def detect_and_ocr(self,img: np.ndarray, drop_score = None):
         """
         Detect text boxes and recognize text from the image.
         :param img: Input image in RGB format.
+        :param drop_score: Minimum score to keep the recognized text. If None, uses the object's drop_score.
         :return: List of BoxedResult containing detected boxes, cropped images, recognized text, and scores.
+
         """
         rec_res = self.ocr(img, det=True, rec=True, cls=True)
         if not rec_res:
             return []
         rec_res = rec_res[0]
         res = []
+
+        if drop_score is None:
+            drop_score = self.drop_score
+
         for box, rec_result in rec_res:
             text, score = rec_result
-            if score >= self.drop_score:
+            if score >= drop_score:
                 res.append(BoxedResult(box, img, text, score))
         return res
 
