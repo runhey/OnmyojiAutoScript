@@ -75,7 +75,7 @@ class Device(BaseModel):
                                              description='模拟器静默启动并最小化')
     # 启动时纯后台运行模拟器，不显示窗口和任务栏
     run_background_only: bool = Field(default=False,
-                                             description='模拟器无UI后台运行，关掉后重启脚本会重新显示（无需重启OSA）')
+                                             description='模拟器无UI后台运行，关掉后重启脚本会重新显示（无需重启OAS）')
 
 
 
