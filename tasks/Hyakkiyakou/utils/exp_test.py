@@ -23,7 +23,7 @@ from tasks.Exploration.config import ExplorationLevel
 
 from utils import usage_time
 from fast_device import FastDevice
-
+from module.exception import GameStuckError
 
 class Step:
     def __init__(self,
@@ -342,6 +342,9 @@ class ExpTest(RightActivity, FastDevice, RestartAssets, ExplorationAssets):
             self.swipe(self.S_SWIPE_LEVEL_UP)
             swipeCount += 1
             if swipeCount >= 25:
+                raise GameStuckError(
+                    f"Swiped too many times ({swipeCount}), seems stuck in exploration level selection"
+                )
                 return False
         self.config.model.script.device.control_method = ControlMethod.WINDOW_MESSAGE
 

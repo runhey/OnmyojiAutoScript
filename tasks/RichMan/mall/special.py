@@ -161,7 +161,7 @@ class Special(Buy, MallNavbar):
         result = result.replace('？', '2').replace('?', '2').replace(':', '；').replace('火', '次').replace('教', '数')
         try:
             if '：' in result:
-                result = re.findall(r'余购买次数：(\d+)', result)[0]
+                result = re.findall(r'(?:剩余)?购买次数：(\d+)', result)[0]
                 result = int(result)
             else:
                 result = re.findall(r'本周剩余数量(\d+)', result)[0]
