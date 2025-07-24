@@ -14,6 +14,8 @@ import inflection
 import asyncio
 import json
 
+from datetime import date
+import threading
 from typing import Callable
 from datetime import datetime, timedelta
 from pathlib import Path
@@ -32,6 +34,8 @@ from module.base.decorator import del_cached_property
 from module.logger import logger
 from module.exception import *
 from module.server.i18n import I18n
+
+_log_switch_lock = threading.Lock()#线程锁
 
 class Script:
     def __init__(self, config_name: str ='oas') -> None:
@@ -402,10 +406,16 @@ class Script:
         Main loop of scheduler.
         :return:
         """
-        logger.set_file_logger(self.config_name)
+        with _log_switch_lock:
+            logger.set_file_logger(self.config_name, do_cleanup=True)
+        start_day = date.today()
         logger.info(f'Start scheduler loop: {self.config_name}')
 
         while 1:
+            if date.today() > start_day:
+                with _log_switch_lock:
+                    logger.set_file_logger(self.config_name, do_cleanup=True)
+                start_day = date.today()
             # Check update event from GUI
             # if self.stop_event is not None:
             #     if self.stop_event.is_set():
