@@ -110,7 +110,7 @@ class GeneralBattleAssets:
 	# 结算金币 
 	I_REWARD_GOLD = RuleImage(roi_front=(268,178,97,69), roi_back=(254,163,797,261), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralBattle/gb/gb_reward_gold.png")
 	# 结算紫蛇皮 
-	I_REWARD_PURPLE_SNAKE_SKIN = RuleImage(roi_front=(403,177,97,73), roi_back=(254,163,797,261), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralBattle/gb/gb_reward_purple_snake_skin.png")
+	I_REWARD_PURPLE_SNAKE_SKIN = RuleImage(roi_front=(604,213,67,37), roi_back=(108,163,1070,261), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralBattle/gb/gb_reward_purple_snake_skin.png")
 	# 结算金蛇皮 
 	I_REWARD_GOLD_SNAKE_SKIN = RuleImage(roi_front=(537,176,97,75), roi_back=(254,163,797,261), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralBattle/gb/gb_reward_gold_snake_skin.png")
 	# 结算四星青吉鬼 
