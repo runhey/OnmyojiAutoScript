@@ -31,7 +31,7 @@ class MoonSeaMap(MoonSeaSkills):
         这个玩意，检测不是很准
         @return: 岛屿的类型，剩余多少回合, (x，y, w, h)
         """
-        # 等待过场动画
+        # 等待过场动画 写的时候图快了，后续优化
         time.sleep(2.5)
         self.screenshot()
         if self.appear(self.I_BOSS_FIRE):
