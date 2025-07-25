@@ -33,12 +33,10 @@ class VerticalText(BaseCor):
         return image
 
     def detect_and_ocr(self, *args, **kwargs):
-        # Try hard to lower TextSystem.box_thresh
-        backup = self.model.text_detector.box_thresh
         # Patch text_recognizer
         text_recognizer = self.model.text_recognizer
         # Lower drop_score
-        lower_score = functools.partial(self.model.detect_and_ocr, drop_score=0.1)
+        lower_score = functools.partial(self.model.detect_and_ocr)
         detect_and_ocr = self.model.detect_and_ocr
 
         def vertical_text_recognizer(img_crop_list):
@@ -46,14 +44,14 @@ class VerticalText(BaseCor):
             result = text_recognizer(img_crop_list)
             return result
 
-        self.model.text_detector.box_thresh = 0.2
+
         self.model.text_recognizer = vertical_text_recognizer
         self.model.detect_and_ocr = lower_score
 
         try:
             result = super().detect_and_ocr(*args, **kwargs)
         finally:
-            self.model.text_detector.box_thresh = backup
+
             self.model.text_recognizer = text_recognizer
             self.model.detect_and_ocr = detect_and_ocr
         return result

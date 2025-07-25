@@ -11,11 +11,10 @@ from enum import Enum
 
 from module.base.decorator import cached_property
 from module.base.utils import area_pad, crop, float2str
-from module.ocr.ppocr import TextSystem
 from module.ocr.models import OCR_MODEL
 from module.exception import ScriptError
 from module.logger import logger
-
+from module.ocr.onnx_paddle_ocr import ONNXPaddleOcr
 
 
 def enlarge_canvas(image):
@@ -87,7 +86,7 @@ class BaseCor:
         self.keyword = keyword
 
     @cached_property
-    def model(self) -> TextSystem:
+    def model(self) -> ONNXPaddleOcr:  #因为目前只有一个语言，所以直接返回对应的模型
         return OCR_MODEL.__getattribute__(self.lang)
 
     def pre_process(self, image):
@@ -159,11 +158,12 @@ class BaseCor:
                     text=f'[{result}]')
         return result
 
-    def detect_and_ocr(self, image) -> list[BoxedResult]:
+    def detect_and_ocr(self, image, drop_score = None) -> list[BoxedResult]:
         """
         注意：这里使用了预处理和后处理
         :param image:
-        :return:
+        :param drop_score: 如果不指定，则使用对象的score属性
+        :return: list[BoxedResult]
         """
         # pre process
         start_time = time.time()
@@ -171,14 +171,13 @@ class BaseCor:
         image = self.pre_process(image)
         image = enlarge_canvas(image)
 
+        if drop_score is None:
+            drop_score = self.score
         # ocr
-        boxed_results: list[BoxedResult] = self.model.detect_and_ocr(image)
+        boxed_results: list[BoxedResult] = self.model.detect_and_ocr(image,drop_score)
         results = []
         # after proces
         for result in boxed_results:
-            # logger.info("ocr result score: %s" % result.score)
-            if result.score < self.score:
-                continue
             result.ocr_text = self.after_process(result.ocr_text)
             results.append(result)
 

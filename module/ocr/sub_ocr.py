@@ -8,7 +8,6 @@ import cn2an
 
 from datetime import timedelta
 
-from module.ocr.ppocr import TextSystem
 from module.exception import ScriptError
 from module.base.utils import area_pad, crop, float2str
 from module.ocr.base_ocr import BaseCor, OcrMode, OcrMethod
@@ -46,16 +45,17 @@ class Full(BaseCor):
         # 如果匹配到了多个,则合并所有的坐标，返回合并后的坐标
         if len(index_list) > 1:
             area_list = [(
-                boxed_results[index].box[0, 0],  # x
-                boxed_results[index].box[0, 1],  # y
-                boxed_results[index].box[1, 0] - boxed_results[index].box[0, 0],     # width
-                boxed_results[index].box[2, 1] - boxed_results[index].box[0, 1],     # height
+                boxed_results[index].box[0][0],  # x
+                boxed_results[index].box[0][1],  # y
+                boxed_results[index].box[1][0] - boxed_results[index].box[0][0],     # width
+                boxed_results[index].box[2][1] - boxed_results[index].box[0][1],     # height
             ) for index in index_list]
             area = merge_area(area_list)
+            print(area)
             self.area = area[0]+self.roi[0], area[1]+self.roi[1], area[2], area[3]
         else:
             box = boxed_results[index_list[0]].box
-            self.area = box[0, 0]+self.roi[0], box[0, 1]+self.roi[1], box[1, 0] - box[0, 0], box[2, 1] - box[0, 1]
+            self.area = box[0][0]+self.roi[0], box[0][1]+self.roi[1], box[1][0] - box[0][0], box[2][1] - box[0][1]
 
         logger.info(f"OCR [{self.name}] detected in {self.area}")
         return self.area
@@ -81,6 +81,7 @@ class Single(BaseCor):
             # 如果没有识别到，这个时候考虑到可能是竖方向的文本, 使用detect_and_ocr来进行识别
             logger.info(f"[{self.name}] Try to detect vertically")
             result = self.detect_and_ocr(image)
+
             if not result:
                 logger.info(f"[{self.name}]: No text detected in ROI")
                 return ""
@@ -236,12 +237,12 @@ class Quantity(BaseCor):
             return 0
 
         box = boxed_results[0].box
-        self.area = box[0, 0] + self.roi[0], box[0, 1] + self.roi[1], box[1, 0] - box[0, 0], box[2, 1] - box[0, 1]
+        self.area = box[0][0] + self.roi[0], box[0][1] + self.roi[1], box[1][0] - box[0][0], box[2][1] - box[0][1]
         return boxed_results[0].ocr_text
 
 
 
 if __name__ == '__main__':
     import cv2
-    image = cv2.imread(r'E:\Project\OnmyojiAutoScript-assets\jade.png')
+    image = cv2.imread(r'd:\MuMu12-20250704-215030.png')
 
