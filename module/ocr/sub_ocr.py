@@ -137,13 +137,8 @@ class DigitCounter(Single):
     def ocr_str_digit_counter(cls, result: str) -> tuple[int, int, int]:
         result = re.search(r'(\d+)/(\d+)', result)
         if result:
-            result = [int(s) for s in result.groups()]
-            current, total = int(result[0]), int(result[1])
-            # 不知道为什么加了这一句，妈的
-            # current = min(current, total)
-            if current > total:
-                logger.warning(f'[{cls.name}]: Current {current} is greater than total {total}')
-            return current, total - current, total
+            # 中间这个1是兼容原有代码用的，onnxocr不会把/识别成1
+            return int(result.group(1)), 1, int(result.group(2))
         else:
             logger.warning(f'Unexpected ocr result: {result}')
             return 0, 0, 0
