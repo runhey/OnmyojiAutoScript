@@ -35,7 +35,7 @@ from module.server.i18n import I18n
 
 class Script:
     def __init__(self, config_name: str ='oas') -> None:
-        self.device = None
+        self._emulator_down = False
         logger.hr('Start', level=0)
         self.server = None
         self.state_queue: Queue = None
@@ -346,6 +346,7 @@ class Script:
         if task.next_run > datetime.now() + timedelta(hours=close_emulator_limit_time.hour, minutes=close_emulator_limit_time.minute, seconds=close_emulator_limit_time.second):
             logger.info('Close emulator during wait')
             self.device.emulator_stop()
+            self._emulator_down = True # 标记
         elif method == 'close_emulator_or_goto_main':
             self._handle_goto_main()
         else:
@@ -440,8 +441,6 @@ class Script:
             #     logger.info('Server or network is recovered. Restart game client')
             #     self.config.task_call('Restart')
 
-            if self.is_first_task:
-                self.device = Device(self.config)
             # Get task
             task = self.get_next_task()
             # 更新 gui的任务
@@ -453,7 +452,11 @@ class Script:
                 self.config.task_delay(task='Restart', success=True, server=True)
                 del_cached_property(self, 'config')
                 continue
-            self.device = Device(self.config)
+            if self._emulator_down:
+                self.device = Device(self.config)
+                self._emulator_down = False
+            else:                
+                _ = self.device # 使用缓存
 
             # Run
             logger.info(f'Scheduler: Start task `{task}`')
