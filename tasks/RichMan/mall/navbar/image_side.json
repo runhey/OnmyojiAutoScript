@@ -39,7 +39,7 @@
     "itemName": "side_sure_friends",
     "imageName": "navbar_side_sure_friends.png",
     "roiFront": "1190,287,43,52",
-    "roiBack": "1163,258,93,109",
+    "roiBack": "1163,258,93,126",
     "method": "Template matching",
     "threshold": 0.7,
     "description": "友情点"
@@ -56,8 +56,8 @@
   {
     "itemName": "side_sure_medal",
     "imageName": "navbar_side_sure_medal.png",
-    "roiFront": "1190,375,39,62",
-    "roiBack": "1156,352,99,113",
+    "roiFront": "1190,404,39,62",
+    "roiBack": "1156,352,112,128",
     "method": "Template matching",
     "threshold": 0.7,
     "description": "勋章"
@@ -75,7 +75,7 @@
     "itemName": "side_sure_charisma",
     "imageName": "navbar_side_sure_charisma.png",
     "roiFront": "1181,467,59,58",
-    "roiBack": "1158,445,101,106",
+    "roiBack": "1158,445,101,142",
     "method": "Template matching",
     "threshold": 0.7,
     "description": "魅力值"
