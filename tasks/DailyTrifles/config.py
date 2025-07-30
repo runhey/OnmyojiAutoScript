@@ -16,6 +16,8 @@ class DailyTriflesConfig(BaseModel):
     one_summon: bool = Field(title='One Summon', default=False)
     # 召唤类型
     summon_type: SummonType = Field(default=SummonType.default, description='召唤类型')
+    # 是否绘制神秘图案
+    draw_mystery_pattern: bool = Field(title='Draw Mystery Pattern', default=False, description='是否绘制神秘图案')
     guild_wish: bool = Field(title='Guild Wish', default=False)
     friend_love: bool = Field(title='Friend Love', default=False)
     luck_msg: bool = Field(title='Luck Msg', default=False)
