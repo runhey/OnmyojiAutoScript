@@ -152,6 +152,16 @@ class PlatformBase(EmulatorManagerBase):
             logger.info(instance)
         search_args = dict(serial=serial)
 
+        instance_id = serial_to_id(self.serial)
+        if instance_id is not None:
+            select = instances.select(MuMuPlayer12_id=instance_id)
+            # No logs for if select.count == 1:
+            # because this is just a trial
+            if select.count == 1:
+                instance = select[0]
+                logger.hr('Emulator instance', level=2)
+                logger.info(f'Found emulator instance: {instance}')
+                return instance
         # Search by serial
         select = instances.select(**search_args)
         if select.count == 0:
@@ -223,4 +233,25 @@ class PlatformBase(EmulatorManagerBase):
 
         # Still too many instances
         logger.warning(f'Found multiple emulator instances with {search_args}')
+        return None
+
+def serial_to_id(serial: str):
+    """
+    Predict instance ID from serial
+    E.g.
+        "127.0.0.1:16384" -> 0
+        "127.0.0.1:16416" -> 1
+        Port from 16414 to 16418 -> 1
+    Returns:
+        int: instance_id, or None if failed to predict
+    """
+    try:
+        port = int(serial.split(':')[1])
+    except (IndexError, ValueError):
+        return None
+    index, offset = divmod(port - 16384 + 16, 32)
+    offset -= 16
+    if 0 <= index < 32 and offset in [-2, -1, 0, 1, 2]:
+        return index
+    else:
         return None
