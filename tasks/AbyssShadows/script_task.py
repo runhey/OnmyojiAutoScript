@@ -165,6 +165,7 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AbyssShadowsAssets):
         """ 获取当前区域
         :return AreaType
         """
+        logger.info("Checking current area")
         while 1:
             self.screenshot()
             # 关闭战报界面
@@ -191,6 +192,7 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AbyssShadowsAssets):
         :return
         """
         # 确保进入区域,有 切换区域 按钮
+        logger.info(f"Change area to {area_name}")
         while 1:
             self.screenshot()
             # 如果出现挑战完成，直接退出
@@ -211,6 +213,7 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AbyssShadowsAssets):
         # 判断当前区域是否正确
         current_area = self.check_current_area()
         if current_area == area_name:
+            logger.info(f"Current area is {current_area.name}, no need to change")
             return True
 
         # 切换到选择区域界面
@@ -228,6 +231,7 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AbyssShadowsAssets):
                 logger.info(f"Click {self.I_CHANGE_AREA.name}")
                 continue
 
+        logger.info(f"enter change area page")
         # 判断区域是否可用，并进入一个区域
         available_areas, unavailable_areas = self.detect_area_status()
         success = area_name in available_areas
@@ -315,6 +319,7 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AbyssShadowsAssets):
         """ 选择暗域类型
         :return
         """
+        logger.info(f"Select boss: {area_name.name} start")
         click_times = 0
         while 1:
             self.screenshot()
@@ -339,10 +344,12 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AbyssShadowsAssets):
                 continue
             if self.appear(self.I_ABYSS_NAVIGATION):
                 break
+        logger.info(f"select boss: {area_name.name} done")
         return True
 
     def goto_enemy(self, item_code: Code) -> bool:
         # 前往当前区域 的某个 敌人
+        logger.info(f"Goto enemy: {item_code}")
         click_area = item_code.get_enemy_click()
         logger.info(f"Click emeny area: {click_area.name}")
         # 点击前往按钮的次数，阴阳师BUG:点击后不动，
@@ -369,6 +376,7 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AbyssShadowsAssets):
                     return False
                 # 出现前往按钮就退出
                 if self.appear(self.I_ABYSS_GOTO_ENEMY):
+                    logger.info(f"{self.I_ABYSS_GOTO_ENEMY} appear")
                     break
                 if self.click(click_area, interval=1.5):
                     click_times += 1
@@ -383,6 +391,7 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AbyssShadowsAssets):
                 if self.appear(self.I_CHECK_FINISH):
                     raise AbyssShadowsFinished
                 if self.appear(self.I_ABYSS_FIRE):
+                    logger.info(f"{self.I_ABYSS_FIRE} appear")
                     break
                 if self.appear(self.I_ENSURE_BUTTON):
                     self.click(self.I_ENSURE_BUTTON, interval=1)
@@ -396,7 +405,12 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AbyssShadowsAssets):
         return True
 
     def attack_enemy(self):
+        logger.info("Attack enemy")
         # 点击战斗按钮
+        # NOTE: 以下暂时为猜测，待验证
+        # 同一敌人,需要第二次攻击时,此时刚刚退出战斗,先出现大地图的帧,然后才会出现战斗按钮，故延迟几秒检测
+        timer_animation = Timer(2)
+        timer_animation.start()
         while 1:
             self.screenshot()
             if self.appear(self.I_CHECK_FINISH):
@@ -413,10 +427,13 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AbyssShadowsAssets):
             #
             if self.appear(self.I_ABYSS_FIRE):
                 self.click(self.I_ABYSS_FIRE, interval=0.4)
+                self.wait_until_appear(self.I_PREPARE_HIGHLIGHT, wait_time=2)
                 continue
             #
             if self.appear(self.I_PREPARE_HIGHLIGHT):
                 return True
+            if not timer_animation.reached():
+                continue
             if self.appear(self.I_ABYSS_NAVIGATION, threshold=0.85):
                 # 已返回主界面
                 logger.info("Return to main page while try to attack enemy")
@@ -512,6 +529,7 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AbyssShadowsAssets):
         return None
 
     def open_navigation(self):
+        logger.info("Open navigation")
         while True:
             self.screenshot()
             if self.appear(self.I_CHECK_FINISH):
@@ -526,6 +544,7 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AbyssShadowsAssets):
                 continue
 
     def execute(self, item_code: Code):
+        logger.info(f"Start to execute code {item_code}")
         area = item_code.get_areatype()
 
         if not self.change_area(area):
