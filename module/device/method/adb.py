@@ -9,6 +9,7 @@ from lxml import etree
 
 from module.base.decorator import Config
 from module.device.connection import Connection
+from module.device.method.minitouch import smooth_path
 from module.device.method.utils import (RETRY_TRIES, retry_sleep, remove_prefix, handle_adb_error,
                                         ImageTruncated, PackageNotInstalled)
 from module.exception import RequestHumanTakeover, ScriptError
@@ -338,6 +339,36 @@ class Adb(Connection):
         # Parse with lxml
         hierarchy = etree.fromstring(content)
         return hierarchy
+
+    def draw_adb(self, points: list, interval=0.01):
+        """
+        通过多个点画连续线段，模拟连续触摸绘制
+
+        Args:
+            points: 点的列表，格式为 [(x1, y1), (x2, y2), ...]
+            interval: 移动间隔时间（秒）
+        """
+        if len(points) < 2:
+            logger.warning('至少需要2个点来画线')
+            return
+
+        # 平滑路径
+        smooth_points = smooth_path(points)
+
+        start_point = smooth_points[0]
+
+        # 按下起始点
+        self.adb_shell(['input', 'motionevent', 'DOWN', str(start_point[0]), str(start_point[1])])
+
+        # 移动到后续点
+        for i, point in enumerate(smooth_points[1:], start=1):
+            # 给点间隔
+            time.sleep(interval)
+            self.adb_shell(['input', 'motionevent', 'MOVE', str(point[0]), str(point[1])])
+
+        # 抬起手指
+        final_point = smooth_points[-1]
+        self.adb_shell(['input', 'motionevent', 'UP', str(final_point[0]), str(final_point[1])])
 
 
 if __name__ == "__main__":
