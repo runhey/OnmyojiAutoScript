@@ -221,8 +221,6 @@ class ScriptTask(GameUi, GeneralBattle, DuelAssets):
                 logger.warning('Duel battle stuck, swipe')
                 self.device.stuck_record_clear()
                 self.device.stuck_record_add('BATTLE_STATUS_S')
-
-
         return battle_win
 
 

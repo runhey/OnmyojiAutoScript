@@ -59,6 +59,9 @@ class ScriptTask(GameUi, CollectiveMissionsAssets):
             logger.warning('Today\'s missions have been completed')
             self.set_next_run(task='CollectiveMissions', success=False, finish=True)
             raise TaskEnd('CollectiveMissions')
+        #切换为目标任务
+        mission_name = self.config.collective_missions.missions_config.missions_select
+        self.select_mission(mission_name)
         # 判断最优的任务是哪一个
         mission, index = self.detect_best()
         logger.info(f'Best mission is {mission}')
@@ -276,6 +279,26 @@ class ScriptTask(GameUi, CollectiveMissionsAssets):
         self.ui_reward_appear_click(True)
         logger.info('Donate finished')
         return True
+
+    def select_mission(self, missions_select: str) -> bool:
+        """
+        尝试在当前界面中识别并选择指定名称的好友
+        :param friend_name: 要选择的好友名称
+        :return: 成功选择返回True
+        """
+
+        while 1:
+            self.screenshot()
+            # 识别当前任务
+            missions = self.detect_one(self.O_CM_1, self.O_CM_2)
+            logger.info(f"当前任务: {missions}")
+            logger.info(f"目标任务: {missions_select}")
+            if missions == missions_select:
+                logger.info(f"成功切换任务")
+                return True
+            else:
+                logger.info(f"尝试切换任务")
+                self.appear_then_click(self.I_CM_SWITCH, interval=1)
 
     def _soul(self, index: int):
         """
