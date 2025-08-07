@@ -18,6 +18,7 @@ class Weekday(str,Enum):
     Saturday: str = "星期六"
     Sunday: str = "星期日"
 
+
 class GuildBanquetTime(BaseModel):
     # 自定义运行时间
     day_1: Weekday = Field(
