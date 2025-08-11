@@ -1,0 +1,47 @@
+[
+  {
+    "itemName": "damage",
+    "roiFront": "50,110,300,50",
+    "roiBack": "50,110,300,50",
+    "mode": "Digit",
+    "method": "CF_HSV(0980B4,1ED2FF)",
+    "keyword": "",
+    "description": "伤害"
+  },
+  {
+    "itemName": "dragon_done",
+    "roiFront": "130,160,180,360",
+    "roiBack": "130,160,180,360",
+    "mode": "Single",
+    "method": "CF_RGB(CCCCCC,FFFFFF)",
+    "keyword": "封印",
+    "description": "神龙暗域已完成"
+  },
+  {
+    "itemName": "peacock_done",
+    "roiFront": "420,160,180,360",
+    "roiBack": "420,160,180,360",
+    "mode": "Single",
+    "method": "CF_RGB(CCCCCC,FFFFFF)",
+    "keyword": "封印",
+    "description": "孔雀暗域已完成"
+  },
+  {
+    "itemName": "fox_done",
+    "roiFront": "680,160,180,360",
+    "roiBack": "680,160,180,360",
+    "mode": "Single",
+    "method": "CF_RGB(CCCCCC,FFFFFF)",
+    "keyword": "封印",
+    "description": "白藏主暗域已完成"
+  },
+  {
+    "itemName": "leopard_done",
+    "roiFront": "1000,160,180,360",
+    "roiBack": "1000,160,180,360",
+    "mode": "Single",
+    "method": "CF_RGB(CCCCCC,FFFFFF)",
+    "keyword": "封印",
+    "description": "黑豹暗域已完成"
+  }
+]
