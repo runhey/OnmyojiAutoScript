@@ -92,6 +92,53 @@ def insert_swipe(p0, p3, speed=15, min_distance=10):
 
     return points
 
+def smooth_path(points: list, min_distance: float = 30.0, offset_range: float = 3.0):
+    """
+    路径平滑，基于路径方向的垂直偏移
+    Args:
+        points: 原始点列表 [(x1, y1), (x2, y2), ...]
+        min_distance: 最小插点距离
+        offset_range: 垂直偏移范围
+
+    Returns:
+        list: 平滑后的点列表
+    """
+    if len(points) < 2:
+        return points
+
+    smooth_points = [points[0]]
+
+    for i in range(len(points) - 1):
+        start = np.array(points[i])
+        end = np.array(points[i + 1])
+
+        direction = end - start
+        distance = np.linalg.norm(direction)
+
+        if distance <= min_distance:
+            continue
+
+        # 归一化方向向量
+        unit_direction = direction / distance
+        # 计算垂直向量
+        perpendicular = np.array([-unit_direction[1], unit_direction[0]])
+
+        num_segments = int(distance / min_distance)
+
+        for j in range(1, num_segments + 1):
+            ratio = j / num_segments
+            interpolated = start + ratio * direction
+
+            # 垂直方向的随机偏移
+            perpendicular_offset = np.random.uniform(-offset_range, offset_range)
+            final_point = interpolated + perpendicular_offset * perpendicular
+
+            smooth_points.append((int(final_point[0]), int(final_point[1])))
+
+    if smooth_points[-1] != points[-1]:
+        smooth_points.append(points[-1])
+
+    return smooth_points
 
 class Command:
     def __init__(
