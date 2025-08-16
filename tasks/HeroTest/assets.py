@@ -14,7 +14,7 @@ class HeroTestAssets:
 	# 进入活动第一步 
 	I_ONE = RuleImage(roi_front=(633,106,88,105), roi_back=(633,106,88,105), threshold=0.7, method="Template matching", file="./tasks/HeroTest/as/as_one.png")
 	# 进入活动第二步 
-	I_TWO = RuleImage(roi_front=(819,685,95,26), roi_back=(819,685,95,26), threshold=0.8, method="Template matching", file="./tasks/HeroTest/as/as_two.png")
+	I_TWO = RuleImage(roi_front=(819,685,95,26), roi_back=(819,685,200,26), threshold=0.8, method="Template matching", file="./tasks/HeroTest/as/as_two.png")
 	# 点击鬼兵演武 
 	I_GBB = RuleImage(roi_front=(95,344,37,131), roi_back=(95,344,37,131), threshold=0.8, method="Template matching", file="./tasks/HeroTest/as/as_gbb.png")
 	# 爬塔返回按钮 
