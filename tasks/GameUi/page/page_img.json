@@ -146,8 +146,8 @@
   {
     "itemName": "check_soul_zones",
     "imageName": "page_check_soul_zones.png",
-    "roiFront": "49,105,298,405",
-    "roiBack": "49,105,298,405",
+    "roiFront": "49,186,298,237",
+    "roiBack": "49,186,298,237",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"
