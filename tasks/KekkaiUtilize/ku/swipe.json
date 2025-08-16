@@ -1,0 +1,9 @@
+[
+  {
+    "itemName": "guild_find_ap",
+    "roiFront": "420,546,40,40",
+    "roiBack": "8,546,40,40",
+    "mode": "default",
+    "description": "移动寻找寮体力"
+  }
+]
