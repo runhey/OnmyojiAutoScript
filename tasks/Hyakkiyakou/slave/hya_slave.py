@@ -223,7 +223,7 @@ class HyaSlave(HyaDevice, HyaColor, HyakkiyakouAssets):
             if self.appear(self.I_ENSURE_RECALL):
                 hya_recall_activity = True
             if hya_recall_activity:
-                if self.appear(self.I_FRIEND_SAME_1_RECALL) or self.appear(self.I_FRIEND_SAME_2_RECALL):
+                if self.appear(self.I_FRIEND_SAME_1_RECALL) or self.appear(self.I_FRIEND_SAME_2_RECALL) or self.appear(self.I_FRIEND_RYOU_1):
                     break
             else:
                 if self.appear(self.I_FRIEND_SAME_1) or self.appear(self.I_FRIEND_SAME_2):
