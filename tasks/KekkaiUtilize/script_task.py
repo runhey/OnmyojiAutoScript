@@ -76,7 +76,18 @@ class ScriptTask(GameUi, ReplaceShikigami, KekkaiUtilizeAssets):
         :return:
         """
         if ap_enable or assets_enable:
-            self.screenshot()
+            # 尝试移动寻找体力或资金
+            try_find_ap = 0
+            while try_find_ap < 3:
+                self.screenshot()
+                try_find_ap += 1
+                if self.appear(self.I_GUILD_AP) or self.appear(self.I_GUILD_ASSETS):
+                    logger.info('Find ap or assets')
+                    break
+                else:
+                    logger.info('Try find ap or assets')
+                    self.swipe(self.S_GUILD_FIND_AP)
+            # 如果未找到则返回False
             if not self.appear(self.I_GUILD_AP) and not self.appear(self.I_GUILD_ASSETS):
                 logger.info('No ap or assets to collect')
                 return False
