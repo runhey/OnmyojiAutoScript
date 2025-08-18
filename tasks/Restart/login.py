@@ -260,9 +260,13 @@ class LoginHandler(BaseTask, RestartAssets):
                     self.wait_until_appear(self.I_HARVEST_MAIL_CONFIRM, wait_time=1)
                     timer_harvest.reset()
                     continue
-                #threshold如果是0.9，可能会导致有邮件但无法识别永久卡住
+                # threshold如果是0.9，可能会导致有邮件但无法识别永久卡住
                 if self.appear(self.I_HARVEST_MAIL_OPEN, threshold=0.8):
                     self.click(self.I_HARVEST_MAIL_OPEN, interval=0.8)
+                    timer_harvest.reset()
+                    continue
+                if self.appear(self.I_HARVEST_MAIL_2):
+                    self.click(self.I_HARVEST_MAIL_2, interval=0.8)
                     timer_harvest.reset()
                     continue
                 if ((self.appear(self.I_HARVEST_MAIL) or self.appear(self.I_HARVEST_MAIL_COPY))
