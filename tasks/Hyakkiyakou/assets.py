@@ -164,6 +164,10 @@ class HyakkiyakouAssets:
 	I_FRIEND_SAME_2_RECALL = RuleImage(roi_front=(168,126,100,60), roi_back=(152,112,133,80), threshold=0.8, method="Template matching", file="./tasks/Hyakkiyakou/hya/hya_friend_same_2.png")
 	# 回归活动使用 
 	I_FRIEND_REMOTE_2_RECALL = RuleImage(roi_front=(296,122,100,56), roi_back=(278,115,131,81), threshold=0.8, method="Template matching", file="./tasks/Hyakkiyakou/hya/hya_friend_remote_2.png")
+	# description 
+	I_FRIEND_RYOU_1 = RuleImage(roi_front=(328,128,80,45), roi_back=(328,128,80,45), threshold=0.8, method="Template matching", file="./tasks/Hyakkiyakou/hya/hya_friend_ryou_1.png")
+	# description 
+	I_FRIEND_RYOU_2 = RuleImage(roi_front=(328,128,80,45), roi_back=(328,128,80,45), threshold=0.8, method="Template matching", file="./tasks/Hyakkiyakou/hya/hya_friend_ryou_2.png")
 
 
 	# Ocr Rule Assets
