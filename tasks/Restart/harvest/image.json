@@ -187,5 +187,14 @@
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"
+  },
+  {
+    "itemName": "harvest_mail_2",
+    "imageName": "harvest_harvest_mail_2.png",
+    "roiFront": "156,125,65,60",
+    "roiBack": "120,94,290,536",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
   }
 ]

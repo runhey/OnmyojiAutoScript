@@ -39,19 +39,19 @@
     "itemName": "guild_ap",
     "imageName": "ku_guild_ap.png",
     "roiFront": "483,314,22,22",
-    "roiBack": "225,224,301,167",
+    "roiBack": "290,224,393,218",
     "method": "Template matching",
     "threshold": 0.8,
-    "description": "description"
+    "description": "寮体力"
   },
   {
     "itemName": "guild_assets",
     "imageName": "ku_guild_assets.png",
     "roiFront": "315,311,23,28",
-    "roiBack": "227,262,354,136",
+    "roiBack": "290,224,393,218",
     "method": "Template matching",
     "threshold": 0.8,
-    "description": "description"
+    "description": "寮资金"
   },
   {
     "itemName": "guild_assets_receive",

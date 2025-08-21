@@ -53,6 +53,8 @@ class RestartAssets:
 	I_HARVEST_ZIDU = RuleImage(roi_front=(785,475,135,135), roi_back=(785,475,135,135), threshold=0.8, method="Template matching", file="./tasks/Restart/harvest/harvest_harvest_zidu.png")
 	# description 
 	I_HARVEST_MAIL_COPY = RuleImage(roi_front=(257,509,29,21), roi_back=(192,472,790,100), threshold=0.8, method="Template matching", file="./tasks/Restart/harvest/harvest_harvest_mail_copy.png")
+	# description 
+	I_HARVEST_MAIL_2 = RuleImage(roi_front=(156,125,65,60), roi_back=(120,94,290,536), threshold=0.8, method="Template matching", file="./tasks/Restart/harvest/harvest_harvest_mail_2.png")
 
 
 	# Click Rule Assets
