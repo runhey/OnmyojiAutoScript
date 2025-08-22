@@ -314,7 +314,10 @@ class GeneralBattle(GeneralBuff, GeneralBattleAssets):
                 continue
             if self.appear_then_click(self.I_PRESET_WIT_NUMBER, threshold=0.8, interval=1):
                 continue
-            if self.ocr_appear(self.O_PRESET):
+            # 使用包含匹配支持"预"和"预设"两种情况
+            ocr_result = self.O_PRESET.ocr(self.device.image)
+            if ocr_result and ("预" in ocr_result):
+                logger.info(f"Found preset button via OCR: {ocr_result}")
                 self.click(self.O_PRESET, interval=1)
                 continue
         logger.info("Click preset button")
