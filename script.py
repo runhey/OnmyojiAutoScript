@@ -369,7 +369,6 @@ class Script:
             self.save_error_log()
             logger.warning(f'Game stuck, {self.device.package} will be restarted in 10 seconds')
             logger.warning('If you are playing by hand, please stop Alas')
-            self.config.notifier.push(title=f'{I18n.trans_zh_cn(command)}{command}', content=f"<{self.config_name}> GameStuckError or GameTooManyClickError")
             self.config.task_call('Restart')
             self.device.sleep(10)
             return False
@@ -480,6 +479,11 @@ class Script:
                 logger.critical("Possible reason #2: There is a problem with this task. "
                                 "Please contact developers or try to fix it yourself.")
                 logger.critical('Request human takeover')
+                # 添加推送通知 - 任务连续失败3次导致停止
+                self.config.notifier.push(
+                    title=f'{task} 任务连续失败', 
+                    content=f"<{self.config_name}> 任务 {task} 连续失败3次，脚本已停止运行"
+                )
                 exit(1)
 
             if success:
@@ -491,6 +495,11 @@ class Script:
                 # self.checker.check_now()
                 continue
             else:
+                # 添加推送通知 - handle_error为False时停止
+                self.config.notifier.push(
+                    title=f'{task} 脚本停止', 
+                    content=f"<{self.config_name}> 错误处理已禁用，脚本因错误停止运行"
+                )
                 break
 
     def start_loop(self) -> None:
