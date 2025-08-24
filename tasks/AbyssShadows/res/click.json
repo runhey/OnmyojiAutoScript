@@ -88,5 +88,23 @@
     "roiFront": "1140,190,50,162",
     "roiBack": "1093,143,138,297",
     "description": "狭间_黑豹入口"
+  },
+  {
+    "itemName": "abyss_shenshe_enter_abyss",
+    "roiFront": "740,640,45,15",
+    "roiBack": "740,640,45,15",
+    "description": "刚进入神社时，可点击进入狭间暗域的区域，用于开启狭间暗域"
+  },
+  {
+    "itemName": "quit_area",
+    "roiFront": "20,36,30,14",
+    "roiBack": "20,36,30,14",
+    "description": "战斗时，左上角退出战斗按钮区域 下半部分"
+  },
+  {
+    "itemName": "mark_main",
+    "roiFront": "380,15,45,30",
+    "roiBack": "380,15,45,30",
+    "description": "红标主怪点击区域"
   }
 ]
