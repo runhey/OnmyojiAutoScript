@@ -12,7 +12,7 @@
     "itemName": "two",
     "imageName": "as_two.png",
     "roiFront": "819,685,95,26",
-    "roiBack": "819,685,95,26",
+    "roiBack": "819,685,200,26",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "进入活动第二步"
