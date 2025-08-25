@@ -67,7 +67,7 @@ class Updater(DeployConfig, GitManager, PipManager):
         log : str = subprocess.run(
             'git branch --show-current', capture_output=True, text=True, encoding="utf8", shell=True
         ).stdout
-        log.replace('\n', '')
+        log = log.replace('\n', '')
         return log
 
     def current_commit(self) -> str:
