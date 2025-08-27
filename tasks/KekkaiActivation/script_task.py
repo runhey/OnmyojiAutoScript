@@ -206,93 +206,125 @@ class ScriptTask(KU, KekkaiActivationAssets):
 
     def screening_card(self, rule: str):
         """
-        开始挑选卡
-        :return:
+        全局优先级挂卡
         """
-
-        def run_auto():
-            while 1:
-                self.screenshot()
-                if not self.appear(self.I_A_EMPTY) and self.appear(self.I_A_ACTIVATE_YELLOW, threshold=0.9):
-                    break
-                if self.click(self.C_A_SELECT_AUTO, interval=1):
-                    continue
-
         if rule == "auto":
-            logger.info('Auto select card')
             run_auto()
             return
 
-        card_class = None
-        target_class = None
-        top_card = self.order_cards[0]
-        if top_card.startswith(CardClass.TAIKO):  # 太鼓
-            card_class = CardClass.TAIKO
-            target_class = self.I_A_CARD_KAIKO
-        elif top_card.startswith(CardClass.MOON):  # 太阴
-            card_class = CardClass.MOON
-            target_class = self.I_A_CARD_MOON
-        elif top_card.startswith(CardClass.FISH):  # 斗鱼
-            card_class = CardClass.FISH
-            target_class = self.I_A_CARD_FISH
-
-        if card_class is None:
-            logger.warning('Unknown card class')
-            run_auto()
-            return
-
-        while 1:
-            self.screenshot()
-
-            if self.appear(target_class):
-                time.sleep(0.3)
-                self.screenshot()
-                if self.appear(target_class):
-                    break
-            if self.click(self.C_A_SELECT_CARD_LIST, interval=2.5):
+        # 按优先级逐个尝试
+        global_best_card = None
+        
+        # 按优先级顺序逐个尝试每张卡
+        for priority_index, target_card in enumerate(self.order_cards):
+            logger.info(f'Trying to find card: {target_card} (priority {priority_index})')
+            
+            # 确定该卡片属于哪个分类
+            if target_card.startswith(CardClass.TAIKO):
+                category_class = CardClass.TAIKO
+                target_class = self.I_A_CARD_KAIKO
+            elif target_card.startswith(CardClass.FISH):
+                category_class = CardClass.FISH
+                target_class = self.I_A_CARD_FISH
+            elif target_card.startswith(CardClass.MOON):
+                category_class = CardClass.MOON
+                target_class = self.I_A_CARD_MOON
+            else:
                 continue
-        logger.info('Appear card class: {}'.format(card_class))
-        while 1:
-            self.screenshot()
-            if not self.appear(target_class):
-                break
-            if self.appear_then_click(target_class, interval=1):
-                continue
-        logger.info('Selected card class: {}'.format(card_class))
+            
+            # 进入对应分类寻找这张特定卡片
+            found_card = self._search_specific_card_in_category(target_card, category_class, target_class)
+            
+            if found_card:
+                logger.info(f'Found target card: {found_card}')
+                return  # 找到目标卡片，挂卡成功
+        
+        # 所有优先级卡片都没找到，降级为auto
+        logger.warning('No cards found in priority order, fallback to auto')
+        run_auto()
 
-        # 得了开始一直往下滑动 找最优卡
-        card_best = None
+    def _search_specific_card_in_category(self, target_card, category_class, target_class_image):
+        """
+        在指定分类中寻找特定的卡片
+        :param target_card: 要寻找的特定卡片 (如 TAIKO6)
+        :param category_class: 分类类型 (TAIKO/FISH/MOON)
+        :param target_class_image: 分类按钮图像
+        :return: 找到返回卡片，没找到返回None
+        """
+        
+        # 1. 进入指定分类
+        self._enter_card_category(category_class, target_class_image)
+        
+        # 2. 在当前分类中专门寻找目标卡片
+        target_image = self.dict_card_image.get(target_card)
+        if not target_image:
+            logger.warning(f'No image defined for card: {target_card}')
+            return None
+        
+        # 3. 滑动搜索特定卡片
         swipe_count = 0
-        while 1:
+        while swipe_count <= 15:
             self.screenshot()
-            current_best = self._current_select_best(card_best)
-            if current_best is None:
-                logger.warning('There is no card in the list')
-                break
-            # Record best card for future comparison
-            if(card_best is None):
-                card_best = current_best
-            elif self.order_cards.index(current_best) <= self.order_cards.index(card_best):
-                break
-            if current_best == self.order_cards[0]:
-                break
-            # 为什么找到第二个最优解也是会退出呢？？？
-            # 这个是因为一般是从高星到低星来找， 基本上第二个最优解就是最优解了
-            elif current_best == self.order_cards[1]:
-                break
-
-            # 滑到底就退出
+            
+            # 检查当前屏幕是否有目标卡片
+            if self.appear(target_image):
+                logger.info(f'Found target card {target_card} in {category_class} category')
+                
+                # 点击选择该卡片
+                if self._select_card(target_image, target_card):
+                    return target_card
+            
+            # 检查是否滑到底部
             if self.appear(self.I_AA_SWIPE_BLOCK):
-                logger.warning('Swipe to the end but no card is found')
                 break
-            # 超过十次就退出
-            if swipe_count > 15:
-                logger.warning('Swipe count is more than 10')
-                break
-            # 一直向下滑动
+                
+            # 继续滑动
             self.swipe(self.S_CARDS_SWIPE, interval=0.9)
             swipe_count += 1
             time.sleep(2)
+        
+        logger.info(f'Card {target_card} not found in {category_class} category')
+        return None
+
+    def _enter_card_category(self, category_class, target_class_image):
+        """进入指定卡片分类"""
+        # 点击分类选择按钮
+        while 1:
+            self.screenshot()
+            if self.appear(target_class_image):
+                time.sleep(0.3)
+                self.screenshot()
+                if self.appear(target_class_image):
+                    break
+            if self.click(self.C_A_SELECT_CARD_LIST, interval=2.5):
+                continue
+        
+        # 点击进入分类
+        while 1:
+            self.screenshot()
+            if not self.appear(target_class_image):
+                break
+            if self.appear_then_click(target_class_image, interval=1):
+                continue
+        
+        logger.info(f'Entered {category_class} category')
+
+    def _select_card(self, target_image, target_card):
+        """选择并点击指定卡片"""
+        if self.appear(self.I_A_EMPTY):
+            # 卡槽为空，点击
+            while 1:
+                self.screenshot()
+                if not self.appear(self.I_A_EMPTY):
+                    return True
+                if self.appear_then_click(target_image, interval=1):
+                    continue
+        else:
+            # 直接点击
+            self.appear_then_click(target_image, interval=0.5)
+            return True
+        
+        return False
 
     def _image_convert_card(self, target: RuleImage) -> CardClass:
         """
