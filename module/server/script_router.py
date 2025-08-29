@@ -44,6 +44,39 @@ async def config_all():
     return mm.all_json_file()
 
 
+@script_app.put('/config')
+async def rename_config(old_name: str = '', new_name: str = ''):
+    """
+    update config name
+    :param old_name: old config name
+    :param new_name: new config name
+    :return: True or False
+    """
+    if old_name == new_name or new_name == '':
+        return False
+    if not mm.rename(old_name, new_name):
+        raise HTTPException(status_code=400, detail='Rename failed')
+    if old_name in mm.script_process:
+        del mm.script_process[old_name]
+    return True
+
+
+@script_app.delete('/config')
+async def config(name: str = ''):
+    """
+    delete config file
+    :param name: config name
+    :return: True or False
+    """
+    if name == '' or name == 'template':
+        raise HTTPException(status_code=400, detail='Delete failed')
+    if not mm.delete(name):
+        raise HTTPException(status_code=400, detail='Delete failed')
+    if name in mm.script_process:
+        del mm.script_process[name]
+    return True
+
+
 # ---------------------------------   脚本实例管理   ----------------------------------
 @script_app.get('/{script_name}/start')
 async def script_start(script_name: str):
