@@ -42,6 +42,7 @@ _log_switch_lock = threading.Lock()#线程锁
 
 class Script:
     def __init__(self, config_name: str ='oas') -> None:
+        self._emulator_down = False
         logger.hr('Start', level=0)
         self.server = None
         self.state_queue: Queue = None
@@ -316,30 +317,46 @@ class Script:
             if task.next_run > datetime.now():
                 logger.info(f'Wait until {task.next_run} for task `{task.command}`')
                 method = self.config.script.optimization.when_task_queue_empty
-                if method == 'close_game':
-                    logger.info('Close game during wait')
-                    self.device.app_stop()
-                    self.device.release_during_wait()
-                    if not self.wait_until(task.next_run):
-                        del_cached_property(self, 'config')
-                        continue
-                    self.run('Restart')
-                elif method == 'goto_main':
-                    logger.info('Goto main page during wait')
-                    self.run('GotoMain')
-                    self.device.release_during_wait()
-                    if not self.wait_until(task.next_run):
-                        del_cached_property(self, 'config')
-                        continue
+                close_game_limit_time = self.config.script.optimization.close_game_limit_time
+                close_emulator_limit_time = self.config.script.optimization.close_emulator_limit_time
+
+                if method == 'goto_main':
+                    self._handle_goto_main()
+                elif method == 'close_game':
+                    self._handle_close_game(task, close_game_limit_time)
+                elif method in ['close_emulator_or_goto_main', 'close_emulator_or_close_game']:
+                    self._handle_close_emulator_or(task, close_game_limit_time, close_emulator_limit_time, method)
                 else:
                     logger.warning(f'Invalid Optimization_WhenTaskQueueEmpty: {method}, fallback to stay_there')
-                    self.device.release_during_wait()
-                    if not self.wait_until(task.next_run):
-                        del_cached_property(self, 'config')
-                        continue
+
+                self.device.release_during_wait()
+                if not self.wait_until(task.next_run):
+                    del_cached_property(self, 'config')
+                    continue
             break
 
         return task.command
+
+    def _handle_goto_main(self):
+        logger.info('Goto main page during wait')
+        self.run('GotoMain')
+
+    def _handle_close_game(self, task, close_game_limit_time):
+        if task.next_run > datetime.now() + timedelta(hours=close_game_limit_time.hour, minutes=close_game_limit_time.minute, seconds=close_game_limit_time.second):
+            logger.info('Close game during wait')
+            self.device.app_stop()
+        else:
+            self._handle_goto_main()
+
+    def _handle_close_emulator_or(self, task, close_game_limit_time, close_emulator_limit_time, method):
+        if task.next_run > datetime.now() + timedelta(hours=close_emulator_limit_time.hour, minutes=close_emulator_limit_time.minute, seconds=close_emulator_limit_time.second):
+            logger.info('Close emulator during wait')
+            self.device.emulator_stop()
+            self._emulator_down = True # 标记
+        elif method == 'close_emulator_or_goto_main':
+            self._handle_goto_main()
+        else:
+            self._handle_close_game(task, close_game_limit_time)
 
     def run(self, command: str) -> bool:
         """
@@ -451,13 +468,18 @@ class Script:
             task = self.get_next_task()
             # 更新 gui的任务
             # Init device and change server
-            _ = self.device
+            # _ = self.device
             # Skip first restart
             if self.is_first_task and task == 'Restart':
                 logger.info('Skip task `Restart` at scheduler start')
                 self.config.task_delay(task='Restart', success=True, server=True)
                 del_cached_property(self, 'config')
                 continue
+            if self._emulator_down:
+                self.device = Device(self.config)
+                self._emulator_down = False
+            else:                
+                _ = self.device # 使用缓存
 
             # Run
             if self.state_queue:
