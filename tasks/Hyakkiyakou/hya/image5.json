@@ -70,5 +70,23 @@
     "method": "Template matching",
     "threshold": 0.8,
     "description": "回归活动使用"
+  },
+  {
+    "itemName": "friend_ryou_1",
+    "imageName": "hya_friend_ryou_1.png",
+    "roiFront": "328,128,80,45",
+    "roiBack": "328,128,80,45",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "friend_ryou_2",
+    "imageName": "hya_friend_ryou_2.png",
+    "roiFront": "328,128,80,45",
+    "roiBack": "328,128,80,45",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
   }
 ]

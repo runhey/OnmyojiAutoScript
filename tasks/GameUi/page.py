@@ -78,11 +78,11 @@ page_exploration.link(button=G.I_EXPLORATION_GOTO_DELEGATION, destination=page_d
 page_secret_zones = Page(G.I_CHECK_SECRET_ZONES)
 page_secret_zones.link(button=G.I_BACK_BLUE, destination=page_exploration)
 page_exploration.link(button=G.I_EXPLORATION_GOTO_SECRET_ZONES, destination=page_secret_zones)
-# 地狱鬼王 area boss
+# 地域鬼王 area boss
 page_area_boss = Page(G.I_CHECK_AREA_BOSS)
 page_area_boss.link(button=G.I_BACK_BLUE, destination=page_exploration)
 page_exploration.link(button=G.I_EXPLORATION_GOTO_AREA_BOSS, destination=page_area_boss)
-# 平安奇谭
+# 平安奇谭 heian kitan
 page_heian_kitan = Page(G.I_CHECK_HEIAN_KITAN)
 page_heian_kitan.link(button=G.I_CHECK_HEIAN_KITAN, destination=page_exploration)
 page_exploration.link(button=G.I_EXPLORATION_GOTO_HEIAN_KITAN, destination=page_heian_kitan)
@@ -90,17 +90,17 @@ page_exploration.link(button=G.I_EXPLORATION_GOTO_HEIAN_KITAN, destination=page_
 page_six_gates = Page(G.I_CHECK_SIX_GATES)
 page_six_gates.link(button=G.I_SIX_GATES_GOTO_EXPLORATION, destination=page_exploration)
 page_exploration.link(button=G.I_EXPLORATION_GOTO_SIX_GATES, destination=page_six_gates)
-# 器灵 bondling_fairyland
+# 契灵之境 bondling fairyland
 page_bondling_fairyland = Page(G.I_CHECK_BONDLING_FAIRYLAND)
 page_bondling_fairyland.link(button=G.I_BACK_YOLLOW, destination=page_exploration)
 page_exploration.link(button=G.I_EXPLORATION_GOTO_BONDLING_FAIRYLAND, destination=page_bondling_fairyland)
 
 # ************************************* 町中部分 *****************************************#
-# 斗鸡 duel
+# 斗技 duel
 page_duel = Page(G.I_CHECK_DUEL)
 page_duel.link(button=G.I_BACK_YOLLOW, destination=page_town)
 page_town.link(button=G.I_TOWN_GOTO_DUEL, destination=page_duel)
-# 封魔之时 demon_encounter
+# 逢魔之时 demon_encounter
 page_demon_encounter = Page(G.I_CHECK_DEMON_ENCOUNTER)
 page_demon_encounter.link(button=G.I_DEMON_ENCOUNTER_GOTO_TOWN, destination=page_town)
 page_town.link(button=G.I_TOWN_GOTO_DEMON_ENCOUNTER, destination=page_demon_encounter)
@@ -112,7 +112,7 @@ page_town.link(button=G.I_TOWN_GOTO_HUNT, destination=page_hunt)
 page_draft_duel = Page(G.I_CHECK_DRAFT_DUEL)
 page_draft_duel.link(button=G.I_BACK_YOLLOW, destination=page_town)
 page_town.link(button=G.I_TOWN_GOTO_DRAFT_DUEL, destination=page_draft_duel)
-# 百鬼奕 hyakkisen
+# 百鬼弈 hyakkisen
 page_hyakkisen = Page(G.I_CHECK_HYAKKISEN)
 page_hyakkisen.link(button=G.I_BACK_YOLLOW, destination=page_town)
 page_town.link(button=G.I_TOWN_GOTO_HYAKKISEN, destination=page_hyakkisen)
