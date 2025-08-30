@@ -18,6 +18,15 @@
     "description": "分数"
   },
   {
+    "itemName": "d_celeb_star",
+    "roiFront": "625,454,77,37",
+    "roiBack": "625,454,77,37",
+    "mode": "Digit",
+    "method": "Default",
+    "keyword": "",
+    "description": "名士星星数"
+  },
+  {
     "itemName": "d_hand",
     "roiFront": "31,639,63,45",
     "roiBack": "31,639,63,45",
@@ -34,5 +43,14 @@
     "method": "Default",
     "keyword": "自动",
     "description": "自动"
+  },
+  {
+    "itemName": "d_ban_name",
+    "roiFront": "92,97,82,25",
+    "roiBack": "92,97,82,25",
+    "mode": "Single",
+    "method": "Default",
+    "keyword": "",
+    "description": "被办式神名称"
   }
 ]

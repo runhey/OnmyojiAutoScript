@@ -18,15 +18,6 @@
     "description": "一键切换所有的御魂"
   },
   {
-    "itemName": "d_visit",
-    "imageName": "duel_d_visit.png",
-    "roiFront": "1045,613,53,55",
-    "roiBack": "1045,613,53,55",
-    "method": "Template matching",
-    "threshold": 0.8,
-    "description": "观战"
-  },
-  {
     "itemName": "d_battle",
     "imageName": "duel_d_battle.png",
     "roiFront": "1153,573,100,100",
@@ -45,15 +36,6 @@
     "description": "战斗带保护的"
   },
   {
-    "itemName": "d_confirm",
-    "imageName": "duel_d_confirm.png",
-    "roiFront": "1097,517,139,156",
-    "roiBack": "1097,517,139,156",
-    "method": "Template matching",
-    "threshold": 0.8,
-    "description": "预选点击确认"
-  },
-  {
     "itemName": "d_auto_entry",
     "imageName": "duel_d_auto_entry.png",
     "roiFront": "42,133,66,62",
@@ -61,15 +43,6 @@
     "method": "Template matching",
     "threshold": 0.8,
     "description": "自动上阵"
-  },
-  {
-    "itemName": "d_hand",
-    "imageName": "duel_d_hand.png",
-    "roiFront": "34,635,55,55",
-    "roiBack": "34,635,55,55",
-    "method": "Template matching",
-    "threshold": 0.8,
-    "description": "手动，弃用"
   },
   {
     "itemName": "d_help",
@@ -88,15 +61,6 @@
     "method": "Template matching",
     "threshold": 0.8,
     "description": "准备"
-  },
-  {
-    "itemName": "d_prepare_done",
-    "imageName": "duel_d_prepare_done.png",
-    "roiFront": "495,82,75,55",
-    "roiBack": "495,82,75,55",
-    "method": "Template matching",
-    "threshold": 0.8,
-    "description": "准备完毕"
   },
   {
     "itemName": "d_battle_data",
@@ -162,6 +126,24 @@
     "description": "练"
   },
   {
+    "itemName": "battle_with_train2",
+    "imageName": "duel_battle_with_train2.png",
+    "roiFront": "1161,588,78,81",
+    "roiBack": "1114,547,163,172",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "练2"
+  },
+  {
+    "itemName": "battle_type_common",
+    "imageName": "duel_battle_type_common.png",
+    "roiFront": "439,278,90,88",
+    "roiBack": "439,278,90,88",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "斗技模式（普通）"
+  },
+  {
     "itemName": "d_battle2",
     "imageName": "duel_d_battle2.png",
     "roiFront": "1171,592,69,78",
@@ -169,5 +151,23 @@
     "method": "Template matching",
     "threshold": 0.8,
     "description": "活动的战斗按钮"
+  },
+  {
+    "itemName": "ban",
+    "imageName": "duel_ban.png",
+    "roiFront": "1112,537,100,100",
+    "roiBack": "1112,537,100,100",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "禁用"
+  },
+  {
+    "itemName": "duel_exit",
+    "imageName": "gb_exit.png",
+    "roiFront": "14,12,43,41",
+    "roiBack": "14,12,43,41",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "左上角的退出"
   }
 ]
