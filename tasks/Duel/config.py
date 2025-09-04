@@ -1,20 +1,29 @@
 # This Python file uses the following encoding: utf-8
 # @author runhey
 # github https://github.com/runhey
-from typing import Any, Dict
-from pydantic import (Field,
-                      model_validator,
-                      ValidationError,
-                      model_serializer,
-                      WithJsonSchema,
-                      SerializerFunctionWrapHandler,
-                      GetJsonSchemaHandler)
+from pydantic import BaseModel, Field
+from datetime import time
 
 from tasks.Component.config_scheduler import Scheduler
 from tasks.Component.config_base import ConfigBase, Time
 from tasks.Component.GeneralBattle.config_general_battle import GreenMarkType
+from enum import Enum
+from tasks.Component.SwitchSoul.switch_soul_config import SwitchSoulConfig
+
+
+class Onmyoji(str, Enum):
+    Ylg = '源赖光'
+    Qm = '晴明'
+    Sl = '神乐'
+    Yby = '源博雅'
+    Bbbqn = '八百比丘尼'
+
 
 class DuelConfig(ConfigBase):
+    # 是否切换阴阳师
+    switch_enabled: bool = Field(default=True, description='是否切换阴阳师')
+    # 切换阴阳师
+    switch_onmyoji: Onmyoji = Field(default=Onmyoji.Ylg, description='切换阴阳师')
     # 一键切换斗技御魂
     switch_all_soul: bool = Field(default=False, description='switch_all_soul_help')
     # 限制时间
@@ -29,42 +38,16 @@ class DuelConfig(ConfigBase):
     green_mark: GreenMarkType = Field(default=GreenMarkType.GREEN_LEFT1, description='green_mark_help')
 
 
+class DuelCelebConfig(ConfigBase):
+    # 是否开启名仕战斗
+    celeb_battle: bool = Field(default=False, description='是否开启名仕战斗')
+    # 填写第五手式神名称，如果阵容式神被办，第五手就会换式神，退出斗技
+    ban_name: str = Field(default='', description='填写第五手式神名称')
+    initial_score: int = Field(default=3800, description='设置初始斗技分值默认为8颗星之后每赢一场加100输一场减100')
+
+
 class Duel(ConfigBase):
     scheduler: Scheduler = Field(default_factory=Scheduler)
     duel_config: DuelConfig = Field(default_factory=DuelConfig)
-    # test_list: list[DuelConfig]
-    #
-    # @model_validator(mode='before')
-    # @classmethod
-    # def check_list(cls, data: dict) -> Any:
-    #     if 'test_list' not in data:
-    #         data['test_list'] = []
-    #     for key, value in data.items():
-    #         if isinstance(value, list):
-    #             continue
-    #         if 'test_list' not in key:
-    #             continue
-    #         try:
-    #             DuelConfig(**value)
-    #             data['test_list'].append(value)
-    #         except ValidationError as e:
-    #             pass
-    #     # 补全list
-    #     while len(data['test_list']) < data['scheduler']['priority']:
-    #         data['test_list'].append(DuelConfig())
-    #     return data
-    #
-    # @model_serializer()
-    # def serializer_model(self, value: Any) -> Dict[str, Any]:
-    #     properties = self.__dict__
-    #     data = {}
-    #     for key,value in properties.items():
-    #         if isinstance(value, list):
-    #             for index, v in enumerate(value):
-    #                 data[f'{key}_{index+1}'] = v.model_dump()
-    #         else:
-    #             data[key] = value.model_dump()
-    #     return data
-
-
-
+    duel_celeb_config: DuelCelebConfig = Field(default_factory=DuelCelebConfig)
+    switch_soul: SwitchSoulConfig = Field(default_factory=SwitchSoulConfig)
