@@ -1,8 +1,8 @@
 [
   {
     "itemName": "remain_ap",
-    "roiFront": "98,591,38,28",
-    "roiBack": "98,591,38,28",
+    "roiFront": "910,18,62,28",
+    "roiBack": "910,18,62,28",
     "mode": "DigitCounter",
     "method": "Default",
     "keyword": "",
@@ -28,8 +28,8 @@
   },
   {
     "itemName": "remain_ap_activity2",
-    "roiFront": "740,25,71,29",
-    "roiBack": "740,25,71,29",
+    "roiFront": "558,18,47,29",
+    "roiBack": "558,18,47,29",
     "mode": "Digit",
     "method": "Default",
     "keyword": "",
@@ -37,11 +37,11 @@
   },
   {
     "itemName": "entry_activity",
-    "roiFront": "71,241,98,32",
-    "roiBack": "71,241,98,32",
+    "roiFront": "70,103,98,32",
+    "roiBack": "70,103,98,32",
     "mode": "Single",
     "method": "Default",
-    "keyword": "阵练演武",
-    "description": "Ocr-description"
+    "keyword": "驻守平安",
+    "description": "从左侧进入战斗"
   }
 ]
