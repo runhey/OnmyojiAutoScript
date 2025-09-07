@@ -18,10 +18,13 @@ class UserStatus(str, Enum):
     ALONE = 'alone'
     WILD = 'wild'  # 还不打算实现
 
+
 class Layer(str, Enum):
     ONE = '壹层'
     TWO = '贰层'
     THREE = '叁层'
+    FOUR = '日蚀'
+
 
 class FallenSunConfig(ConfigBase):
     # 身份
