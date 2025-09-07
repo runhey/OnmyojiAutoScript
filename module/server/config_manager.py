@@ -90,5 +90,47 @@ class ConfigManager:
         new_script_number = script_numbers[-1] + 1
         return f'oas{new_script_number}'
 
+    @staticmethod
+    def rename(old_name: str, new_name: str) -> bool:
+        """
+        重命名一个配置文件
+        :param old_name: 旧的配置文件名称
+        :param new_name: 新的配置文件名称
+        :return: True or False
+        """
+        config_path = Path.cwd() / 'config'
+        old_path = config_path / f'{old_name}.json'
+        new_path = config_path / f'{new_name}.json'
+        if not old_path.exists():
+            logger.error(f'{old_path} is not exists')
+            return False
+        if new_path.exists():
+            logger.error(f'{new_path} is exists')
+            return False
+        try:
+            old_path.rename(new_path)
+            logger.info(f'rename {old_path} to {new_path}')
+            return True
+        except Exception as e:
+            logger.error(f'rename {old_path} to {new_path} failed: {e}')
+            return False
 
-
+    @staticmethod
+    def delete(file: str) -> bool:
+        """
+        删除一个配置文件
+        :param file:  不带json后缀
+        :return: True or False
+        """
+        config_path = Path.cwd() / 'config'
+        file_path = config_path / f'{file}.json'
+        if not file_path.exists():
+            logger.error(f'{file_path} is not exists')
+            return False
+        try:
+            file_path.unlink()
+            logger.info(f'delete {file_path}')
+            return True
+        except Exception as e:
+            logger.error(f'delete {file_path} failed: {e}')
+            return False
