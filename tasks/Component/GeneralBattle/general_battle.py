@@ -401,7 +401,7 @@ class GeneralBattle(GeneralBuff, GeneralBattleAssets):
                 case 2:
                     self.swipe(self.S_BATTLE_RANDOM_RIGHT, interval=20)
             # 重新设置为长战斗
-            self.device.stuck_record_add('BATTLE_STATUS_S')
+            # self.device.stuck_record_add('BATTLE_STATUS_S')
         else:
             time.sleep(0.4)  # 这样的好像不对
 

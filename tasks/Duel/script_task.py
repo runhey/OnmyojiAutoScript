@@ -117,25 +117,16 @@ class ScriptTask(GameUi, GeneralBattle, SwitchSoul, DuelAssets):
             if self.appear(self.I_BATTLE_WITH_TRAIN) or self.appear(self.I_BATTLE_WITH_TRAIN2):
                 break
 
-            # if con.honor_full_exit and self.check_honor():
-            #     # 荣誉满了，退出
-            #     logger.info('Duel task is over honor')
-            #     break
+            if con.honor_full_exit and self.check_honor():
+                # 荣誉满了，退出
+                logger.info('Duel task is over honor')
+                break
 
             # 当前分数跟目标分数比较
             if current_score >= con.target_score:
                 # 分数够了
                 logger.info('Duel task is over score')
-                # 是否刷满荣誉就退出
-                if con.honor_full_exit:
-                    if self.check_honor():
-                        # 荣誉满了，退出
-                        # self.save_image(content=f'分数: {current_score}, 本周斗技结束', push_flag=True)
-                        logger.info('Duel task is over honor')
-                        duel_week_over = True
-                        break
-                else:
-                    break
+                break
 
             # 进行一次斗技
             self.duel_one(current_score, con.green_enable, con.green_mark, celeb_con.ban_name)

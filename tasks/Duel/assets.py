@@ -88,8 +88,9 @@ class DuelAssets:
 	I_D_BATTLE2 = RuleImage(roi_front=(1171,592,69,78), roi_back=(1119,566,154,143), threshold=0.8, method="Template matching", file="./tasks/Duel/duel/duel_d_battle2.png")
 	# 禁用 
 	I_BAN = RuleImage(roi_front=(1112,537,100,100), roi_back=(1112,537,100,100), threshold=0.8, method="Template matching", file="./tasks/Duel/duel/duel_ban.png")
-	# 左上角的退出
+	# 左上角的退出 
 	I_DUEL_EXIT = RuleImage(roi_front=(14,12,43,41), roi_back=(14,12,43,41), threshold=0.8, method="Template matching", file="./tasks/Duel/duel/gb_exit.png")
+
 
 	# Ocr Rule Assets
 	# 荣誉 
@@ -104,4 +105,5 @@ class DuelAssets:
 	O_D_AUTO = RuleOcr(roi=(30,640,65,44), area=(30,640,65,44), mode="Single", method="Default", keyword="自动", name="d_auto")
 	# 被办式神名称 
 	O_D_BAN_NAME = RuleOcr(roi=(92,97,82,25), area=(92,97,82,25), mode="Single", method="Default", keyword="", name="d_ban_name")
+
 

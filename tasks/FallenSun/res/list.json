@@ -11,11 +11,15 @@
     },
     {
       "itemName": "贰",
-      "roiFront": "283,293,39,85"
+      "roiFront": "283,254,39,85"
     },
     {
       "itemName": "叁",
-      "roiFront": "281,439,43,93"
+      "roiFront": "282,360,43,93"
+    },
+    {
+      "itemName": "日",
+      "roiFront": "271,473,54,69"
     }
   ]
 }
