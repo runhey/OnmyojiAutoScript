@@ -10,6 +10,8 @@ from module.logger import logger
 class Error(BaseModel):
     handle_error: bool = Field(default=True,
                                description='handle_error_help')
+    error_repeated: bool = Field(default=False,
+                               description='是否多次出错关闭模拟器')
     save_error: bool = Field(default=True,
                              description='')
     screenshot_length: int = Field(default=1,

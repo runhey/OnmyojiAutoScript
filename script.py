@@ -489,7 +489,8 @@ class Script:
                     content=f"<{self.config_name}> 任务连续失败三次，请上线查看"
                 )
                 # 关闭模拟器
-                self.device.emulator_stop()
+                if self.config.script.error.error_repeated:
+                    self.device.emulator_stop()
                 exit(1)
 
             if success:
