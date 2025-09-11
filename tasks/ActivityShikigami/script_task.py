@@ -3,7 +3,6 @@
 # github https://github.com/runhey
 import random
 from datetime import datetime, timedelta, time
-import time as time_mode
 from tasks.base_task import BaseTask
 from tasks.Component.GeneralBattle.general_battle import GeneralBattle
 from tasks.AreaBoss.assets import AreaBossAssets
@@ -104,6 +103,7 @@ class ScriptTask(GameUi, BaseActivity, SwitchSoul, ActivityShikigamiAssets):
                     logger.info("Activity ap out and switch to game ap")
                     current_ap = ApMode.AP_GAME
                     self.switch(current_ap)
+                    continue
                 else:
                     logger.info("Activity ap out")
                     break
@@ -156,12 +156,14 @@ class ScriptTask(GameUi, BaseActivity, SwitchSoul, ActivityShikigamiAssets):
             self.C_RANDOM_BOTTOM.name = "BATTLE_RANDOM"
             if self.appear(self.I_FIRE):
                 break
-            if self.appear_then_click(self.I_SHI, interval=1):
+            if self.appear(self.I_SHI):
+                # 有时会点到小纸人其他活动入口，等待稳定
+                self.wait_until_stable(self.I_SHI)
+                self.click(self.I_SHI, interval=1)
                 continue
             if self.ocr_appear_click(self.O_ENTRY_ACTIVITY, interval=1):
                 continue
             if self.appear_then_click(self.I_TOGGLE_BUTTON, interval=3):
-                time_mode.sleep(2)
                 continue
             if self.appear_then_click(self.I_SKIP_BUTTON, interval=1.5):
                 continue
