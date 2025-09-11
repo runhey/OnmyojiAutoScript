@@ -11,6 +11,7 @@ from tasks.Component.SwitchSoul.switch_soul import SwitchSoul
 from tasks.Component.BaseActivity.base_activity import BaseActivity
 from tasks.Component.BaseActivity.config_activity import ApMode
 from tasks.ActivityShikigami.assets import ActivityShikigamiAssets
+from tasks.ActivityShikigami.config import GeneralClimb
 from tasks.GameUi.page import page_main, page_shikigami_records
 from tasks.GameUi.game_ui import GameUi
 
@@ -90,7 +91,7 @@ class ScriptTask(GameUi, BaseActivity, SwitchSoul, ActivityShikigamiAssets):
                 break
             # 2
             self.wait_until_appear(self.I_FIRE)
-            is_remain = self.check_ap_remain(current_ap)
+            is_remain = self.check_ap_remain(current_ap, config.general_climb)
             # 如果没有剩余了且这个时候是体力，就退出活动
             if not is_remain and current_ap == ApMode.AP_GAME:
                 logger.info("Game ap out")
@@ -153,7 +154,10 @@ class ScriptTask(GameUi, BaseActivity, SwitchSoul, ActivityShikigamiAssets):
             self.C_RANDOM_BOTTOM.name = "BATTLE_RANDOM"
             if self.appear(self.I_FIRE):
                 break
-            if self.appear_then_click(self.I_SHI, interval=1):
+            if self.appear(self.I_SHI):
+                # 有时会点到小纸人其他活动入口，等待稳定
+                self.wait_until_stable(self.I_SHI)
+                self.click(self.I_SHI, interval=1)
                 continue
             if self.ocr_appear_click(self.O_ENTRY_ACTIVITY, interval=1):
                 continue
@@ -189,11 +193,16 @@ class ScriptTask(GameUi, BaseActivity, SwitchSoul, ActivityShikigamiAssets):
             if self.appear_then_click(self.I_EXIT, interval=2.2, threshold=0.6):
                 continue
 
-    def check_ap_remain(self, current_ap: ApMode) -> bool:
+    def check_ap_remain(self, current_ap: ApMode, general_climb: GeneralClimb) -> bool:
         """
         检查体力是否足够
         :return: 如何还有体力，返回True，否则返回False
         """
+        # 无视体力识别，强制尝试爬塔
+        if not general_climb.check_ap_number:
+            logger.warning(f'Activity ap has not been checked')
+            return True
+        # 正常识别体力数量
         self.screenshot()
         if current_ap == ApMode.AP_ACTIVITY:
             res: int = self.O_REMAIN_AP_ACTIVITY2.ocr_digit(self.device.image)
@@ -274,9 +283,11 @@ class ScriptTask(GameUi, BaseActivity, SwitchSoul, ActivityShikigamiAssets):
                 logger.info("Win")
                 while 1:
                     self.screenshot()
-                    if not self.appear(self.I_WIN):
+                    if self.appear(self.I_FIRE):
                         break
                     if self.appear_then_click(self.I_WIN, action=self.C_RANDOM_ALL, interval=1.1):
+                        continue
+                    if self.appear_then_click(self.I_UI_REWARD, action=reward_click, interval=1.3):
                         continue
                 return True
             # 失败 -> 正常人不会失败

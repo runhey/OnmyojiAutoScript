@@ -13,6 +13,10 @@ class ApMode(str, Enum):
     AP_ACTIVITY = 'ap_activity'
     AP_GAME = 'ap_game'
 
+class ClimbMode(str, Enum):
+    CLIMB_ONE = '一阶段'
+    CLIMB_TWO = '二阶段'
+
 
 class GeneralClimb(ConfigBase):
     # 限制执行的时间
@@ -21,8 +25,12 @@ class GeneralClimb(ConfigBase):
     limit_count: int = Field(default=50, description='limit_count_help')
     # 每日使用体力挑战的最大次数，默认是300
     ap_game_max: int = Field(default=1800, description='ap_game_max_help')
+    # 爬塔活动阶段
+    climb_mode: ClimbMode = Field(default=ClimbMode.CLIMB_ONE, description='climb_mode_help')
     # 爬塔活动挂活动的体力还是游戏的体力
     ap_mode: ApMode = Field(default=ApMode.AP_ACTIVITY, description='ap_mode_help')
+    # 是否识别体力数量
+    check_ap_number: bool = Field(default=True, description='check_ap_number_help')
     # 游戏体力不足是否需要话勾玉购买
     # buy_ap_activity: bool = Field(default=False, description='buy_ap_activity_help')  # 该功能已经废弃
     # 如果挂完的活动的体力，是不是需要挂游戏的体力
