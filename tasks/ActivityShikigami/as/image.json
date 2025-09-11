@@ -128,8 +128,8 @@
   {
     "itemName": "red_exit",
     "imageName": "as_red_exit.png",
-    "roiFront": "1108,88,39,38",
-    "roiBack": "1071,52,110,135",
+    "roiFront": "1162,96,39,38",
+    "roiBack": "1120,49,110,135",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "红色退出"

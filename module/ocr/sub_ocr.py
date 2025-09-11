@@ -96,9 +96,16 @@ class Digit(Single):
 
     def after_process(self, result):
         result = super().after_process(result)
-        result = result.replace('I', '1').replace('D', '0').replace('S', '5')
-        result = result.replace('B', '8').replace('？', '2').replace('?', '2')
-        result = result.replace('d', '6')
+        replacements = {
+            'I': '1', 'D': '0', 'S': '5',
+            'B': '8', '？': '2', '?': '2',
+            'd': '6', 'o': '0', 'O': '0',
+            '→': '1'
+        }
+
+        for old, new in replacements.items():
+            result = result.replace(old, new)
+
         result = [char for char in result if char.isdigit()]
         result = ''.join(result)
 
@@ -125,9 +132,16 @@ class Digit(Single):
 class DigitCounter(Single):
     def after_process(self, result):
         result = super().after_process(result)
-        result = result.replace('I', '1').replace('D', '0').replace('S', '5')
-        result = result.replace('B', '8').replace('？', '2').replace('?', '2')
-        result = result.replace('d', '6')
+        replacements = {
+            'I': '1', 'D': '0', 'S': '5',
+            'B': '8', '？': '2', '?': '2',
+            'd': '6', 'o': '0', 'O': '0',
+            '→': '1'
+        }
+
+        for old, new in replacements.items():
+            result = result.replace(old, new)
+
         result = [char for char in result if char.isdigit() or char == '/']
         result = ''.join(result)
         return result
