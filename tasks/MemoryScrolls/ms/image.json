@@ -124,5 +124,14 @@
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"
+  },
+  {
+    "itemName": "ms_double_scrolls_enter",
+    "imageName": "ms_ms_double_scrolls_enter.png",
+    "roiFront": "565,586,154,40",
+    "roiBack": "565,586,154,40",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "双绘卷进入按钮"
   }
 ]
