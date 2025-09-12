@@ -20,7 +20,7 @@ main_costume_model = {
         'I_MAIN_GOTO_SUMMON': f'I_MAIN_GOTO_SUMMON_{i}',
         'I_MAIN_GOTO_TOWN': f'I_MAIN_GOTO_TOWN_{i}',
         'I_PET_HOUSE': f'I_PET_HOUSE_{i}'
-    } for i in range(1, 12)
+    } for i in range(1, 13)
 }
 
 
