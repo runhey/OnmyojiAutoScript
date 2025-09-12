@@ -11,7 +11,9 @@ from module.base.decorator import cached_property
 from module.logger import logger
 from module.base.utils import is_approx_rectangle
 
+
 class RuleImage:
+    debug_mode: bool = False
 
     def __init__(self, roi_front: tuple, roi_back: tuple, method: str, threshold: float, file: str) -> None:
         """
@@ -156,7 +158,8 @@ class RuleImage:
 
         res = cv2.matchTemplate(source, mat, cv2.TM_CCOEFF_NORMED)
         min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(res)  # 最小匹配度，最大匹配度，最小匹配度的坐标，最大匹配度的坐标
-        # logger.attr(self.name, max_val)
+        if self.debug_mode:
+            logger.attr(self.name, f'matching score {max_val:.5f}')
 
         if max_val > threshold:
             self.roi_front[0] = max_loc[0] + self.roi_back[0]
@@ -218,6 +221,7 @@ class RuleImage:
         return int(x + w//2), int(y + h//2)
 
     def test_match(self, image: np.array):
+        self.debug_mode = True
         if self.is_template_match:
             return self.match(image)
         if self.is_sift_flann:

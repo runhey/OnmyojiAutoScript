@@ -40,5 +40,11 @@
     "roiFront": "108,509,993,190",
     "roiBack": "108,509,993,190",
     "description": "贡献完成跳结算"
+  },
+  {
+    "itemName": "ms_double_scrolls_2",
+    "roiFront": "714,128,464,397",
+    "roiBack": "714,128,464,397",
+    "description": "双绘卷之二"
   }
 ]
