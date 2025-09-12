@@ -9,6 +9,10 @@ from enum import Enum
 from tasks.Component.config_scheduler import Scheduler
 from tasks.Component.config_base import ConfigBase, Time
 
+class DoubleScrolls(str, Enum):
+    ONE = "默认绘卷一"
+    TWO = "双绘卷之二"
+
 class ScrollNumber(str, Enum):
     ONE = "卷一"
     TWO = "卷二"
@@ -19,6 +23,7 @@ class ScrollNumber(str, Enum):
 
 class MemoryScrollsConfig(ConfigBase):
     auto_contribute_memoryscrolls: bool = Field(default=True, description='自动贡献绘卷碎片')
+    double_scrolls: DoubleScrolls = Field(default=DoubleScrolls.ONE, description='double_scrolls_help')
     scroll_number: ScrollNumber = Field(default=ScrollNumber.ONE, description='scroll_number_help')
     auto_close_exploration: bool = Field(default=False, description='指定绘卷结束后，自动关闭探索任务，避免长时间无意义执行')
     notification_95: bool = Field(default=False, description='到达95%进度时发送通知')

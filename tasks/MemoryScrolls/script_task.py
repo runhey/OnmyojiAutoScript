@@ -29,9 +29,20 @@ class ScriptTask(GameUi, MemoryScrollsAssets):
         if self.wait_until_appear(self.I_MS_ENTER, wait_time=30):
             while 1:
                 self.screenshot()
-                if self.appear(self.I_MS_MAIN):
+                if self.appear(self.I_MS_FRAGMENT_S):
                     logger.info('Entered Memory Scrolls main page')
                     break
+                # 周年庆等时期会使用双绘卷
+                if self.appear(self.I_MS_DOUBLE_SCROLLS_ENTER):
+                    logger.info('Using Double Memory Scrolls')
+                    if con.double_scrolls == con.double_scrolls.ONE:
+                        logger.info('Choose Double Memory Scrolls One')
+                    else:
+                        logger.info('Choose Double Memory Scrolls Two')
+                        self.click(self.C_MS_DOUBLE_SCROLLS_2, interval=1)
+                    if self.appear_then_click(self.I_MS_DOUBLE_SCROLLS_ENTER, interval=1):
+                        continue
+                # 右上角绘卷铃铛
                 if self.appear_then_click(self.I_MS_ENTER, interval=1):
                     continue
         else:
