@@ -3,7 +3,6 @@
 # github https://github.com/runhey
 import random
 from datetime import datetime, timedelta, time
-
 from tasks.base_task import BaseTask
 from tasks.Component.GeneralBattle.general_battle import GeneralBattle
 from tasks.AreaBoss.assets import AreaBossAssets
@@ -18,6 +17,9 @@ from module.logger import logger
 from module.exception import TaskEnd
 from module.base.protect import random_sleep
 
+import cv2
+import numpy as np
+from module.atom.ocr import RuleOcr
 
 class ScriptTask(GameUi, BaseActivity, SwitchSoul, ActivityShikigamiAssets):
 
@@ -101,6 +103,7 @@ class ScriptTask(GameUi, BaseActivity, SwitchSoul, ActivityShikigamiAssets):
                     logger.info("Activity ap out and switch to game ap")
                     current_ap = ApMode.AP_GAME
                     self.switch(current_ap)
+                    continue
                 else:
                     logger.info("Activity ap out")
                     break
@@ -153,7 +156,10 @@ class ScriptTask(GameUi, BaseActivity, SwitchSoul, ActivityShikigamiAssets):
             self.C_RANDOM_BOTTOM.name = "BATTLE_RANDOM"
             if self.appear(self.I_FIRE):
                 break
-            if self.appear_then_click(self.I_SHI, interval=1):
+            if self.appear(self.I_SHI):
+                # 有时会点到小纸人其他活动入口，等待稳定
+                self.wait_until_stable(self.I_SHI)
+                self.click(self.I_SHI, interval=1)
                 continue
             if self.ocr_appear_click(self.O_ENTRY_ACTIVITY, interval=1):
                 continue
@@ -196,7 +202,8 @@ class ScriptTask(GameUi, BaseActivity, SwitchSoul, ActivityShikigamiAssets):
         """
         self.screenshot()
         if current_ap == ApMode.AP_ACTIVITY:
-            res: int = self.O_REMAIN_AP_ACTIVITY2.ocr_digit(self.device.image)
+            res: int = self.O_REMAIN_AP_ACTIVITY2.ocr_digit(
+                self._prepare_image_for_ocr(self.device.image, asset=self.O_REMAIN_AP_ACTIVITY2))
             if res <= 0:
                 logger.warning(f'Activity ap {res} not enough')
                 return False
@@ -208,7 +215,7 @@ class ScriptTask(GameUi, BaseActivity, SwitchSoul, ActivityShikigamiAssets):
             # return True
 
         elif current_ap == ApMode.AP_GAME:
-            cu: int = self.O_REMAIN_AP.ocr_digit(self.device.image)
+            cu: int = self.O_REMAIN_AP.ocr_digit(self._prepare_image_for_ocr(self.device.image,asset=self.O_REMAIN_AP))
             if cu > 0:
                 logger.warning(f'Game ap {cu} more than 0')
                 return True
@@ -278,7 +285,8 @@ class ScriptTask(GameUi, BaseActivity, SwitchSoul, ActivityShikigamiAssets):
                         break
                     if self.appear_then_click(self.I_WIN, action=self.C_RANDOM_ALL, interval=1.1):
                         continue
-                return True
+                if self.appear(self.I_FIRE):
+                    return True
             # 失败 -> 正常人不会失败
             if self.appear(self.I_FALSE):
                 logger.warning('False battle')
@@ -287,6 +295,66 @@ class ScriptTask(GameUi, BaseActivity, SwitchSoul, ActivityShikigamiAssets):
             # 如果开启战斗过程随机滑动
             if random_click_swipt_enable:
                 self.random_click_swipt()
+
+    def _prepare_image_for_ocr(self, image: np.ndarray, asset: RuleOcr) -> np.ndarray:
+
+        image_copy = image.copy()
+        x, y, w, h = asset.roi
+
+        roi_to_process = image_copy[y:y + h, x:x + w]
+        if len(roi_to_process.shape) == 3:
+            gray_image = cv2.cvtColor(roi_to_process, cv2.COLOR_BGR2GRAY)
+        else:
+            gray_image = roi_to_process
+
+        # 自适应二值化
+        _, binary_norm = cv2.threshold(gray_image, 127, 255, cv2.THRESH_BINARY | cv2.THRESH_OTSU)
+        _, binary_inv = cv2.threshold(gray_image, 127, 255, cv2.THRESH_BINARY_INV | cv2.THRESH_OTSU)
+
+        if cv2.countNonZero(binary_norm) < cv2.countNonZero(binary_inv):
+            binary_correct = binary_norm
+        else:
+            binary_correct = binary_inv
+
+        kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (5, 1))
+        dilated_image = cv2.dilate(binary_correct, kernel, iterations=1)
+
+        # 找轮廓
+        contours, _ = cv2.findContours(dilated_image, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+
+        processed_roi_content = None
+        if contours:
+            all_points = np.concatenate(contours, axis=0)
+            bx, by, bw, bh = cv2.boundingRect(all_points)
+
+            processed_roi_content = binary_correct[by:by + bh, bx:bx + bw]
+
+        centered_roi = np.full((h, w), 255, dtype=np.uint8)  # 255代表白色
+
+        if processed_roi_content is not None:
+            content_h, content_w = processed_roi_content.shape
+
+            if content_h <= h and content_w <= w:
+                # 计算居中粘贴的位置，放到中间
+                start_y = (h - content_h) // 2
+                start_x = (w - content_w) // 2
+
+                paste_area = centered_roi[start_y:start_y + content_h, start_x:start_x + content_w]
+
+                paste_area[processed_roi_content == 255] = 0
+            else:
+                logger.warning(f"Content for asset '{asset.name}' is larger than ROI. Skipping centering.")
+                # 内容过大，直接使用原始二值图的反转作为结果
+                centered_roi = cv2.bitwise_not(binary_correct)
+        else:
+            logger.warning(f"No content found in ROI for asset: {asset.name}. ROI will be blank.")
+
+        processed_roi_bgr = cv2.cvtColor(centered_roi, cv2.COLOR_GRAY2BGR)
+        image_copy[y:y + h, x:x + w] = processed_roi_bgr
+
+        return image_copy
+
+
 
     """
     def battle_wait(self, random_click_swipt_enable: bool) -> bool:
