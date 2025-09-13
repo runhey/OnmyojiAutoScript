@@ -2,8 +2,8 @@
   {
     "itemName": "kirin_challage",
     "imageName": "kirin_kirin_challage.png",
-    "roiFront": "1064,559,117,108",
-    "roiBack": "1064,559,117,108",
+    "roiFront": "1134,597,90,54",
+    "roiBack": "1134,597,90,54",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "麒麟的挑战"
@@ -20,10 +20,10 @@
   {
     "itemName": "kirin_end",
     "imageName": "kirin_kirin_end.png",
-    "roiFront": "1049,579,143,59",
-    "roiBack": "1049,579,143,59",
+    "roiFront": "1126,601,104,44",
+    "roiBack": "1126,601,104,44",
     "method": "Template matching",
     "threshold": 0.8,
-    "description": "已结束"
+    "description": "麒麟已挑战"
   }
 ]
