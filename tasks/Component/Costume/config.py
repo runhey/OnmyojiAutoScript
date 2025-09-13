@@ -18,6 +18,7 @@ class MainType(str, Enum):
     COSTUME_MAIN_9 = 'costume_main_9'  # 结缘神社
     COSTUME_MAIN_10 = 'costume_main_10'  # 望月幽庭
     COSTUME_MAIN_11 = 'costume_main_11'  # 鏖刀禁府
+    COSTUME_MAIN_12 = 'costume_main_12'  # 龙吟溯玉
 
 # 结界皮肤
 class RealmType(str, Enum):
