@@ -52,38 +52,30 @@ for i in range(1, 11):
         })
     battle_theme_model[getattr(BattleType, f"COSTUME_BATTLE_{i}")] = entry
 
+# 幕间主题
+shikigami_costume_model = {
+    getattr(ShikigamiType, f"COSTUME_SHIKIGAMI_{i}"): {
+        # GameUi 进出式神录
+        'I_CHECK_RECORDS': f'I_CHECK_RECORDS_{i}',
+        'I_RECORD_SOUL_BACK': f'I_RECORD_SOUL_BACK_{i}',
+        # SwitchSoul 相关
+        'I_SOUL_PRESET': f'I_SOUL_PRESET_{i}',
+        'I_SOU_CHECK_IN': f'I_SOU_CHECK_IN_{i}',
+        'I_SOU_TEAM_PRESENT': f'I_SOU_TEAM_PRESENT_{i}',
+        'I_SOU_CLICK_PRESENT': f'I_SOU_CLICK_PRESENT_{i}',
+        'I_SOU_SWITCH_SURE': f'I_SOU_SWITCH_SURE_{i}',
+        # SwitchSoul 分组相关 (1-7组)
+        **{f'I_SOU_CHECK_GROUP_{g}': f'I_SOU_CHECK_GROUP_{g}_{i}' for g in range(1, 8)},
+        # SwitchSoul 队伍相关 (1-4队)
+        **{f'I_SOU_SWITCH_{t}': f'I_SOU_SWITCH_{t}_{i}' for t in range(1, 5)},
+        # SoulsTidy 相关
+        'I_ST_SOULS': f'I_ST_SOULS_{i}',
+        'I_ST_REPLACE': f'I_ST_REPLACE_{i}',
+    }
+    for i in range(1, 3)  # 目前只有 COSTUME_SHIKIGAMI_1，如需扩展可改 range
+}
 
 class CostumeBase:
-
-    # 幕间（式神录）皮肤映射：ShikigamiType -> { 原始资产名: 皮肤资产名 }
-    # 使用动态生成方式，减少重复代码并支持扩展
-    _shikigami_base_assets = [
-        # GameUi 进出式神录
-        'I_CHECK_RECORDS',
-        'I_RECORD_SOUL_BACK',
-        # SwitchSoul 相关
-        'I_SOUL_PRESET',
-        'I_SOU_CHECK_IN',
-        'I_SOU_TEAM_PRESENT',
-        'I_SOU_CLICK_PRESENT',
-        'I_SOU_SWITCH_SURE',
-        # SwitchSoul 分组相关 (1-7组)
-        *[f'I_SOU_CHECK_GROUP_{i}' for i in range(1, 8)],
-        # SwitchSoul 队伍相关 (1-4队)
-        *[f'I_SOU_SWITCH_{i}' for i in range(1, 5)],
-        # SoulsTidy 相关
-        'I_ST_SOULS',
-        'I_ST_REPLACE',
-    ]
-    
-    shikigami_costume_model = {
-        getattr(ShikigamiType, f"COSTUME_SHIKIGAMI_{i}"): {
-            asset: f"{asset}_{i}" for asset in _shikigami_base_assets
-        }
-        for i in range(1, 2)  # 支持20种幕间皮肤
-        if hasattr(ShikigamiType, f"COSTUME_SHIKIGAMI_{i}")  # 确保类型存在
-    }
-
     def check_costume(self, config: CostumeConfig=None):
         if config is None:
             config: CostumeConfig = self.config.model.global_game.costume_config
@@ -142,7 +134,7 @@ class CostumeBase:
             return
         logger.info(f'Switch shikigami theme {shikigami_type}')
         shikigami_assets = CostumeShikigamiAssets()
-        model = self.shikigami_costume_model.get(shikigami_type, {})
+        model = shikigami_costume_model.get(shikigami_type, {})
         for key, value in model.items():
             if not hasattr(shikigami_assets, value):
                 # 尚未采集完成的资产，跳过
