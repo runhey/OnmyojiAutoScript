@@ -67,7 +67,7 @@ class ScriptTask(GameUi, SwitchSoul, SwitchSoulAssets, SoulsTidyAssets):
         logger.info('Shikigami Costume Test Done')
 
         # 测试御魂切换功能 (1-7组，每组1-4切换)
-        # self.test_switch_soul_all_groups()
+        self.test_switch_soul_all_groups()
         
         # 测试御魂奉纳功能
         self.test_souls_tidy_donation()
@@ -162,6 +162,6 @@ if __name__ == '__main__':
     c = Config('oas1')
     d = Device(c)
     t = ScriptTask(c, d)
-    t.set_costume(ShikigamiType.COSTUME_SHIKIGAMI_2)
+    t.set_costume(ShikigamiType.COSTUME_SHIKIGAMI_4)
     # t.set_costume(ShikigamiType.COSTUME_SHIKIGAMI_DEFAULT)
     t.run()
