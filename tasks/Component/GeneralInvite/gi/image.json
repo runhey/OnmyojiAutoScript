@@ -29,8 +29,8 @@
   {
     "itemName": "fire",
     "imageName": "gi_fire.png",
-    "roiFront": "1179,602,81,87",
-    "roiBack": "1179,602,81,87",
+    "roiFront": "1179,602,81,74",
+    "roiBack": "1179,602,81,74",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"
