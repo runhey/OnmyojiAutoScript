@@ -10,6 +10,7 @@ from tasks.Component.Costume.config import (MainType, CostumeConfig, RealmType,
 from tasks.Component.Costume.assets import CostumeAssets
 from tasks.Component.CostumeRealm.assets import CostumeRealmAssets
 from tasks.Component.CostumeBattle.assets import CostumeBattleAssets
+from tasks.Component.CostumeShikigami.assets import CostumeShikigamiAssets
 
 # 庭院皮肤
 # 主界面皮肤（使用字典推导式动态生成）
@@ -51,15 +52,37 @@ for i in range(1, 11):
         })
     battle_theme_model[getattr(BattleType, f"COSTUME_BATTLE_{i}")] = entry
 
+# 幕间主题
+shikigami_costume_model = {
+    getattr(ShikigamiType, f"COSTUME_SHIKIGAMI_{i}"): {
+        # GameUi 进出式神录
+        'I_CHECK_RECORDS': f'I_CHECK_RECORDS_{i}',
+        'I_RECORD_SOUL_BACK': f'I_RECORD_SOUL_BACK_{i}',
+        # SwitchSoul 相关
+        'I_SOUL_PRESET': f'I_SOUL_PRESET_{i}',
+        'I_SOU_CHECK_IN': f'I_SOU_CHECK_IN_{i}',
+        'I_SOU_TEAM_PRESENT': f'I_SOU_TEAM_PRESENT_{i}',
+        'I_SOU_CLICK_PRESENT': f'I_SOU_CLICK_PRESENT_{i}',
+        'I_SOU_SWITCH_SURE': f'I_SOU_SWITCH_SURE_{i}',
+        # SwitchSoul 分组相关 (1-7组)
+        **{f'I_SOU_CHECK_GROUP_{g}': f'I_SOU_CHECK_GROUP_{g}_{i}' for g in range(1, 8)},
+        # SwitchSoul 队伍相关 (1-4队)
+        **{f'I_SOU_SWITCH_{t}': f'I_SOU_SWITCH_{t}_{i}' for t in range(1, 5)},
+        # SoulsTidy 相关
+        'I_ST_SOULS': f'I_ST_SOULS_{i}',
+        'I_ST_REPLACE': f'I_ST_REPLACE_{i}',
+    }
+    for i in range(1, 5)  # 目前只有 COSTUME_SHIKIGAMI_1，如需扩展可改 range
+}
 
 class CostumeBase:
-
     def check_costume(self, config: CostumeConfig=None):
         if config is None:
             config: CostumeConfig = self.config.model.global_game.costume_config
         self.check_costume_main(config.costume_main_type)
         self.check_costume_realm(config.costume_realm_type)
         self.check_costume_battle(config.costume_battle_type)
+        self.check_costume_shikigami(config.costume_shikigami_type)
 
     def replace_img(self,
                     asset_before: str,
@@ -105,6 +128,20 @@ class CostumeBase:
                 self.replace_img(key, assert_value, rp_roi_back=False)
             else:
                 self.replace_img(key, assert_value)
+
+    def check_costume_shikigami(self, shikigami_type: ShikigamiType):
+        if shikigami_type == ShikigamiType.COSTUME_SHIKIGAMI_DEFAULT:
+            return
+        logger.info(f'Switch shikigami theme {shikigami_type}')
+        shikigami_assets = CostumeShikigamiAssets()
+        model = shikigami_costume_model.get(shikigami_type, {})
+        for key, value in model.items():
+            if not hasattr(shikigami_assets, value):
+                # 尚未采集完成的资产，跳过
+                continue
+            assert_value: RuleImage = getattr(shikigami_assets, value)
+            # 一般不需要固定 back ROI，如确有需要可在此为特例设置 rp_roi_back=False
+            self.replace_img(key, assert_value)
 
 
 if __name__ == '__main__':

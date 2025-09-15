@@ -35,6 +35,11 @@ class ThemeType(str, Enum):
 # 幕间，就是式神录这里
 class ShikigamiType(str, Enum):
     COSTUME_SHIKIGAMI_DEFAULT = 'costume_shikigami_default'  # 静栖走廊
+    COSTUME_SHIKIGAMI_1 = 'costume_shikigami_1'  # 妙音空境
+    COSTUME_SHIKIGAMI_2 = 'costume_shikigami_2'  # 缘台樱垂
+    COSTUME_SHIKIGAMI_3 = 'costume_shikigami_3'  # 启程之刻
+    COSTUME_SHIKIGAMI_4 = 'costume_shikigami_4'  # 冥夜游火
+    COSTUME_SHIKIGAMI_5 = 'costume_shikigami_5'  # 契光水境
 
 # 签到主题
 class SignType(str, Enum):
