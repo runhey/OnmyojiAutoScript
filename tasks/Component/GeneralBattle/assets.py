@@ -145,6 +145,8 @@ class GeneralBattleAssets:
 	O_BATTLE_PREPARE = RuleOcr(roi=(1122,546,92,51), area=(1122,546,92,51), mode="Single", method="Default", keyword="准备", name="battle_prepare")
 	# 预设,部分场景预设按钮上的文字为'预设'+数字,导致点击preset失败 
 	O_PRESET = RuleOcr(roi=(20,620,60,80), area=(20,620,60,80), mode="Single", method="Default", keyword="预", name="preset")
+    # 预设
+	O_PRESET_FULL = RuleOcr(roi=(20,620,60,80), area=(20,620,60,80), mode="Single", method="Default", keyword="预设", name="preset")
 
 
 	# Swipe Rule Assets

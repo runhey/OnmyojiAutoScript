@@ -16,5 +16,14 @@
     "method": "Default",
     "keyword": "预",
     "description": "预设,部分场景预设按钮上的文字为'预设'+数字,导致点击preset失败"
+  },
+  {
+    "itemName": "preset_full",
+    "roiFront": "20,620,60,80",
+    "roiBack":  "20,620,60,80",
+    "mode": "Single",
+    "method": "Default",
+    "keyword": "预设",
+    "description": "预设"
   }
 ]
