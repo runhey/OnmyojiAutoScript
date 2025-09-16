@@ -105,8 +105,7 @@ class ScriptTask(GameUi, GeneralBattle, GeneralInvite, SwitchSoul, HuntAssets):
         logger.hr('kirin', 2)
         while 1:
             self.screenshot()
-            if self.appear(self.I_FIRE):
-                self.click_fire()
+            if self.appear(self.I_PREPARE_HIGHLIGHT):
                 break
             if self.appear_then_click(self.I_UI_CONFIRM, interval=0.9):
                 continue
