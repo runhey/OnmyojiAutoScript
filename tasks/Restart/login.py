@@ -312,3 +312,4 @@ class LoginHandler(BaseTask, RestartAssets):
     def set_specific_usr(self, character: str):
         self.character = character
         self.O_LOGIN_SPECIFIC_SERVE.keyword = character
+

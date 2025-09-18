@@ -51,6 +51,7 @@ from tasks.DemonRetreat.config import DemonRetreat
 
 # 这一部分是活动的配置-----------------------------------------------------------------------------------------------------
 from tasks.ActivityShikigami.config import ActivityShikigami
+from tasks.ActivityCommon.config import ActivityCommon
 from tasks.MetaDemon.config import MetaDemon
 from tasks.FrogBoss.config import FrogBoss
 from tasks.FloatParade.config import FloatParade
@@ -113,6 +114,7 @@ class ConfigModel(ConfigBase):
 
     # 这些是活动的
     activity_shikigami: ActivityShikigami = Field(default_factory=ActivityShikigami)
+    activity_common: ActivityCommon = Field(default_factory=ActivityCommon)
     meta_demon: MetaDemon = Field(default_factory=MetaDemon)
     frog_boss: FrogBoss = Field(default_factory=FrogBoss)
     float_parade: FloatParade = Field(default_factory=FloatParade)

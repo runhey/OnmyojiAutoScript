@@ -77,11 +77,12 @@ if __name__ == '__main__':
     from module.config.config import Config
     from module.device.device import Device
 
-    config = Config('oas1')
+    config = Config('账号切换')
     device = Device(config)
-    task = ScriptTask(config, device)
-    task.config.update_scheduler()
-    task.delay_pending_tasks()
+    s = ScriptTask(config, device)
+    s.app_start()
+    # task.config.update_scheduler()
+    # task.delay_pending_tasks()
     # task.screenshot()
     # print(task.appear_then_click(task.I_LOGIN_SCROOLL_CLOSE, threshold=0.9))
 
