@@ -1,35 +1,29 @@
 # This Python file uses the following encoding: utf-8
 # @author runhey
 # github https://github.com/runhey
-import numpy as np
 
 from time import sleep
-from datetime import datetime, timedelta, time
-from typing import Union
 
-from dev_tools.decorator import usage_time
-
-from module.config.utils import convert_to_underscore
-from module.atom.image import RuleImage
-from module.atom.click import RuleClick
-from module.atom.long_click import RuleLongClick
-from module.atom.swipe import RuleSwipe
-from module.atom.ocr import RuleOcr
-from module.atom.list import RuleList
-from module.atom.gif import RuleGif
-from module.ocr.base_ocr import OcrMode, OcrMethod
+from datetime import datetime, timedelta
 from module.atom.animate import RuleAnimate
-from module.logger import logger
+from module.atom.click import RuleClick
+from module.atom.gif import RuleGif
+from module.atom.image import RuleImage
+from module.atom.list import RuleList
+from module.atom.long_click import RuleLongClick
+from module.atom.ocr import RuleOcr
+from module.atom.swipe import RuleSwipe
 from module.base.timer import Timer
 from module.config.config import Config
-from module.config.utils import get_server_next_update, nearest_future, dict_to_kv, parse_tomorrow_server
 from module.device.device import Device
-from tasks.GlobalGame.assets import GlobalGameAssets
-from tasks.GlobalGame.config_emergency import FriendInvitation, WhenNetworkAbnormal, WhenNetworkError
+from module.exception import ScriptError
+from module.logger import logger
+from module.ocr.base_ocr import OcrMode
 from tasks.Component.Costume.costume_base import CostumeBase
-from tasks.Component.config_base import ConfigBase, Time
-
-from module.exception import GameStuckError, ScriptError
+from tasks.Component.config_base import Time
+from tasks.GlobalGame.assets import GlobalGameAssets
+from tasks.GlobalGame.config_emergency import FriendInvitation
+from typing import Union
 
 
 class BaseTask(GlobalGameAssets, CostumeBase):
@@ -234,20 +228,25 @@ class BaseTask(GlobalGameAssets, CostumeBase):
 
     def wait_until_appear_then_click(self,
                                      target: RuleImage,
-                                     action: Union[RuleClick, RuleLongClick] = None) -> None:
+                                     action: Union[RuleClick, RuleLongClick] = None,
+                                     wait_time: int = None) -> bool:
         """
         等待直到出现目标，然后点击
+        :param wait_time:
         :param action:
         :param target:
         :return:
         """
-        self.wait_until_appear(target)
+        if not self.wait_until_appear(target, wait_time):
+            return False
+        click_x, click_y = target.coord()
         if action is None:
-            self.device.click(target.coord(), control_name=target.name)
+            self.device.click(click_x, click_y, control_name=target.name)
         elif isinstance(action, RuleLongClick):
-            self.device.long_click(target.coord(), duration=action.duration / 1000, control_name=target.name)
+            self.device.long_click(click_x, click_y, duration=action.duration / 1000, control_name=target.name)
         elif isinstance(action, RuleClick):
-            self.device.click(target.coord(), control_name=target.name)
+            self.device.click(click_x, click_y, control_name=target.name)
+        return True
 
     def wait_until_disappear(self, target: RuleImage) -> None:
         while 1:
@@ -459,7 +458,7 @@ class BaseTask(GlobalGameAssets, CostumeBase):
             self.device.click(x=x, y=y, control_name=target.name)
         return True
 
-    def list_find(self, target: RuleList, name: str | list[str]) -> bool:
+    def list_find(self, target: RuleList, name: str | list[str]) -> bool | tuple:
         """
         会一致在列表寻找目标，找到了就退出。
         如果是图片列表会一直往下找

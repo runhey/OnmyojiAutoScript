@@ -1,0 +1,13 @@
+{
+  "name": "act_list_img",
+  "direction": "vertical",
+  "type": "image",
+  "roiBack": "140,105,53,479",
+  "description": "活动列表页图像列表",
+  "list": [
+    {
+      "itemName": "climb_act",
+      "roiFront": "143,266,46,78"
+    }
+  ]
+}

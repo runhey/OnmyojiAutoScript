@@ -1,0 +1,20 @@
+[
+  {
+    "itemName": "paper_doll_close",
+    "imageName": "additional_paper_doll_close.png",
+    "roiFront": "1253,102,25,62",
+    "roiBack": "1238,58,40,153",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "act_list_expand",
+    "imageName": "additional_act_list_expand.png",
+    "roiFront": "1191,508,30,25",
+    "roiBack": "1160,456,92,103",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  }
+]

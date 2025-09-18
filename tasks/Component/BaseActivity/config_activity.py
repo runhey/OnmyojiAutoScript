@@ -16,22 +16,31 @@ class ApMode(str, Enum):
 
 class GeneralClimb(ConfigBase):
     # 限制执行的时间
-    limit_time: Time = Field(default=Time(minute=30), description='limit_time_help')
-    # 限制执行的次数
-    limit_count: int = Field(default=50, description='limit_count_help')
-    # 每日使用体力挑战的最大次数，默认是300
-    ap_game_max: int = Field(default=1800, description='ap_game_max_help')
-    # 爬塔活动挂活动的体力还是游戏的体力
-    ap_mode: ApMode = Field(default=ApMode.AP_ACTIVITY, description='ap_mode_help')
-    # 游戏体力不足是否需要话勾玉购买
-    # buy_ap_activity: bool = Field(default=False, description='buy_ap_activity_help')  # 该功能已经废弃
-    # 如果挂完的活动的体力，是不是需要挂游戏的体力
-    # 在我的设计理念中：活动体力>游戏体力。所以不提供从300挂满然后才到挂活动币
-    activity_toggle: bool = Field(default=False, description='activity_toggle_help')
+    limit_time: time = Field(default=Time(minute=30), description='限制爬塔运行时间')
+    # 限制门票爬塔的次数
+    pass_limit: int = Field(default=50, description='门票爬塔的最大次数')
+    # 限制体力爬塔的次数
+    ap_limit: int = Field(default=300, description='体力爬塔的最大次数')
+    # 限制boss战爬塔的次数
+    boss_limit: int = Field(default=20, description='boss战爬塔的最大次数')
+    # 启用门票爬塔
+    enable_pass: bool = Field(default=True, description='是否启用门票爬塔')
+    # 启用体力爬塔
+    enable_ap: bool = Field(default=True, description='是否启用体力爬塔')
+    # 启用boss战爬塔
+    enable_boss: bool = Field(default=True, description='是否启用boss战爬塔')
+    # 爬塔运行顺序
+    run_sequence: str = Field(default='pass,boss,ap', description='爬塔运行顺序,英文逗号分隔,从左到右运行,若没启用自动跳过对应类型(pass:门票,boss:boss战,ap:体力)')
+    # 门票爬塔buff
+    pass_buff: str = Field(default='buff_4,buff_5', description='门票爬塔加成,buff1-5,加成页从左往右顺序')
+    # 体力爬塔buff
+    ap_buff: str = Field(default='buff_4,buff_5', description='体力爬塔加成,buff1-5,加成页从左往右顺序')
+    # boss爬塔buff
+    boss_buff: str = Field(default='buff_1,buff_3', description='boss战爬塔加成,buff1-5,加成页从左往右顺序')
     # 结束后激活 御魂清理
-    active_souls_clean: bool = Field(default=False, description='active_souls_clean_help')
+    active_souls_clean: bool = Field(default=False, description='是否运行结束后清理御魂')
     # 点击战斗随机休息
-    random_sleep: bool = Field(default=False, description='random_delay_help')
+    random_sleep: bool = Field(default=False, description='是否启用在点击战斗前随机休息')
 
     @validator('limit_time', pre=True, always=True)
     def parse_limit_time(cls, value):
@@ -51,21 +60,3 @@ class GeneralClimb(ConfigBase):
                     logger.warning('Invalid limit_time value. Expected format: HH:MM:SS')
                     return time(hour=0, minute=30, second=0)
         return value
-
-    @validator('ap_game_max', pre=True, always=True)
-    def reset_game_max(cls, value):
-        def_value = int(300)
-        if isinstance(value, str):
-            try:
-                return int(value)
-            except ValueError:
-                logger.warning('Invalid ap_game_max value. Expected format: int')
-                return def_value
-        elif isinstance(value, int):
-            return def_value
-        return def_value
-
-    # 适用于活动爬塔仅有游戏体力的情况
-    # @field_validator('ap_mode', mode='after')
-    # def check_mode(cls, value):
-    #     return ApMode.AP_GAME

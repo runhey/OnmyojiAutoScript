@@ -28,5 +28,47 @@
     "roiFront": "42,94,1207,543",
     "roiBack": "42,94,1207,543",
     "description": "description"
+  },
+  {
+    "itemName": "buff_1_up",
+    "roiFront": "204,626,134,39",
+    "roiBack": "204,626,134,39",
+    "description": "替换buff1"
+  },
+  {
+    "itemName": "buff_2_up",
+    "roiFront": "414,625,134,39",
+    "roiBack": "414,625,134,39",
+    "description": "替换buff2"
+  },
+  {
+    "itemName": "buff_3_up",
+    "roiFront": "619,625,134,39",
+    "roiBack": "619,625,134,39",
+    "description": "替换buff3"
+  },
+  {
+    "itemName": "buff_4_up",
+    "roiFront": "831,625,134,39",
+    "roiBack": "831,625,134,39",
+    "description": "替换buff4"
+  },
+  {
+    "itemName": "buff_5_up",
+    "roiFront": "1043,624,134,39",
+    "roiBack": "1043,624,134,39",
+    "description": "替换buff5"
+  },
+  {
+    "itemName": "buff_1_box",
+    "roiFront": "333,338,70,72",
+    "roiBack": "333,338,70,72",
+    "description": "上阵buff_1位置"
+  },
+  {
+    "itemName": "buff_2_box",
+    "roiFront": "877,220,59,62",
+    "roiBack": "877,220,59,62",
+    "description": "上阵buff_2位置"
   }
 ]
