@@ -1,0 +1,13 @@
+{
+  "name": "act_list_ocr",
+  "direction": "vertical",
+  "type": "ocr",
+  "roiBack": "192,90,190,513",
+  "description": "活动列表页文字列表",
+  "list": [
+    {
+      "itemName": "冰火永烬",
+      "roiFront": "194,361,186,78"
+    }
+  ]
+}

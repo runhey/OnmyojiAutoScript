@@ -30,7 +30,7 @@
     "itemName": "ui_back_red",
     "imageName": "ui_ui_back_red.png",
     "roiFront": "1041,111,34,38",
-    "roiBack": "834,15,427,200",
+    "roiBack": "877,15,383,254",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"

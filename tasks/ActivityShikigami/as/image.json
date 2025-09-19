@@ -66,7 +66,7 @@
     "itemName": "fire",
     "imageName": "as_fire.png",
     "roiFront": "1131,598,103,54",
-    "roiBack": "1123,589,124,88",
+    "roiBack": "1113,564,136,111",
     "method": "Template matching",
     "threshold": 0.7,
     "description": "点击战斗"
@@ -119,8 +119,8 @@
   {
     "itemName": "skip_button",
     "imageName": "as_skip_button.png",
-    "roiFront": "1154,34,64,30",
-    "roiBack": "1154,34,64,30",
+    "roiFront": "1159,37,51,22",
+    "roiBack": "1141,27,86,43",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "右上跳过按钮"
@@ -142,5 +142,104 @@
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"
+  },
+  {
+    "itemName": "boss",
+    "imageName": "as_boss.png",
+    "roiFront": "1054,265,33,132",
+    "roiBack": "966,131,211,355",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "爬塔进入首领战"
+  },
+  {
+    "itemName": "check_boss",
+    "imageName": "as_check_boss.png",
+    "roiFront": "87,18,126,37",
+    "roiBack": "63,0,172,81",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "爬塔boss战页面检查图像"
+  },
+  {
+    "itemName": "check_battle_2",
+    "imageName": "as_check_battle_2.png",
+    "roiFront": "93,12,128,46",
+    "roiBack": "82,0,148,86",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "爬塔活动副页检查标志"
+  },
+  {
+    "itemName": "red_exit_2",
+    "imageName": "as_red_exit_2.png",
+    "roiFront": "1097,177,46,45",
+    "roiBack": "1069,152,100,100",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "爬塔活动页面的红色退出"
+  },
+  {
+    "itemName": "buff_down",
+    "imageName": "as_buff_down.png",
+    "roiFront": "428,625,100,37",
+    "roiBack": "177,600,1040,98",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "卸载buff"
+  },
+  {
+    "itemName": "buff_change_button",
+    "imageName": "as_buff_change_button.png",
+    "roiFront": "491,604,48,46",
+    "roiBack": "439,574,197,108",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "切换buff按钮"
+  },
+  {
+    "itemName": "buff_box_1_empty",
+    "imageName": "as_buff_box_1_empty.png",
+    "roiFront": "342,345,50,59",
+    "roiBack": "317,322,100,100",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "buff容器1为空"
+  },
+  {
+    "itemName": "buff_box_2_empty",
+    "imageName": "as_buff_box_2_empty.png",
+    "roiFront": "883,224,49,54",
+    "roiBack": "854,195,107,105",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "buff容器2为空"
+  },
+  {
+    "itemName": "buff_up",
+    "imageName": "as_buff_up.png",
+    "roiFront": "419,624,120,41",
+    "roiBack": "176,576,1025,142",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "装配buff"
+  },
+  {
+    "itemName": "buff_switch",
+    "imageName": "as_buff_switch.png",
+    "roiFront": "640,624,100,39",
+    "roiBack": "180,601,1026,100",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "buff切换"
+  },
+  {
+    "itemName": "check_buff",
+    "imageName": "as_check_buff.png",
+    "roiFront": "91,12,130,47",
+    "roiBack": "77,0,156,83",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "爬塔活动buff页"
   }
 ]
