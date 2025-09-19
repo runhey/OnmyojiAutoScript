@@ -295,5 +295,14 @@
     "method": "Template matching",
     "threshold": 0.8,
     "description": "新版本的预设图案带数字"
+  },
+  {
+    "itemName": "battle_info",
+    "imageName": "gb_battle_info.png",
+    "roiFront": "230,12,37,39",
+    "roiBack": "210,1,147,72",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "战斗信息标识"
   }
 ]

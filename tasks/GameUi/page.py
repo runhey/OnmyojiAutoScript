@@ -210,10 +210,11 @@ page_climb_act_ap.link(button=asa.I_SWITCH, destination=page_climb_act_pass)
 page_climb_act_pass.link(button=asa.I_SWITCH, destination=page_climb_act_ap)
 # 爬塔活动boss战界面
 page_climb_act_boss = Page(asa.I_CHECK_BOSS)
-page_climb_act_boss.additional = [BT.I_UI_BACK_RED]
+page_climb_act_boss.additional = [BT.I_UI_BACK_RED, asa.I_SKIP_BUTTON]
 page_climb_act_boss.link(button=G.I_BACK_Y, destination=page_climb_act)
 page_climb_act.link(button=asa.I_BOSS, destination=page_climb_act_boss)
 # 爬塔活动加成界面
 page_climb_act_buff = Page(asa.I_CHECK_BUFF)
+page_climb_act_buff.additional = [BT.I_UI_BACK_RED, asa.I_SKIP_BUTTON]
 page_climb_act_buff.link(button=G.I_BACK_Y, destination=page_climb_act)
 page_climb_act.link(button=asa.I_BUFF_CHANGE_BUTTON, destination=page_climb_act_buff)

@@ -119,8 +119,8 @@
   {
     "itemName": "skip_button",
     "imageName": "as_skip_button.png",
-    "roiFront": "1154,34,64,30",
-    "roiBack": "1154,34,64,30",
+    "roiFront": "1159,37,51,22",
+    "roiBack": "1141,27,86,43",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "右上跳过按钮"

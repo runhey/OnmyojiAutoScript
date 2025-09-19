@@ -16,6 +16,7 @@ from tasks.GameUi.page import *
 from tasks.Restart.assets import RestartAssets
 from tasks.SixRealms.assets import SixRealmsAssets
 from tasks.base_task import BaseTask
+from tasks.ActivityShikigami.assets import ActivityShikigamiAssets
 
 
 class GameUi(BaseTask, GameUiAssets):
@@ -41,7 +42,8 @@ class GameUi(BaseTask, GameUiAssets):
                 BaseTask.I_UI_BACK_RED, BaseTask.I_UI_BACK_YELLOW, BaseTask.I_UI_BACK_BLUE,
                 GameUiAssets.I_BACK_FRIENDS, GameUiAssets.I_BACK_DAILY,
                 GameUiAssets.I_REALM_RAID_GOTO_EXPLORATION,
-                GameUiAssets.I_SIX_GATES_GOTO_EXPLORATION, SixRealmsAssets.I_EXIT_SIXREALMS]
+                GameUiAssets.I_SIX_GATES_GOTO_EXPLORATION, SixRealmsAssets.I_EXIT_SIXREALMS,
+                ActivityShikigamiAssets.I_SKIP_BUTTON, ActivityShikigamiAssets.I_RED_EXIT, ActivityShikigamiAssets.I_RED_EXIT_2]
 
     def home_explore(self) -> bool:
         """
@@ -294,7 +296,11 @@ class GameUi(BaseTask, GameUiAssets):
         self.ui_goto(page_act_list)
         # 获取活动页面在活动列表中的文字和图标
         text, png = act_map[dest_act.name]
+        ok_cnt, max_retry = 0, 3
         while True:
+            # 多次成功才算成功
+            if ok_cnt >= max_retry:
+                break
             self.screenshot()
             # 先尝试文字识别,失败则尝试图像识别,都失败则向下滑动
             result = self.L_ACT_LIST_OCR.ocr_appear(self.device.image, name=text)
@@ -302,10 +308,14 @@ class GameUi(BaseTask, GameUiAssets):
                 result = self.L_ACT_LIST_IMG.image_appear(self.device.image, name=png)
             if isinstance(result, tuple):
                 pos = result
-                break
-            x1, y1, x2, y2 = self.L_ACT_LIST_OCR.swipe_pos(number=1)
-            self.device.swipe(p1=(x1, y1), p2=(x2, y2))
-            sleep(0.5)  # 等待滑动完成
+                ok_cnt += 1
+            else:
+                ok_cnt = 0
+            # 一次都未成功则向下滑动
+            if ok_cnt == 0:
+                x1, y1, x2, y2 = self.L_ACT_LIST_OCR.swipe_pos(number=1)
+                self.device.swipe(p1=(x1, y1), p2=(x2, y2))
+            sleep(0.5)
         if isinstance(pos, tuple):
             x, y = pos
             self.device.click(x, y)
