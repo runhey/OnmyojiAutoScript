@@ -109,8 +109,10 @@ class GameUiAssets:
 	I_CHECK_DUEL = RuleImage(roi_front=(110,10,64,38), roi_back=(79,1,110,74), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_check_duel.png")
 	# description 
 	I_CHECK_DEMON_ENCOUNTER = RuleImage(roi_front=(26,658,42,43), roi_back=(2,619,100,100), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_check_demon_encounter.png")
-	# description 
+	# 检查狩猎战界面 
 	I_CHECK_HUNT = RuleImage(roi_front=(575,30,46,25), roi_back=(553,1,81,68), threshold=0.7, method="Template matching", file="./tasks/GameUi/page/page_check_hunt.png")
+	# 检查狩猎战麒麟界面 
+	I_CHECK_HUNT_KIRIN = RuleImage(roi_front=(353,240,30,54), roi_back=(328,234,81,68), threshold=0.7, method="Template matching", file="./tasks/GameUi/page/page_check_hunt_kirin.png")
 	# description 
 	I_CHECK_HYAKKISEN = RuleImage(roi_front=(1014,607,53,55), roi_back=(986,587,100,100), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_check_hyakkisen.png")
 	# description 

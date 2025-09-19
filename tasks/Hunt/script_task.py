@@ -10,7 +10,7 @@ from module.logger import logger
 from module.base.timer import Timer
 
 from tasks.GameUi.game_ui import GameUi
-from tasks.GameUi.page import page_main, page_hunt, page_shikigami_records
+from tasks.GameUi.page import page_main, page_hunt, page_hunt_kirin, page_shikigami_records
 from tasks.Component.GeneralBattle.general_battle import GeneralBattle
 from tasks.Component.GeneralBattle.config_general_battle import GeneralBattleConfig
 from tasks.Component.GeneralInvite.general_invite import GeneralInvite
@@ -38,11 +38,11 @@ class ScriptTask(GameUi, GeneralBattle, GeneralInvite, SwitchSoul, HuntAssets):
                 if con.netherworld_group_team != '-1,-1':
                     self.run_switch_soul(con.netherworld_group_team)
         self.ui_get_current_page()
-        self.ui_goto(page_hunt)
-
         if self.kirin_day:
+            self.ui_goto(page_hunt_kirin)
             self.kirin()
         else:
+            self.ui_goto(page_hunt)
             self.netherworld()
         sleep(1)
 
@@ -105,8 +105,7 @@ class ScriptTask(GameUi, GeneralBattle, GeneralInvite, SwitchSoul, HuntAssets):
         logger.hr('kirin', 2)
         while 1:
             self.screenshot()
-            if self.appear(self.I_FIRE):
-                self.click_fire()
+            if self.appear(self.I_PREPARE_HIGHLIGHT):
                 break
             if self.appear_then_click(self.I_UI_CONFIRM, interval=0.9):
                 continue
