@@ -9,6 +9,7 @@ from module.logger import logger
 
 from tasks.Component.config_base import ConfigBase, TimeDelta, Time
 
+
 class ApMode(str, Enum):
     AP_ACTIVITY = 'ap_activity'
     AP_GAME = 'ap_game'
@@ -16,7 +17,7 @@ class ApMode(str, Enum):
 
 class GeneralClimb(ConfigBase):
     # 限制执行的时间
-    limit_time: time = Field(default=Time(minute=30), description='限制爬塔运行时间')
+    limit_time: Time = Field(default=Time(minute=30), description='限制爬塔运行时间')
     # 限制门票爬塔的次数
     pass_limit: int = Field(default=50, description='门票爬塔的最大次数')
     # 限制体力爬塔的次数
@@ -30,7 +31,8 @@ class GeneralClimb(ConfigBase):
     # 启用boss战爬塔
     enable_boss: bool = Field(default=True, description='是否启用boss战爬塔')
     # 爬塔运行顺序
-    run_sequence: str = Field(default='pass,boss,ap', description='爬塔运行顺序,英文逗号分隔,从左到右运行,若没启用自动跳过对应类型(pass:门票,boss:boss战,ap:体力)')
+    run_sequence: str = Field(default='pass,boss,ap',
+                              description='爬塔运行顺序,英文逗号分隔,从左到右运行,若没启用自动跳过对应类型(pass:门票,boss:boss战,ap:体力)')
     # 门票爬塔buff
     pass_buff: str = Field(default='buff_4,buff_5', description='门票爬塔加成,buff1-5,加成页从左往右顺序')
     # 体力爬塔buff
