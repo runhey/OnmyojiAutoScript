@@ -317,6 +317,9 @@ class GeneralBattle(GeneralBuff, GeneralBattleAssets):
             if self.ocr_appear(self.O_PRESET):
                 self.click(self.O_PRESET, interval=1)
                 continue
+            if self.ocr_appear(self.O_PRESET_FULL):
+                self.click(self.O_PRESET_FULL, interval=1)
+                continue
         logger.info("Click preset button")
 
         def get_unselect_color(tmp1, tmp2, tmp3, size):

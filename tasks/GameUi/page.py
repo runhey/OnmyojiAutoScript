@@ -108,6 +108,10 @@ page_town.link(button=G.I_TOWN_GOTO_DEMON_ENCOUNTER, destination=page_demon_enco
 page_hunt = Page(G.I_CHECK_HUNT)
 page_hunt.link(button=G.I_BACK_BL, destination=page_town)
 page_town.link(button=G.I_TOWN_GOTO_HUNT, destination=page_hunt)
+# 狩猎战麒麟 hunt_kirin
+page_hunt_kirin = Page(G.I_CHECK_HUNT_KIRIN)
+page_hunt_kirin.link(button=G.I_BACK_YOLLOW, destination=page_town)
+page_town.link(button=G.I_TOWN_GOTO_HUNT, destination=page_hunt_kirin)
 # 协同斗技 draft_duel
 page_draft_duel = Page(G.I_CHECK_DRAFT_DUEL)
 page_draft_duel.link(button=G.I_BACK_YOLLOW, destination=page_town)
