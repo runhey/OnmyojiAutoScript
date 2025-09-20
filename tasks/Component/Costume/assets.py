@@ -51,7 +51,7 @@ class CostumeAssets:
 
 	# Image Rule Assets
 	# description 
-	I_CHECK_MAIN_12 = RuleImage(roi_front=(937,487,49,31), roi_back=(78,474,1099,100), threshold=0.8, method="Template matching", file="./tasks/Component/Costume/main12/main12_check_main_12.png")
+	I_CHECK_MAIN_12 = RuleImage(roi_front=(829,278,39,26), roi_back=(61,241,1099,100), threshold=0.8, method="Template matching", file="./tasks/Component/Costume/main12/main12_check_main_12.png")
 	# 探索 
 	I_MAIN_GOTO_EXPLORATION_12 = RuleImage(roi_front=(557,142,20,34), roi_back=(192,123,904,66), threshold=0.6, method="Template matching", file="./tasks/Component/Costume/main12/main12_main_goto_exploration_12.png")
 	# 召唤屋 
