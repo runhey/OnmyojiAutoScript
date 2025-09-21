@@ -192,6 +192,14 @@ class ScriptTask(GameUi, BaseActivity, SwitchSoul, ActivityShikigamiAssets):
                 break
 
     def switch_buff(self, climb_conf: GeneralClimb):
+        buffs = getattr(climb_conf, f'{self.climb_type}_buff', None)
+        if not buffs:
+            logger.info('Not set buff, skip')
+            return
+        buff_list = [buff.strip() for buff in buffs.split(',')]
+        if not buff_list:
+            logger.info('Buff incorrect formatting, skip')
+            return
         self.ui_get_current_page()
         self.ui_goto(page_climb_act_buff)
         buff_box_list = [self.C_BUFF_1_BOX, self.C_BUFF_2_BOX]
@@ -203,7 +211,6 @@ class ScriptTask(GameUi, BaseActivity, SwitchSoul, ActivityShikigamiAssets):
             'buff_4': self.C_BUFF_4_UP,
             'buff_5': self.C_BUFF_5_UP
         }
-        buff_list = [buff.strip() for buff in getattr(climb_conf, f'{self.climb_type}_buff').split(',')]
         logger.info(f'start switch {self.climb_type} {buff_list}')
         for i, buff_box in enumerate(buff_box_list):
             logger.info(f'Start down {buff_list[i]}')
