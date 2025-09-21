@@ -2,7 +2,7 @@
   {
     "itemName": "wq_seal",
     "imageName": "wq_wq_seal.png",
-    "roiFront": "244,181,40,40",
+    "roiFront": "174,184,20,29",
     "roiBack": "56,93,664,455",
     "method": "Template matching",
     "threshold": 0.8,

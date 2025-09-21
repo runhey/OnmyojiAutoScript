@@ -4,18 +4,19 @@
 import time
 from time import sleep
 
-from module.base.decorator import run_once
-from module.base.timer import Timer
+import random
 from module.atom.image import RuleImage
 from module.atom.ocr import RuleOcr
-
+from module.base.decorator import run_once
+from module.base.timer import Timer
+from module.exception import (GameNotRunningError, GamePageUnknownError)
+from module.logger import logger
 from tasks.GameUi.assets import GameUiAssets
 from tasks.GameUi.page import *
 from tasks.Restart.assets import RestartAssets
-from tasks.base_task import BaseTask
 from tasks.SixRealms.assets import SixRealmsAssets
-from module.logger import logger
-from module.exception import (GameNotRunningError, GamePageUnknownError, RequestHumanTakeover)
+from tasks.base_task import BaseTask
+from tasks.ActivityShikigami.assets import ActivityShikigamiAssets
 
 
 class GameUi(BaseTask, GameUiAssets):
@@ -30,16 +31,19 @@ class GameUi(BaseTask, GameUiAssets):
         page_secret_zones, page_area_boss, page_heian_kitan, page_six_gates, page_bondling_fairyland,
         page_kekkai_toppa,
         # 町中的
-        page_duel, page_demon_encounter, page_hunt, page_draft_duel, page_hyakkisen,
+        page_duel, page_demon_encounter, page_hunt, page_hunt_kirin, page_draft_duel, page_hyakkisen,
         # 庭院里面的
         page_shikigami_records, page_onmyodo, page_friends, page_daily, page_mall, page_guild, page_team,
-        page_collection,
+        page_collection, page_act_list,
+        # 爬塔活动
+        page_climb_act, page_climb_act_2, page_climb_act_pass, page_climb_act_ap, page_climb_act_boss, page_climb_act_buff
     ]
     ui_close = [GameUiAssets.I_BACK_MALL,
                 BaseTask.I_UI_BACK_RED, BaseTask.I_UI_BACK_YELLOW, BaseTask.I_UI_BACK_BLUE,
                 GameUiAssets.I_BACK_FRIENDS, GameUiAssets.I_BACK_DAILY,
                 GameUiAssets.I_REALM_RAID_GOTO_EXPLORATION,
-                GameUiAssets.I_SIX_GATES_GOTO_EXPLORATION, SixRealmsAssets.I_EXIT_SIXREALMS]
+                GameUiAssets.I_SIX_GATES_GOTO_EXPLORATION, SixRealmsAssets.I_EXIT_SIXREALMS,
+                ActivityShikigamiAssets.I_SKIP_BUTTON, ActivityShikigamiAssets.I_RED_EXIT, ActivityShikigamiAssets.I_RED_EXIT_2]
 
     def home_explore(self) -> bool:
         """
@@ -214,7 +218,8 @@ class GameUi(BaseTask, GameUiAssets):
             if destination.additional and isinstance(destination.additional, list):
                 appear = False
                 for button in destination.additional:
-                    if self.appear_then_click(button, interval=0.6):
+                    if self.appear_then_click(button, interval=0.6) or (
+                            isinstance(button, RuleOcr) and self.ocr_appear_click(button, interval=2)):
                         appear = True
                         logger.info(f'Page {destination} AB {button} clicked')
                 if appear:
@@ -233,22 +238,12 @@ class GameUi(BaseTask, GameUiAssets):
             for page in visited:
                 if page.parent is None or page.check_button is None:
                     continue
-                # 如果当前页面不出现可以检测当前按键的按钮，那可能是有一些弹窗，广告，这个时候额外处理
-                # if page.additional:
-                #     if not isinstance(page.additional, list):
-                #         page.additional = [page.additional]
-                #     for button in page.additional:
-                #         logger.info(f'Page {page} AB {button} checking')
-                #         if self.appear_then_click(button, interval=1):
-                #             sleep(0.2)
-                #             logger.info(f'Page {page} AB {button} clicked')
-
-
                 # 获取当前页面的要点击的按钮
                 if self.appear(page.check_button, interval=4):
                     logger.info(f'Page switch: {page} -> {page.parent}')
                     button = page.links[page.parent]
-                    if self.appear_then_click(button, interval=2):
+                    if self.appear_then_click(button, interval=2) or (
+                            isinstance(button, RuleOcr) and self.ocr_appear_click(button, interval=2)):
                         self.ui_button_interval_reset(button)
                         confirm_timer.reset()
                         clicked = True
@@ -256,6 +251,7 @@ class GameUi(BaseTask, GameUiAssets):
 
             if clicked:
                 continue
+            sleep(0.5)
 
         # Reset connection
         for page in self.ui_pages:
@@ -284,15 +280,57 @@ class GameUi(BaseTask, GameUiAssets):
         time.sleep(1)
         return
 
+    def main_goto_act_by_list(self, dest_act: Page):
+        """
+        庭院通过活动列表页跳转到对应活动页面
+        :param dest_act: 活动页面
+        :return:
+        """
+        # key: page名称, value: (活动列表中文字, 活动列表中png图像名称)
+        # png图像必须存放在page文件夹下
+        # 添加其他活动列表页的活动时需同时添加下方map内容
+        act_map = {
+            'page_climb_act': ('冰火永烬', 'page_act_list_climb_act')
+        }
+        self.ui_get_current_page()
+        self.ui_goto(page_act_list)
+        # 获取活动页面在活动列表中的文字和图标
+        text, png = act_map[dest_act.name]
+        ok_cnt, max_retry = 0, 3
+        while True:
+            # 多次成功才算成功
+            if ok_cnt >= max_retry:
+                break
+            self.screenshot()
+            # 先尝试文字识别,失败则尝试图像识别,都失败则向下滑动
+            result = self.L_ACT_LIST_OCR.ocr_appear(self.device.image, name=text)
+            if not isinstance(result, tuple):
+                result = self.L_ACT_LIST_IMG.image_appear(self.device.image, name=png)
+            if isinstance(result, tuple):
+                pos = result
+                ok_cnt += 1
+            else:
+                ok_cnt = 0
+            # 一次都未成功则向下滑动
+            if ok_cnt == 0:
+                x1, y1, x2, y2 = self.L_ACT_LIST_OCR.swipe_pos(number=1)
+                self.device.swipe(p1=(x1, y1), p2=(x2, y2))
+            sleep(0.5)
+        if isinstance(pos, tuple):
+            x, y = pos
+            self.device.click(x, y)
+        self.ui_goto(dest_act, confirm_wait=2)
+
 
 if __name__ == '__main__':
     from module.config.config import Config
     from module.device.device import Device
 
-    c = Config('oas1')
+    c = Config('oas2')
     d = Device(c)
     game = GameUi(config=c, device=d)
-
-    game.screenshot()
-    print(game.appear(game.I_CHECK_AREA_BOSS))
-    print(game.appear(game.I_RECORDS_CLOSE))
+    game.ui_get_current_page()
+    game.ui_goto(page_main)
+    game.main_goto_act_by_list(page_climb_act)
+    game.ui_get_current_page()
+    game.ui_goto(page_climb_act_pass)

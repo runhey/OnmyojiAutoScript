@@ -1,6 +1,7 @@
 import traceback
 
 from tasks.GameUi.assets import GameUiAssets as G
+from tasks.base_task import BaseTask as BT
 from tasks.RyouToppa.assets import RyouToppaAssets
 
 class Page:
@@ -31,6 +32,7 @@ class Page:
 page_login=Page(G.I_CHECK_LOGIN_FORM)
 # Main Home 主页
 page_main = Page(G.I_CHECK_MAIN)
+page_main.additional = [G.I_BACK_Y, G.I_BACK_MALL, G.I_AD_CLOSE_RED, G.I_BACK_YOLLOW, G.I_BACK_FRIENDS, G.I_BACK_DAILY, G.I_BACK_BLUE, G.I_BACK_ACT_LIST]
 # 召唤summon
 page_summon = Page(G.I_CHECK_SUMMON)
 page_summon.link(button=G.I_SUMMON_GOTO_MAIN, destination=page_main)
@@ -108,6 +110,10 @@ page_town.link(button=G.I_TOWN_GOTO_DEMON_ENCOUNTER, destination=page_demon_enco
 page_hunt = Page(G.I_CHECK_HUNT)
 page_hunt.link(button=G.I_BACK_BL, destination=page_town)
 page_town.link(button=G.I_TOWN_GOTO_HUNT, destination=page_hunt)
+# 狩猎战麒麟 hunt_kirin
+page_hunt_kirin = Page(G.I_CHECK_HUNT_KIRIN)
+page_hunt_kirin.link(button=G.I_BACK_YOLLOW, destination=page_town)
+page_town.link(button=G.I_TOWN_GOTO_HUNT, destination=page_hunt_kirin)
 # 协同斗技 draft_duel
 page_draft_duel = Page(G.I_CHECK_DRAFT_DUEL)
 page_draft_duel.link(button=G.I_BACK_YOLLOW, destination=page_town)
@@ -162,6 +168,11 @@ page_main.link(button=G.I_MAIN_GOTO_COLLECTION, destination=page_collection)
 page_travel = Page(G.I_CHECK_TRAVEL)
 page_travel.link(button=G.I_BACK_Y, destination=page_main)
 page_main.link(button=G.I_MAIN_GOTO_TRAVEL, destination=page_travel)
+# 活动列表页 act_list
+page_act_list = Page(G.I_CHECK_ACT_LIST)
+page_act_list.additional = [G.I_PAPER_DOLL_CLOSE]
+page_act_list.link(button=G.I_BACK_ACT_LIST, destination=page_main)
+page_main.link(button=G.I_ACT_LIST_EXPAND, destination=page_act_list)
 
 
 # 道馆
@@ -171,7 +182,39 @@ page_dokan = Page(DokanAssets.I_RYOU_DOKAN_CHECK)
 page_dokan.additional = [GeneralBattleAssets.I_EXIT, DokanAssets.I_RYOU_DOKAN_EXIT_ENSURE, G.I_BACK_BLUE]
 page_dokan.link(button=G.I_BACK_Y, destination=page_main)
 
-
-
-
-
+# ************************************* 活动部分 *****************************************#
+from tasks.ActivityShikigami.assets import ActivityShikigamiAssets as asa
+from tasks.GlobalGame.assets import GlobalGameAssets as gga
+# 爬塔活动界面
+page_climb_act = Page(asa.I_BATTLE)
+page_climb_act.additional = [gga.I_UI_REWARD, asa.I_SKIP_BUTTON, asa.I_TOGGLE_BUTTON, asa.I_RED_EXIT_2]
+page_climb_act.link(button=G.I_BACK_Y, destination=page_main)
+page_act_list.link(button=G.I_ACT_LIST_GOTO_ACT, destination=page_climb_act)
+# 爬塔活动副界面
+page_climb_act_2 = Page(asa.I_CHECK_BATTLE_2)
+page_climb_act_2.additional = [asa.I_SKIP_BUTTON, asa.I_TOGGLE_BUTTON, gga.I_UI_REWARD, asa.I_RED_EXIT]
+page_climb_act_2.link(button=G.I_BACK_Y, destination=page_climb_act)
+page_climb_act.link(button=asa.I_BATTLE, destination=page_climb_act_2)
+# 门票爬塔活动界面
+page_climb_act_pass = Page(asa.I_AP_ACTIVITY)
+page_climb_act_pass.additional = [asa.I_SKIP_BUTTON, asa.I_TOGGLE_BUTTON, gga.I_UI_REWARD, asa.I_RED_EXIT]
+page_climb_act_pass.link(button=G.I_BACK_Y, destination=page_climb_act_2)
+page_climb_act_2.link(button=asa.O_ENTRY_ACTIVITY, destination=page_climb_act_pass)
+# 体力爬塔活动界面
+page_climb_act_ap = Page(asa.I_AP)
+page_climb_act_ap.additional = [asa.O_ENTRY_ACTIVITY, asa.I_SKIP_BUTTON, asa.I_TOGGLE_BUTTON, gga.I_UI_REWARD, asa.I_RED_EXIT]
+page_climb_act_ap.link(button=G.I_BACK_Y, destination=page_climb_act_2)
+page_climb_act_2.link(button=asa.O_ENTRY_ACTIVITY, destination=page_climb_act_ap)
+# 体力, 门票互相跳转
+page_climb_act_ap.link(button=asa.I_SWITCH, destination=page_climb_act_pass)
+page_climb_act_pass.link(button=asa.I_SWITCH, destination=page_climb_act_ap)
+# 爬塔活动boss战界面
+page_climb_act_boss = Page(asa.I_CHECK_BOSS)
+page_climb_act_boss.additional = [BT.I_UI_BACK_RED, asa.I_SKIP_BUTTON]
+page_climb_act_boss.link(button=G.I_BACK_Y, destination=page_climb_act)
+page_climb_act.link(button=asa.I_BOSS, destination=page_climb_act_boss)
+# 爬塔活动加成界面
+page_climb_act_buff = Page(asa.I_CHECK_BUFF)
+page_climb_act_buff.additional = [BT.I_UI_BACK_RED, asa.I_SKIP_BUTTON]
+page_climb_act_buff.link(button=G.I_BACK_Y, destination=page_climb_act)
+page_climb_act.link(button=asa.I_BUFF_CHANGE_BUTTON, destination=page_climb_act_buff)

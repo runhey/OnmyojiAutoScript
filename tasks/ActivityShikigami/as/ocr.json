@@ -43,5 +43,14 @@
     "method": "Default",
     "keyword": "驻守平安",
     "description": "从左侧进入战斗"
+  },
+  {
+    "itemName": "remain_boss",
+    "roiFront": "1113,669,131,31",
+    "roiBack": "0,0,100,100",
+    "mode": "DigitCounter",
+    "method": "Default",
+    "keyword": "",
+    "description": "boss剩余攻击次数"
   }
 ]

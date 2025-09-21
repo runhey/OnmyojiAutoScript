@@ -96,7 +96,16 @@
     "roiBack": "553,1,81,68",
     "method": "Template matching",
     "threshold": 0.7,
-    "description": "description"
+    "description": "检查狩猎战界面"
+  },
+  {
+    "itemName": "check_hunt_kirin",
+    "imageName": "page_check_hunt_kirin.png",
+    "roiFront": "353,240,30,54",
+    "roiBack": "328,234,81,68",
+    "method": "Template matching",
+    "threshold": 0.7,
+    "description": "检查狩猎战麒麟界面"
   },
   {
     "itemName": "check_hyakkisen",

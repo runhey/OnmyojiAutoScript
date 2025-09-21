@@ -180,13 +180,13 @@
     "description": "description"
   },
   {
-    "itemName": "new",
-    "imageName": "image_name.png",
-    "roiFront": "0,0,100,100",
-    "roiBack": "0,0,100,100",
+    "itemName": "back_act_list",
+    "imageName": "page_back_act_list.png",
+    "roiFront": "1165,65,51,47",
+    "roiBack": "1124,23,131,133",
     "method": "Template matching",
     "threshold": 0.8,
-    "description": "description"
+    "description": "活动列表页返回庭院"
   },
   {
     "itemName": "dlc_close",
