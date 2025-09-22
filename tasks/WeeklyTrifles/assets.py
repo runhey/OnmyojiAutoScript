@@ -67,7 +67,7 @@ class WeeklyTriflesAssets:
 
 
 	# Image Rule Assets
-	# 秘闻进入 
+	# 秘闻进
 	I_WT_ENTER_SE = RuleImage(roi_front=(1145,598,100,100), roi_back=(1145,598,100,100), threshold=0.8, method="Template matching", file="./tasks/WeeklyTrifles/secret/secret_wt_enter_se.png")
 	# 秘闻分享 
 	I_WT_SE_SHARE = RuleImage(roi_front=(911,570,46,43), roi_back=(886,547,92,95), threshold=0.8, method="Template matching", file="./tasks/WeeklyTrifles/secret/secret_wt_se_share.png")
