@@ -23,7 +23,7 @@ from tasks.GameUi.page import page_main, page_shikigami_records, page_climb_act,
 
 
 def get_run_order_list(climb_conf: GeneralClimb) -> list[str]:
-    if climb_conf.run_sequence is None or climb_conf.run_sequence == '':
+    if not climb_conf.run_sequence or len(climb_conf.run_sequence.split(',')) == 1:
         raise ValueError('Run sequence now is empty, must set it')
     run_order_list = [climb_type.strip() for climb_type in climb_conf.run_sequence.split(',')]
     return [climb_type for climb_type in run_order_list if getattr(climb_conf, f'enable_{climb_type}')]
@@ -161,7 +161,10 @@ class ScriptTask(GameUi, BaseActivity, SwitchSoul, ActivityShikigamiAssets):
             self.ui_get_current_page()
             self.ui_goto(page_shikigami_records)
         if enable_by_name:
-            group, team = getattr(conf, f"{self.climb_type}_group_team_name", '-1,-1').split(",")
+            group_name = getattr(conf, f"{self.climb_type}_group_team_name", '-1,-1')
+            if not group_name or len(group_name.split(',')) != 2:
+                raise ValueError('switch soul by name must be 2 length')
+            group, team = group_name.split(",")
             self.run_switch_soul_by_name(group, team)
         elif enable_switch:
             group_team = getattr(conf, f"{self.climb_type}_group_team", '-1,-1')
@@ -194,7 +197,7 @@ class ScriptTask(GameUi, BaseActivity, SwitchSoul, ActivityShikigamiAssets):
 
     def switch_buff(self, climb_conf: GeneralClimb):
         buffs = getattr(climb_conf, f'{self.climb_type}_buff', None)
-        if not buffs:
+        if not buffs or len(buffs.split(',')) == 1:
             logger.info('Not set buff, skip')
             return
         buff_list = [buff.strip() for buff in buffs.split(',')]
@@ -273,7 +276,8 @@ class ScriptTask(GameUi, BaseActivity, SwitchSoul, ActivityShikigamiAssets):
         :param climb_conf: 爬塔配置
         :return: 限制次数
         """
-        return getattr(climb_conf, f'{self.climb_type}_limit', 0)
+        limit = getattr(climb_conf, f'{self.climb_type}_limit', 0)
+        return 0 if not limit else limit
 
     def switch_next(self) -> bool:
         """
@@ -318,7 +322,10 @@ class ScriptTask(GameUi, BaseActivity, SwitchSoul, ActivityShikigamiAssets):
         from tasks.Component.GeneralBattle.config_general_battle import GeneralBattleConfig as gbc
         conf = self.config.activity_shikigami
         enable_preset = getattr(conf.general_battle, f'enable_{self.climb_type}_preset', False)
-        group, team = getattr(conf.switch_soul_config, f'{self.climb_type}_group_team', '1,1').split(',')
+        group_team = getattr(conf.switch_soul_config, f'{self.climb_type}_group_team')
+        if enable_preset and (not group_team or len(group_team.split(',')) != 2):
+            raise ValueError('Enable preset but group team not set correct!')
+        group, team = group_team.split(',')
         return gbc(lock_team_enable=not enable_preset,
                    preset_enable=enable_preset,
                    preset_group=group if enable_preset else 1,
