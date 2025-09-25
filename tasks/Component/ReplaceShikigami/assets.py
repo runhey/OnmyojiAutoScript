@@ -75,8 +75,8 @@ class ReplaceShikigamiAssets:
 	I_RS_SSR_SELECTED = RuleImage(roi_front=(29,622,66,59), roi_back=(29,622,66,59), threshold=0.8, method="Template matching", file="./tasks/Component/ReplaceShikigami/rs/rs_rs_ssr_selected.png")
 	# description 
 	I_RS_SP_SELECTED = RuleImage(roi_front=(31,622,62,59), roi_back=(31,622,62,59), threshold=0.8, method="Template matching", file="./tasks/Component/ReplaceShikigami/rs/rs_rs_sp_selected.png")
-	# description 
-	I_RS_RECORDS_SHIKI = RuleImage(roi_front=(1148,548,49,43), roi_back=(1148,548,49,43), threshold=0.8, method="Template matching", file="./tasks/Component/ReplaceShikigami/rs/rs_rs_records_shiki.png")
+	# 式神录按钮 
+	I_RS_RECORDS_SHIKI = RuleImage(roi_front=(1148,548,49,43), roi_back=(1145,548,55,90), threshold=0.8, method="Template matching", file="./tasks/Component/ReplaceShikigami/rs/rs_rs_records_shiki.png")
 	# 检测到已经满级了 
 	I_RS_LEVEL_MAX = RuleImage(roi_front=(487,248,23,21), roi_back=(52,238,1118,37), threshold=0.8, method="Template matching", file="./tasks/Component/ReplaceShikigami/rs/rs_rs_level_max.png")
 
