@@ -31,6 +31,8 @@ class Layer(str, Enum):
     TEN = '拾层'
     ELEVEN = '悲鸣'
     TWELVE = '神罚'
+    THIRTEEN = '虚无'
+
 
 class OrochiConfig(ConfigBase):
     # 身份
@@ -57,6 +59,8 @@ class SwitchSoulConfig(BaseSwitchSoulConfig):
     eleven_switch: str = Field(default='-1,-1', description='eleven_switch_help')
     # 神罚 config
     twelve_switch: str = Field(default='-1,-1', description='twelve_switch_help')
+    # 虚无 config
+    thirteen_switch: str = Field(default='-1,-1', description='thirteen_switch_help')
 
 
 class Orochi(ConfigBase):
