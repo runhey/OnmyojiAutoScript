@@ -6,6 +6,7 @@ import numpy as np
 from module.base.decorator import cached_property
 from module.logger import logger
 
+
 class RuleClick:
 
     def __init__(self, roi_front: tuple, roi_back: tuple, name: str = None) -> None:
@@ -60,14 +61,17 @@ class RuleClick:
         x, y, w, h = self.roi_front
         x += x
         y += y
-        if x <= 0 :
+        if x <= 0:
             x = 0
         elif x >= 1280:
             x = 1280
 
-        if y <= 0 :
+        if y <= 0:
             y = 0
         elif y >= 720:
             y = 720
 
         self.roi_front = x, y, w, h
+
+    def __repr__(self):
+        return self.name
