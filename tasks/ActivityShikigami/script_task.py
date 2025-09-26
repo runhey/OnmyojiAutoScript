@@ -23,6 +23,8 @@ from tasks.GameUi.page import page_main, page_shikigami_records, page_climb_act,
 
 
 def get_run_order_list(climb_conf: GeneralClimb) -> list[str]:
+    if not climb_conf.run_sequence or len(climb_conf.run_sequence.split(',')) == 1:
+        raise ValueError('Run sequence now is empty, must set it')
     run_order_list = [climb_type.strip() for climb_type in climb_conf.run_sequence.split(',')]
     return [climb_type for climb_type in run_order_list if getattr(climb_conf, f'enable_{climb_type}')]
 
@@ -153,17 +155,19 @@ class ScriptTask(GameUi, BaseActivity, SwitchSoul, ActivityShikigamiAssets):
         :param conf: 切换御魂配置
         :return:
         """
-        enabled = getattr(conf, f"enable_switch_{self.climb_type}")
-        if not enabled:
-            return
-        self.ui_get_current_page()
-        self.ui_goto(page_shikigami_records)
-        enable_by_name = getattr(conf, f"enable_switch_{self.climb_type}_by_name")
+        enable_switch = getattr(conf, f"enable_switch_{self.climb_type}", False)
+        enable_by_name = getattr(conf, f"enable_switch_{self.climb_type}_by_name", False)
+        if enable_switch or enable_by_name:
+            self.ui_get_current_page()
+            self.ui_goto(page_shikigami_records)
         if enable_by_name:
-            group, team = getattr(conf, f"{self.climb_type}_group_team_name").split(",")
+            group_name = getattr(conf, f"{self.climb_type}_group_team_name", '-1,-1')
+            if not group_name or len(group_name.split(',')) != 2:
+                raise ValueError('switch soul by name must be 2 length')
+            group, team = group_name.split(",")
             self.run_switch_soul_by_name(group, team)
-        else:
-            group_team = getattr(conf, f"{self.climb_type}_group_team")
+        elif enable_switch:
+            group_team = getattr(conf, f"{self.climb_type}_group_team", '-1,-1')
             self.run_switch_soul(group_team)
 
     def lock_team(self, battle_conf: GeneralBattleConfig):
@@ -174,7 +178,7 @@ class ScriptTask(GameUi, BaseActivity, SwitchSoul, ActivityShikigamiAssets):
         """
         self.ui_get_current_page()
         self.ui_goto(self.page_map[self.climb_type])
-        enable_preset = getattr(battle_conf, f"enable_{self.climb_type}_preset")
+        enable_preset = getattr(battle_conf, f"enable_{self.climb_type}_preset", False)
         if not enable_preset:
             logger.info(f'Lock {self.climb_type} team')
             while 1:
@@ -193,7 +197,7 @@ class ScriptTask(GameUi, BaseActivity, SwitchSoul, ActivityShikigamiAssets):
 
     def switch_buff(self, climb_conf: GeneralClimb):
         buffs = getattr(climb_conf, f'{self.climb_type}_buff', None)
-        if not buffs:
+        if not buffs or len(buffs.split(',')) == 1:
             logger.info('Not set buff, skip')
             return
         buff_list = [buff.strip() for buff in buffs.split(',')]
@@ -272,7 +276,8 @@ class ScriptTask(GameUi, BaseActivity, SwitchSoul, ActivityShikigamiAssets):
         :param climb_conf: 爬塔配置
         :return: 限制次数
         """
-        return getattr(climb_conf, f'{self.climb_type}_limit')
+        limit = getattr(climb_conf, f'{self.climb_type}_limit', 0)
+        return 0 if not limit else limit
 
     def switch_next(self) -> bool:
         """
@@ -316,15 +321,18 @@ class ScriptTask(GameUi, BaseActivity, SwitchSoul, ActivityShikigamiAssets):
     def get_general_battle_conf(self) -> tasks.Component.GeneralBattle.config_general_battle.GeneralBattleConfig:
         from tasks.Component.GeneralBattle.config_general_battle import GeneralBattleConfig as gbc
         conf = self.config.activity_shikigami
-        enable_preset = getattr(conf.general_battle, f'enable_{self.climb_type}_preset')
-        group, team = (getattr(conf.switch_soul_config, f'{self.climb_type}_group_team').split(','))
+        enable_preset = getattr(conf.general_battle, f'enable_{self.climb_type}_preset', False)
+        group_team = getattr(conf.switch_soul_config, f'{self.climb_type}_group_team')
+        if enable_preset and (not group_team or len(group_team.split(',')) != 2):
+            raise ValueError('Enable preset but group team not set correct!')
+        group, team = group_team.split(',')
         return gbc(lock_team_enable=not enable_preset,
                    preset_enable=enable_preset,
                    preset_group=group if enable_preset else 1,
                    preset_team=team if enable_preset else 1,
-                   green_enable=getattr(conf.general_battle, f'enable_{self.climb_type}_green'),
+                   green_enable=getattr(conf.general_battle, f'enable_{self.climb_type}_green', False),
                    green_mark=getattr(conf.general_battle, f'{self.climb_type}_green_mark'),
-                   random_click_swipt_enable=getattr(conf.general_battle, f'enable_{self.climb_type}_anti_detect'), )
+                   random_click_swipt_enable=getattr(conf.general_battle, f'enable_{self.climb_type}_anti_detect', False), )
 
     def home_main(self) -> bool:
         """
