@@ -9,7 +9,8 @@ from tasks.Component.config_base import ConfigBase
 
 class SimpleTidy(BaseModel):
     # 贪吃鬼和招财猫
-    greed_maneki: bool = Field(default=False, description="greed_maneki_help")
+    enable_greed: bool = Field(default=False, description="是否启用贪吃鬼")
+    enable_maneki: bool = Field(default=False, description="是否启用奉纳")
 
 
 class SoulsTidy(ConfigBase):

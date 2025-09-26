@@ -489,6 +489,8 @@ class ScriptTask(GeneralBattle, GeneralInvite, GeneralBuff, GeneralRoom, GameUi,
                 group_team = orochi_switch_soul.eleven_switch
             case Layer.TWELVE:
                 group_team = orochi_switch_soul.twelve_switch
+            case Layer.THIRTEEN:
+                group_team = orochi_switch_soul.thirteen_switch
 
         if orochi_switch_soul.auto_switch_soul:
             self.ui_get_current_page()

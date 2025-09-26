@@ -30,7 +30,7 @@ class OrochiAssets:
 	# List Rule Assets
 	# 这个是御魂界面选择不同层数的 
 	L_LAYER_LIST = RuleList(folder="./tasks/Orochi/res", direction="vertical", mode="ocr", roi_back=(138,130,359,500), size=(45, 88), 
-					 array=["壹", "贰", "叁", "肆", "伍", "陆", "柒", "捌", "玖", "拾", "悲", "神"])
+					 array=["壹", "贰", "叁", "肆", "伍", "陆", "柒", "捌", "玖", "拾", "悲", "神", "虚"])
 
 
 	# Ocr Rule Assets

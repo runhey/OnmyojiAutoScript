@@ -24,7 +24,7 @@ def switch_parser(switch_str: str) -> tuple:
 
 class SwitchSoul(BaseTask, SwitchSoulAssets):
 
-    def run_switch_soul(self, target: tuple or list[tuple]):
+    def run_switch_soul(self, target: tuple | list[tuple] | str):
         """
         保证在式神录的界面
         :return:

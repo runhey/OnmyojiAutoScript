@@ -41,6 +41,20 @@ class ActivityShikigamiAssets:
 	C_RANDOM_BOTTOM = RuleClick(roi_front=(182,539,1063,100), roi_back=(182,539,1063,100), name="random_bottom")
 	# description 
 	C_RANDOM_ALL = RuleClick(roi_front=(42,94,1207,543), roi_back=(42,94,1207,543), name="random_all")
+	# 替换buff1 
+	C_BUFF_1_UP = RuleClick(roi_front=(204,626,134,39), roi_back=(204,626,134,39), name="buff_1_up")
+	# 替换buff2 
+	C_BUFF_2_UP = RuleClick(roi_front=(414,625,134,39), roi_back=(414,625,134,39), name="buff_2_up")
+	# 替换buff3 
+	C_BUFF_3_UP = RuleClick(roi_front=(619,625,134,39), roi_back=(619,625,134,39), name="buff_3_up")
+	# 替换buff4 
+	C_BUFF_4_UP = RuleClick(roi_front=(831,625,134,39), roi_back=(831,625,134,39), name="buff_4_up")
+	# 替换buff5 
+	C_BUFF_5_UP = RuleClick(roi_front=(1043,624,134,39), roi_back=(1043,624,134,39), name="buff_5_up")
+	# 上阵buff_1位置 
+	C_BUFF_1_BOX = RuleClick(roi_front=(333,338,70,72), roi_back=(333,338,70,72), name="buff_1_box")
+	# 上阵buff_2位置 
+	C_BUFF_2_BOX = RuleClick(roi_front=(877,220,59,62), roi_back=(877,220,59,62), name="buff_2_box")
 
 
 	# Image Rule Assets
@@ -59,7 +73,7 @@ class ActivityShikigamiAssets:
 	# 还未上锁图片 
 	I_UNLOCK = RuleImage(roi_front=(884,648,28,25), roi_back=(758,607,242,85), threshold=0.8, method="Template matching", file="./tasks/ActivityShikigami/as/as_unlock.png")
 	# 点击战斗 
-	I_FIRE = RuleImage(roi_front=(1131,598,103,54), roi_back=(1123,589,124,88), threshold=0.7, method="Template matching", file="./tasks/ActivityShikigami/as/as_fire.png")
+	I_FIRE = RuleImage(roi_front=(1131,598,103,54), roi_back=(1113,564,136,111), threshold=0.7, method="Template matching", file="./tasks/ActivityShikigami/as/as_fire.png")
 	# 寿司体力 
 	I_AP = RuleImage(roi_front=(1091,550,23,24), roi_back=(1081,532,103,71), threshold=0.8, method="Template matching", file="./tasks/ActivityShikigami/as/as_ap.png")
 	# 活动体力 
@@ -71,11 +85,33 @@ class ActivityShikigamiAssets:
 	# 增加到最大 
 	I_ADD_MAX = RuleImage(roi_front=(17,24,33,37), roi_back=(974,524,57,54), threshold=0.8, method="Template matching", file="./tasks/ActivityShikigami/as/as_add_max.png")
 	# 右上跳过按钮 
-	I_SKIP_BUTTON = RuleImage(roi_front=(1154,34,64,30), roi_back=(1154,34,64,30), threshold=0.8, method="Template matching", file="./tasks/ActivityShikigami/as/as_skip_button.png")
+	I_SKIP_BUTTON = RuleImage(roi_front=(1159,37,51,22), roi_back=(1141,27,86,43), threshold=0.8, method="Template matching", file="./tasks/ActivityShikigami/as/as_skip_button.png")
 	# 红色退出 
 	I_RED_EXIT = RuleImage(roi_front=(1162,96,39,38), roi_back=(1120,49,110,135), threshold=0.8, method="Template matching", file="./tasks/ActivityShikigami/as/as_red_exit.png")
 	# description 
 	I_TOGGLE_BUTTON = RuleImage(roi_front=(1193,463,27,25), roi_back=(1169,146,73,403), threshold=0.8, method="Template matching", file="./tasks/ActivityShikigami/as/as_toggle_button.png")
+	# 爬塔进入首领战 
+	I_BOSS = RuleImage(roi_front=(1054,265,33,132), roi_back=(966,131,211,355), threshold=0.8, method="Template matching", file="./tasks/ActivityShikigami/as/as_boss.png")
+	# 爬塔boss战页面检查图像 
+	I_CHECK_BOSS = RuleImage(roi_front=(87,18,126,37), roi_back=(63,0,172,81), threshold=0.8, method="Template matching", file="./tasks/ActivityShikigami/as/as_check_boss.png")
+	# 爬塔活动副页检查标志 
+	I_CHECK_BATTLE_2 = RuleImage(roi_front=(93,12,128,46), roi_back=(82,0,148,86), threshold=0.8, method="Template matching", file="./tasks/ActivityShikigami/as/as_check_battle_2.png")
+	# 爬塔活动页面的红色退出 
+	I_RED_EXIT_2 = RuleImage(roi_front=(1097,177,46,45), roi_back=(1069,152,100,100), threshold=0.8, method="Template matching", file="./tasks/ActivityShikigami/as/as_red_exit_2.png")
+	# 卸载buff 
+	I_BUFF_DOWN = RuleImage(roi_front=(428,625,100,37), roi_back=(177,600,1040,98), threshold=0.8, method="Template matching", file="./tasks/ActivityShikigami/as/as_buff_down.png")
+	# 切换buff按钮 
+	I_BUFF_CHANGE_BUTTON = RuleImage(roi_front=(491,604,48,46), roi_back=(439,574,197,108), threshold=0.8, method="Template matching", file="./tasks/ActivityShikigami/as/as_buff_change_button.png")
+	# buff容器1为空 
+	I_BUFF_BOX_1_EMPTY = RuleImage(roi_front=(342,345,50,59), roi_back=(317,322,100,100), threshold=0.8, method="Template matching", file="./tasks/ActivityShikigami/as/as_buff_box_1_empty.png")
+	# buff容器2为空 
+	I_BUFF_BOX_2_EMPTY = RuleImage(roi_front=(883,224,49,54), roi_back=(854,195,107,105), threshold=0.8, method="Template matching", file="./tasks/ActivityShikigami/as/as_buff_box_2_empty.png")
+	# 装配buff 
+	I_BUFF_UP = RuleImage(roi_front=(419,624,120,41), roi_back=(176,576,1025,142), threshold=0.8, method="Template matching", file="./tasks/ActivityShikigami/as/as_buff_up.png")
+	# buff切换 
+	I_BUFF_SWITCH = RuleImage(roi_front=(640,624,100,39), roi_back=(180,601,1026,100), threshold=0.8, method="Template matching", file="./tasks/ActivityShikigami/as/as_buff_switch.png")
+	# 爬塔活动buff页 
+	I_CHECK_BUFF = RuleImage(roi_front=(91,12,130,47), roi_back=(77,0,156,83), threshold=0.8, method="Template matching", file="./tasks/ActivityShikigami/as/as_check_buff.png")
 
 
 	# Ocr Rule Assets
@@ -89,5 +125,7 @@ class ActivityShikigamiAssets:
 	O_REMAIN_AP_ACTIVITY2 = RuleOcr(roi=(558,18,47,29), area=(558,18,47,29), mode="Digit", method="Default", keyword="", name="remain_ap_activity2")
 	# 从左侧进入战斗 
 	O_ENTRY_ACTIVITY = RuleOcr(roi=(70,103,98,32), area=(70,103,98,32), mode="Single", method="Default", keyword="驻守平安", name="entry_activity")
+	# boss剩余攻击次数 
+	O_REMAIN_BOSS = RuleOcr(roi=(1113,669,131,31), area=(0,0,100,100), mode="DigitCounter", method="Default", keyword="", name="remain_boss")
 
 
