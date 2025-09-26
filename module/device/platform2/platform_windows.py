@@ -289,7 +289,7 @@ class PlatformWindows(PlatformBase, EmulatorManager):
         """
         Returns:
             bool: True if startup completed
-                False if timeout
+                False if timeout, unexpected stop, adb preemptive
         """
         logger.hr('Emulator start', level=2)
         current_window = get_focused_window()
@@ -322,7 +322,7 @@ class PlatformWindows(PlatformBase, EmulatorManager):
             logger.info(f'Found azurlane packages: {m}')
 
         interval = Timer(1).start()
-        timeout = Timer(180).start()
+        timeout = Timer(120).start()
         struct_window = Timer(10)
         new_window = 0
         while 1:
@@ -341,23 +341,28 @@ class PlatformWindows(PlatformBase, EmulatorManager):
                     set_focus_window(current_window)
                 else:
                     new_window = 0
-
-            # Check device connection
-            devices = self.list_device().select(serial=serial)
-            # logger.info(devices)
-            if devices:
-                device: AdbDeviceWithStatus = devices.first_or_none()
-                if device.status == 'device':
-                    # Emulator online
-                    pass
-                if device.status == 'offline':
-                    self.adb_client.disconnect(serial)
+            try:
+                logger.info('Try to connect emulator, please waiting......')
+                # Check device connection
+                devices = self.list_device().select(serial=serial)
+                # logger.info(devices)
+                if devices:
+                    device: AdbDeviceWithStatus = devices.first_or_none()
+                    if device.status == 'device':
+                        # Emulator online
+                        pass
+                    if device.status == 'offline':
+                        self.adb_client.disconnect(serial)
+                        adb_connect()
+                        continue
+                else:
+                    # Try to connect
                     adb_connect()
                     continue
-            else:
-                # Try to connect
-                adb_connect()
-                continue
+            except Exception as e:
+                logger.warning(f'Error during adb_connect in watch loop: {e}')
+                return False
+
             show_online(devices.first_or_none())
 
             # Check command availability
@@ -419,8 +424,10 @@ class PlatformWindows(PlatformBase, EmulatorManager):
             # Start
             if self._emulator_function_wrapper(self._emulator_start):
                 # Success
-                self.emulator_start_watch()
-                return True
+                if self.emulator_start_watch():
+                    return True
+                # Failed to connect or start, try again
+                continue
             else:
                 # Failed to start, stop and start again
                 if self._emulator_function_wrapper(self._emulator_stop):
