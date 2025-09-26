@@ -1,46 +1,55 @@
 # This Python file uses the following encoding: utf-8
 # @author runhey
 # github https://github.com/runhey
-import datetime
+import sys
+
 import logging
 import os
-import sys
-import traceback
-
+import shutil
+from datetime import datetime, timedelta, date
 from io import TextIOBase
+from pathlib import Path
+from rich.console import Console, ConsoleOptions, ConsoleRenderable, NewLine, RenderResult
+from rich.highlighter import NullHighlighter
+from rich.logging import RichHandler
+from rich.rule import Rule
 from typing import Callable, List
 
-from rich.console import Console, ConsoleOptions, ConsoleRenderable, NewLine, RenderResult
-from rich.highlighter import RegexHighlighter, NullHighlighter
-from rich.logging import RichHandler
-from rich.text import Text
-from rich.rule import Rule
-from rich.style import Style
-from rich.theme import Theme
-from rich.traceback import Traceback
-
-import time
-from pathlib import Path
-
-SECONDS_IN_DAY = 24 * 60 * 60
 
 def cleanup_logs(log_dir: str = "./log", keep_days: int = 7):
-    """删除 log_dir 下所有早于 keep_days 的普通文件"""
-    cutoff_ts = time.time() - keep_days * SECONDS_IN_DAY
-
+    """删除 log_dir 下所有早于 keep_days 的文件夹和文件"""
     log_path = Path(log_dir)
     if not log_path.exists():
         return  # 目录都没有，直接退出
-
-    for p in log_path.iterdir():
-        # 只处理文件；子文件夹一律跳过
-        if p.is_file():
+    keep_days_ago_ts = (datetime.now() - timedelta(days=keep_days)).timestamp()
+    for name in os.listdir(log_path):
+        full_path = os.path.join(log_path, name)
+        # 忽略软链接，仅处理文件和目录
+        if not os.path.exists(full_path):
+            continue
+        if os.path.isfile(full_path):
+            # 处理 log 根目录下超过keep_days的文件
             try:
-                if p.stat().st_mtime < cutoff_ts:
-                    p.unlink()
-                    logger.info(f"Removed old log finish: {p.name}")
-            except Exception as e:
-                logger.warning(f"Failed to delete {p}: {e}")
+                if os.path.getmtime(full_path) < keep_days_ago_ts:
+                    os.remove(full_path)
+            except OSError as e:
+                logger.error(f"delete file '{full_path}' error: {e}")
+        elif os.path.isdir(full_path):
+            # 检查是否为 error 目录
+            if name != 'error':
+                continue
+            for error_dir_name in os.listdir(full_path):
+                error_dir_path = os.path.join(full_path, error_dir_name)
+                if not os.path.isdir(error_dir_path):
+                    continue
+                # 处理 log/error 根目录下超过keep_days的文件夹
+                try:
+                    if os.path.getmtime(error_dir_path) < keep_days_ago_ts:
+                        # 递归删除整个目录及其内容
+                        shutil.rmtree(error_dir_path)
+                except OSError as e:
+                    logger.error(f"delete dir '{error_dir_path}' error: {e}")
+
 
 def empty_function(*args, **kwargs):
     pass
@@ -123,7 +132,7 @@ pyw_name = os.path.splitext(os.path.basename(sys.argv[0]))[0]
 def set_file_logger(name=pyw_name, *, do_cleanup=False):
     if '_' in name:
         name = name.split('_', 1)[0]
-    log_file = f'./log/{datetime.date.today()}_{name}.txt'
+    log_file = f'./log/{date.today()}_{name}.txt'
     try:
         file = open(log_file, mode='a', encoding='utf-8')
     except FileNotFoundError:
@@ -158,8 +167,7 @@ def set_file_logger(name=pyw_name, *, do_cleanup=False):
     # ---------- 可选：清理旧文件 ----------
     if do_cleanup:
         cleanup_logs()
-    if do_cleanup:
-        logger.info("Log cleanup finished")   
+        logger.info("Log cleanup finished")
 
 
 # ======================================================================================================================
