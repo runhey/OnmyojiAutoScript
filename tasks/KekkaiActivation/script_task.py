@@ -30,7 +30,7 @@ class ScriptTask(KU, KekkaiActivationAssets):
         # 进入寮结界
         self.goto_realm()
         if con.exchange_before:
-            self.check_max_lv(con.shikigami_class)
+            self.check_max_lv(con)
         self.harvest_card()
 
         self.run_activation(con)
@@ -45,7 +45,7 @@ class ScriptTask(KU, KekkaiActivationAssets):
                 continue
 
         if con.exchange_max:
-            self.check_max_lv(con.shikigami_class)
+            self.check_max_lv(con)
         self.back_guild()
 
         raise TaskEnd('KekkaiActivation')
@@ -340,24 +340,28 @@ class ScriptTask(KU, KekkaiActivationAssets):
         self.appear_then_click(target, interval=0.5)
         return current_card
 
-    def check_max_lv(self, shikigami_class: ShikigamiClass = ShikigamiClass.N):
+    def check_max_lv(self, con: ActivationConfig):
         """
         在结界界面，进入式神育成，检查是否有满级的，如果有就换下一个
         退出的时候还是结界界面
         :return:
         """
         self.realm_goto_grown()
+        # 直接进行智能放入
+        if con.exchange_smart:
+            logger.info('Smart exchange')
+            self.ui_click_until_disappear(self.I_RS_SMART_EXCHANGE)
         if self.appear(self.I_RS_LEVEL_MAX):
             # 存在满级的式神
             logger.info('Exist max level shikigami and replace it')
             self.unset_shikigami_max_lv()
-            self.switch_shikigami_class(shikigami_class)
+            self.switch_shikigami_class(con.shikigami_class)
             self.set_shikigami(shikigami_order=7, stop_image=self.I_RS_NO_ADD)
         else:
             logger.info('No max level shikigami')
         if self.detect_no_shikigami():
             logger.warning('There are no any shikigami grow room')
-            self.switch_shikigami_class(shikigami_class)
+            self.switch_shikigami_class(con.shikigami_class)
             self.set_shikigami(shikigami_order=7, stop_image=self.I_RS_NO_ADD)
 
         # 回到结界界面
