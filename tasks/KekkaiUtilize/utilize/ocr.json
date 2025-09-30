@@ -18,21 +18,12 @@
     "description": "今日已领取经验"
   },
   {
-    "itemName": "box_exp_zcsb",
-    "roiFront": "584,542,181,35",
-    "roiBack": "584,542,181,35",
-    "mode": "DigitCounter",
+    "itemName": "card_num",
+    "roiFront": "800,421,150,33",
+    "roiBack": "800,421,150,33",
+    "mode": "Single",
     "method": "Default",
     "keyword": "",
-    "description": "今日已领取经验（招财上宾）"
-  },
-  {
-    "itemName": "utilize_f_list",
-    "roiFront": "307,171,213,416",
-    "roiBack": "307,171,213,416",
-    "mode": "Full",
-    "method": "Default",
-    "keyword": "",
-    "description": "Ocr-description"
+    "description": "斗鱼或太古寄养数目"
   }
 ]

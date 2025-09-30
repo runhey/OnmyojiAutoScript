@@ -17,8 +17,7 @@ class UtilizeRule(str, Enum):
     DEFAULT = 'default'  # 默认就好
     TAIKO = 'kaiko'  # 太鼓优先
     FISH = 'fish'  # 斗鱼优先
-    AUTO = 'auto'  # 自动 兼容代码罢了
-    FRIEND = 'friend'  # 好友选定
+    # AUTO = 'auto'  # 自动 兼容代码罢了
 
 
 
@@ -29,10 +28,10 @@ class UtilizeScheduler(Scheduler):
 
 class UtilizeConfig(BaseModel):
     utilize_rule: UtilizeRule = Field(default=UtilizeRule.DEFAULT, description='utilize_rule_help')
-    utilize_friend: str = Field(default= '',description='你要指定的好友的名字，需要选择同区好友还是跨区好友（就是下面那个选项）')
     select_friend_list: SelectFriendList = Field(default=SelectFriendList.SAME_SERVER, description='select_friend_list_help')
     shikigami_class: ShikigamiClass = Field(default=ShikigamiClass.N, description='shikigami_class_help')
     shikigami_order: int = Field(default=4, description='shikigami_order_help')
+    utilize_enable: bool = Field(default=True, description='是否蹭卡，小号可以选择不蹭卡')
     guild_ap_enable: bool = Field(default=True, description='guild_ap_enable_help')
     guild_assets_enable: bool = Field(default=True, description='guild_assets_enable_help')
     box_ap_enable: bool = Field(default=True, description='box_ap_enable_help')

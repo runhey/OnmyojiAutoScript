@@ -47,7 +47,7 @@
   {
     "itemName": "u_taiko_5",
     "imageName": "utilize_u_taiko_5.png",
-    "roiFront": "544,201,59,52",
+    "roiFront": "543,201,62,54",
     "roiBack": "538,179,79,426",
     "method": "Template matching",
     "threshold": 0.8,
@@ -56,7 +56,7 @@
   {
     "itemName": "u_taiko_6",
     "imageName": "utilize_u_taiko_6.png",
-    "roiFront": "545,313,60,45",
+    "roiFront": "543,521,62,54",
     "roiBack": "533,156,87,450",
     "method": "Template matching",
     "threshold": 0.8,
@@ -83,7 +83,7 @@
   {
     "itemName": "u_fish_5",
     "imageName": "utilize_u_fish_5.png",
-    "roiFront": "552,529,45,41",
+    "roiFront": "543,412,62,54",
     "roiBack": "541,183,71,403",
     "method": "Template matching",
     "threshold": 0.8,
@@ -92,7 +92,7 @@
   {
     "itemName": "u_fish_6",
     "imageName": "utilize_u_fish_6.png",
-    "roiFront": "544,201,59,52",
+    "roiFront": "542,197,62,54",
     "roiBack": "530,184,82,416",
     "method": "Template matching",
     "threshold": 0.8,
@@ -166,6 +166,42 @@
     "imageName": "utilize_u_confirm_small.png",
     "roiFront": "672,513,131,60",
     "roiBack": "672,513,131,60",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "select_realm_on_1",
+    "imageName": "select_realm_on_1.png",
+    "roiFront": "608,191,21,59",
+    "roiBack": "608,191,21,59",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "select_realm_on_2",
+    "imageName": "select_realm_on_2.png",
+    "roiFront": "606,298,21,59",
+    "roiBack": "606,298,21,59",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "select_realm_on_3",
+    "imageName": "select_realm_on_3.png",
+    "roiFront": "607,404,21,59",
+    "roiBack": "607,404,21,59",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "select_realm_on_4",
+    "imageName": "select_realm_on_4.png",
+    "roiFront": "607,516,21,59",
+    "roiBack": "607,516,21,59",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"
