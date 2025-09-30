@@ -133,5 +133,14 @@
     "method": "Template matching",
     "threshold": 0.8,
     "description": "检测到已经满级了"
+  },
+  {
+    "itemName": "rs_smart_exchange",
+    "imageName": "rs_rs_smart_exchange.png",
+    "roiFront": "1150,507,40,44",
+    "roiBack": "1128,488,86,162",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "智能放入"
   }
 ]
