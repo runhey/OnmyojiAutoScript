@@ -12,13 +12,13 @@ class BondlingFairylandAssets:
 
 	# Click Rule Assets
 	# description 
-	C_STONE_1 = RuleClick(roi_front=(239,536,26,24), roi_back=(0,0,100,100), name="stone_1")
+	C_STONE_1 = RuleClick(roi_front=(230,533,23,20), roi_back=(0,0,100,100), name="stone_1")
 	# description 
-	C_STONE_2 = RuleClick(roi_front=(417,490,26,23), roi_back=(0,0,100,100), name="stone_2")
+	C_STONE_2 = RuleClick(roi_front=(441,569,23,20), roi_back=(0,0,100,100), name="stone_2")
 	# description 
-	C_STONE_3 = RuleClick(roi_front=(705,511,28,26), roi_back=(0,0,100,100), name="stone_3")
+	C_STONE_3 = RuleClick(roi_front=(692,537,23,20), roi_back=(0,0,100,100), name="stone_3")
 	# description 
-	C_STONE_4 = RuleClick(roi_front=(911,487,27,24), roi_back=(0,0,100,100), name="stone_4")
+	C_STONE_4 = RuleClick(roi_front=(944,529,23,20), roi_back=(0,0,100,100), name="stone_4")
 	# description 
 	C_STONE_5 = RuleClick(roi_front=(1041,494,25,25), roi_back=(0,0,100,100), name="stone_5")
 	# description 
@@ -29,17 +29,17 @@ class BondlingFairylandAssets:
 	# Ocr-description 
 	O_B_BONDLING_CLASS = RuleOcr(roi=(266,271,79,112), area=(287,271,36,112), mode="Single", method="Default", keyword="", name="b_bondling_class")
 	# 小盘子 
-	O_B_LOW_NUMBER = RuleOcr(roi=(490,24,98,36), area=(490,24,98,36), mode="DigitCounter", method="Default", keyword="", name="b_low_number")
+	O_B_LOW_NUMBER = RuleOcr(roi=(543,14,96,33), area=(543,14,96,33), mode="DigitCounter", method="Default", keyword="", name="b_low_number")
 	# 中盘子 
-	O_B_MEDIUM_NUMBER = RuleOcr(roi=(687,21,101,36), area=(687,21,101,36), mode="DigitCounter", method="Default", keyword="", name="b_medium_number")
+	O_B_MEDIUM_NUMBER = RuleOcr(roi=(734,19,99,25), area=(734,19,99,25), mode="DigitCounter", method="Default", keyword="", name="b_medium_number")
 	# 大盘子 
-	O_B_HIGH_NUMBER = RuleOcr(roi=(883,23,100,32), area=(883,23,100,32), mode="DigitCounter", method="Default", keyword="", name="b_high_number")
+	O_B_HIGH_NUMBER = RuleOcr(roi=(928,17,94,30), area=(928,17,94,30), mode="DigitCounter", method="Default", keyword="", name="b_high_number")
 	# 鸣契石 
-	O_B_STONE_NUMBER = RuleOcr(roi=(858,22,82,40), area=(858,22,82,40), mode="DigitCounter", method="Default", keyword="", name="b_stone_number")
+	O_B_STONE_NUMBER = RuleOcr(roi=(1135,16,78,32), area=(1135,16,78,32), mode="DigitCounter", method="Default", keyword="", name="b_stone_number")
 	# 召唤契灵数量 
 	O_B_SUMMON_BALL_NUMBER = RuleOcr(roi=(546,540,100,45), area=(546,540,100,45), mode="Single", method="Default", keyword="", name="b_summon_ball_number")
 	# 抓捕契灵剩余数量 
-	O_B_BALL_NUMBER = RuleOcr(roi=(1190,532,70,30), area=(1190,532,70,30), mode="DigitCounter", method="Default", keyword="", name="b_ball_number")
+	O_B_BALL_NUMBER = RuleOcr(roi=(1186,666,65,26), area=(1186,666,65,26), mode="DigitCounter", method="Default", keyword="", name="b_ball_number")
 	# 好友邀请 
 	O_FRIEND = RuleOcr(roi=(357,89,100,54), area=(357,89,100,54), mode="Single", method="Default", keyword="", name="friend")
 	# 跨区邀请 
@@ -97,6 +97,12 @@ class BondlingFairylandAssets:
 	I_CAP_SUCCESS = RuleImage(roi_front=(210,445,22,21), roi_back=(210,445,22,21), threshold=0.8, method="Template matching", file="./tasks/BondlingFairyland/capture/capture_cap_success.png")
 	# description 
 	I_CAP_FAILURE = RuleImage(roi_front=(1192,608,30,39), roi_back=(1192,608,30,39), threshold=0.8, method="Template matching", file="./tasks/BondlingFairyland/capture/capture_cap_failure.png")
+	# description 
+	I_BATTLE_FAIL = RuleImage(roi_front=(740,267,79,84), roi_back=(740,267,79,84), threshold=0.8, method="Template matching", file="./tasks/BondlingFairyland/capture/battle_fail.png")
+	# 放弃结契 
+	I_BATTLE_FAIL_ABANDON = RuleImage(roi_front=(436,606,115,36), roi_back=(436,606,115,36), threshold=0.8, method="Template matching", file="./tasks/BondlingFairyland/capture/battle_fail_abandon.png")
+	# description 
+	I_BATTLE_SUCCESS = RuleImage(roi_front=(651,203,70,81), roi_back=(651,203,70,81), threshold=0.8, method="Template matching", file="./tasks/BondlingFairyland/capture/battle_success.png")
 
 
 	# Image Rule Assets

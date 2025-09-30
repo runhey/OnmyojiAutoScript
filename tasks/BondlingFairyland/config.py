@@ -12,24 +12,21 @@ from tasks.BondlingFairyland.config_battle import BattleConfig
 from tasks.Component.GeneralInvite.config_invite import InviteConfig
 from tasks.Component.GeneralBattle.config_general_battle import GeneralBattleConfig
 
+
+
 class BondlingMode(str, Enum):
     MODE1 = 'mode_1'
     MODE2 = 'mode_2'
     MODE3 = 'mode_3'
-# 镇墓兽 Tomb Guard  tomb_guard
-# 茨球 Snowball       snowball
-# 小黑 Little Kuro  little_kuro
-# 火灵 Azure Basan azure_basan
+
+
 class BondlingClass(str, Enum):
     TOMB_GUARD = '镇墓兽'
     SNOWBALL = '茨球'
     LITTLE_KURO = '小黑'
     AZURE_BASAN = '火灵'
 
-# 契石 Bondling Stone
-# 低级契灵盘 Low Bondling Discs
-# 中级契灵盘 Medium Bondling Discs
-# 高级契灵盘 High Bondling Discs
+
 class UserStatus(str, Enum):
     LEADER = 'leader'
     MEMBER = 'member'
@@ -37,6 +34,8 @@ class UserStatus(str, Enum):
     handoff1 = 'handoff1'
     handoff2 = 'handoff2'
     # WILD = 'wild'  # 还不打算实现
+
+
 class BondlingConfig(ConfigBase):
     # 身份
     user_status: UserStatus = Field(default=UserStatus.ALONE, description='user_status_help')
@@ -45,6 +44,7 @@ class BondlingConfig(ConfigBase):
     limit_count: int = Field(default=30, description='limit_count_help')
     bondling_stone_enable: bool = Field(default=False, description='bondling_stone_enable_help')
     bondling_stone_class: BondlingClass = Field(default=BondlingClass.TOMB_GUARD, description='bondling_stone_class_help')
+
 
 class BondlingSwitchSoul(ConfigBase):
     auto_switch_soul: bool = Field(default=False, description='auto_switch_soul_help')
@@ -57,8 +57,15 @@ class BondlingSwitchSoul(ConfigBase):
     # 火灵 config
     azure_basan_switch: str = Field(default='-1,-1', description='azure_basan_switch_help')
 
+
+class BondlingCheck(ConfigBase):
+    check_enable: bool = Field(default=True, description='是否检查契忆数量')
+    limit_num: int = Field(default=2000, description='契忆数量限制')
+
+
 class BondlingFairyland(ConfigBase):
     scheduler: Scheduler = Field(default_factory=Scheduler)
+    bondling_check: BondlingCheck = Field(default_factory=BondlingCheck)
     bondling_config: BondlingConfig = Field(default_factory=BondlingConfig)
     bondling_switch_soul: BondlingSwitchSoul = Field(default_factory=BondlingSwitchSoul)
     invite_config: InviteConfig = Field(default_factory=InviteConfig)

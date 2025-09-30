@@ -40,10 +40,6 @@ class GeneralInvite(BaseTask, BondlingFairylandAssets, GeneralInviteAssets):
     timer_invite = None
     timer_wait = None
 
-    """
-
-    """
-
     def run_invite(self, config: InviteConfig, is_first: bool = False, is_over: bool = True) -> bool:
         """
         队长！！身份。。。在组队界面邀请好友（ 如果开启is_first） 等待队员进入开启挑战
@@ -53,7 +49,7 @@ class GeneralInvite(BaseTask, BondlingFairylandAssets, GeneralInviteAssets):
         :param is_first: 如果是第一次开房间的那就要邀请队员，其他情况等待队员进入
         :return:
         """
-        logger.hr('Invite friend', 2)
+        logger.hr('Invite friend')
         if not self.ensure_enter():
             logger.warning('Not enter invite page')
             return False
@@ -72,7 +68,7 @@ class GeneralInvite(BaseTask, BondlingFairylandAssets, GeneralInviteAssets):
         while 1:
             self.screenshot()
             if self.timer_wait.reached():
-                logger.warning('Wait timeout')
+                logger.warning('队长等待超时...')
                 return False
             if self.appear(self.I_MATCHING):
                 logger.warning('Timeout, now is no room')
@@ -85,29 +81,6 @@ class GeneralInvite(BaseTask, BondlingFairylandAssets, GeneralInviteAssets):
             # 如果这个房间最多只容纳两个人（意思是只可以邀请一个人），且已经邀请一个人了，那就开启挑战
             if self.room_type == RoomType.NORMAL_2 and not self.appear(self.I_ADD_1):
                 logger.info('Start challenge and this room can only invite one friend')
-                fire = True
-            # 如果这个房间最多容纳三个人（意思是可以邀请两个人），且设定邀请一个就开启挑战，那就开启挑战
-            elif self.room_type == RoomType.NORMAL_3 and config.invite_number == InviteNumber.ONE and not self.appear(self.I_ADD_1):
-                logger.info('Start challenge and user only invite one friend')
-                fire = True
-            # 如果这个房间最多容纳三个人（意思是可以邀请两个人），且设定邀请两个就开启挑战，那就开启挑战
-            elif self.room_type == RoomType.NORMAL_3 \
-                    and config.invite_number == InviteNumber.TWO and not self.appear(self.I_ADD_2):
-                logger.info('Start challenge and user invite two friends')
-                fire = True
-            # 如果这个房间是五人的，且设定邀请一个就开启挑战，那就开启挑战
-            elif self.room_type == RoomType.NORMAL_5 \
-                    and config.invite_number == InviteNumber.ONE and not self.appear(self.I_ADD_5_1):
-                logger.info('Start challenge and user only invite one friend')
-                fire = True
-            # 如果这个房间是五人的，且设定邀请两个就开启挑战，那就开启挑战
-            elif self.room_type == RoomType.NORMAL_5 \
-                    and config.invite_number == InviteNumber.TWO and not self.appear(self.I_ADD_5_2):
-                logger.info('Start challenge and user invite two friends')
-                fire = True
-            # 如果是永生之海
-            elif self.room_type == RoomType.ETERNITY_SEA and not self.appear(self.I_ADD_SEA):
-                logger.info('Start challenge and this is lock sea')
                 fire = True
 
             # 点击挑战
@@ -457,45 +430,6 @@ class GeneralInvite(BaseTask, BondlingFairylandAssets, GeneralInviteAssets):
                 logger.warning('Invite friend 2 failed')
         sleep(0.5)
 
-    def invite_again(self, default_invite: bool=True) -> bool:
-        """
-        作为队长战斗胜利后再次邀请队友，
-        :param default_invite:  是否勾选默认
-        :return:
-        """
-        logger.info('Invite again')
-        # 判断是否进入界面
-        while 1:
-            self.screenshot()
-            if self.appear(self.I_GI_SURE):
-                break
-        # 如果勾选了默认邀请
-        if default_invite:
-            logger.info('Click default invite')
-            while 1:
-                self.screenshot()
-                if self.appear(self.I_I_DEFAULT):
-                    break
-                if self.appear_then_click(self.I_I_NO_DEFAULT, interval=1):
-                    continue
-        else:
-            logger.info('Click no default invite')
-            while 1:
-                self.screenshot()
-                if self.appear(self.I_I_NO_DEFAULT):
-                    break
-                if self.appear_then_click(self.I_I_DEFAULT, interval=1):
-                    continue
-
-        # 点击确认
-        logger.info('Click invite ensure')
-        while 1:
-            self.screenshot()
-            if not self.appear(self.I_GI_SURE):
-                break
-            if self.appear_then_click(self.I_GI_SURE):
-                continue
-
     def check_and_invite(self, default_invite: bool=True) -> bool:
         """
         队长战斗后 邀请队友
@@ -525,91 +459,13 @@ class GeneralInvite(BaseTask, BondlingFairylandAssets, GeneralInviteAssets):
 
         return True
 
-    def check_then_accept(self) -> bool:
-        """
-        队员接受邀请
-        :return:
-        """
-        if not self.appear(self.I_I_ACCEPT):
-            return False
-        logger.info('Click accept')
-        while 1:
-            self.screenshot()
-            if self.is_in_room():
-                return True
-            # 被秒开
-            # https://github.com/runhey/OnmyojiAutoScript/issues/230
-            if self.appear(GeneralBattleAssets.I_EXIT):
-                return False
-            if self.appear_then_click(self.I_I_NO_DEFAULT, interval=1):
-                continue
-            if self.appear_then_click(self.I_GI_SURE, interval=1):
-                continue
-            if self.appear_then_click(self.I_I_ACCEPT_DEFAULT, interval=1):
-                continue
-            if self.appear_then_click(self.I_I_ACCEPT, interval=1):
-                continue
-        return True
-
-    def wait_battle(self, wait_time: time) -> bool:
-        """
-        在房间等待,(要求保证在房间里面) 队长开启战斗
-        如果队长跑路了，或者的等待了很久还没开始
-        :return: 如果成功进入战斗（反正就是不在房间 ）返回 True
-                 如果失败了，（退出房间）返回 False
-        """
-        wait_second = wait_time.second + wait_time.minute * 60
-        self.timer_wait = Timer(wait_second)
-        self.timer_wait.start()
-        logger.info(f'Wait battle {wait_second} seconds')
-        success = True
-        while 1:
-            self.screenshot()
-
-            # 如果自己在探索界面或者是庭院，那就是房间已经被销毁了
-            if self.appear(self.I_GI_HOME) or self.appear(self.I_GI_EXPLORE):
-                logger.warning('Room destroyed')
-                success = False
-                break
-
-
-            if self.timer_wait.reached():
-                logger.warning('Wait battle time out')
-                success = False
-                break
-
-            # 如果队长跑路了，自己变成了队长: 自己也要跑路
-            if self.appear(self.I_FIRE) or self.appear(self.I_FIRE_SEA):
-                logger.warning('Leader run away while wait battle and become leader now')
-                success = False
-                break
-
-            # 判断是否进入战斗
-            if self.is_in_room(is_screenshot=False):
-                pass
-            else:
-                break
-
-        # 调出循环只有这些可能性：
-        # 1. 进入战斗（ui是战斗）
-        # 2. 队长跑路（自己还是在房间里面）
-        # 3. 等待时间到没有开始（还是在房间里面）
-        # 4. 房间的时间到了被迫提出房间（这个时候来到了探索界面）
-        if not success:
-            logger.info('Leave room')
-            self.exit_room()
-
-        return success
-
-
-
 
 if __name__ == '__main__':
     from module.config.config import Config
     from module.device.device import Device
     import cv2
 
-    c = Config('oas1')
+    c = Config('du')
     d = Device(c)
     t = GeneralInvite(c, d)
 
