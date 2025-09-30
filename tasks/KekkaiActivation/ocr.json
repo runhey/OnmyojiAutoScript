@@ -7,5 +7,14 @@
     "method": "Default",
     "keyword": "",
     "description": "这张卡一共有多少小时"
+  },
+  {
+    "itemName": "check_card_number",
+    "roiFront": "305,153,107,481",
+    "roiBack": "305,153,107,481",
+    "mode": "Single",
+    "method": "Default",
+    "keyword": "",
+    "description": "识别结界卡每小时收益"
   }
 ]

@@ -640,3 +640,9 @@ class BaseTask(GlobalGameAssets, CostumeBase):
             if isinstance(click, RuleOcr):
                 self.click(click)
                 continue
+
+    def push_notify(self, content='', title=None, level=3):
+        logger.info(f'Push notify: {content}')
+
+    def save_image(self, task_name=None, content=None, wait_time=2, image_type=False, push_flag=False, level=3):
+        logger.info(f'Save image: {task_name}')
