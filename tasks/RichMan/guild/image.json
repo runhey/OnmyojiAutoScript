@@ -12,7 +12,7 @@
     "itemName": "guild_store",
     "imageName": "guild_guild_store.png",
     "roiFront": "651,420,212,161",
-    "roiBack": "651,420,212,161",
+    "roiBack": "651,420,212,180",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "功勋商店"
