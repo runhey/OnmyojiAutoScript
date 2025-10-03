@@ -2,8 +2,8 @@
   {
     "itemName": "friend_same_1",
     "imageName": "hya_friend_same_1.png",
-    "roiFront": "375,122,106,62",
-    "roiBack": "375,122,106,62",
+    "roiFront": "349,124,83,50",
+    "roiBack": "349,124,83,50",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"
@@ -11,8 +11,8 @@
   {
     "itemName": "friend_remote_1",
     "imageName": "hya_friend_remote_1.png",
-    "roiFront": "498,125,106,56",
-    "roiBack": "498,125,106,56",
+    "roiFront": "444,127,81,46",
+    "roiBack": "444,127,81,46",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"
@@ -20,8 +20,8 @@
   {
     "itemName": "friend_same_2",
     "imageName": "hya_friend_same_2.png",
-    "roiFront": "377,126,100,60",
-    "roiBack": "377,126,100,60",
+    "roiFront": "355,125,80,47",
+    "roiBack": "355,125,80,47",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"
@@ -29,8 +29,8 @@
   {
     "itemName": "friend_remote_2",
     "imageName": "hya_friend_remote_2.png",
-    "roiFront": "504,127,100,56",
-    "roiBack": "504,127,100,56",
+    "roiFront": "440,122,89,56",
+    "roiBack": "440,122,89,56",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"
@@ -74,19 +74,28 @@
   {
     "itemName": "friend_ryou_1",
     "imageName": "hya_friend_ryou_1.png",
-    "roiFront": "328,128,80,45",
-    "roiBack": "328,128,80,45",
+    "roiFront": "537,126,80,45",
+    "roiBack": "537,126,80,45",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "寮"
+  },
+  {
+    "itemName": "friend_ryou_2",
+    "imageName": "hya_friend_ryou_2.png",
+    "roiFront": "536,127,80,45",
+    "roiBack": "536,127,80,45",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"
   },
   {
-    "itemName": "friend_ryou_2",
-    "imageName": "hya_friend_ryou_2.png",
-    "roiFront": "328,128,80,45",
-    "roiBack": "328,128,80,45",
+    "itemName": "check_invitation",
+    "imageName": "hya_check_invitation.png",
+    "roiFront": "629,140,272,57",
+    "roiBack": "308,113,826,100",
     "method": "Template matching",
     "threshold": 0.8,
-    "description": "description"
+    "description": "判断是否进入邀请页面"
   }
 ]

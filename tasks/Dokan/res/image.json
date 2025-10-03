@@ -363,7 +363,7 @@
     "itemName": "scene_shenshe",
     "imageName": "scene_shenshe.png",
     "roiFront": "477,165,63,65",
-    "roiBack": "477,165,63,65",
+    "roiBack": "477,165,65,80",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "场景检测：神社"

@@ -136,7 +136,8 @@ class SwitchSoul(BaseTask, SwitchSoulAssets):
                 continue
             if not self.appear_then_click(target_team, interval=3):
                 logger.warning(f'Click team {team} failed in group {group}')
-
+        # 兜底若还出现确认按钮则点击
+        self.ui_click_until_disappear(self.I_SOU_SWITCH_SURE)
         logger.info(f'Switch soul_one group {group} team {team}')
 
     def switch_souls(self, target: tuple or list[tuple]) -> None:

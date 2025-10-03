@@ -1,8 +1,11 @@
 # This Python file uses the following encoding: utf-8
 # @author runhey
 # github https://github.com/runhey
+from datetime import timedelta, datetime
+
 import random
 
+from module.server.i18n import I18n
 from tasks.Component.GeneralBattle.general_battle import GeneralBattle
 from tasks.BondlingFairyland.assets import BondlingFairylandAssets
 from tasks.BondlingFairyland.config_battle import BattleConfig
@@ -20,7 +23,13 @@ class BondlingBattle(GeneralBattle, BondlingFairylandAssets):
         """
         logger.hr("General battle start", 2)
         self.current_count += 1
-        logger.info(f"Current count: {self.current_count} / " + str(limit_count))
+        logger.info(f'Current tasks: {I18n.trans_zh_cn(self.config.task.command)}')
+        logger.info(f'Current count: {self.current_count} / {limit_count}')
+
+        task_run_time = datetime.now() - self.start_time
+        # 格式化时间，只保留整数部分的秒
+        task_run_time_seconds = timedelta(seconds=int(task_run_time.total_seconds()))
+        logger.info(f'Current times: {task_run_time_seconds} / {self.limit_time}')
 
         if self.check_load():
             # 首先要判断进入战斗的界面
@@ -67,8 +76,14 @@ class BondlingBattle(GeneralBattle, BondlingFairylandAssets):
             # 如果领奖励
             if self.appear(self.I_REWARD, threshold=0.6):
                 break
-            if self.appear(self.I_WIN, threshold=0.6):
-                break
+            if self.appear_then_click(self.I_WIN, threshold=0.6):
+                continue
+            if self.appear_then_click(self.I_BATTLE_SUCCESS, threshold=0.6, interval=1):
+                continue
+            if self.appear_then_click(self.I_BATTLE_FAIL_ABANDON, interval=1):
+                continue
+            if self.appear_then_click(self.I_BATTLE_FAIL, threshold=0.6, interval=1):
+                continue
             # 如果开启战斗过程随机滑动
             if random_click_swipt_enable:
                 self.random_click_swipt()
@@ -85,7 +100,13 @@ class BondlingBattle(GeneralBattle, BondlingFairylandAssets):
             if self.appear_then_click(self.I_REWARD, action=action_click, interval=1.5):
                 continue
             if self.appear_then_click(self.I_WIN, threshold=0.6):
-                break
+                continue
+            if self.appear_then_click(self.I_BATTLE_SUCCESS, threshold=0.6, interval=1):
+                continue
+            if self.appear_then_click(self.I_BATTLE_FAIL_ABANDON, interval=1):
+                continue
+            if self.appear_then_click(self.I_BATTLE_FAIL, threshold=0.6, interval=1):
+                continue
             if not self.appear(self.I_REWARD):
                 break
         logger.info("Get reward")

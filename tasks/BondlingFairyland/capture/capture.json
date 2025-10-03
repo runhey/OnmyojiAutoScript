@@ -52,5 +52,32 @@
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"
+  },
+  {
+    "itemName": "battle_fail",
+    "imageName": "battle_fail.png",
+    "roiFront": "740,267,79,84",
+    "roiBack": "740,267,79,84",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "battle_fail_abandon",
+    "imageName": "battle_fail_abandon.png",
+    "roiFront": "436,606,115,36",
+    "roiBack": "436,606,115,36",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "放弃结契"
+  },
+  {
+    "itemName": "battle_success",
+    "imageName": "battle_success.png",
+    "roiFront": "651,203,70,81",
+    "roiBack": "651,203,70,81",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
   }
 ]

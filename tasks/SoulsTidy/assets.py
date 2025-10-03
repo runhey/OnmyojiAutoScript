@@ -43,7 +43,7 @@ class SoulsTidyAssets:
 	# 神赐 
 	I_ST_GOD_PRESENT = RuleImage(roi_front=(578,234,131,73), roi_back=(542,117,204,219), threshold=0.8, method="Template matching", file="./tasks/SoulsTidy/simple/simple_st_god_present.png")
 	# 已弃置被选中 
-	I_ST_ABANDONED_SELECTED = RuleImage(roi_front=(47,118,84,33), roi_back=(45,119,85,34), threshold=0.8, method="Template matching", file="./tasks/SoulsTidy/simple/simple_st_abandoned_selected.png")
+	I_ST_ABANDONED_SELECTED = RuleImage(roi_front=(32,112,107,52), roi_back=(15,89,139,87), threshold=0.8, method="Template matching", file="./tasks/SoulsTidy/simple/simple_st_abandoned_selected.png")
 	# 第一个御魂是+0的 
 	I_ST_LEVEL_0 = RuleImage(roi_front=(85,235,45,30), roi_back=(85,235,45,30), threshold=0.9, method="Template matching", file="./tasks/SoulsTidy/simple/simple_st_level_0.png")
 	# 御魂奉纳后获得的金币 

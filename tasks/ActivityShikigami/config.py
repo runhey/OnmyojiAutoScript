@@ -21,17 +21,17 @@ class ShikigamiType(str, Enum):
 class SwitchSoulConfig(BaseModel):
     # 切换门票爬塔御魂
     enable_switch_pass: bool = Field(default=False, description='是否切换门票爬塔御魂')
-    pass_group_team: str = Field(default='-1,-1', description='组1-7,队伍1-4 中间用英文,分隔。战斗内切换队伍预设使用该值')
+    pass_group_team: str = Field(default='-1,-1', description='组1-7,队伍1-4 中间用英文,分隔。战斗内切换队伍预设也使用该值')
     enable_switch_pass_by_name: bool = Field(default=False, description='是否通过ocr切换御魂')
     pass_group_team_name: str = Field(default='', description='组名,队伍名 中间用英文,分隔')
     # 切换体力爬塔御魂
     enable_switch_ap: bool = Field(default=False, description='是否切换体力爬塔御魂')
-    ap_group_team: str = Field(default='-1,-1', description='组1-7,队伍1-4 中间用英文,分隔。战斗内切换队伍预设使用该值')
+    ap_group_team: str = Field(default='-1,-1', description='组1-7,队伍1-4 中间用英文,分隔。战斗内切换队伍预设也使用该值')
     enable_switch_ap_by_name: bool = Field(default=False, description='是否通过ocr切换御魂')
     ap_group_team_name: str = Field(default='', description='组名,队伍名 中间用英文,分隔')
     # 切换boss爬塔御魂
     enable_switch_boss: bool = Field(default=False, description='是否切换boss爬塔御魂')
-    boss_group_team: str = Field(default='-1,-1', description='组1-7,队伍1-4 中间用英文,分隔。战斗内切换队伍预设使用该值')
+    boss_group_team: str = Field(default='-1,-1', description='组1-7,队伍1-4 中间用英文,分隔。战斗内切换队伍预设也使用该值')
     enable_switch_boss_by_name: bool = Field(default=False, description='是否通过ocr切换御魂')
     boss_group_team_name: str = Field(default='', description='组名,队伍名 中间用英文,分隔')
 

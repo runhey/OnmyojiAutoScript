@@ -93,6 +93,7 @@ class ScriptTask(RightActivity, FrogBossAssets, GeneralBattleAssets):
     def do_bet(self):
         logger.hr('do bet', level=2)
         self.screenshot()
+        flag_glod_30 = 0
         count_left = self.O_LEFT_COUNT.ocr(self.device.image)
         count_right = self.O_RIGHT_COUNT.ocr(self.device.image)
         match self.config.model.frog_boss.frog_boss_config.strategy_frog:
@@ -125,9 +126,10 @@ class ScriptTask(RightActivity, FrogBossAssets, GeneralBattleAssets):
             self.screenshot()
             if self.appear(self.I_BETTED):
                 break
-            if self.appear_then_click(self.I_GOLD_30, interval=2):
+            if self.appear_then_click(self.I_BET_SURE, interval=2) and flag_glod_30 == 1:
                 continue
-            if self.appear_then_click(self.I_BET_SURE, interval=2):
+            if self.appear_then_click(self.I_GOLD_30, interval=2):
+                flag_glod_30 = 1
                 continue
             if self.appear_then_click(self.I_UI_CONFIRM, interval=2):
                 continue

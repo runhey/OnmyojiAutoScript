@@ -20,6 +20,7 @@ class ActivationConfig(BaseModel):
     card_rule: MultiLine = Field(default='auto', description='card_rule_help')
     exchange_before: bool = Field(default=True, description='exchange_before_help')
     exchange_max: bool = Field(default=True, description='exchange_max_help')
+    exchange_smart: bool = Field(default=False, description='是否启用智能放入')
     shikigami_class: ShikigamiClass = Field(default=ShikigamiClass.N, description='shikigami_class_help')
 
 

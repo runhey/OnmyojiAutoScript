@@ -110,8 +110,8 @@
   {
     "itemName": "st_abandoned_selected",
     "imageName": "simple_st_abandoned_selected.png",
-    "roiFront": "47,118,84,33",
-    "roiBack": "45,119,85,34",
+    "roiFront": "32,112,107,52",
+    "roiBack": "15,89,139,87",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "已弃置被选中"
