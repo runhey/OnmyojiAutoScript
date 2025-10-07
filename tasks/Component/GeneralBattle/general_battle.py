@@ -52,18 +52,20 @@ class GeneralBattle(GeneralBuff, GeneralBattleAssets):
         """
         战斗前设置
         """
-        # 用来判断是否已经做了相关配置
-        conf = False
         # 用于ui加载,防止还在加载过程中导致准备界面识别失败,最多等待2秒
         wait_in_prepare_timer = Timer(2).start()
         while not self.is_in_prepare() and not wait_in_prepare_timer.reached():
             logger.info('Wait to enter the preparation page')
-            time.sleep(0.2)
+            time.sleep(0.5)
+        confed = False
+        need_battle_timer = Timer(2)
         # 如果不在准备界面,想设置也设置不了,只能直接开始战斗
-        # 在准备界面则执行下列设置
         while self.is_in_prepare():
-            # 在准备界面,且没有配置过,则进行相关配置
-            if not config.lock_team_enable and not conf:
+            # 配置了锁定阵容则启动超时器
+            if config.lock_team_enable and not need_battle_timer.started():
+                need_battle_timer.start()
+            # 在准备界面,且没有锁定阵容,则进行相关配置
+            if not config.lock_team_enable and not confed:
                 logger.info("Lock team is not enable")
                 # 第一次进则切换预设
                 if self.current_count == 1:
@@ -71,12 +73,15 @@ class GeneralBattle(GeneralBuff, GeneralBattleAssets):
                 # 判断是否开启buff并开启
                 self.check_and_open_buff(buff)
                 # 配置过了不再配置
-                conf = True
-            # 已经配置完了,不管有没有锁定队伍,出现了准备都要点击
-            if self.appear_then_click(self.I_PREPARE_HIGHLIGHT, interval=1.5):
-                logger.info("Click prepare ensure button")
+                confed = True
+            # 如果锁定了阵容且超过2秒还在准备界面,则点击准备
+            if config.lock_team_enable and need_battle_timer.reached():
+                self.appear_then_click(self.I_PREPARE_HIGHLIGHT, interval=1.5)
+            # 没有锁定阵容且配置完成则直接点击准备
+            if not config.lock_team_enable and confed:
+                self.appear_then_click(self.I_PREPARE_HIGHLIGHT, interval=1.5)
             # 照顾一下某些模拟器慢的
-            time.sleep(0.1)
+            time.sleep(0.2)
 
     def run_general_battle_back(self, config: GeneralBattleConfig = None, exit_four: bool = False) -> bool:
         """
