@@ -6,6 +6,7 @@ import random
 from time import sleep
 
 import cv2
+from module.base.timer import Timer
 
 from module.base.utils import get_color, color_similar
 from tasks.base_task import BaseTask
@@ -53,14 +54,14 @@ class GeneralBattle(GeneralBuff, GeneralBattleAssets):
         """
         # 用来判断是否已经做了相关配置
         conf = False
-        # 用于ui加载,防止还在加载过程中导致准备界面或战斗界面识别失败
-        while not self.is_in_battle():
-            logger.info('Wait to be in battle')
+        # 用于ui加载,防止还在加载过程中导致准备界面识别失败,最多等待2秒
+        wait_in_prepare_timer = Timer(2).start()
+        while not self.is_in_prepare() and not wait_in_prepare_timer.reached():
+            logger.info('Wait to enter the preparation page')
             time.sleep(0.2)
-        # 如果不在准备界面,那也没有战前了,想设置也设置不了,只能直接开始战斗
+        # 如果不在准备界面,想设置也设置不了,只能直接开始战斗
+        # 在准备界面则执行下列设置
         while self.is_in_prepare():
-            # 照顾一下某些模拟器慢的
-            time.sleep(0.1)
             # 在准备界面,且没有配置过,则进行相关配置
             if not config.lock_team_enable and not conf:
                 logger.info("Lock team is not enable")
@@ -74,6 +75,8 @@ class GeneralBattle(GeneralBuff, GeneralBattleAssets):
             # 已经配置完了,不管有没有锁定队伍,出现了准备都要点击
             if self.appear_then_click(self.I_PREPARE_HIGHLIGHT, interval=1.5):
                 logger.info("Click prepare ensure button")
+            # 照顾一下某些模拟器慢的
+            time.sleep(0.1)
 
     def run_general_battle_back(self, config: GeneralBattleConfig = None, exit_four: bool = False) -> bool:
         """
