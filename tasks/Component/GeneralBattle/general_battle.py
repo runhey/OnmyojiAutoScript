@@ -28,51 +28,48 @@ class GeneralBattle(GeneralBuff, GeneralBattleAssets):
         运行脚本
         :return:
         """
-        # 本人选择的策略是只要进来了就算一次，不管是不是打完了
         logger.hr("General battle start", 2)
-        self.current_count += 1
-        logger.info(f"Current count: {self.current_count}")
         if config is None:
             config = GeneralBattleConfig()
-
-        # 如果没有锁定队伍。那么可以根据配置设定队伍
-        if not config.lock_team_enable:
-            logger.info("Lock team is not enable")
-            # 如果更换队伍
-            if self.current_count == 1:
-                self.switch_preset_team(config.preset_enable, config.preset_group, config.preset_team)
-
-            # 打开buff
-            self.check_buff(buff)
-
-            # 点击准备按钮
-            self.wait_until_appear(self.I_PREPARE_HIGHLIGHT)
-            self.wait_until_appear(self.I_BUFF)
-            occur_prepare_button = False
-            while 1:
-                self.screenshot()
-                if not self.appear(self.I_BUFF):
-                    break
-                if self.appear_then_click(self.I_PREPARE_HIGHLIGHT, interval=1.5):
-                    occur_prepare_button = True
-                    continue
-                # if occur_prepare_button and self.ocr_appear_click(self.O_BATTLE_PREPARE, interval=2):
-                #     continue
-            logger.info("Click prepare ensure button")
-
-            # 照顾一下某些模拟器慢的
-            time.sleep(0.1)
-
+        # 本人选择的策略是只要进来了就算一次，不管是不是打完了
+        # 战斗统计
+        self.current_count += 1
+        logger.info(f"Current count: {self.current_count}")
+        # 战前设置
+        self.battle_before(buff, config)
         # 绿标
-        self.wait_until_disappear(self.I_BUFF)
         if self.is_in_battle(False):
             self.green_mark(config.green_enable, config.green_mark)
-
+        # 战中设置
         win = self.battle_wait(config.random_click_swipt_enable)
         if win:
             return True
         else:
             return False
+
+    def battle_before(self, buff, config):
+        """
+        战斗前设置
+        """
+        # 用来判断是否已经做了相关配置
+        conf = False
+        # 如果不在准备界面,那也没有战前了,想设置也设置不了,只能直接开始战斗
+        while self.is_in_prepare():
+            # 照顾一下某些模拟器慢的
+            time.sleep(0.1)
+            # 在准备界面,且没有配置过,则进行相关配置
+            if not config.lock_team_enable and not conf:
+                logger.info("Lock team is not enable")
+                # 第一次进则切换预设
+                if self.current_count == 1:
+                    self.switch_preset_team(config.preset_enable, config.preset_group, config.preset_team)
+                # 判断是否开启buff并开启
+                self.check_and_open_buff(buff)
+                # 配置过了不再配置
+                conf = True
+            # 已经配置完了,不管有没有锁定队伍,出现了准备都要点击
+            if self.appear_then_click(self.I_PREPARE_HIGHLIGHT, interval=1.5):
+                logger.info("Click prepare ensure button")
 
     def run_general_battle_back(self, config: GeneralBattleConfig = None, exit_four: bool = False) -> bool:
         """
@@ -454,20 +451,7 @@ class GeneralBattle(GeneralBuff, GeneralBattleAssets):
         if not self.is_in_battle():
             return None
 
-        if self.is_in_prepare(False):
-            while 1:
-                self.screenshot()
-                if self.appear_then_click(self.I_PREPARE_HIGHLIGHT, interval=1.5):
-                    continue
-                if not self.appear(self.I_BUFF):
-                    break
-
-            # 被接管的战斗，只有准备阶段才可以点绿标。
-            # 因为如果是战斗中，无法保证点击的时候是否出现动画
-            self.wait_until_disappear(self.I_BUFF)
-            self.green_mark(config.green_enable, config.green_mark)
-
-        return self.battle_wait(config.random_click_swipt_enable)
+        return self.run_general_battle(config=config)
 
     def check_lock(self, enable: bool, lock_image, unlock_image):
         """
@@ -494,7 +478,7 @@ class GeneralBattle(GeneralBuff, GeneralBattleAssets):
                 if self.appear_then_click(lock_image, interval=1):
                     continue
 
-    def check_buff(self, buff: BuffClass or list[BuffClass] = None):
+    def check_and_open_buff(self, buff: BuffClass or list[BuffClass] = None):
         """
         检测是否开启buff
         :param buff:
