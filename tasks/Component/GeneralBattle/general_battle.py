@@ -53,6 +53,10 @@ class GeneralBattle(GeneralBuff, GeneralBattleAssets):
         """
         # 用来判断是否已经做了相关配置
         conf = False
+        # 用于ui加载,防止还在加载过程中导致准备界面或战斗界面识别失败
+        while not self.is_in_battle():
+            logger.info('Wait to be in battle')
+            time.sleep(0.2)
         # 如果不在准备界面,那也没有战前了,想设置也设置不了,只能直接开始战斗
         while self.is_in_prepare():
             # 照顾一下某些模拟器慢的
