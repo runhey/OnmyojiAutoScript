@@ -159,6 +159,8 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, RyouToppaAssets):
         area_index = 0
         success = True
         while 1:
+            # 设置长任务标志,用来寻找寮突可进攻的目标
+            self.device.stuck_record_add('PREPARE_BEFORE_BATTLE')
             if not self.has_ticket():
                 logger.info("We have no chance to attack. Try again after 1 hour.")
                 success = False
