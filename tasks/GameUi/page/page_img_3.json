@@ -196,5 +196,14 @@
     "method": "Template matching",
     "threshold": 0.8,
     "description": "下载拓展包弹窗"
+  },
+  {
+    "itemName": "back_battle",
+    "imageName": "page_back_battle.png",
+    "roiFront": "24,19,40,38",
+    "roiBack": "0,0,90,85",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "退出战斗按钮"
   }
 ]

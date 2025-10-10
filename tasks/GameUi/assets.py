@@ -181,7 +181,8 @@ class GameUiAssets:
 	I_BACK_ACT_LIST = RuleImage(roi_front=(1165,65,51,47), roi_back=(1124,23,131,133), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_back_act_list.png")
 	# 下载拓展包弹窗 
 	I_DLC_CLOSE = RuleImage(roi_front=(916,147,24,25), roi_back=(916,147,24,25), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/store_dlc_close.png")
-
+	# 退出战斗按钮 
+	I_BACK_BATTLE = RuleImage(roi_front=(24,19,40,38), roi_back=(0,0,90,85), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_back_battle.png")
 
 	# Image Rule Assets
 	# description 
@@ -220,8 +221,8 @@ class GameUiAssets:
 
 	# List Rule Assets
 	# 活动列表页文字列表 
-	L_ACT_LIST_OCR = RuleList(folder="./tasks/GameUi/page", direction="vertical", mode="ocr", roi_back=(192,90,190,513), size=(186, 78), 
-					 array=["冰火永烬"])
+	L_ACT_LIST_OCR = RuleList(folder="./tasks/GameUi/page", direction="vertical", mode="ocr", roi_back=(219,91,47,513), size=(42, 78), 
+					 array=["日之"])
 
 
 	# Image Rule Assets
