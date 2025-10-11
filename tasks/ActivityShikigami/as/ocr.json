@@ -1,8 +1,8 @@
 [
   {
     "itemName": "remain_ap",
-    "roiFront": "910,18,62,28",
-    "roiBack": "910,18,62,28",
+    "roiFront": "727,18,105,28",
+    "roiBack": "716,11,122,41",
     "mode": "DigitCounter",
     "method": "Default",
     "keyword": "",
@@ -28,8 +28,8 @@
   },
   {
     "itemName": "remain_ap_activity2",
-    "roiFront": "558,18,47,29",
-    "roiBack": "558,18,47,29",
+    "roiFront": "1115,25,88,29",
+    "roiBack": "1107,14,103,50",
     "mode": "Digit",
     "method": "Default",
     "keyword": "",
@@ -37,20 +37,29 @@
   },
   {
     "itemName": "entry_activity",
-    "roiFront": "70,103,98,32",
-    "roiBack": "70,103,98,32",
+    "roiFront": "72,279,98,32",
+    "roiBack": "73,279,98,32",
     "mode": "Single",
     "method": "Default",
-    "keyword": "驻守平安",
+    "keyword": "临战演武",
     "description": "从左侧进入战斗"
   },
   {
     "itemName": "remain_boss",
     "roiFront": "1113,669,131,31",
-    "roiBack": "0,0,100,100",
+    "roiBack": "1099,659,162,52",
     "mode": "DigitCounter",
     "method": "Default",
     "keyword": "",
     "description": "boss剩余攻击次数"
+  },
+  {
+    "itemName": "fire",
+    "roiFront": "1137,599,83,44",
+    "roiBack": "1129,570,100,100",
+    "mode": "Single",
+    "method": "Default",
+    "keyword": "挑战",
+    "description": "挑战"
   }
 ]

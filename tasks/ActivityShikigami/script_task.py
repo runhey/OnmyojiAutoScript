@@ -19,14 +19,14 @@ from tasks.Component.BaseActivity.config_activity import GeneralClimb
 from tasks.Component.SwitchSoul.switch_soul import SwitchSoul
 from tasks.GameUi.game_ui import GameUi
 from tasks.GameUi.page import page_main, page_shikigami_records, page_climb_act, page_climb_act_pass, \
-    page_climb_act_boss, page_climb_act_ap, Page, page_climb_act_buff
+    page_climb_act_boss, page_climb_act_ap, Page, page_climb_act_buff, page_climb_act_2
 
 
 def get_run_order_list(climb_conf: GeneralClimb) -> list[str]:
     if not climb_conf.run_sequence or len(climb_conf.run_sequence.split(',')) == 1:
         raise ValueError('Run sequence now is empty, must set it')
     run_order_list = [climb_type.strip() for climb_type in climb_conf.run_sequence.split(',')]
-    return [climb_type for climb_type in run_order_list if getattr(climb_conf, f'enable_{climb_type}')]
+    return [climb_type for climb_type in run_order_list if getattr(climb_conf, f'enable_{climb_type}', False)]
 
 
 def _prepare_image_for_ocr(image: np.ndarray, asset: RuleOcr) -> np.ndarray:
@@ -118,7 +118,7 @@ class ScriptTask(GameUi, BaseActivity, SwitchSoul, ActivityShikigamiAssets):
             # 进入爬塔活动主界面
             self.home_main()
             # 切换buff
-            self.switch_buff(config.general_climb)
+            # self.switch_buff(config.general_climb)
             # 锁定阵容
             self.lock_team(config.general_battle)
             while 1:
@@ -176,8 +176,7 @@ class ScriptTask(GameUi, BaseActivity, SwitchSoul, ActivityShikigamiAssets):
         :param battle_conf: 战斗配置
         :return:
         """
-        self.ui_get_current_page()
-        self.ui_goto(self.page_map[self.climb_type])
+        self.goto_act()
         enable_preset = getattr(battle_conf, f"enable_{self.climb_type}_preset", False)
         if not enable_preset:
             logger.info(f'Lock {self.climb_type} team')
@@ -254,10 +253,9 @@ class ScriptTask(GameUi, BaseActivity, SwitchSoul, ActivityShikigamiAssets):
         boss: 剩余挑战次数>0
         :return: True 可以运行 or False
         """
-        self.ui_get_current_page()
-        self.ui_goto(self.page_map[self.climb_type])
+        self.goto_act()
         logger.info(f'Check the {self.climb_type} can work')
-        self.wait_until_appear(self.I_FIRE)
+        self.wait_until_appear(self.O_FIRE)
         self.screenshot()
         remain_times = 0
         if self.climb_type == 'pass':
@@ -294,6 +292,7 @@ class ScriptTask(GameUi, BaseActivity, SwitchSoul, ActivityShikigamiAssets):
         return True
 
     def start_battle(self):
+        self.goto_act()
         # 点击战斗前随机休息
         if self.config.activity_shikigami.general_climb.random_sleep:
             random_sleep(probability=0.2)
@@ -301,9 +300,9 @@ class ScriptTask(GameUi, BaseActivity, SwitchSoul, ActivityShikigamiAssets):
         while 1:
             self.screenshot()
             # 点击挑战
-            if self.appear_then_click(self.I_FIRE, interval=2):
+            if self.ocr_appear_click(self.O_FIRE, interval=2):
                 continue
-            if not self.appear(self.I_FIRE):
+            if self.is_in_battle(False):
                 break
             if self.appear_then_click(self.I_C_CONFIRM1, interval=0.6):
                 continue
@@ -336,12 +335,12 @@ class ScriptTask(GameUi, BaseActivity, SwitchSoul, ActivityShikigamiAssets):
 
     def home_main(self) -> bool:
         """
-        从庭院到活动的爬塔界面，(只到爬塔活动主界面)
+        从庭院到活动的爬塔界面
         :return:
         """
         logger.hr("Enter Shikigami", 2)
-        self.ui_get_current_page()
-        self.main_goto_act_by_list(page_climb_act)
+        self.ui_get_current_page(False)
+        self.ui_goto(page_climb_act)
 
     def main_home(self) -> bool:
         """
@@ -349,8 +348,19 @@ class ScriptTask(GameUi, BaseActivity, SwitchSoul, ActivityShikigamiAssets):
         :return:
         """
         logger.hr("Exit Shikigami", 2)
-        self.ui_get_current_page()
+        self.ui_get_current_page(False)
         self.ui_goto(page_main)
+
+    def goto_act(self):
+        page = self.ui_get_current_page(False)
+        if page == self.page_map[self.climb_type]:
+            return
+        # # 门票活动特殊处理
+        # if self.climb_type == 'pass':
+        #     self.ui_goto(page_climb_act_2)
+        #     return
+        # 其余走page默认逻辑
+        self.ui_goto(self.page_map[self.climb_type])
 
     def random_reward_click(self, exclude_bottom=False):
         options = [self.C_RANDOM_LEFT, self.C_RANDOM_RIGHT, self.C_RANDOM_TOP]
@@ -424,4 +434,4 @@ if __name__ == '__main__':
     d = Device(c)
     t = ScriptTask(c, d)
 
-    t.switch_buff(c.activity_shikigami.general_climb)
+    t.run()

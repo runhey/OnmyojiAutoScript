@@ -20,11 +20,11 @@
   {
     "itemName": "battle",
     "imageName": "as_battle.png",
-    "roiFront": "475,194,35,135",
-    "roiBack": "454,107,154,315",
+    "roiFront": "813,254,35,135",
+    "roiBack": "754,140,154,315",
     "method": "Template matching",
     "threshold": 0.7,
-    "description": "霜火寂境"
+    "description": "征伐斗场"
   },
   {
     "itemName": "battle_1",
@@ -50,7 +50,7 @@
     "roiFront": "884,648,28,25",
     "roiBack": "761,613,255,76",
     "method": "Template matching",
-    "threshold": 0.8,
+    "threshold": 0.5,
     "description": "上锁图标"
   },
   {
@@ -59,32 +59,23 @@
     "roiFront": "884,648,28,25",
     "roiBack": "758,607,242,85",
     "method": "Template matching",
-    "threshold": 0.8,
+    "threshold": 0.5,
     "description": "还未上锁图片"
-  },
-  {
-    "itemName": "fire",
-    "imageName": "as_fire.png",
-    "roiFront": "1131,598,103,54",
-    "roiBack": "1113,564,136,111",
-    "method": "Template matching",
-    "threshold": 0.7,
-    "description": "点击战斗"
   },
   {
     "itemName": "ap",
     "imageName": "as_ap.png",
-    "roiFront": "1091,550,23,24",
-    "roiBack": "1081,532,103,71",
+    "roiFront": "1181,657,23,24",
+    "roiBack": "1149,631,103,71",
     "method": "Template matching",
-    "threshold": 0.8,
+    "threshold": 0.65,
     "description": "寿司体力"
   },
   {
     "itemName": "ap_activity",
     "imageName": "as_ap_activity.png",
-    "roiFront": "1140,550,21,25",
-    "roiBack": "1108,542,84,54",
+    "roiFront": "1153,636,21,25",
+    "roiBack": "1124,621,84,54",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "活动体力"
@@ -146,8 +137,8 @@
   {
     "itemName": "boss",
     "imageName": "as_boss.png",
-    "roiFront": "1054,265,33,132",
-    "roiBack": "966,131,211,355",
+    "roiFront": "165,339,33,132",
+    "roiBack": "103,218,160,355",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "爬塔进入首领战"
@@ -164,8 +155,8 @@
   {
     "itemName": "check_battle_2",
     "imageName": "as_check_battle_2.png",
-    "roiFront": "93,12,128,46",
-    "roiBack": "82,0,148,86",
+    "roiFront": "22,632,61,69",
+    "roiBack": "1,601,109,117",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "爬塔活动副页检查标志"
@@ -241,5 +232,41 @@
     "method": "Template matching",
     "threshold": 0.8,
     "description": "爬塔活动buff页"
+  },
+  {
+    "itemName": "entry_activity",
+    "imageName": "as_entry_activity.png",
+    "roiFront": "567,258,46,42",
+    "roiBack": "254,56,774,524",
+    "method": "Template matching",
+    "threshold": 0.5,
+    "description": "进入门票活动"
+  },
+  {
+    "itemName": "check_act_list_climb_act",
+    "imageName": "as_check_act_list_climb_act.png",
+    "roiFront": "538,194,497,193",
+    "roiBack": "415,67,773,390",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "活动列表页爬塔活动"
+  },
+  {
+    "itemName": "act_map_switch",
+    "imageName": "as_act_map_switch.png",
+    "roiFront": "1196,303,59,48",
+    "roiBack": "1174,263,104,118",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "活动地图切换"
+  },
+  {
+    "itemName": "pass_act_locat",
+    "imageName": "as_pass_act_locat.png",
+    "roiFront": "1214,395,29,31",
+    "roiBack": "1179,373,100,86",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "门票活动定位"
   }
 ]

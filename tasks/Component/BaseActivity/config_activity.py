@@ -33,12 +33,12 @@ class GeneralClimb(ConfigBase):
     # 爬塔运行顺序
     run_sequence: str = Field(default='pass,boss,ap',
                               description='爬塔运行顺序,英文逗号分隔,从左到右运行,若没启用自动跳过对应类型(pass:门票,boss:boss战,ap:体力)')
-    # 门票爬塔buff
-    pass_buff: str = Field(default='buff_4,buff_5', description='门票爬塔加成,buff1-5,加成页从左往右顺序,清空则不切换加成')
-    # 体力爬塔buff
-    ap_buff: str = Field(default='buff_4,buff_5', description='体力爬塔加成,buff1-5,加成页从左往右顺序,清空则不切换加成')
-    # boss爬塔buff
-    boss_buff: str = Field(default='buff_1,buff_3', description='boss战爬塔加成,buff1-5,加成页从左往右顺序,清空则不切换加成')
+    # # 门票爬塔buff
+    # pass_buff: str = Field(default='buff_4,buff_5', description='门票爬塔加成,buff1-5,加成页从左往右顺序,清空则不切换加成')
+    # # 体力爬塔buff
+    # ap_buff: str = Field(default='buff_4,buff_5', description='体力爬塔加成,buff1-5,加成页从左往右顺序,清空则不切换加成')
+    # # boss爬塔buff
+    # boss_buff: str = Field(default='buff_1,buff_3', description='boss战爬塔加成,buff1-5,加成页从左往右顺序,清空则不切换加成')
     # 结束后激活 御魂清理
     active_souls_clean: bool = Field(default=False, description='是否运行结束后清理御魂')
     # 点击战斗随机休息
