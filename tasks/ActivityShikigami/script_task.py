@@ -253,8 +253,7 @@ class ScriptTask(GameUi, BaseActivity, SwitchSoul, ActivityShikigamiAssets):
         boss: 剩余挑战次数>0
         :return: True 可以运行 or False
         """
-        self.ui_get_current_page()
-        self.ui_goto(self.page_map[self.climb_type])
+        self.goto_act()
         logger.info(f'Check the {self.climb_type} can work')
         self.wait_until_appear(self.O_FIRE)
         self.screenshot()
@@ -340,7 +339,7 @@ class ScriptTask(GameUi, BaseActivity, SwitchSoul, ActivityShikigamiAssets):
         :return:
         """
         logger.hr("Enter Shikigami", 2)
-        self.ui_get_current_page()
+        self.ui_get_current_page(False)
         self.ui_goto(page_climb_act)
 
     def main_home(self) -> bool:
@@ -349,11 +348,11 @@ class ScriptTask(GameUi, BaseActivity, SwitchSoul, ActivityShikigamiAssets):
         :return:
         """
         logger.hr("Exit Shikigami", 2)
-        self.ui_get_current_page()
+        self.ui_get_current_page(False)
         self.ui_goto(page_main)
 
     def goto_act(self):
-        page = self.ui_get_current_page()
+        page = self.ui_get_current_page(False)
         if page == self.page_map[self.climb_type]:
             return
         # # 门票活动特殊处理
