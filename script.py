@@ -269,9 +269,6 @@ class Script:
             result[key] = item
         return json.dumps(result)
 
-
-
-
     def wait_until(self, future):
         """
         Wait until a specific time.
@@ -303,43 +300,56 @@ class Script:
         获取下一个任务的名字, 大驼峰。
         :return:
         """
-        while 1:
+        while True:
             task = self.config.get_next()
             self.config.task = task
             if self.state_queue:
                 self.state_queue.put({"schedule": self.config.get_schedule_data()})
+            now = datetime.now()
+            # 任务时间到了返回任务名称
+            if task.next_run <= now:
+                return task.command
+            # 根据策略执行等待逻辑
+            if not self._handle_wait_during_idle(task.next_run):
+                # 若等待被打断, 则刷新配置
+                del_cached_property(self, "config")
 
-            # from module.base.resource import release_resources
-            # if self.config.task.command != 'Alas':
-            #     release_resources(next_task=task.command)
+    def _handle_wait_during_idle(self, next_run: datetime) -> bool:
+        """
+        处理任务空闲期间的行为策略
+        :param next_run: 下一个任务的时间
+        :return: True 表示等待成功完成, False 表示等待被中断
+        """
+        method = self.config.script.optimization.when_task_queue_empty
+        strategy_map = {
+            "close_game": self._wait_close_game,
+            "goto_main": self._wait_goto_main,
+        }
+        func = strategy_map.get(method)
+        if not func:
+            logger.warning(f"Invalid Optimization_WhenTaskQueueEmpty: {method}, fallback to stay_there")
+            func = self._wait_stay_there
+        return func(next_run)
 
-            if task.next_run > datetime.now():
-                logger.info(f'Wait until {task.next_run} for task `{task.command}`')
-                method = self.config.script.optimization.when_task_queue_empty
-                if method == 'close_game':
-                    logger.info('Close game during wait')
-                    self.device.app_stop()
-                    self.device.release_during_wait()
-                    if not self.wait_until(task.next_run):
-                        del_cached_property(self, 'config')
-                        continue
-                    self.run('Restart')
-                elif method == 'goto_main':
-                    logger.info('Goto main page during wait')
-                    self.run('GotoMain')
-                    self.device.release_during_wait()
-                    if not self.wait_until(task.next_run):
-                        del_cached_property(self, 'config')
-                        continue
-                else:
-                    logger.warning(f'Invalid Optimization_WhenTaskQueueEmpty: {method}, fallback to stay_there')
-                    self.device.release_during_wait()
-                    if not self.wait_until(task.next_run):
-                        del_cached_property(self, 'config')
-                        continue
-            break
+    def _wait_close_game(self, next_run: datetime) -> bool:
+        logger.info("Close game during wait")
+        self.device.app_stop()
+        self.device.release_during_wait()
+        if not self.wait_until(next_run):
+            return False
+        self.run("Restart")
+        return True
 
-        return task.command
+    def _wait_goto_main(self, next_run: datetime) -> bool:
+        logger.info("Goto main page during wait")
+        self.run("GotoMain")
+        self.device.release_during_wait()
+        return self.wait_until(next_run)
+
+    def _wait_stay_there(self, next_run: datetime) -> bool:
+        logger.info("Stay_there (no action) during wait")
+        self.device.release_during_wait()
+        return self.wait_until(next_run)
 
     def run(self, command: str) -> bool:
         """
@@ -460,8 +470,6 @@ class Script:
                 continue
 
             # Run
-            if self.state_queue:
-                self.state_queue.put({"schedule": self.config.get_schedule_data()})
             logger.info(f'Scheduler: Start task `{task}`')
             self.device.stuck_record_clear()
             self.device.click_record_clear()
