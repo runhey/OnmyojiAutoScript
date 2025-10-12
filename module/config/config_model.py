@@ -80,7 +80,7 @@ from tasks.Duel.config import Duel
 
 class ConfigModel(ConfigBase):
     config_name: str = "oas"
-    running_task: str = None
+    running_task: str = ''
     script: Script = Field(default_factory=Script)
     restart: Restart = Field(default_factory=Restart)
     global_game: GlobalGame = Field(default_factory=GlobalGame)

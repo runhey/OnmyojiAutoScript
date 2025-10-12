@@ -424,7 +424,7 @@ class Script:
             logger.set_file_logger(self.config_name, do_cleanup=True)
         start_day = date.today()
         logger.info(f'Start scheduler loop: {self.config_name}')
-        self.config.model.running_task = None
+        self.config.model.running_task = ''
 
         # Update GUI 防呆, 读取设置并立刻显示后台模拟器到前台
         if not self.config.script.device.run_background_only:
@@ -477,7 +477,7 @@ class Script:
             logger.hr(task, level=0)
             self.config.model.running_task = task
             success = self.run(inflection.camelize(task))
-            self.config.model.running_task = None
+            self.config.model.running_task = ''
             logger.info(f'Scheduler: End task `{task}`')
             self.is_first_task = False
 
