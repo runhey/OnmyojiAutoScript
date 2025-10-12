@@ -199,6 +199,13 @@ class Config(ConfigState, ConfigManual, ConfigWatcher, ConfigMenu):
         if pending_task:
             pending_task = TaskScheduler.schedule(rule=self.model.script.optimization.schedule_rule,
                                                   pending=pending_task)
+            # 防止正在运行的任务被新上来的pending队列中的任务给顶替掉
+            if self.model.running_task and pending_task:
+                for i, obj in enumerate(pending_task):
+                    if obj.command == self.model.running_task:
+                        pending_task.insert(0, pending_task.pop(i))
+                        logger.info(f'{self.model.running_task} is running')
+                        break
         if waiting_task:
             # waiting_task = f.apply(waiting_task)
             waiting_task = sorted(waiting_task, key=operator.attrgetter("next_run"))
