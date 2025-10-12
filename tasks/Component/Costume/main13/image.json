@@ -38,10 +38,10 @@
   {
     "itemName": "main_goto_exploration_13",
     "imageName": "main13_main_goto_exploration_13.png",
-    "roiFront": "558,133,27,51",
-    "roiBack": "556,133,31,51",
+    "roiFront": "561,133,24,45",
+    "roiBack": "543,125,57,64",
     "method": "Template matching",
-    "threshold": 0.8,
+    "threshold": 0.6,
     "description": "description"
   }
 ]
