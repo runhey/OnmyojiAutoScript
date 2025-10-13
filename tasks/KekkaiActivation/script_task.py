@@ -301,8 +301,17 @@ class ScriptTask(KU, KekkaiActivationAssets):
                 # 按数字大到小排序
                 sorted_results = [result for _, result in sorted(numeric_results, key=lambda x: x[0], reverse=True)]
                 max_result = sorted_results[0]  # 获取数字最大的结果对象
-                target = RuleClick(roi_front=max_result.after_box, roi_back=max_result.after_box, name="tmpclick")
-                logger.info(f"选择挂卡: [{max_result.ocr_text}] {max_result.after_box}")
+
+                box = max_result.box  # 获取边界框坐标
+                x_min = self.O_CHECK_CARD_NUMBER.roi[0] + box[0][0]
+                y_min = self.O_CHECK_CARD_NUMBER.roi[1] + box[0][1]
+                width = box[1][0] - box[0][0]
+                height = box[2][1] - box[1][1]
+                roi = int(x_min), int(y_min), int(width), int(height)
+
+                target = RuleClick(roi_front=roi, roi_back=roi, name="tmpclick")
+                logger.info(f"选择挂卡: [{max_result.ocr_text}] {roi}")
+
                 return target
             else:
                 if ocr_count > 3:
