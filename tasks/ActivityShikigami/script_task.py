@@ -9,6 +9,7 @@ import numpy as np
 import random
 import tasks.Component.GeneralBattle.config_general_battle
 from datetime import datetime, timedelta, time
+from module.atom.click import RuleClick
 from module.atom.ocr import RuleOcr
 from module.base.protect import random_sleep
 from module.exception import TaskEnd
@@ -20,7 +21,6 @@ from tasks.Component.BaseActivity.config_activity import GeneralClimb
 from tasks.Component.SwitchSoul.switch_soul import SwitchSoul
 from tasks.GameUi.game_ui import GameUi
 import tasks.GameUi.page as game
-from tasks.GameUi.page import page_battle_auto
 from typing import Any
 
 
@@ -76,13 +76,13 @@ def _prepare_image_for_ocr(image: np.ndarray, asset: RuleOcr) -> np.ndarray:
 
 
 class Status(Enum):
-    TIME_OUT = auto()
-    DOWN = auto()
-    ALL_DOWN = auto()
-    ALREADY_SWITCH_SOUL = auto()
-    ALREADY_LOCK_TEAM = auto()
-    ALREADY_SWITCH_BUFF = auto()
-    GOTO_ACT_FAILED = auto()
+    TIME_OUT = auto()  # 超时
+    DOWN = auto()  # 当前爬塔类型完成
+    ALL_DOWN = auto()  # 所有爬塔类型完成
+    ALREADY_SWITCH_SOUL = auto()  # 已经切换御魂
+    ALREADY_LOCK_TEAM = auto()  # 已经锁定队伍
+    ALREADY_SWITCH_BUFF = auto()  # 已经切换buff
+    GOTO_ACT_FAILED = auto()  # 前往活动失败
 
 
 class ScriptTask(GameUi, BaseActivity, SwitchSoul, ActivityShikigamiAssets):
@@ -104,13 +104,16 @@ class ScriptTask(GameUi, BaseActivity, SwitchSoul, ActivityShikigamiAssets):
     run_idx: int = 0
 
     def put_status(self):
+        """
+        更新全局状态
+        """
         # 超过运行时间
         if self.limit_time is not None and datetime.now() - self.start_time >= self.limit_time:
-            logger.info(f"{self.climb_type} time out")
+            logger.warning(f"Climb type {self.climb_type} time out")
             self.put_check(Status.TIME_OUT, True)
         # 次数达到限制
         if self.get_count() >= self.get_limit(self.config.activity_shikigami.general_climb):
-            logger.warn(f"{self.climb_type} count out")
+            logger.info(f"Climb type {self.climb_type} count limit reached")
             self.put_check(Status.DOWN, True)
 
     def check(self, status: Status) -> Any:
@@ -130,27 +133,34 @@ class ScriptTask(GameUi, BaseActivity, SwitchSoul, ActivityShikigamiAssets):
                                         seconds=self.limit_time.second)
         # 初始化爬塔类型
         self.climb_type = get_run_order_list(config.general_climb)[0]
-        max_failed_times = 3
         while True:
             self.put_status()
+            # 超时或全部完成则退出
             if self.check(Status.TIME_OUT) or self.check(Status.ALL_DOWN):
                 break
+            # 当前爬塔类型完成了, 切换下一个类型
             if self.check(Status.DOWN):
                 self.switch_next()
                 continue
+            # 获取当前页面
             current_page = self.ui_get_current_page(False)
+            # 检查是否已经切换御魂
             if not self.check(Status.ALREADY_SWITCH_SOUL):
                 self.switch_soul(config.switch_soul_config)
                 continue
             match current_page:
+                # 庭院, 进入活动主界面
                 case game.page_main:
                     self.home_main()
+                # 活动主界面或副界面, 进入最终爬塔界面
                 case game.page_climb_act | game.page_climb_act_2:
                     # self.ui_goto(game.page_climb_act_buff)
                     self.goto_act()
+                # buff界面, 进入最终爬塔界面
                 case game.page_climb_act_buff:
                     self.switch_buff(config.general_climb)
                     self.goto_act()
+                # 最终爬塔界面
                 case game.page_climb_act_pass | game.page_climb_act_ap | game.page_climb_act_boss:
                     if not self.check_can_run():
                         continue
@@ -182,8 +192,7 @@ class ScriptTask(GameUi, BaseActivity, SwitchSoul, ActivityShikigamiAssets):
             if self.is_in_battle(False):
                 break
             if click_times >= max_times:
-                logger.warning(f'{self.climb_type} enter fail, try next')
-                self.put_check(Status.DOWN, True)
+                logger.warning(f'Climb type {self.climb_type} enter fail, try reidentify')
                 return
             # 点击挑战
             if self.ocr_appear_click(self.O_FIRE, interval=2):
@@ -212,8 +221,8 @@ class ScriptTask(GameUi, BaseActivity, SwitchSoul, ActivityShikigamiAssets):
             btn.name = "BATTLE_RANDOM"
         ok_cnt, max_retry = 0, 5
         while 1:
-            self.screenshot()
             sleep(0.5)
+            self.screenshot()
             # 已经回到对应挑战界面
             if self.ui_page_appear(self.page_map[self.climb_type]):
                 break
@@ -224,17 +233,17 @@ class ScriptTask(GameUi, BaseActivity, SwitchSoul, ActivityShikigamiAssets):
             # 失败
             if self.appear(self.I_FALSE):
                 logger.warning("False battle")
-                self.ui_click_until_smt_disappear(self.random_reward_click(), self.I_FALSE, interval=1.5)
+                self.ui_click_until_smt_disappear(self.random_reward_click(click_now=False), self.I_FALSE, interval=1.5)
                 return False
             # 奖励界面
             if self.ui_page_appear(game.page_reward):
                 logger.info(f'Battle end, try close {ok_cnt}')
-                self.random_reward_click(exclude_bottom=True, get_click=False)
+                self.random_reward_click(exclude_click=[self.C_RANDOM_BOTTOM])
                 ok_cnt += 1
                 continue
             # 已经不在战斗中了, 且奖励也识别过了还不在活动界面, 则随机点击
             if ok_cnt > 0 and not self.ui_page_appear(game.page_battle_auto):
-                self.random_reward_click(exclude_bottom=True, get_click=False)
+                self.random_reward_click(exclude_click=[self.C_RANDOM_BOTTOM])
                 ok_cnt += 1
                 continue
             # 战斗中随机滑动
@@ -435,15 +444,20 @@ class ScriptTask(GameUi, BaseActivity, SwitchSoul, ActivityShikigamiAssets):
     def goto_act(self):
         self.ui_goto(self.page_map[self.climb_type], timeout=20)
 
-    def random_reward_click(self, exclude_bottom=False, get_click=True):
-        options = [self.C_RANDOM_LEFT, self.C_RANDOM_RIGHT, self.C_RANDOM_TOP]
-        if not exclude_bottom:
-            options.append(self.C_RANDOM_BOTTOM)
+    def random_reward_click(self, exclude_click: list = None, click_now: bool = True) -> RuleClick:
+        """
+        随机点击
+        :param exclude_click: 排除的点击位置
+        :param click_now: 是否立即点击
+        :return: 随机的点击位置
+        """
+        options = [self.C_RANDOM_LEFT, self.C_RANDOM_RIGHT, self.C_RANDOM_TOP, self.C_RANDOM_BOTTOM]
+        if exclude_click:
+            options = [option for option in options if option not in exclude_click]
         target = random.choice(options)
-        if get_click:
-            return target
-        self.click(target, interval=1.8)
-        return None
+        if click_now:
+            self.click(target, interval=1.8)
+        return target
 
 
 if __name__ == '__main__':
