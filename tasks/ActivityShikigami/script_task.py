@@ -83,6 +83,7 @@ class Status(Enum):
     ALREADY_LOCK_TEAM = auto()  # 已经锁定队伍
     ALREADY_SWITCH_BUFF = auto()  # 已经切换buff
     GOTO_ACT_FAILED = auto()  # 前往活动失败
+    ENTER_BATTLE_FAILED = auto()  # 进入战斗失败
 
 
 class ScriptTask(GameUi, BaseActivity, SwitchSoul, ActivityShikigamiAssets):
@@ -192,7 +193,12 @@ class ScriptTask(GameUi, BaseActivity, SwitchSoul, ActivityShikigamiAssets):
             if self.is_in_battle(False):
                 break
             if click_times >= max_times:
+                if self.check(Status.ENTER_BATTLE_FAILED):
+                    logger.warning(f'Climb {self.climb_type} cannot enter, maybe already end, try next')
+                    self.put_check(Status.DOWN, True)
+                    return
                 logger.warning(f'Climb type {self.climb_type} enter fail, try reidentify')
+                self.put_check(Status.ENTER_BATTLE_FAILED, True)
                 return
             # 点击挑战
             if self.ocr_appear_click(self.O_FIRE, interval=2):
@@ -405,6 +411,7 @@ class ScriptTask(GameUi, BaseActivity, SwitchSoul, ActivityShikigamiAssets):
         self.put_check(Status.ALREADY_SWITCH_SOUL, False)
         self.put_check(Status.ALREADY_LOCK_TEAM, False)
         self.put_check(Status.GOTO_ACT_FAILED, False)
+        self.put_check(Status.ENTER_BATTLE_FAILED, False)
         logger.hr(f'Climb type switch to {self.climb_type}', 2)
 
     def get_general_battle_conf(self) -> tasks.Component.GeneralBattle.config_general_battle.GeneralBattleConfig:
