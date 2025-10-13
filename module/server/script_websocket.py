@@ -13,9 +13,14 @@ class ScriptWSManager:
         await ws.accept()
         self.active_connections.append(ws)
 
-    def disconnect(self, ws: WebSocket):
+    async def disconnect(self, ws: WebSocket):
         # 关闭时 移除ws对象
         self.active_connections.remove(ws)
+        try:
+            # 给前端发送最后一次关闭信号
+            await ws.close()
+        except RuntimeError:
+            pass
 
     async def broadcast(self, message: str):
         # 广播消息

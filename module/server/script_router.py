@@ -134,6 +134,20 @@ async def script_task(script_name: str, task: str, group: str, argument: str, ty
         raise HTTPException(status_code=400, detail=f'Argument type error: {e}')
     return mm.config_cache(script_name).model.script_set_arg(task, group, argument, value)
 
+
+@script_app.put('/{script_name}/{task}/sync_next_run')
+async def sync_next_run(script_name: str, task: str, target_dt: str):
+    if script_name not in mm.script_process:
+        return False
+    config = mm.config_cache(script_name)
+    target = datetime.strptime(target_dt, '%Y-%m-%d %H:%M:%S') if target_dt else None
+    config.task_delay(task=task, success=True, target=target)
+    script_process = mm.script_process[script_name]
+    config.get_next()
+    await script_process.broadcast_state({"schedule": config.get_schedule_data()})
+    return True
+
+
 # --------------------------------------  SSE  --------------------------------------
 @script_app.get('/{script_name}/state')
 async def script_task_state(script_name: str):
@@ -195,11 +209,4 @@ async def websocket_endpoint(websocket: WebSocket, script_name: str):
 
     except WebSocketDisconnect:
         logger.warning(f'[{script_name}] websocket disconnect')
-        script_process.disconnect(websocket)
-
-
-
-
-
-
-
+        await script_process.disconnect(websocket)
