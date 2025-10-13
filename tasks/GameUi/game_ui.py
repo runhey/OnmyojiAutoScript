@@ -245,15 +245,17 @@ class GameUi(BaseTask, GameUiAssets):
             for page, path in paths:
                 if not self.ui_page_appear(page):
                     continue
-                logger.info(f"Current page: {page}, following shortest path: {[p.name for p in path]}")
+                logger.info(f"Current page: {page}. Following shortest path:")
+                show_paths: str = ''.join([f"{p.name} -> " for p in path])
+                logger.info(f" {show_paths}")
                 if self._execute_path(path, confirm_timer, timeout_timer):
                     return True
-            sleep(0.5)
+            sleep(0.3)
         else:
             logger.error(f'Cannot goto page[{destination}], timeout[{timeout}s] reached')
         return False
 
-    def _execute_path(self, path, confirm_timer, timeout_timer):
+    def _execute_path(self, path: list, confirm_timer, timeout_timer):
         """
         执行路径
         :param path: currentPage,page1,page2,...,destinationPage
@@ -276,6 +278,7 @@ class GameUi(BaseTask, GameUiAssets):
                             self.appear_then_click(button, interval=0.6) or
                             (isinstance(button, RuleOcr) and self.ocr_appear_click(button, interval=2))):
                         logger.info(f'Page {current_page} additional {button} clicked')
+                sleep(0.3)
             # 执行页面跳转
             button = current_page.links.get(next_page)
             if not button:
