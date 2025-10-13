@@ -165,7 +165,7 @@
     "itemName": "red_exit_2",
     "imageName": "as_red_exit_2.png",
     "roiFront": "1097,177,46,45",
-    "roiBack": "1069,152,100,100",
+    "roiBack": "931,128,237,164",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "爬塔活动页面的红色退出"

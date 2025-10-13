@@ -225,6 +225,13 @@ class GameUiAssets:
 					 array=["日之"])
 
 
+	# Ocr Rule Assets
+	# 战斗界面自动标识 
+	O_BATTLE_AUTO = RuleOcr(roi=(37,642,51,36), area=(0,589,133,128), mode="Single", method="Default", keyword="自动", name="battle_auto")
+	# 战斗页面手动标志 
+	O_BATTLE_HAND = RuleOcr(roi=(35,644,52,34), area=(0,589,136,129), mode="Single", method="Default", keyword="手动", name="battle_hand")
+
+
 	# Image Rule Assets
 	# 左上角蓝色的返回 
 	I_BACK_BL = RuleImage(roi_front=(32,31,50,53), roi_back=(1,2,139,120), threshold=0.8, method="Template matching", file="./tasks/GameUi/res/res_back_blue.png")

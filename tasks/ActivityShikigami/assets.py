@@ -95,7 +95,7 @@ class ActivityShikigamiAssets:
 	# 爬塔活动副页检查标志 
 	I_CHECK_BATTLE_2 = RuleImage(roi_front=(22,632,61,69), roi_back=(1,601,109,117), threshold=0.8, method="Template matching", file="./tasks/ActivityShikigami/as/as_check_battle_2.png")
 	# 爬塔活动页面的红色退出 
-	I_RED_EXIT_2 = RuleImage(roi_front=(1097,177,46,45), roi_back=(1069,152,100,100), threshold=0.8, method="Template matching", file="./tasks/ActivityShikigami/as/as_red_exit_2.png")
+	I_RED_EXIT_2 = RuleImage(roi_front=(1097,177,46,45), roi_back=(931,128,237,164), threshold=0.8, method="Template matching", file="./tasks/ActivityShikigami/as/as_red_exit_2.png")
 	# 卸载buff 
 	I_BUFF_DOWN = RuleImage(roi_front=(428,625,100,37), roi_back=(177,600,1040,98), threshold=0.8, method="Template matching", file="./tasks/ActivityShikigami/as/as_buff_down.png")
 	# 切换buff按钮 
