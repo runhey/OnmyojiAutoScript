@@ -9,8 +9,6 @@ from tasks.RyouToppa.assets import RyouToppaAssets
 
 
 class Page:
-    parent = None
-
     def __init__(self, check_button, links=None):
         if links is None:
             links = {}
