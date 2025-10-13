@@ -37,10 +37,12 @@ class GameUi(BaseTask, GameUiAssets):
         page_shikigami_records, page_onmyodo, page_friends, page_daily, page_mall, page_guild, page_team,
         page_collection, page_act_list,
         # 爬塔活动
-        page_act_list_climb_act, page_climb_act, page_climb_act_2, page_climb_act_3, page_climb_act_pass, page_climb_act_ap,
-        page_climb_act_boss, page_climb_act_buff
+        page_act_list_climb_act, page_climb_act, page_climb_act_2, page_climb_act_pass, page_climb_act_ap,
+        page_climb_act_boss, page_climb_act_buff,
+        # 战斗
+        page_battle_auto, page_battle_hand, page_reward
     ]
-    ui_close = [GameUiAssets.I_BACK_MALL,
+    ui_close = [GameUiAssets.I_BACK_MALL, GeneralBattleAssets.I_CONFIRM,
                 BaseTask.I_UI_BACK_RED, BaseTask.I_UI_BACK_YELLOW, BaseTask.I_UI_BACK_BLUE,
                 GameUiAssets.I_BACK_FRIENDS, GameUiAssets.I_BACK_DAILY,
                 GameUiAssets.I_REALM_RAID_GOTO_EXPLORATION,
@@ -79,7 +81,25 @@ class GameUi(BaseTask, GameUiAssets):
         """
         判断当前页面是否为page
         """
+        if isinstance(page.check_button, list):
+            for button in page.check_button:
+                if self.appear(button):
+                    return True
+            return False
         return self.appear(page.check_button)
+
+    def ui_wait_until_appear(self, page: Page, timeout: int = 3, interval: float = 0.5) -> bool:
+        """
+        等待页面出现
+        """
+        logger.info(f'Waiting for {page}')
+        timeout_timer = Timer(timeout).start()
+        while not timeout_timer.reached():
+            self.screenshot()
+            if self.ui_page_appear(page):
+                return True
+            sleep(interval)
+        return False
 
     def ensure_scroll_open(self):
         """
@@ -179,12 +199,13 @@ class GameUi(BaseTask, GameUiAssets):
         """
         pass
 
-    def ui_goto(self, destination: Page, confirm_wait=0, skip_first_screenshot=True):
+    def ui_goto(self, destination: Page, confirm_wait=0, skip_first_screenshot=True, timeout: int = 45):
         """
         Args:
             destination (Page):
             confirm_wait:
             skip_first_screenshot:
+        :return: find destination page or timeout reached
         """
         # Reset connection
         for page in self.ui_pages:
@@ -208,54 +229,72 @@ class GameUi(BaseTask, GameUiAssets):
                 break
             visited = new
 
+        timeout_timer = Timer(timeout).start()
+
+        def dfs(current_page: Page) -> bool:
+            if current_page is None:
+                return False
+            if current_page == destination:
+                return True
+            if timeout_timer.reached():
+                return False
+            # wait current page
+            self.ui_wait_until_appear(current_page)
+            logger.info(f'Page switch: {current_page} -> {current_page.parent}')
+            # current page additional
+            if current_page.additional and isinstance(current_page.additional, list):
+                for button in current_page.additional:
+                    if ((isinstance(button, RuleClick) and self.click(button)) or
+                            self.appear_then_click(button, interval=0.6) or
+                            (isinstance(button, RuleOcr) and self.ocr_appear_click(button, interval=2))):
+                        logger.info(f'Page {current_page} AB {button} clicked')
+            # to next page
+            button = current_page.links[current_page.parent]
+            if ((isinstance(button, RuleList) and self.list_appear_click(button)) or
+                    (isinstance(button, RuleClick) and self.click(button)) or
+                    self.appear_then_click(button, interval=2) or
+                    (isinstance(button, RuleOcr) and self.ocr_appear_click(button, interval=2))):
+                self.ui_button_interval_reset(button)
+                confirm_timer.reset()
+                return dfs(current_page.parent)
+            return False
+
         logger.hr(f"UI goto {destination}")
         confirm_timer = Timer(confirm_wait, count=int(confirm_wait // 0.5)).start()
+        try_close_unknown_timer = Timer(3).start()
         while 1:
             if skip_first_screenshot:
                 skip_first_screenshot = False
             else:
                 self.screenshot()
-
-            # Destination additional button
-            if destination.additional and isinstance(destination.additional, list):
-                appear = False
-                for button in destination.additional:
-                    if self.appear_then_click(button, interval=0.6) or (
-                            isinstance(button, RuleOcr) and self.ocr_appear_click(button, interval=2)):
-                        appear = True
-                        logger.info(f'Page {destination} AB {button} clicked')
-                if appear:
-                    continue
-
             # Destination page
-            if self.appear(destination.check_button):
+            if self.ui_page_appear(destination):
                 if confirm_timer.reached():
                     logger.info(f'Page arrive: {destination}')
                     break
             else:
                 confirm_timer.reset()
-
+            # 超时退出
+            if timeout_timer.reached():
+                logger.error(f'Cannot goto page[{destination}], timeout[{timeout}s] reached')
+                break
+            # Try to close unknown page every 3 seconds
+            if try_close_unknown_timer.reached():
+                for close in self.ui_close:
+                    if self.appear_then_click(close, interval=1.5):
+                        logger.warning('Trying to switch to supported page')
+                try_close_unknown_timer.reset()
             # Other pages
-            clicked = False
+            fined = False
             for page in visited:
-                if page.parent is None or page.check_button is None:
+                if page.check_button is None or not self.ui_page_appear(page):
                     continue
-                # 获取当前页面的要点击的按钮
-                if self.appear(page.check_button, interval=4):
-                    logger.info(f'Page switch: {page} -> {page.parent}')
-                    button = page.links[page.parent]
-                    if (isinstance(button, RuleList) and self.list_appear_click(button)) or self.appear_then_click(
-                            button, interval=2) or (
-                            isinstance(button, RuleOcr) and self.ocr_appear_click(button, interval=2)):
-                        self.ui_button_interval_reset(button)
-                        confirm_timer.reset()
-                        clicked = True
-                        break
-
-            if clicked:
+                fined = dfs(page)
+                if fined:
+                    break
+            if fined:
                 continue
             sleep(0.5)
-
         # Reset connection
         for page in self.ui_pages:
             page.parent = None
