@@ -218,7 +218,7 @@ page_climb_act_2.link(button=asa.O_ENTRY_ACTIVITY, destination=page_climb_act_ap
 # page_climb_act_ap.link(button=asa.I_SWITCH, destination=page_climb_act_pass)
 # page_climb_act_pass.link(button=asa.I_SWITCH, destination=page_climb_act_ap)
 # 100体爬塔活动界面
-page_climb_act_ap100 = Page(asa.O_CHECK_AP100)
+page_climb_act_ap100 = Page(asa.I_CHECK_AP100)
 page_climb_act_2.link(button=asa.O_ENTER_AP100, destination=page_climb_act_ap100)
 page_climb_act_ap100.link(button=G.I_BACK_Y, destination=page_climb_act_2)
 # 爬塔活动boss战界面

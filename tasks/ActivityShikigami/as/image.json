@@ -268,5 +268,14 @@
     "method": "Template matching",
     "threshold": 0.8,
     "description": "门票活动定位"
+  },
+  {
+    "itemName": "check_ap100",
+    "imageName": "as_check_ap100.png",
+    "roiFront": "971,575,96,100",
+    "roiBack": "934,537,166,167",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "100体爬塔标识"
   }
 ]

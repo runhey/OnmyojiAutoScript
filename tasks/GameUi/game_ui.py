@@ -3,6 +3,8 @@
 # github https://github.com/runhey
 import time
 from time import sleep
+
+import random
 from collections import deque
 from module.atom.image import RuleImage
 from module.atom.list import RuleList
@@ -269,7 +271,7 @@ class GameUi(BaseTask, GameUiAssets):
             if timeout_timer.reached():
                 return False
             # 等待当前页面出现
-            self.ui_wait_until_appear(current_page)
+            self.ui_wait_until_appear(current_page, interval=random.uniform(0.6, 1.2))
             logger.info(f'Page switch: {current_page} -> {next_page}')
             # 执行附加操作
             if current_page.additional:

@@ -118,8 +118,8 @@ class ActivityShikigamiAssets:
 	I_ACT_MAP_SWITCH = RuleImage(roi_front=(1196,303,59,48), roi_back=(1174,263,104,118), threshold=0.8, method="Template matching", file="./tasks/ActivityShikigami/as/as_act_map_switch.png")
 	# 门票活动定位 
 	I_PASS_ACT_LOCAT = RuleImage(roi_front=(1214,395,29,31), roi_back=(1179,373,100,86), threshold=0.8, method="Template matching", file="./tasks/ActivityShikigami/as/as_pass_act_locat.png")
-	# 100体爬塔活动标识 
-	I_CHECK_AP100 = RuleImage(roi_front=(1182,652,73,32), roi_back=(1141,627,135,81), threshold=0.8, method="Template matching", file="./tasks/ActivityShikigami/as/as_check_ap100.png")
+	# 100体爬塔活动标识
+	I_CHECK_AP100 = RuleImage(roi_front=(971,575,96,100), roi_back=(934,537,166,167), threshold=0.8, method="Template matching", file="./tasks/ActivityShikigami/as/as_check_ap100.png")
 
 
 	# Ocr Rule Assets
@@ -141,7 +141,5 @@ class ActivityShikigamiAssets:
 	O_REMAIN_AP100 = RuleOcr(roi=(922,21,112,39), area=(913,8,131,62), mode="Digit", method="Default", keyword="", name="remain_ap100")
 	# 进入100体活动标识 
 	O_ENTER_AP100 = RuleOcr(roi=(72,187,95,32), area=(7,172,256,108), mode="Single", method="Default", keyword="将魂试炼", name="enter_ap100")
-	# 100体活动界面标识 
-	O_CHECK_AP100 = RuleOcr(roi=(89,12,128,44), area=(67,0,166,69), mode="Single", method="Default", keyword="将魂试炼", name="check_ap100")
 
 

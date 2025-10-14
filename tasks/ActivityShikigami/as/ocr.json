@@ -79,14 +79,5 @@
     "method": "Default",
     "keyword": "将魂试炼",
     "description": "进入100体活动标识"
-  },
-  {
-    "itemName": "check_ap100",
-    "roiFront": "89,12,128,44",
-    "roiBack": "67,0,166,69",
-    "mode": "Single",
-    "method": "Default",
-    "keyword": "将魂试炼",
-    "description": "100体活动界面标识"
   }
 ]
