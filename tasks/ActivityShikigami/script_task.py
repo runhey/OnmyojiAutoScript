@@ -449,7 +449,7 @@ class ScriptTask(GameUi, BaseActivity, SwitchSoul, ActivityShikigamiAssets):
         self.ui_goto(game.page_main)
 
     def goto_act(self):
-        self.ui_goto(self.page_map[self.climb_type], timeout=20)
+        self.ui_goto(self.page_map[self.climb_type], timeout=25)
 
     def random_reward_click(self, exclude_click: list = None, click_now: bool = True) -> RuleClick:
         """
