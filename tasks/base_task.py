@@ -136,7 +136,7 @@ class BaseTask(GlobalGameAssets, CostumeBase):
         return self.device.image
 
     def appear(self,
-               target: RuleImage | RuleGif,
+               target: RuleImage | RuleGif | RuleOcr,
                interval: float = None,
                threshold: float = None):
         """
@@ -146,9 +146,6 @@ class BaseTask(GlobalGameAssets, CostumeBase):
         :param threshold:
         :return:
         """
-        if not isinstance(target, RuleImage) and not isinstance(target, RuleGif):
-            return False
-
         if interval:
             if target.name in self.interval_timer:
                 if self.interval_timer[target.name].limit != interval:
@@ -157,8 +154,10 @@ class BaseTask(GlobalGameAssets, CostumeBase):
                 self.interval_timer[target.name] = Timer(interval)
             if not self.interval_timer[target.name].reached():
                 return False
-
-        appear = target.match(self.device.image, threshold=threshold)
+        if isinstance(target, RuleOcr):
+            appear = self.ocr_appear(target, interval)
+        else:
+            appear = target.match(self.device.image, threshold=threshold)
 
         if appear and interval:
             self.interval_timer[target.name].reset()
@@ -201,7 +200,7 @@ class BaseTask(GlobalGameAssets, CostumeBase):
         return appear
 
     def wait_until_appear(self,
-                          target: RuleImage,
+                          target: RuleImage | RuleOcr,
                           skip_first_screenshot=False,
                           wait_time: int = None) -> bool:
         """
@@ -223,7 +222,9 @@ class BaseTask(GlobalGameAssets, CostumeBase):
             if wait_timer and wait_timer.reached():
                 logger.warning(f"Wait until appear {target.name} timeout")
                 return False
-            if self.appear(target):
+            if isinstance(target, RuleImage) and self.appear(target):
+                return True
+            if isinstance(target, RuleOcr) and self.ocr_appear(target):
                 return True
 
     def wait_until_appear_then_click(self,
@@ -492,6 +493,16 @@ class BaseTask(GlobalGameAssets, CostumeBase):
                 x1, y1, x2, y2 = target.swipe_pos(number=1, after=after)
                 self.device.swipe(p1=(x1, y1), p2=(x2, y2))
                 sleep(1)  # 等待滑动完成， 还没想好如何优化
+
+    def list_appear_click(self, target: RuleList) -> bool:
+        appear = self.list_find(target, name=target.array[0])
+        if not appear:
+            return False
+        if isinstance(appear, tuple):
+            x, y = appear
+            self.device.click(x, y)
+            return True
+        return False
 
     def set_next_run(self, task: str, finish: bool = False,
                      success: bool = None, server: bool = True, target: datetime = None) -> None:

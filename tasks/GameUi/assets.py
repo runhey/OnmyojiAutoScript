@@ -181,6 +181,8 @@ class GameUiAssets:
 	I_BACK_ACT_LIST = RuleImage(roi_front=(1165,65,51,47), roi_back=(1124,23,131,133), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_back_act_list.png")
 	# 下载拓展包弹窗 
 	I_DLC_CLOSE = RuleImage(roi_front=(916,147,24,25), roi_back=(916,147,24,25), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/store_dlc_close.png")
+	# 退出战斗按钮 
+	I_BACK_BATTLE = RuleImage(roi_front=(24,19,40,38), roi_back=(0,0,90,85), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_back_battle.png")
 
 
 	# Image Rule Assets
@@ -220,8 +222,15 @@ class GameUiAssets:
 
 	# List Rule Assets
 	# 活动列表页文字列表 
-	L_ACT_LIST_OCR = RuleList(folder="./tasks/GameUi/page", direction="vertical", mode="ocr", roi_back=(192,90,190,513), size=(186, 78), 
-					 array=["冰火永烬"])
+	L_ACT_LIST_OCR = RuleList(folder="./tasks/GameUi/page", direction="vertical", mode="ocr", roi_back=(219,91,47,513), size=(42, 78), 
+					 array=["日之"])
+
+
+	# Ocr Rule Assets
+	# 战斗界面自动标识 
+	O_BATTLE_AUTO = RuleOcr(roi=(37,642,51,36), area=(0,589,133,128), mode="Single", method="Default", keyword="自动", name="battle_auto")
+	# 战斗页面手动标志 
+	O_BATTLE_HAND = RuleOcr(roi=(35,644,52,34), area=(0,589,136,129), mode="Single", method="Default", keyword="手动", name="battle_hand")
 
 
 	# Image Rule Assets

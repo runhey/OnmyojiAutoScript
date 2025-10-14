@@ -87,6 +87,12 @@ class BaseCor:
         self.area: list = list(area)
         self.keyword = keyword
 
+    def __str__(self):
+        return f"{self.name}"
+
+    def __repr__(self):
+        return f"{self.name}"
+
     @cached_property
     def model(self) -> TextSystem:
         return OCR_MODEL.__getattribute__(self.lang)

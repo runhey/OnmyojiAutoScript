@@ -140,6 +140,8 @@ class GeneralBattleAssets:
 	# Image Rule Assets
 	# description 
 	I_GREED_GHOST = RuleImage(roi_front=(56,40,45,45), roi_back=(56,40,45,45), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralBattle/gb/gb_greed_ghost.png")
+	# 确认按钮 
+	I_CONFIRM = RuleImage(roi_front=(732,383,83,43), roi_back=(330,228,615,286), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralBattle/gb/gb_confirm.png")
 
 
 	# Ocr Rule Assets
