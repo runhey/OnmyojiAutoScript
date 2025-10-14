@@ -133,5 +133,14 @@
     "method": "Template matching",
     "threshold": 0.9,
     "description": "御魂奉纳后获得的金币"
+  },
+  {
+    "itemName": "st_soul_overflow",
+    "imageName": "simple_st_soul_overflow.png",
+    "roiFront": "447,260,384,42",
+    "roiBack": "430,232,417,100",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "御魂溢出"
   }
 ]
