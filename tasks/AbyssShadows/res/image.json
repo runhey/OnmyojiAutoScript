@@ -20,11 +20,20 @@
   {
     "itemName": "abyss_dragon",
     "imageName": "res_abyss_dragon.png",
-    "roiFront": "227,211,55,151",
-    "roiBack": "190,147,140,283",
+    "roiFront": "200,150,110,270",
+    "roiBack": "200,150,110,270",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "狭间_神龙入口"
+  },
+  {
+    "itemName": "abyss_dragon_over",
+    "imageName": "res_abyss_dragon_over.png",
+    "roiFront": "200,150,110,270",
+    "roiBack": "200,150,110,270",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "狭间_神龙入口_已封印"
   },
   {
     "itemName": "abyss_peacock",
@@ -108,6 +117,15 @@
     "description": "战报退出按钮"
   },
   {
+    "itemName": "abyss_enemy_info_exit",
+    "imageName": "res_abyss_enemy_info_exit.png",
+    "roiFront": "975,80,90,70",
+    "roiBack": "975,80,90,70",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "怪物信息页面退出按钮"
+  },
+  {
     "itemName": "abyss_fire",
     "imageName": "res_abyss_fire.png",
     "roiFront": "1121,605,77,50",
@@ -126,6 +144,15 @@
     "description": "前往"
   },
   {
+    "itemName": "change_area",
+    "imageName": "res_change_area.png",
+    "roiFront": "993,610,63,61",
+    "roiBack": "993,610,63,61",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
     "itemName": "ensure_button",
     "imageName": "res_ensure_button.png",
     "roiFront": "672,405,169,55",
@@ -137,11 +164,20 @@
   {
     "itemName": "is_attack",
     "imageName": "res_is_attack.png",
-    "roiFront": "586,62,73,27",
-    "roiBack": "586,62,73,27",
+    "roiFront": "576,54,91,45",
+    "roiBack": "576,54,91,45",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "进攻中"
+  },
+  {
+    "itemName": "check_finish",
+    "imageName": "res_check_finish.png",
+    "roiFront": "570,50,120,60",
+    "roiBack": "570,50,120,60",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "狭间暗域 挑战结束"
   },
   {
     "itemName": "peacock_area",
@@ -198,12 +234,75 @@
     "description": "description"
   },
   {
-    "itemName": "equipping",
-    "imageName": "res_equipping.png",
-    "roiFront": "1126,545,100,83",
-    "roiBack": "1126,545,100,83",
+    "itemName": "select_difficulty",
+    "imageName": "res_select_difficulty.png",
+    "roiFront": "703,645,50,55",
+    "roiBack": "703,645,50,55",
     "method": "Template matching",
     "threshold": 0.8,
-    "description": "description"
+    "description": "选择难度按钮"
+  },
+  {
+    "itemName": "difficulty_easy",
+    "imageName": "res_difficulty_easy.png",
+    "roiFront": "620,445,90,210",
+    "roiBack": "620,445,90,210",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "容易难度"
+  },
+  {
+    "itemName": "difficulty_normal",
+    "imageName": "res_difficulty_normal.png",
+    "roiFront": "620,445,90,210",
+    "roiBack": "620,445,90,210",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "普通难度"
+  },
+  {
+    "itemName": "difficulty_hard",
+    "imageName": "res_difficulty_hard.png",
+    "roiFront": "620,445,90,210",
+    "roiBack": "620,445,90,210",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "困难难度"
+  },
+  {
+    "itemName": "btn_start",
+    "imageName": "res_btn_start.png",
+    "roiFront": "1120,570,100,120",
+    "roiBack": "1120,570,100,120",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "开启按钮"
+  },
+  {
+    "itemName": "start_ensure",
+    "imageName": "res_start_ensure.png",
+    "roiFront": "660,390,190,80",
+    "roiBack": "660,390,190,80",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "开启确认按钮"
+  },
+  {
+    "itemName": "abyss_enemy_fire",
+    "imageName": "res_abyss_enemy_fire.png",
+    "roiFront": "1100,560,130,130",
+    "roiBack": "1100,560,130,130",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "当附近有可用怪物时，右下角出现的开始战斗按钮"
+  },
+  {
+    "itemName": "mark_main",
+    "imageName": "res_mark_main.png",
+    "roiFront": "375,40,60,30",
+    "roiBack": "375,40,60,30",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "红标主怪"
   }
 ]

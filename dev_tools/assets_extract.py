@@ -408,11 +408,9 @@ class AllAssetsExtractor:
         self.task_paths = [x for x in self.task_paths if 'Component' not in x]
         self.task_paths.extend([str(x) for x in (self.task_path / 'Component').iterdir() if x.is_dir()])
 
-        # process_map(self.work, self.task_paths, max_workers=1)
         for task_path in self.task_paths:
             me = AssetsExtractor(task_path)
             me.extract()
-
 
     @staticmethod
     def work(task_path: str):

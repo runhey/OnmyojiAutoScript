@@ -41,6 +41,12 @@ class AbyssShadowsAssets:
 	C_ABYSS_FOX = RuleClick(roi_front=(822,184,49,144), roi_back=(789,130,148,249), name="abyss_fox")
 	# 狭间_黑豹入口 
 	C_ABYSS_LEOPARD = RuleClick(roi_front=(1140,190,50,162), roi_back=(1093,143,138,297), name="abyss_leopard")
+	# 刚进入神社时，可点击进入狭间暗域的区域，用于开启狭间暗域 
+	C_ABYSS_SHENSHE_ENTER_ABYSS = RuleClick(roi_front=(740,640,45,15), roi_back=(740,640,45,15), name="abyss_shenshe_enter_abyss")
+	# 战斗时，左上角退出战斗按钮区域 下半部分 
+	C_QUIT_AREA = RuleClick(roi_front=(20,36,30,14), roi_back=(20,36,30,14), name="quit_area")
+	# 红标主怪点击区域 
+	C_MARK_MAIN = RuleClick(roi_front=(380,15,45,30), roi_back=(380,15,45,30), name="mark_main")
 
 
 	# Image Rule Assets
@@ -49,7 +55,9 @@ class AbyssShadowsAssets:
 	# 神社->狭间暗域 
 	I_RYOU_ABYSS_SHADOWS = RuleImage(roi_front=(707,492,110,27), roi_back=(707,492,110,27), threshold=0.8, method="Template matching", file="./tasks/AbyssShadows/res/res_ryou_abyss_shadows.png")
 	# 狭间_神龙入口 
-	I_ABYSS_DRAGON = RuleImage(roi_front=(227,211,55,151), roi_back=(190,147,140,283), threshold=0.8, method="Template matching", file="./tasks/AbyssShadows/res/res_abyss_dragon.png")
+	I_ABYSS_DRAGON = RuleImage(roi_front=(200,150,110,270), roi_back=(200,150,110,270), threshold=0.8, method="Template matching", file="./tasks/AbyssShadows/res/res_abyss_dragon.png")
+	# 狭间_神龙入口_已封印 
+	I_ABYSS_DRAGON_OVER = RuleImage(roi_front=(200,150,110,270), roi_back=(200,150,110,270), threshold=0.8, method="Template matching", file="./tasks/AbyssShadows/res/res_abyss_dragon_over.png")
 	# 狭间_孔雀入口 
 	I_ABYSS_PEACOCK = RuleImage(roi_front=(521,152,48,165), roi_back=(465,104,145,312), threshold=0.8, method="Template matching", file="./tasks/AbyssShadows/res/res_abyss_peacock.png")
 	# 狭间_白藏主入口 
@@ -68,14 +76,20 @@ class AbyssShadowsAssets:
 	I_ABYSS_MAP = RuleImage(roi_front=(306,147,170,48), roi_back=(306,147,170,48), threshold=0.8, method="Template matching", file="./tasks/AbyssShadows/res/res_abyss_map.png")
 	# 战报退出按钮 
 	I_ABYSS_MAP_EXIT = RuleImage(roi_front=(1154,96,32,32), roi_back=(1154,96,32,32), threshold=0.8, method="Template matching", file="./tasks/AbyssShadows/res/res_abyss_map_exit.png")
+	# 怪物信息页面退出按钮 
+	I_ABYSS_ENEMY_INFO_EXIT = RuleImage(roi_front=(975,80,90,70), roi_back=(975,80,90,70), threshold=0.8, method="Template matching", file="./tasks/AbyssShadows/res/res_abyss_enemy_info_exit.png")
 	# 挑战按钮 
 	I_ABYSS_FIRE = RuleImage(roi_front=(1121,605,77,50), roi_back=(1121,605,77,50), threshold=0.8, method="Template matching", file="./tasks/AbyssShadows/res/res_abyss_fire.png")
 	# 前往 
 	I_ABYSS_GOTO_ENEMY = RuleImage(roi_front=(1120,610,75,45), roi_back=(1120,610,75,45), threshold=0.8, method="Template matching", file="./tasks/AbyssShadows/res/res_abyss_goto_enemy.png")
 	# description 
+	I_CHANGE_AREA = RuleImage(roi_front=(993,610,63,61), roi_back=(993,610,63,61), threshold=0.8, method="Template matching", file="./tasks/AbyssShadows/res/res_change_area.png")
+	# description 
 	I_ENSURE_BUTTON = RuleImage(roi_front=(672,405,169,55), roi_back=(672,405,169,55), threshold=0.8, method="Template matching", file="./tasks/AbyssShadows/res/res_ensure_button.png")
 	# 进攻中 
-	I_IS_ATTACK = RuleImage(roi_front=(586,62,73,27), roi_back=(586,62,73,27), threshold=0.8, method="Template matching", file="./tasks/AbyssShadows/res/res_is_attack.png")
+	I_IS_ATTACK = RuleImage(roi_front=(576,54,91,45), roi_back=(576,54,91,45), threshold=0.8, method="Template matching", file="./tasks/AbyssShadows/res/res_is_attack.png")
+	# 狭间暗域 挑战结束 
+	I_CHECK_FINISH = RuleImage(roi_front=(570,50,120,60), roi_back=(570,50,120,60), threshold=0.8, method="Template matching", file="./tasks/AbyssShadows/res/res_check_finish.png")
 	# description 
 	I_PEACOCK_AREA = RuleImage(roi_front=(577,14,127,36), roi_back=(577,14,127,36), threshold=0.8, method="Template matching", file="./tasks/AbyssShadows/res/res_peacock_area.png")
 	# 黑豹领域 
@@ -88,14 +102,41 @@ class AbyssShadowsAssets:
 	I_DRAGON_AREA = RuleImage(roi_front=(584,15,111,34), roi_back=(584,15,111,34), threshold=0.8, method="Template matching", file="./tasks/AbyssShadows/res/res_dragon_area.png")
 	# description 
 	I_WAIT_TO_START = RuleImage(roi_front=(588,64,70,26), roi_back=(588,64,70,26), threshold=0.8, method="Template matching", file="./tasks/AbyssShadows/res/res_wait_to_start.png")
-	# description 
-	I_EQUIPPING = RuleImage(roi_front=(1126,545,100,83), roi_back=(1126,545,100,83), threshold=0.8, method="Template matching", file="./tasks/AbyssShadows/res/res_equipping.png")
+	# 选择难度按钮 
+	I_SELECT_DIFFICULTY = RuleImage(roi_front=(703,645,50,55), roi_back=(703,645,50,55), threshold=0.8, method="Template matching", file="./tasks/AbyssShadows/res/res_select_difficulty.png")
+	# 容易难度 
+	I_DIFFICULTY_EASY = RuleImage(roi_front=(620,445,90,210), roi_back=(620,445,90,210), threshold=0.8, method="Template matching", file="./tasks/AbyssShadows/res/res_difficulty_easy.png")
+	# 普通难度 
+	I_DIFFICULTY_NORMAL = RuleImage(roi_front=(620,445,90,210), roi_back=(620,445,90,210), threshold=0.8, method="Template matching", file="./tasks/AbyssShadows/res/res_difficulty_normal.png")
+	# 困难难度 
+	I_DIFFICULTY_HARD = RuleImage(roi_front=(620,445,90,210), roi_back=(620,445,90,210), threshold=0.8, method="Template matching", file="./tasks/AbyssShadows/res/res_difficulty_hard.png")
+	# 开启按钮 
+	I_BTN_START = RuleImage(roi_front=(1120,570,100,120), roi_back=(1120,570,100,120), threshold=0.8, method="Template matching", file="./tasks/AbyssShadows/res/res_btn_start.png")
+	# 开启确认按钮 
+	I_START_ENSURE = RuleImage(roi_front=(660,390,190,80), roi_back=(660,390,190,80), threshold=0.8, method="Template matching", file="./tasks/AbyssShadows/res/res_start_ensure.png")
+	# 当附近有可用怪物时，右下角出现的开始战斗按钮 
+	I_ABYSS_ENEMY_FIRE = RuleImage(roi_front=(1100,560,130,130), roi_back=(1100,560,130,130), threshold=0.8, method="Template matching", file="./tasks/AbyssShadows/res/res_abyss_enemy_fire.png")
+	# 红标主怪 
+	I_MARK_MAIN = RuleImage(roi_front=(375,40,60,30), roi_back=(375,40,60,30), threshold=0.8, method="Template matching", file="./tasks/AbyssShadows/res/res_mark_main.png")
 
 
 	# List Rule Assets
 	# 这个是当前活跃的竂活动列表界面 
 	L_RYOU_ACTIVITY_LIST = RuleList(folder="./tasks/AbyssShadows/res", direction="vertical", mode="ocr", roi_back=(35,157,37,250), size=(42, 27), 
 					 array=["道馆", "首领", "狭间"])
+
+
+	# Ocr Rule Assets
+	# 伤害 
+	O_DAMAGE = RuleOcr(roi=(50,110,300,50), area=(50,110,300,50), mode="Digit", method="CF_HSV(0980B4,1ED2FF)", keyword="", name="damage")
+	# 神龙暗域已完成 
+	O_DRAGON_DONE = RuleOcr(roi=(130,160,180,360), area=(130,160,180,360), mode="Single", method="CF_RGB(CCCCCC,FFFFFF)", keyword="封印", name="dragon_done")
+	# 孔雀暗域已完成 
+	O_PEACOCK_DONE = RuleOcr(roi=(420,160,180,360), area=(420,160,180,360), mode="Single", method="CF_RGB(CCCCCC,FFFFFF)", keyword="封印", name="peacock_done")
+	# 白藏主暗域已完成 
+	O_FOX_DONE = RuleOcr(roi=(680,160,180,360), area=(680,160,180,360), mode="Single", method="CF_RGB(CCCCCC,FFFFFF)", keyword="封印", name="fox_done")
+	# 黑豹暗域已完成 
+	O_LEOPARD_DONE = RuleOcr(roi=(1000,160,180,360), area=(1000,160,180,360), mode="Single", method="CF_RGB(CCCCCC,FFFFFF)", keyword="封印", name="leopard_done")
 
 
 	# Swipe Rule Assets
