@@ -217,6 +217,10 @@ page_climb_act_2.link(button=asa.O_ENTRY_ACTIVITY, destination=page_climb_act_ap
 # 体力, 门票互相跳转
 # page_climb_act_ap.link(button=asa.I_SWITCH, destination=page_climb_act_pass)
 # page_climb_act_pass.link(button=asa.I_SWITCH, destination=page_climb_act_ap)
+# 100体爬塔活动界面
+page_climb_act_ap100 = Page(asa.O_CHECK_AP100)
+page_climb_act_2.link(button=asa.O_ENTER_AP100, destination=page_climb_act_ap100)
+page_climb_act_ap100.link(button=G.I_BACK_Y, destination=page_climb_act_2)
 # 爬塔活动boss战界面
 page_climb_act_boss = Page(asa.I_CHECK_BOSS)
 page_climb_act_boss.additional = [BT.I_UI_BACK_RED, asa.I_SKIP_BUTTON]
@@ -249,10 +253,14 @@ def random_click(low: int = None, high: int = None) -> RuleClick | list[RuleClic
 
 # 奖励界面
 page_reward = Page(check_button=[GeneralBattleAssets.I_REWARD_PURPLE_SNAKE_SKIN, GeneralBattleAssets.I_REWARD,
-                                 GeneralBattleAssets.I_REWARD_EXP_SOUL_4,
+                                 GeneralBattleAssets.I_REWARD_EXP_SOUL_4, GeneralBattleAssets.I_WIN,
                                  GeneralBattleAssets.I_REWARD_GOLD, GeneralBattleAssets.I_REWARD_GOLD_SNAKE_SKIN,
                                  GeneralBattleAssets.I_REWARD_SOUL_5, GeneralBattleAssets.I_REWARD_SOUL_6,
-                                 gga.I_UI_REWARD],
+                                 gga.I_UI_REWARD,],
                    links={page_climb_act_pass: random_click(), page_climb_act_ap: random_click(),
                           page_area_boss: random_click()})
 page_reward.additional = random_click(1, 3)
+# 失败界面
+page_failed = Page(check_button=GeneralBattleAssets.I_FALSE,
+                   links={page_climb_act_pass: random_click(), page_climb_act_ap: random_click(),
+                          page_area_boss: random_click()})

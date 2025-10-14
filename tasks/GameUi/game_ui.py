@@ -37,9 +37,9 @@ class GameUi(BaseTask, GameUiAssets):
         page_collection, page_act_list,
         # 爬塔活动
         page_act_list_climb_act, page_climb_act, page_climb_act_2, page_climb_act_pass, page_climb_act_ap,
-        page_climb_act_boss, page_climb_act_buff,
+        page_climb_act_boss, page_climb_act_buff, page_climb_act_ap100,
         # 战斗
-        page_battle_auto, page_battle_hand, page_reward
+        page_battle_auto, page_battle_hand, page_reward, page_failed
     ]
     ui_close = [GameUiAssets.I_BACK_MALL, GeneralBattleAssets.I_CONFIRM,
                 BaseTask.I_UI_BACK_RED, BaseTask.I_UI_BACK_YELLOW, BaseTask.I_UI_BACK_BLUE,
@@ -232,7 +232,7 @@ class GameUi(BaseTask, GameUiAssets):
             if self.ui_page_appear(destination):
                 if confirm_timer.reached():
                     logger.info(f'Page arrive: {destination}')
-                    break
+                    return True
                 confirm_timer.reset()
                 continue
             # 尝试关闭未知页面
@@ -278,8 +278,8 @@ class GameUi(BaseTask, GameUiAssets):
                             self.appear_then_click(button, interval=0.6) or
                             (isinstance(button, RuleOcr) and self.ocr_appear_click(button, interval=2))):
                         logger.info(f'Page {current_page} additional {button} clicked')
-                        # 每次点击之间添加随机延迟, 等待响应
-                        sleep(random.uniform(0.2, 0.6))
+                    # 每次都随机延迟, 等待响应
+                    sleep(random.uniform(0.4, 0.8))
             # 执行页面跳转
             button = current_page.links.get(next_page)
             if not button:

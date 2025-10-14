@@ -61,5 +61,32 @@
     "method": "Default",
     "keyword": "挑战",
     "description": "挑战"
+  },
+  {
+    "itemName": "remain_ap100",
+    "roiFront": "922,21,112,39",
+    "roiBack": "913,8,131,62",
+    "mode": "Digit",
+    "method": "Default",
+    "keyword": "",
+    "description": "100体活动门票检测"
+  },
+  {
+    "itemName": "enter_ap100",
+    "roiFront": "72,187,95,32",
+    "roiBack": "7,172,256,108",
+    "mode": "Single",
+    "method": "Default",
+    "keyword": "将魂试炼",
+    "description": "进入100体活动标识"
+  },
+  {
+    "itemName": "check_ap100",
+    "roiFront": "89,12,128,44",
+    "roiBack": "67,0,166,69",
+    "mode": "Single",
+    "method": "Default",
+    "keyword": "将魂试炼",
+    "description": "100体活动界面标识"
   }
 ]
