@@ -66,6 +66,8 @@ class DuelAssets:
 	I_D_HELP = RuleImage(roi_front=(719,434,32,30), roi_back=(708,397,49,78), threshold=0.8, method="Template matching", file="./tasks/Duel/duel/duel_d_help.png")
 	# 准备 
 	I_D_PREPARE = RuleImage(roi_front=(1127,541,100,100), roi_back=(1127,541,100,100), threshold=0.8, method="Template matching", file="./tasks/Duel/duel/duel_d_prepare.png")
+    # 准备完毕 
+    I_D_PREPARE_DONE = RuleImage(roi_front=(495,82,75,55), roi_back=(495,82,75,55), threshold=0.8, method="Template matching", file="./tasks/Duel/duel/duel_d_prepare_done.png")
 	# 战斗数据 
 	I_D_BATTLE_DATA = RuleImage(roi_front=(1068,610,38,60), roi_back=(1068,610,38,60), threshold=0.8, method="Template matching", file="./tasks/Duel/duel/duel_d_battle_data.png")
 	# 胜利 
