@@ -20,7 +20,7 @@
   {
     "itemName": "cards_kaiko_4",
     "imageName": "cards_cards_kaiko_4.png",
-    "roiFront": "190,255,90,22",
+    "roiFront": "192,354,90,22",
     "roiBack": "179,165,116,482",
     "method": "Template matching",
     "threshold": 0.85,
@@ -29,7 +29,7 @@
   {
     "itemName": "cards_kaiko_3",
     "imageName": "cards_cards_kaiko_3.png",
-    "roiFront": "191,351,89,66",
+    "roiFront": "192,187,89,66",
     "roiBack": "183,169,109,474",
     "method": "Template matching",
     "threshold": 0.8,
