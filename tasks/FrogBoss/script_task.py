@@ -93,6 +93,7 @@ class ScriptTask(RightActivity, FrogBossAssets, GeneralBattleAssets):
     def do_bet(self):
         logger.hr('do bet', level=2)
         self.screenshot()
+        flag_glod_30 = 0
         count_left = self.O_LEFT_COUNT.ocr(self.device.image)
         count_right = self.O_RIGHT_COUNT.ocr(self.device.image)
         match self.config.model.frog_boss.frog_boss_config.strategy_frog:
@@ -125,9 +126,10 @@ class ScriptTask(RightActivity, FrogBossAssets, GeneralBattleAssets):
             self.screenshot()
             if self.appear(self.I_BETTED):
                 break
-            if self.appear_then_click(self.I_GOLD_30, interval=2):
+            if self.appear_then_click(self.I_BET_SURE, interval=2) and flag_glod_30 == 1:
                 continue
-            if self.appear_then_click(self.I_BET_SURE, interval=2):
+            if self.appear_then_click(self.I_GOLD_30, interval=2):
+                flag_glod_30 = 1
                 continue
             if self.appear_then_click(self.I_UI_CONFIRM, interval=2):
                 continue
@@ -254,7 +256,9 @@ class ScriptTask(RightActivity, FrogBossAssets, GeneralBattleAssets):
             {"name": "Mico林木森", "id": "b6b5bc8277e34f69aeca018db0081397"},
             {"name": "查查尔", "id": "d9dc2a75497c4a91b2db1e909a36544d"},
             {"name": "CC南浔", "id": "74db771d92a54c28ae3e98d19aa565a3"},
-            {"name": "冰七喜Den", "id": "e498e524252041e29999b38e57c4df1d"}
+            {"name": "冰七喜Den", "id": "e498e524252041e29999b38e57c4df1d"},
+            {"name": "行水姑娘", "id": "30b0c2923faa483f95572c324a5bc910"},
+            {"name": "更慕林", "id": "e32aedbdd8da46a5b5b497a16c4b7658"}
             # ... 可以添加更多 uid
         ]
 

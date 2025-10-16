@@ -65,8 +65,8 @@
   {
     "itemName": "ui_confirm_samll",
     "imageName": "ui_ui_confirm_samll.png",
-    "roiFront": "677,390,130,62",
-    "roiBack": "677,390,130,62",
+    "roiFront": "681,392,130,62",
+    "roiBack": "558,380,265,99",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "短一点的确认"

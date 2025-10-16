@@ -17,4 +17,4 @@ if __name__ == "__main__":
     # ConfigModel对象并更新保存
     config = ConfigModel()
     config_path = Path("./config/template.json")
-    config.write_json("template", config.dict())
+    config.write_json("template", config.model_dump())

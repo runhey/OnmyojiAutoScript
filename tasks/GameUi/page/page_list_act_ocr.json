@@ -2,12 +2,12 @@
   "name": "act_list_ocr",
   "direction": "vertical",
   "type": "ocr",
-  "roiBack": "192,90,190,513",
+  "roiBack": "219,91,47,513",
   "description": "活动列表页文字列表",
   "list": [
     {
-      "itemName": "冰火永烬",
-      "roiFront": "194,361,186,78"
+      "itemName": "日之",
+      "roiFront": "221,212,42,78"
     }
   ]
 }

@@ -1,16 +1,19 @@
+import random
+
 import traceback
+from module.atom.click import RuleClick
 
 from tasks.GameUi.assets import GameUiAssets as G
 from tasks.base_task import BaseTask as BT
 from tasks.RyouToppa.assets import RyouToppaAssets
 
+
 class Page:
-    parent = None
-
-
-    def __init__(self, check_button):
+    def __init__(self, check_button, links=None):
+        if links is None:
+            links = {}
         self.check_button = check_button
-        self.links = {}
+        self.links = links
         self.additional: list = None  # 附加按钮或者是ocr检测按钮
         (filename, line_number, function_name, text) = traceback.extract_stack()[-2]
         self.name = text[:text.find('=')].strip()
@@ -29,10 +32,10 @@ class Page:
 
 
 #登录login
-page_login=Page(G.I_CHECK_LOGIN_FORM)
+page_login = Page(G.I_CHECK_LOGIN_FORM)
 # Main Home 主页
 page_main = Page(G.I_CHECK_MAIN)
-page_main.additional = [G.I_BACK_Y, G.I_BACK_MALL, G.I_AD_CLOSE_RED, G.I_BACK_YOLLOW, G.I_BACK_FRIENDS, G.I_BACK_DAILY, G.I_BACK_BLUE, G.I_BACK_ACT_LIST]
+page_main.additional = [G.I_AD_CLOSE_RED, G.I_BACK_FRIENDS]
 # 召唤summon
 page_summon = Page(G.I_CHECK_SUMMON)
 page_summon.link(button=G.I_SUMMON_GOTO_MAIN, destination=page_main)
@@ -147,8 +150,10 @@ page_daily = Page(G.I_CHECK_DAILY)
 # page_daily.additional = [G.O_CLICK_CLOSE_1, G.O_CLICK_CLOSE_2]
 page_daily.link(button=G.I_BACK_Y, destination=page_main)
 page_main.link(button=G.I_MAIN_GOTO_DAILY, destination=page_daily)
+from tasks.DailyTrifles.assets import DailyTriflesAssets
+
 # 商店 mall
-page_mall = Page(G.I_CHECK_MALL)
+page_mall = Page(check_button=[G.I_CHECK_MALL, DailyTriflesAssets.I_ROOM_GIFT])
 page_mall.additional = [G.I_AD_CLOSE_RED, G.I_BACK_Y, G.I_DLC_CLOSE]
 page_mall.link(button=G.I_BACK_BLUE, destination=page_main)
 page_main.link(button=G.I_MAIN_GOTO_MALL, destination=page_mall)
@@ -174,10 +179,10 @@ page_act_list.additional = [G.I_PAPER_DOLL_CLOSE]
 page_act_list.link(button=G.I_BACK_ACT_LIST, destination=page_main)
 page_main.link(button=G.I_ACT_LIST_EXPAND, destination=page_act_list)
 
-
 # 道馆
 from tasks.Component.GeneralBattle.assets import GeneralBattleAssets
 from tasks.Dokan.assets import DokanAssets
+
 page_dokan = Page(DokanAssets.I_RYOU_DOKAN_CHECK)
 page_dokan.additional = [GeneralBattleAssets.I_EXIT, DokanAssets.I_RYOU_DOKAN_EXIT_ENSURE, G.I_BACK_BLUE]
 page_dokan.link(button=G.I_BACK_Y, destination=page_main)
@@ -185,29 +190,40 @@ page_dokan.link(button=G.I_BACK_Y, destination=page_main)
 # ************************************* 活动部分 *****************************************#
 from tasks.ActivityShikigami.assets import ActivityShikigamiAssets as asa
 from tasks.GlobalGame.assets import GlobalGameAssets as gga
+
+# 活动列表页爬塔活动
+page_act_list_climb_act = Page(asa.I_CHECK_ACT_LIST_CLIMB_ACT)
+page_act_list.link(button=G.L_ACT_LIST_OCR, destination=page_act_list_climb_act)
+page_act_list_climb_act.link(button=G.I_BACK_ACT_LIST, destination=page_main)
 # 爬塔活动界面
 page_climb_act = Page(asa.I_BATTLE)
-page_climb_act.additional = [gga.I_UI_REWARD, asa.I_SKIP_BUTTON, asa.I_TOGGLE_BUTTON, asa.I_RED_EXIT_2]
+page_climb_act.additional = [gga.I_UI_REWARD, asa.I_SKIP_BUTTON, asa.I_RED_EXIT, asa.I_RED_EXIT_2]
 page_climb_act.link(button=G.I_BACK_Y, destination=page_main)
-page_act_list.link(button=G.I_ACT_LIST_GOTO_ACT, destination=page_climb_act)
+page_act_list_climb_act.link(button=G.I_ACT_LIST_GOTO_ACT, destination=page_climb_act)
 # 爬塔活动副界面
 page_climb_act_2 = Page(asa.I_CHECK_BATTLE_2)
-page_climb_act_2.additional = [asa.I_SKIP_BUTTON, asa.I_TOGGLE_BUTTON, gga.I_UI_REWARD, asa.I_RED_EXIT]
-page_climb_act_2.link(button=G.I_BACK_Y, destination=page_climb_act)
+page_climb_act_2.additional = [asa.I_ACT_MAP_SWITCH, asa.I_PASS_ACT_LOCAT, asa.I_SKIP_BUTTON, asa.I_RED_EXIT,
+                               asa.I_RED_EXIT_2]
+page_climb_act_2.link(button=G.I_BACK_BATTLE, destination=page_climb_act)
 page_climb_act.link(button=asa.I_BATTLE, destination=page_climb_act_2)
 # 门票爬塔活动界面
 page_climb_act_pass = Page(asa.I_AP_ACTIVITY)
-page_climb_act_pass.additional = [asa.I_SKIP_BUTTON, asa.I_TOGGLE_BUTTON, gga.I_UI_REWARD, asa.I_RED_EXIT]
+page_climb_act_pass.additional = [asa.I_SKIP_BUTTON, gga.I_UI_REWARD, asa.I_RED_EXIT, ]
 page_climb_act_pass.link(button=G.I_BACK_Y, destination=page_climb_act_2)
-page_climb_act_2.link(button=asa.O_ENTRY_ACTIVITY, destination=page_climb_act_pass)
+page_climb_act_2.link(button=asa.I_ENTRY_ACTIVITY, destination=page_climb_act_pass)
 # 体力爬塔活动界面
 page_climb_act_ap = Page(asa.I_AP)
-page_climb_act_ap.additional = [asa.O_ENTRY_ACTIVITY, asa.I_SKIP_BUTTON, asa.I_TOGGLE_BUTTON, gga.I_UI_REWARD, asa.I_RED_EXIT]
+page_climb_act_ap.additional = [asa.O_ENTRY_ACTIVITY, asa.I_SKIP_BUTTON, asa.I_TOGGLE_BUTTON, gga.I_UI_REWARD,
+                                asa.I_RED_EXIT]
 page_climb_act_ap.link(button=G.I_BACK_Y, destination=page_climb_act_2)
 page_climb_act_2.link(button=asa.O_ENTRY_ACTIVITY, destination=page_climb_act_ap)
 # 体力, 门票互相跳转
-page_climb_act_ap.link(button=asa.I_SWITCH, destination=page_climb_act_pass)
-page_climb_act_pass.link(button=asa.I_SWITCH, destination=page_climb_act_ap)
+# page_climb_act_ap.link(button=asa.I_SWITCH, destination=page_climb_act_pass)
+# page_climb_act_pass.link(button=asa.I_SWITCH, destination=page_climb_act_ap)
+# 100体爬塔活动界面
+page_climb_act_ap100 = Page(asa.I_CHECK_AP100)
+page_climb_act_2.link(button=asa.O_ENTER_AP100, destination=page_climb_act_ap100)
+page_climb_act_ap100.link(button=G.I_BACK_Y, destination=page_climb_act_2)
 # 爬塔活动boss战界面
 page_climb_act_boss = Page(asa.I_CHECK_BOSS)
 page_climb_act_boss.additional = [BT.I_UI_BACK_RED, asa.I_SKIP_BUTTON]
@@ -218,3 +234,38 @@ page_climb_act_buff = Page(asa.I_CHECK_BUFF)
 page_climb_act_buff.additional = [BT.I_UI_BACK_RED, asa.I_SKIP_BUTTON]
 page_climb_act_buff.link(button=G.I_BACK_Y, destination=page_climb_act)
 page_climb_act.link(button=asa.I_BUFF_CHANGE_BUTTON, destination=page_climb_act_buff)
+
+# ************************************* 战斗部分 *****************************************#
+# 战斗界面
+page_battle_auto = Page(G.O_BATTLE_AUTO)
+page_battle_hand = Page(G.O_BATTLE_HAND)
+page_battle_auto.link(button=G.O_BATTLE_AUTO, destination=page_battle_hand)
+page_battle_hand.link(button=G.O_BATTLE_HAND, destination=page_battle_auto)
+
+
+def random_click(low: int = None, high: int = None) -> RuleClick | list[RuleClick]:
+    """
+    随机生成RuleClick, 不传入参数则返回1个RuleClick, 传入参数则生成范围内的click数组
+    :return: RuleClick或者RuleClick的数组
+    """
+    click = random.choice([asa.C_RANDOM_LEFT, asa.C_RANDOM_RIGHT, asa.C_RANDOM_TOP])
+    click.name = "BATTLE_RANDOM"
+    if low is None or high is None:
+        return click
+    return [click for _ in range(random.randint(low, high))]
+
+
+# 奖励界面
+page_reward = Page(check_button=[GeneralBattleAssets.I_REWARD_PURPLE_SNAKE_SKIN, GeneralBattleAssets.I_REWARD,
+                                 GeneralBattleAssets.I_REWARD_EXP_SOUL_4, GeneralBattleAssets.I_WIN,
+                                 GeneralBattleAssets.I_REWARD_GOLD, GeneralBattleAssets.I_REWARD_GOLD_SNAKE_SKIN,
+                                 GeneralBattleAssets.I_REWARD_SOUL_5, GeneralBattleAssets.I_REWARD_SOUL_6,
+                                 gga.I_UI_REWARD, ],
+                   links={page_climb_act_pass: random_click(), page_climb_act_ap: random_click(),
+                          page_area_boss: random_click()})
+page_reward.additional = [random_click()]
+# 失败界面
+page_failed = Page(check_button=GeneralBattleAssets.I_FALSE,
+                   links={page_climb_act_pass: random_click(), page_climb_act_ap: random_click(),
+                          page_area_boss: random_click()})
+page_failed.additional = [random_click()]

@@ -11,7 +11,7 @@
   {
     "itemName": "hunt",
     "imageName": "DemonRetreat_hunt.png",
-    "roiFront": "661,164,187,165",
+    "roiFront": "698,228,122,78",
     "roiBack": "661,164,187,165",
     "method": "Template matching",
     "threshold": 0.8,

@@ -80,10 +80,10 @@ if __name__ == '__main__':
     config = Config('oas1')
     device = Device(config)
     task = ScriptTask(config, device)
-    task.config.update_scheduler()
-    task.delay_pending_tasks()
-    # task.screenshot()
-    # print(task.appear_then_click(task.I_LOGIN_SCROOLL_CLOSE, threshold=0.9))
+    task.app_restart()
+    # task.config.update_scheduler()
+    # task.delay_pending_tasks()
+
 
 
 

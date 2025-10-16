@@ -87,6 +87,12 @@ class BaseCor:
         self.area: list = list(area)
         self.keyword = keyword
 
+    def __str__(self):
+        return f"{self.name}"
+
+    def __repr__(self):
+        return f"{self.name}"
+
     @cached_property
     def model(self) -> TextSystem:
         return OCR_MODEL.__getattribute__(self.lang)
@@ -191,9 +197,9 @@ class BaseCor:
                 continue
             result.ocr_text = self.after_process(result.ocr_text)
             results.append(result)
-            if logDisplay:
-                logger.attr(name='%s %ss' % (self.name, float2str(time.time() - start_time)),
-                            text=str([result.ocr_text for result in results]))
+        if logDisplay:
+            logger.attr(name='%s %ss' % (self.name, float2str(time.time() - start_time)),
+                        text=str([result.ocr_text for result in results]))
         return results
 
     def match(self, result: str, included: bool=False) -> bool:

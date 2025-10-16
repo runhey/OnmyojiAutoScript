@@ -1,6 +1,7 @@
 # This Python file uses the following encoding: utf-8
 # @author runhey
 # github https://github.com/runhey
+from enum import Enum, auto
 from time import sleep
 
 import cv2
@@ -8,70 +9,53 @@ import numpy as np
 import random
 import tasks.Component.GeneralBattle.config_general_battle
 from datetime import datetime, timedelta, time
+from module.atom.click import RuleClick
 from module.atom.ocr import RuleOcr
 from module.base.protect import random_sleep
 from module.exception import TaskEnd
 from module.logger import logger
 from tasks.ActivityShikigami.assets import ActivityShikigamiAssets
-from tasks.ActivityShikigami.config import SwitchSoulConfig, GeneralBattleConfig
+from tasks.ActivityShikigami.config import SwitchSoulConfig, GeneralBattleConfig, ActivityShikigami
 from tasks.Component.BaseActivity.base_activity import BaseActivity
 from tasks.Component.BaseActivity.config_activity import GeneralClimb
 from tasks.Component.SwitchSoul.switch_soul import SwitchSoul
 from tasks.GameUi.game_ui import GameUi
-from tasks.GameUi.page import page_main, page_shikigami_records, page_climb_act, page_climb_act_pass, \
-    page_climb_act_boss, page_climb_act_ap, Page, page_climb_act_buff
-
-
-def get_run_order_list(climb_conf: GeneralClimb) -> list[str]:
-    run_order_list = [climb_type.strip() for climb_type in climb_conf.run_sequence.split(',')]
-    return [climb_type for climb_type in run_order_list if getattr(climb_conf, f'enable_{climb_type}')]
+import tasks.GameUi.page as game
+from typing import Any
 
 
 def _prepare_image_for_ocr(image: np.ndarray, asset: RuleOcr) -> np.ndarray:
-
     image_copy = image.copy()
     x, y, w, h = asset.roi
-
     roi_to_process = image_copy[y:y + h, x:x + w]
     if len(roi_to_process.shape) == 3:
         gray_image = cv2.cvtColor(roi_to_process, cv2.COLOR_BGR2GRAY)
     else:
         gray_image = roi_to_process
-
     # 自适应二值化
     _, binary_norm = cv2.threshold(gray_image, 127, 255, cv2.THRESH_BINARY | cv2.THRESH_OTSU)
     _, binary_inv = cv2.threshold(gray_image, 127, 255, cv2.THRESH_BINARY_INV | cv2.THRESH_OTSU)
-
     if cv2.countNonZero(binary_norm) < cv2.countNonZero(binary_inv):
         binary_correct = binary_norm
     else:
         binary_correct = binary_inv
-
     kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (5, 1))
     dilated_image = cv2.dilate(binary_correct, kernel, iterations=1)
-
     # 找轮廓
     contours, _ = cv2.findContours(dilated_image, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
-
     processed_roi_content = None
     if contours:
         all_points = np.concatenate(contours, axis=0)
         bx, by, bw, bh = cv2.boundingRect(all_points)
-
         processed_roi_content = binary_correct[by:by + bh, bx:bx + bw]
-
     centered_roi = np.full((h, w), 255, dtype=np.uint8)  # 255代表白色
-
     if processed_roi_content is not None:
         content_h, content_w = processed_roi_content.shape
-
         if content_h <= h and content_w <= w:
             # 计算居中粘贴的位置，放到中间
             start_y = (h - content_h) // 2
             start_x = (w - content_w) // 2
-
             paste_area = centered_roi[start_y:start_y + content_h, start_x:start_x + content_w]
-
             paste_area[processed_roi_content == 255] = 0
         else:
             logger.warning(f"Content for asset '{asset.name}' is larger than ROI. Skipping centering.")
@@ -79,73 +63,173 @@ def _prepare_image_for_ocr(image: np.ndarray, asset: RuleOcr) -> np.ndarray:
             centered_roi = cv2.bitwise_not(binary_correct)
     else:
         logger.warning(f"No content found in ROI for asset: {asset.name}. ROI will be blank.")
-
     processed_roi_bgr = cv2.cvtColor(centered_roi, cv2.COLOR_GRAY2BGR)
     image_copy[y:y + h, x:x + w] = processed_roi_bgr
-
     return image_copy
 
 
-class ScriptTask(GameUi, BaseActivity, SwitchSoul, ActivityShikigamiAssets):
-    # key: climb type value: run count
-    count_map: dict[str, int] = {
-        'pass': 0,
-        'ap': 0,
-        'boss': 0
-    }
-    page_map: dict[str, Page] = {
-        'pass': page_climb_act_pass,
-        'ap': page_climb_act_ap,
-        'boss': page_climb_act_boss,
-    }
+class Status(Enum):
+    TIME_OUT = auto()  # 超时
+    DOWN = auto()  # 当前爬塔类型完成
+    ALL_DOWN = auto()  # 所有爬塔类型完成
+    ALREADY_SWITCH_SOUL = auto()  # 已经切换御魂
+    ALREADY_LOCK_TEAM = auto()  # 已经锁定队伍
+    ALREADY_SWITCH_BUFF = auto()  # 已经切换buff
+    GOTO_ACT_FAILED = auto()  # 前往活动失败
+    ENTER_BATTLE_FAILED = auto()  # 进入战斗失败
+    COUNT_LIMIT = auto()  # 达到次数限制
+    NO_TICKETS = auto()  # 没有票数
 
-    climb_type: str = 'pass'
+
+class ScriptTask(GameUi, BaseActivity, SwitchSoul, ActivityShikigamiAssets):
+    _check_map = None
+    _count_map = None
+
+    page_map: dict[str, game.Page] = {
+        'pass': game.page_climb_act_pass,
+        'ap': game.page_climb_act_ap,
+        'boss': game.page_climb_act_boss,
+        'ap100': game.page_climb_act_ap100,
+    }
     run_idx: int = 0
+    conf: ActivityShikigami = None
 
     def run(self) -> None:
-        config = self.config.activity_shikigami
-        self.limit_time: timedelta = config.general_climb.limit_time
-        if isinstance(self.limit_time, time):
-            self.limit_time = timedelta(hours=self.limit_time.hour, minutes=self.limit_time.minute,
-                                        seconds=self.limit_time.second)
-        # 初始化爬塔类型
-        self.climb_type = get_run_order_list(config.general_climb)[0]
-        while 1:
-            # 切换御魂
-            self.switch_soul(config.switch_soul_config)
-            # 进入爬塔活动主界面
-            self.home_main()
-            # 切换buff
-            self.switch_buff(config.general_climb)
-            # 锁定阵容
-            self.lock_team(config.general_battle)
-            while 1:
-                switch = False
-                # 超时退出
-                if self.limit_time is not None and datetime.now() - self.start_time >= self.limit_time:
-                    logger.info(f"{self.climb_type} time out")
-                    break
-                # 次数达到限制切换下一种爬塔
-                if self.get_count() >= self.get_limit(config.general_climb):
-                    logger.warn(f"{self.climb_type} count out, switch to next")
-                    switch = self.switch_next()
-                    break
-                # 判断是否可以运行
-                can_run = self.check_can_run()
-                if not can_run:
-                    logger.warn(f'{self.climb_type} tickets not enough, switch to next')
-                    switch = self.switch_next()
-                    break
-                # 开始战斗
-                self.start_battle()
-            if not switch:
+        self.conf = self.config.activity_shikigami
+        self.limit_time: timedelta = self.conf.general_climb.limit_time_v
+        while True:
+            self.put_status()
+            # 超时或全部完成则退出
+            if self.check(Status.TIME_OUT) or self.check(Status.ALL_DOWN):
+                logger.hr(f'Climb act all down')
                 break
+            # 当前爬塔类型完成了或达到次数限制了, 切换下一个类型
+            if self.check(Status.DOWN) or self.check(Status.COUNT_LIMIT):
+                self.switch_next()
+                continue
+            # 获取当前页面
+            current_page = self.ui_get_current_page(False)
+            match current_page:
+                # 庭院, 进入活动主界面
+                case game.page_main:
+                    self.switch_soul(self.conf.switch_soul_config)
+                    self.home_main()
+                # 活动主界面或副界面, 进入最终爬塔界面
+                case game.page_climb_act | game.page_climb_act_2:
+                    self.switch_soul(self.conf.switch_soul_config)
+                    # self.ui_goto(game.page_climb_act_buff)
+                    self.goto_act()
+                # buff界面, 进入最终爬塔界面
+                case game.page_climb_act_buff:
+                    self.switch_buff(self.conf.general_climb)
+                    self.goto_act()
+                # 最终爬塔界面
+                case game.page_climb_act_pass | game.page_climb_act_ap | game.page_climb_act_ap100 | game.page_climb_act_boss:
+                    self.switch_soul(self.conf.switch_soul_config)
+                    self.lock_team(self.conf.general_battle)
+                    self.check_tickets_enough()
+                    self.start_battle()
+                case game.page_battle_auto:
+                    self.battle_wait(getattr(self.conf.general_battle, f'enable_{self.climb_type}_anti_detect',
+                                             False))
+                case game.page_battle_hand:
+                    self.ui_click_until_disappear(game.page_battle_hand.check_button)
+                case _:
+                    if self.check(Status.GOTO_ACT_FAILED):
+                        logger.warning(f'Climb type[{self.climb_type}] goto failed')
+                        self.put_check(Status.DOWN, True)
+                        continue
+                    self.put_check(Status.GOTO_ACT_FAILED, True)
+                    # 任何活动界面都没有识别到, 尝试主动前往爬塔活动
+                    self.goto_act(timeout=25)
         # 返回庭院
         self.main_home()
-        if config.general_climb.active_souls_clean:
+        if self.conf.general_climb.active_souls_clean:
             self.set_next_run(task='SoulsTidy', success=False, finish=False, target=datetime.now())
         self.set_next_run(task="ActivityShikigami", success=True)
         raise TaskEnd
+
+    def start_battle(self):
+        # 先识别是否在挑战界面, 不在则交给上层处理
+        if not self.wait_until_appear(self.O_FIRE, wait_time=3):
+            logger.warning(f'Detect fire fail, try reidentify')
+            return
+        # 点击战斗前随机休息
+        if self.conf.general_climb.random_sleep:
+            random_sleep(probability=0.2)
+        logger.info("Click battle")
+        click_times, max_times = 0, random.randint(2, 4)
+        while 1:
+            self.screenshot()
+            if self.is_in_battle(False):
+                # 进入战斗了则一定有门票
+                self.put_check(Status.NO_TICKETS, False)
+                break
+            if click_times >= max_times:
+                # 挑战点击失败, 且无门票则大概率真没有票了
+                if self.check(Status.NO_TICKETS):
+                    self.put_check(Status.DOWN, True)
+                    logger.info(f'Climb {self.climb_type} no tickets detected, try next')
+                    return
+                # 有门票且挑战已经点击失败过一次了
+                if self.check(Status.ENTER_BATTLE_FAILED):
+                    logger.warning(f'Climb {self.climb_type} cannot enter, maybe already end, try next')
+                    self.put_check(Status.DOWN, True)
+                    return
+                # 有门票但挑战点击失败, 交给上层处理
+                logger.warning(f'Climb type {self.climb_type} enter fail, try reidentify')
+                self.put_check(Status.ENTER_BATTLE_FAILED, True)
+                return
+            # 点击挑战
+            if self.ocr_appear_click(self.O_FIRE, interval=2):
+                click_times += 1
+                continue
+            if ((self.appear_then_click(self.I_C_CONFIRM1, interval=0.6) or
+                 self.appear_then_click(self.I_UI_CONFIRM_SAMLL, interval=1) or
+                 self.appear_then_click(self.I_UI_CONFIRM, interval=1)) or
+                    self.appear_then_click(self.I_N_CONFIRM, interval=1)):
+                continue
+        # 运行战斗
+        self.run_general_battle(config=self.get_general_battle_conf())
+
+    def battle_wait(self, random_click_swipt_enable: bool) -> bool:
+        # 通用战斗结束判断
+        self.device.stuck_record_add("BATTLE_STATUS_S")
+        self.device.click_record_clear()
+        logger.info(f"Start {self.climb_type} battle process")
+        self.count_map[self.climb_type] = self.current_count
+        for btn in (self.C_RANDOM_LEFT, self.C_RANDOM_RIGHT, self.C_RANDOM_TOP, self.C_RANDOM_BOTTOM):
+            btn.name = "BATTLE_RANDOM"
+        ok_cnt, max_retry = 0, 5
+        while 1:
+            sleep(random.uniform(1, 1.5))
+            self.screenshot()
+            # 达到最大重试次数则直接交给上层处理
+            if ok_cnt > max_retry:
+                break
+            # 识别到挑战说明已经退出战斗
+            if ok_cnt > 0 and self.ocr_appear(self.O_FIRE):
+                return True
+            # 失败
+            if self.appear(self.I_FALSE):
+                logger.warning("Battle failed")
+                self.ui_click_until_smt_disappear(self.random_reward_click(click_now=False), self.I_FALSE, interval=1.5)
+                return False
+            # 奖励界面
+            if self.ui_page_appear(game.page_reward):
+                logger.info(f'Battle success, try close reward page[{ok_cnt}]')
+                self.random_reward_click(exclude_click=[self.C_RANDOM_BOTTOM])
+                ok_cnt += 1
+                continue
+            # 已经不在战斗中了, 且奖励也识别过了, 则随机点击
+            if ok_cnt > 0 and not self.ui_page_appear(game.page_battle_auto):
+                self.random_reward_click(exclude_click=[self.C_RANDOM_BOTTOM])
+                ok_cnt += 1
+                continue
+            # 战斗中随机滑动
+            if ok_cnt == 0 and random_click_swipt_enable:
+                self.random_click_swipt()
+        return True
 
     def switch_soul(self, conf: SwitchSoulConfig):
         """
@@ -153,18 +237,21 @@ class ScriptTask(GameUi, BaseActivity, SwitchSoul, ActivityShikigamiAssets):
         :param conf: 切换御魂配置
         :return:
         """
-        enabled = getattr(conf, f"enable_switch_{self.climb_type}")
-        if not enabled:
+        if self.check(Status.ALREADY_SWITCH_SOUL):
             return
-        self.ui_get_current_page()
-        self.ui_goto(page_shikigami_records)
-        enable_by_name = getattr(conf, f"enable_switch_{self.climb_type}_by_name")
+        conf.validate_switch_soul()
+        self.put_check(Status.ALREADY_SWITCH_SOUL, True)
+        enable_switch = getattr(conf, f"enable_switch_{self.climb_type}", False)
+        enable_by_name = getattr(conf, f"enable_switch_{self.climb_type}_by_name", False)
+        if enable_switch or enable_by_name:
+            self.ui_goto(game.page_shikigami_records)
         if enable_by_name:
             group, team = getattr(conf, f"{self.climb_type}_group_team_name").split(",")
             self.run_switch_soul_by_name(group, team)
-        else:
+        elif enable_switch:
             group_team = getattr(conf, f"{self.climb_type}_group_team")
             self.run_switch_soul(group_team)
+        self.goto_act()
 
     def lock_team(self, battle_conf: GeneralBattleConfig):
         """
@@ -172,9 +259,10 @@ class ScriptTask(GameUi, BaseActivity, SwitchSoul, ActivityShikigamiAssets):
         :param battle_conf: 战斗配置
         :return:
         """
-        self.ui_get_current_page()
-        self.ui_goto(self.page_map[self.climb_type])
-        enable_preset = getattr(battle_conf, f"enable_{self.climb_type}_preset")
+        if self.check(Status.ALREADY_LOCK_TEAM):
+            return
+        self.put_check(Status.ALREADY_LOCK_TEAM, True)
+        enable_preset = getattr(battle_conf, f"enable_{self.climb_type}_preset", False)
         if not enable_preset:
             logger.info(f'Lock {self.climb_type} team')
             while 1:
@@ -192,16 +280,17 @@ class ScriptTask(GameUi, BaseActivity, SwitchSoul, ActivityShikigamiAssets):
                 break
 
     def switch_buff(self, climb_conf: GeneralClimb):
+        if self.check(Status.ALREADY_SWITCH_BUFF):
+            return
+        self.put_check(Status.ALREADY_SWITCH_BUFF, True)
         buffs = getattr(climb_conf, f'{self.climb_type}_buff', None)
-        if not buffs:
+        if not buffs or len(buffs.split(',')) == 1:
             logger.info('Not set buff, skip')
             return
         buff_list = [buff.strip() for buff in buffs.split(',')]
         if not buff_list:
             logger.info('Buff incorrect formatting, skip')
             return
-        self.ui_get_current_page()
-        self.ui_goto(page_climb_act_buff)
         buff_box_list = [self.C_BUFF_1_BOX, self.C_BUFF_2_BOX]
         buff_box_empty_list = [self.I_BUFF_BOX_1_EMPTY, self.I_BUFF_BOX_2_EMPTY]
         buff_up_map = {
@@ -235,6 +324,19 @@ class ScriptTask(GameUi, BaseActivity, SwitchSoul, ActivityShikigamiAssets):
                 self.appear_then_click(self.I_BUFF_UP, buff_up_map[buff_list[i]], interval=0.5)
             logger.info(f'Up {buff_list[i]} ok')
 
+    def put_status(self):
+        """
+        更新全局状态
+        """
+        # 超过运行时间
+        if self.limit_time is not None and datetime.now() - self.start_time >= self.limit_time:
+            logger.warning(f"Climb type {self.climb_type} time out")
+            self.put_check(Status.TIME_OUT, True)
+        # 次数达到限制
+        if self.get_count() >= self.get_limit():
+            logger.info(f"Climb type {self.climb_type} count limit reached")
+            self.put_check(Status.DOWN, True)
+
     def get_count(self) -> int:
         """
         获取当前爬塔类型运行次数
@@ -242,18 +344,15 @@ class ScriptTask(GameUi, BaseActivity, SwitchSoul, ActivityShikigamiAssets):
         """
         return self.count_map[self.climb_type]
 
-    def check_can_run(self) -> bool:
+    def check_tickets_enough(self):
         """
-        判断当前爬塔类型能否运行
-        pass: 剩余门票爬塔票数>0
-        ap: 剩余体力爬塔票数>0
-        boss: 剩余挑战次数>0
+        判断当前爬塔门票是否足够
         :return: True 可以运行 or False
         """
-        self.ui_get_current_page()
-        self.ui_goto(self.page_map[self.climb_type])
-        logger.info(f'Check the {self.climb_type} can work')
-        self.wait_until_appear(self.I_FIRE)
+        logger.hr(f'Check {self.climb_type} tickets')
+        if not self.wait_until_appear(self.O_FIRE, wait_time=3):
+            logger.warning(f'Detect fire fail, try reidentify')
+            return
         self.screenshot()
         remain_times = 0
         if self.climb_type == 'pass':
@@ -264,76 +363,59 @@ class ScriptTask(GameUi, BaseActivity, SwitchSoul, ActivityShikigamiAssets):
                 _prepare_image_for_ocr(self.device.image, asset=self.O_REMAIN_AP))
         if self.climb_type == 'boss':
             _, remain_times, _ = self.O_REMAIN_BOSS.ocr_digit_counter(self.device.image)
-        return remain_times > 0
+        if self.climb_type == 'ap100':
+            remain_times = self.O_REMAIN_AP100.ocr_digit(
+                _prepare_image_for_ocr(self.device.image, asset=self.O_REMAIN_AP100))
+        self.put_check(Status.NO_TICKETS, remain_times <= 0)
 
-    def get_limit(self, climb_conf: GeneralClimb) -> int:
+    def get_limit(self) -> int:
         """
         获取配置中当前爬塔类型次数限制
-        :param climb_conf: 爬塔配置
         :return: 限制次数
         """
-        return getattr(climb_conf, f'{self.climb_type}_limit')
+        limit = getattr(self.conf.general_climb, f'{self.climb_type}_limit', 0)
+        return 0 if not limit else limit
 
-    def switch_next(self) -> bool:
+    def switch_next(self):
         """
         切换下一种爬塔类型
         :return: True 切换成功 or False
         """
         self.run_idx += 1
-        climb_type_list = get_run_order_list(self.config.activity_shikigami.general_climb)
-        if self.run_idx >= len(climb_type_list):
-            logger.info('All tower climbing activities have been completed')
-            return False
-        self.climb_type = climb_type_list[self.run_idx]
+        if self.run_idx >= len(self.conf.general_climb.run_sequence_v):
+            logger.info('All climbing activities have been completed')
+            self.put_check(Status.ALL_DOWN, True)
+            return
+        # 切换爬塔类型了, 恢复所有状态
         self.current_count = 0
-        return True
-
-    def start_battle(self):
-        # 点击战斗前随机休息
-        if self.config.activity_shikigami.general_climb.random_sleep:
-            random_sleep(probability=0.2)
-        logger.info("Click battle")
-        while 1:
-            self.screenshot()
-            # 点击挑战
-            if self.appear_then_click(self.I_FIRE, interval=2):
-                continue
-            if not self.appear(self.I_FIRE):
-                break
-            if self.appear_then_click(self.I_C_CONFIRM1, interval=0.6):
-                continue
-            if self.appear_then_click(self.I_UI_CONFIRM_SAMLL, interval=1):
-                continue
-            if self.appear_then_click(self.I_UI_CONFIRM, interval=1):
-                continue
-            if self.appear_then_click(self.I_N_CONFIRM, interval=1):
-                continue
-        # 运行战斗
-        if self.run_general_battle(config=self.get_general_battle_conf()):
-            self.count_map[self.climb_type] += 1
-            logger.info("General battle success")
+        self.put_check(Status.ALREADY_SWITCH_SOUL, False)
+        self.put_check(Status.ALREADY_LOCK_TEAM, False)
+        self.put_check(Status.GOTO_ACT_FAILED, False)
+        self.put_check(Status.ENTER_BATTLE_FAILED, False)
+        self.put_check(Status.COUNT_LIMIT, False)
+        logger.hr(f'Climb switch to {self.climb_type}', 2)
 
     def get_general_battle_conf(self) -> tasks.Component.GeneralBattle.config_general_battle.GeneralBattleConfig:
         from tasks.Component.GeneralBattle.config_general_battle import GeneralBattleConfig as gbc
-        conf = self.config.activity_shikigami
-        enable_preset = getattr(conf.general_battle, f'enable_{self.climb_type}_preset')
-        group, team = (getattr(conf.switch_soul_config, f'{self.climb_type}_group_team').split(','))
+        self.conf.validate_switch_preset()
+        enable_preset = getattr(self.conf.general_battle, f'enable_{self.climb_type}_preset', False)
+        group, team = getattr(self.conf.switch_soul_config, f'{self.climb_type}_group_team').split(',')
         return gbc(lock_team_enable=not enable_preset,
                    preset_enable=enable_preset,
                    preset_group=group if enable_preset else 1,
                    preset_team=team if enable_preset else 1,
-                   green_enable=getattr(conf.general_battle, f'enable_{self.climb_type}_green'),
-                   green_mark=getattr(conf.general_battle, f'{self.climb_type}_green_mark'),
-                   random_click_swipt_enable=getattr(conf.general_battle, f'enable_{self.climb_type}_anti_detect'), )
+                   green_enable=getattr(self.conf.general_battle, f'enable_{self.climb_type}_green', False),
+                   green_mark=getattr(self.conf.general_battle, f'{self.climb_type}_green_mark'),
+                   random_click_swipt_enable=getattr(self.conf.general_battle, f'enable_{self.climb_type}_anti_detect',
+                                                     False), )
 
     def home_main(self) -> bool:
         """
-        从庭院到活动的爬塔界面，(只到爬塔活动主界面)
+        从庭院到活动的爬塔界面
         :return:
         """
         logger.hr("Enter Shikigami", 2)
-        self.ui_get_current_page()
-        self.main_goto_act_by_list(page_climb_act)
+        self.ui_goto(game.page_climb_act)
 
     def main_home(self) -> bool:
         """
@@ -341,79 +423,64 @@ class ScriptTask(GameUi, BaseActivity, SwitchSoul, ActivityShikigamiAssets):
         :return:
         """
         logger.hr("Exit Shikigami", 2)
-        self.ui_get_current_page()
-        self.ui_goto(page_main)
+        self.ui_get_current_page(False)
+        self.ui_goto(game.page_main)
 
-    def random_reward_click(self, exclude_bottom=False):
-        options = [self.C_RANDOM_LEFT, self.C_RANDOM_RIGHT, self.C_RANDOM_TOP]
-        if not exclude_bottom:
-            options.append(self.C_RANDOM_BOTTOM)
+    def goto_act(self, timeout: int = 45):
+        self.ui_goto(self.page_map[self.climb_type], timeout=timeout)
+
+    def random_reward_click(self, exclude_click: list = None, click_now: bool = True) -> RuleClick:
+        """
+        随机点击
+        :param exclude_click: 排除的点击位置
+        :param click_now: 是否立即点击
+        :return: 随机的点击位置
+        """
+        options = [self.C_RANDOM_LEFT, self.C_RANDOM_RIGHT, self.C_RANDOM_TOP, self.C_RANDOM_BOTTOM]
+        if exclude_click:
+            options = [option for option in options if option not in exclude_click]
         target = random.choice(options)
-        self.click(target, interval=1.8)
-        return 1
+        if click_now:
+            self.click(target, interval=1.8)
+        return target
 
-    def battle_wait(self, random_click_swipt_enable: bool) -> bool:
-        # 通用战斗结束判断
-        self.device.stuck_record_add("BATTLE_STATUS_S")
-        self.device.click_record_clear()
-        logger.info("Start battle process")
+    @property
+    def climb_type(self) -> str:
+        if self.run_idx >= len(self.conf.general_climb.run_sequence_v):
+            return self.conf.general_climb.run_sequence_v[-1]
+        return self.conf.general_climb.run_sequence_v[self.run_idx]
 
-        for btn in (self.C_RANDOM_LEFT, self.C_RANDOM_RIGHT, self.C_RANDOM_TOP, self.C_RANDOM_BOTTOM):
-            btn.name = "BATTLE_RANDOM"
-        ok_cnt, max_retry = 0, 5
-        while 1:
-            self.screenshot()
-            sleep(0.5)
-            # 已经回到对应挑战界面
-            if self.ui_page_appear(self.page_map[self.climb_type]):
-                break
-            # 达到最大重试次数且没有回到活动界面
-            if ok_cnt > max_retry:
-                self.click(self.random_reward_click(exclude_bottom=True), interval=1)
-                break
-            # 已经胜利但是后续识别失败则重新识别并点击
-            if 0 < ok_cnt <= max_retry:
-                # 紫蛇皮消失
-                self.ui_click_until_smt_disappear(self.random_reward_click(exclude_bottom=True),
-                                                  self.I_REWARD_PURPLE_SNAKE_SKIN, interval=1.6)
-                self.ui_get_current_page()
-                self.ui_goto(self.page_map[self.climb_type])
-                ok_cnt += 1
-                continue
-            # 胜利(鼓 | 魂 | 获得奖励)
-            if self.appear(self.I_WIN) or self.appear(self.I_REWARD) or self.appear(self.I_UI_REWARD):
-                if ok_cnt == 0:
-                    logger.info("Win battle")
-                # 鼓消失
-                self.ui_click_until_smt_disappear(self.random_reward_click(), self.I_WIN, interval=1.1)
-                # 魂消失
-                self.ui_click_until_smt_disappear(self.random_reward_click(exclude_bottom=True), self.I_REWARD,
-                                                  interval=1.3)
-                # 紫蛇皮消失
-                self.ui_click_until_smt_disappear(self.random_reward_click(exclude_bottom=True),
-                                                  self.I_REWARD_PURPLE_SNAKE_SKIN, interval=1.6)
-                # 获得奖励消失
-                self.ui_click_until_smt_disappear(self.random_reward_click(),
-                                                  self.I_UI_REWARD, interval=1.6)
-                ok_cnt += 1
-                continue
-            # 失败
-            if self.appear(self.I_FALSE):
-                logger.warning("False battle")
-                self.ui_click_until_smt_disappear(self.random_reward_click(), self.I_FALSE, interval=1.5)
-                return False
-            # 战斗中随机滑动
-            if random_click_swipt_enable:
-                self.random_click_swipt()
-        return True
+    @property
+    def count_map(self) -> dict[str, int]:
+        """
+        :return: key: climb type, value: run count
+        """
+        if not getattr(self, "_count_map", None):
+            self._count_map = {climb_type: 0 for climb_type in self.conf.general_climb.run_sequence_v}
+        return self._count_map
+
+    @property
+    def check_map(self) -> dict[str, dict[Status, Any]]:
+        if not getattr(self, "_check_map", None):
+            self._check_map = {
+                climb_type: {status: None for status in list(Status)}
+                for climb_type in self.conf.general_climb.run_sequence_v
+            }
+        return self._check_map
+
+    def check(self, status: Status) -> Any:
+        return self.check_map[self.climb_type][status]
+
+    def put_check(self, status: Status, value: Any):
+        self.check_map[self.climb_type][status] = value
 
 
 if __name__ == '__main__':
     from module.config.config import Config
     from module.device.device import Device
 
-    c = Config('oas3')
+    c = Config('oas1')
     d = Device(c)
     t = ScriptTask(c, d)
 
-    t.switch_buff(c.activity_shikigami.general_climb)
+    t.run()

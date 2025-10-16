@@ -66,7 +66,7 @@
     "itemName": "goto_1",
     "imageName": "wq_goto_1.png",
     "roiFront": "978,234,87,45",
-    "roiBack": "978,234,87,45",
+    "roiBack": "978,234,87,60",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"
@@ -75,7 +75,7 @@
     "itemName": "goto_2",
     "imageName": "wq_goto_2.png",
     "roiFront": "979,305,88,43",
-    "roiBack": "979,305,88,43",
+    "roiBack": "979,305,88,58",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"
@@ -84,7 +84,7 @@
     "itemName": "goto_3",
     "imageName": "wq_goto_3.png",
     "roiFront": "979,373,88,47",
-    "roiBack": "979,373,88,47",
+    "roiBack": "979,373,88,62",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"
@@ -93,7 +93,7 @@
     "itemName": "goto_4",
     "imageName": "wq_goto_4.png",
     "roiFront": "979,447,87,42",
-    "roiBack": "979,447,87,42",
+    "roiBack": "979,447,87,57",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"

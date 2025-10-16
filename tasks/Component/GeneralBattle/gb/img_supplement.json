@@ -7,5 +7,14 @@
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"
+  },
+  {
+    "itemName": "confirm",
+    "imageName": "gb_confirm.png",
+    "roiFront": "732,383,83,43",
+    "roiBack": "330,228,615,286",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "确认按钮"
   }
 ]

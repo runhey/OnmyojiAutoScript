@@ -155,7 +155,7 @@ class ScriptTask(GameUi, HyaSlave):
         if not self.appear(self.I_HACCESS):
             logger.warning('Page Error')
         if self._config.hyakkiyakou_config.hya_invite_friend:
-            self.invite_friend(True)
+            self.invite_friend()
         # start
         self.ui_click(self.I_HACCESS, self.I_HSTART, interval=2)
         self.wait_until_appear(self.I_HTITLE)
