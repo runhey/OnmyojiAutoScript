@@ -61,5 +61,23 @@
     "method": "Template matching",
     "threshold": 0.8,
     "description": "领取寮资金"
+  },
+  {
+    "itemName": "guild_collapse",
+    "imageName": "ku_guild_collapse.png",
+    "roiFront": "28,159,19,22",
+    "roiBack": "12,125,88,101",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "收起的寮活动横幅"
+  },
+  {
+    "itemName": "guild_expand",
+    "imageName": "ku_guild_expand.png",
+    "roiFront": "264,162,16,18",
+    "roiBack": "212,102,110,124",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "展开的寮活动横幅"
   }
 ]
