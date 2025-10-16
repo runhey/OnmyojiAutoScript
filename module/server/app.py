@@ -49,12 +49,14 @@ async def on_shutdown():
 
 @app.exception_handler(Exception)
 async def global_exception_handler(request: Request, exc: Exception):
-    logger.error(f"Internal Server Error: {exc}")
+    logger.error(f"Internal Server Error: ", exc_info=True)
+
+    message = ', '.join(str(arg) for arg in exc.args) if exc.args else str(exc)
 
     return JSONResponse(
         status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
         content={
-            'message': ', '.join([arg for arg in exc.args])
+            'message': message
         },
     )
 
