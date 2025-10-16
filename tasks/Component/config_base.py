@@ -36,10 +36,12 @@ def datadelta_validator(v: Any) -> timedelta:
             raise ValueError('Invalid interval value. Expected format: seconds')
     return v
 
+
 def datetime_validator(v: Any) -> datetime:
     if isinstance(v, str):
         return datetime.fromisoformat(v)
     return v
+
 
 def time_validator(v: Any) -> time:
     if isinstance(v, str):
@@ -58,7 +60,7 @@ TimeDelta = Annotated[timedelta,
 
 DateTime = Annotated[datetime,
                      BeforeValidator(datetime_validator),
-                     PlainSerializer(lambda v: v.strftime('%Y-%m-%d %H:%M:%S'), return_type=str),
+                     PlainSerializer(lambda v: v.strftime('%Y-%m-%d %H:%M:%S') if isinstance(v, datetime) else v, return_type=str),
                      WithJsonSchema({'type': 'date_time'}),]
 
 Time = Annotated[time,
