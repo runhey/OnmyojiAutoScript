@@ -48,7 +48,7 @@
     "itemName": "lock",
     "imageName": "as_lock.png",
     "roiFront": "884,648,28,25",
-    "roiBack": "761,613,255,76",
+    "roiBack": "739,613,276,76",
     "method": "Template matching",
     "threshold": 0.5,
     "description": "上锁图标"
@@ -57,7 +57,7 @@
     "itemName": "unlock",
     "imageName": "as_unlock.png",
     "roiFront": "884,648,28,25",
-    "roiBack": "758,607,242,85",
+    "roiBack": "733,607,266,85",
     "method": "Template matching",
     "threshold": 0.5,
     "description": "还未上锁图片"
@@ -268,5 +268,14 @@
     "method": "Template matching",
     "threshold": 0.8,
     "description": "门票活动定位"
+  },
+  {
+    "itemName": "check_ap100",
+    "imageName": "as_check_ap100.png",
+    "roiFront": "971,575,96,100",
+    "roiBack": "934,537,166,167",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "100体爬塔标识"
   }
 ]
