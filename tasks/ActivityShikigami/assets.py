@@ -118,7 +118,7 @@ class ActivityShikigamiAssets:
 	I_ACT_MAP_SWITCH = RuleImage(roi_front=(1196,303,59,48), roi_back=(1174,263,104,118), threshold=0.8, method="Template matching", file="./tasks/ActivityShikigami/as/as_act_map_switch.png")
 	# 门票活动定位 
 	I_PASS_ACT_LOCAT = RuleImage(roi_front=(1214,395,29,31), roi_back=(1179,373,100,86), threshold=0.8, method="Template matching", file="./tasks/ActivityShikigami/as/as_pass_act_locat.png")
-	# 100体爬塔活动标识
+	# 100体爬塔标识 
 	I_CHECK_AP100 = RuleImage(roi_front=(971,575,96,100), roi_back=(934,537,166,167), threshold=0.8, method="Template matching", file="./tasks/ActivityShikigami/as/as_check_ap100.png")
 
 

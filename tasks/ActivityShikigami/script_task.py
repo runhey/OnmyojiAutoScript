@@ -109,16 +109,14 @@ class ScriptTask(GameUi, BaseActivity, SwitchSoul, ActivityShikigamiAssets):
                 continue
             # 获取当前页面
             current_page = self.ui_get_current_page(False)
-            # 检查是否已经切换御魂
-            if not self.check(Status.ALREADY_SWITCH_SOUL):
-                self.switch_soul(self.conf.switch_soul_config)
-                continue
             match current_page:
                 # 庭院, 进入活动主界面
                 case game.page_main:
+                    self.switch_soul(self.conf.switch_soul_config)
                     self.home_main()
                 # 活动主界面或副界面, 进入最终爬塔界面
                 case game.page_climb_act | game.page_climb_act_2:
+                    self.switch_soul(self.conf.switch_soul_config)
                     # self.ui_goto(game.page_climb_act_buff)
                     self.goto_act()
                 # buff界面, 进入最终爬塔界面
@@ -127,9 +125,15 @@ class ScriptTask(GameUi, BaseActivity, SwitchSoul, ActivityShikigamiAssets):
                     self.goto_act()
                 # 最终爬塔界面
                 case game.page_climb_act_pass | game.page_climb_act_ap | game.page_climb_act_ap100 | game.page_climb_act_boss:
+                    self.switch_soul(self.conf.switch_soul_config)
                     self.lock_team(self.conf.general_battle)
                     self.check_tickets_enough()
                     self.start_battle()
+                case game.page_battle_auto:
+                    self.battle_wait(getattr(self.conf.general_battle, f'enable_{self.climb_type}_anti_detect',
+                                             False))
+                case game.page_battle_hand:
+                    self.ui_click_until_disappear(game.page_battle_hand.check_button)
                 case _:
                     if self.check(Status.GOTO_ACT_FAILED):
                         logger.warning(f'Climb type[{self.climb_type}] goto failed')
@@ -137,7 +141,7 @@ class ScriptTask(GameUi, BaseActivity, SwitchSoul, ActivityShikigamiAssets):
                         continue
                     self.put_check(Status.GOTO_ACT_FAILED, True)
                     # 任何活动界面都没有识别到, 尝试主动前往爬塔活动
-                    self.goto_act(timeout=15)
+                    self.goto_act(timeout=25)
         # 返回庭院
         self.main_home()
         if self.conf.general_climb.active_souls_clean:
@@ -154,7 +158,7 @@ class ScriptTask(GameUi, BaseActivity, SwitchSoul, ActivityShikigamiAssets):
         if self.conf.general_climb.random_sleep:
             random_sleep(probability=0.2)
         logger.info("Click battle")
-        click_times, max_times = 0, 3
+        click_times, max_times = 0, random.randint(2, 4)
         while 1:
             self.screenshot()
             if self.is_in_battle(False):
@@ -198,7 +202,7 @@ class ScriptTask(GameUi, BaseActivity, SwitchSoul, ActivityShikigamiAssets):
             btn.name = "BATTLE_RANDOM"
         ok_cnt, max_retry = 0, 5
         while 1:
-            sleep(random.uniform(0.6, 1.2))
+            sleep(random.uniform(1, 1.5))
             self.screenshot()
             # 达到最大重试次数则直接交给上层处理
             if ok_cnt > max_retry:
@@ -422,7 +426,7 @@ class ScriptTask(GameUi, BaseActivity, SwitchSoul, ActivityShikigamiAssets):
         self.ui_get_current_page(False)
         self.ui_goto(game.page_main)
 
-    def goto_act(self, timeout: int = 25):
+    def goto_act(self, timeout: int = 45):
         self.ui_goto(self.page_map[self.climb_type], timeout=timeout)
 
     def random_reward_click(self, exclude_click: list = None, click_now: bool = True) -> RuleClick:

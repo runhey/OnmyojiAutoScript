@@ -2,10 +2,12 @@
 # @author runhey
 # github https://github.com/runhey
 import time
+from datetime import datetime
 from time import sleep
 
 import random
 from collections import deque
+from module.atom.gif import RuleGif
 from module.atom.image import RuleImage
 from module.atom.list import RuleList
 from module.atom.ocr import RuleOcr
@@ -48,7 +50,8 @@ class GameUi(BaseTask, GameUiAssets):
                 GameUiAssets.I_BACK_FRIENDS, GameUiAssets.I_BACK_DAILY,
                 GameUiAssets.I_REALM_RAID_GOTO_EXPLORATION,
                 GameUiAssets.I_SIX_GATES_GOTO_EXPLORATION, SixRealmsAssets.I_EXIT_SIXREALMS,
-                ActivityShikigamiAssets.I_SKIP_BUTTON, ActivityShikigamiAssets.I_RED_EXIT, ActivityShikigamiAssets.I_RED_EXIT_2]
+                ActivityShikigamiAssets.I_SKIP_BUTTON, ActivityShikigamiAssets.I_RED_EXIT,
+                ActivityShikigamiAssets.I_RED_EXIT_2]
 
     def home_explore(self) -> bool:
         """
@@ -78,10 +81,15 @@ class GameUi(BaseTask, GameUiAssets):
         logger.info(f'Click {self.I_HOME_SHIKIKAMI.name}')
         return True
 
-    def ui_page_appear(self, page):
+    def ui_page_appear(self, page: Page, skip_first_screenshot: bool = True, interval: float = random.uniform(0.5, 1)):
         """
         判断当前页面是否为page
         """
+        if interval:
+            interval_timer = Timer(interval).start()
+            interval_timer.wait()
+        if not skip_first_screenshot:
+            self.screenshot()
         if isinstance(page.check_button, list):
             for button in page.check_button:
                 if self.appear(button):
@@ -89,17 +97,19 @@ class GameUi(BaseTask, GameUiAssets):
             return False
         return self.appear(page.check_button)
 
-    def ui_wait_until_appear(self, page: Page, timeout: int = 3, interval: float = 0.5) -> bool:
+    def ui_wait_until_appear(self, page: Page, timeout: float = 3, interval: float = 0.5,
+                             skip_first_screenshot: bool = True) -> bool:
         """
         等待页面出现
         """
         logger.info(f'Waiting for {page}')
         timeout_timer = Timer(timeout).start()
+        interval_timer = Timer(interval).start()
         while not timeout_timer.reached():
-            self.screenshot()
-            if self.ui_page_appear(page):
+            if self.ui_page_appear(page, skip_first_screenshot):
                 return True
-            sleep(interval)
+            skip_first_screenshot = False
+            interval_timer.wait().reset()
         return False
 
     def ensure_scroll_open(self):
@@ -156,7 +166,7 @@ class GameUi(BaseTask, GameUiAssets):
             for page in self.ui_pages:
                 if not page.check_button:
                     continue
-                if self.ui_page_appear(page=page):
+                if self.ui_page_appear(page=page, interval=None):
                     logger.attr("UI", page.name)
                     self.ui_current = page
                     if page == page_main and self.ensure_scroll_open():
@@ -187,15 +197,15 @@ class GameUi(BaseTask, GameUiAssets):
         Args:
             button (Button):
         """
-        pass
+        if getattr(button, 'name', None) and button.name in self.interval_timer:
+            self.interval_timer[button.name].reset()
 
-    def build_reverse_paths(self, destination: Page) -> list[tuple[Page, list[Page]]]:
+    def build_reverse_path_dict(self, destination: Page) -> dict[Page, list[Page]]:
         """
         构建从每个页面到目标页面的最短路径（反向 BFS）
-        并按路径长度从短到长排序返回。
 
         Returns:
-            list[tuple[Page, list[Page]]] -> [(start_page, [path...destinationPage]), ...]
+            dict[Page, list[Page]] -> {start_page: [page1, ...destinationPage], ...}
         """
         paths = {destination: [destination]}
         queue = deque([destination])
@@ -206,11 +216,22 @@ class GameUi(BaseTask, GameUiAssets):
                     # page -> cur
                     paths[page] = [page] + paths[cur]
                     queue.append(page)
+        return paths
+
+    def build_reverse_paths(self, destination: Page) -> list[tuple[Page, list[Page]]]:
+        """
+        构建从每个页面到目标页面的最短路径（反向 BFS）
+        路径从短到长排序
+
+        Returns:
+            [(start_page, [page1, ...destinationPage]), ...]
+        """
+        paths = self.build_reverse_path_dict(destination)
         # 转换成列表并按路径长度排序, 短到长
         sorted_paths = sorted(paths.items(), key=lambda kv: len(kv[1]))
         return sorted_paths
 
-    def ui_goto(self, destination: Page, confirm_wait=0, skip_first_screenshot=True, timeout: int = 45):
+    def ui_goto(self, destination: Page, confirm_wait=0, skip_first_screenshot=True, timeout: int = 60):
         """
         Args:
             destination (Page):
@@ -222,83 +243,108 @@ class GameUi(BaseTask, GameUiAssets):
         # 初始化
         timeout_timer = Timer(timeout).start()
         confirm_timer = Timer(confirm_wait, count=int(confirm_wait // 0.5)).start()
-        try_close_unknown_timer = Timer(3).start()
-        # 构建路径映射并排序
-        paths = self.build_reverse_paths(destination)
+        close_unknown_timer = Timer(3).start()
+        # 构建路径映射
+        path_dict = self.build_reverse_path_dict(destination)
 
         while not timeout_timer.reached():
-            if not skip_first_screenshot:
-                self.screenshot()
-            skip_first_screenshot = False
             # 已经在目标页面
-            if self.ui_page_appear(destination):
+            if self.ui_page_appear(destination, skip_first_screenshot):
                 if confirm_timer.reached():
                     logger.info(f'Page arrive: {destination}')
                     return True
-                confirm_timer.reset()
                 continue
+            skip_first_screenshot = False
             # 尝试关闭未知页面
-            if try_close_unknown_timer.reached():
+            if close_unknown_timer.reached_and_reset():
+                logger.warning('Trying to switch to supported page')
                 for close in self.ui_close:
                     if self.appear_then_click(close, interval=1.5):
-                        logger.warning('Trying to switch to supported page')
-                try_close_unknown_timer.reset()
-            # 遍历所有路径，优先尝试最短路径
-            for page, path in paths:
-                if not self.ui_page_appear(page):
-                    continue
-                logger.info(f"Current page: {page}. Following shortest path:")
-                show_paths: str = ' -> '.join([p.name for p in path])
-                logger.info(f" {show_paths}")
-                if self._execute_path(path, confirm_timer, timeout_timer):
-                    return True
-            sleep(0.3)
+                        logger.info(f'[{close_unknown_timer.current():.1f}s]Click {close} on {self.ui_current} success')
+            confirm_timer.reset()
+            path = path_dict.get(self.ui_current, None)
+            # 找不到路径则重新获取页面重试
+            if not path:
+                self.ui_get_current_page(skip_first_screenshot)
+                continue
+            logger.info(f"Current page: {self.ui_current}. Following shortest path:")
+            show_paths: str = ' -> '.join([p.name for p in path])
+            logger.info(f"{show_paths}")
+            # 遍历路径
+            if self._execute_path(path, timeout_timer) and confirm_timer.reached():
+                return True
         else:
             logger.error(f'Cannot goto page[{destination}], timeout[{timeout}s] reached')
         return False
 
-    def _execute_path(self, path: list, confirm_timer, timeout_timer):
+    def _execute_path(self, path: list, timeout_timer):
         """
         执行路径
         :param path: currentPage,page1,page2,...,destinationPage
-        :param confirm_timer: 确认定时器
         :param timeout_timer: 超时定时器
         :return: currentPage==destinationPage
         """
         for i in range(len(path) - 1):
             current_page, next_page = path[i], path[i + 1]
-            # 已超时则不再遍历
             if timeout_timer.reached():
                 return False
-            # 等待当前页面出现
-            self.ui_wait_until_appear(current_page, interval=random.uniform(0.6, 1.2))
-            logger.info(f'Page switch: {current_page} -> {next_page}')
+            # 当前页不等于路径中对应页, 尝试下一页
+            if self.ui_current != current_page:
+                continue
             # 执行附加操作
             if current_page.additional:
                 for button in current_page.additional:
-                    if ((isinstance(button, RuleClick) and self.click(button)) or
-                            self.appear_then_click(button, interval=0.6) or
-                            (isinstance(button, RuleOcr) and self.ocr_appear_click(button, interval=2))):
+                    if self.appear_then_operate(button, skip_first_screenshot=False, interval=random.uniform(0.4, 0.6)):
                         logger.info(f'Page {current_page} additional {button} clicked')
-                    # 每次都随机延迟, 等待响应
-                    sleep(random.uniform(0.4, 0.8))
-            # 执行页面跳转
+            logger.info(f'Page switch: {current_page} -> {next_page}')
+            # 获取页面跳转操作
             button = current_page.links.get(next_page)
             if not button:
                 logger.warning(f"No link from {current_page} to {next_page}")
-                return False
-            # 执行对应操作
-            if ((isinstance(button, RuleList) and self.list_appear_click(button)) or
-                    (isinstance(button, RuleClick) and self.click(button)) or
-                    self.appear_then_click(button, interval=2) or
-                    (isinstance(button, RuleOcr) and self.ocr_appear_click(button, interval=2))):
-                self.ui_button_interval_reset(button)
-                confirm_timer.reset()
+                continue
+            # 跳转页面
+            max_wait_timer = Timer(5).start()
+            while not max_wait_timer.reached():
+                if timeout_timer.reached():
+                    return False
+                if self.appear_then_operate(button, skip_first_screenshot=False):
+                    break
+                logger.warning(f"[{max_wait_timer.current():.1f}s]Failed click {button} on {current_page}, retry...")
+                sleep(0.3)
             else:
-                logger.warning(f"Failed to click {button} on {current_page}")
-                return False
-        # 最后确认目标页面
-        return self.ui_page_appear(path[-1])
+                self.ui_get_current_page(skip_first_screenshot=False)
+                # 当前页面不是对应路径的页面, 则尝试下一个页面
+                if self.ui_current != current_page:
+                    continue
+            max_wait_timer.reset()
+            while not max_wait_timer.reached():
+                if timeout_timer.reached():
+                    return False
+                if self.ui_wait_until_appear(next_page, timeout=1.5, interval=random.uniform(0.4, 0.8),
+                                             skip_first_screenshot=False):
+                    logger.info(f'[{max_wait_timer.current():.1f}s]Page arrived {next_page}')
+                    self.ui_current = next_page
+                    break
+            else:
+                # 重新获取当前页
+                self.ui_get_current_page(skip_first_screenshot=False)
+        return self.ui_current == path[-1]
+
+    def appear_then_operate(self, target: RuleList | RuleImage | RuleGif | RuleOcr | RuleClick,
+                            interval: float = random.uniform(0.6, 1.2), skip_first_screenshot: bool = True):
+        self.ui_button_interval_reset(target)
+        interval_timer = Timer(interval).start()
+        interval_timer.wait()
+        if not skip_first_screenshot:
+            self.screenshot()
+        if isinstance(target, RuleList):
+            return self.list_appear_click(target)
+        if isinstance(target, (RuleImage, RuleGif)):
+            return self.appear_then_click(target)
+        if isinstance(target, RuleOcr):
+            return self.ocr_appear_click(target)
+        if isinstance(target, RuleClick):
+            return self.click(target)
 
     # ------------------------------------------------------------------------------------------------------------------
     # 下面的这些是一些特殊的页面，需要额外处理

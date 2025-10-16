@@ -150,8 +150,10 @@ page_daily = Page(G.I_CHECK_DAILY)
 # page_daily.additional = [G.O_CLICK_CLOSE_1, G.O_CLICK_CLOSE_2]
 page_daily.link(button=G.I_BACK_Y, destination=page_main)
 page_main.link(button=G.I_MAIN_GOTO_DAILY, destination=page_daily)
+from tasks.DailyTrifles.assets import DailyTriflesAssets
+
 # 商店 mall
-page_mall = Page(G.I_CHECK_MALL)
+page_mall = Page(check_button=[G.I_CHECK_MALL, DailyTriflesAssets.I_ROOM_GIFT])
 page_mall.additional = [G.I_AD_CLOSE_RED, G.I_BACK_Y, G.I_DLC_CLOSE]
 page_mall.link(button=G.I_BACK_BLUE, destination=page_main)
 page_main.link(button=G.I_MAIN_GOTO_MALL, destination=page_mall)
@@ -200,7 +202,8 @@ page_climb_act.link(button=G.I_BACK_Y, destination=page_main)
 page_act_list_climb_act.link(button=G.I_ACT_LIST_GOTO_ACT, destination=page_climb_act)
 # 爬塔活动副界面
 page_climb_act_2 = Page(asa.I_CHECK_BATTLE_2)
-page_climb_act_2.additional = [asa.I_ACT_MAP_SWITCH, asa.I_PASS_ACT_LOCAT, asa.I_SKIP_BUTTON, asa.I_RED_EXIT, asa.I_RED_EXIT_2]
+page_climb_act_2.additional = [asa.I_ACT_MAP_SWITCH, asa.I_PASS_ACT_LOCAT, asa.I_SKIP_BUTTON, asa.I_RED_EXIT,
+                               asa.I_RED_EXIT_2]
 page_climb_act_2.link(button=G.I_BACK_BATTLE, destination=page_climb_act)
 page_climb_act.link(button=asa.I_BATTLE, destination=page_climb_act_2)
 # 门票爬塔活动界面
@@ -246,6 +249,7 @@ def random_click(low: int = None, high: int = None) -> RuleClick | list[RuleClic
     :return: RuleClick或者RuleClick的数组
     """
     click = random.choice([asa.C_RANDOM_LEFT, asa.C_RANDOM_RIGHT, asa.C_RANDOM_TOP])
+    click.name = "BATTLE_RANDOM"
     if low is None or high is None:
         return click
     return [click for _ in range(random.randint(low, high))]
@@ -256,11 +260,12 @@ page_reward = Page(check_button=[GeneralBattleAssets.I_REWARD_PURPLE_SNAKE_SKIN,
                                  GeneralBattleAssets.I_REWARD_EXP_SOUL_4, GeneralBattleAssets.I_WIN,
                                  GeneralBattleAssets.I_REWARD_GOLD, GeneralBattleAssets.I_REWARD_GOLD_SNAKE_SKIN,
                                  GeneralBattleAssets.I_REWARD_SOUL_5, GeneralBattleAssets.I_REWARD_SOUL_6,
-                                 gga.I_UI_REWARD,],
+                                 gga.I_UI_REWARD, ],
                    links={page_climb_act_pass: random_click(), page_climb_act_ap: random_click(),
                           page_area_boss: random_click()})
-page_reward.additional = random_click(1, 3)
+page_reward.additional = [random_click()]
 # 失败界面
 page_failed = Page(check_button=GeneralBattleAssets.I_FALSE,
                    links={page_climb_act_pass: random_click(), page_climb_act_ap: random_click(),
                           page_area_boss: random_click()})
+page_failed.additional = [random_click()]
