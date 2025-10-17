@@ -130,8 +130,7 @@ class ScriptTask(GameUi, BaseActivity, SwitchSoul, ActivityShikigamiAssets):
                     self.check_tickets_enough()
                     self.start_battle()
                 case game.page_battle_auto:
-                    self.battle_wait(getattr(self.conf.general_battle, f'enable_{self.climb_type}_anti_detect',
-                                             False))
+                    self.battle_wait(getattr(self.conf.general_battle, f'enable_{self.climb_type}_anti_detect', False))
                 case game.page_battle_hand:
                     self.ui_click_until_disappear(game.page_battle_hand.check_button)
                 case _:
@@ -201,6 +200,7 @@ class ScriptTask(GameUi, BaseActivity, SwitchSoul, ActivityShikigamiAssets):
         for btn in (self.C_RANDOM_LEFT, self.C_RANDOM_RIGHT, self.C_RANDOM_TOP, self.C_RANDOM_BOTTOM):
             btn.name = "BATTLE_RANDOM"
         ok_cnt, max_retry = 0, 5
+        single_start_time = datetime.now()
         while 1:
             sleep(random.uniform(1, 1.5))
             self.screenshot()
@@ -225,6 +225,11 @@ class ScriptTask(GameUi, BaseActivity, SwitchSoul, ActivityShikigamiAssets):
             if ok_cnt > 0 and not self.ui_page_appear(game.page_battle_auto):
                 self.random_reward_click(exclude_click=[self.C_RANDOM_BOTTOM])
                 ok_cnt += 1
+                continue
+            # 单局到时间自动退出战斗
+            if datetime.now() - single_start_time > self.conf.general_climb.get_single_limit_time(self.climb_type, timedelta(days=1)):
+                logger.attr(self.climb_type, 'Time limit arrived, close current battle')
+                self.exit_battle(skip_first=True)
                 continue
             # 战斗中随机滑动
             if ok_cnt == 0 and random_click_swipt_enable:
