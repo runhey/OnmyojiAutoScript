@@ -11,6 +11,7 @@ from tasks.BondlingFairyland.assets import BondlingFairylandAssets
 from tasks.BondlingFairyland.config_battle import BattleConfig
 
 from module.logger import logger
+from tasks.Component.GeneralBattle.config_general_battle import GreenMarkType, GeneralBattleConfig
 
 
 
@@ -37,6 +38,41 @@ class BondlingBattle(GeneralBattle, BondlingFairylandAssets):
 
         # 进入战斗过程
         return self.catch_battle_wait(battle_config.random_click_swipt_enable)
+
+    def check_take_over_battle(self, is_screenshot: bool, config: GeneralBattleConfig) -> bool or None:
+        """
+        中途接入战斗，并且接管
+        :return:  赢了返回True， 输了返回False, 不是在战斗中返回None
+        """
+        if is_screenshot:
+            self.screenshot()
+        if not self.is_in_battle():
+            return None
+
+        if self.is_in_prepare(False):
+            while 1:
+                self.screenshot()
+                if self.appear_then_click(self.I_PREPARE_HIGHLIGHT, interval=1.5):
+                    continue
+                if not self.appear(self.I_BUFF):
+                    break
+
+            # 被接管的战斗，只有准备阶段才可以点绿标。
+            # 因为如果是战斗中，无法保证点击的时候是否出现动画
+            self.wait_until_disappear(self.I_BUFF)
+            self.green_mark(config.green_enable, config.green_mark)
+
+        # 本人选择的策略是只要进来了就算一次，不管是不是打完了
+        logger.hr("Check take over battle", 2)
+        self.current_count += 1
+        logger.info(f'Current tasks: {I18n.trans_zh_cn(self.config.task.command)}')
+        logger.info(f'Current count: {self.current_count} / {self.limit_count}')
+
+        task_run_time = datetime.now() - self.start_time
+        # 格式化时间，只保留整数部分的秒
+        task_run_time_seconds = timedelta(seconds=int(task_run_time.total_seconds()))
+        logger.info(f'Current times: {task_run_time_seconds} / {self.limit_time}')
+        return self.battle_wait(config.random_click_swipt_enable)
 
 
     def check_load(self) -> bool:
