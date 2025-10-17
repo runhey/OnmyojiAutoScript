@@ -157,7 +157,6 @@ class ScriptTask(GameUi, BaseActivity, SwitchSoul, ActivityShikigamiAssets):
         # 点击战斗前随机休息
         if self.conf.general_climb.random_sleep:
             random_sleep(probability=0.2)
-        logger.info("Click battle")
         click_times, max_times = 0, random.randint(2, 4)
         while 1:
             self.screenshot()
@@ -183,6 +182,7 @@ class ScriptTask(GameUi, BaseActivity, SwitchSoul, ActivityShikigamiAssets):
             # 点击挑战
             if self.ocr_appear_click(self.O_FIRE, interval=2):
                 click_times += 1
+                logger.info(f'Try click fire, remain times[{max_times - click_times}]')
                 continue
             if ((self.appear_then_click(self.I_C_CONFIRM1, interval=0.6) or
                  self.appear_then_click(self.I_UI_CONFIRM_SAMLL, interval=1) or

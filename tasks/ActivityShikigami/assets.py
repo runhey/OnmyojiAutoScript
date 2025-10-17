@@ -111,7 +111,7 @@ class ActivityShikigamiAssets:
 	# 爬塔活动buff页 
 	I_CHECK_BUFF = RuleImage(roi_front=(91,12,130,47), roi_back=(77,0,156,83), threshold=0.8, method="Template matching", file="./tasks/ActivityShikigami/as/as_check_buff.png")
 	# 进入门票活动 
-	I_ENTRY_ACTIVITY = RuleImage(roi_front=(567,258,46,42), roi_back=(254,56,774,524), threshold=0.5, method="Template matching", file="./tasks/ActivityShikigami/as/as_entry_activity.png")
+	I_ENTRY_ACTIVITY = RuleImage(roi_front=(508,318,46,42), roi_back=(56,56,971,633), threshold=0.7, method="Template matching", file="./tasks/ActivityShikigami/as/as_entry_activity.png")
 	# 活动列表页爬塔活动 
 	I_CHECK_ACT_LIST_CLIMB_ACT = RuleImage(roi_front=(538,194,497,193), roi_back=(415,67,773,390), threshold=0.8, method="Template matching", file="./tasks/ActivityShikigami/as/as_check_act_list_climb_act.png")
 	# 活动地图切换 
