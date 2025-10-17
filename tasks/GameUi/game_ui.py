@@ -284,18 +284,17 @@ class GameUi(BaseTask, GameUiAssets):
         :param timeout_timer: 超时定时器
         :return: currentPage==destinationPage
         """
-        for i in range(len(path) - 1):
-            current_page, next_page = path[i], path[i + 1]
+        for i, current_page in enumerate(path):
             if timeout_timer.reached():
                 return False
             # 当前页不等于路径中对应页, 尝试下一页
             if self.ui_current != current_page:
                 continue
-            # 执行附加操作
-            if current_page.additional:
-                for button in current_page.additional:
-                    if self.appear_then_operate(button, skip_first_screenshot=False, interval=random.uniform(0.4, 0.6)):
-                        logger.info(f'Page {current_page} additional {button} clicked')
+            self.run_additional(current_page)
+            # 如果已经是最后一页，不再跳转
+            if i == len(path) - 1:
+                break
+            next_page = path[i + 1]
             logger.info(f'Page switch: {current_page} -> {next_page}')
             # 获取页面跳转操作
             button = current_page.links.get(next_page)
@@ -329,6 +328,14 @@ class GameUi(BaseTask, GameUiAssets):
                 # 重新获取当前页
                 self.ui_get_current_page(skip_first_screenshot=False)
         return self.ui_current == path[-1]
+
+    def run_additional(self, page: Page):
+        """执行页面附加操作"""
+        if not page.additional:
+            return
+        for btn in page.additional:
+            if self.appear_then_operate(btn, skip_first_screenshot=False, interval=random.uniform(0.4, 0.6)):
+                logger.info(f'Page {page} additional {btn} clicked')
 
     def appear_then_operate(self, target: RuleList | RuleImage | RuleGif | RuleOcr | RuleClick,
                             interval: float = random.uniform(0.6, 1.2), skip_first_screenshot: bool = True):
