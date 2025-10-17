@@ -115,12 +115,14 @@ class BaseTask(GlobalGameAssets, CostumeBase):
             self.set_next_run(task='WantedQuests', target=datetime.now().replace(microsecond=0))
         return True
 
-    def screenshot(self):
+    def screenshot(self, soft_skip: bool = False):
         """
         截图 引入中间函数的目的是 为了解决如协作的这类突发的事件
+        :param soft_skip: True跳过截图(但保证设备一定有图才跳过,否则依然截图)
         :return:
         """
-        self.device.screenshot()
+        if not soft_skip or not self.exist_image():
+            self.device.screenshot()
         # 判断勾协
         self._burst()
 
@@ -135,6 +137,13 @@ class BaseTask(GlobalGameAssets, CostumeBase):
         #     raise GameStuckError
 
         return self.device.image
+
+    def exist_image(self) -> bool:
+        """
+        判断当前设备是否有图片
+        :return: 有返回True，没有返回False
+        """
+        return hasattr(self.device, 'image') and self.device.image is not None
 
     def appear(self,
                target: RuleImage | RuleGif | RuleOcr,
@@ -360,7 +369,7 @@ class BaseTask(GlobalGameAssets, CostumeBase):
         点击或者长按
         :param interval:
         :param click:
-        :return:
+        :return: 返回值不是click是否成功，而是interval是否设置以及是否到时间
         """
         if not click:
             return False
