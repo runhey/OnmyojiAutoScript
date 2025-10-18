@@ -130,10 +130,8 @@ class ScriptTask(GameUi, BaseActivity, SwitchSoul, ActivityShikigamiAssets):
                     self.lock_team(self.conf.general_battle)
                     self.check_tickets_enough()
                     self.start_battle()
-                case game.page_battle_auto:
+                case game.page_battle:
                     self.battle_wait(getattr(self.conf.general_battle, f'enable_{self.climb_type}_anti_detect', False))
-                case game.page_battle_hand:
-                    self.ui_click_until_disappear(game.page_battle_hand.check_button)
                 case _:
                     if self.check(Status.GOTO_ACT_FAILED):
                         logger.warning(f'Climb type[{self.climb_type}] goto failed')
@@ -217,13 +215,13 @@ class ScriptTask(GameUi, BaseActivity, SwitchSoul, ActivityShikigamiAssets):
                 self.ui_click_until_smt_disappear(self.random_reward_click(click_now=False), self.I_FALSE, interval=1.5)
                 return False
             # 奖励界面
-            if self.ui_page_appear(game.page_reward):
+            if self.ui_page_appear(game.page_reward, interval=0.6):
                 logger.info(f'Battle success, try close reward page[{ok_cnt}]')
                 self.random_reward_click(exclude_click=[self.C_RANDOM_BOTTOM])
                 ok_cnt += 1
                 continue
             # 已经不在战斗中了, 且奖励也识别过了, 则随机点击
-            if ok_cnt > 0 and not self.ui_page_appear(game.page_battle_auto):
+            if ok_cnt > 0 and not self.is_in_battle(False):
                 self.random_reward_click(exclude_click=[self.C_RANDOM_BOTTOM])
                 ok_cnt += 1
                 continue

@@ -240,10 +240,7 @@ page_climb_act.link(button=asa.I_BUFF_CHANGE_BUTTON, destination=page_climb_act_
 
 # ************************************* 战斗部分 *****************************************#
 # 战斗界面
-page_battle_auto = Page(G.O_BATTLE_AUTO)
-page_battle_hand = Page(G.O_BATTLE_HAND)
-page_battle_auto.link(button=G.O_BATTLE_AUTO, destination=page_battle_hand)
-page_battle_hand.link(button=G.O_BATTLE_HAND, destination=page_battle_auto)
+page_battle = Page(GeneralBattleAssets.I_BATTLE_INFO)
 
 
 def random_click(low: int = None, high: int = None) -> RuleClick | list[RuleClick]:
