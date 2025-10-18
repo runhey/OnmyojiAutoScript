@@ -1,6 +1,8 @@
 # This Python file uses the following encoding: utf-8
 
 import time
+from time import sleep
+
 from datetime import datetime, timedelta
 from functools import wraps
 
@@ -163,3 +165,12 @@ class Timer:
         return f'Timer(limit={round(self.current(), 3)}/{self.limit}, count={self._reach_count}/{self.count})'
 
     __repr__ = __str__
+
+
+if __name__ == '__main__':
+    t = Timer(1.2)
+    sleep(1.2)
+    t.reset()
+    while not t.reached():
+        print(t.current())
+        sleep(5)
