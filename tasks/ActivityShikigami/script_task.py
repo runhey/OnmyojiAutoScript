@@ -12,6 +12,7 @@ from datetime import datetime, timedelta, time
 from module.atom.click import RuleClick
 from module.atom.ocr import RuleOcr
 from module.base.protect import random_sleep
+from module.base.timer import Timer
 from module.exception import TaskEnd
 from module.logger import logger
 from tasks.ActivityShikigami.assets import ActivityShikigamiAssets
@@ -227,14 +228,38 @@ class ScriptTask(GameUi, BaseActivity, SwitchSoul, ActivityShikigamiAssets):
                 ok_cnt += 1
                 continue
             # 单局到时间自动退出战斗
-            if datetime.now() - single_start_time > self.conf.general_climb.get_single_limit_time(self.climb_type, timedelta(days=1)):
+            if ok_cnt == 0 and datetime.now() - single_start_time > self.conf.general_climb.get_single_limit_time(
+                    self.climb_type, timedelta(days=1)):
                 logger.attr(self.climb_type, 'Time limit arrived, close current battle')
                 self.exit_battle(skip_first=True)
+                ok_cnt += 1
                 continue
             # 战斗中随机滑动
             if ok_cnt == 0 and random_click_swipt_enable:
                 self.random_click_swipt()
         return True
+
+    def exit_battle(self, skip_first: bool = False) -> bool:
+        """
+        在战斗的时候强制退出战斗
+        :param skip_first: 是否跳过第一次截屏
+        :return: 退出战斗成功True or 失败False
+        """
+        timeout_timer = Timer(6).start()
+        exit_clicked = False
+        while not timeout_timer.reached():
+            self.screenshot(skip_first)
+            skip_first = False
+            # 不在战斗界面, 认为退出成功
+            if not self.is_in_battle(False):
+                return True
+            if exit_clicked:
+                self.appear_then_click(self.I_EXIT_ENSURE)
+            if not exit_clicked and self.appear_then_click(self.I_EXIT):
+                exit_clicked = True
+            sleep(random.uniform(0.5, 1.5))
+        # 还在战斗界面且超时则退出失败
+        return False
 
     def switch_soul(self, conf: SwitchSoulConfig):
         """
