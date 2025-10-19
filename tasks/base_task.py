@@ -469,13 +469,11 @@ class BaseTask(GlobalGameAssets, CostumeBase):
             self.device.click(x=x, y=y, control_name=target.name)
         return True
 
-    def list_find(self, target: RuleList, name: str | list[str], interval: float = 0,
-                  max_swipe: int = 10) -> bool | tuple:
+    def list_find(self, target: RuleList, name: str | list[str], max_swipe: int = 10) -> bool | tuple:
         """
         会一致在列表寻找目标，找到了就退出。
         如果是图片列表会一直往下找
         如果是纯文字的，会自动识别自己的位置，根据位置选择向前还是向后翻
-        :param interval:
         :param max_swipe: 最大滑动次数
         :param target:
         :param name:
@@ -486,17 +484,6 @@ class BaseTask(GlobalGameAssets, CostumeBase):
         result = None
         if not target:
             return False
-        if interval:
-            if target.name in self.interval_timer:
-                # 如果传入的限制时间不一样，则替换限制新的传入的时间
-                if self.interval_timer[target.name].limit != interval:
-                    self.interval_timer[target.name] = Timer(interval)
-            else:
-                # 如果没有限制时间，则创建限制时间
-                self.interval_timer[target.name] = Timer(interval)
-            # 如果时间还没到达，则不执行
-            if not self.interval_timer[target.name].reached():
-                return False
         appear = False
         for _ in range(max_swipe):
             self.screenshot()
@@ -517,18 +504,27 @@ class BaseTask(GlobalGameAssets, CostumeBase):
                 x1, y1, x2, y2 = target.swipe_pos(after=swipe_down)
             self.device.swipe(p1=(x1, y1), p2=(x2, y2))
             sleep(random.uniform(0.8, 1.3))  # 等待滑动完成, 待优化
-        if appear and interval:
-            self.interval_timer[target.name].reset()
+        if appear:
             return result
         return False
 
     def list_appear_click(self, target: RuleList, interval: float = None) -> bool:
-        appear = self.list_find(target, name=target.array[0], interval=interval)
-        if not appear:
-            return False
-        if isinstance(appear, tuple):
+        if interval:
+            if target.name in self.interval_timer:
+                # 如果传入的限制时间不一样，则替换限制新的传入的时间
+                if self.interval_timer[target.name].limit != interval:
+                    self.interval_timer[target.name] = Timer(interval)
+            else:
+                # 如果没有限制时间，则创建限制时间
+                self.interval_timer[target.name] = Timer(interval)
+            # 如果时间还没到达，则不执行
+            if not self.interval_timer[target.name].reached():
+                return False
+        appear = self.list_find(target, name=target.array[0])
+        if isinstance(appear, tuple) and interval:
             x, y = appear
             self.device.click(x, y)
+            self.interval_timer[target.name].reset()
             return True
         return False
 
