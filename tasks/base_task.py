@@ -469,8 +469,8 @@ class BaseTask(GlobalGameAssets, CostumeBase):
             self.device.click(x=x, y=y, control_name=target.name)
         return True
 
-    def list_find(self, target: RuleList, name: str | list[str], interval: float = None,
-                  max_swipe: int = 5) -> bool | tuple:
+    def list_find(self, target: RuleList, name: str | list[str], interval: float = 0,
+                  max_swipe: int = 10) -> bool | tuple:
         """
         会一致在列表寻找目标，找到了就退出。
         如果是图片列表会一直往下找
