@@ -132,7 +132,7 @@ class ActivityShikigamiAssets:
 	# 活动票数（没有百分比） 
 	O_REMAIN_AP_ACTIVITY2 = RuleOcr(roi=(1115,25,88,29), area=(1107,14,103,50), mode="Digit", method="Default", keyword="", name="remain_ap_activity2")
 	# 从左侧进入战斗 
-	O_ENTRY_ACTIVITY = RuleOcr(roi=(72,279,98,32), area=(73,279,98,32), mode="Single", method="Default", keyword="临战演武", name="entry_activity")
+	O_ENTRY_ACTIVITY = RuleOcr(roi=(73,189,98,32), area=(72,188,98,32), mode="Single", method="Default", keyword="临战演武", name="entry_activity")
 	# boss剩余攻击次数 
 	O_REMAIN_BOSS = RuleOcr(roi=(1113,669,131,31), area=(1099,659,162,52), mode="DigitCounter", method="Default", keyword="", name="remain_boss")
 	# 挑战 
@@ -140,6 +140,6 @@ class ActivityShikigamiAssets:
 	# 100体活动门票检测 
 	O_REMAIN_AP100 = RuleOcr(roi=(922,21,112,39), area=(913,8,131,62), mode="Digit", method="Default", keyword="", name="remain_ap100")
 	# 进入100体活动标识 
-	O_ENTER_AP100 = RuleOcr(roi=(72,187,95,32), area=(7,172,256,108), mode="Single", method="Default", keyword="将魂试炼", name="enter_ap100")
+	O_ENTER_AP100 = RuleOcr(roi=(73,98,95,32), area=(5,79,256,108), mode="Single", method="Default", keyword="将魂试炼", name="enter_ap100")
 
 
