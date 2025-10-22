@@ -20,7 +20,7 @@
   {
     "itemName": "gift_sign",
     "imageName": "store_gift_sign.png",
-    "roiFront": "629,192,129,149",
+    "roiFront": "186,191,115,83",
     "roiBack": "130,129,891,473",
     "method": "Template matching",
     "threshold": 0.8,
