@@ -111,7 +111,7 @@ class ActivityShikigamiAssets:
 	# 爬塔活动buff页 
 	I_CHECK_BUFF = RuleImage(roi_front=(91,12,130,47), roi_back=(77,0,156,83), threshold=0.8, method="Template matching", file="./tasks/ActivityShikigami/as/as_check_buff.png")
 	# 进入门票活动 
-	I_ENTRY_ACTIVITY = RuleImage(roi_front=(567,258,46,42), roi_back=(254,56,774,524), threshold=0.5, method="Template matching", file="./tasks/ActivityShikigami/as/as_entry_activity.png")
+	I_ENTRY_ACTIVITY = RuleImage(roi_front=(508,318,46,42), roi_back=(56,56,971,633), threshold=0.7, method="Template matching", file="./tasks/ActivityShikigami/as/as_entry_activity.png")
 	# 活动列表页爬塔活动 
 	I_CHECK_ACT_LIST_CLIMB_ACT = RuleImage(roi_front=(538,194,497,193), roi_back=(415,67,773,390), threshold=0.8, method="Template matching", file="./tasks/ActivityShikigami/as/as_check_act_list_climb_act.png")
 	# 活动地图切换 
@@ -132,7 +132,7 @@ class ActivityShikigamiAssets:
 	# 活动票数（没有百分比） 
 	O_REMAIN_AP_ACTIVITY2 = RuleOcr(roi=(1115,25,88,29), area=(1107,14,103,50), mode="Digit", method="Default", keyword="", name="remain_ap_activity2")
 	# 从左侧进入战斗 
-	O_ENTRY_ACTIVITY = RuleOcr(roi=(72,279,98,32), area=(73,279,98,32), mode="Single", method="Default", keyword="临战演武", name="entry_activity")
+	O_ENTRY_ACTIVITY = RuleOcr(roi=(73,189,98,32), area=(72,188,98,32), mode="Single", method="Default", keyword="临战演武", name="entry_activity")
 	# boss剩余攻击次数 
 	O_REMAIN_BOSS = RuleOcr(roi=(1113,669,131,31), area=(1099,659,162,52), mode="DigitCounter", method="Default", keyword="", name="remain_boss")
 	# 挑战 
@@ -140,6 +140,6 @@ class ActivityShikigamiAssets:
 	# 100体活动门票检测 
 	O_REMAIN_AP100 = RuleOcr(roi=(922,21,112,39), area=(913,8,131,62), mode="Digit", method="Default", keyword="", name="remain_ap100")
 	# 进入100体活动标识 
-	O_ENTER_AP100 = RuleOcr(roi=(72,187,95,32), area=(7,172,256,108), mode="Single", method="Default", keyword="将魂试炼", name="enter_ap100")
+	O_ENTER_AP100 = RuleOcr(roi=(73,98,95,32), area=(5,79,256,108), mode="Single", method="Default", keyword="将魂试炼", name="enter_ap100")
 
 

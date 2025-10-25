@@ -37,8 +37,8 @@
   },
   {
     "itemName": "entry_activity",
-    "roiFront": "72,279,98,32",
-    "roiBack": "73,279,98,32",
+    "roiFront": "73,189,98,32",
+    "roiBack": "72,188,98,32",
     "mode": "Single",
     "method": "Default",
     "keyword": "临战演武",
@@ -73,8 +73,8 @@
   },
   {
     "itemName": "enter_ap100",
-    "roiFront": "72,187,95,32",
-    "roiBack": "7,172,256,108",
+    "roiFront": "73,98,95,32",
+    "roiBack": "5,79,256,108",
     "mode": "Single",
     "method": "Default",
     "keyword": "将魂试炼",
