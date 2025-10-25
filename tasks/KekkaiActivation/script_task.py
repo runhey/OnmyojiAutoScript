@@ -3,12 +3,16 @@
 # github https://github.com/runhey
 import time
 
+import random
+import re
 from cached_property import cached_property
 from datetime import datetime, timedelta
+from module.atom.click import RuleClick
 
 from module.base.timer import Timer
 from module.atom.image_grid import ImageGrid
 from module.atom.image import RuleImage
+from module.base.utils import point2str
 from module.logger import logger
 from module.exception import TaskEnd, GameStuckError
 
@@ -19,20 +23,27 @@ from tasks.KekkaiActivation.utils import parse_rule
 from tasks.KekkaiActivation.config import ActivationConfig
 from tasks.Utils.config_enum import ShikigamiClass
 from tasks.GameUi.page import page_main, page_guild
+from tasks.KekkaiActivation.config import CardType
 
-
+""" 结界挂卡 """
 class ScriptTask(KU, KekkaiActivationAssets):
 
     def run(self):
         con = self.config.kekkai_activation.activation_config
         self.ui_get_current_page()
         self.ui_goto(page_guild)
+
+        # 在寮的主界面 检查是否有收取体力或者是收取寮资金
+        # self.check_guild_ap_or_assets()
+
         # 进入寮结界
         self.goto_realm()
-        if con.exchange_before:
-            self.check_max_lv(con)
-        self.harvest_card()
 
+        if con.exchange_before:
+            self.check_max_lv(con.shikigami_class)
+        # 收取经验
+        self.harvest_card()
+        # 开始挂卡
         self.run_activation(con)
         while 1:
             # 关闭到结界界面
@@ -45,8 +56,10 @@ class ScriptTask(KU, KekkaiActivationAssets):
                 continue
 
         if con.exchange_max:
-            self.check_max_lv(con)
-        self.back_guild()
+            self.check_max_lv(con.shikigami_class)
+        # self.back_guild()
+        self.ui_get_current_page()
+        self.ui_goto(page_main)
 
         raise TaskEnd('KekkaiActivation')
 
@@ -75,15 +88,15 @@ class ScriptTask(KU, KekkaiActivationAssets):
         return {v: k for k, v in self.dict_card_image.items()}
 
     @cached_property
-    def order_cards(self) -> list[CardClass]:
-        # 重写
-        config = self.config.kekkai_activation.activation_config.card_rule
-        return parse_rule(config)
-
-    @cached_property
     def order_targets(self) -> ImageGrid:
-        # 重写
-        return ImageGrid([self.dict_card_image[card] for card in self.order_cards])
+        rule = self.config.kekkai_activation.activation_config.card_type
+        if rule == CardType.TAIKO:
+            return ImageGrid([self.I_CARDS_KAIKO_6, self.I_CARDS_KAIKO_5])
+        elif rule == CardType.FISH:
+            return ImageGrid([self.I_CARDS_FISH_6, self.I_CARDS_FISH_5])
+        else:
+            logger.error('Unknown utilize rule')
+            raise ValueError('Unknown utilize rule')
 
     def run_activation(self, _config: ActivationConfig) -> bool:
         """
@@ -135,12 +148,7 @@ class ScriptTask(KU, KekkaiActivationAssets):
             # 如果是什么都没有，那就是可以开始挂卡了
             if not card_status and not card_effect:
                 logger.info('Card is not selected also not using')
-                self.screening_card(_config.card_rule)
-
-
-
-
-
+                self.screening_card(_config.card_type)
 
     def goto_cards(self):
         """
@@ -189,7 +197,6 @@ class ScriptTask(KU, KekkaiActivationAssets):
                 return False
             elif self.appear(self.I_A_ACTIVATE_GRAY):
                 return False
-        return False
 
     def ocr_time(self, screenshot=False) -> timedelta or None:
         if screenshot:
@@ -210,35 +217,15 @@ class ScriptTask(KU, KekkaiActivationAssets):
         :return:
         """
 
-        def run_auto():
-            while 1:
-                self.screenshot()
-                if not self.appear(self.I_A_EMPTY) and self.appear(self.I_A_ACTIVATE_YELLOW, threshold=0.9):
-                    break
-                if self.click(self.C_A_SELECT_AUTO, interval=1):
-                    continue
-
-        if rule == "auto":
-            logger.info('Auto select card')
-            run_auto()
-            return
-
-        card_class = None
-        target_class = None
-        top_card = self.order_cards[0]
-        if top_card.startswith(CardClass.TAIKO):  # 太鼓
+        if rule == CardType.TAIKO:
             card_class = CardClass.TAIKO
             target_class = self.I_A_CARD_KAIKO
-        elif top_card.startswith(CardClass.MOON):  # 太阴
-            card_class = CardClass.MOON
-            target_class = self.I_A_CARD_MOON
-        elif top_card.startswith(CardClass.FISH):  # 斗鱼
+        elif rule == CardType.FISH:
             card_class = CardClass.FISH
             target_class = self.I_A_CARD_FISH
-
-        if card_class is None:
-            logger.warning('Unknown card class')
-            run_auto()
+        else:
+            logger.warning('Unknown card rule')
+            self.push_notify(content='Unknown card rule')
             return
 
         while 1:
@@ -260,108 +247,138 @@ class ScriptTask(KU, KekkaiActivationAssets):
                 continue
         logger.info('Selected card class: {}'.format(card_class))
 
-        # 得了开始一直往下滑动 找最优卡
-        card_best = None
-        swipe_count = 0
+        # 找最优卡
         while 1:
             self.screenshot()
-            current_best = self._current_select_best(card_best)
-            if current_best is None:
-                logger.warning('There is no card in the list')
-                break
-            # Record best card for future comparison
-            if(card_best is None):
-                card_best = current_best
-            elif self.order_cards.index(current_best) <= self.order_cards.index(card_best):
-                break
-            if current_best == self.order_cards[0]:
-                break
-            # 为什么找到第二个最优解也是会退出呢？？？
-            # 这个是因为一般是从高星到低星来找， 基本上第二个最优解就是最优解了
-            elif current_best == self.order_cards[1]:
-                break
+            target = self.check_card_num()
+            if target is None:
+                # 未发现卡，处理逻辑
+                self._card_not_found()
+            if self.appear(self.I_A_EMPTY):
+                while 1:
+                    self.screenshot()
+                    if not self.appear(self.I_A_EMPTY):
+                        self.config.kekkai_activation.activation_config.card_not_found_count = 0
+                        self.config.save()
+                        message = f'✅ 确认挂卡: {rule}'
+                        self.save_image(content=message, push_flag=False, wait_time=0)
+                        return
+                    if self.click(target, interval=1):
+                        continue
 
-            # 滑到底就退出
-            if self.appear(self.I_AA_SWIPE_BLOCK):
-                logger.warning('Swipe to the end but no card is found')
-                break
-            # 超过十次就退出
-            if swipe_count > 15:
-                logger.warning('Swipe count is more than 10')
-                break
-            # 一直向下滑动
-            self.swipe(self.S_CARDS_SWIPE, interval=0.9)
-            swipe_count += 1
-            time.sleep(2)
+    def check_card_num(self):
+        rule = self.config.kekkai_activation.activation_config.card_type
+        if rule == CardType.TAIKO:
+            min_card_num = self.config.kekkai_activation.activation_config.min_taiko_num
+            check_card = "勾玉"
+        elif rule == CardType.FISH:
+            min_card_num = self.config.kekkai_activation.activation_config.min_fish_num
+            check_card = "体力"
+        else:
+            logger.error('Unknown utilize rule')
+            raise ValueError('Unknown utilize rule')
 
-    def _image_convert_card(self, target: RuleImage) -> CardClass:
-        """
-        就是把一张图转化 到某个具体的类
-        :return:
-        """
-        try:
-            return self.dict_image_card[target]
-        except KeyError:
-            logger.warning(f'Unknown card class: {target}')
-            return CardClass.UNKNOWN
+        ocr_count = 0
+        while 1:
+            self.screenshot()
+            results = self.O_CHECK_CARD_NUMBER.detect_and_ocr(self.device.image)
+            ocr_count += 1
+            # 第一步：筛选出包含 "体力或者勾玉" 的结果
+            filtered_results = [result for result in results if check_card in result.ocr_text]
+            logger.info(f"识别到卡: {[result.ocr_text for result in filtered_results]}")
 
-    def _current_select_best(self, last_best: CardClass or None) -> CardClass | None:
-        self.screenshot()
-        target = self.order_targets.find_anyone(self.device.image)
-        if target is None:
-            logger.info('No target card found')
-            return None
-        current_card = self._image_convert_card(target)
-        if current_card == CardClass.UNKNOWN:
-            logger.info('Unknown card class')
-            return None
-        logger.info(f'Current best card class: {current_card}')
+            # 第二步：提取数字并按数字排序
+            numeric_results = []
+            for result in filtered_results:
+                # 使用正则表达式提取所有数字
+                numbers = [int(num) for num in re.findall(r'\d+', result.ocr_text)]
+                if numbers:  # 如果提取到数字
+                    if numbers[0] < min_card_num:
+                        continue
+                    numeric_results.append((numbers[0], result))  # 按第一个数字排序
 
-        # 如果当前的最好的卡，不比上一次最好的卡，那就退出
-        if last_best is not None:
-            last_index = self.order_cards.index(last_best)
-            current_index = self.order_cards.index(current_card)
-            if current_index >= last_index:
-                # 不比上一张卡好就退出不执行操作，相同星级卡亦跳过
-                logger.info('Current card is not better than last best card')
-                return last_best
+            if numeric_results:
+                # 按数字大到小排序
+                sorted_results = [result for _, result in sorted(numeric_results, key=lambda x: x[0], reverse=True)]
+                max_result = sorted_results[0]  # 获取数字最大的结果对象
 
-        # 否则就是比上一张卡好，那就执行操作 点击操作
-        logger.info('Current select card: %s', current_card)
-        # 如果一开始是没有选择中的，那就稳定点否则就是只管点击
-        self.screenshot()
-        if self.appear(self.I_A_EMPTY):
-            while 1:
-                self.screenshot()
-                if not self.appear(self.I_A_EMPTY):
-                    return current_card
-                if self.appear_then_click(target, interval=1):
-                    continue
-        self.appear_then_click(target, interval=0.5)
-        return current_card
+                box = max_result.box  # 获取边界框坐标
+                x_min = self.O_CHECK_CARD_NUMBER.roi[0] + box[0][0]
+                y_min = self.O_CHECK_CARD_NUMBER.roi[1] + box[0][1]
+                width = box[1][0] - box[0][0]
+                height = box[2][1] - box[1][1]
+                roi = int(x_min), int(y_min), int(width), int(height)
 
-    def check_max_lv(self, con: ActivationConfig):
+                target = RuleClick(roi_front=roi, roi_back=roi, name="tmpclick")
+                logger.info(f"选择挂卡: [{max_result.ocr_text}] {roi}")
+
+                return target
+            else:
+                if ocr_count > 3:
+                    logger.error('多次未找到符合条件的结果, 退出')
+                    return None
+                logger.warning("未找到符合条件的结果, 准备往上滑动")
+                duration = 2
+                safe_pos_x = random.randint(200, 400)
+                safe_pos_y = random.randint(580, 600)
+                p1 = (safe_pos_x, safe_pos_y)
+                p2 = (safe_pos_x, safe_pos_y - 410)
+                logger.info('Swipe %s -> %s, %sS ' % (point2str(*p1), point2str(*p2), duration))
+                self.device.swipe_adb(p1, p2, duration=duration)
+                time.sleep(1)
+                continue
+
+    def _card_not_found(self):
+        # 获取配置引用
+        activation_config = self.config.kekkai_activation.activation_config
+        # 多少分钟后重试
+        retry_minutes = 180
+        retry_count = 3
+        # 递增未找到卡的计数器
+        activation_config.card_not_found_count += 1
+
+        if activation_config.card_not_found_count >= retry_count:
+            # 达到重试上限时的处理
+            log_msg = f"⚠️{activation_config.card_type}卡未检出（累计{retry_count}次），{retry_minutes}分钟后重试"
+            activation_config.card_not_found_count = 0  # 重置计数器并延长下次执行时间
+            next_run = datetime.now() + timedelta(minutes=retry_minutes)
+        else:
+            # # 未达上限切换卡类型
+            new_type = (
+                CardType.FISH
+                if activation_config.card_type == CardType.TAIKO
+                else CardType.TAIKO
+            )
+            log_msg = f"🔄{activation_config.card_type}卡未检出 → 切换{new_type}"
+            activation_config.card_type = new_type
+            next_run = datetime.now()
+
+        # 统一记录日志和推送
+        self.save_image(content=log_msg, push_flag=True)
+
+        # 保存配置并设置下次执行
+        self.config.save()
+        self.set_next_run("KekkaiActivation", success=True, finish=True, target=next_run)
+        raise TaskEnd
+
+    def check_max_lv(self, shikigami_class: ShikigamiClass = ShikigamiClass.N):
         """
         在结界界面，进入式神育成，检查是否有满级的，如果有就换下一个
         退出的时候还是结界界面
         :return:
         """
         self.realm_goto_grown()
-        # 直接进行智能放入
-        if con.exchange_smart:
-            logger.info('Smart exchange')
-            self.ui_click_until_disappear(self.I_RS_SMART_EXCHANGE)
         if self.appear(self.I_RS_LEVEL_MAX):
             # 存在满级的式神
             logger.info('Exist max level shikigami and replace it')
             self.unset_shikigami_max_lv()
-            self.switch_shikigami_class(con.shikigami_class)
+            self.switch_shikigami_class(shikigami_class)
             self.set_shikigami(shikigami_order=7, stop_image=self.I_RS_NO_ADD)
         else:
             logger.info('No max level shikigami')
         if self.detect_no_shikigami():
             logger.warning('There are no any shikigami grow room')
-            self.switch_shikigami_class(con.shikigami_class)
+            self.switch_shikigami_class(shikigami_class)
             self.set_shikigami(shikigami_order=7, stop_image=self.I_RS_NO_ADD)
 
         # 回到结界界面
@@ -373,10 +390,7 @@ class ScriptTask(KU, KekkaiActivationAssets):
                 if not self.appear(self.I_REALM_SHIN):
                     continue
                 break
-            # 有时候退出动画太久点了两次退出，需要重新进入
-            if self.appear_then_click(self.I_GUILD_REALM, interval=1.5):
-                continue
-            if self.appear_then_click(self.I_UI_BACK_BLUE, interval=5.5):
+            if self.appear_then_click(self.I_UI_BACK_BLUE, interval=2.5):
                 continue
 
     def harvest_card(self):
@@ -392,7 +406,6 @@ class ScriptTask(KU, KekkaiActivationAssets):
         self.appear_then_click(self.I_A_HARVEST_FISH_6)  # 斗鱼6
         self.appear_then_click(self.I_A_HARVEST_MOON_3)  # 太阴3
         self.appear_then_click(self.I_A_HARVEST_FISH_3)  # 斗鱼三
-        self.appear_then_click(self.I_A_HARVEST_OBOROGURUMA)  # 胧车
 
 
 if __name__ == "__main__":
@@ -400,9 +413,9 @@ if __name__ == "__main__":
     from module.device.device import Device
     import cv2
 
-    c = Config('oas1')
+    c = Config('switch')
     d = Device(c)
 
     t = ScriptTask(c, d)
-    t.run()
+    t.check_card_num()
     # t.run_activation(t.config.kekkai_activation.activation_config)

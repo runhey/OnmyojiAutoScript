@@ -39,7 +39,7 @@
     "itemName": "guild_ap",
     "imageName": "ku_guild_ap.png",
     "roiFront": "483,314,22,22",
-    "roiBack": "290,224,393,218",
+    "roiBack": "290,224,894,345",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "寮体力"
@@ -48,7 +48,7 @@
     "itemName": "guild_assets",
     "imageName": "ku_guild_assets.png",
     "roiFront": "315,311,23,28",
-    "roiBack": "290,224,393,218",
+    "roiBack": "290,224,894,345",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "寮资金"
@@ -61,5 +61,23 @@
     "method": "Template matching",
     "threshold": 0.8,
     "description": "领取寮资金"
+  },
+  {
+    "itemName": "guild_collapse",
+    "imageName": "ku_guild_collapse.png",
+    "roiFront": "28,159,19,22",
+    "roiBack": "12,125,88,101",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "收起的寮活动横幅"
+  },
+  {
+    "itemName": "guild_expand",
+    "imageName": "ku_guild_expand.png",
+    "roiFront": "264,162,16,18",
+    "roiBack": "212,102,110,124",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "展开的寮活动横幅"
   }
 ]
