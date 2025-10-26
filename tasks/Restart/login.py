@@ -38,7 +38,10 @@ class LoginHandler(BaseTask, RestartAssets):
                 orientation_timer.reset()
 
             self.screenshot()
-
+            # 取消继续战斗
+            if self.appear_then_click(self.I_CANCEL_BATTLE, interval=0.8):
+                logger.info('Cancel continue battle')
+                continue
             # 确认进入庭院
             if self.appear_then_click(self.I_LOGIN_SCROOLL_CLOSE, interval=2, threshold=0.9):
                 logger.info('Open scroll')
