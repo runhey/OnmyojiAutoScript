@@ -4,6 +4,7 @@ import traceback
 from module.atom.click import RuleClick
 
 from tasks.GameUi.assets import GameUiAssets as G
+from tasks.Restart.assets import RestartAssets
 from tasks.base_task import BaseTask as BT
 from tasks.RyouToppa.assets import RyouToppaAssets
 
@@ -35,7 +36,8 @@ class Page:
 page_login = Page(G.I_CHECK_LOGIN_FORM)
 # Main Home 主页
 page_main = Page(G.I_CHECK_MAIN)
-page_main.additional = [G.I_AD_CLOSE_RED, G.I_BACK_FRIENDS]
+page_main.additional = [G.I_AD_CLOSE_RED, G.I_BACK_FRIENDS, RestartAssets.I_CANCEL_BATTLE,
+                        RestartAssets.I_LOGIN_SCROOLL_CLOSE]
 # 召唤summon
 page_summon = Page(G.I_CHECK_SUMMON)
 page_summon.link(button=G.I_SUMMON_GOTO_MAIN, destination=page_main)
