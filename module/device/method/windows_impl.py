@@ -21,12 +21,15 @@ from win32ui import CreateDCFromHandle, CreateBitmap
 from win32api import GetSystemMetrics, SendMessage, MAKELONG, PostMessage
 from win32con import SRCCOPY
 
+
 from module.base.cBezier import BezierTrajectory
 from module.exception import RequestHumanTakeover, ScriptError
 from module.base.decorator import Config
 from module.base.timer import timer
 from module.logger import logger
 from module.device.handle import Handle, window_scale_rate, EmulatorFamily
+
+
 
 
 class Window(Handle):
@@ -353,6 +356,7 @@ class Window(Handle):
             time.sleep(0.5)
         # 抄网上的
         # SendMessage(handle_num, WM_NCHITTEST, 0, lparam)
+
 
 
 

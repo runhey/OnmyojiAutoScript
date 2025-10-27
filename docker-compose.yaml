@@ -1,0 +1,13 @@
+
+services:
+    OAS:
+        network_mode: host
+        volumes:
+            - '.:/app/OnmyojiAutoScript:rw'
+            - '/etc/localtime:/etc/localtime:ro'
+        container_name: 'oas-env'
+        image: 'oas-env'
+        build:
+            context: ./deploy/docker/
+            dockerfile: ./Dockerfile
+            # dockerfile: ./Dockerfile
