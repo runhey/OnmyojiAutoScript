@@ -59,6 +59,8 @@ class KekkaiUtilizeAssets:
 	I_EXP_EXTRACT = RuleImage(roi_front=(592,448,100,73), roi_back=(592,448,100,73), threshold=0.8, method="Template matching", file="./tasks/KekkaiUtilize/realm/realm_exp_extract.png")
 	# 盒子经验满 
 	I_BOX_EXP_MAX = RuleImage(roi_front=(889,430,61,64), roi_back=(829,372,228,186), threshold=0.7, method="Template matching", file="./tasks/KekkaiUtilize/realm/realm_box_exp_max.png")
+	# 种树活动关闭标识 
+	I_PLANT_TREE_CLOSE = RuleImage(roi_front=(777,91,36,34), roi_back=(711,52,169,125), threshold=0.8, method="Template matching", file="./tasks/KekkaiUtilize/realm/realm_plant_tree_close.png")
 
 
 	# Click Rule Assets
