@@ -25,5 +25,14 @@
     "method": "Template matching",
     "threshold": 0.8,
     "description": "再次召唤"
+  },
+  {
+    "itemName": "bmt_check",
+    "imageName": "broken_amulet_bmt_check.png",
+    "roiFront": "742,571,32,33",
+    "roiBack": "644,565,276,41",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "破碎符咒召唤次数选择标志"
   }
 ]
