@@ -270,8 +270,7 @@ class LoginHandler(BaseTask, RestartAssets):
         self.character = character
         self.O_LOGIN_SPECIFIC_SERVE.keyword = character
 
-    def harvest_mail(self, skip_first_screenshot: bool = True) -> bool:
-        self.screenshot(skip_first_screenshot)
+    def harvest_mail(self, ) -> bool:
         if ((self.appear(self.I_HARVEST_MAIL) or self.appear(self.I_HARVEST_MAIL_COPY))
                 and not self.appear(self.I_LOGIN_RED_CLOSE)):
             self.click(self.I_HARVEST_MAIL, interval=2)

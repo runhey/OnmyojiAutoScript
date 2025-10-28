@@ -198,7 +198,8 @@ class ScriptTask(GameUi, ReplaceShikigami, KekkaiUtilizeAssets):
                 break
             if self.appear(self.I_SHI_DEFENSE):
                 break
-
+            if self.appear_then_click(self.I_PLANT_TREE_CLOSE):
+                continue
             if self.appear_then_click(self.I_GUILD_REALM, interval=1):
                 continue
 
@@ -718,6 +719,8 @@ class ScriptTask(GameUi, ReplaceShikigami, KekkaiUtilizeAssets):
                 break
             if self.appear(self.I_GUILD_REALM):
                 break
+            if self.appear_then_click(self.I_PLANT_TREE_CLOSE):
+                continue
 
             if self.appear_then_click(self.I_UI_BACK_RED, interval=1):
                 continue
