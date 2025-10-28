@@ -246,7 +246,7 @@ class ScriptTask(GameUi, BaseActivity, SwitchSoul, ActivityShikigamiAssets):
         timeout_timer = Timer(6).start()
         exit_clicked = False
         while not timeout_timer.reached():
-            self.screenshot(skip_first)
+            self.maybe_screenshot(skip_first)
             skip_first = False
             # 不在战斗界面, 认为退出成功
             if not self.is_in_battle(False):

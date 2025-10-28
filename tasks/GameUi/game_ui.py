@@ -85,7 +85,7 @@ class GameUi(BaseTask, GameUiAssets):
         """
         判断当前页面是否为page
         """
-        self.screenshot(skip_first_screenshot)
+        self.maybe_screenshot(skip_first_screenshot)
         if isinstance(page.check_button, list):
             for button in page.check_button:
                 if self.appear(button, interval):
@@ -152,7 +152,7 @@ class GameUi(BaseTask, GameUiAssets):
 
         timeout = Timer(10, count=20).start()
         while 1:
-            self.screenshot(skip_first_screenshot)
+            self.maybe_screenshot(skip_first_screenshot)
             skip_first_screenshot = False
             # 如果20S还没有到底，那么就抛出异常
             if timeout.reached():
@@ -269,7 +269,7 @@ class GameUi(BaseTask, GameUiAssets):
         尝试关闭未知界面
         :return: 执行了关闭返回True, 否则False
         """
-        self.screenshot(skip_screenshot)
+        self.maybe_screenshot(skip_screenshot)
         timer = Timer(None).start()
         for close in self.ui_close:
             if self.appear_then_click(close, interval=1.5):
@@ -349,7 +349,7 @@ class GameUi(BaseTask, GameUiAssets):
         :param skip_first_screenshot: 是否跳过首次截图
         :return: 是否成功操作
         """
-        self.screenshot(skip_first_screenshot)
+        self.maybe_screenshot(skip_first_screenshot)
         operated = False
         if isinstance(target, RuleList):
             operated = self.list_appear_click(target, interval=interval)

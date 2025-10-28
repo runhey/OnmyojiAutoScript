@@ -115,14 +115,12 @@ class BaseTask(GlobalGameAssets, CostumeBase):
             self.set_next_run(task='WantedQuests', target=datetime.now().replace(microsecond=0))
         return True
 
-    def screenshot(self, soft_skip: bool = False):
+    def screenshot(self):
         """
         截图 引入中间函数的目的是 为了解决如协作的这类突发的事件
-        :param soft_skip: True跳过截图(但保证设备一定有图才跳过,否则依然截图)
         :return:
         """
-        if not soft_skip or not self.exist_image():
-            self.device.screenshot()
+        self.device.screenshot()
         # 判断勾协
         self._burst()
 
@@ -136,6 +134,16 @@ class BaseTask(GlobalGameAssets, CostumeBase):
         #     logger.warning(f"Network error")
         #     raise GameStuckError
 
+        return self.device.image
+
+    def maybe_screenshot(self, soft_skip: bool = False):
+        """
+        可能截图
+        :param soft_skip: True跳过截图(但保证设备一定有图才跳过,否则依然截图)
+        :return:
+        """
+        if not soft_skip or not self.exist_image():
+            return self.screenshot()
         return self.device.image
 
     def exist_image(self) -> bool:
