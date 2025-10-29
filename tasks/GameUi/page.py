@@ -4,6 +4,7 @@ import traceback
 from module.atom.click import RuleClick
 
 from tasks.GameUi.assets import GameUiAssets as G
+from tasks.KekkaiUtilize.assets import KekkaiUtilizeAssets
 from tasks.Restart.assets import RestartAssets
 from tasks.base_task import BaseTask as BT
 from tasks.RyouToppa.assets import RyouToppaAssets
@@ -239,10 +240,7 @@ page_climb_act.link(button=asa.I_BUFF_CHANGE_BUTTON, destination=page_climb_act_
 
 # ************************************* 战斗部分 *****************************************#
 # 战斗界面
-page_battle_auto = Page(G.O_BATTLE_AUTO)
-page_battle_hand = Page(G.O_BATTLE_HAND)
-page_battle_auto.link(button=G.O_BATTLE_AUTO, destination=page_battle_hand)
-page_battle_hand.link(button=G.O_BATTLE_HAND, destination=page_battle_auto)
+page_battle = Page(GeneralBattleAssets.I_BATTLE_INFO)
 
 
 def random_click(low: int = None, high: int = None) -> RuleClick | list[RuleClick]:
@@ -264,10 +262,10 @@ page_reward = Page(check_button=[GeneralBattleAssets.I_REWARD_PURPLE_SNAKE_SKIN,
                                  GeneralBattleAssets.I_REWARD_SOUL_5, GeneralBattleAssets.I_REWARD_SOUL_6,
                                  gga.I_UI_REWARD, ],
                    links={page_climb_act_pass: random_click(), page_climb_act_ap: random_click(),
-                          page_area_boss: random_click()})
+                          page_area_boss: random_click(), page_climb_act_boss: random_click()})
 page_reward.additional = [random_click()]
 # 失败界面
 page_failed = Page(check_button=GeneralBattleAssets.I_FALSE,
                    links={page_climb_act_pass: random_click(), page_climb_act_ap: random_click(),
-                          page_area_boss: random_click()})
+                          page_area_boss: random_click(), page_climb_act_boss: random_click()})
 page_failed.additional = [random_click()]

@@ -8,6 +8,7 @@ from enum import Enum
 from module.logger import logger
 
 from tasks.Component.config_base import ConfigBase, TimeDelta, Time
+from typing import Optional
 
 
 class ApMode(str, Enum):
@@ -17,6 +18,7 @@ class ApMode(str, Enum):
 
 class GeneralClimb(ConfigBase):
     limit_time: Time = Field(default=Time(minute=30), description='限制爬塔运行总时间')
+    boss_limit_time: Time = Field(default=Time(minute=5), description='boss单局限制时间')
     pass_limit: int = Field(default=50, description='门票爬塔的最大次数')
     ap_limit: int = Field(default=300, description='体力爬塔的最大次数')
     boss_limit: int = Field(default=20, description='boss战爬塔的最大次数')
@@ -45,6 +47,23 @@ class GeneralClimb(ConfigBase):
     def run_sequence_v(self) -> list[str]:
         self.valid_run_sequence()
         return [climb_type.strip() for climb_type in self.run_sequence.split(',')]
+
+    def get_single_limit_time(self, climb_type: str, default: timedelta = None) -> Optional[timedelta]:
+        """
+        获取单局限制时间
+        :param climb_type: 爬塔类型
+        :param default: 默认限制时间
+        :return: 单局限制时间 or default
+        """
+        if not climb_type:
+            return default
+        if getattr(self, f'{climb_type}_limit_time', None) is not None:
+            limit_time = getattr(self, f'{climb_type}_limit_time')
+            if isinstance(limit_time, time):
+                return timedelta(hours=limit_time.hour, minutes=limit_time.minute,
+                                 seconds=limit_time.second)
+            return limit_time
+        return default
 
     # @model_validator(mode='after')
     def valid_run_sequence(self):

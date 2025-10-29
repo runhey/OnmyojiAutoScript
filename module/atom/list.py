@@ -43,6 +43,13 @@ class RuleList:
         self._target = None  # 目标
         self.targets = {}  # 目标列表 只是针对image
 
+    @property
+    def name(self):
+        return f'RuleList[{self.__hash__()}]'
+
+    def __hash__(self):
+        return hash((self.folder, self.is_vertical, self.is_image, self.is_ocr, tuple(self.roi_back), tuple(self.size), tuple(self.array)))
+
     def swipe_pos(self, number: int=2, after: bool=True) -> tuple:
         """
         返回滑动的起始位置和终点位置
