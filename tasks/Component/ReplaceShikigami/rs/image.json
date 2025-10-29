@@ -11,8 +11,8 @@
   {
     "itemName": "rs_material",
     "imageName": "rs_rs_material.png",
-    "roiFront": "32,283,59,56",
-    "roiBack": "32,283,59,56",
+    "roiFront": "822,620,59,56",
+    "roiBack": "129,597,774,98",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "素材"
@@ -20,8 +20,8 @@
   {
     "itemName": "rs_n",
     "imageName": "rs_rs_n.png",
-    "roiFront": "138,299,57,59",
-    "roiBack": "138,299,57,59",
+    "roiFront": "709,621,57,59",
+    "roiBack": "132,595,767,105",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"
@@ -29,8 +29,8 @@
   {
     "itemName": "rs_r",
     "imageName": "rs_rs_r.png",
-    "roiFront": "230,344,64,61",
-    "roiBack": "230,344,64,61",
+    "roiFront": "594,619,64,61",
+    "roiBack": "126,599,776,101",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"
@@ -38,8 +38,8 @@
   {
     "itemName": "rs_sr",
     "imageName": "rs_rs_sr.png",
-    "roiFront": "307,421,62,58",
-    "roiBack": "307,421,62,58",
+    "roiFront": "483,619,62,58",
+    "roiBack": "131,599,767,101",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"
@@ -47,8 +47,8 @@
   {
     "itemName": "rs_ssr",
     "imageName": "rs_rs_ssr.png",
-    "roiFront": "354,517,63,58",
-    "roiBack": "354,517,63,58",
+    "roiFront": "370,621,63,58",
+    "roiBack": "130,600,771,101",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"
@@ -56,8 +56,8 @@
   {
     "itemName": "rs_sp",
     "imageName": "rs_rs_sp.png",
-    "roiFront": "372,621,58,60",
-    "roiBack": "372,621,58,60",
+    "roiFront": "260,621,58,60",
+    "roiBack": "133,600,763,96",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"
@@ -142,5 +142,23 @@
     "method": "Template matching",
     "threshold": 0.8,
     "description": "智能放入"
+  },
+  {
+    "itemName": "rs_ur",
+    "imageName": "rs_rs_ur.png",
+    "roiFront": "149,623,56,58",
+    "roiBack": "136,598,758,101",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "rs_ur_selected",
+    "imageName": "rs_rs_ur_selected.png",
+    "roiFront": "36,620,54,58",
+    "roiBack": "14,601,100,100",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
   }
 ]

@@ -34,13 +34,15 @@ class ReplaceShikigami(BaseTask, ReplaceShikigamiAssets):
                           ShikigamiClass.R: self.I_RS_R_SELECTED,
                           ShikigamiClass.SR: self.I_RS_SR_SELECTED,
                           ShikigamiClass.SSR: self.I_RS_SSR_SELECTED,
-                          ShikigamiClass.SP: self.I_RS_SP_SELECTED}
+                          ShikigamiClass.SP: self.I_RS_SP_SELECTED,
+                          ShikigamiClass.UR: self.I_RS_UR_SELECTED}
         match_click = {ShikigamiClass.MATERIAL: self.I_RS_MATERIAL,
                        ShikigamiClass.N: self.I_RS_N,
                        ShikigamiClass.R: self.I_RS_R,
                        ShikigamiClass.SR: self.I_RS_SR,
                        ShikigamiClass.SSR: self.I_RS_SSR,
-                       ShikigamiClass.SP: self.I_RS_SP}
+                       ShikigamiClass.SP: self.I_RS_SP,
+                       ShikigamiClass.UR: self.I_RS_UR}
         check_selected = match_selected[shikigami_class]
         check_click = match_click[shikigami_class]
         # 选择式神的种类
@@ -125,10 +127,10 @@ class ReplaceShikigami(BaseTask, ReplaceShikigamiAssets):
     def detect_no_shikigami(self) -> bool:
         self.screenshot()
         if self.appear(self.I_DETECT_EMPTY_1)\
-            and self.appear(self.I_DETECT_EMPTY_2) \
-                and self.appear(self.I_DETECT_EMPTY_3) \
-                and self.appear(self.I_DETECT_EMPTY_4) \
-                and self.appear(self.I_DETECT_EMPTY_5) \
-                and self.appear(self.I_DETECT_EMPTY_6):
+            or self.appear(self.I_DETECT_EMPTY_2) \
+                or self.appear(self.I_DETECT_EMPTY_3) \
+                or self.appear(self.I_DETECT_EMPTY_4) \
+                or self.appear(self.I_DETECT_EMPTY_5) \
+                or self.appear(self.I_DETECT_EMPTY_6):
             return True
         return False
