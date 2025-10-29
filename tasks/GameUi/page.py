@@ -251,7 +251,7 @@ def random_click(low: int = None, high: int = None) -> RuleClick | list[RuleClic
     :return: RuleClick或者RuleClick的数组
     """
     click = random.choice([asa.C_RANDOM_LEFT, asa.C_RANDOM_RIGHT, asa.C_RANDOM_TOP])
-    click.name = "BATTLE_RANDOM"
+    click.name = "SAFE_RANDOM_CLICK"
     if low is None or high is None:
         return click
     return [click for _ in range(random.randint(low, high))]
