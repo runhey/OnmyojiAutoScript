@@ -2,7 +2,7 @@ from pydantic import BaseModel, Field, field_validator
 from enum import Enum
 
 from tasks.Component.config_scheduler import Scheduler
-from tasks.Component.config_base import ConfigBase, Time
+from tasks.Component.config_base import ConfigBase, Time, dynamic_hide
 
 
 class ModelPrecision(str, Enum):
@@ -66,6 +66,9 @@ class DebugConfig(ConfigBase):
     # 单独的点击
     hya_control_method: ControlMethod = Field(default=ControlMethod.WINDOW_MESSAGE,
                                               description='hya_control_method')
+
+    hide_fields = dynamic_hide('continuous_learning')
+
 
     @field_validator('continuous_learning', mode='after')
     @classmethod
