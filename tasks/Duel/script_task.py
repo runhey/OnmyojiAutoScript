@@ -364,7 +364,6 @@ class ScriptTask(GameUi, GeneralBattle, SwitchSoul, DuelAssets):
             if self.appear(self.I_D_PREPARE):
                 # 低段位有的准备
                 self.ui_click_until_disappear(self.I_D_PREPARE)
-                self.wait_until_disappear(self.I_D_PREPARE_DONE)
                 logger.info('Duel prepare')
                 break
             # 如果对方直接秒退，那自己就是赢的
@@ -373,12 +372,13 @@ class ScriptTask(GameUi, GeneralBattle, SwitchSoul, DuelAssets):
                 self.battle_win_copy = self.battle_win_count
                 self.battle_win_count += 1
                 return
-        timer = Timer(10)
+        timer = Timer(15)
         timer.start()
         while 1:
             if timer.reached():
                 break
-            if self.is_in_battle():
+            # 此处必须是真正战斗界面,否则低段位进去就是战斗界面会直接跳过该循环
+            if self.is_in_real_battle():
                 break
         while 1:
             self.screenshot()
