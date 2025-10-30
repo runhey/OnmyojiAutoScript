@@ -25,8 +25,8 @@ class RichManAssets:
 	I_GUILD_SKIN = RuleImage(roi_front=(795,438,71,72), roi_back=(320,162,573,371), threshold=0.8, method="Template matching", file="./tasks/RichMan/guild/guild_guild_skin.png")
 	# 皮肤券判断是否到末端 
 	I_GUILD_SKIN_CHECK = RuleImage(roi_front=(795,438,71,72), roi_back=(320,162,573,371), threshold=0.8, method="Template matching", file="./tasks/RichMan/guild/guild_guild_skin.png")
-	# 购买检查 
-	I_GUILD_CHECK_SCRAP = RuleImage(roi_front=(561,429,90,88), roi_back=(561,429,90,88), threshold=0.8, method="Template matching", file="./tasks/RichMan/guild/guild_guild_check_scrap.png")
+	# 购买黑碎检查 
+	I_GUILD_CHECK_SCRAP = RuleImage(roi_front=(592,248,90,88), roi_back=(593,249,90,88), threshold=0.6, method="Template matching", file="./tasks/RichMan/guild/guild_guild_check_scrap.png")
 
 
 	# Ocr Rule Assets
@@ -256,7 +256,7 @@ class RichManAssets:
 	# description 
 	I_SCA_SELECT_3 = RuleImage(roi_front=(972,517,123,50), roi_back=(972,517,123,50), threshold=0.8, method="Template matching", file="./tasks/RichMan/mall/scales/scales_sca_select_3.png")
 	# 获得的六星 
-	I_SCA_SIX_STAR = RuleImage(roi_front=(119,261,100,22), roi_back=(108,246,261,57), threshold=0.8, method="Template matching", file="./tasks/RichMan/mall/scales/scales_sca_six_star.png")
+	I_SCA_SIX_STAR = RuleImage(roi_front=(120,216,97,22), roi_back=(113,102,1057,157), threshold=0.8, method="Template matching", file="./tasks/RichMan/mall/scales/scales_sca_six_star.png")
 	# 点击屏幕继续 
 	I_SCA_REWARD = RuleImage(roi_front=(584,503,100,100), roi_back=(584,503,100,100), threshold=0.8, method="Template matching", file="./tasks/RichMan/mall/scales/scales_sca_reward.png")
 	# 点击兑换 

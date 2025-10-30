@@ -22,7 +22,6 @@ from module.exception import (GameNotRunningError,
 from module.logger import logger
 
 
-
 class Device(Platform, Screenshot, Control, AppControl):
     _screen_size_checked = False
     detect_record = set()

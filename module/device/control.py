@@ -7,7 +7,7 @@ from module.base.utils import *
 from module.device.method.minitouch import Minitouch
 from module.device.method.adb import Adb
 from module.device.method.scrcpy import Scrcpy
-from module.device.method.window import Window
+from module.device.method.windows import Window
 from module.logger import logger
 
 

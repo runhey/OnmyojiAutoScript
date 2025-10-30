@@ -12,7 +12,7 @@ from module.base.decorator import cached_property
 from module.base.timer import Timer
 from module.base.utils import get_color, image_size, limit_in, save_image
 from module.device.method.adb import Adb
-from module.device.method.window import Window
+from module.device.method.windows import Window
 from module.device.method.droidcast import DroidCast
 from module.device.method.scrcpy import Scrcpy
 from module.device.method.nemu_ipc import NemuIpc
@@ -272,4 +272,5 @@ class Screenshot(Adb, DroidCast, Scrcpy, Window, NemuIpc):
 if __name__ == "__main__":
     s = Screenshot(config="oas1")
     s.screenshot()
+
     s.image_show()

@@ -1,7 +1,7 @@
 # This Python file uses the following encoding: utf-8
 # @author runhey
 # github https://github.com/runhey
-
+import random
 from module.base.timer import Timer
 from module.exception import RequestHumanTakeover, GameTooManyClickError, GameStuckError
 from module.logger import logger
@@ -38,7 +38,10 @@ class LoginHandler(BaseTask, RestartAssets):
                 orientation_timer.reset()
 
             self.screenshot()
-
+            # 取消继续战斗
+            if self.appear_then_click(self.I_CANCEL_BATTLE, interval=0.8):
+                logger.info('Cancel continue battle')
+                continue
             # 确认进入庭院
             if self.appear_then_click(self.I_LOGIN_SCROOLL_CLOSE, interval=2, threshold=0.9):
                 logger.info('Open scroll')
@@ -227,32 +230,9 @@ class LoginHandler(BaseTask, RestartAssets):
                 timer_harvest.reset()
                 continue
             # 判断是否勾选了收取邮件（不收取邮件可以查看每日收获）
-            if not skip_default and self.config.restart.harvest_config.enable_mail:
-                if self.appear(self.I_HARVEST_MAIL_CONFIRM):
-                    self.click(self.I_HARVEST_MAIL_CONFIRM, interval=2)
-                    timer_harvest.reset()
-                    continue
-                if self.appear(self.I_HARVEST_MAIL_ALL, threshold=0.9):
-                    self.click(self.I_HARVEST_MAIL_ALL, interval=2)
-                    self.wait_until_appear(self.I_HARVEST_MAIL_CONFIRM, wait_time=1)
-                    timer_harvest.reset()
-                    continue
-                # threshold如果是0.9，可能会导致有邮件但无法识别永久卡住
-                if self.appear(self.I_HARVEST_MAIL_OPEN, threshold=0.8):
-                    self.click(self.I_HARVEST_MAIL_OPEN, interval=0.8)
-                    timer_harvest.reset()
-                    continue
-                if self.appear(self.I_HARVEST_MAIL_2):
-                    self.click(self.I_HARVEST_MAIL_2, interval=0.8)
-                    timer_harvest.reset()
-                    continue
-                if ((self.appear(self.I_HARVEST_MAIL) or self.appear(self.I_HARVEST_MAIL_COPY))
-                        and not self.appear(self.I_LOGIN_RED_CLOSE)):
-                    self.click(self.I_HARVEST_MAIL, interval=2)
-                    self.wait_until_appear(self.I_HARVEST_MAIL_ALL, wait_time=2)
-                    timer_harvest.reset()
-                    continue
-
+            if not skip_default and self.config.restart.harvest_config.enable_mail and self.harvest_mail():
+                timer_harvest.reset()
+                continue
             if self.appear_then_click(self.I_HARVEST_AP, interval=1, threshold=0.7):
                 timer_harvest.reset()
                 continue
@@ -289,3 +269,37 @@ class LoginHandler(BaseTask, RestartAssets):
     def set_specific_usr(self, character: str):
         self.character = character
         self.O_LOGIN_SPECIFIC_SERVE.keyword = character
+
+    def harvest_mail(self, ) -> bool:
+        if ((self.appear(self.I_HARVEST_MAIL) or self.appear(self.I_HARVEST_MAIL_COPY))
+                and not self.appear(self.I_LOGIN_RED_CLOSE)):
+            self.click(self.I_HARVEST_MAIL, interval=2)
+            self.wait_until_appear(self.I_READ_ALL_MAIL, wait_time=2)
+        else:
+            return False
+        logger.info('Harvest system mail')
+        self.click(self.I_SYSTEM_MAIL_CLOSE)
+        self.wait_until_appear(self.I_SYSTEM_MAIL_OPEN, wait_time=2)
+        self.exec_harvest_mail()
+        logger.info('Harvest special mail')
+        self.click(self.I_SPECIAL_MAIL_CLOSE)
+        self.wait_until_appear(self.I_SPECIAL_MAIL_OPEN, wait_time=2)
+        self.exec_harvest_mail()
+        return True
+
+    def exec_harvest_mail(self):
+        timeout_timer = Timer(3).start()
+        while not timeout_timer.reached():
+            self.screenshot()
+            if self.appear_then_click(self.I_READ_ALL_MAIL, interval=1.5):
+                continue
+            if self.appear(self.I_HARVEST_MAIL_CONFIRM):
+                self.click(self.I_HARVEST_MAIL_CONFIRM, interval=2)
+                self.wait_until_disappear(self.I_HARVEST_MAIL_CONFIRM)
+                break
+            if self.appear(self.I_HARVEST_MAIL_ALL, threshold=0.9):
+                time.sleep(random.uniform(0.3, 0.5))
+                self.click(self.I_HARVEST_MAIL_ALL, interval=2)
+                self.wait_until_appear(self.I_HARVEST_MAIL_CONFIRM, wait_time=1)
+                timeout_timer.reset()
+                continue

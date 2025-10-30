@@ -142,5 +142,14 @@
     "method": "Template matching",
     "threshold": 0.8,
     "description": "取消体验服切换弹窗"
+  },
+  {
+    "itemName": "cancel_battle",
+    "imageName": "login_cancel_battle.png",
+    "roiFront": "471,395,129,55",
+    "roiBack": "367,227,545,296",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "取消继续战斗"
   }
 ]
