@@ -236,6 +236,12 @@ class GameUi(BaseTask, GameUiAssets):
         sorted_paths = sorted(paths.items(), key=lambda kv: len(kv[1]))
         return sorted_paths
 
+    def ui_goto_page(self, dest_page: Page, confirm_wait=0, skip_first_screenshot=True, timeout: int = 60):
+        """前往指定page, 自动调用获取当前页面方法, 其他参数同ui_goto
+        """
+        self.ui_get_current_page()
+        self.ui_goto(dest_page, confirm_wait, skip_first_screenshot, timeout)
+
     def ui_goto(self, destination: Page, confirm_wait=0, skip_first_screenshot=True, timeout: int = 60):
         """
         Args:
