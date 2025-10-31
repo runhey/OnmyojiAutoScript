@@ -63,7 +63,7 @@ class Updater(DeployConfig, GitManager, PipManager):
             return logs
 
     def current_branch(self) -> str:
-        return self.filepath('Branch')
+        return self.Branch
 
     def current_commit(self) -> str:
         return self.get_commit()
