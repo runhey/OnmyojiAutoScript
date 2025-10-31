@@ -63,8 +63,7 @@ class Updater(DeployConfig, GitManager, PipManager):
             return logs
 
     def current_branch(self) -> str:
-        branch = self.execute_output(f'{self.git} branch --show-current')
-        return branch.strip()
+        return self.Branch
 
     def current_commit(self) -> str:
         return self.get_commit()
