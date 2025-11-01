@@ -342,7 +342,7 @@ class PlatformWindows(PlatformBase, EmulatorManager):
                 else:
                     new_window = 0
             try:
-                logger.info('Try to connect emulator, please waiting......')
+                logger.info(f'Try to connect emulator, remain[{timeout.remain():.1f}s]')
                 # Check device connection
                 devices = self.list_device().select(serial=serial)
                 # logger.info(devices)
@@ -417,7 +417,7 @@ class PlatformWindows(PlatformBase, EmulatorManager):
 
     def emulator_start(self):
         logger.hr('Emulator start', level=1)
-        for _ in range(3):
+        for i in range(3):
             # Stop
             if not self._emulator_function_wrapper(self._emulator_stop):
                 return False
@@ -426,7 +426,7 @@ class PlatformWindows(PlatformBase, EmulatorManager):
                 # Success
                 if self.emulator_start_watch():
                     return True
-                # Failed to connect or start, try again
+                logger.attr(2 - i, f'Failed to connect or start, try again')
                 continue
             else:
                 # Failed to start, stop and start again
