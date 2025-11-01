@@ -13,7 +13,7 @@ from module.exception import TaskEnd
 from module.base.timer import Timer
 
 from tasks.Component.SwitchSoul.switch_soul import SwitchSoul
-from tasks.DemonEncounter.config import BossType, DemonEncounter
+from tasks.DemonEncounter.config import BossType, DemonEncounter, convert_to_general_battle_config
 from tasks.GameUi.game_ui import GameUi
 from tasks.GameUi.page import page_demon_encounter, page_shikigami_records
 from tasks.DemonEncounter.assets import DemonEncounterAssets
@@ -170,6 +170,7 @@ class ScriptTask(GameUi, GeneralBattle, DemonEncounterAssets, SwitchSoul):
         time.sleep(5)
         # 延长时间并在战斗结束后改回来
         self.device.stuck_timer_long = Timer(480, count=480).start()
+        preset_switched = False
         while True:
             self.screenshot()
             if self.appear(self.I_BOSS_DONE_CHECK):
@@ -185,7 +186,17 @@ class ScriptTask(GameUi, GeneralBattle, DemonEncounterAssets, SwitchSoul):
                 sleep(2)
                 continue
             if self.appear(self.I_PREPARE_HIGHLIGHT):
-                self.run_general_battle()
+                if preset_switched:
+                    self.run_general_battle()
+                    continue
+                preset_switched = True
+                if self.best_demon_enable:
+                    general_battle_config = convert_to_general_battle_config(self.boss_type,
+                                                                             best_demon_battle_conf=self.conf.best_demon_battle_config)
+                else:
+                    general_battle_config = convert_to_general_battle_config(self.boss_type,
+                                                                             demon_battle_conf=self.conf.demon_battle_config)
+                self.run_general_battle(config=general_battle_config)
                 continue
             logger.info('Unknown scene Or Boss fight failed.waiting for Prepare_Button appear...')
             self.wait_until_appear(self.I_PREPARE_HIGHLIGHT, wait_time=2)

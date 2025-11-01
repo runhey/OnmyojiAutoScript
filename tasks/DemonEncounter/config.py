@@ -3,12 +3,10 @@
 # github https://github.com/runhey
 from pydantic import BaseModel, Field
 from enum import Enum, IntEnum
-from datetime import datetime, time
+from tasks.Component.GeneralBattle.config_general_battle import GeneralBattleConfig
 
 from tasks.Component.config_scheduler import Scheduler
 from tasks.Component.config_base import ConfigBase, TimeDelta, dynamic_hide
-from tasks.Component.GeneralBattle.config_general_battle import GeneralBattleConfig
-from tasks.Utils.config_enum import ShikigamiClass
 
 
 class BossType(IntEnum):
@@ -82,6 +80,53 @@ class BestDemonConfig(BaseModel):
                                'best_demon_oboroguruma', 'best_demon_nightly_aramitamau')
 
 
+def convert_to_general_battle_config(boss_type: str, demon_battle_conf: 'DemonBattleConfig' = None,
+                                     best_demon_battle_conf: 'BestDemonBattleConfig' = None) -> GeneralBattleConfig:
+    if demon_battle_conf:
+        enable = getattr(demon_battle_conf, f'{boss_type}_enable')
+        group, team = getattr(demon_battle_conf, boss_type).split(',')
+    elif best_demon_battle_conf:
+        enable = getattr(best_demon_battle_conf, f'{boss_type}_enable')
+        group, team = getattr(best_demon_battle_conf, boss_type).split(',')
+    else:
+        enable = False
+        group, team = (1, 1)
+    return GeneralBattleConfig(preset_enable=enable, preset_group=group if enable else 1, preset_team=team if enable else 1)
+
+
+class DemonBattleConfig(BaseModel):
+    demon_shinkirou_enable: bool = Field(default=False, description='是否切换蜃气楼预设')
+    demon_shinkirou: str = Field(default="-1,-1", description="蜃气楼预设")
+    demon_tsuchigumo_enable: bool = Field(default=False, description='是否切换土蜘蛛预设')
+    demon_tsuchigumo: str = Field(default="-1,-1", description="土蜘蛛预设")
+    demon_gashadokuro_enable: bool = Field(default=False, description='是否切换荒骷髅预设')
+    demon_gashadokuro: str = Field(default="-1,-1", description="荒骷髅预设")
+    demon_namazu_enable: bool = Field(default=False, description='是否切换地震鲶预设')
+    demon_namazu: str = Field(default="-1,-1", description="地震鲶预设")
+    demon_oboroguruma_enable: bool = Field(default=False, description='是否切换胧车预设')
+    demon_oboroguruma: str = Field(default="-1,-1", description="胧车预设")
+    demon_nightly_aramitama_enable: bool = Field(default=False, description='是否切换夜荒魂预设')
+    demon_nightly_aramitama: str = Field(default="-1,-1", description="夜荒魂预设")
+
+
+class BestDemonBattleConfig(BaseModel):
+    best_demon_shinkirou_enable: bool = Field(default=False, description='是否切换极蜃气楼预设')
+    best_demon_shinkirou: str = Field(default="-1,-1", description="极蜃气楼预设")
+    best_demon_tsuchigumo_enable: bool = Field(default=False, description='是否切换极土蜘蛛预设')
+    best_demon_tsuchigumo: str = Field(default="-1,-1", description="极土蜘蛛预设")
+    best_demon_gashadokuro_enable: bool = Field(default=False, description='是否切换极荒骷髅预设')
+    best_demon_gashadokuro: str = Field(default="-1,-1", description="极荒骷髅预设")
+    best_demon_namazu_enable: bool = Field(default=False, description='是否切换极地震鲶预设')
+    best_demon_namazu: str = Field(default="-1,-1", description="极地震鲶预设")
+    best_demon_oboroguruma_enable: bool = Field(default=False, description='是否切换极胧车预设')
+    best_demon_oboroguruma: str = Field(default="-1,-1", description="极胧车预设")
+    best_demon_nightly_aramitama_enable: bool = Field(default=False, description='是否切换极夜荒魂预设')
+    best_demon_nightly_aramitamau: str = Field(default="-1,-1", description="极夜荒魂预设")
+
+    hide_fields = dynamic_hide('best_demon_oboroguruma_enable', 'best_demon_oboroguruma',
+                               'best_demon_nightly_aramitama_enable', 'best_demon_nightly_aramitamau')
+
+
 class UtilizeScheduler(Scheduler):
     priority: int = Field(default=2, description='priority_help')
 
@@ -92,3 +137,5 @@ class DemonEncounter(ConfigBase):
     best_demon_boss_config: BestDemonBossSelect = Field(default_factory=BestDemonBossSelect)
     demon_soul_config: DemonConfig = Field(default_factory=DemonConfig)
     best_demon_soul_config: BestDemonConfig = Field(default_factory=BestDemonConfig)
+    demon_battle_config: DemonBattleConfig = Field(default_factory=DemonBattleConfig)
+    best_demon_battle_config: BestDemonBattleConfig = Field(default_factory=BestDemonBattleConfig)
