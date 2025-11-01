@@ -159,6 +159,13 @@ class Timer:
         from module.logger import logger
         logger.info(str(self))
 
+    def remain(self):
+        """
+        remain time
+        :return:
+        """
+        return self._current + self.limit - time.time()
+
     def __str__(self):
         return f'Timer(limit={round(self.current(), 3)}/{self.limit}, count={self._reach_count}/{self.count})'
 
