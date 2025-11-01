@@ -382,29 +382,6 @@ class GameUi(BaseTask, GameUiAssets):
             operated = self.click(target, interval=interval)
         return operated
 
-    # ------------------------------------------------------------------------------------------------------------------
-    # 下面的这些是一些特殊的页面，需要额外处理
-    # ------------------------------------------------------------------------------------------------------------------
-
-    def main_goto_daily(self):
-        """
-        无法直接一步到花合战，需要先到主页，然后再到花合战
-        :return:
-        """
-        while 1:
-            self.screenshot()
-            if self.appear(self.I_CHECK_DAILY):
-                break
-            if self.appear_then_click(self.I_MAIN_GOTO_DAILY, interval=1):
-                continue
-            if self.ocr_appear_click(self.O_CLICK_CLOSE_1, interval=1):
-                continue
-            if self.ocr_appear_click(self.O_CLICK_CLOSE_2, interval=1):
-                continue
-        logger.info('Page arrive: Daily')
-        time.sleep(1)
-        return
-
 
 if __name__ == '__main__':
     from module.config.config import Config
