@@ -781,14 +781,14 @@ class ScriptTask(ExtendGreenMark, GameUi, SwitchSoul, DokanSceneDetector):
         while not cheering_timer.reached():
             self.screenshot()
             # 出现观战标志点击观战
-            if self.appear_then_click(self.I_RYOU_DOKAN_CD, interval=0.8):
-                sleep(0.3)  # 等待一下寮排名展示动画
+            if self.appear_then_click(self.I_RYOU_DOKAN_CD, interval=2.5):
+                sleep(1)  # 等待一下寮排名展示动画
                 continue
             # 寻找前往按钮并点击
-            if self.list_appear_click(self.L_GOTO_CHEERING):
+            if self.list_appear_click(self.L_GOTO_CHEERING, interval=3, max_swipe=3):
                 break
             # 没有找到前往(全军覆没or没人上)则随机点击其他位置关闭弹窗
-            self.click(random_click(), interval=1.5)
+            self.click(random_click(), interval=5)
         logger.info('Enter battle to cheer')
         cheer_cnt = 0
         self.device.stuck_record_add('PAUSE')

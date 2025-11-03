@@ -516,7 +516,7 @@ class BaseTask(GlobalGameAssets, CostumeBase):
             return result
         return False
 
-    def list_appear_click(self, target: RuleList, interval: float = None) -> bool:
+    def list_appear_click(self, target: RuleList, interval: float = None, max_swipe: int = 10) -> bool:
         if interval:
             if target.name in self.interval_timer:
                 # 如果传入的限制时间不一样，则替换限制新的传入的时间
@@ -528,7 +528,7 @@ class BaseTask(GlobalGameAssets, CostumeBase):
             # 如果时间还没到达，则不执行
             if not self.interval_timer[target.name].reached():
                 return False
-        appear = self.list_find(target, name=target.array[0])
+        appear = self.list_find(target, name=target.array[0], max_swipe=max_swipe)
         if isinstance(appear, tuple) and interval:
             x, y = appear
             self.device.click(x, y)
