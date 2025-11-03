@@ -2,7 +2,7 @@
 # @author runhey
 # github https://github.com/runhey
 
-from time import sleep
+from time import sleep, time
 
 import random
 from datetime import datetime, timedelta
@@ -135,6 +135,23 @@ class BaseTask(GlobalGameAssets, CostumeBase):
         #     raise GameStuckError
 
         return self.device.image
+
+    def maybe_screenshot(self, soft_skip: bool = False):
+        """
+        可能截图
+        :param soft_skip: True跳过截图(但保证设备一定有图才跳过,否则依然截图)
+        :return:
+        """
+        if not soft_skip or not self.exist_image():
+            return self.screenshot()
+        return self.device.image
+
+    def exist_image(self) -> bool:
+        """
+        判断当前设备是否有图片
+        :return: 有返回True，没有返回False
+        """
+        return hasattr(self.device, 'image') and self.device.image is not None
 
     def appear(self,
                target: RuleImage | RuleGif | RuleOcr,
@@ -360,7 +377,7 @@ class BaseTask(GlobalGameAssets, CostumeBase):
         点击或者长按
         :param interval:
         :param click:
-        :return:
+        :return: 返回值不是click是否成功，而是interval是否设置以及是否到时间
         """
         if not click:
             return False
@@ -460,11 +477,12 @@ class BaseTask(GlobalGameAssets, CostumeBase):
             self.device.click(x=x, y=y, control_name=target.name)
         return True
 
-    def list_find(self, target: RuleList, name: str | list[str]) -> bool | tuple:
+    def list_find(self, target: RuleList, name: str | list[str], max_swipe: int = 10) -> bool | tuple:
         """
         会一致在列表寻找目标，找到了就退出。
         如果是图片列表会一直往下找
         如果是纯文字的，会自动识别自己的位置，根据位置选择向前还是向后翻
+        :param max_swipe: 最大滑动次数
         :param target:
         :param name:
         :return:
@@ -474,33 +492,47 @@ class BaseTask(GlobalGameAssets, CostumeBase):
         result = None
         if not target:
             return False
-        while True:
+        appear = False
+        for _ in range(max_swipe):
             self.screenshot()
             if target.is_image:
                 result = target.image_appear(self.device.image, name=name)
                 swipe_down = True
             elif target.is_ocr:
                 result = target.ocr_appear(self.device.image, name=name)
-                swipe_down = isinstance(result, int) and result > 0
+                swipe_down = result is not None and isinstance(result, int) and result > 0
                 swipe_distance_ratio = 1
-            if not result:
-                return False
-            if isinstance(result, tuple):
-                return result
+            # 结果是坐标证明找到了, 非坐标都是没找到
+            if result is not None and isinstance(result, tuple):
+                appear = True
+                break
             if swipe_distance_ratio:
                 x1, y1, x2, y2 = target.swipe_pos(number=swipe_distance_ratio, after=swipe_down)
             else:
                 x1, y1, x2, y2 = target.swipe_pos(after=swipe_down)
             self.device.swipe(p1=(x1, y1), p2=(x2, y2))
             sleep(random.uniform(0.8, 1.3))  # 等待滑动完成, 待优化
+        if appear:
+            return result
+        return False
 
-    def list_appear_click(self, target: RuleList) -> bool:
+    def list_appear_click(self, target: RuleList, interval: float = None) -> bool:
+        if interval:
+            if target.name in self.interval_timer:
+                # 如果传入的限制时间不一样，则替换限制新的传入的时间
+                if self.interval_timer[target.name].limit != interval:
+                    self.interval_timer[target.name] = Timer(interval)
+            else:
+                # 如果没有限制时间，则创建限制时间
+                self.interval_timer[target.name] = Timer(interval)
+            # 如果时间还没到达，则不执行
+            if not self.interval_timer[target.name].reached():
+                return False
         appear = self.list_find(target, name=target.array[0])
-        if not appear:
-            return False
-        if isinstance(appear, tuple):
+        if isinstance(appear, tuple) and interval:
             x, y = appear
             self.device.click(x, y)
+            self.interval_timer[target.name].reset()
             return True
         return False
 
