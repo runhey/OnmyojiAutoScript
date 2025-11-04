@@ -807,7 +807,11 @@ class ScriptTask(ExtendGreenMark, GameUi, SwitchSoul, DokanSceneDetector):
             if self.is_in_battle(False) and self.appear_then_click(self.I_RYOU_DOKAN_CHEERING, interval=1.5):
                 cheer_cnt += 1
                 logger.attr(cheer_cnt, f'cheer, count time[{cheering_timer.current():.1f}s]')
+                self.device.stuck_record_clear()
+                self.device.click_record_clear()
+                self.device.stuck_record_add('PAUSE')
                 continue
+            sleep(random.uniform(0.8, 1.6))
         # 助威时间到了且道馆还未结束, 则退出观战交给上层重新挑战
         self.exit_battle()
         self.device.stuck_record_clear()
