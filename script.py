@@ -356,6 +356,9 @@ class Script:
         # 处理御魂溢出
         from tasks.Utils.post_diagnotor import PostDiagnotor, AnalyzeType
         image = getattr(self.device, 'image', None)
+        # image为None则不做处理
+        if image is None:
+            return
         analyse_type = PostDiagnotor().handle(e=e, command=command, image=image)
         if analyse_type == AnalyzeType.SoulOverflow:
             self.config.task_call('SoulsTidy')
