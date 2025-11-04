@@ -236,10 +236,10 @@
   {
     "itemName": "entry_activity",
     "imageName": "as_entry_activity.png",
-    "roiFront": "567,258,46,42",
-    "roiBack": "254,56,774,524",
+    "roiFront": "508,318,46,42",
+    "roiBack": "56,56,971,633",
     "method": "Template matching",
-    "threshold": 0.5,
+    "threshold": 0.7,
     "description": "进入门票活动"
   },
   {
