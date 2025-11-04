@@ -190,6 +190,8 @@ class ScriptTask(GameUi, GeneralBattle, DemonEncounterAssets, SwitchSoul):
                     self.run_general_battle()
                     continue
                 preset_switched = True
+                # 逢魔其他战斗会影响current_count导致大于0
+                self.current_count = 0
                 if self.best_demon_enable:
                     general_battle_config = convert_to_general_battle_config(self.boss_type,
                                                                              best_demon_battle_conf=self.conf.best_demon_battle_config)
