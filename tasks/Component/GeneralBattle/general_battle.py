@@ -422,6 +422,7 @@ class GeneralBattle(GeneralBuff, GeneralBattleAssets):
     def is_in_battle(self, is_screenshot: bool = True) -> bool:
         """
         判断是否在战斗中
+        tip: 因为有friends判别, 所以即使在准备界面也会识别在战斗中
         :return:
         """
         if is_screenshot:
@@ -434,6 +435,16 @@ class GeneralBattle(GeneralBuff, GeneralBattleAssets):
             return True
         else:
             return False
+
+    def is_in_real_battle(self, is_screenshot: bool = True):
+        """
+        判断是否在真正的战斗中(不是战斗准备界面也不是战斗结束界面)
+        :param is_screenshot:
+        :return:
+        """
+        if is_screenshot:
+            self.screenshot()
+        return self.appear(self.I_BATTLE_INFO)
 
     def is_in_prepare(self, is_screenshot: bool = True) -> bool:
         """
