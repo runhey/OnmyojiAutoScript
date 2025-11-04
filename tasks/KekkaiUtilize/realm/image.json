@@ -97,5 +97,14 @@
     "method": "Template matching",
     "threshold": 0.7,
     "description": "盒子经验满"
+  },
+  {
+    "itemName": "plant_tree_close",
+    "imageName": "realm_plant_tree_close.png",
+    "roiFront": "777,91,36,34",
+    "roiBack": "711,52,169,125",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "种树活动关闭标识"
   }
 ]

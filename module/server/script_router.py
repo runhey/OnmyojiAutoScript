@@ -7,6 +7,7 @@ from fastapi.responses import StreamingResponse
 from fastapi import WebSocket, WebSocketDisconnect
 from datetime import datetime
 from module.config.config import Config
+from module.config.utils import convert_to_underscore
 
 from module.logger import logger
 from module.server.main_manager import MainManager
@@ -79,6 +80,26 @@ async def config_delete(name: str = ''):
     if not mm.delete(name):
         raise HTTPException(status_code=400, detail='Delete failed')
     return True
+
+
+@script_app.put('/config/task/copy')
+async def task_copy(task_name: str, dest_config_name: str, source_config_name: str):
+    if dest_config_name not in mm.script_process or source_config_name not in mm.script_process:
+        return False
+    source_task = getattr(mm.config_cache(source_config_name).model, convert_to_underscore(task_name), None)
+    if source_task is None:
+        return False
+    return mm.config_cache(dest_config_name).model.copy_script_task(task_name, source_task)
+
+
+@script_app.put('/config/task/group/copy')
+async def task_group_copy(task_name: str, group_name: str, dest_config_name: str, source_config_name: str):
+    if dest_config_name not in mm.script_process or source_config_name not in mm.script_process:
+        return False
+    source_task = getattr(mm.config_cache(source_config_name).model, convert_to_underscore(task_name), None)
+    if source_task is None:
+        return False
+    return mm.config_cache(dest_config_name).model.copy_task_group(task_name, group_name, source_task)
 
 
 # ---------------------------------   脚本实例管理   ----------------------------------

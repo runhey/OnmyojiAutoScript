@@ -16,5 +16,14 @@
     "method": "Default",
     "keyword": "",
     "description": "召唤的时候的数量"
+  },
+  {
+    "itemName": "ba_times",
+    "roiFront": "741,564,174,44",
+    "roiBack": "641,566,278,41",
+    "mode": "Full",
+    "method": "Default",
+    "keyword": "",
+    "description": "破碎符咒召唤次数"
   }
 ]

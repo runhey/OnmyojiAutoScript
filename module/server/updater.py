@@ -5,7 +5,6 @@ import time
 import requests
 from typing import Generator, List, Tuple
 
-
 from deploy.config import ExecutionError
 from deploy.git import GitManager
 from deploy.pip import PipManager
@@ -64,11 +63,8 @@ class Updater(DeployConfig, GitManager, PipManager):
             return logs
 
     def current_branch(self) -> str:
-        log : str = subprocess.run(
-            'git branch --show-current', capture_output=True, text=True, encoding="utf8", shell=True
-        ).stdout
-        log = log.replace('\n', '')
-        return log
+        branch = self.execute_output(f'{self.git} branch --show-current')
+        return branch.strip()
 
     def current_commit(self) -> str:
         return self.get_commit()
