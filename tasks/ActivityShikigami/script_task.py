@@ -21,7 +21,7 @@ from tasks.Component.BaseActivity.base_activity import BaseActivity
 from tasks.Component.BaseActivity.config_activity import GeneralClimb
 from tasks.Component.SwitchSoul.switch_soul import SwitchSoul
 from tasks.GameUi.game_ui import GameUi
-import tasks.GameUi.page as game
+import tasks.ActivityShikigami.page as game
 from typing import Any
 
 
