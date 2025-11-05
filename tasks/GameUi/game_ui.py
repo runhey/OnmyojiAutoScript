@@ -280,6 +280,7 @@ class GameUi(BaseTask, GameUiAssets):
             if not found:
                 if close_unknown_timer.reached_and_reset():
                     self.try_close_unknown_page(skip_screenshot=False)
+                    self.ui_current = None
         else:
             logger.error(f'Cannot goto page[{destination}], timeout[{timeout}s] reached')
         return False
