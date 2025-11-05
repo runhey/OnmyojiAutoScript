@@ -51,7 +51,9 @@ class ReplaceShikigami(BaseTask, ReplaceShikigamiAssets):
 
             if self.appear(check_selected):
                 break
-            if self.appear_then_click(check_click, interval=1):
+            if self.appear(check_click, interval=1):
+                if self.wait_until_pos_stable(check_click, stable_time=0.8, timeout=3):
+                    self.click(check_click)
                 continue
             if self.click(self.C_SHIKIGAMI_SWITCH_1, interval=3):
                 continue

@@ -162,7 +162,7 @@ class BaseTask(GlobalGameAssets, CostumeBase):
         :param target: 匹配的目标可以是RuleImage, 也可以是RuleOcr
         :param interval:
         :param threshold:
-        :return:
+        :return: interval时间到达且匹配成功则返回True, 否则False
         """
         if interval:
             if target.name in self.interval_timer:
@@ -273,6 +273,48 @@ class BaseTask(GlobalGameAssets, CostumeBase):
             if not self.appear(target):
                 break
 
+    def wait_until_pos_stable(self, target: RuleImage, stable_time: float = 0.3, timeout: float = 2,
+                              threshold: float = None, skip_first_screenshot: bool = True) -> bool:
+        """
+        等待直到在同一位置稳定出现
+        :param skip_first_screenshot:
+        :param threshold: target匹配阈值
+        :param target: 目标图像
+        :param stable_time: 判断是否稳定的时间
+        :param timeout: 等待稳定的超时时间
+        :return: timer时间内稳定出现则返回True, 否则False
+        """
+        logger.info(f'Wait until {target.name} position stable')
+        timeout_timer = Timer(timeout).start()
+        stable_timer = Timer(stable_time).start()
+        pre_roi_front, cur_roi_front = None, None
+        origin_roi_back = target.roi_back
+        while not timeout_timer.reached():
+            self.maybe_screenshot(skip_first_screenshot)
+            skip_first_screenshot = False
+            # 当前页面能够匹配到target
+            if target.match(self.device.image, threshold=threshold):
+                cur_roi_front = target.roi_front
+                logger.info(f'Current:{cur_roi_front}, pre:{pre_roi_front}')
+                target.roi_back = pre_roi_front
+                # 上一次匹配到的位置还能匹配到target
+                if pre_roi_front is not None and target.match(self.device.image, threshold=threshold):
+                    # 到达稳定时间
+                    if stable_timer.reached():
+                        logger.info(f'{target.name} position has stabilized')
+                        target.roi_back = origin_roi_back
+                        return True
+                else:
+                    stable_timer.reset()  # 上一次匹配到的位置这次匹配不到了, 重置定时器
+            else:
+                stable_timer.reset()  # 当前页面都匹配不到, 重置定时器
+            # 记录这一次的target位置
+            pre_roi_front = cur_roi_front
+            # 还原target的匹配区域
+            target.roi_back = origin_roi_back
+        logger.warning(f'Wait until pos stable({target}) timeout')
+        return False
+
     def wait_until_stable(self,
                           target: RuleImage,
                           timer=Timer(0.3, count=1),
@@ -372,7 +414,7 @@ class BaseTask(GlobalGameAssets, CostumeBase):
             # logger.info(f'Swipe {swipe.name}')
             self.interval_timer[swipe.name].reset()
 
-    def click(self, click: Union[RuleClick, RuleLongClick] = None, interval: float = None) -> bool:
+    def click(self, click: Union[RuleClick, RuleLongClick, RuleImage, RuleOcr] = None, interval: float = None) -> bool:
         """
         点击或者长按
         :param interval:
