@@ -11,8 +11,8 @@
   {
     "itemName": "rs_material",
     "imageName": "rs_rs_material.png",
-    "roiFront": "822,620,59,56",
-    "roiBack": "129,597,774,98",
+    "roiFront": "38,286,54,52",
+    "roiBack": "0,265,1072,454",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "素材"
@@ -20,8 +20,8 @@
   {
     "itemName": "rs_n",
     "imageName": "rs_rs_n.png",
-    "roiFront": "709,621,57,59",
-    "roiBack": "694,606,89,90",
+    "roiFront": "129,298,47,49",
+    "roiBack": "0,265,1072,454",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"
@@ -29,8 +29,8 @@
   {
     "itemName": "rs_r",
     "imageName": "rs_rs_r.png",
-    "roiFront": "594,619,64,61",
-    "roiBack": "582,601,91,98",
+    "roiFront": "209,335,48,47",
+    "roiBack": "0,265,1072,454",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"
@@ -38,8 +38,8 @@
   {
     "itemName": "rs_sr",
     "imageName": "rs_rs_sr.png",
-    "roiFront": "483,619,62,58",
-    "roiBack": "470,603,90,96",
+    "roiFront": "279,388,48,47",
+    "roiBack": "0,265,1072,454",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"
@@ -47,8 +47,8 @@
   {
     "itemName": "rs_ssr",
     "imageName": "rs_rs_ssr.png",
-    "roiFront": "370,621,63,58",
-    "roiBack": "353,600,98,100",
+    "roiFront": "331,457,53,46",
+    "roiBack": "0,265,1072,454",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"
@@ -56,8 +56,8 @@
   {
     "itemName": "rs_sp",
     "imageName": "rs_rs_sp.png",
-    "roiFront": "260,621,58,60",
-    "roiBack": "246,605,92,90",
+    "roiFront": "368,537,48,47",
+    "roiBack": "0,265,1072,454",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"
@@ -146,8 +146,8 @@
   {
     "itemName": "rs_ur",
     "imageName": "rs_rs_ur.png",
-    "roiFront": "149,623,56,58",
-    "roiBack": "136,603,88,95",
+    "roiFront": "377,627,49,46",
+    "roiBack": "0,265,1072,454",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"
