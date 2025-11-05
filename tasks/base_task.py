@@ -302,6 +302,7 @@ class BaseTask(GlobalGameAssets, CostumeBase):
                     # 到达稳定时间
                     if stable_timer.reached():
                         logger.info(f'{target.name} position has stabilized')
+                        target.roi_back = origin_roi_back
                         return True
                 else:
                     stable_timer.reset()  # 上一次匹配到的位置这次匹配不到了, 重置定时器
