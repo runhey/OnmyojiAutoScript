@@ -33,6 +33,12 @@ class DokanAssets:
 	C_DOKAN_BATTLE_QUIT_AREA = RuleClick(roi_front=(10,36,50,14), roi_back=(10,36,50,14), name="dokan_battle_quit_area")
 
 
+	# List Rule Assets
+	# 前往按钮列表
+	L_GOTO_CHEERING = RuleList(folder="./tasks/Dokan/res", direction="vertical", mode="ocr", roi_back=(950,172,54,324), size=(53, 62), 
+					 array=["前往"])
+
+
 	# Image Rule Assets
 	# 阴阳寮->神社的按钮 
 	I_RYOU_SHENSHE = RuleImage(roi_front=(850,660,100,60), roi_back=(850,660,100,60), threshold=0.8, method="Template matching", file="./tasks/Dokan/res/res_ryou_shenshe.png")
@@ -150,6 +156,10 @@ class DokanAssets:
 	I_RYOU_DOKAN_DOKAN_QUIT = RuleImage(roi_front=(0,2,80,80), roi_back=(0,2,80,80), threshold=0.8, method="Template matching", file="./tasks/Dokan/res/res_ryou_dokan_dokan_quit.png")
 	# 道馆攻破后夺得资金界面 
 	I_RYOU_DOKAN_SPOILS_OF_DOKAN = RuleImage(roi_front=(480,400,400,100), roi_back=(480,400,400,100), threshold=0.8, method="Template matching", file="./tasks/Dokan/res/res_ryou_dokan_spoils_of_dokan.png")
+	# 助威可点击 
+	I_RYOU_DOKAN_CHEERING = RuleImage(roi_front=(65,601,71,33), roi_back=(44,568,112,100), threshold=0.8, method="Template matching", file="./tasks/Dokan/res/res_ryou_dokan_cheering.png")
+	# 助威灰色不可点击 
+	I_RYOU_DOKAN_CHEERING_GRAY = RuleImage(roi_front=(65,601,71,33), roi_back=(44,568,112,100), threshold=0.8, method="Template matching", file="./tasks/Dokan/res/res_ryou_dokan_cheering_gray.png")
 
 
 	# List Rule Assets
@@ -171,6 +181,8 @@ class DokanAssets:
 	O_DOKAN_RIGHTPAD_BOUNTY = RuleOcr(roi=(0,0,0,0), area=(0,0,0,0), mode="Single", method="Default", keyword="", name="dokan_rightpad_bounty")
 	# 查找道馆时,中间卡片上防守人数 
 	O_DOKAN_CENTER_PEOPLE_NUMBER = RuleOcr(roi=(0,0,0,0), area=(0,0,0,0), mode="Full", method="Default", keyword="", name="dokan_center_people_number")
+	# 道馆失败CD 
+	O_DOKEN_FAIL_CD = RuleOcr(roi=(1066,499,193,31), area=(1061,490,207,47), mode="Full", method="Default", keyword="", name="doken_fail_cd")
 
 
 	# Swipe Rule Assets
