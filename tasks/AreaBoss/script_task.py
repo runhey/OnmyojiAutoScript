@@ -262,7 +262,6 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AreaBossAssets):
         need_open_filter, boss_name, photo = self.get_hot_in_reward()  # 获取挑战人数最多的Boss的名字
         if photo is None or boss_name == '声望不够':
             return False
-        logger.info(f'Select reward boss:{boss_name}')
         # 不需要打开筛选界面说明直接找到了目标boss, 直接挑战
         if not need_open_filter:
             return self.boss_fight(photo, True, fileter_open=False)
@@ -272,20 +271,18 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AreaBossAssets):
         for i in range(random.randint(1, 3)):
             self.swipe(self.S_AB_FILTER_DOWN)
         for PHOTO in BOSS_REWARD_PHOTO1:
-            if photo.name != PHOTO.name:
-                continue
             name = self.get_bossName(PHOTO)
             if self.check_common_chars(str(name), boss_name):
                 return self.boss_fight(PHOTO, True, fileter_open=False)
+            self.ui_click_until_disappear(self.I_AB_CLOSE_RED)
         # 倒数一和二
         for i in range(random.randint(1, 3)):
             self.swipe(self.S_AB_FILTER_UP)
         for PHOTO in BOSS_REWARD_PHOTO2:
-            if photo.name != PHOTO.name:
-                continue
             name = self.get_bossName(PHOTO)
             if self.check_common_chars(str(name), boss_name):
                 return self.boss_fight(PHOTO, True, fileter_open=False)
+            self.ui_click_until_disappear(self.I_AB_CLOSE_RED)
         self.ui_click_until_disappear(self.I_AB_CLOSE_RED)
 
     def get_hot_in_reward(self):
@@ -335,6 +332,7 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AreaBossAssets):
                 mx_challenge_num = challenge_num
                 mx_challenge_boss_name = boss_name
                 photo = cfg['photo']
+                logger.attr(mx_challenge_num, f'Select:{boss_name},{photo.name}')
         # 没有最优boss则找挑战人数最多的boss
         return True, mx_challenge_boss_name if mx_challenge_boss_name else '声望不够', photo if mx_challenge_boss_name else None
 
