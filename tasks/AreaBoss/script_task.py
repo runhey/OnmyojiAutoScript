@@ -423,6 +423,7 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AreaBossAssets):
                 continue
 
     def switch_to_reward(self):
+        self.open_filter()
         while 1:
             self.screenshot()
             if self.appear(self.I_AB_FILTER_TITLE_REWARD):
