@@ -4,6 +4,7 @@
 from enum import Enum
 
 class ShikigamiClass(str, Enum):
+    UR = 'UR'
     SP = 'SP'
     SSR = 'SSR'
     SR = 'SR'
