@@ -1,0 +1,47 @@
+[
+  {
+    "itemName": "exit_11",
+    "imageName": "battle11_exit_11.png",
+    "roiFront": "16,12,41,40",
+    "roiBack": "16,12,41,40",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "左上角退出"
+  },
+  {
+    "itemName": "friends_11",
+    "imageName": "battle11_friends_11.png",
+    "roiFront": "87,12,39,40",
+    "roiBack": "87,12,39,40",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "左上角好友"
+  },
+  {
+    "itemName": "local_11",
+    "imageName": "battle11_local_11.png",
+    "roiFront": "22,560,37,37",
+    "roiBack": "22,560,37,37",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "指针"
+  },
+  {
+    "itemName": "false_11",
+    "imageName": "battle11_false_11.png",
+    "roiFront": "588,155,20,20",
+    "roiBack": "588,155,20,20",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "失败"
+  },
+  {
+    "itemName": "win_11",
+    "imageName": "battle11_win_11.png",
+    "roiFront": "529,129,27,21",
+    "roiBack": "529,129,27,21",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "战斗胜利"
+  }
+]

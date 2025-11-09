@@ -29,6 +29,19 @@ class CostumeBattleAssets:
 
 
 	# Image Rule Assets
+	# 左上角退出 
+	I_EXIT_11 = RuleImage(roi_front=(16,12,41,40), roi_back=(16,12,41,40), threshold=0.8, method="Template matching", file="./tasks/Component/CostumeBattle/battle11/battle11_exit_11.png")
+	# 左上角好友 
+	I_FRIENDS_11 = RuleImage(roi_front=(87,12,39,40), roi_back=(87,12,39,40), threshold=0.8, method="Template matching", file="./tasks/Component/CostumeBattle/battle11/battle11_friends_11.png")
+	# 指针 
+	I_LOCAL_11 = RuleImage(roi_front=(22,560,37,37), roi_back=(22,560,37,37), threshold=0.8, method="Template matching", file="./tasks/Component/CostumeBattle/battle11/battle11_local_11.png")
+	# 失败 
+	I_FALSE_11 = RuleImage(roi_front=(588,155,20,20), roi_back=(588,155,20,20), threshold=0.8, method="Template matching", file="./tasks/Component/CostumeBattle/battle11/battle11_false_11.png")
+	# 战斗胜利 
+	I_WIN_11 = RuleImage(roi_front=(529,129,27,21), roi_back=(529,129,27,21), threshold=0.8, method="Template matching", file="./tasks/Component/CostumeBattle/battle11/battle11_win_11.png")
+
+
+	# Image Rule Assets
 	# description 
 	I_LOCAL_2 = RuleImage(roi_front=(30,569,21,22), roi_back=(30,569,21,22), threshold=0.8, method="Template matching", file="./tasks/Component/CostumeBattle/battle2/battle2_local_2.png")
 	# description 

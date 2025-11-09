@@ -38,7 +38,7 @@ realm_costume_model = {
 
 # 战斗主题（使用循环处理常规情况 + 特例处理）
 battle_theme_model = {}
-for i in range(1, 11):
+for i in range(1, 12):
     entry = {
         'I_LOCAL': f'I_LOCAL_{i}',
         'I_EXIT': f'I_EXIT_{i}',
@@ -50,6 +50,11 @@ for i in range(1, 11):
             'I_DE_WIN': 'I_DE_WIN_8',
             'I_FALSE': 'I_FALSE_8'
         })
+    if i == 11:  # 特殊处理第11项
+            entry.update({
+                'I_WIN': 'I_WIN_11',
+                'I_FALSE': 'I_FALSE_11'
+            })
     battle_theme_model[getattr(BattleType, f"COSTUME_BATTLE_{i}")] = entry
 
 # 幕间主题
