@@ -137,6 +137,8 @@ class ScriptTask(GameUi, HyaSlave, SwitchOnmyoji):
 
             self.one()
             hya_count += 1
+            logger.info(f'count: {hya_count}/{self.limit_count}')
+            logger.info(f'time: {(datetime.now() - self.start_time).total_seconds():.1f}s/{self.limit_time.total_seconds()}s')
 
         while 1:
             self.screenshot()
