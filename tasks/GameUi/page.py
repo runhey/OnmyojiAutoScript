@@ -1,3 +1,5 @@
+from itertools import compress
+
 import random
 
 import traceback
@@ -212,12 +214,13 @@ page_act_list_climb_act.link(button=G.I_BACK_ACT_LIST, destination=page_main)
 page_battle = Page(GeneralBattleAssets.I_BATTLE_INFO)
 
 
-def random_click(low: int = None, high: int = None) -> RuleClick | list[RuleClick]:
+def random_click(low: int = None, high: int = None, ltrb: tuple = (True, False, True, False)) -> RuleClick | list[RuleClick]:
     """
     随机生成RuleClick, 不传入参数则返回1个RuleClick, 传入参数则生成范围内的click数组
     :return: RuleClick或者RuleClick的数组
     """
-    click = random.choice([asa.C_RANDOM_LEFT, asa.C_RANDOM_RIGHT, asa.C_RANDOM_TOP])
+    click_area_list = [asa.C_RANDOM_LEFT, asa.C_RANDOM_TOP, asa.C_RANDOM_RIGHT, asa.C_RANDOM_BOTTOM]
+    click = random.choice(list(compress(click_area_list, ltrb)))
     click.name = "SAFE_RANDOM_CLICK"
     if low is None or high is None:
         return click
