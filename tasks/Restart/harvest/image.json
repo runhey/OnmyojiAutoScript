@@ -47,8 +47,8 @@
   {
     "itemName": "harvest_mail_all",
     "imageName": "harvest_harvest_mail_all.png",
-    "roiFront": "69,589,64,57",
-    "roiBack": "28,572,115,123",
+    "roiFront": "65,578,76,70",
+    "roiBack": "2,554,173,165",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "全部收取"
@@ -200,8 +200,8 @@
   {
     "itemName": "system_mail_open",
     "imageName": "harvest_system_mail_open.png",
-    "roiFront": "1201,223,51,112",
-    "roiBack": "1197,219,59,118",
+    "roiFront": "1186,221,51,112",
+    "roiBack": "1172,184,88,166",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "系统邮件打开状态"
@@ -209,8 +209,8 @@
   {
     "itemName": "special_mail_close",
     "imageName": "harvest_special_mail_close.png",
-    "roiFront": "1200,379,53,108",
-    "roiBack": "1185,342,80,178",
+    "roiFront": "1188,379,53,108",
+    "roiBack": "1164,340,114,178",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "特殊邮件关闭状态"
@@ -218,8 +218,8 @@
   {
     "itemName": "system_mail_close",
     "imageName": "harvest_system_mail_close.png",
-    "roiFront": "1200,222,53,112",
-    "roiBack": "1186,193,81,156",
+    "roiFront": "1187,220,53,112",
+    "roiBack": "1171,186,106,164",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "系统邮件关闭状态"
@@ -227,8 +227,8 @@
   {
     "itemName": "special_mail_open",
     "imageName": "harvest_special_mail_open.png",
-    "roiFront": "1201,380,55,110",
-    "roiBack": "1190,348,79,162",
+    "roiFront": "1185,377,55,110",
+    "roiBack": "1166,350,112,162",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "特殊邮件打开状态"
@@ -236,7 +236,7 @@
   {
     "itemName": "read_all_mail",
     "imageName": "harvest_read_all_mail.png",
-    "roiFront": "155,603,166,44",
+    "roiFront": "198,605,91,34",
     "roiBack": "149,588,182,72",
     "method": "Template matching",
     "threshold": 0.8,
