@@ -3,6 +3,7 @@
 # github https://github.com/runhey
 import time
 
+from tasks.GameUi.page import random_click
 from typing import Union
 
 from module.atom.image import RuleImage
@@ -53,6 +54,10 @@ class Buy(BaseTask, BuyAssets):
                         continue
                 return False
 
+            if self.appear(self.I_BUY_SUCCESS):
+                self.ui_click_until_smt_disappear(random_click(), self.I_BUY_SUCCESS, interval=0.8)
+                logger.info('Get reward success')
+                break
 
             if self.ui_reward_appear_click():
                 while 1:
@@ -70,7 +75,6 @@ class Buy(BaseTask, BuyAssets):
                 continue
 
         return True
-
 
     def buy_more(self, start_click: Union[RuleImage, RuleOcr, RuleClick],
                  number: int = None):

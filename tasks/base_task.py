@@ -2,7 +2,7 @@
 # @author runhey
 # github https://github.com/runhey
 
-from time import sleep
+from time import sleep, time
 
 import random
 from datetime import datetime, timedelta
@@ -136,6 +136,23 @@ class BaseTask(GlobalGameAssets, CostumeBase):
 
         return self.device.image
 
+    def maybe_screenshot(self, soft_skip: bool = False):
+        """
+        可能截图
+        :param soft_skip: True跳过截图(但保证设备一定有图才跳过,否则依然截图)
+        :return:
+        """
+        if not soft_skip or not self.exist_image():
+            return self.screenshot()
+        return self.device.image
+
+    def exist_image(self) -> bool:
+        """
+        判断当前设备是否有图片
+        :return: 有返回True，没有返回False
+        """
+        return hasattr(self.device, 'image') and self.device.image is not None
+
     def appear(self,
                target: RuleImage | RuleGif | RuleOcr,
                interval: float = None,
@@ -145,7 +162,7 @@ class BaseTask(GlobalGameAssets, CostumeBase):
         :param target: 匹配的目标可以是RuleImage, 也可以是RuleOcr
         :param interval:
         :param threshold:
-        :return:
+        :return: interval时间到达且匹配成功则返回True, 否则False
         """
         if interval:
             if target.name in self.interval_timer:
@@ -256,6 +273,48 @@ class BaseTask(GlobalGameAssets, CostumeBase):
             if not self.appear(target):
                 break
 
+    def wait_until_pos_stable(self, target: RuleImage, stable_time: float = 0.3, timeout: float = 2,
+                              threshold: float = None, skip_first_screenshot: bool = True) -> bool:
+        """
+        等待直到在同一位置稳定出现
+        :param skip_first_screenshot:
+        :param threshold: target匹配阈值
+        :param target: 目标图像
+        :param stable_time: 判断是否稳定的时间
+        :param timeout: 等待稳定的超时时间
+        :return: timer时间内稳定出现则返回True, 否则False
+        """
+        logger.info(f'Wait until {target.name} position stable')
+        timeout_timer = Timer(timeout).start()
+        stable_timer = Timer(stable_time).start()
+        pre_roi_front, cur_roi_front = None, None
+        origin_roi_back = target.roi_back
+        while not timeout_timer.reached():
+            self.maybe_screenshot(skip_first_screenshot)
+            skip_first_screenshot = False
+            # 当前页面能够匹配到target
+            if target.match(self.device.image, threshold=threshold):
+                cur_roi_front = target.roi_front
+                logger.info(f'Current:{cur_roi_front}, pre:{pre_roi_front}')
+                target.roi_back = pre_roi_front
+                # 上一次匹配到的位置还能匹配到target
+                if pre_roi_front is not None and target.match(self.device.image, threshold=threshold):
+                    # 到达稳定时间
+                    if stable_timer.reached():
+                        logger.info(f'{target.name} position has stabilized')
+                        target.roi_back = origin_roi_back
+                        return True
+                else:
+                    stable_timer.reset()  # 上一次匹配到的位置这次匹配不到了, 重置定时器
+            else:
+                stable_timer.reset()  # 当前页面都匹配不到, 重置定时器
+            # 记录这一次的target位置
+            pre_roi_front = cur_roi_front
+            # 还原target的匹配区域
+            target.roi_back = origin_roi_back
+        logger.warning(f'Wait until pos stable({target}) timeout')
+        return False
+
     def wait_until_stable(self,
                           target: RuleImage,
                           timer=Timer(0.3, count=1),
@@ -355,12 +414,12 @@ class BaseTask(GlobalGameAssets, CostumeBase):
             # logger.info(f'Swipe {swipe.name}')
             self.interval_timer[swipe.name].reset()
 
-    def click(self, click: Union[RuleClick, RuleLongClick] = None, interval: float = None) -> bool:
+    def click(self, click: Union[RuleClick, RuleLongClick, RuleImage, RuleOcr] = None, interval: float = None) -> bool:
         """
         点击或者长按
         :param interval:
         :param click:
-        :return:
+        :return: 返回值不是click是否成功，而是interval是否设置以及是否到时间
         """
         if not click:
             return False
@@ -460,11 +519,12 @@ class BaseTask(GlobalGameAssets, CostumeBase):
             self.device.click(x=x, y=y, control_name=target.name)
         return True
 
-    def list_find(self, target: RuleList, name: str | list[str]) -> bool | tuple:
+    def list_find(self, target: RuleList, name: str | list[str], max_swipe: int = 10) -> bool | tuple:
         """
         会一致在列表寻找目标，找到了就退出。
         如果是图片列表会一直往下找
         如果是纯文字的，会自动识别自己的位置，根据位置选择向前还是向后翻
+        :param max_swipe: 最大滑动次数
         :param target:
         :param name:
         :return:
@@ -474,33 +534,47 @@ class BaseTask(GlobalGameAssets, CostumeBase):
         result = None
         if not target:
             return False
-        while True:
+        appear = False
+        for _ in range(max_swipe):
             self.screenshot()
             if target.is_image:
                 result = target.image_appear(self.device.image, name=name)
                 swipe_down = True
             elif target.is_ocr:
                 result = target.ocr_appear(self.device.image, name=name)
-                swipe_down = isinstance(result, int) and result > 0
+                swipe_down = result is not None and isinstance(result, int) and result > 0
                 swipe_distance_ratio = 1
-            if not result:
-                return False
-            if isinstance(result, tuple):
-                return result
+            # 结果是坐标证明找到了, 非坐标都是没找到
+            if result is not None and isinstance(result, tuple):
+                appear = True
+                break
             if swipe_distance_ratio:
                 x1, y1, x2, y2 = target.swipe_pos(number=swipe_distance_ratio, after=swipe_down)
             else:
                 x1, y1, x2, y2 = target.swipe_pos(after=swipe_down)
             self.device.swipe(p1=(x1, y1), p2=(x2, y2))
             sleep(random.uniform(0.8, 1.3))  # 等待滑动完成, 待优化
+        if appear:
+            return result
+        return False
 
-    def list_appear_click(self, target: RuleList) -> bool:
-        appear = self.list_find(target, name=target.array[0])
-        if not appear:
-            return False
-        if isinstance(appear, tuple):
+    def list_appear_click(self, target: RuleList, interval: float = None, max_swipe: int = 10) -> bool:
+        if interval:
+            if target.name in self.interval_timer:
+                # 如果传入的限制时间不一样，则替换限制新的传入的时间
+                if self.interval_timer[target.name].limit != interval:
+                    self.interval_timer[target.name] = Timer(interval)
+            else:
+                # 如果没有限制时间，则创建限制时间
+                self.interval_timer[target.name] = Timer(interval)
+            # 如果时间还没到达，则不执行
+            if not self.interval_timer[target.name].reached():
+                return False
+        appear = self.list_find(target, name=target.array[0], max_swipe=max_swipe)
+        if isinstance(appear, tuple) and interval:
             x, y = appear
             self.device.click(x, y)
+            self.interval_timer[target.name].reset()
             return True
         return False
 

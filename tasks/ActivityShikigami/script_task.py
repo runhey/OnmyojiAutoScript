@@ -12,6 +12,7 @@ from datetime import datetime, timedelta, time
 from module.atom.click import RuleClick
 from module.atom.ocr import RuleOcr
 from module.base.protect import random_sleep
+from module.base.timer import Timer
 from module.exception import TaskEnd
 from module.logger import logger
 from tasks.ActivityShikigami.assets import ActivityShikigamiAssets
@@ -20,7 +21,7 @@ from tasks.Component.BaseActivity.base_activity import BaseActivity
 from tasks.Component.BaseActivity.config_activity import GeneralClimb
 from tasks.Component.SwitchSoul.switch_soul import SwitchSoul
 from tasks.GameUi.game_ui import GameUi
-import tasks.GameUi.page as game
+import tasks.ActivityShikigami.page as game
 from typing import Any
 
 
@@ -129,11 +130,8 @@ class ScriptTask(GameUi, BaseActivity, SwitchSoul, ActivityShikigamiAssets):
                     self.lock_team(self.conf.general_battle)
                     self.check_tickets_enough()
                     self.start_battle()
-                case game.page_battle_auto:
-                    self.battle_wait(getattr(self.conf.general_battle, f'enable_{self.climb_type}_anti_detect',
-                                             False))
-                case game.page_battle_hand:
-                    self.ui_click_until_disappear(game.page_battle_hand.check_button)
+                case game.page_battle:
+                    self.battle_wait(getattr(self.conf.general_battle, f'enable_{self.climb_type}_anti_detect', False))
                 case _:
                     if self.check(Status.GOTO_ACT_FAILED):
                         logger.warning(f'Climb type[{self.climb_type}] goto failed')
@@ -157,7 +155,6 @@ class ScriptTask(GameUi, BaseActivity, SwitchSoul, ActivityShikigamiAssets):
         # 点击战斗前随机休息
         if self.conf.general_climb.random_sleep:
             random_sleep(probability=0.2)
-        logger.info("Click battle")
         click_times, max_times = 0, random.randint(2, 4)
         while 1:
             self.screenshot()
@@ -183,6 +180,7 @@ class ScriptTask(GameUi, BaseActivity, SwitchSoul, ActivityShikigamiAssets):
             # 点击挑战
             if self.ocr_appear_click(self.O_FIRE, interval=2):
                 click_times += 1
+                logger.info(f'Try click fire, remain times[{max_times - click_times}]')
                 continue
             if ((self.appear_then_click(self.I_C_CONFIRM1, interval=0.6) or
                  self.appear_then_click(self.I_UI_CONFIRM_SAMLL, interval=1) or
@@ -201,6 +199,7 @@ class ScriptTask(GameUi, BaseActivity, SwitchSoul, ActivityShikigamiAssets):
         for btn in (self.C_RANDOM_LEFT, self.C_RANDOM_RIGHT, self.C_RANDOM_TOP, self.C_RANDOM_BOTTOM):
             btn.name = "BATTLE_RANDOM"
         ok_cnt, max_retry = 0, 5
+        single_start_time = datetime.now()
         while 1:
             sleep(random.uniform(1, 1.5))
             self.screenshot()
@@ -216,20 +215,49 @@ class ScriptTask(GameUi, BaseActivity, SwitchSoul, ActivityShikigamiAssets):
                 self.ui_click_until_smt_disappear(self.random_reward_click(click_now=False), self.I_FALSE, interval=1.5)
                 return False
             # 奖励界面
-            if self.ui_page_appear(game.page_reward):
+            if self.ui_page_appear(game.page_reward, interval=0.6):
                 logger.info(f'Battle success, try close reward page[{ok_cnt}]')
                 self.random_reward_click(exclude_click=[self.C_RANDOM_BOTTOM])
                 ok_cnt += 1
                 continue
             # 已经不在战斗中了, 且奖励也识别过了, 则随机点击
-            if ok_cnt > 0 and not self.ui_page_appear(game.page_battle_auto):
+            if ok_cnt > 0 and not self.is_in_battle(False):
                 self.random_reward_click(exclude_click=[self.C_RANDOM_BOTTOM])
+                ok_cnt += 1
+                continue
+            # 单局到时间自动退出战斗
+            if ok_cnt == 0 and datetime.now() - single_start_time > self.conf.general_climb.get_single_limit_time(
+                    self.climb_type, timedelta(days=1)):
+                logger.attr(self.climb_type, 'Time limit arrived, close current battle')
+                self.exit_battle(skip_first=True)
                 ok_cnt += 1
                 continue
             # 战斗中随机滑动
             if ok_cnt == 0 and random_click_swipt_enable:
                 self.random_click_swipt()
         return True
+
+    def exit_battle(self, skip_first: bool = False) -> bool:
+        """
+        在战斗的时候强制退出战斗
+        :param skip_first: 是否跳过第一次截屏
+        :return: 退出战斗成功True or 失败False
+        """
+        timeout_timer = Timer(6).start()
+        exit_clicked = False
+        while not timeout_timer.reached():
+            self.maybe_screenshot(skip_first)
+            skip_first = False
+            # 不在战斗界面, 认为退出成功
+            if not self.is_in_battle(False):
+                return True
+            if exit_clicked:
+                self.appear_then_click(self.I_EXIT_ENSURE)
+            if not exit_clicked and self.appear_then_click(self.I_EXIT):
+                exit_clicked = True
+            sleep(random.uniform(0.5, 1.5))
+        # 还在战斗界面且超时则退出失败
+        return False
 
     def switch_soul(self, conf: SwitchSoulConfig):
         """

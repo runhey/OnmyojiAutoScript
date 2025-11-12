@@ -44,7 +44,6 @@
     "keyword": "",
     "description": "查找道馆时,右侧边栏中的赏金"
   },
-
   {
     "itemName": "dokan_center_people_number",
     "roiFront": "0,0,0,0",
@@ -53,5 +52,14 @@
     "method": "Default",
     "keyword": "",
     "description": "查找道馆时,中间卡片上防守人数"
+  },
+  {
+    "itemName": "doken_fail_cd",
+    "roiFront": "1066,499,193,31",
+    "roiBack": "1061,490,207,47",
+    "mode": "Full",
+    "method": "Default",
+    "keyword": "",
+    "description": "道馆失败CD"
   }
 ]

@@ -2,11 +2,24 @@ import random
 
 import traceback
 from module.atom.click import RuleClick
-
+from tasks.GlobalGame.assets import GlobalGameAssets as GGA
 from tasks.GameUi.assets import GameUiAssets as G
+from tasks.KekkaiUtilize.assets import KekkaiUtilizeAssets
 from tasks.Restart.assets import RestartAssets
 from tasks.base_task import BaseTask as BT
 from tasks.RyouToppa.assets import RyouToppaAssets
+
+
+class PageRegistry:
+    _registry = []
+
+    @classmethod
+    def register(cls, page):
+        cls._registry.append(page)
+
+    @classmethod
+    def all(cls):
+        return list(cls._registry)
 
 
 class Page:
@@ -18,6 +31,7 @@ class Page:
         self.additional: list = None  # 附加按钮或者是ocr检测按钮
         (filename, line_number, function_name, text) = traceback.extract_stack()[-2]
         self.name = text[:text.find('=')].strip()
+        PageRegistry.register(self)
 
     def __eq__(self, other):
         return self.name == other.name
@@ -50,10 +64,6 @@ page_main.link(button=G.I_MAIN_GOTO_EXPLORATION, destination=page_exploration)
 page_town = Page(G.I_CHECK_TOWN)
 page_town.link(button=G.I_TOWN_GOTO_MAIN, destination=page_main)
 page_main.link(button=G.I_MAIN_GOTO_TOWN, destination=page_town)
-
-# Unknown
-# page_unknown = Page(None)
-# page_unknown.link(button=G.I_CHECK_MAIN, destination=page_main)
 
 # ************************************* 探索部分 *****************************************#
 # 觉醒 awake zones
@@ -132,7 +142,6 @@ page_hyakkiyakou = Page(G.I_CHECK_KYAKKIYAKOU)
 page_hyakkiyakou.link(button=G.I_HYAKKIYAKOU_CLOSE, destination=page_town)
 page_town.link(button=G.I_TOWN_GOTO_HYAKKIYAKOU, destination=page_hyakkiyakou)
 
-
 # ************************************* 庭院部分 *****************************************#
 # 式神录 shikigami_records
 page_shikigami_records = Page(G.I_CHECK_RECORDS)
@@ -161,6 +170,7 @@ page_mall.link(button=G.I_BACK_BLUE, destination=page_main)
 page_main.link(button=G.I_MAIN_GOTO_MALL, destination=page_mall)
 # 阴阳寮 guild
 page_guild = Page(G.I_CHECK_GUILD)
+page_guild.additional = [KekkaiUtilizeAssets.I_PLANT_TREE_CLOSE]
 page_guild.link(button=G.I_BACK_Y, destination=page_main)
 page_main.link(button=G.I_MAIN_GOTO_GUILD, destination=page_guild)
 # 组队 team
@@ -191,58 +201,15 @@ page_dokan.link(button=G.I_BACK_Y, destination=page_main)
 
 # ************************************* 活动部分 *****************************************#
 from tasks.ActivityShikigami.assets import ActivityShikigamiAssets as asa
-from tasks.GlobalGame.assets import GlobalGameAssets as gga
 
 # 活动列表页爬塔活动
 page_act_list_climb_act = Page(asa.I_CHECK_ACT_LIST_CLIMB_ACT)
 page_act_list.link(button=G.L_ACT_LIST_OCR, destination=page_act_list_climb_act)
 page_act_list_climb_act.link(button=G.I_BACK_ACT_LIST, destination=page_main)
-# 爬塔活动界面
-page_climb_act = Page(asa.I_BATTLE)
-page_climb_act.additional = [gga.I_UI_REWARD, asa.I_SKIP_BUTTON, asa.I_RED_EXIT, asa.I_RED_EXIT_2]
-page_climb_act.link(button=G.I_BACK_Y, destination=page_main)
-page_act_list_climb_act.link(button=G.I_ACT_LIST_GOTO_ACT, destination=page_climb_act)
-# 爬塔活动副界面
-page_climb_act_2 = Page(asa.I_CHECK_BATTLE_2)
-page_climb_act_2.additional = [asa.I_ACT_MAP_SWITCH, asa.I_PASS_ACT_LOCAT, asa.I_SKIP_BUTTON, asa.I_RED_EXIT,
-                               asa.I_RED_EXIT_2]
-page_climb_act_2.link(button=G.I_BACK_BATTLE, destination=page_climb_act)
-page_climb_act.link(button=asa.I_BATTLE, destination=page_climb_act_2)
-# 门票爬塔活动界面
-page_climb_act_pass = Page(asa.I_AP_ACTIVITY)
-page_climb_act_pass.additional = [asa.I_SKIP_BUTTON, gga.I_UI_REWARD, asa.I_RED_EXIT, ]
-page_climb_act_pass.link(button=G.I_BACK_Y, destination=page_climb_act_2)
-page_climb_act_2.link(button=asa.I_ENTRY_ACTIVITY, destination=page_climb_act_pass)
-# 体力爬塔活动界面
-page_climb_act_ap = Page(asa.I_AP)
-page_climb_act_ap.additional = [asa.O_ENTRY_ACTIVITY, asa.I_SKIP_BUTTON, asa.I_TOGGLE_BUTTON, gga.I_UI_REWARD,
-                                asa.I_RED_EXIT]
-page_climb_act_ap.link(button=G.I_BACK_Y, destination=page_climb_act_2)
-page_climb_act_2.link(button=asa.O_ENTRY_ACTIVITY, destination=page_climb_act_ap)
-# 体力, 门票互相跳转
-# page_climb_act_ap.link(button=asa.I_SWITCH, destination=page_climb_act_pass)
-# page_climb_act_pass.link(button=asa.I_SWITCH, destination=page_climb_act_ap)
-# 100体爬塔活动界面
-page_climb_act_ap100 = Page(asa.I_CHECK_AP100)
-page_climb_act_2.link(button=asa.O_ENTER_AP100, destination=page_climb_act_ap100)
-page_climb_act_ap100.link(button=G.I_BACK_Y, destination=page_climb_act_2)
-# 爬塔活动boss战界面
-page_climb_act_boss = Page(asa.I_CHECK_BOSS)
-page_climb_act_boss.additional = [BT.I_UI_BACK_RED, asa.I_SKIP_BUTTON]
-page_climb_act_boss.link(button=G.I_BACK_Y, destination=page_climb_act)
-page_climb_act.link(button=asa.I_BOSS, destination=page_climb_act_boss)
-# 爬塔活动加成界面
-page_climb_act_buff = Page(asa.I_CHECK_BUFF)
-page_climb_act_buff.additional = [BT.I_UI_BACK_RED, asa.I_SKIP_BUTTON]
-page_climb_act_buff.link(button=G.I_BACK_Y, destination=page_climb_act)
-page_climb_act.link(button=asa.I_BUFF_CHANGE_BUTTON, destination=page_climb_act_buff)
 
 # ************************************* 战斗部分 *****************************************#
 # 战斗界面
-page_battle_auto = Page(G.O_BATTLE_AUTO)
-page_battle_hand = Page(G.O_BATTLE_HAND)
-page_battle_auto.link(button=G.O_BATTLE_AUTO, destination=page_battle_hand)
-page_battle_hand.link(button=G.O_BATTLE_HAND, destination=page_battle_auto)
+page_battle = Page(GeneralBattleAssets.I_BATTLE_INFO)
 
 
 def random_click(low: int = None, high: int = None) -> RuleClick | list[RuleClick]:
@@ -262,12 +229,8 @@ page_reward = Page(check_button=[GeneralBattleAssets.I_REWARD_PURPLE_SNAKE_SKIN,
                                  GeneralBattleAssets.I_REWARD_EXP_SOUL_4, GeneralBattleAssets.I_WIN,
                                  GeneralBattleAssets.I_REWARD_GOLD, GeneralBattleAssets.I_REWARD_GOLD_SNAKE_SKIN,
                                  GeneralBattleAssets.I_REWARD_SOUL_5, GeneralBattleAssets.I_REWARD_SOUL_6,
-                                 gga.I_UI_REWARD, ],
-                   links={page_climb_act_pass: random_click(), page_climb_act_ap: random_click(),
-                          page_area_boss: random_click()})
+                                 GGA.I_UI_REWARD, ])
 page_reward.additional = [random_click()]
 # 失败界面
-page_failed = Page(check_button=GeneralBattleAssets.I_FALSE,
-                   links={page_climb_act_pass: random_click(), page_climb_act_ap: random_click(),
-                          page_area_boss: random_click()})
+page_failed = Page(GeneralBattleAssets.I_FALSE)
 page_failed.additional = [random_click()]

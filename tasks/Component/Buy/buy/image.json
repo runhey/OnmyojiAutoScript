@@ -34,5 +34,14 @@
     "method": "Template matching",
     "threshold": 0.8,
     "description": "出现用魂玉购买"
+  },
+  {
+    "itemName": "buy_success",
+    "imageName": "buy_buy_success.png",
+    "roiFront": "512,53,261,44",
+    "roiBack": "449,0,405,167",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "购买成功"
   }
 ]
