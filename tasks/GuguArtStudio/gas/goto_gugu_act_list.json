@@ -1,0 +1,13 @@
+{
+  "name": "goto_gugu_act",
+  "direction": "vertical",
+  "type": "ocr",
+  "roiBack": "241,119,49,486",
+  "description": "前往呱呱画室列表",
+  "list": [
+    {
+      "itemName": "画室",
+      "roiFront": "242,335,44,79"
+    }
+  ]
+}

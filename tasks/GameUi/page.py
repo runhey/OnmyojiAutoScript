@@ -203,11 +203,16 @@ page_dokan.link(button=G.I_BACK_Y, destination=page_main)
 
 # ************************************* 活动部分 *****************************************#
 from tasks.ActivityShikigami.assets import ActivityShikigamiAssets as asa
+from tasks.GuguArtStudio.assets import GuguArtStudioAssets as gasa
 
 # 活动列表页爬塔活动
 page_act_list_climb_act = Page(asa.I_CHECK_ACT_LIST_CLIMB_ACT)
 page_act_list.link(button=G.L_ACT_LIST_OCR, destination=page_act_list_climb_act)
 page_act_list_climb_act.link(button=G.I_BACK_ACT_LIST, destination=page_main)
+# 活动列表页呱呱画室活动
+page_act_list_gugu_act = Page(gasa.I_CHECK_ACT_LIST_GUGU_ACT)
+page_act_list.link(button=gasa.L_GOTO_GUGU_ACT, destination=page_act_list_gugu_act)
+page_act_list_gugu_act.link(button=G.I_BACK_ACT_LIST, destination=page_main)
 
 # ************************************* 战斗部分 *****************************************#
 # 战斗界面

@@ -1,0 +1,74 @@
+[
+  {
+    "itemName": "check_act_list_gugu_act",
+    "imageName": "gas_check_act_list_gugu_act.png",
+    "roiFront": "577,175,440,117",
+    "roiBack": "499,119,595,296",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "活动列表页呱呱画室标志"
+  },
+  {
+    "itemName": "check_gugu_act",
+    "imageName": "gas_check_gugu_act.png",
+    "roiFront": "1069,20,33,40",
+    "roiBack": "1052,10,74,59",
+    "method": "Template matching",
+    "threshold": 0.7,
+    "description": "呱呱画室主页面"
+  },
+  {
+    "itemName": "obtain_paint",
+    "imageName": "gas_obtain_paint.png",
+    "roiFront": "1156,453,51,55",
+    "roiBack": "1118,406,156,149",
+    "method": "Template matching",
+    "threshold": 0.7,
+    "description": "获取颜料"
+  },
+  {
+    "itemName": "submit_paint",
+    "imageName": "gas_submit_paint.png",
+    "roiFront": "1151,590,58,76",
+    "roiBack": "1117,552,148,151",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "提交颜料"
+  },
+  {
+    "itemName": "gas_can_fire",
+    "imageName": "gas_gas_can_fire.png",
+    "roiFront": "1106,578,92,96",
+    "roiBack": "1077,548,157,158",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "可以挑战标志"
+  },
+  {
+    "itemName": "goto_submit",
+    "imageName": "gas_goto_submit.png",
+    "roiFront": "694,401,124,62",
+    "roiBack": "672,386,165,91",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "前往提交"
+  },
+  {
+    "itemName": "goto_obtain",
+    "imageName": "gas_goto_obtain.png",
+    "roiFront": "696,400,126,63",
+    "roiBack": "688,391,141,85",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "前往获取"
+  },
+  {
+    "itemName": "gas_cannot_fire",
+    "imageName": "gas_gas_cannot_fire.png",
+    "roiFront": "1100,577,100,100",
+    "roiBack": "1078,563,142,128",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "不能挑战标志"
+  }
+]

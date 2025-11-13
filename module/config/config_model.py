@@ -1,6 +1,7 @@
 # This Python file uses the following encoding: utf-8
 # @author runhey
 # github https://github.com/runhey
+from tasks.GuguArtStudio.config import GuguArtStudio
 from typing import Dict, Any
 
 import re
@@ -120,6 +121,7 @@ class ConfigModel(ConfigBase):
     quiz: Quiz = Field(default_factory=Quiz)
     kitty_shop: KittyShop = Field(default_factory=KittyShop)
     dye_trials: DyeTrials = Field(default_factory=DyeTrials)
+    gugu_art_studio: GuguArtStudio = Field(default_factory=GuguArtStudio)
 
     # 这些是肝帝专属
     bondling_fairyland: BondlingFairyland = Field(default_factory=BondlingFairyland)
