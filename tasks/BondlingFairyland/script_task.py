@@ -59,29 +59,19 @@ class ScriptTask(GameUi, GeneralInvite, GeneralRoom, BondlingBattle, SwitchSoul,
             logger.info(f'契忆数量: {cu} 小于 {MAX_COUNT}, 继续任务')
 
         logger.hr('第二步, 切换御魂', 2)
-        # 御魂切换方式一
-        if cong.switch_soul_config.enable:
-            self.ui_get_current_page()
-            self.ui_goto(page_shikigami_records)
-            self.run_switch_soul(cong.switch_soul_config.switch_group_team)
-        # 御魂切换方式二
-        if cong.switch_soul_config.enable_switch_by_name:
-            self.ui_get_current_page()
-            self.ui_goto(page_shikigami_records)
-            self.run_switch_soul_by_name(cong.switch_soul_config.group_name, cong.switch_soul_config.team_name)
+        if cong.bondling_switch_soul.enable:
+            type_str, (group, team) = cong.bondling_switch_soul.get_switch_by_enum(cong.bondling_config.bondling_stone_class)
+            if type_str is None:
+                logger.warning(f'Invalid switch soul config on {cong.bondling_config.bondling_stone_class.value}, not switch')
+            else:
+                self.ui_goto_page(page_shikigami_records)
+                if type_str == 'int':
+                    self.run_switch_soul((group, team))
+                if type_str == 'str':
+                    self.run_switch_soul_by_name(group, team)
 
         logger.hr('第三步, 前往契灵主界面', 2)
-        self.ui_get_current_page()
-        self.ui_goto(page_bondling_fairyland)
-
-        while 1:
-            self.screenshot()
-            if self.appear(self.I_CHECK_BONDLING_FAIRYLAND, interval=1):
-                break
-            if self.appear(self.I_BALL_HELP, interval=1):
-                self.ui_get_current_page()
-                self.ui_goto(page_bondling_fairyland)
-                continue
+        self.ui_goto_page(page_bondling_fairyland)
 
         logger.hr('第四步, 开始战斗准备', 2)
         self.current_count = 0
@@ -280,17 +270,8 @@ class ScriptTask(GameUi, GeneralInvite, GeneralRoom, BondlingBattle, SwitchSoul,
         battle_config = cong.battle_config
 
         logger.info(f'抓捕契灵: [{bondling_config.bondling_stone_class}] ')
-        match bondling_config.bondling_stone_class:
-            case BondlingClass.TOMB_GUARD:
-                current_ball_index = 1
-            case BondlingClass.AZURE_BASAN:
-                current_ball_index = 2
-            case BondlingClass.SNOWBALL:
-                current_ball_index = 3
-            case BondlingClass.LITTLE_KURO:
-                current_ball_index = 4
-            case _:
-                current_ball_index = 1
+        idx = BondlingClass.get_index(bondling_config.bondling_stone_class)
+        current_ball_index = idx if idx is not None else 1
 
         while 1:
 
@@ -491,10 +472,16 @@ class ScriptTask(GameUi, GeneralInvite, GeneralRoom, BondlingBattle, SwitchSoul,
         :param index:
         :return:
         """
+        def get_click_area(ind: int):
+            """获取对应契灵地域点击位置"""
+            if 1 <= ind <= 4:  # 平安京
+                return self.C_AREA_1
+            if 5 <= ind <= 8:  # 逢魔之原
+                return self.C_AREA_2
+            return None
 
         def get_click_target(ind: int):
-            if ind > 5 or ind < 1:
-                raise ValueError('index must be 1-5')
+            """获取对应契灵点击位置"""
             match = {
                 1: self.C_STONE_1,
                 2: self.C_STONE_2,
@@ -502,8 +489,17 @@ class ScriptTask(GameUi, GeneralInvite, GeneralRoom, BondlingBattle, SwitchSoul,
                 4: self.C_STONE_4,
                 5: self.C_STONE_5,
             }
-            return match[ind]
+            return match[(ind - 1) % 4 + 1]
 
+        # 进入地域页面
+        while True:
+            self.screenshot()
+            if self.appear(self.I_CHECK_AREA, interval=0.8):
+                break
+            if self.appear_then_click(self.I_BALL_AREA, interval=1.2):
+                continue
+        # 点击对应地域并返回契灵主界面
+        self.ui_click(get_click_area(index), self.I_BALL_AREA, interval=0.8)
         click_target = get_click_target(index)
         click_count = 0
         logger.info(f'Click ball index: {index}')
