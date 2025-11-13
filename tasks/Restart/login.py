@@ -11,6 +11,7 @@ import time
 
 class LoginHandler(BaseTask, RestartAssets):
     character: str
+    harvest_mail_cnt: int = 0
 
     def __init__(self, *wargs, **kwargs):
         super().__init__(*wargs, **kwargs)
@@ -271,10 +272,15 @@ class LoginHandler(BaseTask, RestartAssets):
         self.O_LOGIN_SPECIFIC_SERVE.keyword = character
 
     def harvest_mail(self, ) -> bool:
+        if self.harvest_mail_cnt >= 1:
+            return False
+        self.harvest_mail_cnt += 1
         if ((self.appear(self.I_HARVEST_MAIL) or self.appear(self.I_HARVEST_MAIL_COPY))
                 and not self.appear(self.I_LOGIN_RED_CLOSE)):
             self.click(self.I_HARVEST_MAIL, interval=2)
-            self.wait_until_appear(self.I_READ_ALL_MAIL, wait_time=2)
+            if not self.wait_until_appear(self.I_READ_ALL_MAIL, wait_time=2):
+                logger.warning('Cannot recognize read all mail')
+                return False
         else:
             return False
         logger.info('Harvest system mail')
