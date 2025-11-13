@@ -46,11 +46,29 @@
   },
   {
     "itemName": "create_team",
-    "imageName": "create_team.png",
+    "imageName": "ball_create_team.png",
     "roiFront": "569,491,141,50",
     "roiBack": "569,491,141,50",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "契灵创建队伍"
+  },
+  {
+    "itemName": "ball_area",
+    "imageName": "ball_ball_area.png",
+    "roiFront": "61,631,50,48",
+    "roiBack": "8,582,138,137",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "地域"
+  },
+  {
+    "itemName": "check_area",
+    "imageName": "ball_check_area.png",
+    "roiFront": "489,377,238,95",
+    "roiBack": "454,337,314,170",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "地域页面"
   }
 ]

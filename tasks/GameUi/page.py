@@ -4,6 +4,7 @@ import random
 
 import traceback
 from module.atom.click import RuleClick
+from tasks.BondlingFairyland.assets import BondlingFairylandAssets
 from tasks.GlobalGame.assets import GlobalGameAssets as GGA
 from tasks.GameUi.assets import GameUiAssets as G
 from tasks.KekkaiUtilize.assets import KekkaiUtilizeAssets
@@ -110,7 +111,7 @@ page_six_gates = Page(G.I_CHECK_SIX_GATES)
 page_six_gates.link(button=G.I_SIX_GATES_GOTO_EXPLORATION, destination=page_exploration)
 page_exploration.link(button=G.I_EXPLORATION_GOTO_SIX_GATES, destination=page_six_gates)
 # 契灵之境 bondling fairyland
-page_bondling_fairyland = Page(G.I_CHECK_BONDLING_FAIRYLAND)
+page_bondling_fairyland = Page(BondlingFairylandAssets.I_BALL_AREA)
 page_bondling_fairyland.link(button=G.I_BACK_YOLLOW, destination=page_exploration)
 page_exploration.link(button=G.I_EXPLORATION_GOTO_BONDLING_FAIRYLAND, destination=page_bondling_fairyland)
 

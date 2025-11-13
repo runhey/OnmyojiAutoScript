@@ -12,17 +12,21 @@ class BondlingFairylandAssets:
 
 	# Click Rule Assets
 	# description 
-	C_STONE_1 = RuleClick(roi_front=(230,533,23,20), roi_back=(0,0,100,100), name="stone_1")
+	C_STONE_1 = RuleClick(roi_front=(228,502,26,58), roi_back=(0,0,100,100), name="stone_1")
 	# description 
-	C_STONE_2 = RuleClick(roi_front=(441,569,23,20), roi_back=(0,0,100,100), name="stone_2")
+	C_STONE_2 = RuleClick(roi_front=(439,528,25,62), roi_back=(0,0,100,100), name="stone_2")
 	# description 
-	C_STONE_3 = RuleClick(roi_front=(692,537,23,20), roi_back=(0,0,100,100), name="stone_3")
+	C_STONE_3 = RuleClick(roi_front=(687,505,26,56), roi_back=(0,0,100,100), name="stone_3")
 	# description 
-	C_STONE_4 = RuleClick(roi_front=(944,529,23,20), roi_back=(0,0,100,100), name="stone_4")
+	C_STONE_4 = RuleClick(roi_front=(944,497,22,50), roi_back=(0,0,100,100), name="stone_4")
 	# description 
 	C_STONE_5 = RuleClick(roi_front=(1041,494,25,25), roi_back=(0,0,100,100), name="stone_5")
 	# description 
 	C_CAP_SUCCESS = RuleClick(roi_front=(317,102,378,363), roi_back=(0,0,100,100), name="cap_success")
+	# 逢魔之原地域 
+	C_AREA_2 = RuleClick(roi_front=(689,118,121,77), roi_back=(0,0,100,100), name="area_2")
+	# 平安京地域 
+	C_AREA_1 = RuleClick(roi_front=(628,314,108,137), roi_back=(0,0,100,100), name="area_1")
 
 
 	# Ocr Rule Assets
@@ -58,7 +62,11 @@ class BondlingFairylandAssets:
 	# 求援 
 	I_BALL_HELP = RuleImage(roi_front=(963,571,100,100), roi_back=(963,571,100,100), threshold=0.8, method="Template matching", file="./tasks/BondlingFairyland/ball/ball_ball_help.png")
 	# 契灵创建队伍 
-	I_CREATE_TEAM = RuleImage(roi_front=(569,491,141,50), roi_back=(569,491,141,50), threshold=0.8, method="Template matching", file="./tasks/BondlingFairyland/ball/create_team.png")
+	I_CREATE_TEAM = RuleImage(roi_front=(569,491,141,50), roi_back=(569,491,141,50), threshold=0.8, method="Template matching", file="./tasks/BondlingFairyland/ball/ball_create_team.png")
+	# 地域 
+	I_BALL_AREA = RuleImage(roi_front=(61,631,50,48), roi_back=(8,582,138,137), threshold=0.8, method="Template matching", file="./tasks/BondlingFairyland/ball/ball_ball_area.png")
+	# 地域页面 
+	I_CHECK_AREA = RuleImage(roi_front=(489,377,238,95), roi_back=(454,337,314,170), threshold=0.8, method="Template matching", file="./tasks/BondlingFairyland/ball/ball_check_area.png")
 
 
 	# Image Rule Assets
