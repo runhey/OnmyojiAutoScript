@@ -59,11 +59,11 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, GuguArtStudioAssets):
             return
         while True:
             self.screenshot()
-            if self.appear(self.I_SUBMIT_PAINT, interval=0.8):  # 提交颜料页面则退出
+            if self.appear(self.I_SUBMIT_PAINT, interval=0.8):  # 在提交颜料页面则退出
                 break
             if self.appear_then_click(self.I_GOTO_SUBMIT, interval=0.8):  # 点击前往提交按钮去提交颜料页面
                 logger.info('Get paint finish, go to submit paint')
-                break
+                continue
             if self.appear(self.I_GAS_CANNOT_FIRE, interval=0.8):  # 无法挑战则退出到提交颜料页面
                 logger.info('Cannot fire, go to submit paint')
                 self.ui_click(self.I_BACK_Y, self.I_SUBMIT_PAINT, interval=2.5)
@@ -72,11 +72,11 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, GuguArtStudioAssets):
                 self.run_general_battle()
 
     def submit_paint(self):
-        self.ui_goto_page(pages.page_gugu_act)
+        self.ui_goto_page(pages.page_gugu_act, skip_first_screenshot=False)
         cnt, submit_cnt = 0, random.randint(2, 3)
         while True:
             if cnt >= submit_cnt:
-                logger.info('Submit paint success, exit')
+                logger.attr(cnt, 'Submit paint success, exit')
                 break
             self.screenshot()
             if self.appear_then_click(self.I_SUBMIT_PAINT, interval=0.8):
