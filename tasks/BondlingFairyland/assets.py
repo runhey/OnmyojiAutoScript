@@ -70,8 +70,8 @@ class BondlingFairylandAssets:
 
 
 	# Image Rule Assets
-	# description 
-	I_BF_SEARSH = RuleImage(roi_front=(1133,577,100,100), roi_back=(1133,577,100,100), threshold=0.8, method="Template matching", file="./tasks/BondlingFairyland/bf/bf_bf_searsh.png")
+	# 探查按钮 
+	I_BF_SEARSH = RuleImage(roi_front=(1144,580,88,85), roi_back=(1102,531,176,188), threshold=0.8, method="Template matching", file="./tasks/BondlingFairyland/bf/bf_bf_searsh.png")
 	# description 
 	I_BF_LOCK = RuleImage(roi_front=(826,653,24,26), roi_back=(826,653,24,26), threshold=0.8, method="Template matching", file="./tasks/BondlingFairyland/bf/bf_bf_lock.png")
 	# description 
@@ -114,30 +114,34 @@ class BondlingFairylandAssets:
 
 
 	# Image Rule Assets
-	# description 
-	I_C_AUTO_TRUE = RuleImage(roi_front=(524,175,38,35), roi_back=(524,175,38,35), threshold=0.8, method="Template matching", file="./tasks/BondlingFairyland/capture/capture_c_auto_true.png")
-	# description 
-	I_C_AUTO_FALSE = RuleImage(roi_front=(524,174,38,37), roi_back=(524,174,38,37), threshold=0.8, method="Template matching", file="./tasks/BondlingFairyland/capture/capture_c_auto_false.png")
-	# description 
-	I_C_LOW_TRUE = RuleImage(roi_front=(543,271,30,32), roi_back=(543,271,30,32), threshold=0.8, method="Template matching", file="./tasks/BondlingFairyland/capture/capture_c_low_true.png")
-	# description 
-	I_C_LOW_FALSE = RuleImage(roi_front=(539,269,37,35), roi_back=(539,269,37,35), threshold=0.8, method="Template matching", file="./tasks/BondlingFairyland/capture/capture_c_low_false.png")
-	# description 
-	I_C_MIDUM_TRUE = RuleImage(roi_front=(680,277,35,27), roi_back=(680,277,35,27), threshold=0.8, method="Template matching", file="./tasks/BondlingFairyland/capture/capture_c_midum_true.png")
-	# description 
-	I_C_MIDUM_FALSE = RuleImage(roi_front=(681,272,31,32), roi_back=(681,272,31,32), threshold=0.8, method="Template matching", file="./tasks/BondlingFairyland/capture/capture_c_midum_false.png")
-	# description 
-	I_C_HIGH_TRUE = RuleImage(roi_front=(819,272,37,31), roi_back=(819,272,37,31), threshold=0.8, method="Template matching", file="./tasks/BondlingFairyland/capture/capture_c_high_true.png")
-	# description 
-	I_C_HIGH_FALSE = RuleImage(roi_front=(818,272,36,34), roi_back=(818,272,36,34), threshold=0.8, method="Template matching", file="./tasks/BondlingFairyland/capture/capture_c_high_false.png")
-	# description 
-	I_C_FIRST_ENABLE = RuleImage(roi_front=(524,472,33,31), roi_back=(524,472,33,31), threshold=0.8, method="Template matching", file="./tasks/BondlingFairyland/capture/capture_c_first_enable.png")
-	# description 
-	I_C_FIRST_DISABLE = RuleImage(roi_front=(713,469,38,34), roi_back=(713,469,38,34), threshold=0.8, method="Template matching", file="./tasks/BondlingFairyland/capture/capture_c_first_disable.png")
-	# description 
-	I_CAPTION_ENSURE = RuleImage(roi_front=(690,532,129,56), roi_back=(690,532,129,56), threshold=0.8, method="Template matching", file="./tasks/BondlingFairyland/capture/capture_caption_ensure.png")
-	# 结契设置 
-	I_CLICK_CAPTION = RuleImage(roi_front=(177,625,59,51), roi_back=(177,625,59,51), threshold=0.8, method="Template matching", file="./tasks/BondlingFairyland/capture/capture_click_caption.png")
+	# 启用自动结契 
+	I_C_AUTO_TRUE = RuleImage(roi_front=(765,157,50,24), roi_back=(752,145,79,51), threshold=0.8, method="Template matching", file="./tasks/BondlingFairyland/capture/capture_c_auto_true.png")
+	# 关闭自动结契 
+	I_C_AUTO_FALSE = RuleImage(roi_front=(768,156,43,25), roi_back=(745,146,88,44), threshold=0.8, method="Template matching", file="./tasks/BondlingFairyland/capture/capture_c_auto_false.png")
+	# 启用低级盘子 
+	I_C_LOW_TRUE = RuleImage(roi_front=(524,242,30,32), roi_back=(512,233,51,50), threshold=0.8, method="Template matching", file="./tasks/BondlingFairyland/capture/capture_c_low_true.png")
+	# 禁用低级盘子 
+	I_C_LOW_FALSE = RuleImage(roi_front=(521,238,33,35), roi_back=(513,231,48,47), threshold=0.8, method="Template matching", file="./tasks/BondlingFairyland/capture/capture_c_low_false.png")
+	# 启用中级盘子 
+	I_C_MIDUM_TRUE = RuleImage(roi_front=(663,241,31,31), roi_back=(657,238,41,38), threshold=0.8, method="Template matching", file="./tasks/BondlingFairyland/capture/capture_c_midum_true.png")
+	# 禁用中级盘子 
+	I_C_MIDUM_FALSE = RuleImage(roi_front=(662,241,31,32), roi_back=(654,234,49,45), threshold=0.8, method="Template matching", file="./tasks/BondlingFairyland/capture/capture_c_midum_false.png")
+	# 启用高级盘子 
+	I_C_HIGH_TRUE = RuleImage(roi_front=(800,239,33,36), roi_back=(796,236,42,44), threshold=0.8, method="Template matching", file="./tasks/BondlingFairyland/capture/capture_c_high_true.png")
+	# 禁用高级盘子 
+	I_C_HIGH_FALSE = RuleImage(roi_front=(801,241,32,34), roi_back=(792,232,51,50), threshold=0.8, method="Template matching", file="./tasks/BondlingFairyland/capture/capture_c_high_false.png")
+	# 启用优先连接羁绊式神 
+	I_C_FIRST_ENABLE = RuleImage(roi_front=(507,517,33,31), roi_back=(499,510,49,47), threshold=0.8, method="Template matching", file="./tasks/BondlingFairyland/capture/capture_c_first_enable.png")
+	# 禁用优先连接羁绊式神 
+	I_C_FIRST_DISABLE = RuleImage(roi_front=(708,518,38,34), roi_back=(703,513,46,44), threshold=0.8, method="Template matching", file="./tasks/BondlingFairyland/capture/capture_c_first_disable.png")
+	# 结契设置确定 
+	I_CAPTION_ENSURE = RuleImage(roi_front=(668,567,129,56), roi_back=(655,557,153,77), threshold=0.8, method="Template matching", file="./tasks/BondlingFairyland/capture/capture_caption_ensure.png")
+	# 结契设置按钮 
+	I_CLICK_CAPTION = RuleImage(roi_front=(68,414,54,42), roi_back=(48,398,97,81), threshold=0.8, method="Template matching", file="./tasks/BondlingFairyland/capture/capture_click_caption.png")
+	# 禁用连续使用盘子 
+	I_C_CONTINUOUS_DISABLE = RuleImage(roi_front=(710,424,33,36), roi_back=(700,417,50,52), threshold=0.8, method="Template matching", file="./tasks/BondlingFairyland/capture/capture_c_continuous_disable.png")
+	# 启用连续使用盘子 
+	I_C_CONTINUOUS_ENABLE = RuleImage(roi_front=(508,424,32,34), roi_back=(501,417,47,48), threshold=0.8, method="Template matching", file="./tasks/BondlingFairyland/capture/capture_c_continuous_enable.png")
 
 
 	# Image Rule Assets
@@ -173,5 +177,7 @@ class BondlingFairylandAssets:
 	I_BUY_ADD = RuleImage(roi_front=(678,540,43,40), roi_back=(678,540,43,40), threshold=0.8, method="Template matching", file="./tasks/BondlingFairyland/stone/buy_add.png")
 	# description 
 	I_BUY_SUB = RuleImage(roi_front=(468,540,43,40), roi_back=(468,540,43,40), threshold=0.8, method="Template matching", file="./tasks/BondlingFairyland/stone/buy_sub.png")
+	# 关闭购买契灵页面 
+	I_STONE_CLOSE = RuleImage(roi_front=(911,56,42,38), roi_back=(888,49,100,100), threshold=0.8, method="Template matching", file="./tasks/BondlingFairyland/stone/stone_stone_close.png")
 
 
