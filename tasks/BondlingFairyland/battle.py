@@ -6,6 +6,7 @@ from datetime import timedelta, datetime
 import random
 
 from module.server.i18n import I18n
+from tasks.BondlingFairyland.config import BondlingMode
 from tasks.Component.GeneralBattle.general_battle import GeneralBattle
 from tasks.BondlingFairyland.assets import BondlingFairylandAssets
 from tasks.BondlingFairyland.config_battle import BattleConfig
@@ -64,23 +65,34 @@ class BondlingBattle(GeneralBattle, BondlingFairylandAssets):
         # 战斗过程 随机点击和滑动 防封
         logger.info("Start battle process")
         win: bool = False
+        bondling_mode = self.config.bondling_fairyland.bondling_config.bondling_mode
+        cap_again = bondling_mode in [BondlingMode.MODE3, BondlingMode.MODE4]
+        cap_cnt, max_cap = 0, 10
         while 1:
+            # 捕获次数超过最大次数限制, 则不再进行捕获
+            if cap_cnt >= max_cap:
+                cap_again = False
             self.screenshot()
             # 如果捕获成功
             if self.appear_then_click(self.I_CAP_SUCCESS, action=self.C_CAP_SUCCESS,  interval=1):
                 win = True
-            # 如果捕获失败
+            # 连续结契捕获失败
             if self.appear_then_click(self.I_CAP_FAILURE, action=self.C_CAP_SUCCESS, interval=1):
                 win = False
-
+            # 非连续结契且单次抓捕失败
+            if not cap_again and self.appear_then_click(self.I_BATTLE_FAIL_ABANDON, interval=1):
+                win = False
+            # 连续结契则继续结契
+            if cap_again and self.appear_then_click(self.I_CAP_AGAIN, interval=1):
+                self.device.click_record_clear()  # 需要10次结契因此清空点击记录
+                cap_cnt += 1
+                continue
             # 如果领奖励
             if self.appear(self.I_REWARD, threshold=0.6):
                 break
             if self.appear_then_click(self.I_WIN, threshold=0.6):
                 continue
             if self.appear_then_click(self.I_BATTLE_SUCCESS, threshold=0.6, interval=1):
-                continue
-            if self.appear_then_click(self.I_BATTLE_FAIL_ABANDON, interval=1):
                 continue
             if self.appear_then_click(self.I_BATTLE_FAIL, threshold=0.6, interval=1):
                 continue
