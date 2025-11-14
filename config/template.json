@@ -266,10 +266,11 @@
     },
     "utilize_config": {
       "utilize_rule": "default",
-      "utilize_friend": "",
       "select_friend_list": "same_server",
       "shikigami_class": "N",
       "shikigami_order": 4,
+      "harvest_guild_max_times": 3,
+      "utilize_enable": true,
       "guild_ap_enable": true,
       "guild_assets_enable": true,
       "box_ap_enable": true,
@@ -289,11 +290,13 @@
       "float_time": "00:00:00"
     },
     "activation_config": {
-      "card_rule": "auto",
+      "card_type": "太鼓",
+      "min_taiko_num": 8,
+      "min_fish_num": 16,
       "exchange_before": true,
       "exchange_max": true,
-      "exchange_smart": false,
-      "shikigami_class": "N"
+      "shikigami_class": "N",
+      "card_not_found_count": 0
     }
   },
   "demon_encounter": {
@@ -311,12 +314,13 @@
       "box_buy_sushi": false
     },
     "best_demon_boss_config": {
-      "enable": false,
-      "best_demon_kiryou_select": false,
+      "best_demon_kiryou_utahime_select": false,
       "best_demon_shinkirou_select": false,
       "best_demon_tsuchigumo_select": false,
       "best_demon_gashadokuro_select": false,
-      "best_demon_namazu_select": false
+      "best_demon_namazu_select": false,
+      "best_demon_oboroguruma_select": false,
+      "best_demon_nightly_aramitama_select": false
     },
     "demon_soul_config": {
       "enable": false,
@@ -336,7 +340,37 @@
       "best_demon_shinkirou": "group,team",
       "best_demon_tsuchigumo": "group,team",
       "best_demon_gashadokuro": "group,team",
-      "best_demon_namazu": "group,team"
+      "best_demon_namazu": "group,team",
+      "best_demon_oboroguruma": "group,team",
+      "best_demon_nightly_aramitamau": "group,team"
+    },
+    "demon_battle_config": {
+      "demon_shinkirou_enable": false,
+      "demon_shinkirou": "-1,-1",
+      "demon_tsuchigumo_enable": false,
+      "demon_tsuchigumo": "-1,-1",
+      "demon_gashadokuro_enable": false,
+      "demon_gashadokuro": "-1,-1",
+      "demon_namazu_enable": false,
+      "demon_namazu": "-1,-1",
+      "demon_oboroguruma_enable": false,
+      "demon_oboroguruma": "-1,-1",
+      "demon_nightly_aramitama_enable": false,
+      "demon_nightly_aramitama": "-1,-1"
+    },
+    "best_demon_battle_config": {
+      "best_demon_shinkirou_enable": false,
+      "best_demon_shinkirou": "-1,-1",
+      "best_demon_tsuchigumo_enable": false,
+      "best_demon_tsuchigumo": "-1,-1",
+      "best_demon_gashadokuro_enable": false,
+      "best_demon_gashadokuro": "-1,-1",
+      "best_demon_namazu_enable": false,
+      "best_demon_namazu": "-1,-1",
+      "best_demon_oboroguruma_enable": false,
+      "best_demon_oboroguruma": "-1,-1",
+      "best_demon_nightly_aramitama_enable": false,
+      "best_demon_nightly_aramitamau": "-1,-1"
     }
   },
   "daily_trifles": {
@@ -765,13 +799,12 @@
     },
     "general_climb": {
       "limit_time": "00:30:00",
+      "boss_limit_time": "00:05:00",
       "pass_limit": 50,
       "ap_limit": 300,
       "boss_limit": 20,
-      "enable_pass": true,
-      "enable_ap": true,
-      "enable_boss": true,
-      "run_sequence": "pass,boss,ap",
+      "ap100_limit": 20,
+      "run_sequence": "pass,ap100,boss,ap",
       "active_souls_clean": false,
       "random_sleep": false
     },
@@ -787,7 +820,11 @@
       "enable_switch_boss": false,
       "boss_group_team": "-1,-1",
       "enable_switch_boss_by_name": false,
-      "boss_group_team_name": ""
+      "boss_group_team_name": "",
+      "enable_switch_ap100": false,
+      "ap100_group_team": "-1,-1",
+      "enable_switch_ap100_by_name": false,
+      "ap100_group_team_name": ""
     },
     "general_battle": {
       "enable_pass_preset": false,
@@ -801,7 +838,11 @@
       "enable_boss_preset": false,
       "enable_boss_green": false,
       "boss_green_mark": "green_left1",
-      "enable_boss_anti_detect": false
+      "enable_boss_anti_detect": false,
+      "enable_ap100_preset": false,
+      "enable_ap100_green": false,
+      "ap100_green_mark": "green_left1",
+      "enable_ap100_anti_detect": false
     }
   },
   "meta_demon": {
@@ -921,24 +962,16 @@
       "delay_date": 1,
       "float_time": "00:00:00"
     },
-    "bondling_check": {
-      "check_enable": true,
-      "limit_num": 2000
-    },
     "bondling_config": {
       "user_status": "alone",
-      "bondling_mode": "mode_1",
+      "bondling_mode": "只刷探查(仅限单刷)",
       "limit_time": "00:30:00",
       "limit_count": 30,
+      "bondling_stone_class": "镇墓兽",
       "bondling_stone_enable": false,
-      "bondling_stone_class": "镇墓兽"
-    },
-    "bondling_switch_soul": {
-      "auto_switch_soul": false,
-      "tomb_guard_switch": "-1,-1",
-      "snowball_switch": "-1,-1",
-      "little_kuro_switch": "-1,-1",
-      "azure_basan_switch": "-1,-1"
+      "bondling_search_enable": false,
+      "check_enable": true,
+      "limit_num": 2000
     },
     "invite_config": {
       "invite_number": "one",
@@ -948,17 +981,26 @@
       "wait_time": "00:02:00",
       "default_invite": true
     },
+    "bondling_switch_soul": {
+      "enable": false,
+      "search_switch": "",
+      "tomb_guard_switch": "",
+      "snowball_switch": "",
+      "little_kuro_switch": "",
+      "azure_basan_switch": "",
+      "bondling_2_1_switch": "",
+      "bondling_2_2_switch": "",
+      "bondling_2_3_switch": "",
+      "bondling_2_4_switch": ""
+    },
     "battle_config": {
+      "lock_team_enable": false,
+      "preset_enable": false,
+      "preset_group": 1,
+      "preset_team": 1,
       "green_enable": false,
       "green_mark": "green_left1",
       "random_click_swipt_enable": false
-    },
-    "switch_soul_config": {
-      "enable": false,
-      "switch_group_team": "-1,-1",
-      "enable_switch_by_name": false,
-      "group_name": "",
-      "team_name": ""
     }
   },
   "evo_zone": {
@@ -1422,6 +1464,24 @@
     "hunt_config": {
       "kirin_group_team": "-1,-1",
       "netherworld_group_team": "-1,-1"
+    },
+    "kirin_battle_config": {
+      "lock_team_enable": false,
+      "preset_enable": false,
+      "preset_group": 1,
+      "preset_team": 1,
+      "green_enable": false,
+      "green_mark": "green_left1",
+      "random_click_swipt_enable": false
+    },
+    "netherworld_battle_config": {
+      "lock_team_enable": false,
+      "preset_enable": false,
+      "preset_group": 1,
+      "preset_team": 1,
+      "green_enable": false,
+      "green_mark": "green_left1",
+      "random_click_swipt_enable": false
     }
   },
   "dokan": {
