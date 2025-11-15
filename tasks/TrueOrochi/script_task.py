@@ -5,7 +5,7 @@ from time import sleep
 from datetime import datetime, time
 
 from module.logger import logger
-from module.exception import TaskEnd
+from module.exception import TaskEnd, GameStuckError
 from module.base.timer import Timer
 
 from tasks.GameUi.game_ui import GameUi
@@ -135,6 +135,7 @@ class ScriptTask(OrochiScriptTask, TrueOrochiAssets):
         logger.info("Start battle process")
         check_timer = Timer(280)
         check_timer.start()
+        check_count = 0
         while 1:
             self.screenshot()
             if self.appear(self.I_GREED_GHOST):
@@ -155,6 +156,9 @@ class ScriptTask(OrochiScriptTask, TrueOrochiAssets):
             if self.appear_then_click(self.I_ST_FRAME, interval=1):
                 continue
             if check_timer.reached():
+                if check_count > 3:
+                    raise GameStuckError
+                check_count += 1
                 logger.warning('Battle timeout')
                 check_timer.reset()
                 self.device.stuck_record_clear()

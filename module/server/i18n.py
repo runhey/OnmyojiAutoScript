@@ -24,5 +24,6 @@ class I18n:
         with open(str(I18n.file_zh_cn), 'r', encoding='utf-8') as f:
             return json.load(f)
 
+
 if __name__ == '__main__':
     print(I18n.load_zh_cn())
