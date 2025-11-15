@@ -97,5 +97,23 @@
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"
+  },
+  {
+    "itemName": "cm_get_reward",
+    "imageName": "cm_cm_get_reward.png",
+    "roiFront": "921,466,108,48",
+    "roiBack": "522,448,547,94",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "领取奖励"
+  },
+  {
+    "itemName": "cm_close",
+    "imageName": "cm_cm_close.png",
+    "roiFront": "1147,100,43,43",
+    "roiBack": "1118,74,100,100",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "集体任务关闭按钮"
   }
 ]
