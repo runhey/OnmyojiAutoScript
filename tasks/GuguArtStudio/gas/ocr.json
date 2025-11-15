@@ -1,0 +1,20 @@
+[
+  {
+    "itemName": "total_paint",
+    "roiFront": "1128,25,79,29",
+    "roiBack": "1126,23,82,35",
+    "mode": "Digit",
+    "method": "Default",
+    "keyword": "",
+    "description": "总颜料"
+  },
+  {
+    "itemName": "remain_get_paint",
+    "roiFront": "127,591,42,26",
+    "roiBack": "124,587,48,32",
+    "mode": "Digit",
+    "method": "Default",
+    "keyword": "",
+    "description": "剩余可获得颜料"
+  }
+]
