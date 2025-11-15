@@ -1,5 +1,6 @@
 from pydantic import BaseModel, Field, field_validator
 from enum import Enum
+from tasks.Component.SwitchOnmyoji.config import Onmyoji
 
 from tasks.Component.config_scheduler import Scheduler
 from tasks.Component.config_base import ConfigBase, Time, dynamic_hide
@@ -26,6 +27,7 @@ class HyakkiyakouConfig(ConfigBase):
     hya_limit_time: Time = Field(default=Time(minute=20), description='hya_limit_time_help')
     hya_limit_count: int = Field(default=10, description='hya_limit_count_help')
     hya_invite_friend: bool = Field(default=False, description='hya_invite_friend_help')
+    hya_onmyoji: Onmyoji = Field(default=Onmyoji.KAGURA, description='切换阴阳师')
     # 自动调整豆子数量
     hya_auto_bean: bool = Field(default=False, description='hya_auto_bean_help')
     hya_priorities: str = Field(default='', description='hya_priorities_help')

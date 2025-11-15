@@ -7,6 +7,7 @@ import cv2
 import numpy as np
 import random
 import re
+from module.atom.click import RuleClick
 from tasks.base_task import BaseTask
 from tasks.Component.GeneralBattle.general_battle import GeneralBattle
 from tasks.GameUi.game_ui import GameUi
@@ -262,36 +263,35 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AreaBossAssets):
         need_open_filter, boss_name, photo = self.get_hot_in_reward()  # 获取挑战人数最多的Boss的名字
         if photo is None or boss_name == '声望不够':
             return False
-        logger.info(f'Select reward boss:{boss_name}')
         # 不需要打开筛选界面说明直接找到了目标boss, 直接挑战
         if not need_open_filter:
             return self.boss_fight(photo, True, fileter_open=False)
-        self.open_filter()
         # 滑动到最顶层
         logger.info("Swipe to top")
         for i in range(random.randint(1, 3)):
             self.swipe(self.S_AB_FILTER_DOWN)
+        # 遍历所有boss找到名称一致的即目前挑战人数最多的
         for PHOTO in BOSS_REWARD_PHOTO1:
-            if photo.name != PHOTO.name:
-                continue
+            self.open_filter()
             name = self.get_bossName(PHOTO)
             if self.check_common_chars(str(name), boss_name):
                 return self.boss_fight(PHOTO, True, fileter_open=False)
+            self.ui_click_until_disappear(self.I_AB_CLOSE_RED)
         # 倒数一和二
         for i in range(random.randint(1, 3)):
             self.swipe(self.S_AB_FILTER_UP)
         for PHOTO in BOSS_REWARD_PHOTO2:
-            if photo.name != PHOTO.name:
-                continue
+            self.open_filter()
             name = self.get_bossName(PHOTO)
             if self.check_common_chars(str(name), boss_name):
                 return self.boss_fight(PHOTO, True, fileter_open=False)
+            self.ui_click_until_disappear(self.I_AB_CLOSE_RED)
         self.ui_click_until_disappear(self.I_AB_CLOSE_RED)
 
     def get_hot_in_reward(self):
         """
             返回挑战人数最多的悬赏鬼王
-        @return: 是否打开筛选界面, boss名称
+        @return: 是否打开筛选界面, boss名称, boss图片的click
         @rtype:
         """
         self.switch_to_reward()
@@ -303,8 +303,12 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AreaBossAssets):
             {"photo": self.C_AB_BOSS_REWARD_PHOTO_MINUS_1, "need_swipe": True},
         ]
 
-        def check_boss(photo):
-            """检查boss是否满足条件"""
+        def check_boss(photo: RuleClick):
+            """
+            检查boss是否满足条件
+            :param photo:
+            :return: 是否满足条件, 挑战数量, boss名称
+            """
             self.open_filter()
             num = self.get_num_challenge(photo) or 0
             if not num:
@@ -321,7 +325,7 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AreaBossAssets):
         mx_challenge_boss_name = None
         mx_challenge_num = 0
         photo = None
-        # 遍历所有boss配置
+        # 遍历所有boss配置, 找挑战人数最多的boss
         for cfg in boss_configs:
             if cfg["need_swipe"]:
                 self.open_filter()
@@ -329,13 +333,13 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AreaBossAssets):
                     self.swipe(self.S_AB_FILTER_UP)
                 self.wait_until_appear(cfg["photo"], wait_time=1)
             ret, challenge_num, boss_name = check_boss(cfg["photo"])
-            if ret:
+            if ret:  # 直接找到满足条件的, 则不需要打开筛选界面直接挑战即可
                 return False, boss_name, cfg["photo"]
             if challenge_num > mx_challenge_num:
                 mx_challenge_num = challenge_num
                 mx_challenge_boss_name = boss_name
                 photo = cfg['photo']
-        # 没有最优boss则找挑战人数最多的boss
+                logger.attr(mx_challenge_num, f'Select:{boss_name},{photo.name}')
         return True, mx_challenge_boss_name if mx_challenge_boss_name else '声望不够', photo if mx_challenge_boss_name else None
 
     def get_num_challenge(self, click_area):
@@ -423,6 +427,7 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AreaBossAssets):
                 continue
 
     def switch_to_reward(self):
+        self.open_filter()
         while 1:
             self.screenshot()
             if self.appear(self.I_AB_FILTER_TITLE_REWARD):

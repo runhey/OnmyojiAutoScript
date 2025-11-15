@@ -64,34 +64,6 @@ class GameUi(BaseTask, GameUiAssets):
     def ui_pages(self) -> list[Page]:
         return PageRegistry.all()
 
-    def home_explore(self) -> bool:
-        """
-        使用ocr识别到探索按钮并点击
-        :return:
-        """
-        while 1:
-            self.screenshot()
-            if self.ocr_appear_click(self.O_HOME_EXPLORE, interval=2):
-                continue
-            if self.appear(self.I_BACK_BLUE, threshold=0.6):
-                break
-        logger.info(f'Click {self.O_HOME_EXPLORE.name}')
-        return True
-
-    def explore_home(self) -> bool:
-        """
-
-        :return:
-        """
-        while 1:
-            self.screenshot()
-            if self.appear_then_click(self.I_BACK_BLUE, threshold=0.6, interval=2):
-                continue
-            if self.appear(self.I_HOME_SHIKIKAMI, threshold=0.6):
-                break
-        logger.info(f'Click {self.I_HOME_SHIKIKAMI.name}')
-        return True
-
     def ui_page_appear(self, page: Page, skip_first_screenshot: bool = True, interval: float = None):
         """
         判断当前页面是否为page
@@ -121,23 +93,6 @@ class GameUi(BaseTask, GameUiAssets):
                 return True
             skip_first_screenshot = False
         return False
-
-    def ensure_scroll_open(self):
-        """
-        判断庭院界面卷轴是否打开
-        """
-        return self.appear(RestartAssets.I_LOGIN_SCROOLL_CLOSE)
-
-    def ensure_button_execute(self, button):
-        """
-        确保button执行
-        """
-        if isinstance(button, RuleImage) and self.appear(button):
-            return True
-        elif callable(button) and button():
-            return True
-        else:
-            return False
 
     def ui_get_current_page(self, skip_first_screenshot=True) -> Page:
         """
@@ -381,29 +336,6 @@ class GameUi(BaseTask, GameUiAssets):
         elif isinstance(target, RuleClick):
             operated = self.click(target, interval=interval)
         return operated
-
-    # ------------------------------------------------------------------------------------------------------------------
-    # 下面的这些是一些特殊的页面，需要额外处理
-    # ------------------------------------------------------------------------------------------------------------------
-
-    def main_goto_daily(self):
-        """
-        无法直接一步到花合战，需要先到主页，然后再到花合战
-        :return:
-        """
-        while 1:
-            self.screenshot()
-            if self.appear(self.I_CHECK_DAILY):
-                break
-            if self.appear_then_click(self.I_MAIN_GOTO_DAILY, interval=1):
-                continue
-            if self.ocr_appear_click(self.O_CLICK_CLOSE_1, interval=1):
-                continue
-            if self.ocr_appear_click(self.O_CLICK_CLOSE_2, interval=1):
-                continue
-        logger.info('Page arrive: Daily')
-        time.sleep(1)
-        return
 
 
 if __name__ == '__main__':

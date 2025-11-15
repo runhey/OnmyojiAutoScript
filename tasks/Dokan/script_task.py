@@ -384,6 +384,7 @@ class ScriptTask(ExtendGreenMark, GameUi, SwitchSoul, DokanSceneDetector):
             if battle_config.random_click_swipt_enable:
                 logger.info("random swipt ...")
                 self.random_click_swipt()
+                self.device.stuck_record_add('BATTLE_STATUS_S')
 
             # 打完一个小朋友，自动进入下一个小朋友
             if self.appear(self.I_RYOU_DOKAN_IN_FIELD):
