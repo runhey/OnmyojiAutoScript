@@ -12,12 +12,11 @@ from module.logger import logger
 from module.exception import TaskEnd
 from module.base.timer import Timer
 
+
 class ScriptTask(GameUi, TalismanPassAssets):
 
     def run(self):
-        self.ui_get_current_page()
-        self.ui_goto(page_main)
-        self.main_goto_daily()
+        self.ui_goto_page(page_daily)
         con: TalismanConfig = self.config.talisman_pass.talisman
 
         # 收取全部奖励
@@ -27,11 +26,10 @@ class ScriptTask(GameUi, TalismanPassAssets):
         self.get_flower(con.level_reward)
         # 收取1500签御魂
         if con.harvest_soul:
-            self.ui_goto(page_main)
+            self.ui_goto_page(page_main)
             self.harvest_soul()
         self.set_next_run(task='TalismanPass', success=True, finish=True)
         raise TaskEnd('TalismanPass')
-
 
     def get_all(self):
         """

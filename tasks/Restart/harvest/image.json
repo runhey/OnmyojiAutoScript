@@ -241,5 +241,14 @@
     "method": "Template matching",
     "threshold": 0.8,
     "description": "一键已读所有邮件"
+  },
+  {
+    "itemName": "mail_red_point",
+    "imageName": "harvest_mail_red_point.png",
+    "roiFront": "1229,200,16,21",
+    "roiBack": "1159,189,100,317",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "邮件红点"
   }
 ]
