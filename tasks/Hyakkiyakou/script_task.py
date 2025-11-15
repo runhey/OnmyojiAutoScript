@@ -19,11 +19,10 @@ from oashya.utils import draw_tracks
 from module.exception import TaskEnd
 from module.logger import logger
 from module.exception import RequestHumanTakeover
+from tasks.Component.SwitchOnmyoji.switch_onmyoji import SwitchOnmyoji
 from tasks.GameUi.game_ui import GameUi
-from tasks.GameUi.page import page_hyakkiyakou
-from tasks.Hyakkiyakou.config import Hyakkiyakou as HyakkiyakouConfig
+from tasks.GameUi.page import page_hyakkiyakou, page_main, page_onmyodo
 from tasks.Hyakkiyakou.config import InferenceEngine, ModelPrecision
-from tasks.Hyakkiyakou.assets import HyakkiyakouAssets
 from tasks.Hyakkiyakou.agent.agent import Agent
 from tasks.Hyakkiyakou.slave.hya_slave import HyaSlave
 from tasks.Hyakkiyakou.debugger import Debugger
@@ -47,7 +46,7 @@ def plot_save(image, boxes):
     cv2.imwrite(save_file, image)
 
 
-class ScriptTask(GameUi, HyaSlave):
+class ScriptTask(GameUi, HyaSlave, SwitchOnmyoji):
 
     @property
     def _config(self):
@@ -124,9 +123,9 @@ class ScriptTask(GameUi, HyaSlave):
         limit_time = self._config.hyakkiyakou_config.hya_limit_time
         self.limit_time: timedelta = timedelta(hours=limit_time.hour, minutes=limit_time.minute,
                                                seconds=limit_time.second)
-        self.ui_get_current_page()
-        self.ui_goto(page_hyakkiyakou)
-
+        self.ui_goto_page(page_onmyodo)
+        self.switch_onmyoji(self._config.hyakkiyakou_config.hya_onmyoji)
+        self.ui_goto_page(page_hyakkiyakou)
 
         while 1:
             if hya_count >= self.limit_count:
@@ -138,6 +137,8 @@ class ScriptTask(GameUi, HyaSlave):
 
             self.one()
             hya_count += 1
+            logger.info(f'count: {hya_count}/{self.limit_count}')
+            logger.info(f'time: {(datetime.now() - self.start_time).total_seconds():.1f}s/{self.limit_time.total_seconds()}s')
 
         while 1:
             self.screenshot()
