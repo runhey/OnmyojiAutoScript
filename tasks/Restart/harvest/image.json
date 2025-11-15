@@ -47,8 +47,8 @@
   {
     "itemName": "harvest_mail_all",
     "imageName": "harvest_harvest_mail_all.png",
-    "roiFront": "69,589,64,57",
-    "roiBack": "28,572,115,123",
+    "roiFront": "75,580,64,57",
+    "roiBack": "37,569,115,123",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "全部收取"
@@ -236,8 +236,8 @@
   {
     "itemName": "read_all_mail",
     "imageName": "harvest_read_all_mail.png",
-    "roiFront": "155,603,166,44",
-    "roiBack": "149,588,182,72",
+    "roiFront": "171,601,154,44",
+    "roiBack": "156,588,174,72",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "一键已读所有邮件"

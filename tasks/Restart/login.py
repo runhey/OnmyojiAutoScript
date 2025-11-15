@@ -291,15 +291,15 @@ class LoginHandler(BaseTask, RestartAssets):
         timeout_timer = Timer(3).start()
         while not timeout_timer.reached():
             self.screenshot()
-            if self.appear_then_click(self.I_READ_ALL_MAIL, interval=1.5):
-                continue
             if self.appear(self.I_HARVEST_MAIL_CONFIRM):
                 self.click(self.I_HARVEST_MAIL_CONFIRM, interval=2)
                 self.wait_until_disappear(self.I_HARVEST_MAIL_CONFIRM)
-                break
+                continue
             if self.appear(self.I_HARVEST_MAIL_ALL, threshold=0.9):
                 time.sleep(random.uniform(0.3, 0.5))
                 self.click(self.I_HARVEST_MAIL_ALL, interval=2)
                 self.wait_until_appear(self.I_HARVEST_MAIL_CONFIRM, wait_time=1)
                 timeout_timer.reset()
                 continue
+            if self.appear_then_click(self.I_READ_ALL_MAIL, interval=1.5):
+                break
