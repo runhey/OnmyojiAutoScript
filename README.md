@@ -69,7 +69,7 @@ OAS 在其基础上进行了如下优化：
 - [Alas](https://github.com/LmeSzinc/AzurLaneAutoScript): 碧蓝航线的自动化脚本
 - [SRC](https://github.com/LmeSzinc/StarRailCopilot): 星铁速溶茶，崩坏：星穹铁道脚本，基于下一代Alas框架。
 - [OASX](https://github.com/runhey/OASX): 同 OAS 对接的全平台 GUI
-- [NikkeAutoScript](https://github.com/takagisanmie/NIKKEAutoScript): 胜利女神：NIKKE 自动日常脚本
+- [NikkeAutoScript](https://github.com/megumiss/NIKKEAutoScript): 胜利女神：NIKKE 自动日常脚本
 - [AAS](https://github.com/TheFunny/ArisuAutoSweeper): 蔚蓝档案自动化脚本
 - [MAA](https://github.com/MaaAssistantArknights/MaaAssistantArknights): 明日方舟小助手，全日常一键长草
 - [FGO-py](https://github.com/hgjazhgj/FGO-py): 全自动免配置跨平台开箱即用的Fate/Grand Order助手
