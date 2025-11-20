@@ -1,5 +1,7 @@
 {
-  "boss_limit_time": "单局Boss限制时间"
+  "boss_limit_time": "单局Boss限制时间",
+  "kirin_battle_config": "麒麟战斗配置",
+  "netherworld_battle_config": "阴界之门战斗配置"
 }
 
 

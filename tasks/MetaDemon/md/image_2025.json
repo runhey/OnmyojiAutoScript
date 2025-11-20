@@ -1,0 +1,110 @@
+[
+  {
+    "itemName": "right_enter",
+    "imageName": "md_right_enter.png",
+    "roiFront": "1183,314,46,42",
+    "roiBack": "1150,131,100,360",
+    "method": "Template matching",
+    "threshold": 0.75,
+    "description": "右侧进去"
+  },
+  {
+    "itemName": "enter2",
+    "imageName": "md_enter2.png",
+    "roiFront": "461,265,44,156",
+    "roiBack": "428,220,100,258",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "find_demon",
+    "imageName": "md_find_demon.png",
+    "roiFront": "1140,582,86,81",
+    "roiBack": "1102,546,132,133",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "寻找鬼王"
+  },
+  {
+    "itemName": "battle_demon",
+    "imageName": "md_battle_demon.png",
+    "roiFront": "1131,573,100,100",
+    "roiBack": "1085,536,165,161",
+    "method": "Template matching",
+    "threshold": 0.7,
+    "description": "点击战斗"
+  },
+  {
+    "itemName": "boss_empty",
+    "imageName": "md_boss_empty.png",
+    "roiFront": "44,134,88,85",
+    "roiBack": "44,134,88,85",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "boss_empty_1",
+    "imageName": "md_boss_empty_1.png",
+    "roiFront": "46,372,87,90",
+    "roiBack": "46,372,87,90",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "boss_empty_2",
+    "imageName": "md_boss_empty_2.png",
+    "roiFront": "46,501,88,88",
+    "roiBack": "46,501,88,88",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "crafting_1",
+    "imageName": "md_crafting_1.png",
+    "roiFront": "1202,222,36,45",
+    "roiBack": "1167,199,100,100",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "合成"
+  },
+  {
+    "itemName": "crafting_empty",
+    "imageName": "md_crafting_empty.png",
+    "roiFront": "939,460,75,81",
+    "roiBack": "922,447,108,111",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "空"
+  },
+  {
+    "itemName": "crafting_card_star_1",
+    "imageName": "md_crafting_card_star_1.png",
+    "roiFront": "217,156,87,92",
+    "roiBack": "191,127,140,137",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "一星卡片"
+  },
+  {
+    "itemName": "crafting_start",
+    "imageName": "md_crafting_start.png",
+    "roiFront": "889,561,140,39",
+    "roiBack": "840,521,231,100",
+    "method": "Template matching",
+    "threshold": 0.75,
+    "description": "开始合成"
+  },
+  {
+    "itemName": "crafting_empty_new",
+    "imageName": "md_crafting_empty_new.png",
+    "roiFront": "787,307,100,100",
+    "roiBack": "772,299,128,117",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  }
+]

@@ -47,12 +47,41 @@ class MetaDemonAssets:
 	I_RED_BACK = RuleImage(roi_front=(925,181,47,48), roi_back=(925,181,47,48), threshold=0.8, method="Template matching", file="./tasks/MetaDemon/md/md_red_back.png")
 
 
+	# Image Rule Assets
+	# 右侧进去 
+	I_RIGHT_ENTER = RuleImage(roi_front=(1183,314,46,42), roi_back=(1150,131,100,360), threshold=0.75, method="Template matching", file="./tasks/MetaDemon/md/md_right_enter.png")
+	# description 
+	I_ENTER2 = RuleImage(roi_front=(461,265,44,156), roi_back=(428,220,100,258), threshold=0.8, method="Template matching", file="./tasks/MetaDemon/md/md_enter2.png")
+	# 寻找鬼王 
+	I_FIND_DEMON = RuleImage(roi_front=(1140,582,86,81), roi_back=(1102,546,132,133), threshold=0.8, method="Template matching", file="./tasks/MetaDemon/md/md_find_demon.png")
+	# 点击战斗 
+	I_BATTLE_DEMON = RuleImage(roi_front=(1131,573,100,100), roi_back=(1085,536,165,161), threshold=0.7, method="Template matching", file="./tasks/MetaDemon/md/md_battle_demon.png")
+	# description 
+	I_BOSS_EMPTY = RuleImage(roi_front=(44,134,88,85), roi_back=(44,134,88,85), threshold=0.8, method="Template matching", file="./tasks/MetaDemon/md/md_boss_empty.png")
+	# description 
+	I_BOSS_EMPTY_1 = RuleImage(roi_front=(46,372,87,90), roi_back=(46,372,87,90), threshold=0.8, method="Template matching", file="./tasks/MetaDemon/md/md_boss_empty_1.png")
+	# description 
+	I_BOSS_EMPTY_2 = RuleImage(roi_front=(46,501,88,88), roi_back=(46,501,88,88), threshold=0.8, method="Template matching", file="./tasks/MetaDemon/md/md_boss_empty_2.png")
+	# 合成 
+	I_CRAFTING_1 = RuleImage(roi_front=(1202,222,36,45), roi_back=(1167,199,100,100), threshold=0.8, method="Template matching", file="./tasks/MetaDemon/md/md_crafting_1.png")
+	# 空 
+	I_CRAFTING_EMPTY = RuleImage(roi_front=(939,460,75,81), roi_back=(922,447,108,111), threshold=0.8, method="Template matching", file="./tasks/MetaDemon/md/md_crafting_empty.png")
+	# 一星卡片 
+	I_CRAFTING_CARD_STAR_1 = RuleImage(roi_front=(217,156,87,92), roi_back=(191,127,140,137), threshold=0.8, method="Template matching", file="./tasks/MetaDemon/md/md_crafting_card_star_1.png")
+	# 开始合成 
+	I_CRAFTING_START = RuleImage(roi_front=(889,561,140,39), roi_back=(840,521,231,100), threshold=0.75, method="Template matching", file="./tasks/MetaDemon/md/md_crafting_start.png")
+	# description 
+	I_CRAFTING_EMPTY_NEW = RuleImage(roi_front=(787,307,100,100), roi_back=(772,299,128,117), threshold=0.8, method="Template matching", file="./tasks/MetaDemon/md/md_crafting_empty_new.png")
+
+
 	# Ocr Rule Assets
 	# Ocr-description 
-	O_MD_EXHAUSTION = RuleOcr(roi=(1096,18,89,31), area=(1096,18,89,31), mode="DigitCounter", method="Default", keyword="", name="md_exhaustion")
+	O_MD_EXHAUSTION = RuleOcr(roi=(1114,24,94,31), area=(1114,24,94,31), mode="DigitCounter", method="Default", keyword="", name="md_exhaustion")
 	# Ocr-description 
 	O_MD_TICKET = RuleOcr(roi=(923,18,82,30), area=(923,18,82,30), mode="DigitCounter", method="Default", keyword="", name="md_ticket")
 	# Ocr-description 
 	O_MD_COUNT_INFO = RuleOcr(roi=(94,314,161,37), area=(94,314,161,37), mode="Single", method="Default", keyword="击败奖励结算中", name="md_count_info")
+	# 一星卡 
+	O_CRAFTING_CARD_1 = RuleOcr(roi=(303,158,161,33), area=(303,158,161,33), mode="Single", method="Default", keyword="一星梦告铃鼓", name="crafting_card_1")
 
 

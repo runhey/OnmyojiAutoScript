@@ -11,6 +11,7 @@ from tasks.Component.SwitchSoul.switch_soul_config import SwitchSoulConfig
 
 
 class MetaDemonConfig(ConfigBase):
+    meta_crafting_card: bool = Field(default=True, description='craft_essence_help')
     auto_tea: bool = Field(default=False, description='auto_tea_help')
     extreme_notify: bool = Field(default=False, description='extreme_notify_help')
 

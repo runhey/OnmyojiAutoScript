@@ -97,5 +97,14 @@
     "method": "Template matching",
     "threshold": 0.8,
     "description": "勾选"
+  },
+  {
+    "itemName": "ui_gotit_small",
+    "imageName": "ui_ui_gotit_small.png",
+    "roiFront": "678,396,127,60",
+    "roiBack": "622,371,242,100",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "知道了"
   }
 ]

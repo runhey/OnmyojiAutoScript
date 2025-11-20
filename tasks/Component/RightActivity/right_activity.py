@@ -24,4 +24,3 @@ class RightActivity(GameUi, RightActivityAssets):
     def right_close(self):
         self.ui_click(self.I_RA_OPEN, self.I_RA_CLOSE, interval=2)
 
-
