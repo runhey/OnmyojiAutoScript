@@ -106,5 +106,41 @@
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"
+  },
+  {
+    "itemName": "star56_pos_1",
+    "imageName": "md_star56_pos_1.png",
+    "roiFront": "100,205,8,11",
+    "roiBack": "100,205,8,11",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "star56_hp_threshold_t",
+    "imageName": "md_star56_hp_threshold_t.png",
+    "roiFront": "630,518,58,18",
+    "roiBack": "630,518,58,18",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "血量高于阈值"
+  },
+  {
+    "itemName": "star56_hp_threshold_f",
+    "imageName": "md_star56_hp_threshold_f.png",
+    "roiFront": "659,517,26,19",
+    "roiBack": "659,517,26,19",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "血量小于阈值"
+  },
+  {
+    "itemName": "enter_ensure",
+    "imageName": "md_enter_ensure.png",
+    "roiFront": "541,578,186,48",
+    "roiBack": "443,555,370,100",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
   }
 ]

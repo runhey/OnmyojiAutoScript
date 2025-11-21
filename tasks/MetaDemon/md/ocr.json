@@ -34,5 +34,14 @@
     "method": "Default",
     "keyword": "一星梦告铃鼓",
     "description": "一星卡"
+  },
+  {
+    "itemName": "md_full_name",
+    "roiFront": "479,116,100,217",
+    "roiBack": "479,116,100,217",
+    "mode": "Full",
+    "method": "Default",
+    "keyword": "",
+    "description": "式神全名"
   }
 ]

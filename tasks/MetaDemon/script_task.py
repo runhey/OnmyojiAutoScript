@@ -17,13 +17,59 @@ from tasks.Component.GeneralBattle.config_general_battle import GeneralBattleCon
 from tasks.Component.SwitchSoul.switch_soul import SwitchSoul
 from tasks.GameUi.game_ui import GameUi
 from tasks.GameUi.page import page_main, page_shikigami_records
-from tasks.MetaDemon.config import MetaDemon
+from tasks.MetaDemon.config import MetaDemon, DefaultStrategy, Strategy
 from tasks.MetaDemon.assets import MetaDemonAssets
 from tasks.Restart.assets import RestartAssets
 from tasks.ActivityShikigami.assets import ActivityShikigamiAssets
 
 
-class ScriptTask(RightActivity, GeneralBattle, SwitchSoul, GameUi, MetaDemonAssets):
+
+class Star56(GameUi, MetaDemonAssets):
+
+    @cached_property
+    def cached_strategies(self) -> dict[str, list[int]]:
+        return Strategy.parse_all(self.config.meta_demon.md_strategies)
+
+    @cached_property
+    def cached_default_group_team(self) -> list[int]:
+        return Strategy.parse_group_team(self.config.meta_demon.md_default_strategy.md_preset_group_team_default_1) \
+            + Strategy.parse_group_team(self.config.meta_demon.md_default_strategy.md_preset_group_team_default_2)
+
+    def is_star56(self):
+        if not self.appear(self.I_STAR56_POS_1):
+            return True
+        return False
+
+    def hp_threshold_low(self, image):
+        """
+        @param image:
+        @return: 血量小于阈值返回True
+        """
+        return self.appear(self.I_STAR56_HP_THRESHOLD_F) and not self.appear(self.I_STAR56_HP_THRESHOLD_T)
+
+    @classmethod
+    def strategy2group_team(cls, strategies: dict[str, list[int]], detect_name: str) -> list[int] | None:
+        """
+        先是默认的完全匹配，然后是1个字符不同，最后是2个字符不同
+        @param strategies:
+        @param detect_name:
+        @return:
+        """
+        for i in range(2):
+            for key_name in strategies:
+                if len(key_name) != len(detect_name):
+                    continue
+                diff_count = sum(1 for c1, c2 in zip(key_name, detect_name) if c1 != c2)
+                if diff_count <= i:
+                    return strategies[key_name]
+        return None
+
+    def get_group_team(self, detect_name: str) -> list[int]:
+        tmp = self.strategy2group_team(self.cached_strategies, detect_name)
+        return tmp if tmp else self.cached_default_group_team
+
+
+class ScriptTask(RightActivity, GeneralBattle, SwitchSoul, Star56):
 
     def run(self):
         if self.config.meta_demon.switch_soul.enable:
@@ -42,15 +88,23 @@ class ScriptTask(RightActivity, GeneralBattle, SwitchSoul, GameUi, MetaDemonAsse
             self.screenshot()
             if self.appear(self.I_FIND_DEMON) or self.appear(self.I_BATTLE_DEMON):
                 break
+
+            if self.ui_reward_appear_click():
+                continue
+            if self.appear_then_click(self.I_UI_BACK_RED, interval=1.5):
+                continue
+            if self.appear_then_click(self.I_ENTER_ENSURE, interval=1):
+                continue
             if self.appear_then_click(self.I_ENTER2, interval=1):
                 continue
         if self.config.meta_demon.meta_demon_config.meta_crafting_card:
             self.crafting()
 
-        boss_timer = Timer(120)
+        boss_timer = Timer(180)
         boss_timer.start()
         while 1:
             battle_processing = False
+            is_hard_boss = False  # 五星或者六星
             self.screenshot()
             if not (self.appear(self.I_FIND_DEMON) or self.appear(self.I_BATTLE_DEMON)):
                 continue
@@ -59,12 +113,16 @@ class ScriptTask(RightActivity, GeneralBattle, SwitchSoul, GameUi, MetaDemonAsse
             if not self.appear(self.I_BOSS_EMPTY):
                 self.click(self.I_BOSS_EMPTY, interval=1.5)
                 battle_processing = True
+                if self.is_star56():
+                    is_hard_boss = True
             # 看别人的是否给我共享鬼王
             if not battle_processing:
                 if not self.appear(self.I_BOSS_EMPTY_1):
+                    logger.info('Try to battle boss 1 from others')
                     self.click(self.I_BOSS_EMPTY_1, interval=1.5)
                     battle_processing = True
                 elif not self.appear(self.I_BOSS_EMPTY_2):
+                    logger.info('Try to battle boss 2 from others')
                     self.click(self.I_BOSS_EMPTY_2, interval=1.5)
                     battle_processing = True
             # 是否喝茶 疲劳满了就不打了
@@ -77,10 +135,31 @@ class ScriptTask(RightActivity, GeneralBattle, SwitchSoul, GameUi, MetaDemonAsse
                 else:
                     logger.info('Exhaustion is full, exit')
                     break
+            # 超时结束
+            if boss_timer.reached():
+                logger.info('Time out, exit')
+                break
+            # 5/6星特殊处理 + 使用自定义策略组
+            target_group_team = [None, None]
+            if is_hard_boss:
+                logger.info('Hard boss')
+                if self.config.meta_demon.meta_demon_config.md_use_strategy:
+                    detect_full_name = self.O_MD_FULL_NAME.ocr_single(self.device.image)
+                    logger.info(f'detect_full_name: {detect_full_name}')
+                    if not detect_full_name:
+                        detect_full_name = ''
+                    group_team = self.get_group_team(detect_full_name)
+                    if self.hp_threshold_low(self.device.image):
+                        logger.info('Hp threshold low')
+                        target_group_team = group_team[2:4]
+                    else:
+                        logger.info('Hp threshold high')
+                        target_group_team = group_team[0:2]
             # 正式战斗
             if battle_processing and self.appear(self.I_BATTLE_DEMON):
+                logger.info(f'preset group team: {target_group_team}')
+                self.battle_boss(target_group_team[0], target_group_team[1])
                 boss_timer.reset()
-                self.battle_boss()
                 continue
 
             # 自己召唤鬼王
@@ -122,8 +201,7 @@ class ScriptTask(RightActivity, GeneralBattle, SwitchSoul, GameUi, MetaDemonAsse
                 break
             if self.appear(self.I_CRAFTING_EMPTY) or self.appear(self.I_CRAFTING_EMPTY_NEW):
                 if self.appear_then_click(self.I_CRAFTING_CARD_STAR_1, interval=1):
-                    timer.reset()
-                continue
+                    continue
             else:
                 self.appear_then_click(self.I_CRAFTING_START, interval=3)
                 count += 1
@@ -145,16 +223,32 @@ class ScriptTask(RightActivity, GeneralBattle, SwitchSoul, GameUi, MetaDemonAsse
             if self.appear_then_click(self.I_FIND_DEMON, interval=3.5):
                 continue
         self.screenshot()
+        if self.is_star56():
+            logger.info('Star 5 or 6 demon found')
+            detect_full_name = self.O_MD_FULL_NAME.ocr_single(self.device.image)
+            logger.info(f'召唤到高星鬼王: {detect_full_name}')
+            self.config.notifier.push(content=f'召唤到高星鬼王: {detect_full_name}', title='超鬼王')
         return True
 
-    def battle_boss(self) -> bool:
+    def battle_boss(self, group: int = None, team: int = None) -> bool:
         logger.info('Battle boss')
         self.ui_click_until_disappear(self.I_BATTLE_DEMON, interval=1.8)
         battle_config = GeneralBattleConfig()
         battle_config.lock_team_enable = False
-        if self.run_general_battle(battle_config):
-            return True
-        return False
+        if group is None and team is None:
+            battle_config.preset_enable = False
+            success = self.run_general_battle(battle_config)
+            return True if success else False
+        # 针对5/6星的挑战
+        else:
+            battle_config.preset_enable = True
+            battle_config.preset_group = group
+            battle_config.preset_team = team
+            tmp_battle_count = self.current_count
+            self.current_count = 0
+            success = self.run_general_battle(battle_config)
+            self.current_count = tmp_battle_count + 1
+            return True if success else False
 
     def battle_wait(self, random_click_swipt_enable: bool) -> bool:
         # 重写
@@ -185,5 +279,4 @@ if __name__ == '__main__':
     t = ScriptTask(c, d)
 
     t.run()
-    # t.screenshot()
-    # print(t.current_exhaustion())
+

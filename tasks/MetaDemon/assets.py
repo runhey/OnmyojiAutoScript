@@ -72,6 +72,14 @@ class MetaDemonAssets:
 	I_CRAFTING_START = RuleImage(roi_front=(889,561,140,39), roi_back=(840,521,231,100), threshold=0.75, method="Template matching", file="./tasks/MetaDemon/md/md_crafting_start.png")
 	# description 
 	I_CRAFTING_EMPTY_NEW = RuleImage(roi_front=(787,307,100,100), roi_back=(772,299,128,117), threshold=0.8, method="Template matching", file="./tasks/MetaDemon/md/md_crafting_empty_new.png")
+	# description 
+	I_STAR56_POS_1 = RuleImage(roi_front=(100,205,8,11), roi_back=(100,205,8,11), threshold=0.8, method="Template matching", file="./tasks/MetaDemon/md/md_star56_pos_1.png")
+	# 血量高于阈值 
+	I_STAR56_HP_THRESHOLD_T = RuleImage(roi_front=(630,518,58,18), roi_back=(630,518,58,18), threshold=0.8, method="Template matching", file="./tasks/MetaDemon/md/md_star56_hp_threshold_t.png")
+	# 血量小于阈值 
+	I_STAR56_HP_THRESHOLD_F = RuleImage(roi_front=(659,517,26,19), roi_back=(659,517,26,19), threshold=0.8, method="Template matching", file="./tasks/MetaDemon/md/md_star56_hp_threshold_f.png")
+	# description 
+	I_ENTER_ENSURE = RuleImage(roi_front=(541,578,186,48), roi_back=(443,555,370,100), threshold=0.8, method="Template matching", file="./tasks/MetaDemon/md/md_enter_ensure.png")
 
 
 	# Ocr Rule Assets
@@ -83,5 +91,7 @@ class MetaDemonAssets:
 	O_MD_COUNT_INFO = RuleOcr(roi=(94,314,161,37), area=(94,314,161,37), mode="Single", method="Default", keyword="击败奖励结算中", name="md_count_info")
 	# 一星卡 
 	O_CRAFTING_CARD_1 = RuleOcr(roi=(303,158,161,33), area=(303,158,161,33), mode="Single", method="Default", keyword="一星梦告铃鼓", name="crafting_card_1")
+	# 式神全名 
+	O_MD_FULL_NAME = RuleOcr(roi=(479,116,100,217), area=(479,116,100,217), mode="Full", method="Default", keyword="", name="md_full_name")
 
 
