@@ -66,7 +66,7 @@ class Strategy(ConfigBase):
     def parse_all(cls, data: list['Strategy']) -> dict[str, list[int]]:
         result = {}
         for item in data:
-            value = item.parse_group_team(item.md_preset_group_team_1)\
+            value = item.parse_group_team(item.md_preset_group_team_1) \
                     + item.parse_group_team(item.md_preset_group_team_2)
             for name in cls.parse_names(item.md_match_names):
                 result[name] = value
@@ -80,7 +80,6 @@ class MetaDemonConfig(ConfigBase):
     md_strategy_count: int = Field(default=0, ge=0, description='md_strategy_count_help')
     md_use_strategy: bool = Field(default=False, description='md_use_strategy_help')
 
-
     @field_validator('auto_tea', mode='after')
     @classmethod
     def to_false(cls, v):
@@ -92,7 +91,6 @@ class MetaDemonConfig(ConfigBase):
         if v < 0:
             return 0
         return v
-
 
 
 class MetaDemon(ConfigBase):
@@ -166,4 +164,3 @@ class MetaDemon(ConfigBase):
 if __name__ == '__main__':
     ff = MetaDemon()
     ff.model_dump()
-

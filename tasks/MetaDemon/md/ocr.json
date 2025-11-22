@@ -43,5 +43,14 @@
     "method": "Default",
     "keyword": "",
     "description": "式神全名"
+  },
+  {
+    "itemName": "boss_empty_1",
+    "roiFront": "141,400,94,32",
+    "roiBack": "141,400,94,32",
+    "mode": "Single",
+    "method": "Default",
+    "keyword": "剩余时间",
+    "description": "判断别人是否给鬼王"
   }
 ]

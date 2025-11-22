@@ -57,11 +57,13 @@ class MetaDemonAssets:
 	# 点击战斗 
 	I_BATTLE_DEMON = RuleImage(roi_front=(1131,573,100,100), roi_back=(1085,536,165,161), threshold=0.7, method="Template matching", file="./tasks/MetaDemon/md/md_battle_demon.png")
 	# description 
-	I_BOSS_EMPTY = RuleImage(roi_front=(44,134,88,85), roi_back=(44,134,88,85), threshold=0.8, method="Template matching", file="./tasks/MetaDemon/md/md_boss_empty.png")
+	I_BOSS_EMPTY = RuleImage(roi_front=(44,134,88,85), roi_back=(44,134,88,85), threshold=0.7, method="Template matching", file="./tasks/MetaDemon/md/md_boss_empty.png")
+	# 集结 
+	I_BOSS_CONVENE = RuleImage(roi_front=(247,146,47,52), roi_back=(228,127,88,85), threshold=0.7, method="Template matching", file="./tasks/MetaDemon/md/md_boss_convene.png")
 	# description 
-	I_BOSS_EMPTY_1 = RuleImage(roi_front=(46,372,87,90), roi_back=(46,372,87,90), threshold=0.8, method="Template matching", file="./tasks/MetaDemon/md/md_boss_empty_1.png")
+	I_BOSS_EMPTY_1 = RuleImage(roi_front=(46,372,87,90), roi_back=(46,372,87,90), threshold=0.5, method="Template matching", file="./tasks/MetaDemon/md/md_boss_empty_1.png")
 	# description 
-	I_BOSS_EMPTY_2 = RuleImage(roi_front=(46,501,88,88), roi_back=(46,501,88,88), threshold=0.8, method="Template matching", file="./tasks/MetaDemon/md/md_boss_empty_2.png")
+	I_BOSS_EMPTY_2 = RuleImage(roi_front=(46,501,88,88), roi_back=(46,501,88,88), threshold=0.5, method="Template matching", file="./tasks/MetaDemon/md/md_boss_empty_2.png")
 	# 合成 
 	I_CRAFTING_1 = RuleImage(roi_front=(1202,222,36,45), roi_back=(1167,199,100,100), threshold=0.8, method="Template matching", file="./tasks/MetaDemon/md/md_crafting_1.png")
 	# 空 
@@ -93,5 +95,7 @@ class MetaDemonAssets:
 	O_CRAFTING_CARD_1 = RuleOcr(roi=(303,158,161,33), area=(303,158,161,33), mode="Single", method="Default", keyword="一星梦告铃鼓", name="crafting_card_1")
 	# 式神全名 
 	O_MD_FULL_NAME = RuleOcr(roi=(479,116,100,217), area=(479,116,100,217), mode="Full", method="Default", keyword="", name="md_full_name")
+	# 判断别人是否给鬼王 
+	O_BOSS_EMPTY_1 = RuleOcr(roi=(141,400,94,32), area=(141,400,94,32), mode="Single", method="Default", keyword="剩余时间", name="boss_empty_1")
 
 

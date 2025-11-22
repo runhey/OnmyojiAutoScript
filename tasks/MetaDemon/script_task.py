@@ -60,7 +60,7 @@ class Star56(GameUi, MetaDemonAssets):
                 if len(key_name) != len(detect_name):
                     continue
                 diff_count = sum(1 for c1, c2 in zip(key_name, detect_name) if c1 != c2)
-                if diff_count <= i:
+                if diff_count <= i < len(detect_name):
                     return strategies[key_name]
         return None
 
@@ -102,7 +102,7 @@ class ScriptTask(RightActivity, GeneralBattle, SwitchSoul, Star56):
 
         boss_timer = Timer(180)
         boss_timer.start()
-        first_battle = True
+        first_battle_for_easy_boss = True
         while 1:
             battle_processing = False
             is_hard_boss = False  # 五星或者六星
@@ -111,21 +111,26 @@ class ScriptTask(RightActivity, GeneralBattle, SwitchSoul, Star56):
                 continue
 
             # 先看自己有没有鬼王要打
-            if not self.appear(self.I_BOSS_EMPTY):
+            if not self.appear(self.I_BOSS_EMPTY) and self.appear(self.I_BOSS_CONVENE):
+                logger.info('Try to battle boss from self')
                 self.click(self.I_BOSS_EMPTY, interval=1.5)
                 battle_processing = True
                 if self.is_star56():
                     is_hard_boss = True
             # 看别人的是否给我共享鬼王
             if not battle_processing:
-                if not self.appear(self.I_BOSS_EMPTY_1):
+                if not self.appear(self.I_BOSS_EMPTY_1) and self.ocr_appear(self.O_BOSS_EMPTY_1):
                     logger.info('Try to battle boss 1 from others')
                     self.click(self.I_BOSS_EMPTY_1, interval=1.5)
+                    self.ui_click(self.I_BOSS_EMPTY_1, stop=self.I_BATTLE_DEMON, interval=1.5)
                     battle_processing = True
+                    is_hard_boss = True
                 elif not self.appear(self.I_BOSS_EMPTY_2):
                     logger.info('Try to battle boss 2 from others')
                     self.click(self.I_BOSS_EMPTY_2, interval=1.5)
+                    self.ui_click(self.I_BOSS_EMPTY_1, stop=self.I_BATTLE_DEMON, interval=1.5)
                     battle_processing = True
+                    is_hard_boss = True
             # 是否喝茶 疲劳满了就不打了
             current_exhaustion = self.current_exhaustion()
             if current_exhaustion > 99:
@@ -157,19 +162,21 @@ class ScriptTask(RightActivity, GeneralBattle, SwitchSoul, Star56):
                         logger.info('Hp threshold high')
                         target_group_team = group_team[0:2]
             else:
-                if self.config.meta_demon.meta_demon_config.md_use_strategy and first_battle:
+                if self.config.meta_demon.meta_demon_config.md_use_strategy and first_battle_for_easy_boss:
                     logger.info('Normal boss first battle use default group team')
                     target_group_team = self.cached_default_group_team
             if battle_processing and self.appear(self.I_BATTLE_DEMON):
                 logger.info(f'preset group team: {target_group_team}')
                 self.battle_boss(target_group_team[0], target_group_team[1])
-                if first_battle:
-                    first_battle = False
+                if first_battle_for_easy_boss:
+                    first_battle_for_easy_boss = False
+                if is_hard_boss:
+                    first_battle_for_easy_boss = True
                 boss_timer.reset()
                 continue
 
             # 自己召唤鬼王
-            if self.find_demon():
+            if current_exhaustion < 90 and self.find_demon():
                 boss_timer.reset()
                 continue
 
@@ -215,6 +222,7 @@ class ScriptTask(RightActivity, GeneralBattle, SwitchSoul, Star56):
                 continue
         logger.info('Finish star crafting')
         self.ui_click_until_disappear(self.I_UI_BACK_RED, interval=1)
+        sleep(0.5)
 
     def find_demon(self) -> bool:
         """
@@ -231,7 +239,12 @@ class ScriptTask(RightActivity, GeneralBattle, SwitchSoul, Star56):
         self.screenshot()
         if self.is_star56():
             logger.info('Star 5 or 6 demon found')
-            detect_full_name = self.O_MD_FULL_NAME.ocr_single(self.device.image)
+            while 1:
+                sleep(0.4)
+                self.screenshot()
+                detect_full_name = self.O_MD_FULL_NAME.ocr_single(self.device.image)
+                if detect_full_name:
+                    break
             logger.info(f'召唤到高星鬼王: {detect_full_name}')
             self.config.notifier.push(content=f'召唤到高星鬼王: {detect_full_name}', title='超鬼王')
         return True

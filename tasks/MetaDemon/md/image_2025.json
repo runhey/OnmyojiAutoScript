@@ -41,8 +41,17 @@
     "roiFront": "44,134,88,85",
     "roiBack": "44,134,88,85",
     "method": "Template matching",
-    "threshold": 0.8,
+    "threshold": 0.7,
     "description": "description"
+  },
+  {
+    "itemName": "boss_convene",
+    "imageName": "md_boss_convene.png",
+    "roiFront": "247,146,47,52",
+    "roiBack": "228,127,88,85",
+    "method": "Template matching",
+    "threshold": 0.7,
+    "description": "集结"
   },
   {
     "itemName": "boss_empty_1",
@@ -50,7 +59,7 @@
     "roiFront": "46,372,87,90",
     "roiBack": "46,372,87,90",
     "method": "Template matching",
-    "threshold": 0.8,
+    "threshold": 0.5,
     "description": "description"
   },
   {
@@ -59,7 +68,7 @@
     "roiFront": "46,501,88,88",
     "roiBack": "46,501,88,88",
     "method": "Template matching",
-    "threshold": 0.8,
+    "threshold": 0.5,
     "description": "description"
   },
   {
