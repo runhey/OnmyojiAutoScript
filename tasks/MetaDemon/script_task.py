@@ -102,6 +102,7 @@ class ScriptTask(RightActivity, GeneralBattle, SwitchSoul, Star56):
 
         boss_timer = Timer(180)
         boss_timer.start()
+        first_battle = True
         while 1:
             battle_processing = False
             is_hard_boss = False  # 五星或者六星
@@ -155,10 +156,15 @@ class ScriptTask(RightActivity, GeneralBattle, SwitchSoul, Star56):
                     else:
                         logger.info('Hp threshold high')
                         target_group_team = group_team[0:2]
-            # 正式战斗
+            else:
+                if self.config.meta_demon.meta_demon_config.md_use_strategy and first_battle:
+                    logger.info('Normal boss first battle use default group team')
+                    target_group_team = self.cached_default_group_team
             if battle_processing and self.appear(self.I_BATTLE_DEMON):
                 logger.info(f'preset group team: {target_group_team}')
                 self.battle_boss(target_group_team[0], target_group_team[1])
+                if first_battle:
+                    first_battle = False
                 boss_timer.reset()
                 continue
 

@@ -23,7 +23,7 @@ class DefaultStrategy(ConfigBase):
 
 class Strategy(ConfigBase):
     # 匹配的式神中文名字
-    md_match_names: str = Field(default='default')
+    md_match_names: str = Field(default='御撰津')
     # 选哪一个预设组
     md_preset_group_team_1: str = Field(default='1,1')
     md_preset_group_team_2: str = Field(default='1,1')
