@@ -2,7 +2,22 @@ import json
 from pathlib import Path
 
 
-class I18n:
+class Addition:
+    @classmethod
+    def load_additions(cls) -> dict:
+        result = {}
+        files: str = ['en-US', 'zh-CN']
+        for file in files:
+            file_path = Path.cwd() / 'assets' / 'i18n' / f'{file}.json'
+            result[file] = {}
+            if not file_path.exists():
+                continue
+            with open(str(file_path), 'r', encoding='utf-8') as f:
+                result[file] = json.load(f)
+        return result
+
+
+class I18n(Addition):
     file_zh_cn = Path.cwd() / 'module' / 'config' / 'i18n' / 'zh-CN.json'
 
     @classmethod
@@ -23,6 +38,7 @@ class I18n:
             return {}
         with open(str(I18n.file_zh_cn), 'r', encoding='utf-8') as f:
             return json.load(f)
+
 
 if __name__ == '__main__':
     print(I18n.load_zh_cn())

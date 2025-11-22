@@ -34,10 +34,10 @@ def detect_ocr(file: str, target: RuleOcr):
 
 
 # 图片文件路径 可以是相对路径
-IMAGE_FILE = r"C:\Users\Ryland\Desktop\QQ20251014-103056.png"
+IMAGE_FILE = r"C:\Users\Ryland\Desktop\ScreenShot_2025-11-20_210804_069.png"
 if __name__ == '__main__':
-    from tasks.KekkaiActivation.script_task import ScriptTask
-    targe = ScriptTask.I_UI_CONFIRM_SAMLL
+    from tasks.MetaDemon.script_task import ScriptTask
+    targe = ScriptTask.I_BOSS_EMPTY_2
     print(detect_image(IMAGE_FILE, targe))
 
     # ocr demo

@@ -34,7 +34,7 @@ class DokanAssets:
 
 
 	# List Rule Assets
-	# 前往按钮列表
+	# 前往按钮列表 
 	L_GOTO_CHEERING = RuleList(folder="./tasks/Dokan/res", direction="vertical", mode="ocr", roi_back=(950,172,54,324), size=(53, 62), 
 					 array=["前往"])
 
