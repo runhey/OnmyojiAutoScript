@@ -274,6 +274,7 @@ class ScriptTask(RightActivity, GeneralBattle, SwitchSoul, Star56):
         self.device.stuck_record_add('BATTLE_STATUS_S')
         self.device.click_record_clear()
         logger.info("Start battle process")
+        self.boss_mark_reset()
         while 1:
             self.screenshot()
             # if self.appear_then_click(self.I_WIN, interval=1):
@@ -287,6 +288,8 @@ class ScriptTask(RightActivity, GeneralBattle, SwitchSoul, Star56):
                 logger.warning('False battle')
                 self.ui_click_until_disappear(self.I_MD_BATTLE_FAILURE)
                 return False
+            if self.boss_mark():
+                continue
 
 
 if __name__ == '__main__':

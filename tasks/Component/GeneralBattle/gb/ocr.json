@@ -11,7 +11,7 @@
   {
     "itemName": "preset",
     "roiFront": "20,620,60,80",
-    "roiBack":  "20,620,60,80",
+    "roiBack": "20,620,60,80",
     "mode": "Single",
     "method": "Default",
     "keyword": "预",
@@ -20,10 +20,19 @@
   {
     "itemName": "preset_full",
     "roiFront": "20,620,60,80",
-    "roiBack":  "20,620,60,80",
+    "roiBack": "20,620,60,80",
     "mode": "Single",
     "method": "Default",
     "keyword": "预设",
     "description": "预设"
+  },
+  {
+    "itemName": "boss_mark",
+    "roiFront": "379,44,50,21",
+    "roiBack": "379,44,50,21",
+    "mode": "Single",
+    "method": "Default",
+    "keyword": "已标记",
+    "description": "已标记"
   }
 ]
