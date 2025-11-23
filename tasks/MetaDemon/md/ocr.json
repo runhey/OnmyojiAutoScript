@@ -1,8 +1,8 @@
 [
   {
     "itemName": "md_exhaustion",
-    "roiFront": "1096,18,89,31",
-    "roiBack": "1096,18,89,31",
+    "roiFront": "1114,24,94,31",
+    "roiBack": "1114,24,94,31",
     "mode": "DigitCounter",
     "method": "Default",
     "keyword": "",
@@ -25,5 +25,32 @@
     "method": "Default",
     "keyword": "击败奖励结算中",
     "description": "Ocr-description"
+  },
+  {
+    "itemName": "crafting_card_1",
+    "roiFront": "303,158,161,33",
+    "roiBack": "303,158,161,33",
+    "mode": "Single",
+    "method": "Default",
+    "keyword": "一星梦告铃鼓",
+    "description": "一星卡"
+  },
+  {
+    "itemName": "md_full_name",
+    "roiFront": "479,116,100,217",
+    "roiBack": "479,116,100,217",
+    "mode": "Full",
+    "method": "Default",
+    "keyword": "",
+    "description": "式神全名"
+  },
+  {
+    "itemName": "boss_empty_1",
+    "roiFront": "141,400,94,32",
+    "roiBack": "141,400,94,32",
+    "mode": "Single",
+    "method": "Default",
+    "keyword": "剩余时间",
+    "description": "判断别人是否给鬼王"
   }
 ]

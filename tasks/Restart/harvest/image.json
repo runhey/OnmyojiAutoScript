@@ -47,8 +47,8 @@
   {
     "itemName": "harvest_mail_all",
     "imageName": "harvest_harvest_mail_all.png",
-    "roiFront": "69,589,64,57",
-    "roiBack": "28,572,115,123",
+    "roiFront": "69,579,80,67",
+    "roiBack": "28,551,142,144",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "全部收取"
@@ -236,10 +236,19 @@
   {
     "itemName": "read_all_mail",
     "imageName": "harvest_read_all_mail.png",
-    "roiFront": "155,603,166,44",
+    "roiFront": "180,605,130,35",
     "roiBack": "149,588,182,72",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "一键已读所有邮件"
+  },
+  {
+    "itemName": "mail_red_point",
+    "imageName": "harvest_mail_red_point.png",
+    "roiFront": "1229,200,16,21",
+    "roiBack": "1159,189,100,317",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "邮件红点"
   }
 ]
