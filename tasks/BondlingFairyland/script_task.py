@@ -338,6 +338,7 @@ class ScriptTask(GameUi, GeneralInvite, GeneralRoom, BondlingBattle, SwitchSoul,
         while 1:
             self.screenshot()
             if not self.appear(self.I_STONE_SURE):
+                sleep(random.uniform(1.5, 2))  # 等待购买后的动画, 否则已经买了但是下次再点击还会出现该界面
                 return True
             for i in range(3):
                 if self.appear_then_click(self.I_BUY_PLUS, interval=1):
@@ -530,19 +531,9 @@ class ScriptTask(GameUi, GeneralInvite, GeneralRoom, BondlingBattle, SwitchSoul,
         if mode == BondlingMode.MODE1:
             return None
         logger.info(f'Capture setting mode: {mode}')
-        while 1:
-            self.screenshot()
-            if self.appear(self.I_CAPTION_ENSURE):
-                break
-            if self.appear_then_click(self.I_CLICK_CAPTION, interval=1):
-                continue
-
-        while 1:
-            self.screenshot()
-            if self.appear(self.I_C_AUTO_TRUE):
-                break
-            if self.appear_then_click(self.I_C_AUTO_FALSE, interval=1):
-                continue
+        self.ui_click(self.I_CLICK_CAPTION, self.I_CAPTION_ENSURE, interval=1)  # 打开结契设置
+        self.ui_click(self.I_C_AUTO_FALSE, self.I_C_AUTO_TRUE, interval=1)  # 自动结契
+        self.ui_click(self.I_C_MINIMAL_MODE_DISABLE, self.I_C_MINIMAL_MODE_ENABLE, interval=0.8)  # 极简模式
 
         target_true = None
         target_false = None
@@ -561,34 +552,15 @@ class ScriptTask(GameUi, GeneralInvite, GeneralRoom, BondlingBattle, SwitchSoul,
         elif mode == BondlingMode.MODE4:  # 高级盘子不需要设置连续结契和羁绊式神
             target_true = self.I_C_HIGH_TRUE
             target_false = self.I_C_HIGH_FALSE
-        # 切换盘子
-        while target_true is not None:
-            self.screenshot()
-            if self.appear(target_true):
-                break
-            if self.appear_then_click(target_false, interval=1):
-                continue
-        # 是否连续结契
-        while target_continuous is not None:
-            self.screenshot()
-            if not self.appear(target_continuous):
-                break
-            if self.appear_then_click(target_continuous, interval=1):
-                continue
-        # 是否使用羁绊式神
-        while target_first is not None:
-            self.screenshot()
-            if not self.appear(target_first):
-                break
-            if self.appear_then_click(target_first, interval=1):
-                continue
+        if target_true is not None:  # 切换盘子
+            self.ui_click(target_false, target_true, interval=1)
+        if target_continuous is not None:  # 是否连续结契
+            self.ui_click_until_disappear(target_continuous, interval=1)
+        if target_first is not None:  # 是否使用羁绊式神
+            self.ui_click_until_disappear(target_first, interval=1)
         # 点击确定退出
-        while 1:
-            self.screenshot()
-            if not self.appear(self.I_CAPTION_ENSURE):
-                break
-            if self.appear_then_click(self.I_CAPTION_ENSURE, interval=1):
-                continue
+        self.ui_click_until_disappear(self.I_CAPTION_ENSURE, interval=1)
+        return None
 
     def enter_shikigami_records(self) -> None:
         """
