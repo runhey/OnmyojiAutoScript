@@ -2,8 +2,8 @@
   {
     "itemName": "c_auto_true",
     "imageName": "capture_c_auto_true.png",
-    "roiFront": "765,157,50,24",
-    "roiBack": "752,145,79,51",
+    "roiFront": "765,200,50,24",
+    "roiBack": "749,187,79,51",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "启用自动结契"
@@ -11,8 +11,8 @@
   {
     "itemName": "c_auto_false",
     "imageName": "capture_c_auto_false.png",
-    "roiFront": "768,156,43,25",
-    "roiBack": "745,146,88,44",
+    "roiFront": "766,200,43,25",
+    "roiBack": "745,189,88,44",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "关闭自动结契"
@@ -20,8 +20,8 @@
   {
     "itemName": "c_low_true",
     "imageName": "capture_c_low_true.png",
-    "roiFront": "524,242,30,32",
-    "roiBack": "512,233,51,50",
+    "roiFront": "523,284,30,32",
+    "roiBack": "514,274,51,50",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "启用低级盘子"
@@ -29,8 +29,8 @@
   {
     "itemName": "c_low_false",
     "imageName": "capture_c_low_false.png",
-    "roiFront": "521,238,33,35",
-    "roiBack": "513,231,48,47",
+    "roiFront": "521,282,33,35",
+    "roiBack": "513,275,48,47",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "禁用低级盘子"
@@ -38,8 +38,8 @@
   {
     "itemName": "c_midum_true",
     "imageName": "capture_c_midum_true.png",
-    "roiFront": "663,241,31,31",
-    "roiBack": "657,238,41,38",
+    "roiFront": "663,283,31,31",
+    "roiBack": "653,277,49,46",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "启用中级盘子"
@@ -47,8 +47,8 @@
   {
     "itemName": "c_midum_false",
     "imageName": "capture_c_midum_false.png",
-    "roiFront": "662,241,31,32",
-    "roiBack": "654,234,49,45",
+    "roiFront": "662,283,31,32",
+    "roiBack": "654,276,49,45",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "禁用中级盘子"
@@ -56,8 +56,8 @@
   {
     "itemName": "c_high_true",
     "imageName": "capture_c_high_true.png",
-    "roiFront": "800,239,33,36",
-    "roiBack": "796,236,42,44",
+    "roiFront": "800,283,33,36",
+    "roiBack": "792,273,49,50",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "启用高级盘子"
@@ -65,8 +65,8 @@
   {
     "itemName": "c_high_false",
     "imageName": "capture_c_high_false.png",
-    "roiFront": "801,241,32,34",
-    "roiBack": "792,232,51,50",
+    "roiFront": "801,283,32,34",
+    "roiBack": "792,273,51,50",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "禁用高级盘子"
@@ -74,8 +74,8 @@
   {
     "itemName": "c_first_enable",
     "imageName": "capture_c_first_enable.png",
-    "roiFront": "507,517,33,31",
-    "roiBack": "499,510,49,47",
+    "roiFront": "507,563,33,31",
+    "roiBack": "500,553,49,47",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "启用优先连接羁绊式神"
@@ -83,8 +83,8 @@
   {
     "itemName": "c_first_disable",
     "imageName": "capture_c_first_disable.png",
-    "roiFront": "708,518,38,34",
-    "roiBack": "703,513,46,44",
+    "roiFront": "708,560,38,34",
+    "roiBack": "702,553,49,49",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "禁用优先连接羁绊式神"
@@ -92,8 +92,8 @@
   {
     "itemName": "caption_ensure",
     "imageName": "capture_caption_ensure.png",
-    "roiFront": "668,567,129,56",
-    "roiBack": "655,557,153,77",
+    "roiFront": "665,610,129,56",
+    "roiBack": "652,601,153,77",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "结契设置确定"
@@ -110,8 +110,8 @@
   {
     "itemName": "c_continuous_disable",
     "imageName": "capture_c_continuous_disable.png",
-    "roiFront": "710,424,33,36",
-    "roiBack": "700,417,50,52",
+    "roiFront": "709,468,33,36",
+    "roiBack": "702,462,50,52",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "禁用连续使用盘子"
@@ -119,10 +119,28 @@
   {
     "itemName": "c_continuous_enable",
     "imageName": "capture_c_continuous_enable.png",
-    "roiFront": "508,424,32,34",
-    "roiBack": "501,417,47,48",
+    "roiFront": "508,468,32,34",
+    "roiBack": "500,461,47,48",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "启用连续使用盘子"
+  },
+  {
+    "itemName": "c_minimal_mode_enable",
+    "imageName": "capture_c_minimal_mode_enable.png",
+    "roiFront": "764,155,48,24",
+    "roiBack": "757,149,63,39",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "启用结契极简模式"
+  },
+  {
+    "itemName": "c_minimal_mode_disable",
+    "imageName": "capture_c_minimal_mode_disable.png",
+    "roiFront": "764,156,46,23",
+    "roiBack": "758,148,62,39",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "禁用结契极简模式"
   }
 ]
