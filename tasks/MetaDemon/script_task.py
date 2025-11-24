@@ -100,7 +100,7 @@ class ScriptTask(RightActivity, GeneralBattle, SwitchSoul, Star56):
         if self.config.meta_demon.meta_demon_config.meta_crafting_card:
             self.crafting()
 
-        boss_timer = Timer(180)
+        boss_timer = Timer(50)
         boss_timer.start()
         first_battle_for_easy_boss = True
         while 1:
@@ -133,7 +133,7 @@ class ScriptTask(RightActivity, GeneralBattle, SwitchSoul, Star56):
                     is_hard_boss = True
             # 是否喝茶 疲劳满了就不打了
             current_exhaustion = self.current_exhaustion()
-            if current_exhaustion > 99:
+            if current_exhaustion > 100:
                 if self.config.meta_demon.meta_demon_config.auto_tea:
                     logger.info('Exhaustion is full, buy tea')
                     boss_timer.reset()
