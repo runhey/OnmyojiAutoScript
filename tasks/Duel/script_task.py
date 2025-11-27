@@ -88,6 +88,8 @@ class ScriptTask(GameUi, GeneralBattle, SwitchSoul, DuelAssets):
         duel_week_over = False
         while 1:
             self.screenshot()
+            if self.appear_then_click(self.I_REWARD, interval=0.6):
+                continue
             if not self.duel_main():
                 continue
             # 检查分数
