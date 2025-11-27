@@ -409,8 +409,7 @@ class ScriptTask(GameUi, GeneralBattle, SwitchSoul, DuelAssets):
         while 1:
             self.screenshot()
             # 收取奖励
-            if self.appear(self.I_REWARD, interval=0.6):
-                self.ui_click_until_disappear(self.I_REWARD)
+            if self.ui_reward_appear_click():
                 continue
             if self.appear_then_click(self.I_D_BATTLE_DATA, action=self.C_D_BATTLE_DATA, interval=0.6):
                 continue
