@@ -88,8 +88,6 @@ class ScriptTask(GameUi, GeneralBattle, SwitchSoul, DuelAssets):
         duel_week_over = False
         while 1:
             self.screenshot()
-            if self.appear_then_click(self.I_REWARD, interval=0.6):
-                continue
             if not self.duel_main():
                 continue
             # 检查分数
@@ -410,6 +408,9 @@ class ScriptTask(GameUi, GeneralBattle, SwitchSoul, DuelAssets):
         swipe_timer.start()
         while 1:
             self.screenshot()
+            # 收取奖励
+            if self.appear_then_click(self.I_REWARD, interval=0.6):
+                continue
             if self.appear_then_click(self.I_D_BATTLE_DATA, action=self.C_D_BATTLE_DATA, interval=0.6):
                 continue
             if self.appear(self.I_FALSE):
@@ -474,7 +475,7 @@ class ScriptTask(GameUi, GeneralBattle, SwitchSoul, DuelAssets):
 if __name__ == '__main__':
     from module.config.config import Config
     from module.device.device import Device
-    c = Config('oas1')
+    c = Config('oas3')
     d = Device(c)
     t = ScriptTask(c, d)
 
