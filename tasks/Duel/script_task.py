@@ -22,6 +22,7 @@ from tasks.Component.SwitchSoul.switch_soul import SwitchSoul
 from tasks.GameUi.page import page_main, page_team, page_shikigami_records
 import os
 from module.atom.image import RuleImage
+from tasks.GlobalGame.assets import GlobalGameAssets as GGA
 """ 斗技 """
 
 
@@ -88,6 +89,9 @@ class ScriptTask(GameUi, GeneralBattle, SwitchSoul, DuelAssets):
         duel_week_over = False
         while 1:
             self.screenshot()
+            # 关闭恭喜晋升段位页面
+            if self.appear_then_click(GGA.I_UI_BACK_RED):
+                continue
             if self.appear_then_click(self.I_REWARD, interval=0.6):
                 continue
             if not self.duel_main():
