@@ -49,17 +49,17 @@ class GeneralBattleAssets:
 	# 预设组7 
 	C_PRESET_GROUP_7 = RuleClick(roi_front=(35,615,25,50), roi_back=(35,615,25,50), name="preset_group_7")
 	# 从左开始第一个绿标 
-	C_GREEN_LEFT_1 = RuleClick(roi_front=(128,433,90,150), roi_back=(128,433,90,150), name="green_left_1")
+	C_GREEN_LEFT_1 = RuleClick(roi_front=(183,506,125,108), roi_back=(183,506,125,108), name="green_left_1")
 	# 从左开始第二个绿标 
-	C_GREEN_LEFT_2 = RuleClick(roi_front=(371,385,81,145), roi_back=(371,385,81,145), name="green_left_2")
+	C_GREEN_LEFT_2 = RuleClick(roi_front=(407,474,100,100), roi_back=(407,474,100,100), name="green_left_2")
 	# 从左开始第三个绿标 
-	C_GREEN_LEFT_3 = RuleClick(roi_front=(586,328,100,76), roi_back=(586,328,100,76), name="green_left_3")
+	C_GREEN_LEFT_3 = RuleClick(roi_front=(608,446,64,44), roi_back=(608,446,64,44), name="green_left_3")
 	# 从左开始第四个绿标 
-	C_GREEN_LEFT_4 = RuleClick(roi_front=(817,379,77,133), roi_back=(817,379,77,133), name="green_left_4")
+	C_GREEN_LEFT_4 = RuleClick(roi_front=(769,475,81,98), roi_back=(769,475,81,98), name="green_left_4")
 	# 从左开始第五个绿标 
-	C_GREEN_LEFT_5 = RuleClick(roi_front=(1059,416,85,145), roi_back=(1059,416,85,145), name="green_left_5")
+	C_GREEN_LEFT_5 = RuleClick(roi_front=(932,473,132,108), roi_back=(932,473,132,108), name="green_left_5")
 	# 绿标阴阳师 
-	C_GREEN_MAIN = RuleClick(roi_front=(590,454,88,178), roi_back=(590,454,88,178), name="green_main")
+	C_GREEN_MAIN = RuleClick(roi_front=(565,555,104,81), roi_back=(565,555,104,81), name="green_main")
 	# 绿标点击 区域,默认为全屏，需要在代码中更新其区域 
 	C_GREEN_MARK_AREA = RuleClick(roi_front=(0,0,1280,720), roi_back=(0,0,1280,720), name="green_mark_area")
 	# 战斗的时候有一定的概率随机点击 
