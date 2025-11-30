@@ -59,6 +59,7 @@ class BaseTask(GlobalGameAssets, CostumeBase):
 
         # 战斗次数相关
         self.current_count = 0  # 战斗次数
+        self._boss_mark_flag = False
 
     def _burst(self) -> bool:
         """
