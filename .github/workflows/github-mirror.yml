@@ -3,10 +3,10 @@ on:
     - cron: "0 4 * * *" # 北京时间中午12点 (UTC+8) = UTC 04:00
     - cron: "0 10 * * *" # 下午六点
     - cron: "0 17 * * *" # 凌晨一点
-#  push:
-#    branches:
-#      - master
-name: GitHub-Mirror
+  push:
+    branches:
+      - master
+name: GitHub-Mirrors
 
 jobs:
   run:
