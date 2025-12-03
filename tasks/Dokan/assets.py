@@ -49,9 +49,9 @@ class DokanAssets:
 	# 是否已经成功进入道馆，上面中间的“道馆突破”文字 
 	I_RYOU_DOKAN_CHECK = RuleImage(roi_front=(567,15,144,42), roi_back=(567,15,144,42), threshold=0.8, method="Template matching", file="./tasks/Dokan/res/res_ryou_dokan_check.png")
 	# 道馆内式神录 
-	I_RYOU_DOKAN_SHIKIGAMI = RuleImage(roi_front=(960,580,140,120), roi_back=(960,580,140,120), threshold=0.8, method="Template matching", file="./tasks/Dokan/res/res_ryou_dokan_shikigami.png")
+	I_RYOU_DOKAN_SHIKIGAMI = RuleImage(roi_front=(989,640,85,67), roi_back=(989,640,85,67), threshold=0.8, method="Template matching", file="./tasks/Dokan/res/res_ryou_dokan_shikigami.png")
 	# 优先攻击选项 
-	I_RYOU_DOKAN_ATTACK_PRIORITY = RuleImage(roi_front=(666,672,58,25), roi_back=(666,672,58,25), threshold=0.8, method="Template matching", file="./tasks/Dokan/res/res_ryou_dokan_priority.png")
+	I_RYOU_DOKAN_ATTACK_PRIORITY = RuleImage(roi_front=(742,667,49,25), roi_back=(742,667,49,25), threshold=0.8, method="Template matching", file="./tasks/Dokan/res/res_ryou_dokan_priority.png")
 	# 优先攻击: 见习 
 	I_RYOU_DOKAN_ATTACK_PRIORITY_0 = RuleImage(roi_front=(98,170,94,43), roi_back=(98,170,94,43), threshold=0.8, method="Template matching", file="./tasks/Dokan/res/res_ryou_dokan_priority_0.png")
 	# 优先攻击: 初级 
