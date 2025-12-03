@@ -49,7 +49,7 @@ class DokanAssets:
 	# 是否已经成功进入道馆，上面中间的“道馆突破”文字 
 	I_RYOU_DOKAN_CHECK = RuleImage(roi_front=(567,15,144,42), roi_back=(567,15,144,42), threshold=0.8, method="Template matching", file="./tasks/Dokan/res/res_ryou_dokan_check.png")
 	# 道馆内式神录 
-	I_RYOU_DOKAN_SHIKIGAMI = RuleImage(roi_front=(989,640,85,67), roi_back=(989,640,85,67), threshold=0.8, method="Template matching", file="./tasks/Dokan/res/res_ryou_dokan_shikigami.png")
+	I_RYOU_DOKAN_SHIKIGAMI = RuleImage(roi_front=(987,608,89,60), roi_back=(987,608,89,60), threshold=0.8, method="Template matching", file="./tasks/Dokan/res/res_ryou_dokan_shikigami.png")
 	# 优先攻击选项 
 	I_RYOU_DOKAN_ATTACK_PRIORITY = RuleImage(roi_front=(742,667,49,25), roi_back=(742,667,49,25), threshold=0.8, method="Template matching", file="./tasks/Dokan/res/res_ryou_dokan_priority.png")
 	# 优先攻击: 见习 

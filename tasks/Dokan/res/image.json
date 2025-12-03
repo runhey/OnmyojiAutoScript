@@ -38,8 +38,8 @@
   {
     "itemName": "ryou_dokan_shikigami",
     "imageName": "res_ryou_dokan_shikigami.png",
-    "roiFront": "989,640,85,67",
-    "roiBack": "989,640,85,67",
+    "roiFront": "987,608,89,60",
+    "roiBack": "987,608,89,60",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "道馆内式神录"
