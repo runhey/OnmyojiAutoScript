@@ -160,5 +160,14 @@
     "method": "Template matching",
     "threshold": 0.8,
     "description": "暂时离开六道之门"
+  },
+  {
+    "itemName": "select_shikigami_and_confirm",
+    "imageName": "gate1_select_shikigami_and_confirm.png",
+    "roiFront": "499,238,151,57",
+    "roiBack": "479,213,199,113",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "选择一个式神加入征伐队伍"
   }
 ]
