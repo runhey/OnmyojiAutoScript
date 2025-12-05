@@ -62,6 +62,15 @@
     "threshold": 0.8,
     "description": "准备"
   },
+    {
+    "itemName": "d_prepare_done",
+    "imageName": "duel_d_prepare_done.png",
+    "roiFront": "495,82,75,55",
+    "roiBack": "495,82,75,55",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "准备完毕 "
+  },
   {
     "itemName": "d_battle_data",
     "imageName": "duel_d_battle_data.png",
