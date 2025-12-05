@@ -11,11 +11,15 @@ class MoonSeaL105(MoonSeaSkills):
         """
         logger.hr('Start Island battle')
         logger.info('Island 105')
+        if not self.wait_until_appear(self.I_ZHAOFU, wait_time=1):
+            self.save_image(task_name="Island 105", image_type=True, wait_time=1)
+            self.appear_then_click(self.I_BACK_EXIT, interval=1)
+            return False
         while 1:
             self.screenshot()
             if self.appear(self.I_NPC_FIRE):
                 break
-            if self.click(self.C_NPC_FIRE_LEFT):
+            if self.appear_then_click(self.I_ZHAOFU):
                 continue
         self.battle_lock_team()
         self.island_battle()
@@ -26,15 +30,14 @@ class MoonSeaL105(MoonSeaSkills):
                 break
             if self.appear_then_click(self.I_COIN, action=self.C_UI_REWARD, interval=0.8):
                 continue
+        return True
 
 
 if __name__ == '__main__':
     from module.config.config import Config
-    from module.device.device import Device
 
-    c = Config('oas1')
-    d = Device(c)
-    t = MoonSeaL105(c, d)
+    c = Config('du')
+    t = MoonSeaL105(c)
     t.screenshot()
 
     t.run_l105()

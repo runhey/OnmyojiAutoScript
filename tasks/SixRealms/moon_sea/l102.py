@@ -43,6 +43,9 @@ class MoonSeaL102(MoonSeaSkills):
             self.screenshot()
             if self.in_main():
                 break
+            if self.cnt_skill101 >= 5:
+                if self.appear_then_click(self.I_BACK_EXIT, interval=2):
+                    continue
             if self.appear_then_click(self.I_IMITATE_1, interval=2.5):
                 continue
             if self.appear_then_click(self.I_UI_CONFIRM_SAMLL, interval=1):
@@ -69,11 +72,9 @@ class MoonSeaL102(MoonSeaSkills):
 
 if __name__ == '__main__':
     from module.config.config import Config
-    from module.device.device import Device
 
-    c = Config('oas1')
-    d = Device(c)
-    t = MoonSeaL102(c, d)
+    c = Config('du')
+    t = MoonSeaL102(c)
     t.screenshot()
 
     t.run_l102()

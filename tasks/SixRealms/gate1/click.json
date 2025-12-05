@@ -1,8 +1,8 @@
 [
   {
     "itemName": "npc_fire_left",
-    "roiFront": "423,203,153,193",
-    "roiBack": "423,203,153,193",
+    "roiFront": "423,203,53,193",
+    "roiBack": "423,203,53,193",
     "description": "左边的"
   },
   {

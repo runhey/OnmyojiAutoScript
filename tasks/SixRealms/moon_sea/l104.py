@@ -16,16 +16,13 @@ class MoonSeaL104(MoonSeaSkills):
         self.battle_lock_team()
         self.island_battle()
         logger.info('Island battle finished')
-        self.select_skill(refresh=True)
 
 
 if __name__ == '__main__':
     from module.config.config import Config
-    from module.device.device import Device
 
-    c = Config('oas1')
-    d = Device(c)
-    t = MoonSeaL104(c, d)
+    c = Config('du')
+    t = MoonSeaL104(c)
     t.screenshot()
 
     t.run_l104()

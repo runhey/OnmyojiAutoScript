@@ -27,6 +27,15 @@
     "description": "有多少钱"
   },
   {
+    "itemName": "sixrealms_number",
+    "roiFront": "1151,23,59,33",
+    "roiBack": "1151,23,59,33",
+    "mode": "Digit",
+    "method": "Default",
+    "keyword": "",
+    "description": "六道门票"
+  },
+  {
     "itemName": "skill_refresh",
     "roiFront": "1172,684,100,31",
     "roiBack": "1172,684,100,31",

@@ -10,6 +10,19 @@ from module.atom.list import RuleList
 class SixRealmsAssets: 
 
 
+	# Image Rule Assets
+	# 宁息 
+	I_NINGXI = RuleImage(roi_front=(646,424,30,31), roi_back=(151,88,908,513), threshold=0.65, method="Template matching", file="./tasks/SixRealms/a/ningxi.png")
+	# 混沌 
+	I_HUNDUN = RuleImage(roi_front=(370,405,33,31), roi_back=(151,88,908,513), threshold=0.65, method="Template matching", file="./tasks/SixRealms/a/hundun.png")
+	# 鏖战 
+	I_ZHAN = RuleImage(roi_front=(644,468,28,29), roi_back=(151,88,908,513), threshold=0.65, method="Template matching", file="./tasks/SixRealms/a/zhan.png")
+	# 神秘 
+	I_SHENMI = RuleImage(roi_front=(901,458,36,28), roi_back=(151,88,908,513), threshold=0.65, method="Template matching", file="./tasks/SixRealms/a/shenmi.png")
+	# 星之屿 
+	I_XING = RuleImage(roi_front=(643,466,30,27), roi_back=(151,88,908,513), threshold=0.7, method="Template matching", file="./tasks/SixRealms/a/xing.png")
+
+
 	# Click Rule Assets
 	# description 
 	C_MAIN_ANIMATE_KEEP = RuleClick(roi_front=(565,7,100,215), roi_back=(565,7,100,215), name="main_animate_keep")
@@ -42,7 +55,7 @@ class SixRealmsAssets:
 
 	# Click Rule Assets
 	# 左边的 
-	C_NPC_FIRE_LEFT = RuleClick(roi_front=(423,203,153,193), roi_back=(423,203,153,193), name="npc_fire_left")
+	C_NPC_FIRE_LEFT = RuleClick(roi_front=(423,203,53,193), roi_back=(423,203,53,193), name="npc_fire_left")
 	# description 
 	C_NPC_FIRE_RIGHT = RuleClick(roi_front=(740,248,181,180), roi_back=(740,248,181,180), name="npc_fire_right")
 	# 中间的精英 
@@ -100,8 +113,6 @@ class SixRealmsAssets:
 	I_ISLAND_TAG_FLAG = RuleImage(roi_front=(543,601,100,100), roi_back=(543,601,100,100), threshold=0.8, method="Template matching", file="./tasks/SixRealms/gate1/gate1_island_tag_flag.png")
 	# 暂时离开六道之门 
 	I_EXIT_SIXREALMS = RuleImage(roi_front=(507.5,308,100,100), roi_back=(507.5,308,100,100), threshold=0.8, method="Template matching", file="./tasks/SixRealms/gate1/gate1_exit_sixrealms.png")
-	# 选择一个式神加入征伐队伍 
-	I_SELECT_SHIKIGAMI_AND_CONFIRM = RuleImage(roi_front=(499,238,151,57), roi_back=(479,213,199,113), threshold=0.8, method="Template matching", file="./tasks/SixRealms/gate1/gate1_select_shikigami_and_confirm.png")
 
 
 	# Ocr Rule Assets
@@ -111,6 +122,8 @@ class SixRealmsAssets:
 	O_ISLAND_NAME = RuleOcr(roi=(88,17,148,49), area=(88,17,148,49), mode="Single", method="Default", keyword="", name="island_name")
 	# 有多少钱 
 	O_COIN_NUM = RuleOcr(roi=(1171,23,59,31), area=(1171,23,59,31), mode="Digit", method="Default", keyword="", name="coin_num")
+	# 六道门票 
+	O_SIXREALMS_NUMBER = RuleOcr(roi=(1151,23,59,33), area=(1151,23,59,33), mode="Digit", method="Default", keyword="", name="sixrealms_number")
 	# Ocr-description 
 	O_SKILL_REFRESH = RuleOcr(roi=(1172,684,100,31), area=(1172,684,100,31), mode="Single", method="Default", keyword="", name="skill_refresh")
 
@@ -140,11 +153,6 @@ class SixRealmsAssets:
 	I_COIN2 = RuleImage(roi_front=(612,345,66,53), roi_back=(405,229,561,270), threshold=0.8, method="Template matching", file="./tasks/SixRealms/gate1/gate1_coin.png")
 	# 洞察之力 
 	I_SKILL105 = RuleImage(roi_front=(178,187,80,69), roi_back=(112,149,779,151), threshold=0.8, method="Template matching", file="./tasks/SixRealms/gate1/gate1_skill105.png")
-
-
-	# Swipe Rule Assets
-	# 征伐队伍选择界面底部阵容上拉 
-	S_TEAM_SWIPE_UP = RuleSwipe(roi_front=(520,571,93,98), roi_back=(589,180,100,100), mode="default", name="team_swipe_up")
 
 
 	# Image Rule Assets
@@ -177,6 +185,8 @@ class SixRealmsAssets:
 	# Image Rule Assets
 	# description 
 	I_L103_EXIT = RuleImage(roi_front=(1171,587,69,70), roi_back=(1078,538,195,180), threshold=0.8, method="Template matching", file="./tasks/SixRealms/l103/l103_exit.png")
+	# lucky_box 
+	I_LUCKY_BOX = RuleImage(roi_front=(442,335,20,95), roi_back=(319,233,257,293), threshold=0.8, method="Template matching", file="./tasks/SixRealms/l103/lucky_box.png")
 
 
 	# Image Rule Assets
@@ -188,5 +198,12 @@ class SixRealmsAssets:
 	I_BATTLE_TEAM_UNLOCK = RuleImage(roi_front=(962,676,21,21), roi_back=(943,655,64,60), threshold=0.8, method="Template matching", file="./tasks/SixRealms/l104/l104_battle_team_unlock.png")
 	# description 
 	I_BATTLE_TEAM_LOCK = RuleImage(roi_front=(961,675,21,23), roi_back=(949,662,48,50), threshold=0.8, method="Template matching", file="./tasks/SixRealms/l104/l104_battle_team_lock.png")
+	# fenghuang 
+	I_FENGHUANG = RuleImage(roi_front=(582,124,412,433), roi_back=(582,124,412,433), threshold=0.8, method="Template matching", file="./tasks/SixRealms/l104/fenghuang.png")
+
+
+	# Image Rule Assets
+	# 招福达摩 
+	I_ZHAOFU = RuleImage(roi_front=(421,270,22,51), roi_back=(382,205,97,214), threshold=0.8, method="Template matching", file="./tasks/SixRealms/l105/zhaofu.png")
 
 

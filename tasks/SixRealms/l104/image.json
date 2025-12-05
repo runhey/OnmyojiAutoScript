@@ -34,5 +34,14 @@
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"
+  },
+  {
+    "itemName": "fenghuang",
+    "imageName": "fenghuang.png",
+    "roiFront": "582,124,412,433",
+    "roiBack": "582,124,412,433",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "fenghuang"
   }
 ]

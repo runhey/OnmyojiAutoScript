@@ -7,5 +7,14 @@
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"
+  },
+  {
+    "itemName": "lucky_box",
+    "imageName": "lucky_box.png",
+    "roiFront": "442,335,20,95",
+    "roiBack": "319,233,257,293",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "lucky_box"
   }
 ]
