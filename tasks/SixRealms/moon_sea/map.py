@@ -1,23 +1,47 @@
 from module.logger import logger
 from tasks.SixRealms.moon_sea.skills import MoonSeaSkills
-
+from cached_property import cached_property
 
 class MoonSeaMap(MoonSeaSkills):
-
+    priority_queue=[[0,3,1,5,4,2],[0,1,5,3,4,2]]  # 两种优先级方案
+    @cached_property
+    def island_list(self):
+        return [
+            self.I_UI_CANCEL, 
+            self.I_SHENMI,
+            self.I_HUNDUN,
+            self.I_ZHAN,
+            self.I_XING,
+            self.I_NINGXI
+        ]
+    
     def enter_island(self):
         self.screenshot()
-        if self.appear_then_click_and_wait(self.I_UI_CANCEL, wait_time=1):
+        logger.info(f'Entering island self.cnt_skill101={self.cnt_skill101}, self.cnt_skillpower={self.cnt_skillpower}')
+        if self.cnt_skill101 < 1 and self.cnt_skillpower < 4:
+            i=0
+            for i in range(6):
+                if self.appear_then_click(self.island_list[self.priority_queue[0][i]], interval=1):
+                    return True
+        else:
+            i=0
+            for i in range(6):
+                if self.appear_then_click(self.island_list[self.priority_queue[1][i]], interval=1):
+                    return True
+        '''
+        if self.appear_then_click(self.I_UI_CANCEL, interval=1):
             return True
-        if self.appear_then_click_and_wait(self.I_SHENMI, wait_time=1):
+        if self.appear_then_click(self.I_SHENMI, interval=1):
             return True
-        if self.appear_then_click_and_wait(self.I_HUNDUN, wait_time=1):
+        if self.appear_then_click(self.I_HUNDUN, interval=1):
             return True
-        if self.appear_then_click_and_wait(self.I_ZHAN, wait_time=1):
+        if self.appear_then_click(self.I_ZHAN, interval=1):
             return True
-        if self.appear_then_click_and_wait(self.I_XING, wait_time=1):
+        if self.appear_then_click(self.I_XING, interval=1):
             return True
-        if self.appear_then_click_and_wait(self.I_NINGXI, wait_time=1):
+        if self.appear_then_click(self.I_NINGXI, interval=1):
             return True
+        '''
         logger.info('Entering island')
         return None
 
@@ -26,7 +50,7 @@ class MoonSeaMap(MoonSeaSkills):
         最后打boss前面激活一次商店买东西
         @return: 有钱够就是True
         """
-        if self.cnt_skill101 >= 5:
+        if self.cnt_skill101 >= 1:
             # 如果柔风满级就不召唤
             return False
         self.screenshot()

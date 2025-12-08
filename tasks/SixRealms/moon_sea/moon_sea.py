@@ -1,7 +1,6 @@
 import time
 
 from module.logger import logger
-
 from cached_property import cached_property
 from datetime import datetime, timedelta
 
@@ -31,7 +30,7 @@ class MoonSea(MoonSeaMap, MoonSeaL101, MoonSeaL102, MoonSeaL103, MoonSeaL104, Mo
         )
         cnt = 0
         while 1:
-            self._check_first_priority_task()
+            #self._check_first_priority_task()
             if cnt >= max_cont:
                 logger.info('Run out of count, exit')
                 break
@@ -47,7 +46,8 @@ class MoonSea(MoonSeaMap, MoonSeaL101, MoonSeaL102, MoonSeaL103, MoonSeaL104, Mo
         logger.info('Exit Moon Sea')
 
     def one(self):
-        self.cnt_skill101 = 1
+        self.cnt_skill101 = 0
+        self.cnt_skillpower = 1
         if not self._start():
             return False
         while 1:
@@ -57,12 +57,8 @@ class MoonSea(MoonSeaMap, MoonSeaL101, MoonSeaL102, MoonSeaL103, MoonSeaL104, Mo
             #     continue
 
             # 如果是boss
-            if self.appear(self.I_BOSS_FIRE):
-                self.boss_team_lock()
-                if self.boss_battle():
-                    return True
-                else:
-                    continue
+            
+                
 
             if self.select_skill(refresh=True):
                 continue
@@ -77,9 +73,13 @@ class MoonSea(MoonSeaMap, MoonSeaL101, MoonSeaL102, MoonSeaL103, MoonSeaL104, Mo
                 case MoonSeaType.island102: self.run_l102()
                 case MoonSeaType.island103: self.run_103()
                 case MoonSeaType.island104: self.run_l104()
-                case MoonSeaType.island105:
-                    if not self.run_l105():
-                        logger.warning('run_l105 failed')
+                case MoonSeaType.island105: self.run_l105()
+                case MoonSeaType.island106:
+                    logger.info('Is boss island')
+                    self.boss_team_lock()
+                    if self.boss_battle():
+                        return True
+                    else:
                         continue
             self.wait_animate_stable(self.C_MAIN_ANIMATE_KEEP, timeout=3)
             continue
@@ -141,6 +141,8 @@ class MoonSea(MoonSeaMap, MoonSeaL101, MoonSeaL102, MoonSeaL103, MoonSeaL104, Mo
                 continue
             if self.appear_then_click(self.I_MCONINUE, interval=3):
                 continue
+            if self.appear_then_click(self.I_MPEACOCK_SKILL, interval=3):
+                continue
         logger.info("Start Roguelike")
         while 1:
             self.screenshot()
@@ -156,16 +158,18 @@ class MoonSea(MoonSeaMap, MoonSeaL101, MoonSeaL102, MoonSeaL103, MoonSeaL104, Mo
         while 1:
             self.screenshot()
             text = self.O_ISLAND_NAME.ocr(self.device.image)
-            if '星之屿' in text:
+            if '绽放' in text:
                 return MoonSeaType.island105
-            if '鏖战之屿' in text:
+            if '战之' in text:
                 return MoonSeaType.island104
-            if '混沌之屿' in text:
+            if '混' in text:
                 return MoonSeaType.island103
-            if '神秘之屿' in text:
+            if '神秘' in text:
                 return MoonSeaType.island102
-            if '宁息之屿' in text:
+            if '宁息' in text:
                 return MoonSeaType.island101
+            if '恋色' in text:
+                return MoonSeaType.island106
             else:
                 return False
 

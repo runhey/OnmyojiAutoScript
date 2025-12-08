@@ -7,9 +7,12 @@ class MoonSeaL102(MoonSeaSkills):
     def run_l102(self):
         logger.hr('Start Island battle')
         logger.info('Island 102')
-        is_imitation = None
+        ##is_imitation = None
         while 1:
             self.screenshot()
+            if self.appear_then_click(self.I_BACK_EXIT, interval=1):
+                break
+                ''' 
             if self.appear(self.I_COIN_RIGHT_TOP):
                 is_imitation = False
                 break
@@ -33,7 +36,9 @@ class MoonSeaL102(MoonSeaSkills):
                     continue
             logger.info('Finish Island 102')
             return
+            
         self.imitate()
+        '''
 
     def imitate(self):
         # 仿造

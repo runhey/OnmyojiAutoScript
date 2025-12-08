@@ -2,11 +2,11 @@
   {
     "itemName": "menter",
     "imageName": "gate1_menter.png",
-    "roiFront": "346,167,30,100",
-    "roiBack": "346,167,30,100",
+    "roiFront": "346,149,35,118",
+    "roiBack": "346,149,35,118",
     "method": "Template matching",
     "threshold": 0.8,
-    "description": "description"
+    "description": "孔雀国re"
   },
   {
     "itemName": "mshuten",
@@ -15,16 +15,16 @@
     "roiBack": "46,609,70,65",
     "method": "Template matching",
     "threshold": 0.8,
-    "description": "酒吞"
+    "description": "小鹿男re"
   },
   {
     "itemName": "mshouzu_select",
     "imageName": "gate1_mshouzu_select.png",
-    "roiFront": "544,179,199,438",
-    "roiBack": "544,179,199,438",
+    "roiFront": "777,180,199,438",
+    "roiBack": "777,180,199,438",
     "method": "Template matching",
     "threshold": 0.8,
-    "description": "椒图选中"
+    "description": "觉选中re"
   },
   {
     "itemName": "mshouzu",
@@ -33,25 +33,25 @@
     "roiBack": "43,608,73,67",
     "method": "Template matching",
     "threshold": 0.8,
-    "description": "椒图"
+    "description": "觉re"
   },
   {
     "itemName": "mstart",
     "imageName": "gate1_mstart.png",
-    "roiFront": "1136,575,100,100",
+    "roiFront": "1121,586,100,100",
     "roiBack": "1043,527,215,167",
     "method": "Template matching",
     "threshold": 0.8,
-    "description": "开启"
+    "description": "第一次开启re"
   },
   {
     "itemName": "mstart_confirm",
     "imageName": "gate1_mstart_confirm.png",
-    "roiFront": "1136,575,100,100",
+    "roiFront": "1124,572,100,100",
     "roiBack": "1080,548,182,150",
     "method": "Template matching",
     "threshold": 0.8,
-    "description": "description"
+    "description": "试炼式神选择re"
   },
   {
     "itemName": "mstart_uncheck",
@@ -60,7 +60,7 @@
     "roiBack": "543,340,38,40",
     "method": "Template matching",
     "threshold": 0.8,
-    "description": "description"
+    "description": "mstart_uncheckoff"
   },
   {
     "itemName": "mstart_check",
@@ -69,7 +69,7 @@
     "roiBack": "542,340,39,41",
     "method": "Template matching",
     "threshold": 0.8,
-    "description": "description"
+    "description": "mstart_check_off"
   },
   {
     "itemName": "mskip",
@@ -78,16 +78,16 @@
     "roiBack": "1117,28,58,36",
     "method": "Template matching",
     "threshold": 0.8,
-    "description": ""
+    "description": "mskip_off"
   },
   {
     "itemName": "prepare_battle",
     "imageName": "gate1_prepare_battle.png",
-    "roiFront": "33,640,48,54",
-    "roiBack": "33,640,48,54",
+    "roiFront": "29,638,55,66",
+    "roiBack": "20,630,72,81",
     "method": "Template matching",
     "threshold": 0.8,
-    "description": "左下角备战"
+    "description": "左下角备战re"
   },
   {
     "itemName": "mconinue",
@@ -96,16 +96,16 @@
     "roiBack": "1121,578,100,100",
     "method": "Template matching",
     "threshold": 0.8,
-    "description": "继续执行"
+    "description": "继续执行re"
   },
   {
     "itemName": "mfirst_skill",
     "imageName": "gate1_mfirst_skill.png",
-    "roiFront": "255,577,141,39",
-    "roiBack": "206,550,227,100",
+    "roiFront": "259,554,141,39",
+    "roiBack": "209,523,227,100",
     "method": "Template matching",
     "threshold": 0.8,
-    "description": "选第一个柔风"
+    "description": "极道轰炸选择re"
   },
   {
     "itemName": "m_store",
@@ -114,7 +114,7 @@
     "roiBack": "1103,576,100,100",
     "method": "Template matching",
     "threshold": 0.8,
-    "description": "唤息"
+    "description": "唤息re"
   },
   {
     "itemName": "back_exit",
@@ -123,7 +123,7 @@
     "roiBack": "0,0,100,100",
     "method": "Template matching",
     "threshold": 0.8,
-    "description": "左上角退出"
+    "description": "左上角退出re"
   },
   {
     "itemName": "m_store_activity",
@@ -132,16 +132,16 @@
     "roiBack": "1107,573,100,100",
     "method": "Template matching",
     "threshold": 0.8,
-    "description": "可以购买的幻息"
+    "description": "可以购买的幻息off"
   },
   {
     "itemName": "mstart_confirm2",
     "imageName": "gate1_mstart_confirm2.png",
-    "roiFront": "1154,581,74,85",
+    "roiFront": "1146,570,84,101",
     "roiBack": "1079,535,196,177",
     "method": "Template matching",
     "threshold": 0.8,
-    "description": "description"
+    "description": "式神阵容选择re"
   },
   {
     "itemName": "island_tag_flag",
@@ -150,15 +150,24 @@
     "roiBack": "543,601,100,100",
     "method": "Template matching",
     "threshold": 0.8,
-    "description": "动画完了就有这个东西"
+    "description": "动画完了就有这个东西off"
   },
   {
     "itemName": "exit_sixrealms",
     "imageName": "gate1_exit_sixrealms.png",
-    "roiFront": "507.5,308,100,100",
-    "roiBack": "507.5,308,100,100",
+    "roiFront": "503,306,84,75",
+    "roiBack": "494,297,100,90",
     "method": "Template matching",
     "threshold": 0.8,
-    "description": "暂时离开六道之门"
+    "description": "暂时离开六道之门re"
+  },
+  {
+    "itemName": "mpeacock_skill",
+    "imageName": "gate1_mpeacock_skill.png",
+    "roiFront": "219,601,95,43",
+    "roiBack": "167,584,192,86",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "选择绽放之舞re"
   }
 ]

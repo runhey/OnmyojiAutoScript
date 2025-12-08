@@ -6,10 +6,11 @@ from module.exception import TaskEnd
 
 from tasks.Component.SwitchSoul.switch_soul import SwitchSoul
 from tasks.GameUi.page import page_six_gates
+from tasks.GameUi.game_ui import GameUi
 from tasks.SixRealms.moon_sea.moon_sea import MoonSea
 
 
-class ScriptTask(SwitchSoul, MoonSea):
+class ScriptTask(SwitchSoul, MoonSea, GameUi):
     """ 六道之门 """
     @property
     def _config(self):
@@ -31,8 +32,8 @@ class ScriptTask(SwitchSoul, MoonSea):
             if self.appear_then_click(self.I_BACK_EXIT, interval=2):
                 continue
         # 设置下一次运行时间是周一
-        self.next_run_week(1)
-        # self.set_next_run('SixRealms', success=True, finish=False)
+        #self.next_run_week(1)
+        self.set_next_run('SixRealms', success=True, finish=False)
         raise TaskEnd
 
     def run_moon_sea(self):
