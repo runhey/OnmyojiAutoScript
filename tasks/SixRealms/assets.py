@@ -57,9 +57,9 @@ class SixRealmsAssets:
 	# 左边的 
 	C_NPC_FIRE_LEFT = RuleClick(roi_front=(423,203,53,193), roi_back=(423,203,53,193), name="npc_fire_left")
 	# description 
-	C_NPC_FIRE_RIGHT = RuleClick(roi_front=(740,248,181,180), roi_back=(740,248,181,180), name="npc_fire_right")
+	C_NPC_FIRE_RIGHT = RuleClick(roi_front=(811,285,72,111), roi_back=(737,249,183,180), name="npc_fire_right")
 	# 中间的精英 
-	C_NPC_FIRE_CENTER = RuleClick(roi_front=(620,188,174,217), roi_back=(620,188,174,217), name="npc_fire_center")
+	C_NPC_FIRE_CENTER = RuleClick(roi_front=(689,199,83,126), roi_back=(620,188,174,217), name="npc_fire_center")
 	# 默认的 
 	C_ISLAND_ENTER = RuleClick(roi_front=(0,0,100,100), roi_back=(0,0,100,100), name="island_enter")
 	# 右数第一个 

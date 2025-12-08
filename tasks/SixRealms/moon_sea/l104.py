@@ -11,7 +11,7 @@ class MoonSeaL104(MoonSeaSkills):
             self.screenshot()
             if self.appear(self.I_NPC_FIRE):
                 break
-            if self.click(self.C_NPC_FIRE_RIGHT, interval=4):
+            if self.click(self.C_NPC_FIRE_RIGHT, interval=2):
                 continue
         self.battle_lock_team()
         self.island_battle()
