@@ -39,7 +39,7 @@ class MoonSea(MoonSeaMap, MoonSeaL101, MoonSeaL102, MoonSeaL103, MoonSeaL104, Mo
                 break
             if self.one():
                 cnt += 1
-                logger.info(f'Run {cnt} times')
+                logger.info(f'Run {cnt} times,avg time: {timedelta(seconds=int((datetime.now() - self.start_time).total_seconds() / cnt))}, total time: {timedelta(seconds=int((datetime.now() - self.start_time).total_seconds()))}')
             else:
                 break
         self.push_notify(content=f'任务已完成{cnt}次,用时: {timedelta(seconds=int((datetime.now() - self.start_time).total_seconds()))}')
@@ -51,15 +51,8 @@ class MoonSea(MoonSeaMap, MoonSeaL101, MoonSeaL102, MoonSeaL103, MoonSeaL104, Mo
         if not self._start():
             return False
         while 1:
-            self.screenshot()
-
-            # if self.activate_store():
-            #     continue
-
-            # 如果是boss
-            
+            self.screenshot()            
                 
-
             if self.select_skill(refresh=True):
                 continue
 
@@ -211,7 +204,7 @@ class MoonSea(MoonSeaMap, MoonSeaL101, MoonSeaL102, MoonSeaL103, MoonSeaL104, Mo
                 continue
             if self.appear_then_click(self.I_UI_CONFIRM_SAMLL, interval=1):
                 continue
-            if self.appear_then_click(self.I_BOSS_SKIP, interval=1):
+            if self.appear(self.I_BOSS_SKIP, interval=1):
                 # 第二个boss
                 self.device.stuck_record_clear()
                 self.device.stuck_record_add('BATTLE_STATUS_S')

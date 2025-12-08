@@ -5,8 +5,8 @@
 from module.exception import TaskEnd
 
 from tasks.Component.SwitchSoul.switch_soul import SwitchSoul
-from tasks.GameUi.page import page_six_gates
 from tasks.GameUi.game_ui import GameUi
+from tasks.GameUi.page import page_shikigami_records,page_six_gates
 from tasks.SixRealms.moon_sea.moon_sea import MoonSea
 
 
@@ -17,10 +17,14 @@ class ScriptTask(SwitchSoul, MoonSea, GameUi):
         return self.config.model.six_realms
 
     def run(self):
-        if self.config.six_realms.switch_soul_config.enable:
-            self.run_switch_soul(self.config.six_realms.switch_soul_config.one_switch)
-            self.run_switch_soul(self.config.six_realms.switch_soul_config.two_switch)
-
+        if self._config.switch_soul_config.enable:
+            self.ui_get_current_page()
+            self.ui_goto(page_shikigami_records)
+            self.run_switch_soul(self._config.switch_soul_config.one_switch)
+            self.ui_get_current_page()
+            self.ui_goto(page_shikigami_records)
+            self.run_switch_soul(self._config.switch_soul_config.two_switch)
+        self.ui_get_current_page()
         self.ui_goto_page(page_six_gates)
         self.run_moon_sea()
 

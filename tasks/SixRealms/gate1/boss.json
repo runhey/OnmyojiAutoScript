@@ -14,7 +14,7 @@
     "roiFront": "1122,527,33,32",
     "roiBack": "1116,520,43,43",
     "method": "Template matching",
-    "threshold": 0.90,
+    "threshold": 0.9,
     "description": "lockre"
   },
   {
@@ -23,14 +23,14 @@
     "roiFront": "1128,529,25,26",
     "roiBack": "1120,520,40,41",
     "method": "Template matching",
-    "threshold": 0.90,
+    "threshold": 0.9,
     "description": "unlockre"
   },
   {
     "itemName": "boss_skip",
     "imageName": "gate1_boss_skip.png",
-    "roiFront": "1131,13,100,42",
-    "roiBack": "1113,5,136,62",
+    "roiFront": "1140,39,48,27",
+    "roiBack": "1110,24,136,58",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"

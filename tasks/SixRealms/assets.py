@@ -12,15 +12,15 @@ class SixRealmsAssets:
 
 	# Image Rule Assets
 	# 宁息 
-	I_NINGXI = RuleImage(roi_front=(649,345,30,31), roi_back=(150,88,908,513), threshold=0.65, method="Template matching", file="./tasks/SixRealms/a/ningxi.png")
+	I_NINGXI = RuleImage(roi_front=(1011,375,19,29), roi_back=(153,87,908,513), threshold=0.65, method="Template matching", file="./tasks/SixRealms/a/a_ningxi.png")
 	# 混沌re 
-	I_HUNDUN = RuleImage(roi_front=(650,370,33,31), roi_back=(151,88,908,513), threshold=0.65, method="Template matching", file="./tasks/SixRealms/a/hundun.png")
+	I_HUNDUN = RuleImage(roi_front=(896,447,23,33), roi_back=(162,122,908,513), threshold=0.65, method="Template matching", file="./tasks/SixRealms/a/a_hundun.png")
 	# 鏖战re 
-	I_ZHAN = RuleImage(roi_front=(909,484,28,29), roi_back=(151,88,908,513), threshold=0.65, method="Template matching", file="./tasks/SixRealms/a/zhan.png")
+	I_ZHAN = RuleImage(roi_front=(207,366,22,26), roi_back=(156,103,908,513), threshold=0.8, method="Template matching", file="./tasks/SixRealms/a/a_zhan.png")
 	# 神秘re 
-	I_SHENMI = RuleImage(roi_front=(376,410,36,28), roi_back=(151,88,908,513), threshold=0.65, method="Template matching", file="./tasks/SixRealms/a/shenmi.png")
+	I_SHENMI = RuleImage(roi_front=(465,459,20,31), roi_back=(151,88,908,513), threshold=0.65, method="Template matching", file="./tasks/SixRealms/a/a_shenmi.png")
 	# 绽放之屿re 
-	I_XING = RuleImage(roi_front=(652,478,30,27), roi_back=(151,88,908,513), threshold=0.7, method="Template matching", file="./tasks/SixRealms/a/xing.png")
+	I_XING = RuleImage(roi_front=(652,478,30,27), roi_back=(151,88,908,513), threshold=0.7, method="Template matching", file="./tasks/SixRealms/a/a_xing.png")
 
 
 	# Click Rule Assets
@@ -38,7 +38,7 @@ class SixRealmsAssets:
 	# unlockre 
 	I_BOSS_TEAM_UNLOCK = RuleImage(roi_front=(1128,529,25,26), roi_back=(1120,520,40,41), threshold=0.9, method="Template matching", file="./tasks/SixRealms/gate1/gate1_boss_team_unlock.png")
 	# description 
-	I_BOSS_SKIP = RuleImage(roi_front=(1131,13,100,42), roi_back=(1113,5,136,62), threshold=0.8, method="Template matching", file="./tasks/SixRealms/gate1/gate1_boss_skip.png")
+	I_BOSS_SKIP = RuleImage(roi_front=(1140,39,48,27), roi_back=(1110,24,136,58), threshold=0.8, method="Template matching", file="./tasks/SixRealms/gate1/gate1_boss_skip.png")
 	# description 
 	I_BOSS_USE_DOUBLE = RuleImage(roi_front=(669,417,126,53), roi_back=(651,407,164,71), threshold=0.8, method="Template matching", file="./tasks/SixRealms/gate1/gate1_boss_use_double.png")
 	# 御神获得经验 
