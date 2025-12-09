@@ -158,7 +158,7 @@ class SixRealmsAssets:
 	# 力量强化 
 	I_PEACOCK_SKILL1 = RuleImage(roi_front=(244,501,95,35), roi_back=(223,478,143,73), threshold=0.8, method="Template matching", file="./tasks/SixRealms/gate1/gate1_peacock_skill1.png")
 	# 技巧强化 
-	I_PEACOCK_SKILL2 = RuleImage(roi_front=(424,500,93,36), roi_back=(389,476,163,76), threshold=0.8, method="Template matching", file="./tasks/SixRealms/gate1/gate1_peacock_skill2.png")
+	I_PEACOCK_SKILL2 = RuleImage(roi_front=(779,501,93,36), roi_back=(747,480,163,76), threshold=0.8, method="Template matching", file="./tasks/SixRealms/gate1/gate1_peacock_skill2.png")
 
 
 	# Image Rule Assets
