@@ -65,19 +65,19 @@
   {
     "itemName": "open_yellow",
     "imageName": "gb_open_yellow.png",
-    "roiFront": "772,347,21,21",
+    "roiFront": "773,297,17,21",
     "roiBack": "766,133,35,366",
     "method": "Template matching",
-    "threshold": 0.7,
+    "threshold": 0.6,
     "description": "description"
   },
   {
     "itemName": "close_red",
     "imageName": "gb_close_red.png",
-    "roiFront": "774,143,21,21",
+    "roiFront": "773,297,17,21",
     "roiBack": "764,134,38,369",
     "method": "Template matching",
-    "threshold": 0.63,
+    "threshold": 0.6,
     "description": "description"
   },
   {
