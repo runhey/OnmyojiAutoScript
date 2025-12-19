@@ -1,32 +1,5 @@
 [
   {
-    "itemName": "shi",
-    "imageName": "as_shi.png",
-    "roiFront": "1183,319,47,38",
-    "roiBack": "1164,134,83,318",
-    "method": "Template matching",
-    "threshold": 0.7,
-    "description": "进入活动"
-  },
-  {
-    "itemName": "back_green",
-    "imageName": "as_back_green.png",
-    "roiFront": "27,19,34,38",
-    "roiBack": "2,1,170,75",
-    "method": "Template matching",
-    "threshold": 0.8,
-    "description": "左上角返回"
-  },
-  {
-    "itemName": "battle",
-    "imageName": "as_battle.png",
-    "roiFront": "813,254,35,135",
-    "roiBack": "754,140,154,315",
-    "method": "Template matching",
-    "threshold": 0.7,
-    "description": "征伐斗场"
-  },
-  {
     "itemName": "battle_1",
     "imageName": "as_battle_1.png",
     "roiFront": "541,197,149,26",
@@ -47,8 +20,8 @@
   {
     "itemName": "lock",
     "imageName": "as_lock.png",
-    "roiFront": "884,648,28,25",
-    "roiBack": "739,613,276,76",
+    "roiFront": "825,657,28,25",
+    "roiBack": "739,613,276,85",
     "method": "Template matching",
     "threshold": 0.5,
     "description": "上锁图标"
@@ -57,7 +30,7 @@
     "itemName": "unlock",
     "imageName": "as_unlock.png",
     "roiFront": "884,648,28,25",
-    "roiBack": "733,607,266,85",
+    "roiBack": "733,607,266,95",
     "method": "Template matching",
     "threshold": 0.5,
     "description": "还未上锁图片"
@@ -108,24 +81,6 @@
     "description": "增加到最大"
   },
   {
-    "itemName": "skip_button",
-    "imageName": "as_skip_button.png",
-    "roiFront": "1159,37,51,22",
-    "roiBack": "1141,27,86,43",
-    "method": "Template matching",
-    "threshold": 0.8,
-    "description": "右上跳过按钮"
-  },
-  {
-    "itemName": "red_exit",
-    "imageName": "as_red_exit.png",
-    "roiFront": "1162,96,39,38",
-    "roiBack": "1120,49,110,135",
-    "method": "Template matching",
-    "threshold": 0.8,
-    "description": "红色退出"
-  },
-  {
     "itemName": "toggle_button",
     "imageName": "as_toggle_button.png",
     "roiFront": "1193,463,27,25",
@@ -162,78 +117,6 @@
     "description": "爬塔活动副页检查标志"
   },
   {
-    "itemName": "red_exit_2",
-    "imageName": "as_red_exit_2.png",
-    "roiFront": "1097,177,46,45",
-    "roiBack": "931,128,237,164",
-    "method": "Template matching",
-    "threshold": 0.8,
-    "description": "爬塔活动页面的红色退出"
-  },
-  {
-    "itemName": "buff_down",
-    "imageName": "as_buff_down.png",
-    "roiFront": "428,625,100,37",
-    "roiBack": "177,600,1040,98",
-    "method": "Template matching",
-    "threshold": 0.8,
-    "description": "卸载buff"
-  },
-  {
-    "itemName": "buff_change_button",
-    "imageName": "as_buff_change_button.png",
-    "roiFront": "491,604,48,46",
-    "roiBack": "439,574,197,108",
-    "method": "Template matching",
-    "threshold": 0.8,
-    "description": "切换buff按钮"
-  },
-  {
-    "itemName": "buff_box_1_empty",
-    "imageName": "as_buff_box_1_empty.png",
-    "roiFront": "342,345,50,59",
-    "roiBack": "317,322,100,100",
-    "method": "Template matching",
-    "threshold": 0.8,
-    "description": "buff容器1为空"
-  },
-  {
-    "itemName": "buff_box_2_empty",
-    "imageName": "as_buff_box_2_empty.png",
-    "roiFront": "883,224,49,54",
-    "roiBack": "854,195,107,105",
-    "method": "Template matching",
-    "threshold": 0.8,
-    "description": "buff容器2为空"
-  },
-  {
-    "itemName": "buff_up",
-    "imageName": "as_buff_up.png",
-    "roiFront": "419,624,120,41",
-    "roiBack": "176,576,1025,142",
-    "method": "Template matching",
-    "threshold": 0.8,
-    "description": "装配buff"
-  },
-  {
-    "itemName": "buff_switch",
-    "imageName": "as_buff_switch.png",
-    "roiFront": "640,624,100,39",
-    "roiBack": "180,601,1026,100",
-    "method": "Template matching",
-    "threshold": 0.8,
-    "description": "buff切换"
-  },
-  {
-    "itemName": "check_buff",
-    "imageName": "as_check_buff.png",
-    "roiFront": "91,12,130,47",
-    "roiBack": "77,0,156,83",
-    "method": "Template matching",
-    "threshold": 0.8,
-    "description": "爬塔活动buff页"
-  },
-  {
     "itemName": "entry_activity",
     "imageName": "as_entry_activity.png",
     "roiFront": "508,318,46,42",
@@ -252,15 +135,6 @@
     "description": "活动列表页爬塔活动"
   },
   {
-    "itemName": "act_map_switch",
-    "imageName": "as_act_map_switch.png",
-    "roiFront": "1196,303,59,48",
-    "roiBack": "1174,263,104,118",
-    "method": "Template matching",
-    "threshold": 0.8,
-    "description": "活动地图切换"
-  },
-  {
     "itemName": "pass_act_locat",
     "imageName": "as_pass_act_locat.png",
     "roiFront": "1214,395,29,31",
@@ -268,14 +142,5 @@
     "method": "Template matching",
     "threshold": 0.8,
     "description": "门票活动定位"
-  },
-  {
-    "itemName": "check_ap100",
-    "imageName": "as_check_ap100.png",
-    "roiFront": "971,575,96,100",
-    "roiBack": "934,537,166,167",
-    "method": "Template matching",
-    "threshold": 0.8,
-    "description": "100体爬塔标识"
   }
 ]

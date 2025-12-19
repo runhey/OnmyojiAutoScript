@@ -36,8 +36,7 @@ class GameUi(BaseTask, GameUiAssets):
                 GameUiAssets.I_BACK_FRIENDS, GameUiAssets.I_BACK_DAILY,
                 GameUiAssets.I_REALM_RAID_GOTO_EXPLORATION,
                 GameUiAssets.I_SIX_GATES_GOTO_EXPLORATION, SixRealmsAssets.I_EXIT_SIXREALMS,
-                ActivityShikigamiAssets.I_SKIP_BUTTON, ActivityShikigamiAssets.I_RED_EXIT, BaseTask.I_UI_BACK_BLUE,
-                ActivityShikigamiAssets.I_RED_EXIT_2]
+                ActivityShikigamiAssets.I_SKIP_BUTTON, ActivityShikigamiAssets.I_RED_EXIT, BaseTask.I_UI_BACK_BLUE]
 
     def __init__(self, config, device):
         super().__init__(config, device)
@@ -285,6 +284,11 @@ class GameUi(BaseTask, GameUiAssets):
             while not max_wait_timer.reached():
                 if timeout_timer.reached():
                     return False
+                if isinstance(button, list):
+                    exec_operates = [self.appear_then_operate(btn, interval=0.8, skip_first_screenshot=False)
+                                     for btn in button]
+                    if exec_operates[0]:  # 只要第一个成功就跳出
+                        break
                 if self.appear_then_operate(button, interval=0.8, skip_first_screenshot=False):
                     break
                 logger.warning(f"[{max_wait_timer.current():.1f}s]Failed click {button} on {current_page}, retry...")

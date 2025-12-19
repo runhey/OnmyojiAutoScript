@@ -1,0 +1,29 @@
+[
+  {
+    "itemName": "battle",
+    "imageName": "as_battle.png",
+    "roiFront": "813,254,35,135",
+    "roiBack": "754,140,154,315",
+    "method": "Template matching",
+    "threshold": 0.7,
+    "description": "征伐斗场"
+  },
+  {
+    "itemName": "pass_1",
+    "imageName": "fire_pass_1.png",
+    "roiFront": "359,295,100,53",
+    "roiBack": "68,203,1138,369",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "pass_2",
+    "imageName": "fire_pass_2.png",
+    "roiFront": "645,224,92,57",
+    "roiBack": "98,205,1076,366",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  }
+]
