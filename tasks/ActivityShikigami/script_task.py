@@ -263,12 +263,11 @@ class ScriptTask(StateMachine, GameUi, BaseActivity, SwitchSoul, ActivityShikiga
             self.screenshot()
             self.put_status()
             # --------------------------------------------------------------
-            if self.appear_then_click(self.I_CHECK_BATTLE_MAIN, interval=4):
-                continue
             if not ocr_limit_timer.reached():
                 continue
             ocr_limit_timer.reset()
             if not self.ocr_appear(self.O_FIRE):
+                self.appear_then_click(self.I_CHECK_BATTLE_MAIN, interval=4)
                 continue
             #  --------------------------------------------------------------
             self.lock_team(self.conf.general_battle)
@@ -417,8 +416,8 @@ class ScriptTask(StateMachine, GameUi, BaseActivity, SwitchSoul, ActivityShikiga
         self.screenshot()
         remain_times = 0
         if self.climb_type == 'pass':
-            remain_times = self.O_REMAIN_AP_ACTIVITY2.ocr_digit(
-                _prepare_image_for_ocr(self.device.image, asset=self.O_REMAIN_AP_ACTIVITY2))
+            remain_times = self.O_REMAIN_PASS.ocr_digit(
+                _prepare_image_for_ocr(self.device.image, asset=self.O_REMAIN_PASS))
         if self.climb_type == 'ap':
             remain_times = self.O_REMAIN_AP.ocr_digit(
                 _prepare_image_for_ocr(self.device.image, asset=self.O_REMAIN_AP))
@@ -467,6 +466,6 @@ if __name__ == '__main__':
     d = Device(c)
     t = ScriptTask(c, d)
 
-    t._run_pass()
+    t.run()
 
 
