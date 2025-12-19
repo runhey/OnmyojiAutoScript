@@ -110,10 +110,19 @@
   {
     "itemName": "pass12",
     "imageName": "fire_pass12.png",
-    "roiFront": "0,0,100,100",
-    "roiBack": "0,0,100,100",
+    "roiFront": "870,356,100,50",
+    "roiBack": "104,169,1109,425",
     "method": "Template matching",
     "threshold": 0.8,
-    "description": "none"
+    "description": "击败魇兽将直接前往下一层"
+  },
+  {
+    "itemName": "pass_13",
+    "imageName": "fire_pass_13.png",
+    "roiFront": "1018,570,100,100",
+    "roiBack": "984,538,169,152",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "魇兽将的战斗图片"
   }
 ]

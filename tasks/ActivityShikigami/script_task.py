@@ -19,6 +19,7 @@ from module.exception import TaskEnd
 from module.logger import logger
 
 from tasks.base_task import BaseTask
+from tasks.Component.GeneralBattle.config_general_battle import GeneralBattleConfig
 from tasks.ActivityShikigami.assets import ActivityShikigamiAssets
 from tasks.ActivityShikigami.config import SwitchSoulConfig, GeneralBattleConfig, ActivityShikigami
 from tasks.Component.BaseActivity.base_activity import BaseActivity
@@ -186,6 +187,16 @@ class ScriptTask(StateMachine, GameUi, BaseActivity, SwitchSoul, ActivityShikiga
                 continue
             if self.ui_reward_appear_click():
                 continue
+            # 击败魇兽将直接前往下一层
+            if self.appear(self.I_PASS12):
+                logger.info('Found魇兽将')
+                from tasks.Component.GeneralBattle.config_general_battle import GeneralBattleConfig as GBC1
+                _battle_config = GBC1(lock_team_enable=True)
+                _battle_config.lock_team_enable = True
+                self.ui_click(self.I_PASS12, stop=self.I_PASS_13)
+                self.ui_click_until_disappear(self.I_PASS_13, interval=1)
+                self.run_general_battle(config=_battle_config)
+                continue
             # 领箱子
             if self.appear_then_click(self.I_PASS_5):
                 logger.info('Found箱子')
@@ -195,18 +206,24 @@ class ScriptTask(StateMachine, GameUi, BaseActivity, SwitchSoul, ActivityShikiga
                 logger.info('Found印记')
                 click_index = 0
                 clicks = [self.I_PASS_8, self.I_PASS_10, self.I_PASS_11]
+                self.ui_click(self.I_PASS_6, stop=self.I_UI_BACK_RED, interval=1)
+                self.screenshot()
+                if not self.appear(self.I_UI_BACK_RED):
+                    continue
                 while 1:
                     self.screenshot()
                     if self.ui_reward_appear_click():
                         break
-                    if self.appear_then_click(self.I_PASS_9):
-                        logger.info('Select one done')
+                    if not self.appear(self.I_UI_BACK_RED):
                         break
                     # 按照顺序 间隔点击
                     if self.click(clicks[click_index], interval=1):
-                        sleep(1)
+                        sleep(1.6)
                         click_index += 1
                         click_index = click_index % len(clicks)
+                    if self.appear_then_click(self.I_PASS_9, interval=1.1):
+                        logger.info('Select one done')
+                        continue
             # 下一层
             if self.appear_then_click(self.I_PASS_7, interval=1):
                 logger.info('Next layer')
