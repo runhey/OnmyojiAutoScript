@@ -187,11 +187,6 @@ page_main.link(button=G.I_MAIN_GOTO_COLLECTION, destination=page_collection)
 page_travel = Page(G.I_CHECK_TRAVEL)
 page_travel.link(button=G.I_BACK_Y, destination=page_main)
 page_main.link(button=G.I_MAIN_GOTO_TRAVEL, destination=page_travel)
-# 活动列表页 act_list
-page_act_list = Page(G.I_CHECK_ACT_LIST)
-page_act_list.additional = [G.I_PAPER_DOLL_CLOSE]
-page_act_list.link(button=G.I_BACK_ACT_LIST, destination=page_main)
-page_main.link(button=G.I_ACT_LIST_EXPAND, destination=page_act_list)
 
 # 道馆
 from tasks.Component.GeneralBattle.assets import GeneralBattleAssets
@@ -201,39 +196,33 @@ page_dokan = Page(DokanAssets.I_RYOU_DOKAN_CHECK)
 page_dokan.additional = [GeneralBattleAssets.I_EXIT, DokanAssets.I_RYOU_DOKAN_EXIT_ENSURE, G.I_BACK_BLUE]
 page_dokan.link(button=G.I_BACK_Y, destination=page_main)
 
-# ************************************* 活动部分 *****************************************#
-from tasks.ActivityShikigami.assets import ActivityShikigamiAssets as asa
-
-# 活动列表页爬塔活动
-page_act_list_climb_act = Page(asa.I_CHECK_ACT_LIST_CLIMB_ACT)
-page_act_list.link(button=G.L_ACT_LIST_OCR, destination=page_act_list_climb_act)
-page_act_list_climb_act.link(button=G.I_BACK_ACT_LIST, destination=page_main)
 
 # ************************************* 战斗部分 *****************************************#
 # 战斗界面
-page_battle = Page(GeneralBattleAssets.I_BATTLE_INFO)
-
-
+# page_battle = Page(GeneralBattleAssets.I_BATTLE_INFO)
+#
+#
 def random_click(low: int = None, high: int = None, ltrb: tuple = (True, False, True, False)) -> RuleClick | list[RuleClick]:
     """
     随机生成RuleClick, 不传入参数则返回1个RuleClick, 传入参数则生成范围内的click数组
     :return: RuleClick或者RuleClick的数组
     """
-    click_area_list = [asa.C_RANDOM_LEFT, asa.C_RANDOM_TOP, asa.C_RANDOM_RIGHT, asa.C_RANDOM_BOTTOM]
+    from tasks.Component.GeneralBattle.assets import GeneralBattleAssets as GBA
+    click_area_list = [GBA.C_REWARD_1, GBA.C_REWARD_2, GBA.C_REWARD_3]
     click = random.choice(list(compress(click_area_list, ltrb)))
     click.name = "SAFE_RANDOM_CLICK"
     if low is None or high is None:
         return click
     return [click for _ in range(random.randint(low, high))]
-
-
-# 奖励界面
-page_reward = Page(check_button=[GeneralBattleAssets.I_REWARD_PURPLE_SNAKE_SKIN, GeneralBattleAssets.I_REWARD,
-                                 GeneralBattleAssets.I_REWARD_EXP_SOUL_4, GeneralBattleAssets.I_WIN,
-                                 GeneralBattleAssets.I_REWARD_GOLD, GeneralBattleAssets.I_REWARD_GOLD_SNAKE_SKIN,
-                                 GeneralBattleAssets.I_REWARD_SOUL_5, GeneralBattleAssets.I_REWARD_SOUL_6,
-                                 GGA.I_UI_REWARD, ])
-page_reward.additional = [random_click()]
-# 失败界面
-page_failed = Page(GeneralBattleAssets.I_FALSE)
-page_failed.additional = [random_click()]
+#
+#
+# # 奖励界面
+# page_reward = Page(check_button=[GeneralBattleAssets.I_REWARD_PURPLE_SNAKE_SKIN, GeneralBattleAssets.I_REWARD,
+#                                  GeneralBattleAssets.I_REWARD_EXP_SOUL_4, GeneralBattleAssets.I_WIN,
+#                                  GeneralBattleAssets.I_REWARD_GOLD, GeneralBattleAssets.I_REWARD_GOLD_SNAKE_SKIN,
+#                                  GeneralBattleAssets.I_REWARD_SOUL_5, GeneralBattleAssets.I_REWARD_SOUL_6,
+#                                  GGA.I_UI_REWARD, ])
+# page_reward.additional = [random_click()]
+# # 失败界面
+# page_failed = Page(GeneralBattleAssets.I_FALSE)
+# page_failed.additional = [random_click()]
