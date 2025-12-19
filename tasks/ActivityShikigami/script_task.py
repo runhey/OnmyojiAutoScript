@@ -176,14 +176,48 @@ class ScriptTask(StateMachine, GameUi, BaseActivity, SwitchSoul, ActivityShikiga
         self.switch_soul(self.I_BATTLE_MAIN_TO_RECORDS, self.I_CHECK_BATTLE_MAIN)
 
         ocr_limit_timer = Timer(1).start()
+        click_limit_timer = Timer(4).start()
         while 1:
             self.screenshot()
             self.put_status()
-            ##
-            if self.appear_then_click(self.I_PASS_1, interval=4):
+            # --------------------------------------------------------------
+            if (self.appear_then_click(self.I_UI_CONFIRM, interval=0.5)
+                    or self.appear_then_click(self.I_UI_CONFIRM_SAMLL, interval=0.5)):
                 continue
-            if self.appear_then_click(self.I_PASS_1, interval=4):
+            if self.ui_reward_appear_click():
                 continue
+            # 领箱子
+            if self.appear_then_click(self.I_PASS_5):
+                logger.info('Found箱子')
+                continue
+            # 印记
+            if self.appear(self.I_PASS_6):
+                logger.info('Found印记')
+                click_index = 0
+                clicks = [self.I_PASS_8, self.I_PASS_10, self.I_PASS_11]
+                while 1:
+                    self.screenshot()
+                    if self.ui_reward_appear_click():
+                        break
+                    if self.appear_then_click(self.I_PASS_9):
+                        logger.info('Select one done')
+                        break
+                    # 按照顺序 间隔点击
+                    if self.click(clicks[click_index], interval=1):
+                        sleep(1)
+                        click_index += 1
+                        click_index = click_index % len(clicks)
+            # 下一层
+            if self.appear_then_click(self.I_PASS_7, interval=1):
+                logger.info('Next layer')
+                continue
+            if click_limit_timer.reached():
+                click_limit_timer.reset()
+                if (self.appear_then_click(self.I_PASS_1)
+                        or self.appear_then_click(self.I_PASS_2)
+                        or self.appear_then_click(self.I_PASS_3)
+                        or self.appear_then_click(self.I_PASS_4)):
+                    continue
             if not ocr_limit_timer.reached():
                 continue
             ocr_limit_timer.reset()
@@ -416,6 +450,6 @@ if __name__ == '__main__':
     d = Device(c)
     t = ScriptTask(c, d)
 
-    t.run()
+    t._run_pass()
 
 
