@@ -143,6 +143,9 @@ class StateMachine(BaseTask):
 
 
 class ScriptTask(StateMachine, GameUi, BaseActivity, SwitchSoul, ActivityShikigamiAssets):
+    """
+    更新前请先看 ./README.md
+    """
 
     def run(self) -> None:
         self.limit_time: timedelta = self.conf.general_climb.limit_time_v
@@ -172,6 +175,9 @@ class ScriptTask(StateMachine, GameUi, BaseActivity, SwitchSoul, ActivityShikiga
         raise TaskEnd
 
     def _run_pass(self):
+        """
+            更新前请先看 ./README.md
+        """
         logger.hr(f'Start run climb type PASS', 1)
         self.ui_click(self.I_TO_BATTLE_MAIN, stop=self.I_CHECK_BATTLE_MAIN, interval=1)
         self.switch_soul(self.I_BATTLE_MAIN_TO_RECORDS, self.I_CHECK_BATTLE_MAIN)
@@ -188,15 +194,15 @@ class ScriptTask(StateMachine, GameUi, BaseActivity, SwitchSoul, ActivityShikiga
             if self.ui_reward_appear_click():
                 continue
             # 击败魇兽将直接前往下一层
-            if self.appear(self.I_PASS12):
-                logger.info('Found魇兽将')
-                from tasks.Component.GeneralBattle.config_general_battle import GeneralBattleConfig as GBC1
-                _battle_config = GBC1(lock_team_enable=True)
-                _battle_config.lock_team_enable = True
-                self.ui_click(self.I_PASS12, stop=self.I_PASS_13)
-                self.ui_click_until_disappear(self.I_PASS_13, interval=1)
-                self.run_general_battle(config=_battle_config)
-                continue
+            # if self.appear(self.I_PASS12):
+            #     logger.info('Found魇兽将')
+            #     from tasks.Component.GeneralBattle.config_general_battle import GeneralBattleConfig as GBC1
+            #     _battle_config = GBC1(lock_team_enable=True)
+            #     _battle_config.lock_team_enable = True
+            #     self.ui_click(self.I_PASS12, stop=self.I_PASS_13)
+            #     self.ui_click_until_disappear(self.I_PASS_13, interval=1)
+            #     self.run_general_battle(config=_battle_config)
+            #     continue
             # 领箱子
             if self.appear_then_click(self.I_PASS_5):
                 logger.info('Found箱子')
@@ -225,7 +231,7 @@ class ScriptTask(StateMachine, GameUi, BaseActivity, SwitchSoul, ActivityShikiga
                         logger.info('Select one done')
                         continue
             # 下一层
-            if self.appear_then_click(self.I_PASS_7, interval=1):
+            if self.appear_then_click(self.I_PASS_7, interval=1, threshold=0.65):
                 logger.info('Next layer')
                 continue
             if click_limit_timer.reached():
@@ -245,7 +251,6 @@ class ScriptTask(StateMachine, GameUi, BaseActivity, SwitchSoul, ActivityShikiga
             if not self.check_tickets_enough():
                 logger.warning(f'No tickets left, wait for next time')
                 break
-            # 点击战斗前随机休息
             if self.conf.general_climb.random_sleep:
                 random_sleep(probability=0.2)
             if self.start_battle():
@@ -254,6 +259,9 @@ class ScriptTask(StateMachine, GameUi, BaseActivity, SwitchSoul, ActivityShikiga
         self.ui_click(self.I_UI_BACK_YELLOW, stop=self.I_TO_BATTLE_MAIN, interval=1)
 
     def _run_ap(self):
+        """
+            更新前请先看 ./README.md
+        """
         logger.hr(f'Start run climb type AP')
         self.ui_click(self.I_TO_BATTLE_MAIN, stop=self.I_CHECK_BATTLE_MAIN, interval=1)
         self.switch_soul(self.I_BATTLE_MAIN_TO_RECORDS, self.I_CHECK_BATTLE_MAIN)
@@ -274,7 +282,6 @@ class ScriptTask(StateMachine, GameUi, BaseActivity, SwitchSoul, ActivityShikiga
             if not self.check_tickets_enough():
                 logger.warning(f'No tickets left, wait for next time')
                 break
-            # 点击战斗前随机休息
             if self.conf.general_climb.random_sleep:
                 random_sleep(probability=0.2)
             if self.start_battle():
@@ -283,7 +290,10 @@ class ScriptTask(StateMachine, GameUi, BaseActivity, SwitchSoul, ActivityShikiga
         self.ui_click(self.I_UI_BACK_YELLOW, stop=self.I_TO_BATTLE_MAIN, interval=1)
 
     def _run_boss(self):
-        pass
+        """
+        更新前请先看 ./README.md
+        """
+        logger.hr(f'Start run climb type BOSS')
 
     def start_battle(self):
         click_times, max_times = 0, random.randint(2, 4)
@@ -294,10 +304,8 @@ class ScriptTask(StateMachine, GameUi, BaseActivity, SwitchSoul, ActivityShikiga
             if click_times >= max_times:
                 logger.warning(f'Climb {self.climb_type} cannot enter, maybe already end, try next')
                 return
-            if ((self.appear_then_click(self.I_C_CONFIRM1, interval=0.6) or
-                 self.appear_then_click(self.I_UI_CONFIRM_SAMLL, interval=1) or
-                 self.appear_then_click(self.I_UI_CONFIRM, interval=1)) or
-                    self.appear_then_click(self.I_N_CONFIRM, interval=1)):
+            if (self.appear_then_click(self.I_UI_CONFIRM_SAMLL, interval=1) or
+                    self.appear_then_click(self.I_UI_CONFIRM, interval=1) ):
                 continue
             if self.ocr_appear_click(self.O_FIRE, interval=2):
                 click_times += 1
@@ -353,28 +361,6 @@ class ScriptTask(StateMachine, GameUi, BaseActivity, SwitchSoul, ActivityShikiga
             if ok_cnt == 0 and random_click_swipt_enable:
                 self.random_click_swipt()
         return True
-
-    # def exit_battle(self, skip_first: bool = False) -> bool:
-    #     """
-    #     在战斗的时候强制退出战斗
-    #     :param skip_first: 是否跳过第一次截屏
-    #     :return: 退出战斗成功True or 失败False
-    #     """
-    #     timeout_timer = Timer(6).start()
-    #     exit_clicked = False
-    #     while not timeout_timer.reached():
-    #         self.maybe_screenshot(skip_first)
-    #         skip_first = False
-    #         # 不在战斗界面, 认为退出成功
-    #         if not self.is_in_battle(False):
-    #             return True
-    #         if exit_clicked:
-    #             self.appear_then_click(self.I_EXIT_ENSURE)
-    #         if not exit_clicked and self.appear_then_click(self.I_EXIT):
-    #             exit_clicked = True
-    #         sleep(random.uniform(0.5, 1.5))
-    #     # 还在战斗界面且超时则退出失败
-    #     return False
 
     def switch_soul(self, enter_button: RuleImage, cur_img: RuleImage):
         conf = self.conf.switch_soul_config
