@@ -128,7 +128,7 @@ class ScriptTask(KU, KekkaiActivationAssets):
             if card_status and card_effect:
                 logger.info('Card is using')
                 interval = self.ocr_time()
-                self.set_next_run("KekkaiActivation", success=False, finish=True, target=interval+datetime.now())
+                self.set_next_run("KekkaiActivation", target=interval+datetime.now())
                 return False
             # 如果已经选中这张卡了， 那就激活这张卡
             if card_status and not card_effect:
@@ -143,7 +143,7 @@ class ScriptTask(KU, KekkaiActivationAssets):
                     if self.appear_then_click(self.I_A_ACTIVATE_YELLOW, interval=1):
                         continue
                 interval = self.ocr_time(True)
-                self.set_next_run("KekkaiActivation", success=True, finish=True, target=interval + datetime.now())
+                self.set_next_run("KekkaiActivation", target=interval + datetime.now())
                 return True
             # 如果是什么都没有，那就是可以开始挂卡了
             if not card_status and not card_effect:
@@ -358,7 +358,7 @@ class ScriptTask(KU, KekkaiActivationAssets):
 
         # 保存配置并设置下次执行
         self.config.save()
-        self.set_next_run("KekkaiActivation", success=True, finish=True, target=next_run)
+        self.set_next_run("KekkaiActivation", target=next_run)
         raise TaskEnd
 
     def check_max_lv(self, shikigami_class: ShikigamiClass = ShikigamiClass.N):
