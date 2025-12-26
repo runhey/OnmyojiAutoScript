@@ -38,10 +38,10 @@
   {
     "itemName": "exploration_goto_awake_zone",
     "imageName": "page_exploration_goto_awake_zone.png",
-    "roiFront": "57,628,57,61",
+    "roiFront": "57,628,57,42",
     "roiBack": "33,619,113,79",
     "method": "Template matching",
-    "threshold": 0.8,
+    "threshold": 0.65,
     "description": "探索前往觉醒"
   },
   {
@@ -59,7 +59,7 @@
     "roiFront": "248,636,67,48",
     "roiBack": "229,612,203,87",
     "method": "Template matching",
-    "threshold": 0.8,
+    "threshold": 0.65,
     "description": "探索前往结界突破"
   },
   {
@@ -74,19 +74,19 @@
   {
     "itemName": "exploration_goto_delegation",
     "imageName": "page_exploration_goto_delegation.png",
-    "roiFront": "445,638,60,50",
-    "roiBack": "445,638,180,50",
+    "roiFront": "453,639,53,37",
+    "roiBack": "409,613,167,75",
     "method": "Template matching",
-    "threshold": 0.8,
+    "threshold": 0.65,
     "description": "探索前往式神委派"
   },
   {
     "itemName": "exploration_goto_secret_zones",
     "imageName": "page_exploration_goto_secret_zones.png",
-    "roiFront": "546,628,61,55",
+    "roiFront": "549,633,53,40",
     "roiBack": "524,614,200,87",
     "method": "Template matching",
-    "threshold": 0.8,
+    "threshold": 0.7,
     "description": "探索前往秘闻"
   },
   {
@@ -95,7 +95,7 @@
     "roiFront": "640,638,51,45",
     "roiBack": "640,638,180,45",
     "method": "Template matching",
-    "threshold": 0.8,
+    "threshold": 0.65,
     "description": "探索前往地域鬼王"
   },
   {
@@ -113,16 +113,16 @@
     "roiFront": "938,640,60,49",
     "roiBack": "918,631,200,66",
     "method": "Template matching",
-    "threshold": 0.8,
+    "threshold": 0.65,
     "description": "探索前往六道之门"
   },
   {
     "itemName": "exploration_goto_bondling_fairyland",
     "imageName": "page_exploration_goto_bondling_fairyland.png",
-    "roiFront": "1037,639,56,49",
-    "roiBack": "1018,633,203,64",
+    "roiFront": "1037,635,56,44",
+    "roiBack": "918,623,218,72",
     "method": "Template matching",
-    "threshold": 0.8,
+    "threshold": 0.65,
     "description": "探索前往契灵之境"
   },
   {
