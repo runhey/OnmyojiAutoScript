@@ -74,8 +74,8 @@
   {
     "itemName": "me_check_black",
     "imageName": "medal_me_check_black.png",
-    "roiFront": "585,230,100,100",
-    "roiBack": "585,230,100,100",
+    "roiFront": "593,229,100,100",
+    "roiBack": "558,177,202,200",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "购买检查"
@@ -83,8 +83,8 @@
   {
     "itemName": "me_check_blue",
     "imageName": "medal_me_check_blue.png",
-    "roiFront": "587,238,100,100",
-    "roiBack": "587,238,100,100",
+    "roiFront": "591,220,100,100",
+    "roiBack": "541,179,206,189",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "购买检查"
@@ -92,8 +92,8 @@
   {
     "itemName": "me_check_ap",
     "imageName": "medal_me_check_ap.png",
-    "roiFront": "588,242,100,100",
-    "roiBack": "588,242,100,100",
+    "roiFront": "590,231,100,100",
+    "roiBack": "539,194,189,162",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "购买检查"
@@ -101,8 +101,8 @@
   {
     "itemName": "me_check_souls",
     "imageName": "medal_me_check_souls.png",
-    "roiFront": "590,257,100,100",
-    "roiBack": "590,257,100,100",
+    "roiFront": "611,225,100,100",
+    "roiBack": "507,199,272,175",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "购买检查"
