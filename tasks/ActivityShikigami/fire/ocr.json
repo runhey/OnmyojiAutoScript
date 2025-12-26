@@ -1,5 +1,14 @@
 [
   {
+    "itemName": "fire",
+    "roiFront": "1137,599,83,44",
+    "roiBack": "1129,570,100,100",
+    "mode": "Single",
+    "method": "Default",
+    "keyword": "挑战",
+    "description": "挑战"
+  },
+  {
     "itemName": "remain_ap",
     "roiFront": "749,18,73,29",
     "roiBack": "749,18,73,29",
@@ -27,22 +36,13 @@
     "description": "还有多少次购买体力的机会"
   },
   {
-    "itemName": "remain_ap_activity2",
+    "itemName": "remain_pass2",
     "roiFront": "1115,25,88,29",
     "roiBack": "1107,14,103,50",
     "mode": "Digit",
     "method": "Default",
     "keyword": "",
     "description": "活动票数（没有百分比）"
-  },
-  {
-    "itemName": "entry_activity",
-    "roiFront": "73,189,98,32",
-    "roiBack": "72,188,98,32",
-    "mode": "Single",
-    "method": "Default",
-    "keyword": "临战演武",
-    "description": "从左侧进入战斗"
   },
   {
     "itemName": "remain_boss",
@@ -53,13 +53,23 @@
     "keyword": "",
     "description": "boss剩余攻击次数"
   },
+
+    {
+    "itemName": "remain_ap100",
+    "roiFront": "922,21,112,39",
+    "roiBack": "913,8,131,62",
+    "mode": "Digit",
+    "method": "Default",
+    "keyword": "",
+    "description": "100体活动门票检测"
+  },
   {
-    "itemName": "fire",
-    "roiFront": "1137,599,83,44",
-    "roiBack": "1129,570,100,100",
+    "itemName": "enter_ap100",
+    "roiFront": "73,98,95,32",
+    "roiBack": "5,79,256,108",
     "mode": "Single",
     "method": "Default",
-    "keyword": "挑战",
-    "description": "挑战"
+    "keyword": "将魂试炼",
+    "description": "进入100体活动标识"
   }
 ]

@@ -1,14 +1,5 @@
 [
   {
-    "itemName": "battle",
-    "imageName": "as_battle.png",
-    "roiFront": "813,254,35,135",
-    "roiBack": "754,140,154,315",
-    "method": "Template matching",
-    "threshold": 0.7,
-    "description": "征伐斗场"
-  },
-  {
     "itemName": "pass_1",
     "imageName": "fire_pass_1.png",
     "roiFront": "359,295,100,53",

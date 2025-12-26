@@ -1,23 +1,5 @@
 [
   {
-    "itemName": "battle_1",
-    "imageName": "as_battle_1.png",
-    "roiFront": "541,197,149,26",
-    "roiBack": "506,622,273,96",
-    "method": "Template matching",
-    "threshold": 0.7,
-    "description": "进入爬塔1"
-  },
-  {
-    "itemName": "drum",
-    "imageName": "as_drum.png",
-    "roiFront": "327,627,145,28",
-    "roiBack": "256,462,301,232",
-    "method": "Template matching",
-    "threshold": 0.8,
-    "description": "归鹿之途"
-  },
-  {
     "itemName": "lock",
     "imageName": "as_lock.png",
     "roiFront": "825,657,28,25",
@@ -88,59 +70,5 @@
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"
-  },
-  {
-    "itemName": "boss",
-    "imageName": "as_boss.png",
-    "roiFront": "165,339,33,132",
-    "roiBack": "103,218,160,355",
-    "method": "Template matching",
-    "threshold": 0.8,
-    "description": "爬塔进入首领战"
-  },
-  {
-    "itemName": "check_boss",
-    "imageName": "as_check_boss.png",
-    "roiFront": "87,18,126,37",
-    "roiBack": "63,0,172,81",
-    "method": "Template matching",
-    "threshold": 0.8,
-    "description": "爬塔boss战页面检查图像"
-  },
-  {
-    "itemName": "check_battle_2",
-    "imageName": "as_check_battle_2.png",
-    "roiFront": "22,632,61,69",
-    "roiBack": "1,601,109,117",
-    "method": "Template matching",
-    "threshold": 0.8,
-    "description": "爬塔活动副页检查标志"
-  },
-  {
-    "itemName": "entry_activity",
-    "imageName": "as_entry_activity.png",
-    "roiFront": "508,318,46,42",
-    "roiBack": "56,56,971,633",
-    "method": "Template matching",
-    "threshold": 0.7,
-    "description": "进入门票活动"
-  },
-  {
-    "itemName": "check_act_list_climb_act",
-    "imageName": "as_check_act_list_climb_act.png",
-    "roiFront": "538,194,497,193",
-    "roiBack": "415,67,773,390",
-    "method": "Template matching",
-    "threshold": 0.8,
-    "description": "活动列表页爬塔活动"
-  },
-  {
-    "itemName": "pass_act_locat",
-    "imageName": "as_pass_act_locat.png",
-    "roiFront": "1214,395,29,31",
-    "roiBack": "1179,373,100,86",
-    "method": "Template matching",
-    "threshold": 0.8,
-    "description": "门票活动定位"
   }
 ]
