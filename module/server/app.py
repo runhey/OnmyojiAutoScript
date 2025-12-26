@@ -4,15 +4,17 @@
 from contextlib import asynccontextmanager
 
 import argparse
+from starlette import status
+from starlette.responses import JSONResponse
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 
 from module.logger import logger
-
 from module.server.home_router import home_app
 from module.server.script_router import script_app
-from starlette import status
-from starlette.responses import JSONResponse
+from module.server.setting import State
+from module.server.main_manager import mm
+
 
 
 @asynccontextmanager
@@ -20,6 +22,7 @@ async def lifespan(app: FastAPI):
     await on_startup()
     yield
     await on_shutdown()
+
 app = FastAPI(
     title='OAS',
     description='OAS web service',
@@ -40,7 +43,12 @@ app.include_router(script_app)
 
 
 async def on_startup():
+    """
+    app.state 的生命周期在定义app的时候就有了
+    :return:
+    """
     logger.info('OAS web service startup done')
+    await mm.restart_processes(app.state.script_instances)
 
 
 async def on_shutdown():
@@ -78,5 +86,16 @@ def fastapi_app():
         help="Run OAS by config names on startup",
     )
     args, _ = parser.parse_known_args()
+    # ------------------------------------------------------------------------------------------------------------------
+
+    runs = None
+    if args.run:
+        runs = args.run
+    elif State.deploy_config.Run:
+        # TODO: refactor poor_yaml_read() to support list
+        tmp = State.deploy_config.Run.split(",")
+        runs = [l.strip(" ['\"]") for l in tmp if len(l)]
+    # ------------------------------------------------------------------------------------------------------------------
+    app.state.script_instances = runs
 
     return app
