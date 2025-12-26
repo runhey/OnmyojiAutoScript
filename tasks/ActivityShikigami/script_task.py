@@ -341,9 +341,20 @@ class ScriptTask(StateMachine, GameUi, BaseActivity, SwitchSoul, ActivityShikiga
             # 战斗成功
             if self.appear_then_click(self.I_WIN, interval=2):
                 continue
+            #  出现 “魂” 和 紫蛇皮
             if self.appear(self.I_REWARD):
                 logger.info('Win battle')
-                self.ui_click_until_disappear(self.I_REWARD, interval=1.5)
+                while 1:
+                    self.screenshot()
+                    appear_reward = self.appear_then_click(self.I_REWARD)
+                    appear_reward_purple_snake_skin = self.appear(self.I_REWARD_PURPLE_SNAKE_SKIN)
+                    if not appear_reward and not appear_reward_purple_snake_skin:
+                        break
+                    if appear_reward or appear_reward_purple_snake_skin:
+                        reward_click = random.choice(
+                            [self.C_RANDOM_LEFT, self.C_RANDOM_RIGHT, self.C_RANDOM_TOP])
+                        self.click(reward_click, interval=1.8)
+                        continue
                 return True
             # 已经不在战斗中了, 且奖励也识别过了, 则随机点击
             # if ok_cnt > 0 and not self.is_in_battle(False):
