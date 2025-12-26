@@ -102,7 +102,7 @@ class RichManAssets:
 	# description 
 	I_FS_WHITE_CLICK = RuleImage(roi_front=(627,140,138,132), roi_back=(627,140,138,132), threshold=0.8, method="Template matching", file="./tasks/RichMan/mall/friendship_points/friendship_points_fs_white_click.png")
 	# 白蛋确认 
-	I_FS_WHITE_CHECK = RuleImage(roi_front=(589,227,100,100), roi_back=(589,227,100,100), threshold=0.8, method="Template matching", file="./tasks/RichMan/mall/friendship_points/friendship_points_fs_white_check.png")
+	I_FS_WHITE_CHECK = RuleImage(roi_front=(591,228,100,100), roi_back=(534,181,201,183), threshold=0.8, method="Template matching", file="./tasks/RichMan/mall/friendship_points/friendship_points_fs_white_check.png")
 
 
 	# Image Rule Assets
