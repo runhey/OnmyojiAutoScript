@@ -48,7 +48,8 @@ async def on_startup():
     :return:
     """
     logger.info('OAS web service startup done')
-    await mm.restart_processes(app.state.script_instances)
+    if app.state.script_instances:
+        await mm.restart_processes(app.state.script_instances)
 
 
 async def on_shutdown():
