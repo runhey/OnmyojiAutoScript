@@ -1,11 +1,20 @@
 [
   {
     "itemName": "l103_exit",
-    "imageName": "l103_exit.png",
-    "roiFront": "1171,587,69,70",
+    "imageName": "l103_l103_exit.png",
+    "roiFront": "1156,630,61,58",
     "roiBack": "1078,538,195,180",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"
+  },
+  {
+    "itemName": "lucky_box",
+    "imageName": "l103_lucky_box.png",
+    "roiFront": "625,268,26,107",
+    "roiBack": "527,179,257,293",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "lucky_boxre"
   }
 ]

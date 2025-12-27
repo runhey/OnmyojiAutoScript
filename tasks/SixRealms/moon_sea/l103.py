@@ -7,13 +7,12 @@ class MoonSeaL103(MoonSeaSkills):
     def run_103(self):
         # 宝箱还是精英
         logger.hr('Island 103')
-        self.wait_until_appear(self.I_ISLAND_TAG_FLAG, wait_time=2)
         is_box: bool = self.appear(self.I_L103_EXIT)
         if is_box:
             logger.info('Access to Box')
             while 1:
                 self.screenshot()
-                if self.appear(self.I_M_STORE):
+                if self.appear(self.I_M_STORE) or self.appear(self.I_BOSS_FIRE):
                     logger.info('Not punched the treasure  box')
                     return
                 if self.appear_then_click(self.I_UI_UNCHECK, interval=0.5):
@@ -37,18 +36,15 @@ class MoonSeaL103(MoonSeaSkills):
         self.battle_lock_team()
         self.island_battle()
         logger.info('Island battle finished')
-        self.select_skill(refresh=True)
 
 
 
 
 if __name__ == '__main__':
     from module.config.config import Config
-    from module.device.device import Device
 
-    c = Config('oas1')
-    d = Device(c)
-    t = MoonSeaL103(c, d)
+    c = Config('du')
+    t = MoonSeaL103(c)
     t.screenshot()
 
     t.run_103()
