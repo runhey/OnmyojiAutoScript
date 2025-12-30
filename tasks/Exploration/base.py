@@ -228,7 +228,11 @@ class BaseExploration(GameUi, GeneralBattle, GeneralRoom, GeneralInvite, Replace
                 self.swipe(self.S_SWIPE_SHIKI_TO_LEFT)
             else:
                 break
+        operation_timeout = Timer(60)
+        operation_timeout.start()
         while 1:
+            if operation_timeout.reached():
+                raise GameStuckError('Adding shikigami timeout')
             # 候补出战数量识别
             self.screenshot()
             if not self.appear(self.I_E_OPEN_SETTINGS):
