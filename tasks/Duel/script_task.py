@@ -22,6 +22,7 @@ from tasks.Component.SwitchSoul.switch_soul import SwitchSoul
 from tasks.GameUi.page import page_main, page_team, page_shikigami_records
 import os
 from module.atom.image import RuleImage
+from tasks.GlobalGame.assets import GlobalGameAssets as GGA
 """ 斗技 """
 
 
@@ -88,6 +89,9 @@ class ScriptTask(GameUi, GeneralBattle, SwitchSoul, DuelAssets):
         duel_week_over = False
         while 1:
             self.screenshot()
+            # 关闭恭喜晋升段位页面
+            if self.appear_then_click(GGA.I_UI_BACK_RED):
+                continue
             if self.appear_then_click(self.I_REWARD, interval=0.6):
                 continue
             if not self.duel_main():
@@ -364,7 +368,6 @@ class ScriptTask(GameUi, GeneralBattle, SwitchSoul, DuelAssets):
             if self.appear(self.I_D_PREPARE):
                 # 低段位有的准备
                 self.ui_click_until_disappear(self.I_D_PREPARE)
-                self.wait_until_disappear(self.I_D_PREPARE_DONE)
                 logger.info('Duel prepare')
                 break
             # 如果对方直接秒退，那自己就是赢的
@@ -373,12 +376,13 @@ class ScriptTask(GameUi, GeneralBattle, SwitchSoul, DuelAssets):
                 self.battle_win_copy = self.battle_win_count
                 self.battle_win_count += 1
                 return
-        timer = Timer(10)
+        timer = Timer(15)
         timer.start()
         while 1:
             if timer.reached():
                 break
-            if self.is_in_battle():
+            # 此处必须是真正战斗界面,否则低段位进去就是战斗界面会直接跳过该循环
+            if self.is_in_real_battle():
                 break
         while 1:
             self.screenshot()
@@ -410,6 +414,9 @@ class ScriptTask(GameUi, GeneralBattle, SwitchSoul, DuelAssets):
         swipe_timer.start()
         while 1:
             self.screenshot()
+            # 收取奖励
+            if self.ui_reward_appear_click(True):
+                continue
             if self.appear_then_click(self.I_D_BATTLE_DATA, action=self.C_D_BATTLE_DATA, interval=0.6):
                 continue
             if self.appear(self.I_FALSE):
@@ -474,8 +481,7 @@ class ScriptTask(GameUi, GeneralBattle, SwitchSoul, DuelAssets):
 if __name__ == '__main__':
     from module.config.config import Config
     from module.device.device import Device
-
-    c = Config('mi')
+    c = Config('oas3')
     d = Device(c)
     t = ScriptTask(c, d)
 

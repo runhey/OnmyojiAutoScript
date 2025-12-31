@@ -42,6 +42,10 @@ class MainManager(ConfigManager):
     #         self.config_cache = Config(config_name)
     #     return self.config_cache
 
+    @staticmethod
+    def config_cache(name: str) -> Config:
+        return Config(name)
+
     def add_script_file(self, file_name: str):
         # 当你添加了新的脚本文件后，需要添加缓存的列表
         if file_name in self._all_script_files:
@@ -95,7 +99,16 @@ class MainManager(ConfigManager):
                     tasks[coroutine_log_name] = asyncio.create_task(script_p.coroutine_broadcast_log(),
                                                                     name=coroutine_log_name)
 
-    @staticmethod
-    def config_cache(name: str) -> Config:
-        return Config(name)
+    async def restart_processes(self, script_instances: list[str]):
+        for instance in script_instances:
+            logger.info(f'Restart script {instance}')
+            if instance not in self.script_process:
+                try:
+                    self.script_process[instance] = ScriptProcess(instance)
+                except FileNotFoundError:
+                    logger.error(f'{instance} file not found')
+                    continue
+            await self.script_process[instance].start()
 
+
+mm = MainManager()

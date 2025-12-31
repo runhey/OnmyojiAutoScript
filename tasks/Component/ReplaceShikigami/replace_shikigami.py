@@ -3,6 +3,7 @@
 # github https://github.com/runhey
 from module.atom.ocr import RuleOcr
 from module.atom.image import RuleImage
+from module.base.timer import Timer
 from module.logger import logger
 
 from tasks.base_task import BaseTask
@@ -33,13 +34,15 @@ class ReplaceShikigami(BaseTask, ReplaceShikigamiAssets):
                           ShikigamiClass.R: self.I_RS_R_SELECTED,
                           ShikigamiClass.SR: self.I_RS_SR_SELECTED,
                           ShikigamiClass.SSR: self.I_RS_SSR_SELECTED,
-                          ShikigamiClass.SP: self.I_RS_SP_SELECTED}
+                          ShikigamiClass.SP: self.I_RS_SP_SELECTED,
+                          ShikigamiClass.UR: self.I_RS_UR_SELECTED}
         match_click = {ShikigamiClass.MATERIAL: self.I_RS_MATERIAL,
                        ShikigamiClass.N: self.I_RS_N,
                        ShikigamiClass.R: self.I_RS_R,
                        ShikigamiClass.SR: self.I_RS_SR,
                        ShikigamiClass.SSR: self.I_RS_SSR,
-                       ShikigamiClass.SP: self.I_RS_SP}
+                       ShikigamiClass.SP: self.I_RS_SP,
+                       ShikigamiClass.UR: self.I_RS_UR}
         check_selected = match_selected[shikigami_class]
         check_click = match_click[shikigami_class]
         # 选择式神的种类
@@ -48,9 +51,11 @@ class ReplaceShikigami(BaseTask, ReplaceShikigamiAssets):
 
             if self.appear(check_selected):
                 break
-            if self.appear_then_click(check_click, interval=1):
+            if self.appear(check_click, interval=1):
+                if self.wait_until_pos_stable(check_click, stable_time=0.8, timeout=2.5):
+                    self.click(check_click)
                 continue
-            if self.click(self.C_SHIKIGAMI_SWITCH_1, interval=3):
+            if self.click(self.C_SHIKIGAMI_SWITCH_1, interval=3.5):
                 continue
         logger.info('Select shikigami class: %s' % shikigami_class)
 
@@ -87,11 +92,16 @@ class ReplaceShikigami(BaseTask, ReplaceShikigamiAssets):
         click_match = _click_match[shikigami_order]
         TIMEOUT_SEC = 120          # 超时时长（秒）
         start_time = time.time()   # 记录起始时间
+        click_interval_timer = Timer(1.5).start()  # 点击选择式神间隔
+        clicked = False
         while 1:
             # ——1. 先做超时检查——
             if time.time() - start_time > TIMEOUT_SEC:
                 logger.error('寄养等待超过 2 分钟，自动退出')
                 raise GameStuckError('寄养超时（>120 s）')
+            # 恢复点击操作
+            if click_interval_timer.reached_and_reset():
+                clicked = False
             
             self.screenshot()
 
@@ -99,13 +109,17 @@ class ReplaceShikigami(BaseTask, ReplaceShikigamiAssets):
                 break
 
             if self.appear_then_click(self.I_U_CONFIRM_SMALL, interval=0.5):
+                clicked = False  # 点击了确认, 恢复选式神的操作
                 continue
 
-            if self.click(click_match, interval=1.5):
+            # 与下方点击第7个式神操作互斥, 防止确认按钮还没有出现被下方取消掉
+            if not clicked and self.click(click_match, interval=1.5):
+                clicked = True
                 continue
-            if self.click(_click_match[6], interval=4.5):
+            if not clicked and self.click(_click_match[6], interval=4.5):
                 # 有的时候第七个格子被占用到寄养上去了
                 # 导致一直无法选上
+                clicked = True
                 continue
             if self.appear_then_click(self.I_U_CIRCLE_ALTERNATE, interval=2.5):
                 self.appear_then_click(self.I_U_CONFIRM_ALTERNATE, interval=1.5)
@@ -115,10 +129,10 @@ class ReplaceShikigami(BaseTask, ReplaceShikigamiAssets):
     def detect_no_shikigami(self) -> bool:
         self.screenshot()
         if self.appear(self.I_DETECT_EMPTY_1)\
-            and self.appear(self.I_DETECT_EMPTY_2) \
-                and self.appear(self.I_DETECT_EMPTY_3) \
-                and self.appear(self.I_DETECT_EMPTY_4) \
-                and self.appear(self.I_DETECT_EMPTY_5) \
-                and self.appear(self.I_DETECT_EMPTY_6):
+            or self.appear(self.I_DETECT_EMPTY_2) \
+                or self.appear(self.I_DETECT_EMPTY_3) \
+                or self.appear(self.I_DETECT_EMPTY_4) \
+                or self.appear(self.I_DETECT_EMPTY_5) \
+                or self.appear(self.I_DETECT_EMPTY_6):
             return True
         return False

@@ -20,7 +20,7 @@
   {
     "itemName": "mall_sccales",
     "imageName": "navbar_mall_sccales.png",
-    "roiFront": "470,649,68,49",
+    "roiFront": "470,647,68,37",
     "roiBack": "427,621,147,92",
     "method": "Template matching",
     "threshold": 0.8,

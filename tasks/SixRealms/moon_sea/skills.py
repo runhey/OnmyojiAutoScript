@@ -37,6 +37,9 @@ class MoonSeaSkills(BaseTask, SixRealmsAssets):
                 break
             if self.appear(self.I_COIN):
                 break
+            if self.appear(self.I_SELECT_SHIKIGAMI_AND_CONFIRM):
+                self.select_shikigami_and_confirm()
+                continue
             if self.appear_then_click(self.I_NPC_FIRE, interval=1):
                 self.device.stuck_record_clear()
                 self.device.stuck_record_add('BATTLE_STATUS_S')

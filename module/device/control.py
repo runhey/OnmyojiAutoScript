@@ -4,10 +4,11 @@ from module.base.timer import Timer
 from module.base.utils import *
 # from module.device.method.hermit import Hermit
 # from module.device.method.maatouch import MaaTouch
+from module.device.env import IS_WINDOWS
 from module.device.method.minitouch import Minitouch
 from module.device.method.adb import Adb
 from module.device.method.scrcpy import Scrcpy
-from module.device.method.window import Window
+from module.device.method.windows import Window
 from module.logger import logger
 
 
@@ -22,7 +23,7 @@ class Control(Minitouch, Adb, Scrcpy, Window):
             'ADB': self.click_adb,
             'uiautomator2': self.click_uiautomator2,
             'minitouch': self.click_minitouch,
-            'window_message': self.click_window_message
+            'window_message': self.click_window_message if IS_WINDOWS else None,
             # 'Hermit': self.click_hermit,
             # 'MaaTouch': self.click_maatouch,
         }
@@ -33,7 +34,7 @@ class Control(Minitouch, Adb, Scrcpy, Window):
             'ADB': self.long_click_adb,
             'uiautomator2': self.long_click_uiautomator2,
             'minitouch': self.long_click_minitouch,
-            'window_message': self.long_click_window_message,
+            'window_message': self.long_click_window_message if IS_WINDOWS else None,
             'scrcpy': self.long_click_scrcpy
             # 'Hermit': self.click_hermit,
             # 'MaaTouch': self.click_maatouch,

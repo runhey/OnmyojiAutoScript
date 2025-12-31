@@ -37,9 +37,8 @@ class Medal(FriendshipPoints):
                               money_ocr=self.O_MALL_RESOURCE_3, buy_money=120)
         # 随机御魂
         if con.random_soul:
-            pass
-            # self.buy_mall_one(buy_button=self.I_ME_SOULS, buy_check=self.I_ME_CHECK_SOULS,
-            #                   money_ocr=self.O_MALL_RESOURCE_5, buy_money=320)
+            self.buy_mall_one(buy_button=self.I_ME_SOULS, buy_check=self.I_ME_CHECK_SOULS,
+                              money_ocr=self.O_MALL_RESOURCE_5, buy_money=320)
         # 两颗白蛋
         if con.white_daruma:
             self.buy_mall_more(buy_button=self.I_ME_WHITE, remain_number=True, money_ocr=self.O_MALL_RESOURCE_3,
@@ -60,7 +59,6 @@ class Medal(FriendshipPoints):
                                buy_number=con.broken_amulet, buy_max=99, buy_money=20)
 
         time.sleep(1)
-
 
 
 if __name__ == '__main__':

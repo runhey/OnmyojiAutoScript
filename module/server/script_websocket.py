@@ -19,27 +19,32 @@ class ScriptWSManager:
         try:
             # 给前端发送最后一次关闭信号
             await ws.close()
-        except RuntimeError:
-            pass
+        except RuntimeError as e:
+            print(e)
 
     async def broadcast(self, message: str):
         # 广播消息
         for connection in self.active_connections:
-            await connection.send_text(message)
+            try:
+                await connection.send_text(message)
+            except RuntimeError:
+                await self.disconnect(connection)
 
     async def broadcast_state(self, data: dict):
         # 广播自身的状态
         for connection in self.active_connections:
-            await connection.send_json(data)
+            try:
+                await connection.send_json(data)
+            except RuntimeError:
+                await self.disconnect(connection)
 
     async def broadcast_log(self, log: str):
         # 广播日志
         for connection in self.active_connections:
             try:
                 await connection.send_text(log)
-            except RuntimeError as e:
-                print(e)
-                self.active_connections.remove(connection)
+            except RuntimeError:
+                await self.disconnect(connection)
 
 
 

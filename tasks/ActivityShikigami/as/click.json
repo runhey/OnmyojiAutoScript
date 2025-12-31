@@ -1,26 +1,26 @@
 [
   {
     "itemName": "random_left",
-    "roiFront": "21,23,237,599",
-    "roiBack": "21,23,237,599",
+    "roiFront": "17,69,132,599",
+    "roiBack": "17,70,137,599",
     "description": "description"
   },
   {
     "itemName": "random_right",
-    "roiFront": "1047,55,218,638",
-    "roiBack": "1047,55,218,638",
+    "roiFront": "1133,55,131,638",
+    "roiBack": "1131,55,133,638",
     "description": "description"
   },
   {
     "itemName": "random_top",
-    "roiFront": "85,46,1159,101",
+    "roiFront": "84,49,1159,93",
     "roiBack": "85,46,1159,101",
     "description": "description"
   },
   {
     "itemName": "random_bottom",
-    "roiFront": "182,539,1063,100",
-    "roiBack": "182,539,1063,100",
+    "roiFront": "179,577,972,100",
+    "roiBack": "179,579,972,100",
     "description": "description"
   },
   {
@@ -28,47 +28,5 @@
     "roiFront": "42,94,1207,543",
     "roiBack": "42,94,1207,543",
     "description": "description"
-  },
-  {
-    "itemName": "buff_1_up",
-    "roiFront": "204,626,134,39",
-    "roiBack": "204,626,134,39",
-    "description": "替换buff1"
-  },
-  {
-    "itemName": "buff_2_up",
-    "roiFront": "414,625,134,39",
-    "roiBack": "414,625,134,39",
-    "description": "替换buff2"
-  },
-  {
-    "itemName": "buff_3_up",
-    "roiFront": "619,625,134,39",
-    "roiBack": "619,625,134,39",
-    "description": "替换buff3"
-  },
-  {
-    "itemName": "buff_4_up",
-    "roiFront": "831,625,134,39",
-    "roiBack": "831,625,134,39",
-    "description": "替换buff4"
-  },
-  {
-    "itemName": "buff_5_up",
-    "roiFront": "1043,624,134,39",
-    "roiBack": "1043,624,134,39",
-    "description": "替换buff5"
-  },
-  {
-    "itemName": "buff_1_box",
-    "roiFront": "333,338,70,72",
-    "roiBack": "333,338,70,72",
-    "description": "上阵buff_1位置"
-  },
-  {
-    "itemName": "buff_2_box",
-    "roiFront": "877,220,59,62",
-    "roiBack": "877,220,59,62",
-    "description": "上阵buff_2位置"
   }
 ]

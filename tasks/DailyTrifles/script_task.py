@@ -6,6 +6,7 @@ from time import sleep
 from datetime import time, datetime, timedelta
 
 from exceptiongroup import catch
+from tasks.DailyTrifles.page import page_store_gift_room
 from winerror import NOERROR
 
 from tasks.GameUi.game_ui import GameUi
@@ -225,12 +226,7 @@ class ScriptTask(GameUi, Summon, DailyTriflesAssets):
 
     def run_store_sign(self):
 
-        while 1:
-            self.screenshot()
-            if self.appear(self.I_GIFT_RECOMMEND):
-                break
-            if self.appear_then_click(self.I_ROOM_GIFT, interval=1):
-                continue
+        self.ui_goto_page(page_store_gift_room)
         self.screenshot()
         self.appear_then_click(self.I_GIFT_RECOMMEND, interval=1)
         logger.info('Enter store sign')

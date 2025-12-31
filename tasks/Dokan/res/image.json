@@ -38,8 +38,8 @@
   {
     "itemName": "ryou_dokan_shikigami",
     "imageName": "res_ryou_dokan_shikigami.png",
-    "roiFront": "960,580,140,120",
-    "roiBack": "960,580,140,120",
+    "roiFront": "987,608,89,60",
+    "roiBack": "987,608,89,60",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "道馆内式神录"
@@ -47,8 +47,8 @@
   {
     "itemName": "ryou_dokan_attack_priority",
     "imageName": "res_ryou_dokan_priority.png",
-    "roiFront": "666,672,58,25",
-    "roiBack": "666,672,58,25",
+    "roiFront": "742,667,49,25",
+    "roiBack": "742,667,49,25",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "优先攻击选项"
@@ -516,9 +516,27 @@
     "itemName": "ryou_dokan_spoils_of_dokan",
     "imageName": "res_ryou_dokan_spoils_of_dokan.png",
     "roiFront": "480,400,400,100",
-    "roiBack":  "480,400,400,100",
+    "roiBack": "480,400,400,100",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "道馆攻破后夺得资金界面"
+  },
+  {
+    "itemName": "ryou_dokan_cheering",
+    "imageName": "res_ryou_dokan_cheering.png",
+    "roiFront": "65,601,71,33",
+    "roiBack": "44,568,112,100",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "助威可点击"
+  },
+  {
+    "itemName": "ryou_dokan_cheering_gray",
+    "imageName": "res_ryou_dokan_cheering_gray.png",
+    "roiFront": "65,601,71,33",
+    "roiBack": "44,568,112,100",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "助威灰色不可点击"
   }
 ]

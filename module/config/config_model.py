@@ -409,6 +409,35 @@ class ConfigModel(ConfigBase):
             logger.error(e)
             return False
 
+    def copy_script_task(self, task_name: str, source_task: BaseModel) -> bool:
+        model_task_name = convert_to_underscore(task_name)
+        try:
+            setattr(self, model_task_name, source_task)
+            self.save()
+            logger.info(f'Copy task {model_task_name} success')
+            return True
+        except ValidationError as e:
+            logger.error(e)
+            return False
+
+    def copy_task_group(self, task_name: str, group_name: str, source_task: BaseModel) -> bool:
+        model_task_name = convert_to_underscore(task_name)
+        model_group_name = convert_to_underscore(group_name)
+        task_object = getattr(self, model_task_name, None)
+        if not task_object:
+            return False
+        source_group_obj = getattr(source_task, model_group_name, None)
+        if not source_group_obj:
+            return False
+        try:
+            setattr(task_object, model_group_name, source_group_obj)
+            self.save()
+            logger.info(f'Copy task group {model_task_name}.{model_group_name} success')
+            return True
+        except ValidationError as e:
+            logger.error(e)
+            return False
+
     def replace_next_run(self, d, dt: datetime):
         for k, v in d.items():
             if isinstance(v, dict):

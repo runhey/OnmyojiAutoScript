@@ -35,7 +35,7 @@ module/config/i18n/*.json
 !dev_tools/ViewWizard2/ViewWizard2.exe
 !dev_tools/ViewWizard3/ViewWizard.exe
 dev_tools/assets_test.py
-hya
+#hya
 deploy/launcher/oas-backend.bat
 deploy/launcher/oas-server.bat
 oas-backend.bat

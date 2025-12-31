@@ -69,7 +69,7 @@ OAS 在其基础上进行了如下优化：
 - [Alas](https://github.com/LmeSzinc/AzurLaneAutoScript): 碧蓝航线的自动化脚本
 - [SRC](https://github.com/LmeSzinc/StarRailCopilot): 星铁速溶茶，崩坏：星穹铁道脚本，基于下一代Alas框架。
 - [OASX](https://github.com/runhey/OASX): 同 OAS 对接的全平台 GUI
-- [NikkeAutoScript](https://github.com/takagisanmie/NIKKEAutoScript): 胜利女神：NIKKE 自动日常脚本
+- [NikkeAutoScript](https://github.com/megumiss/NIKKEAutoScript): 胜利女神：NIKKE 自动日常脚本
 - [AAS](https://github.com/TheFunny/ArisuAutoSweeper): 蔚蓝档案自动化脚本
 - [MAA](https://github.com/MaaAssistantArknights/MaaAssistantArknights): 明日方舟小助手，全日常一键长草
 - [FGO-py](https://github.com/hgjazhgj/FGO-py): 全自动免配置跨平台开箱即用的Fate/Grand Order助手
@@ -84,7 +84,7 @@ OAS 在其基础上进行了如下优化：
 相对于其他的游戏，阴阳师玩家总体而言对脚本这类工具具有极高的排斥性。树大招风，无论你是否喜欢 OAS ，我们都希望你不在互联网上进行宣传，这保护 OAS , 也保护开发者们。
 
 为此保持较高的入群门槛: 
-#### QQ交流群: 465946275
+#### QQ交流群: 1群465946275 2群1076565458
 - 你的QQ等级必须大于32级(🌞🌞)，注册时间超过一年，低等级账号成分复杂，还请见谅。
 - 你必须拥有一个 Github 账户来点一个 **Star** (这并不影响你入群后取消Star)，同样的要求注册时间过半年。
 - 入群验证填入你的 Github `username`(不是`name`)，无需在意问题是什么，由QQ机器人审核(机器永远的对的)。

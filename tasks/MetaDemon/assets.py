@@ -47,12 +47,55 @@ class MetaDemonAssets:
 	I_RED_BACK = RuleImage(roi_front=(925,181,47,48), roi_back=(925,181,47,48), threshold=0.8, method="Template matching", file="./tasks/MetaDemon/md/md_red_back.png")
 
 
+	# Image Rule Assets
+	# 右侧进去 
+	I_RIGHT_ENTER = RuleImage(roi_front=(1183,314,46,34), roi_back=(1150,131,100,360), threshold=0.75, method="Template matching", file="./tasks/MetaDemon/md/md_right_enter.png")
+	# description 
+	I_ENTER2 = RuleImage(roi_front=(461,265,44,156), roi_back=(428,220,100,258), threshold=0.8, method="Template matching", file="./tasks/MetaDemon/md/md_enter2.png")
+	# 寻找鬼王 
+	I_FIND_DEMON = RuleImage(roi_front=(1140,582,86,81), roi_back=(1102,546,132,133), threshold=0.8, method="Template matching", file="./tasks/MetaDemon/md/md_find_demon.png")
+	# 点击战斗 
+	I_BATTLE_DEMON = RuleImage(roi_front=(1131,573,100,100), roi_back=(1085,536,165,161), threshold=0.7, method="Template matching", file="./tasks/MetaDemon/md/md_battle_demon.png")
+	# description 
+	I_BOSS_EMPTY = RuleImage(roi_front=(44,134,88,85), roi_back=(44,134,88,85), threshold=0.7, method="Template matching", file="./tasks/MetaDemon/md/md_boss_empty.png")
+	# 集结 
+	I_BOSS_CONVENE = RuleImage(roi_front=(247,146,47,52), roi_back=(228,127,88,85), threshold=0.7, method="Template matching", file="./tasks/MetaDemon/md/md_boss_convene.png")
+	# description 
+	I_BOSS_EMPTY_1 = RuleImage(roi_front=(46,372,87,90), roi_back=(46,372,87,90), threshold=0.5, method="Template matching", file="./tasks/MetaDemon/md/md_boss_empty_1.png")
+	# description 
+	I_BOSS_EMPTY_2 = RuleImage(roi_front=(46,501,88,88), roi_back=(46,501,88,88), threshold=0.5, method="Template matching", file="./tasks/MetaDemon/md/md_boss_empty_2.png")
+	# 合成 
+	I_CRAFTING_1 = RuleImage(roi_front=(1202,222,36,45), roi_back=(1167,199,100,100), threshold=0.8, method="Template matching", file="./tasks/MetaDemon/md/md_crafting_1.png")
+	# 空 
+	I_CRAFTING_EMPTY = RuleImage(roi_front=(939,460,75,81), roi_back=(922,447,108,111), threshold=0.8, method="Template matching", file="./tasks/MetaDemon/md/md_crafting_empty.png")
+	# 一星卡片 
+	I_CRAFTING_CARD_STAR_1 = RuleImage(roi_front=(217,156,87,92), roi_back=(191,127,140,137), threshold=0.8, method="Template matching", file="./tasks/MetaDemon/md/md_crafting_card_star_1.png")
+	# 开始合成 
+	I_CRAFTING_START = RuleImage(roi_front=(889,561,140,39), roi_back=(840,521,231,100), threshold=0.75, method="Template matching", file="./tasks/MetaDemon/md/md_crafting_start.png")
+	# description 
+	I_CRAFTING_EMPTY_NEW = RuleImage(roi_front=(787,307,100,100), roi_back=(772,299,128,117), threshold=0.8, method="Template matching", file="./tasks/MetaDemon/md/md_crafting_empty_new.png")
+	# description 
+	I_STAR56_POS_1 = RuleImage(roi_front=(100,205,8,11), roi_back=(100,205,8,11), threshold=0.8, method="Template matching", file="./tasks/MetaDemon/md/md_star56_pos_1.png")
+	# 血量高于阈值 
+	I_STAR56_HP_THRESHOLD_T = RuleImage(roi_front=(630,518,58,18), roi_back=(630,518,58,18), threshold=0.8, method="Template matching", file="./tasks/MetaDemon/md/md_star56_hp_threshold_t.png")
+	# 血量小于阈值 
+	I_STAR56_HP_THRESHOLD_F = RuleImage(roi_front=(659,517,26,19), roi_back=(659,517,26,19), threshold=0.8, method="Template matching", file="./tasks/MetaDemon/md/md_star56_hp_threshold_f.png")
+	# description 
+	I_ENTER_ENSURE = RuleImage(roi_front=(541,578,186,48), roi_back=(443,555,370,100), threshold=0.8, method="Template matching", file="./tasks/MetaDemon/md/md_enter_ensure.png")
+
+
 	# Ocr Rule Assets
 	# Ocr-description 
-	O_MD_EXHAUSTION = RuleOcr(roi=(1096,18,89,31), area=(1096,18,89,31), mode="DigitCounter", method="Default", keyword="", name="md_exhaustion")
+	O_MD_EXHAUSTION = RuleOcr(roi=(1114,24,94,31), area=(1114,24,94,31), mode="DigitCounter", method="Default", keyword="", name="md_exhaustion")
 	# Ocr-description 
 	O_MD_TICKET = RuleOcr(roi=(923,18,82,30), area=(923,18,82,30), mode="DigitCounter", method="Default", keyword="", name="md_ticket")
 	# Ocr-description 
 	O_MD_COUNT_INFO = RuleOcr(roi=(94,314,161,37), area=(94,314,161,37), mode="Single", method="Default", keyword="击败奖励结算中", name="md_count_info")
+	# 一星卡 
+	O_CRAFTING_CARD_1 = RuleOcr(roi=(303,158,161,33), area=(303,158,161,33), mode="Single", method="Default", keyword="一星梦告铃鼓", name="crafting_card_1")
+	# 式神全名 
+	O_MD_FULL_NAME = RuleOcr(roi=(479,116,100,217), area=(479,116,100,217), mode="Full", method="Default", keyword="", name="md_full_name")
+	# 判断别人是否给鬼王 
+	O_BOSS_EMPTY_1 = RuleOcr(roi=(141,400,94,32), area=(141,400,94,32), mode="Single", method="Default", keyword="剩余时间", name="boss_empty_1")
 
 

@@ -1,0 +1,65 @@
+[
+  {
+    "itemName": "seimi_battle",
+    "imageName": "so_seimi_battle.png",
+    "roiFront": "253,429,79,78",
+    "roiBack": "147,388,222,153",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "晴明战标志"
+  },
+  {
+    "itemName": "kagura_battle",
+    "imageName": "so_kagura_battle.png",
+    "roiFront": "509,428,79,78",
+    "roiBack": "401,394,222,153",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "神乐战标志"
+  },
+  {
+    "itemName": "hiromasa_battle",
+    "imageName": "so_hiromasa_battle.png",
+    "roiFront": "761,427,79,78",
+    "roiBack": "657,396,222,153",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "源博雅战标志"
+  },
+  {
+    "itemName": "yao_bikuni_battle",
+    "imageName": "so_yao_bikuni_battle.png",
+    "roiFront": "1017,428,79,78",
+    "roiBack": "910,387,222,153",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "八百比丘尼战标志"
+  },
+  {
+    "itemName": "onmyoji_switch",
+    "imageName": "so_onmyoji_switch.png",
+    "roiFront": "39,385,40,33",
+    "roiBack": "19,362,80,91",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "阴阳师交替按钮"
+  },
+  {
+    "itemName": "onmyoji_check",
+    "imageName": "so_onmyoji_check.png",
+    "roiFront": "67,622,82,58",
+    "roiBack": "58,608,100,88",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "阴阳术阴阳师页面标志"
+  },
+  {
+    "itemName": "hero_check",
+    "imageName": "so_hero_check.png",
+    "roiFront": "70,624,75,55",
+    "roiBack": "60,602,100,100",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "阴阳术英杰页面标志"
+  }
+]

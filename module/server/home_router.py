@@ -84,3 +84,13 @@ async def chinese_translate(data: dict = Body(...)):
     except Exception as e:
         logger.error(e)
     return True
+
+
+@home_app.get('/additional_translate')
+async def additional_translate() -> dict:
+    try:
+        data = I18n.load_additions()
+        return data
+    except Exception as e:
+        logger.error(e)
+    return {}

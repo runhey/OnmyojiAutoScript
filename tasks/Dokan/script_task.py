@@ -32,7 +32,7 @@ from tasks.Dokan.dokan_scene import DokanScene, DokanSceneDetector
 from tasks.Dokan.ex_green_mark import ExtendGreenMark
 from tasks.Dokan.utils import detect_safe_area2
 from tasks.GameUi.game_ui import GameUi
-from tasks.GameUi.page import page_shikigami_records, page_guild, page_main
+from tasks.GameUi.page import page_shikigami_records, page_guild, page_main, random_click
 from tasks.Hyakkiyakou.utils.fast_device import FastDevice
 
 
@@ -384,6 +384,7 @@ class ScriptTask(ExtendGreenMark, GameUi, SwitchSoul, DokanSceneDetector):
             if battle_config.random_click_swipt_enable:
                 logger.info("random swipt ...")
                 self.random_click_swipt()
+                self.device.stuck_record_add('BATTLE_STATUS_S')
 
             # 打完一个小朋友，自动进入下一个小朋友
             if self.appear(self.I_RYOU_DOKAN_IN_FIELD):
@@ -770,8 +771,51 @@ class ScriptTask(ExtendGreenMark, GameUi, SwitchSoul, DokanSceneDetector):
         return res_list
 
     def start_cheering(self):
-        # TODO 待实现
-        logger.info("start cheering")
+        cd_text = self.O_DOKEN_FAIL_CD.detect_text(self.device.image)
+        match = re.search(r'\d+', cd_text)
+        remain_seconds = int(match.group()) if match else None
+        if not remain_seconds:
+            logger.info(f'No remain seconds, exit cheering, cd_text[{cd_text}]')
+            return
+        cheering_timer = Timer(remain_seconds).start()
+        logger.info(f"start cheering, remain seconds:{remain_seconds}s")
+        while not cheering_timer.reached():
+            self.screenshot()
+            # 出现观战标志点击观战
+            if self.appear_then_click(self.I_RYOU_DOKAN_CD, interval=2.5):
+                sleep(1)  # 等待一下寮排名展示动画
+                continue
+            # 寻找前往按钮并点击
+            if self.list_appear_click(self.L_GOTO_CHEERING, interval=3, max_swipe=3):
+                break
+            # 没有找到前往(全军覆没or没人上)则随机点击其他位置关闭弹窗
+            self.click(random_click(), interval=5)
+        logger.info('Enter battle to cheer')
+        cheer_cnt = 0
+        self.device.stuck_record_add('PAUSE')
+        while not cheering_timer.reached():
+            self.screenshot()
+            # 道馆成员战斗成功或失败或馆主战结束出现排名, 交给上层处理
+            if self.appear(self.I_RYOU_DOKAN_WIN, interval=1) or self.appear(self.I_FALSE) or self.appear(self.I_RYOU_DOKAN_TOPPA_RANK):
+                self.click(random_click(), interval=1)
+                logger.info(f'Cheer finish, count[{cheer_cnt}]')
+                self.device.stuck_record_clear()
+                return
+            # 灰色助威
+            if self.is_in_battle(False) and self.appear(self.I_RYOU_DOKAN_CHEERING_GRAY, interval=1):
+                continue
+            # 亮色助威
+            if self.is_in_battle(False) and self.appear_then_click(self.I_RYOU_DOKAN_CHEERING, interval=1.5):
+                cheer_cnt += 1
+                logger.attr(cheer_cnt, f'cheer, count time[{cheering_timer.current():.1f}s]')
+                self.device.stuck_record_clear()
+                self.device.click_record_clear()
+                self.device.stuck_record_add('PAUSE')
+                continue
+            sleep(random.uniform(0.8, 1.6))
+        # 助威时间到了且道馆还未结束, 则退出观战交给上层重新挑战
+        self.exit_battle()
+        self.device.stuck_record_clear()
         return
 
     def update_remain_attack_count(self) -> int:

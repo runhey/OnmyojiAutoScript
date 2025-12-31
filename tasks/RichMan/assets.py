@@ -25,8 +25,8 @@ class RichManAssets:
 	I_GUILD_SKIN = RuleImage(roi_front=(795,438,71,72), roi_back=(320,162,573,371), threshold=0.8, method="Template matching", file="./tasks/RichMan/guild/guild_guild_skin.png")
 	# 皮肤券判断是否到末端 
 	I_GUILD_SKIN_CHECK = RuleImage(roi_front=(795,438,71,72), roi_back=(320,162,573,371), threshold=0.8, method="Template matching", file="./tasks/RichMan/guild/guild_guild_skin.png")
-	# 购买检查 
-	I_GUILD_CHECK_SCRAP = RuleImage(roi_front=(561,429,90,88), roi_back=(561,429,90,88), threshold=0.8, method="Template matching", file="./tasks/RichMan/guild/guild_guild_check_scrap.png")
+	# 购买黑碎检查 
+	I_GUILD_CHECK_SCRAP = RuleImage(roi_front=(592,248,90,88), roi_back=(593,249,90,88), threshold=0.6, method="Template matching", file="./tasks/RichMan/guild/guild_guild_check_scrap.png")
 
 
 	# Ocr Rule Assets
@@ -102,7 +102,7 @@ class RichManAssets:
 	# description 
 	I_FS_WHITE_CLICK = RuleImage(roi_front=(627,140,138,132), roi_back=(627,140,138,132), threshold=0.8, method="Template matching", file="./tasks/RichMan/mall/friendship_points/friendship_points_fs_white_click.png")
 	# 白蛋确认 
-	I_FS_WHITE_CHECK = RuleImage(roi_front=(589,227,100,100), roi_back=(589,227,100,100), threshold=0.8, method="Template matching", file="./tasks/RichMan/mall/friendship_points/friendship_points_fs_white_check.png")
+	I_FS_WHITE_CHECK = RuleImage(roi_front=(591,228,100,100), roi_back=(534,181,201,183), threshold=0.8, method="Template matching", file="./tasks/RichMan/mall/friendship_points/friendship_points_fs_white_check.png")
 
 
 	# Image Rule Assets
@@ -141,13 +141,13 @@ class RichManAssets:
 	# 破碎的咒符 
 	I_ME_BROKEN = RuleImage(roi_front=(398,144,143,116), roi_back=(146,116,866,475), threshold=0.8, method="Template matching", file="./tasks/RichMan/mall/medal/medal_me_broken.png")
 	# 购买检查 
-	I_ME_CHECK_BLACK = RuleImage(roi_front=(585,230,100,100), roi_back=(585,230,100,100), threshold=0.8, method="Template matching", file="./tasks/RichMan/mall/medal/medal_me_check_black.png")
+	I_ME_CHECK_BLACK = RuleImage(roi_front=(593,229,100,100), roi_back=(558,177,202,200), threshold=0.8, method="Template matching", file="./tasks/RichMan/mall/medal/medal_me_check_black.png")
 	# 购买检查 
-	I_ME_CHECK_BLUE = RuleImage(roi_front=(587,238,100,100), roi_back=(587,238,100,100), threshold=0.8, method="Template matching", file="./tasks/RichMan/mall/medal/medal_me_check_blue.png")
+	I_ME_CHECK_BLUE = RuleImage(roi_front=(591,220,100,100), roi_back=(541,179,206,189), threshold=0.8, method="Template matching", file="./tasks/RichMan/mall/medal/medal_me_check_blue.png")
 	# 购买检查 
-	I_ME_CHECK_AP = RuleImage(roi_front=(588,242,100,100), roi_back=(588,242,100,100), threshold=0.8, method="Template matching", file="./tasks/RichMan/mall/medal/medal_me_check_ap.png")
+	I_ME_CHECK_AP = RuleImage(roi_front=(590,231,100,100), roi_back=(539,194,189,162), threshold=0.8, method="Template matching", file="./tasks/RichMan/mall/medal/medal_me_check_ap.png")
 	# 购买检查 
-	I_ME_CHECK_SOULS = RuleImage(roi_front=(590,257,100,100), roi_back=(590,257,100,100), threshold=0.8, method="Template matching", file="./tasks/RichMan/mall/medal/medal_me_check_souls.png")
+	I_ME_CHECK_SOULS = RuleImage(roi_front=(611,225,100,100), roi_back=(507,199,272,175), threshold=0.8, method="Template matching", file="./tasks/RichMan/mall/medal/medal_me_check_souls.png")
 
 
 	# Image Rule Assets
@@ -156,7 +156,7 @@ class RichManAssets:
 	# 寄售屋 
 	I_MALL_CONSIGNMENT_CHECK = RuleImage(roi_front=(12,166,100,390), roi_back=(12,166,100,390), threshold=0.8, method="Template matching", file="./tasks/RichMan/mall/navbar/navbar_mall_consignment_check.png")
 	# 密卷屋 
-	I_MALL_SCCALES = RuleImage(roi_front=(470,649,68,49), roi_back=(427,621,147,92), threshold=0.8, method="Template matching", file="./tasks/RichMan/mall/navbar/navbar_mall_sccales.png")
+	I_MALL_SCCALES = RuleImage(roi_front=(470,647,68,37), roi_back=(427,621,147,92), threshold=0.8, method="Template matching", file="./tasks/RichMan/mall/navbar/navbar_mall_sccales.png")
 	# 密卷屋 
 	I_MALL_SCCALES_CHECK = RuleImage(roi_front=(409,253,100,100), roi_back=(409,253,100,100), threshold=0.8, method="Template matching", file="./tasks/RichMan/mall/navbar/navbar_mall_sccales_check.png")
 	# description 
@@ -256,7 +256,7 @@ class RichManAssets:
 	# description 
 	I_SCA_SELECT_3 = RuleImage(roi_front=(972,517,123,50), roi_back=(972,517,123,50), threshold=0.8, method="Template matching", file="./tasks/RichMan/mall/scales/scales_sca_select_3.png")
 	# 获得的六星 
-	I_SCA_SIX_STAR = RuleImage(roi_front=(119,261,100,22), roi_back=(108,246,261,57), threshold=0.8, method="Template matching", file="./tasks/RichMan/mall/scales/scales_sca_six_star.png")
+	I_SCA_SIX_STAR = RuleImage(roi_front=(120,216,97,22), roi_back=(113,102,1057,157), threshold=0.8, method="Template matching", file="./tasks/RichMan/mall/scales/scales_sca_six_star.png")
 	# 点击屏幕继续 
 	I_SCA_REWARD = RuleImage(roi_front=(584,503,100,100), roi_back=(584,503,100,100), threshold=0.8, method="Template matching", file="./tasks/RichMan/mall/scales/scales_sca_reward.png")
 	# 点击兑换 

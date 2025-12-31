@@ -724,7 +724,7 @@ class ScriptTask(WQExplore, SecretScriptTask, WantedQuestsAssets):
                     total = total % 10
                 if cu > total:
                     logger.warning('Current number of wanted quests is greater than total number')
-                    cu = cu % 10
+                    cu = cu // 10
                 if cu == total:
                     # 该任务已完成，一般是悬赏任务，邀请人没有做导致的
                     continue

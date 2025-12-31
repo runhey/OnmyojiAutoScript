@@ -422,6 +422,7 @@ class GeneralBattle(GeneralBuff, GeneralBattleAssets):
     def is_in_battle(self, is_screenshot: bool = True) -> bool:
         """
         判断是否在战斗中
+        tip: 因为有friends判别, 所以即使在准备界面也会识别在战斗中
         :return:
         """
         if is_screenshot:
@@ -434,6 +435,16 @@ class GeneralBattle(GeneralBuff, GeneralBattleAssets):
             return True
         else:
             return False
+
+    def is_in_real_battle(self, is_screenshot: bool = True):
+        """
+        判断是否在真正的战斗中(不是战斗准备界面也不是战斗结束界面)
+        :param is_screenshot:
+        :return:
+        """
+        if is_screenshot:
+            self.screenshot()
+        return self.appear(self.I_BATTLE_INFO)
 
     def is_in_prepare(self, is_screenshot: bool = True) -> bool:
         """
@@ -527,6 +538,28 @@ class GeneralBattle(GeneralBuff, GeneralBattleAssets):
                 break
             if self.appear_then_click(self.I_BUFF, interval=1):
                 continue
+
+    def boss_mark(self, enable=True) -> bool:
+        if not enable or self._boss_mark_flag:
+            return False
+        if self.ocr_appear(self.O_BOSS_MARK):
+            self.screenshot()
+            if self.ocr_appear(self.O_BOSS_MARK):
+                self._boss_mark_flag = True
+                logger.info('Boss marked')
+                self.device.stuck_record_add('BATTLE_STATUS_S')
+                return True
+        if self.device.click_record.count(str(self.O_BOSS_MARK)) >= 3:
+            self._boss_mark_flag = True
+            logger.info('Boss mark skipped due to maybe no boss')
+            self.device.stuck_record_add('BATTLE_STATUS_S')
+            return False
+        if self.click(self.O_BOSS_MARK, interval=1.8):
+            return False
+        return False
+
+    def boss_mark_reset(self):
+        self._boss_mark_flag = False
 
 
 if __name__ == '__main__':
