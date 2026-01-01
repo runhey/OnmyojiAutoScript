@@ -438,7 +438,7 @@ class ScriptTask(WQExplore, SecretScriptTask, WantedQuestsAssets):
                 break
             if self.appear_then_click(self.I_UI_BACK_RED, interval=1):
                 continue
-            if self.appear_then_click(self.I_UI_BACK_BLUE, interval=1.5):
+            if self.appear_then_click(self.I_UI_BACK_YELLOW, interval=1.5):
                 continue
         logger.info('Secret mission finished')
 
