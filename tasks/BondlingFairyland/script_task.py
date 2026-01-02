@@ -795,10 +795,12 @@ if __name__ == '__main__':
     from module.config.config import Config
     from module.device.device import Device
 
-    config = Config('SWITCH')
+    config = Config('oas1')
     device = Device(config)
     t = ScriptTask(config, device)
-    t.run()
+    # t.run()
+    t.ui_get_current_page()
+    t.ui_goto(page_bondling_fairyland)
     # image = task.screenshot()
 
     # con = config.bondling_fairyland

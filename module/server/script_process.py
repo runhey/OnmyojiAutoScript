@@ -9,7 +9,7 @@ from asyncio import QueueEmpty, CancelledError, sleep
 from enum import Enum
 
 from module.logger import logger
-
+from module.server.config_manager import ConfigManager
 from module.server.script_websocket import ScriptWSManager
 
 
@@ -24,6 +24,8 @@ class ScriptProcess(ScriptWSManager):
 
     def __init__(self, config_name: str) -> None:
         super().__init__()
+        if config_name not in ConfigManager.all_script_files():
+            raise FileNotFoundError(f'{config_name}.json not found')
         self.config_name = config_name  # config_name
         self.log_pipe_out, self.log_pipe_in = multiprocessing.Pipe(False)
         self.state_queue = multiprocessing.Queue()

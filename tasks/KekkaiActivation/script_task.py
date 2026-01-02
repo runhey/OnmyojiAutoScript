@@ -413,9 +413,9 @@ if __name__ == "__main__":
     from module.device.device import Device
     import cv2
 
-    c = Config('switch')
+    c = Config('oas1')
     d = Device(c)
 
     t = ScriptTask(c, d)
-    t.check_card_num()
+    t.run()
     # t.run_activation(t.config.kekkai_activation.activation_config)
