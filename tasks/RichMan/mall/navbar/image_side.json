@@ -48,7 +48,7 @@
     "itemName": "side_check_friends",
     "imageName": "navbar_side_check_friends.png",
     "roiFront": "890,8,39,43",
-    "roiBack": "890,8,39,43",
+    "roiBack": "9,8,1266,43",
     "method": "Template matching",
     "threshold": 0.7,
     "description": "友情点"
