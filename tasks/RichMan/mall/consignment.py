@@ -31,7 +31,7 @@ class Consignment(Buy, MallNavbar):
         # 等待页面加载
         time.sleep(0.5)
         self.screenshot()
-        # 进入寄售屋
+        # 进入寄售屋兑换页面
         self.ui_click(self.I_CON_ENTER, self.I_CON_ENTER_CHECK)
         #检查勾玉是否足够
         if not self.mall_check_money_legacy(1, 100):
