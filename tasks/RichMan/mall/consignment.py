@@ -28,9 +28,11 @@ class Consignment(Buy, MallNavbar):
             logger.info('Consignment buy_sale_ticket is not enable')
             return
         self._enter_consignment()
-        self.ui_click(self.I_CON_ENTER, self.I_CON_ENTER_CHECK)
+        # 等待页面加载
         time.sleep(0.5)
         self.screenshot()
+        # 进入寄售屋
+        self.ui_click(self.I_CON_ENTER, self.I_CON_ENTER_CHECK)
         #检查勾玉是否足够
         if not self.mall_check_money_legacy(1, 100):
             logger.warning('Consignment money is not enough')
@@ -54,7 +56,7 @@ if __name__ == '__main__':
     from module.config.config import Config
     from module.device.device import Device
 
-    c = Config('oas1')
+    c = Config('oas2')
     d = Device(c)
     t = Consignment(c, d)
 
