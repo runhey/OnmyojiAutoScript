@@ -104,6 +104,7 @@ class MallNavbar(GameUi, RichManAssets):
             4: self.O_MALL_RESOURCE_4,
             5: self.O_MALL_RESOURCE_5,
             6: self.O_MALL_RESOURCE_6,
+            7: self.O_MALL_RESOURCE_7,
         }
         self.screenshot()
         result = match[index].ocr(self.device.image)
