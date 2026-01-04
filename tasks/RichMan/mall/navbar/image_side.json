@@ -11,8 +11,8 @@
   {
     "itemName": "side_check_special",
     "imageName": "navbar_side_check_special.png",
-    "roiFront": "102,7,42,42",
-    "roiBack": "102,7,42,42",
+    "roiFront": "215,7,42,42",
+    "roiBack": "215,7,42,42",
     "method": "Template matching",
     "threshold": 0.7,
     "description": "特殊"
@@ -29,8 +29,8 @@
   {
     "itemName": "side_check_honor",
     "imageName": "navbar_side_check_honor.png",
-    "roiFront": "694,12,41,42",
-    "roiBack": "694,12,41,42",
+    "roiFront": "752,11,41,42",
+    "roiBack": "752,11,41,42",
     "method": "Template matching",
     "threshold": 0.7,
     "description": "荣誉"
@@ -47,8 +47,8 @@
   {
     "itemName": "side_check_friends",
     "imageName": "navbar_side_check_friends.png",
-    "roiFront": "890,8,39,43",
-    "roiBack": "890,8,39,43",
+    "roiFront": "925,8,39,43",
+    "roiBack": "9,8,1266,43",
     "method": "Template matching",
     "threshold": 0.7,
     "description": "友情点"
