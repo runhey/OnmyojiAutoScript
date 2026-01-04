@@ -213,6 +213,17 @@ class RichManAssets:
 	O_MALL_RESOURCE_7 = RuleOcr(roi=(1100,54,150,38), area=(1100,54,150,38), mode="Quantity", method="Default", keyword="", name="mall_resource_7")
 
 
+	# Ocr Rule Assets
+	# 左数第一个(插画屋/寄售屋) 
+	O_LEGACY_MALL_RESOURCE_1 = RuleOcr(roi=(533,9,107,38), area=(533,9,107,38), mode="Quantity", method="Default", keyword="", name="legacy_mall_resource_1")
+	# 左数第二个(插画屋/寄售屋) 
+	O_LEGACY_MALL_RESOURCE_2 = RuleOcr(roi=(739,8,100,39), area=(739,8,100,39), mode="Quantity", method="Default", keyword="", name="legacy_mall_resource_2")
+	# 左数第三个(插画屋/寄售屋) 
+	O_LEGACY_MALL_RESOURCE_3 = RuleOcr(roi=(935,11,100,37), area=(935,11,100,37), mode="Quantity", method="Default", keyword="", name="legacy_mall_resource_3")
+	# 左数第四个(插画屋/寄售屋) 
+	O_LEGACY_MALL_RESOURCE_4 = RuleOcr(roi=(1129,6,100,41), area=(1129,6,100,41), mode="Quantity", method="Default", keyword="", name="legacy_mall_resource_4")
+
+
 	# Click Rule Assets
 	# 一号位 
 	C_SCA_DEMON_1 = RuleClick(roi_front=(255,158,100,100), roi_back=(255,158,100,100), name="sca_demon_1")

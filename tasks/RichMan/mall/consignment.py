@@ -31,7 +31,8 @@ class Consignment(Buy, MallNavbar):
         self.ui_click(self.I_CON_ENTER, self.I_CON_ENTER_CHECK)
         time.sleep(0.5)
         self.screenshot()
-        if not self.mall_check_money(3, 100):
+        #检查勾玉是否足够
+        if not self.mall_check_money_legacy(1, 100):
             logger.warning('Consignment money is not enough')
             return
         remain_number = self.O_CON_NUMBER.ocr(self.device.image)
