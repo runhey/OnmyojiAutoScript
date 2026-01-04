@@ -82,10 +82,12 @@ class ScriptTask(GameUi, GeneralBattle, SwitchSoul, SecretAssets):
             if not layer:
                 if self.appear(WeeklyTriflesAssets.I_WT_SE_SHARE):
                     logger.warning('You have completed the weekly trifles, skip')
+                    self.ui_click(self.I_UI_BACK_BLUE, stop=self.I_UI_BACK_YELLOW)
                     break
                 text = self.O_SE_TOTAL_TIME.ocr_single(self.device.image)
                 if '尚未' not in text:
                     logger.warning('You have completed the weekly trifles, skip')
+                    self.ui_click(self.I_UI_BACK_BLUE, stop=self.I_UI_BACK_YELLOW)
                     break
                 continue
             if layer >= 6:
