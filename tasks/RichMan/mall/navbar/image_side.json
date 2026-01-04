@@ -23,7 +23,7 @@
     "roiFront": "1180,191,59,60",
     "roiBack": "1150,159,103,132",
     "method": "Template matching",
-    "threshold": 0.7,
+    "threshold": 0.6,
     "description": "荣誉"
   },
   {
@@ -83,8 +83,8 @@
   {
     "itemName": "side_check_charisma",
     "imageName": "navbar_side_check_charisma.png",
-    "roiFront": "886,4,48,46",
-    "roiBack": "886,4,48,46",
+    "roiFront": "917,9,48,46",
+    "roiBack": "886,1,114,80",
     "method": "Template matching",
     "threshold": 0.7,
     "description": "魅力值"
