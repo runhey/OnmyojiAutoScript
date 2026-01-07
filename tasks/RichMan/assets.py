@@ -68,7 +68,7 @@ class RichManAssets:
 	# 中级盘剩余 
 	O_BL_RES_MEDIUM = RuleOcr(roi=(918,285,28,27), area=(918,285,28,27), mode="Digit", method="Default", keyword="", name="bl_res_medium")
 	# 检查契灵的钱是否够 
-	O_BL_CHECK_MONEY = RuleOcr(roi=(1123,12,127,33), area=(1123,12,127,33), mode="DigitCounter", method="Default", keyword="", name="bl_check_money")
+	O_BL_CHECK_MONEY = RuleOcr(roi=(1137,12,125,33), area=(1137,12,125,33), mode="DigitCounter", method="Default", keyword="", name="bl_check_money")
 
 
 	# Image Rule Assets
@@ -198,17 +198,30 @@ class RichManAssets:
 
 	# Ocr Rule Assets
 	# 左数第一个 
-	O_MALL_RESOURCE_1 = RuleOcr(roi=(144,7,100,43), area=(144,7,100,43), mode="Quantity", method="Default", keyword="", name="mall_resource_1")
+	O_MALL_RESOURCE_1 = RuleOcr(roi=(261,8,100,43), area=(261,8,100,43), mode="Quantity", method="Default", keyword="", name="mall_resource_1")
 	# 左数第二个 
-	O_MALL_RESOURCE_2 = RuleOcr(roi=(326,8,124,39), area=(326,8,124,39), mode="Quantity", method="Default", keyword="", name="mall_resource_2")
-	# 左数第二个 
-	O_MALL_RESOURCE_3 = RuleOcr(roi=(533,9,107,38), area=(533,9,107,38), mode="Quantity", method="Default", keyword="", name="mall_resource_3")
-	# 左数第二个 
-	O_MALL_RESOURCE_4 = RuleOcr(roi=(739,8,100,39), area=(739,8,100,39), mode="Quantity", method="Default", keyword="", name="mall_resource_4")
-	# 左数第二个 
-	O_MALL_RESOURCE_5 = RuleOcr(roi=(935,11,100,37), area=(935,11,100,37), mode="Quantity", method="Default", keyword="", name="mall_resource_5")
-	# 左数第二个 
+	O_MALL_RESOURCE_2 = RuleOcr(roi=(415,8,124,39), area=(415,8,124,39), mode="Quantity", method="Default", keyword="", name="mall_resource_2")
+	# 左数第三个 
+	O_MALL_RESOURCE_3 = RuleOcr(roi=(596,10,107,38), area=(596,10,107,38), mode="Quantity", method="Default", keyword="", name="mall_resource_3")
+	# 左数第四个 
+	O_MALL_RESOURCE_4 = RuleOcr(roi=(783,9,100,39), area=(783,9,100,39), mode="Quantity", method="Default", keyword="", name="mall_resource_4")
+	# 左数第五个 
+	O_MALL_RESOURCE_5 = RuleOcr(roi=(958,9,100,37), area=(958,9,100,37), mode="Quantity", method="Default", keyword="", name="mall_resource_5")
+	# 左数第六个 
 	O_MALL_RESOURCE_6 = RuleOcr(roi=(1129,6,100,41), area=(1129,6,100,41), mode="Quantity", method="Default", keyword="", name="mall_resource_6")
+	# 左数第二排第一个 
+	O_MALL_RESOURCE_7 = RuleOcr(roi=(1100,54,150,38), area=(1100,54,150,38), mode="Quantity", method="Default", keyword="", name="mall_resource_7")
+
+
+	# Ocr Rule Assets
+	# 左数第一个(插画屋/寄售屋) 
+	O_LEGACY_MALL_RESOURCE_1 = RuleOcr(roi=(533,9,107,38), area=(533,9,107,38), mode="Quantity", method="Default", keyword="", name="legacy_mall_resource_1")
+	# 左数第二个(插画屋/寄售屋) 
+	O_LEGACY_MALL_RESOURCE_2 = RuleOcr(roi=(739,8,100,39), area=(739,8,100,39), mode="Quantity", method="Default", keyword="", name="legacy_mall_resource_2")
+	# 左数第三个(插画屋/寄售屋) 
+	O_LEGACY_MALL_RESOURCE_3 = RuleOcr(roi=(935,11,100,37), area=(935,11,100,37), mode="Quantity", method="Default", keyword="", name="legacy_mall_resource_3")
+	# 左数第四个(插画屋/寄售屋) 
+	O_LEGACY_MALL_RESOURCE_4 = RuleOcr(roi=(1129,6,100,41), area=(1129,6,100,41), mode="Quantity", method="Default", keyword="", name="legacy_mall_resource_4")
 
 
 	# Click Rule Assets
@@ -267,7 +280,7 @@ class RichManAssets:
 
 	# Ocr Rule Assets
 	# 蛇皮剩余可买的 
-	O_SCA_NUMBER_OROCHI = RuleOcr(roi=(46,318,30,25), area=(46,318,30,25), mode="Quantity", method="Default", keyword="", name="sca_number_orochi")
+	O_SCA_NUMBER_OROCHI = RuleOcr(roi=(41,318,34,25), area=(41,318,34,25), mode="Quantity", method="Default", keyword="", name="sca_number_orochi")
 	# 首领御魂剩余可买的 
 	O_SCA_NUMBER_DEMON = RuleOcr(roi=(627,319,30,25), area=(627,319,30,25), mode="Quantity", method="Default", keyword="", name="sca_number_demon")
 	# 永生之海 
@@ -275,11 +288,11 @@ class RichManAssets:
 	# 多少号位 
 	O_SCA_DEMON_POSTION = RuleOcr(roi=(960,244,88,41), area=(960,244,88,41), mode="Single", method="Default", keyword="", name="sca_demon_postion")
 	# 朴素的御魂 
-	O_SCA_RES_OROCHI = RuleOcr(roi=(531,9,127,37), area=(531,9,127,37), mode="DigitCounter", method="Default", keyword="", name="sca_res_orochi")
+	O_SCA_RES_OROCHI = RuleOcr(roi=(610,9,127,37), area=(610,9,127,37), mode="DigitCounter", method="Default", keyword="", name="sca_res_orochi")
 	# 首领御魂数量 
-	O_SCA_RES_DEMON = RuleOcr(roi=(949,10,86,35), area=(949,10,86,35), mode="Digit", method="Default", keyword="", name="sca_res_demon")
+	O_SCA_RES_DEMON = RuleOcr(roi=(949,10,134,35), area=(949,10,134,35), mode="Digit", method="Default", keyword="", name="sca_res_demon")
 	# 永生之海 
-	O_SCA_RES_SEA = RuleOcr(roi=(1152,11,80,38), area=(1152,11,80,38), mode="Digit", method="Default", keyword="", name="sca_res_sea")
+	O_SCA_RES_SEA = RuleOcr(roi=(1134,11,117,38), area=(1134,11,117,38), mode="Digit", method="Default", keyword="", name="sca_res_sea")
 
 
 	# Image Rule Assets
