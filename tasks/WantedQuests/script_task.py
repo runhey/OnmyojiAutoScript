@@ -440,6 +440,8 @@ class ScriptTask(WQExplore, SecretScriptTask, WantedQuestsAssets):
                 continue
             if self.appear_then_click(self.I_UI_BACK_BLUE, interval=1.5):
                 continue
+            if self.appear_then_click(self.I_UI_BACK_YELLOW, interval=1.5):
+                continue
         logger.info('Secret mission finished')
 
     def invite_random(self, add_button: RuleImage):
