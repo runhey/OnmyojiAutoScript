@@ -198,15 +198,15 @@ class RichManAssets:
 
 	# Ocr Rule Assets
 	# 左数第一个 
-	O_MALL_RESOURCE_1 = RuleOcr(roi=(261,8,100,43), area=(261,8,100,43), mode="Quantity", method="Default", keyword="", name="mall_resource_1")
+	O_MALL_RESOURCE_1 = RuleOcr(roi=(208,7,100,43), area=(208,7,100,43), mode="Quantity", method="Default", keyword="", name="mall_resource_1")
 	# 左数第二个 
-	O_MALL_RESOURCE_2 = RuleOcr(roi=(415,8,124,39), area=(415,8,124,39), mode="Quantity", method="Default", keyword="", name="mall_resource_2")
+	O_MALL_RESOURCE_2 = RuleOcr(roi=(382,8,124,39), area=(382,8,124,39), mode="Quantity", method="Default", keyword="", name="mall_resource_2")
 	# 左数第三个 
-	O_MALL_RESOURCE_3 = RuleOcr(roi=(596,10,107,38), area=(596,10,107,38), mode="Quantity", method="Default", keyword="", name="mall_resource_3")
+	O_MALL_RESOURCE_3 = RuleOcr(roi=(574,9,127,38), area=(574,9,127,38), mode="Quantity", method="Default", keyword="", name="mall_resource_3")
 	# 左数第四个 
-	O_MALL_RESOURCE_4 = RuleOcr(roi=(783,9,100,39), area=(783,9,100,39), mode="Quantity", method="Default", keyword="", name="mall_resource_4")
+	O_MALL_RESOURCE_4 = RuleOcr(roi=(755,9,128,39), area=(755,9,128,39), mode="Quantity", method="Default", keyword="", name="mall_resource_4")
 	# 左数第五个 
-	O_MALL_RESOURCE_5 = RuleOcr(roi=(958,9,100,37), area=(958,9,100,37), mode="Quantity", method="Default", keyword="", name="mall_resource_5")
+	O_MALL_RESOURCE_5 = RuleOcr(roi=(943,9,116,37), area=(943,9,116,37), mode="Quantity", method="Default", keyword="", name="mall_resource_5")
 	# 左数第六个 
 	O_MALL_RESOURCE_6 = RuleOcr(roi=(1129,6,100,41), area=(1129,6,100,41), mode="Quantity", method="Default", keyword="", name="mall_resource_6")
 	# 左数第二排第一个 
