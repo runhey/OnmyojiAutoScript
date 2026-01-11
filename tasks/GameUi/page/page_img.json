@@ -47,8 +47,8 @@
   {
     "itemName": "exploration_goto_soul_zone",
     "imageName": "page_exploration_goto_soul_zone.png",
-    "roiFront": "159,633,55,55",
-    "roiBack": "138,620,89,75",
+    "roiFront": "163,642,44,36",
+    "roiBack": "134,623,93,70",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "探索前往御魂"

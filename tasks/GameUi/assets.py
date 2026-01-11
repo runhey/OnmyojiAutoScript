@@ -48,7 +48,7 @@ class GameUiAssets:
 	# 探索前往觉醒 
 	I_EXPLORATION_GOTO_AWAKE_ZONE = RuleImage(roi_front=(57,628,57,42), roi_back=(33,619,113,79), threshold=0.65, method="Template matching", file="./tasks/GameUi/page/page_exploration_goto_awake_zone.png")
 	# 探索前往御魂 
-	I_EXPLORATION_GOTO_SOUL_ZONE = RuleImage(roi_front=(159,633,55,55), roi_back=(138,620,89,75), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_exploration_goto_soul_zone.png")
+	I_EXPLORATION_GOTO_SOUL_ZONE = RuleImage(roi_front=(163,642,44,36), roi_back=(134,623,93,70), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_exploration_goto_soul_zone.png")
 	# 探索前往结界突破 
 	I_EXPLORATION_GOTO_REALM_RAID = RuleImage(roi_front=(248,636,67,48), roi_back=(229,612,203,87), threshold=0.65, method="Template matching", file="./tasks/GameUi/page/page_exploration_goto_realm_raid.png")
 	# 探索前往御灵 
