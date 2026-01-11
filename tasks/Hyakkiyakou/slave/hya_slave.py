@@ -255,7 +255,9 @@ class HyaSlave(HyaDevice, HyaColor, HyakkiyakouAssets):
                     raise RequestHumanTakeover('Invite friend failed')
 
     def _invite_friend(self, button1: RuleImage, button2: RuleImage, hya_recall_activity: bool = False ) -> bool:
+        logger.info('Start clicking')
         self.ui_click(button1, button2)
+        logger.info('End clicking')
         invite_timer = Timer(8)
         invite_timer.start()
         while 1:
