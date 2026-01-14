@@ -2,35 +2,35 @@
   {
     "itemName": "boss_fire",
     "imageName": "gate1_boss_fire.png",
-    "roiFront": "1128,576,100,100",
-    "roiBack": "1091,557,156,147",
+    "roiFront": "1114,582,100,100",
+    "roiBack": "1084,559,156,147",
     "method": "Template matching",
     "threshold": 0.8,
-    "description": "大boss挑战"
+    "description": "大boss挑战re"
   },
   {
     "itemName": "boss_team_lock",
     "imageName": "gate1_boss_team_lock.png",
-    "roiFront": "1139,493,21,21",
-    "roiBack": "1130,487,38,43",
+    "roiFront": "1122,527,33,32",
+    "roiBack": "1116,520,43,43",
     "method": "Template matching",
-    "threshold": 0.95,
-    "description": "description"
+    "threshold": 0.9,
+    "description": "lockre"
   },
   {
     "itemName": "boss_team_unlock",
     "imageName": "gate1_boss_team_unlock.png",
-    "roiFront": "1138,497,22,21",
-    "roiBack": "1127,491,40,41",
+    "roiFront": "1128,529,25,26",
+    "roiBack": "1120,520,40,41",
     "method": "Template matching",
-    "threshold": 0.95,
-    "description": "description"
+    "threshold": 0.9,
+    "description": "unlockre"
   },
   {
     "itemName": "boss_skip",
     "imageName": "gate1_boss_skip.png",
-    "roiFront": "1131,13,100,42",
-    "roiBack": "1113,5,136,62",
+    "roiFront": "1140,39,48,27",
+    "roiBack": "1110,24,136,58",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"
@@ -56,17 +56,17 @@
   {
     "itemName": "boss_share",
     "imageName": "gate1_boss_share.png",
-    "roiFront": "1090,604,70,74",
-    "roiBack": "1074,587,100,100",
+    "roiFront": "1158,619,70,74",
+    "roiBack": "1144,606,100,100",
     "method": "Template matching",
     "threshold": 0.8,
-    "description": "description"
+    "description": "boss_sharere"
   },
   {
     "itemName": "boss_shutu",
     "imageName": "gate1_boss_shutu.png",
-    "roiFront": "108,141,173,122",
-    "roiBack": "108,141,173,122",
+    "roiFront": "539,669,173,37",
+    "roiBack": "526,646,198,73",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "结算的椒图"

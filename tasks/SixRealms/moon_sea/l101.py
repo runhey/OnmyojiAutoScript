@@ -74,10 +74,10 @@ class MoonSeaL101(MoonSeaSkills):
         while 1:
             self.screenshot()
             coin = self.O_COIN_NUM.ocr(self.device.image)
-            if coin < 300:
+            if coin < 200:
                 logger.info('Not enough coin')
                 break
-            if self.cnt_skill101 >= 5:
+            if self.cnt_skill101 >= 1:
                 logger.info('Skill 101 level is max')
                 break
 
@@ -85,7 +85,7 @@ class MoonSeaL101(MoonSeaSkills):
                 self.ui_click_until_disappear(self.I_UI_CONFIRM, interval=1)
             if self.appear(self.I_STORE_SKILL_101):
                 self.buy_skill_101()
-            elif coin < 400:
+            elif coin < 300:
                 break
             elif not self.refresh_store():
                 break
@@ -103,11 +103,9 @@ class MoonSeaL101(MoonSeaSkills):
 
 if __name__ == '__main__':
     from module.config.config import Config
-    from module.device.device import Device
 
-    c = Config('oas1')
-    d = Device(c)
-    t = MoonSeaL101(c, d)
+    c = Config('du')
+    t = MoonSeaL101(c)
     t.screenshot()
 
     t.run_l101()

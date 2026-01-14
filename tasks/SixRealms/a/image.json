@@ -1,0 +1,47 @@
+[
+  {
+    "itemName": "ningxi",
+    "imageName": "a_ningxi.png",
+    "roiFront": "1011,375,19,29",
+    "roiBack": "153,87,908,513",
+    "method": "Template matching",
+    "threshold": 0.65,
+    "description": "宁息"
+  },
+  {
+    "itemName": "hundun",
+    "imageName": "a_hundun.png",
+    "roiFront": "896,447,23,33",
+    "roiBack": "162,122,908,513",
+    "method": "Template matching",
+    "threshold": 0.65,
+    "description": "混沌re"
+  },
+  {
+    "itemName": "zhan",
+    "imageName": "a_zhan.png",
+    "roiFront": "207,366,22,26",
+    "roiBack": "156,103,908,513",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "鏖战re"
+  },
+  {
+    "itemName": "shenmi",
+    "imageName": "a_shenmi.png",
+    "roiFront": "465,459,20,31",
+    "roiBack": "151,88,908,513",
+    "method": "Template matching",
+    "threshold": 0.65,
+    "description": "神秘re"
+  },
+  {
+    "itemName": "xing",
+    "imageName": "a_xing.png",
+    "roiFront": "652,478,30,27",
+    "roiBack": "151,88,908,513",
+    "method": "Template matching",
+    "threshold": 0.7,
+    "description": "绽放之屿re"
+  }
+]
