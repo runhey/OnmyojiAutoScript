@@ -1,7 +1,7 @@
 [
   {
     "itemName": "fire",
-    "roiFront": "1137,599,83,44",
+    "roiFront": "1131,589,96,67",
     "roiBack": "1129,570,100,100",
     "mode": "Single",
     "method": "Default",
@@ -10,8 +10,8 @@
   },
   {
     "itemName": "remain_ap",
-    "roiFront": "749,18,73,29",
-    "roiBack": "749,18,73,29",
+    "roiFront": "1148,19,73,29",
+    "roiBack": "1148,19,73,29",
     "mode": "DigitCounter",
     "method": "Default",
     "keyword": "",
@@ -37,8 +37,8 @@
   },
   {
     "itemName": "remain_pass2",
-    "roiFront": "1115,25,88,29",
-    "roiBack": "1107,14,103,50",
+    "roiFront": "526,17,88,29",
+    "roiBack": "513,8,103,50",
     "mode": "Digit",
     "method": "Default",
     "keyword": "",
@@ -46,15 +46,14 @@
   },
   {
     "itemName": "remain_boss",
-    "roiFront": "1113,669,131,31",
+    "roiFront": "1115,663,131,31",
     "roiBack": "1099,659,162,52",
     "mode": "DigitCounter",
     "method": "Default",
     "keyword": "",
     "description": "boss剩余攻击次数"
   },
-
-    {
+  {
     "itemName": "remain_ap100",
     "roiFront": "922,21,112,39",
     "roiBack": "913,8,131,62",

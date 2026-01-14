@@ -28,5 +28,11 @@
     "roiFront": "42,94,1207,543",
     "roiBack": "42,94,1207,543",
     "description": "description"
+  },
+  {
+    "itemName": "random_boss",
+    "roiFront": "536,603,249,100",
+    "roiBack": "536,603,249,100",
+    "description": "description"
   }
 ]

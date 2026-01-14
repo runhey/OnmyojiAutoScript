@@ -2,7 +2,7 @@
   {
     "itemName": "lock",
     "imageName": "as_lock.png",
-    "roiFront": "825,657,28,25",
+    "roiFront": "824,651,31,31",
     "roiBack": "739,613,276,85",
     "method": "Template matching",
     "threshold": 0.5,
@@ -11,7 +11,7 @@
   {
     "itemName": "unlock",
     "imageName": "as_unlock.png",
-    "roiFront": "884,648,28,25",
+    "roiFront": "824,653,28,29",
     "roiBack": "733,607,266,95",
     "method": "Template matching",
     "threshold": 0.5,
@@ -20,8 +20,8 @@
   {
     "itemName": "ap",
     "imageName": "as_ap.png",
-    "roiFront": "1181,657,23,24",
-    "roiBack": "1149,631,103,71",
+    "roiFront": "1099,524,26,35",
+    "roiBack": "1084,504,161,71",
     "method": "Template matching",
     "threshold": 0.65,
     "description": "寿司体力"
@@ -29,8 +29,8 @@
   {
     "itemName": "ap_activity",
     "imageName": "as_ap_activity.png",
-    "roiFront": "1153,636,21,25",
-    "roiBack": "1124,621,84,54",
+    "roiFront": "1152,527,23,34",
+    "roiBack": "1143,515,43,54",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "活动体力"
@@ -38,8 +38,8 @@
   {
     "itemName": "switch",
     "imageName": "as_switch.png",
-    "roiFront": "1215,551,23,23",
-    "roiBack": "1204,538,74,49",
+    "roiFront": "1240,531,24,29",
+    "roiBack": "1223,523,55,44",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "切换按键"
@@ -65,8 +65,8 @@
   {
     "itemName": "toggle_button",
     "imageName": "as_toggle_button.png",
-    "roiFront": "1193,463,27,25",
-    "roiBack": "1169,146,73,403",
+    "roiFront": "1195,530,27,25",
+    "roiBack": "1171,127,73,443",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"

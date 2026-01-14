@@ -19,7 +19,7 @@ from tasks.base_task import BaseTask as BT
 
 # 爬塔活动主要界面
 page_climb_act = Page(asa.I_TO_BATTLE_MAIN)
-page_climb_act.additional = [gga.I_UI_REWARD, asa.I_SKIP_BUTTON, asa.I_RED_EXIT]
+page_climb_act.additional = [gga.I_UI_REWARD, asa.I_RED_EXIT]
 page_climb_act.link(button=G.I_BACK_Y, destination=page_main)
 page_main.link(button=[asa.I_SHI, RAA.I_TOGGLE_BUTTON], destination=page_climb_act)
 
