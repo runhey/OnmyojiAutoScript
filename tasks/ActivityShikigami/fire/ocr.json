@@ -10,8 +10,8 @@
   },
   {
     "itemName": "remain_ap",
-    "roiFront": "749,18,73,29",
-    "roiBack": "749,18,73,29",
+    "roiFront": "939,18,73,29",
+    "roiBack": "939,18,73,29",
     "mode": "DigitCounter",
     "method": "Default",
     "keyword": "",
@@ -19,8 +19,8 @@
   },
   {
     "itemName": "remain_pass",
-    "roiFront": "959,18,57,28",
-    "roiBack": "959,18,57,28",
+    "roiFront": "552,18,57,28",
+    "roiBack": "552,18,57,28",
     "mode": "DigitCounter",
     "method": "Default",
     "keyword": "",
@@ -53,8 +53,7 @@
     "keyword": "",
     "description": "boss剩余攻击次数"
   },
-
-    {
+  {
     "itemName": "remain_ap100",
     "roiFront": "922,21,112,39",
     "roiBack": "913,8,131,62",

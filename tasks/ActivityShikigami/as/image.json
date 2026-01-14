@@ -38,8 +38,8 @@
   {
     "itemName": "switch",
     "imageName": "as_switch.png",
-    "roiFront": "1215,551,23,23",
-    "roiBack": "1204,538,74,49",
+    "roiFront": "1241,533,23,23",
+    "roiBack": "1202,521,74,49",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "切换按键"
@@ -70,5 +70,32 @@
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"
+  },
+  {
+    "itemName": "climb_mode_pass",
+    "imageName": "as_climb_mode_pass.png",
+    "roiFront": "1151,528,21,28",
+    "roiBack": "1118,500,62,100",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "活动爬塔标志"
+  },
+  {
+    "itemName": "climb_mode_ap",
+    "imageName": "as_climb_mode_ap.png",
+    "roiFront": "1100,530,22,25",
+    "roiBack": "1063,508,100,100",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "体力爬塔标志"
+  },
+  {
+    "itemName": "climb_mode_switch",
+    "imageName": "as_climb_mode_switch.png",
+    "roiFront": "1238,531,29,26",
+    "roiBack": "1179,494,100,100",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "切换按键"
   }
 ]

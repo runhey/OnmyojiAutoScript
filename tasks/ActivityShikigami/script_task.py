@@ -181,6 +181,7 @@ class ScriptTask(StateMachine, GameUi, BaseActivity, SwitchSoul, ActivityShikiga
         logger.hr(f'Start run climb type PASS', 1)
         self.ui_click(self.I_TO_BATTLE_MAIN, stop=self.I_CHECK_BATTLE_MAIN, interval=1)
         self.switch_soul(self.I_BATTLE_MAIN_TO_RECORDS, self.I_CHECK_BATTLE_MAIN)
+        self.switch_climb_mode_in_game('pass')
 
         ocr_limit_timer = Timer(1).start()
         click_limit_timer = Timer(4).start()
@@ -204,36 +205,36 @@ class ScriptTask(StateMachine, GameUi, BaseActivity, SwitchSoul, ActivityShikiga
             #     self.run_general_battle(config=_battle_config)
             #     continue
             # 领箱子
-            if self.appear_then_click(self.I_PASS_5):
-                logger.info('Found箱子')
-                continue
+            # if self.appear_then_click(self.I_PASS_5):
+            #     logger.info('Found箱子')
+            #     continue
             # 印记
-            if self.appear(self.I_PASS_6):
-                logger.info('Found印记')
-                click_index = 0
-                clicks = [self.I_PASS_8, self.I_PASS_10, self.I_PASS_11]
-                self.ui_click(self.I_PASS_6, stop=self.I_UI_BACK_RED, interval=1)
-                self.screenshot()
-                if not self.appear(self.I_UI_BACK_RED):
-                    continue
-                while 1:
-                    self.screenshot()
-                    if self.ui_reward_appear_click():
-                        break
-                    if not self.appear(self.I_UI_BACK_RED):
-                        break
-                    # 按照顺序 间隔点击
-                    if self.click(clicks[click_index], interval=1):
-                        sleep(1.6)
-                        click_index += 1
-                        click_index = click_index % len(clicks)
-                    if self.appear_then_click(self.I_PASS_9, interval=1.1):
-                        logger.info('Select one done')
-                        continue
+            # if self.appear(self.I_PASS_6):
+            #     logger.info('Found印记')
+            #     click_index = 0
+            #     clicks = [self.I_PASS_8, self.I_PASS_10, self.I_PASS_11]
+            #     self.ui_click(self.I_PASS_6, stop=self.I_UI_BACK_RED, interval=1)
+            #     self.screenshot()
+            #     if not self.appear(self.I_UI_BACK_RED):
+            #         continue
+            #     while 1:
+            #         self.screenshot()
+            #         if self.ui_reward_appear_click():
+            #             break
+            #         if not self.appear(self.I_UI_BACK_RED):
+            #             break
+            #         # 按照顺序 间隔点击
+            #         if self.click(clicks[click_index], interval=1):
+            #             sleep(1.6)
+            #             click_index += 1
+            #             click_index = click_index % len(clicks)
+            #         if self.appear_then_click(self.I_PASS_9, interval=1.1):
+            #             logger.info('Select one done')
+            #             continue
             # 下一层
-            if self.appear_then_click(self.I_PASS_7, interval=1, threshold=0.65):
-                logger.info('Next layer')
-                continue
+            # if self.appear_then_click(self.I_PASS_7, interval=1, threshold=0.65):
+            #     logger.info('Next layer')
+            #     continue
             if click_limit_timer.reached():
                 click_limit_timer.reset()
                 if (self.appear_then_click(self.I_PASS_1)
@@ -265,6 +266,7 @@ class ScriptTask(StateMachine, GameUi, BaseActivity, SwitchSoul, ActivityShikiga
         logger.hr(f'Start run climb type AP')
         self.ui_click(self.I_TO_BATTLE_MAIN, stop=self.I_CHECK_BATTLE_MAIN, interval=1)
         self.switch_soul(self.I_BATTLE_MAIN_TO_RECORDS, self.I_CHECK_BATTLE_MAIN)
+        self.switch_climb_mode_in_game('ap')
 
         ocr_limit_timer = Timer(1).start()
         while 1:
@@ -388,6 +390,14 @@ class ScriptTask(StateMachine, GameUi, BaseActivity, SwitchSoul, ActivityShikiga
             group_team = getattr(conf, f"{self.climb_type}_group_team")
             self.run_switch_soul(group_team)
         self.ui_click(self.I_UI_BACK_YELLOW, stop=cur_img, interval=1)
+
+    def switch_climb_mode_in_game(self, mode: str = 'ap'):
+        map_check = {
+            'ap': self.I_CLIMB_MODE_AP,
+            'pass': self.I_CLIMB_MODE_PASS,
+        }
+        logger.info(f'Switch climb mode to {mode}')
+        self.ui_click(self.I_CLIMB_MODE_SWITCH, stop=map_check[mode], interval=1)
 
     def lock_team(self, battle_conf: GeneralBattleConfig):
         """
