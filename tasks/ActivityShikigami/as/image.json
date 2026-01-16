@@ -18,57 +18,30 @@
     "description": "还未上锁图片"
   },
   {
-    "itemName": "ap",
-    "imageName": "as_ap.png",
-    "roiFront": "1181,657,23,24",
-    "roiBack": "1149,631,103,71",
-    "method": "Template matching",
-    "threshold": 0.65,
-    "description": "寿司体力"
-  },
-  {
-    "itemName": "ap_activity",
-    "imageName": "as_ap_activity.png",
-    "roiFront": "1153,636,21,25",
-    "roiBack": "1124,621,84,54",
+    "itemName": "climb_mode_pass",
+    "imageName": "as_climb_mode_pass.png",
+    "roiFront": "1151,528,21,28",
+    "roiBack": "1118,500,62,100",
     "method": "Template matching",
     "threshold": 0.8,
-    "description": "活动体力"
+    "description": "活动爬塔标志"
   },
   {
-    "itemName": "switch",
-    "imageName": "as_switch.png",
-    "roiFront": "1215,551,23,23",
-    "roiBack": "1204,538,74,49",
+    "itemName": "climb_mode_ap",
+    "imageName": "as_climb_mode_ap.png",
+    "roiFront": "1100,530,22,25",
+    "roiBack": "1063,508,100,100",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "体力爬塔标志"
+  },
+  {
+    "itemName": "climb_mode_switch",
+    "imageName": "as_climb_mode_switch.png",
+    "roiFront": "1238,531,29,26",
+    "roiBack": "1179,494,100,100",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "切换按键"
-  },
-  {
-    "itemName": "buy_jade",
-    "imageName": "as_buy_jade.png",
-    "roiFront": "1004,192,38,42",
-    "roiBack": "836,619,38,42",
-    "method": "Template matching",
-    "threshold": 0.8,
-    "description": "购买活动的体力"
-  },
-  {
-    "itemName": "add_max",
-    "imageName": "as_add_max.png",
-    "roiFront": "17,24,33,37",
-    "roiBack": "974,524,57,54",
-    "method": "Template matching",
-    "threshold": 0.8,
-    "description": "增加到最大"
-  },
-  {
-    "itemName": "toggle_button",
-    "imageName": "as_toggle_button.png",
-    "roiFront": "1193,463,27,25",
-    "roiBack": "1169,146,73,403",
-    "method": "Template matching",
-    "threshold": 0.8,
-    "description": "description"
   }
 ]
