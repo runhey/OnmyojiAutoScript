@@ -84,7 +84,7 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AreaBossAssets):
         logger.info("Script back home")
         while 1:
             self.screenshot()
-            if self.appear_then_click(self.I_BACK_BLUE, threshold=0.6, interval=2):
+            if self.appear_then_click(self.I_UI_BACK_YELLOW, threshold=0.6, interval=2):
                 continue
             if self.appear(self.I_CHECK_MAIN, threshold=0.6):
                 break

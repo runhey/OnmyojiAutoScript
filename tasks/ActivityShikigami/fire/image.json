@@ -1,0 +1,119 @@
+[
+  {
+    "itemName": "pass_1",
+    "imageName": "fire_pass_1.png",
+    "roiFront": "359,295,100,53",
+    "roiBack": "68,203,1138,369",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "pass_2",
+    "imageName": "fire_pass_2.png",
+    "roiFront": "645,224,92,57",
+    "roiBack": "98,205,1076,366",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "pass_3",
+    "imageName": "fire_pass_3.png",
+    "roiFront": "648,227,91,55",
+    "roiBack": "103,162,1077,416",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "pass_4",
+    "imageName": "fire_pass_4.png",
+    "roiFront": "586,424,100,58",
+    "roiBack": "99,194,1080,398",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "pass_5",
+    "imageName": "fire_pass_5.png",
+    "roiFront": "946,415,65,48",
+    "roiBack": "97,194,1036,398",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "箱子"
+  },
+  {
+    "itemName": "pass_6",
+    "imageName": "fire_pass_6.png",
+    "roiFront": "668,221,54,50",
+    "roiBack": "107,159,1012,394",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "印记"
+  },
+  {
+    "itemName": "pass_7",
+    "imageName": "fire_pass_7.png",
+    "roiFront": "329,233,51,51",
+    "roiBack": "95,180,1056,394",
+    "method": "Template matching",
+    "threshold": 0.65,
+    "description": "description"
+  },
+  {
+    "itemName": "pass_8",
+    "imageName": "fire_pass_8.png",
+    "roiFront": "579,276,100,100",
+    "roiBack": "577,296,100,100",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "印记选中间的"
+  },
+  {
+    "itemName": "pass_9",
+    "imageName": "fire_pass_9.png",
+    "roiFront": "558,643,160,44",
+    "roiBack": "480,601,306,100",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "pass_10",
+    "imageName": "fire_pass_10.png",
+    "roiFront": "279,309,100,100",
+    "roiBack": "291,305,100,100",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "印记选左边的"
+  },
+  {
+    "itemName": "pass_11",
+    "imageName": "fire_pass_11.png",
+    "roiFront": "918,304,100,100",
+    "roiBack": "914,308,100,100",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "印记选右边的"
+  },
+  {
+    "itemName": "pass12",
+    "imageName": "fire_pass12.png",
+    "roiFront": "870,356,100,50",
+    "roiBack": "104,169,1109,425",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "击败魇兽将直接前往下一层"
+  },
+  {
+    "itemName": "pass_13",
+    "imageName": "fire_pass_13.png",
+    "roiFront": "1018,570,100,100",
+    "roiBack": "984,538,169,152",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "魇兽将的战斗图片"
+  }
+]

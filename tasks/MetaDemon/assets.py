@@ -49,7 +49,7 @@ class MetaDemonAssets:
 
 	# Image Rule Assets
 	# 右侧进去 
-	I_RIGHT_ENTER = RuleImage(roi_front=(1183,314,46,42), roi_back=(1150,131,100,360), threshold=0.75, method="Template matching", file="./tasks/MetaDemon/md/md_right_enter.png")
+	I_RIGHT_ENTER = RuleImage(roi_front=(1183,314,46,34), roi_back=(1150,131,100,360), threshold=0.75, method="Template matching", file="./tasks/MetaDemon/md/md_right_enter.png")
 	# description 
 	I_ENTER2 = RuleImage(roi_front=(461,265,44,156), roi_back=(428,220,100,258), threshold=0.8, method="Template matching", file="./tasks/MetaDemon/md/md_enter2.png")
 	# 寻找鬼王 

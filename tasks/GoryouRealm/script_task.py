@@ -71,7 +71,7 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, GoryouRealmAssets):
                     break
 
 
-        self.ui_click(self.I_UI_BACK_BLUE, self.I_CHECK_EXPLORATION)
+        self.ui_click(self.I_UI_BACK_YELLOW, self.I_CHECK_EXPLORATION)
         logger.info('Back to exploration')
         self.set_next_run(task='GoryouRealm', success=True, finish=True)
         raise TaskEnd

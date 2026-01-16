@@ -25,8 +25,8 @@ class ScriptTask(GameUi, PetsAssets):
             if self.appear_then_click(self.I_PET_CLAW, interval=1):
                 continue
         logger.info('Enter Pets')
-        if con.pets_happy:
-            self._play()
+        # if con.pets_happy:
+        #     self._play()
         if con.pets_feast:
             self._feed()
         self.ui_click(self.I_PET_EXIT, self.I_CHECK_MAIN)

@@ -125,7 +125,7 @@ class RyouToppaAssets:
 	# 开始寮突按钮 
 	I_START_TOPPA_BUTTON = RuleImage(roi_front=(832,279,130,43), roi_back=(1,1,1055,718), threshold=0.8, method="Template matching", file="./tasks/RyouToppa/res/res_start_toppa_button.png")
 	# 寮击破奖励 
-	I_RYOU_REWARD = RuleImage(roi_front=(134,417,241,40), roi_back=(134,417,241,40), threshold=0.8, method="Template matching", file="./tasks/RyouToppa/res/res_ryou_reward.png")
+	I_RYOU_REWARD = RuleImage(roi_front=(134,417,241,40), roi_back=(122,390,340,84), threshold=0.65, method="Template matching", file="./tasks/RyouToppa/res/res_ryou_reward.png")
 	# 勋章奖励标题 
 	I_GUILD_ORDERS_REWARDS = RuleImage(roi_front=(1123,31,115,56), roi_back=(1123,31,115,56), threshold=0.8, method="Template matching", file="./tasks/RyouToppa/res/res_guild_orders_rewards.png")
 	# 攻破阴阳寮 

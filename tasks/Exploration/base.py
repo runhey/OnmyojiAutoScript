@@ -211,11 +211,14 @@ class BaseExploration(GameUi, GeneralBattle, GeneralRoom, GeneralInvite, Replace
             if not self.appear(self.I_E_OPEN_SETTINGS):
                 logger.warning('Opening settings failed due to now in battle')
                 return
+
+        # 先点候补式神区域，再切换稀有度，避免点击失败
+        self.click(self.C_CLICK_STANDBY_TEAM)
+
         choose_rarity = self._config.exploration_config.choose_rarity
         rarity = ShikigamiClass.N if choose_rarity == ChooseRarity.N else ShikigamiClass.MATERIAL
         self.switch_shikigami_class(rarity)
 
-        self.click(self.C_CLICK_STANDBY_TEAM)
         # 移动至未候补的狗粮
         while 1:
             # 慢一点
@@ -228,7 +231,11 @@ class BaseExploration(GameUi, GeneralBattle, GeneralRoom, GeneralInvite, Replace
                 self.swipe(self.S_SWIPE_SHIKI_TO_LEFT)
             else:
                 break
+        operation_timeout = Timer(60)
+        operation_timeout.start()
         while 1:
+            if operation_timeout.reached():
+                raise GameStuckError('Adding shikigami timeout')
             # 候补出战数量识别
             self.screenshot()
             if not self.appear(self.I_E_OPEN_SETTINGS):
@@ -327,9 +334,9 @@ class BaseExploration(GameUi, GeneralBattle, GeneralRoom, GeneralInvite, Replace
         # 设置下次执行行时间
         logger.info("RealmRaid and Exploration  set_next_run !")
         next_run = datetime.now() + con_scrolls.scrolls_cd
-        self.set_next_run(task='Exploration', success=False, finish=False, target=next_run)
-        self.set_next_run(task='RealmRaid', success=False, finish=False, target=datetime.now())
-        self.set_next_run(task='MemoryScrolls', success=False, finish=False, target=datetime.now())
+        self.set_next_run(task='Exploration', success=None, finish=False, target=next_run)
+        self.set_next_run(task='RealmRaid', success=None, finish=False, target=datetime.now())
+        self.set_next_run(task='MemoryScrolls', success=None, finish=False, target=datetime.now())
         raise TaskEnd
 
     #
@@ -360,7 +367,7 @@ class BaseExploration(GameUi, GeneralBattle, GeneralRoom, GeneralInvite, Replace
                 continue
             if self.appear(self.I_EXPLORATION_TITLE) or self.appear(self.I_CHECK_EXPLORATION):
                 continue
-            if self.appear_then_click(self.I_UI_BACK_BLUE, interval=3.5):
+            if self.appear_then_click(self.I_UI_BACK_YELLOW, interval=3.5):
                 continue
 
     def fire(self, button) -> bool:

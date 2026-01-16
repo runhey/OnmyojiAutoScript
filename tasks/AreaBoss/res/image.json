@@ -18,15 +18,6 @@
     "description": "地狱鬼王图标"
   },
   {
-    "itemName": "back_blue",
-    "imageName": "res_back_blue.png",
-    "roiFront": "51,30,51,52",
-    "roiBack": "4,1,128,110",
-    "method": "Template matching",
-    "threshold": 0.8,
-    "description": "蓝色的返回"
-  },
-  {
     "itemName": "filter",
     "imageName": "res_filter.png",
     "roiFront": "1116,33,35,31",

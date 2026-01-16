@@ -539,6 +539,28 @@ class GeneralBattle(GeneralBuff, GeneralBattleAssets):
             if self.appear_then_click(self.I_BUFF, interval=1):
                 continue
 
+    def boss_mark(self, enable=True) -> bool:
+        if not enable or self._boss_mark_flag:
+            return False
+        if self.ocr_appear(self.O_BOSS_MARK):
+            self.screenshot()
+            if self.ocr_appear(self.O_BOSS_MARK):
+                self._boss_mark_flag = True
+                logger.info('Boss marked')
+                self.device.stuck_record_add('BATTLE_STATUS_S')
+                return True
+        if self.device.click_record.count(str(self.O_BOSS_MARK)) >= 3:
+            self._boss_mark_flag = True
+            logger.info('Boss mark skipped due to maybe no boss')
+            self.device.stuck_record_add('BATTLE_STATUS_S')
+            return False
+        if self.click(self.O_BOSS_MARK, interval=1.8):
+            return False
+        return False
+
+    def boss_mark_reset(self):
+        self._boss_mark_flag = False
+
 
 if __name__ == '__main__':
     from module.config.config import Config

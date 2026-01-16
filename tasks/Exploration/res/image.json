@@ -95,7 +95,7 @@
     "roiFront": "37,692,53,26",
     "roiBack": "37,692,53,26",
     "method": "Template matching",
-    "threshold": 0.8,
+    "threshold": 0.65,
     "description": "设置按钮"
   },
   {

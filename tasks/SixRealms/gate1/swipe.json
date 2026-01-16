@@ -1,0 +1,9 @@
+[
+  {
+    "itemName": "team_swipe_up",
+    "roiFront": "520,571,93,98",
+    "roiBack": "589,180,100,100",
+    "mode": "default",
+    "description": "征伐队伍选择界面底部阵容上拉"
+  }
+]

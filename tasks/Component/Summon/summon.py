@@ -143,7 +143,7 @@ class Summon(BaseTask, SummonAssets):
             self.screenshot()
             if self.appear(self.I_BLUE_TICKET):
                 break
-            if self.appear_then_click(self.I_UI_BACK_BLUE):
+            if self.appear_then_click(self.I_UI_BACK_YELLOW):
                 continue
             if self.appear_then_click(self.I_UI_BACK_YELLOW):
                 continue

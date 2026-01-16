@@ -100,7 +100,7 @@ class ScriptTask(RightActivity, GeneralBattle, SwitchSoul, Star56):
         if self.config.meta_demon.meta_demon_config.meta_crafting_card:
             self.crafting()
 
-        boss_timer = Timer(180)
+        boss_timer = Timer(50)
         boss_timer.start()
         first_battle_for_easy_boss = True
         while 1:
@@ -133,7 +133,7 @@ class ScriptTask(RightActivity, GeneralBattle, SwitchSoul, Star56):
                     is_hard_boss = True
             # 是否喝茶 疲劳满了就不打了
             current_exhaustion = self.current_exhaustion()
-            if current_exhaustion > 99:
+            if current_exhaustion > 100:
                 if self.config.meta_demon.meta_demon_config.auto_tea:
                     logger.info('Exhaustion is full, buy tea')
                     boss_timer.reset()
@@ -274,6 +274,7 @@ class ScriptTask(RightActivity, GeneralBattle, SwitchSoul, Star56):
         self.device.stuck_record_add('BATTLE_STATUS_S')
         self.device.click_record_clear()
         logger.info("Start battle process")
+        self.boss_mark_reset()
         while 1:
             self.screenshot()
             # if self.appear_then_click(self.I_WIN, interval=1):
@@ -287,6 +288,8 @@ class ScriptTask(RightActivity, GeneralBattle, SwitchSoul, Star56):
                 logger.warning('False battle')
                 self.ui_click_until_disappear(self.I_MD_BATTLE_FAILURE)
                 return False
+            if self.boss_mark():
+                continue
 
 
 if __name__ == '__main__':

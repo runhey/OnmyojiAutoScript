@@ -6,18 +6,17 @@ from fastapi import APIRouter, HTTPException
 from fastapi.responses import StreamingResponse
 from fastapi import WebSocket, WebSocketDisconnect
 from datetime import datetime
-from module.config.config import Config
 from module.config.utils import convert_to_underscore
 
 from module.logger import logger
-from module.server.main_manager import MainManager
+from module.server.main_manager import mm
 from module.server.script_process import ScriptProcess, ScriptState
 
 from tasks.Component.config_base import TimeDelta
 
 
 script_app = APIRouter()
-mm = MainManager()
+
 
 @script_app.get('/test')
 async def script_test():

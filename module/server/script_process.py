@@ -2,13 +2,16 @@
 # @author runhey
 # 脚本进程
 # github https://github.com/runhey
+import sys, os
+import signal
 import multiprocessing
 from asyncio import QueueEmpty, CancelledError, sleep
 from enum import Enum
 
 from module.logger import logger
-
+from module.server.config_manager import ConfigManager
 from module.server.script_websocket import ScriptWSManager
+
 
 class ScriptState(int, Enum):
     INACTIVE = 0
@@ -16,18 +19,18 @@ class ScriptState(int, Enum):
     WARNING = 2
     UPDATING = 3
 
+
 class ScriptProcess(ScriptWSManager):
 
     def __init__(self, config_name: str) -> None:
         super().__init__()
+        if config_name not in ConfigManager.all_script_files():
+            raise FileNotFoundError(f'{config_name}.json not found')
         self.config_name = config_name  # config_name
         self.log_pipe_out, self.log_pipe_in = multiprocessing.Pipe(False)
         self.state_queue = multiprocessing.Queue()
         self.state: ScriptState = ScriptState.INACTIVE
         self._process = None
-
-
-
 
     async def start(self):
         self.state = ScriptState.RUNNING
@@ -40,9 +43,9 @@ class ScriptProcess(ScriptWSManager):
         self._process = multiprocessing.Process(target=func,
                                                 args=(self.config_name, self.state_queue, self.log_pipe_in,),
                                                 name=self.config_name,
-                                                daemon=True)
+                                                daemon=True
+                                                )
         self._process.start()
-
 
     async def stop(self):
         self.state = ScriptState.INACTIVE
@@ -54,6 +57,10 @@ class ScriptProcess(ScriptWSManager):
             logger.warning(f'Script {self.config_name} is not running')
             return
         self._process.terminate()
+        self._process.join(timeout=0.7)
+        if self._process.is_alive():
+            logger.error(f'Script {self.config_name} subprocess terminate failed')
+            self._process.kill()
         self._process = None
 
     async def coroutine_broadcast_state(self):
@@ -114,6 +121,14 @@ class ScriptProcess(ScriptWSManager):
 
 
 def func(config: str, state_queue: multiprocessing.Queue, log_pipe_in) -> None:
+    def signal_handler(signum, frame):
+        logger.info(f'Script {config} received signal {signum}, exiting gracefully')
+        log_pipe_in.close()
+        state_queue.close()
+        sys.exit(0)
+
+    signal.signal(signal.SIGTERM, signal_handler)
+    signal.signal(signal.SIGINT, signal_handler)
 
     def start_log() -> None:
         try:

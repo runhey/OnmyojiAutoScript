@@ -20,7 +20,7 @@
   {
     "itemName": "mall_sccales",
     "imageName": "navbar_mall_sccales.png",
-    "roiFront": "470,649,68,49",
+    "roiFront": "470,647,68,37",
     "roiBack": "427,621,147,92",
     "method": "Template matching",
     "threshold": 0.8,
@@ -50,7 +50,7 @@
     "roiFront": "1194,421,69,74",
     "roiBack": "1194,421,69,74",
     "method": "Template matching",
-    "threshold": 0.8,
+    "threshold": 0.7,
     "description": "契灵商店"
   },
   {
@@ -77,7 +77,7 @@
     "roiFront": "880,646,53,54",
     "roiBack": "834,621,116,90",
     "method": "Template matching",
-    "threshold": 0.8,
+    "threshold": 0.65,
     "description": "杂货铺"
   },
   {

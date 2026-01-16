@@ -29,11 +29,11 @@
   {
     "itemName": "pet_feast",
     "imageName": "pet_pet_feast.png",
-    "roiFront": "747,619,69,61",
-    "roiBack": "747,619,69,61",
+    "roiFront": "849,624,69,49",
+    "roiBack": "849,624,69,49",
     "method": "Template matching",
     "threshold": 0.8,
-    "description": "大餐"
+    "description": "快速喂养"
   },
   {
     "itemName": "pet_play",
@@ -47,11 +47,11 @@
   {
     "itemName": "pet_feed",
     "imageName": "pet_pet_feed.png",
-    "roiFront": "798,497,77,81",
-    "roiBack": "798,497,77,81",
+    "roiFront": "899,511,79,68",
+    "roiBack": "884,485,127,123",
     "method": "Template matching",
     "threshold": 0.8,
-    "description": "投喂"
+    "description": "喂食"
   },
   {
     "itemName": "pet_skip",

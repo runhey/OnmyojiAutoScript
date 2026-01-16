@@ -11,6 +11,7 @@ from PIL import Image
 from module.base.decorator import cached_property
 from module.base.timer import Timer
 from module.base.utils import get_color, image_size, limit_in, save_image
+from module.device.env import IS_WINDOWS
 from module.device.method.adb import Adb
 from module.device.method.windows import Window
 from module.device.method.droidcast import DroidCast
@@ -43,7 +44,7 @@ class Screenshot(Adb, DroidCast, Scrcpy, Window, NemuIpc):
             'DroidCast': self.screenshot_droidcast,
             'DroidCast_raw': self.screenshot_droidcast_raw,
             'scrcpy': self.screenshot_scrcpy,
-            'window_background': self.screenshot_window_background,
+            'window_background': self.screenshot_window_background if IS_WINDOWS else None,
             'nemu_ipc': self.screenshot_nemu_ipc
         }
 

@@ -38,8 +38,8 @@
   {
     "itemName": "d_auto_entry",
     "imageName": "duel_d_auto_entry.png",
-    "roiFront": "42,133,66,62",
-    "roiBack": "20,119,115,111",
+    "roiFront": "21,116,66,62",
+    "roiBack": "2,95,115,111",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "自动上阵"
@@ -47,8 +47,8 @@
   {
     "itemName": "d_help",
     "imageName": "duel_d_help.png",
-    "roiFront": "719,434,32,30",
-    "roiBack": "708,397,49,78",
+    "roiFront": "784,502,32,30",
+    "roiBack": "774,489,49,55",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "主界面的感叹号"
@@ -61,6 +61,15 @@
     "method": "Template matching",
     "threshold": 0.8,
     "description": "准备"
+  },
+    {
+    "itemName": "d_prepare_done",
+    "imageName": "duel_d_prepare_done.png",
+    "roiFront": "495,82,75,55",
+    "roiBack": "495,82,75,55",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "准备完毕 "
   },
   {
     "itemName": "d_battle_data",
@@ -163,7 +172,7 @@
   },
   {
     "itemName": "duel_exit",
-    "imageName": "gb_exit.png",
+    "imageName": "duel_duel_exit.png",
     "roiFront": "14,12,43,41",
     "roiBack": "14,12,43,41",
     "method": "Template matching",

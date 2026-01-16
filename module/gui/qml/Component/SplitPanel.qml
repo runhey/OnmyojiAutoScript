@@ -37,6 +37,9 @@ Item {
         anchors.bottomMargin: 12
 
         onLoaded: {
+            if (!contentDefalut.item)
+                return
+
             if(typeof contentDefalut.item.splitPanel === "undefined"){
                 return
             }
@@ -113,6 +116,10 @@ Item {
 //    }
     //设置右边显示的参数项，输入的序列的字符串
     function setLoaderData(args, value){
+        if (!contentLoader.item) {
+            console.log("SplitPanel: contentLoader.item is null in setLoaderData")
+            return
+        }
         contentLoader.item.argsData = args
         contentLoader.item.valueData = value
         contentLoader.item.updataData()
@@ -120,12 +127,20 @@ Item {
 
     //设置上下文
     function setLoaderContext(configName, taskName){
+        if (!contentLoader.item) {
+            console.log("SplitPanel: contentLoader.item is null in setLoaderContext")
+            return
+        }
         contentLoader.item.configName = configName
         contentLoader.item.taskName = taskName
     }
 
     //设置配置的名称
     function setDefalutConfig(name){
+        if (!contentDefalut.item) {
+            console.log("SplitPanel: contentDefalut.item is null in setDefalutConfig")
+            return
+        }
         contentDefalut.item.configName = name
     }
 

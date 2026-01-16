@@ -92,7 +92,7 @@ class ExplorationAssets:
 	# 确定按钮 
 	I_E_SURE_BUTTON = RuleImage(roi_front=(1131,425,43,37), roi_back=(1077,367,165,152), threshold=0.65, method="Template matching", file="./tasks/Exploration/res/res_e_sure_button.png")
 	# 设置按钮 
-	I_E_SETTINGS_BUTTON = RuleImage(roi_front=(37,692,53,26), roi_back=(37,692,53,26), threshold=0.8, method="Template matching", file="./tasks/Exploration/res/res_e_settings_button.png")
+	I_E_SETTINGS_BUTTON = RuleImage(roi_front=(37,692,53,26), roi_back=(37,692,53,26), threshold=0.65, method="Template matching", file="./tasks/Exploration/res/res_e_settings_button.png")
 	# 普通怪 
 	I_NORMAL_BATTLE_BUTTON = RuleImage(roi_front=(636,263,42,39), roi_back=(0,0,1279,719), threshold=0.8, method="Template matching", file="./tasks/Exploration/res/res_normal_battle_button.png")
 	# boss 

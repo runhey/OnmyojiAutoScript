@@ -29,8 +29,8 @@
   {
     "itemName": "fs_white_check",
     "imageName": "friendship_points_fs_white_check.png",
-    "roiFront": "589,227,100,100",
-    "roiBack": "589,227,100,100",
+    "roiFront": "591,228,100,100",
+    "roiBack": "534,181,201,183",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "白蛋确认"

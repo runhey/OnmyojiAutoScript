@@ -440,6 +440,8 @@ class ScriptTask(WQExplore, SecretScriptTask, WantedQuestsAssets):
                 continue
             if self.appear_then_click(self.I_UI_BACK_BLUE, interval=1.5):
                 continue
+            if self.appear_then_click(self.I_UI_BACK_YELLOW, interval=1.5):
+                continue
         logger.info('Secret mission finished')
 
     def invite_random(self, add_button: RuleImage):
@@ -724,7 +726,7 @@ class ScriptTask(WQExplore, SecretScriptTask, WantedQuestsAssets):
                     total = total % 10
                 if cu > total:
                     logger.warning('Current number of wanted quests is greater than total number')
-                    cu = cu % 10
+                    cu = cu // 10
                 if cu == total:
                     # 该任务已完成，一般是悬赏任务，邀请人没有做导致的
                     continue

@@ -2,7 +2,7 @@
   {
     "itemName": "right_enter",
     "imageName": "md_right_enter.png",
-    "roiFront": "1183,314,46,42",
+    "roiFront": "1183,314,46,34",
     "roiBack": "1150,131,100,360",
     "method": "Template matching",
     "threshold": 0.75,

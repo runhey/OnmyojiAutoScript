@@ -31,6 +31,7 @@ class MoonSeaL101(MoonSeaSkills):
         self.cnt_skill101 += 1
         logger.info(f'Skill 101 level: {self.cnt_skill101}')
         logger.info('Buy skill 101 done')
+        self.wait_animate_stable(self.O_COIN_NUM, timeout=2)
         return True
 
     def refresh_store(self) -> bool:

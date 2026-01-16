@@ -1,12 +1,12 @@
 [
   {
     "itemName": "pet_feed_ap",
-    "roiFront": "730,527,57,33",
-    "roiBack": "730,527,57,33",
+    "roiFront": "817,538,57,33",
+    "roiBack": "817,538,57,33",
     "mode": "Digit",
     "method": "Default",
     "keyword": "",
-    "description": "投喂的体力"
+    "description": "喂食的体力"
   },
   {
     "itemName": "pet_play_gold",

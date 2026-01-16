@@ -104,6 +104,7 @@ class MallNavbar(GameUi, RichManAssets):
             4: self.O_MALL_RESOURCE_4,
             5: self.O_MALL_RESOURCE_5,
             6: self.O_MALL_RESOURCE_6,
+            7: self.O_MALL_RESOURCE_7,
         }
         self.screenshot()
         result = match[index].ocr(self.device.image)
@@ -117,6 +118,35 @@ class MallNavbar(GameUi, RichManAssets):
 
     def mall_check_money(self, index: int, least: int) -> bool:
         return self.mall_resource(index) >= least
+    
+    #add legacy check money method for compatibility, for consignment task
+    def mall_check_money_legacy(self, index: int, least: int) -> bool:
+        """
+        Legacy implementation.
+        旧版商城资源判断逻辑（包含资源获取 + 校验）用于插画屋和寄售屋任务
+        :param index: 从左开始数 1-4 对应第1-4个资源 least 最少多少
+        :return: bool
+        """
+
+        match = {
+            1: self.O_LEGACY_MALL_RESOURCE_1,
+            2: self.O_LEGACY_MALL_RESOURCE_2,
+            3: self.O_LEGACY_MALL_RESOURCE_3,
+            4: self.O_LEGACY_MALL_RESOURCE_4,
+        }
+
+        self.screenshot()
+        result = match[index].ocr(self.device.image)
+
+        if not isinstance(result, int):
+            logger.warning(f'Get mall resource {index} error, result: {result}')
+            return False
+
+        if result == 0:
+            logger.warning(f'Get mall resource {index} error, result: {result}')
+            return False
+
+        return result >= least
 
 if __name__ == '__main__':
     from module.config.config import Config

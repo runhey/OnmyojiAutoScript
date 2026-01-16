@@ -100,9 +100,9 @@ class Agent:
                 case _ if CI.MIN_SR <= _class <= CI.MAX_SR: weight = weights[2]
                 case _ if CI.MIN_SSR <= _class <= CI.MAX_SSR: weight = 1.5 * weights[1]
                 case _ if CI.MIN_SP <= _class <= CI.MAX_SP: weight = 1.5 * weights[0]
-                case CI.BUFF_005:  # freeze
-                    weight = -1.
-                    _cy += 100
+                # case CI.BUFF_005:  # freeze
+                #     weight = -1.
+                #     _cy += 100
                 case _: continue
             for priority in priorities:  # 我的代码在你之上
                 if priority == _class:
@@ -126,7 +126,7 @@ class Agent:
                 max_variance = variance
         return Focus(inputs=tracks[max_index])
 
-    def decision(self, tracks: list[tuple], state: list) -> list:
+    def decision(self, tracks: list[tuple], state: list, freeze: bool = False) -> list:
         not_decision = [-1, -1, False, -1]
         if not tracks:
             return not_decision
@@ -136,7 +136,7 @@ class Agent:
         self.check_observe(tracks=tracks)
         if self.focus is None:
             return not_decision
-        result = self.focus.decision(tracks=tracks, strategy=self.strategy, state=[delta_time] + state)
+        result = self.focus.decision(tracks=tracks, strategy=self.strategy, state=[delta_time] + state, freeze=freeze)
         if result[2]:
             self.last_throw_time = new_time
             self.dbg_throw += 1

@@ -76,7 +76,7 @@ class Scales(Buy, MallNavbar):
                     self.screenshot()
                     if not self.appear(self.I_SCA_SIX_STAR):
                         break
-                    if self.click(self.C_SCA_SOULS_GET, interval=1):
+                    if self.click(self.C_SCA_SOULS_BACK, interval=1):
                         continue
                 # 收获购买的东西
                 logger.info('Scales get success')

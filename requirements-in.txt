@@ -17,7 +17,7 @@ cn2an==0.5.23
 # Web
 paho-mqtt==1.6.1
 fastapi==0.104.1
-uvicorn==0.23.2
+uvicorn==0.38.0
 websockets==11.0.3
 zerorpc==0.6.3
 pydantic==2.10.0

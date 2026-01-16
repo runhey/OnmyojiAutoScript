@@ -104,6 +104,9 @@ class MoonSea(MoonSeaMap, MoonSeaL101, MoonSeaL102, MoonSeaL103, MoonSeaL104, Mo
             self.screenshot()
             if self.in_main():
                 break
+            if self.appear(self.I_SELECT_SHIKIGAMI_AND_CONFIRM):
+                self.select_shikigami_and_confirm()
+                continue
             if self.appear_then_click(self.I_MCONINUE, interval=1):
                 continue
 
@@ -149,6 +152,10 @@ class MoonSea(MoonSeaMap, MoonSeaL101, MoonSeaL102, MoonSeaL103, MoonSeaL104, Mo
                 continue
             if self.appear_then_click(self.I_MCONINUE, interval=3):
                 continue
+        # Hook: select one shikigami and confirm before starting
+        if self.appear(self.I_SELECT_SHIKIGAMI_AND_CONFIRM):
+            self.select_shikigami_and_confirm()
+
         logger.info("Start Roguelike")
         while 1:
             self.screenshot()
@@ -221,6 +228,16 @@ class MoonSea(MoonSeaMap, MoonSeaL101, MoonSeaL102, MoonSeaL103, MoonSeaL104, Mo
         if self.wait_until_appear(self.I_BOSS_SHUTU, wait_time=20):
             self.ui_click(self.I_BOSS_SHUTU, stop=self.I_MSTART)
         return True
+
+    def select_shikigami_and_confirm(self):
+        """Select shikigami and confirm to start battle."""
+        while True:
+            self.screenshot()
+            if not self.appear(self.I_SELECT_SHIKIGAMI_AND_CONFIRM):
+                break
+            self.swipe(self.S_TEAM_SWIPE_UP)
+            self.appear_then_click(self.I_MSTART_CONFIRM, interval=2)
+            self.appear_then_click(self.I_COIN2, interval=2)
 
 
 if __name__ == '__main__':

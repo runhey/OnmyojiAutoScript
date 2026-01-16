@@ -1,0 +1,65 @@
+on:
+  schedule:
+    - cron: "0 4 * * *" # 北京时间中午12点 (UTC+8) = UTC 04:00
+    - cron: "0 10 * * *" # 下午六点
+    - cron: "0 17 * * *" # 凌晨一点
+  push:
+    branches:
+      - master
+name: GitHub-Mirrors
+
+jobs:
+  run:
+    name: Run
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get repo and time
+        id: info
+        uses: actions/github-script@v3.1
+        with:
+          result-encoding: string
+          script: |
+            core.setOutput('time', new Date(Date.now()).toISOString().replace(/[^0-9]/g, ""));
+            core.setOutput('key', `${context.repo.owner}-${context.repo.repo}`);
+            return context.repo.repo;
+
+      - name: Cache src repos
+        uses: actions/cache@v4
+        id: cache
+        with:
+          path: ${{ github.workspace }}/hub-mirror-cache
+          key: ${{ runner.os }}-${{ steps.info.outputs.key }}-cache-${{ steps.info.outputs.time }}
+          restore-keys: ${{ runner.os }}-${{ steps.info.outputs.key }}-cache-
+
+      - name: Mirror the GitHub repos to Gitee with cache
+        uses: Yikun/hub-mirror-action@master
+        with:
+          src: github/runhey
+          dst: gitee/runheng
+          dst_key: ${{ secrets.GITEE_PRIVATE_KEY }} # 复用公钥
+          dst_token: ${{ secrets.GITEE_TOKEN }}
+          clone_style: ssh
+          static_list: "${{ steps.info.outputs.result }}"
+          cache_path: /github/workspace/hub-mirror-cache
+          account_type: user
+          force_update: true
+          white_list: "${{ steps.info.outputs.result }}"
+
+      - name: Mirror the GitHub repos to GitCode with cache
+        uses: Yikun/hub-mirror-action@master
+        with:
+          src: github/runhey
+          dst: gitcode/OnmyojiAutoScript
+          dst_key: ${{ secrets.GITEE_PRIVATE_KEY }} # 复用公钥
+          dst_token: ${{ secrets.GITCODE_TOKEN }}
+          clone_style: ssh
+          static_list: "${{ steps.info.outputs.result }}"
+          cache_path: /github/workspace/hub-mirror-cache
+          src_account_type: user
+          dst_account_type: org
+          force_update: true
+          white_list: "${{ steps.info.outputs.result }}"
+
+      - name: Print cache path
+        run: |
+          ls -la ${{ github.workspace }}/hub-mirror-cache

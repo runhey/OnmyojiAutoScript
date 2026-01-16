@@ -1,0 +1,83 @@
+[
+  {
+    "itemName": "shi",
+    "imageName": "as_shi.png",
+    "roiFront": "1184,300,47,29",
+    "roiBack": "1164,134,83,393",
+    "method": "Template matching",
+    "threshold": 0.7,
+    "description": "进入活动"
+  },
+  {
+    "itemName": "back_green",
+    "imageName": "as_back_green.png",
+    "roiFront": "27,19,34,38",
+    "roiBack": "2,1,170,75",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "左上角返回"
+  },
+  {
+    "itemName": "skip_button",
+    "imageName": "as_skip_button.png",
+    "roiFront": "1159,37,51,22",
+    "roiBack": "1141,27,86,43",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "右上跳过按钮"
+  },
+  {
+    "itemName": "red_exit",
+    "imageName": "as_red_exit.png",
+    "roiFront": "1162,96,39,38",
+    "roiBack": "1120,49,110,135",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "红色退出"
+  },
+  {
+    "itemName": "to_battle_main",
+    "imageName": "as_to_battle_main.png",
+    "roiFront": "478,340,39,176",
+    "roiBack": "449,297,100,241",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "进入主要的战斗界面"
+  },
+  {
+    "itemName": "to_battle_boss",
+    "imageName": "as_to_battle_boss.png",
+    "roiFront": "931,217,37,173",
+    "roiBack": "909,198,100,219",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "点击进入boss战斗页面"
+  },
+  {
+    "itemName": "check_battle_main",
+    "imageName": "as_check_battle_main.png",
+    "roiFront": "45,629,63,61",
+    "roiBack": "24,602,264,100",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "check_battle_boss",
+    "imageName": "as_check_battle_boss.png",
+    "roiFront": "0,0,100,100",
+    "roiBack": "0,0,100,100",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "battle_main_to_records",
+    "imageName": "as_battle_main_to_records.png",
+    "roiFront": "1017,572,39,42",
+    "roiBack": "976,539,146,100",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "从main进入到式神录"
+  }
+]

@@ -61,8 +61,6 @@ class AreaBossAssets:
 	I_EXPLORE = RuleImage(roi_front=(758,122,66,77), roi_back=(339,104,836,120), threshold=0.8, method="Template matching", file="./tasks/AreaBoss/res/res_explore.png")
 	# 地狱鬼王图标 
 	I_AREA_BOSS = RuleImage(roi_front=(639,636,65,68), roi_back=(606,619,145,100), threshold=0.8, method="Template matching", file="./tasks/AreaBoss/res/res_area_boss.png")
-	# 蓝色的返回 
-	I_BACK_BLUE = RuleImage(roi_front=(51,30,51,52), roi_back=(4,1,128,110), threshold=0.8, method="Template matching", file="./tasks/AreaBoss/res/res_back_blue.png")
 	# 右上边选中鬼王的 
 	I_FILTER = RuleImage(roi_front=(1116,33,35,31), roi_back=(1076,19,98,78), threshold=0.8, method="Template matching", file="./tasks/AreaBoss/res/res_filter.png")
 	# 除悬赏外 选中第一个鬼王的 

@@ -1,8 +1,8 @@
 [
   {
     "itemName": "mall_resource_1",
-    "roiFront": "144,7,100,43",
-    "roiBack": "144,7,100,43",
+    "roiFront": "261,8,100,43",
+    "roiBack": "261,8,100,43",
     "mode": "Quantity",
     "method": "Default",
     "keyword": "",
@@ -10,8 +10,8 @@
   },
   {
     "itemName": "mall_resource_2",
-    "roiFront": "326,8,124,39",
-    "roiBack": "326,8,124,39",
+    "roiFront": "415,8,124,39",
+    "roiBack": "415,8,124,39",
     "mode": "Quantity",
     "method": "Default",
     "keyword": "",
@@ -19,30 +19,30 @@
   },
   {
     "itemName": "mall_resource_3",
-    "roiFront": "533,9,107,38",
-    "roiBack": "533,9,107,38",
+    "roiFront": "596,10,107,38",
+    "roiBack": "596,10,107,38",
     "mode": "Quantity",
     "method": "Default",
     "keyword": "",
-    "description": "左数第二个"
+    "description": "左数第三个"
   },
   {
     "itemName": "mall_resource_4",
-    "roiFront": "739,8,100,39",
-    "roiBack": "739,8,100,39",
+    "roiFront": "783,9,100,39",
+    "roiBack": "783,9,100,39",
     "mode": "Quantity",
     "method": "Default",
     "keyword": "",
-    "description": "左数第二个"
+    "description": "左数第四个"
   },
   {
     "itemName": "mall_resource_5",
-    "roiFront": "935,11,100,37",
-    "roiBack": "935,11,100,37",
+    "roiFront": "958,9,100,37",
+    "roiBack": "958,9,100,37",
     "mode": "Quantity",
     "method": "Default",
     "keyword": "",
-    "description": "左数第二个"
+    "description": "左数第五个"
   },
   {
     "itemName": "mall_resource_6",
@@ -51,6 +51,15 @@
     "mode": "Quantity",
     "method": "Default",
     "keyword": "",
-    "description": "左数第二个"
+    "description": "左数第六个"
+  },
+  {
+    "itemName": "mall_resource_7",
+    "roiFront": "1100,54,150,38",
+    "roiBack": "1100,54,150,38",
+    "mode": "Quantity",
+    "method": "Default",
+    "keyword": "",
+    "description": "左数第二排第一个"
   }
 ]

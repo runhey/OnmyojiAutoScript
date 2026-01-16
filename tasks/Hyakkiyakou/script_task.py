@@ -13,7 +13,7 @@ from cached_property import cached_property
 # Use cmd to install: ./toolkit/python.exe -m pip install -i https://pypi.org/simple/ oashya --trusted-host pypi.org
 # update oashya:  ./toolkit/python.exe -m pip install --upgrade oashya
 from oashya.tracker import Tracker
-from oashya.labels import label2id
+from oashya.labels import label2id, CLASSINDEX as CI, id2name
 from oashya.utils import draw_tracks
 
 from module.exception import TaskEnd
@@ -63,9 +63,9 @@ class ScriptTask(GameUi, HyaSlave, SwitchOnmyoji):
             raise RequestHumanTakeover('iou_threshold should be in [0.2, 1]')
         inf_en = 'onnxruntime' if hyakkiyakou_models.inference_engine == InferenceEngine.ONNXRUNTIME else 'tensorrt'
         precision = 'fp32' if hyakkiyakou_models.model_precision == ModelPrecision.FP32 else 'int8'
-        # 这个坑后面在补
+        # 这个坑后面再补
         if inf_en == 'tensorrt' or precision == 'int8':
-            raise RequestHumanTakeover('Only support onnxruntime')
+            raise RequestHumanTakeover('Only support onnxruntime and FP32 now')
         debug_info: bool = self._config.debug_config.hya_info
         args = {
             'conf_threshold': conf,
@@ -151,6 +151,91 @@ class ScriptTask(GameUi, HyaSlave, SwitchOnmyoji):
         self.set_next_run(task='Hyakkiyakou', success=True, finish=False)
         raise TaskEnd
 
+    # ------------ 新增三个函数：用于检测 ------------
+    def _rarity_score(self, class_id: int) -> int:
+        """
+        返回一个用于比较的稀有度分数：
+        SP > SSR > SR > R > N > G
+        没有匹配到的返回 -1
+        """
+        # G（呱太）
+        if CI.MIN_G <= class_id <= CI.MAX_G:
+            return 0
+        # N
+        if CI.MIN_N <= class_id <= CI.MAX_N:
+            return 1
+        # R（排除童男/童女）
+        if (CI.MIN_R <= class_id <= CI.MAX_R) and class_id not in (CI.R_007, CI.R_008):
+            return 2
+        # SR
+        if CI.MIN_SR <= class_id <= CI.MAX_SR:
+            return 3
+        # SSR
+        if CI.MIN_SSR <= class_id <= CI.MAX_SSR:
+            return 4
+        # SP
+        if CI.MIN_SP <= class_id <= CI.MAX_SP:
+            return 5
+        # 其他（buff/未收录 等）不参与排序
+        return -1
+
+    def _detect_current_rarity(self) -> tuple[int, int]:
+        """
+        在当前截图上跑一遍 tracker，返回：
+        (最高稀有度分数, 对应的 class_id)
+        如果没检测到式神，则返回 (-1, -1)
+        """
+        # 截一张当前图
+        self.screenshot()
+        # 这里 response 随便给一个默认值即可，主线战斗里是 last_action
+        tracks = self.tracker(image=self.device.image, response=[0, 0, False, 10])
+        best_score = -1
+        best_class = -1
+        for _id, _class, _conf, _cx, _cy, _w, _h, _v in tracks:
+            score = self._rarity_score(_class)
+            if score > best_score:
+                best_score = score
+                best_class = _class
+        if best_class != -1:
+            logger.info(
+                f'Hyakki select: detect {id2name(_class)} '
+                f'with rarity score {score}'
+            )
+        else:
+            logger.warning('Hyakki select: no valid shikigami detected on title screen')
+        return best_score, best_class
+
+    def _select_best_boss(self):
+        """
+        在鬼王选择界面依次点三个候选，识别稀有度，最终选择最高稀有度的那个。
+        要求：当前已经在 I_HTITLE 画面。
+        """
+        candidates = [self.C_HSELECT_1, self.C_HSELECT_2, self.C_HSELECT_3]
+        logger.info('Start selecting boss')
+        best_idx = 0
+        best_score = -1
+        scores = []
+
+        for idx, btn in enumerate(candidates):
+            # 点一下第 idx 个候选，让它成为当前选中的式神
+            self.click(btn, interval=0.1)
+            time.sleep(1)  # 给界面一点刷新时间
+            score, cls = self._detect_current_rarity()
+            scores.append(score)
+            if score > best_score:
+                best_score = score
+                best_idx = idx
+        
+        #所以如果三个都识别失败了会选第一个
+        logger.info(f'Hyakki select scores: {scores}, choose index {best_idx + 1}') 
+
+        # 记录一下，后面如果需要兜底再点一次可以用
+        self._best_boss_button = candidates[best_idx]
+
+        # 再点一次最高稀有度那个，确保它处于选中状态
+        self.click(self._best_boss_button, interval=0.1)
+        time.sleep(0.5)
+
     def one(self):
         self.reset_state()
         if not self.appear(self.I_HACCESS):
@@ -160,16 +245,18 @@ class ScriptTask(GameUi, HyaSlave, SwitchOnmyoji):
         # start
         self.ui_click(self.I_HACCESS, self.I_HSTART, interval=2)
         self.wait_until_appear(self.I_HTITLE)
-        # 随机选一个
-        click_button = choice([self.C_HSELECT_1, self.C_HSELECT_2, self.C_HSELECT_3])
+        # 这里改成：在三个候选中选择稀有度最高的作为鬼王
+        self._best_boss_button = None
+        self._select_best_boss()
         while 1:
             self.screenshot()
             if not self.appear(self.I_HTITLE):
                 break
             if self.appear_then_click(self.I_HSTART, interval=2):
                 continue
-            if not self.appear(self.I_HSELECTED):
-                self.click(click_button, interval=2)
+            if not self.appear(self.I_HSELECTED) and getattr(self, '_best_boss_button', None) is not None:
+                self.click(self._best_boss_button, interval=2) # 保险：如果因为某些原因还没处于“已选中”状态，就再点一次最佳按钮
+                continue
         self.device.stuck_record_add('BATTLE_STATUS_S')
         # 正式开始
         logger.hr('Start Hyakkiyakou')
@@ -188,15 +275,19 @@ class ScriptTask(GameUi, HyaSlave, SwitchOnmyoji):
                 init_bean_flag = True
                 self.bean_05to10()
                 time.sleep(0.5)
+            #修改：在这里不再区分freeze，而是将状态传到decision用于执行冻结策略
+            #目前被禁用了 因为冰冻状态下检测正确率约等于0 全是蝉冰雪女 =.=
             if not self.appear(self.I_HFREEZE):
-                # --------------------------------------------------------
+                # -------------------------------------------------------
+                freeze = self.appear(self.I_HFREEZE)
                 self.slave_state = self.update_state()
                 tracks = self.tracker(image=self.device.image, response=last_action)
-                last_action = self.agent.decision(tracks=tracks, state=self.slave_state)
+                last_action = self.agent.decision(tracks=tracks, state=self.slave_state, freeze=freeze)
                 self.do_action(last_action, state=self.slave_state)
             else:
                 # TODO freeze state
                 tracks = []
+
             # debug
             if self._config.debug_config.hya_show:
                 draw_image = draw_tracks(self.device.image, tracks=tracks)
@@ -210,8 +301,8 @@ class ScriptTask(GameUi, HyaSlave, SwitchOnmyoji):
         if self._config.debug_config.hya_show:
             self.debugger.show_stop()
         if self._config.debug_config.hya_save_result:
-            # 走个动画
-            time.sleep(1.5)
+            # 走个动画 - 修改了时间以保证能截到图
+            time.sleep(2)
             self.debugger.save_result(self.device.image)
         self.ui_click(self.I_HEND, self.I_HACCESS)
         self.debugger.save_images()

@@ -18,7 +18,7 @@ class ApMode(str, Enum):
 
 class GeneralClimb(ConfigBase):
     limit_time: Time = Field(default=Time(minute=30), description='限制爬塔运行总时间')
-    boss_limit_time: Time = Field(default=Time(minute=5), description='boss单局限制时间')
+    # boss_limit_time: Time = Field(default=Time(minute=5), description='boss单局限制时间')
     pass_limit: int = Field(default=50, description='门票爬塔的最大次数')
     ap_limit: int = Field(default=300, description='体力爬塔的最大次数')
     boss_limit: int = Field(default=20, description='boss战爬塔的最大次数')
