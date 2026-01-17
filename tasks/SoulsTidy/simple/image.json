@@ -138,9 +138,18 @@
     "itemName": "st_soul_overflow",
     "imageName": "simple_st_soul_overflow.png",
     "roiFront": "447,260,384,42",
-    "roiBack": "430,232,417,100",
+    "roiBack": "447,260,384,42",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "御魂溢出"
+  },
+  {
+    "itemName": "st_soul_stack",
+    "imageName": "simple_st_soul_stack.png",
+    "roiFront": "142,234,20,16",
+    "roiBack": "142,234,20,16",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "狗粮御魂的堆叠标识"
   }
 ]

@@ -306,6 +306,8 @@ class Handle:
             name = self.root_node.children[0].name
             if name == 'MuMuPlayer':
                 return EmulatorFamily.FAMILY_MUMU
+            elif name == 'MuMuNxDevice':
+                return EmulatorFamily.FAMILY_MUMU
             elif name == 'NemuPlayer':
                 return EmulatorFamily.FAMILY_MUMU
             elif name == 'TheRender':
@@ -347,6 +349,9 @@ class Handle:
                 return num
             elif name == 'NemuPlayer':
                 logger.info('The emulator is MuMu模拟器')
+                return num
+            elif name == 'MuMuNxDevice':
+                logger.info('The emulator is MuMu模拟器5.0')
                 return num
         # 夜神
         elif self.emulator_family == EmulatorFamily.FAMILY_NOX:
