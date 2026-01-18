@@ -211,14 +211,11 @@ class BaseExploration(GameUi, GeneralBattle, GeneralRoom, GeneralInvite, Replace
             if not self.appear(self.I_E_OPEN_SETTINGS):
                 logger.warning('Opening settings failed due to now in battle')
                 return
-
-        # 先点候补式神区域，再切换稀有度，避免点击失败
-        self.click(self.C_CLICK_STANDBY_TEAM)
-
         choose_rarity = self._config.exploration_config.choose_rarity
         rarity = ShikigamiClass.N if choose_rarity == ChooseRarity.N else ShikigamiClass.MATERIAL
         self.switch_shikigami_class(rarity)
 
+        self.click(self.C_CLICK_STANDBY_TEAM)
         # 移动至未候补的狗粮
         while 1:
             # 慢一点
@@ -231,11 +228,7 @@ class BaseExploration(GameUi, GeneralBattle, GeneralRoom, GeneralInvite, Replace
                 self.swipe(self.S_SWIPE_SHIKI_TO_LEFT)
             else:
                 break
-        operation_timeout = Timer(60)
-        operation_timeout.start()
         while 1:
-            if operation_timeout.reached():
-                raise GameStuckError('Adding shikigami timeout')
             # 候补出战数量识别
             self.screenshot()
             if not self.appear(self.I_E_OPEN_SETTINGS):
@@ -257,6 +250,8 @@ class BaseExploration(GameUi, GeneralBattle, GeneralRoom, GeneralInvite, Replace
     def search_up_fight(self, up_type: UpType = None):
         if up_type is None:
             up_type = self._config.exploration_config.up_type
+        
+        # 1. 如果选择了特定的 UP 类型 (比如达摩)
         if up_type != UpType.ALL:
             match up_type:
                 case UpType.EXP:
@@ -267,40 +262,63 @@ class BaseExploration(GameUi, GeneralBattle, GeneralRoom, GeneralInvite, Replace
                     find_flag = self.I_UP_DARUMA
                 case _:
                     find_flag = self.I_UP_EXP
-            appear = self.appear(find_flag)
-            if not appear:
-                return None
-            logger.info(f'Found up type: {up_type} at  {find_flag.roi_front}')
-            x, y, _, _ = find_flag.roi_front
-            x_center, y_center = find_flag.front_center()
-            roi_back_y = max(0, y - 300)
-            roi_back_h = y - 20 - roi_back_y
-            roi_back_x = max(0, x - 160)
-            roi_back_w = min(1280, x + 200) - roi_back_x
-            # self.I_NORMAL_BATTLE_BUTTON.roi_back = [roi_back_x, roi_back_y, roi_back_w, roi_back_h]
-            logger.info(f'It will search normal battle button at {roi_back_x, roi_back_y, roi_back_w, roi_back_h}')
-            matches = self.I_NORMAL_BATTLE_BUTTON.match_all(
-                image=self.device.image,
-                threshold=0.9,
-                roi=[roi_back_x, roi_back_y, roi_back_w, roi_back_h]
-            )
-            if not matches:
-                return None
-            distances = []
-            for match in matches:
-                x_match, y_match = match[1], match[2]
-                distance = np.linalg.norm(
-                    np.array([x_center, y_center]) - np.array([x_match, y_match])
+            
+            # 尝试寻找 UP 图标
+            if self.appear(find_flag):
+                # 获取 UP 图标的坐标和中心点
+                x, y, w, h = find_flag.roi_front
+                x_center, y_center = find_flag.front_center()
+                
+                logger.info(f'Found up type: {up_type} at {find_flag.roi_front}')
+
+                # 缩小搜索范围 (ROI)
+                # 原来左右各扩 160-200，太宽了容易甚至把隔壁怪算进来
+                # 现在改为左右各扩 50-80，强制只找垂直线附近的战斗图标
+                roi_back_y = max(0, y - 300)      # 向上找300像素
+                roi_back_h = y - 20 - roi_back_y  #直到UP图标上方20像素截止
+                
+                # 左右范围缩窄：防止误触旁边的怪
+                roi_back_x = max(0, x - 60)       
+                roi_back_w = min(1280, x + w + 60) - roi_back_x
+                
+                logger.info(f'Searching sword icon in narrowed area: {roi_back_x, roi_back_y, roi_back_w, roi_back_h}')
+                
+                matches = self.I_NORMAL_BATTLE_BUTTON.match_all(
+                    image=self.device.image,
+                    threshold=0.9,
+                    roi=[roi_back_x, roi_back_y, roi_back_w, roi_back_h]
                 )
-                distances.append((distance, match))
-            distances.sort(key=lambda x: x[0], reverse=False)
-            match = distances[0][1]
-            roi_front = list(match[1:])  # x,y,w,h
-            self.I_NORMAL_BATTLE_BUTTON.roi_front = roi_front
-            logger.info(f"Found normal battle button at {roi_front}")
-            return self.I_NORMAL_BATTLE_BUTTON
+                
+                if matches:
+                    distances = []
+                    for match in matches:
+                        # 这里假设 match[1], match[2] 是 x, y
+                        x_match = match[1] + match[3] / 2  # 战斗图标中心 X
+                        y_match = match[2] + match[4] / 2  # 战斗图标中心 Y
+                        
+                        # 这样能完美避开“距离很近但属于隔壁怪”的情况
+                        x_diff = abs(x_center - x_match)
+                        y_diff = abs(y_center - y_match)
+                        weighted_distance = (x_diff * 3) + y_diff
+                        
+                        distances.append((weighted_distance, match))
+                    
+                    # 按加权距离排序，取最正对着的一个
+                    distances.sort(key=lambda x: x[0], reverse=False)
+                    match = distances[0][1]
+                    
+                    roi_front = list(match[1:])  # x,y,w,h
+                    self.I_NORMAL_BATTLE_BUTTON.roi_front = roi_front
+                    logger.info(f"Target locked: sword at {roi_front} (aligned with UP icon)")
+                    return self.I_NORMAL_BATTLE_BUTTON
+            else:
+                # 没找到 UP 图标，返回 None 让外层逻辑去处理(滑动或退出)
+                return None
+
+        # 2. 如果是默认情况 (UpType.ALL)，则只要有怪就打
         if self.appear(self.I_NORMAL_BATTLE_BUTTON):
             return self.I_NORMAL_BATTLE_BUTTON
+            
         return None
 
     def activate_realm_raid(self, con_scrolls, con) -> None:
@@ -334,9 +352,9 @@ class BaseExploration(GameUi, GeneralBattle, GeneralRoom, GeneralInvite, Replace
         # 设置下次执行行时间
         logger.info("RealmRaid and Exploration  set_next_run !")
         next_run = datetime.now() + con_scrolls.scrolls_cd
-        self.set_next_run(task='Exploration', success=None, finish=False, target=next_run)
-        self.set_next_run(task='RealmRaid', success=None, finish=False, target=datetime.now())
-        self.set_next_run(task='MemoryScrolls', success=None, finish=False, target=datetime.now())
+        self.set_next_run(task='Exploration', success=False, finish=False, target=next_run)
+        self.set_next_run(task='RealmRaid', success=False, finish=False, target=datetime.now())
+        self.set_next_run(task='MemoryScrolls', success=False, finish=False, target=datetime.now())
         raise TaskEnd
 
     #
@@ -355,19 +373,32 @@ class BaseExploration(GameUi, GeneralBattle, GeneralRoom, GeneralInvite, Replace
         logger.info('Quit explore')
         boss_timer = Timer(15)
         boss_timer.start()
+        
         while 1:
             self.screenshot()
+            
             if self.appear(self.I_UI_BACK_RED) and self.appear(self.I_E_EXPLORATION_CLICK):
                 break
+  
+            # 防止BOSS打完箱子刚落地，脚本就手快点退出了
+            if self.appear_then_click(self.I_BATTLE_REWARD, interval=1.5):
+                logger.info("Found battle reward during exit, picking it up.")
+                boss_timer.reset()
+                continue
+
             if boss_timer.reached():
-                # https://github.com/runhey/OnmyojiAutoScript/issues/548
-                logger.warning('Exit immediately after the boss battle')
-                break
+                logger.warning('Exit timeout, force clicking back button')
+                boss_timer.reset()
+                self.click(self.I_UI_BACK_BLUE)
+                continue
+
             if self.appear_then_click(self.I_E_EXIT_CONFIRM, interval=0.8):
                 continue
-            if self.appear(self.I_EXPLORATION_TITLE) or self.appear(self.I_CHECK_EXPLORATION):
+            
+            if self.appear_then_click(self.I_BACK_YOLLOW, interval=3.5):
                 continue
-            if self.appear_then_click(self.I_UI_BACK_YELLOW, interval=3.5):
+            
+            if self.appear(self.I_EXPLORATION_TITLE) or self.appear(self.I_CHECK_EXPLORATION):
                 continue
 
     def fire(self, button) -> bool:
