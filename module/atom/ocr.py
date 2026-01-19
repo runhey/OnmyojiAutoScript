@@ -74,12 +74,13 @@ if __name__ == "__main__":
 
     I_SIDE_CHECK_SPECIAL = RuleImage(roi_front=(155,8,42,42), roi_back=(155,7,1115,90), threshold=0.7, method="Template matching", file="E:\Debug\\navbar_mall_sccales_check.png")
 
-    roi = I_SIDE_CHECK_SPECIAL.get_mall_resource_text_roi(image, threshold=0.7)
-    if roi is None:
-        print("failed")
-    else:
-        print("roi =", roi)
-        rule = RuleOcr(roi=roi,area=roi,mode="Quantity",method="Default",keyword="",name="mall_resource_1")
-        print(rule.ocr_quantity(image))
+    #roi = I_SIDE_CHECK_SPECIAL.get_mall_resource_text_roi(image, threshold=0.7)
 
+    rule = I_SIDE_CHECK_SPECIAL.build_mall_resource_ocr(
+        image,
+        threshold=0.7,
+        name="mall_resource_1"
+    )
+
+    print(rule.ocr_quantity(image))
 
