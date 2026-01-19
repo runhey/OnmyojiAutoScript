@@ -1,0 +1,47 @@
+[
+  {
+    "itemName": "mall_resource_ap",
+    "imageName": "navbar_mall_resource_ap.png",
+    "roiFront": "155,7,45,43",
+    "roiBack": "155,7,1115,90",
+    "method": "Default",
+    "threshold": 0.7,
+    "description": "体力"
+  },
+  {
+    "itemName": "mall_resource_honor",
+    "imageName": "navbar_mall_resource_honor.png",
+    "roiFront": "722,11,41,42",
+    "roiBack": "155,7,1115,90",
+    "method": "Default",
+    "threshold": 0.7,
+    "description": "荣誉"
+  },
+  {
+    "itemName": "mall_resource_friends",
+    "imageName": "navbar_mall_resource_friends.png",
+    "roiFront": "908,8,39,43",
+    "roiBack": "155,7,1115,90",
+    "method": "Default",
+    "threshold": 0.7,
+    "description": "友情点"
+  },
+  {
+    "itemName": "mall_resource_medal",
+    "imageName": "navbar_mall_resource_medal.png",
+    "roiFront": "535,9,40,44",
+    "roiBack": "155,7,1115,90",
+    "method": "Default",
+    "threshold": 0.7,
+    "description": "勋章"
+  },
+  {
+    "itemName": "mall_resource_charisma",
+    "imageName": "navbar_mall_resource_charisma.png",
+    "roiFront": "906,5,48,46",
+    "roiBack": "155,7,1115,90",
+    "method": "Default",
+    "threshold": 0.7,
+    "description": "魅力值"
+  }
+]
