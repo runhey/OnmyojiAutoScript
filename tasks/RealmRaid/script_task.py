@@ -181,7 +181,7 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, RealmRaidAssets):
                 else:
                     logger.info('No one can attack, break')
                     # 检查是否有“刷新确认”弹窗挡路
-                     if self.appear(self.I_FRESH_ENSURE):
+                    if self.appear(self.I_FRESH_ENSURE):
                         logger.info("Closing obstructing refresh dialog (Click Ensure)...")
                         # 点击“确定”来完成刷新（或者你可以改成点取消）
                         self.appear_then_click(self.I_FRESH_ENSURE, interval=2)
