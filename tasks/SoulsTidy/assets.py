@@ -49,7 +49,9 @@ class SoulsTidyAssets:
 	# 御魂奉纳后获得的金币 
 	I_ST_GOLD = RuleImage(roi_front=(170,100,950,500), roi_back=(170,100,950,500), threshold=0.9, method="Template matching", file="./tasks/SoulsTidy/simple/simple_st_gold.png")
 	# 御魂溢出 
-	I_ST_SOUL_OVERFLOW = RuleImage(roi_front=(447,260,384,42), roi_back=(430,232,417,100), threshold=0.8, method="Template matching", file="./tasks/SoulsTidy/simple/simple_st_soul_overflow.png")
+	I_ST_SOUL_OVERFLOW = RuleImage(roi_front=(447,260,384,42), roi_back=(447,260,384,42), threshold=0.8, method="Template matching", file="./tasks/SoulsTidy/simple/simple_st_soul_overflow.png")
+	# 狗粮御魂的堆叠标识 
+	I_ST_SOUL_STACK = RuleImage(roi_front=(142,234,20,16), roi_back=(142,234,20,16), threshold=0.8, method="Template matching", file="./tasks/SoulsTidy/simple/simple_st_soul_stack.png")
 
 
 	# Long Click Rule Assets
