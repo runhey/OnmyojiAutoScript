@@ -7,12 +7,13 @@ import numpy as np
 from numpy import float32, int32, uint8, fromfile
 from pathlib import Path
 
+from module.atom.RuleImageMallResourceMixin import RuleImageMallResourceMixin
 from module.base.decorator import cached_property
 from module.logger import logger
 from module.base.utils import is_approx_rectangle
 
 
-class RuleImage:
+class RuleImage(RuleImageMallResourceMixin):
     debug_mode: bool = False
 
     def __init__(self, roi_front: tuple, roi_back: tuple, method: str, threshold: float, file: str) -> None:
@@ -342,7 +343,6 @@ class RuleImage:
             if abs(average_color[i] - color[i]) > bias:
                 return False
         return True
-
 
 if __name__ == "__main__":
     from dev_tools.assets_test import detect_image

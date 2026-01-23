@@ -25,12 +25,12 @@ class Charisma(FriendshipPoints):
         # 黑色碎片
         if con.black_daruma_scrap:
             self.buy_mall_more(buy_button=self.I_CH_BLACK, remain_number=True,
-                               money_ocr=self.O_MALL_RESOURCE_5,
+                               money_ocr=self.I_MALL_RESOURCE_CHARISMA.build_mall_resource_ocr(self.device.image),
                                buy_number=2, buy_max=2, buy_money=320)
         # 蓝票
         if con.mystery_amulet:
             self.buy_mall_one(buy_button=self.I_CH_BLUE, buy_check=self.I_CH_CHECK_BLUE,
-                              money_ocr=self.O_MALL_RESOURCE_5, buy_money=400)
+                              money_ocr=self.I_MALL_RESOURCE_CHARISMA.build_mall_resource_ocr(self.device.image), buy_money=400)
 
 
 

@@ -124,20 +124,25 @@ class ScriptTask(GameUi, SoulsTidyAssets):
             logger.info('Sort by level')
             # 开始奉纳
             while 1:
-                self.wait_until_appear(self.I_ST_LEVEL_0, wait_time=2)
-                self.screenshot()
-                # 非+0的不弃置 双保险
-                if not self.appear(self.I_ST_LEVEL_0):
-                    logger.info("First Orichi isn't Level 0,quit")
-                    break
-                firvel = self.O_ST_FIRSET_LEVEL.ocr(self.device.image)
-                if firvel is None or firvel == '':
-                    logger.info('ocr result is Null')
-                    continue
-                if firvel != '古':
-                    # 问就是 把 +0 识别成了 古
-                    logger.info('No zero level, bongna done')
-                    break
+                if self.wait_until_appear(self.I_ST_SOUL_STACK, wait_time=2):
+                    # 方式1. 御魂堆叠奉纳
+                    logger.info('Soul stack')
+                else:
+                    # 方式2. 强化+0奉纳
+                    self.wait_until_appear(self.I_ST_LEVEL_0, wait_time=2)
+                    self.screenshot()
+                    # 非+0的不弃置 双保险
+                    if not self.appear(self.I_ST_LEVEL_0):
+                        logger.info("First Orichi isn't Level 0,quit")
+                        break
+                    firvel = self.O_ST_FIRSET_LEVEL.ocr(self.device.image)
+                    if firvel is None or firvel == '':
+                        logger.info('ocr result is Null')
+                        continue
+                    if firvel != '古':
+                        # 问就是 把 +0 识别成了 古
+                        logger.info('No zero level, bongna done')
+                        break
 
                 # !!!!!!  这里没有检查金币是否足够
                 # 长按
