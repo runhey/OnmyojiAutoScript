@@ -24,12 +24,12 @@ class FriendshipPoints(Special):
         # 购买
         if con.white_daruma:
             self.buy_mall_one(buy_button=self.I_FS_WHITE_CLICK, buy_check=self.I_FS_WHITE_CHECK,
-                              money_ocr=self.O_MALL_RESOURCE_5, buy_money=1000)
+                              money_ocr=self.I_MALL_RESOURCE_FRIENDS.build_mall_resource_ocr(self.device.image), buy_money=1000)
         if con.red_daruma != 0:
-            self.buy_mall_more(buy_button=self.I_FS_RED, remain_number=False, money_ocr=self.O_MALL_RESOURCE_5,
+            self.buy_mall_more(buy_button=self.I_FS_RED, remain_number=False, money_ocr=self.I_MALL_RESOURCE_FRIENDS.build_mall_resource_ocr(self.device.image),
                                buy_number=con.red_daruma, buy_max=99, buy_money=150)
         if con.broken_amulet != 0:
-            self.buy_mall_more(buy_button=self.I_FS_BROKEN, remain_number=False, money_ocr=self.O_MALL_RESOURCE_5,
+            self.buy_mall_more(buy_button=self.I_FS_BROKEN, remain_number=False, money_ocr=self.I_MALL_RESOURCE_FRIENDS.build_mall_resource_ocr(self.device.image),
                                buy_number=con.broken_amulet, buy_max=99, buy_money=100)
 
     def buy_mall_one(self, buy_button: RuleImage, buy_check: RuleImage, money_ocr: RuleOcr, buy_money: int):
@@ -129,7 +129,7 @@ if __name__ == '__main__':
     from module.config.config import Config
     from module.device.device import Device
 
-    c = Config('oas1')
+    c = Config('debug')
     d = Device(c)
     t = FriendshipPoints(c, d)
 

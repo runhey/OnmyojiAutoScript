@@ -41,21 +41,21 @@ class Medal(FriendshipPoints):
                               money_ocr=self.O_MALL_RESOURCE_3, buy_money=320)
         # 两颗白蛋
         if con.white_daruma:
-            self.buy_mall_more(buy_button=self.I_ME_WHITE, remain_number=True, money_ocr=self.O_MALL_RESOURCE_3,
+            self.buy_mall_more(buy_button=self.I_ME_WHITE, remain_number=True, money_ocr=self.I_MALL_RESOURCE_MEDAL.build_mall_resource_ocr(self.device.image),
                                buy_number=2, buy_max=2, buy_money=100)
         # 十张挑战券
         if con.challenge_pass:
-            self.buy_mall_more(buy_button=self.I_ME_CHALLENGE_PASS, remain_number=True, money_ocr=self.O_MALL_RESOURCE_3,
+            self.buy_mall_more(buy_button=self.I_ME_CHALLENGE_PASS, remain_number=True, money_ocr=self.I_MALL_RESOURCE_MEDAL.build_mall_resource_ocr(self.device.image),
                                buy_number=con.challenge_pass, buy_max=10, buy_money=30)
         # 红蛋
         if con.red_daruma:
             self.buy_mall_more(buy_button=self.I_ME_RED, remain_number=False,
-                               money_ocr=self.O_MALL_RESOURCE_3,
+                               money_ocr=self.I_MALL_RESOURCE_MEDAL.build_mall_resource_ocr(self.device.image),
                                buy_number=con.red_daruma, buy_max=99, buy_money=30)
         # 破碎的咒符
         if con.broken_amulet:
             self.buy_mall_more(buy_button=self.I_ME_BROKEN, remain_number=False,
-                               money_ocr=self.O_MALL_RESOURCE_3,
+                               money_ocr=self.I_MALL_RESOURCE_MEDAL.build_mall_resource_ocr(self.device.image),
                                buy_number=con.broken_amulet, buy_max=99, buy_money=20)
 
         time.sleep(1)
