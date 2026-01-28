@@ -180,10 +180,15 @@ class ScriptTask(GameUi, GeneralBattle, HeroTestAssets, SwitchSoul):
         }
         check_hero_img, switch_hero_img = switch_hero_dict[layer]
         while True:
-            if self.appear(check_hero_img, interval=1):
+            self.screenshot()
+            if self.appear_then_click(switch_hero_img, interval=1):
+                continue
+            appeared = self.appear(check_hero_img, interval=1)
+            if not appeared and self.appear(self.I_CHECK_HERO_TEST):
+                self.click(self.C_SWITCH_HERO_BTN, interval=1.5)
+                continue
+            if appeared:
                 break
-            self.ui_click(self.C_SWITCH_HERO_BTN, switch_hero_img, interval=0.5)
-            self.appear_then_click(switch_hero_img, interval=0.5)
 
     def can_run(self, layer: Layer) -> bool:
         """检查是否可以运行
