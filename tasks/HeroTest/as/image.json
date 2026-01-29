@@ -83,8 +83,8 @@
   {
     "itemName": "bcmj_lock",
     "imageName": "as_bcmj_lock.png",
-    "roiFront": "901,159,36,26",
-    "roiBack": "901,650,36,38",
+    "roiFront": "908,655,20,26",
+    "roiBack": "825,645,199,52",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "兵藏秘境阵容锁"
@@ -164,8 +164,8 @@
   {
     "itemName": "bcmj_unlock",
     "imageName": "as_bcmj_unlock.png",
-    "roiFront": "906,652,22,30",
-    "roiBack": "906,652,22,30",
+    "roiFront": "908,656,20,20",
+    "roiBack": "825,642,195,56",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "兵藏秘境的阵容未锁"
@@ -295,5 +295,14 @@
     "method": "Template matching",
     "threshold": 0.8,
     "description": "御灵满级标志"
+  },
+  {
+    "itemName": "real_money",
+    "imageName": "as_real_money.png",
+    "roiFront": "536,320,24,30",
+    "roiBack": "466,155,530,411",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "真钱"
   }
 ]

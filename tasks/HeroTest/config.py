@@ -10,6 +10,7 @@ from tasks.Component.config_scheduler import Scheduler
 from tasks.Component.config_base import ConfigBase, Time, TimeDelta
 from tasks.Component.SwitchSoul.switch_soul_config import SwitchSoulConfig
 
+
 class Layer(str, Enum):
     YANWU: str = "鬼兵演武"
     MIJING: str = "兵藏秘境"
@@ -17,12 +18,19 @@ class Layer(str, Enum):
     MENGXU: str = "梦虚秘境"
 
 
+class SkillMode(str, Enum):
+    PVE = 'PVE'
+    PVP = 'PVP'
+
+
 class HeroTestConfig(BaseModel):
     # 副本选择
     layer: Layer = Field(
         default=Layer.YANWU,
-        description="选择要打的关卡。\n兵藏秘境升级顺序八华斩->无畏 -> 暴击伤害 -> 默认祝福 -> 默认属性",
+        description="选择要打的关卡。\n兵藏秘境升级顺序八华斩->无畏 -> 暴击伤害 -> 默认祝福 -> 默认属性\n"
+                    "藤原道长矩阵博士攻略:https://www.bilibili.com/opus/1162129635334422531",
     )
+    skill_mode: SkillMode = Field(default=SkillMode.PVE, description="技能本技能偏向\n藤原道长使用攻略高配阵容,需自己配置好技能和祝福")
     # 限制时间
     limit_time: Time = Field(default=Time(minute=30), description="limit_time_help")
     # 限制次数
