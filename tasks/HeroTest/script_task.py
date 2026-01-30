@@ -78,7 +78,7 @@ class ScriptTask(GameUi, GeneralBattle, HeroTestAssets, SwitchSoul):
             if self.appear(self.I_REAL_MONEY, interval=1):  # 这里因为门票不够而不是其他异常所以success默认还是true
                 logger.warning('Ticket is not enough')
                 return False
-            if self.appear_then_click(self.O_FIRE, interval=1.6):  # 挑战按钮
+            if self.appear_then_click(self.O_FIRE, interval=1.2):  # 挑战按钮
                 self.device.stuck_record_clear()
                 click_cnt += 1
                 continue
@@ -98,30 +98,25 @@ class ScriptTask(GameUi, GeneralBattle, HeroTestAssets, SwitchSoul):
         }
         while True:
             self.screenshot()
-            if win is not None and self.appear(self.O_FIRE, interval=1.6):
+            if win is not None and self.appear(self.O_FIRE, interval=1.5):
                 break
-            if mode_wait_dict.get(self.conf.herotest.layer, None) is not None:
-                appeared = mode_wait_dict[self.conf.herotest.layer]()
-                if appeared:
-                    win = True
-                    continue
-            if win is not None:
-                self.click(pages.random_click(ltrb=(False, True, True, False)), interval=1.5)
-                continue
-            if self.appear(self.I_WIN, interval=1.5) or \
-                    self.appear(self.I_DE_WIN, interval=1.5) or \
-                    self.appear(self.I_REWARD, interval=1.5):
-                logger.info("Battle result is win")
+            if mode_wait_dict.get(self.conf.herotest.layer, None) is not None and \
+                    mode_wait_dict[self.conf.herotest.layer]():
                 win = True
                 continue
-            # 如果出现失败 就点击，返回False
-            if self.appear(self.I_FALSE, interval=1.5):
-                logger.info("Battle result is false")
-                win = False
+            if self.appear(self.I_WIN, interval=1.2) or \
+                    self.appear(self.I_DE_WIN, interval=1.2) or \
+                    self.appear(self.I_REWARD, interval=1.2):
+                win = True
+                self.click(pages.random_click(ltrb=(False, True, True, False)))
                 continue
-            # 如果开启战斗过程随机滑动
-            if random_click_swipt_enable:
+            if self.appear(self.I_FALSE, interval=1.5):
+                win = False
+                self.click(pages.random_click(ltrb=(False, True, True, False)))
+                continue
+            if win is None and random_click_swipt_enable:
                 self.random_click_swipt()
+        logger.info(f'Battle win = {win}')
         return win
 
     def hero1_skill_wait(self):
