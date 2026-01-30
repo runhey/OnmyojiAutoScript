@@ -184,7 +184,7 @@ class BaseTask(GlobalGameAssets, CostumeBase):
         return appear
 
     def appear_then_click(self,
-                          target: RuleImage | RuleGif,
+                          target: RuleImage | RuleGif | RuleOcr,
                           action: Union[RuleClick, RuleLongClick] = None,
                           interval: float = None,
                           threshold: float = None,
@@ -198,9 +198,6 @@ class BaseTask(GlobalGameAssets, CostumeBase):
         :param threshold:
         :return: True or False
         """
-        if not isinstance(target, RuleImage) and not isinstance(target, RuleGif):
-            return False
-
         appear = self.appear(target, interval=interval, threshold=threshold)
         if appear and not action:
             x, y = target.coord()

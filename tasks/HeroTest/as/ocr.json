@@ -25,5 +25,14 @@
     "method": "Default",
     "keyword": "",
     "description": "兵道帖机密"
+  },
+  {
+    "itemName": "fire",
+    "roiFront": "1130,585,92,55",
+    "roiBack": "1126,576,100,99",
+    "mode": "Single",
+    "method": "Default",
+    "keyword": "挑战",
+    "description": "挑战按钮"
   }
 ]

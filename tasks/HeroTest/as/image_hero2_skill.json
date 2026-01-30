@@ -1,0 +1,56 @@
+[
+  {
+    "itemName": "hero2_skill1",
+    "imageName": "as_hero2_skill1.png",
+    "roiFront": "825,358,61,36",
+    "roiBack": "47,340,1178,65",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "同调祝福"
+  },
+  {
+    "itemName": "hero2_skill2",
+    "imageName": "as_hero2_skill2.png",
+    "roiFront": "521,356,63,37",
+    "roiBack": "46,333,1174,82",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "韵迟祝福"
+  },
+  {
+    "itemName": "hero2_skill4",
+    "imageName": "as_hero2_skill4.png",
+    "roiFront": "1127,356,65,41",
+    "roiBack": "48,349,1173,57",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "叠辉祝福"
+  },
+  {
+    "itemName": "hero2_skill5",
+    "imageName": "as_hero2_skill5.png",
+    "roiFront": "217,358,65,37",
+    "roiBack": "46,334,1148,81",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "敛神祝福"
+  },
+  {
+    "itemName": "hero2_skill3",
+    "imageName": "as_hero2_skill3.png",
+    "roiFront": "520,358,62,38",
+    "roiBack": "41,346,1172,63",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "弥天祝福"
+  },
+  {
+    "itemName": "hero2_skill6",
+    "imageName": "as_hero2_skill6.png",
+    "roiFront": "427,356,62,38",
+    "roiBack": "48,342,1175,67",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "速度祝福"
+  }
+]

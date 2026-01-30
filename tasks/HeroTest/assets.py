@@ -10,6 +10,11 @@ from module.atom.list import RuleList
 class HeroTestAssets: 
 
 
+	# Click Rule Assets
+	# 切换英杰按钮 
+	C_SWITCH_HERO_BTN = RuleClick(roi_front=(54,113,52,55), roi_back=(8,64,156,161), name="switch_hero_btn")
+
+
 	# Image Rule Assets
 	# 进入活动第一步 
 	I_ONE = RuleImage(roi_front=(633,106,88,105), roi_back=(633,106,88,105), threshold=0.7, method="Template matching", file="./tasks/HeroTest/as/as_one.png")
@@ -24,13 +29,13 @@ class HeroTestAssets:
 	# 挑战按钮 
 	I_BATTLE = RuleImage(roi_front=(1129,588,99,49), roi_back=(1129,588,99,49), threshold=0.8, method="Template matching", file="./tasks/HeroTest/as/as_battle.png")
 	# 解锁阵容 
-	I_UNLOCK = RuleImage(roi_front=(817,648,33,31), roi_back=(817,648,33,31), threshold=0.8, method="Template matching", file="./tasks/HeroTest/as/as_unlock.png")
-	# description 
-	I_LOCK = RuleImage(roi_front=(816,644,36,38), roi_back=(816,644,36,38), threshold=0.8, method="Template matching", file="./tasks/HeroTest/as/as_lock.png")
+	I_UNLOCK = RuleImage(roi_front=(824,651,20,25), roi_back=(734,632,286,71), threshold=0.8, method="Template matching", file="./tasks/HeroTest/as/as_unlock.png")
+	# 阵容锁定状态 
+	I_LOCK = RuleImage(roi_front=(822,650,23,26), roi_back=(736,638,283,71), threshold=0.8, method="Template matching", file="./tasks/HeroTest/as/as_lock.png")
 	# 兵藏秘境 
 	I_BCMJ = RuleImage(roi_front=(1086,350,45,131), roi_back=(1086,350,45,131), threshold=0.8, method="Template matching", file="./tasks/HeroTest/as/as_bcmj.png")
 	# 兵藏秘境阵容锁 
-	I_BCMJ_LOCK = RuleImage(roi_front=(901,159.5,36,26), roi_back=(901,650,36,38), threshold=0.8, method="Template matching", file="./tasks/HeroTest/as/as_bcmj_lock.png")
+	I_BCMJ_LOCK = RuleImage(roi_front=(908,655,20,26), roi_back=(825,645,199,52), threshold=0.8, method="Template matching", file="./tasks/HeroTest/as/as_bcmj_lock.png")
 	# 兵藏秘境挑战 
 	I_BCMJ_BATTLE = RuleImage(roi_front=(1131,598,92,50), roi_back=(1131,598,92,50), threshold=0.8, method="Template matching", file="./tasks/HeroTest/as/as_bcmj_battle.png")
 	# 兵藏秘境胜利 
@@ -48,13 +53,52 @@ class HeroTestAssets:
 	# 默认属性 
 	I_BCMJ__DEFALUT_ATTRIBUTE = RuleImage(roi_front=(1168,159,21,22), roi_back=(255,155,944,31), threshold=0.8, method="Template matching", file="./tasks/HeroTest/as/as_bcmj__defalut_attribute.png")
 	# 兵藏秘境的阵容未锁 
-	I_BCMJ_UNLOCK = RuleImage(roi_front=(906,652,22,30), roi_back=(906,652,22,30), threshold=0.8, method="Template matching", file="./tasks/HeroTest/as/as_bcmj_unlock.png")
+	I_BCMJ_UNLOCK = RuleImage(roi_front=(908,656,20,20), roi_back=(825,642,195,56), threshold=0.8, method="Template matching", file="./tasks/HeroTest/as/as_bcmj_unlock.png")
 	# 通过兵藏秘境确认重置按钮 
 	I_BCMJ_RESET_CONFIRM = RuleImage(roi_front=(668,399,180,70), roi_back=(668,399,180,70), threshold=0.8, method="Template matching", file="./tasks/HeroTest/as/as_bcmj_reset_confirm.png")
 	# 通过兵藏秘境取消重置按钮 
 	I_BCMJ_RESET_CLOSE = RuleImage(roi_front=(429,397,186,71), roi_back=(429,397,186,71), threshold=0.8, method="Template matching", file="./tasks/HeroTest/as/as_bcmj_reset_close.png")
 	# 周一点击确认开始挑战 
 	I_START_CHALLENGE = RuleImage(roi_front=(685,407,142,47), roi_back=(685,407,142,47), threshold=0.8, method="Template matching", file="./tasks/HeroTest/as/as_start_challenge.png")
+	# 藤原道长副本标志 
+	I_CHECK_HERO2 = RuleImage(roi_front=(52,113,57,58), roi_back=(3,62,157,151), threshold=0.8, method="Template matching", file="./tasks/HeroTest/as/as_check_hero2.png")
+	# 切换源赖光 
+	I_SWITCH_HERO1 = RuleImage(roi_front=(176,113,251,360), roi_back=(0,0,1279,718), threshold=0.8, method="Template matching", file="./tasks/HeroTest/as/as_switch_hero1.png")
+	# 源赖光副本标志 
+	I_CHECK_HERO1 = RuleImage(roi_front=(52,109,55,66), roi_back=(19,79,127,130), threshold=0.8, method="Template matching", file="./tasks/HeroTest/as/as_check_hero1.png")
+	# 切换藤原道长 
+	I_SWITCH_HERO2 = RuleImage(roi_front=(507,126,254,352), roi_back=(0,0,1274,714), threshold=0.8, method="Template matching", file="./tasks/HeroTest/as/as_switch_hero2.png")
+	# 进入传承试炼标志 
+	I_ENTER_CCSL = RuleImage(roi_front=(302,243,41,149), roi_back=(252,161,148,303), threshold=0.8, method="Template matching", file="./tasks/HeroTest/as/as_enter_ccsl.png")
+	# 进入梦虚秘境标志 
+	I_ENTER_MXMJ = RuleImage(roi_front=(1075,331,40,138), roi_back=(1051,302,92,190), threshold=0.8, method="Template matching", file="./tasks/HeroTest/as/as_enter_mxmj.png")
+	# 鬼兵演武页面标志 
+	I_CHECK_HERO1_EXP = RuleImage(roi_front=(36,466,63,69), roi_back=(0,427,137,145), threshold=0.8, method="Template matching", file="./tasks/HeroTest/as/as_check_hero1_exp.png")
+	# 兵藏秘境标志 
+	I_CHECK_HERO1_SKILL = RuleImage(roi_front=(27,237,338,142), roi_back=(0,139,423,322), threshold=0.8, method="Template matching", file="./tasks/HeroTest/as/as_check_hero1_skill.png")
+	# 传承试炼页面标志 
+	I_CHECK_HERO2_EXP = RuleImage(roi_front=(33,465,63,65), roi_back=(12,448,100,100), threshold=0.8, method="Template matching", file="./tasks/HeroTest/as/as_check_hero2_exp.png")
+	# 梦虚秘境页面标志 
+	I_CHECK_HERO2_SKILL = RuleImage(roi_front=(24,308,250,92), roi_back=(0,282,362,143), threshold=0.8, method="Template matching", file="./tasks/HeroTest/as/as_check_hero2_skill.png")
+	# 御灵满级标志 
+	I_HERO_EXP_MAX = RuleImage(roi_front=(175,493,20,20), roi_back=(162,481,106,37), threshold=0.8, method="Template matching", file="./tasks/HeroTest/as/as_hero_exp_max.png")
+	# 真钱 
+	I_REAL_MONEY = RuleImage(roi_front=(536,320,24,30), roi_back=(466,155,530,411), threshold=0.8, method="Template matching", file="./tasks/HeroTest/as/as_real_money.png")
+
+
+	# Image Rule Assets
+	# 同调祝福 
+	I_HERO2_SKILL1 = RuleImage(roi_front=(825,358,61,36), roi_back=(47,340,1178,65), threshold=0.8, method="Template matching", file="./tasks/HeroTest/as/as_hero2_skill1.png")
+	# 韵迟祝福 
+	I_HERO2_SKILL2 = RuleImage(roi_front=(521,356,63,37), roi_back=(46,333,1174,82), threshold=0.8, method="Template matching", file="./tasks/HeroTest/as/as_hero2_skill2.png")
+	# 叠辉祝福 
+	I_HERO2_SKILL4 = RuleImage(roi_front=(1127,356,65,41), roi_back=(48,349,1173,57), threshold=0.8, method="Template matching", file="./tasks/HeroTest/as/as_hero2_skill4.png")
+	# 敛神祝福 
+	I_HERO2_SKILL5 = RuleImage(roi_front=(217,358,65,37), roi_back=(46,334,1148,81), threshold=0.8, method="Template matching", file="./tasks/HeroTest/as/as_hero2_skill5.png")
+	# 弥天祝福 
+	I_HERO2_SKILL3 = RuleImage(roi_front=(520,358,62,38), roi_back=(41,346,1172,63), threshold=0.8, method="Template matching", file="./tasks/HeroTest/as/as_hero2_skill3.png")
+	# 速度祝福 
+	I_HERO2_SKILL6 = RuleImage(roi_front=(427,356,62,38), roi_back=(48,342,1175,67), threshold=0.8, method="Template matching", file="./tasks/HeroTest/as/as_hero2_skill6.png")
 
 
 	# Ocr Rule Assets
@@ -64,5 +108,7 @@ class HeroTestAssets:
 	O_ART_WAR_CARD = RuleOcr(roi=(712,21,98,36), area=(712,21,98,36), mode="DigitCounter", method="Default", keyword="", name="art_war_card")
 	# 兵道帖机密 
 	O_ART_WAR_CARD_PLUS = RuleOcr(roi=(916,25,90,29), area=(916,25,90,29), mode="SINGLE", method="Default", keyword="", name="art_war_card_plus")
+	# 挑战按钮 
+	O_FIRE = RuleOcr(roi=(1130,585,92,55), area=(1126,576,100,99), mode="Single", method="Default", keyword="挑战", name="fire")
 
 

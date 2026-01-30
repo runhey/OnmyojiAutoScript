@@ -70,5 +70,23 @@
     "method": "Template matching",
     "threshold": 0.8,
     "description": "活动列表页标志"
+  },
+  {
+    "itemName": "check_hero_test",
+    "imageName": "page_check_hero_test.png",
+    "roiFront": "148,10,133,48",
+    "roiBack": "137,0,157,71",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "英杰试炼左上角标志"
+  },
+  {
+    "itemName": "exploration_goto_hero_test",
+    "imageName": "page_exploration_goto_hero_test.png",
+    "roiFront": "837,630,58,56",
+    "roiBack": "7,605,1272,113",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "探索前往英杰试炼"
   }
 ]

@@ -3,324 +3,295 @@
 # github https://github.com/runhey
 from datetime import datetime, timedelta, time
 import random  # type: ignore
+from module.atom.image import RuleImage
 
-from tasks.Component.BaseActivity.base_activity import BaseActivity
+from tasks.Component.GeneralBattle.general_battle import GeneralBattle
 from tasks.HeroTest.assets import HeroTestAssets
-from tasks.GameUi.page import page_main, page_shikigami_records
 from tasks.GameUi.game_ui import GameUi
-from tasks.GameUi.page import page_exploration
 from tasks.Component.SwitchSoul.switch_soul import SwitchSoul
 
 from module.logger import logger
 from module.exception import TaskEnd
+from tasks.HeroTest.config import Layer, HeroTest, SkillMode
+from typing import Callable
+
+import tasks.GameUi.page as pages
 
 
-class ScriptTask(GameUi, BaseActivity, HeroTestAssets, SwitchSoul):
+class ScriptTask(GameUi, GeneralBattle, HeroTestAssets, SwitchSoul):
 
-    is_update = False
-    is_skill = False
+    conf: HeroTest
+    page_hero_mode: pages.Page  # 当前英杰对应模式界面(经验or技能)
+    success: bool = True
 
     def run(self) -> None:
-
-        config = self.config.hero_test
-        global is_update
-        global is_skill
-         # 自动换御魂
-        if config.switch_soul_config.enable:
-            self.ui_get_current_page()
-            self.ui_goto(page_shikigami_records)
-            self.run_switch_soul(config.switch_soul_config.switch_group_team)
-        if config.switch_soul_config.enable_switch_by_name:
-            self.ui_get_current_page()
-            self.ui_goto(page_shikigami_records)
-            self.run_switch_soul_by_name(config.switch_soul_config.group_name, config.switch_soul_config.team_name)
-
-        if config.herotest.layer.value == "鬼兵演武":
-            is_update = True
-            is_skill = False
-        if config.herotest.layer.value == "兵藏秘境":
-            is_skill = True
-            is_update = False
-
-        self.limit_time: timedelta = config.herotest.limit_time
+        self.conf = self.config.hero_test
+        self.limit_time: timedelta = self.conf.herotest.limit_time
         if isinstance(self.limit_time, time):
             self.limit_time = timedelta(
                 hours=self.limit_time.hour,
                 minutes=self.limit_time.minute,
                 seconds=self.limit_time.second,
             )
-        self.limit_count = config.herotest.limit_count
-
-        self.ui_get_current_page()
-        self.ui_goto(page_main)
-
-        # 启动经验加成
-        exp_50_buff_enable = config.herotest.exp_50_buff_enable_help
-        exp_100_buff_enable = config.herotest.exp_100_buff_enable_help
-        if exp_50_buff_enable or exp_100_buff_enable:
-            self.open_buff()
-            self.exp_100(exp_100_buff_enable)
-            self.exp_50(exp_50_buff_enable)
-            self.close_buff()
-
-        self.ui_goto(page_exploration)
-        self.home_main()
-        # 设定是否锁定阵容
-        if is_update:
-            if config.general_battle.lock_team_enable:
-                logger.info("Lock team")
-                while 1:
-                    self.screenshot()
-                    if self.appear_then_click(self.I_UNLOCK, interval=1):
-                        continue
-                    if self.appear(self.I_LOCK):
-                        break
-            else:
-                logger.info("Unlock team")
-                while 1:
-                    self.screenshot()
-                    if self.appear_then_click(self.I_LOCK, interval=1):
-                        continue
-                    if self.appear(self.I_UNLOCK):
-                        break
-        elif is_skill:
-            if config.general_battle.lock_team_enable:
-                logger.info("Lock team")
-                while 1:
-                    self.screenshot()
-                    if self.appear_then_click(self.I_BCMJ_UNLOCK, interval=1):
-                        continue
-                    if self.appear(self.I_BCMJ_LOCK):
-                        break
-            else:
-                logger.info("Unlock team")
-                while 1:
-                    self.screenshot()
-                    if self.appear_then_click(self.I_BCMJ_LOCK, interval=1):
-                        continue
-                    if self.appear(self.I_BCMJ_UNLOCK):
-                        break
-
-        while 1:
-            # 1
-            if (
-                self.limit_time is not None
-                and self.limit_time + self.start_time < datetime.now()
-            ):
+        self.limit_count = self.conf.herotest.limit_count
+        self.check_and_switch_soul()
+        self.open_exp_buff()
+        self.switch_hero(self.conf.herotest.layer)
+        self.init_pages()
+        self.ui_goto_page(self.page_hero_mode)
+        self.check_and_lock_team()
+        while True:
+            if self.limit_time is not None and self.limit_time + self.start_time < datetime.now():
                 logger.info("Time out")
                 break
             if self.current_count >= self.limit_count:
                 logger.info("Count out")
                 break
-            # 2
-            if is_update:
-                self.wait_until_appear(self.I_BATTLE)
-            if is_skill:
-                self.wait_until_appear(self.I_BCMJ_BATTLE)
-
-            # 如果是兵藏秘境 看看是否有兵道帖
-            if is_skill:
-                if not self.check_art_war_card():
-                    logger.info("Art war card is not enough")
-                    break
-            # 点击战斗
-            logger.info("Click battle")
-            while 1:
-                self.screenshot()
-                if is_update:
-                    if self.appear_then_click(self.I_BATTLE, interval=2):
-                        self.device.stuck_record_clear()
-                        continue
-                    if not self.appear(self.I_BATTLE):
-                        break
-                elif is_skill:
-                    if not self.check_art_war_card():
-                        logger.info("Art war card is not nough")
-                        break
-                    if self.appear_then_click(self.I_START_CHALLENGE, interval=1):
-                        continue
-                    if self.appear_then_click(self.I_BCMJ_RESET_CONFIRM, interval=1):
-                        continue
-                    if self.appear_then_click(self.I_BCMJ_BATTLE, interval=2):
-                        self.device.stuck_record_clear()
-                        continue
-                    if not self.appear(self.I_BCMJ_BATTLE):
-                        break
-
-            if self.run_general_battle(config=config.general_battle):
+            self.ui_goto_page(self.page_hero_mode)
+            if not self.can_run(self.conf.herotest.layer):
+                break
+            entered = self.enter_battle()
+            if not entered:
+                break
+            if self.run_general_battle(config=self.conf.general_battle):
                 logger.info("General battle success")
-
-        self.main_home()
-        self.set_next_run(task="HeroTest", success=True)
+        self.close_exp_buff()
+        self.set_next_run(task="HeroTest", success=self.success)
         raise TaskEnd
+
+    def enter_battle(self) -> bool:
+        """进入战斗
+        :return: True:进入成功 False:进入失败
+        """
+        logger.info("Click battle")
+        click_cnt, max_click = 0, random.randint(3, 4)
+        while True:
+            self.screenshot()
+            if self.is_in_battle(False):
+                return True  # 成功进入战斗
+            if click_cnt >= max_click:  # 异常情况,怎么都无法进入
+                break
+            if self.appear_then_click(self.I_START_CHALLENGE, interval=1):  # 兵藏秘境确认挑战
+                continue
+            if self.appear_then_click(self.I_BCMJ_RESET_CONFIRM, interval=1):  # 兵藏秘境确认重置
+                continue
+            if self.appear(self.I_REAL_MONEY, interval=1):  # 这里因为门票不够而不是其他异常所以success默认还是true
+                logger.warning('Ticket is not enough')
+                return False
+            if self.appear_then_click(self.O_FIRE, interval=1.2):  # 挑战按钮
+                self.device.stuck_record_clear()
+                click_cnt += 1
+                continue
+        logger.error('Battle cannot enter, maybe recognize failed')
+        self.success = False  # 进入失败且不知道发生了什么情况
+        return False
 
     def battle_wait(self, random_click_swipt_enable: bool) -> bool:
         self.device.stuck_record_add("BATTLE_STATUS_S")
         self.device.click_record_clear()
         logger.info("Start battle process")
-        win: bool = False
-        while 1:
+        win = None
+        # 处理不同模式下的结算界面
+        mode_wait_dict: dict[Layer, Callable] = {
+            Layer.MIJING: self.hero1_skill_wait,
+            Layer.MENGXU: self.hero2_skill_wait,
+        }
+        while True:
             self.screenshot()
-            if self.appear(self.I_WIN, threshold=0.8) or self.appear(self.I_DE_WIN):
-                logger.info("Battle result is win")
-                if self.appear(self.I_DE_WIN):
-                    self.ui_click_until_disappear(self.I_DE_WIN)
+            if win is not None and self.appear(self.O_FIRE, interval=1.5):
+                break
+            if mode_wait_dict.get(self.conf.herotest.layer, None) is not None and \
+                    mode_wait_dict[self.conf.herotest.layer]():
                 win = True
-                break
-
-            # 如果出现失败 就点击，返回False
-            if self.appear(self.I_FALSE, threshold=0.8):
-                logger.info("Battle result is false")
-                win = False
-                break
-
-            # 如果领奖励
-            if self.appear(self.I_REWARD, threshold=0.6):
-                win = True
-                break
-
-            # 如果领奖励出现金币
-            if self.appear(self.I_REWARD_GOLD, threshold=0.8):
-                win = True
-                break
-            # 如果开启战斗过程随机滑动
-            if random_click_swipt_enable:
-                self.random_click_swipt()
-
-        # 再次确认战斗结果
-        logger.info("Reconfirm the results of the battle")
-        while 1:
-            self.screenshot()
-            if win:
-                # 点击赢了
-                # self.C_WIN_2 在掉落物品过多的时候可能会点击到物品，导致脚本卡死
-                action_click = random.choice([self.C_WIN_1, self.C_WIN_3])
-                if self.appear_then_click(
-                    self.I_WIN, action=action_click, interval=0.5
-                ):
-                    continue
-                if not self.appear(self.I_WIN):
-                    break
-            else:
-                # 如果失败且 点击失败后
-                if self.appear_then_click(self.I_FALSE, threshold=0.6):
-                    continue
-                if not self.appear(self.I_FALSE, threshold=0.6):
-                    return False
-        # 最后保证能点击 获得奖励
-        if not is_skill and not self.wait_until_appear(self.I_REWARD, wait_time=2):
-            # 有些的战斗没有下面的奖励，所以直接返回
-            logger.info("There is no reward, Exit battle")
-            return win
-        else:
-            if self.wait_until_appear(self.I_BCMJ_SKILL_ADD_CONFIRM, wait_time=2):
-                while 1:
-                    self.screenshot()
-                    if self.appear_then_click(self.I_BCMJ_SKILL_ADD1, interval=1):
-                        break
-                    if self.appear_then_click(self.I_BCMJ_SKILL_ADD2, interval=1):
-                        break
-                    if self.appear_then_click(self.I_BCMJ_BLESS, interval=1):
-                        break
-                    if self.appear_then_click(
-                        self.I_BCMJ_PROPERTY_ADD_CRITICAL, interval=1
-                    ):
-                        break
-                    if self.appear_then_click(
-                        self.I_BCMJ__DEFALUT_ATTRIBUTE, interval=1
-                    ):
-                        break
-                if self.appear_then_click(self.I_BCMJ_SKILL_ADD_CONFIRM, interval=1):
-                    return win
-
-        logger.info("Get reward")
-        while 1:
-            self.screenshot()
-            # 如果出现领奖励
-            # self.C_REWARD_2 在掉落物品过多的时候可能会点击到物品，导致脚本卡死
-            action_click = random.choice(
-                [self.C_REWARD_1, self.C_REWARD_3]
-            )
-            if self.appear_then_click(
-                self.I_REWARD, action=action_click, interval=1.5
-            ) or self.appear_then_click(
-                self.I_REWARD_GOLD, action=action_click, interval=1.5
-            ):
                 continue
-            if not self.appear(self.I_REWARD) and not self.appear(self.I_REWARD_GOLD):
-                break
-
+            if self.appear(self.I_WIN, interval=1.2) or \
+                    self.appear(self.I_DE_WIN, interval=1.2) or \
+                    self.appear(self.I_REWARD, interval=1.2):
+                win = True
+                self.click(pages.random_click(ltrb=(False, True, True, False)))
+                continue
+            if self.appear(self.I_FALSE, interval=1.5):
+                win = False
+                self.click(pages.random_click(ltrb=(False, True, True, False)))
+                continue
+            if win is None and random_click_swipt_enable:
+                self.random_click_swipt()
+        logger.info(f'Battle win = {win}')
         return win
 
-    def check_art_war_card(self):
+    def hero1_skill_wait(self):
+        if self.wait_until_appear(self.I_BCMJ_SKILL_ADD_CONFIRM, wait_time=2):
+            while 1:
+                self.screenshot()
+                if self.appear_then_click(self.I_BCMJ_SKILL_ADD1, interval=1):
+                    break
+                if self.appear_then_click(self.I_BCMJ_SKILL_ADD2, interval=1):
+                    break
+                if self.appear_then_click(self.I_BCMJ_BLESS, interval=1):
+                    break
+                if self.appear_then_click(
+                        self.I_BCMJ_PROPERTY_ADD_CRITICAL, interval=1
+                ):
+                    break
+                if self.appear_then_click(
+                        self.I_BCMJ__DEFALUT_ATTRIBUTE, interval=1
+                ):
+                    break
+            if self.appear_then_click(self.I_BCMJ_SKILL_ADD_CONFIRM, interval=1):
+                return True
+        return False
+
+    def hero2_skill_wait(self):
+        if not self.appear(self.I_BCMJ_SKILL_ADD_CONFIRM):
+            return False
+        # pve技能列表, 按优先级顺序
+        pve_skill = [
+            self.I_HERO2_SKILL1,  # 同调祝福
+            self.I_HERO2_SKILL2,  # 韵迟祝福
+            self.I_HERO2_SKILL3,  # 弥天祝福
+            self.I_HERO2_SKILL4,  # 叠辉祝福
+            self.I_HERO2_SKILL5,  # 敛神祝福
+            self.I_HERO2_SKILL6,  # 速度祝福
+        ]
+        # TODO: PVP
+        pvp_skill = []
+        target_skill_dict: dict[SkillMode, list] = {
+            SkillMode.PVE: pve_skill,
+            SkillMode.PVP: pvp_skill,
+        }
+        target_skills = target_skill_dict[self.conf.herotest.skill_mode]
+        while True:
+            self.screenshot()
+            if any(self.appear_then_click(ts, interval=1) for ts in target_skills):
+                break
+        self.ui_click_until_disappear(self.I_BCMJ_SKILL_ADD_CONFIRM, interval=1.5)
+        return True
+
+    def switch_hero(self, layer: Layer):
+        """切换英杰"""
+        self.ui_goto_page(pages.page_hero_test)
+        switch_hero_dict: dict = {
+            Layer.YANWU: (self.I_CHECK_HERO1, self.I_SWITCH_HERO1),  # 源赖光
+            Layer.MIJING: (self.I_CHECK_HERO1, self.I_SWITCH_HERO1),  # 源赖光
+            Layer.CHUANCHENG: (self.I_CHECK_HERO2, self.I_SWITCH_HERO2),  # 藤原道长
+            Layer.MENGXU: (self.I_CHECK_HERO2, self.I_SWITCH_HERO2),  # 藤原道长
+        }
+        check_hero_img, switch_hero_img = switch_hero_dict[layer]
+        while True:
+            self.screenshot()
+            if self.appear_then_click(switch_hero_img, interval=1):
+                continue
+            appeared = self.appear(check_hero_img, interval=1)
+            if not appeared and self.appear(self.I_CHECK_HERO_TEST):
+                self.click(self.C_SWITCH_HERO_BTN, interval=1.5)
+                continue
+            if appeared:
+                break
+
+    def can_run(self, layer: Layer) -> bool:
+        """检查是否可以运行
+        :return: True(default): can run, False: cannot run
+        """
+        check_func: dict[Layer, Callable] = {
+            Layer.MIJING: self.check_art_war_card,
+            Layer.CHUANCHENG: self.check_level_max,
+            Layer.MENGXU: self.check_art_war_card,
+        }
+        if check_func.get(layer, None) is not None:
+            return check_func[layer]()
+        return True
+
+    def check_art_war_card(self) -> bool:
+        """兵藏秘境/梦虚秘境 看看门票是否足够"""
         self.screenshot()
         cu = self.O_ART_WAR_CARD.ocr(image=self.device.image)
         if cu[0] >= 1:
             logger.info("Art war card is enough")
             return True
         cu = self.O_ART_WAR_CARD_PLUS.ocr(image=self.device.image)
-        # 转换为int
-        if cu != "":
-            cu = int(cu)
-        else:
-            cu = 0
+        cu = 0 if cu == '' else int(cu)
         if cu >= 1:
             logger.info("Art war card is not enough, but plus card is enough")
             return True
+        logger.warning("Art war card is not enough")
         return False
 
-    def home_main(self) -> bool:
-        """
-        从庭院到活动的爬塔界面
-        :return:
-        """
-        logger.hr("Enter HeroTest", 2)
-        global is_update
-        global is_skill
-        while 1:
-            self.screenshot()
-            if is_update:
-                if self.appear(self.I_BATTLE):
-                    break
-            if is_skill:
-                if self.appear(self.I_BCMJ_BATTLE):
-                    break
-            if self.appear_then_click(self.I_TWO, interval=1):
-                continue
-            if is_update:
-                if self.appear_then_click(self.I_GBB, interval=1):
-                    continue
-            if is_skill:
-                if self.appear_then_click(self.I_BCMJ, interval=1):
-                    continue
+    def check_level_max(self):
+        """检查御灵等级是否已经满级"""
+        self.screenshot()
+        if self.appear(self.I_HERO_EXP_MAX):
+            logger.info('Experience is already maxed out, exit battle')
+            return False
+        return True
 
-    def main_home(self) -> bool:
-        """
-        从活动的爬塔界面到庭院
-        :return:
-        """
-        logger.hr("Exit HeroTest", 2)
-        global is_update
-        while 1:
-            self.screenshot()
-            if self.appear_then_click(self.I_UI_BACK_RED, interval=2):
-                continue
-            if self.appear_then_click(self.I_UI_BACK_YELLOW, interval=2):
-                continue
-            if self.appear_then_click(self.I_BACK, interval=2):
-                continue
-            if self.appear_then_click(self.I_GBB_BACK, interval=2):
-                continue
-            self.ui_get_current_page()
-            self.ui_goto(page_main)
-            if is_update:
-                # 关闭经验加成
-                self.open_buff()
-                self.exp_100(False)
-                self.exp_50(False)
-                self.close_buff()
-            break
+    def check_and_switch_soul(self):
+        """检查并切换御魂"""
+        if self.conf.switch_soul_config.enable:
+            self.ui_goto_page(pages.page_shikigami_records)
+            self.run_switch_soul(self.conf.switch_soul_config.switch_group_team)
+        if self.conf.switch_soul_config.enable_switch_by_name:
+            self.ui_goto_page(pages.page_shikigami_records)
+            self.run_switch_soul_by_name(self.conf.switch_soul_config.group_name, self.conf.switch_soul_config.team_name)
 
+    def open_exp_buff(self):
+        """启用经验加成"""
+        exp_50_buff_enable = self.conf.herotest.exp_50_buff_enable_help
+        exp_100_buff_enable = self.conf.herotest.exp_100_buff_enable_help
+        if exp_50_buff_enable or exp_100_buff_enable:
+            self.ui_goto_page(pages.page_main)
+            self.open_buff()
+            self.exp_100(exp_100_buff_enable)
+            self.exp_50(exp_50_buff_enable)
+            self.close_buff()
+
+    def close_exp_buff(self):
+        """关闭经验加成"""
+        exp_50_buff_enable = self.conf.herotest.exp_50_buff_enable_help
+        exp_100_buff_enable = self.conf.herotest.exp_100_buff_enable_help
+        if exp_50_buff_enable or exp_100_buff_enable:
+            self.ui_goto_page(pages.page_main)
+            self.open_buff()
+            self.exp_100(False)
+            self.exp_50(False)
+            self.close_buff()
+
+    def check_and_lock_team(self):
+        """检查并锁定阵容"""
+        lock_img = self.I_LOCK
+        unlock_img = self.I_UNLOCK
+        match self.conf.herotest.layer:
+            case Layer.YANWU | Layer.CHUANCHENG:
+                pass
+            case Layer.MIJING | Layer.MENGXU:
+                lock_img = self.I_BCMJ_LOCK
+                unlock_img = self.I_BCMJ_UNLOCK
+            case _:
+                raise ValueError(f'Unknown layer on lock: {self.conf.herotest.layer}')
+        if self.conf.general_battle.lock_team_enable:
+            logger.info("Lock team")
+            self.ui_click(unlock_img, lock_img, interval=0.8)
+        else:
+            logger.info("Unlock team")
+            self.ui_click(lock_img, unlock_img, interval=0.8)
+
+    def init_pages(self):
+        """初始化页面"""
+        match self.conf.herotest.layer:
+            case Layer.YANWU:
+                self.page_hero_mode = pages.Page(self.I_CHECK_HERO1_EXP)
+                pages.page_hero_test.link(button=self.I_GBB, destination=self.page_hero_mode)
+            case Layer.MIJING:
+                self.page_hero_mode = pages.Page(self.I_CHECK_HERO1_SKILL)
+                pages.page_hero_test.link(button=self.I_BCMJ, destination=self.page_hero_mode)
+            case Layer.CHUANCHENG:
+                self.page_hero_mode = pages.Page(self.I_CHECK_HERO2_EXP)
+                pages.page_hero_test.link(button=self.I_ENTER_CCSL, destination=self.page_hero_mode)
+            case Layer.MENGXU:
+                self.page_hero_mode = pages.Page(self.I_CHECK_HERO2_SKILL)
+                pages.page_hero_test.link(button=self.I_ENTER_MXMJ, destination=self.page_hero_mode)
+            case _:
+                raise ValueError(f'Unknown Layer {Layer}')
+        self.page_hero_mode.link(button=self.I_BACK_YOLLOW, destination=pages.page_hero_test)
 
 
 if __name__ == "__main__":
@@ -331,4 +302,4 @@ if __name__ == "__main__":
     d = Device(c)
     t = ScriptTask(c, d)
 
-    t.run()
+    t.check_and_lock_team()
