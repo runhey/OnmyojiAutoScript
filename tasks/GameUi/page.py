@@ -113,6 +113,10 @@ page_exploration.link(button=G.I_EXPLORATION_GOTO_SIX_GATES, destination=page_si
 page_bondling_fairyland = Page(G.I_CHECK_BONDLING_FAIRYLAND)
 page_bondling_fairyland.link(button=G.I_BACK_YOLLOW, destination=page_exploration)
 page_exploration.link(button=G.I_EXPLORATION_GOTO_BONDLING_FAIRYLAND, destination=page_bondling_fairyland)
+# 英杰试炼 hero test
+page_hero_test = Page(G.I_CHECK_HERO_TEST)
+page_hero_test.link(button=G.I_BACK_YOLLOW, destination=page_exploration)
+page_exploration.link(button=G.I_EXPLORATION_GOTO_HERO_TEST, destination=page_hero_test)
 
 # ************************************* 町中部分 *****************************************#
 # 斗技 duel
