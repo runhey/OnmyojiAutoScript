@@ -92,7 +92,9 @@ class ScriptTask(GameUi, GeneralBattle, SwitchSoul, DuelAssets):
             # 关闭恭喜晋升段位页面
             if self.appear_then_click(GGA.I_UI_BACK_RED):
                 continue
-            if self.appear_then_click(self.I_REWARD, interval=0.6):
+            if self.appear_then_click(self.I_REWARD):
+                continue
+            if self.appear_then_click(self.I_WIN):
                 continue
             if not self.duel_main():
                 continue
@@ -431,7 +433,7 @@ class ScriptTask(GameUi, GeneralBattle, SwitchSoul, DuelAssets):
                 break
             if self.appear(self.I_WIN):
                 # 打赢了
-                self.ui_click_until_disappear(self.I_WIN, 2)
+                self.ui_click_until_disappear(self.I_WIN)
                 battle_win = True
                 break
             if self.appear(self.I_D_VICTORY):
