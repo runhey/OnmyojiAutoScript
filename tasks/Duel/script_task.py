@@ -431,7 +431,7 @@ class ScriptTask(GameUi, GeneralBattle, SwitchSoul, DuelAssets):
                 break
             if self.appear(self.I_WIN):
                 # 打赢了
-                self.ui_click_until_disappear(self.I_WIN)
+                self.ui_click_until_disappear(self.I_WIN, 2)
                 battle_win = True
                 break
             if self.appear(self.I_D_VICTORY):
@@ -481,7 +481,7 @@ class ScriptTask(GameUi, GeneralBattle, SwitchSoul, DuelAssets):
 if __name__ == '__main__':
     from module.config.config import Config
     from module.device.device import Device
-    c = Config('oas3')
+    c = Config('oas2')
     d = Device(c)
     t = ScriptTask(c, d)
 
