@@ -42,6 +42,7 @@ class ShikigamiType(str, Enum):
     COSTUME_SHIKIGAMI_4 = 'costume_shikigami_4'  # 冥夜游火
     COSTUME_SHIKIGAMI_5 = 'costume_shikigami_5'  # 契光水境
     COSTUME_SHIKIGAMI_6 = 'costume_shikigami_6'  # 月下火舞
+    COSTUME_SHIKIGAMI_7 = 'costume_shikigami_7'  # 赤溟幽界
 
 # 签到主题
 class SignType(str, Enum):
