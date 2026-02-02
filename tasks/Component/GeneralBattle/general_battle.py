@@ -48,40 +48,30 @@ class GeneralBattle(GeneralBuff, GeneralBattleAssets):
         else:
             return False
 
-    def battle_before(self, buff, config):
+    def battle_before(self, buff: BuffClass | list[BuffClass], config: GeneralBattleConfig, timeout: float = 5) -> bool:
+        """战斗前设置
+        :return: True:进入战斗或点击了准备按钮且识别不到准备按钮了 False:超过timeout s还没有进入战斗且没有点击过准备
         """
-        战斗前设置
-        """
-        # 用于ui加载,防止还在加载过程中导致准备界面识别失败,最多等待2秒
-        wait_in_prepare_timer = Timer(2).start()
-        while not self.is_in_prepare() and not wait_in_prepare_timer.reached():
-            logger.info('Wait to enter the preparation page')
-            time.sleep(0.5)
+        timeout_timer = Timer(timeout).start()
         confed = False
-        need_battle_timer = Timer(2)
-        # 如果不在准备界面,想设置也设置不了,只能直接开始战斗
-        while self.is_in_prepare():
-            # 配置了锁定阵容则启动超时器
-            if config.lock_team_enable and not need_battle_timer.started():
-                need_battle_timer.start()
-            # 在准备界面,且没有锁定阵容,则进行相关配置
-            if not config.lock_team_enable and not confed:
-                logger.info("Lock team is not enable")
-                # 第一次进则切换预设
-                if self.current_count == 1:
-                    self.switch_preset_team(config.preset_enable, config.preset_group, config.preset_team)
-                # 判断是否开启buff并开启
-                self.check_and_open_buff(buff)
-                # 配置过了不再配置
-                confed = True
-            # 如果锁定了阵容且超过2秒还在准备界面,则点击准备
-            if config.lock_team_enable and need_battle_timer.reached():
-                self.appear_then_click(self.I_PREPARE_HIGHLIGHT, interval=1.5)
-            # 没有锁定阵容且配置完成则直接点击准备
-            if not config.lock_team_enable and confed:
-                self.appear_then_click(self.I_PREPARE_HIGHLIGHT, interval=1.5)
-            # 照顾一下某些模拟器慢的
-            time.sleep(0.2)
+        while not timeout_timer.reached():
+            self.screenshot()
+            if self.is_in_real_battle(False):  # 战斗阶段
+                return True
+            if self.is_in_prepare(False):  # 战斗准备阶段
+                if not getattr(config, 'lock_team_enable', False):  # 没有锁定阵容
+                    if self.current_count == 1 and not confed:  # 第一次战斗且是本次第一次配置
+                        self.switch_preset_team(config.preset_enable, config.preset_group, config.preset_team)
+                        self.check_and_open_buff(buff)
+                        confed = True
+                # 点击准备(锁定阵容自动点准备,不锁定阵容前面也已经配置完毕需要点准备)
+                if self.appear_then_click(self.I_PREPARE_HIGHLIGHT, interval=0.8):
+                    continue
+                continue
+            # 未知界面, 既不是准备界面也不是战斗界面
+            logger.info('Wait for preparation page')
+            sleep(random.uniform(0.4, 0.8))
+        return False
 
     def run_general_battle_back(self, config: GeneralBattleConfig = None, exit_four: bool = False) -> bool:
         """
