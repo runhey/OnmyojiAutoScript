@@ -18,6 +18,24 @@
     "description": "庭院卷轴关闭"
   },
   {
+    "itemName": "login_courtyard",
+    "imageName": "login_courtyard.png",
+    "roiFront": "40,640,100,50",
+    "roiBack": "40,640,100,50",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "闲庭图片(用户新增，用于判断是否需要点击卷轴关闭区域)"
+  },
+  {
+    "itemName": "login_scroll_close_area",
+    "imageName": "login_scroll_close_area.png",
+    "roiFront": "1181,634,28,39",
+    "roiBack": "1162,595,77,112",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "卷轴关闭区域点击(用户新增，用于点击I_LOGIN_SCROOLL_CLOSE的区域而不依赖图片识别)"
+  },
+  {
     "itemName": "login_red_close",
     "imageName": "login_login_red_close.png",
     "roiFront": "800,0,480,290",
