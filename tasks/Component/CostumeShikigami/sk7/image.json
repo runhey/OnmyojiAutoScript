@@ -1,0 +1,182 @@
+[
+  {
+    "itemName": "check_records_7",
+    "imageName": "sk7_check_records_7.png",
+    "roiFront": "267,76,51,46",
+    "roiBack": "265,74,55,50",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "用于判断在式神录"
+  },
+  {
+    "itemName": "record_soul_back_7",
+    "imageName": "sk7_record_soul_back_7.png",
+    "roiFront": "19,9,51,44",
+    "roiBack": "19,9,51,44",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "退出式神录"
+  },
+  {
+    "itemName": "soul_preset_7",
+    "imageName": "sk7_soul_preset_7.png",
+    "roiFront": "341,76,78,42",
+    "roiBack": "341,76,78,42",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "预设"
+  },
+  {
+    "itemName": "sou_switch_1_7",
+    "imageName": "sk7_sou_switch_1_7.png",
+    "roiFront": "973,140,34,32",
+    "roiBack": "973,140,34,32",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "第一组切换"
+  },
+  {
+    "itemName": "sou_switch_2_7",
+    "imageName": "sk7_sou_switch_2_7.png",
+    "roiFront": "973,293,33,33",
+    "roiBack": "973,293,33,33",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "第二组切换"
+  },
+  {
+    "itemName": "sou_switch_3_7",
+    "imageName": "sk7_sou_switch_3_7.png",
+    "roiFront": "968,448,41,38",
+    "roiBack": "968,448,41,38",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "sou_switch_4_7",
+    "imageName": "sk7_sou_switch_4_7.png",
+    "roiFront": "967,597,42,25",
+    "roiBack": "967,597,42,25",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "sou_switch_sure_7",
+    "imageName": "sk7_sou_switch_sure_7.png",
+    "roiFront": "668,401,180,61",
+    "roiBack": "668,401,180,61",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "sou_check_in_7",
+    "imageName": "sk7_sou_check_in_7.png",
+    "roiFront": "268,74,50,49",
+    "roiBack": "268,74,50,49",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "用于判断是否在式神录里面"
+  },
+  {
+    "itemName": "sou_check_group_1_7",
+    "imageName": "sk7_sou_check_group_1_7.png",
+    "roiFront": "1083,78,22,57",
+    "roiBack": "1083,78,22,57",
+    "method": "Template matching",
+    "threshold": 0.9,
+    "description": "检查是否为第一组"
+  },
+  {
+    "itemName": "sou_check_group_2_7",
+    "imageName": "sk7_sou_check_group_2_7.png",
+    "roiFront": "1083,150,21,57",
+    "roiBack": "1083,150,21,57",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "sou_check_group_3_7",
+    "imageName": "sk7_sou_check_group_3_7.png",
+    "roiFront": "1083,224,22,49",
+    "roiBack": "1083,224,22,49",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "sou_check_group_4_7",
+    "imageName": "sk7_sou_check_group_4_7.png",
+    "roiFront": "1082,291,21,56",
+    "roiBack": "1082,291,21,56",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "sou_check_group_5_7",
+    "imageName": "sk7_sou_check_group_5_7.png",
+    "roiFront": "1083,361,21,53",
+    "roiBack": "1083,361,21,53",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "sou_check_group_6_7",
+    "imageName": "sk7_sou_check_group_6_7.png",
+    "roiFront": "1084,430,21,54",
+    "roiBack": "1084,430,21,54",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "sou_check_group_7_7",
+    "imageName": "sk7_sou_check_group_7_7.png",
+    "roiFront": "1084,502,21,54",
+    "roiBack": "1084,502,21,54",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "sou_team_present_7",
+    "imageName": "sk7_sou_team_present_7.png",
+    "roiFront": "720,76,136,43",
+    "roiBack": "720,76,136,43",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "匹配队伍预设"
+  },
+  {
+    "itemName": "sou_click_present_7",
+    "imageName": "sk7_sou_click_present_7.png",
+    "roiFront": "967,305,43,22",
+    "roiBack": "967,305,43,22",
+    "method": "Template matching",
+    "threshold": 0.9,
+    "description": "需要切换的预设按钮(颜色深一点)"
+  },
+  {
+    "itemName": "st_souls_7",
+    "imageName": "sk7_st_souls_7.png",
+    "roiFront": "1176,227,70,80",
+    "roiBack": "1176,227,70,80",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "点击御魂"
+  },
+  {
+    "itemName": "st_replace_7",
+    "imageName": "sk7_st_replace_7.png",
+    "roiFront": "858,162,100,100",
+    "roiBack": "858,162,100,100",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "更换"
+  }
+]

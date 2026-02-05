@@ -211,11 +211,14 @@ class BaseExploration(GameUi, GeneralBattle, GeneralRoom, GeneralInvite, Replace
             if not self.appear(self.I_E_OPEN_SETTINGS):
                 logger.warning('Opening settings failed due to now in battle')
                 return
+
+        # 先点候补式神区域，再切换稀有度，避免点击失败
+        self.click(self.C_CLICK_STANDBY_TEAM)
+
         choose_rarity = self._config.exploration_config.choose_rarity
         rarity = ShikigamiClass.N if choose_rarity == ChooseRarity.N else ShikigamiClass.MATERIAL
         self.switch_shikigami_class(rarity)
 
-        self.click(self.C_CLICK_STANDBY_TEAM)
         # 移动至未候补的狗粮
         while 1:
             # 慢一点

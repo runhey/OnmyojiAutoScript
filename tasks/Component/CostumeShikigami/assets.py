@@ -225,3 +225,89 @@ class CostumeShikigamiAssets:
 	I_ST_REPLACE_5 = RuleImage(roi_front=(860,168,100,100), roi_back=(872,186,78,63), threshold=0.8, method="Template matching", file="./tasks/Component/CostumeShikigami/sk5/sk5_st_replace_5.png")
 
 
+	# Image Rule Assets
+	# 用于判断在式神录 
+	I_CHECK_RECORDS_6 = RuleImage(roi_front=(269,71,55,50), roi_back=(269,71,55,50), threshold=0.8, method="Template matching", file="./tasks/Component/CostumeShikigami/sk6/sk6_check_records_6.png")
+	# 退出式神录 
+	I_RECORD_SOUL_BACK_6 = RuleImage(roi_front=(19,9,51,44), roi_back=(19,9,51,44), threshold=0.8, method="Template matching", file="./tasks/Component/CostumeShikigami/sk6/sk6_record_soul_back_6.png")
+	# 预设 
+	I_SOUL_PRESET_6 = RuleImage(roi_front=(335,73,90,51), roi_back=(310,57,169,72), threshold=0.8, method="Template matching", file="./tasks/Component/CostumeShikigami/sk6/sk6_soul_preset_6.png")
+	# 第一组切换 
+	I_SOU_SWITCH_1_6 = RuleImage(roi_front=(973,140,34,32), roi_back=(967,131,51,48), threshold=0.8, method="Template matching", file="./tasks/Component/CostumeShikigami/sk6/sk6_sou_switch_1_6.png")
+	# 第二组切换 
+	I_SOU_SWITCH_2_6 = RuleImage(roi_front=(971,293,33,33), roi_back=(960,284,58,49), threshold=0.8, method="Template matching", file="./tasks/Component/CostumeShikigami/sk6/sk6_sou_switch_2_6.png")
+	# description 
+	I_SOU_SWITCH_3_6 = RuleImage(roi_front=(968,448,41,38), roi_back=(962,442,52,48), threshold=0.8, method="Template matching", file="./tasks/Component/CostumeShikigami/sk6/sk6_sou_switch_3_6.png")
+	# description 
+	I_SOU_SWITCH_4_6 = RuleImage(roi_front=(967,597,42,25), roi_back=(962,592,53,34), threshold=0.8, method="Template matching", file="./tasks/Component/CostumeShikigami/sk6/sk6_sou_switch_4_6.png")
+	# description 
+	I_SOU_SWITCH_SURE_6 = RuleImage(roi_front=(668,401,180,61), roi_back=(668,401,180,61), threshold=0.8, method="Template matching", file="./tasks/Component/CostumeShikigami/sk6/sk6_sou_switch_sure_6.png")
+	# 用于判断是否在式神录里面 
+	I_SOU_CHECK_IN_6 = RuleImage(roi_front=(269,69,50,49), roi_back=(269,69,50,49), threshold=0.8, method="Template matching", file="./tasks/Component/CostumeShikigami/sk6/sk6_sou_check_in_6.png")
+	# 检查是否为第一组 
+	I_SOU_CHECK_GROUP_1_6 = RuleImage(roi_front=(1086,91,22,57), roi_back=(1086,91,22,57), threshold=0.9, method="Template matching", file="./tasks/Component/CostumeShikigami/sk6/sk6_sou_check_group_1_6.png")
+	# description 
+	I_SOU_CHECK_GROUP_2_6 = RuleImage(roi_front=(1086,163,25,57), roi_back=(1086,163,25,57), threshold=0.8, method="Template matching", file="./tasks/Component/CostumeShikigami/sk6/sk6_sou_check_group_2_6.png")
+	# description 
+	I_SOU_CHECK_GROUP_3_6 = RuleImage(roi_front=(1085,234,22,49), roi_back=(1085,234,22,49), threshold=0.8, method="Template matching", file="./tasks/Component/CostumeShikigami/sk6/sk6_sou_check_group_3_6.png")
+	# description 
+	I_SOU_CHECK_GROUP_4_6 = RuleImage(roi_front=(1086,303,21,56), roi_back=(1086,303,21,56), threshold=0.8, method="Template matching", file="./tasks/Component/CostumeShikigami/sk6/sk6_sou_check_group_4_6.png")
+	# description 
+	I_SOU_CHECK_GROUP_5_6 = RuleImage(roi_front=(1088,370,21,53), roi_back=(1088,370,21,53), threshold=0.8, method="Template matching", file="./tasks/Component/CostumeShikigami/sk6/sk6_sou_check_group_5_6.png")
+	# description 
+	I_SOU_CHECK_GROUP_6_6 = RuleImage(roi_front=(1085,443,23,54), roi_back=(1085,443,23,54), threshold=0.8, method="Template matching", file="./tasks/Component/CostumeShikigami/sk6/sk6_sou_check_group_6_6.png")
+	# description 
+	I_SOU_CHECK_GROUP_7_6 = RuleImage(roi_front=(1088,512,21,54), roi_back=(1088,512,21,54), threshold=0.8, method="Template matching", file="./tasks/Component/CostumeShikigami/sk6/sk6_sou_check_group_7_6.png")
+	# 匹配队伍预设 
+	I_SOU_TEAM_PRESENT_6 = RuleImage(roi_front=(720,76,136,43), roi_back=(706,68,175,63), threshold=0.8, method="Template matching", file="./tasks/Component/CostumeShikigami/sk6/sk6_sou_team_present_6.png")
+	# 需要切换的预设按钮(颜色深一点) 
+	I_SOU_CLICK_PRESENT_6 = RuleImage(roi_front=(967,305,43,22), roi_back=(965,142,48,480), threshold=0.9, method="Template matching", file="./tasks/Component/CostumeShikigami/sk6/sk6_sou_click_present_6.png")
+	# 选中的御魂 
+	I_ST_SOULS_6 = RuleImage(roi_front=(1180,236,62,66), roi_back=(1176,230,70,80), threshold=0.8, method="Template matching", file="./tasks/Component/CostumeShikigami/sk6/sk6_st_souls_6.png")
+	# 更换 
+	I_ST_REPLACE_6 = RuleImage(roi_front=(856,170,100,100), roi_back=(856,170,100,100), threshold=0.8, method="Template matching", file="./tasks/Component/CostumeShikigami/sk6/sk6_st_replace_6.png")
+
+
+	# Image Rule Assets
+	# 用于判断在式神录 
+	I_CHECK_RECORDS_7 = RuleImage(roi_front=(267,76,51,46), roi_back=(265,74,55,50), threshold=0.8, method="Template matching", file="./tasks/Component/CostumeShikigami/sk7/sk7_check_records_7.png")
+	# 退出式神录 
+	I_RECORD_SOUL_BACK_7 = RuleImage(roi_front=(19,9,51,44), roi_back=(19,9,51,44), threshold=0.8, method="Template matching", file="./tasks/Component/CostumeShikigami/sk7/sk7_record_soul_back_7.png")
+	# 预设 
+	I_SOUL_PRESET_7 = RuleImage(roi_front=(341,76,78,42), roi_back=(341,76,78,42), threshold=0.8, method="Template matching", file="./tasks/Component/CostumeShikigami/sk7/sk7_soul_preset_7.png")
+	# 第一组切换 
+	I_SOU_SWITCH_1_7 = RuleImage(roi_front=(973,140,34,32), roi_back=(973,140,34,32), threshold=0.8, method="Template matching", file="./tasks/Component/CostumeShikigami/sk7/sk7_sou_switch_1_7.png")
+	# 第二组切换 
+	I_SOU_SWITCH_2_7 = RuleImage(roi_front=(973,293,33,33), roi_back=(973,293,33,33), threshold=0.8, method="Template matching", file="./tasks/Component/CostumeShikigami/sk7/sk7_sou_switch_2_7.png")
+	# description 
+	I_SOU_SWITCH_3_7 = RuleImage(roi_front=(968,448,41,38), roi_back=(968,448,41,38), threshold=0.8, method="Template matching", file="./tasks/Component/CostumeShikigami/sk7/sk7_sou_switch_3_7.png")
+	# description 
+	I_SOU_SWITCH_4_7 = RuleImage(roi_front=(967,597,42,25), roi_back=(967,597,42,25), threshold=0.8, method="Template matching", file="./tasks/Component/CostumeShikigami/sk7/sk7_sou_switch_4_7.png")
+	# description 
+	I_SOU_SWITCH_SURE_7 = RuleImage(roi_front=(668,401,180,61), roi_back=(668,401,180,61), threshold=0.8, method="Template matching", file="./tasks/Component/CostumeShikigami/sk7/sk7_sou_switch_sure_7.png")
+	# 用于判断是否在式神录里面 
+	I_SOU_CHECK_IN_7 = RuleImage(roi_front=(268,74,50,49), roi_back=(268,74,50,49), threshold=0.8, method="Template matching", file="./tasks/Component/CostumeShikigami/sk7/sk7_sou_check_in_7.png")
+	# 检查是否为第一组 
+	I_SOU_CHECK_GROUP_1_7 = RuleImage(roi_front=(1083,78,22,57), roi_back=(1083,78,22,57), threshold=0.9, method="Template matching", file="./tasks/Component/CostumeShikigami/sk7/sk7_sou_check_group_1_7.png")
+	# description 
+	I_SOU_CHECK_GROUP_2_7 = RuleImage(roi_front=(1083,150,21,57), roi_back=(1083,150,21,57), threshold=0.8, method="Template matching", file="./tasks/Component/CostumeShikigami/sk7/sk7_sou_check_group_2_7.png")
+	# description 
+	I_SOU_CHECK_GROUP_3_7 = RuleImage(roi_front=(1083,224,22,49), roi_back=(1083,224,22,49), threshold=0.8, method="Template matching", file="./tasks/Component/CostumeShikigami/sk7/sk7_sou_check_group_3_7.png")
+	# description 
+	I_SOU_CHECK_GROUP_4_7 = RuleImage(roi_front=(1082,291,21,56), roi_back=(1082,291,21,56), threshold=0.8, method="Template matching", file="./tasks/Component/CostumeShikigami/sk7/sk7_sou_check_group_4_7.png")
+	# description 
+	I_SOU_CHECK_GROUP_5_7 = RuleImage(roi_front=(1083,361,21,53), roi_back=(1083,361,21,53), threshold=0.8, method="Template matching", file="./tasks/Component/CostumeShikigami/sk7/sk7_sou_check_group_5_7.png")
+	# description 
+	I_SOU_CHECK_GROUP_6_7 = RuleImage(roi_front=(1084,430,21,54), roi_back=(1084,430,21,54), threshold=0.8, method="Template matching", file="./tasks/Component/CostumeShikigami/sk7/sk7_sou_check_group_6_7.png")
+	# description 
+	I_SOU_CHECK_GROUP_7_7 = RuleImage(roi_front=(1084,502,21,54), roi_back=(1084,502,21,54), threshold=0.8, method="Template matching", file="./tasks/Component/CostumeShikigami/sk7/sk7_sou_check_group_7_7.png")
+	# 匹配队伍预设 
+	I_SOU_TEAM_PRESENT_7 = RuleImage(roi_front=(720,76,136,43), roi_back=(720,76,136,43), threshold=0.8, method="Template matching", file="./tasks/Component/CostumeShikigami/sk7/sk7_sou_team_present_7.png")
+	# 需要切换的预设按钮(颜色深一点) 
+	I_SOU_CLICK_PRESENT_7 = RuleImage(roi_front=(967,305,43,22), roi_back=(967,305,43,22), threshold=0.9, method="Template matching", file="./tasks/Component/CostumeShikigami/sk7/sk7_sou_click_present_7.png")
+	# 点击御魂 
+	I_ST_SOULS_7 = RuleImage(roi_front=(1176,227,70,80), roi_back=(1176,227,70,80), threshold=0.8, method="Template matching", file="./tasks/Component/CostumeShikigami/sk7/sk7_st_souls_7.png")
+	# 更换 
+	I_ST_REPLACE_7 = RuleImage(roi_front=(858,162,100,100), roi_back=(858,162,100,100), threshold=0.8, method="Template matching", file="./tasks/Component/CostumeShikigami/sk7/sk7_st_replace_7.png")
+
+
