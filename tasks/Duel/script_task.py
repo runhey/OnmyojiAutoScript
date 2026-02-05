@@ -93,7 +93,9 @@ class ScriptTask(GameUi, GeneralBattle, SwitchSoul, DuelAssets):
             # 关闭恭喜晋升段位页面
             if self.appear_then_click(GGA.I_UI_BACK_RED):
                 continue
-            if self.appear_then_click(self.I_REWARD, interval=0.6):
+            if self.appear_then_click(self.I_REWARD):
+                continue
+            if self.appear_then_click(self.I_WIN):
                 continue
             if not self.duel_main():
                 continue
@@ -482,7 +484,7 @@ class ScriptTask(GameUi, GeneralBattle, SwitchSoul, DuelAssets):
 if __name__ == '__main__':
     from module.config.config import Config
     from module.device.device import Device
-    c = Config('oas3')
+    c = Config('oas2')
     d = Device(c)
     t = ScriptTask(c, d)
 
