@@ -288,8 +288,8 @@ if __name__ == '__main__':
     t = ScriptTask(c, d)
     t.screenshot()
 
-    # t._share_secret()
-    t._share_area_boss()
+    t._share_collect()
+    # t._share_area_boss()
     # t.click_share(t.I_WT_SE_WECHAT)
 
 
