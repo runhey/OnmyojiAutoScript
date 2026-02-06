@@ -29,16 +29,16 @@
   {
     "itemName": "main_goto_daily",
     "imageName": "page_main_goto_daily.png",
-    "roiFront": "735,590,50,32",
+    "roiFront": "765,616,63,38",
     "roiBack": "735,590,120,100",
     "method": "Template matching",
-    "threshold": 0.7,
+    "threshold": 0.6,
     "description": "进入花合战"
   },
   {
     "itemName": "main_goto_mall",
     "imageName": "page_main_goto_mall.png",
-    "roiFront": "620,590,33,35",
+    "roiFront": "663,623,33,42",
     "roiBack": "620,590,120,100",
     "method": "Template matching",
     "threshold": 0.5,
