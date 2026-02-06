@@ -202,6 +202,7 @@
 	<message><source>Duel</source><translation>斗技</translation></message>
 	<message><source>WantedQuests</source><translation>悬赏封印</translation></message>
 	<message><source>Tako</source><translation>石距</translation></message>
+	<message><source>AutoCheckinBigGod</source><translation>大神签到</translation></message>
 </context>
 <context>
     <name>TaskList</name>
@@ -249,6 +250,7 @@
 	<message><source>Duel</source><translation>斗技</translation></message>
 	<message><source>WantedQuests</source><translation>悬赏封印</translation></message>
 	<message><source>Tako</source><translation>石距</translation></message>
+	<message><source>AutoCheckinBigGod</source><translation>大神签到</translation></message>
 </context>
 <context>
     <name>Args</name>

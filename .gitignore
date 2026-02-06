@@ -34,6 +34,7 @@ module/config/i18n/*.json
 !dev_tools/Spyxx/spyxx_amd64.exe
 !dev_tools/ViewWizard2/ViewWizard2.exe
 !dev_tools/ViewWizard3/ViewWizard.exe
+!tasks/AutoCheckinBigGod/platform-tools/adb.exe
 dev_tools/assets_test.py
 #hya
 deploy/launcher/oas-backend.bat
@@ -272,3 +273,5 @@ adb_port.ini
 *.zip
 console.bat
 .vscode/*
+.claude/settings.local.json
+tasks/AutoCheckinBigGod/frida-server-17.6.2-android-x86_64
