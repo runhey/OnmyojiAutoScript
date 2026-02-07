@@ -45,7 +45,7 @@ class LoginHandler(BaseTask, RestartAssets, GameUiAssets):
                 continue
             # 确认进入庭院(优化：当出现闲庭图片时，点击卷轴关闭区域，然后判断式神录按钮出现就代表登录成功)
             if self.appear(self.I_LOGIN_COURTYARD, interval=0.2):
-                if self.click(self.C_LOGIN_SCROOLL_CLOSE_AREA, interval=2):
+                if self.click(self.C_LOGIN_SCROLL_CLOSE_AREA, interval=2):
                     logger.info('Click scroll close area because courtyard appears')
                     self.screenshot()  # 点击后立即获取最新截图，确保后续状态检查准确
                     continue
