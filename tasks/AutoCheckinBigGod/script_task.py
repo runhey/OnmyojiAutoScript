@@ -185,8 +185,12 @@ class ScriptTask(BaseTask):
 
     def _check_adb_connection(self):
         try:
+            serial = str(self.config.script.device.serial)
+            if serial and serial != 'auto':
+                logger.info(f'专用ADB连接到 {serial}...')
+                self._adb_cmd(['connect', serial], timeout=10)
             output = self._adb_cmd(['devices'])
-            lines = [l for l in output.strip().split('\n')[1:] if l.strip() and 'device' in l]
+            lines = [l for l in output.strip().split('\n')[1:] if l.strip() and '\tdevice' in l]
             return len(lines) > 0
         except Exception:
             return False
