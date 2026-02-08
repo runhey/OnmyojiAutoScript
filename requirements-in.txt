@@ -23,7 +23,8 @@ zerorpc==0.6.3
 pydantic==2.10.0
 
 # Frida (AutoCheckinBigGod)
-frida-tools
+frida==17.6.2
+frida-tools==14.5.2
 
 # Utils
 rich==13.3.5

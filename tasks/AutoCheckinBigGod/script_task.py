@@ -3,6 +3,7 @@ import subprocess
 import tempfile
 import lzma
 import os
+import sys
 import time
 import json
 import random
@@ -24,6 +25,9 @@ FRIDA_SERVER_LOCAL = os.path.join(SCRIPT_DIR, "frida-server-17.6.2-android-x86_6
 FRIDA_SERVER_XZ = FRIDA_SERVER_LOCAL + ".xz"
 FRIDA_SERVER_REMOTE = "/data/local/tmp/frida-server"
 ADB_PATH = os.path.join(SCRIPT_DIR, "platform-tools", "adb.exe")
+
+# 获取项目 Python 路径（当前运行的 Python）
+PYTHON_PATH = sys.executable
 
 APP_KEY = "g37"
 GL_VERSION = "4.11.0"
@@ -143,14 +147,18 @@ class ScriptTask(BaseTask):
         except Exception:
             pass
         try:
-            self._adb_shell(['killall', 'frida-server'])
+            self._adb_shell(['su', '-c', 'killall frida-server'])
         except Exception:
             pass
 
     # ======================== ADB 操作 ========================
 
     def _adb_cmd(self, args, timeout=10):
-        cmd = [ADB_PATH] + args
+        # 如果有设备序列号且命令不是 connect/devices，则添加 -s 参数指定设备
+        cmd = [ADB_PATH]
+        if hasattr(self, '_adb_serial') and self._adb_serial and args[0] not in ['connect', 'devices']:
+            cmd.extend(['-s', self._adb_serial])
+        cmd.extend(args)
         result = subprocess.run(cmd, capture_output=True, text=True, timeout=timeout)
         return result.stdout.strip()
 
@@ -188,17 +196,50 @@ class ScriptTask(BaseTask):
             serial = str(self.config.script.device.serial)
             if serial and serial != 'auto':
                 logger.info(f'专用ADB连接到 {serial}...')
-                self._adb_cmd(['connect', serial], timeout=10)
+                result = self._adb_cmd(['connect', serial], timeout=10)
+                if 'connected' not in result.lower() and 'already connected' not in result.lower():
+                    logger.warning(f'ADB连接失败: {result}')
+                    return False
+                # 保存设备序列号，用于后续命令指定设备
+                self._adb_serial = serial
+            else:
+                self._adb_serial = None
+
             output = self._adb_cmd(['devices'])
             lines = [l for l in output.strip().split('\n')[1:] if l.strip() and '\tdevice' in l]
-            return len(lines) > 0
-        except Exception:
+
+            if len(lines) == 0:
+                logger.warning('未检测到任何设备')
+                return False
+
+            # 如果没有指定 serial 且只有一个设备，自动使用该设备
+            if not self._adb_serial and len(lines) == 1:
+                device_line = lines[0].split('\t')[0]
+                self._adb_serial = device_line.strip()
+                logger.info(f'自动使用设备: {self._adb_serial}')
+
+            return True
+        except Exception as e:
+            logger.warning(f'ADB连接检查失败: {e}')
             return False
 
     def _is_frida_server_running(self):
         try:
             output = self._adb_shell(['ps | grep frida-server'])
-            return 'frida-server' in output
+            if 'frida-server' not in output:
+                return False
+            # 确保是以 root 身份运行，否则无法 attach 进程
+            for line in output.strip().split('\n'):
+                if 'frida-server' in line and 'grep' not in line:
+                    if line.strip().startswith('root'):
+                        return True
+            # frida-server 存在但不是 root 运行，杀掉重启
+            logger.warning('Frida Server未以root运行，正在重启...')
+            try:
+                self._adb_shell(['killall', 'frida-server'])
+            except Exception:
+                pass
+            return False
         except Exception:
             return False
 
@@ -231,20 +272,56 @@ class ScriptTask(BaseTask):
             return False
         logger.info('推送Frida Server到模拟器...')
         try:
-            self._adb_cmd(['push', FRIDA_SERVER_LOCAL, FRIDA_SERVER_REMOTE], timeout=30)
+            # 先删除旧文件（如果存在）
+            try:
+                self._adb_shell(['rm', '-f', FRIDA_SERVER_REMOTE])
+            except:
+                pass
+
+            # 推送文件
+            self._adb_cmd(['push', FRIDA_SERVER_LOCAL, FRIDA_SERVER_REMOTE], timeout=60)
+
+            # 验证推送是否成功（检查文件大小）
+            local_size = os.path.getsize(FRIDA_SERVER_LOCAL)
+            remote_check = self._adb_shell(['ls', '-l', FRIDA_SERVER_REMOTE])
+
+            if 'No such file' in remote_check:
+                logger.error('推送失败: 文件未找到')
+                return False
+
+            # 从 ls -l 输出提取文件大小（格式如：-rwxr-xr-x 1 root root 105123456 ...）
+            try:
+                parts = remote_check.split()
+                if len(parts) >= 5:
+                    remote_size = int(parts[4])
+                    if remote_size != local_size:
+                        logger.error(f'推送失败: 文件大小不匹配 (本地: {local_size}, 远程: {remote_size})')
+                        return False
+            except:
+                pass
+
             self._adb_shell(['chmod', '755', FRIDA_SERVER_REMOTE])
             logger.info('Frida Server推送完成')
             return True
+        except subprocess.TimeoutExpired:
+            logger.error('推送超时，请检查网络连接和模拟器状态')
+            return False
         except Exception as e:
             logger.error(f'推送失败: {e}')
             return False
 
     def _start_frida_server(self):
         logger.info('启动Frida Server...')
-        subprocess.Popen(
-            [ADB_PATH, 'shell', f'{FRIDA_SERVER_REMOTE} &'],
-            stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL
-        )
+        # 使用 su + nohup 以 root 身份后台启动，否则无权 attach 其他进程
+        # 将 stdout/stderr 重定向到 /dev/null 避免阻塞
+        start_cmd = f'su -c "nohup {FRIDA_SERVER_REMOTE} > /dev/null 2>&1 &"'
+        try:
+            self._adb_shell([start_cmd], timeout=5)
+        except subprocess.TimeoutExpired:
+            # su 启动可能超时，但进程已经在后台运行了
+            pass
+        except Exception:
+            pass
         time.sleep(3)
         if self._is_frida_server_running():
             logger.info('Frida Server已启动')
@@ -267,20 +344,44 @@ class ScriptTask(BaseTask):
             f.write(script_content)
             script_path = f.name
         try:
+            # 获取 frida 可执行文件路径
+            # frida-tools 安装后会在 Python Scripts 目录下生成 frida.exe
+            python_dir = os.path.dirname(PYTHON_PATH)
+            frida_exe = os.path.join(python_dir, 'Scripts', 'frida.exe')
+
+            # 如果找不到 frida.exe，尝试直接使用 frida 命令（依赖 PATH）
+            if not os.path.exists(frida_exe):
+                frida_exe = 'frida'
+
+            # 构建 frida 命令
+            if hasattr(self, '_adb_serial') and self._adb_serial:
+                frida_cmd = [frida_exe, '-D', self._adb_serial, '-p', str(pid), '-l', script_path]
+            else:
+                frida_cmd = [frida_exe, '-U', '-p', str(pid), '-l', script_path]
+
             process = subprocess.Popen(
-                ['frida', '-U', '-p', str(pid), '-l', script_path],
+                frida_cmd,
                 stdin=subprocess.PIPE,
                 stdout=subprocess.PIPE,
                 stderr=subprocess.PIPE,
-                text=True
             )
+            # 等待脚本执行完成
             time.sleep(wait_time)
-            stdout, stderr = process.communicate(input='exit\n', timeout=timeout)
-            return stdout + stderr
-        except subprocess.TimeoutExpired:
-            process.kill()
-            logger.warning('Frida脚本执行超时')
-            return None
+
+            # 关闭 stdin 触发 frida 退出，然后读取输出
+            process.stdin.close()
+            try:
+                stdout_bytes, stderr_bytes = process.communicate(timeout=timeout)
+            except subprocess.TimeoutExpired:
+                process.kill()
+                stdout_bytes, stderr_bytes = process.communicate()
+
+            # 使用 utf-8 解码，忽略无法解码的字符
+            stdout = stdout_bytes.decode('utf-8', errors='ignore') if stdout_bytes else ''
+            stderr = stderr_bytes.decode('utf-8', errors='ignore') if stderr_bytes else ''
+            output = stdout + stderr
+
+            return output
         except Exception as e:
             logger.warning(f'Frida脚本执行失败: {e}')
             return None
@@ -340,7 +441,7 @@ Java.perform(function() {{
     }});
 }});
 """
-        output = self._run_frida_script(pid, script, wait_time=3, timeout=10)
+        output = self._run_frida_script(pid, script, wait_time=5, timeout=15)
         if not output:
             return None
 
