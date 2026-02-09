@@ -183,8 +183,13 @@ class ScriptTask(BaseTask):
                 '-c', 'android.intent.category.LAUNCHER', '1'
             ])
             logger.info('等待大神APP启动...')
-            time.sleep(15)
-            return self._get_app_pid()
+            # 轮询检测APP启动，最多等30秒
+            for _ in range(15):
+                time.sleep(2)
+                pid = self._get_app_pid()
+                if pid:
+                    return pid
+            return None
         except Exception as e:
             logger.warning(f'启动APP失败: {e}')
             return None
@@ -322,10 +327,12 @@ class ScriptTask(BaseTask):
             pass
         except Exception:
             pass
-        time.sleep(3)
-        if self._is_frida_server_running():
-            logger.info('Frida Server已启动')
-            return True
+        # 轮询检测启动状态，最多等10秒
+        for _ in range(5):
+            time.sleep(2)
+            if self._is_frida_server_running():
+                logger.info('Frida Server已启动')
+                return True
         logger.error('Frida Server启动失败，请确保模拟器已开启Root模式')
         return False
 
