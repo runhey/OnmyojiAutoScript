@@ -142,6 +142,10 @@ class GeneralBattleAssets:
 	I_GREED_GHOST = RuleImage(roi_front=(56,40,45,45), roi_back=(56,40,45,45), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralBattle/gb/gb_greed_ghost.png")
 	# 确认按钮 
 	I_CONFIRM = RuleImage(roi_front=(732,383,83,43), roi_back=(330,228,615,286), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralBattle/gb/gb_confirm.png")
+	# 关闭御魂不一致提示弹窗 
+	I_CONFIRM_CLOSE_DIFF_SOUL = RuleImage(roi_front=(571,404,135,54), roi_back=(517,374,226,112), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralBattle/gb/gb_confirm_close_diff_soul.png")
+	# 禁用御魂不一致提示7天 
+	I_DISABLE_7DAYS_DIFF_SOUL = RuleImage(roi_front=(547,342,27,36), roi_back=(524,325,70,71), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralBattle/gb/gb_disable_7days_diff_soul.png")
 
 
 	# Ocr Rule Assets

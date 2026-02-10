@@ -58,6 +58,10 @@ class GeneralBattle(GeneralBuff, GeneralBattleAssets):
             self.screenshot()
             if self.is_in_real_battle(False):  # 战斗阶段
                 return True
+            if self.appear_then_click(self.I_DISABLE_7DAYS_DIFF_SOUL, interval=0.6):  # 关闭御魂不一致提示
+                continue
+            if self.appear_then_click(self.I_CONFIRM_CLOSE_DIFF_SOUL, interval=0.6):  # 确认关闭御魂不一致提示
+                continue
             if self.is_in_prepare(False):  # 战斗准备阶段
                 if not getattr(config, 'lock_team_enable', False):  # 没有锁定阵容
                     if self.current_count == 1 and not confed:  # 第一次战斗且是本次第一次配置
