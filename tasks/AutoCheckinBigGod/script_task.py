@@ -8,6 +8,10 @@ import time
 import json
 import random
 
+# 直接运行本脚本时，需要先将项目根目录加入 Python 路径
+if __name__ == '__main__' and 'tasks' not in sys.modules:
+    sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..'))
+
 import requests
 import urllib3
 
@@ -19,6 +23,7 @@ urllib3.disable_warnings()
 os.environ['MSYS_NO_PATHCONV'] = '1'
 
 WELFARE_BASE = "https://god-welfare.gameyw.netease.com"
+LOGIN_BASE = "https://god.gameyw.netease.com"
 GL_PACKAGE = "com.netease.gl"
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 FRIDA_SERVER_LOCAL = os.path.join(SCRIPT_DIR, "frida-server-17.6.2-android-x86_64")
@@ -30,7 +35,7 @@ ADB_PATH = os.path.join(SCRIPT_DIR, "platform-tools", "adb.exe")
 PYTHON_PATH = sys.executable
 
 APP_KEY = "g37"
-GL_VERSION = "4.11.0"
+GL_VERSION = "4.12.0"  # 默认值，运行时会从APP动态获取
 GL_CLIENTTYPE = "50"
 
 
@@ -41,6 +46,7 @@ class ScriptTask(BaseTask):
         self.gl_token = ""
         self.gl_deviceid = ""
         self.gl_source = "URS"
+        self.gl_version = GL_VERSION
         self.role_id = ""
         self.server = ""
         self.app_key = APP_KEY
@@ -77,20 +83,20 @@ class ScriptTask(BaseTask):
 
         # [3/5] 获取Token
         logger.info('[3/5] 获取Token...')
-        token_data = None
-        for attempt in range(1, 4):
-            token_data = self._extract_token(pid)
-            if token_data:
-                break
-            if attempt < 3:
-                logger.warning(f'第{attempt}次获取Token失败，等待{10 * attempt}秒后重试...')
-                time.sleep(10 * attempt)
-                new_pid = self._get_app_pid()
-                if new_pid:
-                    pid = new_pid
-                    self.frida_pid = pid
+        token_data = self._try_extract_token(pid)
+
+        # 如果内存提取失败，通过 auth 数据库 + HTTP API 自动登录
         if not token_data:
-            logger.error('无法获取Token，请确保已登录大神APP')
+            logger.warning('内存中未找到Token，尝试通过URS凭据自动登录...')
+            new_pid, login_token = self._auto_login(pid)
+            if new_pid:
+                pid = new_pid
+                self.frida_pid = pid
+            if login_token:
+                token_data = login_token
+
+        if not token_data:
+            logger.error('无法获取Token，请确保已登录大神APP并绑定阴阳师角色')
             self.set_next_run('AutoCheckinBigGod', success=False, finish=True)
             raise TaskEnd('AutoCheckinBigGod')
 
@@ -98,10 +104,9 @@ class ScriptTask(BaseTask):
         self.gl_token = token_data.get('GL_TOKEN', '')
         self.gl_deviceid = token_data.get('GL_DEVICEID', '')
         self.gl_source = token_data.get('GL_SOURCE', 'URS')
-        self.role_id = token_data.get('ROLE_ID', '')
-        self.server = token_data.get('SERVER', '')
-        if token_data.get('APP_KEY'):
-            self.app_key = token_data.get('APP_KEY')
+        if token_data.get('GL_VERSION'):
+            self.gl_version = token_data['GL_VERSION']
+            logger.info(f'APP版本: {self.gl_version}')
         logger.info(f'Token获取成功! 用户ID: {self.gl_uid[:16]}...')
 
         # Token已获取，将大神APP切到后台，减少对用户的干扰
@@ -110,7 +115,12 @@ class ScriptTask(BaseTask):
         except Exception:
             pass
 
-        if self.role_id and self.server:
+        # 通过API获取角色信息
+        logger.info('通过API获取角色信息...')
+        role_info = self._get_role_info()
+        if role_info:
+            self.role_id = role_info.get('roleId', '')
+            self.server = role_info.get('server', '')
             logger.info(f'角色信息: {self.role_id} @ {self.server}')
         else:
             logger.warning('未能获取角色信息，请确保已在大神APP中绑定阴阳师角色')
@@ -175,15 +185,20 @@ class ScriptTask(BaseTask):
         return None
 
     def _launch_app(self):
+        """启动大神APP。如果已在运行则直接返回PID，不会force-stop。"""
         try:
-            self._adb_shell(['am', 'force-stop', GL_PACKAGE])
-            time.sleep(2)
+            # 先检查是否已在运行
+            pid = self._get_app_pid()
+            if pid:
+                logger.info('大神APP已在运行，无需重启')
+                return pid
+
+            # APP未运行，启动它
             self._adb_shell([
                 'monkey', '-p', GL_PACKAGE,
                 '-c', 'android.intent.category.LAUNCHER', '1'
             ])
             logger.info('等待大神APP启动...')
-            # 轮询检测APP启动，最多等30秒
             for _ in range(15):
                 time.sleep(2)
                 pid = self._get_app_pid()
@@ -206,6 +221,8 @@ class ScriptTask(BaseTask):
                     logger.warning(f'ADB连接失败: {result}')
                     return False
                 # 保存设备序列号，用于后续命令指定设备
+                # adb connect 不带端口时会自动补 :5555，需要从 devices 列表中获取实际名称
+                # 因为 Frida -D 参数需要精确匹配 adb devices 中的设备名
                 self._adb_serial = serial
             else:
                 self._adb_serial = None
@@ -216,6 +233,17 @@ class ScriptTask(BaseTask):
             if len(lines) == 0:
                 logger.warning('未检测到任何设备')
                 return False
+
+            # 从 adb devices 输出中获取实际的设备 serial（可能带端口号）
+            # 例如用户配置 192.168.1.66，adb devices 中显示 192.168.1.66:5555
+            if self._adb_serial:
+                for l in lines:
+                    actual_serial = l.split('\t')[0].strip()
+                    if actual_serial.startswith(self._adb_serial):
+                        if actual_serial != self._adb_serial:
+                            logger.info(f'设备实际名称: {actual_serial}')
+                        self._adb_serial = actual_serial
+                        break
 
             # 如果没有指定 serial 且只有一个设备，自动使用该设备
             if not self._adb_serial and len(lines) == 1:
@@ -398,58 +426,57 @@ class ScriptTask(BaseTask):
             except:
                 pass
 
+    def _try_extract_token(self, pid):
+        """尝试多次从内存提取 Token（GL_UID/GL_TOKEN/GL_DEVICEID），返回 dict 或 None。"""
+        for attempt in range(1, 4):
+            token_data = self._extract_token(pid)
+            if token_data:
+                return token_data
+            logger.warning(f'第{attempt}次获取Token失败，等待5秒后重试...')
+            if attempt < 3:
+                time.sleep(5)
+                new_pid = self._get_app_pid()
+                if new_pid:
+                    pid = new_pid
+                    self.frida_pid = pid
+        return None
+
     def _extract_token(self, pid):
-        script = f"""
-Java.perform(function() {{
-    Java.choose('com.netease.gl.serviceaccount.proto.auth.GLAuth$Authed', {{
-        onMatch: function(instance) {{
+        """通过 Frida 从内存中提取 GL 认证信息（UID/Token/DeviceId/Source）"""
+        script = """
+Java.perform(function() {
+    Java.choose('com.netease.gl.serviceaccount.proto.auth.GLAuth$Authed', {
+        onMatch: function(instance) {
             var uid = instance.getUid();
             var token = instance.getToken();
             var source = instance.getSource();
-            if (uid && token) {{
+            if (uid && token) {
                 console.log('GL_UID:' + uid);
                 console.log('GL_TOKEN:' + token);
                 console.log('GL_SOURCE:' + source);
-            }}
-        }},
-        onComplete: function() {{}}
-    }});
+            }
+        },
+        onComplete: function() {}
+    });
 
-    try {{
+    try {
         var YXFDeviceInfo = Java.use('com.netease.gl.glbase.build.YXFDeviceInfo');
         console.log('GL_DEVICEID:' + YXFDeviceInfo.getDeviceId());
-    }} catch(e) {{}}
+    } catch(e) {}
 
-    Java.choose('com.netease.gl.serviceim.entity.chatroom.GameRoleCardEntity', {{
-        onMatch: function(instance) {{
-            var appKey = instance.getAppKey ? instance.getAppKey() : null;
-            if (appKey === '{self.app_key}') {{
-                var displayInfos = instance.getRoleCardDisplayInfos();
-                if (displayInfos && displayInfos.size() > 0) {{
-                    var info = displayInfos.get(0);
-                    var fields = info.getClass().getDeclaredFields();
-                    for (var i = 0; i < fields.length; i++) {{
-                        fields[i].setAccessible(true);
-                        var name = fields[i].getName();
-                        try {{
-                            var value = fields[i].get(info);
-                            if (name === 'roleId' && value) {{
-                                console.log('ROLE_ID:' + value);
-                            }} else if (name === 'server' && value) {{
-                                console.log('SERVER:' + value);
-                            }}
-                        }} catch(e) {{}}
-                    }}
-                    console.log('APP_KEY:' + appKey);
-                }}
-            }}
-        }},
-        onComplete: function() {{}}
-    }});
-}});
+    // 获取APP版本号
+    try {
+        var AppProfile = Java.use('com.netease.gl.glbase.app.AppProfile');
+        var ctx = AppProfile.getContext();
+        var pm = ctx.getPackageManager();
+        var pi = pm.getPackageInfo('com.netease.gl', 0);
+        console.log('GL_VERSION:' + pi.versionName.value);
+    } catch(e) {}
+});
 """
         output = self._run_frida_script(pid, script, wait_time=5, timeout=15)
         if not output:
+            logger.warning('Frida脚本无输出')
             return None
 
         data = {}
@@ -462,12 +489,8 @@ Java.perform(function() {{
                 data['GL_DEVICEID'] = line.split('GL_DEVICEID:')[1].strip()
             elif 'GL_SOURCE:' in line:
                 data['GL_SOURCE'] = line.split('GL_SOURCE:')[1].strip()
-            elif 'ROLE_ID:' in line:
-                data['ROLE_ID'] = line.split('ROLE_ID:')[1].strip()
-            elif 'SERVER:' in line:
-                data['SERVER'] = line.split('SERVER:')[1].strip()
-            elif 'APP_KEY:' in line:
-                data['APP_KEY'] = line.split('APP_KEY:')[1].strip()
+            elif 'GL_VERSION:' in line:
+                data['GL_VERSION'] = line.split('GL_VERSION:')[1].strip()
 
         if data.get('GL_UID') and data.get('GL_TOKEN'):
             return data
@@ -507,7 +530,248 @@ Java.perform(function() {{
                 return line.split('SIGNED_URL:')[1].strip()
         return None
 
+    # ======================== 自动登录（读取auth数据库 + HTTP API） ========================
+
+    def _auto_login(self, pid):
+        """
+        自动登录流程：
+        1. 通过 Frida 读取 APP 的 auth SQLite 数据库，获取缓存的 URS 凭据
+        2. 使用 URS 凭据调用 login-by-urs-token API 获取新的 GL Token
+        前提：用户至少手动登录过一次（数据库中有缓存账号）。
+        返回 (pid, token_data) 元组。token_data 为 dict 或 None。
+        """
+        # 第1步：从 auth 数据库读取 URS 凭据
+        logger.info('从APP数据库读取URS凭据...')
+        urs_creds = self._get_urs_credentials(pid)
+        if not urs_creds:
+            logger.error('无法读取URS凭据，请确保已手动登录过大神APP')
+            return pid, None
+
+        logger.info(f'获取到URS凭据，账号: {urs_creds.get("AUTH_ACCOUNT", "unknown")}')
+        if urs_creds.get('GL_VERSION'):
+            self.gl_version = urs_creds['GL_VERSION']
+            logger.info(f'APP版本: {self.gl_version}')
+
+        # 第2步：调用 login-by-urs-token API
+        logger.info('调用登录API...')
+        token_data = self._login_by_urs_token(pid, urs_creds)
+        if token_data:
+            logger.info('自动登录成功!')
+            return self._get_app_pid(), token_data
+
+        logger.warning('登录API调用失败')
+        return self._get_app_pid(), None
+
+    def _get_urs_credentials(self, pid):
+        """通过 Frida 从 APP 的 auth SQLite 数据库中读取 URS 凭据"""
+        script = """
+Java.perform(function() {
+    // 从 auth 数据库读取 userauths 表
+    try {
+        var AppProfile = Java.use('com.netease.gl.glbase.app.AppProfile');
+        var ctx = AppProfile.getContext();
+        var dbPath = ctx.getDatabasePath('auth');
+        if (dbPath.exists()) {
+            var SQLiteDatabase = Java.use('android.database.sqlite.SQLiteDatabase');
+            var db = SQLiteDatabase.openDatabase(dbPath.getAbsolutePath(), null, 1);
+            var cursor = db.rawQuery(
+                "SELECT uid, token, account, ursAuthedToken, ursAuhtedId, authType FROM userauths LIMIT 1",
+                null
+            );
+            if (cursor.moveToFirst()) {
+                console.log('AUTH_UID:' + cursor.getString(0));
+                console.log('AUTH_TOKEN:' + cursor.getString(1));
+                console.log('AUTH_ACCOUNT:' + cursor.getString(2));
+                console.log('AUTH_URS_TOKEN:' + cursor.getString(3));
+                console.log('AUTH_URS_ID:' + cursor.getString(4));
+                console.log('AUTH_TYPE:' + cursor.getString(5));
+            }
+            cursor.close();
+            db.close();
+        } else {
+            console.log('AUTH_DB_ERROR:数据库文件不存在');
+        }
+    } catch(e) {
+        console.log('AUTH_DB_ERROR:' + e);
+    }
+
+    // 获取 DeviceId
+    try {
+        var YXFDeviceInfo = Java.use('com.netease.gl.glbase.build.YXFDeviceInfo');
+        console.log('GL_DEVICEID:' + YXFDeviceInfo.getDeviceId());
+    } catch(e) {}
+
+    // 获取 UDID
+    try {
+        var Settings = Java.use('android.provider.Settings$Secure');
+        var AppProfile = Java.use('com.netease.gl.glbase.app.AppProfile');
+        var ctx = AppProfile.getContext();
+        var udid = Settings.getString(ctx.getContentResolver(), 'android_id');
+        console.log('UDID:' + udid);
+    } catch(e) {}
+
+    // 获取APP版本号
+    try {
+        var AppProfile = Java.use('com.netease.gl.glbase.app.AppProfile');
+        var ctx = AppProfile.getContext();
+        var pm = ctx.getPackageManager();
+        var pi = pm.getPackageInfo('com.netease.gl', 0);
+        console.log('GL_VERSION:' + pi.versionName.value);
+    } catch(e) {}
+});
+"""
+        output = self._run_frida_script(pid, script, wait_time=5, timeout=15)
+        if not output:
+            return None
+
+        data = {}
+        for line in output.split('\n'):
+            for key in ['AUTH_UID', 'AUTH_TOKEN', 'AUTH_ACCOUNT', 'AUTH_URS_TOKEN',
+                        'AUTH_URS_ID', 'AUTH_TYPE', 'GL_DEVICEID', 'UDID', 'GL_VERSION']:
+                tag = key + ':'
+                if tag in line:
+                    data[key] = line.split(tag)[1].strip()
+            if 'AUTH_DB_ERROR:' in line:
+                logger.warning(f'读取数据库失败: {line.split("AUTH_DB_ERROR:")[1].strip()}')
+
+        if data.get('AUTH_URS_TOKEN') and data.get('AUTH_URS_ID'):
+            return data
+
+        logger.warning('数据库中无有效的URS凭据')
+        return None
+
+    def _login_by_urs_token(self, pid, urs_creds):
+        """使用 URS 凭据调用 login-by-urs-token API 获取新的 GL Token"""
+        base_url = f"{LOGIN_BASE}/v1/app/base/user/login-by-urs-token"
+        device_id = urs_creds.get('GL_DEVICEID', '')
+        udid = urs_creds.get('UDID', '')
+
+        payload = {
+            "urs": {
+                "id": urs_creds['AUTH_URS_ID'],
+                "token": urs_creds['AUTH_URS_TOKEN'],
+                "type": int(urs_creds.get('AUTH_TYPE', '30'))
+            },
+            "account": urs_creds['AUTH_ACCOUNT'],
+            "clientType": int(GL_CLIENTTYPE),
+            "deviceId": device_id,
+            "os": "android",
+            "version": self.gl_version,
+            "osVersion": "12",
+            "device": "SDY-AN00",
+            "udid": udid,
+            "unisdkDeviceId": udid,
+            "autoLogin": False
+        }
+
+        body_str = json.dumps(payload)
+        nonce = self._generate_nonce()
+        sign_headers = {
+            "GL-ClientType": GL_CLIENTTYPE,
+            "GL-DeviceId": device_id,
+            "GL-Nonce": nonce,
+        }
+
+        # 需要 Frida 签名
+        self.frida_pid = pid
+        signed_url = self._frida_sign(base_url, body_str, sign_headers)
+        if not signed_url:
+            logger.warning('登录请求签名失败')
+            return None
+
+        headers = {
+            "Content-Type": "application/json; charset=utf-8",
+            "User-Agent": "okhttp/4.9.1",
+            "gl-clienttype": GL_CLIENTTYPE,
+            "gl-deviceid": device_id,
+            "gl-version": self.gl_version,
+            "gl-nonce": nonce,
+            "gl-curtime": str(int(time.time())),
+        }
+
+        try:
+            resp = self.session.post(signed_url, json=payload, headers=headers, timeout=15)
+            data = resp.json()
+
+            if data.get('code') == 200:
+                result = data.get('result', {})
+                token = result.get('token', '')
+                uid = result.get('userInfo', {}).get('user', {}).get('uid', '')
+                source = result.get('source', 'URS')
+                if uid and token:
+                    logger.info(f'登录成功! Token: {token[:16]}...')
+                    return {
+                        'GL_UID': uid,
+                        'GL_TOKEN': token,
+                        'GL_SOURCE': source,
+                        'GL_DEVICEID': device_id,
+                    }
+                logger.warning('登录API返回200但缺少uid或token')
+                return None
+            else:
+                logger.warning(f'登录失败: code={data.get("code")}, msg={data.get("errmsg")}')
+                return None
+        except Exception as e:
+            logger.warning(f'登录请求异常: {e}')
+            return None
+
     # ======================== HTTP API ========================
+
+    def _get_role_info(self):
+        """通过大神API获取绑定的阴阳师角色信息"""
+        url = f"{LOGIN_BASE}/v1/app/gameRole/getBindList"
+        payload = {"uid": self.gl_uid}
+
+        try:
+            resp = self.session.post(url, json=payload, headers=self._build_headers(), timeout=15)
+            data = resp.json()
+            if data.get('code') != 200:
+                logger.warning(f'获取角色信息失败: {data.get("errmsg")}')
+                return None
+
+            roles = data.get('result', [])
+            for role in roles:
+                if role.get('appKey') == self.app_key:
+                    role_id = role.get('roleId', '')
+                    server = role.get('server', '')
+                    if role_id:
+                        logger.info(f'API获取角色成功: {role_id} @ {server}')
+                        return {'roleId': role_id, 'server': server}
+
+            if roles:
+                logger.warning(f'找到 {len(roles)} 个绑定角色，但无 appKey={self.app_key} 的角色')
+            else:
+                logger.warning('未找到任何绑定角色')
+            return None
+        except Exception as e:
+            logger.warning(f'获取角色信息异常: {e}')
+            return None
+
+    def _is_token_expired(self, code, msg):
+        """判断API返回是否表示Token已过期"""
+        if code in [802, 805]:
+            return True
+        if msg and ('其他设备' in msg or '登录' in msg or '过期' in msg or '失效' in msg):
+            return True
+        return False
+
+    def _relogin(self):
+        """Token过期时重新登录，更新 self 上的凭据。返回是否成功。"""
+        logger.warning('Token已失效，尝试重新登录...')
+        pid = self.frida_pid or self._get_app_pid()
+        if not pid:
+            logger.error('重新登录失败：APP未运行')
+            return False
+        _, token_data = self._auto_login(pid)
+        if not token_data:
+            logger.error('重新登录失败')
+            return False
+        self.gl_uid = token_data.get('GL_UID', '')
+        self.gl_token = token_data.get('GL_TOKEN', '')
+        self.gl_deviceid = token_data.get('GL_DEVICEID', self.gl_deviceid)
+        self.gl_source = token_data.get('GL_SOURCE', 'URS')
+        logger.info(f'重新登录成功! 新Token: {self.gl_token[:16]}...')
+        return True
 
     def _generate_nonce(self):
         return str(random.randint(-9000000000000000000, 9000000000000000000))
@@ -518,8 +782,8 @@ Java.perform(function() {{
         return {
             "Content-Type": "application/json",
             "Accept": "application/json",
-            "User-Agent": f"Mozilla/5.0 (Linux; Android 12) Godlike/{GL_VERSION}",
-            "gl-version": GL_VERSION,
+            "User-Agent": f"Mozilla/5.0 (Linux; Android 12) Godlike/{self.gl_version}",
+            "gl-version": self.gl_version,
             "gl-source": self.gl_source,
             "gl-deviceid": self.gl_deviceid,
             "gl-token": self.gl_token,
@@ -541,8 +805,19 @@ Java.perform(function() {{
             resp = self.session.post(url, json=payload, headers=self._build_headers(), timeout=15)
             data = resp.json()
 
-            if data.get('code') != 200:
-                logger.warning(f'获取礼包失败: {data.get("errmsg")}')
+            code = data.get('code')
+            msg = data.get('errmsg', '')
+
+            # Token过期，重新登录后重试
+            if code != 200 and self._is_token_expired(code, msg):
+                if self._relogin():
+                    resp = self.session.post(url, json=payload, headers=self._build_headers(), timeout=15)
+                    data = resp.json()
+                    code = data.get('code')
+                    msg = data.get('errmsg', '')
+
+            if code != 200:
+                logger.warning(f'获取礼包失败: {msg}')
                 return []
 
             rewards = []
@@ -606,6 +881,22 @@ Java.perform(function() {{
                 return True
             elif code == 801 or '已领取' in msg:
                 logger.info(f'  已领取过: {title}')
+            elif self._is_token_expired(code, msg):
+                # Token过期，重新登录后重试
+                if self._relogin():
+                    logger.info(f'  重试领取: {title}...')
+                    nonce = self._generate_nonce()
+                    sign_headers["GL-Token"] = self.gl_token
+                    sign_headers["GL-Nonce"] = nonce
+                    signed_url = self._frida_sign(base_url, json.dumps(payload), sign_headers)
+                    if signed_url:
+                        resp2 = self.session.post(signed_url, json=payload,
+                                                  headers=self._build_headers(nonce), timeout=15)
+                        data2 = resp2.json()
+                        if data2.get('code') == 200:
+                            logger.info(f'  领取成功: {title}')
+                            return True
+                        logger.warning(f'  重试失败: {title} - {data2.get("errmsg")}')
             else:
                 logger.warning(f'  领取失败: {title} - {msg}')
 
