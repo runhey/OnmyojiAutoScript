@@ -18,7 +18,7 @@ class ActivityShikigamiAssets:
 	# description 
 	C_RANDOM_TOP = RuleClick(roi_front=(84,49,1159,93), roi_back=(85,46,1159,101), name="random_top")
 	# description 
-	C_RANDOM_BOTTOM = RuleClick(roi_front=(179,577,972,100), roi_back=(179,579,972,100), name="random_bottom")
+	C_RANDOM_BOTTOM = RuleClick(roi_front=(179,598,972,78), roi_back=(179,597,972,81), name="random_bottom")
 	# description 
 	C_RANDOM_ALL = RuleClick(roi_front=(42,94,1207,543), roi_back=(42,94,1207,543), name="random_all")
 

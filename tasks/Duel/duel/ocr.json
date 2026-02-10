@@ -1,8 +1,8 @@
 [
   {
     "itemName": "d_honor",
-    "roiFront": "699,562,131,31",
-    "roiBack": "699,562,131,31",
+    "roiFront": "233,644,131,31",
+    "roiBack": "233,643,131,31",
     "mode": "DigitCounter",
     "method": "Default",
     "keyword": "",
@@ -10,9 +10,9 @@
   },
   {
     "itemName": "d_score",
-    "roiFront": "701,509,61,33",
-    "roiBack": "701,509,61,33",
-    "mode": "Digit",
+    "roiFront": "604,484,108,28",
+    "roiBack": "604,484,108,28",
+    "mode": "DigitCounter",
     "method": "Default",
     "keyword": "",
     "description": "分数"
