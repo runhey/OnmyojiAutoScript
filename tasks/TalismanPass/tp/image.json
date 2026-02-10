@@ -124,5 +124,14 @@
     "method": "Template matching",
     "threshold": 0.8,
     "description": "六星御魂标志"
+  },
+  {
+    "itemName": "tp_soul_1b",
+    "imageName": "tp_tp_soul_1b.png",
+    "roiFront": "248,501,34,37",
+    "roiBack": "160,392,936,180",
+    "method": "Template matching",
+    "threshold": 0.7,
+    "description": "description"
   }
 ]

@@ -104,8 +104,15 @@ class ScriptTask(GameUi, TalismanPassAssets):
             self.screenshot()
             # 自选御魂
             if self.appear(self.I_TP_SOUL_1):
-                logger.info('Select soul 2')
-                self.ui_click(self.I_TP_SOUL_1, stop=self.I_TP_SOUL_2)
+                current = self.I_TP_SOUL_1
+                logger.info('Select soul (type 1)')
+            elif self.appear(self.I_TP_SOUL_1B):
+                current = self.I_TP_SOUL_1B
+                logger.info('Select soul (type 2)')
+            else:
+                current = None
+            if current:
+                self.ui_click(current, stop=self.I_TP_SOUL_2)
                 self.ui_click(self.I_TP_SOUL_2, stop=self.I_TP_SOUL_3, interval=3)
                 self.ui_click_until_disappear(click=self.I_TP_SOUL_3)
                 timer_harvest.reset()

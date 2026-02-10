@@ -11,22 +11,107 @@ class CostumeRealmAssets:
 
 
 	# Image Rule Assets
-	# description 
-	I_SHI_CARD_1 = RuleImage(roi_front=(919,295,36,66), roi_back=(868,238,141,150), threshold=0.8, method="Template matching", file="./tasks/Component/CostumeRealm/realm1/realm1_shi_card_1.png")
-	# description 
-	I_SHI_DEFENSE_1 = RuleImage(roi_front=(308,294,35,100), roi_back=(197,241,247,207), threshold=0.8, method="Template matching", file="./tasks/Component/CostumeRealm/realm1/realm1_shi_defense_1.png")
+	# 育成 
+	I_SHI_GROWN_1 = RuleImage(roi_front=(621,300,35,38), roi_back=(553,253,181,198), threshold=0.6, method="Template matching", file="./tasks/Component/CostumeRealm/realm1/realm1_shi_grown_1.png")
+	# 结界卡 
+	I_SHI_CARD_1 = RuleImage(roi_front=(923,302,38,56), roi_back=(902,288,87,120), threshold=0.6, method="Template matching", file="./tasks/Component/CostumeRealm/realm1/realm1_shi_card_1.png")
+	# 防守 
+	I_SHI_DEFENSE_1 = RuleImage(roi_front=(309,299,31,62), roi_back=(252,266,154,166), threshold=0.8, method="Template matching", file="./tasks/Component/CostumeRealm/realm1/realm1_shi_defense_1.png")
+	# 收取经验（没有满的图） 
+	I_CARD_EXP_1 = RuleImage(roi_front=(918,142,57,54), roi_back=(849,86,199,185), threshold=0.8, method="Template matching", file="./tasks/Component/CostumeRealm/realm1/realm1_card_exp_1.png")
+	# 收取体力（没有满） 
+	I_BOX_AP_1 = RuleImage(roi_front=(813,384,51,46), roi_back=(735,305,202,204), threshold=0.7, method="Template matching", file="./tasks/Component/CostumeRealm/realm1/realm1_box_ap_1.png")
+	# 收取盒子的经验（没有满） 
+	I_BOX_EXP_1 = RuleImage(roi_front=(899,390,42,45), roi_back=(854,348,147,127), threshold=0.7, method="Template matching", file="./tasks/Component/CostumeRealm/realm1/realm1_box_exp_1.png")
+	# 结界皮肤 
+	I_REALM_SHIN_1 = RuleImage(roi_front=(161,389,54,58), roi_back=(0,273,360,276), threshold=0.9, method="Template matching", file="./tasks/Component/CostumeRealm/realm1/realm1_realm_shin_1.png")
+	# 寄养别人的经验 
+	I_UTILIZE_EXP_1 = RuleImage(roi_front=(616,143,58,43), roi_back=(566,101,156,123), threshold=0.8, method="Template matching", file="./tasks/Component/CostumeRealm/realm1/realm1_utilize_exp_1.png")
+	# 盒子经验满 
+	I_BOX_EXP_MAX_1 = RuleImage(roi_front=(893,376,56,61), roi_back=(803,317,228,186), threshold=0.7, method="Template matching", file="./tasks/Component/CostumeRealm/realm1/realm1_box_exp_max_1.png")
 
 
 	# Image Rule Assets
-	# description 
-	I_SHI_GROWN_2 = RuleImage(roi_front=(663,344,36,68), roi_back=(598,280,159,186), threshold=0.8, method="Template matching", file="./tasks/Component/CostumeRealm/realm2/realm2_shi_grown_2.png")
-	# description 
-	I_SHI_CARD_2 = RuleImage(roi_front=(934,351,36,43), roi_back=(903,318,100,100), threshold=0.8, method="Template matching", file="./tasks/Component/CostumeRealm/realm2/realm2_shi_card_2.png")
-	# description 
-	I_SHI_DEFENSE_2 = RuleImage(roi_front=(369,365,33,100), roi_back=(285,315,178,188), threshold=0.8, method="Template matching", file="./tasks/Component/CostumeRealm/realm2/realm2_shi_defense_2.png")
-	# description 
-	I_BOX_AP_2 = RuleImage(roi_front=(925,448,50,54), roi_back=(852,377,154,160), threshold=0.8, method="Template matching", file="./tasks/Component/CostumeRealm/realm2/realm2_box_ap_2.png")
-	# description 
-	I_BOX_EXP_2 = RuleImage(roi_front=(991,448,41,59), roi_back=(921,372,155,173), threshold=0.8, method="Template matching", file="./tasks/Component/CostumeRealm/realm2/realm2_box_exp_2.png")
+	# 育成 
+	I_SHI_GROWN_2 = RuleImage(roi_front=(665,354,35,38), roi_back=(588,299,181,198), threshold=0.6, method="Template matching", file="./tasks/Component/CostumeRealm/realm2/realm2_shi_grown_2.png")
+	# 结界卡 
+	I_SHI_CARD_2 = RuleImage(roi_front=(935,354,32,56), roi_back=(913,329,87,120), threshold=0.6, method="Template matching", file="./tasks/Component/CostumeRealm/realm2/realm2_shi_card_2.png")
+	# 防守 
+	I_SHI_DEFENSE_2 = RuleImage(roi_front=(371,368,31,62), roi_back=(300,321,154,166), threshold=0.8, method="Template matching", file="./tasks/Component/CostumeRealm/realm2/realm2_shi_defense_2.png")
+	# 收取经验（没有满的图） 
+	I_CARD_EXP_2 = RuleImage(roi_front=(935,223,57,54), roi_back=(873,151,199,185), threshold=0.8, method="Template matching", file="./tasks/Component/CostumeRealm/realm2/realm2_card_exp_2.png")
+	# 收取体力（没有满） 
+	I_BOX_AP_2 = RuleImage(roi_front=(927,448,51,46), roi_back=(863,367,202,204), threshold=0.7, method="Template matching", file="./tasks/Component/CostumeRealm/realm2/realm2_box_ap_2.png")
+	# 收取盒子的经验（没有满） 
+	I_BOX_EXP_2 = RuleImage(roi_front=(990,457,42,45), roi_back=(953,414,147,127), threshold=0.7, method="Template matching", file="./tasks/Component/CostumeRealm/realm2/realm2_box_exp_2.png")
+	# 结界皮肤 
+	I_REALM_SHIN_2 = RuleImage(roi_front=(157,503,54,58), roi_back=(7,386,360,276), threshold=0.9, method="Template matching", file="./tasks/Component/CostumeRealm/realm2/realm2_realm_shin_2.png")
+	# 寄养别人的经验 
+	I_UTILIZE_EXP_2 = RuleImage(roi_front=(659,218,58,43), roi_back=(609,174,156,123), threshold=0.8, method="Template matching", file="./tasks/Component/CostumeRealm/realm2/realm2_utilize_exp_2.png")
+	# 盒子经验满 
+	I_BOX_EXP_MAX_2 = RuleImage(roi_front=(991,443,48,51), roi_back=(893,378,228,186), threshold=0.7, method="Template matching", file="./tasks/Component/CostumeRealm/realm2/realm2_box_exp_max_2.png")
+
+
+	# Image Rule Assets
+	# 育成 
+	I_SHI_GROWN_3 = RuleImage(roi_front=(605,304,35,38), roi_back=(530,247,181,198), threshold=0.6, method="Template matching", file="./tasks/Component/CostumeRealm/realm3/realm3_shi_grown_3.png")
+	# 结界卡 
+	I_SHI_CARD_3 = RuleImage(roi_front=(935,295,38,56), roi_back=(910,282,87,120), threshold=0.6, method="Template matching", file="./tasks/Component/CostumeRealm/realm3/realm3_shi_card_3.png")
+	# 防守 
+	I_SHI_DEFENSE_3 = RuleImage(roi_front=(253,309,31,62), roi_back=(200,269,154,166), threshold=0.8, method="Template matching", file="./tasks/Component/CostumeRealm/realm3/realm3_shi_defense_3.png")
+	# 收取经验（没有满的图） 
+	I_CARD_EXP_3 = RuleImage(roi_front=(939,147,50,54), roi_back=(864,86,199,185), threshold=0.8, method="Template matching", file="./tasks/Component/CostumeRealm/realm3/realm3_card_exp_3.png")
+	# 收取体力（没有满） 
+	I_BOX_AP_3 = RuleImage(roi_front=(949,376,51,46), roi_back=(872,298,202,204), threshold=0.7, method="Template matching", file="./tasks/Component/CostumeRealm/realm3/realm3_box_ap_3.png")
+	# 收取盒子的经验（没有满） 
+	I_BOX_EXP_3 = RuleImage(roi_front=(1012,390,42,45), roi_back=(962,347,147,127), threshold=0.7, method="Template matching", file="./tasks/Component/CostumeRealm/realm3/realm3_box_exp_3.png")
+	# 结界皮肤 
+	I_REALM_SHIN_3 = RuleImage(roi_front=(160,401,54,58), roi_back=(0,290,360,276), threshold=0.9, method="Template matching", file="./tasks/Component/CostumeRealm/realm3/realm3_realm_shin_3.png")
+	# 寄养别人的经验 
+	I_UTILIZE_EXP_3 = RuleImage(roi_front=(595,151,58,43), roi_back=(543,113,156,123), threshold=0.8, method="Template matching", file="./tasks/Component/CostumeRealm/realm3/realm3_utilize_exp_3.png")
+	# 盒子经验满 
+	I_BOX_EXP_MAX_3 = RuleImage(roi_front=(1012,374,49,50), roi_back=(919,317,228,186), threshold=0.7, method="Template matching", file="./tasks/Component/CostumeRealm/realm3/realm3_box_exp_max_3.png")
+
+
+	# Image Rule Assets
+	# 育成 
+	I_SHI_GROWN_4 = RuleImage(roi_front=(609,323,27,38), roi_back=(532,250,181,198), threshold=0.6, method="Template matching", file="./tasks/Component/CostumeRealm/realm4/realm4_shi_grown_4.png")
+	# 结界卡 
+	I_SHI_CARD_4 = RuleImage(roi_front=(929,315,38,56), roi_back=(904,299,87,120), threshold=0.6, method="Template matching", file="./tasks/Component/CostumeRealm/realm4/realm4_shi_card_4.png")
+	# 防守 
+	I_SHI_DEFENSE_4 = RuleImage(roi_front=(242,320,31,62), roi_back=(184,276,154,166), threshold=0.8, method="Template matching", file="./tasks/Component/CostumeRealm/realm4/realm4_shi_defense_4.png")
+	# 收取经验（没有满的图） 
+	I_CARD_EXP_4 = RuleImage(roi_front=(930,181,57,54), roi_back=(855,111,199,185), threshold=0.8, method="Template matching", file="./tasks/Component/CostumeRealm/realm4/realm4_card_exp_4.png")
+	# 收取体力（没有满） 
+	I_BOX_AP_4 = RuleImage(roi_front=(958,386,51,46), roi_back=(889,313,202,204), threshold=0.7, method="Template matching", file="./tasks/Component/CostumeRealm/realm4/realm4_box_ap_4.png")
+	# 收取盒子的经验（没有满） 
+	I_BOX_EXP_4 = RuleImage(roi_front=(1022,394,32,45), roi_back=(968,353,147,127), threshold=0.7, method="Template matching", file="./tasks/Component/CostumeRealm/realm4/realm4_box_exp_4.png")
+	# 结界皮肤 
+	I_REALM_SHIN_4 = RuleImage(roi_front=(228,406,54,58), roi_back=(60,293,360,276), threshold=0.9, method="Template matching", file="./tasks/Component/CostumeRealm/realm4/realm4_realm_shin_4.png")
+	# 寄养别人的经验 
+	I_UTILIZE_EXP_4 = RuleImage(roi_front=(596,181,58,43), roi_back=(545,144,156,123), threshold=0.8, method="Template matching", file="./tasks/Component/CostumeRealm/realm4/realm4_utilize_exp_4.png")
+	# 盒子经验满 
+	I_BOX_EXP_MAX_4 = RuleImage(roi_front=(1026,381,41,51), roi_back=(934,323,228,186), threshold=0.7, method="Template matching", file="./tasks/Component/CostumeRealm/realm4/realm4_box_exp_max_4.png")
+
+
+	# Image Rule Assets
+	# 育成 
+	I_SHI_GROWN_5 = RuleImage(roi_front=(642,356,35,38), roi_back=(568,295,181,198), threshold=0.6, method="Template matching", file="./tasks/Component/CostumeRealm/realm5/realm5_shi_grown_5.png")
+	# 结界卡 
+	I_SHI_CARD_5 = RuleImage(roi_front=(925,358,38,56), roi_back=(901,333,87,120), threshold=0.6, method="Template matching", file="./tasks/Component/CostumeRealm/realm5/realm5_shi_card_5.png")
+	# 防守 
+	I_SHI_DEFENSE_5 = RuleImage(roi_front=(312,356,31,62), roi_back=(257,310,154,166), threshold=0.8, method="Template matching", file="./tasks/Component/CostumeRealm/realm5/realm5_shi_defense_5.png")
+	# 收取经验（没有满的图） 
+	I_CARD_EXP_5 = RuleImage(roi_front=(922,216,57,54), roi_back=(850,145,199,185), threshold=0.8, method="Template matching", file="./tasks/Component/CostumeRealm/realm5/realm5_card_exp_5.png")
+	# 收取体力（没有满） 
+	I_BOX_AP_5 = RuleImage(roi_front=(981,420,51,46), roi_back=(925,345,202,204), threshold=0.7, method="Template matching", file="./tasks/Component/CostumeRealm/realm5/realm5_box_ap_5.png")
+	# 收取盒子的经验（没有满） 
+	I_BOX_EXP_5 = RuleImage(roi_front=(1050,430,42,45), roi_back=(996,382,147,127), threshold=0.7, method="Template matching", file="./tasks/Component/CostumeRealm/realm5/realm5_box_exp_5.png")
+	# 结界皮肤 
+	I_REALM_SHIN_5 = RuleImage(roi_front=(237,411,54,58), roi_back=(95,303,360,276), threshold=0.9, method="Template matching", file="./tasks/Component/CostumeRealm/realm5/realm5_realm_shin_5.png")
+	# 寄养别人的经验 
+	I_UTILIZE_EXP_5 = RuleImage(roi_front=(632,216,58,43), roi_back=(582,172,156,123), threshold=0.8, method="Template matching", file="./tasks/Component/CostumeRealm/realm5/realm5_utilize_exp_5.png")
+	# 盒子经验满 
+	I_BOX_EXP_MAX_5 = RuleImage(roi_front=(1048,420,48,56), roi_back=(958,353,228,186), threshold=0.7, method="Template matching", file="./tasks/Component/CostumeRealm/realm5/realm5_box_exp_max_5.png")
 
 
