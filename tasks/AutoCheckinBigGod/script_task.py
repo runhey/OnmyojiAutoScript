@@ -83,17 +83,20 @@ class ScriptTask(BaseTask):
 
         # [3/5] 获取Token
         logger.info('[3/5] 获取Token...')
-        token_data = self._try_extract_token(pid)
 
-        # 如果内存提取失败，通过 auth 数据库 + HTTP API 自动登录
+        # 优先通过 ADB 读取 auth 数据库 + HTTP API 登录（速度快）
+        token_data = None
+        new_pid, login_token = self._auto_login(pid)
+        if new_pid:
+            pid = new_pid
+            self.frida_pid = pid
+        if login_token:
+            token_data = login_token
+
+        # 回退：从内存提取（数据库无数据时）
         if not token_data:
-            logger.warning('内存中未找到Token，尝试通过URS凭据自动登录...')
-            new_pid, login_token = self._auto_login(pid)
-            if new_pid:
-                pid = new_pid
-                self.frida_pid = pid
-            if login_token:
-                token_data = login_token
+            logger.warning('自动登录失败，尝试从内存提取Token...')
+            token_data = self._try_extract_token(pid)
 
         if not token_data:
             logger.error('无法获取Token，请确保已登录大神APP并绑定阴阳师角色')
@@ -141,7 +144,7 @@ class ScriptTask(BaseTask):
         for r in rewards:
             if self._claim_reward(r['id'], r['title']):
                 success_count += 1
-            time.sleep(1)
+            time.sleep(0.5)
 
         logger.info(f'完成! 成功领取 {success_count}/{len(rewards)} 个礼包')
         self._cleanup()
@@ -157,7 +160,7 @@ class ScriptTask(BaseTask):
         except Exception:
             pass
         try:
-            self._adb_shell(['su', '-c', 'killall frida-server'])
+            self._adb_shell(['su -c "killall frida-server"'])
         except Exception:
             pass
 
@@ -193,16 +196,40 @@ class ScriptTask(BaseTask):
                 logger.info('大神APP已在运行，无需重启')
                 return pid
 
-            # APP未运行，启动它
+            # 优先通过 ContentProvider 后台启动（不显示UI，需要 su 权限）
+            logger.info('后台启动大神APP进程...')
+            try:
+                subprocess.run(
+                    [ADB_PATH] + (['-s', self._adb_serial] if getattr(self, '_adb_serial', None) else []) +
+                    ['shell', 'su', '0', 'content', 'query', '--uri',
+                     f'content://{GL_PACKAGE}.utilcode.provider/'],
+                    capture_output=True, timeout=20
+                )
+            except subprocess.TimeoutExpired:
+                pass
+
+            # 等待进程启动
+            for _ in range(10):
+                time.sleep(2)
+                pid = self._get_app_pid()
+                if pid:
+                    return pid
+
+            # 后台启动失败，用 monkey 前台启动后立即按 HOME 切回后台
+            logger.info('后台启动失败，前台启动后切回后台...')
             self._adb_shell([
                 'monkey', '-p', GL_PACKAGE,
                 '-c', 'android.intent.category.LAUNCHER', '1'
             ])
-            logger.info('等待大神APP启动...')
             for _ in range(15):
                 time.sleep(2)
                 pid = self._get_app_pid()
                 if pid:
+                    # 立即按 HOME 键切到后台
+                    try:
+                        self._adb_shell(['input', 'keyevent', 'KEYCODE_HOME'])
+                    except Exception:
+                        pass
                     return pid
             return None
         except Exception as e:
@@ -432,9 +459,9 @@ class ScriptTask(BaseTask):
             token_data = self._extract_token(pid)
             if token_data:
                 return token_data
-            logger.warning(f'第{attempt}次获取Token失败，等待5秒后重试...')
+            logger.warning(f'第{attempt}次获取Token失败，等待3秒后重试...')
             if attempt < 3:
-                time.sleep(5)
+                time.sleep(3)
                 new_pid = self._get_app_pid()
                 if new_pid:
                     pid = new_pid
@@ -463,15 +490,6 @@ Java.perform(function() {
         var YXFDeviceInfo = Java.use('com.netease.gl.glbase.build.YXFDeviceInfo');
         console.log('GL_DEVICEID:' + YXFDeviceInfo.getDeviceId());
     } catch(e) {}
-
-    // 获取APP版本号
-    try {
-        var AppProfile = Java.use('com.netease.gl.glbase.app.AppProfile');
-        var ctx = AppProfile.getContext();
-        var pm = ctx.getPackageManager();
-        var pi = pm.getPackageInfo('com.netease.gl', 0);
-        console.log('GL_VERSION:' + pi.versionName.value);
-    } catch(e) {}
 });
 """
         output = self._run_frida_script(pid, script, wait_time=5, timeout=15)
@@ -489,10 +507,12 @@ Java.perform(function() {
                 data['GL_DEVICEID'] = line.split('GL_DEVICEID:')[1].strip()
             elif 'GL_SOURCE:' in line:
                 data['GL_SOURCE'] = line.split('GL_SOURCE:')[1].strip()
-            elif 'GL_VERSION:' in line:
-                data['GL_VERSION'] = line.split('GL_VERSION:')[1].strip()
 
         if data.get('GL_UID') and data.get('GL_TOKEN'):
+            # 版本号通过 ADB 获取
+            version = self._get_app_version()
+            if version:
+                data['GL_VERSION'] = version
             return data
         return None
 
@@ -535,7 +555,7 @@ Java.perform(function() {{
     def _auto_login(self, pid):
         """
         自动登录流程：
-        1. 通过 Frida 读取 APP 的 auth SQLite 数据库，获取缓存的 URS 凭据
+        1. 通过 ADB + sqlite3 直接读取 APP 的 auth 数据库，获取缓存的 URS 凭据
         2. 使用 URS 凭据调用 login-by-urs-token API 获取新的 GL Token
         前提：用户至少手动登录过一次（数据库中有缓存账号）。
         返回 (pid, token_data) 元组。token_data 为 dict 或 None。
@@ -563,81 +583,89 @@ Java.perform(function() {{
         return self._get_app_pid(), None
 
     def _get_urs_credentials(self, pid):
-        """通过 Frida 从 APP 的 auth SQLite 数据库中读取 URS 凭据"""
-        script = """
-Java.perform(function() {
-    // 从 auth 数据库读取 userauths 表
-    try {
-        var AppProfile = Java.use('com.netease.gl.glbase.app.AppProfile');
-        var ctx = AppProfile.getContext();
-        var dbPath = ctx.getDatabasePath('auth');
-        if (dbPath.exists()) {
-            var SQLiteDatabase = Java.use('android.database.sqlite.SQLiteDatabase');
-            var db = SQLiteDatabase.openDatabase(dbPath.getAbsolutePath(), null, 1);
-            var cursor = db.rawQuery(
-                "SELECT uid, token, account, ursAuthedToken, ursAuhtedId, authType FROM userauths LIMIT 1",
-                null
-            );
-            if (cursor.moveToFirst()) {
-                console.log('AUTH_UID:' + cursor.getString(0));
-                console.log('AUTH_TOKEN:' + cursor.getString(1));
-                console.log('AUTH_ACCOUNT:' + cursor.getString(2));
-                console.log('AUTH_URS_TOKEN:' + cursor.getString(3));
-                console.log('AUTH_URS_ID:' + cursor.getString(4));
-                console.log('AUTH_TYPE:' + cursor.getString(5));
-            }
-            cursor.close();
-            db.close();
-        } else {
-            console.log('AUTH_DB_ERROR:数据库文件不存在');
-        }
-    } catch(e) {
-        console.log('AUTH_DB_ERROR:' + e);
-    }
+        """通过 ADB 直接从 auth 数据库读取 URS 凭据（不需要 Frida）"""
+        try:
+            # 直接通过 ADB + su + sqlite3 读取 auth 数据库
+            sql = 'SELECT uid, token, account, ursAuthedToken, ursAuhtedId, authType FROM userauths LIMIT 1'
+            db_path = f'/data/data/{GL_PACKAGE}/databases/auth'
+            # 用单条字符串传给 adb shell，避免参数拆分导致 SQL 断裂
+            shell_cmd = f'su 0 sqlite3 {db_path} "{sql}"'
+            result = subprocess.run(
+                [ADB_PATH] + (['-s', self._adb_serial] if getattr(self, '_adb_serial', None) else []) +
+                ['shell', shell_cmd],
+                capture_output=True, text=True, timeout=10
+            )
+            row = result.stdout.strip()
+            if not row or '|' not in row:
+                logger.warning('auth数据库为空或不可读')
+                return None
 
-    // 获取 DeviceId
+            fields = row.split('|')
+            if len(fields) < 6:
+                logger.warning(f'auth数据库字段不足: {len(fields)}')
+                return None
+
+            data = {
+                'AUTH_UID': fields[0],
+                'AUTH_TOKEN': fields[1],
+                'AUTH_ACCOUNT': fields[2],
+                'AUTH_URS_TOKEN': fields[3],
+                'AUTH_URS_ID': fields[4],
+                'AUTH_TYPE': fields[5],
+            }
+
+            # 通过 ADB 获取 UDID (android_id)
+            udid = self._adb_shell(['settings', 'get', 'secure', 'android_id'])
+            if udid:
+                data['UDID'] = udid
+
+            # 通过 ADB 获取 APP 版本号
+            version = self._get_app_version()
+            if version:
+                data['GL_VERSION'] = version
+
+            # DeviceId 通过 Frida 获取
+            device_id = self._get_device_id(pid)
+            if device_id:
+                data['GL_DEVICEID'] = device_id
+
+            if data.get('AUTH_URS_TOKEN') and data.get('AUTH_URS_ID'):
+                return data
+
+            logger.warning('数据库中无有效的URS凭据')
+            return None
+        except Exception as e:
+            logger.warning(f'读取URS凭据失败: {e}')
+            return None
+
+    def _get_app_version(self):
+        """通过 ADB dumpsys 获取 APP 版本号"""
+        try:
+            output = self._adb_shell([
+                f'dumpsys package {GL_PACKAGE} | grep versionName'
+            ])
+            for line in output.split('\n'):
+                if 'versionName=' in line:
+                    return line.split('versionName=')[1].strip()
+        except Exception:
+            pass
+        return None
+
+    def _get_device_id(self, pid):
+        """通过 Frida 获取 DeviceId"""
+        script = """
+Java.performNow(function() {
     try {
         var YXFDeviceInfo = Java.use('com.netease.gl.glbase.build.YXFDeviceInfo');
         console.log('GL_DEVICEID:' + YXFDeviceInfo.getDeviceId());
     } catch(e) {}
-
-    // 获取 UDID
-    try {
-        var Settings = Java.use('android.provider.Settings$Secure');
-        var AppProfile = Java.use('com.netease.gl.glbase.app.AppProfile');
-        var ctx = AppProfile.getContext();
-        var udid = Settings.getString(ctx.getContentResolver(), 'android_id');
-        console.log('UDID:' + udid);
-    } catch(e) {}
-
-    // 获取APP版本号
-    try {
-        var AppProfile = Java.use('com.netease.gl.glbase.app.AppProfile');
-        var ctx = AppProfile.getContext();
-        var pm = ctx.getPackageManager();
-        var pi = pm.getPackageInfo('com.netease.gl', 0);
-        console.log('GL_VERSION:' + pi.versionName.value);
-    } catch(e) {}
 });
 """
-        output = self._run_frida_script(pid, script, wait_time=5, timeout=15)
-        if not output:
-            return None
-
-        data = {}
-        for line in output.split('\n'):
-            for key in ['AUTH_UID', 'AUTH_TOKEN', 'AUTH_ACCOUNT', 'AUTH_URS_TOKEN',
-                        'AUTH_URS_ID', 'AUTH_TYPE', 'GL_DEVICEID', 'UDID', 'GL_VERSION']:
-                tag = key + ':'
-                if tag in line:
-                    data[key] = line.split(tag)[1].strip()
-            if 'AUTH_DB_ERROR:' in line:
-                logger.warning(f'读取数据库失败: {line.split("AUTH_DB_ERROR:")[1].strip()}')
-
-        if data.get('AUTH_URS_TOKEN') and data.get('AUTH_URS_ID'):
-            return data
-
-        logger.warning('数据库中无有效的URS凭据')
+        output = self._run_frida_script(pid, script, wait_time=2, timeout=10)
+        if output:
+            for line in output.split('\n'):
+                if 'GL_DEVICEID:' in line:
+                    return line.split('GL_DEVICEID:')[1].strip()
         return None
 
     def _login_by_urs_token(self, pid, urs_creds):
@@ -782,7 +810,7 @@ Java.perform(function() {
         return {
             "Content-Type": "application/json",
             "Accept": "application/json",
-            "User-Agent": f"Mozilla/5.0 (Linux; Android 12) Godlike/{self.gl_version}",
+            "User-Agent": "okhttp/4.9.1",
             "gl-version": self.gl_version,
             "gl-source": self.gl_source,
             "gl-deviceid": self.gl_deviceid,
