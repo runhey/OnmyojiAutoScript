@@ -15,11 +15,10 @@ from module.base.timer import Timer
 from tasks.Component.GeneralBattle.general_battle import GeneralBattle
 from tasks.Component.GeneralBattle.config_general_battle import GreenMarkType
 from tasks.GameUi.game_ui import GameUi
-from tasks.GameUi.page import page_main, page_duel
 from tasks.Duel.config import Duel, Onmyoji
 from tasks.Duel.assets import DuelAssets
 from tasks.Component.SwitchSoul.switch_soul import SwitchSoul
-from tasks.GameUi.page import page_main, page_team, page_shikigami_records
+from tasks.GameUi.page import page_main, page_duel, page_onmyodo, page_shikigami_records
 import os
 from module.atom.image import RuleImage
 from tasks.GlobalGame.assets import GlobalGameAssets as GGA
@@ -63,6 +62,8 @@ class ScriptTask(GameUi, GeneralBattle, SwitchSoul, DuelAssets):
         self.ui_goto(page_main)
         # 切换阴阳师
         if con.switch_enabled:
+            self.ui_get_current_page()
+            self.ui_goto(page_onmyodo)
             # 清明
             if con.switch_onmyoji == Onmyoji.Qm:
                 self.switch_kagura(con, self.C_QM_ZHAN, self.I_QM_ZHAN)
@@ -92,7 +93,9 @@ class ScriptTask(GameUi, GeneralBattle, SwitchSoul, DuelAssets):
             # 关闭恭喜晋升段位页面
             if self.appear_then_click(GGA.I_UI_BACK_RED):
                 continue
-            if self.appear_then_click(self.I_REWARD, interval=0.6):
+            if self.appear_then_click(self.I_REWARD):
+                continue
+            if self.appear_then_click(self.I_WIN):
                 continue
             if not self.duel_main():
                 continue
@@ -481,7 +484,7 @@ class ScriptTask(GameUi, GeneralBattle, SwitchSoul, DuelAssets):
 if __name__ == '__main__':
     from module.config.config import Config
     from module.device.device import Device
-    c = Config('oas3')
+    c = Config('oas2')
     d = Device(c)
     t = ScriptTask(c, d)
 

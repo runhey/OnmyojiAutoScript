@@ -38,7 +38,7 @@ realm_costume_model = {
 
 # 战斗主题（使用循环处理常规情况 + 特例处理）
 battle_theme_model = {}
-for i in range(1, 11):
+for i in range(1, 12):
     entry = {
         'I_LOCAL': f'I_LOCAL_{i}',
         'I_EXIT': f'I_EXIT_{i}',
@@ -72,7 +72,7 @@ shikigami_costume_model = {
         'I_ST_SOULS': f'I_ST_SOULS_{i}',
         'I_ST_REPLACE': f'I_ST_REPLACE_{i}',
     }
-    for i in range(1, 5)  # 目前只有 COSTUME_SHIKIGAMI_1，如需扩展可改 range
+    for i in range(1, 8)  # 目前只有 COSTUME_SHIKIGAMI_1，如需扩展可改 range
 }
 
 class CostumeBase:

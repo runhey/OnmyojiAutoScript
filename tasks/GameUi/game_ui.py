@@ -316,7 +316,15 @@ class GameUi(BaseTask, GameUiAssets):
         if not page.additional:
             return
         for btn in page.additional:
-            if self.appear_then_operate(btn, interval=interval, skip_first_screenshot=skip_first_screenshot):
+            # 支持复合条件操作: [条件元素, 操作元素]。出现条件图片时点击另一个区域。
+            if isinstance(btn, list) and len(btn) == 2:
+                condition, action = btn
+                self.maybe_screenshot(skip_first_screenshot)
+                if self.appear(condition):
+                    if self.appear_then_operate(action, interval=interval, skip_first_screenshot=False):
+                        logger.info(f'Page {page} additional conditional {condition} -> {action} executed')
+                        skip_first_screenshot = False
+            elif self.appear_then_operate(btn, interval=interval, skip_first_screenshot=skip_first_screenshot):
                 logger.info(f'Page {page} additional {btn} clicked')
                 skip_first_screenshot = False
 

@@ -41,6 +41,8 @@ class ShikigamiType(str, Enum):
     COSTUME_SHIKIGAMI_3 = 'costume_shikigami_3'  # 启程之刻
     COSTUME_SHIKIGAMI_4 = 'costume_shikigami_4'  # 冥夜游火
     COSTUME_SHIKIGAMI_5 = 'costume_shikigami_5'  # 契光水境
+    COSTUME_SHIKIGAMI_6 = 'costume_shikigami_6'  # 月下火舞
+    COSTUME_SHIKIGAMI_7 = 'costume_shikigami_7'  # 赤溟幽界
 
 # 签到主题
 class SignType(str, Enum):
@@ -59,6 +61,7 @@ class BattleType(str, Enum):
     COSTUME_BATTLE_8 = 'costume_battle_8'  # 藏金台阁
     COSTUME_BATTLE_9 = 'costume_battle_9'  # 莲华圣域
     COSTUME_BATTLE_10 = 'costume_battle_10'  # 流焰蝶舞
+    COSTUME_BATTLE_11 = 'costume_battle_11'  # 辰烁奇夜
 
 
 

@@ -84,7 +84,7 @@
     "itemName": "mall_sundry_check",
     "imageName": "navbar_mall_sundry_check.png",
     "roiFront": "1093,10,31,44",
-    "roiBack": "1093,10,31,44",
+    "roiBack": "1093,10,150,100",
     "method": "Template matching",
     "threshold": 0.7,
     "description": "杂货铺"

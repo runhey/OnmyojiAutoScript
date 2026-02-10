@@ -2,8 +2,8 @@
   {
     "itemName": "main_goto_shikigami_records",
     "imageName": "page_main_goto_shikigami_records.png",
-    "roiFront": "1098,611,56,64",
-    "roiBack": "1084,589,93,106",
+    "roiFront": "1080,590,56,64",
+    "roiBack": "1080,590,120,100",
     "method": "Template matching",
     "threshold": 0.7,
     "description": "式神录"
@@ -11,17 +11,17 @@
   {
     "itemName": "main_goto_onmyodo",
     "imageName": "page_main_goto_onmyodo.png",
-    "roiFront": "992,614,51,60",
-    "roiBack": "992,614,51,60",
+    "roiFront": "960,590,39,36",
+    "roiBack": "960,590,120,100",
     "method": "Template matching",
-    "threshold": 0.8,
+    "threshold": 0.5,
     "description": "description"
   },
   {
     "itemName": "main_goto_friends",
     "imageName": "page_main_goto_friends.png",
-    "roiFront": "879,623,55,55",
-    "roiBack": "867,606,79,77",
+    "roiFront": "845,590,55,55",
+    "roiBack": "845,590,120,100",
     "method": "Template matching",
     "threshold": 0.7,
     "description": "description"
@@ -29,26 +29,26 @@
   {
     "itemName": "main_goto_daily",
     "imageName": "page_main_goto_daily.png",
-    "roiFront": "779,612,51,67",
-    "roiBack": "754,595,89,97",
+    "roiFront": "765,616,63,38",
+    "roiBack": "735,590,120,100",
     "method": "Template matching",
-    "threshold": 0.7,
+    "threshold": 0.6,
     "description": "进入花合战"
   },
   {
     "itemName": "main_goto_mall",
     "imageName": "page_main_goto_mall.png",
-    "roiFront": "663,661,41,22",
-    "roiBack": "644,613,81,78",
+    "roiFront": "663,623,33,42",
+    "roiBack": "620,590,120,100",
     "method": "Template matching",
-    "threshold": 0.7,
+    "threshold": 0.5,
     "description": "description"
   },
   {
     "itemName": "main_goto_guild",
     "imageName": "page_main_goto_guild.png",
-    "roiFront": "544,611,50,47",
-    "roiBack": "520,583,99,105",
+    "roiFront": "495,590,50,22",
+    "roiBack": "495,590,120,100",
     "method": "Template matching",
     "threshold": 0.7,
     "description": "description"
@@ -56,8 +56,8 @@
   {
     "itemName": "main_goto_team",
     "imageName": "page_main_goto_team.png",
-    "roiFront": "437,625,38,48",
-    "roiBack": "366,606,192,83",
+    "roiFront": "395,590,38,48",
+    "roiBack": "395,590,120,100",
     "method": "Template matching",
     "threshold": 0.7,
     "description": "description"
@@ -65,8 +65,8 @@
   {
     "itemName": "main_goto_collection",
     "imageName": "page_main_goto_collection.png",
-    "roiFront": "92,621,36,41",
-    "roiBack": "51,596,159,85",
+    "roiFront": "70,590,36,41",
+    "roiBack": "70,590,120,100",
     "method": "Template matching",
     "threshold": 0.7,
     "description": "description"

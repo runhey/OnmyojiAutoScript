@@ -6,10 +6,11 @@ from module.base.timer import Timer
 from module.exception import RequestHumanTakeover, GameTooManyClickError, GameStuckError
 from module.logger import logger
 from tasks.Restart.assets import RestartAssets
+from tasks.GameUi.assets import GameUiAssets
 from tasks.base_task import BaseTask
 import time
 
-class LoginHandler(BaseTask, RestartAssets):
+class LoginHandler(BaseTask, RestartAssets, GameUiAssets):
     character: str
 
     def __init__(self, *wargs, **kwargs):
@@ -42,19 +43,28 @@ class LoginHandler(BaseTask, RestartAssets):
             if self.appear_then_click(self.I_CANCEL_BATTLE, interval=0.8):
                 logger.info('Cancel continue battle')
                 continue
-            # 确认进入庭院
-            if self.appear_then_click(self.I_LOGIN_SCROOLL_CLOSE, interval=2, threshold=0.9):
-                logger.info('Open scroll')
-                continue
-            if self.appear(self.I_LOGIN_SCROOLL_OPEN, interval=0.2):
+            # 确认进入庭院(优化：当出现闲庭图片时，点击卷轴关闭区域，然后判断式神录按钮出现就代表登录成功)
+            if self.appear(self.I_LOGIN_COURTYARD, interval=0.2):
+                if self.click(self.C_LOGIN_SCROLL_CLOSE_AREA, interval=2):
+                    logger.info('Click scroll close area because courtyard appears')
+                    self.screenshot()  # 点击后立即获取最新截图，确保后续状态检查准确
+                    continue
+            if self.appear(self.I_MAIN_GOTO_SHIKIGAMI_RECORDS, interval=0.2):
                 if confirm_timer.reached():
-                    logger.info('Login to main confirm')
+                    logger.info('Login to main confirm (shikigami records button appears)')
+                    break
+            elif self.appear(self.I_LOGIN_SCROOLL_OPEN, interval=0.2):
+                if confirm_timer.reached():
+                    logger.info('Login to main confirm (scroll open)')
                     break
             else:
                 confirm_timer.reset()
             # 登录成功
-            if self.appear(self.I_LOGIN_SCROOLL_OPEN, interval=0.5):
-                logger.info('Login success')
+            if self.appear(self.I_MAIN_GOTO_SHIKIGAMI_RECORDS, interval=0.5):
+                logger.info('Login success: shikigami records button appears')
+                login_success = True
+            elif self.appear(self.I_LOGIN_SCROOLL_OPEN, interval=0.5):
+                logger.info('Login success: scroll open')
                 login_success = True
 
             # 网络异常
