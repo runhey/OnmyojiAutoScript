@@ -39,5 +39,7 @@ class TalismanPassAssets:
 	I_TP_SOUL_2 = RuleImage(roi_front=(582,438,115,48), roi_back=(570,427,139,71), threshold=0.8, method="Template matching", file="./tasks/TalismanPass/tp/tp_tp_soul_2.png")
 	# 六星御魂标志 
 	I_TP_SOUL_3 = RuleImage(roi_front=(313,489,188,33), roi_back=(302,472,216,60), threshold=0.8, method="Template matching", file="./tasks/TalismanPass/tp/tp_tp_soul_3.png")
+	# description 
+	I_TP_SOUL_1B = RuleImage(roi_front=(248,501,34,37), roi_back=(160,392,936,180), threshold=0.7, method="Template matching", file="./tasks/TalismanPass/tp/tp_tp_soul_1b.png")
 
 

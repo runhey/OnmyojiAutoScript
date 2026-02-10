@@ -1,0 +1,83 @@
+[
+  {
+    "itemName": "shi_grown_3",
+    "imageName": "realm3_shi_grown_3.png",
+    "roiFront": "605,304,35,38",
+    "roiBack": "530,247,181,198",
+    "method": "Template matching",
+    "threshold": 0.6,
+    "description": "育成"
+  },
+  {
+    "itemName": "shi_card_3",
+    "imageName": "realm3_shi_card_3.png",
+    "roiFront": "935,295,38,56",
+    "roiBack": "910,282,87,120",
+    "method": "Template matching",
+    "threshold": 0.6,
+    "description": "结界卡"
+  },
+  {
+    "itemName": "shi_defense_3",
+    "imageName": "realm3_shi_defense_3.png",
+    "roiFront": "253,309,31,62",
+    "roiBack": "200,269,154,166",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "防守"
+  },
+  {
+    "itemName": "card_exp_3",
+    "imageName": "realm3_card_exp_3.png",
+    "roiFront": "939,147,50,54",
+    "roiBack": "864,86,199,185",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "收取经验（没有满的图）"
+  },
+  {
+    "itemName": "box_ap_3",
+    "imageName": "realm3_box_ap_3.png",
+    "roiFront": "949,376,51,46",
+    "roiBack": "872,298,202,204",
+    "method": "Template matching",
+    "threshold": 0.7,
+    "description": "收取体力（没有满）"
+  },
+  {
+    "itemName": "box_exp_3",
+    "imageName": "realm3_box_exp_3.png",
+    "roiFront": "1012,390,42,45",
+    "roiBack": "962,347,147,127",
+    "method": "Template matching",
+    "threshold": 0.7,
+    "description": "收取盒子的经验（没有满）"
+  },
+  {
+    "itemName": "realm_shin_3",
+    "imageName": "realm3_realm_shin_3.png",
+    "roiFront": "160,401,54,58",
+    "roiBack": "0,290,360,276",
+    "method": "Template matching",
+    "threshold": 0.9,
+    "description": "结界皮肤"
+  },
+  {
+    "itemName": "utilize_exp_3",
+    "imageName": "realm3_utilize_exp_3.png",
+    "roiFront": "595,151,58,43",
+    "roiBack": "543,113,156,123",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "寄养别人的经验"
+  },
+  {
+    "itemName": "box_exp_max_3",
+    "imageName": "realm3_box_exp_max_3.png",
+    "roiFront": "1012,374,49,50",
+    "roiBack": "919,317,228,186",
+    "method": "Template matching",
+    "threshold": 0.7,
+    "description": "盒子经验满"
+  }
+]
