@@ -61,5 +61,23 @@
     "method": "Template matching",
     "threshold": 0.8,
     "description": "阴阳术英杰页面标志"
+  },
+  {
+    "itemName": "yorimitsu_battle",
+    "imageName": "so_yorimitsu_battle.png",
+    "roiFront": "511,424,100,100",
+    "roiBack": "448,401,181,142",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "源赖光战标志"
+  },
+  {
+    "itemName": "michinaga_battle",
+    "imageName": "so_michinaga_battle.png",
+    "roiFront": "741,421,100,100",
+    "roiBack": "689,399,171,133",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "藤原道长战标志"
   }
 ]
