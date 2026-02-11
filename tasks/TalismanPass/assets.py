@@ -14,13 +14,13 @@ class TalismanPassAssets:
 	# 领取全部 
 	I_TP_GET_ALL = RuleImage(roi_front=(903,599,70,71), roi_back=(903,599,70,71), threshold=0.8, method="Template matching", file="./tasks/TalismanPass/tp/tp_tp_get_all.png")
 	# 任务 的右上方红点 
-	I_RED_POINT_TASK = RuleImage(roi_front=(1226,312,23,24), roi_back=(1226,312,23,24), threshold=0.8, method="Template matching", file="./tasks/TalismanPass/tp/tp_red_point_task.png")
+	I_RED_POINT_TASK = RuleImage(roi_front=(1227,301,23,24), roi_back=(1210,289,66,58), threshold=0.7, method="Template matching", file="./tasks/TalismanPass/tp/tp_red_point_task.png")
 	# 今日 的右上方红点 
-	I_RED_POINT_DAY = RuleImage(roi_front=(632,157,23,26), roi_back=(632,157,23,26), threshold=0.8, method="Template matching", file="./tasks/TalismanPass/tp/tp_red_point_day.png")
+	I_RED_POINT_DAY = RuleImage(roi_front=(635,160,23,26), roi_back=(615,151,70,45), threshold=0.7, method="Template matching", file="./tasks/TalismanPass/tp/tp_red_point_day.png")
 	# 本周 的右上方红点 
-	I_RED_POINT_WEEK = RuleImage(roi_front=(795,156,24,25), roi_back=(795,156,24,25), threshold=0.8, method="Template matching", file="./tasks/TalismanPass/tp/tp_red_point_week.png")
+	I_RED_POINT_WEEK = RuleImage(roi_front=(803,161,24,25), roi_back=(792,151,48,44), threshold=0.7, method="Template matching", file="./tasks/TalismanPass/tp/tp_red_point_week.png")
 	# 等级奖励 
-	I_RED_POINT_LEVEL = RuleImage(roi_front=(1222,174,21,22), roi_back=(1214,165,40,43), threshold=0.8, method="Template matching", file="./tasks/TalismanPass/tp/tp_red_point_level.png")
+	I_RED_POINT_LEVEL = RuleImage(roi_front=(1232,170,13,13), roi_back=(1202,156,58,65), threshold=0.7, method="Template matching", file="./tasks/TalismanPass/tp/tp_red_point_level.png")
 	# 选择一号奖励 
 	I_TP_LEVEL_1 = RuleImage(roi_front=(203,435,122,59), roi_back=(203,435,122,59), threshold=0.8, method="Template matching", file="./tasks/TalismanPass/tp/tp_tp_level_1.png")
 	# 选择二号奖励 
