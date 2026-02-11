@@ -1,6 +1,7 @@
 # This Python file uses the following encoding: utf-8
 import subprocess
 import tempfile
+import threading
 import lzma
 import os
 import sys
@@ -19,6 +20,14 @@ from tasks.base_task import BaseTask
 from module.logger import logger
 from module.exception import TaskEnd
 
+try:
+    from oas_checkin_biggod import FRIDA_SERVER_XZ, ADB_PATH
+except ImportError:
+    raise ImportError(
+        "oas-checkin-biggod is not installed. "
+        "Run: ./toolkit/python.exe -m pip install oas-checkin-biggod"
+    )
+
 urllib3.disable_warnings()
 os.environ['MSYS_NO_PATHCONV'] = '1'
 
@@ -27,12 +36,7 @@ LOGIN_BASE = "https://god.gameyw.netease.com"
 GL_PACKAGE = "com.netease.gl"
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 FRIDA_SERVER_LOCAL = os.path.join(SCRIPT_DIR, "frida-server-17.6.2-android-x86_64")
-FRIDA_SERVER_XZ = FRIDA_SERVER_LOCAL + ".xz"
 FRIDA_SERVER_REMOTE = "/data/local/tmp/frida-server"
-ADB_PATH = os.path.join(SCRIPT_DIR, "platform-tools", "adb.exe")
-
-# 获取项目 Python 路径（当前运行的 Python）
-PYTHON_PATH = sys.executable
 
 APP_KEY = "g37"
 GL_VERSION = "4.12.0"  # 默认值，运行时会从APP动态获取
@@ -51,6 +55,8 @@ class ScriptTask(BaseTask):
         self.server = ""
         self.app_key = APP_KEY
         self.frida_pid = None
+        self._frida_session = None  # 常驻 frida.exe 子进程
+        self._frida_attached_pid = None  # REPL 当前 attach 的 PID
 
         self.session = requests.Session()
         self.session.verify = False
@@ -155,6 +161,13 @@ class ScriptTask(BaseTask):
 
     def _cleanup(self):
         logger.info('清理：关闭大神APP和Frida Server...')
+        try:
+            if self._frida_session is not None:
+                self._frida_session.kill()
+        except Exception:
+            pass
+        self._frida_session = None
+        self._frida_attached_pid = None
         try:
             self._adb_shell(['am', 'force-stop', GL_PACKAGE])
         except Exception:
@@ -401,25 +414,190 @@ class ScriptTask(BaseTask):
 
     # ======================== Frida 脚本执行 ========================
 
-    def _run_frida_script(self, pid, script_content, wait_time=3, timeout=10):
+    def _get_frida_exe(self):
+        """获取 frida 可执行文件路径"""
+        python_dir = os.path.dirname(sys.executable)
+        frida_exe = os.path.join(python_dir, 'Scripts', 'frida.exe')
+        if os.path.exists(frida_exe):
+            return frida_exe
+        # 回退：依赖 PATH
+        return 'frida'
+
+    def _ensure_frida_repl(self, pid):
+        """确保有一个常驻的 frida REPL 进程 attach 到目标 PID。
+        首次调用启动进程（~3-5秒），后续调用直接复用。
+        如果 PID 变了（APP重启），则关闭旧进程并重新 attach。
+        """
+        if self._frida_session is not None:
+            if self._frida_session.poll() is None:
+                # PID 没变，直接复用
+                if self._frida_attached_pid == pid:
+                    return self._frida_session
+                # PID 变了，需要重新 attach
+                logger.info(f'目标PID变更 ({self._frida_attached_pid} -> {pid})，重新attach...')
+                try:
+                    self._frida_session.kill()
+                except Exception:
+                    pass
+            else:
+                logger.warning('Frida REPL 进程已退出，重新启动...')
+            self._frida_session = None
+            self._frida_attached_pid = None
+
+        frida_exe = self._get_frida_exe()
+        if hasattr(self, '_adb_serial') and self._adb_serial:
+            cmd = [frida_exe, '-D', self._adb_serial, '-p', str(pid)]
+        else:
+            cmd = [frida_exe, '-U', '-p', str(pid)]
+
+        try:
+            proc = subprocess.Popen(
+                cmd,
+                stdin=subprocess.PIPE,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.STDOUT,
+            )
+            self._frida_session = proc
+
+            # 等待 frida attach 完成后再发 ping
+            # frida.exe 启动到可接受 JS 输入通常需要 3-5 秒
+            for wait_sec in (3, 3, 4):
+                time.sleep(wait_sec)
+                if proc.poll() is not None:
+                    out = proc.stdout.read().decode('utf-8', errors='ignore')
+                    logger.warning(f'Frida REPL 进程提前退出: {out[:300]}')
+                    self._frida_session = None
+                    return None
+
+                # 直接向 stdin 写 ping，不走 _run_frida_script 避免副作用
+                if self._ping_frida_repl(proc):
+                    self._frida_attached_pid = pid
+                    logger.info('Frida REPL 已就绪')
+                    return proc
+                logger.info('Frida REPL 尚未就绪，继续等待...')
+
+            # 所有重试都失败
+            logger.warning('Frida REPL 启动超时')
+            try:
+                proc.kill()
+            except Exception:
+                pass
+            self._frida_session = None
+            return None
+        except Exception as e:
+            logger.warning(f'启动Frida REPL失败: {e}')
+            self._frida_session = None
+            return None
+
+    def _ping_frida_repl(self, proc, timeout=8):
+        """向 frida REPL 发送 ping 并等待回显，验证 REPL 已就绪。
+        直接操作 proc 的 stdin/stdout，不经过 _run_frida_script。
+        返回 True/False。
+        """
+        # 使用唯一标记避免多次重试时 reader 线程之间的竞争
+        marker = f'__PING_{id(proc)}_{time.monotonic_ns()}__'
+        ping_js = f'console.log("{marker}"); console.log("__DONE__");\n'
+        try:
+            proc.stdin.write(ping_js.encode('utf-8'))
+            proc.stdin.flush()
+        except (BrokenPipeError, OSError):
+            return False
+
+        got_ready = False
+
+        def _read():
+            nonlocal got_ready
+            try:
+                while True:
+                    raw = proc.stdout.readline()
+                    if not raw:
+                        break
+                    line = raw.decode('utf-8', errors='ignore').strip()
+                    # 跳过 REPL 回显行（包含 ]-> ），避免 JS 代码中的标记被误判
+                    if ']->' in line:
+                        continue
+                    if marker in line:
+                        got_ready = True
+                    if '__DONE__' in line:
+                        break
+            except Exception:
+                pass
+
+        reader = threading.Thread(target=_read, daemon=True)
+        reader.start()
+        reader.join(timeout=timeout)
+        return got_ready
+
+    def _run_frida_script(self, pid, script_content, timeout=10):
+        """通过常驻 frida.exe REPL 子进程执行 JS 脚本，返回 console.log 输出。
+        首次调用自动启动 REPL（~3-5秒），后续调用复用同一进程（~毫秒级）。
+
+        脚本必须在最后一步打印 __DONE__ 来标记执行完成。
+        """
+
+        # 确保 REPL 进程存活
+        if self._frida_session is None or self._frida_session.poll() is not None:
+            if not self._ensure_frida_repl(pid):
+                logger.warning('无法建立Frida REPL连接，回退到单次执行模式')
+                return self._run_frida_script_oneshot(pid, script_content, timeout)
+
+        proc = self._frida_session
+
+        try:
+            # 写入 stdin — 将多行 JS 压成单行（frida REPL 按行执行）
+            line = script_content.replace('\n', ' ').replace('\r', '') + '\n'
+            proc.stdin.write(line.encode('utf-8'))
+            proc.stdin.flush()
+        except (BrokenPipeError, OSError) as e:
+            logger.warning(f'Frida REPL stdin写入失败: {e}')
+            self._frida_session = None
+            return self._run_frida_script_oneshot(pid, script_content, timeout)
+
+        # 从 stdout 读取直到看到 __DONE__ 标记或超时
+        output_lines = []
+        timed_out = threading.Event()
+
+        def _read_until_done():
+            try:
+                while True:
+                    if timed_out.is_set():
+                        break
+                    raw = proc.stdout.readline()
+                    if not raw:
+                        break
+                    line_decoded = raw.decode('utf-8', errors='ignore').rstrip('\n').rstrip('\r')
+                    # 先过滤 REPL 回显行（包含 ]-> ），避免 JS 代码中的标记被误判
+                    if ']->' in line_decoded:
+                        continue
+                    if '__DONE__' in line_decoded:
+                        break
+                    if line_decoded.strip():
+                        output_lines.append(line_decoded)
+            except Exception:
+                pass
+
+        reader = threading.Thread(target=_read_until_done, daemon=True)
+        reader.start()
+        reader.join(timeout=timeout)
+
+        if reader.is_alive():
+            timed_out.set()
+            logger.warning(f'Frida REPL 读取超时 ({timeout}s)')
+
+        return '\n'.join(output_lines) if output_lines else ''
+
+    def _run_frida_script_oneshot(self, pid, script_content, timeout=10):
+        """回退方案：每次启动新 frida.exe 进程执行单个脚本"""
         with tempfile.NamedTemporaryFile(mode='w', suffix='.js', delete=False, encoding='utf-8') as f:
             f.write(script_content)
             script_path = f.name
         try:
-            # 获取 frida 可执行文件路径
-            # frida-tools 安装后会在 Python Scripts 目录下生成 frida.exe
-            python_dir = os.path.dirname(PYTHON_PATH)
-            frida_exe = os.path.join(python_dir, 'Scripts', 'frida.exe')
+            frida_exe = self._get_frida_exe()
 
-            # 如果找不到 frida.exe，尝试直接使用 frida 命令（依赖 PATH）
-            if not os.path.exists(frida_exe):
-                frida_exe = 'frida'
-
-            # 构建 frida 命令
             if hasattr(self, '_adb_serial') and self._adb_serial:
-                frida_cmd = [frida_exe, '-D', self._adb_serial, '-p', str(pid), '-l', script_path]
+                frida_cmd = [frida_exe, '-D', self._adb_serial, '-p', str(pid), '-l', script_path, '-q']
             else:
-                frida_cmd = [frida_exe, '-U', '-p', str(pid), '-l', script_path]
+                frida_cmd = [frida_exe, '-U', '-p', str(pid), '-l', script_path, '-q']
 
             process = subprocess.Popen(
                 frida_cmd,
@@ -427,10 +605,8 @@ class ScriptTask(BaseTask):
                 stdout=subprocess.PIPE,
                 stderr=subprocess.PIPE,
             )
-            # 等待脚本执行完成
-            time.sleep(wait_time)
+            time.sleep(2)
 
-            # 关闭 stdin 触发 frida 退出，然后读取输出
             process.stdin.close()
             try:
                 stdout_bytes, stderr_bytes = process.communicate(timeout=timeout)
@@ -438,12 +614,9 @@ class ScriptTask(BaseTask):
                 process.kill()
                 stdout_bytes, stderr_bytes = process.communicate()
 
-            # 使用 utf-8 解码，忽略无法解码的字符
             stdout = stdout_bytes.decode('utf-8', errors='ignore') if stdout_bytes else ''
             stderr = stderr_bytes.decode('utf-8', errors='ignore') if stderr_bytes else ''
-            output = stdout + stderr
-
-            return output
+            return stdout + stderr
         except Exception as e:
             logger.warning(f'Frida脚本执行失败: {e}')
             return None
@@ -472,6 +645,11 @@ class ScriptTask(BaseTask):
         """通过 Frida 从内存中提取 GL 认证信息（UID/Token/DeviceId/Source）"""
         script = """
 Java.perform(function() {
+    try {
+        var YXFDeviceInfo = Java.use('com.netease.gl.glbase.build.YXFDeviceInfo');
+        console.log('GL_DEVICEID:' + YXFDeviceInfo.getDeviceId());
+    } catch(e) {}
+
     Java.choose('com.netease.gl.serviceaccount.proto.auth.GLAuth$Authed', {
         onMatch: function(instance) {
             var uid = instance.getUid();
@@ -483,16 +661,13 @@ Java.perform(function() {
                 console.log('GL_SOURCE:' + source);
             }
         },
-        onComplete: function() {}
+        onComplete: function() {
+            console.log('__DONE__');
+        }
     });
-
-    try {
-        var YXFDeviceInfo = Java.use('com.netease.gl.glbase.build.YXFDeviceInfo');
-        console.log('GL_DEVICEID:' + YXFDeviceInfo.getDeviceId());
-    } catch(e) {}
 });
 """
-        output = self._run_frida_script(pid, script, wait_time=5, timeout=15)
+        output = self._run_frida_script(pid, script, timeout=15)
         if not output:
             logger.warning('Frida脚本无输出')
             return None
@@ -539,9 +714,10 @@ Java.perform(function() {{
     {headers_code}
     var result = Tools.getPostMethodSignatures('{url}', '{body_escaped}', map);
     console.log('SIGNED_URL:' + result);
+    console.log('__DONE__');
 }});
 """
-        output = self._run_frida_script(self.frida_pid, script, wait_time=2, timeout=15)
+        output = self._run_frida_script(self.frida_pid, script, timeout=15)
         if not output:
             return None
 
@@ -654,14 +830,15 @@ Java.perform(function() {{
     def _get_device_id(self, pid):
         """通过 Frida 获取 DeviceId"""
         script = """
-Java.performNow(function() {
+Java.perform(function() {
     try {
         var YXFDeviceInfo = Java.use('com.netease.gl.glbase.build.YXFDeviceInfo');
         console.log('GL_DEVICEID:' + YXFDeviceInfo.getDeviceId());
     } catch(e) {}
+    console.log('__DONE__');
 });
 """
-        output = self._run_frida_script(pid, script, wait_time=2, timeout=10)
+        output = self._run_frida_script(pid, script, timeout=10)
         if output:
             for line in output.split('\n'):
                 if 'GL_DEVICEID:' in line:

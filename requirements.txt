@@ -4,7 +4,6 @@
 #
 #    pip-compile --annotation-style=line --output-file=requirements.txt requirements-in.txt
 #
-
 adbutils==0.11.0          # via -r requirements-in.txt, uiautomator2
 annotated-types==0.7.0    # via pydantic
 anyio==3.7.1              # via fastapi, starlette
@@ -17,7 +16,7 @@ charset-normalizer==3.3.2  # via requests
 cigam==0.0.3              # via apkutils2
 click==8.1.7              # via uvicorn
 cn2an==0.5.23             # via -r requirements-in.txt
-colorama==0.4.6           # via click, logzero, tqdm
+colorama==0.4.6           # via click, frida-tools, logzero, tqdm
 coloredlogs==15.0.1       # via onnxruntime
 cryptography==42.0.8      # via -r requirements-in.txt
 decorator==5.1.1          # via retry
@@ -27,6 +26,8 @@ exceptiongroup==1.2.0     # via anyio
 fastapi==0.104.1          # via -r requirements-in.txt
 filelock==3.13.1          # via uiautomator2
 flatbuffers==23.5.26      # via onnxruntime
+frida==17.6.2             # via -r requirements-in.txt, frida-tools
+frida-tools==14.5.2       # via -r requirements-in.txt
 future==0.18.3            # via zerorpc
 gevent==23.9.1            # via zerorpc
 greenlet==3.0.3           # via gevent
@@ -41,6 +42,7 @@ mdurl==0.1.2              # via markdown-it-py
 mpmath==1.3.0             # via sympy
 msgpack==1.0.7            # via zerorpc
 numpy==1.24.3             # via -r requirements-in.txt, onnxruntime, opencv-python, ppocr-onnx, shapely
+oas-checkin-biggod==0.0.1  # via -r requirements-in.txt
 oashya==0.0.7             # via -r requirements-in.txt
 onepush==1.3.0            # via -r requirements-in.txt
 onnxruntime==1.16.3       # via ppocr-onnx
@@ -51,6 +53,7 @@ pillow==10.2.0            # via ppocr-onnx, uiautomator2
 ppocr-onnx==0.0.3.9       # via -r requirements-in.txt
 proces==0.1.7             # via cn2an
 progress==1.6             # via uiautomator2
+prompt-toolkit==3.0.52    # via frida-tools
 protobuf==4.25.1          # via onnxruntime
 psutil==6.1.1             # via -r requirements-in.txt
 py==1.11.0                # via retry
@@ -60,7 +63,7 @@ pycryptodome==3.21.0      # via onepush
 pydantic==2.10.0          # via -r requirements-in.txt, fastapi
 pydantic-core==2.27.0     # via pydantic
 pyelftools==0.30          # via apkutils2
-pygments==2.17.2          # via rich
+pygments==2.17.2          # via frida-tools, rich
 pyparsing==3.1.1          # via packaging
 pyreadline3==3.4.1        # via humanfriendly
 pywin32==306              # via -r requirements-in.txt
@@ -75,12 +78,13 @@ sniffio==1.3.0            # via anyio
 starlette==0.27.0         # via fastapi
 sympy==1.12               # via onnxruntime
 tqdm==4.65.0              # via -r requirements-in.txt
-typing-extensions==4.12.2  # via fastapi, pydantic, pydantic-core, uvicorn
+typing-extensions==4.12.2  # via fastapi, frida, pydantic, pydantic-core, uvicorn
 uiautomator2==2.16.17     # via -r requirements-in.txt
 uiautomator2cache==0.3.0.1  # via -r requirements-in.txt
 urllib3==2.1.0            # via requests
 uvicorn==0.38.0           # via -r requirements-in.txt
-websockets==11.0.3        # via -r requirements-in.txt
+wcwidth==0.6.0            # via prompt-toolkit
+websockets==13.1          # via -r requirements-in.txt, frida-tools
 whichcraft==0.6.1         # via adbutils, uiautomator2
 wrapt==1.15.0             # via -r requirements-in.txt, deprecated
 xmltodict==0.13.0         # via apkutils2
