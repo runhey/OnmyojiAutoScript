@@ -41,6 +41,7 @@ class Guild(Buy, GameUi, RichManAssets):
             if self.swipe(self.S_GUILD_STORE, interval=1.5):
                 time.sleep(2)
                 continue
+        self.wait_until_stable(self.I_GUILD_SKIN_CHECK)
 
         # 开始购买
         if con.mystery_amulet:
@@ -111,6 +112,9 @@ class Guild(Buy, GameUi, RichManAssets):
         return True
 
     def check_remain(self, image: RuleImage) -> int:
+        if not self.appear(image):
+            logger.warning(f'Image {image.name} not appear')
+            return 0
         self.O_GUILD_REMAIN.roi[0] = image.roi_front[0] - 38
         self.O_GUILD_REMAIN.roi[1] = image.roi_front[1] + 83
         logger.info(f'Image roi {image.roi_front}')

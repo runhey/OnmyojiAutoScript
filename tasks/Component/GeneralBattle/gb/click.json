@@ -67,38 +67,38 @@
   },
   {
     "itemName": "green_left_1",
-    "roiFront": "128,433,90,150",
-    "roiBack": "128,433,90,150",
+    "roiFront": "183,506,125,108",
+    "roiBack": "183,506,125,108",
     "description": "从左开始第一个绿标"
   },
   {
     "itemName": "green_left_2",
-    "roiFront": "371,385,81,145",
-    "roiBack": "371,385,81,145",
+    "roiFront": "407,474,100,100",
+    "roiBack": "407,474,100,100",
     "description": "从左开始第二个绿标"
   },
   {
     "itemName": "green_left_3",
-    "roiFront": "586,328,100,76",
-    "roiBack": "586,328,100,76",
+    "roiFront": "608,446,64,44",
+    "roiBack": "608,446,64,44",
     "description": "从左开始第三个绿标"
   },
   {
     "itemName": "green_left_4",
-    "roiFront": "817,379,77,133",
-    "roiBack": "817,379,77,133",
+    "roiFront": "769,475,81,98",
+    "roiBack": "769,475,81,98",
     "description": "从左开始第四个绿标"
   },
   {
     "itemName": "green_left_5",
-    "roiFront": "1059,416,85,145",
-    "roiBack": "1059,416,85,145",
+    "roiFront": "932,473,132,108",
+    "roiBack": "932,473,132,108",
     "description": "从左开始第五个绿标"
   },
   {
     "itemName": "green_main",
-    "roiFront": "590,454,88,178",
-    "roiBack": "590,454,88,178",
+    "roiFront": "565,555,104,81",
+    "roiBack": "565,555,104,81",
     "description": "绿标阴阳师"
   },
   {

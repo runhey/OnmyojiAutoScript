@@ -38,8 +38,8 @@
   {
     "itemName": "d_auto_entry",
     "imageName": "duel_d_auto_entry.png",
-    "roiFront": "21,116,66,62",
-    "roiBack": "2,95,115,111",
+    "roiFront": "23,118,53,54",
+    "roiBack": "2,97,93,96",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "自动上阵"
@@ -47,8 +47,8 @@
   {
     "itemName": "d_help",
     "imageName": "duel_d_help.png",
-    "roiFront": "784,502,32,30",
-    "roiBack": "774,489,49,55",
+    "roiFront": "783,500,29,30",
+    "roiBack": "778,476,49,78",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "主界面的感叹号"
@@ -61,24 +61,6 @@
     "method": "Template matching",
     "threshold": 0.8,
     "description": "准备"
-  },
-    {
-    "itemName": "d_prepare_done",
-    "imageName": "duel_d_prepare_done.png",
-    "roiFront": "495,82,75,55",
-    "roiBack": "495,82,75,55",
-    "method": "Template matching",
-    "threshold": 0.8,
-    "description": "准备完毕 "
-  },
-  {
-    "itemName": "d_battle_data",
-    "imageName": "duel_d_battle_data.png",
-    "roiFront": "1068,610,38,60",
-    "roiBack": "1068,610,38,60",
-    "method": "Template matching",
-    "threshold": 0.8,
-    "description": "战斗数据"
   },
   {
     "itemName": "d_victory",
@@ -101,8 +83,8 @@
   {
     "itemName": "d_word_battle",
     "imageName": "duel_d_word_battle.png",
-    "roiFront": "612,41,54,54",
-    "roiBack": "612,41,54,54",
+    "roiFront": "613,41,54,54",
+    "roiBack": "600,24,84,85",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "战"
@@ -110,8 +92,8 @@
   {
     "itemName": "d_celeb_star",
     "imageName": "duel_d_celeb_star.png",
-    "roiFront": "586,456,30,32",
-    "roiBack": "574,444,53,54",
+    "roiFront": "646,450,33,37",
+    "roiBack": "551,433,185,67",
     "method": "Template matching",
     "threshold": 0.75,
     "description": "名士的星星"
@@ -119,8 +101,8 @@
   {
     "itemName": "d_celeb_honor",
     "imageName": "duel_d_celeb_honor.png",
-    "roiFront": "665,531,25,30",
-    "roiBack": "652,517,52,53",
+    "roiFront": "338,641,25,30",
+    "roiBack": "199,606,222,76",
     "method": "Template matching",
     "threshold": 0.75,
     "description": "名士专属"
@@ -164,8 +146,8 @@
   {
     "itemName": "ban",
     "imageName": "duel_ban.png",
-    "roiFront": "1112,537,100,100",
-    "roiBack": "1112,537,100,100",
+    "roiFront": "1139,565,77,72",
+    "roiBack": "1122,545,114,116",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "禁用"
@@ -178,5 +160,23 @@
     "method": "Template matching",
     "threshold": 0.8,
     "description": "左上角的退出"
+  },
+  {
+    "itemName": "d_check_ban",
+    "imageName": "duel_d_check_ban.png",
+    "roiFront": "611,36,56,62",
+    "roiBack": "590,14,100,100",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "ban选界面"
+  },
+  {
+    "itemName": "duel_honor",
+    "imageName": "duel_duel_honor.png",
+    "roiFront": "211,636,20,20",
+    "roiBack": "200,601,130,100",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "斗技荣誉图标"
   }
 ]

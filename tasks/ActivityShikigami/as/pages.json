@@ -2,7 +2,7 @@
   {
     "itemName": "shi",
     "imageName": "as_shi.png",
-    "roiFront": "1184,300,47,29",
+    "roiFront": "1184,460,47,29",
     "roiBack": "1164,134,83,393",
     "method": "Template matching",
     "threshold": 0.7,
@@ -38,8 +38,8 @@
   {
     "itemName": "to_battle_main",
     "imageName": "as_to_battle_main.png",
-    "roiFront": "478,340,39,176",
-    "roiBack": "449,297,100,241",
+    "roiFront": "267,277,39,176",
+    "roiBack": "238,242,100,241",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "进入主要的战斗界面"
@@ -47,8 +47,8 @@
   {
     "itemName": "to_battle_boss",
     "imageName": "as_to_battle_boss.png",
-    "roiFront": "931,217,37,173",
-    "roiBack": "909,198,100,219",
+    "roiFront": "974,327,37,136",
+    "roiBack": "934,317,100,219",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "点击进入boss战斗页面"
@@ -56,8 +56,8 @@
   {
     "itemName": "check_battle_main",
     "imageName": "as_check_battle_main.png",
-    "roiFront": "45,629,63,61",
-    "roiBack": "24,602,264,100",
+    "roiFront": "34,639,39,46",
+    "roiBack": "12,597,264,105",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"
@@ -79,5 +79,14 @@
     "method": "Template matching",
     "threshold": 0.8,
     "description": "从main进入到式神录"
+  },
+  {
+    "itemName": "to_battle_main_2",
+    "imageName": "as_to_battle_main_2.png",
+    "roiFront": "15,94,247,38",
+    "roiBack": "2,68,311,100",
+    "method": "Template matching",
+    "threshold": 0.65,
+    "description": "description"
   }
 ]

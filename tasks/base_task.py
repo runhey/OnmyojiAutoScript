@@ -679,6 +679,19 @@ class BaseTask(GlobalGameAssets, CostumeBase):
             elif isinstance(click, RuleOcr) and self.ocr_appear_click(click, interval=interval):
                 continue
 
+    def ui_clicks(self, clicks: list[RuleImage | RuleOcr | RuleClick], stop: RuleImage, interval=1):
+        while 1:
+            self.screenshot()
+            if self.appear(stop):
+                break
+            for click in clicks:
+                if isinstance(click, RuleImage) and self.appear_then_click(click, interval=interval):
+                    continue
+                elif isinstance(click, RuleClick) and self.click(click, interval=interval):
+                    continue
+                elif isinstance(click, RuleOcr) and self.ocr_appear_click(click, interval=interval):
+                    continue
+
     def ui_click_until_disappear(self, click, interval: float = 1):
         """
         点击一个按钮直到消失

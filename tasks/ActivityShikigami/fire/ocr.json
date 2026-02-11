@@ -10,8 +10,8 @@
   },
   {
     "itemName": "remain_ap",
-    "roiFront": "939,18,73,29",
-    "roiBack": "939,18,73,29",
+    "roiFront": "575,16,73,29",
+    "roiBack": "575,16,73,29",
     "mode": "DigitCounter",
     "method": "Default",
     "keyword": "",
@@ -19,8 +19,8 @@
   },
   {
     "itemName": "remain_pass",
-    "roiFront": "552,18,57,28",
-    "roiBack": "552,18,57,28",
+    "roiFront": "783,18,57,28",
+    "roiBack": "783,18,57,28",
     "mode": "DigitCounter",
     "method": "Default",
     "keyword": "",
@@ -37,8 +37,8 @@
   },
   {
     "itemName": "remain_pass2",
-    "roiFront": "1115,25,88,29",
-    "roiBack": "1107,14,103,50",
+    "roiFront": "750,17,88,29",
+    "roiBack": "750,17,88,29",
     "mode": "Digit",
     "method": "Default",
     "keyword": "",

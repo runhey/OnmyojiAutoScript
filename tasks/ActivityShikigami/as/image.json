@@ -20,7 +20,7 @@
   {
     "itemName": "climb_mode_pass",
     "imageName": "as_climb_mode_pass.png",
-    "roiFront": "1151,528,21,28",
+    "roiFront": "1142,546,21,21",
     "roiBack": "1118,500,62,100",
     "method": "Template matching",
     "threshold": 0.8,
@@ -29,8 +29,8 @@
   {
     "itemName": "climb_mode_ap",
     "imageName": "as_climb_mode_ap.png",
-    "roiFront": "1100,530,22,25",
-    "roiBack": "1063,508,100,100",
+    "roiFront": "1091,545,22,25",
+    "roiBack": "1049,504,100,100",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "体力爬塔标志"
@@ -38,7 +38,7 @@
   {
     "itemName": "climb_mode_switch",
     "imageName": "as_climb_mode_switch.png",
-    "roiFront": "1238,531,29,26",
+    "roiFront": "1233,543,29,26",
     "roiBack": "1179,494,100,100",
     "method": "Template matching",
     "threshold": 0.8,
