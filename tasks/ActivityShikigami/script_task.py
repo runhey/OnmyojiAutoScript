@@ -307,7 +307,7 @@ class ScriptTask(StateMachine, GameUi, BaseActivity, SwitchSoul, ActivityShikiga
                         break
                     if appear_reward or appear_reward_purple_snake_skin:
                         reward_click = random.choice(
-                            [self.C_RANDOM_LEFT, self.C_RANDOM_RIGHT, self.C_RANDOM_TOP])
+                            [self.C_RANDOM_LEFT, self.C_RANDOM_RIGHT])
                         self.click(reward_click, interval=1.8)
                         continue
                 return True
