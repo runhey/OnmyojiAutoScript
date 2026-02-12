@@ -41,6 +41,7 @@ FRIDA_SERVER_REMOTE = "/data/local/tmp/frida-server"
 APP_KEY = "g37"
 GL_VERSION = "4.12.0"  # 默认值，运行时会从APP动态获取
 GL_CLIENTTYPE = "50"
+_NO_WINDOW = subprocess.CREATE_NO_WINDOW if sys.platform == 'win32' else 0
 
 
 class ScriptTask(BaseTask):
@@ -185,7 +186,8 @@ class ScriptTask(BaseTask):
         if hasattr(self, '_adb_serial') and self._adb_serial and args[0] not in ['connect', 'devices']:
             cmd.extend(['-s', self._adb_serial])
         cmd.extend(args)
-        result = subprocess.run(cmd, capture_output=True, text=True, timeout=timeout)
+        result = subprocess.run(cmd, capture_output=True, text=True, timeout=timeout,
+                                creationflags=_NO_WINDOW)
         return result.stdout.strip()
 
     def _adb_shell(self, cmd, timeout=15):
@@ -216,7 +218,7 @@ class ScriptTask(BaseTask):
                     [ADB_PATH] + (['-s', self._adb_serial] if getattr(self, '_adb_serial', None) else []) +
                     ['shell', 'su', '0', 'content', 'query', '--uri',
                      f'content://{GL_PACKAGE}.utilcode.provider/'],
-                    capture_output=True, timeout=20
+                    capture_output=True, timeout=20, creationflags=_NO_WINDOW
                 )
             except subprocess.TimeoutExpired:
                 pass
@@ -456,6 +458,7 @@ class ScriptTask(BaseTask):
                 stdin=subprocess.PIPE,
                 stdout=subprocess.PIPE,
                 stderr=subprocess.STDOUT,
+                creationflags=_NO_WINDOW,
             )
             self._frida_session = proc
 
@@ -604,6 +607,7 @@ class ScriptTask(BaseTask):
                 stdin=subprocess.PIPE,
                 stdout=subprocess.PIPE,
                 stderr=subprocess.PIPE,
+                creationflags=_NO_WINDOW,
             )
             time.sleep(2)
 
@@ -769,7 +773,7 @@ Java.perform(function() {{
             result = subprocess.run(
                 [ADB_PATH] + (['-s', self._adb_serial] if getattr(self, '_adb_serial', None) else []) +
                 ['shell', shell_cmd],
-                capture_output=True, text=True, timeout=10
+                capture_output=True, text=True, timeout=10, creationflags=_NO_WINDOW
             )
             row = result.stdout.strip()
             if not row or '|' not in row:
