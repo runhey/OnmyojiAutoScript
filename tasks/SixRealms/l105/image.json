@@ -1,0 +1,11 @@
+[
+  {
+    "itemName": "zhaofu",
+    "imageName": "l105_zhaofu.png",
+    "roiFront": "1157,628,57,59",
+    "roiBack": "1135,603,97,111",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "绽放退出"
+  }
+]
