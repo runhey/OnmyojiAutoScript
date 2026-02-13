@@ -170,16 +170,27 @@ class RuleImage(RuleImageMallResourceMixin):
             return False
 
     def match_multi_scale(self, image: np.array, threshold: float = None,
-                          scales: list = None) -> bool:
+                          scales: list = None, scale_range: tuple = None) -> bool:
         """
         多尺度模板匹配，自动尝试多个缩放比例以适应图片大小的变化
         :param image: 原始截图
         :param threshold: 匹配阈值
-        :param scales: 缩放比例列表，默认 [0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.1, 1.2]
+        :param scales: 缩放比例列表
+        :param scale_range: 缩放范围 (start, end, step)，例如 (0.8, 1.2, 0.1)，step 默认为 0.1
         :return: 匹配是否成功
         """
         if threshold is None:
             threshold = self.threshold
+
+        # 如果指定了 scale_range，自动生成 scales 列表
+        if scale_range is not None:
+            if len(scale_range) == 2:
+                # 只有 start, end，默认 step=0.1
+                start, end = scale_range
+                scales = [round(x * 10) / 10 for x in np.arange(start, end + 0.1, 0.1)]
+            else:
+                start, end, step = scale_range
+                scales = [round(x * 10) / 10 for x in np.arange(start, end + step, step)]
 
         if scales is None:
             scales = [0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.1, 1.2]

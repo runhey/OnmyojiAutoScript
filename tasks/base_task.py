@@ -219,13 +219,15 @@ class BaseTask(GlobalGameAssets, CostumeBase):
                            target: RuleImage,
                            interval: float = None,
                            threshold: float = None,
-                           scales: list = None):
+                           scales: list = None,
+                           scale_range: tuple = None):
         """
         多尺度图片识别，自动尝试多个缩放比例以适应图片大小的变化
         :param target: RuleImage对象
         :param interval: 匹配间隔时间
         :param threshold: 匹配阈值
-        :param scales: 缩放比例列表，默认 [0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.1, 1.2]
+        :param scales: 缩放比例列表
+        :param scale_range: 缩放范围 (start, end, step)，例如 (0.8, 1.2, 0.1)
         :return: interval时间到达且匹配成功则返回True, 否则False
         """
         if interval:
@@ -237,7 +239,7 @@ class BaseTask(GlobalGameAssets, CostumeBase):
             if not self.interval_timer[target.name].reached():
                 return False
 
-        appear = target.match_multi_scale(self.device.image, threshold=threshold, scales=scales)
+        appear = target.match_multi_scale(self.device.image, threshold=threshold, scales=scales, scale_range=scale_range)
 
         if appear and interval:
             self.interval_timer[target.name].reset()
@@ -250,6 +252,7 @@ class BaseTask(GlobalGameAssets, CostumeBase):
                                       interval: float = None,
                                       threshold: float = None,
                                       scales: list = None,
+                                      scale_range: tuple = None,
                                       duration: float = None):
         """
         多尺度图片识别并点击，自动尝试多个缩放比例以适应图片大小的变化
@@ -258,10 +261,11 @@ class BaseTask(GlobalGameAssets, CostumeBase):
         :param interval: 匹配间隔时间
         :param threshold: 匹配阈值
         :param scales: 缩放比例列表
+        :param scale_range: 缩放范围 (start, end, step)，例如 (0.8, 1.2, 0.1)
         :param duration: 长按时间（毫秒）
         :return: True or False
         """
-        appear = self.appear_multi_scale(target, interval=interval, threshold=threshold, scales=scales)
+        appear = self.appear_multi_scale(target, interval=interval, threshold=threshold, scales=scales, scale_range=scale_range)
 
         if appear and not action:
             x, y = target.coord()
