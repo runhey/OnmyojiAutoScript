@@ -2,46 +2,82 @@
   {
     "itemName": "shi_grown_2",
     "imageName": "realm2_shi_grown_2.png",
-    "roiFront": "663,344,36,68",
-    "roiBack": "598,280,159,186",
+    "roiFront": "665,354,35,38",
+    "roiBack": "588,299,181,198",
     "method": "Template matching",
-    "threshold": 0.8,
-    "description": "description"
+    "threshold": 0.6,
+    "description": "育成"
   },
   {
     "itemName": "shi_card_2",
     "imageName": "realm2_shi_card_2.png",
-    "roiFront": "934,351,36,43",
-    "roiBack": "903,318,100,100",
+    "roiFront": "935,354,32,56",
+    "roiBack": "913,329,87,120",
     "method": "Template matching",
-    "threshold": 0.8,
-    "description": "description"
+    "threshold": 0.6,
+    "description": "结界卡"
   },
   {
     "itemName": "shi_defense_2",
     "imageName": "realm2_shi_defense_2.png",
-    "roiFront": "369,365,33,100",
-    "roiBack": "285,315,178,188",
+    "roiFront": "371,368,31,62",
+    "roiBack": "300,321,154,166",
     "method": "Template matching",
     "threshold": 0.8,
-    "description": "description"
+    "description": "防守"
+  },
+  {
+    "itemName": "card_exp_2",
+    "imageName": "realm2_card_exp_2.png",
+    "roiFront": "935,223,57,54",
+    "roiBack": "873,151,199,185",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "收取经验（没有满的图）"
   },
   {
     "itemName": "box_ap_2",
     "imageName": "realm2_box_ap_2.png",
-    "roiFront": "925,448,50,54",
-    "roiBack": "852,377,154,160",
+    "roiFront": "927,448,51,46",
+    "roiBack": "863,367,202,204",
     "method": "Template matching",
-    "threshold": 0.8,
-    "description": "description"
+    "threshold": 0.7,
+    "description": "收取体力（没有满）"
   },
   {
     "itemName": "box_exp_2",
     "imageName": "realm2_box_exp_2.png",
-    "roiFront": "991,448,41,59",
-    "roiBack": "921,372,155,173",
+    "roiFront": "990,457,42,45",
+    "roiBack": "953,414,147,127",
+    "method": "Template matching",
+    "threshold": 0.7,
+    "description": "收取盒子的经验（没有满）"
+  },
+  {
+    "itemName": "realm_shin_2",
+    "imageName": "realm2_realm_shin_2.png",
+    "roiFront": "157,503,54,58",
+    "roiBack": "7,386,360,276",
+    "method": "Template matching",
+    "threshold": 0.9,
+    "description": "结界皮肤"
+  },
+  {
+    "itemName": "utilize_exp_2",
+    "imageName": "realm2_utilize_exp_2.png",
+    "roiFront": "659,218,58,43",
+    "roiBack": "609,174,156,123",
     "method": "Template matching",
     "threshold": 0.8,
-    "description": "description"
+    "description": "寄养别人的经验"
+  },
+  {
+    "itemName": "box_exp_max_2",
+    "imageName": "realm2_box_exp_max_2.png",
+    "roiFront": "991,443,48,51",
+    "roiBack": "893,378,228,186",
+    "method": "Template matching",
+    "threshold": 0.7,
+    "description": "盒子经验满"
   }
 ]

@@ -13,6 +13,11 @@ from tasks.Component.Buy.buy import Buy
 from tasks.RichMan.assets import RichManAssets
 from tasks.RichMan.config import GuildStore
 
+
+class ButtonException(Exception):
+    pass
+
+
 class Guild(Buy, GameUi, RichManAssets):
 
     def execute_guild(self, con: GuildStore=None):
@@ -32,26 +37,59 @@ class Guild(Buy, GameUi, RichManAssets):
                 continue
         logger.info('Enter guild store success')
         time.sleep(0.5)
+        # while 1:
+        #     self.screenshot()
+        #     # 功勋商店 购买皮肤券 现在问题是皮肤券作为下滑判断标志,下滑过程中roi_front[1]发生了变化,
+        #     # 导致后续识别本周剩余数量位置偏差,现在解决方案是创建一个相同属性的I_GUILD_SKIN_CHECK 来作为判断标志
+        #     if self.appear(self.I_GUILD_SKIN_CHECK):
+        #         break
+        #     if self.swipe(self.S_GUILD_STORE, interval=1.5):
+        #         time.sleep(2)
+        #         continue
+        # self.wait_until_stable(self.I_GUILD_SKIN_CHECK)
+        # 开始购买
+        # if con.mystery_amulet:
+        #     # 蓝票
+        #     self._guild_mystery_amulet()
+        # if con.black_daruma_scrap:
+        #     # 黑碎
+        #     self._guild_black_daruma_scrap()
+        # if con.skin_ticket:
+        #     # 皮肤券
+        #     self._guild_skin_ticket(con.skin_ticket)
+
+
+        # 对应的图片, 对应的函数
+        # 这里的顺序就是，在游戏中出现的顺序
+        items = [
+            *([(self.I_GUILD_BLUE, self._guild_mystery_amulet)] if con.mystery_amulet else []),
+            *([(self.I_GUILD_SCRAP, self._guild_black_daruma_scrap)] if con.black_daruma_scrap else []),
+            *([(self.I_GUILD_SKIN, self._guild_skin_ticket)] if con.skin_ticket else []),
+        ]
+        items_all_done = False
         while 1:
             self.screenshot()
-            # 功勋商店 购买皮肤券 现在问题是皮肤券作为下滑判断标志,下滑过程中roi_front[1]发生了变化,
-            # 导致后续识别本周剩余数量位置偏差,现在解决方案是创建一个相同属性的I_GUILD_SKIN_CHECK 来作为判断标志
-            if self.appear(self.I_GUILD_SKIN_CHECK):
+            for item in items:
+                button, func = item
+                if not self.appear(button):
+                    continue
+                self.wait_until_stable(button)
+                try:
+                    func()
+                    # 如果这里是最后一个，就是代表前面的都购买完成了
+                    if item == items[-1]:
+                        items_all_done = True
+                    items.remove(item)
+                except ButtonException as e:
+                    logger.warning(f'Button {button.name} click failed')
+                break
+            if items_all_done:
+                logger.info(f'All items have been purchased {items}')
                 break
             if self.swipe(self.S_GUILD_STORE, interval=1.5):
                 time.sleep(2)
                 continue
 
-        # 开始购买
-        if con.mystery_amulet:
-            # 蓝票
-            self._guild_mystery_amulet()
-        if con.black_daruma_scrap:
-            # 黑碎
-            self._guild_black_daruma_scrap()
-        if con.skin_ticket:
-            # 皮肤券
-            self._guild_skin_ticket(con.skin_ticket)
 
         # 回去
         while 1:
@@ -111,6 +149,9 @@ class Guild(Buy, GameUi, RichManAssets):
         return True
 
     def check_remain(self, image: RuleImage) -> int:
+        if not self.appear(image):
+            logger.warning(f'Image {image.name} not appear')
+            return 0
         self.O_GUILD_REMAIN.roi[0] = image.roi_front[0] - 38
         self.O_GUILD_REMAIN.roi[1] = image.roi_front[1] + 83
         logger.info(f'Image roi {image.roi_front}')
@@ -119,6 +160,8 @@ class Guild(Buy, GameUi, RichManAssets):
         result = self.O_GUILD_REMAIN.ocr(self.device.image)
         logger.warning(result)
         result = result.replace('？', '2').replace('?', '2').replace(':', '；')
+        if '本周剩余数量' not in result:
+            raise ButtonException(f'Image {image.name} ocr result is empty: {result}')
         try:
             result = re.findall(r'本周剩余数量(\d+)', result)[0]
             result = int(result)

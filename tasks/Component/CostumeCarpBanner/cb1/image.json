@@ -1,0 +1,47 @@
+[
+  {
+    "itemName": "shi_grown_1",
+    "imageName": "cb1_shi_grown_1.png",
+    "roiFront": "602,339,26,37",
+    "roiBack": "524,269,181,198",
+    "method": "Template matching",
+    "threshold": 0.6,
+    "description": "育成"
+  },
+  {
+    "itemName": "shi_card_1",
+    "imageName": "cb1_shi_card_1.png",
+    "roiFront": "887,335,15,35",
+    "roiBack": "854,306,87,120",
+    "method": "Template matching",
+    "threshold": 0.6,
+    "description": "结界卡"
+  },
+  {
+    "itemName": "shi_defense_1",
+    "imageName": "cb1_shi_defense_1.png",
+    "roiFront": "269,335,24,46",
+    "roiBack": "200,277,154,166",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "防守"
+  },
+  {
+    "itemName": "card_exp_1",
+    "imageName": "cb1_card_exp_1.png",
+    "roiFront": "875,181,57,54",
+    "roiBack": "803,111,199,185",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "收取经验（没有满的图）"
+  },
+  {
+    "itemName": "utilize_exp_1",
+    "imageName": "cb1_utilize_exp_1.png",
+    "roiFront": "589,187,58,43",
+    "roiBack": "539,144,156,123",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "寄养别人的经验"
+  }
+]
