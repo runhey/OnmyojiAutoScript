@@ -184,42 +184,40 @@ class RuleImage(RuleImageMallResourceMixin):
 
         # 如果指定了 scale_range，自动生成 scales 列表
         if scale_range is not None:
-            if len(scale_range) == 2:
-                # 只有 start, end，默认 step=0.1
-                start, end = scale_range
-                scales = [round(x * 10) / 10 for x in np.arange(start, end + 0.1, 0.1)]
-            else:
-                start, end, step = scale_range
-                scales = [round(x * 10) / 10 for x in np.arange(start, end + step, step)]
+            start, end = scale_range[:2]
+            step = scale_range[2] if len(scale_range) > 2 else 0.1
+            scales = sorted(set(round(x, 1) for x in np.arange(start, end + step, step)))
 
         if scales is None:
             scales = [0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.1, 1.2]
+        else:
+            scales = sorted(set(round(x, 1) for x in scales))
 
         source = self.corp(image)
         mat = self.image
 
         if mat is None or mat.shape[0] == 0 or mat.shape[1] == 0:
             logger.error(f"Template image is invalid: {mat.shape}")
-            return False  # 模板无效，匹配失败
+            return False
+
+        # 预计算模板尺寸
+        mat_h, mat_w = mat.shape[:2]
+        source_h, source_w = source.shape[:2]
 
         best_score = 0
         best_loc = None
         best_scale = 1.0
 
         for scale in scales:
+            scaled_w = int(mat_w * scale)
+            scaled_h = int(mat_h * scale)
+
+            # 跳过无效缩放
+            if scaled_w < 10 or scaled_h < 10:
+                continue
+
             try:
-                # 按比例缩放模板
-                scaled_w = int(mat.shape[1] * scale)
-                scaled_h = int(mat.shape[0] * scale)
-
-                # 跳过太大或太小的缩放
-                if scaled_w < 10 or scaled_h < 10:
-                    continue
-                if scaled_w > source.shape[1] * 1.5 or scaled_h > source.shape[0] * 1.5:
-                    continue
-
                 scaled_mat = cv2.resize(mat, (scaled_w, scaled_h))
-
                 res = cv2.matchTemplate(source, scaled_mat, cv2.TM_CCOEFF_NORMED)
                 _, max_val, _, max_loc = cv2.minMaxLoc(res)
 
@@ -234,11 +232,6 @@ class RuleImage(RuleImageMallResourceMixin):
             logger.attr(self.name, f'best scale: {best_scale:.2f}, best score: {best_score:.5f}')
 
         if best_score > threshold and best_loc is not None:
-            # 计算缩放后的模板尺寸
-            scaled_w = int(mat.shape[1] * best_scale)
-            scaled_h = int(mat.shape[0] * best_scale)
-
-            # 设置 roi_front 为匹配位置 + 缩放后的尺寸
             self.roi_front[0] = best_loc[0] + self.roi_back[0]
             self.roi_front[1] = best_loc[1] + self.roi_back[1]
             self.roi_front[2] = scaled_w
