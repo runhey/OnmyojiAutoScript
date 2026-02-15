@@ -727,18 +727,23 @@ class BaseTask(GlobalGameAssets, CostumeBase):
 
         return True
 
-    def ui_click(self, click, stop, interval=1):
+    def ui_click(self, click, stop, interval=1, timeout=None):
         """
         循环的一个操作，直到出现stop
         :param click:
         :param stop:
-        :parm interval
+        :param interval: 点击间隔
+        :param timeout: 超时时间（秒），None表示不超时
         :return:
         """
+        timer = Timer(timeout).start() if timeout else None
         while 1:
             self.screenshot()
             if self.appear(stop):
-                break
+                return True
+            if timer and timer.reached():
+                logger.warning(f'ui_click timeout after {timeout}s')
+                return False
             if isinstance(click, RuleImage) and self.appear_then_click(click, interval=interval):
                 continue
             if isinstance(click, RuleClick) and self.click(click, interval=interval):
@@ -790,6 +795,31 @@ class BaseTask(GlobalGameAssets, CostumeBase):
                 continue
             if isinstance(click, RuleOcr):
                 self.click(click)
+                continue
+
+    def ui_click_multi_scale(self, click, stop, interval=1, scale_range=None, timeout=None):
+        """
+        循环的一个操作，直到出现stop（支持多尺度图片识别）
+        :param click:
+        :param stop:
+        :param interval:
+        :param scale_range: 多尺度缩放范围 (start, end, step)
+        :param timeout: 超时时间（秒），None表示不超时
+        :return: True-找到stop条件, False-超时
+        """
+        timer = Timer(timeout).start() if timeout else None
+        while 1:
+            self.screenshot()
+            if self.appear(stop):
+                return True
+            if timer and timer.reached():
+                logger.warning(f'ui_click_multi_scale timeout after {timeout}s')
+                return False
+            if isinstance(click, RuleImage) and self.appear_then_click_multi_scale(click, scale_range=scale_range, interval=interval):
+                continue
+            if isinstance(click, RuleClick) and self.click(click, interval=interval):
+                continue
+            elif isinstance(click, RuleOcr) and self.ocr_appear_click(click, interval=interval):
                 continue
 
     def push_notify(self, content='', title=None, level=3):
