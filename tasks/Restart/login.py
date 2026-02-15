@@ -174,6 +174,7 @@ class LoginHandler(BaseTask, RestartAssets, GameUiAssets):
         logger.hr('Harvest')
         timer_harvest = Timer(5)  # 如果连续5秒没有发现任何奖励，退出
         skip_default = False
+        courtyard_affairs_done = False  # 庭院事务只执行一次
         while 1:
             self.screenshot()
 
@@ -215,6 +216,12 @@ class LoginHandler(BaseTask, RestartAssets, GameUiAssets):
                     logger.info('Close zidu')
                 continue
 
+            # 庭院事务
+            if self.config.restart.harvest_config.enable_courtyard_affairs and not courtyard_affairs_done:
+                self.harvest_courtyard_affairs()
+                timer_harvest.reset()
+                courtyard_affairs_done = True
+                continue
             # 勾玉
             if self.appear_then_click(self.I_HARVEST_JADE, interval=1.5):
                 timer_harvest.reset()
@@ -311,4 +318,25 @@ class LoginHandler(BaseTask, RestartAssets, GameUiAssets):
                 continue
         self.ui_click_until_disappear(self.I_LOGIN_RED_CLOSE)
         return True
-
+    
+    def harvest_courtyard_affairs(self) -> bool:
+        if not self.ui_click_multi_scale(self.I_NOTE, self.I_PAGE, timeout=3, scale_range=(0.8, 1.2)):
+            logger.warning('courtyard affairs timeout!')
+            return False
+        while 1:
+            self.screenshot()
+            if self.appear(self.I_NO_TASKS):
+                logger.info('courtyard affairs completed！')
+                return True
+            if self.appear_then_click(self.I_COMPLETE_TASKS, interval=1):
+                continue
+            if self.appear_then_click(self.I_DAILY, interval=1):
+                continue
+            if self.appear_then_click(self.I_CONFIRM): #式神满级，是否提取物经验？确定
+                continue
+            if self.appear_then_click(self.I_SUCCESS_CLAIMED):
+                continue
+            if self.appear_then_click(self.I_SKIP):# 万花牌跳过
+                continue
+            if self.appear_then_click(self.I_LOGIN_RED_CLOSE):# 万花牌X
+                continue
