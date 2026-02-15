@@ -11,14 +11,6 @@ class RestartAssets:
 
 
 	# Image Rule Assets
-	# 点击勾玉 
-	I_HARVEST_JADE = RuleImage(roi_front=(732,489,34,33), roi_back=(177,451,973,141), threshold=0.8, method="Template matching", file="./tasks/Restart/harvest/harvest_harvest_jade.png")
-	# 签到小图标 
-	I_HARVEST_SIGN = RuleImage(roi_front=(397,500,24,34), roi_back=(70,471,889,89), threshold=0.8, method="Template matching", file="./tasks/Restart/harvest/harvest_harvest_sign.png")
-	# description 
-	I_HARVEST_SIGN_2 = RuleImage(roi_front=(592,135,100,252), roi_back=(592,135,100,252), threshold=0.8, method="Template matching", file="./tasks/Restart/harvest/harvest_harvest_sign_2.png")
-	# 999签到福袋 
-	I_HARVEST_SIGN_999 = RuleImage(roi_front=(345,494,23,29), roi_back=(51,459,888,103), threshold=0.8, method="Template matching", file="./tasks/Restart/harvest/harvest_harvest_sign_999.png")
 	# 邮件小图标 
 	I_HARVEST_MAIL = RuleImage(roi_front=(337,505,37,25), roi_back=(38,465,880,89), threshold=0.8, method="Template matching", file="./tasks/Restart/harvest/harvest_harvest_mail.png")
 	# 全部收取 
@@ -28,25 +20,15 @@ class RestartAssets:
 	# 确认收取邮件 
 	I_HARVEST_MAIL_CONFIRM = RuleImage(roi_front=(687,543,168,64), roi_back=(687,543,168,64), threshold=0.8, method="Template matching", file="./tasks/Restart/harvest/harvest_harvest_mail_confirm.png")
 	# description 
-	I_HARVEST_SOUL = RuleImage(roi_front=(241,497,38,36), roi_back=(68,480,930,72), threshold=0.8, method="Template matching", file="./tasks/Restart/harvest/harvest_harvest_soul.png")
-	# description 
 	I_HARVEST_MAIL_TITLE = RuleImage(roi_front=(520,48,245,41), roi_back=(520,48,245,41), threshold=0.8, method="Template matching", file="./tasks/Restart/harvest/harvest_harvest_mail_title.png")
-	# description 
-	I_HARVEST_AP = RuleImage(roi_front=(721,486,31,38), roi_back=(206,462,970,134), threshold=0.8, method="Template matching", file="./tasks/Restart/harvest/harvest_harvest_ap.png")
 	# 打开聊天频道会自动关闭 
 	I_HARVEST_CHAT_CLOSE = RuleImage(roi_front=(639,309,35,100), roi_back=(639,309,35,100), threshold=0.8, method="Template matching", file="./tasks/Restart/harvest/harvest_harvest_chat_close.png")
-	# 签到 
-	I_HARVEST_SIGN_3 = RuleImage(roi_front=(291,495,33,36), roi_back=(100,473,1014,91), threshold=0.8, method="Template matching", file="./tasks/Restart/harvest/harvest_harvest_sign_3.png")
-	# description 
-	I_HARVEST_SIGN_4 = RuleImage(roi_front=(587,151,100,228), roi_back=(547,123,185,281), threshold=0.8, method="Template matching", file="./tasks/Restart/harvest/harvest_harvest_sign_4.png")
 	# 点击随机御魂 
 	I_HARVEST_SOUL_1 = RuleImage(roi_front=(248,501,34,37), roi_back=(165,389,929,168), threshold=0.8, method="Template matching", file="./tasks/Restart/harvest/harvest_harvest_soul_1.png")
 	# 选择中间第二个御魂 
 	I_HARVEST_SOUL_2 = RuleImage(roi_front=(586,561,112,47), roi_back=(570,547,139,71), threshold=0.8, method="Template matching", file="./tasks/Restart/harvest/harvest_harvest_soul_2.png")
 	# 六星御魂标志 
 	I_HARVEST_SOUL_3 = RuleImage(roi_front=(313,489,188,33), roi_back=(302,472,216,60), threshold=0.8, method="Template matching", file="./tasks/Restart/harvest/harvest_harvest_soul_3.png")
-	# 寮包 
-	I_HARVEST_GUILD_REWARD = RuleImage(roi_front=(244,498,41,42), roi_back=(200,403,817,157), threshold=0.8, method="Template matching", file="./tasks/Restart/harvest/harvest_harvest_guild_reward.png")
 	# 宠物小屋关闭按钮 
 	I_HARVEST_BACK_PET_HOUSE = RuleImage(roi_front=(20,15,70,70), roi_back=(20,15,70,70), threshold=0.8, method="Template matching", file="./tasks/Restart/harvest/harvest_back_pet_house.png")
 	# 点击庭院阴阳师出现的姿度按钮 
@@ -67,6 +49,16 @@ class RestartAssets:
 	I_READ_ALL_MAIL = RuleImage(roi_front=(180,605,130,35), roi_back=(149,588,182,72), threshold=0.8, method="Template matching", file="./tasks/Restart/harvest/harvest_read_all_mail.png")
 	# 邮件红点 
 	I_MAIL_RED_POINT = RuleImage(roi_front=(1229,200,16,21), roi_back=(1159,189,100,317), threshold=0.8, method="Template matching", file="./tasks/Restart/harvest/harvest_mail_red_point.png")
+	# 一键收获按钮 
+	I_HARVEST_ONE_KEY = RuleImage(roi_front=(270,220,23,25), roi_back=(270,220,880,350), threshold=0.8, method="Template matching", file="./tasks/Restart/harvest/harvest_harvest_one_key.png")
+	# 一键收获每日签到 
+	I_HARVEST_ONE_KEY_DAILY = RuleImage(roi_front=(1125,120,62,36), roi_back=(1125,120,100,80), threshold=0.8, method="Template matching", file="./tasks/Restart/harvest/harvest_harvest_one_key_daily.png")
+	# 一键收获完成按钮 
+	I_HARVEST_ONE_KEY_FINISH_BUTTON = RuleImage(roi_front=(1100,570,82,75), roi_back=(1100,570,130,130), threshold=0.8, method="Template matching", file="./tasks/Restart/harvest/harvest_harvest_one_key_finish_button.png")
+	# 万华牌跳过按钮 
+	I_HARVEST_ONE_KEY_WANHUA_CARD_SKIP = RuleImage(roi_front=(1120,0,43,18), roi_back=(1120,0,160,80), threshold=0.8, method="Template matching", file="./tasks/Restart/harvest/harvest_harvest_one_key_wanhua_card_skip.png")
+	# 一键收获成功标识 
+	I_HARVEST_ONE_KEY_SUCCESS = RuleImage(roi_front=(280,16,161,35), roi_back=(280,16,230,70), threshold=0.8, method="Template matching", file="./tasks/Restart/harvest/harvest_harvest_one_key_success.png")
 
 
 	# Click Rule Assets
@@ -74,6 +66,8 @@ class RestartAssets:
 	C_LOGIN_ENSURE_LOGIN_CHARACTER_IN_SAME_SVR = RuleClick(roi_front=(600,240,500,400), roi_back=(600,240,500,400), name="login_ensure_login_character_in_same_svr")
 	# 卷轴关闭区域点击(用户新增，用于点击I_LOGIN_SCROOLL_CLOSE的区域而不依赖图片识别) 
 	C_LOGIN_SCROLL_CLOSE_AREA = RuleClick(roi_front=(1181,634,28,39), roi_back=(1162,595,77,112), name="login_scroll_close_area")
+	# 一键收获完成界面关闭区域 
+	C_HARVEST_ONE_KEY_CLOSE_AREA = RuleClick(roi_front=(0,0,230,280), roi_back=(0,0,230,280), name="harvest_one_key_close_area")
 
 
 	# Image Rule Assets
