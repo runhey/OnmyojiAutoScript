@@ -57,6 +57,8 @@ class RestartAssets:
 	I_HARVEST_ONE_KEY_FINISH_BUTTON = RuleImage(roi_front=(1100,570,82,75), roi_back=(1100,570,130,130), threshold=0.8, method="Template matching", file="./tasks/Restart/harvest/harvest_harvest_one_key_finish_button.png")
 	# 万华牌跳过按钮 
 	I_HARVEST_ONE_KEY_WANHUA_CARD_SKIP = RuleImage(roi_front=(1120,0,43,18), roi_back=(1120,0,160,80), threshold=0.8, method="Template matching", file="./tasks/Restart/harvest/harvest_harvest_one_key_wanhua_card_skip.png")
+	# 一键收获取消按钮 
+	I_HARVEST_ONE_KEY_CANCEL = RuleImage(roi_front=(430,230,420,270), roi_back=(430,230,420,270), threshold=0.8, method="Template matching", file="./tasks/Restart/harvest/harvest_harvest_one_key_cancel.png")
 	# 一键收获成功标识 
 	I_HARVEST_ONE_KEY_SUCCESS = RuleImage(roi_front=(280,16,161,35), roi_back=(280,16,230,70), threshold=0.8, method="Template matching", file="./tasks/Restart/harvest/harvest_harvest_one_key_success.png")
 

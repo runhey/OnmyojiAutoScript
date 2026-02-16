@@ -321,6 +321,11 @@ class LoginHandler(BaseTask, RestartAssets, GameUiAssets):
                 logger.info('Click wanhua card skip button')
                 start_time = time.time()
                 continue
+            
+            if self.appear_then_click(self.I_HARVEST_ONE_KEY_CANCEL, interval=1):
+                logger.info('Click one key harvest cancel button')
+                start_time = time.time()
+                continue
         
         if self.appear(self.I_HARVEST_ONE_KEY_SUCCESS):
             self.click(self.C_HARVEST_ONE_KEY_CLOSE_AREA, interval=1)
