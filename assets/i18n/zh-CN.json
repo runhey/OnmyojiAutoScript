@@ -6,7 +6,12 @@
   "hya_onmyoji_help": "",
   "skill_mode": "技能本模式",
   "costume_shikigami_6": "月下火舞",
-  "costume_shikigami_7": "赤溟幽界"
+  "costume_shikigami_7": "赤溟幽界",
+  "AutoCheckinBigGod": "大神签到",
+  "auto_checkin_big_god": "大神签到",
+  "checkin_config": "签到配置",
+  "Usage": "使用说明",
+  "checkin_big_god_usage_help": "自动领取网易大神APP的阴阳师福利礼包。\n\n使用前准备：\n1. 开启模拟器的Root模式\n2. 模拟器中安装并登录「网易大神」APP\n3. 在大神APP中绑定阴阳师角色\n\nFrida Server 会自动推送到模拟器并启动，无需手动操作。"
 }
 
 
