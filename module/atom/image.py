@@ -154,8 +154,8 @@ class RuleImage(RuleImageMallResourceMixin):
         mat = self.image
 
         if mat is None or mat.shape[0] == 0 or mat.shape[1] == 0:
-            logger.error(f"Template image is invalid: {mat.shape}") #检测模板尺寸，不合法则不进行匹配，避免两次截图画面完全相同造成模板不合法
-            return True  # 如果模板图像无效，直接返回 True
+            logger.error(f"Template image is invalid: {mat.shape}")
+            return False  # 模板无效，匹配失败
 
         res = cv2.matchTemplate(source, mat, cv2.TM_CCOEFF_NORMED)
         min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(res)  # 最小匹配度，最大匹配度，最小匹配度的坐标，最大匹配度的坐标
@@ -165,6 +165,77 @@ class RuleImage(RuleImageMallResourceMixin):
         if max_val > threshold:
             self.roi_front[0] = max_loc[0] + self.roi_back[0]
             self.roi_front[1] = max_loc[1] + self.roi_back[1]
+            return True
+        else:
+            return False
+
+    def match_multi_scale(self, image: np.array, threshold: float = None,
+                          scales: list = None, scale_range: tuple = None) -> bool:
+        """
+        多尺度模板匹配，自动尝试多个缩放比例以适应图片大小的变化
+        :param image: 原始截图
+        :param threshold: 匹配阈值
+        :param scales: 缩放比例列表
+        :param scale_range: 缩放范围 (start, end, step)，例如 (0.8, 1.2, 0.1)，step 默认为 0.1
+        :return: 匹配是否成功
+        """
+        if threshold is None:
+            threshold = self.threshold
+
+        # 如果指定了 scale_range，自动生成 scales 列表
+        if scale_range is not None:
+            start, end = scale_range[:2]
+            step = scale_range[2] if len(scale_range) > 2 else 0.1
+            scales = sorted(set(round(x, 1) for x in np.arange(start, end + step, step)))
+
+        if scales is None:
+            scales = [0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.1, 1.2]
+        else:
+            scales = sorted(set(round(x, 1) for x in scales))
+
+        source = self.corp(image)
+        mat = self.image
+
+        if mat is None or mat.shape[0] == 0 or mat.shape[1] == 0:
+            logger.error(f"Template image is invalid: {mat.shape}")
+            return False
+
+        # 预计算模板尺寸
+        mat_h, mat_w = mat.shape[:2]
+        source_h, source_w = source.shape[:2]
+
+        best_score = 0
+        best_loc = None
+        best_scale = 1.0
+
+        for scale in scales:
+            scaled_w = int(mat_w * scale)
+            scaled_h = int(mat_h * scale)
+
+            # 跳过无效缩放
+            if scaled_w < 10 or scaled_h < 10:
+                continue
+
+            try:
+                scaled_mat = cv2.resize(mat, (scaled_w, scaled_h))
+                res = cv2.matchTemplate(source, scaled_mat, cv2.TM_CCOEFF_NORMED)
+                _, max_val, _, max_loc = cv2.minMaxLoc(res)
+
+                if max_val > best_score:
+                    best_score = max_val
+                    best_loc = max_loc
+                    best_scale = scale
+            except Exception as e:
+                continue
+
+        if self.debug_mode:
+            logger.attr(self.name, f'best scale: {best_scale:.2f}, best score: {best_score:.5f}')
+
+        if best_score > threshold and best_loc is not None:
+            self.roi_front[0] = best_loc[0] + self.roi_back[0]
+            self.roi_front[1] = best_loc[1] + self.roi_back[1]
+            self.roi_front[2] = scaled_w
+            self.roi_front[3] = scaled_h
             return True
         else:
             return False
@@ -358,4 +429,3 @@ if __name__ == "__main__":
     detect_image(IMAGE_FILE, jade)
     detect_image(IMAGE_FILE, sign)
     print(jade.roi_front)
-
