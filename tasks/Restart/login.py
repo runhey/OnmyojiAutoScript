@@ -353,8 +353,9 @@ class LoginHandler(BaseTask, RestartAssets, GameUiAssets):
             if self.appear_then_click(self.I_LOGIN_RED_CLOSE, interval=1):# 万花牌X
                 continue
             # 一键完成
-            if count_success >= 6:
+            if count_success >= 3:
                 logger.info(f'Click complete tasks {count_success} times')
+                break
             if self.appear_then_click(self.I_COMPLETE_TASKS, interval=2.3):
                 count_success += 1
                 continue
