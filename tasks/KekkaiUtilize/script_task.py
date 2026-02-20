@@ -129,7 +129,7 @@ class ScriptTask(GameUi, ReplaceShikigami, KekkaiUtilizeAssets):
         while 1:
             self.screenshot()
 
-            if self.appear(self.I_REALM_SHIN) and self.appear_multi_scale(self.I_SHI_GROWN):
+            if self.appear(self.I_REALM_SHIN) and self.appear(self.I_SHI_GROWN):
                 self.screenshot()
                 if not self.appear(self.I_REALM_SHIN):
                     continue
@@ -196,7 +196,7 @@ class ScriptTask(GameUi, ReplaceShikigami, KekkaiUtilizeAssets):
             self.screenshot()
             if self.appear(self.I_REALM_SHIN):
                 break
-            if self.appear_multi_scale(self.I_SHI_DEFENSE):
+            if self.appear(self.I_SHI_DEFENSE):
                 break
             if self.appear_then_click(self.I_PLANT_TREE_CLOSE):
                 continue
@@ -334,7 +334,7 @@ class ScriptTask(GameUi, ReplaceShikigami, KekkaiUtilizeAssets):
             if self.in_shikigami_growth():
                 break
 
-            if self.appear_then_click_multi_scale(self.I_SHI_GROWN, interval=1):
+            if self.appear_then_click(self.I_SHI_GROWN, interval=1):
                 continue
         logger.info('Enter shikigami grown')
 
@@ -735,7 +735,7 @@ class ScriptTask(GameUi, ReplaceShikigami, KekkaiUtilizeAssets):
             self.screenshot()
             if self.appear(self.I_REALM_SHIN):
                 break
-            if self.appear_multi_scale(self.I_SHI_DEFENSE):
+            if self.appear(self.I_SHI_DEFENSE):
                 break
             if self.appear_then_click(self.I_UI_BACK_RED, interval=1):
                 continue

@@ -12,8 +12,6 @@ from tasks.Component.config_base import ConfigBase, DateTime, MultiLine
 class HarvestConfig(BaseModel):
     # 默认启用
     enable: bool = Field(default=True, description='harvest_enable_help')
-    # 庭院事务
-    enable_courtyard_affairs: bool = Field(default=True)
     # 永久勾玉卡
     enable_jade: bool = Field(default=True)
     # 签到

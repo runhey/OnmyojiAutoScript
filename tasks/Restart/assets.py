@@ -11,25 +11,6 @@ class RestartAssets:
 
 
 	# Image Rule Assets
-	# 庭院事务按钮 
-	I_NOTE = RuleImage(roi_front=(782,415,27,31), roi_back=(134,363,968,189), threshold=0.8, method="Template matching", file="./tasks/Restart/courtyard_affairs/courtyard_affairs_note.png")
-	# 庭院事务主页 
-	I_PAGE = RuleImage(roi_front=(264,41,182,51), roi_back=(243,14,260,99), threshold=0.8, method="Template matching", file="./tasks/Restart/courtyard_affairs/courtyard_affairs_page.png")
-	# 一键完成 
-	I_COMPLETE_TASKS = RuleImage(roi_front=(1124,599,75,78), roi_back=(1116,588,93,98), threshold=0.8, method="Template matching", file="./tasks/Restart/courtyard_affairs/courtyard_affairs_complete_tasks.png")
-	# 领取成功 
-	I_SUCCESS_CLAIMED = RuleImage(roi_front=(302,27,184,51), roi_back=(257,10,272,84), threshold=0.8, method="Template matching", file="./tasks/Restart/courtyard_affairs/courtyard_affairs_success_claimed.png")
-	# 日常 
-	I_DAILY = RuleImage(roi_front=(1138,139,63,45), roi_back=(1126,90,125,249), threshold=0.8, method="Template matching", file="./tasks/Restart/courtyard_affairs/courtyard_affairs_daily.png")
-	# 暂无可完成的任务 
-	I_NO_TASKS = RuleImage(roi_front=(538,225,205,32), roi_back=(492,214,291,51), threshold=0.8, method="Template matching", file="./tasks/Restart/courtyard_affairs/courtyard_affairs_no_tasks.png")
-	# description 
-	I_CONFIRM = RuleImage(roi_front=(674,391,131,63), roi_back=(400,199,485,320), threshold=0.8, method="Template matching", file="./tasks/Restart/courtyard_affairs/courtyard_affairs_confirm.png")
-	# description 
-	I_SKIP = RuleImage(roi_front=(1170,36,56,28), roi_back=(1144,0,109,99), threshold=0.8, method="Template matching", file="./tasks/Restart/courtyard_affairs/courtyard_affairs_skip.png")
-
-
-	# Image Rule Assets
 	# 点击勾玉 
 	I_HARVEST_JADE = RuleImage(roi_front=(732,489,34,33), roi_back=(177,451,973,141), threshold=0.8, method="Template matching", file="./tasks/Restart/harvest/harvest_harvest_jade.png")
 	# 签到小图标 

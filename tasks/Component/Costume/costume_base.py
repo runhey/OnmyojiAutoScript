@@ -48,6 +48,8 @@ carpbanner_costume_model = {
         'I_SHI_CARD': f'I_SHI_CARD_{i}',
         'I_SHI_DEFENSE': f'I_SHI_DEFENSE_{i}',
         'I_SHI_GROWN': f'I_SHI_GROWN_{i}',
+        'I_CARD_EXP': f'I_CARD_EXP_{i}',
+        'I_UTILIZE_EXP': f'I_UTILIZE_EXP_{i}',
     } for i in range(1, 2)
 }
 
