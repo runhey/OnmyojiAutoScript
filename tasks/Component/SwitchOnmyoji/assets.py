@@ -25,5 +25,9 @@ class SwitchOnmyojiAssets:
 	I_ONMYOJI_CHECK = RuleImage(roi_front=(67,622,82,58), roi_back=(58,608,100,88), threshold=0.8, method="Template matching", file="./tasks/Component/SwitchOnmyoji/so/so_onmyoji_check.png")
 	# 阴阳术英杰页面标志 
 	I_HERO_CHECK = RuleImage(roi_front=(70,624,75,55), roi_back=(60,602,100,100), threshold=0.8, method="Template matching", file="./tasks/Component/SwitchOnmyoji/so/so_hero_check.png")
+	# 源赖光战标志 
+	I_YORIMITSU_BATTLE = RuleImage(roi_front=(511,424,100,100), roi_back=(448,401,181,142), threshold=0.8, method="Template matching", file="./tasks/Component/SwitchOnmyoji/so/so_yorimitsu_battle.png")
+	# 藤原道长战标志 
+	I_MICHINAGA_BATTLE = RuleImage(roi_front=(741,421,100,100), roi_back=(689,399,171,133), threshold=0.8, method="Template matching", file="./tasks/Component/SwitchOnmyoji/so/so_michinaga_battle.png")
 
 
