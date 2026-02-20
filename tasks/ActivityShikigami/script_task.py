@@ -297,7 +297,7 @@ class ScriptTask(StateMachine, GameUi, BaseActivity, SwitchSoul, ActivityShikiga
             if self.appear_then_click(self.I_WIN, interval=2):
                 continue
             #  出现 “魂” 和 紫蛇皮
-            if self.appear(self.I_REWARD):
+            if self.appear(self.I_REWARD) or self.appear(self.I_REWARD_PURPLE_SNAKE_SKIN):
                 logger.info('Win battle')
                 while 1:
                     self.screenshot()
