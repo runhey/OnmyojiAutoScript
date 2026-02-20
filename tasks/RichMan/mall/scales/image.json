@@ -30,7 +30,7 @@
     "itemName": "sca_demon_boss_1",
     "imageName": "scales_sca_demon_boss_1.png",
     "roiFront": "246,224,112,126",
-    "roiBack": "168,142,346,290",
+    "roiBack": "168,142,949,497",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "土蜘蛛"
@@ -39,7 +39,7 @@
     "itemName": "sca_demon_boss_2",
     "imageName": "scales_sca_demon_boss_2.png",
     "roiFront": "457,203,123,153",
-    "roiBack": "413,136,273,250",
+    "roiBack": "155,136,1001,500",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "胧车"
@@ -48,7 +48,7 @@
     "itemName": "sca_demon_boss_3",
     "imageName": "scales_sca_demon_boss_3.png",
     "roiFront": "686,239,131,121",
-    "roiBack": "631,132,344,273",
+    "roiBack": "145,132,1017,526",
     "method": "Template matching",
     "threshold": 0.6,
     "description": "荒骷髅"
@@ -57,7 +57,7 @@
     "itemName": "sca_demon_boss_4",
     "imageName": "scales_sca_demon_boss_4.png",
     "roiFront": "912,188,141,169",
-    "roiBack": "804,121,315,292",
+    "roiBack": "165,121,954,521",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "地震鲶"
@@ -66,7 +66,7 @@
     "itemName": "sca_demon_boss_5",
     "imageName": "scales_sca_demon_boss_5.png",
     "roiFront": "345,469,136,160",
-    "roiBack": "241,414,504,242",
+    "roiBack": "144,127,997,529",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "蜃气楼"
@@ -75,7 +75,7 @@
     "itemName": "sca_demon_boss_6",
     "imageName": "scales_sca_demon_boss_6.png",
     "roiFront": "561,480,141,141",
-    "roiBack": "437,402,555,236",
+    "roiBack": "139,110,1011,528",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "歌姬"
@@ -138,7 +138,7 @@
     "itemName": "sca_demon_boss_7",
     "imageName": "scales_sca_demon_boss_7.png",
     "roiFront": "819,489,100,100",
-    "roiBack": "640,423,412,222",
+    "roiBack": "96,125,1024,520",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "夜荒魂"
