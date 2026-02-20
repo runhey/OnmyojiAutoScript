@@ -897,6 +897,12 @@ class ScriptTask(ExtendGreenMark, GameUi, SwitchSoul, DokanSceneDetector):
     def switch_soul_in_dokan(self):
         if self.switch_soul_done:
             return
+        
+        # 道馆界面切换式神,如果配置里不开启,或者不开启按名字切换,就打开式神录
+        if not self.config.dokan.switch_soul_config.enable and not self.config.dokan.switch_soul_config.enable_switch_by_name:
+            self.switch_soul_done = True
+            return
+        
         logger.info("start switch soul...")
         self.ui_click_until_disappear(self.I_RYOU_DOKAN_SHIKIGAMI, interval=2)
 
