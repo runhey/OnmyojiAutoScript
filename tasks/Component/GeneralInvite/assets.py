@@ -14,7 +14,7 @@ class GeneralInviteAssets:
 	# 中间的邀请图片 
 	I_ADD_1 = RuleImage(roi_front=(596,241,114,51), roi_back=(569,196,186,161), threshold=0.9, method="Template matching", file="./tasks/Component/GeneralInvite/gi/gi_add_1.png")
 	# 最右边的邀请 
-	I_ADD_2 = RuleImage(roi_front=(1013,249,100,100), roi_back=(970,151,193,220), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralInvite/gi/gi_add_2.png")
+	I_ADD_2 = RuleImage(roi_front=(1013,203,100,100), roi_back=(970,151,193,220), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralInvite/gi/gi_add_2.png")
 	# description 
 	I_FIRE_FAIL = RuleImage(roi_front=(1177,604,81,74), roi_back=(1177,604,81,74), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralInvite/gi/gi_fire_fail.png")
 	# description 
@@ -127,5 +127,3 @@ class GeneralInviteAssets:
 	O_FRIEND_NAME_2 = RuleOcr(roi=(729,184,196,346), area=(729,184,196,346), mode="Full", method="Default", keyword="", name="friend_name_2")
 	# Ocr-description 
 	O_ONLINE = RuleOcr(roi=(790,102,124,42), area=(0,0,100,100), mode="Single", method="Default", keyword="", name="online")
-
-
