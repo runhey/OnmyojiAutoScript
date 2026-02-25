@@ -42,6 +42,7 @@ class ScriptTask(ExtendGreenMark, GameUi, SwitchSoul, DokanSceneDetector):
     team_switched: bool = False
     green_mark_done: bool = False
     switch_soul_done: bool = False
+    dokan_created: bool = False
 
     @cached_property
     def _attack_priorities(self) -> list:
@@ -128,7 +129,6 @@ class ScriptTask(ExtendGreenMark, GameUi, SwitchSoul, DokanSceneDetector):
 
             # 场景状态：寻找合适道馆中
             if current_scene == DokanScene.RYOU_DOKAN_SCENE_FINDING_DOKAN:
-
                 # 更新可挑战次数 可挑战次数为<=0,当作道馆成功完成
                 count = self.update_remain_attack_count()
                 if count <= 0:
@@ -140,8 +140,10 @@ class ScriptTask(ExtendGreenMark, GameUi, SwitchSoul, DokanSceneDetector):
                 if not try_start_dokan:
                     is_dokan_activated = False
                     break
-                # NOTE 只在周一尝试建立道馆
-                if datetime.now().weekday() == 0:
+                # 检查道馆是否开启
+                self.is_dokan_created(self, current_scene)
+                # 尝试开启道馆
+                if not self.dokan_created:
                     self.creat_dokan()
 
                 # 寻找合适道馆,找不到直接退出
@@ -720,6 +722,36 @@ class ScriptTask(ExtendGreenMark, GameUi, SwitchSoul, DokanSceneDetector):
             self.config.dokan.attack_count_config.del_attack_count(1, self.config.save)
             return True
         return False
+
+
+    def is_dokan_created(self, current_scense):
+        """
+            判断道馆是否创建成功
+
+        """
+        if current_scense != DokanScene.RYOU_DOKAN_SCENE_FINDING_DOKAN:
+            return
+        if self.dokan_created:
+            return
+        # 判断道馆信息界面是否出现,出现了就说明创建成功了
+        while True:
+            self.screenshot()
+            # 点击我的道馆界面
+            if self.appear_then_click(self.I_RYOU_DOKAN_MY_DOKAN, interval=2):
+                logger.info("Enter my dokan")
+                continue
+            
+            # 进入我的道馆界面
+            if self.appear(self.I_RYOU_DOKAN_MINE_DOKAN_TEAM_COMPOSITION):
+                if self.appear(self.I_RYOU_DOKAN_UNBUILT):
+                    self.dokan_created = False
+                    logger.info("Dokan is not created")
+                else:
+                    self.dokan_created = True
+                    logger.info("Dokan is created")
+                break
+            break
+
 
     def creat_dokan(self):
         # 点击创建道馆

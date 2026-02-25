@@ -160,7 +160,12 @@ class DokanAssets:
 	I_RYOU_DOKAN_CHEERING = RuleImage(roi_front=(65,601,71,33), roi_back=(44,568,112,100), threshold=0.8, method="Template matching", file="./tasks/Dokan/res/res_ryou_dokan_cheering.png")
 	# 助威灰色不可点击 
 	I_RYOU_DOKAN_CHEERING_GRAY = RuleImage(roi_front=(65,601,71,33), roi_back=(44,568,112,100), threshold=0.8, method="Template matching", file="./tasks/Dokan/res/res_ryou_dokan_cheering_gray.png")
-
+	# 我的道馆item
+	I_RYOU_DOKAN_MY_DOKAN = RuleImage(roi_front=(132,601,89,94), roi_back=(133,659,86,34), threshold=0.8, method="Template matching", file="./tasks/Dokan/res/res_dokan_mine_dokan.png")
+	# 是否未建立道馆
+	I_RYOU_DOKAN_UNBUILT = RuleImage(roi_front=(75,490,45,106), roi_back=(75,496,44,92), threshold=0.8, method="Template matching", file="./tasks/Dokan/res/res_dokan_dokan_unbuilt.png")
+	# 我的道馆界面-阵容配置
+	I_RYOU_DOKAN_MINE_DOKAN_TEAM_COMPOSITION = RuleImage(roi_front=(165,582,127,45), roi_back=(165,582,127,45), threshold=0.8, method="Template matching", file="./tasks/Dokan/res/res_dokan_mine_dokan_team_composition.png")
 
 	# List Rule Assets
 	# 这个是当前活跃的竂活动列表界面 
@@ -183,7 +188,7 @@ class DokanAssets:
 	O_DOKAN_CENTER_PEOPLE_NUMBER = RuleOcr(roi=(0,0,0,0), area=(0,0,0,0), mode="Full", method="Default", keyword="", name="dokan_center_people_number")
 	# 道馆失败CD 
 	O_DOKEN_FAIL_CD = RuleOcr(roi=(1066,499,193,31), area=(1061,490,207,47), mode="Full", method="Default", keyword="", name="doken_fail_cd")
-
+	
 
 	# Swipe Rule Assets
 	# 道馆选择界面 右侧侧边栏 手指向上滑动 

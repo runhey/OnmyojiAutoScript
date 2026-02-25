@@ -1,62 +1,119 @@
 [
   {
     "itemName": "dokan_random_click_area",
+    "imageName": "res_dokan_random_click_area.png",
     "roiFront": "142,294,107,150",
     "roiBack": "142,294,107,150",
+    "method": "",
+    "threshold": 0,
     "description": "道馆随机点击安全区域"
   },
   {
     "itemName": "dokan_random_click_area1",
+    "imageName": "res_dokan_random_click_area1.png",
     "roiFront": "42,594,10,30",
     "roiBack": "42,594,10,30",
+    "method": "",
+    "threshold": 0,
     "description": "道馆随机点击安全区域1：竂友突破信息"
   },
   {
     "itemName": "dokan_random_click_area2",
+    "imageName": "",
     "roiFront": "1122,360,10,40",
     "roiBack": "1122,360,10,40",
+    "method": "",
+    "threshold": 0,
     "description": "道馆随机点击安全区域2：切换查看队伍模式。初步测试下来这个地方最安全，除了庭院、町中、逢魔外其他各场景都可用。"
   },
   {
     "itemName": "dokan_random_click_area3",
+    "imageName": "",
     "roiFront": "333,44,107,20",
     "roiBack": "333,44,107,20",
+    "method": "",
+    "threshold": 0,
     "description": "道馆随机点击安全区域3"
   },
   {
     "itemName": "dokan_toppa_rank_close_area",
+    "imageName": "",
     "roiFront": "1150,380,100,150",
     "roiBack": "1150,380,100,150",
+    "method": "",
+    "threshold": 0,
     "description": "道馆突破排名弹出时,点击此区域关闭"
   },
   {
     "itemName": "dokan_ready_for_battle",
+    "imageName": "",
     "roiFront": "42,94,1207,543",
     "roiBack": "42,94,1207,543",
+    "method": "",
+    "threshold": 0,
     "description": "准备战斗"
   },
   {
     "itemName": "dokan_cancel_select_dokan",
+    "imageName": "",
     "roiFront": "1070,610,30,90",
     "roiBack": "1070,610,30,90",
+    "method": "",
+    "threshold": 0,
     "description": "查找道馆时 点击此区域 隐藏道馆详情(显示防守人数,馆主等级等的卡片)"
   },
   {
     "itemName": "dokan_cancel_select_dokan_check_animate",
+    "imageName": "",
     "roiFront": "600,330,80,60",
     "roiBack": "600,330,80,60",
+    "method": "",
+    "threshold": 0,
     "description": "ruleanimate 用作检测选择道馆时,确定地图区域稳定无动作"
   },
   {
     "itemName": "dokan_refresh",
+    "imageName": "",
     "roiFront": "1140,630,40,30",
     "roiBack": "1140,630,40,30",
+    "method": "",
+    "threshold": 0,
     "description": "查找道馆时 刷新道馆列表"
   },
   {
     "itemName": "dokan_battle_quit_area",
+    "imageName": "res_dokan_battle_quit_area.png",
     "roiFront": "10,36,50,14",
     "roiBack": "10,36,50,14",
+    "method": "",
+    "threshold": 0,
     "description": "道馆战斗时,左上角 退出按钮区域"
+  },
+  {
+    "itemName": "dokan_mine_dokan",
+    "imageName": "res_dokan_mine_dokan.png",
+    "roiFront": "132,601,89,94",
+    "roiBack": "133,659,86,34",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "dokan_dokan_unbuilt",
+    "imageName": "res_dokan_dokan_unbuilt.png",
+    "roiFront": "75,490,45,106",
+    "roiBack": "75,490,45,106",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "dokan_mine_dokan_team_composition",
+    "imageName": "res_dokan_mine_dokan_team_composition.png",
+    "roiFront": "165,582,127,45",
+    "roiBack": "165,582,127,45",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
   }
 ]
