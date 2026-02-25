@@ -17,7 +17,6 @@ class LoginHandler(BaseTask, RestartAssets, GameUiAssets):
         super().__init__(*wargs, **kwargs)
         self.character = self.config.restart.login_character_config.character
         self.O_LOGIN_SPECIFIC_SERVE.keyword = self.character
-        self._one_key_harvest_done = False
         # self.specific_usr = kwargs['config'].
 
     def _app_handle_login(self) -> bool:
@@ -178,11 +177,6 @@ class LoginHandler(BaseTask, RestartAssets, GameUiAssets):
         while 1:
             self.screenshot()
 
-            # 一键收获流程（替换勾玉、签到、体力、寮包、御魂）
-            if self.harvest_one_key():
-                timer_harvest.reset()
-                continue
-
             # 点击'获得奖励'
             if self.ui_reward_appear_click():
                 timer_harvest.reset()
@@ -221,8 +215,43 @@ class LoginHandler(BaseTask, RestartAssets, GameUiAssets):
                     logger.info('Close zidu')
                 continue
 
+            # 勾玉
+            if self.appear_then_click(self.I_HARVEST_JADE, interval=1.5):
+                timer_harvest.reset()
+                continue
+            # 签到
+            if self.appear_then_click(self.I_HARVEST_SIGN, interval=1.5):
+                self.wait_until_appear(self.I_HARVEST_SIGN_2, wait_time=2)
+                timer_harvest.reset()
+                continue
+            # 某些活动的特殊签到，有空看到就删掉
+            if self.appear_then_click(self.I_HARVEST_SIGN_3, interval=0.7):
+                timer_harvest.reset()
+                continue
+            if self.appear_then_click(self.I_HARVEST_SIGN_4, interval=1):
+                timer_harvest.reset()
+                continue
+            if self.appear_then_click(self.I_HARVEST_SIGN_2, interval=1.5):
+                self.wait_until_appear(self.I_LOGIN_RED_CLOSE, wait_time=2)
+                timer_harvest.reset()
+                continue
+            # 999天的签到福袋
+            if self.appear_then_click(self.I_HARVEST_SIGN_999, interval=1.5):
+                timer_harvest.reset()
+                continue
             # 判断是否勾选了收取邮件（不收取邮件可以查看每日收获）
             if not skip_default and self.config.restart.harvest_config.enable_mail and self.harvest_mail():
+                timer_harvest.reset()
+                continue
+            if self.appear_then_click(self.I_HARVEST_AP, interval=1, threshold=0.7):
+                timer_harvest.reset()
+                continue
+            # 御魂觉醒加成
+            if self.appear_then_click(self.I_HARVEST_SOUL, interval=1):
+                timer_harvest.reset()
+                continue
+            # 寮包
+            if self.appear_then_click(self.I_HARVEST_GUILD_REWARD, interval=2):
                 timer_harvest.reset()
                 continue
             # 自选御魂
@@ -281,59 +310,5 @@ class LoginHandler(BaseTask, RestartAssets, GameUiAssets):
             if self.appear_then_click(self.I_MAIL_RED_POINT, interval=4):
                 continue
         self.ui_click_until_disappear(self.I_LOGIN_RED_CLOSE)
-        return True
-
-    def harvest_one_key(self) -> bool:
-        """
-        一键收获流程
-        :return: 是否执行了一键收获
-        """
-        if self._one_key_harvest_done:
-            return False
-        
-        if not self.appear(self.I_HARVEST_ONE_KEY):
-            return False
-        
-        logger.info('One key harvest found')
-        self._one_key_harvest_done = True
-        
-        self.appear_then_click(self.I_HARVEST_ONE_KEY, interval=1)
-        logger.info('Click one key harvest button')
-        
-        self.wait_until_appear(self.I_HARVEST_ONE_KEY_FINISH_BUTTON, wait_time=3)
-        
-        if self.appear_then_click(self.I_HARVEST_ONE_KEY_DAILY, interval=1):
-            logger.info('Click one key harvest daily')
-            self.wait_until_appear(self.I_HARVEST_ONE_KEY_FINISH_BUTTON, wait_time=2)
-        
-        self.appear_then_click(self.I_HARVEST_ONE_KEY_FINISH_BUTTON, interval=1)
-        logger.info('Click one key harvest finish button')
-        
-        start_time = time.time()
-        while time.time() - start_time < 5:
-            self.screenshot()
-            if self.appear_then_click(self.I_LOGIN_RED_CLOSE, interval=1):
-                logger.info('Close red close after one key harvest')
-                start_time = time.time()
-                continue
-            
-            if self.appear_then_click(self.I_HARVEST_ONE_KEY_WANHUA_CARD_SKIP, interval=1):
-                logger.info('Click wanhua card skip button')
-                start_time = time.time()
-                continue
-            
-            if self.appear_then_click(self.I_HARVEST_ONE_KEY_CANCEL, interval=1):
-                logger.info('Click one key harvest cancel button')
-                start_time = time.time()
-                continue
-        
-        if self.appear(self.I_HARVEST_ONE_KEY_SUCCESS):
-            self.click(self.C_HARVEST_ONE_KEY_CLOSE_AREA, interval=1)
-            logger.info('Click one key success close area')
-        
-        self.screenshot()
-        if self.appear_then_click(self.I_LOGIN_YELLOW_CLOSE, interval=1):
-            logger.info('Close yellow close after one key harvest')
-        
         return True
 
