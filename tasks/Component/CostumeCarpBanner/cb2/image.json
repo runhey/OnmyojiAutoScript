@@ -1,0 +1,29 @@
+[
+  {
+    "itemName": "shi_grown_2",
+    "imageName": "cb2_shi_grown_2.png",
+    "roiFront": "585,336,21,38",
+    "roiBack": "519,212,220,281",
+    "method": "Template matching",
+    "threshold": 0.5,
+    "description": "育成"
+  },
+  {
+    "itemName": "shi_card_2",
+    "imageName": "cb2_shi_card_2.png",
+    "roiFront": "871,341,20,36",
+    "roiBack": "823,210,252,297",
+    "method": "Template matching",
+    "threshold": 0.5,
+    "description": "结界卡"
+  },
+  {
+    "itemName": "shi_defense_2",
+    "imageName": "cb2_shi_defense_2.png",
+    "roiFront": "287,343,19,38",
+    "roiBack": "178,209,261,274",
+    "method": "Template matching",
+    "threshold": 0.5,
+    "description": "防守"
+  }
+]

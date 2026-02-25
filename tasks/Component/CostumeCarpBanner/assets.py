@@ -19,3 +19,12 @@ class CostumeCarpBannerAssets:
 	I_SHI_DEFENSE_1 = RuleImage(roi_front=(216,258,22,33), roi_back=(178,209,261,274), threshold=0.6, method="Template matching", file="./tasks/Component/CostumeCarpBanner/cb1/cb1_shi_defense_1.png")
 
 
+	# Image Rule Assets
+	# 育成 
+	I_SHI_GROWN_2 = RuleImage(roi_front=(585,336,21,38), roi_back=(519,212,220,281), threshold=0.5, method="Template matching", file="./tasks/Component/CostumeCarpBanner/cb2/cb2_shi_grown_2.png")
+	# 结界卡 
+	I_SHI_CARD_2 = RuleImage(roi_front=(871,341,20,36), roi_back=(823,210,252,297), threshold=0.5, method="Template matching", file="./tasks/Component/CostumeCarpBanner/cb2/cb2_shi_card_2.png")
+	# 防守 
+	I_SHI_DEFENSE_2 = RuleImage(roi_front=(287,343,19,38), roi_back=(178,209,261,274), threshold=0.5, method="Template matching", file="./tasks/Component/CostumeCarpBanner/cb2/cb2_shi_defense_2.png")
+
+
