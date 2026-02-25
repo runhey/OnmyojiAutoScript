@@ -83,8 +83,8 @@
   {
     "itemName": "sou_check_group_1_6",
     "imageName": "sk6_sou_check_group_1_6.png",
-    "roiFront": "1086,91,22,57",
-    "roiBack": "1086,91,22,57",
+    "roiFront": "1078,79,22,52",
+    "roiBack": "1078,79,22,52",
     "method": "Template matching",
     "threshold": 0.9,
     "description": "检查是否为第一组"
@@ -92,8 +92,8 @@
   {
     "itemName": "sou_check_group_2_6",
     "imageName": "sk6_sou_check_group_2_6.png",
-    "roiFront": "1086,163,25,57",
-    "roiBack": "1086,163,25,57",
+    "roiFront": "1080,149,25,49",
+    "roiBack": "1080,149,25,49",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"
@@ -101,8 +101,8 @@
   {
     "itemName": "sou_check_group_3_6",
     "imageName": "sk6_sou_check_group_3_6.png",
-    "roiFront": "1085,234,22,49",
-    "roiBack": "1085,234,22,49",
+    "roiFront": "1080,221,22,43",
+    "roiBack": "1080,221,22,43",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"
@@ -110,8 +110,8 @@
   {
     "itemName": "sou_check_group_4_6",
     "imageName": "sk6_sou_check_group_4_6.png",
-    "roiFront": "1086,303,21,56",
-    "roiBack": "1086,303,21,56",
+    "roiFront": "1081,289,21,50",
+    "roiBack": "1081,289,21,50",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"
@@ -119,8 +119,8 @@
   {
     "itemName": "sou_check_group_5_6",
     "imageName": "sk6_sou_check_group_5_6.png",
-    "roiFront": "1088,370,21,53",
-    "roiBack": "1088,370,21,53",
+    "roiFront": "1081,360,21,50",
+    "roiBack": "1081,360,21,50",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"
@@ -128,8 +128,8 @@
   {
     "itemName": "sou_check_group_6_6",
     "imageName": "sk6_sou_check_group_6_6.png",
-    "roiFront": "1085,443,23,54",
-    "roiBack": "1085,443,23,54",
+    "roiFront": "1081,428,23,49",
+    "roiBack": "1081,428,23,49",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"
@@ -137,8 +137,8 @@
   {
     "itemName": "sou_check_group_7_6",
     "imageName": "sk6_sou_check_group_7_6.png",
-    "roiFront": "1088,512,21,54",
-    "roiBack": "1088,512,21,54",
+    "roiFront": "1079,500,21,48",
+    "roiBack": "1079,500,21,48",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"

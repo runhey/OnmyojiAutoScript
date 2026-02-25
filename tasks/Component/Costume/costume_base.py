@@ -8,7 +8,6 @@ from module.logger import logger
 from tasks.Component.Costume.config import (MainType, CostumeConfig, RealmType,
                                             ThemeType, ShikigamiType, SignType, BattleType, CarpBannerType)
 from tasks.Component.Costume.assets import CostumeAssets
-from tasks.Component.CostumeRealm.assets import CostumeRealmAssets
 from tasks.Component.CostumeBattle.assets import CostumeBattleAssets
 from tasks.Component.CostumeShikigami.assets import CostumeShikigamiAssets
 from tasks.Component.CostumeCarpBanner.assets import CostumeCarpBannerAssets
@@ -26,31 +25,13 @@ main_costume_model = {
 }
 
 
-# 结界皮肤
-realm_costume_model = {
-    getattr(RealmType, f"COSTUME_REALM_{i}"): {
-        'I_SHI_CARD': f'I_SHI_CARD_{i}',
-        'I_SHI_DEFENSE': f'I_SHI_DEFENSE_{i}',
-        'I_SHI_GROWN': f'I_SHI_GROWN_{i}',
-        'I_CARD_EXP': f'I_CARD_EXP_{i}',
-        'I_BOX_AP': f'I_BOX_AP_{i}',
-        'I_BOX_EXP': f'I_BOX_EXP_{i}',
-        'I_REALM_SHIN': f'I_REALM_SHIN_{i}',
-        'I_UTILIZE_EXP': f'I_UTILIZE_EXP_{i}',
-        'I_BOX_EXP_MAX': f'I_BOX_EXP_MAX_{i}',
-    } for i in range(1, 6)
-}
-
-
 # 鲤鱼旗皮肤
 carpbanner_costume_model = {
     getattr(CarpBannerType, f"COSTUME_CARPBANNER_{i}"): {
         'I_SHI_CARD': f'I_SHI_CARD_{i}',
         'I_SHI_DEFENSE': f'I_SHI_DEFENSE_{i}',
         'I_SHI_GROWN': f'I_SHI_GROWN_{i}',
-        'I_CARD_EXP': f'I_CARD_EXP_{i}',
-        'I_UTILIZE_EXP': f'I_UTILIZE_EXP_{i}',
-    } for i in range(1, 2)
+    } for i in range(1, 3)
 }
 
 
@@ -104,7 +85,6 @@ class CostumeBase:
         if config is None:
             config: CostumeConfig = self.config.model.global_game.costume_config
         self.check_costume_main(config.costume_main_type)
-        self.check_costume_realm(config.costume_realm_type)
         self.check_costume_carpbanner(config.costume_carpbanner_type)
         self.check_costume_battle(config.costume_battle_type)
         self.check_costume_shikigami(config.costume_shikigami_type)
@@ -144,19 +124,6 @@ class CostumeBase:
                 continue
             assert_value: RuleImage = getattr(carpbanner_assets, value)
             # 执行替换（覆盖结界皮肤的同名key）
-            self.replace_img(key, assert_value)
-
-    def check_costume_realm(self, realm_type: RealmType):
-        if realm_type == RealmType.COSTUME_REALM_DEFAULT:
-            return
-        logger.info(f'Switch realm theme {realm_type}')
-        costume_realm_assets = CostumeRealmAssets()
-        model = realm_costume_model.get(realm_type, {})
-        for key, value in model.items():
-            if not hasattr(costume_realm_assets, value):
-                logger.warning(f'Realm asset {value} not found, skip')
-                continue
-            assert_value: RuleImage = getattr(costume_realm_assets, value)
             self.replace_img(key, assert_value)
 
     def check_costume_battle(self, battle_type: BattleType):

@@ -12,14 +12,19 @@ class CostumeCarpBannerAssets:
 
 	# Image Rule Assets
 	# 育成 
-	I_SHI_GROWN_1 = RuleImage(roi_front=(602,339,26,37), roi_back=(524,269,181,198), threshold=0.6, method="Template matching", file="./tasks/Component/CostumeCarpBanner/cb1/cb1_shi_grown_1.png")
+	I_SHI_GROWN_1 = RuleImage(roi_front=(572,272,21,33), roi_back=(530,220,202,267), threshold=0.5, method="Template matching", file="./tasks/Component/CostumeCarpBanner/cb1/cb1_shi_grown_1.png")
 	# 结界卡 
-	I_SHI_CARD_1 = RuleImage(roi_front=(887,335,15,35), roi_back=(854,306,87,120), threshold=0.6, method="Template matching", file="./tasks/Component/CostumeCarpBanner/cb1/cb1_shi_card_1.png")
+	I_SHI_CARD_1 = RuleImage(roi_front=(911,262,20,33), roi_back=(823,210,252,297), threshold=0.5, method="Template matching", file="./tasks/Component/CostumeCarpBanner/cb1/cb1_shi_card_1.png")
 	# 防守 
-	I_SHI_DEFENSE_1 = RuleImage(roi_front=(269,335,24,46), roi_back=(200,277,154,166), threshold=0.8, method="Template matching", file="./tasks/Component/CostumeCarpBanner/cb1/cb1_shi_defense_1.png")
-	# 收取经验（没有满的图） 
-	I_CARD_EXP_1 = RuleImage(roi_front=(875,181,57,54), roi_back=(803,111,199,185), threshold=0.8, method="Template matching", file="./tasks/Component/CostumeCarpBanner/cb1/cb1_card_exp_1.png")
-	# 寄养别人的经验 
-	I_UTILIZE_EXP_1 = RuleImage(roi_front=(589,187,58,43), roi_back=(539,144,156,123), threshold=0.8, method="Template matching", file="./tasks/Component/CostumeCarpBanner/cb1/cb1_utilize_exp_1.png")
+	I_SHI_DEFENSE_1 = RuleImage(roi_front=(216,258,22,33), roi_back=(178,209,261,274), threshold=0.6, method="Template matching", file="./tasks/Component/CostumeCarpBanner/cb1/cb1_shi_defense_1.png")
+
+
+	# Image Rule Assets
+	# 育成 
+	I_SHI_GROWN_2 = RuleImage(roi_front=(585,336,21,38), roi_back=(519,212,220,281), threshold=0.5, method="Template matching", file="./tasks/Component/CostumeCarpBanner/cb2/cb2_shi_grown_2.png")
+	# 结界卡 
+	I_SHI_CARD_2 = RuleImage(roi_front=(871,341,20,36), roi_back=(823,210,252,297), threshold=0.5, method="Template matching", file="./tasks/Component/CostumeCarpBanner/cb2/cb2_shi_card_2.png")
+	# 防守 
+	I_SHI_DEFENSE_2 = RuleImage(roi_front=(287,343,19,38), roi_back=(178,209,261,274), threshold=0.5, method="Template matching", file="./tasks/Component/CostumeCarpBanner/cb2/cb2_shi_defense_2.png")
 
 
