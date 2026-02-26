@@ -141,7 +141,7 @@ class ScriptTask(ExtendGreenMark, GameUi, SwitchSoul, DokanSceneDetector):
                     is_dokan_activated = False
                     break
                 # 检查道馆是否开启
-                self.is_dokan_created(self, current_scene)
+                self.is_dokan_created(current_scene)
                 # 尝试开启道馆
                 if not self.dokan_created:
                     self.creat_dokan()
@@ -729,15 +729,17 @@ class ScriptTask(ExtendGreenMark, GameUi, SwitchSoul, DokanSceneDetector):
             判断道馆是否创建成功
 
         """
+        logger.info("into is_dokan_created method")
         if current_scense != DokanScene.RYOU_DOKAN_SCENE_FINDING_DOKAN:
             return
         if self.dokan_created:
             return
         # 判断道馆信息界面是否出现,出现了就说明创建成功了
         while True:
+            logger.info("check if dokan is created...")
             self.screenshot()
             # 点击我的道馆界面
-            if self.appear_then_click(self.I_RYOU_DOKAN_MY_DOKAN, interval=2):
+            if self.appear_then_click(self.I_RYOU_DOKAN_MINE_DOKAN, interval=2):
                 logger.info("Enter my dokan")
                 continue
             
@@ -749,6 +751,8 @@ class ScriptTask(ExtendGreenMark, GameUi, SwitchSoul, DokanSceneDetector):
                 else:
                     self.dokan_created = True
                     logger.info("Dokan is created")
+                if self.appear_then_click(self.I_RYOU_DOKAN_DOKAN_INFO_CLOSE, interval=2):
+                    logger.info("close my dokan info")
                 break
             break
 

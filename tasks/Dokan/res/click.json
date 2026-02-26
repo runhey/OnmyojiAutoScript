@@ -92,8 +92,8 @@
   {
     "itemName": "dokan_mine_dokan",
     "imageName": "res_dokan_mine_dokan.png",
-    "roiFront": "132,601,89,94",
-    "roiBack": "133,659,86,34",
+    "roiFront": "143,622,62,57",
+    "roiBack": "143,622,62,57",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"

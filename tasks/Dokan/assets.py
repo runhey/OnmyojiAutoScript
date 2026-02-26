@@ -161,7 +161,7 @@ class DokanAssets:
 	# 助威灰色不可点击 
 	I_RYOU_DOKAN_CHEERING_GRAY = RuleImage(roi_front=(65,601,71,33), roi_back=(44,568,112,100), threshold=0.8, method="Template matching", file="./tasks/Dokan/res/res_ryou_dokan_cheering_gray.png")
 	# 我的道馆item
-	I_RYOU_DOKAN_MY_DOKAN = RuleImage(roi_front=(132,601,89,94), roi_back=(133,659,86,34), threshold=0.8, method="Template matching", file="./tasks/Dokan/res/res_dokan_mine_dokan.png")
+	I_RYOU_DOKAN_MINE_DOKAN = RuleImage(roi_front=(143,622,62,57), roi_back=(143,622,62,57), threshold=0.8, method="Template matching", file="./tasks/Dokan/res/res_dokan_mine_dokan.png")
 	# 是否未建立道馆
 	I_RYOU_DOKAN_UNBUILT = RuleImage(roi_front=(75,490,45,106), roi_back=(75,496,44,92), threshold=0.8, method="Template matching", file="./tasks/Dokan/res/res_dokan_dokan_unbuilt.png")
 	# 我的道馆界面-阵容配置
