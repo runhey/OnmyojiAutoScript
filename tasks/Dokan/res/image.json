@@ -538,5 +538,23 @@
     "method": "Template matching",
     "threshold": 0.8,
     "description": "助威灰色不可点击"
+  },
+  {
+    "itemName": "dokan_dokan_unbuilt",
+    "imageName": "res_dokan_dokan_unbuilt.png",
+    "roiFront": "75,490,45,106",
+    "roiBack": "75,490,45,106",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "dokan_mine_dokan_team_composition",
+    "imageName": "res_dokan_mine_dokan_team_composition.png",
+    "roiFront": "165,582,127,45",
+    "roiBack": "165,582,127,45",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
   }
 ]

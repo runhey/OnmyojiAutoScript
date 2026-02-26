@@ -144,10 +144,12 @@ class ScriptTask(ExtendGreenMark, GameUi, SwitchSoul, DokanSceneDetector):
                 self.is_dokan_created(current_scene)
                 # 尝试开启道馆
                 if not self.dokan_created:
+                    logger.info("Dokan is not created, try to creat dokan...")
                     self.creat_dokan()
 
                 # 寻找合适道馆,找不到直接退出
                 if not self.find_dokan(self.config.dokan.dokan_config.find_dokan_score):
+                    logger.info("can not find suitable dokan, exit")
                     is_dokan_activated = False
                     break
                 # 寻找到道馆后等一会页面刷新
@@ -739,7 +741,8 @@ class ScriptTask(ExtendGreenMark, GameUi, SwitchSoul, DokanSceneDetector):
             logger.info("check if dokan is created...")
             self.screenshot()
             # 点击我的道馆界面
-            if self.appear_then_click(self.I_RYOU_DOKAN_MINE_DOKAN, interval=2):
+            if self.appear(self.I_RYOU_DOKAN_MINE_DOKAN, interval=2):
+                self.ui_click_until_disappear(self.I_RYOU_DOKAN_MINE_DOKAN)
                 logger.info("Enter my dokan")
                 continue
             
@@ -751,10 +754,12 @@ class ScriptTask(ExtendGreenMark, GameUi, SwitchSoul, DokanSceneDetector):
                 else:
                     self.dokan_created = True
                     logger.info("Dokan is created")
-                if self.appear_then_click(self.I_RYOU_DOKAN_DOKAN_INFO_CLOSE, interval=2):
+                if self.appear(self.I_RYOU_DOKAN_DOKAN_INFO_CLOSE, interval=2):
+                    self.ui_click_until_disappear(self.I_RYOU_DOKAN_DOKAN_INFO_CLOSE)
                     logger.info("close my dokan info")
                 break
             break
+        logger.info(f"exit is_dokan_created method, dokan_created status={self.dokan_created}")
 
 
     def creat_dokan(self):
