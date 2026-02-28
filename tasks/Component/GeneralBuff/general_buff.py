@@ -100,14 +100,14 @@ class GeneralBuff(BaseTask, GeneralBuffAssets):
                 self.screenshot()
                 if self.appear(self.I_OPEN_YELLOW):
                     break
-                if self.appear_then_click(self.I_CLOSE_RED, interval=1):
+                if self.appear_then_click(self.I_CLOSE_RED, interval=2):
                     continue
         else:
             while 1:
                 self.screenshot()
                 if self.appear(self.I_CLOSE_RED):
                     break
-                if self.appear_then_click(self.I_OPEN_YELLOW, interval=1):
+                if self.appear_then_click(self.I_OPEN_YELLOW, interval=2):
                     continue
 
     def gold_100(self, is_open: bool = True):
@@ -129,14 +129,14 @@ class GeneralBuff(BaseTask, GeneralBuffAssets):
                 self.screenshot()
                 if self.appear(self.I_OPEN_YELLOW):
                     break
-                if self.appear_then_click(self.I_CLOSE_RED, interval=1):
+                if self.appear_then_click(self.I_CLOSE_RED, interval=2):
                     continue
         else:
             while 1:
                 self.screenshot()
                 if self.appear(self.I_CLOSE_RED):
                     break
-                if self.appear_then_click(self.I_OPEN_YELLOW, interval=1):
+                if self.appear_then_click(self.I_OPEN_YELLOW, interval=2):
                     continue
 
     def exp_50(self, is_open: bool = True):
@@ -166,14 +166,14 @@ class GeneralBuff(BaseTask, GeneralBuffAssets):
                 self.screenshot()
                 if self.appear(self.I_OPEN_YELLOW):
                     break
-                if self.appear_then_click(self.I_CLOSE_RED, interval=1):
+                if self.appear_then_click(self.I_CLOSE_RED, interval=2):
                     continue
         else:
             while 1:
                 self.screenshot()
                 if self.appear(self.I_CLOSE_RED):
                     break
-                if self.appear_then_click(self.I_OPEN_YELLOW, interval=1):
+                if self.appear_then_click(self.I_OPEN_YELLOW, interval=2):
                     continue
 
     def exp_100(self, is_open: bool = True):
@@ -203,14 +203,14 @@ class GeneralBuff(BaseTask, GeneralBuffAssets):
                 self.screenshot()
                 if self.appear(self.I_OPEN_YELLOW):
                     break
-                if self.appear_then_click(self.I_CLOSE_RED, interval=1):
+                if self.appear_then_click(self.I_CLOSE_RED, interval=2):
                     continue
         else:
             while 1:
                 self.screenshot()
                 if self.appear(self.I_CLOSE_RED):
                     break
-                if self.appear_then_click(self.I_OPEN_YELLOW, interval=1):
+                if self.appear_then_click(self.I_OPEN_YELLOW, interval=2):
                     continue
 
     def get_area_image(self, target: RuleImage) -> list:
@@ -253,14 +253,14 @@ class GeneralBuff(BaseTask, GeneralBuffAssets):
                 self.screenshot()
                 if self.appear(self.I_OPEN_YELLOW):
                     break
-                if self.appear_then_click(self.I_CLOSE_RED, interval=1):
+                if self.appear_then_click(self.I_CLOSE_RED, interval=2):
                     continue
         else:
             while 1:
                 self.screenshot()
                 if self.appear(self.I_CLOSE_RED):
                     break
-                if self.appear_then_click(self.I_OPEN_YELLOW, interval=1):
+                if self.appear_then_click(self.I_OPEN_YELLOW, interval=2):
                     continue
 
     def soul(self, is_open: bool = True):
@@ -281,14 +281,14 @@ class GeneralBuff(BaseTask, GeneralBuffAssets):
                 self.screenshot()
                 if self.appear(self.I_OPEN_YELLOW):
                     break
-                if self.appear_then_click(self.I_CLOSE_RED, interval=1):
+                if self.appear_then_click(self.I_CLOSE_RED, interval=2):
                     continue
         else:
             while 1:
                 self.screenshot()
                 if self.appear(self.I_CLOSE_RED):
                     break
-                if self.appear_then_click(self.I_OPEN_YELLOW, interval=1):
+                if self.appear_then_click(self.I_OPEN_YELLOW, interval=2):
                     continue
 
     def reject_invite(self):
