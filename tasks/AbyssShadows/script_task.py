@@ -545,18 +545,11 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AbyssShadowsAssets):
         # 点击返回
         while 1:
             self.screenshot()
-            if self.appear_then_click(self.I_EXIT, interval=1.5):
+            if self.appear_then_click(self.I_EXIT, interval=2):
                 continue
-            if self.appear(self.I_EXIT_ENSURE):
-                break
-        logger.info(f"Click {self.I_EXIT.name}")
-
-        # 点击返回确认
-        while 1:
-            self.screenshot()
-            if self.appear_then_click(self.I_EXIT_ENSURE, interval=1.5):
+            if self.appear_then_click(self.I_EXIT_ENSURE, interval=2):
                 continue
-            if self.appear_then_click(self.I_WIN, interval=1.5):
+            if self.appear_then_click(self.I_WIN, interval=2):
                 continue
             if self.appear(self.I_ABYSS_NAVIGATION):
                 break
