@@ -12,19 +12,19 @@ class SwitchSoulAssets:
 
 	# Click Rule Assets
 	# description 
-	C_SOU_GROUP_1 = RuleClick(roi_front=(1086,85,158,67), roi_back=(1086,85,158,67), name="sou_group_1")
+	C_SOU_GROUP_1 = RuleClick(roi_front=(1086,85,158,47), roi_back=(1086,85,158,47), name="sou_group_1")
 	# description 
-	C_SOU_GROUP_2 = RuleClick(roi_front=(1087,155,162,62), roi_back=(1087,155,162,62), name="sou_group_2")
+	C_SOU_GROUP_2 = RuleClick(roi_front=(1087,155,162,48), roi_back=(1087,155,162,48), name="sou_group_2")
 	# description 
-	C_SOU_GROUP_3 = RuleClick(roi_front=(1088,226,154,61), roi_back=(1088,226,154,61), name="sou_group_3")
+	C_SOU_GROUP_3 = RuleClick(roi_front=(1088,226,154,49), roi_back=(1088,226,154,49), name="sou_group_3")
 	# description 
-	C_SOU_GROUP_4 = RuleClick(roi_front=(1087,297,157,59), roi_back=(1087,297,157,59), name="sou_group_4")
+	C_SOU_GROUP_4 = RuleClick(roi_front=(1087,297,157,46), roi_back=(1087,297,157,46), name="sou_group_4")
 	# description 
-	C_SOU_GROUP_5 = RuleClick(roi_front=(1087,365,154,62), roi_back=(1087,365,154,62), name="sou_group_5")
+	C_SOU_GROUP_5 = RuleClick(roi_front=(1087,365,154,47), roi_back=(1087,365,154,47), name="sou_group_5")
 	# description 
-	C_SOU_GROUP_6 = RuleClick(roi_front=(1088,437,156,57), roi_back=(1088,437,156,57), name="sou_group_6")
+	C_SOU_GROUP_6 = RuleClick(roi_front=(1088,437,156,46), roi_back=(1088,437,156,46), name="sou_group_6")
 	# description 
-	C_SOU_GROUP_7 = RuleClick(roi_front=(1090,505,156,62), roi_back=(1090,505,156,62), name="sou_group_7")
+	C_SOU_GROUP_7 = RuleClick(roi_front=(1090,505,156,51), roi_back=(1090,505,156,51), name="sou_group_7")
 	# 阵容选择按钮位置 
 	C_SOU_TEAM_SELECT = RuleClick(roi_front=(977,157,21,21), roi_back=(977,157,21,21), name="sou_team_select")
 

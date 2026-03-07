@@ -77,10 +77,12 @@ class CostumeConfig(BaseModel):
     costume_sign_type: SignType = Field(default=SignType.COSTUME_SIGN_DEFAULT, description='costume_sign_type_help')
     costume_battle_type: BattleType = Field(default=BattleType.COSTUME_BATTLE_DEFAULT, description='costume_battle_type_help')
 
-    @field_validator('costume_realm_type', mode='after')
+    @field_validator('costume_realm_type', mode='before')
     @classmethod
-    def validator_realm(cls, v: RealmType) -> RealmType:
-        return RealmType.COSTUME_REALM_DEFAULT
+    def validate_realm(cls, v):
+        if v and v not in RealmType._value2member_map_:
+            return RealmType.COSTUME_REALM_DEFAULT
+        return v
 
 
 
