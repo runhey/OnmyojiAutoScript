@@ -45,7 +45,17 @@ class ScriptTask(GameUi, ReplaceShikigami, KekkaiUtilizeAssets):
         # 查看育成满级
         self.check_max_lv(con.shikigami_class)
         # 检查蹭卡收获
-        self.check_utilize_harvest()
+
+
+
+        ### Jacky test
+        # self.check_utilize_harvest()
+        logger.warning(f'[JACKY] harvest_history_assets_enabled={con.harvest_history_assets_enabled}!!!')
+        if con.harvest_history_assets_enabled:
+            self.check_utilize_harvest()
+
+
+
         # 收体力盒子或者是经验盒子
         self.check_box_ap_or_exp(con.box_ap_enable, con.box_exp_enable, con.box_exp_waste)
 

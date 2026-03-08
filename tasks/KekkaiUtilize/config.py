@@ -39,6 +39,7 @@ class UtilizeConfig(BaseModel):
     box_exp_enable: bool = Field(default=True, description='box_exp_enable_help')
     box_exp_waste: bool = Field(default=True, description='box_exp_waste_help')
 
+    harvest_history_assets_enabled: bool = Field(default=False, description='是否收集存储在结界中的体力和勾玉，默认不收集')
 
 class KekkaiUtilize(ConfigBase):
     scheduler: UtilizeScheduler = Field(default_factory=UtilizeScheduler)
