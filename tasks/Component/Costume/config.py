@@ -20,6 +20,7 @@ class MainType(str, Enum):
     COSTUME_MAIN_11 = 'costume_main_11'  # 鏖刀禁府
     COSTUME_MAIN_12 = 'costume_main_12'  # 龙吟溯玉
     COSTUME_MAIN_13 = 'costume_main_13'  # 云景阆苑
+    COSTUME_MAIN_14 = 'costume_main_14'  # 雪月华庭
 
 # 结界皮肤
 class RealmType(str, Enum):
@@ -45,6 +46,7 @@ class ShikigamiType(str, Enum):
     COSTUME_SHIKIGAMI_5 = 'costume_shikigami_5'  # 契光水境
     COSTUME_SHIKIGAMI_6 = 'costume_shikigami_6'  # 月下火舞
     COSTUME_SHIKIGAMI_7 = 'costume_shikigami_7'  # 赤溟幽界
+    COSTUME_SHIKIGAMI_8 = 'costume_shikigami_8'  # 童梦基地
 
 # 签到主题
 class SignType(str, Enum):
@@ -64,6 +66,7 @@ class BattleType(str, Enum):
     COSTUME_BATTLE_9 = 'costume_battle_9'  # 莲华圣域
     COSTUME_BATTLE_10 = 'costume_battle_10'  # 流焰蝶舞
     COSTUME_BATTLE_11 = 'costume_battle_11'  # 辰烁奇夜
+    COSTUME_BATTLE_12 = 'costume_battle_12'  # 招财纳福
 
 
 
@@ -77,10 +80,12 @@ class CostumeConfig(BaseModel):
     costume_sign_type: SignType = Field(default=SignType.COSTUME_SIGN_DEFAULT, description='costume_sign_type_help')
     costume_battle_type: BattleType = Field(default=BattleType.COSTUME_BATTLE_DEFAULT, description='costume_battle_type_help')
 
-    @field_validator('costume_realm_type', mode='after')
+    @field_validator('costume_realm_type', mode='before')
     @classmethod
-    def validator_realm(cls, v: RealmType) -> RealmType:
-        return RealmType.COSTUME_REALM_DEFAULT
+    def validate_realm(cls, v):
+        if v and v not in RealmType._value2member_map_:
+            return RealmType.COSTUME_REALM_DEFAULT
+        return v
 
 
 
