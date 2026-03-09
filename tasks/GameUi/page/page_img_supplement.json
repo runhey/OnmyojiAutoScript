@@ -20,8 +20,8 @@
   {
     "itemName": "check_summon",
     "imageName": "page_check_summon.png",
-    "roiFront": "581,594,68,66",
-    "roiBack": "316,528,594,174",
+    "roiFront": "750,580,30,28",
+    "roiBack": "750,580,350,120",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"
