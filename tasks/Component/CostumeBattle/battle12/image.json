@@ -1,0 +1,56 @@
+[
+  {
+    "itemName": "exit_12",
+    "imageName": "battle12_exit_12.png",
+    "roiFront": "16,15,22,25",
+    "roiBack": "16,15,40,40",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "左上角退出"
+  },
+  {
+    "itemName": "friends_12",
+    "imageName": "battle12_friends_12.png",
+    "roiFront": "90,14,22,30",
+    "roiBack": "90,14,40,40",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "左上角好友"
+  },
+  {
+    "itemName": "local_12",
+    "imageName": "battle12_local_12.png",
+    "roiFront": "29,566,28,28",
+    "roiBack": "29,566,40,40",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "指针"
+  },
+  {
+    "itemName": "win_12",
+    "imageName": "battle12_win_12.png",
+    "roiFront": "390,30,46,88",
+    "roiBack": "390,30,510,290",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "战斗胜利"
+  },
+  {
+    "itemName": "de_win_12",
+    "imageName": "battle12_de_win_12.png",
+    "roiFront": "390,30,46,88",
+    "roiBack": "390,30,510,290",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "针对封魔的特殊"
+  },
+  {
+    "itemName": "false_12",
+    "imageName": "battle12_false_12.png",
+    "roiFront": "390,30,58,86",
+    "roiBack": "390,30,510,290",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "失败"
+  }
+]

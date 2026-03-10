@@ -34,7 +34,7 @@ class TalismanPassAssets:
 	# 溢出确认 
 	I_OVERFLOW_CONFIRME = RuleImage(roi_front=(585,410,116,44), roi_back=(585,410,116,44), threshold=0.8, method="Template matching", file="./tasks/TalismanPass/tp/tp_overflow_confirme.png")
 	# 点击随机御魂 
-	I_TP_SOUL_1 = RuleImage(roi_front=(248,501,34,37), roi_back=(165,389,929,168), threshold=0.8, method="Template matching", file="./tasks/TalismanPass/tp/tp_tp_soul_1.png")
+	I_TP_SOUL_1 = RuleImage(roi_front=(248,501,34,37), roi_back=(165,389,929,168), threshold=0.7, method="Template matching", file="./tasks/TalismanPass/tp/tp_tp_soul_1.png")
 	# 选择中间第二个御魂 
 	I_TP_SOUL_2 = RuleImage(roi_front=(582,438,115,48), roi_back=(570,427,139,71), threshold=0.8, method="Template matching", file="./tasks/TalismanPass/tp/tp_tp_soul_2.png")
 	# 六星御魂标志 
