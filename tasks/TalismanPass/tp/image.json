@@ -104,7 +104,7 @@
     "roiFront": "248,501,34,37",
     "roiBack": "165,389,929,168",
     "method": "Template matching",
-    "threshold": 0.8,
+    "threshold": 0.7,
     "description": "点击随机御魂"
   },
   {
