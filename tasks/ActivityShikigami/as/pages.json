@@ -2,7 +2,7 @@
   {
     "itemName": "shi",
     "imageName": "as_shi.png",
-    "roiFront": "1184,460,47,29",
+    "roiFront": "1184,384,47,29",
     "roiBack": "1164,134,83,393",
     "method": "Template matching",
     "threshold": 0.7,
@@ -38,7 +38,7 @@
   {
     "itemName": "to_battle_main",
     "imageName": "as_to_battle_main.png",
-    "roiFront": "141,310,39,176",
+    "roiFront": "223,287,39,176",
     "roiBack": "100,242,238,269",
     "method": "Template matching",
     "threshold": 0.8,
@@ -47,7 +47,7 @@
   {
     "itemName": "to_battle_boss",
     "imageName": "as_to_battle_boss.png",
-    "roiFront": "1093,293,37,136",
+    "roiFront": "1076,241,37,136",
     "roiBack": "934,209,234,327",
     "method": "Template matching",
     "threshold": 0.8,
@@ -56,8 +56,8 @@
   {
     "itemName": "check_battle_main",
     "imageName": "as_check_battle_main.png",
-    "roiFront": "34,639,39,46",
-    "roiBack": "12,597,264,105",
+    "roiFront": "842,565,39,45",
+    "roiBack": "688,499,415,203",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"
@@ -88,5 +88,14 @@
     "method": "Template matching",
     "threshold": 0.65,
     "description": "description"
+  },
+  {
+    "itemName": "confirm_skip",
+    "imageName": "as_confirm_skip.png",
+    "roiFront": "707,442,137,38",
+    "roiBack": "656,397,231,124",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "确认跳过"
   }
 ]
