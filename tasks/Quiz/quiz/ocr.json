@@ -2,16 +2,16 @@
   {
     "itemName": "question",
     "roiFront": "903,32,322,101",
-    "roiBack": "903,32,322,101",
-    "mode": "Single",
+    "roiBack": "0,0,100,100",
+    "mode": "Full",
     "method": "Default",
     "keyword": "",
     "description": "Ocr-description"
   },
   {
     "itemName": "answer1",
-    "roiFront": "906,178,320,53",
-    "roiBack": "906,178,320,53",
+    "roiFront": "951,188,228,31",
+    "roiBack": "949,187,231,34",
     "mode": "Single",
     "method": "Default",
     "keyword": "",
@@ -19,8 +19,8 @@
   },
   {
     "itemName": "answer2",
-    "roiFront": "905,289,319,51",
-    "roiBack": "905,289,319,51",
+    "roiFront": "960,301,208,26",
+    "roiBack": "959,300,211,29",
     "mode": "Single",
     "method": "Default",
     "keyword": "",
@@ -28,8 +28,8 @@
   },
   {
     "itemName": "answer3",
-    "roiFront": "906,399,320,55",
-    "roiBack": "906,399,320,55",
+    "roiFront": "955,417,228,26",
+    "roiBack": "953,415,231,29",
     "mode": "Single",
     "method": "Default",
     "keyword": "",
@@ -37,8 +37,8 @@
   },
   {
     "itemName": "answer4",
-    "roiFront": "909,511,316,54",
-    "roiBack": "909,511,316,54",
+    "roiFront": "964,527,208,23",
+    "roiBack": "963,526,211,26",
     "mode": "Single",
     "method": "Default",
     "keyword": "",
@@ -46,8 +46,8 @@
   },
   {
     "itemName": "countdown",
-    "roiFront": "1045,6,27,30",
-    "roiBack": "1045,6,27,30",
+    "roiFront": "1030,9,61,25",
+    "roiBack": "1029,7,63,27",
     "mode": "Digit",
     "method": "Default",
     "keyword": "4",
@@ -65,7 +65,7 @@
   {
     "itemName": "question_and_answer",
     "roiFront": "902,34,325,534",
-    "roiBack": "902,34,325,534",
+    "roiBack": "0,0,100,100",
     "mode": "Full",
     "method": "Default",
     "keyword": "",

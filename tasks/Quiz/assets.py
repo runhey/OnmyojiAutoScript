@@ -10,35 +10,48 @@ from module.atom.list import RuleList
 class QuizAssets: 
 
 
+	# Click Rule Assets
+	# description 
+	C_ANSWER_ENSURE_1 = RuleClick(roi_front=(1219,185,21,34), roi_back=(1218,184,23,37), name="answer_ensure_1")
+	# description 
+	C_ANSWER_ENSURE_2 = RuleClick(roi_front=(1223,298,19,26), roi_back=(1222,297,22,29), name="answer_ensure_2")
+	# description 
+	C_ANSWER_ENSURE_3 = RuleClick(roi_front=(1224,414,18,23), roi_back=(1223,413,21,26), name="answer_ensure_3")
+	# description 
+	C_ANSWER_ENSURE_4 = RuleClick(roi_front=(1226,524,13,29), roi_back=(1224,523,15,31), name="answer_ensure_4")
+
+
 	# Image Rule Assets
 	# description 
-	I_ENTRY = RuleImage(roi_front=(143,363,40,128), roi_back=(119,246,100,326), threshold=0.8, method="Template matching", file="./tasks/Quiz/quiz/quiz_entry.png")
+	I_ENTRY = RuleImage(roi_front=(770,373,33,139), roi_back=(745,281,142,329), threshold=0.8, method="Template matching", file="./tasks/Quiz/quiz/entry.png")
 	# 开始 
 	I_START = RuleImage(roi_front=(1149,608,66,41), roi_back=(1136,574,100,100), threshold=0.8, method="Template matching", file="./tasks/Quiz/quiz/quiz_start.png")
 	# 标志 
-	I_MESSAGE = RuleImage(roi_front=(75,488,58,41), roi_back=(50,460,100,100), threshold=0.8, method="Template matching", file="./tasks/Quiz/quiz/quiz_message.png")
+	I_MESSAGE = RuleImage(roi_front=(73,483,53,46), roi_back=(51,450,170,136), threshold=0.8, method="Template matching", file="./tasks/Quiz/quiz/message.png")
 	# 失败然后离开 
-	I_FAIL_QUIT = RuleImage(roi_front=(416,529,183,45), roi_back=(354,502,275,100), threshold=0.8, method="Template matching", file="./tasks/Quiz/quiz/quiz_fail_quit.png")
+	I_FAIL_QUIT = RuleImage(roi_front=(612,534,67,31), roi_back=(375,484,524,163), threshold=0.8, method="Template matching", file="./tasks/Quiz/quiz/fail_quit.png")
 	# 结算分享 
 	I_SHARE = RuleImage(roi_front=(1171,625,53,44), roi_back=(1152,592,100,100), threshold=0.8, method="Template matching", file="./tasks/Quiz/quiz/quiz_share.png")
+	# description 
+	I_ALONE_ENSURE = RuleImage(roi_front=(1216,405,30,41), roi_back=(1138,148,140,435), threshold=0.7, method="Template matching", file="./tasks/Quiz/quiz/alone_ensure.png")
 
 
 	# Ocr Rule Assets
 	# Ocr-description 
-	O_QUESTION = RuleOcr(roi=(903,32,322,101), area=(903,32,322,101), mode="Single", method="Default", keyword="", name="question")
+	O_QUESTION = RuleOcr(roi=(903,32,322,101), area=(0,0,100,100), mode="Full", method="Default", keyword="", name="question")
 	# Ocr-description 
-	O_ANSWER1 = RuleOcr(roi=(906,178,320,53), area=(906,178,320,53), mode="Single", method="Default", keyword="", name="answer1")
+	O_ANSWER1 = RuleOcr(roi=(951,188,228,31), area=(949,187,231,34), mode="Single", method="Default", keyword="", name="answer1")
 	# Ocr-description 
-	O_ANSWER2 = RuleOcr(roi=(905,289,319,51), area=(905,289,319,51), mode="Single", method="Default", keyword="", name="answer2")
+	O_ANSWER2 = RuleOcr(roi=(960,301,208,26), area=(959,300,211,29), mode="Single", method="Default", keyword="", name="answer2")
 	# Ocr-description 
-	O_ANSWER3 = RuleOcr(roi=(906,399,320,55), area=(906,399,320,55), mode="Single", method="Default", keyword="", name="answer3")
+	O_ANSWER3 = RuleOcr(roi=(955,417,228,26), area=(953,415,231,29), mode="Single", method="Default", keyword="", name="answer3")
 	# Ocr-description 
-	O_ANSWER4 = RuleOcr(roi=(909,511,316,54), area=(909,511,316,54), mode="Single", method="Default", keyword="", name="answer4")
+	O_ANSWER4 = RuleOcr(roi=(964,527,208,23), area=(963,526,211,26), mode="Single", method="Default", keyword="", name="answer4")
 	# 倒计时 
-	O_COUNTDOWN = RuleOcr(roi=(1045,6,27,30), area=(1045,6,27,30), mode="Digit", method="Default", keyword="4", name="countdown")
+	O_COUNTDOWN = RuleOcr(roi=(1030,9,61,25), area=(1029,7,63,27), mode="Digit", method="Default", keyword="4", name="countdown")
 	# 倒计时 
 	O_COUNTDOWN3 = RuleOcr(roi=(1045,6,27,30), area=(1045,6,27,30), mode="Digit", method="Default", keyword="3", name="countdown3")
 	# Ocr-description 
-	O_QUESTION_AND_ANSWER = RuleOcr(roi=(902,34,325,534), area=(902,34,325,534), mode="Full", method="Default", keyword="", name="question_and_answer")
+	O_QUESTION_AND_ANSWER = RuleOcr(roi=(902,34,325,534), area=(0,0,100,100), mode="Full", method="Default", keyword="", name="question_and_answer")
 
 
