@@ -297,28 +297,16 @@ class ScriptTask(StateMachine, GameUi, BaseActivity, SwitchSoul, ActivityShikiga
             if self.appear_then_click(self.I_WIN, interval=2):
                 continue
             #  出现 “魂” 和 紫蛇皮
-            if self.appear(self.I_REWARD):
-                logger.info('Win battle')
-                while 1:
-                    self.screenshot()
-                    # appear_reward = self.appear_then_click(self.I_REWARD)
-                    appear_reward_purple_snake_skin = self.appear(self.I_REWARD_PURPLE_SNAKE_SKIN)
-                    appear_reward = self.appear(self.I_REWARD)
-                    if appear_reward:
-                        self.click(self.I_REWARD, interval=0.9)
-                    if not appear_reward and not appear_reward_purple_snake_skin:
-                        break
-                    if appear_reward or appear_reward_purple_snake_skin:
-                        reward_click = random.choice(
-                            [self.C_RANDOM_LEFT, self.C_RANDOM_RIGHT])
-                        self.click(reward_click, interval=1.8)
-                        continue
-                return True
+            if self.appear(self.I_REWARD) or self.appear(self.I_REWARD_PURPLE_SNAKE_SKIN) or \
+                    self.appear(self.I_REWARD_GOLD) or self.appear(self.I_REWARD_GOLD_SNAKE_SKIN):
+                self.random_reward_click(exclude_click=[self.C_RANDOM_RIGHT])
+                ok_cnt += 1
+                continue
             # 已经不在战斗中了, 且奖励也识别过了, 则随机点击
-            # if ok_cnt > 0 and not self.is_in_battle(False):
-            #     self.random_reward_click(exclude_click=[self.C_RANDOM_BOTTOM])
-            #     ok_cnt += 1
-            #     continue
+            if ok_cnt > 0 and not self.is_in_battle(False):
+                self.random_reward_click(exclude_click=[self.C_RANDOM_RIGHT])
+                ok_cnt += 1
+                continue
             # 战斗中随机滑动
             if ok_cnt == 0 and random_click_swipt_enable:
                 self.random_click_swipt()
@@ -326,11 +314,12 @@ class ScriptTask(StateMachine, GameUi, BaseActivity, SwitchSoul, ActivityShikiga
 
     def switch_soul(self, enter_button: RuleImage, cur_img: RuleImage):
         conf = self.conf.switch_soul_config
-        conf.validate_switch_soul()
         enable_switch = getattr(conf, f"enable_switch_{self.climb_type}", False)
         enable_by_name = getattr(conf, f"enable_switch_{self.climb_type}_by_name", False)
         if not enable_switch and not enable_by_name:
             return
+        logger.hr('Start switch soul', 2)
+        conf.validate_switch_soul()
         self.ui_click(enter_button, stop=self.I_CHECK_RECORDS, interval=1)
         if enable_by_name:
             group, team = getattr(conf, f"{self.climb_type}_group_team_name").split(",")
@@ -372,16 +361,13 @@ class ScriptTask(StateMachine, GameUi, BaseActivity, SwitchSoul, ActivityShikiga
         self.screenshot()
         remain_times = 0
         if self.climb_type == 'pass':
-            remain_times = self.O_REMAIN_PASS.ocr_digit(
-                _prepare_image_for_ocr(self.device.image, asset=self.O_REMAIN_PASS))
+            remain_times = self.O_REMAIN_PASS.ocr_digit(self.device.image)
         if self.climb_type == 'ap':
-            remain_times = self.O_REMAIN_AP.ocr_digit(
-                _prepare_image_for_ocr(self.device.image, asset=self.O_REMAIN_AP))
+            remain_times = self.O_REMAIN_AP.ocr_digit(self.device.image)
         if self.climb_type == 'boss':
             _, remain_times, _ = self.O_REMAIN_BOSS.ocr_digit_counter(self.device.image)
         if self.climb_type == 'ap100':
-            remain_times = self.O_REMAIN_AP100.ocr_digit(
-                _prepare_image_for_ocr(self.device.image, asset=self.O_REMAIN_AP100))
+            remain_times = self.O_REMAIN_AP100.ocr_digit(self.device.image)
         return remain_times > 0
 
     def get_general_battle_conf(self) -> tasks.Component.GeneralBattle.config_general_battle.GeneralBattleConfig:
