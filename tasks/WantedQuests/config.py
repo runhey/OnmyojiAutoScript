@@ -83,6 +83,21 @@ class CooperationSelectMaskDescription(str, Enum):
     Any = 'Any'
 
 
+# 定义秘闻副本层数限制
+class LayerLimit(str, Enum):
+    LAYER_1 = '壹'
+    LAYER_2 = '贰'
+    LAYER_3 = '叁'
+    LAYER_4 = '肆'
+    LAYER_5 = '伍'
+    LAYER_6 = '陆'
+    LAYER_7 = '柒'
+    LAYER_8 = '捌'
+    LAYER_9 = '玖'
+    LAYER_10 = '拾'
+    EXTRA = '番外'
+    ALL = '无限制'       # 全都打
+
 class WantedQuestsConfig(BaseModel):
     before_end: Time = Field(default=Time(0, 0, 0), description='before_end_help')
     invite_friend_name: str = Field(default=str(""), description="invite_friend_name_help")
@@ -94,6 +109,8 @@ class WantedQuestsConfig(BaseModel):
     cooperation_only: bool = Field(default=False, description="cooperation_only_help")
     # 忽略任务的任务目标名称（“酒吞童子”等）,多个用逗号“，,"分隔
     unwanted_boss_names: str = Field(default='酒吞童子,阎魔', description='unwanted_boss_name_help')
+    # 秘闻层数限制，默认值为7
+    layer_limit: LayerLimit = Field(default=LayerLimit.LAYER_7, description='X层及以上不打')
 
 
 class WantedQuests(ConfigBase):

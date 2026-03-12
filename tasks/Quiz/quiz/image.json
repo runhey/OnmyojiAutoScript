@@ -1,9 +1,9 @@
 [
   {
     "itemName": "entry",
-    "imageName": "quiz_entry.png",
-    "roiFront": "143,363,40,128",
-    "roiBack": "119,246,100,326",
+    "imageName": "entry.png",
+    "roiFront": "770,373,33,139",
+    "roiBack": "745,281,142,329",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"
@@ -19,18 +19,18 @@
   },
   {
     "itemName": "message",
-    "imageName": "quiz_message.png",
-    "roiFront": "75,488,58,41",
-    "roiBack": "50,460,100,100",
+    "imageName": "message.png",
+    "roiFront": "73,483,53,46",
+    "roiBack": "51,450,170,136",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "标志"
   },
   {
     "itemName": "fail_quit",
-    "imageName": "quiz_fail_quit.png",
-    "roiFront": "416,529,183,45",
-    "roiBack": "354,502,275,100",
+    "imageName": "fail_quit.png",
+    "roiFront": "612,534,67,31",
+    "roiBack": "375,484,524,163",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "失败然后离开"
@@ -43,5 +43,23 @@
     "method": "Template matching",
     "threshold": 0.8,
     "description": "结算分享"
+  },
+  {
+    "itemName": "alone_ensure",
+    "roiFront": "1216,405,30,41",
+    "roiBack": "1138,148,140,435",
+    "description": "description",
+    "imageName": "alone_ensure.png",
+    "method": "Template matching",
+    "threshold": "0.7"
+  },
+  {
+    "itemName": "alone_ensure_2",
+    "roiFront": "1215,294,22,30",
+    "roiBack": "1167,162,107,427",
+    "description": "description",
+    "imageName": "alone_ensure_2.png",
+    "method": "Template matching",
+    "threshold": "0.7"
   }
 ]

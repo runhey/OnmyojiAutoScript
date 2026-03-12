@@ -1,7 +1,7 @@
 # This Python file uses the following encoding: utf-8
 # @author runhey
 # github https://github.com/runhey
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, field_validator
 from enum import Enum
 
 # 庭院皮肤
@@ -20,20 +20,18 @@ class MainType(str, Enum):
     COSTUME_MAIN_11 = 'costume_main_11'  # 鏖刀禁府
     COSTUME_MAIN_12 = 'costume_main_12'  # 龙吟溯玉
     COSTUME_MAIN_13 = 'costume_main_13'  # 云景阆苑
+    COSTUME_MAIN_14 = 'costume_main_14'  # 雪月华庭
 
 # 结界皮肤
 class RealmType(str, Enum):
     COSTUME_REALM_DEFAULT = 'costume_realm_default'  # 妖扇结界
-    COSTUME_REALM_1 = 'costume_realm_1'  # 鬼灵咒符
-    COSTUME_REALM_2 = 'costume_realm_2'  # 狐梦之乡
-    COSTUME_REALM_3 = 'costume_realm_3'  # 编心织忆
-    COSTUME_REALM_4 = 'costume_realm_4'  # 花海繁生
-    COSTUME_REALM_5 = 'costume_realm_5'  # 莲心梦乡
 
 # 鲤鱼旗皮肤
 class CarpBannerType(str, Enum):
     COSTUME_CARPBANNER_DEFAULT = 'costume_carpbanner_default'  # 吉鲤游风
-    COSTUME_CARPBANNER_1 = 'costume_carpbanner_1'  # 无垢莲台（仅适配莲心梦乡）
+    COSTUME_CARPBANNER_1 = 'costume_carpbanner_1'  # 无垢莲台
+    COSTUME_CARPBANNER_2 = 'costume_carpbanner_2'  # 萤灯月夜
+    COSTUME_CARPBANNER_3 = 'costume_carpbanner_3'  # 鸢戏游鲤
 
 # 主题，就是庭院最右下角的展开按钮
 class ThemeType(str, Enum):
@@ -49,6 +47,7 @@ class ShikigamiType(str, Enum):
     COSTUME_SHIKIGAMI_5 = 'costume_shikigami_5'  # 契光水境
     COSTUME_SHIKIGAMI_6 = 'costume_shikigami_6'  # 月下火舞
     COSTUME_SHIKIGAMI_7 = 'costume_shikigami_7'  # 赤溟幽界
+    COSTUME_SHIKIGAMI_8 = 'costume_shikigami_8'  # 童梦基地
 
 # 签到主题
 class SignType(str, Enum):
@@ -68,6 +67,7 @@ class BattleType(str, Enum):
     COSTUME_BATTLE_9 = 'costume_battle_9'  # 莲华圣域
     COSTUME_BATTLE_10 = 'costume_battle_10'  # 流焰蝶舞
     COSTUME_BATTLE_11 = 'costume_battle_11'  # 辰烁奇夜
+    COSTUME_BATTLE_12 = 'costume_battle_12'  # 招财纳福
 
 
 
@@ -80,6 +80,16 @@ class CostumeConfig(BaseModel):
     costume_shikigami_type: ShikigamiType = Field(default=ShikigamiType.COSTUME_SHIKIGAMI_DEFAULT, description='costume_shikigami_type_help')
     costume_sign_type: SignType = Field(default=SignType.COSTUME_SIGN_DEFAULT, description='costume_sign_type_help')
     costume_battle_type: BattleType = Field(default=BattleType.COSTUME_BATTLE_DEFAULT, description='costume_battle_type_help')
+
+    @field_validator('costume_realm_type', mode='before')
+    @classmethod
+    def validate_realm(cls, v):
+        if v and v not in RealmType._value2member_map_:
+            return RealmType.COSTUME_REALM_DEFAULT
+        return v
+
+
+
 
 
 

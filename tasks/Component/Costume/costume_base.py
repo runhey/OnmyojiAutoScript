@@ -8,7 +8,6 @@ from module.logger import logger
 from tasks.Component.Costume.config import (MainType, CostumeConfig, RealmType,
                                             ThemeType, ShikigamiType, SignType, BattleType, CarpBannerType)
 from tasks.Component.Costume.assets import CostumeAssets
-from tasks.Component.CostumeRealm.assets import CostumeRealmAssets
 from tasks.Component.CostumeBattle.assets import CostumeBattleAssets
 from tasks.Component.CostumeShikigami.assets import CostumeShikigamiAssets
 from tasks.Component.CostumeCarpBanner.assets import CostumeCarpBannerAssets
@@ -22,23 +21,7 @@ main_costume_model = {
         'I_MAIN_GOTO_SUMMON': f'I_MAIN_GOTO_SUMMON_{i}',
         'I_MAIN_GOTO_TOWN': f'I_MAIN_GOTO_TOWN_{i}',
         'I_PET_HOUSE': f'I_PET_HOUSE_{i}'
-    } for i in range(1, 14)
-}
-
-
-# 结界皮肤
-realm_costume_model = {
-    getattr(RealmType, f"COSTUME_REALM_{i}"): {
-        'I_SHI_CARD': f'I_SHI_CARD_{i}',
-        'I_SHI_DEFENSE': f'I_SHI_DEFENSE_{i}',
-        'I_SHI_GROWN': f'I_SHI_GROWN_{i}',
-        'I_CARD_EXP': f'I_CARD_EXP_{i}',
-        'I_BOX_AP': f'I_BOX_AP_{i}',
-        'I_BOX_EXP': f'I_BOX_EXP_{i}',
-        'I_REALM_SHIN': f'I_REALM_SHIN_{i}',
-        'I_UTILIZE_EXP': f'I_UTILIZE_EXP_{i}',
-        'I_BOX_EXP_MAX': f'I_BOX_EXP_MAX_{i}',
-    } for i in range(1, 6)
+    } for i in range(1, 15)
 }
 
 
@@ -48,13 +31,13 @@ carpbanner_costume_model = {
         'I_SHI_CARD': f'I_SHI_CARD_{i}',
         'I_SHI_DEFENSE': f'I_SHI_DEFENSE_{i}',
         'I_SHI_GROWN': f'I_SHI_GROWN_{i}',
-    } for i in range(1, 2)
+    } for i in range(1, 4)
 }
 
 
 # 战斗主题（使用循环处理常规情况 + 特例处理）
 battle_theme_model = {}
-for i in range(1, 12):
+for i in range(1, 13):
     entry = {
         'I_LOCAL': f'I_LOCAL_{i}',
         'I_EXIT': f'I_EXIT_{i}',
@@ -65,6 +48,12 @@ for i in range(1, 12):
             'I_WIN': 'I_WIN_8',
             'I_DE_WIN': 'I_DE_WIN_8',
             'I_FALSE': 'I_FALSE_8'
+        })
+    if i == 12:  # 特殊处理第12项
+        entry.update({
+            'I_WIN': 'I_WIN_12',
+            'I_DE_WIN': 'I_DE_WIN_12',
+            'I_FALSE': 'I_FALSE_12'
         })
     battle_theme_model[getattr(BattleType, f"COSTUME_BATTLE_{i}")] = entry
 
@@ -88,7 +77,7 @@ shikigami_costume_model = {
         'I_ST_SOULS': f'I_ST_SOULS_{i}',
         'I_ST_REPLACE': f'I_ST_REPLACE_{i}',
     }
-    for i in range(1, 8)  # 目前只有 COSTUME_SHIKIGAMI_1，如需扩展可改 range
+    for i in range(1, 9)  # 目前支持 COSTUME_SHIKIGAMI_1 到 COSTUME_SHIKIGAMI_8
 }
 
 class CostumeBase:
@@ -96,7 +85,6 @@ class CostumeBase:
         if config is None:
             config: CostumeConfig = self.config.model.global_game.costume_config
         self.check_costume_main(config.costume_main_type)
-        self.check_costume_realm(config.costume_realm_type)
         self.check_costume_carpbanner(config.costume_carpbanner_type)
         self.check_costume_battle(config.costume_battle_type)
         self.check_costume_shikigami(config.costume_shikigami_type)
@@ -136,19 +124,6 @@ class CostumeBase:
                 continue
             assert_value: RuleImage = getattr(carpbanner_assets, value)
             # 执行替换（覆盖结界皮肤的同名key）
-            self.replace_img(key, assert_value)
-
-    def check_costume_realm(self, realm_type: RealmType):
-        if realm_type == RealmType.COSTUME_REALM_DEFAULT:
-            return
-        logger.info(f'Switch realm theme {realm_type}')
-        costume_realm_assets = CostumeRealmAssets()
-        model = realm_costume_model.get(realm_type, {})
-        for key, value in model.items():
-            if not hasattr(costume_realm_assets, value):
-                logger.warning(f'Realm asset {value} not found, skip')
-                continue
-            assert_value: RuleImage = getattr(costume_realm_assets, value)
             self.replace_img(key, assert_value)
 
     def check_costume_battle(self, battle_type: BattleType):
