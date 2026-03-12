@@ -1,0 +1,26 @@
+[
+  {
+    "itemName": "answer_ensure_1",
+    "roiFront": "1219,185,21,34",
+    "roiBack": "1218,184,23,37",
+    "description": "description"
+  },
+  {
+    "itemName": "answer_ensure_2",
+    "roiFront": "1223,298,19,26",
+    "roiBack": "1222,297,22,29",
+    "description": "description"
+  },
+  {
+    "itemName": "answer_ensure_3",
+    "roiFront": "1224,414,18,23",
+    "roiBack": "1223,413,21,26",
+    "description": "description"
+  },
+  {
+    "itemName": "answer_ensure_4",
+    "roiFront": "1226,524,13,29",
+    "roiBack": "1224,523,15,31",
+    "description": "description"
+  }
+]
