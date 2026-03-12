@@ -292,6 +292,7 @@
       "card_rule": "auto",
       "exchange_before": true,
       "exchange_max": true,
+      "exchange_auto": true,
       "exchange_smart": false,
       "shikigami_class": "N"
     }
