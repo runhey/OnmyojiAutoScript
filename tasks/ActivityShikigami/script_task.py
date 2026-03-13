@@ -251,6 +251,12 @@ class ScriptTask(StateMachine, GameUi, BaseActivity, SwitchSoul, ActivityShikiga
         """
         logger.hr(f'Start run climb type BOSS')
 
+    def _run_ap100(self):
+        """
+        更新前请先看 ./README.md
+        """
+        logger.hr(f'Start run climb type AP100')
+
     def start_battle(self):
         click_times, max_times = 0, random.randint(2, 4)
         while 1:
@@ -297,31 +303,11 @@ class ScriptTask(StateMachine, GameUi, BaseActivity, SwitchSoul, ActivityShikiga
             if self.appear_then_click(self.I_WIN, interval=2):
                 continue
             #  出现 “魂” 和 紫蛇皮
-<<<<<<< dev
             if self.appear(self.I_REWARD) or self.appear(self.I_REWARD_PURPLE_SNAKE_SKIN) or \
                     self.appear(self.I_REWARD_GOLD) or self.appear(self.I_REWARD_GOLD_SNAKE_SKIN):
                 self.random_reward_click(exclude_click=[self.C_RANDOM_RIGHT])
                 ok_cnt += 1
                 continue
-=======
-            if self.appear(self.I_REWARD) or self.appear(self.I_REWARD_PURPLE_SNAKE_SKIN):
-                logger.info('Win battle')
-                while 1:
-                    self.screenshot()
-                    # appear_reward = self.appear_then_click(self.I_REWARD)
-                    appear_reward_purple_snake_skin = self.appear(self.I_REWARD_PURPLE_SNAKE_SKIN)
-                    appear_reward = self.appear(self.I_REWARD)
-                    if appear_reward:
-                        self.click(self.I_REWARD, interval=0.9)
-                    if not appear_reward and not appear_reward_purple_snake_skin:
-                        break
-                    if appear_reward or appear_reward_purple_snake_skin:
-                        reward_click = random.choice(
-                            [self.C_RANDOM_LEFT, self.C_RANDOM_RIGHT])
-                        self.click(reward_click, interval=1.8)
-                        continue
-                return True
->>>>>>> master
             # 已经不在战斗中了, 且奖励也识别过了, 则随机点击
             if ok_cnt > 0 and not self.is_in_battle(False):
                 self.random_reward_click(exclude_click=[self.C_RANDOM_RIGHT])
