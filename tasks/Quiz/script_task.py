@@ -148,7 +148,7 @@ class ScriptTask(GameUi, QuizAssets, ActivityShikigamiAssets, Debugger):
         
         self.last_countdown = countdown """
         
-        if countdown <1 or countdown > 3:
+        if countdown < 2 or countdown > 5:
             # 最后两秒钟的时候 进行选择
             if countdown >100:
                 self.runalone = True
@@ -207,17 +207,10 @@ class ScriptTask(GameUi, QuizAssets, ActivityShikigamiAssets, Debugger):
         answer_2 = ''
         answer_3 = ''
         answer_4 = ''
-        answer_1 = self.O_ANSWER1.ocr(self.device.image)
-        answer_2 = self.O_ANSWER2.ocr(self.device.image)
-        answer_3 = self.O_ANSWER3.ocr(self.device.image)
-        answer_4 = self.O_ANSWER4.ocr(self.device.image)    
-        
-        # 过滤answer中的符号'.', '''
-        answer_1 = answer_1.replace('.', '').replace("'", '').replace('：', '').replace(' ', '') if answer_1 else ''
-        answer_2 = answer_2.replace('.', '').replace("'", '').replace('：', '').replace(' ', '') if answer_2 else ''
-        answer_3 = answer_3.replace('.', '').replace("'", '').replace('：', '').replace(' ', '') if answer_3 else ''
-        answer_4 = answer_4.replace('.', '').replace("'", '').replace('：', '').replace(' ', '') if answer_4 else ''
-        
+        answer_1 = remove_symbols(self.O_ANSWER1.ocr(self.device.image))
+        answer_2 = remove_symbols(self.O_ANSWER2.ocr(self.device.image))
+        answer_3 = remove_symbols(self.O_ANSWER3.ocr(self.device.image))
+        answer_4 = remove_symbols(self.O_ANSWER4.ocr(self.device.image))  
         for result in results:
             # box 是四个点坐标 左上， 右上， 右下， 左下
             # x1, y1, x2, y2 = result.box[0][0], result.box[0][1], result.box[2][0], result.box[2][1]

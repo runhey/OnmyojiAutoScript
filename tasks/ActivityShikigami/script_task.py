@@ -251,6 +251,12 @@ class ScriptTask(StateMachine, GameUi, BaseActivity, SwitchSoul, ActivityShikiga
         """
         logger.hr(f'Start run climb type BOSS')
 
+    def _run_ap100(self):
+        """
+        更新前请先看 ./README.md
+        """
+        logger.hr(f'Start run climb type AP100')
+
     def start_battle(self):
         click_times, max_times = 0, random.randint(2, 4)
         while 1:
