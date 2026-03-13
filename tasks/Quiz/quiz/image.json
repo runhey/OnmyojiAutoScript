@@ -52,14 +52,5 @@
     "imageName": "alone_ensure.png",
     "method": "Template matching",
     "threshold": "0.7"
-  },
-  {
-    "itemName": "alone_ensure_2",
-    "roiFront": "1215,294,22,30",
-    "roiBack": "1167,162,107,427",
-    "description": "description",
-    "imageName": "alone_ensure_2.png",
-    "method": "Template matching",
-    "threshold": "0.7"
   }
 ]
