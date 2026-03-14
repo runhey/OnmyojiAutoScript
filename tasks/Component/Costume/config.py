@@ -31,6 +31,7 @@ class CarpBannerType(str, Enum):
     COSTUME_CARPBANNER_DEFAULT = 'costume_carpbanner_default'  # 吉鲤游风
     COSTUME_CARPBANNER_1 = 'costume_carpbanner_1'  # 无垢莲台
     COSTUME_CARPBANNER_2 = 'costume_carpbanner_2'  # 萤灯月夜
+    COSTUME_CARPBANNER_3 = 'costume_carpbanner_3'  # 鸢戏游鲤
 
 # 主题，就是庭院最右下角的展开按钮
 class ThemeType(str, Enum):
