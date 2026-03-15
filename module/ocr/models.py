@@ -1,5 +1,9 @@
+from typing import Dict
+
 from module.base.decorator import cached_property
 from module.ocr.ppocr import TextSystem
+from module.ocr.rpc import ModelProxy
+from module.server.setting import State
 
 
 class OcrModel:
@@ -10,6 +14,17 @@ class OcrModel:
 
 OCR_MODEL = OcrModel()
 
+_OCR_PROXY_CACHE: Dict[str, ModelProxy] = {}
+
+
+def get_ocr_model(lang: str = "ch"):
+    deploy_config = State.deploy_config
+    if deploy_config.UseOcrServer:
+        address = deploy_config.OcrClientAddress or "127.0.0.1:22268"
+        if address not in _OCR_PROXY_CACHE:
+            _OCR_PROXY_CACHE[address] = ModelProxy(address)
+        return _OCR_PROXY_CACHE[address]
+    return getattr(OCR_MODEL, lang)
 
 
 if __name__ == "__main__":
