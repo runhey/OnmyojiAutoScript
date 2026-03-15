@@ -231,6 +231,10 @@ class ScriptTask(StateMachine, GameUi, BaseActivity, SwitchSoul, ActivityShikiga
                 continue
             ocr_limit_timer.reset()
             
+            # 战斗结束后未返回到准备界面
+            if not self.ocr_appear(self.O_FIRE):
+                continue
+
             # 判断是否为体力爬塔模式
             if not self.appear(self.I_CLIMB_MODE_AP):
                 logger.info(f'非体力爬塔模式，切换为体力爬塔模式')
