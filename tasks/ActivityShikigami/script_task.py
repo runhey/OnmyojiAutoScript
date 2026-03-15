@@ -230,9 +230,19 @@ class ScriptTask(StateMachine, GameUi, BaseActivity, SwitchSoul, ActivityShikiga
             if not ocr_limit_timer.reached():
                 continue
             ocr_limit_timer.reset()
-            if not self.ocr_appear(self.O_FIRE):
-                self.appear_then_click(self.I_CHECK_BATTLE_MAIN, interval=4)
+            
+            # 判断是否为体力爬塔模式
+            if not self.appear(self.I_CLIMB_MODE_AP):
+                logger.info(f'非体力爬塔模式，切换为体力爬塔模式')
+                self.switch_climb_mode_in_game('ap')
                 continue
+            
+            # 判断是否弹出体力购买弹窗
+            if self.appear(self.I_CLIMB_PAGE_BUY_MAGATAMA):
+                logger.warning(f'体力不够，结束任务')
+                self.ui_click_until_disappear(self.I_MAGATAMA_RED_EXIT) # 退出体力购买弹窗
+                break
+                
             #  --------------------------------------------------------------
             self.lock_team(self.conf.general_battle)
             if not self.check_tickets_enough():
@@ -265,7 +275,7 @@ class ScriptTask(StateMachine, GameUi, BaseActivity, SwitchSoul, ActivityShikiga
                 break
             if click_times >= max_times:
                 logger.warning(f'Climb {self.climb_type} cannot enter, maybe already end, try next')
-                return
+                return False
             if (self.appear_then_click(self.I_UI_CONFIRM_SAMLL, interval=1) or
                     self.appear_then_click(self.I_UI_CONFIRM, interval=1) ):
                 continue
@@ -275,6 +285,7 @@ class ScriptTask(StateMachine, GameUi, BaseActivity, SwitchSoul, ActivityShikiga
                 continue
         # 运行战斗
         self.run_general_battle(config=self.get_general_battle_conf())
+        return True
 
     def battle_wait(self, random_click_swipt_enable: bool) -> bool:
         # 通用战斗结束判断

@@ -34,7 +34,8 @@ class ActivityShikigamiAssets:
 	I_CLIMB_MODE_AP = RuleImage(roi_front=(1101,532,22,25), roi_back=(1055,495,100,100), threshold=0.8, method="Template matching", file="./tasks/ActivityShikigami/as/as_climb_mode_ap.png")
 	# 切换按键 
 	I_CLIMB_MODE_SWITCH = RuleImage(roi_front=(1237,532,29,26), roi_back=(1174,511,104,82), threshold=0.8, method="Template matching", file="./tasks/ActivityShikigami/as/as_climb_mode_switch.png")
-
+	# 购买体力弹窗
+	I_CLIMB_PAGE_BUY_MAGATAMA = RuleImage(roi_front=(568,345,44,43), roi_back=(547,329,194,86), threshold=0.8, method="Template matching", file="./tasks/ActivityShikigami/as/as_climb_page_buy_magatama.png")
 
 	# Image Rule Assets
 	# 进入活动 
@@ -59,7 +60,8 @@ class ActivityShikigamiAssets:
 	I_TO_BATTLE_MAIN_2 = RuleImage(roi_front=(15,94,247,38), roi_back=(2,68,311,100), threshold=0.65, method="Template matching", file="./tasks/ActivityShikigami/as/as_to_battle_main_2.png")
 	# 确认跳过 
 	I_CONFIRM_SKIP = RuleImage(roi_front=(707,442,137,38), roi_back=(656,397,231,124), threshold=0.8, method="Template matching", file="./tasks/ActivityShikigami/as/as_confirm_skip.png")
-
+	# 体力购买页面红色按钮退出
+	I_MAGATAMA_RED_EXIT = RuleImage(roi_front=(916,175,44,45), roi_back=(916,175,44,45), threshold=0.8, method="Template matching", file="./tasks/ActivityShikigami/as/as_magatama_red_exit.png")
 
 	# Image Rule Assets
 	# description 

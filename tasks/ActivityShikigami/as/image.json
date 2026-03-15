@@ -43,5 +43,14 @@
     "method": "Template matching",
     "threshold": 0.8,
     "description": "切换按键"
+  },
+  {
+    "itemName": "climb_page_buy_magatama",
+    "imageName": "as_climb_page_buy_magatama.png",
+    "roiFront": "568,345,44,43",
+    "roiBack": "547,329,194,86",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "体力购买弹窗"
   }
 ]
