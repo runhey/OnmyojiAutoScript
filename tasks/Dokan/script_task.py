@@ -42,6 +42,7 @@ class ScriptTask(ExtendGreenMark, GameUi, SwitchSoul, DokanSceneDetector):
     team_switched: bool = False
     green_mark_done: bool = False
     switch_soul_done: bool = False
+    dokan_created: bool = False
 
     @cached_property
     def _attack_priorities(self) -> list:
@@ -128,7 +129,6 @@ class ScriptTask(ExtendGreenMark, GameUi, SwitchSoul, DokanSceneDetector):
 
             # 场景状态：寻找合适道馆中
             if current_scene == DokanScene.RYOU_DOKAN_SCENE_FINDING_DOKAN:
-
                 # 更新可挑战次数 可挑战次数为<=0,当作道馆成功完成
                 count = self.update_remain_attack_count()
                 if count <= 0:
@@ -140,12 +140,16 @@ class ScriptTask(ExtendGreenMark, GameUi, SwitchSoul, DokanSceneDetector):
                 if not try_start_dokan:
                     is_dokan_activated = False
                     break
-                # NOTE 只在周一尝试建立道馆
-                if datetime.now().weekday() == 0:
+                # 检查道馆是否开启
+                self.is_dokan_created(current_scene)
+                # 尝试开启道馆
+                if not self.dokan_created:
+                    logger.info("Dokan is not created, try to creat dokan...")
                     self.creat_dokan()
 
                 # 寻找合适道馆,找不到直接退出
                 if not self.find_dokan(self.config.dokan.dokan_config.find_dokan_score):
+                    logger.info("can not find suitable dokan, exit")
                     is_dokan_activated = False
                     break
                 # 寻找到道馆后等一会页面刷新
@@ -721,6 +725,43 @@ class ScriptTask(ExtendGreenMark, GameUi, SwitchSoul, DokanSceneDetector):
             return True
         return False
 
+
+    def is_dokan_created(self, current_scense):
+        """
+            判断道馆是否创建成功
+
+        """
+        logger.info("into is_dokan_created method")
+        if current_scense != DokanScene.RYOU_DOKAN_SCENE_FINDING_DOKAN:
+            return
+        if self.dokan_created:
+            return
+        # 判断道馆信息界面是否出现,出现了就说明创建成功了
+        while True:
+            logger.info("check if dokan is created...")
+            self.screenshot()
+            # 点击我的道馆界面
+            if self.appear(self.I_RYOU_DOKAN_MINE_DOKAN, interval=2):
+                self.ui_click_until_disappear(self.I_RYOU_DOKAN_MINE_DOKAN)
+                logger.info("Enter my dokan")
+                continue
+            
+            # 进入我的道馆界面
+            if self.appear(self.I_RYOU_DOKAN_MINE_DOKAN_TEAM_COMPOSITION):
+                if self.appear(self.I_RYOU_DOKAN_UNBUILT):
+                    self.dokan_created = False
+                    logger.info("Dokan is not created")
+                else:
+                    self.dokan_created = True
+                    logger.info("Dokan is created")
+                if self.appear(self.I_RYOU_DOKAN_DOKAN_INFO_CLOSE, interval=2):
+                    self.ui_click_until_disappear(self.I_RYOU_DOKAN_DOKAN_INFO_CLOSE)
+                    logger.info("close my dokan info")
+                break
+            break
+        logger.info(f"exit is_dokan_created method, dokan_created status={self.dokan_created}")
+
+
     def creat_dokan(self):
         # 点击创建道馆
         # 当 成功建立道馆并关闭道馆信息窗口后退出
@@ -897,6 +938,12 @@ class ScriptTask(ExtendGreenMark, GameUi, SwitchSoul, DokanSceneDetector):
     def switch_soul_in_dokan(self):
         if self.switch_soul_done:
             return
+        
+        # 道馆界面切换式神,如果配置里不开启,或者不开启按名字切换,就不打开式神录
+        if not self.config.dokan.switch_soul_config.enable and not self.config.dokan.switch_soul_config.enable_switch_by_name:
+            self.switch_soul_done = True
+            return
+        
         logger.info("start switch soul...")
         self.ui_click_until_disappear(self.I_RYOU_DOKAN_SHIKIGAMI, interval=2)
 

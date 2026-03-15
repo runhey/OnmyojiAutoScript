@@ -97,5 +97,14 @@
     "method": "Template matching",
     "threshold": 0.8,
     "description": "确认跳过"
+  },
+  {
+    "itemName": "magatama_red_exit",
+    "imageName": "as_magatama_red_exit.png",
+    "roiFront": "916,175,44,45",
+    "roiBack": "916,175,44,45",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "体力购买页面推出"
   }
 ]

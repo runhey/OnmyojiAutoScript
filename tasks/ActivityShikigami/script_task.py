@@ -230,9 +230,23 @@ class ScriptTask(StateMachine, GameUi, BaseActivity, SwitchSoul, ActivityShikiga
             if not ocr_limit_timer.reached():
                 continue
             ocr_limit_timer.reset()
+            
+            # 战斗结束后未返回到准备界面
             if not self.ocr_appear(self.O_FIRE):
-                self.appear_then_click(self.I_CHECK_BATTLE_MAIN, interval=4)
                 continue
+
+            # 判断是否为体力爬塔模式
+            if not self.appear(self.I_CLIMB_MODE_AP):
+                logger.info(f'非体力爬塔模式，切换为体力爬塔模式')
+                self.switch_climb_mode_in_game('ap')
+                continue
+            
+            # 判断是否弹出体力购买弹窗
+            if self.appear(self.I_CLIMB_PAGE_BUY_MAGATAMA):
+                logger.warning(f'体力不够，结束任务')
+                self.ui_click_until_disappear(self.I_MAGATAMA_RED_EXIT) # 退出体力购买弹窗
+                break
+                
             #  --------------------------------------------------------------
             self.lock_team(self.conf.general_battle)
             if not self.check_tickets_enough():
@@ -265,7 +279,7 @@ class ScriptTask(StateMachine, GameUi, BaseActivity, SwitchSoul, ActivityShikiga
                 break
             if click_times >= max_times:
                 logger.warning(f'Climb {self.climb_type} cannot enter, maybe already end, try next')
-                return
+                return False
             if (self.appear_then_click(self.I_UI_CONFIRM_SAMLL, interval=1) or
                     self.appear_then_click(self.I_UI_CONFIRM, interval=1) ):
                 continue
@@ -275,6 +289,7 @@ class ScriptTask(StateMachine, GameUi, BaseActivity, SwitchSoul, ActivityShikiga
                 continue
         # 运行战斗
         self.run_general_battle(config=self.get_general_battle_conf())
+        return True
 
     def battle_wait(self, random_click_swipt_enable: bool) -> bool:
         # 通用战斗结束判断
@@ -303,11 +318,23 @@ class ScriptTask(StateMachine, GameUi, BaseActivity, SwitchSoul, ActivityShikiga
             if self.appear_then_click(self.I_WIN, interval=2):
                 continue
             #  出现 “魂” 和 紫蛇皮
-            if self.appear(self.I_REWARD) or self.appear(self.I_REWARD_PURPLE_SNAKE_SKIN) or \
-                    self.appear(self.I_REWARD_GOLD) or self.appear(self.I_REWARD_GOLD_SNAKE_SKIN):
-                self.random_reward_click(exclude_click=[self.C_RANDOM_RIGHT])
-                ok_cnt += 1
-                continue
+            if self.appear(self.I_REWARD) or self.appear(self.I_REWARD_PURPLE_SNAKE_SKIN):
+                logger.info('Win battle')
+                while 1:
+                    self.screenshot()
+                    # appear_reward = self.appear_then_click(self.I_REWARD)
+                    appear_reward_purple_snake_skin = self.appear(self.I_REWARD_PURPLE_SNAKE_SKIN)
+                    appear_reward = self.appear(self.I_REWARD)
+                    if appear_reward:
+                        self.click(self.I_REWARD, interval=0.9)
+                    if not appear_reward and not appear_reward_purple_snake_skin:
+                        break
+                    if appear_reward or appear_reward_purple_snake_skin:
+                        reward_click = random.choice(
+                            [self.C_RANDOM_LEFT, self.C_RANDOM_RIGHT])
+                        self.click(reward_click, interval=1.8)
+                        continue
+                return True
             # 已经不在战斗中了, 且奖励也识别过了, 则随机点击
             if ok_cnt > 0 and not self.is_in_battle(False):
                 self.random_reward_click(exclude_click=[self.C_RANDOM_RIGHT])
