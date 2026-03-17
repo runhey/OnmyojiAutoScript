@@ -44,7 +44,7 @@ oas-backend.bat
 .prettierrc.js
 
 
-
+*.code-workspace
 
 
 
