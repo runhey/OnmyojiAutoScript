@@ -1,6 +1,7 @@
 # This Python file uses the following encoding: utf-8
 # @author runhey
 # github https://github.com/runhey
+import atexit
 import multiprocessing
 import pickle
 import socket
@@ -80,6 +81,34 @@ def ensure_ocr_server_started() -> bool:
         time.sleep(0.1)
     logger.error(f"OCR server is not ready on port {port}")
     return False
+
+
+def shutdown_ocr_server(timeout: float = 2.0) -> bool:
+    global _OCR_SERVER_PROCESS
+
+    process = _OCR_SERVER_PROCESS
+    if process is None:
+        return False
+
+    if not process.is_alive():
+        _OCR_SERVER_PROCESS = None
+        return False
+
+    logger.info("Stopping OCR server process")
+    try:
+        process.terminate()
+        process.join(timeout=timeout)
+        if process.is_alive():
+            logger.warning("OCR server process did not exit in time, force killing")
+            process.kill()
+            process.join(timeout=1.0)
+        logger.info("OCR server process stopped")
+        return True
+    except Exception as e:
+        logger.exception(e)
+        return False
+    finally:
+        _OCR_SERVER_PROCESS = None
 
 
 def run_ocr_server(host: str, port: int) -> None:
@@ -176,3 +205,6 @@ class ModelProxy:
             BoxedResult(np.array(item["box"]), None, item["ocr_text"], item["score"])
             for item in results
         ]
+
+
+atexit.register(shutdown_ocr_server)

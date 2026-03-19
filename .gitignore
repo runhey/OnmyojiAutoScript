@@ -42,14 +42,12 @@ oas-backend.bat
 .eslintignore
 .eslintrc.js
 .prettierrc.js
-
-
-
-
-
-
-
-
+# ai
+AGENTS.md
+CLAUDE.md
+.codex/
+.claude/
+openspec/
 
 
 # Created by .ignore support plugin (hsz.mobi)
@@ -272,6 +270,5 @@ adb_port.ini
 *.zip
 console.bat
 .vscode/*
-.claude/settings.local.json
 tasks/AutoCheckinBigGod/frida-server-17.6.2-android-x86_64
 oas.bat
