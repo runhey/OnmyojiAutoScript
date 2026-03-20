@@ -1,0 +1,244 @@
+.icon-rail-right {
+  border-radius: 0 8px 8px 0;
+  border-left: 0;
+}
+
+.tool-content-right {
+  border-right: 0;
+  border-radius: 8px 0 0 8px;
+}
+
+.dir-selectors {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding: 8px;
+  border: 1px solid var(--line-main);
+  border-radius: 6px;
+  background: var(--bg-subpanel);
+}
+
+.breadcrumb-root-prefix {
+  color: var(--text-muted);
+  font-weight: 700;
+  line-height: 1;
+  padding: 0 2px;
+}
+
+.breadcrumb-sep {
+  color: var(--text-muted);
+  font-weight: 600;
+}
+
+.breadcrumb-select {
+  min-width: 130px;
+  max-width: 230px;
+  height: 30px;
+  padding: 4px 8px;
+}
+
+.rule-editor-panel {
+  min-width: 0;
+  overflow: hidden;
+}
+
+.rule-editor-scroll {
+  display: flex;
+  flex: 1 1 0;
+  flex-direction: column;
+  min-height: 0;
+  min-width: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding-right: 2px;
+}
+
+.rule-list {
+  border: 1px solid var(--line-main);
+  border-radius: 8px;
+  background: var(--bg-subpanel);
+  min-height: 220px;
+  height: 220px;
+  max-height: none;
+  flex: 0 0 auto;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.rule-list-splitter {
+  flex: 0 0 10px;
+  height: 10px;
+  position: relative;
+  cursor: row-resize;
+}
+
+.rule-list-splitter::before {
+  content: "";
+  position: absolute;
+  left: 12px;
+  right: 12px;
+  top: 3px;
+  height: 4px;
+  border-radius: 4px;
+  background: linear-gradient(90deg, transparent, var(--line-main), transparent);
+  opacity: 0.75;
+}
+
+.rule-list-splitter:hover::before {
+  background: linear-gradient(90deg, transparent, var(--accent), transparent);
+}
+
+.rule-detail-scroll {
+  min-height: 0;
+  flex: 0 0 auto;
+  overflow: visible;
+  padding-right: 0;
+}
+
+.rule-list-resizing {
+  cursor: row-resize !important;
+  user-select: none;
+}
+
+.rule-list-resizing * {
+  transition: none !important;
+}
+
+.rule-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid var(--line-input);
+  border-radius: 6px;
+  background: linear-gradient(180deg, var(--bg-panel-1), var(--bg-panel-2));
+  padding: 5px;
+  cursor: pointer;
+}
+
+.rule-item.active {
+  border-color: var(--accent);
+  box-shadow: inset 0 0 0 1px var(--accent);
+}
+
+.rule-thumb-wrap {
+  position: relative;
+  width: 44px;
+  height: 30px;
+  border-radius: 4px;
+  background: var(--bg-subpanel);
+  border: 1px solid var(--line-main);
+  flex-shrink: 0;
+  overflow: hidden;
+}
+
+.rule-thumb {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.rule-thumb:not([src]),
+.rule-thumb[src=""] {
+  display: none;
+}
+
+.rule-thumb-empty {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  color: var(--text-muted);
+  pointer-events: none;
+}
+
+.rule-thumb-wrap.has-image .rule-thumb-empty {
+  display: none;
+}
+
+.rule-item-text {
+  flex: 1;
+  min-width: 0;
+  font-size: 12px;
+  color: var(--text-main);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.rule-editor-panel.rule-editor-compact .form-grid {
+  grid-template-columns: 1fr;
+}
+
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 8px;
+  min-width: 0;
+}
+
+.form-grid label {
+  min-width: 0;
+}
+
+.form-grid input,
+.form-grid select,
+.form-grid textarea {
+  width: 100%;
+  min-width: 0;
+}
+
+.form-grid .full {
+  grid-column: 1 / -1;
+}
+
+.action-row {
+  align-items: center;
+}
+
+#saveRulesBtn.save-ok {
+  border-color: var(--ok-border);
+  color: var(--ok);
+  box-shadow: inset 0 0 0 1px var(--ok-border);
+}
+
+#saveRulesBtn.save-fail {
+  border-color: var(--fail-border);
+  color: var(--danger);
+  box-shadow: inset 0 0 0 1px var(--fail-border);
+}
+
+
+.current-dir {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin: 8px 0 6px;
+}
+
+.tip {
+  font-size: 12px;
+  color: #d6a75c;
+  background: var(--tip-bg);
+  border: 1px solid var(--tip-border);
+  padding: 6px;
+  border-radius: 6px;
+  margin-bottom: 6px;
+}
+
+@media (max-width: 720px) {
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .form-grid .full {
+    grid-column: span 1;
+  }
+}

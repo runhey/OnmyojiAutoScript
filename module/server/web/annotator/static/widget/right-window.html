@@ -1,0 +1,97 @@
+<div class="edge-splitter edge-splitter-right" id="rightSplitter" aria-hidden="true"></div>
+<aside class="tool-window tool-window-right" id="rightWindow">
+  <div class="tool-content tool-content-right" id="rightContent">
+    <aside class="stack stack-right" id="rightStack">
+      <section class="panel panel-top panel-scroll-box" id="ruleSourcePanel">
+        <h2>文件</h2>
+        <div class="panel-scroll-body">
+          <div id="dirSelectors" class="dir-selectors breadcrumb"></div>
+
+          <div class="row">
+            <input id="newJsonName" type="text" placeholder="输入新 JSON 名称" />
+            <button id="createJsonBtn" type="button">新增</button>
+            <button id="deleteJsonBtn" type="button" class="danger-btn">删除</button>
+          </div>
+        </div>
+      </section>
+
+      <div class="panel-height-splitter" id="rightPanelSplitter" aria-hidden="true"></div>
+
+      <section class="panel panel-fill rule-editor-panel" id="ruleEditorPanel">
+        <h2>规则</h2>
+        <div class="rule-editor-scroll">
+          <label>规则类型
+            <select id="ruleType">
+              <option value="image">RuleImage</option>
+              <option value="ocr">RuleOcr</option>
+              <option value="click">RuleClick</option>
+              <option value="swipe">RuleSwipe</option>
+              <option value="long_click">RuleLongClick</option>
+              <option value="list">RuleList</option>
+            </select>
+          </label>
+
+          <div id="listMetaBox" class="block hidden">
+            <label>list.name<input id="listName" type="text"></label>
+            <label>list.direction
+              <select id="listDirection">
+                <option value="vertical">vertical</option>
+                <option value="horizontal">horizontal</option>
+              </select>
+            </label>
+            <label>list.type
+              <select id="listType">
+                <option value="image">image</option>
+                <option value="ocr">ocr</option>
+              </select>
+            </label>
+            <label>list.description<input id="listDescription" type="text"></label>
+          </div>
+
+          <div class="row">
+            <button id="addRuleBtn" type="button">新增</button>
+            <button id="deleteRuleBtn" type="button">删除</button>
+            <button id="refreshRulesBtn" type="button">刷新</button>
+          </div>
+          <div id="ruleList" class="rule-list"></div>
+
+          <div class="rule-list-splitter" id="ruleListSplitter" aria-hidden="true"></div>
+
+          <div class="rule-detail-scroll">
+            <div class="form-grid">
+              <label>itemName<input id="itemName" type="text"></label>
+              <label id="imageNameWrap">imageName<input id="imageName" type="text"></label>
+              <label id="methodWrap">method<input id="method" type="text"></label>
+              <label id="thresholdWrap">threshold<input id="threshold" type="number" step="0.01" min="0" max="1"></label>
+              <label id="modeWrap" class="hidden">mode
+                <select id="mode">
+                  <option value="default">default</option>
+                  <option value="Single">Single</option>
+                  <option value="Full">Full</option>
+                  <option value="Digit">Digit</option>
+                  <option value="DigitCounter">DigitCounter</option>
+                  <option value="Duration">Duration</option>
+                  <option value="vector">vector</option>
+                </select>
+              </label>
+              <label id="keywordWrap" class="hidden">keyword<input id="keyword" type="text"></label>
+              <label id="durationWrap" class="hidden">duration(ms)<input id="duration" type="number" min="1" step="1"></label>
+              <label id="descriptionWrap" class="full">description<textarea id="description"></textarea></label>
+            </div>
+
+            <div class="row action-row">
+              <button id="saveImageBtn" type="button" class="hidden">裁剪</button>
+              <button id="saveRulesBtn" type="button">保存</button>
+              <button id="testRuleBtn" type="button" class="hidden">测试</button>
+            </div>
+          </div>
+        </div>
+      </section>
+    </aside>
+  </div>
+  <div class="icon-rail icon-rail-right" id="rightRail">
+    <button type="button" class="rail-btn" data-window="right" data-panel-id="ruleSourcePanel" title="文件">文件</button>
+    <button type="button" class="rail-btn" data-window="right" data-panel-id="ruleEditorPanel" title="规则">规则</button>
+  </div>
+</aside>
+
