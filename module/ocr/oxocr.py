@@ -2,6 +2,7 @@ import base64
 import pickle
 from typing import List
 
+import cv2
 import numpy as np
 from onnxocr import onnx_paddleocr
 
@@ -67,7 +68,21 @@ class ONNXPaddleOcr(onnx_paddleocr.ONNXPaddleOcr):
             precision=precision,
             drop_score=drop_score,
             use_angle_cls=use_angle_cls,
+            
         )
+
+    @staticmethod
+    def _prepare_single_line_image(img: np.ndarray, use_grayscale: bool=True) -> np.ndarray:
+        if not use_grayscale:
+            print("Using original image for single line OCR")
+            return img
+        if img.ndim == 2:
+            return cv2.cvtColor(img, cv2.COLOR_GRAY2RGB)
+        if img.ndim == 3 and img.shape[2] == 1:
+            return cv2.cvtColor(img[:, :, 0], cv2.COLOR_GRAY2RGB)
+
+        gray = cv2.cvtColor(img, cv2.COLOR_RGB2GRAY)
+        return cv2.cvtColor(gray, cv2.COLOR_GRAY2RGB)
 
     def detect_and_ocr(self, img: np.ndarray, drop_score=None):
         """
@@ -97,11 +112,12 @@ class ONNXPaddleOcr(onnx_paddleocr.ONNXPaddleOcr):
     def ocr_lines(self, img_list: List[np.ndarray]):
         tmp_img_list = []
         for img in img_list:
+            img = self._prepare_single_line_image(img)
             img_height, img_width = img.shape[0:2]
             if img_height * 1.0 / img_width >= 1.5:
                 img = np.rot90(img)
             tmp_img_list.append(img)
-
+            
         rec_res = self.text_recognizer(tmp_img_list)
         return rec_res
 
