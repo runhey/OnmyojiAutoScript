@@ -38,6 +38,7 @@ class ConfigModel:
     StartOcrServer: bool = False
     OcrServerPort: int = 22268
     OcrClientAddress: str = "127.0.0.1:22268"
+    OcrEngine: str = "ppocr"
 
     # Update
     EnableReload: bool = True
