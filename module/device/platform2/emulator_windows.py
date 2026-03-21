@@ -523,6 +523,27 @@ class EmulatorManager(EmulatorManagerBase):
             if Emulator.is_emulator(exe):
                 yield exe
 
+    @staticmethod
+    def iter_running_mumu_device():
+        """
+        Yields:
+            str: Path to MuMuNxDevice.exe executables, each corresponds to one emulator instance
+        """
+        try:
+            import psutil
+        except ModuleNotFoundError:
+            return
+        for pid in psutil.pids():
+            proc = psutil._psplatform.Process(pid)
+            try:
+                exe = proc.cmdline()
+                exe = exe[0].replace(r'\\', '/').replace('\\', '/')
+            except (psutil.AccessDenied, psutil.NoSuchProcess, IndexError, OSError):
+                continue
+
+            if 'mumunxdevice.exe' in exe.lower():
+                yield exe
+
     @cached_property
     def all_emulators(self) -> t.List[Emulator]:
         """

@@ -31,7 +31,8 @@ from module.config.config_model import ConfigModel
 from module.device.device import Device
 from module.device.env import IS_WINDOWS
 from module.base.utils import load_module
-from module.base.decorator import del_cached_property
+from module.base.decorator import del_cached_property, has_cached_property
+from module.base.timer import Timer
 from module.logger import logger
 from module.exception import *
 from module.server.i18n import I18n
@@ -329,6 +330,8 @@ class Script:
         strategy_map = {
             "close_game": self._wait_close_game,
             "goto_main": self._wait_goto_main,
+            "close_emulator": self._wait_close_emulator,
+            "auto": self._wait_auto,
         }
         func = strategy_map.get(method)
         if not func:
@@ -351,10 +354,55 @@ class Script:
         self.device.release_during_wait()
         return self.wait_until(next_run)
 
+    def _wait_close_emulator(self, next_run: datetime) -> bool:
+        logger.info("Close emulator during wait")
+        self.device.release_during_wait()
+        self.device.emulator_stop()
+        if not self.wait_until(next_run):
+            return False
+        self.run("Restart")
+        return True
+
+    def _wait_auto(self, next_run: datetime) -> bool:
+        wait_minutes = (next_run - datetime.now()).total_seconds() / 60
+        config = self.config.script.optimization
+        
+        logger.info(f"Auto mode: wait {wait_minutes:.1f} minutes")
+        
+        if wait_minutes > config.close_emulator_threshold:
+            return self._wait_close_emulator(next_run)
+        elif wait_minutes > config.close_game_threshold:
+            return self._wait_close_game(next_run)
+        else:
+            return self._wait_goto_main(next_run)
+
     def _wait_stay_there(self, next_run: datetime) -> bool:
         logger.info("Stay_there (no action) during wait")
         self.device.release_during_wait()
         return self.wait_until(next_run)
+
+    def _is_cached_device_online(self) -> bool:
+        """
+        检查已缓存device是否仍在线。
+        仅使用缓存对象，不触发self.device重建。
+        """
+        if not has_cached_property(self, 'device'):
+            return False
+
+        try:
+            cached_device = self.__dict__.get('device')
+            if cached_device is None:
+                return False
+
+            serial = str(getattr(cached_device, 'serial', ''))
+            if not serial:
+                return False
+
+            devices = cached_device.list_device().select(status='device')
+            return any(dev.serial == serial for dev in devices)
+        except Exception as e:
+            logger.warning(f'检查缓存device在线状态失败: {e}')
+            return False
 
     def exception_handler(self, e: Exception, command: str) -> None:
         # 处理御魂溢出
@@ -484,6 +532,10 @@ class Script:
 
             # Get task
             task = self.get_next_task()
+            # 若缓存device对应的模拟器已离线，先清缓存，再让device重建（重建时会走emulator_start前检查）
+            if has_cached_property(self, 'device') and not self._is_cached_device_online():
+                logger.warning('检测到缓存device离线，清理缓存并重建设备')
+                del_cached_property(self, 'device')
             _ = self.device
             # Skip first restart
             if self.is_first_task and task == 'Restart':
