@@ -1,6 +1,7 @@
 import ctypes
 import re
 import subprocess
+import time
 import psutil
 from adbutils import AdbDevice, AdbClient
 
@@ -415,8 +416,43 @@ class PlatformWindows(PlatformBase, EmulatorManager):
         return True
 
 
+    def _check_emulator_availability_before_start(self) -> bool:
+        """
+        仅在真正拉起模拟器前检查一次可用性
+        """
+        config = self.config.script.optimization
+        if config.max_running_emulators >= 99:
+            return True
+        try:
+            running_emulators = list(EmulatorManager.iter_running_mumu_device())
+            running_count = len(running_emulators)
+            logger.info(f'检测到运行中的模拟器进程: {running_count}')
+            for exe in running_emulators:
+                logger.info(f'  - {exe}')
+            if running_count >= config.max_running_emulators:
+                logger.info(f'运行中的模拟器数量 ({running_count}) 已达到最大限制 ({config.max_running_emulators})')
+                return False
+        except Exception as e:
+            logger.warning(f'检查运行中的模拟器失败: {e}')
+        return True
+
+    def _wait_for_emulator_availability_before_start(self) -> None:
+        config = self.config.script.optimization
+        if config.max_running_emulators >= 99:
+            return
+        check_interval = 60
+        start_time = time.time()
+        logger.info(f'启动前检查模拟器可用性，最大允许运行的模拟器数量: {config.max_running_emulators}')
+        while not self._check_emulator_availability_before_start():
+            elapsed_minutes = (time.time() - start_time) / 60
+            logger.info(f'模拟器不可用，等待 {elapsed_minutes:.1f} 分钟...')
+            time.sleep(check_interval)
+        logger.info('模拟器现在可用，继续启动')
+
     def emulator_start(self):
         logger.hr('Emulator start', level=1)
+        # 仅在这里做一次并发启动检查，确保是“拉起前检查”
+        self._wait_for_emulator_availability_before_start()
         for i in range(3):
             # Stop
             if not self._emulator_function_wrapper(self._emulator_stop):

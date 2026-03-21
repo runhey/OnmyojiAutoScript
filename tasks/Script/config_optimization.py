@@ -9,6 +9,8 @@ from module.logger import logger
 class WhenTaskQueueEmpty(str, Enum):
     GOTO_MAIN = 'goto_main'
     CLOSE_GAME = 'close_game'
+    CLOSE_EMULATOR = 'close_emulator'
+    AUTO = 'auto'
 
 class ScheduleRule(str, Enum):
     FILTER = 'Filter'  # 默认的基于过滤器，（按照开发者设定的调度规则进行调度）
@@ -24,5 +26,12 @@ class Optimization(BaseModel):
                                           description='task_hoarding_duration_help')
     when_task_queue_empty: WhenTaskQueueEmpty = Field(default=WhenTaskQueueEmpty.GOTO_MAIN,
                                                       description='when_task_queue_empty_help')
+    close_game_threshold: int = Field(default=30,
+                                       description='距离下一个任务超过此分钟数时关闭游戏（auto模式专用）')
+    close_emulator_threshold: int = Field(default=60,
+                                          description='距离下一个任务超过此分钟数时关闭模拟器（auto模式专用）')
+    # 模拟器启动避让配置
+    max_running_emulators: int = Field(default=99,
+        description='最大允许运行的模拟器数量，99表示不限制')
     schedule_rule: ScheduleRule = Field(default=ScheduleRule.FILTER, description='schedule_rule_help')
 
