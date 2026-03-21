@@ -13,6 +13,11 @@ class CardType(str, Enum):
     TAIKO = '太鼓'
     
 
+class CardPriority(str, Enum):
+    HIGH = 'high'  # 优先挂高值卡
+    LOW = 'low'    # 优先挂低值卡
+
+
 class ActivationScheduler(Scheduler):
     priority: int = Field(default=2, description='priority_help')
     success_interval: TimeDelta = Field(default=TimeDelta(days=1), description='success_interval_help')
@@ -21,6 +26,7 @@ class ActivationScheduler(Scheduler):
 
 class ActivationConfig(BaseModel):
     card_type: CardType = Field(default=CardType.TAIKO, description='card_rule_help')
+    card_priority: CardPriority = Field(default=CardPriority.HIGH, description='挂卡优先级：high=优先高值卡，low=优先低值卡')
     min_taiko_num: int = Field(default=8, description='挂卡太鼓每小时最少收益,低于则不挂卡')
     min_fish_num: int = Field(default=16, description='挂卡斗鱼每小时最少收益,低于则不挂卡')
     exchange_before: bool = Field(default=True, description='exchange_before_help')

@@ -20,7 +20,7 @@ from tasks.KekkaiUtilize.script_task import ScriptTask as KU
 from tasks.KekkaiUtilize.utils import CardClass
 from tasks.KekkaiActivation.assets import KekkaiActivationAssets
 from tasks.KekkaiActivation.utils import parse_rule
-from tasks.KekkaiActivation.config import ActivationConfig
+from tasks.KekkaiActivation.config import ActivationConfig, CardPriority
 from tasks.Utils.config_enum import ShikigamiClass
 from tasks.GameUi.page import page_main, page_guild
 from tasks.KekkaiActivation.config import CardType
@@ -247,6 +247,14 @@ class ScriptTask(KU, KekkaiActivationAssets):
                 continue
         logger.info('Selected card class: {}'.format(card_class))
 
+        # 根据配置切换排序（游戏默认降序，优先低值卡需要点击一次切换为升序）
+        priority = self.config.kekkai_activation.activation_config.card_priority
+        if priority == CardPriority.LOW:
+            logger.info('优先挂低值卡，点击切换为升序')
+            self.click(self.C_A_SORT_TOGGLE, interval=0.5)
+        else:
+            logger.info('优先挂高值卡，保持默认降序')
+
         # 找最优卡
         while 1:
             self.screenshot()
@@ -298,11 +306,20 @@ class ScriptTask(KU, KekkaiActivationAssets):
                     numeric_results.append((numbers[0], result))  # 按第一个数字排序
 
             if numeric_results:
-                # 按数字大到小排序
-                sorted_results = [result for _, result in sorted(numeric_results, key=lambda x: x[0], reverse=True)]
-                max_result = sorted_results[0]  # 获取数字最大的结果对象
+                # 根据配置决定排序方向
+                priority = self.config.kekkai_activation.activation_config.card_priority
+                if priority == CardPriority.HIGH:
+                    # 按数字大到小排序（优先高值卡）
+                    sorted_results = [result for _, result in sorted(numeric_results, key=lambda x: x[0], reverse=True)]
+                    logger.info("优先选择高值卡")
+                else:
+                    # 按数字从小到大排序（优先低值卡）
+                    sorted_results = [result for _, result in sorted(numeric_results, key=lambda x: x[0], reverse=False)]
+                    logger.info("优先选择低值卡")
 
-                box = max_result.box  # 获取边界框坐标
+                selected_result = sorted_results[0]  # 获取排第一的结果对象
+
+                box = selected_result.box  # 获取边界框坐标
                 x_min = self.O_CHECK_CARD_NUMBER.roi[0] + box[0][0]
                 y_min = self.O_CHECK_CARD_NUMBER.roi[1] + box[0][1]
                 width = box[1][0] - box[0][0]
@@ -310,7 +327,8 @@ class ScriptTask(KU, KekkaiActivationAssets):
                 roi = int(x_min), int(y_min), int(width), int(height)
 
                 target = RuleClick(roi_front=roi, roi_back=roi, name="tmpclick")
-                logger.info(f"选择挂卡: [{max_result.ocr_text}] {roi}")
+                card_value = numeric_results[0][0]
+                logger.info(f"选择挂卡: [{selected_result.ocr_text}] 数值:{card_value} {roi}")
 
                 return target
             else:

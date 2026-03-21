@@ -16,6 +16,9 @@ class KekkaiActivationAssets:
 	# description 
 	C_A_SELECT_AUTO = RuleClick(roi_front=(173,160,354,127), roi_back=(173,160,354,127), name="a_select_auto")
 
+	# 切换排序（升序/降序）
+	C_A_SORT_TOGGLE = RuleClick(roi_front=(220,105,110,35), roi_back=(220,105,110,35), name="a_sort_toggle")
+
 
 	# Ocr Rule Assets
 	# 这张卡一共有多少小时 
