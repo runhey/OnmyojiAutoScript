@@ -284,7 +284,7 @@ class ScriptTask(GameUi, ReplaceShikigami, KekkaiUtilizeAssets):
 
                 if self.appear(self.I_EXP_EXTRACT):
                     # 如果达到今日领取的最大，就不领取了
-                    cur, res, totol = self.O_BOX_EXP.ocr(self.device.image)
+                    cur, res, totol = self.ocr_box_exp_counter()
                     if cur == res == totol == 0:
                         continue
                     if cur == totol and cur + res == totol:
@@ -307,6 +307,61 @@ class ScriptTask(GameUi, ReplaceShikigami, KekkaiUtilizeAssets):
             _check_ap_box(box_ap)
         if exp_enable:
             _check_exp_box(box_exp)
+
+    @staticmethod
+    def extract_numbers_from_text(text: str) -> list[int]:
+        """从文本中按顺序提取所有数字。
+
+        遍历字符串，遇到数字开始记录，直到非数字停止。
+        示例："今日已领取192000/160000+32000" -> [19200, 160000, 32000]
+        """
+        numbers = []
+        current_num = ""
+
+        for char in text:
+            if char.isdigit():
+                current_num += char
+            else:
+                if current_num:
+                    numbers.append(int(current_num))
+                    current_num = ""
+
+        # 处理最后一个数字
+        if current_num:
+            numbers.append(int(current_num))
+
+        return numbers
+
+    def ocr_box_exp_counter(self) -> tuple[int, int, int]:
+        """OCR读取经验计数，直接识别原始文本后提取数字。
+
+        支持格式：
+        - 普通：今日已领取10000/40000 -> (10000, 30000, 40000)
+        - 上宾：今日已领取192000/160000+32000 -> (192000, 0, 192000)
+        """
+        raw_text = self.O_BOX_EXP.detect_text(self.device.image)
+        numbers = self.extract_numbers_from_text(raw_text)
+
+        if not numbers:
+            logger.info(f'Box exp counter: {raw_text} -> no numbers found')
+            return 0, 0, 0
+
+        if len(numbers) == 2:
+            # 普通格式：cur/total
+            cur, total = numbers[0], numbers[1]
+            remain = max(total - cur, 0)
+            logger.info(f'Box exp counter: {raw_text} -> ({cur}, {remain}, {total})')
+            return cur, remain, total
+        elif len(numbers) >= 3:
+            # 上宾格式：cur/base_total+bonus_total
+            cur, base_total, bonus_total = numbers[0], numbers[1], numbers[2]
+            total = base_total + bonus_total
+            remain = max(total - cur, 0)
+            logger.info(f'Box exp counter (with bonus): {raw_text} -> ({cur}, {remain}, {total})')
+            return cur, remain, total
+        else:
+            logger.info(f'Box exp counter: {raw_text} -> insufficient numbers: {numbers}')
+            return 0, 0, 0
 
     def check_utilize_harvest(self) -> bool:
         """
