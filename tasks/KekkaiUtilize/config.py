@@ -19,6 +19,11 @@ class UtilizeRule(str, Enum):
     FISH = 'fish'  # 斗鱼优先
     # AUTO = 'auto'  # 自动 兼容代码罢了
 
+class ValueCalculationRule(str, Enum):
+    DEFAULT = 'default'  # 按档位选
+    TAIKO_PRIORITY = 'taiko_priority'  # 启用价值计算，太鼓系数2.2
+    FISH_PRIORITY = 'fish_priority'  # 启用价值计算，斗鱼系数1.8
+
 
 
 class UtilizeScheduler(Scheduler):
@@ -28,6 +33,7 @@ class UtilizeScheduler(Scheduler):
 
 class UtilizeConfig(BaseModel):
     utilize_rule: UtilizeRule = Field(default=UtilizeRule.DEFAULT, description='utilize_rule_help')
+    value_calculation_rule: ValueCalculationRule = Field(default=ValueCalculationRule.DEFAULT, description='价值计算规则，默认按档位选；taiko_priority：太鼓优先(太鼓系数2.2)，fish_priority：斗鱼优先(太鼓系数1.8)')
     select_friend_list: SelectFriendList = Field(default=SelectFriendList.SAME_SERVER, description='select_friend_list_help')
     shikigami_class: ShikigamiClass = Field(default=ShikigamiClass.N, description='shikigami_class_help')
     shikigami_order: int = Field(default=4, description='shikigami_order_help')

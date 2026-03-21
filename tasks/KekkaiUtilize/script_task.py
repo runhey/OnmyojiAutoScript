@@ -14,7 +14,7 @@ from module.exception import TaskEnd
 from tasks.GameUi.game_ui import GameUi
 from tasks.Utils.config_enum import ShikigamiClass
 from tasks.KekkaiUtilize.assets import KekkaiUtilizeAssets
-from tasks.KekkaiUtilize.config import UtilizeRule, SelectFriendList
+from tasks.KekkaiUtilize.config import UtilizeRule, SelectFriendList, ValueCalculationRule
 from tasks.KekkaiUtilize.utils import CardClass, target_to_card_class
 from tasks.Component.ReplaceShikigami.replace_shikigami import ReplaceShikigami
 from tasks.GameUi.page import page_main, page_guild
@@ -544,7 +544,13 @@ class ScriptTask(GameUi, ReplaceShikigami, KekkaiUtilizeAssets):
                 return False
 
             # 决策优先级
-            res_type, target = ('斗鱼', self.ap_max_num) if ap_index <= jade_index else ('太鼓', self.jade_max_num)
+            value_rule = self.config.kekkai_utilize.utilize_config.value_calculation_rule
+            if value_rule == ValueCalculationRule.TAIKO_PRIORITY:
+                res_type, target = ('斗鱼', self.ap_max_num) if self.ap_max_num >= self.jade_max_num * 2.2 else ('太鼓', self.jade_max_num)
+            elif value_rule == ValueCalculationRule.FISH_PRIORITY:
+                res_type, target = ('斗鱼', self.ap_max_num) if self.ap_max_num >= self.jade_max_num * 1.8 else ('太鼓', self.jade_max_num)
+            else:
+                res_type, target = ('斗鱼', self.ap_max_num) if ap_index <= jade_index else ('太鼓', self.jade_max_num)
             logger.info(f'⚖️ 选择{res_type}卡 | 目标: {target}')
 
             # 第三阶段：执行选卡操作
