@@ -80,6 +80,10 @@ Deploy:
     # Address of ocr server for alas instance to connect
     # [Default] 127.0.0.1:22268
     OcrClientAddress: 127.0.0.1:22268
+    # Specify the OCR engine/backend to be used for text recognition
+    # Supported options: ppocr (onnxocr)
+    # [Default] ppocr
+    OcrEngine: ppocr
 
   Update:
     # Use auto update and builtin updater feature

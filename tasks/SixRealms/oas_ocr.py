@@ -7,6 +7,7 @@ import numpy as np
 from module.base.utils import color_similarity_2d, load_image
 # from module.ocr.ocr import Ocr
 from module.ocr.base_ocr import BaseCor
+from module.ocr.ppocr import TextSystem
 
 
 
@@ -33,6 +34,10 @@ class VerticalText(BaseCor):
         return image
 
     def detect_and_ocr(self, *args, **kwargs):
+        # onnx不需要此补丁
+        if not isinstance(self.model, TextSystem):
+            return super().detect_and_ocr(*args, **kwargs)
+
         # Try hard to lower TextSystem.box_thresh
         backup = self.model.text_detector.box_thresh
         # Patch text_recognizer
