@@ -72,7 +72,7 @@ class ONNXPaddleOcr(onnx_paddleocr.ONNXPaddleOcr):
         )
 
     @staticmethod
-    def _prepare_single_line_image(img: np.ndarray, use_grayscale: bool=True) -> np.ndarray:
+    def _prepare_ocr_image(img: np.ndarray, use_grayscale: bool=True) -> np.ndarray:
         if not use_grayscale:
             print("Using original image for single line OCR")
             return img
@@ -92,6 +92,7 @@ class ONNXPaddleOcr(onnx_paddleocr.ONNXPaddleOcr):
         :return: List of BoxedResult containing detected boxes, cropped images, recognized text, and scores.
 
         """
+        img = self._prepare_ocr_image(img)
         rec_res = self.ocr(img, det=True, rec=True, cls=True)
         if not rec_res:
             return []
@@ -112,7 +113,7 @@ class ONNXPaddleOcr(onnx_paddleocr.ONNXPaddleOcr):
     def ocr_lines(self, img_list: List[np.ndarray]):
         tmp_img_list = []
         for img in img_list:
-            img = self._prepare_single_line_image(img)
+            img = self._prepare_ocr_image(img)
             img_height, img_width = img.shape[0:2]
             if img_height * 1.0 / img_width >= 1.5:
                 img = np.rot90(img)
