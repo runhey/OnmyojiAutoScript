@@ -355,7 +355,9 @@ class Script:
 
     def _wait_close_emulator(self, next_run: datetime) -> bool:
         logger.info("Close emulator during wait")
+        self.device.app_stop()
         self.device.release_during_wait()
+        time.sleep(15)
         self.device.emulator_stop()
         if not self.wait_until(next_run):
             return False
