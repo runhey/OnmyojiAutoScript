@@ -30,6 +30,19 @@ class ScriptTask(KU, KekkaiActivationAssets):
 
     def run(self):
         con = self.config.kekkai_activation.activation_config
+        
+        # 日期过滤检查（适合多个小号轮流挂卡给大号吃）
+        if con.activation_dates:
+            today = datetime.now().day
+            allowed_dates = [int(d.strip()) for d in con.activation_dates.split(',') if d.strip().isdigit()]
+            if today not in allowed_dates:
+                logger.info(f"今日日期{today}不在挂卡日期列表{allowed_dates}中，跳过挂卡任务")
+                # 设置下次执行时间为明天0点
+                next_run = (datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)
+                           + timedelta(days=1))
+                self.set_next_run("KekkaiActivation", target=next_run)
+                raise TaskEnd('KekkaiActivation')
+        
         self.ui_get_current_page()
         self.ui_goto(page_guild)
 

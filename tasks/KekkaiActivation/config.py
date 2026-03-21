@@ -29,6 +29,7 @@ class ActivationConfig(BaseModel):
     card_priority: CardPriority = Field(default=CardPriority.HIGH, description='挂卡优先级：high=优先高值卡，low=优先低值卡')
     min_taiko_num: int = Field(default=8, description='挂卡太鼓每小时最少收益,低于则不挂卡')
     min_fish_num: int = Field(default=16, description='挂卡斗鱼每小时最少收益,低于则不挂卡')
+    activation_dates: str = Field(default="", description='挂卡日期过滤：使用逗号分隔的日期列表，例如 1,5,10,15,20,25 表示只在每月的这些日期挂卡。留空则每天都可以挂卡。适合多个小号轮流挂卡给大号吃')
     exchange_before: bool = Field(default=True, description='exchange_before_help')
     exchange_max: bool = Field(default=True, description='exchange_max_help')
     shikigami_class: ShikigamiClass = Field(default=ShikigamiClass.N, description='shikigami_class_help')
