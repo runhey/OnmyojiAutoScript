@@ -100,7 +100,8 @@ class LayerLimit(str, Enum):
 
 class WantedQuestsConfig(BaseModel):
     before_end: Time = Field(default=Time(0, 0, 0), description='before_end_help')
-    invite_friend_name: str = Field(default=str(""), description="invite_friend_name_help")
+    # 支持多个好友名称，使用中文/英文逗号分隔，最多10个，按优先级邀请
+    invite_friend_name: str = Field(default=str(""), description="填写朋友昵称,无法区分不同服务器相同昵称好友, 最多支持10个好友，使用中文/英文逗号分隔，按优先级邀请")
     cooperation_type: CooperationSelectMaskDescription = Field(default=CooperationSelectMaskDescription.Any,
                                                                description="cooperation_type_help")
     # 找怪优先级  挑战 > 秘闻 > 探索

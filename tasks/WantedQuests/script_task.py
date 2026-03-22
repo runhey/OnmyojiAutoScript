@@ -512,61 +512,88 @@ class ScriptTask(WQExplore, SecretScriptTask, WantedQuestsAssets):
                 logger.info("cooperationType %s But needed Type %s ,Skipped", item['type'], typeMask)
                 break
             '''
-               尝试5次 如果邀请失败 等待20s 重新尝试
+               尝试数次(5~10) 如果邀请失败 等待20s 重新尝试
                阴阳师BUG: 好友明明在线 但邀请界面找不到该好友(好友未接受任何协作任务的情况下)
-           '''
-            index = 0
+            '''
             item['inviteResult'] = False
             if name_all is None:
-                name = self.get_invite_vip_name(item['type'])
+                names = self.get_invite_vip_name_list(item['type'])
             else:
-                name = name_all
-            logger.warning("find cooperationType %s ,start invite %s", item['type'], name)
-            while index < 5:
-                if self.cooperation_invite(item['inviteBtn'], name):
+                names = self.parse_invite_names(name_all)
+            if len(names) == 0:
+                logger.warning("cooperationType %s has no valid invite names", item['type'])
+                continue
+
+            # 实际邀请轮次 = 邀请人数+2 且介于 (5~10) 之间
+            invite_rounds = min(max(len(names) + 2, 5), 10)
+
+            logger.warning("find cooperationType %s ,start invite %s (invite round: %d)", item['type'], names, invite_rounds)
+            success_name = None
+            for index in range(invite_rounds):
+                # 每轮优先级列表逐步扩大：[0], [0,1], [0,1,2], ...
+                priority_names = names[:min(index + 1, len(names))]
+                logger.info("invite round[%d/%d], priority names: %s", index + 1, invite_rounds, priority_names)
+
+                # 传入优先级列表，cooperation_invite 内部会按顺序搜索
+                success, found_name = self.cooperation_invite(item['inviteBtn'], priority_names)
+                if success:
                     item['inviteResult'] = True
-                    index = 5
-                    continue
-                logger.info("%s not found,Wait 20s,%d invitations left", name, 5 - index - 1)
-                index += 1
-                sleep(20) if index < 5 else sleep(0)
+                    success_name = found_name
+                    break
+
+                # 如果不是最后一轮，等待20秒后重试
+                if index < invite_rounds - 1:
+                    logger.info("%s not found, Wait 20s, %d invitations left", priority_names, invite_rounds - index - 1)
+                    sleep(20)
                 # NOTE 等待过程如果出现协作邀请 将会卡住 为了防止卡住
                 self.screenshot()
             # 邀请追踪一起吧,只有邀请成功才追踪
             if item['inviteResult']:
-                self.invite_success_callback(item['type'], name)
+                self.invite_success_callback(item['type'], success_name)
                 if (self.get_config()).cooperation_only:
                     logger.info("start trace_one")
                     self.trace_one(item['inviteBtn'])
         return ret
 
-    def cooperation_invite(self, btn: RuleImage, name: str):
+    def cooperation_invite(self, btn: RuleImage, names: List[str]):
         """
             单个协作任务邀请
-        @param btn:
-        @param name:
-        @return:
+        @param btn: 邀请按钮
+        @param names: 好友名字列表
+        @return: (success: bool, found_name: str) 是否成功邀请及找到的好友名
         """
         self.ui_click(btn, stop=self.I_WQ_INVITE_ENSURE, interval=2.5)
 
-        # 选人
-        self.O_WQ_INVITE_COLUMN_1.keyword = name
-        self.O_WQ_INVITE_COLUMN_2.keyword = name
-
         find = False
+        found_name = None
+
         for i in range(2):
             self.wait_until_appear(self.I_WQ_INVITE_FRIEND_LIST_APPEAR, wait_time=4)
+
+            # 按优先级顺序搜索好友
             self.screenshot()
-            in_col_1 = self.ocr_appear_click(self.O_WQ_INVITE_COLUMN_1)
-            in_col_2 = self.ocr_appear_click(self.O_WQ_INVITE_COLUMN_2)
-            find = in_col_2 or in_col_1
+            for name in names:
+                self.O_WQ_INVITE_COLUMN_1.keyword = name
+                self.O_WQ_INVITE_COLUMN_2.keyword = name
+
+                in_col_1 = self.ocr_appear_click(self.O_WQ_INVITE_COLUMN_1)
+                in_col_2 = self.ocr_appear_click(self.O_WQ_INVITE_COLUMN_2)
+                find = in_col_2 or in_col_1
+
+                if find:
+                    found_name = name
+                    logger.info(f"friend '{name}' found and selected")
+                    self.wait_until_appear(self.I_WQ_INVITE_SELECTED, wait_time=2)
+                    self.screenshot()
+                    if self.appear(self.I_WQ_INVITE_SELECTED):
+                        break
+                    # TODO OCR识别到文字 但是没有选中 尝试重新选择  (选择好友时,弹出协作邀请导致选择好友失败)
+                else:
+                    logger.debug(f"friend '{name}' not found in current screen")
+
             if find:
-                self.wait_until_appear(self.I_WQ_INVITE_SELECTED, wait_time=2)
-                self.screenshot()
-                if self.appear(self.I_WQ_INVITE_SELECTED):
-                    logger.info("friend found and selected")
-                    break
-                # TODO OCR识别到文字 但是没有选中 尝试重新选择  (选择好友时,弹出协作邀请导致选择好友失败)
+                break
+
             # 检测跨服好友按钮是否高亮
             while 1:
                 self.screenshot()
@@ -578,12 +605,13 @@ class ScriptTask(WQExplore, SecretScriptTask, WantedQuestsAssets):
             self.wait_until_appear(self.I_WQ_INVITE_DIFF_SVR_HIGHLIGHT, wait_time=4)
         # 没有找到需要邀请的人,点击取消 返回悬赏封印界面
         if not find:
+            logger.warning(f"None of the friends {names} found")
             self.screenshot()
             self.ui_click_until_disappear(self.I_WQ_INVITE_CANCEL, interval=1.5)
-            return False
+            return False, None
         #
         self.ui_click_until_disappear(self.I_WQ_INVITE_ENSURE, interval=1)
-        return True
+        return True, found_name
 
     def get_cooperation_info(self) -> List:
         """
@@ -665,6 +693,15 @@ class ScriptTask(WQExplore, SecretScriptTask, WantedQuestsAssets):
 
     def get_invite_vip_name(self, ctype: CooperationType):
         return self.get_config().invite_friend_name
+
+    def parse_invite_names(self, raw_names: str) -> List[str]:
+        if raw_names is None:
+            return []
+        name_list = [name.strip() for name in re.split(r"[，,]", raw_names) if name.strip()]
+        return name_list[:10]
+
+    def get_invite_vip_name_list(self, ctype: CooperationType) -> List[str]:
+        return self.parse_invite_names(self.get_invite_vip_name(ctype))
 
     def invite_success_callback(self, ctype: CooperationType, name):
         """
