@@ -362,6 +362,8 @@ class Script:
         self.device.emulator_stop()
         if not self.wait_until(next_run):
             return False
+        getattr(self.device, 'emulator_start')()
+        time.sleep(15)
         self.run("Restart")
         return True
 
