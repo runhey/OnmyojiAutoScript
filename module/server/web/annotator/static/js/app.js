@@ -1979,7 +1979,10 @@
 
       const ok = result.generate_status === "success";
       setSaveStatus(ok);
-      appendOutput(ok ? "保存成功" : "保存失败", result);
+      const outputTitle = ok
+        ? "保存成功"
+        : (result.save_status === "success" ? "规则已保存，生成失败" : "保存失败");
+      appendOutput(outputTitle, result);
 
       clearDirty();
       await rebuildDirSelectors(state.currentDirPath, state.jsonFileName, false);
@@ -1994,11 +1997,14 @@
 
   async function saveRules() {
     const { ok, result } = await persistRules();
+    const assetsFile = String(result.assets_file || "").trim();
     if (ok) {
-      showMessage(`已保存规则，共 ${result.rule_count || 0} 条`, "ok");
+      const suffix = assetsFile ? `，已生成 ${assetsFile}` : "";
+      showMessage(`已保存规则，共 ${result.rule_count || 0} 条${suffix}`, "ok");
       return;
     }
-    showMessage(`规则已保存，但 assets.py 生成失败: ${result.error || "未知错误"}`, "error");
+    const targetText = assetsFile ? `，目标文件: ${assetsFile}` : "";
+    showMessage(`规则已保存，但 assets.py 生成失败: ${result.error || "未知错误"}${targetText}`, "error");
   }
   async function saveImageCrop() {
     const rule = getCurrentRule();
@@ -2628,5 +2634,4 @@
     showMessage(error.message || String(error), "error");
   });
 })();
-
 

@@ -856,6 +856,34 @@ class AnnotatorManager:
         return task_root, target_json
 
     @staticmethod
+    def _resolve_assets_extract_target(task_root: Path, target_json: Path) -> tuple[Path, Path]:
+        task_root = task_root.resolve()
+        target_json = target_json.resolve()
+        AnnotatorManager._ensure_within_root(target_json, task_root)
+
+        if task_root.name != "Component":
+            return task_root, task_root / "assets.py"
+
+        rel_parts = target_json.relative_to(task_root).parts
+        if len(rel_parts) < 2:
+            raise AnnotatorError(
+                "invalid_component_task",
+                "Component 目录下的规则文件必须位于具体组件子任务目录中",
+                400,
+            )
+
+        component_name = rel_parts[0]
+        extract_root = (task_root / component_name).resolve()
+        AnnotatorManager._ensure_within_root(extract_root, task_root)
+        if not extract_root.exists() or not extract_root.is_dir():
+            raise AnnotatorError(
+                "invalid_component_task",
+                f"Component 子任务目录不存在: {component_name}",
+                404,
+            )
+        return extract_root, extract_root / "assets.py"
+
+    @staticmethod
     def list_task_json_files(task_name: str) -> list[str]:
         task_root = AnnotatorManager._resolve_task_root(task_name)
         result = []
@@ -1302,18 +1330,24 @@ class AnnotatorManager:
         save_status = "success"
         generate_status = "success"
         generate_error = ""
+        assets_file = ""
+        extract_root = None
         try:
-            AssetsExtractor(str(task_root)).extract()
+            extract_root, assets_path = self._resolve_assets_extract_target(task_root, target_json)
+            assets_file = str(assets_path.relative_to(PROJECT_ROOT).as_posix())
+            AssetsExtractor(str(extract_root)).extract()
         except Exception as e:
             generate_status = "failed"
             generate_error = str(e)
             logger.exception(
-                f"[annotator] assets generate failed, session={session_id}, task={task_name}, target={target_json}"
+                f"[annotator] assets generate failed, session={session_id}, task={task_name}, "
+                f"target={target_json}, extract_root={extract_root}"
             )
 
         logger.info(
             f"[annotator] save rules, session={session_id}, task={task_name}, target={target_json}, "
-            f"rule_type={rule_type}, save_status={save_status}, generate_status={generate_status}"
+            f"rule_type={rule_type}, save_status={save_status}, generate_status={generate_status}, "
+            f"assets_file={assets_file or 'n/a'}"
         )
 
         rule_count = len(payload.get("list", [])) if isinstance(payload, dict) and "list" in payload else len(payload)
@@ -1323,7 +1357,7 @@ class AnnotatorManager:
             "generate_status": generate_status,
             "error": generate_error,
             "target_json": str(target_json.relative_to(PROJECT_ROOT).as_posix()),
-            "assets_file": str((task_root / "assets.py").relative_to(PROJECT_ROOT).as_posix()),
+            "assets_file": assets_file,
             "rule_count": rule_count,
         }
 
