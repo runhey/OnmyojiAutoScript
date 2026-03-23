@@ -62,7 +62,7 @@ class GameUiAssets:
 	# 探索前往平安奇谭 
 	I_EXPLORATION_GOTO_HEIAN_KITAN = RuleImage(roi_front=(739,643,52,44), roi_back=(739,643,180,44), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_exploration_goto_heian_kitan.png")
 	# 探索前往六道之门 
-	I_EXPLORATION_GOTO_SIX_GATES = RuleImage(roi_front=(938,640,60,49), roi_back=(918,631,200,66), threshold=0.65, method="Template matching", file="./tasks/GameUi/page/page_exploration_goto_six_gates.png")
+	I_EXPLORATION_GOTO_SIX_GATES = RuleImage(roi_front=(938,640,60,49), roi_back=(820,631,296,66), threshold=0.65, method="Template matching", file="./tasks/GameUi/page/page_exploration_goto_six_gates.png")
 	# 探索前往契灵之境 
 	I_EXPLORATION_GOTO_BONDLING_FAIRYLAND = RuleImage(roi_front=(1037,635,56,44), roi_back=(918,623,218,72), threshold=0.65, method="Template matching", file="./tasks/GameUi/page/page_exploration_goto_bondling_fairyland.png")
 	# description 

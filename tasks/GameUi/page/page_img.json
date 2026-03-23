@@ -111,7 +111,7 @@
     "itemName": "exploration_goto_six_gates",
     "imageName": "page_exploration_goto_six_gates.png",
     "roiFront": "938,640,60,49",
-    "roiBack": "918,631,200,66",
+    "roiBack": "820,631,296,66",
     "method": "Template matching",
     "threshold": 0.65,
     "description": "探索前往六道之门"
