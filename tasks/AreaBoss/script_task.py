@@ -60,14 +60,14 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AreaBossAssets):
             self.switch_to_famous()
 
         if con.boss_number - boss_fought == 3:
-            self.boss_fight(self.I_BATTLE_1)
-            self.boss_fight(self.I_BATTLE_2)
-            self.boss_fight(self.I_BATTLE_3)
+            self.boss_fight(self.I_BATTLE_1, ultra=True)
+            self.boss_fight(self.I_BATTLE_2, ultra=True)
+            self.boss_fight(self.I_BATTLE_3, ultra=True)
         elif con.boss_number - boss_fought == 2:
-            self.boss_fight(self.I_BATTLE_1)
-            self.boss_fight(self.I_BATTLE_2)
+            self.boss_fight(self.I_BATTLE_1, ultra=True)
+            self.boss_fight(self.I_BATTLE_2, ultra=True)
         elif con.boss_number - boss_fought == 1:
-            self.boss_fight(self.I_BATTLE_1)
+            self.boss_fight(self.I_BATTLE_1, ultra=True)
         # 退出
         self.go_back()
         self.set_next_run(task='AreaBoss', success=True, finish=False)
@@ -151,9 +151,12 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AreaBossAssets):
             return True
 
         if ultra:
+            # 判断是否能切换到极地鬼
             if not self.get_difficulty():
-                # 判断是否能切换到极地鬼
-                if not self.appear(self.I_AB_DIFFICULTY_NORMAL) and self.config.area_boss.boss.Attack_60:
+                # 如何可以切换，直接切换
+                if self.appear(self.I_AB_DIFFICULTY_NORMAL):
+                    self.switch_difficulty(True)
+                elif self.config.area_boss.boss.Attack_60:
                     self.switch_to_level_60()
                     if not self.start_fight():
                         logger.warning("you are so weakness!")
@@ -164,7 +167,6 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AreaBossAssets):
                     self.ui_click_until_disappear(self.I_AB_CLOSE_RED, interval=3)
                     return False
                 # 切换到 极地鬼
-            self.switch_difficulty(True)
 
             # 调整悬赏层数
             match reward_floor:
