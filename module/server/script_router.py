@@ -207,12 +207,13 @@ async def websocket_endpoint(websocket: WebSocket, script_name: str):
         mm.script_process[script_name] = ScriptProcess(script_name)
     script_process = mm.script_process[script_name]
     await script_process.connect(websocket)
-    await script_process.broadcast_state({"state": script_process.state})
-    config = mm.config_cache(script_name)
-    config.get_next()
-    await script_process.broadcast_state({"schedule": config.get_schedule_data()})
 
     try:
+        await script_process.send_json(websocket, {"state": script_process.state})
+        config = mm.config_cache(script_name)
+        config.get_next()
+        await script_process.send_json(websocket, {"schedule": config.get_schedule_data()})
+
         while True:
             # 初次进入，广播state schedule
             data = await websocket.receive_text()
@@ -229,4 +230,7 @@ async def websocket_endpoint(websocket: WebSocket, script_name: str):
 
     except WebSocketDisconnect:
         logger.warning(f'[{script_name}] websocket disconnect')
+        await script_process.disconnect(websocket)
+    except Exception as e:
+        logger.exception(f'[{script_name}] websocket error: {e}')
         await script_process.disconnect(websocket)
