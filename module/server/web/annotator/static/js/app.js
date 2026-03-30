@@ -1,8 +1,6 @@
 (function () {
   const API_PREFIX = "/tool/annotator";
-  const OcrModes = ["Single", "Full", "Digit", "DigitCounter", "Duration"];
-  const SwipeModes = ["default", "vector"];
-  const AllowedRuleTypes = new Set(["image", "ocr", "click", "swipe", "long_click", "list"]);
+  const AllowedRuleTypes = new Set();
 
   const state = {
     sessionId: "",
@@ -32,6 +30,8 @@
 
     ruleType: "image",
     ruleTypeLocked: false,
+    ruleSchemas: [],
+    ruleSchemaMap: new Map(),
     rules: [],
     activeRuleIndex: -1,
     listMeta: {
@@ -108,36 +108,279 @@
     ruleTypeLockTip: document.getElementById("ruleTypeLockTip"),
 
     listMetaBox: document.getElementById("listMetaBox"),
-    listName: document.getElementById("listName"),
-    listDirection: document.getElementById("listDirection"),
-    listType: document.getElementById("listType"),
-    listDescription: document.getElementById("listDescription"),
+    listMetaFields: document.getElementById("listMetaFields"),
+    listName: null,
+    listDirection: null,
+    listType: null,
+    listDescription: null,
 
     ruleList: document.getElementById("ruleList"),
     addRuleBtn: document.getElementById("addRuleBtn"),
     deleteRuleBtn: document.getElementById("deleteRuleBtn"),
     refreshRulesBtn: document.getElementById("refreshRulesBtn"),
 
-    itemName: document.getElementById("itemName"),
-    imageNameWrap: document.getElementById("imageNameWrap"),
-    imageName: document.getElementById("imageName"),
-    methodWrap: document.getElementById("methodWrap"),
-    method: document.getElementById("method"),
-    thresholdWrap: document.getElementById("thresholdWrap"),
-    threshold: document.getElementById("threshold"),
-    modeWrap: document.getElementById("modeWrap"),
-    mode: document.getElementById("mode"),
-    keywordWrap: document.getElementById("keywordWrap"),
-    keyword: document.getElementById("keyword"),
-    durationWrap: document.getElementById("durationWrap"),
-    duration: document.getElementById("duration"),
-    descriptionWrap: document.getElementById("descriptionWrap"),
-    description: document.getElementById("description"),
+    ruleFields: document.getElementById("ruleFields"),
+    itemName: null,
+    imageNameWrap: null,
+    imageName: null,
+    methodWrap: null,
+    method: null,
+    thresholdWrap: null,
+    threshold: null,
+    modeWrap: null,
+    mode: null,
+    keywordWrap: null,
+    keyword: null,
+    durationWrap: null,
+    duration: null,
+    descriptionWrap: null,
+    description: null,
 
     testRuleBtn: document.getElementById("testRuleBtn"),
     saveImageBtn: document.getElementById("saveImageBtn"),
     saveRulesBtn: document.getElementById("saveRulesBtn"),
   };
+
+  function getRuleSchema(type = state.ruleType) {
+    return state.ruleSchemaMap.get(type) || null;
+  }
+
+  function getRuleFields(type = state.ruleType) {
+    const schema = getRuleSchema(type);
+    return schema && Array.isArray(schema.fields) ? schema.fields : [];
+  }
+
+  function getListMetaFields() {
+    const schema = getRuleSchema("list");
+    return schema && Array.isArray(schema.meta_fields) ? schema.meta_fields : [];
+  }
+
+  function getFieldDefault(type, key, fallback = "") {
+    const fields = type === "list"
+      ? [...getRuleFields(type), ...getListMetaFields()]
+      : getRuleFields(type);
+    const field = fields.find((item) => item.key === key);
+    if (!field) {
+      return fallback;
+    }
+    return field.default ?? fallback;
+  }
+
+  function getListMetaDefaults() {
+    const defaults = {
+      name: "list_name",
+      direction: "vertical",
+      type: "image",
+      roiBack: "0,0,100,100",
+      description: "",
+    };
+    for (const field of getListMetaFields()) {
+      defaults[field.key] = field.default ?? defaults[field.key] ?? "";
+    }
+    return defaults;
+  }
+
+  function getRuleFieldDomId(key) {
+    return key;
+  }
+
+  function getRuleFieldWrapId(key) {
+    return `${key}Wrap`;
+  }
+
+  function getListMetaFieldDomId(key) {
+    if (key === "name") {
+      return "listName";
+    }
+    if (key === "direction") {
+      return "listDirection";
+    }
+    if (key === "type") {
+      return "listType";
+    }
+    if (key === "description") {
+      return "listDescription";
+    }
+    return `list${key}`;
+  }
+
+  function createFieldControl(field, domId, wrapId = "") {
+    const label = document.createElement("label");
+    if (wrapId) {
+      label.id = wrapId;
+    }
+    if (field.full) {
+      label.classList.add("full");
+    }
+    label.append(document.createTextNode(field.label));
+
+    let control = null;
+    if (field.control === "textarea") {
+      control = document.createElement("textarea");
+    } else if (field.control === "select") {
+      control = document.createElement("select");
+      for (const optionValue of field.options || []) {
+        createOption(control, optionValue, optionValue);
+      }
+    } else {
+      control = document.createElement("input");
+      control.type = field.control === "number" ? "number" : "text";
+    }
+
+    control.id = domId;
+    if (field.step !== undefined && "step" in control) {
+      control.step = String(field.step);
+    }
+    if (field.min !== undefined && "min" in control) {
+      control.min = String(field.min);
+    }
+    if (field.max !== undefined && "max" in control) {
+      control.max = String(field.max);
+    }
+    label.appendChild(control);
+    return label;
+  }
+
+  function renderFieldGroup(container, fields, domIdResolver, wrapIdResolver = null) {
+    if (!container) {
+      return;
+    }
+    container.innerHTML = "";
+    for (const field of fields) {
+      const domId = domIdResolver(field.key);
+      const wrapId = wrapIdResolver ? wrapIdResolver(field.key) : "";
+      container.appendChild(createFieldControl(field, domId, wrapId));
+    }
+  }
+
+  function refreshDynamicFieldRefs() {
+    el.itemName = document.getElementById("itemName");
+    el.imageNameWrap = document.getElementById("imageNameWrap");
+    el.imageName = document.getElementById("imageName");
+    el.methodWrap = document.getElementById("methodWrap");
+    el.method = document.getElementById("method");
+    el.thresholdWrap = document.getElementById("thresholdWrap");
+    el.threshold = document.getElementById("threshold");
+    el.modeWrap = document.getElementById("modeWrap");
+    el.mode = document.getElementById("mode");
+    el.keywordWrap = document.getElementById("keywordWrap");
+    el.keyword = document.getElementById("keyword");
+    el.durationWrap = document.getElementById("durationWrap");
+    el.duration = document.getElementById("duration");
+    el.descriptionWrap = document.getElementById("descriptionWrap");
+    el.description = document.getElementById("description");
+
+    el.listName = document.getElementById("listName");
+    el.listDirection = document.getElementById("listDirection");
+    el.listType = document.getElementById("listType");
+    el.listDescription = document.getElementById("listDescription");
+  }
+
+  function bindRuleFieldChange(element, fieldKey) {
+    if (!element) {
+      return;
+    }
+    const eventName = element.tagName === "SELECT" ? "change" : "input";
+    element.addEventListener(eventName, () => updateRuleFromForm(fieldKey));
+  }
+
+  function bindDynamicFieldEvents() {
+    bindRuleFieldChange(el.itemName, "itemName");
+    bindRuleFieldChange(el.imageName, "imageName");
+    bindRuleFieldChange(el.method, "method");
+    bindRuleFieldChange(el.threshold, "threshold");
+    bindRuleFieldChange(el.mode, "mode");
+    bindRuleFieldChange(el.keyword, "keyword");
+    bindRuleFieldChange(el.duration, "duration");
+    bindRuleFieldChange(el.description, "description");
+
+    if (el.listName) {
+      el.listName.addEventListener("input", () => {
+        updateListMetaFromForm();
+        markDirty();
+      });
+    }
+    if (el.listDirection) {
+      el.listDirection.addEventListener("change", () => {
+        updateListMetaFromForm();
+        markDirty();
+        updateFieldVisibility();
+      });
+    }
+    if (el.listType) {
+      el.listType.addEventListener("change", () => {
+        updateListMetaFromForm();
+        clearTestOverlay();
+        renderRuleList();
+        markDirty();
+        updateFieldVisibility();
+      });
+    }
+    if (el.listDescription) {
+      el.listDescription.addEventListener("input", () => {
+        updateListMetaFromForm();
+        markDirty();
+      });
+    }
+  }
+
+  function renderDynamicFieldGroups() {
+    renderFieldGroup(el.ruleFields, getRuleFields(), getRuleFieldDomId, getRuleFieldWrapId);
+    renderFieldGroup(el.listMetaFields, getListMetaFields(), getListMetaFieldDomId);
+    refreshDynamicFieldRefs();
+    bindDynamicFieldEvents();
+  }
+
+  function populateRuleTypeOptions() {
+    el.ruleType.innerHTML = "";
+    for (const schema of state.ruleSchemas) {
+      createOption(el.ruleType, schema.type, schema.label || schema.type);
+    }
+  }
+
+  async function loadRuleSchemas() {
+    const res = await api(`${API_PREFIX}/api/rules/schema`);
+    const schemas = res.schemas || {};
+    const ruleTypes = Array.isArray(res.rule_types) ? res.rule_types : Object.keys(schemas);
+    state.ruleSchemas = ruleTypes.map((type) => schemas[type]).filter(Boolean);
+    state.ruleSchemaMap = new Map(state.ruleSchemas.map((schema) => [schema.type, schema]));
+    AllowedRuleTypes.clear();
+    for (const schema of state.ruleSchemas) {
+      AllowedRuleTypes.add(schema.type);
+    }
+    populateRuleTypeOptions();
+    if (!AllowedRuleTypes.has(state.ruleType)) {
+      state.ruleType = state.ruleSchemas[0] ? state.ruleSchemas[0].type : "image";
+    }
+    renderDynamicFieldGroups();
+  }
+
+  function setElementValue(element, value) {
+    if (!element) {
+      return;
+    }
+    element.value = value ?? "";
+  }
+
+  function readFieldValue(field, element) {
+    if (!element) {
+      return field.default ?? "";
+    }
+    if (field.control === "number") {
+      const raw = String(element.value || "").trim();
+      if (field.integer) {
+        const parsed = Number.parseInt(raw, 10);
+        return Number.isFinite(parsed) ? parsed : (field.default ?? 0);
+      }
+      const parsed = Number.parseFloat(raw);
+      return Number.isFinite(parsed) ? parsed : (field.default ?? 0);
+    }
+    const value = String(element.value || "").trim();
+    if (!value && field.default !== undefined) {
+      return field.default;
+    }
+    return value;
+  }
 
   function showMessage(text, type = "") {
     const message = String(text || "").trim();
@@ -1153,75 +1396,33 @@
   }
 
   function resetListMeta() {
-    state.listMeta = {
-      name: "list_name",
-      direction: "vertical",
-      type: "image",
-      roiBack: "0,0,100,100",
-      description: "",
-    };
+    state.listMeta = getListMetaDefaults();
   }
 
   function defaultRuleByType(type) {
+    const rule = {};
+    for (const field of getRuleFields(type)) {
+      rule[field.key] = field.default ?? "";
+    }
+    rule.itemName = String(rule.itemName || "new");
+    rule.roiFront = "0,0,100,100";
+    if (type !== "list") {
+      rule.roiBack = "0,0,100,100";
+    }
     if (type === "image") {
-      return {
-        itemName: "new",
-        imageName: defaultImageNameForItem("new"),
-        roiFront: "0,0,100,100",
-        roiBack: "0,0,100,100",
-        method: "Template matching",
-        threshold: 0.8,
-        description: "",
-        __autoImageName: true,
-      };
+      rule.imageName = String(rule.imageName || "").trim() || defaultImageNameForItem(rule.itemName || "new");
+      rule.__autoImageName = true;
     }
-    if (type === "ocr") {
-      return {
-        itemName: "new",
-        roiFront: "0,0,100,100",
-        roiBack: "0,0,100,100",
-        mode: "Single",
-        method: "Default",
-        keyword: "",
-        description: "",
-      };
+    if (type === "list") {
+      delete rule.description;
     }
-    if (type === "click") {
-      return {
-        itemName: "new",
-        roiFront: "0,0,100,100",
-        roiBack: "0,0,100,100",
-        description: "",
-      };
-    }
-    if (type === "swipe") {
-      return {
-        itemName: "new",
-        roiFront: "0,0,100,100",
-        roiBack: "0,0,100,100",
-        mode: "default",
-        description: "",
-      };
-    }
-    if (type === "long_click") {
-      return {
-        itemName: "new",
-        roiFront: "0,0,100,100",
-        roiBack: "0,0,100,100",
-        duration: 1000,
-        description: "",
-      };
-    }
-    return {
-      itemName: "new",
-      roiFront: "0,0,100,100",
-    };
+    return rule;
   }
 
   function normalizeLoadedRules(type, rules) {
     const result = [];
     for (const raw of rules || []) {
-      const item = { ...raw };
+      const item = { ...defaultRuleByType(type), ...(raw || {}) };
       if (type === "image") {
         const autoName = defaultImageNameForItem(item.itemName || "");
         item.__autoImageName = !item.imageName || item.imageName === autoName;
@@ -1237,37 +1438,14 @@
   function cloneRules(rules) {
     return (rules || []).map((rule) => ({ ...rule }));
   }
-  function updateModeOptions() {
-    const oldValue = el.mode.value;
-    if (state.ruleType === "ocr") {
-      el.mode.innerHTML = OcrModes.map((item) => `<option value="${item}">${item}</option>`).join("");
-      el.mode.value = OcrModes.includes(oldValue) ? oldValue : "Single";
-      return;
-    }
-    if (state.ruleType === "swipe") {
-      el.mode.innerHTML = SwipeModes.map((item) => `<option value="${item}">${item}</option>`).join("");
-      el.mode.value = SwipeModes.includes(oldValue) ? oldValue : "default";
-      return;
-    }
-    el.mode.innerHTML = '<option value="default">default</option>';
-    el.mode.value = "default";
-  }
 
   function updateFieldVisibility() {
     const type = state.ruleType;
-    el.imageNameWrap.classList.toggle("hidden", type !== "image");
-    el.methodWrap.classList.toggle("hidden", type !== "image");
-    el.thresholdWrap.classList.toggle("hidden", type !== "image");
-    el.modeWrap.classList.toggle("hidden", !(type === "ocr" || type === "swipe"));
-    el.keywordWrap.classList.toggle("hidden", type !== "ocr");
-    el.durationWrap.classList.toggle("hidden", type !== "long_click");
     el.listMetaBox.classList.toggle("hidden", type !== "list");
-    el.descriptionWrap.classList.toggle("hidden", type === "list");
 
     const showSaveImage = type === "image" || isListImageRule();
     el.saveImageBtn.classList.toggle("hidden", !showSaveImage);
 
-    updateModeOptions();
     refreshActiveRuleImageExists().catch(() => {
       // ignore
     });
@@ -1508,14 +1686,10 @@
   }
 
   function clearRuleForm() {
-    el.itemName.value = "";
-    el.imageName.value = "";
-    el.method.value = "";
-    el.threshold.value = "";
-    el.mode.value = "default";
-    el.keyword.value = "";
-    el.duration.value = "";
-    el.description.value = "";
+    for (const field of getRuleFields()) {
+      const element = document.getElementById(getRuleFieldDomId(field.key));
+      setElementValue(element, field.default ?? "");
+    }
     el.roiFrontValue.value = "";
     el.roiBackValue.value = "";
     refreshRoiLayoutFromRule();
@@ -1523,17 +1697,19 @@
   }
 
   function fillListMetaForm() {
-    el.listName.value = state.listMeta.name || "";
-    el.listDirection.value = state.listMeta.direction || "vertical";
-    el.listType.value = state.listMeta.type || "image";
-    el.listDescription.value = state.listMeta.description || "";
+    const defaults = getListMetaDefaults();
+    for (const field of getListMetaFields()) {
+      const element = document.getElementById(getListMetaFieldDomId(field.key));
+      setElementValue(element, state.listMeta[field.key] ?? defaults[field.key] ?? "");
+    }
   }
 
   function updateListMetaFromForm() {
-    state.listMeta.name = el.listName.value.trim() || "list_name";
-    state.listMeta.direction = el.listDirection.value || "vertical";
-    state.listMeta.type = el.listType.value || "image";
-    state.listMeta.description = el.listDescription.value.trim();
+    const defaults = getListMetaDefaults();
+    for (const field of getListMetaFields()) {
+      const element = document.getElementById(getListMetaFieldDomId(field.key));
+      state.listMeta[field.key] = readFieldValue(field, element) ?? defaults[field.key] ?? "";
+    }
   }
 
   function fillRuleForm() {
@@ -1543,14 +1719,10 @@
       return;
     }
 
-    el.itemName.value = rule.itemName || "";
-    el.imageName.value = rule.imageName || "";
-    el.method.value = rule.method || "";
-    el.threshold.value = rule.threshold ?? "";
-    el.mode.value = rule.mode || "default";
-    el.keyword.value = rule.keyword || "";
-    el.duration.value = rule.duration ?? "";
-    el.description.value = state.ruleType === "list" ? "" : (rule.description || "");
+    for (const field of getRuleFields()) {
+      const element = document.getElementById(getRuleFieldDomId(field.key));
+      setElementValue(element, rule[field.key] ?? field.default ?? "");
+    }
 
     const front = rule.roiFront || "0,0,100,100";
     const back = state.ruleType === "list" ? (state.listMeta.roiBack || "0,0,100,100") : (rule.roiBack || "0,0,100,100");
@@ -1570,33 +1742,33 @@
     }
 
     const oldPreviewImageName = getRulePreviewImageName(rule);
-    const newItemName = el.itemName.value.trim() || "unnamed";
-
-    rule.itemName = newItemName;
-    if (state.ruleType !== "list") {
-      rule.description = el.description.value.trim();
+    for (const field of getRuleFields()) {
+      if (state.ruleType === "image" && field.key === "imageName" && changedField === "itemName") {
+        continue;
+      }
+      const element = document.getElementById(getRuleFieldDomId(field.key));
+      rule[field.key] = readFieldValue(field, element);
     }
+
+    const newItemName = String(rule.itemName || "").trim() || "unnamed";
+    rule.itemName = newItemName;
 
     if (state.ruleType === "image") {
       if (changedField === "itemName") {
         rule.imageName = defaultImageNameForItem(newItemName);
         rule.__autoImageName = true;
-        el.imageName.value = rule.imageName;
+        setElementValue(el.imageName, rule.imageName);
       } else {
-        const imageNameInput = el.imageName.value.trim();
+        const imageNameInput = String(el.imageName && el.imageName.value || "").trim();
         if (imageNameInput) {
           rule.imageName = imageNameInput;
           rule.__autoImageName = imageNameInput === defaultImageNameForItem(newItemName);
         } else {
           rule.imageName = defaultImageNameForItem(newItemName);
           rule.__autoImageName = true;
-          el.imageName.value = rule.imageName;
+          setElementValue(el.imageName, rule.imageName);
         }
       }
-
-      rule.method = el.method.value.trim() || "Template matching";
-      const threshold = Number.parseFloat(el.threshold.value);
-      rule.threshold = Number.isFinite(threshold) ? threshold : 0.8;
 
       const nextImageName = String(rule.imageName || "").trim();
       if (oldPreviewImageName !== nextImageName || changedField === "itemName") {
@@ -1604,21 +1776,6 @@
         clearRuleImageCache(rule);
         state.activeRuleImageExists = false;
       }
-    }
-
-    if (state.ruleType === "ocr") {
-      rule.mode = el.mode.value || "Single";
-      rule.method = el.method.value.trim() || "Default";
-      rule.keyword = el.keyword.value.trim();
-    }
-
-    if (state.ruleType === "swipe") {
-      rule.mode = el.mode.value || "default";
-    }
-
-    if (state.ruleType === "long_click") {
-      const duration = Number.parseInt(el.duration.value, 10);
-      rule.duration = Number.isFinite(duration) ? Math.max(1, duration) : 1000;
     }
 
     if (state.ruleType === "list") {
@@ -1656,8 +1813,9 @@
   }
 
   function setRuleType(nextType) {
-    state.ruleType = AllowedRuleTypes.has(nextType) ? nextType : "image";
+    state.ruleType = AllowedRuleTypes.has(nextType) ? nextType : (state.ruleSchemas[0] ? state.ruleSchemas[0].type : "image");
     el.ruleType.value = state.ruleType;
+    renderDynamicFieldGroups();
     updateFieldVisibility();
   }
 
@@ -2540,36 +2698,6 @@
       el.refreshRulesBtn.addEventListener("click", withError(refreshRulesList));
     }
 
-    el.itemName.addEventListener("input", () => updateRuleFromForm("itemName"));
-    el.imageName.addEventListener("input", () => updateRuleFromForm("imageName"));
-    el.method.addEventListener("input", () => updateRuleFromForm("method"));
-    el.threshold.addEventListener("input", () => updateRuleFromForm("threshold"));
-    el.mode.addEventListener("change", () => updateRuleFromForm("mode"));
-    el.keyword.addEventListener("input", () => updateRuleFromForm("keyword"));
-    el.duration.addEventListener("input", () => updateRuleFromForm("duration"));
-    el.description.addEventListener("input", () => updateRuleFromForm("description"));
-
-    el.listName.addEventListener("input", () => {
-      updateListMetaFromForm();
-      markDirty();
-    });
-    el.listDirection.addEventListener("change", () => {
-      updateListMetaFromForm();
-      markDirty();
-      updateFieldVisibility();
-    });
-    el.listType.addEventListener("change", () => {
-      updateListMetaFromForm();
-      clearTestOverlay();
-      renderRuleList();
-      markDirty();
-      updateFieldVisibility();
-    });
-    el.listDescription.addEventListener("input", () => {
-      updateListMetaFromForm();
-      markDirty();
-    });
-
     el.testRuleBtn.addEventListener("click", withError(testCurrentRule));
     el.saveImageBtn.addEventListener("click", withError(saveImageCrop));
     el.saveRulesBtn.addEventListener("click", withError(saveRules));
@@ -2595,10 +2723,11 @@
   async function init() {
     setupRoiBox(el.roiFront);
     setupRoiBox(el.roiBack);
+    await loadRuleSchemas();
     bindEvents();
 
     resetListMeta();
-    state.rules = [defaultRuleByType("image")];
+    state.rules = [defaultRuleByType(state.ruleType)];
     state.activeRuleIndex = 0;
     renderRuleList();
 

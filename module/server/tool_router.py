@@ -216,6 +216,15 @@ async def annotator_task_json_files(task_name: str):
         _raise_annotator_error(e)
 
 
+@tool_app.get('/annotator/api/rules/schema')
+async def annotator_rule_schema():
+    try:
+        data = annotator_manager.rule_schema()
+        return {"code": "ok", **data}
+    except AnnotatorError as e:
+        _raise_annotator_error(e)
+
+
 @tool_app.get('/annotator/api/rules/load')
 async def annotator_load_rules(task_name: str, json_relpath: str):
     try:

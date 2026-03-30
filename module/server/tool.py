@@ -23,6 +23,15 @@ from module.config.config import Config
 from module.device.device import Device
 from module.logger import logger
 from module.server.config_manager import ConfigManager
+from module.server.annotator_rule_schema import (
+    default_list_meta,
+    field_default,
+    field_options,
+    get_rule_types,
+    get_schema_payload,
+    merge_list_meta_with_defaults,
+    merge_rule_with_defaults,
+)
 
 logger.set_file_logger('tool', do_cleanup=True)
 
@@ -31,10 +40,11 @@ TASKS_ROOT = (PROJECT_ROOT / "tasks").resolve()
 ANNOTATOR_ROOT = (PROJECT_ROOT / "log" / "annotator").resolve()
 
 ALLOWED_IMAGE_EXT = {".png", ".jpg", ".jpeg", ".bmp", ".webp"}
-ALLOWED_OCR_MODE = {"Single", "Full", "Digit", "DigitCounter", "Duration"}
-ALLOWED_LIST_DIRECTION = {"vertical", "horizontal"}
-ALLOWED_LIST_MODE = {"image", "ocr"}
-ALLOWED_SWIPE_MODE = {"default", "vector"}
+ALLOWED_RULE_TYPE = set(get_rule_types())
+ALLOWED_OCR_MODE = set(field_options("ocr", "mode"))
+ALLOWED_LIST_DIRECTION = set(field_options("list", "direction"))
+ALLOWED_LIST_MODE = set(field_options("list", "type"))
+ALLOWED_SWIPE_MODE = set(field_options("swipe", "mode"))
 
 SESSION_IDLE_TIMEOUT_SECONDS = 10 * 60
 SESSION_SWEEP_INTERVAL_SECONDS = 30
@@ -608,6 +618,10 @@ class AnnotatorManager:
     def list_configs(self) -> list[str]:
         return ConfigManager.all_script_files()
 
+    @staticmethod
+    def rule_schema() -> dict[str, Any]:
+        return get_schema_payload()
+
     def start_emulator(self, session_id: str, config_name: str, frame_rate: int) -> dict[str, Any]:
         session = self._get_session(session_id)
         if config_name not in self.list_configs():
@@ -690,7 +704,7 @@ class AnnotatorManager:
                     "imageName": image_name,
                     "roiFront": self._parse_roi(str(rule.get("roiFront", ""))),
                     "roiBack": self._parse_roi(str(rule.get("roiBack", ""))),
-                    "method": str(rule.get("method", "Template matching")).strip() or "Template matching",
+                    "method": str(rule.get("method", field_default("image", "method", "Template matching"))).strip() or field_default("image", "method", "Template matching"),
                     "threshold": threshold,
                     "description": str(rule.get("description", "")).strip(),
                 }
@@ -703,7 +717,7 @@ class AnnotatorManager:
             item_name = str(rule.get("itemName", "")).strip()
             if not item_name:
                 raise AnnotatorError("invalid_rule", f"第 {index + 1} 条规则缺少 itemName", 400)
-            mode = str(rule.get("mode", "Single")).strip() or "Single"
+            mode = str(rule.get("mode", field_default("ocr", "mode", "Single"))).strip() or field_default("ocr", "mode", "Single")
             if mode not in ALLOWED_OCR_MODE:
                 raise AnnotatorError("invalid_rule", f"第 {index + 1} 条规则 mode 不支持: {mode}", 400)
             normalized.append(
@@ -712,7 +726,7 @@ class AnnotatorManager:
                     "roiFront": self._parse_roi(str(rule.get("roiFront", ""))),
                     "roiBack": self._parse_roi(str(rule.get("roiBack", ""))),
                     "mode": mode,
-                    "method": str(rule.get("method", "Default")).strip() or "Default",
+                    "method": str(rule.get("method", field_default("ocr", "method", "Default"))).strip() or field_default("ocr", "method", "Default"),
                     "keyword": str(rule.get("keyword", "")).strip(),
                     "description": str(rule.get("description", "")).strip(),
                 }
@@ -741,7 +755,7 @@ class AnnotatorManager:
             item_name = str(rule.get("itemName", "")).strip()
             if not item_name:
                 raise AnnotatorError("invalid_rule", f"第 {index + 1} 条滑动规则缺少 itemName", 400)
-            mode = str(rule.get("mode", "default")).strip() or "default"
+            mode = str(rule.get("mode", field_default("swipe", "mode", "default"))).strip() or field_default("swipe", "mode", "default")
             if mode not in ALLOWED_SWIPE_MODE:
                 raise AnnotatorError("invalid_rule", f"第 {index + 1} 条滑动规则 mode 不支持: {mode}", 400)
             normalized.append(
@@ -762,7 +776,7 @@ class AnnotatorManager:
             if not item_name:
                 raise AnnotatorError("invalid_rule", f"第 {index + 1} 条长按规则缺少 itemName", 400)
             try:
-                duration = int(rule.get("duration", 1000))
+                duration = int(rule.get("duration", field_default("long_click", "duration", 1000)))
             except (TypeError, ValueError) as e:
                 raise AnnotatorError("invalid_rule", f"第 {index + 1} 条长按规则 duration 非法", 400) from e
             if duration <= 0:
@@ -786,11 +800,11 @@ class AnnotatorManager:
         if not list_name:
             raise AnnotatorError("invalid_rule", "list_meta.name 不能为空", 400)
 
-        direction = str(list_meta.get("direction", "vertical")).strip() or "vertical"
+        direction = str(list_meta.get("direction", field_default("list", "direction", "vertical"))).strip() or field_default("list", "direction", "vertical")
         if direction not in ALLOWED_LIST_DIRECTION:
             raise AnnotatorError("invalid_rule", f"list_meta.direction 不支持: {direction}", 400)
 
-        list_type = str(list_meta.get("type", "image")).strip() or "image"
+        list_type = str(list_meta.get("type", field_default("list", "type", "image"))).strip() or field_default("list", "type", "image")
         if list_type not in ALLOWED_LIST_MODE:
             raise AnnotatorError("invalid_rule", f"list_meta.type 不支持: {list_type}", 400)
 
@@ -986,11 +1000,11 @@ class AnnotatorManager:
 
         if rule_type == "list":
             list_meta = {
-                "name": str(data.get("name", "list_name")),
-                "direction": str(data.get("direction", "vertical")),
-                "type": str(data.get("type", "image")),
-                "roiBack": str(data.get("roiBack", "0,0,100,100")),
-                "description": str(data.get("description", "")),
+                "name": str(data.get("name", field_default("list", "name", "list_name"))),
+                "direction": str(data.get("direction", field_default("list", "direction", "vertical"))),
+                "type": str(data.get("type", field_default("list", "type", "image"))),
+                "roiBack": str(data.get("roiBack", default_list_meta().get("roiBack", "0,0,100,100"))),
+                "description": str(data.get("description", field_default("list", "description", ""))),
             }
             for item in data.get("list", []):
                 if not isinstance(item, dict):
@@ -1059,7 +1073,11 @@ class AnnotatorManager:
                         }
                     )
 
-        rule_type_locked = rule_type in {"image", "ocr", "click", "swipe", "long_click", "list"} and len(rules) > 0
+        if rule_type == "list":
+            list_meta = merge_list_meta_with_defaults(list_meta)
+        rules = [merge_rule_with_defaults(rule_type, item) for item in rules]
+
+        rule_type_locked = rule_type in ALLOWED_RULE_TYPE and len(rules) > 0
 
         return {
             "task_name": task_name,
@@ -1165,7 +1183,7 @@ class AnnotatorManager:
             image_name = str(rule.get("imageName", "")).strip()
             if not image_name:
                 raise AnnotatorError("invalid_rule", "image 规则缺少 imageName", 400)
-            method = str(rule.get("method", "Template matching")).strip() or "Template matching"
+            method = str(rule.get("method", field_default("image", "method", "Template matching"))).strip() or field_default("image", "method", "Template matching")
             try:
                 threshold = float(rule.get("threshold", 0.8))
             except (TypeError, ValueError) as e:
@@ -1198,7 +1216,7 @@ class AnnotatorManager:
 
         if rule_type == "ocr":
             item_name = str(rule.get("itemName", "")).strip() or "unnamed"
-            mode = str(rule.get("mode", "Single")).strip() or "Single"
+            mode = str(rule.get("mode", field_default("ocr", "mode", "Single"))).strip() or field_default("ocr", "mode", "Single")
             method = str(rule.get("method", "Default")).strip() or "Default"
             keyword = str(rule.get("keyword", "")).strip()
             roi_front = self._parse_roi_tuple(str(rule.get("roiFront", "")))
@@ -1234,7 +1252,7 @@ class AnnotatorManager:
             if not item_name:
                 raise AnnotatorError("invalid_rule", "list 项缺少 itemName", 400)
 
-            list_type = str(list_meta.get("type", "image")).strip() or "image"
+            list_type = str(list_meta.get("type", field_default("list", "type", "image"))).strip() or field_default("list", "type", "image")
             if list_type not in ALLOWED_LIST_MODE:
                 raise AnnotatorError("invalid_rule", f"list_meta.type 不支持: {list_type}", 400)
             list_roi_back = self._parse_roi_tuple(str(list_meta.get("roiBack", "")))

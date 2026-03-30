@@ -21,31 +21,11 @@
         <h2>规则</h2>
         <div class="rule-editor-scroll">
           <label>规则类型
-            <select id="ruleType">
-              <option value="image">RuleImage</option>
-              <option value="ocr">RuleOcr</option>
-              <option value="click">RuleClick</option>
-              <option value="swipe">RuleSwipe</option>
-              <option value="long_click">RuleLongClick</option>
-              <option value="list">RuleList</option>
-            </select>
+            <select id="ruleType"></select>
           </label>
 
           <div id="listMetaBox" class="block hidden">
-            <label>list.name<input id="listName" type="text"></label>
-            <label>list.direction
-              <select id="listDirection">
-                <option value="vertical">vertical</option>
-                <option value="horizontal">horizontal</option>
-              </select>
-            </label>
-            <label>list.type
-              <select id="listType">
-                <option value="image">image</option>
-                <option value="ocr">ocr</option>
-              </select>
-            </label>
-            <label>list.description<input id="listDescription" type="text"></label>
+            <div id="listMetaFields" class="form-grid"></div>
           </div>
 
           <div class="row">
@@ -58,26 +38,7 @@
           <div class="rule-list-splitter" id="ruleListSplitter" aria-hidden="true"></div>
 
           <div class="rule-detail-scroll">
-            <div class="form-grid">
-              <label>itemName<input id="itemName" type="text"></label>
-              <label id="imageNameWrap">imageName<input id="imageName" type="text"></label>
-              <label id="methodWrap">method<input id="method" type="text"></label>
-              <label id="thresholdWrap">threshold<input id="threshold" type="number" step="0.01" min="0" max="1"></label>
-              <label id="modeWrap" class="hidden">mode
-                <select id="mode">
-                  <option value="default">default</option>
-                  <option value="Single">Single</option>
-                  <option value="Full">Full</option>
-                  <option value="Digit">Digit</option>
-                  <option value="DigitCounter">DigitCounter</option>
-                  <option value="Duration">Duration</option>
-                  <option value="vector">vector</option>
-                </select>
-              </label>
-              <label id="keywordWrap" class="hidden">keyword<input id="keyword" type="text"></label>
-              <label id="durationWrap" class="hidden">duration(ms)<input id="duration" type="number" min="1" step="1"></label>
-              <label id="descriptionWrap" class="full">description<textarea id="description"></textarea></label>
-            </div>
+            <div class="form-grid" id="ruleFields"></div>
 
             <div class="row action-row">
               <button id="saveImageBtn" type="button" class="hidden">裁剪</button>
@@ -94,4 +55,3 @@
     <button type="button" class="rail-btn" data-window="right" data-panel-id="ruleEditorPanel" title="规则">规则</button>
   </div>
 </aside>
-
