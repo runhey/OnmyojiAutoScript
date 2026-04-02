@@ -7,6 +7,7 @@ from pathlib import Path
 
 from module.config.utils import write_file
 from module.logger import logger
+from module.ocr.rpc import shutdown_ocr_server
 from module.server.main_manager import MainManager
 from module.server.updater import Updater
 from module.server.i18n import I18n
@@ -46,6 +47,7 @@ async def notify_test(setting: str, title: str, content: str):
 
 @home_app.get('/kill_server')
 async def kill_server():
+    shutdown_ocr_server()
     MainManager.signal_kill_server = True
     return 'success'
 

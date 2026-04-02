@@ -12,7 +12,7 @@
     "itemName": "wq_done",
     "imageName": "wq_wq_done.png",
     "roiFront": "248,183,37,39",
-    "roiBack": "107,147,570,389",
+    "roiBack": "63,134,624,401",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "勾号"
