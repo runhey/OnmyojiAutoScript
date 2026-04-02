@@ -39,7 +39,7 @@
     "itemName": "wt_ab_wechat",
     "imageName": "area_boss_wt_ab_wechat.png",
     "roiFront": "920,646,50,41",
-    "roiBack": "829,620,172,85",
+    "roiBack": "760,620,240,85",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "微信分享"
