@@ -61,6 +61,10 @@ class ScriptTask(GameUi, MemoryScrollsAssets):
                 logger.info('Small Memory Scrolls fragments reached 50, planning tomorrow exploration')
                 # 安排下次探索
                 self.custom_next_run(task='Exploration', custom_time=self.config.memory_scrolls.memory_scrolls_finish.next_exploration_time, time_delta=1)
+            else:
+                logger.warning('Small Memory Scrolls fragments not reached 50, task failed')
+                self.set_next_run(task='MemoryScrolls', success=False)
+                raise TaskEnd
             self.ui_click_until_smt_disappear(self.I_MS_FRAGMENT_S, stop=self.I_MS_FRAGMENT_S_VERIFICATION, interval=1.5)
         # 进入指定分卷
         self.goto_scroll(con)
