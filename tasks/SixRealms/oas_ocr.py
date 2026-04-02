@@ -33,6 +33,12 @@ class VerticalText(BaseCor):
         return image
 
     def detect_and_ocr(self, *args, **kwargs):
+        if getattr(self.model, "is_proxy", False):
+            params = {"drop_score": 0.1, "box_thresh": 0.2, "vertical": True}
+            for key in list(params.keys()):
+                if key in kwargs:
+                    params.pop(key)
+            return self.model.detect_and_ocr(*args, **params, **kwargs)
         # Try hard to lower TextSystem.box_thresh
         backup = self.model.text_detector.box_thresh
         # Patch text_recognizer
