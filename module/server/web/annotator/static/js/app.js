@@ -34,6 +34,7 @@
     ruleSchemaMap: new Map(),
     rules: [],
     activeRuleIndex: -1,
+    ruleSearchKeyword: "",
     listMeta: {
       name: "list_name",
       direction: "vertical",
@@ -114,6 +115,8 @@
     listType: null,
     listDescription: null,
 
+    ruleSearchBox: document.getElementById("ruleSearchBox"),
+    ruleSearchInput: document.getElementById("ruleSearchInput"),
     ruleList: document.getElementById("ruleList"),
     addRuleBtn: document.getElementById("addRuleBtn"),
     deleteRuleBtn: document.getElementById("deleteRuleBtn"),
@@ -1569,10 +1572,11 @@
     updateTestButtonVisibility();
   }
 
-  function buildRuleItem(rule, index) {
+  function buildRuleItem(rule, index, displayIndex) {
     const item = document.createElement("div");
     item.className = "rule-item";
     item.dataset.index = String(index);
+    item.dataset.displayIndex = String(displayIndex);
 
     if (isImagePreviewRule()) {
       const thumbWrap = document.createElement("div");
@@ -1609,7 +1613,7 @@
 
     const text = document.createElement("div");
     text.className = "rule-item-text";
-    text.textContent = `${index + 1}. ${rule.itemName || "unnamed"}`;
+    text.textContent = `${displayIndex}. ${rule.itemName || "unnamed"}`;
     item.appendChild(text);
 
     item.addEventListener("click", () => {
@@ -1623,6 +1627,29 @@
     });
 
     return item;
+  }
+
+  function buildRuleListEmptyState(message) {
+    const empty = document.createElement("div");
+    empty.className = "rule-list-empty";
+    empty.textContent = message;
+    return empty;
+  }
+
+  function getVisibleRuleEntries() {
+    const keyword = getNormalizedRuleSearchKeyword();
+    return state.rules
+      .map((rule, actualIndex) => ({ rule, actualIndex }))
+      .filter(({ rule }) => {
+        if (!keyword) {
+          return true;
+        }
+        return String(rule.itemName || "").toLowerCase().includes(keyword);
+      })
+      .map((entry, offset) => ({
+        ...entry,
+        displayIndex: offset + 1,
+      }));
   }
 
   function updateRuleActiveHighlight() {
@@ -1639,16 +1666,27 @@
     if (state.rules.length === 0) {
       state.activeRuleIndex = -1;
       clearRuleForm();
+      fillListMetaForm();
       return;
     }
 
-    state.rules.forEach((rule, index) => {
-      el.ruleList.appendChild(buildRuleItem(rule, index));
-    });
+    const visibleEntries = getVisibleRuleEntries();
 
-    if (state.activeRuleIndex < 0 || state.activeRuleIndex >= state.rules.length) {
-      state.activeRuleIndex = 0;
+    if (visibleEntries.length === 0) {
+      state.activeRuleIndex = -1;
+      el.ruleList.appendChild(buildRuleListEmptyState("未找到匹配的规则项"));
+      clearRuleForm();
+      fillListMetaForm();
+      return;
     }
+
+    if (state.activeRuleIndex < 0 || !visibleEntries.some((entry) => entry.actualIndex === state.activeRuleIndex)) {
+      state.activeRuleIndex = visibleEntries[0].actualIndex;
+    }
+
+    visibleEntries.forEach(({ rule, actualIndex, displayIndex }) => {
+      el.ruleList.appendChild(buildRuleItem(rule, actualIndex, displayIndex));
+    });
 
     updateRuleActiveHighlight();
     fillRuleForm();
@@ -1665,7 +1703,8 @@
     }
     const text = active.querySelector(".rule-item-text");
     if (text) {
-      text.textContent = `${state.activeRuleIndex + 1}. ${rule.itemName || "unnamed"}`;
+      const displayIndex = Number.parseInt(active.dataset.displayIndex || "1", 10) || 1;
+      text.textContent = `${displayIndex}. ${rule.itemName || "unnamed"}`;
     }
     const thumbWrap = active.querySelector(".rule-thumb-wrap");
     const thumb = active.querySelector(".rule-thumb");
@@ -1694,6 +1733,7 @@
     el.roiBackValue.value = "";
     refreshRoiLayoutFromRule();
     clearTestOverlay();
+    updateFieldVisibility();
   }
 
   function fillListMetaForm() {
@@ -1788,7 +1828,13 @@
       }
     }
 
-    refreshActiveRuleItem();
+    const searchKeyword = getNormalizedRuleSearchKeyword();
+    const activeStillVisible = !searchKeyword || String(rule.itemName || "").toLowerCase().includes(searchKeyword);
+    if (changedField === "itemName" && !activeStillVisible) {
+      renderRuleList();
+    } else {
+      refreshActiveRuleItem();
+    }
     markDirty();
     refreshActiveRuleImageExists().catch(() => {
       // ignore
@@ -1849,9 +1895,39 @@
     el.currentDir.textContent = text;
   }
 
+  function hasLoadedRuleSource() {
+    return Boolean(state.taskName && state.jsonRelPath);
+  }
+
+  function getNormalizedRuleSearchKeyword() {
+    return String(state.ruleSearchKeyword || "").trim().toLowerCase();
+  }
+
+  function resetRuleSearch() {
+    state.ruleSearchKeyword = "";
+    if (el.ruleSearchInput) {
+      el.ruleSearchInput.value = "";
+    }
+  }
+
+  function updateRuleSearchVisibility() {
+    const visible = hasLoadedRuleSource();
+    if (el.ruleSearchBox) {
+      el.ruleSearchBox.classList.toggle("hidden", !visible);
+    }
+    if (el.ruleSearchInput) {
+      el.ruleSearchInput.disabled = !visible;
+      if (!visible) {
+        el.ruleSearchInput.value = "";
+      }
+    }
+  }
+
   function clearRuleBinding() {
     state.taskName = "";
     state.jsonRelPath = "";
+    resetRuleSearch();
+    updateRuleSearchVisibility();
   }
 
   function updateRuleSourceActionVisibility() {
@@ -2042,8 +2118,14 @@
     }
 
     const pair = resolveTaskAndJson(state.currentDirPath, state.jsonFileName);
+    const previousTaskName = state.taskName;
+    const previousJsonRelPath = state.jsonRelPath;
     state.taskName = pair.taskName;
     state.jsonRelPath = pair.jsonRelPath;
+    if (state.taskName !== previousTaskName || state.jsonRelPath !== previousJsonRelPath) {
+      resetRuleSearch();
+    }
+    updateRuleSearchVisibility();
 
     const query = new URLSearchParams({
       task_name: state.taskName,
@@ -2661,6 +2743,13 @@
 
     el.createJsonBtn.addEventListener("click", withError(createJsonFile));
     el.deleteJsonBtn.addEventListener("click", withError(deleteJsonFile));
+    if (el.ruleSearchInput) {
+      el.ruleSearchInput.addEventListener("input", () => {
+        state.ruleSearchKeyword = el.ruleSearchInput.value || "";
+        clearTestOverlay();
+        renderRuleList();
+      });
+    }
 
     el.ruleType.addEventListener("change", () => {
       if (state.ruleTypeLocked) {
@@ -2737,6 +2826,7 @@
 
     updateRuleTypeLockView();
     updateFieldVisibility();
+    updateRuleSearchVisibility();
     setSourceMode("local");
     updateRuleSourceActionVisibility();
     clearOutput();
@@ -2763,4 +2853,3 @@
     showMessage(error.message || String(error), "error");
   });
 })();
-

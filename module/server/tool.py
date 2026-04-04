@@ -33,8 +33,6 @@ from module.server.annotator_rule_schema import (
     merge_rule_with_defaults,
 )
 
-logger.set_file_logger('tool', do_cleanup=True)
-
 PROJECT_ROOT = Path.cwd().resolve()
 TASKS_ROOT = (PROJECT_ROOT / "tasks").resolve()
 ANNOTATOR_ROOT = (PROJECT_ROOT / "log" / "annotator").resolve()

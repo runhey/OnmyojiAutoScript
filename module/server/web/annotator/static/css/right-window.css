@@ -54,6 +54,14 @@
   padding-right: 2px;
 }
 
+.rule-search-box {
+  margin: 8px 0 6px;
+}
+
+.rule-search-box input {
+  width: 100%;
+}
+
 .rule-list {
   border: 1px solid var(--line-main);
   border-radius: 8px;
@@ -171,6 +179,20 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+.rule-list-empty {
+  min-height: 88px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px;
+  border: 1px dashed var(--line-input);
+  border-radius: 6px;
+  color: var(--text-muted);
+  font-size: 12px;
+  text-align: center;
+  background: rgba(255, 255, 255, 0.02);
 }
 
 .rule-editor-panel.rule-editor-compact .form-grid {
