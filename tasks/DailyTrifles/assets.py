@@ -69,5 +69,7 @@ class DailyTriflesAssets:
 	O_SELECT_SM3 = RuleOcr(roi=(26,304,45,38), area=(26,304,45,38), mode="Single", method="Default", keyword="", name="select_sm3")
 	# description 
 	O_SELECT_SM4 = RuleOcr(roi=(26,397,45,38), area=(26,397,45,38), mode="Single", method="Default", keyword="", name="select_sm4")
+	# 吉闻 
+	O_LUCK_MSG = RuleOcr(roi=(15,38,70,70), area=(15,38,70,70), mode="Single", method="Default", keyword="吉闻", name="luck_msg")
 
 
