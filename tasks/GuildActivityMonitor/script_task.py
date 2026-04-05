@@ -45,33 +45,39 @@ class ScriptTask(GameUi):
         # 获取初始通知时间
         init_time, _ = self.get_notification_info()
 
+        # 监控任务属于长等待场景，加入长等待白名单，避免被全局卡死检测误判
+        self.device.stuck_record_add('PAUSE')
+
         # 主监控循环
-        while True:
-            if check_timer.reached():
-                logger.info("监控时间到，任务结束")
-                raise TaskEnd('GuildActivityMonitor')
+        try:
+            while True:
+                if check_timer.reached():
+                    logger.info("监控时间到，任务结束")
+                    raise TaskEnd('GuildActivityMonitor')
 
-            if log_timer.reached():
-                remaining = int(check_timer.remain() // 60)
-                logger.info(f"监控中... 剩余时间: {remaining}分钟")
-                log_timer.reset()
+                if log_timer.reached():
+                    remaining = int(check_timer.remain() // 60)
+                    logger.info(f"监控中... 剩余时间: {remaining}分钟")
+                    log_timer.reset()
 
-            # 处理突发事件
-            self.screenshot()
+                # 处理突发事件
+                self.screenshot()
 
-            # 检测新通知
-            current_time, notification_text = self.get_notification_info()
-            if current_time > init_time and notification_text:
-                logger.info(f"检测到新通知: {notification_text}")
-                for keyword, task_name in KEYWORD_MAP.items():
-                    if keyword in notification_text:
-                        logger.info(f"检测到关键字 '{keyword}'，启动任务: {task_name}")
-                        self.set_next_run(task=task_name, success=False, finish=False, server=False, target=datetime.now())
-                        recheck_interval = monitor_config.recheck_interval
-                        self.set_next_run(task='GuildActivityMonitor', success=False, finish=False, server=False, target=datetime.now() + timedelta(minutes=recheck_interval))
-                        raise TaskEnd('GuildActivityMonitor')
+                # 检测新通知
+                current_time, notification_text = self.get_notification_info()
+                if current_time > init_time and notification_text:
+                    logger.info(f"检测到新通知: {notification_text}")
+                    for keyword, task_name in KEYWORD_MAP.items():
+                        if keyword in notification_text:
+                            logger.info(f"检测到关键字 '{keyword}'，启动任务: {task_name}")
+                            self.set_next_run(task=task_name, success=False, finish=False, server=False, target=datetime.now())
+                            recheck_interval = monitor_config.recheck_interval
+                            self.set_next_run(task='GuildActivityMonitor', success=False, finish=False, server=False, target=datetime.now() + timedelta(minutes=recheck_interval))
+                            raise TaskEnd('GuildActivityMonitor')
 
-            time.sleep(interval)
+                time.sleep(interval)
+        finally:
+            self.device.stuck_record_clear()
 
     def get_notification_info(self) -> tuple:
         try:
