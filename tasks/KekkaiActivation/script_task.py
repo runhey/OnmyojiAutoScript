@@ -31,12 +31,12 @@ class ScriptTask(KU, KekkaiActivationAssets):
     def run(self):
         con = self.config.kekkai_activation.activation_config
         
-        # 日期过滤检查（适合多个小号轮流挂卡给大号吃）
-        if con.activation_dates:
-            today = datetime.now().day
-            allowed_dates = [int(d.strip()) for d in con.activation_dates.split(',') if d.strip().isdigit()]
-            if today not in allowed_dates:
-                logger.info(f"今日日期{today}不在挂卡日期列表{allowed_dates}中，跳过挂卡任务")
+        # 星期过滤检查（适合多个小号轮流挂卡给大号吃）
+        if con.activation_weekdays:
+            weekday = datetime.now().weekday()  # 0=周一, 6=周日
+            allowed_weekdays = self.parse_weekdays(con.activation_weekdays)
+            if weekday not in allowed_weekdays:
+                logger.info(f"今日星期{weekday + 1}不在挂卡星期列表{allowed_weekdays}中，跳过挂卡任务")
                 # 设置下次执行时间为明天0点
                 next_run = (datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)
                            + timedelta(days=1))
@@ -162,6 +162,41 @@ class ScriptTask(KU, KekkaiActivationAssets):
             if not card_status and not card_effect:
                 logger.info('Card is not selected also not using')
                 self.screening_card(_config.card_type)
+
+    def parse_weekdays(self, weekdays_str: str) -> list[int]:
+        """
+        解析星期配置，支持多种格式：
+        - 中文：周一、周二、周三、周四、周五、周六、周日
+        - 数字：1-7（1=周一，7=周日）
+        - 分隔符：支持英文逗号(,)、中文逗号(，)、顿号(、)
+        返回：datetime.weekday() 格式（0=周一，6=周日）
+        """
+        weekday_map = {
+            # 中文 -> weekday (0=周一)
+            '周一': 0, '周二': 1, '周三': 2, '周四': 3, '周五': 4, '周六': 5, '周日': 6,
+        }
+        
+        # 统一分隔符：将中文逗号和顿号都替换为英文逗号
+        normalized_str = weekdays_str.replace('，', ',').replace('、', ',')
+        
+        allowed_weekdays = []
+        for item in normalized_str.split(','):
+            item = item.strip()
+            if not item:
+                continue
+            
+            # 数字（1-7，1=周一）
+            if item.isdigit():
+                weekday = int(item)
+                if 1 <= weekday <= 7:
+                    allowed_weekdays.append(weekday - 1)  # 转换为 weekday 格式
+            # 中文
+            elif item in weekday_map:
+                allowed_weekdays.append(weekday_map[item])
+            else:
+                logger.warning(f"无法识别的星期配置：{item}")
+        
+        return allowed_weekdays
 
     def goto_cards(self):
         """
