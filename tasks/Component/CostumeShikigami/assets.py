@@ -311,7 +311,7 @@ class CostumeShikigamiAssets:
 	I_ST_REPLACE_7 = RuleImage(roi_front=(858,162,100,100), roi_back=(858,162,100,100), threshold=0.8, method="Template matching", file="./tasks/Component/CostumeShikigami/sk7/sk7_st_replace_7.png")
 
 
-	# Image Rule Assets - sk8 童梦基地
+	# Image Rule Assets
 	# 用于判断在式神录 
 	I_CHECK_RECORDS_8 = RuleImage(roi_front=(265,71,34,36), roi_back=(265,71,60,50), threshold=0.8, method="Template matching", file="./tasks/Component/CostumeShikigami/sk8/sk8_check_records_8.png")
 	# 退出式神录 
