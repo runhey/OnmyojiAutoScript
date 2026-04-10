@@ -16,15 +16,29 @@ class ScriptTask(GameUi):
         :return:
         """
         monitor_config = self.config.guild_activity_monitor.guild_activity_monitor_combat_time
-        today = datetime.now().weekday() + 1
-        run_days = {int(day.strip()) for day in monitor_config.run_days.split(',') if day.strip().isdigit()}
-        if today not in run_days:
-            logger.info(f"今天是周{today}，不在配置运行日期({monitor_config.run_days})内，跳过 GuildActivityMonitor")
-            self.set_next_run(task='GuildActivityMonitor', success=True, finish=True)
+        now = datetime.now()
+        today = now.weekday() + 1
+        run_days = sorted({day for day in map(int, re.findall(r'\d+', monitor_config.run_days)) if 1 <= day <= 7})
+        if not run_days:
+            logger.warning(f"运行日期配置无效: {monitor_config.run_days}，跳过 GuildActivityMonitor")
+            raise TaskEnd('GuildActivityMonitor')
+
+        in_run_days = today in run_days
+        candidate_days = [day for day in run_days if day != today] if in_run_days else run_days
+        delta_days = min((day - today) % 7 for day in candidate_days)
+        next_date = now + timedelta(days=delta_days or 7)
+
+        server_update = self.config.guild_activity_monitor.scheduler.server_update
+        use_server_time = (server_update.hour, server_update.minute, server_update.second) != (9, 0, 0)
+        next_target = datetime.combine(next_date.date(), server_update) if use_server_time else next_date
+        status = '在' if in_run_days else '不在'
+        action = '本次继续执行' if in_run_days else '跳过 GuildActivityMonitor'
+        logger.info(f"今天是周{today}，{status}配置运行日期({monitor_config.run_days})内，"f"{action}，下次运行时间: {next_target}")
+        self.set_next_run(task='GuildActivityMonitor',success=None,finish=False,server=False,target=next_target)
+        if not in_run_days:
             raise TaskEnd('GuildActivityMonitor')
 
         # 构建关键字映射
-        self.set_next_run(task='GuildActivityMonitor', success=True, finish=True)
         self.ui_get_current_page()
         self.ui_goto(page_main)
         guild_config = self.config.guild_activity_monitor.guild_activity
