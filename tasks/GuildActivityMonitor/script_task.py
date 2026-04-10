@@ -15,6 +15,14 @@ class ScriptTask(GameUi):
 
         :return:
         """
+        monitor_config = self.config.guild_activity_monitor.guild_activity_monitor_combat_time
+        today = datetime.now().weekday() + 1
+        run_days = {int(day.strip()) for day in monitor_config.run_days.split(',') if day.strip().isdigit()}
+        if today not in run_days:
+            logger.info(f"今天是周{today}，不在配置运行日期({monitor_config.run_days})内，跳过 GuildActivityMonitor")
+            self.set_next_run(task='GuildActivityMonitor', success=True, finish=True)
+            raise TaskEnd('GuildActivityMonitor')
+
         # 构建关键字映射
         self.set_next_run(task='GuildActivityMonitor', success=True, finish=True)
         self.ui_get_current_page()
@@ -83,11 +91,10 @@ class ScriptTask(GameUi):
         try:
             output = self.device.adb_shell(['dumpsys', 'notification', '--noredact'])
 
-            # 改进的通知时间提取逻辑 - 只获取最新的通知
+            # 通知时间提取逻辑 - 只获取最新的通知
             notification_time = 0
             notification_text = ""
-            
-            # 使用更精确的正则表达式匹配每个通知块
+
             # 查找所有通知块，每个块包含时间戳和文本
             notification_blocks = re.findall(r'(when=(\d+)[\s\S]*?(?=when=|\Z))', output)
             
