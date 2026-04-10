@@ -9,6 +9,7 @@ class GuildActivityMonitorCombatTime(BaseModel):
     detection_interval: int = Field(default=30, description="通知检测间隔（秒）\n通过adb检测系统中收到的活动推送，自动拉起对应任务")
     monitor_duration: int = Field(default=15, description="监控持续时间（分）\n请确保已开启游戏通知权限，游戏设置权限中对应活动推送")
     recheck_interval: int = Field(default=5, description="拉起对应活动后，间隔多久再次开启检测（分）\n若监控时间内未检测到活动，则按调度器设置下次运行时间")
+    run_days: str = Field(default="1,2,3,4,5,6,7", description="运行日期，1-7 对应周一到周日；例如 5,6,7")
 
 class GuildActivity(BaseModel):
     # 道馆
