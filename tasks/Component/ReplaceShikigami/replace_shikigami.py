@@ -46,36 +46,30 @@ class ReplaceShikigami(BaseTask, ReplaceShikigamiAssets):
         check_selected = match_selected[shikigami_class]
         check_click = match_click[shikigami_class]
         # 选择式神的种类
-        timeout = Timer(10).start()
-        try:
-            while not timeout.reached():
-                self.screenshot()
+        while 1:
+            self.screenshot()
 
-                # 已经切到了目标分类
-                if self.appear(check_selected):
-                    logger.info('Select shikigami class: %s' % shikigami_class)
-                    return
+            # 已经切到了目标分类
+            if self.appear(check_selected):
+                logger.info('Select shikigami class: %s' % shikigami_class)
+                return
 
-                # 如识别到目标分类按钮，则点击
-                if self.appear(check_click, interval=0.5):
-                    if self.wait_until_pos_stable(check_click, stable_time=0.3, timeout=1.5):
-                        self.click(check_click)
-                        time.sleep(0.4)
+            # 看到了目标分类按钮，就点它
+            if self.appear(check_click, interval=1):
+                if self.wait_until_pos_stable(check_click, stable_time=0.8, timeout=2.5):
+                    self.click(check_click)
+                    logger.info('Clicked shikigami class: %s' % shikigami_class)
+                    time.sleep(1)
+                    # 点完后只确认 selected 状态，避免下一轮又把 selected 当 click target
+                    self.screenshot()
+                    if self.appear(check_selected):
+                        logger.info('Select shikigami class: %s' % shikigami_class)
+                        break
+                continue
 
-                        # 点完后只确认 selected 状态，避免下一轮又把 selected 当 click target
-                        self.screenshot()
-                        if self.appear(check_selected):
-                            logger.info('Select shikigami class: %s' % shikigami_class)
-                            return
-                    continue
-
-                # 没识别到就重新展开分类面板
-                self.click(self.C_SHIKIGAMI_SWITCH_1, interval=3.5)
-
-            raise GameStuckError(f'switch_shikigami_class timeout: {shikigami_class}')
-        
-        finally:
-            logger.info('Select shikigami class success.')
+            # 没看到就展开分类面板
+            self.click(self.C_SHIKIGAMI_SWITCH_1, interval=1.0)
+            time.sleep(1)
 
     def unset_shikigami_max_lv(self):
         """
