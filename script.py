@@ -327,26 +327,16 @@ class Script:
         :return: True 表示等待成功完成, False 表示等待被中断
         """
         method = self.config.script.optimization.when_task_queue_empty
-        close_game_limit_time = self.config.script.optimization.close_game_limit_time
-        close_emulator_limit_time = self.config.script.optimization.close_emulator_limit_time
         strategy_map = {
             "close_game": self._wait_close_game,
             "goto_main": self._wait_goto_main,
-            "close_emulator_or_goto_main": self._wait_close_emulator_or,
-            "close_emulator_or_close_game": self._wait_close_emulator_or,
+            "close_emulator_or_goto_main": self._wait_close_emulator_or_goto_main,
+            "close_emulator_or_close_game": self._wait_close_emulator_or_close_game,
         }
         func = strategy_map.get(method)
-        if not func:
+        if func is None:
             logger.warning(f"Invalid Optimization_WhenTaskQueueEmpty: {method}, fallback to stay_there")
             func = self._wait_stay_there
-            return func(next_run)
-
-        if method in ["close_emulator_or_goto_main", "close_emulator_or_close_game"]:
-            return func(next_run, close_game_limit_time, close_emulator_limit_time, method)
-
-        if method == "close_game":
-            return func(next_run, close_game_limit_time)
-
         return func(next_run)
 
     @staticmethod
@@ -379,11 +369,12 @@ class Script:
             return self.wait_until(next_run)
         return True
 
-    def _wait_close_game(self, next_run: datetime, close_game_limit_time=None) -> bool:
+    def _wait_close_game(self, next_run: datetime) -> bool:
         if self._emulator_down:
             logger.info("Emulator is down, skip close_game/goto_main action and wait with preheat")
             return self._wait_until_with_emulator_preheat(next_run)
 
+        close_game_limit_time = self.config.script.optimization.close_game_limit_time
         close_game_limit = self._time_to_timedelta(close_game_limit_time)
         if close_game_limit > timedelta(0) and next_run > datetime.now() + close_game_limit:
             logger.info("Close game during wait")
@@ -410,8 +401,14 @@ class Script:
         self.device.release_during_wait()
         return self.wait_until(next_run)
 
-    def _wait_close_emulator_or(self, next_run: datetime, close_game_limit_time=None,
-                                close_emulator_limit_time=None, method=None) -> bool:
+    def _wait_close_emulator_or_goto_main(self, next_run: datetime) -> bool:
+        return self._wait_close_emulator_or(next_run, self._wait_goto_main)
+
+    def _wait_close_emulator_or_close_game(self, next_run: datetime) -> bool:
+        return self._wait_close_emulator_or(next_run, self._wait_close_game)
+
+    def _wait_close_emulator_or(self, next_run: datetime, fallback_waiter: Callable[[datetime], bool]) -> bool:
+        close_emulator_limit_time = self.config.script.optimization.close_emulator_limit_time
         close_emulator_limit = self._time_to_timedelta(close_emulator_limit_time)
 
         if close_emulator_limit > timedelta(0) and next_run > datetime.now() + close_emulator_limit:
@@ -429,10 +426,7 @@ class Script:
             self.run("Restart")
             return True
 
-        if method == "close_emulator_or_goto_main":
-            return self._wait_goto_main(next_run)
-
-        return self._wait_close_game(next_run, close_game_limit_time)
+        return fallback_waiter(next_run)
 
     def _wait_stay_there(self, next_run: datetime) -> bool:
         if self._emulator_down:
