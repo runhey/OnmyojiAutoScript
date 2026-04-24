@@ -1,0 +1,50 @@
+name: ❓问题咨询
+title: '❓'
+description: 使用问题、功能咨询、配置帮助
+labels: question
+body:
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: 在提问之前...
+      options:
+      - label: 我已经搜索了现有的 issues 和文档
+        required: true
+      - label: 我在提问题之前至少花费了 5 分钟来思考
+        required: true
+      - label: 我已经阅读了项目的 README 和使用说明
+        required: true
+  - type: textarea
+    id: question
+    attributes:
+      label: 我的问题
+      description: 简要描述你的问题
+    validations:
+      required: true
+  - type: textarea
+    id: context
+    attributes:
+      label: 背景信息
+      description: |
+        你尝试做什么？遇到了什么情况？
+        包含相关的配置、环境信息等
+    validations:
+      required: false
+  - type: textarea
+    id: screenshots
+    attributes:
+      label: 截图
+      description: |
+        如果有，添加屏幕截图以帮助解释你的问题。
+        可以点击这个区域，然后把文件拖进来添加图片。
+    validations:
+      required: false
+  - type: textarea
+    id: others
+    attributes:
+      label: 还有别的吗？
+      description: |
+        相关的配置？日志？链接？参考资料？
+        任何能帮助理解问题的信息。
+    validations:
+      required: false
