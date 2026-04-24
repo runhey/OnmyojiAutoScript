@@ -162,7 +162,7 @@ class ScriptTask(GameUi, Summon, DailyTriflesAssets):
                 break
             if self.appear_then_click(self.I_FRIENDSHIP_UP, interval=1):
                 continue
-            if self.appear_then_click(self.I_LUCK_MSG, interval=1):
+            if self.ocr_appear_click(self.O_LUCK_MSG, interval=1):
                 continue
         logger.info('Start luck msg')
         check_timer = Timer(2)

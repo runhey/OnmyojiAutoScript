@@ -16,6 +16,7 @@ class ScriptTask(GameUi):
         :return:
         """
         # 构建关键字映射
+        self.set_next_run(task='GuildActivityMonitor', success=True, finish=True)
         self.ui_get_current_page()
         self.ui_goto(page_main)
         guild_config = self.config.guild_activity_monitor.guild_activity
@@ -48,7 +49,6 @@ class ScriptTask(GameUi):
         while True:
             if check_timer.reached():
                 logger.info("监控时间到，任务结束")
-                self.set_next_run(task='GuildActivityMonitor', success=True, finish=True)
                 raise TaskEnd('GuildActivityMonitor')
 
             if log_timer.reached():

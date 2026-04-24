@@ -56,5 +56,14 @@
     "method": "Default",
     "keyword": "",
     "description": "description"
+  },
+  {
+    "itemName": "luck_msg",
+    "roiFront": "15,38,70,70",
+    "roiBack": "15,38,70,70",
+    "mode": "Single",
+    "method": "Default",
+    "keyword": "吉闻",
+    "description": "吉闻"
   }
 ]

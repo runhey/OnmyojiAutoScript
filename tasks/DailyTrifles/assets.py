@@ -17,8 +17,6 @@ class DailyTriflesAssets:
 	I_L_LOVE = RuleImage(roi_front=(123,625,67,72), roi_back=(123,625,67,72), threshold=0.9, method="Template matching", file="./tasks/DailyTrifles/love/love_l_love.png")
 	# 一键收取 
 	I_L_COLLECT = RuleImage(roi_front=(47,537,129,56), roi_back=(47,537,129,56), threshold=0.8, method="Template matching", file="./tasks/DailyTrifles/love/love_l_collect.png")
-	# 吉闻 
-	I_LUCK_MSG = RuleImage(roi_front=(22,47,46,27), roi_back=(22,47,46,27), threshold=0.8, method="Template matching", file="./tasks/DailyTrifles/love/Screenshots_luck_msg.png")
 	# 一键祝福 
 	I_ONE_CLICK_BLESS = RuleImage(roi_front=(1115,500,93,33), roi_back=(1115,500,93,33), threshold=0.8, method="Template matching", file="./tasks/DailyTrifles/love/Screenshots_one_click_bless.png")
 	# 点击祝福 
@@ -71,5 +69,7 @@ class DailyTriflesAssets:
 	O_SELECT_SM3 = RuleOcr(roi=(26,304,45,38), area=(26,304,45,38), mode="Single", method="Default", keyword="", name="select_sm3")
 	# description 
 	O_SELECT_SM4 = RuleOcr(roi=(26,397,45,38), area=(26,397,45,38), mode="Single", method="Default", keyword="", name="select_sm4")
+	# 吉闻 
+	O_LUCK_MSG = RuleOcr(roi=(15,38,70,70), area=(15,38,70,70), mode="Single", method="Default", keyword="吉闻", name="luck_msg")
 
 

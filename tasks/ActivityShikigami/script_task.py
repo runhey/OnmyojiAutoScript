@@ -151,6 +151,10 @@ class ScriptTask(StateMachine, GameUi, BaseActivity, SwitchSoul, ActivityShikiga
         self.limit_time: timedelta = self.conf.general_climb.limit_time_v
         #
         for climb_type in self.conf.general_climb.run_sequence_v:
+            # 2026.04.04>>>----------------------------------------------------------------
+            if climb_type not in ['ap']:
+                continue
+            # 2026.04.04<<<----------------------------------------------------------------
             # 进入到活动的主页面，不是具体的战斗页面
             self.ui_get_current_page()
             self.ui_goto(game.page_climb_act)
@@ -220,7 +224,9 @@ class ScriptTask(StateMachine, GameUi, BaseActivity, SwitchSoul, ActivityShikiga
         self.ui_clicks([self.I_TO_BATTLE_MAIN, self.I_TO_BATTLE_MAIN_2],
                        stop=self.I_CHECK_BATTLE_MAIN, interval=1)
         self.switch_soul(self.I_BATTLE_MAIN_TO_RECORDS, self.I_CHECK_BATTLE_MAIN)
-        self.switch_climb_mode_in_game('ap')
+        # 2026.04.04>>>----------------------------------------------------------------
+        # self.switch_climb_mode_in_game('ap')
+        # 2026.04.04<<<----------------------------------------------------------------
 
         ocr_limit_timer = Timer(1).start()
         while 1:
@@ -258,7 +264,7 @@ class ScriptTask(StateMachine, GameUi, BaseActivity, SwitchSoul, ActivityShikiga
         logger.hr(f'Start run climb type AP100')
 
     def start_battle(self):
-        click_times, max_times = 0, random.randint(2, 4)
+        click_times, max_times = 0, random.randint(4, 8)
         while 1:
             self.screenshot()
             if self.is_in_battle(False):
@@ -284,7 +290,7 @@ class ScriptTask(StateMachine, GameUi, BaseActivity, SwitchSoul, ActivityShikiga
         self.count_map[self.climb_type] = self.current_count
         for btn in (self.C_RANDOM_LEFT, self.C_RANDOM_RIGHT, self.C_RANDOM_TOP, self.C_RANDOM_BOTTOM):
             btn.name = "BATTLE_RANDOM"
-        ok_cnt, max_retry = 0, 5
+        ok_cnt, max_retry = 0, 8
         while 1:
             sleep(random.uniform(0.5, 1.5))
             self.screenshot()
@@ -305,12 +311,13 @@ class ScriptTask(StateMachine, GameUi, BaseActivity, SwitchSoul, ActivityShikiga
             #  出现 “魂” 和 紫蛇皮
             if self.appear(self.I_REWARD) or self.appear(self.I_REWARD_PURPLE_SNAKE_SKIN) or \
                     self.appear(self.I_REWARD_GOLD) or self.appear(self.I_REWARD_GOLD_SNAKE_SKIN):
-                self.random_reward_click(exclude_click=[self.C_RANDOM_RIGHT])
+                self.random_reward_click(exclude_click=[self.C_RANDOM_TOP, self.C_RANDOM_LEFT])
                 ok_cnt += 1
                 continue
             # 已经不在战斗中了, 且奖励也识别过了, 则随机点击
-            if ok_cnt > 0 and not self.is_in_battle(False):
-                self.random_reward_click(exclude_click=[self.C_RANDOM_RIGHT])
+            if ok_cnt > 3 and not self.is_in_battle(False):
+                self.random_reward_click(exclude_click=[self.C_RANDOM_TOP, self.C_RANDOM_LEFT])
+                self.device.stuck_record_clear()
                 ok_cnt += 1
                 continue
             # 战斗中随机滑动

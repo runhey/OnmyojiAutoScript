@@ -20,6 +20,15 @@ class GuildActivity(BaseModel):
     # 退治
     DemonRetreat: bool = Field(default=True)
 
+    # 保持前端翻译，自动转换格式
+    def __getattr__(self, name):
+        camel = ''.join(w.capitalize() for w in name.split('_'))
+        return getattr(self, camel) if hasattr(self, camel) else super().__getattr__(name)
+
+    def __setattr__(self, name, value):
+        camel = ''.join(w.capitalize() for w in name.split('_'))
+        super().__setattr__(camel if hasattr(self, camel) else name, value)
+
 
 class GuildActivityMonitor(ConfigBase):
     scheduler: Scheduler = Field(default_factory=Scheduler)

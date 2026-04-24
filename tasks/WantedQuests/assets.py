@@ -141,7 +141,7 @@ class WantedQuestsAssets:
 	# 封印 
 	I_WQ_SEAL = RuleImage(roi_front=(174,184,20,29), roi_back=(56,93,664,455), threshold=0.8, method="Template matching", file="./tasks/WantedQuests/wq/wq_wq_seal.png")
 	# 勾号 
-	I_WQ_DONE = RuleImage(roi_front=(248,183,37,39), roi_back=(107,147,570,389), threshold=0.8, method="Template matching", file="./tasks/WantedQuests/wq/wq_wq_done.png")
+	I_WQ_DONE = RuleImage(roi_front=(248,183,37,39), roi_back=(63,134,624,401), threshold=0.8, method="Template matching", file="./tasks/WantedQuests/wq/wq_wq_done.png")
 	# 一键追踪 
 	I_TRACE_ENABLE = RuleImage(roi_front=(1097,588,101,70), roi_back=(1097,588,101,70), threshold=0.8, method="Template matching", file="./tasks/WantedQuests/wq/wq_trace_enable.png")
 	# 取消追踪 
