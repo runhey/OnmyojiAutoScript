@@ -15,7 +15,7 @@ from module.base.timer import Timer
 from tasks.Component.SwitchSoul.switch_soul import SwitchSoul
 from tasks.DemonEncounter.config import BossType, DemonEncounter, convert_to_general_battle_config
 from tasks.GameUi.game_ui import GameUi
-from tasks.GameUi.page import page_demon_encounter, page_shikigami_records
+from tasks.GameUi.page import page_demon_encounter, page_demon_encounter_realworld, page_shikigami_records
 from tasks.DemonEncounter.assets import DemonEncounterAssets
 from tasks.Component.GeneralBattle.general_battle import GeneralBattle
 from tasks.Component.GeneralBattle.config_general_battle import GeneralBattleConfig
@@ -49,7 +49,7 @@ class ScriptTask(GameUi, GeneralBattle, DemonEncounterAssets, SwitchSoul):
             self.checkout_soul()
         self.ui_goto(page_demon_encounter)
         self.execute_lantern()
-        self.wait_and_click(self.I_DE_BOSS_ENTER)
+        self.ui_goto(page_demon_encounter_realworld)
         self.execute_boss()
 
         self.set_next_run(task='DemonEncounter', success=True, finish=False)
