@@ -9,6 +9,15 @@
     "description": "红色达摩"
   },
   {
+    "itemName": "de_boss_enter",
+    "imageName": "demon_de_boss_enter.png",
+    "roiFront": "994,485,106,30",
+    "roiBack": "994,485,106,30",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "进入boss"
+  },
+  {
     "itemName": "de_find",
     "imageName": "demon_de_find.png",
     "roiFront": "1136,593,100,100",
