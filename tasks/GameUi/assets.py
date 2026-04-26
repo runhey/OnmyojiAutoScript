@@ -114,8 +114,12 @@ class GameUiAssets:
 	I_TOWN_GOTO_HYAKKISEN = RuleImage(roi_front=(192,145,48,67), roi_back=(86,130,447,100), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_town_goto_hyakkisen.png")
 	# 斗技主界面左上角文字图像 
 	I_CHECK_DUEL = RuleImage(roi_front=(149,16,64,38), roi_back=(133,0,110,74), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_check_duel.png")
-	# description 
-	I_CHECK_DEMON_ENCOUNTER = RuleImage(roi_front=(26,658,42,43), roi_back=(2,619,100,100), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_check_demon_encounter.png")
+	# description
+	I_CHECK_DEMON_ENCOUNTER = RuleImage(roi_front=(153,16,129,38), roi_back=(153,16,129,38), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_check_demon_encounter.png")
+	# 检查逢魔之时现世逢魔界面
+	I_CHECK_DEMON_ENCOUNTER_REALWORLD = RuleImage(roi_front=(26,658,42,43), roi_back=(2,619,100,100), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_check_demon_encounter_realworld.png")
+	# 逢魔之时进入现世逢魔
+	I_DEMON_ENCOUNTER_REALWORLD_GOTO = RuleImage(roi_front=(994,485,106,30), roi_back=(994,485,106,30), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_demon_encounter_realworld.png")
 	# 检查狩猎战界面 
 	I_CHECK_HUNT = RuleImage(roi_front=(575,30,46,25), roi_back=(553,1,81,68), threshold=0.7, method="Template matching", file="./tasks/GameUi/page/page_check_hunt.png")
 	# 检查狩猎战麒麟界面 

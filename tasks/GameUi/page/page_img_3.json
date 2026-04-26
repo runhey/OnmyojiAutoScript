@@ -205,5 +205,14 @@
     "method": "Template matching",
     "threshold": 0.8,
     "description": "退出战斗按钮"
+  },
+  {
+    "itemName": "demon_encounter_realworld",
+    "imageName": "page_demon_encounter_realworld.png",
+    "roiFront": "994,485,106,30",
+    "roiBack": "994,485,106,30",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "进入现世逢魔"
   }
 ]

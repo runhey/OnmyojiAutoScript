@@ -71,9 +71,9 @@ class DemonEncounterAssets:
 
 
 	# Image Rule Assets
-	# 红色达摩 
+	# 红色达摩
 	I_DE_RED_DHARMA = RuleImage(roi_front=(1216,215,32,33), roi_back=(1209,208,51,50), threshold=0.7, method="Template matching", file="./tasks/DemonEncounter/demon/demon_de_red_dharma.png")
-	# 点击右下角的寻找封魔 
+	# 点击右下角的寻找封魔
 	I_DE_FIND = RuleImage(roi_front=(1136,593,100,100), roi_back=(1136,593,100,100), threshold=0.8, method="Template matching", file="./tasks/DemonEncounter/demon/demon_de_find.png")
 	# 点击首领 
 	I_DE_BOSS = RuleImage(roi_front=(1001,645,45,45), roi_back=(1001,645,45,45), threshold=0.8, method="Template matching", file="./tasks/DemonEncounter/demon/demon_de_boss.png")
