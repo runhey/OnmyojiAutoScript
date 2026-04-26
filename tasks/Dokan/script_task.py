@@ -897,20 +897,24 @@ class ScriptTask(ExtendGreenMark, GameUi, SwitchSoul, DokanSceneDetector):
     def switch_soul_in_dokan(self):
         if self.switch_soul_done:
             return
+        # 先检查是否有任何切御魂配置启用
+        if not self.config.dokan.switch_soul_config.enable and not self.config.dokan.switch_soul_config.enable_switch_by_name:
+            self.switch_soul_done = True
+            return
+    
         logger.info("start switch soul...")
         self.ui_click_until_disappear(self.I_RYOU_DOKAN_SHIKIGAMI, interval=2)
-
+    
         if self.config.dokan.switch_soul_config.enable:
             self.run_switch_soul(self.config.dokan.switch_soul_config.switch_group_team)
         if self.config.dokan.switch_soul_config.enable_switch_by_name:
             self.run_switch_soul_by_name(self.config.dokan.switch_soul_config.group_name,
                                          self.config.dokan.switch_soul_config.team_name)
-
+    
         self.switch_soul_done = True
-        # back to dokan
         from tasks.GameUi.assets import GameUiAssets as gua
         self.ui_click_until_disappear(gua.I_BACK_Y, interval=2)
-
+    
     def next_run(self, skip_today=False, is_dokan_activated=False):
         """
             设置下次运行时间
