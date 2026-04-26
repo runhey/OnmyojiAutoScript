@@ -15,7 +15,7 @@ from module.base.timer import Timer
 from tasks.Component.SwitchSoul.switch_soul import SwitchSoul
 from tasks.DemonEncounter.config import BossType, DemonEncounter, convert_to_general_battle_config
 from tasks.GameUi.game_ui import GameUi
-from tasks.GameUi.page import page_demon_encounter, page_shikigami_records
+from tasks.GameUi.page import page_demon_encounter, page_demon_encounter_realworld, page_shikigami_records
 from tasks.DemonEncounter.assets import DemonEncounterAssets
 from tasks.Component.GeneralBattle.general_battle import GeneralBattle
 from tasks.Component.GeneralBattle.config_general_battle import GeneralBattleConfig
@@ -47,7 +47,7 @@ class ScriptTask(GameUi, GeneralBattle, DemonEncounterAssets, SwitchSoul):
         if soul_config.enable or best_soul_config.enable:
             self.ui_goto(page_shikigami_records)
             self.checkout_soul()
-        self.ui_goto(page_demon_encounter)
+        self.ui_goto(page_demon_encounter_realworld)
         self.execute_lantern()
         self.execute_boss()
 
@@ -543,6 +543,25 @@ class ScriptTask(GameUi, GeneralBattle, DemonEncounterAssets, SwitchSoul):
     def best_demon_enable(self) -> bool:
         boss_name = BossType(datetime.now().weekday()).name
         return getattr(self.conf.best_demon_boss_config, f'best_demon_{boss_name}_select', False)
+
+    def wait_and_click(self, target) -> bool:
+        """
+        等待目标出现并点击，然后返回True
+        :param target: 图片规则
+        :return: 点击成功返回True
+        """
+        from module.base.timer import Timer
+        from module.exception import TaskEnd
+        timeout = 60
+        timer = Timer(timeout)
+        timer.start()
+        while not timer.reached():
+            self.screenshot()
+            if self.appear(target):
+                if self.appear_then_click(target, interval=1):
+                    return True
+        logger.warning(f'wait_and_click {target.name} timeout')
+        return False
 
 
 if __name__ == '__main__':
