@@ -10,6 +10,7 @@ on:
       payload:
         type: string
         required: false
+  roles: all
 
 permissions:
   contents: read
