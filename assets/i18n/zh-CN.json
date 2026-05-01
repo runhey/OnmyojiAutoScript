@@ -27,11 +27,14 @@
   "costume_main_14": "雪月华庭",
   "goto_main": "前往主界面",
   "close_game": "关闭游戏",
-  "close_emulator_or_goto_main": "关闭模拟器或前往主界面",
-  "close_emulator_or_close_game": "关闭模拟器或关闭游戏",
+  "close_emulator_or_goto_main": "关闭模拟器&前往主界面",
+  "close_emulator_or_close_game": "关闭模拟器&关闭游戏",
   "close_game_limit_time": "关闭游戏等待时间",
+  "close_game_limit_time_help": "此时间内不会关闭游戏, 防止运行间隔时间短的多个任务导致反复开关游戏",
   "close_emulator_limit_time": "关闭模拟器等待时间",
-  "emulator_startup_lead_time": "模拟器预热时间"
+  "close_emulator_limit_time_help": "此时间内不会关闭模拟器, 防止运行间隔时间短的多个任务导致反复开关模拟器",
+  "emulator_startup_lead_time": "模拟器预热时间",
+  "emulator_startup_lead_time_help": "在开始运行任务之前提前启动模拟器的时间"
 }
 
 
