@@ -2,9 +2,10 @@
 name: "PR Review Intent"
 description: 自动审计 Pull Request 的代码意图、隐含约束、实现对齐情况与发布风险
 on:
-  pull_request:
+  pull_request_target:
     types: [opened, reopened]
-  roles: all
+    branches:
+      - dev
 
 permissions:
   contents: read
@@ -186,10 +187,16 @@ Intent/Constraint 审计应尽量收敛到以下结论之一：
 - [用 2-4 条短句概括这次改动实际改变了什么行为或结构]
 
 ## Reconstructed Intent
+<details><summary>点击此处展开</summary>
 - [仅在需要时输出：从代码推断出的最可能 intent]
+</details>
+
 
 ## Observed Constraints
+<details><summary>点击此处展开</summary>
 - [仅在需要时输出：这次实现依赖的关键约束、前提或边界]
+</details>
+
 
 ## Intent Alignment
 - [明确说明：基本一致 / 只部分覆盖 / 引入额外行为变化 / 仍有关键不确定性]
@@ -199,7 +206,9 @@ Intent/Constraint 审计应尽量收敛到以下结论之一：
 - [指出维护者应重点关注的 1-3 个风险点，聚焦影响范围与行为风险]
 
 ## Validation Gaps
+<details><summary>点击此处展开</summary>
 - [列出最重要的验证缺口；如果验证已经足够，也要明确写“未看到明显额外验证缺口”]
+</details>
 ```
 
 ## Procedure
