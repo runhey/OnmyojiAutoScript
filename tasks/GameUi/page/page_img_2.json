@@ -83,11 +83,29 @@
   {
     "itemName": "check_demon_encounter",
     "imageName": "page_check_demon_encounter.png",
+    "roiFront": "153,16,129,38",
+    "roiBack": "153,16,129,38",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "check_demon_encounter_realworld",
+    "imageName": "page_check_demon_encounter_realworld.png",
     "roiFront": "26,658,42,43",
     "roiBack": "2,619,100,100",
     "method": "Template matching",
     "threshold": 0.8,
-    "description": "description"
+    "description": "检查逢魔之时现世逢魔界面"
+  },
+  {
+    "itemName": "demon_encounter_realworld_goto",
+    "imageName": "page_demon_encounter_realworld.png",
+    "roiFront": "994,485,106,30",
+    "roiBack": "994,485,106,30",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "逢魔之时进入现世逢魔"
   },
   {
     "itemName": "check_hunt",

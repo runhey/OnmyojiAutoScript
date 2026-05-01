@@ -1,7 +1,7 @@
 name: 🎈其他相关
-title: '🎈'
-description: 确定不是上面两种类型，同 oas 相关的一切
-labels: ['未来可期']
+title: "🎈"
+description: 确定不是其他三种类型，同 oas 相关的一切
+labels: [ "other" ]
 body:
   - type: textarea
     id: additional
