@@ -351,11 +351,13 @@ class Script:
             return self.wait_until(next_run)
 
         startup_lead = self._time_to_timedelta(self.config.script.optimization.emulator_startup_lead_time)
+        now = datetime.now()
         wake_time = next_run - startup_lead if startup_lead > timedelta(0) else next_run
-        if wake_time < datetime.now():
-            wake_time = datetime.now()
+        if wake_time < now:
+            wake_time = now
 
-        if wake_time > datetime.now():
+        now = datetime.now()
+        if wake_time > now:
             logger.info(f"Wait before wake emulator: {wake_time.strftime('%Y-%m-%d %H:%M:%S')}")
             if not self.wait_until(wake_time):
                 return False
@@ -385,7 +387,7 @@ class Script:
             self.run("Restart")
             return True
 
-        logger.info("Goto main page during wait (close_game limit time not reached)")
+        logger.info("Wait without closing game (close_game limit time not reached)")
         self.device.release_during_wait()
         if not self.wait_until(next_run):
             return False
@@ -411,7 +413,8 @@ class Script:
         close_emulator_limit_time = self.config.script.optimization.close_emulator_limit_time
         close_emulator_limit = self._time_to_timedelta(close_emulator_limit_time)
 
-        if close_emulator_limit > timedelta(0) and next_run > datetime.now() + close_emulator_limit:
+        now = datetime.now()
+        if close_emulator_limit > timedelta(0) and next_run > now + close_emulator_limit:
             logger.info("Close emulator during wait")
             if not self._emulator_down:
                 self.device.emulator_stop()
