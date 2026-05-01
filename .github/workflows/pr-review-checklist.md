@@ -47,7 +47,7 @@ timeout-minutes: 10
 
 你必须完成以下事情：
 
-1. 读取 `.github/workflows/shared/review-checklist.md`
+1. 通过 GitHub 读取 `${{ github.repository }}` 在 `${{ github.event.pull_request.base.sha }}` 上的 `.github/workflows/shared/review-checklist.md`
 2. 严格按条目编号顺序逐条审查，不要跳项，不要合并
 3. 每条规则只允许使用以下状态之一：`通过` / `风险` / `不适用` / `不确定`
 4. 每条规则必须给出定位、一句简短依据和一句修改建议
@@ -61,12 +61,14 @@ timeout-minutes: 10
 - **PR 作者**: @${{ github.actor }}
 - **当前 head SHA**: `${{ github.event.pull_request.head.sha }}`
 - **base SHA**: `${{ github.event.pull_request.base.sha }}`
+- **Checklist 路径**: `.github/workflows/shared/review-checklist.md`
+- **Checklist 来源**: `${{ github.repository }}` @ `${{ github.event.pull_request.base.sha }}`
 
 ## Evidence Priority
 
 按以下优先级理解 PR：
 
-1. `.github/workflows/pr-learn/review-checklist.md`
+1. `${{ github.repository }}` 在 `${{ github.event.pull_request.base.sha }}` 上的 `.github/workflows/shared/review-checklist.md`
 2. PR diff
 3. 改动文件列表
 4. 与改动文件相关的源码上下文
@@ -112,7 +114,7 @@ timeout-minutes: 10
 ## Procedure
 
 1. 获取 PR 元数据、文件列表、diff、已有评论、review 和状态
-2. 读取 `.github/workflows/pr-learn/review-checklist.md`
+2. 通过 GitHub 工具读取 `${{ github.repository }}` 在 `${{ github.event.pull_request.base.sha }}` 上的 `.github/workflows/shared/review-checklist.md`
 3. 检查是否已存在当前 `head SHA` 的标记评论；如有则 `noop`
 4. 按 checklist 顺序逐条审查 C1 到 C8
 5. 为每条给出状态、定位、一句依据和一句修改建议
