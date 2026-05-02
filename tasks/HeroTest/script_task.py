@@ -152,6 +152,7 @@ class ScriptTask(GameUi, GeneralBattle, HeroTestAssets, SwitchSoul):
             self.I_HERO2_SKILL4,  # 叠辉祝福
             self.I_HERO2_SKILL5,  # 敛神祝福
             self.I_HERO2_SKILL6,  # 速度祝福
+            self.I_HERO2_SKILL7,  # 默认技能
         ]
         # TODO: PVP
         pvp_skill = []
