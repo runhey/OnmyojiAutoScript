@@ -2,11 +2,11 @@
   {
     "itemName": "bf_searsh",
     "imageName": "bf_bf_searsh.png",
-    "roiFront": "1133,577,100,100",
-    "roiBack": "1133,577,100,100",
+    "roiFront": "1144,580,88,85",
+    "roiBack": "1102,531,176,188",
     "method": "Template matching",
     "threshold": 0.8,
-    "description": "description"
+    "description": "探查按钮"
   },
   {
     "itemName": "bf_lock",
