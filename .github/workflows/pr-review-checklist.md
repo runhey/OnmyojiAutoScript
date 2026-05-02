@@ -6,6 +6,7 @@ on:
     types: [opened, reopened]
     branches:
       - dev
+  roles: all
 
 permissions:
   contents: read
