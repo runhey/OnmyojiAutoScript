@@ -7,6 +7,7 @@ from pathlib import Path
 from module.logger import logger
 from module.atom.image import RuleImage
 from module.atom.ocr import RuleOcr
+from tasks.ActivityShikigami.assets import ActivityShikigamiAssets
 
 
 def load_image(file: str):
@@ -34,13 +35,13 @@ def detect_ocr(file: str, target: RuleOcr):
 
 
 # 图片文件路径 可以是相对路径
-IMAGE_FILE = r"C:\Users\Ryland\Desktop\ScreenShot_2026-01-04_222421_055.png"
+IMAGE_FILE = r"C:\Users\admin\Desktop\QQ20260502-153356.png"
 if __name__ == '__main__':
-    from tasks.RichMan.script_task import ScriptTask
-    targe = ScriptTask.I_MALL_BONDLINGS_SURE
-    print(detect_image(IMAGE_FILE, targe))
+    # from tasks.RichMan.script_task import ScriptTask
+    # targe = ScriptTask.I_MALL_BONDLINGS_SURE
+    # print(detect_image(IMAGE_FILE, targe))
 
     # ocr demo
-    # from tasks.KekkaiActivation.assets import KekkaiActivationAssets
-    # target = KekkaiActivationAssets.O_CARD_ALL_TIME
-    # print(detect_ocr(IMAGE_FILE, target))
+    from tasks.KekkaiActivation.assets import KekkaiActivationAssets
+    target = ActivityShikigamiAssets.O_FIRE
+    print(detect_ocr(IMAGE_FILE, target))

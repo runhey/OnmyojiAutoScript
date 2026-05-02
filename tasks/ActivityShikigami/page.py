@@ -18,7 +18,16 @@ from tasks.base_task import BaseTask as BT
 # page_act_list_climb_act.link(button=G.I_BACK_ACT_LIST, destination=page_main)
 
 # 爬塔活动主要界面
-page_climb_act = Page(asa.I_TO_BATTLE_MAIN)
+# Page.check_button 支持 list (game_ui.py:71-76 任一匹配就算这一页), 用它收集本活动的所有
+# 可能标题锚点 -- 天现迷局总览 / 醒世达观章节 / 其他章节. 任意一个出现都识别成 page_climb_act.
+# 标题区不随地图状态/角色站位变化, 比 I_TO_BATTLE_MAIN 这种会漂移的图标稳定得多.
+_climb_act_checks = [
+    img for img in (
+        getattr(asa, 'I_CHECK_IS_SHI_MAIN', None),    # 天现迷局
+        getattr(asa, 'I_TO_BATTLE_MAIN', None),   # 醒世达观
+    ) if img is not None
+] or [asa.I_TO_BATTLE_MAIN]  # 一个都没截的兜底, 行为退化为旧的 (会漂移)
+page_climb_act = Page(_climb_act_checks)
 page_climb_act.additional = [gga.I_UI_REWARD, asa.I_SKIP_BUTTON, asa.I_CONFIRM_SKIP, asa.I_RED_EXIT]
 page_climb_act.link(button=G.I_BACK_Y, destination=page_main)
 page_main.link(button=[asa.I_SHI, RAA.I_TOGGLE_BUTTON], destination=page_climb_act)

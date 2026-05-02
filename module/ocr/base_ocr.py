@@ -122,7 +122,7 @@ class BaseCor:
         :param image:
         :return:
         """
-        x, y, w, h = roi
+        x, y, w, h = int(roi[0]), int(roi[1]), int(roi[2]), int(roi[3])
         return image[y:y + h, x:x + w]
 
     def ocr_item(self, image):

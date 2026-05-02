@@ -25,14 +25,14 @@ class ImplScriptTask(ScriptTask, ABC):
 
 
 class ScriptTest:
-    def __init__(self, config: str = 'oas1'):
+    def __init__(self, config: str = '欢哥'):
         self.config = Config(config)
         self.device = Device(self.config)
         self.task = ImplScriptTask(self.config, self.device)
 
 
 if __name__ == '__main__':
-    test = ScriptTest(config='oas1')
+    test = ScriptTest(config='欢哥')
     assert test.task.test_battle_main()
 
 
