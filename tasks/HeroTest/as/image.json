@@ -353,19 +353,19 @@
   {
     "itemName": "hero2_skill6",
     "imageName": "as_hero2_skill6.png",
-    "roiFront": "427,356,62,38",
-    "roiBack": "48,342,1175,67",
-    "method": "Template matching",
-    "threshold": 0.8,
-    "description": "速度祝福"
-  },
-  {
-    "itemName": "hero2_skill7",
-    "imageName": "as_hero2_skill7.png",
     "roiFront": "253,128,39,63",
     "roiBack": "253,128,39,63",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "默认技能"
+  },
+  {
+    "itemName": "hero2_skill7",
+    "imageName": "as_hero2_skill7.png",
+    "roiFront": "427,356,62,38",
+    "roiBack": "48,342,1175,67",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "速度祝福"
   }
 ]

@@ -97,10 +97,10 @@ class HeroTestAssets:
 	I_HERO2_SKILL5 = RuleImage(roi_front=(217,358,65,37), roi_back=(46,334,1148,81), threshold=0.8, method="Template matching", file="./tasks/HeroTest/as/as_hero2_skill5.png")
 	# 弥天祝福 
 	I_HERO2_SKILL3 = RuleImage(roi_front=(520,358,62,38), roi_back=(41,346,1172,63), threshold=0.8, method="Template matching", file="./tasks/HeroTest/as/as_hero2_skill3.png")
-	# 速度祝福 
-	I_HERO2_SKILL6 = RuleImage(roi_front=(427,356,62,38), roi_back=(48,342,1175,67), threshold=0.8, method="Template matching", file="./tasks/HeroTest/as/as_hero2_skill6.png")
-	# 默认技能 
-	I_HERO2_SKILL7 = RuleImage(roi_front=(253,128,39,63), roi_back=(253,128,39,63), threshold=0.8, method="Template matching", file="./tasks/HeroTest/as/as_hero2_skill7.png")
+	# 默认技能
+	I_HERO2_SKILL6 = RuleImage(roi_front=(253,128,39,63), roi_back=(253,128,39,63), threshold=0.8, method="Template matching", file="./tasks/HeroTest/as/as_hero2_skill6.png")
+	# 速度祝福
+	I_HERO2_SKILL7 = RuleImage(roi_front=(427,356,62,38), roi_back=(48,342,1175,67), threshold=0.8, method="Template matching", file="./tasks/HeroTest/as/as_hero2_skill7.png")
 
 
 	# Ocr Rule Assets
