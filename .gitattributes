@@ -13,3 +13,5 @@
 *.yaml text eol=lf
 *.json text eol=lf
 *.html text eol=lf
+
+.github/workflows/*.lock.yml linguist-generated=true merge=ours
