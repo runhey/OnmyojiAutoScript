@@ -39,6 +39,9 @@ class ScriptTask(GameUi, Summon, DailyTriflesAssets):
         # 商店签到 or 购买寿司
         if con.store_sign or con.buy_sushi_count > 0:
             self.run_store()
+        # 一键收菜
+        if con.claim_all:
+            self.run_claim_all()
         self.set_next_run('DailyTrifles', success=True, finish=False)
         raise TaskEnd('DailyTrifles')
 
@@ -297,6 +300,79 @@ class ScriptTask(GameUi, Summon, DailyTriflesAssets):
                 self.ui_click(self.I_SPECIAL_SUSHI, stop=self.I_STORE_COST_TYPE_JADE, interval=2)
                 continue
         return
+
+    def run_claim_all(self):
+        """
+        一键收菜：在庭院界面点击一键收菜按钮，进入庭院事务界面后
+        点击一键完成，处理可能弹出的签到关闭，再点击空白处关闭收菜成功
+        弹窗，最后点击返回按钮回到庭院主界面。
+        :return:
+        """
+        # 1. 确保在庭院主界面
+        self.ui_get_current_page()
+        self.ui_goto(page_main)
+
+        # 2. 检测庭院界面上的"一键收菜"按钮
+        check_timer = Timer(3).start()
+        while 1:
+            self.screenshot()
+            if self.appear(self.I_CLAIM_ALL):
+                break
+            if check_timer.reached():
+                logger.warning('There is no claim_all button in courtyard')
+                return
+
+        # 3. 点击一键收菜进入庭院事务界面，途中处理"结界式神等级已满"确认弹窗
+        logger.info('Enter claim all (courtyard affairs)')
+        enter_timer = Timer(10).start()
+        while 1:
+            self.screenshot()
+            if self.appear(self.I_CHECK_CLAIM_ALL_MAIN):
+                break
+            if enter_timer.reached():
+                logger.warning('Enter courtyard affairs interface timeout')
+                return
+            # 结界式神等级已满弹窗 -> 点确认
+            if self.appear_then_click(self.I_CLAIM_FOR_SURE, interval=1):
+                logger.info('Confirm shikigami level full extraction')
+                continue
+            self.appear_then_click(self.I_CLAIM_ALL, interval=1.5)
+
+        # 4. 点击"一键完成"
+        logger.info('Click claim finish')
+        self.appear_then_click(self.I_CLAIM_FINISH, interval=1)
+
+        # 5. 处理签到弹窗 + 结界确认弹窗 + 收菜成功弹窗，直到回到庭院事务界面
+        finish_timer = Timer(15).start()
+        while 1:
+            self.screenshot()
+            # 已经回到庭院事务界面，关闭流程结束
+            if self.appear(self.I_CHECK_CLAIM_ALL_MAIN):
+                logger.info('Back to courtyard affairs interface')
+                break
+            if finish_timer.reached():
+                logger.warning('Claim all finish timeout')
+                break
+            # 结界式神等级已满弹窗 -> 点确认
+            if self.appear_then_click(self.I_CLAIM_FOR_SURE, interval=1):
+                logger.info('Confirm shikigami level full extraction')
+                continue
+            # 跳出签到界面则点击关闭(复用签到关闭逻辑)
+            if self.appear_then_click(self.I_CHECK_IN_CLOSE, interval=1):
+                logger.info('Close sign in popup')
+                continue
+            # 收菜成功 -> 点击空白处关闭
+            if self.appear(self.I_CHECK_MAIN_CLAIM_SUCCESS):
+                self.click(self.C_C_CLAIM_TO_CLOSE, interval=1)
+                logger.info('Click blank to close claim success')
+                continue
+            # 兜底再点一次一键完成
+            if self.appear_then_click(self.I_CLAIM_FINISH, interval=2):
+                continue
+
+        # 6. 点击返回按钮回到庭院主界面
+        logger.info('Back to courtyard main')
+        self.ui_click(self.I_CLAIM_ALL_BACK, stop=self.I_CHECK_MAIN, interval=1.5)
 
 
 if __name__ == '__main__':

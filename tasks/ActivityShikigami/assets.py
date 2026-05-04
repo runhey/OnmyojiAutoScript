@@ -21,6 +21,8 @@ class ActivityShikigamiAssets:
 	C_RANDOM_BOTTOM = RuleClick(roi_front=(196,598,581,78), roi_back=(194,597,583,81), name="random_bottom")
 	# description 
 	C_RANDOM_ALL = RuleClick(roi_front=(42,94,1207,543), roi_back=(42,94,1207,543), name="random_all")
+	# description 
+	C_RANDOM_CLOSE_FREE = RuleClick(roi_front=(982.6666666666666,195.00000000000006,259.33333333333337,480.6666666666667), roi_back=(1105,256.00000000000006,100,100), name="random_close_free")
 
 
 	# Image Rule Assets
@@ -42,6 +44,8 @@ class ActivityShikigamiAssets:
 	I_AP100_BATTLE_MAIN_TO_RECORDS = RuleImage(roi_front=(848,553,37,35), roi_back=(597,509,382,119), threshold=0.8, method="Template matching", file="./tasks/ActivityShikigami/as/as_ap100_battle_main_to_records.png")
 	# 活动的返回按钮 
 	I_BACK_AP = RuleImage(roi_front=(23,20,40,39), roi_back=(0,0,100,100), threshold=0.8, method="Template matching", file="./tasks/ActivityShikigami/as/as_back_ap.png")
+	# 进入当前活动战场位置 
+	I_AP_RESET_POS = RuleImage(roi_front=(1216,397,26,27), roi_back=(1195,377,62,72), threshold=0.8, method="Template matching", file="./tasks/ActivityShikigami/as/as_ap_reset_pos.png")
 
 
 	# Image Rule Assets
@@ -75,6 +79,12 @@ class ActivityShikigamiAssets:
 	I_AP_100_CHECK_MAIN = RuleImage(roi_front=(86,15,138,41), roi_back=(73,5,218,76), threshold=0.8, method="Template matching", file="./tasks/ActivityShikigami/as/as_ap_100_check_main.png")
 	# 是否在主战场界面 
 	I_CHECK_IS_SHI_MAIN = RuleImage(roi_front=(560,6,159,42), roi_back=(556,2,170,51), threshold=0.8, method="Template matching", file="./tasks/ActivityShikigami/as/as_check_is_shi_main.png")
+	# 关闭每日赠送的票 
+	I_CLOSE_FREE_TICKET = RuleImage(roi_front=(1099,182,42,40), roi_back=(1095,178,49,47), threshold=0.8, method="Template matching", file="./tasks/ActivityShikigami/as/as_close_free_ticket.png")
+	# description 
+	I_CHECK_MAIN_FREE_TICKET = RuleImage(roi_front=(629,207,328,60), roi_back=(594,175,388,118), threshold=0.8, method="Template matching", file="./tasks/ActivityShikigami/as/as_check_main_free_ticket.png")
+	# 每日赠票获得奖励弹窗(获得奖励横幅) 
+	I_DAILY_FREE_TICKET = RuleImage(roi_front=(473,140,334,39), roi_back=(300,80,700,180), threshold=0.8, method="Template matching", file="./tasks/ActivityShikigami/as/as_daily_free_ticket.png")
 
 
 	# Image Rule Assets

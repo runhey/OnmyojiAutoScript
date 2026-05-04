@@ -86,6 +86,27 @@ class StateMachine(BaseTask):
     run_idx: int = 0  # 当前爬塔类型
     _count_map = None
 
+    def _ocr_digit_reliable(self, rule: RuleOcr, tries: int = 3) -> int:
+        """
+        OCR with false-zero retry. PaddleOCR on small ROIs occasionally returns
+        empty → 0 even when the number is present (false negative). Since OCR
+        never produces false positives for digit regions, retrying and taking the
+        maximum is safe: returns the real count on any successful read, and only
+        returns 0 when all tries genuinely see nothing.
+
+        Assumes device.image is already up-to-date for the first attempt.
+        Takes a fresh screenshot for each subsequent retry.
+        """
+        best = rule.ocr_digit(self.device.image)
+        for _ in range(tries - 1):
+            if best > 0:
+                return best
+            self.screenshot()
+            val = rule.ocr_digit(self.device.image)
+            if val > best:
+                best = val
+        return best
+
     @cached_property
     def conf(self) -> GeneralClimb:
         return self.config.model.activity_shikigami
@@ -240,8 +261,8 @@ class ScriptTask(StateMachine, GameUi, BaseActivity, SwitchSoul, ActivityShikiga
 
         # 2) 在主战场 OCR 资源, 决定走哪条子流程
         self.screenshot()
-        pass_count = self.O_REMAIN_PASS2.ocr_digit(self.device.image)
-        ap_count = self.O_REMAIN_AP.ocr_digit(self.device.image)
+        pass_count = self._ocr_digit_reliable(self.O_REMAIN_PASS2)
+        ap_count = self._ocr_digit_reliable(self.O_REMAIN_AP)
         logger.attr('Resources on 主战场', f'tickets={pass_count}, ap={ap_count}')
 
         if pass_count > 0:
@@ -323,7 +344,7 @@ class ScriptTask(StateMachine, GameUi, BaseActivity, SwitchSoul, ActivityShikiga
 
         # 2) 进入前先确认还有次数; 没有就直接退出, 让外层调度切到下一个 climb_type
         self.screenshot()
-        pre_count = self.O_REMAIN_AP100.ocr_digit(self.device.image)
+        pre_count = self._ocr_digit_reliable(self.O_REMAIN_AP100)
         logger.attr('AP100 remaining (pre-enter)', pre_count)
         if pre_count <= 0:
             logger.warning('AP100: no attempts left, skip entry')
@@ -492,12 +513,18 @@ class ScriptTask(StateMachine, GameUi, BaseActivity, SwitchSoul, ActivityShikiga
 
     def _goto_main_battlefield(self) -> bool:
         """
-        活动主页 -> 主战场. 用 I_TO_BATTLE_MAIN_2 (体力爬塔入口图标) 作为"已到达主战场"的稳定信号:
-            - 它的 roi_back 较大, 比 I_TICKET_DOOR (40x39 小图标) 更不容易漏检.
-            - I_TICKET_ENTER 阈值已下调到 0.65, 在活动主页上会假阳性, 不能用作早退信号.
-        若已经在两种战斗界面之一 (I_CHECK_BATTLE_MAIN / I_CHECK_BATTLE_MAIN_2), 直接返回.
-        :return: True 表示成功到达主战场或更深, False 表示点击次数耗尽.
+        活动主页 -> 主战场. 用 I_TO_BATTLE_MAIN_2 (体力爬塔入口图标) 作为"已到达主战场"的稳定信号.
+        进入主战场之前先处理每日赠票弹窗.
+
+        恢复机制: 若点击 I_TO_BATTLE_MAIN 超过上限仍未看到 I_TO_BATTLE_MAIN_2, 说明当前页面状态
+        不正常 (如上一轮爬塔退出时卡在了中间页)。此时回庭院重进一次活动页, 再重试一遍.
+        仅做一次恢复, 仍然失败才返回 False.
+        :return: True 表示成功到达主战场或更深, False 表示两次尝试均耗尽点击次数.
         """
+        # 处理每日赠票弹窗 (在识别 I_TO_BATTLE_MAIN 之前)
+        self._handle_daily_free_ticket_popup()
+
+        recovered = False
         main_clicks, max_main_clicks = 0, 8
         while 1:
             self.screenshot()
@@ -505,14 +532,61 @@ class ScriptTask(StateMachine, GameUi, BaseActivity, SwitchSoul, ActivityShikiga
             if self.appear(self.I_CHECK_BATTLE_MAIN) or self.appear(self.I_CHECK_BATTLE_MAIN_2):
                 logger.info('Already past main battlefield')
                 return True
-            # 看到主战场标志, 进入下一步
+            # 看到主战场入口标志, 进入下一步
             if self.appear(self.I_TO_BATTLE_MAIN_2):
                 return True
             if main_clicks >= max_main_clicks:
-                logger.warning('Click I_TO_BATTLE_MAIN too many times without progress')
-                return False
+                if recovered:
+                    logger.warning('Still cannot reach main battlefield after courtyard recovery')
+                    return False
+                # 上一轮退出后状态不干净 -> 回庭院重进活动页
+                logger.warning('Cannot reach main battlefield, recovering: back to courtyard and re-enter')
+                self.ui_get_current_page(False)
+                self.ui_goto(game.page_main)
+                self.ui_goto(game.page_climb_act)
+                self._handle_daily_free_ticket_popup()
+                recovered = True
+                main_clicks = 0
+                continue
             if self.appear_then_click(self.I_TO_BATTLE_MAIN, interval=1.5):
                 main_clicks += 1
+                continue
+
+    def _handle_daily_free_ticket_popup(self):
+        """
+        每日赠票流程:
+            1) 识别 I_DAILY_FREE_TICKET ("获得奖励"横幅) -> 点击空白处 C_RANDOM_CLOSE_FREE 关闭
+            2) 关闭后若仍在 I_CHECK_MAIN_FREE_TICKET 每日赠票主界面 -> 点击 I_CLOSE_FREE_TICKET 关闭
+
+        每个步骤都有计时器兜底, 没出现时立即返回, 不阻塞后续主战场流程.
+        """
+        # Step 1: 获得奖励横幅 -> 点空白关闭
+        check_timer = Timer(2).start()
+        reward_seen = False
+        while 1:
+            self.screenshot()
+            if self.appear(self.I_DAILY_FREE_TICKET):
+                reward_seen = True
+                logger.info('Daily free ticket reward popup detected, click blank to close')
+                self.click(self.C_RANDOM_CLOSE_FREE, interval=1)
+                check_timer.reset()
+                continue
+            if check_timer.reached():
+                break
+        if reward_seen:
+            logger.info('Daily free ticket reward popup closed')
+
+        # Step 2: 仍在每日赠票主界面 -> 点关闭按钮
+        ticket_main_timer = Timer(8).start()
+        while 1:
+            self.screenshot()
+            if not self.appear(self.I_CHECK_MAIN_FREE_TICKET):
+                break
+            if ticket_main_timer.reached():
+                logger.warning('Daily free ticket main page close timeout')
+                break
+            if self.appear_then_click(self.I_CLOSE_FREE_TICKET, interval=1.5):
+                logger.info('Click close on daily free ticket main page')
                 continue
 
     def _click_ticket_door_to_battle_area(self):
@@ -521,6 +595,8 @@ class ScriptTask(StateMachine, GameUi, BaseActivity, SwitchSoul, ActivityShikiga
         透视模式打开后, 战斗目标 (I_TICKET_ENTER / I_TICKET_ENTER_1) 才能识别.
 
         约束:
+        - 点击 I_TICKET_DOOR_CLOSE 之前先点几次 I_AP_RESET_POS 把视角拉回当前活动战场位置;
+          AP_RESET_POS 是否点中无法直接观察, 仅按"点几次"兜底.
         - 至少点 I_TICKET_DOOR_CLOSE 1 次, 最多 5 次.
         - 肯定的"已切到 open 状态"信号 = I_TICKET_DOOR_OPEN 出现.
         - 硬迭代上限保证不死循环.
@@ -530,6 +606,13 @@ class ScriptTask(StateMachine, GameUi, BaseActivity, SwitchSoul, ActivityShikiga
         if self.appear(self.I_CHECK_BATTLE_MAIN):
             logger.info('Already in battle main page, skip ticket door step')
             return
+
+        # 先点几次 ap_reset_pos 把视角拉回活动战场位置 (无法判断点击是否成功, 兜底点几次)
+        ap_reset_clicks = 3
+        for i in range(ap_reset_clicks):
+            self.screenshot()
+            self.appear_then_click(self.I_AP_RESET_POS, interval=0.6)
+        logger.info(f'AP reset pos clicked {ap_reset_clicks} times')
 
         door_clicks, max_door_clicks = 0, 5
         max_iters, iters = 30, 0
@@ -630,13 +713,13 @@ class ScriptTask(StateMachine, GameUi, BaseActivity, SwitchSoul, ActivityShikiga
         self.screenshot()
         remain_times = 0
         if self.climb_type == 'pass':
-            remain_times = self.O_REMAIN_PASS.ocr_digit(self.device.image)
+            remain_times = self._ocr_digit_reliable(self.O_REMAIN_PASS)
         if self.climb_type == 'ap':
-            remain_times = self.O_REMAIN_PASS2.ocr_digit(self.device.image)
+            remain_times = self._ocr_digit_reliable(self.O_REMAIN_PASS2)
         if self.climb_type == 'boss':
             _, remain_times, _ = self.O_REMAIN_BOSS.ocr_digit_counter(self.device.image)
         if self.climb_type == 'ap100':
-            remain_times = self.O_REMAIN_AP100.ocr_digit(self.device.image)
+            remain_times = self._ocr_digit_reliable(self.O_REMAIN_AP100)
         return remain_times > 0
 
     def _check_ap_enough(self) -> bool:
@@ -649,7 +732,7 @@ class ScriptTask(StateMachine, GameUi, BaseActivity, SwitchSoul, ActivityShikiga
             logger.warning('Detect fire fail, try reidentify')
             return False
         self.screenshot()
-        remain_times = self.O_REMAIN_AP.ocr_digit(self.device.image)
+        remain_times = self._ocr_digit_reliable(self.O_REMAIN_AP)
         return remain_times > 0
 
     def _check_ap100_enough(self) -> bool:
@@ -663,7 +746,7 @@ class ScriptTask(StateMachine, GameUi, BaseActivity, SwitchSoul, ActivityShikiga
             logger.warning('Detect fire fail, try reidentify')
             return False
         self.screenshot()
-        remain_times = self.O_REMAIN_AP100_MAIN.ocr_digit(self.device.image)
+        remain_times = self._ocr_digit_reliable(self.O_REMAIN_AP100_MAIN)
         return remain_times > 0
 
     def get_general_battle_conf(self) -> tasks.Component.GeneralBattle.config_general_battle.GeneralBattleConfig:

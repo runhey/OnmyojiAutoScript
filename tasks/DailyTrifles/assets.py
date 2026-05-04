@@ -27,6 +27,28 @@ class DailyTriflesAssets:
 	I_FRIENDSHIP_UP = RuleImage(roi_front=(1147,80,27,28), roi_back=(1147,80,27,28), threshold=0.8, method="Template matching", file="./tasks/DailyTrifles/love/friendship_up.png")
 
 
+	# Click Rule Assets
+	# description 
+	C_C_CLAIM_TO_CLOSE = RuleClick(roi_front=(1177.3333333333333,196.66666666666674,95.33333333333348,374), roi_back=(1176,64.3333333333334,103.33333333333326,644.6666666666666), name="c_claim_to_close")
+
+
+	# Image Rule Assets
+	# 一键收菜 
+	I_CLAIM_ALL = RuleImage(roi_front=(427,399,22,28), roi_back=(0,342,1050,371), threshold=0.8, method="Template matching", file="./tasks/DailyTrifles/singIn/singIn_claim_all.png")
+	# 一键完成 
+	I_CLAIM_FINISH = RuleImage(roi_front=(1116,591,88,90), roi_back=(1089,567,151,139), threshold=0.8, method="Template matching", file="./tasks/DailyTrifles/singIn/singIn_claim_finish.png")
+	# 每日签到关闭 
+	I_CHECK_IN_CLOSE = RuleImage(roi_front=(1046,56,45,42), roi_back=(1042,52,54,49), threshold=0.8, method="Template matching", file="./tasks/DailyTrifles/singIn/singIn_check_in_close.png")
+	# 检查是否在收菜成功页面 
+	I_CHECK_MAIN_CLAIM_SUCCESS = RuleImage(roi_front=(305,30,180,51), roi_back=(300,24,190,60), threshold=0.8, method="Template matching", file="./tasks/DailyTrifles/singIn/singIn_check_main_claim_success.png")
+	# 检查是否在庭院事务界面 
+	I_CHECK_CLAIM_ALL_MAIN = RuleImage(roi_front=(265,40,187,53), roi_back=(261,39,194,57), threshold=0.8, method="Template matching", file="./tasks/DailyTrifles/singIn/singIn_check_claim_all_main.png")
+	# description 
+	I_CLAIM_ALL_BACK = RuleImage(roi_front=(23,20,34,38), roi_back=(21,16,39,45), threshold=0.8, method="Template matching", file="./tasks/DailyTrifles/singIn/singIn_claim_all_back.png")
+	# 结界提示 
+	I_CLAIM_FOR_SURE = RuleImage(roi_front=(676,394,127,56), roi_back=(669,384,144,78), threshold=0.8, method="Template matching", file="./tasks/DailyTrifles/singIn/singIn_claim_for_sure.png")
+
+
 	# Image Rule Assets
 	# 礼包屋 
 	I_ROOM_GIFT = RuleImage(roi_front=(1138,658,52,40), roi_back=(1119,621,103,94), threshold=0.8, method="Template matching", file="./tasks/DailyTrifles/store/store_room_gift.png")

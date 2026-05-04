@@ -26,6 +26,8 @@ class DailyTriflesConfig(BaseModel):
     store_sign: bool = Field(title='Store Sign', default=False, description='store_sign_help')
     # 每天购买体力数量
     buy_sushi_count: int = Field(title='Buy Sushi Count', default=-1)
+    # 一键收菜
+    claim_all: bool = Field(title='Claim All', default=False, description='一键收菜')
 
     hide_fields = dynamic_hide('draw_mystery_pattern')
 

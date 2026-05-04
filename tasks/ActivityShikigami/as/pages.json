@@ -133,5 +133,32 @@
     "method": "Template matching",
     "threshold": 0.8,
     "description": "是否在主战场界面"
+  },
+  {
+    "itemName": "close_free_ticket",
+    "imageName": "as_close_free_ticket.png",
+    "roiFront": "1099,182,42,40",
+    "roiBack": "1095,178,49,47",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "关闭每日赠送的票"
+  },
+  {
+    "itemName": "check_main_free_ticket",
+    "imageName": "as_check_main_free_ticket.png",
+    "roiFront": "629,207,328,60",
+    "roiBack": "594,175,388,118",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "daily_free_ticket",
+    "imageName": "as_daily_free_ticket.png",
+    "roiFront": "473,140,334,39",
+    "roiBack": "300,80,700,180",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "每日赠票获得奖励弹窗(获得奖励横幅)"
   }
 ]

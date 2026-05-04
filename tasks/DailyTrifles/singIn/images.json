@@ -1,0 +1,65 @@
+[
+  {
+    "itemName": "claim_all",
+    "imageName": "singIn_claim_all.png",
+    "roiFront": "427,399,22,28",
+    "roiBack": "0,342,1050,371",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "一键收菜"
+  },
+  {
+    "itemName": "claim_finish",
+    "imageName": "singIn_claim_finish.png",
+    "roiFront": "1116,591,88,90",
+    "roiBack": "1089,567,151,139",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "一键完成"
+  },
+  {
+    "itemName": "check_in_close",
+    "imageName": "singIn_check_in_close.png",
+    "roiFront": "1046,56,45,42",
+    "roiBack": "1042,52,54,49",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "每日签到关闭"
+  },
+  {
+    "itemName": "check_main_claim_success",
+    "imageName": "singIn_check_main_claim_success.png",
+    "roiFront": "305,30,180,51",
+    "roiBack": "300,24,190,60",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "检查是否在收菜成功页面"
+  },
+  {
+    "itemName": "check_claim_all_main",
+    "imageName": "singIn_check_claim_all_main.png",
+    "roiFront": "265,40,187,53",
+    "roiBack": "261,39,194,57",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "检查是否在庭院事务界面"
+  },
+  {
+    "itemName": "claim_all_back",
+    "imageName": "singIn_claim_all_back.png",
+    "roiFront": "23,20,34,38",
+    "roiBack": "21,16,39,45",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "claim_for_sure",
+    "imageName": "singIn_claim_for_sure.png",
+    "roiFront": "676,394,127,56",
+    "roiBack": "669,384,144,78",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "结界提示"
+  }
+]
