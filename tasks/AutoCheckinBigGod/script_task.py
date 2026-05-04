@@ -141,7 +141,7 @@ class ScriptTask(BaseTask):
 
         if not rewards:
             logger.info('没有可领取的礼包')
-            self._cleanup()
+            self._cleanup(restore_game=True)
             self.set_next_run('AutoCheckinBigGod', success=True, finish=True)
             raise TaskEnd('AutoCheckinBigGod')
 
@@ -154,13 +154,13 @@ class ScriptTask(BaseTask):
             time.sleep(0.5)
 
         logger.info(f'完成! 成功领取 {success_count}/{len(rewards)} 个礼包')
-        self._cleanup()
+        self._cleanup(restore_game=True)
         self.set_next_run('AutoCheckinBigGod', success=True, finish=True)
         raise TaskEnd('AutoCheckinBigGod')
 
     # ======================== 清理 ========================
 
-    def _cleanup(self):
+    def _cleanup(self, restore_game=False):
         logger.info('清理：关闭大神APP和Frida Server...')
         try:
             if self._frida_session is not None:
@@ -177,6 +177,13 @@ class ScriptTask(BaseTask):
             self._adb_shell(['su -c "killall frida-server"'])
         except Exception:
             pass
+
+        if restore_game:
+            try:
+                self.device.app_start()
+                logger.info('已返回阴阳师前台')
+            except Exception as e:
+                logger.warning(f'返回阴阳师失败: {e}')
 
     # ======================== ADB 操作 ========================
 
