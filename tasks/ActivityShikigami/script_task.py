@@ -273,6 +273,8 @@ class ScriptTask(StateMachine, GameUi, BaseActivity, SwitchSoul, ActivityShikiga
             check_battle_image = self.I_CHECK_BATTLE_MAIN
             gate = self.check_tickets_enough  # self.climb_type='ap' -> O_REMAIN_PASS2
             gate_label = 'tickets'
+            # 门票子流程的锁/解锁按钮在右侧 (x≈907), 用通用的 I_LOCK / I_UNLOCK
+            lock_img, unlock_img = self.I_LOCK, self.I_UNLOCK
             # start_battle 失败 -> 退回活动战斗区域, 重新点 ticket_enter (可能选到另一只怪)
             def battle_fail_recover():
                 self._recover_to_battle_area_after_failed_battle()
@@ -285,6 +287,8 @@ class ScriptTask(StateMachine, GameUi, BaseActivity, SwitchSoul, ActivityShikiga
             check_battle_image = self.I_CHECK_BATTLE_MAIN_2
             gate = self._check_ap_enough
             gate_label = 'AP'
+            # 体力子流程的锁/解锁按钮位置和门票子流程不同 (x≈786), 用专属的 I_AP_LOCK / I_AP_UNLOCK
+            lock_img, unlock_img = self.I_AP_LOCK, self.I_AP_UNLOCK
             # 体力爬塔暂无怪物可选/换关概念, 失败时不做特殊回退
             def battle_fail_recover():
                 pass
@@ -302,7 +306,7 @@ class ScriptTask(StateMachine, GameUi, BaseActivity, SwitchSoul, ActivityShikiga
                 self.appear_then_click(check_battle_image, interval=4)
                 continue
             #  --------------------------------------------------------------
-            self.lock_team(self.conf.general_battle)
+            self.lock_team(self.conf.general_battle, lock_img=lock_img, unlock_img=unlock_img)
             if not gate():
                 logger.warning(f'No {gate_label} left, wait for next time')
                 break
@@ -684,19 +688,26 @@ class ScriptTask(StateMachine, GameUi, BaseActivity, SwitchSoul, ActivityShikiga
                 back_clicks += 1
                 continue
 
-    def lock_team(self, battle_conf: GeneralBattleConfig):
+    def lock_team(self, battle_conf: GeneralBattleConfig, lock_img=None, unlock_img=None):
         """
         根据配置判断当前爬塔类型是否锁定阵容, 并执行锁定或解锁.
         不同 climb_type 的锁定按钮可能位置/外观不同 (例如 AP100 战斗界面与门票/体力爬塔不在同一处),
-        因此优先按命名约定查找 climb_type 专属的图标:
-            - I_<CLIMB_TYPE>_LOCK   (例: I_AP100_LOCK)
-            - I_<CLIMB_TYPE>_UNLOCK (例: I_AP100_UNLOCK)
-        若没有专属图标则回退到通用的 I_LOCK / I_UNLOCK.
+        甚至同一 climb_type 下不同子流程也可能位置不同 (例如 climb_type='ap' 下,
+        门票子流程使用 I_LOCK/I_UNLOCK, 体力子流程使用 I_AP_LOCK/I_AP_UNLOCK).
+
+        参数:
+            lock_img / unlock_img: 显式指定要使用的锁/解锁图片. 若不传则走默认查找:
+                优先按命名约定查找 climb_type 专属的图标:
+                    - I_<CLIMB_TYPE>_LOCK   (例: I_AP100_LOCK)
+                    - I_<CLIMB_TYPE>_UNLOCK (例: I_AP100_UNLOCK)
+                若没有专属图标则回退到通用的 I_LOCK / I_UNLOCK.
         """
-        lock_attr = f'I_{self.climb_type.upper()}_LOCK'
-        unlock_attr = f'I_{self.climb_type.upper()}_UNLOCK'
-        lock_img = getattr(self, lock_attr, None) or self.I_LOCK
-        unlock_img = getattr(self, unlock_attr, None) or self.I_UNLOCK
+        if lock_img is None:
+            lock_attr = f'I_{self.climb_type.upper()}_LOCK'
+            lock_img = getattr(self, lock_attr, None) or self.I_LOCK
+        if unlock_img is None:
+            unlock_attr = f'I_{self.climb_type.upper()}_UNLOCK'
+            unlock_img = getattr(self, unlock_attr, None) or self.I_UNLOCK
 
         enable_preset = getattr(battle_conf, f"enable_{self.climb_type}_preset", False)
         if not enable_preset:
