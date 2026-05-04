@@ -30,7 +30,7 @@ safe-outputs:
     max: 1
     target: triggering
 
-timeout-minutes: 10
+timeout-minutes: 15
 ---
 
 # PR Intent/Constraint Reviewer
