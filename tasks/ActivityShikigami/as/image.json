@@ -88,5 +88,23 @@
     "method": "Template matching",
     "threshold": 0.8,
     "description": "进入当前活动战场位置"
+  },
+  {
+    "itemName": "ap_lock",
+    "imageName": "as_ap_lock.png",
+    "roiFront": "786,654,25,26",
+    "roiBack": "722,619,247,100",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "体力爬塔锁定"
+  },
+  {
+    "itemName": "ap_unlock",
+    "imageName": "as_ap_unlock.png",
+    "roiFront": "786,653,24,27",
+    "roiBack": "699,619,301,100",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "体力爬塔解锁队伍"
   }
 ]

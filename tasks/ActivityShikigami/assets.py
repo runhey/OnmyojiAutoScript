@@ -46,6 +46,10 @@ class ActivityShikigamiAssets:
 	I_BACK_AP = RuleImage(roi_front=(23,20,40,39), roi_back=(0,0,100,100), threshold=0.8, method="Template matching", file="./tasks/ActivityShikigami/as/as_back_ap.png")
 	# 进入当前活动战场位置 
 	I_AP_RESET_POS = RuleImage(roi_front=(1216,397,26,27), roi_back=(1195,377,62,72), threshold=0.8, method="Template matching", file="./tasks/ActivityShikigami/as/as_ap_reset_pos.png")
+	# 体力爬塔锁定 
+	I_AP_LOCK = RuleImage(roi_front=(786,654,25,26), roi_back=(722,619,247,100), threshold=0.8, method="Template matching", file="./tasks/ActivityShikigami/as/as_ap_lock.png")
+	# 体力爬塔解锁队伍 
+	I_AP_UNLOCK = RuleImage(roi_front=(786,653,24,27), roi_back=(699,619,301,100), threshold=0.8, method="Template matching", file="./tasks/ActivityShikigami/as/as_ap_unlock.png")
 
 
 	# Image Rule Assets
@@ -139,7 +143,7 @@ class ActivityShikigamiAssets:
 	# 还有多少次购买体力的机会 
 	O_REMAIN_BUY = RuleOcr(roi=(808,531,39,42), area=(808,531,39,42), mode="DigitCounter", method="Default", keyword="", name="remain_buy")
 	# 活动票数（没有百分比） 
-	O_REMAIN_PASS2 = RuleOcr(roi=(1118,16.3333333333334,100,32.66666666666666), area=(1111.3333333333333,9.3333333333334,109.66666666666674,45), mode="Digit", method="Default", keyword="", name="remain_pass2")
+	O_REMAIN_PASS2 = RuleOcr(roi=(1118,16,100,32), area=(1111,9,109,45), mode="Digit", method="Default", keyword="", name="remain_pass2")
 	# boss剩余攻击次数 
 	O_REMAIN_BOSS = RuleOcr(roi=(1113,669,131,31), area=(1099,659,162,52), mode="DigitCounter", method="Default", keyword="", name="remain_boss")
 	# 100体活动门票检测 

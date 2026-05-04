@@ -244,14 +244,13 @@ class ScriptTask(StateMachine, GameUi, BaseActivity, SwitchSoul, ActivityShikiga
 
     def _run_ap(self):
         """
-        AP 槽位现在分两种子模式, 在主战场上 OCR 资源后再决定进入哪条:
+        AP 槽位现在分两种子模式, 在主战场仅 OCR 门票决定第一跳, 体力由界面内闸口判断:
             - 门票爬塔 (remain_pass2 > 0):
                 主战场 -> ticket_door -> ticket_enter -> 战斗界面 (I_CHECK_BATTLE_MAIN)
                 资源闸口: O_REMAIN_PASS2  (走 self.check_tickets_enough, 因为 self.climb_type='ap')
-            - 体力爬塔 (remain_pass2 == 0 且 remain_ap > 0):
+            - 体力爬塔 (remain_pass2 == 0):
                 主战场 -> 点击 I_TO_BATTLE_MAIN_2 -> 战斗界面 (I_CHECK_BATTLE_MAIN_2)
-                资源闸口: O_REMAIN_AP    (走 self._check_ap_enough)
-            - 都没有: 直接退出
+                资源闸口: O_REMAIN_AP    (走 self._check_ap_enough, 在界面内 OCR)
         更新前请先看 ./README.md
         """
         logger.hr(f'Start run climb type AP')
@@ -259,11 +258,10 @@ class ScriptTask(StateMachine, GameUi, BaseActivity, SwitchSoul, ActivityShikiga
         # 1) 进入主战场
         self._goto_main_battlefield()
 
-        # 2) 在主战场 OCR 资源, 决定走哪条子流程
+        # 2) 在主战场仅 OCR 门票, 体力不在此判断 (先进入体力界面再 OCR)
         self.screenshot()
         pass_count = self._ocr_digit_reliable(self.O_REMAIN_PASS2)
-        ap_count = self._ocr_digit_reliable(self.O_REMAIN_AP)
-        logger.attr('Resources on 主战场', f'tickets={pass_count}, ap={ap_count}')
+        logger.attr('Resources on 主战场', f'tickets={pass_count}')
 
         if pass_count > 0:
             logger.info(f'Subflow=ticket (pass tickets={pass_count})')
@@ -279,8 +277,9 @@ class ScriptTask(StateMachine, GameUi, BaseActivity, SwitchSoul, ActivityShikiga
             def battle_fail_recover():
                 self._recover_to_battle_area_after_failed_battle()
                 self._click_ticket_enter_to_battle_main()
-        elif ap_count > 0:
-            logger.info(f'Subflow=stamina (ap={ap_count})')
+        else:
+            # 门票为 0, 直接进入体力爬塔界面, AP 是否足够由战斗循环闸口 _check_ap_enough 判断
+            logger.info('Subflow=stamina (tickets exhausted, enter AP interface)')
             self.ui_click(self.I_TO_BATTLE_MAIN_2, stop=self.I_CHECK_BATTLE_MAIN_2, interval=1.5)
             self.switch_soul(self.I_BATTLE_MAIN_TO_RECORDS, self.I_CHECK_BATTLE_MAIN_2)
             check_battle_image = self.I_CHECK_BATTLE_MAIN_2
@@ -289,10 +288,6 @@ class ScriptTask(StateMachine, GameUi, BaseActivity, SwitchSoul, ActivityShikiga
             # 体力爬塔暂无怪物可选/换关概念, 失败时不做特殊回退
             def battle_fail_recover():
                 pass
-        else:
-            logger.warning(f'No tickets and no AP, exit AP task')
-            self.ui_clicks([self.I_UI_BACK_YELLOW, self.I_BACK_AP], stop=self.I_TO_BATTLE_MAIN, interval=1)
-            return
 
         # 3) 战斗循环 (两种子模式共用)
         ocr_limit_timer = Timer(1).start()
