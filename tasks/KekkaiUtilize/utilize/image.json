@@ -205,23 +205,5 @@
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"
-  },
-  {
-    "itemName": "auto_switch_up",
-    "imageName": "utilize_auto_switch_up.png",
-    "roiFront": "1149,507,44,45",
-    "roiBack": "1123,478,100,100",
-    "method": "Template matching",
-    "threshold": 0.8,
-    "description": "智能放入"
-  },
-  {
-    "itemName": "auto_switch_down",
-    "imageName": "utilize_auto_switch_down.png",
-    "roiFront": "1148,505,45,48",
-    "roiBack": "1139,498,60,61",
-    "method": "Template matching",
-    "threshold": 0.8,
-    "description": "一键卸下"
   }
 ]

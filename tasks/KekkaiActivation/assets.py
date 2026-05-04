@@ -78,6 +78,10 @@ class KekkaiActivationAssets:
 	I_A_DEMOUNT = RuleImage(roi_front=(939,575,55,47), roi_back=(903,551,107,91), threshold=0.8, method="Template matching", file="./tasks/KekkaiActivation/a/a_a_demount.png")
 	# 斗鱼3 
 	I_A_HARVEST_FISH_3 = RuleImage(roi_front=(891,165,57,39), roi_back=(854,128,160,174), threshold=0.8, method="Template matching", file="./tasks/KekkaiActivation/a/a_a_harvest_fish_3.png")
+	# 一键卸下(式神育成) 
+	I_SMART_REMOVE = RuleImage(roi_front=(1148,505,45,48), roi_back=(1139,498,60,61), threshold=0.8, method="Template matching", file="./tasks/KekkaiActivation/a/a_smart_remove.png")
+	# 智能放入(式神育成) 
+	I_SMART_PLACE = RuleImage(roi_front=(1149,507,44,45), roi_back=(1123,478,100,100), threshold=0.8, method="Template matching", file="./tasks/KekkaiActivation/a/a_smart_place.png")
 
 
 	# Image Rule Assets

@@ -361,25 +361,62 @@ class ScriptTask(KU, KekkaiActivationAssets):
         self.set_next_run("KekkaiActivation", target=next_run)
         raise TaskEnd
 
+    def _smart_place_shikigami(self, shikigami_class: ShikigamiClass = ShikigamiClass.N, timeout: int = 30):
+        """
+        使用智能放入和一键卸下放置式神 (替代逐个手动: unset_shikigami_max_lv + set_shikigami)
+        前提: 已在式神育成界面
+        """
+        logger.info('Smart place: start')
+        # 1) 一键卸下现有式神
+        self.screenshot()
+        if self.appear(self.I_SMART_REMOVE):
+            logger.info('Smart place: one-click remove existing shikigami')
+            self.appear_then_click(self.I_SMART_REMOVE, interval=2)
+            time.sleep(1)
+
+        # 2) 切换式神分类
+        self.switch_shikigami_class(shikigami_class)
+
+        # 3) 智能放入
+        timer = Timer(timeout).start()
+        while 1:
+            self.screenshot()
+            # 放置完成: I_RS_NO_ADD 从屏幕上消失表示已放入式神
+            if not self.appear(self.I_RS_NO_ADD):
+                logger.info('Smart place: shikigami placed successfully')
+                return True
+            if timer.reached():
+                logger.warning('Smart place: timeout')
+                return False
+            # 确认弹窗
+            if self.appear_then_click(self.I_U_CONFIRM_SMALL, interval=0.5):
+                continue
+            # SP式神替换确认
+            if self.appear_then_click(self.I_U_CIRCLE_ALTERNATE, interval=2.5):
+                self.appear_then_click(self.I_U_CONFIRM_ALTERNATE, interval=1.5)
+                continue
+            # 点击智能放入
+            if self.appear_then_click(self.I_SMART_PLACE, interval=2):
+                logger.info('Smart place: clicked smart place button')
+                continue
+
     def check_max_lv(self, shikigami_class: ShikigamiClass = ShikigamiClass.N):
         """
         在结界界面，进入式神育成，检查是否有满级的，如果有就换下一个
+        通过智能放入和一键卸下完成，不再逐个手动点击
         退出的时候还是结界界面
         :return:
         """
         self.realm_goto_grown()
         if self.appear(self.I_RS_LEVEL_MAX):
-            # 存在满级的式神
-            logger.info('Exist max level shikigami and replace it')
-            self.unset_shikigami_max_lv()
-            self.switch_shikigami_class(shikigami_class)
-            self.set_shikigami(shikigami_order=7, stop_image=self.I_RS_NO_ADD)
+            # 存在满级的式神 -> 智能换入
+            logger.info('Exist max level shikigami, smart replace')
+            self._smart_place_shikigami(shikigami_class)
         else:
             logger.info('No max level shikigami')
         if self.detect_no_shikigami():
             logger.warning('There are no any shikigami grow room')
-            self.switch_shikigami_class(shikigami_class)
-            self.set_shikigami(shikigami_order=7, stop_image=self.I_RS_NO_ADD)
+            self._smart_place_shikigami(shikigami_class)
 
         # 回到结界界面
         while 1:
