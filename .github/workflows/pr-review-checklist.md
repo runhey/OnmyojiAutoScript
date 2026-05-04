@@ -112,6 +112,7 @@ timeout-minutes: 10
 - 不输出 Mermaid
 - 不写诗、笑话、类比、花哨总结
 
+
 ## Procedure
 
 1. 获取 PR 元数据、文件列表、diff、已有评论、review 和状态
@@ -120,7 +121,7 @@ timeout-minutes: 10
 4. 按 checklist 顺序逐条审查 C1 到 C8
 5. 为每条给出状态、定位、一句依据和一句修改建议
 6. 仅收集状态为 `风险` 或 `不确定` 的条目作为 `Findings`
-7. 使用 `add-comment` 发布评论
+7. 使用 safe-outputs 的 `add-comment` 发布评论
 
 ## Guardrails
 

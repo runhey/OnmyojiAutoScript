@@ -221,7 +221,7 @@ Intent/Constraint 审计应尽量收敛到以下结论之一：
 5. 提取关键 constraints
 6. 判断 intent 与实现是否对齐
 7. 评估发布风险与验证缺口
-8. 使用 `add-comment` 发布评论
+8. 使用 safe-outputs 的 `add-comment` 发布评论
 
 ## Guardrails
 
