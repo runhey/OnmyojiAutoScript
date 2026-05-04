@@ -115,5 +115,41 @@
     "method": "Template matching",
     "threshold": 0.8,
     "description": "魇兽将的战斗图片"
+  },
+  {
+    "itemName": "ticket_door_open",
+    "imageName": "fire_ticket_door_open.png",
+    "roiFront": "1215,311,31,27",
+    "roiBack": "1185,287,91,78",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "开启透视模式"
+  },
+  {
+    "itemName": "ticket_enter",
+    "imageName": "fire_ticket_enter.png",
+    "roiFront": "542,275,17,31",
+    "roiBack": "316,90,866,521",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "进入战斗页面"
+  },
+  {
+    "itemName": "ticket_door_close",
+    "imageName": "fire_ticket_door_close.png",
+    "roiFront": "1193,313,70,26",
+    "roiBack": "1178,274,100,100",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "未开启透视模式"
+  },
+  {
+    "itemName": "ticket_enter_1",
+    "imageName": "fire_ticket_enter_1.png",
+    "roiFront": "624,333,30,19",
+    "roiBack": "318,91,842,574",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "进入战斗页面辅助"
   }
 ]

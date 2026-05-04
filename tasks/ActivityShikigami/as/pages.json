@@ -38,11 +38,11 @@
   {
     "itemName": "to_battle_main",
     "imageName": "as_to_battle_main.png",
-    "roiFront": "825,309,39,176",
-    "roiBack": "737,264,238,269",
+    "roiFront": "445,223,39,130",
+    "roiBack": "349,138,238,269",
     "method": "Template matching",
     "threshold": 0.8,
-    "description": "进入主要的战斗界面"
+    "description": "进入主要的战场界面"
   },
   {
     "itemName": "to_battle_boss",
@@ -56,11 +56,11 @@
   {
     "itemName": "check_battle_main",
     "imageName": "as_check_battle_main.png",
-    "roiFront": "27,637,62,58",
-    "roiBack": "1,510,415,203",
+    "roiFront": "150,16,135,40",
+    "roiBack": "94,1,415,203",
     "method": "Template matching",
     "threshold": 0.8,
-    "description": "description"
+    "description": "检查是否进入了最后的战斗界面"
   },
   {
     "itemName": "check_battle_boss",
@@ -83,11 +83,11 @@
   {
     "itemName": "to_battle_main_2",
     "imageName": "as_to_battle_main_2.png",
-    "roiFront": "15,94,247,38",
-    "roiBack": "2,68,311,100",
+    "roiFront": "64,288,132,26",
+    "roiBack": "0,270,312,100",
     "method": "Template matching",
     "threshold": 0.65,
-    "description": "description"
+    "description": "体力爬塔"
   },
   {
     "itemName": "confirm_skip",
@@ -97,5 +97,68 @@
     "method": "Template matching",
     "threshold": 0.8,
     "description": "确认跳过"
+  },
+  {
+    "itemName": "check_battle_main_2",
+    "imageName": "as_check_battle_main_2.png",
+    "roiFront": "149,19,134,33",
+    "roiBack": "72,0,264,75",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "是否进入了体力爬塔界面"
+  },
+  {
+    "itemName": "ap_100_check",
+    "imageName": "as_ap_100_check.png",
+    "roiFront": "65,195,98,30",
+    "roiBack": "60,194,109,35",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "100体力爬塔界面"
+  },
+  {
+    "itemName": "ap_100_check_main",
+    "imageName": "as_ap_100_check_main.png",
+    "roiFront": "86,15,138,41",
+    "roiBack": "73,5,218,76",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "是否进入了体力100爬塔界面"
+  },
+  {
+    "itemName": "check_is_shi_main",
+    "imageName": "as_check_is_shi_main.png",
+    "roiFront": "560,6,159,42",
+    "roiBack": "556,2,170,51",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "是否在主战场界面"
+  },
+  {
+    "itemName": "close_free_ticket",
+    "imageName": "as_close_free_ticket.png",
+    "roiFront": "1099,182,42,40",
+    "roiBack": "1095,178,49,47",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "关闭每日赠送的票"
+  },
+  {
+    "itemName": "check_main_free_ticket",
+    "imageName": "as_check_main_free_ticket.png",
+    "roiFront": "629,207,328,60",
+    "roiBack": "594,175,388,118",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "daily_free_ticket",
+    "imageName": "as_daily_free_ticket.png",
+    "roiFront": "473,140,334,39",
+    "roiBack": "300,80,700,180",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "每日赠票获得奖励弹窗(获得奖励横幅)"
   }
 ]

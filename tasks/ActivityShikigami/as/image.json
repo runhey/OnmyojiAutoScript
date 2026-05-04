@@ -2,7 +2,7 @@
   {
     "itemName": "lock",
     "imageName": "as_lock.png",
-    "roiFront": "825,657,28,25",
+    "roiFront": "907,642,28,25",
     "roiBack": "739,613,276,85",
     "method": "Template matching",
     "threshold": 0.5,
@@ -11,7 +11,7 @@
   {
     "itemName": "unlock",
     "imageName": "as_unlock.png",
-    "roiFront": "884,648,28,25",
+    "roiFront": "907,643,28,25",
     "roiBack": "733,607,266,95",
     "method": "Template matching",
     "threshold": 0.5,
@@ -43,5 +43,50 @@
     "method": "Template matching",
     "threshold": 0.8,
     "description": "切换按键"
+  },
+  {
+    "itemName": "ap100_lock",
+    "imageName": "as_ap100_lock.png",
+    "roiFront": "731,637,28,27",
+    "roiBack": "714,628,62,55",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "ap100_unlock",
+    "imageName": "as_ap100_unlock.png",
+    "roiFront": "730,636,27,26",
+    "roiBack": "720,629,45,44",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "ap100_battle_main_to_records",
+    "imageName": "as_ap100_battle_main_to_records.png",
+    "roiFront": "848,553,37,35",
+    "roiBack": "597,509,382,119",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "ap100式神录入口"
+  },
+  {
+    "itemName": "back_ap",
+    "imageName": "as_back_ap.png",
+    "roiFront": "23,20,40,39",
+    "roiBack": "0,0,100,100",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "活动的返回按钮"
+  },
+  {
+    "itemName": "ap_reset_pos",
+    "imageName": "as_ap_reset_pos.png",
+    "roiFront": "1216,397,26,27",
+    "roiBack": "1195,377,62,72",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "进入当前活动战场位置"
   }
 ]
