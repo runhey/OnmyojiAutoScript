@@ -55,7 +55,7 @@ class MemoryScrollsAssets:
 	# 小碎片 
 	I_MS_FRAGMENT_S = RuleImage(roi_front=(290,677,40,35), roi_back=(290,677,40,35), threshold=0.8, method="Template matching", file="./tasks/MemoryScrolls/ms/ms_ms_fragment_s.png")
 	# 小碎片满50 
-	I_MS_FRAGMENT_S_50 = RuleImage(roi_front=(473,517,60,25), roi_back=(473,517,60,25), threshold=0.8, method="Template matching", file="./tasks/MemoryScrolls/ms/ms_ms_fragment_s_50.png")
+	I_MS_FRAGMENT_S_50 = RuleImage(roi_front=(473,517,60,25), roi_back=(473,517,60,25), threshold=0.9, method="Template matching", file="./tasks/MemoryScrolls/ms/ms_ms_fragment_s_50.png")
 	# description 
 	I_MS_FRAGMENT_S_VERIFICATION = RuleImage(roi_front=(522,318,100,100), roi_back=(522,318,100,100), threshold=0.8, method="Template matching", file="./tasks/MemoryScrolls/ms/ms_ms_fragment_s_verification.png")
 	# 双绘卷进入按钮 

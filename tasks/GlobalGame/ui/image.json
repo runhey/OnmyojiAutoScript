@@ -75,7 +75,7 @@
     "itemName": "ui_cancel_samll",
     "imageName": "ui_ui_cancel_samll.png",
     "roiFront": "472,389,128,62",
-    "roiBack": "472,389,128,62",
+    "roiBack": "360,377,272,185",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "短一点的取消"

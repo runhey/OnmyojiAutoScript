@@ -113,7 +113,7 @@
     "roiFront": "473,517,60,25",
     "roiBack": "473,517,60,25",
     "method": "Template matching",
-    "threshold": 0.8,
+    "threshold": 0.9,
     "description": "小碎片满50"
   },
   {

@@ -1,25 +1,25 @@
 [
   {
     "itemName": "stone_1",
-    "roiFront": "230,533,23,20",
+    "roiFront": "228,502,26,58",
     "roiBack": "0,0,100,100",
     "description": "description"
   },
   {
     "itemName": "stone_2",
-    "roiFront": "441,569,23,20",
+    "roiFront": "439,528,25,62",
     "roiBack": "0,0,100,100",
     "description": "description"
   },
   {
     "itemName": "stone_3",
-    "roiFront": "692,537,23,20",
+    "roiFront": "687,505,26,56",
     "roiBack": "0,0,100,100",
     "description": "description"
   },
   {
     "itemName": "stone_4",
-    "roiFront": "944,529,23,20",
+    "roiFront": "944,497,22,50",
     "roiBack": "0,0,100,100",
     "description": "description"
   },
@@ -34,5 +34,17 @@
     "roiFront": "317,102,378,363",
     "roiBack": "0,0,100,100",
     "description": "description"
+  },
+  {
+    "itemName": "area_2",
+    "roiFront": "689,118,121,77",
+    "roiBack": "0,0,100,100",
+    "description": "逢魔之原地域"
+  },
+  {
+    "itemName": "area_1",
+    "roiFront": "628,314,108,137",
+    "roiBack": "0,0,100,100",
+    "description": "平安京地域"
   }
 ]

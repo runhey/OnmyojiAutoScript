@@ -43,5 +43,14 @@
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"
+  },
+  {
+    "itemName": "stone_close",
+    "imageName": "stone_stone_close.png",
+    "roiFront": "911,56,42,38",
+    "roiBack": "888,49,100,100",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "关闭购买契灵页面"
   }
 ]
