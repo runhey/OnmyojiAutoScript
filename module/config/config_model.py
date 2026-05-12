@@ -70,6 +70,7 @@ from tasks.Hyakkiyakou.config import Hyakkiyakou
 from tasks.HeroTest.config import HeroTest
 from tasks.FindJade.config import FindJade
 from tasks.MemoryScrolls.config import MemoryScrolls
+from tasks.SwitchAccount.config import SwitchAccount
 # ----------------------------------------------------------------------------------------------------------------------
 
 # 每周任务---------------------------------------------------------------------------------------------------------------
@@ -133,6 +134,7 @@ class ConfigModel(ConfigBase):
     hero_test: HeroTest = Field(default_factory=HeroTest)
     find_jade: FindJade = Field(default_factory=FindJade)
     memory_scrolls: MemoryScrolls = Field(default_factory=MemoryScrolls)
+    switch_account: SwitchAccount = Field(default_factory=SwitchAccount)
 
     # 这些是每周任务
     true_orochi: TrueOrochi = Field(default_factory=TrueOrochi)

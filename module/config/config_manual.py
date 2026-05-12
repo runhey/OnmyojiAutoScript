@@ -20,6 +20,7 @@ class ConfigManual:
         > Secret > WeeklyTrifles > MysteryShop > Duel 
         > TrueOrochi > RichMan
         > MetaDemon > FrogBoss > FloatParade > Quiz > KittyShop > DyeTrials > MemoryScrolls
+        > FindJade > SwitchAccount
         """
 
     DEVICE_OVER_HTTP = False
