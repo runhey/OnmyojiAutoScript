@@ -11,8 +11,8 @@
   {
     "itemName": "e_exploration_click",
     "imageName": "res_e_exploration_click.png",
-    "roiFront": "898,518,96,42",
-    "roiBack": "898,518,96,42",
+    "roiFront": "1076,601,96,42",
+    "roiBack": "939,555,307,127",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "探索按钮"
@@ -200,8 +200,8 @@
   {
     "itemName": "exp_create_team",
     "imageName": "res_exp_create_team.png",
-    "roiFront": "590,514,122,52",
-    "roiBack": "543,490,192,100",
+    "roiFront": "894,599,96,50",
+    "roiBack": "855,546,189,151",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "组队按钮"
@@ -214,5 +214,23 @@
     "method": "Template matching",
     "threshold": 0.8,
     "description": "创建确认"
+  },
+  {
+    "itemName": "exp_arrow_right",
+    "imageName": "res_exp_arrow_right.png",
+    "roiFront": "1240,117,24,21",
+    "roiBack": "1178,74,100,100",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "箭头，收纳"
+  },
+  {
+    "itemName": "exp_arrow_left",
+    "imageName": "res_exp_arrow_left.png",
+    "roiFront": "1244,115,18,26",
+    "roiBack": "1178,78,100,100",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "箭头，打开"
   }
 ]

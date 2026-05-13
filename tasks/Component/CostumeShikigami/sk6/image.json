@@ -29,7 +29,7 @@
   {
     "itemName": "sou_switch_1_6",
     "imageName": "sk6_sou_switch_1_6.png",
-    "roiFront": "973,140,34,32",
+    "roiFront": "980,141,28,27",
     "roiBack": "967,131,51,48",
     "method": "Template matching",
     "threshold": 0.8,
@@ -38,8 +38,8 @@
   {
     "itemName": "sou_switch_2_6",
     "imageName": "sk6_sou_switch_2_6.png",
-    "roiFront": "971,293,33,33",
-    "roiBack": "960,284,58,49",
+    "roiFront": "979,294,29,31",
+    "roiBack": "964,285,58,49",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "第二组切换"
@@ -47,7 +47,7 @@
   {
     "itemName": "sou_switch_3_6",
     "imageName": "sk6_sou_switch_3_6.png",
-    "roiFront": "968,448,41,38",
+    "roiFront": "978,448,31,30",
     "roiBack": "962,442,52,48",
     "method": "Template matching",
     "threshold": 0.8,
@@ -56,7 +56,7 @@
   {
     "itemName": "sou_switch_4_6",
     "imageName": "sk6_sou_switch_4_6.png",
-    "roiFront": "967,597,42,25",
+    "roiFront": "977,601,32,21",
     "roiBack": "962,592,53,34",
     "method": "Template matching",
     "threshold": 0.8,
@@ -155,7 +155,7 @@
   {
     "itemName": "sou_click_present_6",
     "imageName": "sk6_sou_click_present_6.png",
-    "roiFront": "967,305,43,22",
+    "roiFront": "976,303,35,18",
     "roiBack": "965,142,48,480",
     "method": "Template matching",
     "threshold": 0.9,

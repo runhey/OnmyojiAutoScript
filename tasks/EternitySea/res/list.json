@@ -2,24 +2,24 @@
   "name": "layer_list",
   "direction": "vertical",
   "type": "ocr",
-  "roiBack": "138,127,353,435",
+  "roiBack": "124,101,74,593",
   "description": "永生之海层数列表",
   "list": [
     {
       "itemName": "壹",
-      "roiFront": "266,148,60,64"
+      "roiFront": "126,104,69,83"
     },
     {
       "itemName": "贰",
-      "roiFront": "270,253,54,74"
+      "roiFront": "125,203,72,81"
     },
     {
       "itemName": "叁",
-      "roiFront": "276,367,50,67"
+      "roiFront": "125,295,72,87"
     },
     {
       "itemName": "肆",
-      "roiFront": "271,479,60,70"
+      "roiFront": "124,396,74,85"
     }
   ]
 }

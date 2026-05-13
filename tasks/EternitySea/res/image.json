@@ -2,8 +2,8 @@
   {
     "itemName": "eternity_sea",
     "imageName": "res_eternity_sea.png",
-    "roiFront": "1139,93,127,416",
-    "roiBack": "1139,93,127,416",
+    "roiFront": "1158,88,70,70",
+    "roiBack": "1002,78,233,353",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "选择永生之海"
@@ -11,8 +11,8 @@
   {
     "itemName": "form_team",
     "imageName": "res_form_team.png",
-    "roiFront": "939,594,96,90",
-    "roiBack": "939,594,96,90",
+    "roiFront": "962,579,96,90",
+    "roiBack": "962,579,96,90",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "组队"
@@ -20,8 +20,8 @@
   {
     "itemName": "eternity_sea_fire",
     "imageName": "res_eternity_sea_fire.png",
-    "roiFront": "1108,592,96,93",
-    "roiBack": "1108,592,96,93",
+    "roiFront": "1146,595,92,49",
+    "roiBack": "1142,580,96,93",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "挑战"
@@ -29,8 +29,8 @@
   {
     "itemName": "eternitysea_unlock",
     "imageName": "res_eternitysea_unlock.png",
-    "roiFront": "556,560,35,34",
-    "roiBack": "556,560,35,34",
+    "roiFront": "700,654,35,34",
+    "roiBack": "669,644,167,64",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "开锁"
@@ -38,8 +38,8 @@
   {
     "itemName": "neweternitysea_lock",
     "imageName": "res_neweternitysea_lock.png",
-    "roiFront": "556,560,31,37",
-    "roiBack": "556,560,31,37",
+    "roiFront": "699,652,31,37",
+    "roiBack": "667,652,164,53",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "关锁"

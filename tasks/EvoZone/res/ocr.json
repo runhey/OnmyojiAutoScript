@@ -1,8 +1,8 @@
 [
   {
     "itemName": "o_test_ocr",
-    "roiFront": "126,136,360,491",
-    "roiBack": "126,136,360,491",
+    "roiFront": "128,114,349,564",
+    "roiBack": "128,114,349,564",
     "mode": "Full",
     "method": "Default",
     "keyword": "",

@@ -26,9 +26,10 @@ class WQExplore(BaseExploration, HighLight):
         explore_only_boss: bool = True
         _cnt_exploration = 0
         search_fail_cnt = 0
+        search_fail_timer = Timer(3.2)  # 这里设置的时间一定要大于S_SWIPE_BACKGROUND_RIGHT滑动的时间
         while 1:
             self.screenshot()
-            if self.appear(self.I_UI_BACK_RED) and self.appear(self.I_E_EXPLORATION_CLICK):
+            if self.appear(self.I_UI_BACK_YELLOW) and self.appear(self.I_E_EXPLORATION_CLICK):
                 break
             if self.appear_then_click(goto, interval=2):
                 continue
@@ -39,11 +40,11 @@ class WQExplore(BaseExploration, HighLight):
             if scene == Scene.ENTRANCE:
                 if _cnt_exploration >= num:
                     logger.info('Execution exploration end')
-                    self.ui_click_until_disappear(self.I_UI_BACK_RED)
+                    # --退出到探索大世界--
+                    self.ui_click(self.I_UI_BACK_YELLOW, stop=self.I_CHECK_EXPLORATION, interval=4)
                     if explore_only_boss:
                         raise ExploreWantedBoss
                     break
-                logger.info("点击探索")
                 self.ui_click(self.I_E_EXPLORATION_CLICK, stop=self.I_E_SETTINGS_BUTTON)
                 continue
             # 探索大世界
@@ -87,17 +88,17 @@ class WQExplore(BaseExploration, HighLight):
                     logger.info(f'Fight, minions cnt {self.minions_cnt}')
                     continue
                 # 向后拉,寻找怪
-                if search_fail_cnt >= 4:
-                    search_fail_cnt = 0
-                    if self._match_end.stable(self.device.image):
+                if search_fail_timer.reached():
+                    search_fail_timer.reset()
+                    if self._match_end.stable(self.device.image, refresh_after_stable=True):
                         _cnt_exploration += 1
                         self.quit_explore()
                         continue
                     if self.swipe(self.S_SWIPE_BACKGROUND_RIGHT, interval=3):
                         continue
-                else:
-                    search_fail_cnt += 1
-            elif scene==Scene.BATTLE_PREPARE:
+                if not search_fail_timer.started():
+                    search_fail_timer.start()
+            elif scene == Scene.BATTLE_PREPARE:
                 self.ui_click_until_disappear(self.I_PREPARE_HIGHLIGHT, interval=0.5)
             elif scene == Scene.UNKNOWN:
                 continue

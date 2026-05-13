@@ -2,44 +2,17 @@
   {
     "itemName": "s_sougenbi",
     "imageName": "s_s_sougenbi.png",
-    "roiFront": "405,97,301,414",
-    "roiBack": "405,97,301,414",
+    "roiFront": "560,139,57,61",
+    "roiBack": "412,68,231,359",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "进入业原火"
   },
   {
-    "itemName": "s_greed",
-    "imageName": "s_s_greed.png",
-    "roiFront": "167,143,307,100",
-    "roiBack": "167,143,307,100",
-    "method": "Template matching",
-    "threshold": 0.8,
-    "description": "贪"
-  },
-  {
-    "itemName": "s_anger",
-    "imageName": "s_s_anger.png",
-    "roiFront": "164,291,307,100",
-    "roiBack": "164,291,307,100",
-    "method": "Template matching",
-    "threshold": 0.8,
-    "description": ""
-  },
-  {
-    "itemName": "s_foolery",
-    "imageName": "s_s_foolery.png",
-    "roiFront": "164,436,307,100",
-    "roiBack": "164,436,307,100",
-    "method": "Template matching",
-    "threshold": 0.8,
-    "description": "痴"
-  },
-  {
     "itemName": "s_team_lock",
     "imageName": "s_s_team_lock.png",
-    "roiFront": "559,562,31,36",
-    "roiBack": "559,562,31,36",
+    "roiFront": "700,652,31,36",
+    "roiBack": "667,649,167,56",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"
@@ -47,8 +20,8 @@
   {
     "itemName": "s_team_unlock",
     "imageName": "s_s_team_unlock.png",
-    "roiFront": "555,561,33,33",
-    "roiBack": "555,561,33,33",
+    "roiFront": "700,655,33,33",
+    "roiBack": "669,645,164,58",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"
@@ -56,8 +29,8 @@
   {
     "itemName": "s_fire",
     "imageName": "s_s_fire.png",
-    "roiFront": "1105,585,100,100",
-    "roiBack": "1105,585,100,100",
+    "roiFront": "1051,598,100,43",
+    "roiBack": "1051,580,100,100",
     "method": "Template matching",
     "threshold": 0.7,
     "description": "挑战"
@@ -65,8 +38,8 @@
   {
     "itemName": "s_check_sougenbi",
     "imageName": "s_s_check_sougenbi.png",
-    "roiFront": "772,222,307,292",
-    "roiBack": "772,222,307,292",
+    "roiFront": "933,103,176,68",
+    "roiBack": "915,80,341,134",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "确认进入业原火"
@@ -74,8 +47,8 @@
   {
     "itemName": "s_fire_greed",
     "imageName": "s_s_fire_greed.png",
-    "roiFront": "1132,640,21,33",
-    "roiBack": "1122,635,41,48",
+    "roiFront": "1071,641,21,33",
+    "roiBack": "1039,586,124,97",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "贪"
@@ -83,8 +56,8 @@
   {
     "itemName": "s_fire_anger",
     "imageName": "s_s_fire_anger.png",
-    "roiFront": "1131,643,21,30",
-    "roiBack": "1122,636,40,42",
+    "roiFront": "1070,642,21,30",
+    "roiBack": "1033,574,131,115",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"
@@ -92,8 +65,8 @@
   {
     "itemName": "s_fire_foolery",
     "imageName": "s_s_fire_foolery.png",
-    "roiFront": "1130,641,22,31",
-    "roiBack": "1117,630,46,52",
+    "roiFront": "1071,641,22,31",
+    "roiBack": "1024,572,142,121",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "痴"

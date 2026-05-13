@@ -1,20 +1,20 @@
 [
   {
     "itemName": "c_greed",
-    "roiFront": "172,144,299,100",
-    "roiBack": "172,144,299,100",
+    "roiFront": "87,99,138,51",
+    "roiBack": "87,99,138,51",
     "description": "description"
   },
   {
     "itemName": "c_anger",
-    "roiFront": "165,289,307,100",
-    "roiBack": "165,289,307,100",
+    "roiFront": "89,203,132,52",
+    "roiBack": "89,203,132,52",
     "description": "description"
   },
   {
     "itemName": "c_foolery",
-    "roiFront": "166,435,303,100",
-    "roiBack": "166,435,303,100",
+    "roiFront": "95,313,142,41",
+    "roiBack": "95,313,142,41",
     "description": "description"
   }
 ]

@@ -330,8 +330,6 @@ class Script:
         strategy_map = {
             "close_game": self._wait_close_game,
             "goto_main": self._wait_goto_main,
-            "close_emulator_or_goto_main": self._wait_close_emulator_or_goto_main,
-            "close_emulator_or_close_game": self._wait_close_emulator_or_close_game,
         }
         func = strategy_map.get(method)
         if func is None:
@@ -376,9 +374,23 @@ class Script:
             logger.info("Emulator is down, skip close_game/goto_main action and wait with preheat")
             return self._wait_until_with_emulator_preheat(next_run)
 
-        close_game_limit_time = self.config.script.optimization.close_game_limit_time
-        close_game_limit = self._time_to_timedelta(close_game_limit_time)
-        if close_game_limit > timedelta(0) and next_run > datetime.now() + close_game_limit:
+        close_game_wait_duration = self.config.script.optimization.close_game_wait_duration
+        close_game_wait = self._time_to_timedelta(close_game_wait_duration)
+        close_emulator_wait_duration = self.config.script.optimization.close_emulator_wait_duration
+        close_emulator_wait = self._time_to_timedelta(close_emulator_wait_duration)
+
+        if close_emulator_wait > timedelta(0) and next_run > datetime.now() + close_emulator_wait:
+            logger.info("Close emulator during wait")
+            self.device.emulator_stop()
+            self._emulator_down = True
+
+            if not self._wait_until_with_emulator_preheat(next_run):
+                return False
+
+            self.run("Restart")
+            return True
+
+        if close_game_wait <= timedelta(0):
             logger.info("Close game during wait")
             self.device.app_stop()
             self.device.release_during_wait()
@@ -387,7 +399,16 @@ class Script:
             self.run("Restart")
             return True
 
-        logger.info("Wait without closing game (close_game limit time not reached)")
+        if next_run > datetime.now() + close_game_wait:
+            logger.info("Close game during wait")
+            self.device.app_stop()
+            self.device.release_during_wait()
+            if not self.wait_until(next_run):
+                return False
+            self.run("Restart")
+            return True
+
+        logger.info("Wait without closing game (close_game wait duration not reached)")
         self.device.release_during_wait()
         if not self.wait_until(next_run):
             return False
@@ -398,29 +419,11 @@ class Script:
             logger.info("Emulator is down, skip goto_main and wait with preheat")
             return self._wait_until_with_emulator_preheat(next_run)
 
-        logger.info("Goto main page during wait")
-        self.run("GotoMain")
-        self.device.release_during_wait()
-        return self.wait_until(next_run)
-
-    def _wait_close_emulator_or_goto_main(self, next_run: datetime) -> bool:
-        return self._wait_close_emulator_or(next_run, self._wait_goto_main)
-
-    def _wait_close_emulator_or_close_game(self, next_run: datetime) -> bool:
-        return self._wait_close_emulator_or(next_run, self._wait_close_game)
-
-    def _wait_close_emulator_or(self, next_run: datetime, fallback_waiter: Callable[[datetime], bool]) -> bool:
-        close_emulator_limit_time = self.config.script.optimization.close_emulator_limit_time
-        close_emulator_limit = self._time_to_timedelta(close_emulator_limit_time)
-
-        now = datetime.now()
-        if close_emulator_limit > timedelta(0) and next_run > now + close_emulator_limit:
+        close_emulator_wait_duration = self.config.script.optimization.close_emulator_wait_duration
+        close_emulator_wait = self._time_to_timedelta(close_emulator_wait_duration)
+        if close_emulator_wait > timedelta(0) and next_run > datetime.now() + close_emulator_wait:
             logger.info("Close emulator during wait")
-            if not self._emulator_down:
-                self.device.emulator_stop()
-            else:
-                logger.info("Emulator already closed")
-
+            self.device.emulator_stop()
             self._emulator_down = True
 
             if not self._wait_until_with_emulator_preheat(next_run):
@@ -429,7 +432,10 @@ class Script:
             self.run("Restart")
             return True
 
-        return fallback_waiter(next_run)
+        logger.info("Goto main page during wait")
+        self.run("GotoMain")
+        self.device.release_during_wait()
+        return self.wait_until(next_run)
 
     def _wait_stay_there(self, next_run: datetime) -> bool:
         if self._emulator_down:

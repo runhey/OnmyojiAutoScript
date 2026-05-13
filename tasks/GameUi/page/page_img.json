@@ -29,8 +29,8 @@
   {
     "itemName": "check_exploration",
     "imageName": "page_check_exploration.png",
-    "roiFront": "1146,175,21,22",
-    "roiBack": "1146,175,21,22",
+    "roiFront": "681,12,27,36",
+    "roiBack": "661,0,70,61",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"
@@ -38,8 +38,8 @@
   {
     "itemName": "exploration_goto_awake_zone",
     "imageName": "page_exploration_goto_awake_zone.png",
-    "roiFront": "57,628,57,42",
-    "roiBack": "33,619,113,79",
+    "roiFront": "65,632,50,41",
+    "roiBack": "33,619,1125,98",
     "method": "Template matching",
     "threshold": 0.65,
     "description": "探索前往觉醒"
@@ -47,8 +47,8 @@
   {
     "itemName": "exploration_goto_soul_zone",
     "imageName": "page_exploration_goto_soul_zone.png",
-    "roiFront": "163,642,44,36",
-    "roiBack": "134,623,93,70",
+    "roiFront": "165,639,44,36",
+    "roiBack": "38,621,1106,98",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "探索前往御魂"
@@ -56,8 +56,8 @@
   {
     "itemName": "exploration_goto_realm_raid",
     "imageName": "page_exploration_goto_realm_raid.png",
-    "roiFront": "248,636,67,48",
-    "roiBack": "229,612,203,87",
+    "roiFront": "263,636,51,46",
+    "roiBack": "42,618,1103,100",
     "method": "Template matching",
     "threshold": 0.65,
     "description": "探索前往结界突破"
@@ -66,7 +66,7 @@
     "itemName": "exploration_goto_goryou_realm",
     "imageName": "page_exploration_goto_goryou_realm.png",
     "roiFront": "353,639,47,45",
-    "roiBack": "346,626,178,67",
+    "roiBack": "49,613,1107,105",
     "method": "Template matching",
     "threshold": 0.7,
     "description": "探索前往御灵"
@@ -75,7 +75,7 @@
     "itemName": "exploration_goto_delegation",
     "imageName": "page_exploration_goto_delegation.png",
     "roiFront": "453,639,53,37",
-    "roiBack": "409,613,167,75",
+    "roiBack": "43,609,1107,107",
     "method": "Template matching",
     "threshold": 0.65,
     "description": "探索前往式神委派"
@@ -84,7 +84,7 @@
     "itemName": "exploration_goto_secret_zones",
     "imageName": "page_exploration_goto_secret_zones.png",
     "roiFront": "549,633,53,40",
-    "roiBack": "524,614,200,87",
+    "roiBack": "44,617,1102,99",
     "method": "Template matching",
     "threshold": 0.7,
     "description": "探索前往秘闻"
@@ -93,7 +93,7 @@
     "itemName": "exploration_goto_area_boss",
     "imageName": "page_exploration_goto_area_boss.png",
     "roiFront": "640,638,51,45",
-    "roiBack": "640,638,180,45",
+    "roiBack": "33,622,1103,90",
     "method": "Template matching",
     "threshold": 0.65,
     "description": "探索前往地域鬼王"
@@ -102,7 +102,7 @@
     "itemName": "exploration_goto_heian_kitan",
     "imageName": "page_exploration_goto_heian_kitan.png",
     "roiFront": "739,643,52,44",
-    "roiBack": "739,643,180,44",
+    "roiBack": "35,615,1097,102",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "探索前往平安奇谭"
@@ -110,8 +110,8 @@
   {
     "itemName": "exploration_goto_six_gates",
     "imageName": "page_exploration_goto_six_gates.png",
-    "roiFront": "938,640,60,49",
-    "roiBack": "820,631,296,66",
+    "roiFront": "928,638,54,46",
+    "roiBack": "46,618,1090,100",
     "method": "Template matching",
     "threshold": 0.65,
     "description": "探索前往六道之门"
@@ -119,8 +119,8 @@
   {
     "itemName": "exploration_goto_bondling_fairyland",
     "imageName": "page_exploration_goto_bondling_fairyland.png",
-    "roiFront": "1037,635,56,44",
-    "roiBack": "918,623,218,72",
+    "roiFront": "1032,634,46,50",
+    "roiBack": "41,619,1104,96",
     "method": "Template matching",
     "threshold": 0.65,
     "description": "探索前往契灵之境"
@@ -137,8 +137,8 @@
   {
     "itemName": "check_awake",
     "imageName": "page_check_awake.png",
-    "roiFront": "376,565,73,82",
-    "roiBack": "376,565,73,82",
+    "roiFront": "164,534,42,41",
+    "roiBack": "124,524,197,119",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"
@@ -146,8 +146,8 @@
   {
     "itemName": "check_soul_zones",
     "imageName": "page_check_soul_zones.png",
-    "roiFront": "49,186,298,237",
-    "roiBack": "49,186,298,237",
+    "roiFront": "1193,636,40,40",
+    "roiBack": "1131,591,149,128",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"

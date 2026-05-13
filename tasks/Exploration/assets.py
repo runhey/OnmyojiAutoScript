@@ -74,7 +74,7 @@ class ExplorationAssets:
 	# 进入难度选择界面 
 	I_E_EXPLORATION_OPEN = RuleImage(roi_front=(1077,248,37,80), roi_back=(1072,242,47,92), threshold=0.8, method="Template matching", file="./tasks/Exploration/res/res_e_exploration_open.png")
 	# 探索按钮 
-	I_E_EXPLORATION_CLICK = RuleImage(roi_front=(898,518,96,42), roi_back=(898,518,96,42), threshold=0.8, method="Template matching", file="./tasks/Exploration/res/res_e_exploration_click.png")
+	I_E_EXPLORATION_CLICK = RuleImage(roi_front=(1076,601,96,42), roi_back=(939,555,307,127), threshold=0.8, method="Template matching", file="./tasks/Exploration/res/res_e_exploration_click.png")
 	# 自动轮换开着 
 	I_E_AUTO_ROTATE_ON = RuleImage(roi_front=(104,649,153,44), roi_back=(104,649,153,44), threshold=0.9, method="Template matching", file="./tasks/Exploration/res/res_e_auto_rotate_on.png")
 	# 自动轮换关闭 
@@ -116,9 +116,13 @@ class ExplorationAssets:
 	# 队伍的表情标志 
 	I_TEAM_EMOJI = RuleImage(roi_front=(36,437,44,46), roi_back=(4,407,100,100), threshold=0.8, method="Template matching", file="./tasks/Exploration/res/res_team_emoji.png")
 	# 组队按钮 
-	I_EXP_CREATE_TEAM = RuleImage(roi_front=(590,514,122,52), roi_back=(543,490,192,100), threshold=0.8, method="Template matching", file="./tasks/Exploration/res/res_exp_create_team.png")
+	I_EXP_CREATE_TEAM = RuleImage(roi_front=(894,599,96,50), roi_back=(855,546,189,151), threshold=0.8, method="Template matching", file="./tasks/Exploration/res/res_exp_create_team.png")
 	# 创建确认 
 	I_EXP_CREATE_ENSURE = RuleImage(roi_front=(534,486,218,59), roi_back=(516,475,244,85), threshold=0.8, method="Template matching", file="./tasks/Exploration/res/res_exp_create_ensure.png")
+	# 箭头，收纳 
+	I_EXP_ARROW_RIGHT = RuleImage(roi_front=(1240,117,24,21), roi_back=(1178,74,100,100), threshold=0.8, method="Template matching", file="./tasks/Exploration/res/res_exp_arrow_right.png")
+	# 箭头，打开 
+	I_EXP_ARROW_LEFT = RuleImage(roi_front=(1244,115,18,26), roi_back=(1178,78,100,100), threshold=0.8, method="Template matching", file="./tasks/Exploration/res/res_exp_arrow_left.png")
 
 
 	# Long Click Rule Assets
@@ -134,7 +138,7 @@ class ExplorationAssets:
 
 	# Ocr Rule Assets
 	# 识别当前显示的章节 
-	O_E_EXPLORATION_LEVEL_NUMBER = RuleOcr(roi=(1079,193,147,467), area=(1079,193,147,467), mode="Full", method="Default", keyword="", name="e_exploration_level_number")
+	O_E_EXPLORATION_LEVEL_NUMBER = RuleOcr(roi=(1064,206,121,337), area=(1064,206,121,337), mode="Full", method="Default", keyword="", name="e_exploration_level_number")
 	# 候补出战的数量 
 	O_E_ALTERNATE_NUMBER = RuleOcr(roi=(1092,122,69,32), area=(1092,122,69,32), mode="DigitCounter", method="Default", keyword="", name="e_alternate_number")
 	# 探索右上角 突破卷的数量 

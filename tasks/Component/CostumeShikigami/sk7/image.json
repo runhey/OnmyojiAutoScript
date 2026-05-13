@@ -29,8 +29,8 @@
   {
     "itemName": "sou_switch_1_7",
     "imageName": "sk7_sou_switch_1_7.png",
-    "roiFront": "973,140,34,32",
-    "roiBack": "973,140,34,32",
+    "roiFront": "977,142,30,27",
+    "roiBack": "969,131,56,51",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "第一组切换"
@@ -38,8 +38,8 @@
   {
     "itemName": "sou_switch_2_7",
     "imageName": "sk7_sou_switch_2_7.png",
-    "roiFront": "973,293,33,33",
-    "roiBack": "973,293,33,33",
+    "roiFront": "979,295,28,28",
+    "roiBack": "966,280,57,56",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "第二组切换"
@@ -47,8 +47,8 @@
   {
     "itemName": "sou_switch_3_7",
     "imageName": "sk7_sou_switch_3_7.png",
-    "roiFront": "968,448,41,38",
-    "roiBack": "968,448,41,38",
+    "roiFront": "977,448,32,29",
+    "roiBack": "959,430,69,63",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"
@@ -56,8 +56,8 @@
   {
     "itemName": "sou_switch_4_7",
     "imageName": "sk7_sou_switch_4_7.png",
-    "roiFront": "967,597,42,25",
-    "roiBack": "967,597,42,25",
+    "roiFront": "975,604,37,23",
+    "roiBack": "963,589,61,48",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"
@@ -155,8 +155,8 @@
   {
     "itemName": "sou_click_present_7",
     "imageName": "sk7_sou_click_present_7.png",
-    "roiFront": "967,305,43,22",
-    "roiBack": "967,305,43,22",
+    "roiFront": "977,299,35,20",
+    "roiBack": "969,128,51,508",
     "method": "Template matching",
     "threshold": 0.9,
     "description": "需要切换的预设按钮(颜色深一点)"

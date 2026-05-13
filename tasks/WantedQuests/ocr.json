@@ -10,8 +10,8 @@
   },
   {
     "itemName": "wq_wanted",
-    "roiFront": "9,145,123,381",
-    "roiBack": "9,145,123,381",
+    "roiFront": "15,116,85,401",
+    "roiBack": "15,116,85,401",
     "mode": "Full",
     "method": "Default",
     "keyword": "",
@@ -154,8 +154,8 @@
   },
   {
     "itemName": "wq_text_all",
-    "roiFront": "20,140,110,390",
-    "roiBack": "20,140,110,390",
+    "roiFront": "12,119,88,393",
+    "roiBack": "12,119,88,393",
     "mode": "Full",
     "method": "Default",
     "keyword": "",
