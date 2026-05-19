@@ -3,8 +3,8 @@ engine:
   id: claude
   model: MiniMax-M2.7
   env:
-    ANTHROPIC_BASE_URL: https://api.minimaxi.com/anthropic
-    ANTHROPIC_API_KEY : ${{ secrets.MINIMAX_API_KEY  }}
+    ANTHROPIC_BASE_URL: https://opencode.ai/zen/go
+    ANTHROPIC_API_KEY : ${{ secrets.OPENCODE_GO_API_KEY }}
 ---
 
 
