@@ -69,23 +69,18 @@ class ScriptTask(GameUi, WeeklyTriflesAssets):
         # 一路进去
         while 1:
             self.screenshot()
-            if self.appear(self.I_WT_COLLECT):
+            if self.appear(self.I_WT_LOGO):
                 break
             if self.appear_then_click(self.I_WT_SHIKIAGMI, interval=1):
                 continue
-            if self.appear_then_click(self.I_WT_SCROLL, interval=1):
+            if self.appear_then_click(self.I_WT_SHARE, interval=1):
                 continue
-        # 确认的是百鬼夜行图
-        self.ui_click(self.I_WT_SCROLL_2, self.I_WT_SCROLL_1)
-        logger.info('Confirm the picture is 百妖风物鉴')
         # 点击分享
         while 1:
             self.screenshot()
             if self.appear(self.I_WT_QR_CODE):
                 break
             if self.appear_then_click(self.I_WT_COLLECT_WECHAT, interval=1):
-                continue
-            if self.appear_then_click(self.I_WT_COLLECT, interval=5):
                 continue
         logger.info('Click share')
         get_timer = Timer(3)
@@ -108,8 +103,6 @@ class ScriptTask(GameUi, WeeklyTriflesAssets):
             if self.appear(self.I_WT_SHIKIAGMI):
                 break
             if self.appear_then_click(self.I_UI_BACK_RED, interval=1):
-                continue
-            if self.appear_then_click(self.I_UI_BACK_BLUE, interval=1):
                 continue
             if self.appear_then_click(self.I_UI_BACK_YELLOW, interval=1):
                 continue
