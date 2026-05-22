@@ -451,15 +451,15 @@ class ScriptTask(WQExplore, SecretScriptTask, WantedQuestsAssets):
             success = self.run_general_battle(self.battle_config)
         while 1:
             self.screenshot()
-            if self.appear(self.I_CHECK_EXPLORATION):
-                self.wait_until_stable(self.I_CHECK_EXPLORATION)
+            if self.appear(self.I_CHECK_SECRET_ZONES):
                 break
             if self.appear_then_click(self.I_UI_BACK_RED, interval=1):
                 continue
             if self.appear_then_click(self.I_UI_BACK_BLUE, interval=1.5):
                 continue
-            if self.appear_then_click(self.I_UI_BACK_YELLOW, interval=1.5):
-                continue
+        self.ui_get_current_page()
+        self.ui_goto(page_exploration)
+        self.wait_until_stable(self.I_CHECK_EXPLORATION)
         logger.info('Secret mission finished')
 
     def invite_random(self, add_button: RuleImage):
