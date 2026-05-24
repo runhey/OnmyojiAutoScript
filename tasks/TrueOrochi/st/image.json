@@ -2,8 +2,8 @@
   {
     "itemName": "find_ts",
     "imageName": "st_find_ts.png",
-    "roiFront": "1,613,100,93",
-    "roiBack": "1,613,100,93",
+    "roiFront": "259,635,96,79",
+    "roiBack": "183,585,331,135",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "出现真蛇"

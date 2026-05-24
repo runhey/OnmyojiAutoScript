@@ -38,8 +38,8 @@
   {
     "itemName": "lock",
     "imageName": "gi_lock.png",
-    "roiFront": "29,644,29,32",
-    "roiBack": "29,644,29,32",
+    "roiFront": "49,645,29,32",
+    "roiBack": "29,633,287,61",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "锁定阵容的图片"
@@ -47,8 +47,8 @@
   {
     "itemName": "unlock",
     "imageName": "gi_unlock.png",
-    "roiFront": "30,647,23,30",
-    "roiBack": "30,647,23,30",
+    "roiFront": "31,647,23,27",
+    "roiBack": "26,633,285,57",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "还没有锁定阵容"

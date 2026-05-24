@@ -20,8 +20,8 @@
   {
     "itemName": "sou_switch_1",
     "imageName": "ss_sou_switch_1.png",
-    "roiFront": "971,149,34,32",
-    "roiBack": "962,141,51,48",
+    "roiFront": "978,153,25,26",
+    "roiBack": "966,143,51,48",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"
@@ -29,7 +29,7 @@
   {
     "itemName": "sou_switch_2",
     "imageName": "ss_sou_switch_2.png",
-    "roiFront": "967,296,42,39",
+    "roiFront": "977,303,25,26",
     "roiBack": "961,292,54,49",
     "method": "Template matching",
     "threshold": 0.8,
@@ -38,7 +38,7 @@
   {
     "itemName": "sou_switch_3",
     "imageName": "ss_sou_switch_3.png",
-    "roiFront": "968,448,41,38",
+    "roiFront": "978,455,25,26",
     "roiBack": "962,442,52,48",
     "method": "Template matching",
     "threshold": 0.8,
@@ -47,7 +47,7 @@
   {
     "itemName": "sou_switch_4",
     "imageName": "ss_sou_switch_4.png",
-    "roiFront": "967,597,42,25",
+    "roiFront": "978,603,25,22",
     "roiBack": "962,592,53,34",
     "method": "Template matching",
     "threshold": 0.8,
@@ -146,7 +146,7 @@
   {
     "itemName": "sou_click_present",
     "imageName": "ss_sou_click_present.png",
-    "roiFront": "967,305,43,22",
+    "roiFront": "978,304,25,26",
     "roiBack": "965,142,48,480",
     "method": "Template matching",
     "threshold": 0.9,

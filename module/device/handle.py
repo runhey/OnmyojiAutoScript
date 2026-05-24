@@ -4,6 +4,7 @@
 import re
 
 from enum import Enum
+from time import sleep
 from cached_property import cached_property
 from anytree import NodeMixin, RenderTree, PreOrderIter
 from win32api import GetSystemMetrics, SendMessage, MAKELONG, PostMessage
@@ -168,11 +169,8 @@ class Handle:
                 self.config = Config(config, task=None)
             else:
                 self.config = config
-        if not self.config.script.device.handle:
-            logger.info('Handle is empty. oas not use handle')
-            return
-        if self.config.script.device.handle == '':
-            logger.info('Handle is empty. oas not use handle')
+        if not self.config.script.device.handle or self.config.script.device.handle == '':
+            logger.info('Handle is empty, oas not use handle')
             return
 
         # 获取根的句柄
@@ -187,20 +185,32 @@ class Handle:
         if isinstance(self.root_handle, str):
             try:
                 self.root_handle_num = int(self.root_handle)
-                logger.info('Handle is handle num. oas use it as root handle num')
+                logger.info('Handle is a number, using it as root handle num')
                 if is_handle_valid(self.root_handle_num):
                     logger.info(f'Handle number {self.root_handle_num} is valid')
                     self.root_handle_title = handle_num2title(self.root_handle_num)
             except ValueError:
-                logger.info('Handle is handle string. oas use it as root handle title')
+                logger.info('Handle is a string, looking up window by title')
                 if handle_title2num(self.root_handle) != 0:
                     self.root_handle_num = handle_title2num(self.root_handle)
                     self.root_handle_title = self.root_handle
         logger.info(f'The root handle title is {self.root_handle_title} and num is {self.root_handle_num}')
 
-        # 获取句柄树
+        # 获取句柄树（加重试，等待子窗口渲染就绪）
         self.root_node = WindowNode(name=self.root_handle_title, num=self.root_handle_num)
         Handle.handle_tree(self.root_handle_num, self.root_node)
+        if not self.root_node.children:
+            logger.info('Window child tree not ready, waiting for emulator to finish initializing')
+            for i in range(9):
+                sleep(1)
+                self.root_node = WindowNode(name=self.root_handle_title, num=self.root_handle_num)
+                Handle.handle_tree(self.root_handle_num, self.root_node)
+                if self.root_node.children:
+                    logger.info(f'Window child tree ready after {i + 2} attempts')
+                    break
+            else:
+                logger.warning('Window child tree still not ready after 10 attempts, will use title-based fallback')
+
         logger.info('Emulator handle structure:')
         for pre, fill, node in RenderTree(self.root_node):
             logger.info("%s%s" % (pre, node.name))
@@ -209,12 +219,9 @@ class Handle:
 
         # 判断是哪一个模拟器 通过句柄树结构
         logger.info(f'Emulator family: {self.emulator_family}')
-
         # window系统的缩放
-        logger.info(f'Your window screen scale rate: {window_scale_rate()}')
-        _ = self.screenshot_handle_num
-        logger.info(f'Screenshot handle num: {self.screenshot_handle_num}')
-        logger.info(f'Emulator screenshot size: {self.screenshot_size}')
+        logger.info(f'Window screen scale rate: {window_scale_rate()}')
+        # screenshot_handle_num 和 screenshot_size 延迟到首次截屏时按需求值，不在初始化时预计算
 
     @staticmethod
     def all_windows() -> list:
@@ -240,7 +247,7 @@ class Handle:
         :return:
         """
         if windows is None:
-            logger.error("handle_auto not get all wnidow")
+            logger.error("auto_handle_title: windows list is None")
 
         emu_list = []
         for window_title in windows:
@@ -270,7 +277,7 @@ class Handle:
         if len(emu_list) == 1:
             emulator_title = emu_list[0]
 
-        logger.info(f'Handle auto seclect to find {emulator_title} and use it as root_title')
+        logger.info(f'Auto-detected emulator window: {emulator_title}')
         return emulator_title
 
     @staticmethod

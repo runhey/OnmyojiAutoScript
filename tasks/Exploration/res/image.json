@@ -200,8 +200,8 @@
   {
     "itemName": "exp_create_team",
     "imageName": "res_exp_create_team.png",
-    "roiFront": "590,514,122,52",
-    "roiBack": "543,490,192,100",
+    "roiFront": "894,599,96,50",
+    "roiBack": "855,546,189,151",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "组队按钮"

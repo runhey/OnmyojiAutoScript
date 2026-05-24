@@ -65,12 +65,8 @@ class ScriptTask(GameUi, GeneralBattle, DemonEncounterAssets, SwitchSoul):
             group, team = getattr(self.conf.demon_soul_config, self.boss_type).split(",")
         if group and team:
             self.run_switch_soul_by_name(group, team)
-            if datetime.now().weekday() == 0:
-                if select_best_demon:
-                    group, team = getattr(self.conf.best_demon_soul_config, f'{self.boss_type}_supplementary').split(",")
-                else:
-                    group, team = getattr(self.conf.demon_soul_config, f'{self.boss_type}_supplementary').split(",")
-                self.run_switch_soul_by_name(group, team)
+            return
+        logger.error(f'Unknown switch soul conf: group[{group}], team[{team}]')
 
     def execute_boss(self):
         """

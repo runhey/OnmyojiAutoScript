@@ -116,7 +116,7 @@ class ExplorationAssets:
 	# 队伍的表情标志 
 	I_TEAM_EMOJI = RuleImage(roi_front=(36,437,44,46), roi_back=(4,407,100,100), threshold=0.8, method="Template matching", file="./tasks/Exploration/res/res_team_emoji.png")
 	# 组队按钮 
-	I_EXP_CREATE_TEAM = RuleImage(roi_front=(590,514,122,52), roi_back=(543,490,192,100), threshold=0.8, method="Template matching", file="./tasks/Exploration/res/res_exp_create_team.png")
+	I_EXP_CREATE_TEAM = RuleImage(roi_front=(894,599,96,50), roi_back=(855,546,189,151), threshold=0.8, method="Template matching", file="./tasks/Exploration/res/res_exp_create_team.png")
 	# 创建确认 
 	I_EXP_CREATE_ENSURE = RuleImage(roi_front=(534,486,218,59), roi_back=(516,475,244,85), threshold=0.8, method="Template matching", file="./tasks/Exploration/res/res_exp_create_ensure.png")
 	# 箭头，收纳 

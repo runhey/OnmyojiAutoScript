@@ -20,9 +20,9 @@ class GeneralInviteAssets:
 	# description 
 	I_FIRE = RuleImage(roi_front=(1179,602,81,74), roi_back=(1179,602,81,74), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralInvite/gi/gi_fire.png")
 	# 锁定阵容的图片 
-	I_LOCK = RuleImage(roi_front=(29,644,29,32), roi_back=(29,644,29,32), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralInvite/gi/gi_lock.png")
+	I_LOCK = RuleImage(roi_front=(49,645,29,32), roi_back=(29,633,287,61), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralInvite/gi/gi_lock.png")
 	# 还没有锁定阵容 
-	I_UNLOCK = RuleImage(roi_front=(30,647,23,30), roi_back=(30,647,23,30), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralInvite/gi/gi_unlock.png")
+	I_UNLOCK = RuleImage(roi_front=(31,647,23,27), roi_back=(26,633,285,57), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralInvite/gi/gi_unlock.png")
 	# 如果是到时间会退出房间，这个右边显示一个匹配的图片 
 	I_MATCHING = RuleImage(roi_front=(51,574,52,114), roi_back=(51,574,52,114), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralInvite/gi/gi_matching.png")
 	# 永生之海挑战（还未有队友的图片） 
@@ -105,7 +105,7 @@ class GeneralInviteAssets:
 	# 判断是不是在庭院界面 
 	I_GI_HOME = RuleImage(roi_front=(361,34,34,46), roi_back=(361,34,34,46), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralInvite/gi/gi_gi_home.png")
 	# 判断是不是在探索界面 
-	I_GI_EXPLORE = RuleImage(roi_front=(1138,119,41,48), roi_back=(1138,119,41,48), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralInvite/gi/gi_gi_explore.png")
+	I_GI_EXPLORE = RuleImage(roi_front=(677,11,33,46), roi_back=(677,11,33,46), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralInvite/gi/gi_gi_explore.png")
 
 
 	# Ocr Rule Assets

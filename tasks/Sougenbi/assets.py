@@ -22,12 +22,6 @@ class SougenbiAssets:
 	# Image Rule Assets
 	# 进入业原火 
 	I_S_SOUGENBI = RuleImage(roi_front=(560,139,57,61), roi_back=(412,68,231,359), threshold=0.8, method="Template matching", file="./tasks/Sougenbi/s/s_s_sougenbi.png")
-	# 贪 
-	I_S_GREED = RuleImage(roi_front=(118,121,307,100), roi_back=(167,143,307,100), threshold=0.8, method="Template matching", file="./tasks/Sougenbi/s/s_s_greed.png")
-	#  
-	I_S_ANGER = RuleImage(roi_front=(164,291,307,100), roi_back=(164,291,307,100), threshold=0.8, method="Template matching", file="./tasks/Sougenbi/s/s_s_anger.png")
-	# 痴 
-	I_S_FOOLERY = RuleImage(roi_front=(164,436,307,100), roi_back=(164,436,307,100), threshold=0.8, method="Template matching", file="./tasks/Sougenbi/s/s_s_foolery.png")
 	# description 
 	I_S_TEAM_LOCK = RuleImage(roi_front=(700,652,31,36), roi_back=(667,649,167,56), threshold=0.8, method="Template matching", file="./tasks/Sougenbi/s/s_s_team_lock.png")
 	# description 
@@ -46,10 +40,11 @@ class SougenbiAssets:
 
 	# Ocr Rule Assets
 	# Ocr-description 
-	O_S_GREED = RuleOcr(roi=(388,20,63,42), area=(388,20,63,42), mode="Single", method="Default", keyword="", name="s_greed")
+	O_S_GREED = RuleOcr(roi=(585,7,63,42), area=(585,7,63,42), mode="Single", method="Default", keyword="", name="s_greed")
 	# Ocr-description 
-	O_S_ANGER = RuleOcr(roi=(571,18,79,43), area=(571,18,79,43), mode="Digit", method="Default", keyword="", name="s_anger")
+	O_S_ANGER = RuleOcr(roi=(759,9,79,43), area=(759,9,79,43), mode="Digit", method="Default", keyword="", name="s_anger")
 	# Ocr-description 
-	O_S_FOOLERY = RuleOcr(roi=(755,23,68,36), area=(755,23,68,36), mode="Digit", method="Default", keyword="", name="s_foolery")
+	O_S_FOOLERY = RuleOcr(roi=(955,10,68,36), area=(955,10,68,36), mode="Digit", method="Default", keyword="", name="s_foolery")
+
 
 

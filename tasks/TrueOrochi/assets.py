@@ -31,7 +31,7 @@ class TrueOrochiAssets:
 
 	# Image Rule Assets
 	# 出现真蛇 
-	I_FIND_TS = RuleImage(roi_front=(1,613,100,93), roi_back=(1,613,100,93), threshold=0.8, method="Template matching", file="./tasks/TrueOrochi/st/st_find_ts.png")
+	I_FIND_TS = RuleImage(roi_front=(259,635,96,79), roi_back=(183,585,331,135), threshold=0.8, method="Template matching", file="./tasks/TrueOrochi/st/st_find_ts.png")
 	# 点击挑战60体力 
 	I_ST_FIRE = RuleImage(roi_front=(960,485,100,100), roi_back=(960,485,100,100), threshold=0.8, method="Template matching", file="./tasks/TrueOrochi/st/st_st_fire.png")
 	# 确认挑战 

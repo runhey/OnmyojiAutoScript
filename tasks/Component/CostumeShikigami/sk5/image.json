@@ -29,8 +29,8 @@
   {
     "itemName": "sou_switch_1_5",
     "imageName": "sk5_sou_switch_1_5.png",
-    "roiFront": "973,140,34,32",
-    "roiBack": "967,131,51,48",
+    "roiFront": "982,149,27,29",
+    "roiBack": "969,137,50,47",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "第一组切换"
@@ -38,8 +38,8 @@
   {
     "itemName": "sou_switch_2_5",
     "imageName": "sk5_sou_switch_2_5.png",
-    "roiFront": "973,293,33,33",
-    "roiBack": "960,284,58,49",
+    "roiFront": "981,303,26,26",
+    "roiBack": "960,284,58,57",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "第二组切换"
@@ -47,7 +47,7 @@
   {
     "itemName": "sou_switch_3_5",
     "imageName": "sk5_sou_switch_3_5.png",
-    "roiFront": "968,448,41,38",
+    "roiFront": "980,453,29,29",
     "roiBack": "962,442,52,48",
     "method": "Template matching",
     "threshold": 0.8,
@@ -56,7 +56,7 @@
   {
     "itemName": "sou_switch_4_5",
     "imageName": "sk5_sou_switch_4_5.png",
-    "roiFront": "967,597,42,25",
+    "roiFront": "978,602,31,20",
     "roiBack": "962,592,53,34",
     "method": "Template matching",
     "threshold": 0.8,
@@ -155,7 +155,7 @@
   {
     "itemName": "sou_click_present_5",
     "imageName": "sk5_sou_click_present_5.png",
-    "roiFront": "967,305,43,22",
+    "roiFront": "980,306,30,20",
     "roiBack": "965,142,48,480",
     "method": "Template matching",
     "threshold": 0.9,
