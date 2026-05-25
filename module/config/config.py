@@ -233,6 +233,9 @@ class Config(ConfigState, ConfigManual, ConfigWatcher, ConfigMenu):
         if self.waiting_task:
             logger.info("No task pending")
             task = copy.deepcopy(self.waiting_task[0])
+            next_task = self.waiting_task[0]
+            next_time = next_task.next_run.strftime("%Y-%m-%d %H:%M:%S")
+            self.notifier.push(title="等待中", content=f"下一个任务：{next_task.command}，预定运行时间：{next_time}")
             # task.next_run = (task.next_run + self.hoarding).replace(microsecond=0)
             logger.attr("Task", task)
             return task
