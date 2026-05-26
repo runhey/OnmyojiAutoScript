@@ -45,8 +45,7 @@ class DemonConfig(BaseModel):
         description="通过预设名称来匹配普通封魔御魂分组\n例如=> 逢魔之时,歌(中间的是英文逗号)",
     )
     # 周一
-    demon_kiryou_utahime: str = Field(default="group,team", description="鬼灵歌姬御魂1")
-    demon_kiryou_utahime_supplementary: str = Field(default="group,team", description="鬼灵歌姬御魂补充")
+    demon_kiryou_utahime: str = Field(default="group,team", description="鬼灵歌姬御魂")
     # 周二
     demon_shinkirou: str = Field(default="group,team", description="蜃气楼御魂")
     # 周三 土蜘蛛
@@ -67,8 +66,7 @@ class BestDemonConfig(BaseModel):
         default=False,
         description="通过预设名称来匹配极封魔御魂分组\n例如=> 逢魔之时,歌(中间的是英文逗号)",
     )
-    best_demon_kiryou_utahime: str = Field(default="group,team", description="极鬼灵歌姬御魂1")
-    best_demon_kiryou_utahime_supplementary: str = Field(default="group,team", description="极鬼灵歌姬御魂补充")
+    best_demon_kiryou_utahime: str = Field(default="group,team", description="极鬼灵歌姬御魂")
     best_demon_shinkirou: str = Field(default="group,team", description="极蜃气楼御魂")
     best_demon_tsuchigumo: str = Field(default="group,team", description="极土蜘蛛御魂")
     best_demon_gashadokuro: str = Field(default="group,team", description="极荒骷髅御魂")
@@ -76,8 +74,8 @@ class BestDemonConfig(BaseModel):
     best_demon_oboroguruma: str = Field(default="group,team", description="极胧车御魂")
     best_demon_nightly_aramitamau: str = Field(default="group,team", description="极夜荒魂御魂")
 
-    hide_fields = dynamic_hide('best_demon_kiryou_utahime', 'best_demon_kiryou_utahime_supplementary',
-                               'best_demon_oboroguruma', 'best_demon_nightly_aramitamau')
+    hide_fields = dynamic_hide('best_demon_kiryou_utahime', 'best_demon_oboroguruma',
+                               'best_demon_nightly_aramitamau')
 
 
 def convert_to_general_battle_config(boss_type: str, demon_battle_conf: 'DemonBattleConfig' = None,
