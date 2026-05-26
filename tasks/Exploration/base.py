@@ -139,6 +139,8 @@ class BaseExploration(GameUi, GeneralBattle, GeneralRoom, GeneralInvite, Replace
             # 获取当前章节名
             results = self.O_E_EXPLORATION_LEVEL_NUMBER.detect_and_ocr(self.device.image)
             text1 = [result.ocr_text for result in results]
+            # https://github.com/runhey/OnmyojiAutoScript/issues/1540
+            text1 = [text.replace("名", "第").replace("书", "第") for text in text1]
             # 判断当前章节有无目标章节
             result = set(text1).intersection({explorationConfig.exploration_config.exploration_level})
             # 有则跳出检测
@@ -157,7 +159,6 @@ class BaseExploration(GameUi, GeneralBattle, GeneralRoom, GeneralInvite, Replace
                 raise GameStuckError(
                     f"Swiped too many times ({swipeCount}), seems stuck in exploration level selection"
                 )
-                return False
             time.sleep(1)
 
         # 选中对应章节
