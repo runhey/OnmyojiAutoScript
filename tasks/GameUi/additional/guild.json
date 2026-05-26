@@ -1,0 +1,11 @@
+[
+  {
+    "itemName": "close_chat_window",
+    "imageName": "additional_close_chat_window.png",
+    "roiFront": "653,397,18,18",
+    "roiBack": "653,397,18,18",
+    "method": "Template matching",
+    "threshold": 0.91,
+    "description": "关闭聊天窗口"
+  }
+]

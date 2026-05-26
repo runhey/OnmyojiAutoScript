@@ -353,9 +353,13 @@ class GameUi(BaseTask, GameUiAssets):
 if __name__ == '__main__':
     from module.config.config import Config
     from module.device.device import Device
+    from tasks.GameUi.page import page_guild
 
-    c = Config('oas2')
+    c = Config('oas1')
     d = Device(c)
     game = GameUi(config=c, device=d)
-    game.ui_get_current_page()
-    game.ui_goto(page_main)
+    for i in range(10):
+        game.ui_get_current_page()
+        game.ui_goto(page_guild)
+        game.ui_get_current_page()
+        game.ui_goto(page_main)
