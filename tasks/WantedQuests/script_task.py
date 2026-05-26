@@ -77,6 +77,9 @@ class ScriptTask(WQExplore, SecretScriptTask, WantedQuestsAssets):
                 logger.warning('failed too many times, exit')
                 break
             cu, re, total, area = self.find_wq(self.device.image)
+            if re == -2:
+                logger.info("only completed wanted quests remained")
+                break
             if re == -1:
                 error_count += 1
                 # 没找到任务 尝试上滑
@@ -448,15 +451,15 @@ class ScriptTask(WQExplore, SecretScriptTask, WantedQuestsAssets):
             success = self.run_general_battle(self.battle_config)
         while 1:
             self.screenshot()
-            if self.appear(self.I_CHECK_EXPLORATION):
-                self.wait_until_stable(self.I_CHECK_EXPLORATION)
+            if self.appear(self.I_CHECK_SECRET_ZONES):
                 break
             if self.appear_then_click(self.I_UI_BACK_RED, interval=1):
                 continue
             if self.appear_then_click(self.I_UI_BACK_BLUE, interval=1.5):
                 continue
-            if self.appear_then_click(self.I_UI_BACK_YELLOW, interval=1.5):
-                continue
+        self.ui_get_current_page()
+        self.ui_goto(page_exploration)
+        self.wait_until_stable(self.I_CHECK_EXPLORATION)
         logger.info('Secret mission finished')
 
     def invite_random(self, add_button: RuleImage):
@@ -725,6 +728,7 @@ class ScriptTask(WQExplore, SecretScriptTask, WantedQuestsAssets):
         reg_progress = re.compile(r'^(\d+)([7/])(\d+)$')
         # 没有检测到斜杠，符合格式：前N位与后N位相同,表示已完成
         reg_XX = re.compile(r'^(\d+)\1$')
+        completed_only = False
         for index, res in enumerate(res_list):
             if reg_fengyin.match(res.ocr_text):
                 continue
@@ -744,6 +748,7 @@ class ScriptTask(WQExplore, SecretScriptTask, WantedQuestsAssets):
                     cu = cu // 10
                 if cu == total:
                     # 该任务已完成，一般是悬赏任务，邀请人没有做导致的
+                    completed_only = True
                     continue
                 return cu, re, total, xywh
             # 例如：1414 66 1212
@@ -754,6 +759,8 @@ class ScriptTask(WQExplore, SecretScriptTask, WantedQuestsAssets):
             if reg_fengyin.match(res_list[last_index].ocr_text):
                 return 0, 1, 3, calc_xywh(res_list[last_index].box)
 
+        if completed_only:
+            return -2, -2, -2, [0, 0, 0, 0]
         return -1, -1, -1, [0, 0, 0, 0]
 
     def is_wq_remained(self):

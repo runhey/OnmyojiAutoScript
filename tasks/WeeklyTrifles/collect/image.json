@@ -9,46 +9,28 @@
     "description": "点击“式神”"
   },
   {
-    "itemName": "wt_scroll",
-    "imageName": "collect_wt_scroll.png",
-    "roiFront": "1128,615,77,67",
-    "roiBack": "1128,615,77,67",
+    "itemName": "wt_share",
+    "imageName": "collect_wt_share.png",
+    "roiFront": "336,280,50,48",
+    "roiBack": "266,241,199,141",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "点击式神绘卷"
   },
   {
-    "itemName": "wt_collect",
-    "imageName": "collect_wt_collect.png",
-    "roiFront": "1170,606,78,83",
-    "roiBack": "1170,606,78,83",
-    "method": "Template matching",
-    "threshold": 0.8,
-    "description": "点击分享"
-  },
-  {
-    "itemName": "wt_scroll_1",
-    "imageName": "collect_wt_scroll_1.png",
-    "roiFront": "1180,27,28,121",
-    "roiBack": "1159,12,65,152",
+    "itemName": "wt_logo",
+    "imageName": "collect_wt_logo.png",
+    "roiFront": "1106,72,34,111",
+    "roiBack": "1065,11,117,207",
     "method": "Template matching",
     "threshold": 0.7,
     "description": "百鬼夜行图"
   },
   {
-    "itemName": "wt_scroll_2",
-    "imageName": "collect_wt_scroll_2.png",
-    "roiFront": "1182,24,24,122",
-    "roiBack": "1163,12,63,155",
-    "method": "Template matching",
-    "threshold": 0.7,
-    "description": "百妖风物鉴"
-  },
-  {
     "itemName": "wt_collect_wechat",
     "imageName": "collect_wt_collect_wechat.png",
-    "roiFront": "280,600,440,100",
-    "roiBack": "280,600,440,100",
+    "roiFront": "325,645,50,45",
+    "roiBack": "119,594,1045,126",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "微信分享"

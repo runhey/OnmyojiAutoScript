@@ -16,9 +16,9 @@ class OrochiAssets:
 	# 组队 
 	I_FORM_TEAM = RuleImage(roi_front=(957,582,100,100), roi_back=(957,582,100,100), threshold=0.8, method="Template matching", file="./tasks/Orochi/o/o_form_team.png")
 	# description 
-	I_OROCHI_LOCK = RuleImage(roi_front=(652,657,22,26), roi_back=(628,644,191,62), threshold=0.8, method="Template matching", file="./tasks/Orochi/o/o_orochi_lock.png")
+	I_OROCHI_LOCK = RuleImage(roi_front=(706,659,19,20), roi_back=(628,646,262,60), threshold=0.7, method="Template matching", file="./tasks/Orochi/o/o_orochi_lock.png")
 	# description 
-	I_OROCHI_UNLOCK = RuleImage(roi_front=(652,656,21,21), roi_back=(624,644,188,60), threshold=0.8, method="Template matching", file="./tasks/Orochi/o/o_orochi_unlock.png")
+	I_OROCHI_UNLOCK = RuleImage(roi_front=(707,659,15,18), roi_back=(624,645,271,59), threshold=0.7, method="Template matching", file="./tasks/Orochi/o/o_orochi_unlock.png")
 	# 点击挑战 
 	I_OROCHI_FIRE = RuleImage(roi_front=(1133,584,110,59), roi_back=(1122,572,131,124), threshold=0.6, method="Template matching", file="./tasks/Orochi/o/o_orochi_fire.png")
 	# 式神录 
@@ -35,6 +35,6 @@ class OrochiAssets:
 
 	# Ocr Rule Assets
 	# Ocr-description 
-	O_O_TEST_OCR = RuleOcr(roi=(126,136,360,491), area=(126,136,360,491), mode="Full", method="Default", keyword="", name="o_test_ocr")
+	O_O_TEST_OCR = RuleOcr(roi=(126,136,346,561), area=(126,136,346,561), mode="Full", method="Default", keyword="", name="o_test_ocr")
 
 
