@@ -1,5 +1,10 @@
 {
   "entries": {
+    "github/gh-aw-actions/setup-cli@v0.68.3": {
+      "repo": "github/gh-aw-actions/setup-cli",
+      "version": "v0.68.3",
+      "sha": "ba90f2186d7ad780ec640f364005fa24e797b360"
+    },
     "github/gh-aw-actions/setup@v0.68.3": {
       "repo": "github/gh-aw-actions/setup",
       "version": "v0.68.3",
