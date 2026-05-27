@@ -2,7 +2,7 @@
   {
     "itemName": "shi",
     "imageName": "as_shi.png",
-    "roiFront": "1182,379,43,29",
+    "roiFront": "1187,304,43,29",
     "roiBack": "1164,134,83,393",
     "method": "Template matching",
     "threshold": 0.7,
@@ -38,8 +38,8 @@
   {
     "itemName": "to_battle_main",
     "imageName": "as_to_battle_main.png",
-    "roiFront": "825,309,39,176",
-    "roiBack": "737,264,238,269",
+    "roiFront": "403,300,39,176",
+    "roiBack": "313,246,238,269",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "进入主要的战斗界面"
@@ -56,7 +56,7 @@
   {
     "itemName": "check_battle_main",
     "imageName": "as_check_battle_main.png",
-    "roiFront": "27,637,62,58",
+    "roiFront": "50,642,62,58",
     "roiBack": "1,510,415,203",
     "method": "Template matching",
     "threshold": 0.8,
@@ -74,7 +74,7 @@
   {
     "itemName": "battle_main_to_records",
     "imageName": "as_battle_main_to_records.png",
-    "roiFront": "999,557,39,42",
+    "roiFront": "1018,562,39,42",
     "roiBack": "966,534,140,100",
     "method": "Template matching",
     "threshold": 0.7,
