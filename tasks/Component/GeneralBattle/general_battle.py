@@ -237,6 +237,10 @@ class GeneralBattle(GeneralBuff, GeneralBattleAssets):
                 # self.appear_then_click(self.I_REWARD_SOUL_6, action=action_click, interval=1.5)
                 ):
                 continue
+            # 未知结算弹窗（皮肤碎片等）：点一下空白区域尝试跳过
+            if self.appear(self.I_STATISTICS) and not self.appear(self.I_REWARD)and not self.appear(self.I_WIN):
+                self.click(self.C_RANDOM_CLICK)
+                continue
             if (not self.appear(self.I_REWARD) and
                 not self.appear(self.I_REWARD_GOLD)#  and
                 # not self.appear(self.I_REWARD_STATISTICS) and
