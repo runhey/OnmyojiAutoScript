@@ -260,7 +260,7 @@ class SoloExploration(BaseExploration):
                 continue
             #
             elif scene == Scene.ENTRANCE:
-                self.ui_click_until_disappear(self.I_UI_BACK_RED)
+                self.ui_click(self.I_UI_BACK_YELLOW,stop=self.I_CHECK_EXPLORATION)
             #
             elif scene == Scene.TEAM:
                 continue
