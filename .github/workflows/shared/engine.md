@@ -1,10 +1,16 @@
 ---
+# engine:
+#   id: claude
+#   model: deepseek-v4-pro
+#   env:
+#     ANTHROPIC_BASE_URL: https://api.deepseek.com/anthropic
+#     ANTHROPIC_API_KEY : ${{ secrets.DEEPSEEK_API_KEY  }}
 engine:
-  id: claude
-  model: MiniMax-M2.7
+  id: codex
+  model: gpt-5.4
   env:
-    ANTHROPIC_BASE_URL: https://api.minimaxi.com/anthropic
-    ANTHROPIC_API_KEY : ${{ secrets.MINIMAX_API_KEY  }}
+    OPENAI_BASE_URL: https://ai-pixel.online
+    OPENAI_API_KEY : ${{ secrets.PIXEL_API_KEY }}
 ---
 
 

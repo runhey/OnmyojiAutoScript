@@ -33,12 +33,12 @@ imports:
 safe-outputs:
   add-labels:
     max: 3
-    target: "*"
+    target: ${{ inputs.issue_number }}
   add-comment:
     max: 1
-    target: "*"
+    target: ${{ inputs.issue_number }}
   update-issue:
-    target: "*"
+    target: ${{ inputs.issue_number }}
 
 timeout-minutes: 15
 ---
