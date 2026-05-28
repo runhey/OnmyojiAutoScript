@@ -35,15 +35,18 @@ class SoloExploration(BaseExploration):
         while 1:
             self.screenshot()
             scene = self.get_current_scene()
-
+            logger.info(f'[run_solo] Current scene: {scene.name}')
             #
             if scene == Scene.WORLD:
                 # 打开右边箭头
-                self.ui_click(click=self.I_EXP_ARROW_LEFT, stop=self.I_EXP_ARROW_RIGHT, interval=2)
+                self.ui_click(click=self.I_EXP_ARROW_LEFT, stop=self.I_EXP_ARROW_RIGHT, interval=2, timeout=3)
                 if self.appear(self.I_TREASURE_BOX_CLICK):
                     # 宝箱
                     logger.info('Treasure box appear, get it.')
                     self.ui_click_until_disappear(self.I_TREASURE_BOX_CLICK)
+                # 处理识别页面出错的情况
+                if not self.appear(self.I_CHECK_EXPLORATION):
+                    continue
                 if self.check_exit():
                     break
                 self.open_expect_level()
@@ -106,11 +109,15 @@ class SoloExploration(BaseExploration):
         while 1:
             self.screenshot()
             scene = self.get_current_scene()
+            logger.info(f'[run_leader] Current scene: {scene.name}')
             # 探索大世界
             if scene == Scene.WORLD:
-                self.wait_until_stable(self.I_CHECK_EXPLORATION)
+                self.wait_until_stable(self.I_CHECK_EXPLORATION, timeout=5)
                 # 打开右边箭头
-                self.ui_click(click=self.I_EXP_ARROW_LEFT, stop=self.I_EXP_ARROW_RIGHT, interval=2)
+                self.ui_click(click=self.I_EXP_ARROW_LEFT, stop=self.I_EXP_ARROW_RIGHT,timeout=3, interval=2)
+                # 处理识别页面出错的情况
+                if not self.appear(self.I_CHECK_EXPLORATION):
+                    continue
                 if self.appear(self.I_TREASURE_BOX_CLICK):
                     # 宝箱
                     logger.info('Treasure box appear, get it.')
@@ -240,10 +247,14 @@ class SoloExploration(BaseExploration):
         while 1:
             self.screenshot()
             scene = self.get_current_scene()
+            logger.info(f'[run_member] Current scene: {scene.name}')
             #
             if scene == Scene.WORLD:
                 # 打开右边箭头
                 self.ui_click(click=self.I_EXP_ARROW_LEFT, stop=self.I_EXP_ARROW_RIGHT, interval=2)
+                # 处理识别页面出错的情况
+                if not self.appear(self.I_CHECK_EXPLORATION):
+                    continue
                 if self.appear(self.I_TREASURE_BOX_CLICK):
                     # 宝箱
                     logger.info('Treasure box appear, get it.')
@@ -295,6 +306,7 @@ class SoloExploration(BaseExploration):
                     friend_leave_timer = Timer(10)
             #
             elif scene == Scene.BATTLE_PREPARE or scene == Scene.BATTLE_FIGHTING:
+                logger.info('[run_member] Handling scene: BATTLE')
                 self.check_take_over_battle(is_screenshot=False, config=self._config.general_battle_config)
             elif scene == Scene.UNKNOWN:
                 continue
