@@ -422,6 +422,22 @@ class BaseExploration(GameUi, GeneralBattle, GeneralRoom, GeneralInvite, Replace
         self.minions_cnt += 1
         return True
 
+    def wait_world_stable(self) -> bool:
+        """
+        # 打开右边箭头 and https://github.com/runhey/OnmyojiAutoScript/pull/1589/
+        https://github.com/runhey/OnmyojiAutoScript/issues/1588
+        @return:
+        """
+        while 1:
+            scene = self.get_current_scene(reuse_screenshot=False)
+            if scene == Scene.WORLD and self.appear(self.I_EXP_ARROW_RIGHT):
+                return True
+            if scene == Scene.ENTRANCE:
+                logger.warning('World scene unstable, possibly transient frame after paper doll collection')
+                return False
+            if self.appear_then_click(self.I_E_EXPLORATION_CLICK, interval=2):
+                continue
+
 
 if __name__ == "__main__":
     from module.config.config import Config
@@ -436,10 +452,9 @@ if __name__ == "__main__":
     # image = load_image(IMAGE_FILE)
     # t.device.image = image
     while 1:
-    # print(t.search_up_fight(UpType.EXP))
+        # print(t.search_up_fight(UpType.EXP))
         t.screenshot()
-        print(t.I_UP_DARUMA.test_match(t.device.image))
-        time.sleep(0.2)
+        print(t.get_current_scene())
     from PIL import Image
     # Image.fromarray(t.device.image.astype(np.uint8)).show()
 
