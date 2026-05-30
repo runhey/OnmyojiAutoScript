@@ -442,7 +442,7 @@ class BaseExploration(GameUi, GeneralBattle, GeneralRoom, GeneralInvite, Replace
             if scene == Scene.ENTRANCE:
                 logger.warning('World scene unstable, possibly transient frame after paper doll collection')
                 return False
-            if self.appear_then_click(self.I_E_EXPLORATION_CLICK, interval=2):
+            if self.appear_then_click(self.I_EXP_ARROW_LEFT, interval=2):
                 continue
 
 
