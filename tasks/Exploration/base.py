@@ -409,6 +409,13 @@ class BaseExploration(GameUi, GeneralBattle, GeneralRoom, GeneralInvite, Replace
             if self.appear(self.I_EXPLORATION_TITLE) or self.appear(self.I_CHECK_EXPLORATION):
                 continue
 
+    def _hook_special_reward(self) -> bool:
+        if self.appear(self.I_STATISTICS) and not self.appear(self.I_REWARD) and not self.appear(self.I_WIN):
+            if self.appear_then_click(self.I_CONFIRM_CLOSE_DIFF_SOUL):
+                return True
+            self.click(self.C_RANDOM_CLICK, interval=1.5)
+        return False
+
     def fire(self, button) -> bool:
         self.ui_click_until_disappear(button, interval=3)
         self.screenshot()

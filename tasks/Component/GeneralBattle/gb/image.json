@@ -137,8 +137,8 @@
   {
     "itemName": "statistics",
     "imageName": "gb_statistics.png",
-    "roiFront": "61,644,33,28",
-    "roiBack": "61,644,33,28",
+    "roiFront": "70,630,33,28",
+    "roiBack": "35,28,411,661",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"
