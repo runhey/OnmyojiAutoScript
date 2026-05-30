@@ -98,7 +98,7 @@ class GeneralBattleAssets:
 	# 左下角的位置指针 
 	I_LOCAL = RuleImage(roi_front=(25,563,30,34), roi_back=(25,563,30,34), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralBattle/gb/gb_local.png")
 	# description 
-	I_STATISTICS = RuleImage(roi_front=(70,630,33,28), roi_back=(35,28,411,661), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralBattle/gb/gb_statistics.png")
+	I_STATISTICS = RuleImage(roi_front=(61,644,33,28), roi_back=(61,644,33,28), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralBattle/gb/gb_statistics.png")
 	# 左上角的退出 
 	I_EXIT = RuleImage(roi_front=(14,12,43,41), roi_back=(14,12,43,41), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralBattle/gb/gb_exit.png")
 	# 退出确认 
@@ -143,7 +143,7 @@ class GeneralBattleAssets:
 	# 确认按钮 
 	I_CONFIRM = RuleImage(roi_front=(732,383,83,43), roi_back=(330,228,615,286), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralBattle/gb/gb_confirm.png")
 	# 关闭御魂不一致提示弹窗 
-	I_CONFIRM_CLOSE_DIFF_SOUL = RuleImage(roi_front=(571,404,135,54), roi_back=(508,372,255,161), threshold=0.7, method="Template matching", file="./tasks/Component/GeneralBattle/gb/gb_confirm_close_diff_soul.png")
+	I_CONFIRM_CLOSE_DIFF_SOUL = RuleImage(roi_front=(571,404,135,54), roi_back=(517,374,226,112), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralBattle/gb/gb_confirm_close_diff_soul.png")
 	# 禁用御魂不一致提示7天 
 	I_DISABLE_7DAYS_DIFF_SOUL = RuleImage(roi_front=(547,342,27,36), roi_back=(524,325,70,71), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralBattle/gb/gb_disable_7days_diff_soul.png")
 
