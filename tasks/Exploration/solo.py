@@ -35,7 +35,7 @@ class SoloExploration(BaseExploration):
         while 1:
             self.screenshot()
             scene = self.get_current_scene()
-            logger.info(f'[run_solo] Current scene: {scene.name}')
+            logger.info(f'[run_solo] Current scene: {scene.name}')  # TODO 2026.06.22 之后删掉这个刷屏的
             #
             if scene == Scene.WORLD:
                 # 打开右边箭头
@@ -107,7 +107,7 @@ class SoloExploration(BaseExploration):
         while 1:
             self.screenshot()
             scene = self.get_current_scene()
-            logger.info(f'[run_leader] Current scene: {scene.name}')
+            logger.info(f'[run_leader] Current scene: {scene.name}')  # TODO 2026.06.22 之后删掉这个刷屏的
             # 探索大世界
             if scene == Scene.WORLD:
                 # 打开右边箭头
@@ -242,7 +242,7 @@ class SoloExploration(BaseExploration):
         while 1:
             self.screenshot()
             scene = self.get_current_scene()
-            logger.info(f'[run_member] Current scene: {scene.name}')
+            logger.info(f'[run_member] Current scene: {scene.name}')  # TODO 2026.06.12 之后删掉这个刷屏的
             #
             if scene == Scene.WORLD:
                 # 打开右边箭头
