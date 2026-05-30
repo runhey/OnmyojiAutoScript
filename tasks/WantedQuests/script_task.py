@@ -728,11 +728,15 @@ class ScriptTask(WQExplore, SecretScriptTask, WantedQuestsAssets):
         reg_progress = re.compile(r'^(\d+)([7/])(\d+)$')
         # 没有检测到斜杠，符合格式：前N位与后N位相同,表示已完成
         reg_XX = re.compile(r'^(\d+)\1$')
+        # 过滤掉协或者未知悬赏等其他无用字符
+        reg_other = re.compile(r'[?？协边]')
         completed_only = False
         for index, res in enumerate(res_list):
             if reg_fengyin.match(res.ocr_text):
                 continue
             if reg_time.match(res.ocr_text):
+                continue
+            if reg_other.search(res.ocr_text):
                 continue
             if (match := reg_progress.match(res.ocr_text)):
                 spliter_index = match.start(2)
