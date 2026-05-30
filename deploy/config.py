@@ -88,13 +88,14 @@ class DeployConfig(ConfigModel):
         logger.info(f"Rest of the configs are the same as default")
 
     def read(self):
-        self.config = poor_yaml_read(DEPLOY_TEMPLATE)
+        self.config_template = poor_yaml_read(DEPLOY_TEMPLATE)
+        self.config = copy.deepcopy(self.config_template)
+        self.config.update(poor_yaml_read(self.file))
+
         # https://e.coding.net/onmyojiautoscript/oas/OnmyojiAutoScript.git
         # 2025.09.01 腾讯coding跑路了
         if self.config["Repository"].startswith("https://e.coding.net/"):
             self.config["Repository"] = "https://gitcode.com/OnmyojiAutoScript/OnmyojiAutoScript.git"
-        self.config_template = copy.deepcopy(self.config)
-        self.config.update(poor_yaml_read(self.file))
 
         for key, value in self.config.items():
             if hasattr(self, key):
