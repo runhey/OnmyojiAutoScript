@@ -54,9 +54,10 @@ body:
   - type: textarea
     id: screenshots
     attributes:
-      label: 截图
+      label: 报错时游戏的截图/别的截图
       description: |
         如果有，添加屏幕截图以帮助解释你的问题。
+        游戏截图可以在游戏安装目录的文件夹 logs/error/{一堆日期数字}/ 里面找到，要求1280x720分辨率。
         提示: 可以通过点击这个区域，然后把文件拖进来添加图片或日志文件。
     validations:
       required: false
