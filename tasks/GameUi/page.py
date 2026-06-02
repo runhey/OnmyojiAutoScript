@@ -55,7 +55,7 @@ page_login = Page(G.I_CHECK_LOGIN_FORM)
 page_main = Page(G.I_CHECK_MAIN)
 page_main.additional = [G.I_AD_CLOSE_RED, G.I_BACK_FRIENDS, RestartAssets.I_CANCEL_BATTLE,
                         [RestartAssets.I_LOGIN_COURTYARD, RestartAssets.C_LOGIN_SCROLL_CLOSE_AREA],
-                            GGA.I_CHAT_CLOSE_BUTTON]
+                            GGA.I_CHAT_CLOSE_BUTTON, G.I_CLOSE_CHAT_WINDOW]
 # 召唤summon
 page_summon = Page(G.I_CHECK_SUMMON)
 page_summon.link(button=G.I_SUMMON_GOTO_MAIN, destination=page_main)
