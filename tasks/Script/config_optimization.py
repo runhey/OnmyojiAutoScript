@@ -10,6 +10,7 @@ from tasks.Component.config_base import Time
 class WhenTaskQueueEmpty(str, Enum):
     GOTO_MAIN = 'goto_main'
     CLOSE_GAME = 'close_game'
+    CLOSE_COMPUTER = 'close_computer'
 
 class ScheduleRule(str, Enum):
     FILTER = 'Filter'  # 默认的基于过滤器，（按照开发者设定的调度规则进行调度）

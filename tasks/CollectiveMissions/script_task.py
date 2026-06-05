@@ -264,8 +264,9 @@ class ScriptTask(GameUi, CollectiveMissionsAssets):
                 raise RequestHumanTakeover
 
         logger.info('Swipe to the most matter')
-        # 还有一点很重要的，捐赠会有双倍的，需要领两次
+        # 双倍活动时会领两次；若只有单次奖励，超时后继续避免卡死
         reward_number = 0
+        second_reward_wait = None
         while 1:
             self.screenshot()
 
@@ -273,7 +274,13 @@ class ScriptTask(GameUi, CollectiveMissionsAssets):
                 break
             if self.ui_reward_appear_click(False):
                 reward_number += 1
+                if reward_number == 1:
+                    second_reward_wait = Timer(10)
+                    second_reward_wait.start()
                 continue
+            if reward_number == 1 and second_reward_wait is not None and second_reward_wait.reached():
+                logger.info('Donate: only one reward popup; skip waiting for double')
+                break
             if self.appear_then_click(self.I_CM_PRESENT, interval=1):
                 continue
         self.ui_reward_appear_click(True)
@@ -362,8 +369,8 @@ class ScriptTask(GameUi, CollectiveMissionsAssets):
             for click in click_list:
                 self.click(click)
         logger.info('Finish to feed soul')
-        # 还有一点很重要的，捐赠会有双倍的，需要领两次
         reward_number = 0
+        second_reward_wait = None
         while 1:
             self.screenshot()
 
@@ -371,7 +378,13 @@ class ScriptTask(GameUi, CollectiveMissionsAssets):
                 break
             if self.ui_reward_appear_click(False):
                 reward_number += 1
+                if reward_number == 1:
+                    second_reward_wait = Timer(10)
+                    second_reward_wait.start()
                 continue
+            if reward_number == 1 and second_reward_wait is not None and second_reward_wait.reached():
+                logger.info('Feed: only one reward popup; skip waiting for double')
+                break
             if self.appear_then_click(self.I_FEED_SUBMIT, interval=1):
                 continue
         self.ui_reward_appear_click(True)

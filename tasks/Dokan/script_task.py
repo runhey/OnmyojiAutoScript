@@ -140,9 +140,9 @@ class ScriptTask(ExtendGreenMark, GameUi, SwitchSoul, DokanSceneDetector):
                 if not try_start_dokan:
                     is_dokan_activated = False
                     break
-                # NOTE 只在周一尝试建立道馆
-                if datetime.now().weekday() == 0:
-                    self.creat_dokan()
+
+                # 尝试建立道馆
+                self.creat_dokan()
 
                 # 寻找合适道馆,找不到直接退出
                 if not self.find_dokan(self.config.dokan.dokan_config.find_dokan_score):

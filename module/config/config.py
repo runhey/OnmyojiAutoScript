@@ -356,10 +356,15 @@ class Config(ConfigState, ConfigManual, ConfigWatcher, ConfigMenu):
                              scheduler.float_time.second)
             random_float = random.randint(0, float_seconds)
             # 如果有强制运行时间
-            if scheduler.server_update == time(hour=9):
+            if scheduler.server_update == time(hour=9) or target is not None:
                 next_run += timedelta(seconds=random_float)
             else:
                 next_run = parse_tomorrow_server(scheduler.server_update, scheduler.delay_date, random_float)
+
+        if hasattr(scheduler, 'next_monday') and scheduler.next_monday:
+            today = next_run - timedelta(days=1)
+            days_until_monday = (7 - today.weekday()) % 7 or 7
+            next_run = today + timedelta(days=days_until_monday)
 
         # 将这些连接起来，方便日志输出
         kv = dict_to_kv(
