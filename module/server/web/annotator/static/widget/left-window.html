@@ -1,0 +1,60 @@
+<aside class="tool-window tool-window-left" id="leftWindow">
+  <div class="icon-rail icon-rail-left" id="leftRail">
+    <button type="button" class="rail-btn" data-window="left" data-panel-id="dataSourcePanel" title="数据来源">来源</button>
+    <button type="button" class="rail-btn" data-window="left" data-panel-id="sessionImagesPanel" title="图片">图片</button>
+  </div>
+  <div class="tool-content tool-content-left" id="leftContent">
+    <aside class="stack stack-left" id="leftStack">
+      <section class="panel panel-top panel-scroll-box" id="dataSourcePanel">
+        <h2>数据来源</h2>
+        <div class="panel-scroll-body">
+          <label>来源模式
+            <select id="sourceMode">
+              <option value="local" selected>本地图片</option>
+              <option value="emulator">模拟器画面</option>
+            </select>
+          </label>
+
+          <div id="localControls" class="block">
+            <label>上传图片（支持多选）
+              <input id="imageUpload" type="file" accept="image/*" multiple>
+            </label>
+            <button id="uploadBtn" type="button">上传</button>
+          </div>
+
+          <div id="emulatorControls" class="block hidden">
+            <label>脚本配置
+              <select id="configName"></select>
+            </label>
+            <label>帧率（1-10）
+              <input id="frameRate" type="number" min="1" max="10" value="2">
+            </label>
+            <div class="row">
+              <button id="startEmulatorBtn" type="button">连接模拟器</button>
+              <button id="stopEmulatorBtn" type="button">停止连接</button>
+            </div>
+            <div class="preview-card">
+              <img id="emulatorPreview" alt="模拟器预览" />
+            </div>
+            <button id="captureBtn" type="button">截取当前帧到图片列表</button>
+            <pre id="emulatorStatus" class="small-output"></pre>
+          </div>
+        </div>
+      </section>
+
+      <div class="panel-height-splitter" id="leftPanelSplitter" aria-hidden="true"></div>
+
+      <section class="panel panel-fill panel-lock-scroll" id="sessionImagesPanel">
+        <h2>图片</h2>
+        <div class="row">
+          <button id="refreshImagesBtn" type="button">刷新</button>
+          <button id="removeImagesBtn" type="button" class="danger-btn">移除</button>
+          <button id="clearImagesBtn" type="button" class="danger-btn">清空</button>
+        </div>
+        <div class="selected-info">已选中: <span id="selectedImageCount">0</span></div>
+        <div id="imageList" class="image-list"></div>
+      </section>
+    </aside>
+  </div>
+</aside>
+<div class="edge-splitter edge-splitter-left" id="leftSplitter" aria-hidden="true"></div>

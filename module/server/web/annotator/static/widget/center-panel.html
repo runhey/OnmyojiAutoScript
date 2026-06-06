@@ -1,0 +1,40 @@
+<section class="panel center-panel" id="centerPanel">
+  <h2>ROI 画布</h2>
+  <div id="stageWrap" class="stage-wrap">
+    <div class="stage-canvas-holder">
+      <div id="imageStage" class="image-stage">
+        <img id="mainImage" alt="标注图片" />
+        <div id="noImagePlaceholder" class="no-image">空</div>
+        <div id="roiBack" class="roi roi-back">
+          <span class="tag">Back</span>
+          <span class="resize-handle resize-handle-nw" data-resize-dir="nw"></span>
+          <span class="resize-handle resize-handle-ne" data-resize-dir="ne"></span>
+          <span class="resize-handle resize-handle-sw" data-resize-dir="sw"></span>
+          <span class="resize-handle resize-handle-se" data-resize-dir="se"></span>
+        </div>
+        <div id="roiFront" class="roi roi-front">
+          <span class="tag">Front</span>
+          <span class="resize-handle resize-handle-nw" data-resize-dir="nw"></span>
+          <span class="resize-handle resize-handle-ne" data-resize-dir="ne"></span>
+          <span class="resize-handle resize-handle-sw" data-resize-dir="sw"></span>
+          <span class="resize-handle resize-handle-se" data-resize-dir="se"></span>
+        </div>
+        <div id="testRoiBack" class="roi roi-test-back hidden"><span class="tag">TestBack</span></div>
+        <div id="testRoiFront" class="roi roi-test-front hidden"><span class="tag">TestFront</span></div>
+      </div>
+    </div>
+  </div>
+  <div class="roi-values">
+    <label>roiFront<input id="roiFrontValue" type="text"></label>
+    <label>roiBack<input id="roiBackValue" type="text"></label>
+  </div>
+
+  <section class="panel output-panel center-output-panel" id="centerOutputPanel">
+    <div class="output-header">
+      <h3>输出</h3>
+      <button id="clearOutputBtn" type="button">清空输出</button>
+    </div>
+    <pre id="outputLog" class="output-log"></pre>
+  </section>
+</section>
+

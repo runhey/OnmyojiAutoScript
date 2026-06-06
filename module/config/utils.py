@@ -9,6 +9,7 @@ from filelock import FileLock
 from datetime import datetime, timedelta, timezone, time
 
 from module.config.atomicwrites import atomic_write
+from module.logger import logger
 
 DEFAULT_TIME = datetime(2023, 1, 1, 0, 0)
 
@@ -50,7 +51,7 @@ def read_file(file: str):
     _, ext = os.path.splitext(file)
     lock = FileLock(f"{file}.lock")
     with lock:
-        print(f'read: {file}')
+        logger.debug(f'read: {file}')
         if ext == '.yaml':
             with open(file, mode='r', encoding='utf-8') as f:
                 s = f.read()
@@ -65,7 +66,7 @@ def read_file(file: str):
                 s = f.read()
                 return json.loads(s)
         else:
-            print(f'Unsupported config file extension: {ext}')
+            logger.warning(f'Unsupported config file extension: {ext}')
             return {}
 
 def write_file(file: str, data):
@@ -83,7 +84,7 @@ def write_file(file: str, data):
     _, ext = os.path.splitext(file)
     lock = FileLock(f"{file}.lock")
     with lock:
-        print(f'write: {file}')
+        logger.debug(f'write: {file}')
         if ext == '.yaml':
             with atomic_write(file, overwrite=True, encoding='utf-8', newline='') as f:
                 if isinstance(data, list):
@@ -97,7 +98,7 @@ def write_file(file: str, data):
                 s = json.dumps(data, indent=2, ensure_ascii=False, sort_keys=False, default=str)
                 f.write(s)
         else:
-            print(f'Unsupported config file extension: {ext}')
+            logger.warning(f'Unsupported config file extension: {ext}')
 
 
 def deep_iter(data, depth=0, current_depth=1):
