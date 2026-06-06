@@ -76,7 +76,11 @@ class ScriptTask(WQExplore, SecretScriptTask, WantedQuestsAssets):
             if error_count > 3:
                 logger.warning('failed too many times, exit')
                 break
+            if self.current_count >= 30:
+                logger.error(f'current count {self.current_count} >= 20, exit')
+                raise Exception('current count >= 20, exit')
             cu, re, total, area = self.find_wq(self.device.image)
+            logger.info(f"find_wq result: current {cu} remain {re} total {total} area {area}")
             if re == -2:
                 logger.info("only completed wanted quests remained")
                 break
@@ -87,85 +91,10 @@ class ScriptTask(WQExplore, SecretScriptTask, WantedQuestsAssets):
                 sleep(1)
                 continue
             # 找到任务,执行
-            error_count=0
+            error_count = 0
             self.O_WQ_TEXT_ALL.area = area
             self.execute_mission(self.O_WQ_TEXT_ALL, total - cu, number_challenge)
             sleep(1.5)
-
-
-
-        # region 旧代码
-        # # 第一个位置
-        # wq_1_done = False
-        # wq_2_done = False
-        # while 1:
-        #     self.screenshot()
-        #     if self.appear(self.I_WQ_BOX):
-        #         self.ui_get_reward(self.I_WQ_BOX)
-        #         continue
-        #     if self.appear(self.I_TREASURE_BOX_CLICK):
-        #         self.ui_get_reward(self.I_TREASURE_BOX_CLICK)
-        #         continue
-        #     if ocr_error_count > 10:
-        #         logger.warning('OCR failed too many times, exit')
-        #         break
-        #     # if self.ocr_appear(self.O_WQ_TEXT_1, interval=1):
-        #     if (not wq_1_done) and self.txt_ocr_appear(self.O_WQ_TEXT_1, r".*[封|野]印.*", self.device.image):
-        #         # cu, re, total = self.O_WQ_NUM_1.ocr(self.device.image)
-        #         cu, re, total = self.process_ocr(self.O_WQ_NUM_1, self.device.image)
-        #         if cu == re == total == 0:
-        #             logger.warning('OCR failed and have a try')
-        #             ocr_error_count += 1
-        #             # 尝试打一次
-        #             unknown_num = self.O_WQ_NUM_UNKNOWN_1.ocr(self.device.image)
-        #             if unknown_num > 14:
-        #                 self.execute_mission(self.O_WQ_TEXT_1, 1, number_challenge)
-        #         if total > 14:
-        #             logger.warning("Total number of wanted quests is greater than 14")
-        #             total = total % 10
-        #         if cu > total:
-        #             logger.warning('Current number of wanted quests is greater than total number')
-        #             cu = cu % 10
-        #         if cu < total and re != 0:
-        #             self.execute_mission(self.O_WQ_TEXT_1, min(total - cu, 20), number_challenge)
-        #         if cu == total:
-        #             wq_1_done = True
-        #
-        #     # if self.ocr_appear(self.O_WQ_TEXT_2, interval=1):
-        #     if self.txt_ocr_appear(self.O_WQ_TEXT_2, r".*[封|野]印.*", self.device.image):
-        #         # cu, re, total = self.O_WQ_NUM_2.ocr(self.device.image)
-        #         cu, re, total = self.process_ocr(self.O_WQ_NUM_2, self.device.image)
-        #         if cu == re == total == 0:
-        #             logger.warning('OCR failed and have a try')
-        #             ocr_error_count += 1
-        #             # 尝试打一次
-        #             unknown_num = self.O_WQ_NUM_UNKNOWN_2.ocr(self.device.image)
-        #             if unknown_num > 14:
-        #                 self.execute_mission(self.O_WQ_TEXT_2, 1, number_challenge)
-        #         if total > 14:
-        #             logger.warning("Total number of wanted quests is greater than 14")
-        #             total = total % 10
-        #         if cu > total:
-        #             logger.warning('Current number of wanted quests is greater than total number')
-        #             cu = cu % 10
-        #         if cu < total and re != 0:
-        #             self.execute_mission(self.O_WQ_TEXT_2, min(total - cu, 20), number_challenge)
-        #         continue
-        #
-        #     # 妖气封印或者年兽，那就四分钟后继续
-        #     if self.appear(self.I_WQ_D1111) or self.appear(self.I_WQ_NIAN):
-        #         logger.warning('Tiger is in the way, wait for 4 minutes')
-        #         logger.info('Time to wait for 4 minutes')
-        #         self.set_next_run('WantedQuests', target=datetime.now() + timedelta(minutes=4))
-        #         raise TaskEnd('WantedQuests')
-        #     if self.appear(self.I_WQ_CHECK_TASK):
-        #         continue
-        #     sleep(1.5)
-        #     self.screenshot()
-        #     if not self.appear(self.I_WQ_CHECK_TASK):
-        #         logger.info('No wanted quests')
-        #         break
-        # endregion
 
         self.next_run()
         raise TaskEnd('WantedQuests')
@@ -728,17 +657,22 @@ class ScriptTask(WQExplore, SecretScriptTask, WantedQuestsAssets):
         reg_progress = re.compile(r'^(\d+)([7/])(\d+)$')
         # 没有检测到斜杠，符合格式：前N位与后N位相同,表示已完成
         reg_XX = re.compile(r'^(\d+)\1$')
+        # 过滤掉协或者未知悬赏等其他无用字符
+        reg_other = re.compile(r'[?？协边]')
         completed_only = False
         for index, res in enumerate(res_list):
             if reg_fengyin.match(res.ocr_text):
                 continue
             if reg_time.match(res.ocr_text):
                 continue
+            if reg_other.search(res.ocr_text):
+                continue
             if (match := reg_progress.match(res.ocr_text)):
                 spliter_index = match.start(2)
                 xywh = calc_xywh(res.box)
                 self.O_WQ_TEXT_ALL.area = xywh
                 cu, re, total = int(res.ocr_text[:spliter_index]), 1, int(res.ocr_text[spliter_index + 1:])
+                logger.info(f'Matched: {res.ocr_text}')
                 # 识别结果规范性检查
                 if total > 14:
                     logger.warning("Total number of wanted quests is greater than 14")

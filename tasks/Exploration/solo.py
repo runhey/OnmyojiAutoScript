@@ -35,18 +35,16 @@ class SoloExploration(BaseExploration):
         while 1:
             self.screenshot()
             scene = self.get_current_scene()
-            logger.info(f'[run_solo] Current scene: {scene.name}')
+            logger.info(f'[run_solo] Current scene: {scene.name}')  # TODO 2026.06.22 之后删掉这个刷屏的
             #
             if scene == Scene.WORLD:
                 # 打开右边箭头
-                self.ui_click(click=self.I_EXP_ARROW_LEFT, stop=self.I_EXP_ARROW_RIGHT, interval=2, timeout=3)
+                if not self.wait_world_stable():
+                    continue
                 if self.appear(self.I_TREASURE_BOX_CLICK):
                     # 宝箱
                     logger.info('Treasure box appear, get it.')
                     self.ui_click_until_disappear(self.I_TREASURE_BOX_CLICK)
-                # 处理识别页面出错的情况
-                if not self.appear(self.I_CHECK_EXPLORATION):
-                    continue
                 if self.check_exit():
                     break
                 self.open_expect_level()
@@ -109,14 +107,11 @@ class SoloExploration(BaseExploration):
         while 1:
             self.screenshot()
             scene = self.get_current_scene()
-            logger.info(f'[run_leader] Current scene: {scene.name}')
+            logger.info(f'[run_leader] Current scene: {scene.name}')  # TODO 2026.06.22 之后删掉这个刷屏的
             # 探索大世界
             if scene == Scene.WORLD:
-                self.wait_until_stable(self.I_CHECK_EXPLORATION, timeout=5)
                 # 打开右边箭头
-                self.ui_click(click=self.I_EXP_ARROW_LEFT, stop=self.I_EXP_ARROW_RIGHT,timeout=3, interval=2)
-                # 处理识别页面出错的情况
-                if not self.appear(self.I_CHECK_EXPLORATION):
+                if not self.wait_world_stable():
                     continue
                 if self.appear(self.I_TREASURE_BOX_CLICK):
                     # 宝箱
@@ -247,13 +242,11 @@ class SoloExploration(BaseExploration):
         while 1:
             self.screenshot()
             scene = self.get_current_scene()
-            logger.info(f'[run_member] Current scene: {scene.name}')
+            logger.info(f'[run_member] Current scene: {scene.name}')  # TODO 2026.06.12 之后删掉这个刷屏的
             #
             if scene == Scene.WORLD:
                 # 打开右边箭头
-                self.ui_click(click=self.I_EXP_ARROW_LEFT, stop=self.I_EXP_ARROW_RIGHT, interval=2)
-                # 处理识别页面出错的情况
-                if not self.appear(self.I_CHECK_EXPLORATION):
+                if not self.wait_world_stable():
                     continue
                 if self.appear(self.I_TREASURE_BOX_CLICK):
                     # 宝箱

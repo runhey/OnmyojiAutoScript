@@ -21,9 +21,9 @@
     "itemName": "confirm_close_diff_soul",
     "imageName": "gb_confirm_close_diff_soul.png",
     "roiFront": "571,404,135,54",
-    "roiBack": "508,372,255,161",
+    "roiBack": "517,374,226,112",
     "method": "Template matching",
-    "threshold": 0.7,
+    "threshold": 0.8,
     "description": "关闭御魂不一致提示弹窗"
   },
   {

@@ -73,7 +73,7 @@ class GeneralBattle(GeneralBuff, GeneralBattleAssets):
                     continue
                 continue
             # 未知界面, 既不是准备界面也不是战斗界面
-            logger.info('Wait for preparation page')
+            # logger.info('Wait for preparation page')  # 这玩意刷屏
             sleep(random.uniform(0.4, 0.8))
         return False
 
@@ -218,10 +218,11 @@ class GeneralBattle(GeneralBuff, GeneralBattleAssets):
                 if not self.appear(self.I_FALSE, threshold=0.6):
                     return False
         # 最后保证能点击 获得奖励
-        if not self.wait_until_appear(self.I_REWARD):
-            # 有些的战斗没有下面的奖励，所以直接返回
-            logger.info("There is no reward, Exit battle")
-            return win
+        if not self.wait_until_appear(self.I_REWARD, wait_time=10):
+            if not self.appear(self.I_STATISTICS):
+                # 有些的战斗没有下面的奖励，所以直接返回
+                logger.info("There is no reward, Exit battle")
+                return win
         logger.info("Get reward")
         while 1:
             self.screenshot()
@@ -237,13 +238,10 @@ class GeneralBattle(GeneralBuff, GeneralBattleAssets):
                 # self.appear_then_click(self.I_REWARD_SOUL_6, action=action_click, interval=1.5)
                 ):
                 continue
-            # 未知结算弹窗（皮肤碎片等）：点一下空白区域尝试跳过
-            if self.appear(self.I_STATISTICS) and not self.appear(self.I_REWARD)and not self.appear(self.I_WIN):
-                self.click(self.C_RANDOM_CLICK)  #碎片
-                self.appear_then_click(self.I_CONFIRM_CLOSE_DIFF_SOUL) #整个皮肤
+            if self._hook_special_reward():
                 continue
             if (not self.appear(self.I_REWARD) and
-                not self.appear(self.I_REWARD_GOLD)#  and
+                not self.appear(self.I_REWARD_GOLD)  # and
                 # not self.appear(self.I_REWARD_STATISTICS) and
                 # not self.appear(self.I_REWARD_PURPLE_SNAKE_SKIN) and
                 # not self.appear(self.I_REWARD_GOLD_SNAKE_SKIN) and
@@ -254,6 +252,12 @@ class GeneralBattle(GeneralBuff, GeneralBattleAssets):
                 break
 
         return win
+
+    def _hook_special_reward(self) -> bool:
+        """
+        For overwrite https://github.com/runhey/OnmyojiAutoScript/issues/1580
+        """
+        return False
 
     def green_mark(self, enable: bool = False, mark_mode: GreenMarkType = GreenMarkType.GREEN_MAIN):
         """
