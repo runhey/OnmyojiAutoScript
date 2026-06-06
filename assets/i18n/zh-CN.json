@@ -18,6 +18,7 @@
   "costume_carpbanner_type_help": "多数结界通用",
   "costume_battle_10": "流焰蝶舞",
   "costume_battle_11": "辰烁奇夜",
+  "costume_battle_13": "茸茨跃动",
   "enable_courtyard_affairs": "庭院事务",
   "GuildActivityMonitor": "寮活动监控",
   "guild_activity_monitor_combat_time": "监控时间设置",
@@ -38,4 +39,3 @@
   "emulator_startup_lead_time_help": "在开始运行任务之前提前启动模拟器的时间",
   "exit_four_help": "支持打九退四，保证稳定57级，要求设置好战斗主题，即 脚本->全局配置->游戏装饰自定义->战斗主题"
 }
-
