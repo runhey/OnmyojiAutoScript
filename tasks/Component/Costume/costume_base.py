@@ -35,27 +35,19 @@ carpbanner_costume_model = {
 }
 
 
-# 战斗主题（使用循环处理常规情况 + 特例处理）
-battle_theme_model = {}
-for i in range(1, 13):
-    entry = {
+# 战斗主题
+battle_theme_model = {
+    getattr(BattleType, f"COSTUME_BATTLE_{i}"): {
         'I_LOCAL': f'I_LOCAL_{i}',
         'I_EXIT': f'I_EXIT_{i}',
         'I_FRIENDS': f'I_FRIENDS_{i}',
-    }
-    if i == 8:  # 特殊处理第8项
-        entry.update({
-            'I_WIN': 'I_WIN_8',
-            'I_DE_WIN': 'I_DE_WIN_8',
-            'I_FALSE': 'I_FALSE_8'
-        })
-    if i == 12:  # 特殊处理第12项
-        entry.update({
-            'I_WIN': 'I_WIN_12',
-            'I_DE_WIN': 'I_DE_WIN_12',
-            'I_FALSE': 'I_FALSE_12'
-        })
-    battle_theme_model[getattr(BattleType, f"COSTUME_BATTLE_{i}")] = entry
+        'I_BATTLE_INFO': f'I_BATTLE_INFO_{i}',
+        # 以下资源并非所有主题都需要修改，未采集的资源将被跳过
+        'I_WIN': f'I_WIN_{i}', # 已知：8，12
+        'I_DE_WIN': f'I_DE_WIN_{i}', # 已知：8，12
+        'I_FALSE': f'I_FALSE_{i}' # 已知：8，12
+    } for i in range(1, 13)
+}
 
 # 幕间主题
 shikigami_costume_model = {
@@ -132,6 +124,9 @@ class CostumeBase:
         logger.info(f'Switch battle theme {battle_type}')
         costume_battle_assets = CostumeBattleAssets()
         for key, value in battle_theme_model[battle_type].items():
+            if not hasattr(costume_battle_assets, value):
+                # 尚未采集完成的资产，跳过
+                continue
             assert_value: RuleImage = getattr(costume_battle_assets, value)
             # 绿标的坐标点范围不变
             if key == 'I_LOCAL':
