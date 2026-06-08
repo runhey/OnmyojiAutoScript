@@ -43,10 +43,10 @@ battle_theme_model = {
         'I_FRIENDS': f'I_FRIENDS_{i}',
         'I_BATTLE_INFO': f'I_BATTLE_INFO_{i}',
         # 以下资源并非所有主题都需要修改，未采集的资源将被跳过
-        'I_WIN': f'I_WIN_{i}', # 已知：8，12
-        'I_DE_WIN': f'I_DE_WIN_{i}', # 已知：8，12
-        'I_FALSE': f'I_FALSE_{i}' # 已知：8，12
-    } for i in range(1, 13)
+        'I_WIN': f'I_WIN_{i}', # 已知：8，12，13，14
+        'I_DE_WIN': f'I_DE_WIN_{i}', # 已知：8，12，13，14
+        'I_FALSE': f'I_FALSE_{i}' # 已知：8，12，13，14
+    } for i in range(1, 15)
 }
 
 # 幕间主题
