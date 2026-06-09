@@ -302,4 +302,4 @@ if __name__ == "__main__":
     d = Device(c)
     t = ScriptTask(c, d)
 
-    t.check_and_lock_team()
+    t.run()
