@@ -52,5 +52,14 @@
     "method": "Template matching",
     "threshold": 0.8,
     "description": "失败"
+  },
+  {
+    "itemName": "battle_info_8",
+    "imageName": "battle8_battle_info_8.png",
+    "roiFront": "232,17,32,33",
+    "roiBack": "212,0,143,57",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "战斗信息标识"
   }
 ]
