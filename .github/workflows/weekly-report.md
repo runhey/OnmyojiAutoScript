@@ -2,8 +2,7 @@
 name: "Weekly Report"
 description: 每周自动生成仓库活动报告，包括 PR/Issue 列表、Changelog、贡献者统计等
 on:
-  schedule:
-    - cron: "0 17 * * 4" # Friday 01:00 Asia/Shanghai == Thursday 17:00 UTC
+  schedule: weekly on thursday
   workflow_dispatch:
 
 permissions:
