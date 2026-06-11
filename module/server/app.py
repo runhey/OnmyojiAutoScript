@@ -1,6 +1,8 @@
 # This Python file uses the following encoding: utf-8
 # @author runhey
 # github https://github.com/runhey
+from pathlib import Path
+
 from contextlib import asynccontextmanager
 
 import argparse
@@ -12,9 +14,10 @@ from fastapi.middleware.cors import CORSMiddleware
 from module.logger import logger
 from module.server.home_router import home_app
 from module.server.script_router import script_app
+from module.server.tool_router import tool_app
 from module.server.setting import State
 from module.server.main_manager import mm
-
+from starlette.staticfiles import StaticFiles
 
 
 @asynccontextmanager
@@ -40,6 +43,11 @@ app.add_middleware(
 
 app.include_router(home_app)
 app.include_router(script_app)
+app.include_router(tool_app)
+
+annotator_static_dir = Path(__file__).resolve().parent / "web" / "annotator" / "static"
+if annotator_static_dir.exists():
+    app.mount("/tool/annotator/static", StaticFiles(directory=str(annotator_static_dir)), name="annotator_static")
 
 
 async def on_startup():

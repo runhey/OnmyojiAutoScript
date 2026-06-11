@@ -83,10 +83,10 @@
   {
     "itemName": "exploration_goto_hero_test",
     "imageName": "page_exploration_goto_hero_test.png",
-    "roiFront": "837,630,58,56",
+    "roiFront": "838,635,38,43",
     "roiBack": "7,605,1272,113",
     "method": "Template matching",
-    "threshold": 0.8,
+    "threshold": 0.65,
     "description": "探索前往英杰试炼"
   }
 ]

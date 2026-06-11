@@ -1,0 +1,60 @@
+<div class="edge-splitter edge-splitter-right" id="rightSplitter" aria-hidden="true"></div>
+<aside class="tool-window tool-window-right" id="rightWindow">
+  <div class="tool-content tool-content-right" id="rightContent">
+    <aside class="stack stack-right" id="rightStack">
+      <section class="panel panel-top panel-scroll-box" id="ruleSourcePanel">
+        <h2>文件</h2>
+        <div class="panel-scroll-body">
+          <div id="dirSelectors" class="dir-selectors breadcrumb"></div>
+
+          <div class="row">
+            <input id="newJsonName" type="text" placeholder="输入新 JSON 名称" />
+            <button id="createJsonBtn" type="button">新增</button>
+            <button id="deleteJsonBtn" type="button" class="danger-btn">删除</button>
+          </div>
+        </div>
+      </section>
+
+      <div class="panel-height-splitter" id="rightPanelSplitter" aria-hidden="true"></div>
+
+      <section class="panel panel-fill rule-editor-panel" id="ruleEditorPanel">
+        <h2>规则</h2>
+        <div class="rule-editor-scroll">
+          <label>规则类型
+            <select id="ruleType"></select>
+          </label>
+
+          <div id="listMetaBox" class="block hidden">
+            <div id="listMetaFields" class="form-grid"></div>
+          </div>
+
+          <div class="row">
+            <button id="addRuleBtn" type="button">新增</button>
+            <button id="deleteRuleBtn" type="button">删除</button>
+            <button id="refreshRulesBtn" type="button">刷新</button>
+          </div>
+          <div id="ruleSearchBox" class="rule-search-box hidden">
+            <input id="ruleSearchInput" type="text" placeholder="按 itemName 搜索规则项" autocomplete="off" />
+          </div>
+          <div id="ruleList" class="rule-list"></div>
+
+          <div class="rule-list-splitter" id="ruleListSplitter" aria-hidden="true"></div>
+
+          <div class="rule-detail-scroll">
+            <div class="form-grid" id="ruleFields"></div>
+
+            <div class="row action-row">
+              <button id="saveImageBtn" type="button" class="hidden">裁剪</button>
+              <button id="saveRulesBtn" type="button">保存</button>
+              <button id="testRuleBtn" type="button" class="hidden">测试</button>
+            </div>
+          </div>
+        </div>
+      </section>
+    </aside>
+  </div>
+  <div class="icon-rail icon-rail-right" id="rightRail">
+    <button type="button" class="rail-btn" data-window="right" data-panel-id="ruleSourcePanel" title="文件">文件</button>
+    <button type="button" class="rail-btn" data-window="right" data-panel-id="ruleEditorPanel" title="规则">规则</button>
+  </div>
+</aside>

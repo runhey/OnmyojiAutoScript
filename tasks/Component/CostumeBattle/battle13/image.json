@@ -2,8 +2,8 @@
   {
     "itemName": "exit_13",
     "imageName": "battle13_exit_13.png",
-    "roiFront": "25,21,24,24",
-    "roiBack": "16,10,40,44",
+    "roiFront": "25,20,22,25",
+    "roiBack": "10,10,69,48",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "左上角退出"
@@ -11,8 +11,8 @@
   {
     "itemName": "friends_13",
     "imageName": "battle13_friends_13.png",
-    "roiFront": "95,17,28,27",
-    "roiBack": "88,12,40,40",
+    "roiFront": "98,15,22,30",
+    "roiBack": "74,10,71,47",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "左上角好友"
@@ -20,8 +20,8 @@
   {
     "itemName": "local_13",
     "imageName": "battle13_local_13.png",
-    "roiFront": "115,491,30,32",
-    "roiBack": "107,479,48,50",
+    "roiFront": "29,566,28,28",
+    "roiBack": "29,566,40,40",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "指针"
@@ -29,7 +29,7 @@
   {
     "itemName": "win_13",
     "imageName": "battle13_win_13.png",
-    "roiFront": "590,152,87,129",
+    "roiFront": "631,142,68,67",
     "roiBack": "390,30,510,290",
     "method": "Template matching",
     "threshold": 0.8,
@@ -38,8 +38,8 @@
   {
     "itemName": "de_win_13",
     "imageName": "battle13_de_win_13.png",
-    "roiFront": "590,152,87,129",
-    "roiBack": "390,30,510,290",
+    "roiFront": "577,59,73,49",
+    "roiBack": "386,0,480,231",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "针对封魔的特殊"
@@ -47,10 +47,19 @@
   {
     "itemName": "false_13",
     "imageName": "battle13_false_13.png",
-    "roiFront": "586,178,76,110",
-    "roiBack": "380,55,510,290",
+    "roiFront": "550,152,58,77",
+    "roiBack": "390,30,510,290",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "失败"
+  },
+  {
+    "itemName": "battle_info_13",
+    "imageName": "battle13_battle_info_13.png",
+    "roiFront": "234,17,32,32",
+    "roiBack": "215,0,142,58",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "战斗信息标识"
   }
 ]

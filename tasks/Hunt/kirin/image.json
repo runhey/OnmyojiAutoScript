@@ -25,5 +25,14 @@
     "method": "Template matching",
     "threshold": 0.8,
     "description": "麒麟已挑战"
+  },
+  {
+    "itemName": "kirin_start_challage",
+    "imageName": "kirin_kirin_start_challage.png",
+    "roiFront": "1141,576,80,98",
+    "roiBack": "1092,545,172,166",
+    "method": "Template matching",
+    "threshold": 0.7,
+    "description": "寮管理开启挑战"
   }
 ]

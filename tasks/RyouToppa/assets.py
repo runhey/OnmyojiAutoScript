@@ -103,7 +103,7 @@ class RyouToppaAssets:
 
 	# Image Rule Assets
 	# description 
-	I_TOPPA_RECORD = RuleImage(roi_front=(66,628,64,39), roi_back=(66,628,64,39), threshold=0.8, method="Template matching", file="./tasks/RyouToppa/dev/res_toppa_record.png")
+	I_TOPPA_RECORD = RuleImage(roi_front=(66,633,64,39), roi_back=(40,606,119,89), threshold=0.8, method="Template matching", file="./tasks/RyouToppa/dev/res_toppa_record.png")
 	# description 
 	I_TOPPA_LOCK_TEAM = RuleImage(roi_front=(203,602,26,32), roi_back=(203,602,26,32), threshold=0.8, method="Template matching", file="./tasks/RyouToppa/dev/dev_toppa_lock_team.png")
 	# description 
@@ -127,7 +127,7 @@ class RyouToppaAssets:
 	# 寮击破奖励 
 	I_RYOU_REWARD = RuleImage(roi_front=(134,417,241,40), roi_back=(122,390,340,84), threshold=0.65, method="Template matching", file="./tasks/RyouToppa/res/res_ryou_reward.png")
 	# 勋章奖励标题 
-	I_GUILD_ORDERS_REWARDS = RuleImage(roi_front=(1123,31,115,56), roi_back=(1123,31,115,56), threshold=0.8, method="Template matching", file="./tasks/RyouToppa/res/res_guild_orders_rewards.png")
+	I_GUILD_ORDERS_REWARDS = RuleImage(roi_front=(1123,31,115,56), roi_back=(1123,31,115,56), threshold=0.7, method="Template matching", file="./tasks/RyouToppa/res/res_guild_orders_rewards.png")
 	# 攻破阴阳寮 
 	I_SUCCESS_PENETRATION = RuleImage(roi_front=(141,374,234,37), roi_back=(141,374,234,37), threshold=0.8, method="Template matching", file="./tasks/RyouToppa/res/res_success_penetration.png")
 	# 个人突破刷新按钮 

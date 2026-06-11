@@ -50,7 +50,7 @@
     "roiFront": "1123,31,115,56",
     "roiBack": "1123,31,115,56",
     "method": "Template matching",
-    "threshold": 0.8,
+    "threshold": 0.7,
     "description": "勋章奖励标题"
   },
   {
