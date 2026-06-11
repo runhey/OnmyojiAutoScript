@@ -175,7 +175,7 @@ class GameUiAssets:
 	# description 
 	I_CHECK_GUILD = RuleImage(roi_front=(1072,630,49,46), roi_back=(1072,630,49,46), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_check_guild.png")
 	# description 
-	I_CHECK_TEAM = RuleImage(roi_front=(32,585,82,90), roi_back=(32,585,82,90), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_check_team.png")
+	I_CHECK_TEAM = RuleImage(roi_front=(32,585,82,90), roi_back=(32,585,82,90), threshold=0.63, method="Template matching", file="./tasks/GameUi/page/page_check_team.png")
 	# description 
 	I_CHECK_COLLECTION = RuleImage(roi_front=(579,639,63,65), roi_back=(118,626,1162,94), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_check_collection.png")
 	# description 
