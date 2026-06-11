@@ -37,7 +37,7 @@ carpbanner_costume_model = {
 
 # 战斗主题（使用循环处理常规情况 + 特例处理）
 battle_theme_model = {}
-for i in range(1, 13):
+for i in range(1, 14):
     entry = {
         'I_LOCAL': f'I_LOCAL_{i}',
         'I_EXIT': f'I_EXIT_{i}',
@@ -54,6 +54,12 @@ for i in range(1, 13):
             'I_WIN': 'I_WIN_12',
             'I_DE_WIN': 'I_DE_WIN_12',
             'I_FALSE': 'I_FALSE_12'
+        })
+    if i == 13:  # 13项特殊处理
+        entry.update({
+            'I_WIN': 'I_WIN_13',
+            'I_DE_WIN': 'I_DE_WIN_13',
+            'I_FALSE': 'I_FALSE_13'
         })
     battle_theme_model[getattr(BattleType, f"COSTUME_BATTLE_{i}")] = entry
 

@@ -53,6 +53,21 @@ class CostumeBattleAssets:
 
 
 	# Image Rule Assets
+	# 左上角退出 
+	I_EXIT_13 = RuleImage(roi_front=(25,21,24,24), roi_back=(16,10,40,44), threshold=0.8, method="Template matching", file="./tasks/Component/CostumeBattle/battle13/battle13_exit_13.png")
+	# 左上角好友 
+	I_FRIENDS_13 = RuleImage(roi_front=(95,17,28,27), roi_back=(88,12,40,40), threshold=0.8, method="Template matching", file="./tasks/Component/CostumeBattle/battle13/battle13_friends_13.png")
+	# 指针 
+	I_LOCAL_13 = RuleImage(roi_front=(115,491,30,32), roi_back=(107,479,48,50), threshold=0.8, method="Template matching", file="./tasks/Component/CostumeBattle/battle13/battle13_local_13.png")
+	# 战斗胜利 
+	I_WIN_13 = RuleImage(roi_front=(590,152,87,129), roi_back=(390,30,510,290), threshold=0.8, method="Template matching", file="./tasks/Component/CostumeBattle/battle13/battle13_win_13.png")
+	# 针对封魔的特殊 
+	I_DE_WIN_13 = RuleImage(roi_front=(590,152,87,129), roi_back=(390,30,510,290), threshold=0.8, method="Template matching", file="./tasks/Component/CostumeBattle/battle13/battle13_de_win_13.png")
+	# 失败 
+	I_FALSE_13 = RuleImage(roi_front=(586,178,76,110), roi_back=(380,55,510,290), threshold=0.8, method="Template matching", file="./tasks/Component/CostumeBattle/battle13/battle13_false_13.png")
+
+
+	# Image Rule Assets
 	# description 
 	I_LOCAL_2 = RuleImage(roi_front=(30,569,21,22), roi_back=(30,569,21,22), threshold=0.8, method="Template matching", file="./tasks/Component/CostumeBattle/battle2/battle2_local_2.png")
 	# description 
