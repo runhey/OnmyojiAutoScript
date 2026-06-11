@@ -103,7 +103,7 @@ class RyouToppaAssets:
 
 	# Image Rule Assets
 	# description 
-	I_TOPPA_RECORD = RuleImage(roi_front=(66,628,64,39), roi_back=(66,628,64,39), threshold=0.8, method="Template matching", file="./tasks/RyouToppa/dev/res_toppa_record.png")
+	I_TOPPA_RECORD = RuleImage(roi_front=(66,633,64,39), roi_back=(40,606,119,89), threshold=0.8, method="Template matching", file="./tasks/RyouToppa/dev/res_toppa_record.png")
 	# description 
 	I_TOPPA_LOCK_TEAM = RuleImage(roi_front=(203,602,26,32), roi_back=(203,602,26,32), threshold=0.8, method="Template matching", file="./tasks/RyouToppa/dev/dev_toppa_lock_team.png")
 	# description 

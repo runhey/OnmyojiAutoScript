@@ -108,9 +108,12 @@ class ScriptTask(GameUi, GeneralBattle, GeneralInvite, SwitchSoul, HuntAssets):
             self.screenshot()
             if self.appear(self.I_PREPARE_HIGHLIGHT):
                 break
-            if self.appear_then_click(self.I_UI_CONFIRM, interval=0.9):
+            if self.appear_then_click(self.I_UI_CONFIRM, interval=0.9)\
+                    or self.appear_then_click(self.I_UI_CONFIRM_SAMLL, interval=0.9):
                 continue
             if self.appear_then_click(self.I_KIRIN_CHALLAGE, interval=1.5):
+                continue
+            if self.appear_then_click(self.I_KIRIN_START_CHALLAGE, interval=2.5):
                 continue
             if self.appear(self.I_KIRIN_END):
                 # 今日已挑战
