@@ -409,11 +409,62 @@ class RuleImage(RuleImageMallResourceMixin):
         """
         image = self.corp(image)
         average_color = cv2.mean(image)
-        # logger.info(f'{self.name} average_color: {average_color}')
+        if self.debug_mode:
+            logger.info(f'{self.name} average_color: {average_color}')
         for i in range(3):
             if abs(average_color[i] - color[i]) > bias:
                 return False
         return True
+
+    def match_brightness(
+            self, image: np.array,
+            threshold: float = 0.9,
+            roi: list = None,
+            gray: bool = False) -> bool:
+        source = self.corp(image, roi) if roi is not None else self.corp(image)
+        template = self.image
+
+        if len(source.shape) != 3:
+            raise Exception(f'{self.name} source image must be 3-channel RGB, got shape={source.shape}')
+        source_gray = cv2.cvtColor(source, cv2.COLOR_RGB2GRAY)
+        source_hsv = cv2.cvtColor(source, cv2.COLOR_RGB2HSV)
+
+        if len(template.shape) != 3:
+            raise Exception(f'{self.name} template image must be 3-channel RGB, got shape={template.shape}')
+        template_gray = cv2.cvtColor(template, cv2.COLOR_RGB2GRAY)
+        template_hsv = cv2.cvtColor(template, cv2.COLOR_RGB2HSV)
+
+        source_value = float(source_gray.mean()) if gray else float(source_hsv[:, :, 2].mean())
+        template_value = float(template_gray.mean()) if gray else float(template_hsv[:, :, 2].mean())
+        score = 1.0 - abs(source_value - template_value) / 255.0
+        score = max(0.0, min(1.0, score))
+
+        if self.debug_mode:
+            logger.attr(self.name, f'brightness similarity {score:.5f}')
+            logger.info(f'Template value: {template_value}, Source value: {source_value}')
+        return score >= threshold
+
+    def match_saturation(self, image: np.array, threshold: float = 0.9, roi: list = None) -> bool:
+        source = self.corp(image, roi) if roi is not None else self.corp(image)
+        template = self.image
+
+        if len(source.shape) != 3:
+            raise Exception(f'{self.name} source image must be 3-channel RGB, got shape={source.shape}')
+        source_hsv = cv2.cvtColor(source, cv2.COLOR_RGB2HSV)
+
+        if len(template.shape) != 3:
+            raise Exception(f'{self.name} template image must be 3-channel RGB, got shape={template.shape}')
+        template_hsv = cv2.cvtColor(template, cv2.COLOR_RGB2HSV)
+
+        source_value = float(source_hsv[:, :, 1].mean())
+        template_value = float(template_hsv[:, :, 1].mean())
+        score = 1.0 - abs(source_value - template_value) / 255.0
+        score = max(0.0, min(1.0, score))
+
+        if self.debug_mode:
+            logger.attr(self.name, f'saturation similarity {score:.5f}')
+            logger.info(f'Template value: {template_value}, Source value: {source_value}')
+        return score >= threshold
 
 if __name__ == "__main__":
     from dev_tools.assets_test import detect_image

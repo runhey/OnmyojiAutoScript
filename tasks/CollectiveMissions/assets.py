@@ -41,7 +41,7 @@ class CollectiveMissionsAssets:
 	# 领取奖励 
 	I_CM_REWARDS = RuleImage(roi_front=(567,463,145,60), roi_back=(200,458,914,88), threshold=0.8, method="Template matching", file="./tasks/CollectiveMissions/cm/cm_cm_rewards.png")
 	# description 
-	I_CM_SWITCH = RuleImage(roi_front=(414,478,43,58), roi_back=(310,453,282,114), threshold=0.8, method="Template matching", file="./tasks/CollectiveMissions/cm/cm_cm_switch.png")
+	I_CM_SWITCH = RuleImage(roi_front=(414,478,43,58), roi_back=(401,470,72,77), threshold=0.8, method="Template matching", file="./tasks/CollectiveMissions/cm/cm_cm_switch.png")
 
 
 	# Ocr Rule Assets
