@@ -61,7 +61,7 @@ class AbyssShadowsAssets:
 	# 式神录 
 	I_ABYSS_SHIKI = RuleImage(roi_front=(1199,462,47,53), roi_back=(1199,462,47,53), threshold=0.8, method="Template matching", file="./tasks/AbyssShadows/res/res_abyss_shiki.png")
 	# 狭间暗域 
-	I_ABYSS_SHADOWS = RuleImage(roi_front=(711,489,107,38), roi_back=(711,479,107,48), threshold=0.8, method="Template matching", file="./tasks/AbyssShadows/res/res_abyss_shadows.png")
+	I_ABYSS_SHADOWS = RuleImage(roi_front=(711,489,107,38), roi_back=(700,470,140,70), threshold=0.8, method="Template matching", file="./tasks/AbyssShadows/res/res_abyss_shadows.png")
 	# 开启狭间暗域 
 	I_OPEN_ABYSS_SHADOWS = RuleImage(roi_front=(1133,602,74,58), roi_back=(1133,602,74,58), threshold=0.8, method="Template matching", file="./tasks/AbyssShadows/res/res_open_abyss_shadows.png")
 	# 战报页面 
@@ -101,5 +101,4 @@ class AbyssShadowsAssets:
 	# Swipe Rule Assets
 	# 滑到狭间 
 	S_TO_ABBSY_SHADOWS = RuleSwipe(roi_front=(752,395,62,66), roi_back=(758,193,62,48), mode="default", name="to_abbsy_shadows")
-
 
