@@ -67,7 +67,7 @@ class GameUiAssets:
 	# 探索前往平安奇谭 
 	I_EXPLORATION_GOTO_HEIAN_KITAN = RuleImage(roi_front=(739,643,52,44), roi_back=(35,615,1097,102), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_exploration_goto_heian_kitan.png")
 	# 探索前往六道之门 
-	I_EXPLORATION_GOTO_SIX_GATES = RuleImage(roi_front=(928,638,54,46), roi_back=(46,618,1090,100), threshold=0.65, method="Template matching", file="./tasks/GameUi/page/page_exploration_goto_six_gates.png")
+	I_EXPLORATION_GOTO_SIX_GATES = RuleImage(roi_front=(529,679,93,30), roi_back=(46,618,1090,100), threshold=0.65, method="Template matching", file="./tasks/GameUi/page/page_exploration_goto_six_gates.png")
 	# 探索前往契灵之境 
 	I_EXPLORATION_GOTO_BONDLING_FAIRYLAND = RuleImage(roi_front=(1032,634,46,50), roi_back=(41,619,1104,96), threshold=0.65, method="Template matching", file="./tasks/GameUi/page/page_exploration_goto_bondling_fairyland.png")
 	# description 
@@ -89,7 +89,7 @@ class GameUiAssets:
 	# description 
 	I_CHECK_HEIAN_KITAN = RuleImage(roi_front=(27,48,47,39), roi_back=(27,48,47,39), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_check_heian_kitan.png")
 	# description 
-	I_CHECK_SIX_GATES = RuleImage(roi_front=(1174,621,55,44), roi_back=(1174,621,55,44), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_check_six_gates.png")
+	I_CHECK_SIX_GATES = RuleImage(roi_front=(98,22,128,38), roi_back=(98,22,128,38), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_check_six_gates.png")
 	# description 
 	I_CHECK_BONDLING_FAIRYLAND = RuleImage(roi_front=(614,660,56,49), roi_back=(614,660,56,49), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_check_bondling_fairyland.png")
 	# description 
@@ -278,5 +278,4 @@ class GameUiAssets:
 	O_HOME_EXPLORE = RuleOcr(roi=(310,105,858,194), area=(0,0,100,100), mode="Full", method="Default", keyword="探索", name="home_explore")
 	# Ocr-description 
 	O_NEW = RuleOcr(roi=(0,0,100,100), area=(0,0,100,100), mode="Single", method="Default", keyword="", name="new")
-
 

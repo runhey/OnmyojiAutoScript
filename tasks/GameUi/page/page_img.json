@@ -110,7 +110,7 @@
   {
     "itemName": "exploration_goto_six_gates",
     "imageName": "page_exploration_goto_six_gates.png",
-    "roiFront": "928,638,54,46",
+    "roiFront": "529,679,93,30",
     "roiBack": "46,618,1090,100",
     "method": "Template matching",
     "threshold": 0.65,
@@ -209,8 +209,8 @@
   {
     "itemName": "check_six_gates",
     "imageName": "page_check_six_gates.png",
-    "roiFront": "1174,621,55,44",
-    "roiBack": "1174,621,55,44",
+    "roiFront": "98,22,128,38",
+    "roiBack": "98,22,128,38",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"
