@@ -12,7 +12,7 @@
     "itemName": "nw_challage",
     "imageName": "netherworld_nw_challage.png",
     "roiFront": "306,590,171,63",
-    "roiBack": "306,590,171,63",
+    "roiBack": "300,584,190,75",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "点击挑战"
