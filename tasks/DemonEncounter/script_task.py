@@ -35,6 +35,70 @@ class LanternClass(Enum):
 class ScriptTask(GameUi, GeneralBattle, DemonEncounterAssets, SwitchSoul):
     conf: DemonEncounter = None
 
+    def _boss_team_config_appear(self) -> bool:
+        """Return whether the boss team configuration page is visible."""
+        return self.appear(self.I_BACK_BLUE)
+
+    def _return_to_boss_gather(self, timeout: int = 10) -> bool:
+        """Close preset/configuration pages until the gathering page appears."""
+        return_timer = Timer(timeout).start()
+        while not return_timer.reached():
+            self.screenshot()
+            if self.appear(self.I_BOSS_GATHER):
+                return True
+            if self._boss_team_config_appear():
+                self.click(self.C_BOSS_PRESET_BACK, interval=1)
+                continue
+            sleep(0.3)
+        return False
+
+    def _switch_boss_gather_preset(self, config: GeneralBattleConfig) -> bool:
+        """Switch the preset from the gathering page and return to gathering."""
+        logger.info('Open boss gathering team configuration')
+        if not self.click(self.C_BOSS_GATHER_PRESET, interval=1):
+            logger.warning('Failed to click boss gathering preset entrance')
+            return False
+
+        enter_timer = Timer(10).start()
+        while not enter_timer.reached():
+            self.screenshot()
+            if self._boss_team_config_appear():
+                break
+            sleep(0.3)
+        else:
+            logger.warning('Boss team configuration page did not appear')
+            return False
+
+        if self.appear_then_click(self.I_BOSS_TEAM_PRESET, interval=1):
+            logger.info('Boss team preset matched by template')
+        elif self.ocr_appear(self.O_PRESET_FULL):
+            self.click(self.O_PRESET_FULL, interval=1)
+        elif self.ocr_appear(self.O_PRESET):
+            self.click(self.O_PRESET, interval=1)
+        else:
+            # The stylized vertical label is unstable in OCR; its position is fixed.
+            logger.warning('Boss team preset OCR failed; use fixed preset position')
+            self.device.click(50, 660, control_name=self.O_PRESET_FULL.name)
+
+        if not self.wait_until_appear(self.I_BOSS_PRESET_PANEL, wait_time=5):
+            logger.warning('Boss preset panel did not appear')
+            if not self._return_to_boss_gather():
+                logger.warning('Failed to leave boss team configuration after preset error')
+            return False
+
+        self.switch_preset_team(
+            True,
+            config.preset_group,
+            config.preset_team,
+            preset_opened=True,
+        )
+
+        if not self._return_to_boss_gather():
+            logger.warning('Failed to return to boss gathering after preset switch')
+            return False
+        logger.info('Boss preset switched and returned to gathering')
+        return True
+
     def run(self):
         self.conf = self.config.demon_encounter
         if not self.check_time():
@@ -166,7 +230,20 @@ class ScriptTask(GameUi, GeneralBattle, DemonEncounterAssets, SwitchSoul):
         time.sleep(5)
         # 延长时间并在战斗结束后改回来
         self.device.stuck_timer_long = Timer(480, count=480).start()
+        if self.best_demon_enable:
+            general_battle_config = convert_to_general_battle_config(
+                self.boss_type,
+                best_demon_battle_conf=self.conf.best_demon_battle_config,
+            )
+        else:
+            general_battle_config = convert_to_general_battle_config(
+                self.boss_type,
+                demon_battle_conf=self.conf.demon_battle_config,
+            )
+
+        gather_preset_attempted = False
         preset_switched = False
+        prepare_preset_attempted = False
         while True:
             self.screenshot()
             if self.appear(self.I_BOSS_DONE_CHECK):
@@ -175,6 +252,12 @@ class ScriptTask(GameUi, GeneralBattle, DemonEncounterAssets, SwitchSoul):
                 self.device.stuck_record_clear()
                 self.device.stuck_record_add('BATTLE_STATUS_S')
                 logger.info('Boss Gathering...')
+                if general_battle_config.preset_enable and not gather_preset_attempted:
+                    # Mark before clicking so a failed attempt is not repeated throughout gathering.
+                    gather_preset_attempted = True
+                    preset_switched = self._switch_boss_gather_preset(general_battle_config)
+                    if not preset_switched:
+                        logger.warning('Boss gathering preset switch failed; keep prepare-stage fallback')
                 sleep(2)
                 continue
             if self.appear(self.I_BOSS_WAIT):
@@ -182,18 +265,12 @@ class ScriptTask(GameUi, GeneralBattle, DemonEncounterAssets, SwitchSoul):
                 sleep(2)
                 continue
             if self.appear(self.I_PREPARE_HIGHLIGHT):
-                if preset_switched:
+                if preset_switched or prepare_preset_attempted:
                     self.run_general_battle()
                     continue
-                preset_switched = True
+                prepare_preset_attempted = True
                 # 逢魔其他战斗会影响current_count导致大于0
                 self.current_count = 0
-                if self.best_demon_enable:
-                    general_battle_config = convert_to_general_battle_config(self.boss_type,
-                                                                             best_demon_battle_conf=self.conf.best_demon_battle_config)
-                else:
-                    general_battle_config = convert_to_general_battle_config(self.boss_type,
-                                                                             demon_battle_conf=self.conf.demon_battle_config)
                 self.run_general_battle(config=general_battle_config)
                 continue
             logger.info('Unknown scene Or Boss fight failed.waiting for Prepare_Button appear...')

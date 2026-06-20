@@ -4,5 +4,17 @@
     "roiFront": "593,274,100,100",
     "roiBack": "593,274,100,100",
     "description": "description"
+  },
+  {
+    "itemName": "boss_preset_back",
+    "roiFront": "20,10,60,45",
+    "roiBack": "20,10,60,45",
+    "description": "配置队伍返回"
+  },
+  {
+    "itemName": "boss_gather_preset",
+    "roiFront": "845,635,25,20",
+    "roiBack": "845,635,25,20",
+    "description": "集结页阵容预设入口"
   }
 ]
