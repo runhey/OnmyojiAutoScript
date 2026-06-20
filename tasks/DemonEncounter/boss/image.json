@@ -99,6 +99,24 @@
     "description": "集结"
   },
   {
+    "itemName": "boss_team_preset",
+    "imageName": "boss_boss_team_preset.png",
+    "roiFront": "26,632,38,60",
+    "roiBack": "15,615,70,90",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "配置队伍预设入口"
+  },
+  {
+    "itemName": "boss_preset_panel",
+    "imageName": "boss_boss_preset_panel.png",
+    "roiFront": "20,218,170,32",
+    "roiBack": "10,205,200,60",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "配置队伍预设面板"
+  },
+  {
     "itemName": "boss_win",
     "imageName": "boss_boss_win.png",
     "roiFront": "380,43,100,100",

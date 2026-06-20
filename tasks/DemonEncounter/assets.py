@@ -13,6 +13,10 @@ class DemonEncounterAssets:
 	# Click Rule Assets
 	# description 
 	C_DM_BOSS_CLICK = RuleClick(roi_front=(593,274,100,100), roi_back=(593,274,100,100), name="dm_boss_click")
+	# 配置队伍返回
+	C_BOSS_PRESET_BACK = RuleClick(roi_front=(20,10,60,45), roi_back=(20,10,60,45), name="boss_preset_back")
+	# 集结页阵容预设入口
+	C_BOSS_GATHER_PRESET = RuleClick(roi_front=(845,635,25,20), roi_back=(845,635,25,20), name="boss_gather_preset")
 
 
 	# Image Rule Assets
@@ -38,6 +42,10 @@ class DemonEncounterAssets:
 	I_BOSS_NO_SELECT = RuleImage(roi_front=(544,337,37,43), roi_back=(544,337,37,43), threshold=0.8, method="Template matching", file="./tasks/DemonEncounter/boss/boss_boss_no_select.png")
 	# 集结 
 	I_BOSS_GATHER = RuleImage(roi_front=(801,589,100,100), roi_back=(801,589,100,100), threshold=0.8, method="Template matching", file="./tasks/DemonEncounter/boss/boss_boss_gather.png")
+	# 配置队伍预设入口
+	I_BOSS_TEAM_PRESET = RuleImage(roi_front=(26,632,38,60), roi_back=(15,615,70,90), threshold=0.8, method="Template matching", file="./tasks/DemonEncounter/boss/boss_boss_team_preset.png")
+	# 配置队伍预设面板
+	I_BOSS_PRESET_PANEL = RuleImage(roi_front=(20,218,170,32), roi_back=(10,205,200,60), threshold=0.8, method="Template matching", file="./tasks/DemonEncounter/boss/boss_boss_preset_panel.png")
 	# 战斗胜利 
 	I_BOSS_WIN = RuleImage(roi_front=(380,43,100,100), roi_back=(380,43,100,100), threshold=0.8, method="Template matching", file="./tasks/DemonEncounter/boss/boss_boss_win.png")
 	# 白色退出 
@@ -147,5 +155,4 @@ class DemonEncounterAssets:
 	O_LETTER_ANSWER_2 = RuleOcr(roi=(428,350,438,74), area=(428,350,438,74), mode="Single", method="Default", keyword="", name="letter_answer_2")
 	# 回答三 
 	O_LETTER_ANSWER_3 = RuleOcr(roi=(428,439,443,72), area=(428,439,443,72), mode="Single", method="Default", keyword="", name="letter_answer_3")
-
 

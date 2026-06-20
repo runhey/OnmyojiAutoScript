@@ -301,12 +301,14 @@ class GeneralBattle(GeneralBuff, GeneralBattleAssets):
             # 点击绿标
             self.device.click(x, y)
 
-    def switch_preset_team(self, enable: bool = False, preset_group: int = 1, preset_team: int = 1):
+    def switch_preset_team(self, enable: bool = False, preset_group: int = 1, preset_team: int = 1,
+                           preset_opened: bool = False):
         """
         切换预设的队伍， 要求是在不锁定队伍时的情况下
         :param enable:
         :param preset_group:
         :param preset_team:
+        :param preset_opened: the preset panel has already been opened by the caller
         :return:
         """
         if not enable:
@@ -314,26 +316,29 @@ class GeneralBattle(GeneralBuff, GeneralBattleAssets):
             return None
 
         logger.info("Preset is enable")
-        # 点击预设按钮
-        while 1:
-            self.screenshot()
+        if preset_opened:
+            logger.info("Preset panel is already open")
+        else:
+            # 点击预设按钮
+            while 1:
+                self.screenshot()
 
-            if self.appear(self.I_PRESET_ENSURE):
-                break
-            # 首个队伍没有满足5个式神，未出现预设按钮的情况下跳出循环
-            if self.appear(self.I_PRESENT_LESS_THAN_5):
-                break
-            if self.appear_then_click(self.I_PRESET, threshold=0.8, interval=1):
-                continue
-            if self.appear_then_click(self.I_PRESET_WIT_NUMBER, threshold=0.8, interval=1):
-                continue
-            if self.ocr_appear(self.O_PRESET):
-                self.click(self.O_PRESET, interval=1)
-                continue
-            if self.ocr_appear(self.O_PRESET_FULL):
-                self.click(self.O_PRESET_FULL, interval=1)
-                continue
-        logger.info("Click preset button")
+                if self.appear(self.I_PRESET_ENSURE):
+                    break
+                # 首个队伍没有满足5个式神，未出现预设按钮的情况下跳出循环
+                if self.appear(self.I_PRESENT_LESS_THAN_5):
+                    break
+                if self.appear_then_click(self.I_PRESET, threshold=0.8, interval=1):
+                    continue
+                if self.appear_then_click(self.I_PRESET_WIT_NUMBER, threshold=0.8, interval=1):
+                    continue
+                if self.ocr_appear(self.O_PRESET):
+                    self.click(self.O_PRESET, interval=1)
+                    continue
+                if self.ocr_appear(self.O_PRESET_FULL):
+                    self.click(self.O_PRESET_FULL, interval=1)
+                    continue
+            logger.info("Click preset button")
 
         def get_unselect_color(tmp1, tmp2, tmp3, size):
             # 获取未选择分组的颜色，3组之中必定存在两个颜色相似
