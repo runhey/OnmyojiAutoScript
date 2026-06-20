@@ -123,7 +123,9 @@ class ScriptTask(GameUi, GeneralBattle, SwitchSoul, DemonRetreatAssets, AbyssSha
             # 确保不离开退治
             if self.appear_then_click(self.I_QUIT_BACK, interval=1):
                 pass
-            if self.appear(self.I_HUNT_CHECK):
+            if (self.appear(self.I_HUNT_CHECK)
+                    or self.appear(self.I_DEMON_GATHER)
+                    or self.is_in_prepare(False)):
                 if self.appear_then_click(self.I_QUIT_BACK, interval=1):
                     pass
                 logger.info("Enter demon_retreat success")
