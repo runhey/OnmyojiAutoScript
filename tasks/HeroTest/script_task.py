@@ -209,6 +209,11 @@ class ScriptTask(GameUi, GeneralBattle, HeroTestAssets, SwitchSoul):
             logger.info("Art war card is enough")
             return True
         cu = self.O_ART_WAR_CARD_PLUS.ocr(image=self.device.image)
+        try:
+            cu = int(cu)
+        except (TypeError, ValueError) as e:
+            logger.warning(f"Unexpected art war card plus OCR result: {cu!r}, {e}")
+            cu = 0
         if cu >= 1:
             logger.info("Art war card is not enough, but plus card is enough")
             return True
