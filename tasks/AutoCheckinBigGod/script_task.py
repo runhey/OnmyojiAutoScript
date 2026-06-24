@@ -839,12 +839,19 @@ Java.perform(function() {{
         return None
 
     def _get_device_id(self, pid):
-        """通过 Frida 获取 DeviceId"""
+        """通过 Frida 获取 DeviceId，失败时使用UDID作为备选"""
         script = """
 Java.perform(function() {
     try {
         var YXFDeviceInfo = Java.use('com.netease.gl.glbase.build.YXFDeviceInfo');
-        console.log('GL_DEVICEID:' + YXFDeviceInfo.getDeviceId());
+        var id = YXFDeviceInfo.getDeviceId();
+        if (id && typeof id === 'string' && id != 'unknown') console.log('GL_DEVICEID:' + id);
+    } catch(e) {}
+    try {
+        var ctx = Java.use('android.app.ActivityThread').currentApplication().getApplicationContext();
+        var sp = ctx.getSharedPreferences('gl_user_info', 0);
+        var deviceId = sp.getString('deviceId', '');
+        if (deviceId && deviceId != 'unknown') console.log('GL_DEVICEID:' + deviceId);
     } catch(e) {}
     console.log('__DONE__');
 });
@@ -853,7 +860,18 @@ Java.perform(function() {
         if output:
             for line in output.split('\n'):
                 if 'GL_DEVICEID:' in line:
-                    return line.split('GL_DEVICEID:')[1].strip()
+                    device_id = line.split('GL_DEVICEID:')[1].strip()
+                    if device_id and device_id != 'unknown' and not device_id.startswith('Java.Field'):
+                        return device_id
+        
+        try:
+            udid = self._adb_shell(['settings', 'get', 'secure', 'android_id'])
+            if udid and udid != 'unknown':
+                logger.info(f'使用UDID作为DeviceId')
+                return udid
+        except Exception:
+            pass
+        
         return None
 
     def _login_by_urs_token(self, pid, urs_creds):
@@ -1120,3 +1138,10 @@ Java.perform(function() {
             logger.error(f'  领取异常: {title} - {e}')
 
         return False
+if __name__ == "__main__":
+    from module.config.config import Config
+    from module.device.device import Device
+    config = Config('oas1')
+    device = Device(config)
+    t = ScriptTask(config, device)
+    t.run()
