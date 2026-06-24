@@ -25,5 +25,14 @@
     "method": "Template matching",
     "threshold": 0.8,
     "description": "左上角好友"
+  },
+  {
+    "itemName": "battle_info_7",
+    "imageName": "battle7_battle_info_7.png",
+    "roiFront": "232,16,33,33",
+    "roiBack": "214,0,141,57",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "战斗信息标识"
   }
 ]

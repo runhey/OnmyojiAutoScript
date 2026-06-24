@@ -90,7 +90,6 @@ class ScriptTask(GameUi, CollectiveMissionsAssets):
             if self.appear_then_click(self.I_UI_BACK_YELLOW, interval=1):
                 continue
 
-
         self.set_next_run(task='CollectiveMissions', success=True, finish=True)
         raise TaskEnd('CollectiveMissions')
 
@@ -286,19 +285,32 @@ class ScriptTask(GameUi, CollectiveMissionsAssets):
         :param friend_name: 要选择的好友名称
         :return: 成功选择返回True
         """
-
+        click_cnt = 0
         while 1:
             self.screenshot()
             # 识别当前任务
             missions = self.detect_one(self.O_CM_1, self.O_CM_2)
             logger.info(f"当前任务: {missions}")
             logger.info(f"目标任务: {missions_select}")
+
             if missions == missions_select:
                 logger.info(f"成功切换任务")
                 return True
-            else:
+            if click_cnt > 20:
+                logger.warning(f'click_cnt={click_cnt}')
+                return False
+            if not (self.I_CM_SWITCH.match_brightness(self.device.image) and
+                self.I_CM_SWITCH.match_brightness(self.device.image) and
+                self.I_CM_SWITCH.match_mean_color(self.device.image, color=(134, 107, 83))
+            ):
+                # 无法刷新
+                logger.warning(f'[SelectMission] cannot refresh, brightness/color mismatch at click_cnt={click_cnt}')
+                return False
+            if self.appear_then_click(self.I_CM_SWITCH, interval=2):
                 logger.info(f"尝试切换任务")
-                self.appear_then_click(self.I_CM_SWITCH, interval=1)
+                click_cnt += 1
+
+
 
     def _soul(self, index: int):
         """

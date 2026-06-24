@@ -1,0 +1,97 @@
+.icon-rail-left {
+  border-radius: 8px 0 0 8px;
+  border-right: 0;
+}
+
+.tool-content-left {
+  border-left: 0;
+  border-radius: 0 8px 8px 0;
+}
+
+#sessionImagesPanel .row {
+  flex-shrink: 0;
+}
+
+.selected-info {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-bottom: 6px;
+  flex-shrink: 0;
+}
+
+.image-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  border: 1px solid var(--line-main);
+  border-radius: 8px;
+  padding: 6px;
+  background: var(--bg-subpanel);
+  overflow: auto;
+  min-height: 0;
+  flex: 1;
+}
+
+.image-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid var(--line-input);
+  border-radius: 6px;
+  padding: 5px;
+  background: linear-gradient(180deg, var(--bg-panel-1), var(--bg-panel-2));
+  cursor: pointer;
+  min-width: 0;
+}
+
+.image-item.active {
+  border-color: var(--accent);
+  box-shadow: inset 0 0 0 1px var(--accent);
+}
+
+.image-item.selected {
+  background: var(--selected-bg);
+}
+
+.image-item .selector {
+  display: flex;
+  align-items: center;
+}
+
+.image-item img {
+  width: 52px;
+  height: 36px;
+  object-fit: cover;
+  border-radius: 4px;
+  background: var(--bg-subpanel);
+  border: 1px solid var(--line-main);
+  flex-shrink: 0;
+}
+
+.image-item .image-name {
+  flex: 1;
+  min-width: 0;
+  font-size: 12px;
+  color: var(--text-main);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.preview-card {
+  border: 1px solid var(--line-main);
+  border-radius: 6px;
+  min-height: 140px;
+  background: var(--bg-subpanel);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: auto;
+}
+
+#emulatorPreview {
+  width: 100%;
+  height: auto;
+  max-height: 190px;
+  object-fit: contain;
+}
