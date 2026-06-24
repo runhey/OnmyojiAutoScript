@@ -58,7 +58,7 @@ class ProcessManager(DeployConfig):
         logger.hr(f'Kill {name}', 1)
         for row in self.iter_process_by_name(name):
             logger.info(' '.join(map(str, row)))
-            self.execute(f'taskkill /f /pid {row[2]}', allow_failure=True, output=False)
+            self.execute(['taskkill', '/f', '/pid', str(row[2])], allow_failure=True, output=False)
 
     def process_kill(self):
         logger.hr(f'Kill existing Alas', 0)
