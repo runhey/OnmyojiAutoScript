@@ -50,7 +50,7 @@ class LoginHandler(BaseTask, RestartAssets, GameUiAssets):
                     self.screenshot()  # 点击后立即获取最新截图，确保后续状态检查准确
                     continue
             # 确认进入庭院(兜底：未检测到闲庭图片时，如果识别到卷轴处于关闭状态，直接点击卷轴将其展开)
-            if self.appear_then_click(self.I_LOGIN_SCROOLL_CLOSE, interval=0.2):
+            if self.appear_then_click(self.I_LOGIN_SCROOLL_CLOSE, interval=1):
                 logger.info('Click closed scroll to open it')
                 self.screenshot()
                 continue
