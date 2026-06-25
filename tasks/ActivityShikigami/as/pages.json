@@ -2,7 +2,7 @@
   {
     "itemName": "shi",
     "imageName": "as_shi.png",
-    "roiFront": "1187,304,43,29",
+    "roiFront": "1187,383,43,29",
     "roiBack": "1164,134,83,393",
     "method": "Template matching",
     "threshold": 0.7,
@@ -38,8 +38,8 @@
   {
     "itemName": "to_battle_main",
     "imageName": "as_to_battle_main.png",
-    "roiFront": "403,300,39,176",
-    "roiBack": "313,246,238,269",
+    "roiFront": "245,284,39,176",
+    "roiBack": "177,240,238,269",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "进入主要的战斗界面"
