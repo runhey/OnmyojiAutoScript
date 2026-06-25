@@ -209,8 +209,8 @@
   {
     "itemName": "check_six_gates",
     "imageName": "page_check_six_gates.png",
-    "roiFront": "98,22,128,38",
-    "roiBack": "98,22,128,38",
+    "roiFront": "249,33,22,24",
+    "roiBack": "227,7,98,85",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"
