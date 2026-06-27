@@ -209,7 +209,6 @@ class ScriptTask(GameUi, GeneralBattle, HeroTestAssets, SwitchSoul):
             logger.info("Art war card is enough")
             return True
         cu = self.O_ART_WAR_CARD_PLUS.ocr(image=self.device.image)
-        cu = 0 if cu == '' else int(cu)
         if cu >= 1:
             logger.info("Art war card is not enough, but plus card is enough")
             return True
