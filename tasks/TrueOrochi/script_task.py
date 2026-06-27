@@ -181,26 +181,27 @@ class ScriptTask(OrochiScriptTask, TrueOrochiAssets):
     def check_times(self, battle: bool):
         """
         后续的次数和时间设置
-        :param battle:
+        :param battle: 本次是否挑战了真蛇
         :param current_success: 这周的成功次数
         :return:
         """
         now = datetime.now()
         now_year, now_week_number, now_weekday = now.isocalendar()
         if battle:
-            next_run = now + self.config.true_orochi.scheduler.success_interval
-        else:
-            next_run = now + self.config.true_orochi.scheduler.failure_interval
-        next_run_year, next_run_week_number, next_run_weekday = next_run.isocalendar()
-        # 如果下次运行的时间是下一周，那么就重置成功次数
-        if now_week_number != next_run_week_number:
-            logger.info('Reset current_success')
-            self.config.true_orochi.true_orochi_config.current_success = 0
-        else:
-            # 如果不是下一周，那么就加一
+            # 只有真正打过才加一次数
             logger.info('Add current_success by 1')
             self.config.true_orochi.true_orochi_config.current_success += 1
             self.config.true_orochi.true_orochi_config.current_success = min(2, self.config.true_orochi.true_orochi_config.current_success)
+            next_run = now + self.config.true_orochi.scheduler.success_interval
+        else:
+            logger.info('Battle skipped or not found True Orochi')
+            next_run = now + self.config.true_orochi.scheduler.failure_interval
+        next_run_year, next_run_week_number, next_run_weekday = next_run.isocalendar()
+        # 如果下次运行的时间是下一周，那么就重置成功次数，加入跨年周数重置判断
+        if (now_year, now_week_number) != (next_run_year, next_run_week_number):
+            logger.info('Reset current_success')
+            self.config.true_orochi.true_orochi_config.current_success = 0
+
         self.config.save()
         self.set_next_run(task='TrueOrochi', target=next_run)
         # self.set_next_run('TrueOrochi', finish=True, success=True)
