@@ -1,16 +1,17 @@
 # This Python file uses the following encoding: utf-8
 # @author runhey
 # github https://github.com/runhey
-from pathlib import Path
-import json
-
-from contextlib import asynccontextmanager
-
 import argparse
-from starlette import status
-from starlette.responses import JSONResponse
+import json
+from contextlib import asynccontextmanager
+from pathlib import Path
+
 from fastapi import FastAPI, Request
+from fastapi.encoders import jsonable_encoder
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
+from starlette import status
+from starlette.staticfiles import StaticFiles
 
 from module.logger import logger
 from module.server.home_router import home_app
@@ -18,15 +19,15 @@ from module.server.script_router import script_app
 from module.server.tool_router import tool_app
 from module.server.setting import State
 from module.server.main_manager import mm
-from starlette.staticfiles import StaticFiles
 
 
 class ASCIIJSONResponse(JSONResponse):
     """Serialize non-ASCII characters as ``\\uXXXX`` for proxy compatibility."""
 
     def render(self, content) -> bytes:
+        encoded_content = jsonable_encoder(content)
         return json.dumps(
-            content,
+            encoded_content,
             ensure_ascii=True,
             allow_nan=False,
             indent=None,
