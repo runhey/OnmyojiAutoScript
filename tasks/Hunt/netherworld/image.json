@@ -14,7 +14,7 @@
     "roiFront": "306,590,171,63",
     "roiBack": "306,590,171,63",
     "method": "Template matching",
-    "threshold": 0.8,
+    "threshold": 0.7,
     "description": "点击挑战"
   },
   {

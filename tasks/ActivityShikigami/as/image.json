@@ -20,8 +20,8 @@
   {
     "itemName": "climb_mode_pass",
     "imageName": "as_climb_mode_pass.png",
-    "roiFront": "1142,546,21,21",
-    "roiBack": "1129,510,48,69",
+    "roiFront": "1142,547,21,21",
+    "roiBack": "1129,511,111,68",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "活动爬塔标志"
