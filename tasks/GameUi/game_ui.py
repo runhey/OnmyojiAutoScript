@@ -316,8 +316,16 @@ class GameUi(BaseTask, GameUiAssets):
         if not page.additional:
             return
         for btn in page.additional:
+            # 支持反向条件操作: [条件元素, 操作元素, True]。不出现条件图片时点击另一个区域。
+            if isinstance(btn, list) and len(btn) == 3 and btn[2] is True:
+                condition, action, invert = btn
+                self.maybe_screenshot(skip_first_screenshot)
+                if not self.appear(condition):
+                    if self.appear_then_operate(action, interval=interval, skip_first_screenshot=False):
+                        logger.info(f'Page {page} additional invert conditional not {condition} -> {action} executed')
+                        skip_first_screenshot = False
             # 支持复合条件操作: [条件元素, 操作元素]。出现条件图片时点击另一个区域。
-            if isinstance(btn, list) and len(btn) == 2:
+            elif isinstance(btn, list) and len(btn) == 2:
                 condition, action = btn
                 self.maybe_screenshot(skip_first_screenshot)
                 if self.appear(condition):
