@@ -1,0 +1,47 @@
+[
+  {
+    "itemName": "check_main_15",
+    "imageName": "main15_check_main_15.png",
+    "roiFront": "1017,365,71,48",
+    "roiBack": "900,270,300,220",
+    "method": "Template matching",
+    "threshold": 0.75,
+    "description": "茨心乐园庭院判定"
+  },
+  {
+    "itemName": "main_goto_exploration_15",
+    "imageName": "main15_main_goto_exploration_15.png",
+    "roiFront": "590,190,30,50",
+    "roiBack": "520,130,190,180",
+    "method": "Template matching",
+    "threshold": 0.55,
+    "description": "探索"
+  },
+  {
+    "itemName": "main_goto_summon_15",
+    "imageName": "main15_main_goto_summon_15.png",
+    "roiFront": "960,204,28,45",
+    "roiBack": "890,130,200,180",
+    "method": "Template matching",
+    "threshold": 0.55,
+    "description": "召唤屋"
+  },
+  {
+    "itemName": "main_goto_town_15",
+    "imageName": "main15_main_goto_town_15.png",
+    "roiFront": "838,324,24,49",
+    "roiBack": "760,250,200,190",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "町中"
+  },
+  {
+    "itemName": "pet_house_15",
+    "imageName": "main15_pet_house_15.png",
+    "roiFront": "951,383,31,50",
+    "roiBack": "900,330,150,150",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "宠物屋"
+  }
+]
