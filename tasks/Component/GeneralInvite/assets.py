@@ -105,7 +105,7 @@ class GeneralInviteAssets:
 	# 判断是不是在庭院界面 
 	I_GI_HOME = RuleImage(roi_front=(361,34,34,46), roi_back=(361,34,34,46), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralInvite/gi/gi_gi_home.png")
 	# 判断是不是在探索界面 
-	I_GI_EXPLORE = RuleImage(roi_front=(677,11,33,46), roi_back=(677,11,33,46), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralInvite/gi/gi_gi_explore.png")
+	I_GI_EXPLORE = RuleImage(roi_front=(690,16,28,28), roi_back=(688,8,33,46), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralInvite/gi/gi_gi_explore.png")
 
 
 	# Ocr Rule Assets
