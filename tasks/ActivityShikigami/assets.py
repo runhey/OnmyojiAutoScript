@@ -48,12 +48,12 @@ class ActivityShikigamiAssets:
 	# 进入主要的战斗界面 
 	I_TO_BATTLE_MAIN = RuleImage(roi_front=(245,284,39,176), roi_back=(177,240,238,269), threshold=0.8, method="Template matching", file="./tasks/ActivityShikigami/as/as_to_battle_main.png")
 	# 点击进入boss战斗页面 
-	I_TO_BATTLE_BOSS = RuleImage(roi_front=(1076,241,37,136), roi_back=(934,209,234,327), threshold=0.8, method="Template matching", file="./tasks/ActivityShikigami/as/as_to_battle_boss.png")
+	I_TO_BATTLE_BOSS = RuleImage(roi_front=(940,250,20,100), roi_back=(900,200,100,200), threshold=0.8, method="Template matching", file="./tasks/ActivityShikigami/as/as_to_battle_boss.png")
 	# description 
 	I_CHECK_BATTLE_MAIN = RuleImage(roi_front=(50,642,62,58), roi_back=(1,510,415,203), threshold=0.8, method="Template matching", file="./tasks/ActivityShikigami/as/as_check_battle_main.png")
 	# description 
-	I_CHECK_BATTLE_BOSS = RuleImage(roi_front=(34,365,45,35), roi_back=(20,328,100,100), threshold=0.8, method="Template matching", file="./tasks/ActivityShikigami/as/as_check_battle_boss.png")
-	# 从main进入到式神录 
+	I_CHECK_BATTLE_BOSS = RuleImage(roi_front=(352,171,45,35), roi_back=(319,150,100,300), threshold=0.8, method="Template matching", file="./tasks/ActivityShikigami/as/as_check_battle_boss.png")
+	# 从main进入到式神录
 	I_BATTLE_MAIN_TO_RECORDS = RuleImage(roi_front=(1018,562,39,42), roi_back=(966,534,140,100), threshold=0.7, method="Template matching", file="./tasks/ActivityShikigami/as/as_battle_main_to_records.png")
 	# description 
 	I_TO_BATTLE_MAIN_2 = RuleImage(roi_front=(15,94,247,38), roi_back=(2,68,311,100), threshold=0.65, method="Template matching", file="./tasks/ActivityShikigami/as/as_to_battle_main_2.png")
@@ -92,7 +92,7 @@ class ActivityShikigamiAssets:
 
 	# Ocr Rule Assets
 	# 挑战 
-	O_FIRE = RuleOcr(roi=(1124,599,96,50), area=(1123,570,106,100), mode="Single", method="Default", keyword="挑战", name="fire")
+	O_FIRE = RuleOcr(roi=(1132,583,107,55), area=(1123,570,150,100), mode="Single", method="Default", keyword="挑战", name="fire")
 	# 体力的数量检测 
 	O_REMAIN_AP = RuleOcr(roi=(777,17,63,30), area=(776,16,63,30), mode="DigitCounter", method="Default", keyword="", name="remain_ap")
 	# 活动体力的剩余检测 
