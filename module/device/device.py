@@ -26,6 +26,8 @@ class Device(Platform, Screenshot, Control, AppControl):
     _screen_size_checked = False
     detect_record = set()
     click_record = deque(maxlen=15)
+    click_coord_record = deque(maxlen=15)
+    last_error_click_coords = None
     stuck_timer = Timer(60, count=60).start()
     stuck_timer_long = Timer(300, count=300).start()
     stuck_long_wait_list = ['BATTLE_STATUS_S', 'PAUSE', 'LOGIN_CHECK', 'PREPARE_BEFORE_BATTLE']
@@ -162,16 +164,24 @@ class Device(Platform, Screenshot, Control, AppControl):
         else:
             raise GameNotRunningError('Game died')
 
-    def handle_control_check(self, button):
+    def handle_control_check(self, button, x=None, y=None):
         self.stuck_record_clear()
         self.click_record_add(button)
+        if x is not None and y is not None:
+            self.click_coord_record_add(button, x, y)
         self.click_record_check()
 
     def click_record_add(self, button):
         self.click_record.append(str(button))
 
-    def click_record_clear(self):
+    def click_coord_record_add(self, button, x, y):
+        self.click_coord_record.append((str(button), int(x), int(y)))
+
+    def click_record_clear(self, keep_error_coords=False):
         self.click_record.clear()
+        self.click_coord_record.clear()
+        if not keep_error_coords:
+            self.last_error_click_coords = None
 
     def click_record_remove(self, button):
         """
@@ -206,12 +216,14 @@ class Device(Platform, Screenshot, Control, AppControl):
         if count[0][1] >= 10:
             logger.warning(f'Too many click for a button: {count[0][0]}')
             logger.warning(f'History click: {[str(prev) for prev in self.click_record]}')
-            self.click_record_clear()
+            self.last_error_click_coords = list(self.click_coord_record)
+            self.click_record_clear(keep_error_coords=True)
             raise GameTooManyClickError(f'Too many click for a button: {count[0][0]}')
         if len(count) >= 2 and count[0][1] >= 6 and count[1][1] >= 6:
             logger.warning(f'Too many click between 2 buttons: {count[0][0]}, {count[1][0]}')
             logger.warning(f'History click: {[str(prev) for prev in self.click_record]}')
-            self.click_record_clear()
+            self.last_error_click_coords = list(self.click_coord_record)
+            self.click_record_clear(keep_error_coords=True)
             raise GameTooManyClickError(f'Too many click between 2 buttons: {count[0][0]}, {count[1][0]}')
 
     def disable_stuck_detection(self):

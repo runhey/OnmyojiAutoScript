@@ -533,6 +533,165 @@ def save_image(image, file):
     Image.fromarray(image).save(file)
 
 
+# import cv2
+# import numpy as np
+
+def draw_click_marks(
+    image,
+    click_coords,
+    outer_radius=15,
+    inner_radius=3,
+    circle_thickness=2,
+    font_scale=0.5,
+    font_thickness=1,
+    margin=10,
+    text_padding=5,  # 文本列与标记边界框之间的水平间距
+    line_gap=4,      # 同一类别列中相邻文本行之间的垂直间距
+):
+    """
+    Draw click position markers with leader lines and category-based column layout.
+
+    Layout rules for each category group:
+      - Text column is placed to the left of min_x or to the right of max_x of the
+        group's markers, so text never overlaps any same-category marker point.
+      - Total required vertical space is pre-computed as
+        (text_height * count + line_gap * (count - 1)) and texts are laid out
+        sequentially as a block, clamped within the image. This avoids overlap
+        even when the first marker sits near the bottom edge.
+
+    Args:
+        image (np.ndarray): RGB image
+        click_coords (list[tuple[str, int, int]]): List of (name, x, y)
+        outer_radius (int): Radius of the outer circle.
+        inner_radius (int): Radius of the inner filled circle.
+        circle_thickness (int): Thickness of the outer circle outline.
+        font_scale (float): Font scale factor.
+        font_thickness (int): Thickness of the text.
+        margin (int): Margin from the image edge for text placement.
+        text_padding (int): Horizontal distance between the marker bounding box
+            and the text column.
+        line_gap (int): Vertical gap between consecutive text rows in a column.
+
+    Returns:
+        np.ndarray: RGB image with markers
+    """
+    image = image.copy()
+    image_bgr = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
+    h, w = image_bgr.shape[:2]
+
+    colors = [
+        (0, 0, 255), (0, 255, 0), (255, 0, 0),
+        (0, 255, 255), (255, 0, 255), (255, 255, 0),
+    ]
+
+    font = cv2.FONT_HERSHEY_SIMPLEX
+
+    # 1. 收集标记信息并绘制圆
+    markers_info = []
+    for i, (name, x, y) in enumerate(click_coords):
+        color = colors[i % len(colors)]
+        x, y = int(x), int(y)
+
+        cv2.circle(image_bgr, (x, y), outer_radius, color, circle_thickness)
+        cv2.circle(image_bgr, (x, y), inner_radius, color, -1)
+
+        label = f'{i + 1}:{name} ({x},{y})'
+        (text_w, text_h), baseline = cv2.getTextSize(label, font, font_scale, font_thickness)
+
+        # 提取纯类别名 (去除可能存在的前缀序号和后缀坐标)
+        category = name.split(':')[0] if ':' in name else name
+        category = category.split(' ')[0]
+
+        markers_info.append({
+            'x': x, 'y': y, 'color': color, 'label': label,
+            'text_w': text_w, 'text_h': text_h, 'category': category
+        })
+
+    # 2. 按类别分组
+    categories = {}
+    for m in markers_info:
+        cat = m['category']
+        categories.setdefault(cat, []).append(m)
+
+    # 3. 为每个类别计算列位置并绘制
+    for cat, group in categories.items():
+        # 按Y坐标排序，使文本顺序与标记点自上而下一致，引线不易交叉
+        group.sort(key=lambda m: m['y'])
+
+        n = len(group)
+        max_text_w = max(m['text_w'] for m in group)
+        text_h = max(m['text_h'] for m in group)
+
+        # 该组所有标记点的水平边界框，用于把文本列放到"同类标记矩形之外"
+        min_x = min(m['x'] for m in group)
+        max_x = max(m['x'] for m in group)
+        avg_y = sum(m['y'] for m in group) / n
+
+        # 决定文本列放在标记边界框的左侧还是右侧
+        space_left = min_x - margin
+        space_right = w - margin - max_x
+        need_w = max_text_w + text_padding
+
+        if space_left >= need_w and space_left >= space_right:
+            side = 'left'
+        elif space_right >= need_w:
+            side = 'right'
+        else:
+            # 两侧都不够，选空间更大的一侧，后续再做边界钳制
+            side = 'left' if space_left >= space_right else 'right'
+
+        # 计算列的左右边界，确保整个文本列在同类标记矩形之外
+        if side == 'left':
+            col_right_x = min_x - outer_radius - text_padding
+            col_left_x = col_right_x - max_text_w
+            # 边界修正：列超出图像左侧时拉回
+            if col_left_x < margin:
+                col_left_x = margin
+                col_right_x = col_left_x + max_text_w
+        else:
+            col_left_x = max_x + outer_radius + text_padding
+            col_right_x = col_left_x + max_text_w
+            # 边界修正：列超出图像右侧时拉回
+            if col_right_x > w - margin:
+                col_right_x = w - margin
+                col_left_x = col_right_x - max_text_w
+
+        # 4. 预计算文本块所需总高度 = 文本高度 * 个数 + 行间距 * (个数-1)
+        total_h = text_h * n + line_gap * (n - 1)
+        available_h = h - 2 * margin
+
+        # 文本块顶部 y：以标记点平均 y 为中心，再钳制到图像范围内
+        block_top = int(avg_y - total_h / 2)
+        if total_h <= available_h:
+            block_top = max(margin, min(block_top, h - margin - total_h))
+        else:
+            # 极端情况：所需空间超过可用空间，从顶部开始放置
+            block_top = margin
+
+        # 5. 依次绘制每个文本（顺序排列，杜绝重叠）
+        for idx, m in enumerate(group):
+            desired_top_y = block_top + idx * (text_h + line_gap)
+            text_y = desired_top_y + m['text_h']  # putText 的 y 是文本基线(左下角)
+
+            if side == 'left':
+                text_x = col_right_x - m['text_w']  # 右对齐
+                line_start_x = col_right_x + text_padding
+            else:
+                text_x = col_left_x  # 左对齐
+                line_start_x = col_left_x - text_padding
+
+            line_start_y = desired_top_y + m['text_h'] // 2
+            line_end = (m['x'], m['y'])
+
+            # 绘制直线引线 (斜线)
+            cv2.line(image_bgr, (line_start_x, line_start_y), line_end, m['color'], 1, cv2.LINE_AA)
+            # 绘制文本
+            cv2.putText(image_bgr, m['label'], (text_x, text_y),
+                        font, font_scale, m['color'], font_thickness, cv2.LINE_AA)
+
+    return cv2.cvtColor(image_bgr, cv2.COLOR_BGR2RGB)
+
+
 def crop(image, area, copy=True):
     """
     Crop image like pillow, when using opencv / numpy.

@@ -101,7 +101,7 @@ class Script:
         Save last 60 screenshots in ./log/error/<timestamp>
         Save logs to ./log/error/<timestamp>/log.txt
         """
-        from module.base.utils import save_image
+        from module.base.utils import draw_click_marks, save_image
         from module.handler.sensitive_info import (handle_sensitive_image,
                                                    handle_sensitive_logs)
         if self.config.script.error.save_error:
@@ -117,6 +117,13 @@ class Script:
                 image_time = datetime.strftime(data['time'], '%Y-%m-%d_%H-%M-%S-%f')
                 image = handle_sensitive_image(data['image'])
                 save_image(image, f'{folder}/{image_time}.png')
+            click_coords = self.device.last_error_click_coords
+            if click_coords and getattr(self.device, 'image', None) is not None:
+                image = handle_sensitive_image(self.device.image.copy())
+                marked = draw_click_marks(image, click_coords)
+                save_image(marked, f'{folder}/click_marks.png')
+                logger.info(f'Saved click marks image: {folder}/click_marks.png')
+                self.device.last_error_click_coords = None
             with open(logger.log_file, 'r', encoding='utf-8') as f:
                 lines = f.readlines()
                 start = 0

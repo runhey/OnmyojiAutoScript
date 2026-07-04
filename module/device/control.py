@@ -13,7 +13,7 @@ from module.logger import logger
 
 
 class Control(Minitouch, Adb, Scrcpy, Window):
-    def handle_control_check(self, button):
+    def handle_control_check(self, button, x=None, y=None):
         # Will be overridden in Device
         pass
 
@@ -69,9 +69,9 @@ class Control(Minitouch, Adb, Scrcpy, Window):
         :param control_check:
         :return:
         """
-        if control_check:
-            self.handle_control_check(control_name)
         x, y = ensure_int(x, y)
+        if control_check:
+            self.handle_control_check(control_name, x, y)
         logger.info(
             'Click %s @ %s' % (point2str(x, y), control_name)
         )
@@ -137,8 +137,8 @@ class Control(Minitouch, Adb, Scrcpy, Window):
         :param duration: 单位是s
         :return:
         """
-        self.handle_control_check(control_name)
         x, y = ensure_int(x, y)
+        self.handle_control_check(control_name, x, y)
         if duration is None:
             duration = 0.8
         duration = ensure_time(duration)
