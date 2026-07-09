@@ -209,11 +209,11 @@
   {
     "itemName": "check_six_gates",
     "imageName": "page_check_six_gates.png",
-    "roiFront": "249,33,22,24",
-    "roiBack": "227,7,98,85",
+    "roiFront": "1180,614,46,80",
+    "roiBack": "1145,585,120,130",
     "method": "Template matching",
-    "threshold": 0.8,
-    "description": "description"
+    "threshold": 0.85,
+    "description": "六道之门检查"
   },
   {
     "itemName": "check_bondling_fairyland",
