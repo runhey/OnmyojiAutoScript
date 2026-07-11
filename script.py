@@ -28,6 +28,7 @@ from multiprocessing.queues import Queue
 from module.config.utils import convert_to_underscore
 from module.config.config import Config
 from module.config.config_model import ConfigModel
+from module.config.instance_guard import InstanceGuard
 from module.device.device import Device
 from module.device.env import IS_WINDOWS
 from module.base.utils import load_module
@@ -57,6 +58,8 @@ class Script:
         self.failure_record = {}
         # 运行loop的线程
         self.loop_thread: Thread = None
+        # 跨进程排队管理器（仅在 queue_mode=True 时初始化）
+        self.instance_guard: InstanceGuard = None
 
     @cached_property
     def config(self) -> "Config":
@@ -316,9 +319,64 @@ class Script:
             if task.next_run <= now:
                 return task.command
             # 根据策略执行等待逻辑
+            if not self._try_acquire_queue_token():
+                del_cached_property(self, "config")
+                continue
             if not self._handle_wait_during_idle(task.next_run):
                 # 若等待被打断, 则刷新配置
                 del_cached_property(self, "config")
+
+    def _try_acquire_queue_token(self) -> bool:
+        """
+        尝试获取排队执行权。
+        如果排队模式未启用，返回 True。
+        如果排队模式启用但未能获取到执行权，进入等待循环直到获取成功或配置变更。
+
+        Returns:
+            True: 获取得执行权，可以执行任务
+            False: 等待被配置变更打断，调用方应重新加载配置后重试
+        """
+        # 是否开启排队模式
+        if not self.config.script.optimization.queue_mode:
+            if self.instance_guard:
+                self.instance_guard.remove_from_queue()
+                self.instance_guard = None
+            return True
+
+        # 懒加载instance_guard
+        if self.instance_guard is None:
+            try:
+                self.instance_guard = InstanceGuard(self.config_name)
+                logger.info(f"[Queue] Queue mode enabled for '{self.config_name}'")
+            except Exception:
+                self.instance_guard = None
+                return True
+
+        # 尝试获取执行权
+        if self.instance_guard.try_acquire():
+            return True
+
+        # 执行权获取失败，关闭模拟器并进入等待循环
+        logger.info(f"[Queue] '{self.config_name}' waiting for execution token...")
+        if (self.config.script.optimization.when_task_queue_empty == 'close_game'
+                and not self._emulator_down
+                and 'device' in self.__dict__):
+            try:
+                self.device.emulator_stop()
+                self._emulator_down = True
+                logger.info(f"[Queue] Emulator closed during queue wait")
+            except Exception:
+                pass
+        self.config.start_watching()
+        while True:
+            time.sleep(30)
+
+            if self.config.should_reload():
+                logger.info(f"[Queue] Config changed, re-evaluating")
+                return False
+
+            if self.instance_guard.try_acquire():
+                return True
 
     def _handle_wait_during_idle(self, next_run: datetime) -> bool:
         """
@@ -362,6 +420,8 @@ class Script:
 
         if self._emulator_down:
             logger.info("Wake emulator before next task")
+            if not self._try_acquire_queue_token():
+                return False
             self.device = Device(self.config)
             self._emulator_down = False
 
@@ -383,6 +443,13 @@ class Script:
             logger.info("Close emulator during wait")
             self.device.emulator_stop()
             self._emulator_down = True
+
+            if self.instance_guard and self.instance_guard.should_release(
+                pending_task=self.config.pending_task,
+                waiting_task=self.config.waiting_task,
+                idle_threshold_minutes=self.config.script.optimization.queue_idle_threshold
+            ):
+                self.instance_guard.release()
 
             if not self._wait_until_with_emulator_preheat(next_run):
                 return False
@@ -426,6 +493,13 @@ class Script:
             self.device.emulator_stop()
             self._emulator_down = True
 
+            if self.instance_guard and self.instance_guard.should_release(
+                pending_task=self.config.pending_task,
+                waiting_task=self.config.waiting_task,
+                idle_threshold_minutes=self.config.script.optimization.queue_idle_threshold
+            ):
+                self.instance_guard.release()
+
             if not self._wait_until_with_emulator_preheat(next_run):
                 return False
 
@@ -435,6 +509,12 @@ class Script:
         logger.info("Goto main page during wait")
         self.run("GotoMain")
         self.device.release_during_wait()
+        if self.instance_guard and self.instance_guard.should_release(
+            pending_task=self.config.pending_task,
+            waiting_task=self.config.waiting_task,
+            idle_threshold_minutes=self.config.script.optimization.queue_idle_threshold
+        ):
+            self.instance_guard.release()
         return self.wait_until(next_run)
 
     def _wait_stay_there(self, next_run: datetime) -> bool:
@@ -465,6 +545,19 @@ class Script:
         """
         if command == 'start' or command == 'goto_main':
             logger.error(f'Invalid command `{command}`')
+
+        if not self._try_acquire_queue_token():
+            return False
+
+        if self.instance_guard and self.instance_guard.token_lost:
+            logger.warning(f'Token lost, stopping emulator and rejoining queue')
+            try:
+                self.device.emulator_stop()
+            except Exception:
+                pass
+            self._emulator_down = True
+            self.instance_guard.release()
+            return False
 
         try:
             self.device.screenshot()
@@ -578,6 +671,10 @@ class Script:
             if self.is_first_task and task == 'Restart':
                 logger.info('Skip task `Restart` at scheduler start')
                 self.config.task_delay(task='Restart', success=True, server=True)
+                del_cached_property(self, 'config')
+                continue
+
+            if not self._try_acquire_queue_token():
                 del_cached_property(self, 'config')
                 continue
 
