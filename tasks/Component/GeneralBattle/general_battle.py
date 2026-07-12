@@ -398,13 +398,17 @@ class GeneralBattle(GeneralBuff, GeneralBattleAssets):
 
         # 点击预设确认
         self.wait_until_appear(self.I_PRESET_ENSURE, wait_time=1)
+        click_timer = Timer(10).start()
         while 1:
             self.screenshot()
+            if click_timer.reached():
+                logger.warning("Switch preset failure")
             if not self.appear(self.I_PRESET_ENSURE):
                 break
-            if self.appear_then_click(self.I_PRESET_ENSURE, threshold=0.8, interval=0.2):
+            if self.appear_then_click(self.I_PRESET_ENSURE, threshold=0.8, interval=1):
                 continue
         logger.info("Click preset ensure")
+        return None
 
     def random_click_swipt(self):
         if 0 <= random.randint(0, 500) <= 3:  # 百分之4的概率
