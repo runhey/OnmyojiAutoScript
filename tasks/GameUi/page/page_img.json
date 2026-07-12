@@ -210,7 +210,7 @@
     "itemName": "check_six_gates",
     "imageName": "page_check_six_gates.png",
     "roiFront": "411,297,21,21",
-    "roiBack": "394,252,58,104",
+    "roiBack": "395,262,54,85",
     "method": "Template matching",
     "threshold": 0.85,
     "description": "六道之门检查"
