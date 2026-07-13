@@ -123,11 +123,6 @@ class ScriptProcess(ScriptWSManager):
 def func(config: str, state_queue: multiprocessing.Queue, log_pipe_in) -> None:
     def signal_handler(signum, frame):
         logger.info(f'Script {config} received signal {signum}, exiting gracefully')
-        try:
-            from module.config.instance_guard import InstanceGuard
-            InstanceGuard(config).remove_from_queue()
-        except Exception:
-            pass
         log_pipe_in.close()
         state_queue.close()
         sys.exit(0)
@@ -165,12 +160,6 @@ def func(config: str, state_queue: multiprocessing.Queue, log_pipe_in) -> None:
         logger.exception(f'Run script {config} error')
         logger.error(f'Error: {e}')
         raise
-    finally:
-        try:
-            from module.config.instance_guard import InstanceGuard
-            InstanceGuard(config).remove_from_queue()
-        except Exception:
-            pass
 
 
 if __name__ == '__main__':

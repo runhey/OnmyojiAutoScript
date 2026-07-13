@@ -2,6 +2,7 @@
 # @author runhey
 # github https://github.com/runhey
 
+from functools import wraps
 import zerorpc
 import zmq
 import msgpack
@@ -278,6 +279,19 @@ class Script:
             result[key] = item
         return json.dumps(result)
 
+    def _release_token_before_wait(func):
+        @wraps(func)
+        def wrapper(self, future):
+            if self.instance_guard and self.instance_guard.should_release(
+                pending_task=self.config.pending_task,
+                waiting_task=self.config.waiting_task,
+                idle_threshold_minutes=self.config.script.optimization.queue_idle_threshold
+            ):
+                self.instance_guard.release()
+            return func(self, future)
+        return wrapper
+
+    @_release_token_before_wait
     def wait_until(self, future):
         """
         Wait until a specific time.
@@ -444,13 +458,6 @@ class Script:
             self.device.emulator_stop()
             self._emulator_down = True
 
-            if self.instance_guard and self.instance_guard.should_release(
-                pending_task=self.config.pending_task,
-                waiting_task=self.config.waiting_task,
-                idle_threshold_minutes=self.config.script.optimization.queue_idle_threshold
-            ):
-                self.instance_guard.release()
-
             if not self._wait_until_with_emulator_preheat(next_run):
                 return False
 
@@ -493,13 +500,6 @@ class Script:
             self.device.emulator_stop()
             self._emulator_down = True
 
-            if self.instance_guard and self.instance_guard.should_release(
-                pending_task=self.config.pending_task,
-                waiting_task=self.config.waiting_task,
-                idle_threshold_minutes=self.config.script.optimization.queue_idle_threshold
-            ):
-                self.instance_guard.release()
-
             if not self._wait_until_with_emulator_preheat(next_run):
                 return False
 
@@ -509,12 +509,6 @@ class Script:
         logger.info("Goto main page during wait")
         self.run("GotoMain")
         self.device.release_during_wait()
-        if self.instance_guard and self.instance_guard.should_release(
-            pending_task=self.config.pending_task,
-            waiting_task=self.config.waiting_task,
-            idle_threshold_minutes=self.config.script.optimization.queue_idle_threshold
-        ):
-            self.instance_guard.release()
         return self.wait_until(next_run)
 
     def _wait_stay_there(self, next_run: datetime) -> bool:
