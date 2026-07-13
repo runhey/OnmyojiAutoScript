@@ -200,6 +200,8 @@ class InstanceGuard:
             if state["current"] == self.config_name:
                 state["timestamp"] = datetime.now().isoformat()
                 self._state.write(state)
+                self._heartbeat.start()
+                logger.info(f"[InstanceGuard] '{self.config_name}' already holds token")
                 return True
 
             # 持有者崩溃，强制接管
@@ -235,7 +237,8 @@ class InstanceGuard:
     def release(self) -> None:
         """释放执行权。
 
-        停止心跳线程。如果等待队列非空，自动移交给下一个实例。
+        清空 current 和 timestamp，停止心跳。
+        等待队列中的实例自行获取。
         如果自己不是持有者，静默返回。
         """
         with self._state._lock:
@@ -244,21 +247,10 @@ class InstanceGuard:
                 return
 
             self._heartbeat.stop()
-
-            if state["queue"]:
-                next_holder = state["queue"].pop(0)
-                state["current"] = next_holder
-                state["timestamp"] = datetime.now().isoformat()
-                logger.info(
-                    f"[InstanceGuard] '{self.config_name}' released token "
-                    f"→ '{next_holder}'")
-            else:
-                state["current"] = None
-                state["timestamp"] = None
-                logger.info(
-                    f"[InstanceGuard] '{self.config_name}' released token, "
-                    f"queue empty")
+            state["current"] = None
+            state["timestamp"] = None
             self._state.write(state)
+            logger.info(f"[InstanceGuard] '{self.config_name}' released token")
 
     def should_release(self, pending_task: list, waiting_task: list,
                        idle_threshold_minutes: int = 10) -> bool:
