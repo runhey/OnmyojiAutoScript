@@ -80,7 +80,7 @@ class ScriptTask(GameUi, WeeklyTriflesAssets):
             self.screenshot()
             if self.appear(self.I_WT_QR_CODE):
                 break
-            if self.appear_then_click(self.I_WT_COLLECT_WECHAT, interval=1):
+            if self.appear_then_click(self.I_WT_COLLECT_WECHAT, interval=4):
                 continue
         logger.info('Click share')
         get_timer = Timer(3)
@@ -92,7 +92,7 @@ class ScriptTask(GameUi, WeeklyTriflesAssets):
                 logger.info('Get reward')
                 break
 
-            if self.appear_then_click(self.I_WT_QR_CODE, self.C_WT_WECHAT, interval=0.8):
+            if self.appear_then_click(self.I_WT_QR_CODE, self.C_WT_WECHAT, interval=2.8):
                 continue
             if get_timer.reached():
                 logger.warning('Share timeout. The reward may have been obtained')
@@ -137,7 +137,7 @@ class ScriptTask(GameUi, WeeklyTriflesAssets):
             if self.appear(self.I_WT_NO_DAY):
                 obtained = True
                 break
-            if self.click(self.C_WT_AB_CLICK, interval=1):
+            if self.click(self.C_WT_AB_CLICK, interval=2.5):
                 continue
             if self.appear_then_click(self.I_WT_DAY_BATTLE, interval=2):
                 continue
@@ -281,8 +281,8 @@ if __name__ == '__main__':
     t = ScriptTask(c, d)
     t.screenshot()
 
-    t._share_collect()
-    # t._share_area_boss()
+    # t._share_collect()
+    t._share_area_boss()
     # t.click_share(t.I_WT_SE_WECHAT)
 
 
