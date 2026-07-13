@@ -3,19 +3,19 @@
 # github https://github.com/runhey
 from datetime import datetime, timedelta, time
 import random  # type: ignore
-from module.atom.image import RuleImage
+from typing import Callable
 
+from module.logger import logger
+from module.exception import TaskEnd
+from module.base.timer import Timer
+
+import tasks.GameUi.page as pages
 from tasks.Component.GeneralBattle.general_battle import GeneralBattle
 from tasks.HeroTest.assets import HeroTestAssets
 from tasks.GameUi.game_ui import GameUi
 from tasks.Component.SwitchSoul.switch_soul import SwitchSoul
-
-from module.logger import logger
-from module.exception import TaskEnd
 from tasks.HeroTest.config import Layer, HeroTest, SkillMode
-from typing import Callable
 
-import tasks.GameUi.page as pages
 
 
 class ScriptTask(GameUi, GeneralBattle, HeroTestAssets, SwitchSoul):
@@ -121,8 +121,18 @@ class ScriptTask(GameUi, GeneralBattle, HeroTestAssets, SwitchSoul):
 
     def hero1_skill_wait(self):
         if self.wait_until_appear(self.I_BCMJ_SKILL_ADD_CONFIRM, wait_time=2):
+            timer = Timer(10).start()
             while 1:
                 self.screenshot()
+
+                # https://github.com/runhey/OnmyojiAutoScript/issues/1671
+                if timer.reached_and_reset():
+                    if self.appear(self.I_BCMJ_SKILL_ADD_CONFIRM):
+                        logger.warning('No skill selected for 10s, panel still open, retrying')
+                        continue
+                    logger.warning('Skill selection panel closed unexpectedly, exit')
+                    break
+
                 if self.appear_then_click(self.I_BCMJ_SKILL_ADD1, interval=1):
                     break
                 if self.appear_then_click(self.I_BCMJ_SKILL_ADD2, interval=1):
