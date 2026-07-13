@@ -329,13 +329,13 @@ class Script:
             if self.state_queue:
                 self.state_queue.put({"schedule": self.config.get_schedule_data()})
             now = datetime.now()
+            if not self._try_acquire_queue_token():
+                del_cached_property(self, "config")
+                continue
             # 任务时间到了返回任务名称
             if task.next_run <= now:
                 return task.command
             # 根据策略执行等待逻辑
-            if not self._try_acquire_queue_token():
-                del_cached_property(self, "config")
-                continue
             if not self._handle_wait_during_idle(task.next_run):
                 # 若等待被打断, 则刷新配置
                 del_cached_property(self, "config")
@@ -665,10 +665,6 @@ class Script:
             if self.is_first_task and task == 'Restart':
                 logger.info('Skip task `Restart` at scheduler start')
                 self.config.task_delay(task='Restart', success=True, server=True)
-                del_cached_property(self, 'config')
-                continue
-
-            if not self._try_acquire_queue_token():
                 del_cached_property(self, 'config')
                 continue
 
