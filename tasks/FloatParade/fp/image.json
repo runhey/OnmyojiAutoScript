@@ -2,7 +2,7 @@
   {
     "itemName": "fp_access",
     "imageName": "fp_fp_access.png",
-    "roiFront": "1178,168,43,34",
+    "roiFront": "1184,385,41,34",
     "roiBack": "1051,101,210,472",
     "method": "Template matching",
     "threshold": 0.8,
@@ -11,8 +11,8 @@
   {
     "itemName": "fp_getall0",
     "imageName": "fp_fp_getall0.png",
-    "roiFront": "1153,287,65,56",
-    "roiBack": "1134,261,100,100",
+    "roiFront": "1027,655,37,40",
+    "roiBack": "1003,572,267,134",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"
@@ -56,8 +56,8 @@
   {
     "itemName": "fp_tasks",
     "imageName": "fp_fp_tasks.png",
-    "roiFront": "1175,617,79,76",
-    "roiBack": "1162,605,100,100",
+    "roiFront": "1184,553,68,66",
+    "roiBack": "1167,532,100,100",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "右下角的任务"
@@ -65,8 +65,8 @@
   {
     "itemName": "fp_upgrade",
     "imageName": "fp_fp_upgrade.png",
-    "roiFront": "1086,74,116,49",
-    "roiBack": "1040,52,169,100",
+    "roiFront": "57,180,39,35",
+    "roiBack": "19,153,169,100",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "升级"
@@ -133,5 +133,41 @@
     "method": "Template matching",
     "threshold": 0.8,
     "description": "礼包类型2"
+  },
+  {
+    "itemName": "fp_select_1",
+    "imageName": "fp_fp_select_1.png",
+    "roiFront": "238,443,110,41",
+    "roiBack": "217,420,179,92",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": ""
+  },
+  {
+    "itemName": "fp_select_2",
+    "imageName": "fp_fp_select_2.png",
+    "roiFront": "570,438,116,52",
+    "roiBack": "541,418,177,85",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": ""
+  },
+  {
+    "itemName": "fp_select_3",
+    "imageName": "fp_fp_select_3.png",
+    "roiFront": "938,435,104,54",
+    "roiBack": "917,415,154,98",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": ""
+  },
+  {
+    "itemName": "red_point_0",
+    "imageName": "fp_red_point_0.png",
+    "roiFront": "1244,216,19,17",
+    "roiBack": "1212,157,64,303",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": ""
   }
 ]

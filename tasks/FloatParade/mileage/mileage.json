@@ -1,0 +1,20 @@
+[
+  {
+    "itemName": "claim_mileage",
+    "imageName": "mileage_claim_mileage.png",
+    "roiFront": "794,515,142,44",
+    "roiBack": "731,493,264,89",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": ""
+  },
+  {
+    "itemName": "entry_mileage",
+    "imageName": "mileage_entry_mileage.png",
+    "roiFront": "93,75,23,22",
+    "roiBack": "77,66,63,54",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "进入里程（右上角红点）"
+  }
+]
