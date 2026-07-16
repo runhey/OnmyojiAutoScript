@@ -165,7 +165,7 @@
     "itemName": "red_point_0",
     "imageName": "fp_red_point_0.png",
     "roiFront": "1244,216,19,17",
-    "roiBack": "1212,157,64,303",
+    "roiBack": "1217,157,59,415",
     "method": "Template matching",
     "threshold": 0.8,
     "description": ""

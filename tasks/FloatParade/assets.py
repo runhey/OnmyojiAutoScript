@@ -48,13 +48,13 @@ class FloatParadeAssets:
 	#  
 	I_FP_SELECT_3 = RuleImage(roi_front=(938,435,104,54), roi_back=(917,415,154,98), threshold=0.8, method="Template matching", file="./tasks/FloatParade/fp/fp_fp_select_3.png")
 	#  
-	I_RED_POINT_0 = RuleImage(roi_front=(1244,216,19,17), roi_back=(1212,157,64,303), threshold=0.8, method="Template matching", file="./tasks/FloatParade/fp/fp_red_point_0.png")
+	I_RED_POINT_0 = RuleImage(roi_front=(1244,216,19,17), roi_back=(1217,157,59,415), threshold=0.8, method="Template matching", file="./tasks/FloatParade/fp/fp_red_point_0.png")
 
 
 	# Image Rule Assets
 	#  
 	I_CLAIM_MILEAGE = RuleImage(roi_front=(794,515,142,44), roi_back=(731,493,264,89), threshold=0.8, method="Template matching", file="./tasks/FloatParade/mileage/mileage_claim_mileage.png")
 	# 进入里程（右上角红点） 
-	I_ENTRY_MILEAGE = RuleImage(roi_front=(93,75,23,22), roi_back=(77,66,63,54), threshold=0.8, method="Template matching", file="./tasks/FloatParade/mileage/mileage_entry_mileage.png")
+	I_ENTRY_MILEAGE = RuleImage(roi_front=(97,76,19,21), roi_back=(84,69,56,51), threshold=0.8, method="Template matching", file="./tasks/FloatParade/mileage/mileage_entry_mileage.png")
 
 

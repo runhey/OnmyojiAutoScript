@@ -52,7 +52,7 @@ class ScriptTask(RightActivity, FloatParadeAssets, TalismanPassAssets):
         if not self.appear(self.I_ENTRY_MILEAGE):
             return
         logger.hr("Get mileage reward")
-        self.ui_click( click=self.I_ENTRY_MILEAGE, stop=self.I_ENTRY_MILEAGE, interval=1.9)
+        self.ui_click( click=self.I_ENTRY_MILEAGE, stop=self.I_CLAIM_MILEAGE, interval=1.9)
         self.ui_get_reward(self.I_CLAIM_MILEAGE)
         self.ui_click_until_disappear(self.I_UI_BACK_RED, interval=1.8)
         logger.info('Got mileage reward')
