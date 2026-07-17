@@ -109,8 +109,9 @@ class ScriptTask(GameUi, GeneralInvite, GeneralRoom, BondlingBattle, SwitchSoul,
                     # 某些活动的时候出现 “选择共鸣的阴阳师”
                     if self.appear_then_click(self.I_UI_CONFIRM, interval=1):
                         continue
-                    if self.check_and_invite(True):
-                        continue
+                    # The post-battle/default-invite dialog can transition directly
+                    # to the create-team dialog.  Handle that dialog first so
+                    # check_and_invite() cannot keep waiting for stale invite UI.
                     if self.appear(self.I_CREATE_TEAM, interval=1):
                         self.ensure_private()
                         if self.appear_then_click(self.I_CREATE_TEAM, interval=2):
@@ -123,6 +124,8 @@ class ScriptTask(GameUi, GeneralInvite, GeneralRoom, BondlingBattle, SwitchSoul,
                                     return True
                                 if self.appear(self.I_BALL_HELP) or self.appear(self.I_CREATE_TEAM):
                                     break
+                        continue
+                    if self.check_and_invite(True):
                         continue
                     # 求援
                     if self.appear(self.I_BALL_AREA, interval=1):

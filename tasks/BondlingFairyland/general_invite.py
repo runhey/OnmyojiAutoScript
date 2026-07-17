@@ -464,12 +464,34 @@ class GeneralInvite(BaseTask, BondlingFairylandAssets, GeneralInviteAssets):
         if not self.appear(self.I_GI_SURE, interval=1.5):
             return False
 
+        # This dialog may be replaced by the bondling create-team dialog as
+        # soon as confirmation is clicked.  Do not let either loop below wait
+        # forever for controls from the previous dialog.
+        handle_timer = Timer(8).start()
+
+        def invite_dialog_changed() -> bool:
+            if self.appear(self.I_CREATE_TEAM):
+                logger.info('Create-team dialog appeared while handling default invite')
+                return True
+            if self.appear(self.I_GI_IN_ROOM) or self.is_in_room(is_screenshot=False):
+                logger.info('Room entered while handling default invite')
+                return True
+            if self.appear(self.I_BALL_HELP) or self.appear(self.I_BALL_AREA):
+                logger.info('Left default-invite dialog')
+                return True
+            return False
+
         if default_invite:
             # 有可能是挑战失败的
             if self.appear(self.I_I_DEFAULT) or self.appear(self.I_I_NO_DEFAULT):
                 logger.info('Click default invite')
                 while 1:
                     self.screenshot()
+                    if invite_dialog_changed():
+                        return False
+                    if handle_timer.reached():
+                        logger.warning('Default-invite checkbox handling timed out')
+                        return False
                     if self.appear(self.I_I_DEFAULT):
                         break
                     if self.appear_then_click(self.I_I_NO_DEFAULT, interval=1):
@@ -477,6 +499,11 @@ class GeneralInvite(BaseTask, BondlingFairylandAssets, GeneralInviteAssets):
         # 点击确认
         while 1:
             self.screenshot()
+            if invite_dialog_changed():
+                return False
+            if handle_timer.reached():
+                logger.warning('Default-invite confirmation handling timed out')
+                return False
             if not self.appear(self.I_GI_SURE):
                 break
             if self.appear_then_click(self.I_GI_SURE, interval=1):
