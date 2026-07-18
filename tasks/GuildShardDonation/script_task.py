@@ -181,13 +181,28 @@ class ScriptTask(GameUi, GuildShardDonationAssets):
         self.device.click_record_clear()
         self.device.stuck_record_clear()
 
-        while not timer.reached():
+        # Do not swipe immediately after entering the prayer page. Observe the
+        # initial viewport three times during one second. Only the newest sample
+        # is used for row/button positioning; if it has no target, start scrolling.
+        initial_started = time.monotonic()
+        visible = []
+        target = None
+        for sample_index, sample_at in enumerate((0.2, 0.6, 1.0), 1):
+            remaining = sample_at - (time.monotonic() - initial_started)
+            if remaining > 0:
+                time.sleep(remaining)
             self.screenshot()
             visible = self._read_visible_names()
             target = self._find_target_in(visible)
-            if target is not None:
-                return target
+            logger.info("祈愿首屏 OCR 采样 %d/3（目标时间 %.1fs）", sample_index, sample_at)
 
+        if target is not None:
+            logger.info("首屏三次采样完成，使用最新坐标检查同行赠予按钮")
+            return target
+
+        logger.info("首屏三次采样均未确认目标玩家，开始滑动扫描")
+
+        while not timer.reached():
             signature = tuple(item["text"] for item in visible)
             # 连续滚动是这个任务的正常行为。直接调用设备滑动，避免通用控件的
             # “同一控件点击过多”保护把列表扫描误判为死循环。
@@ -243,6 +258,10 @@ class ScriptTask(GameUi, GuildShardDonationAssets):
             if stable_count >= self.BOTTOM_STABLE_SWIPES:
                 logger.info("连续五次滑动后的昵称列表完全相同，判定已到列表底部")
                 return None
+
+            # The last post-swipe sample becomes the baseline for the next
+            # swipe, avoiding an extra scan immediately before scrolling.
+            visible = after_swipe
 
         raise RuntimeError("祈愿列表扫描超时，无法可靠判定到底")
 
