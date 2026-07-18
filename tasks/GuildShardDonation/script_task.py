@@ -312,7 +312,10 @@ class ScriptTask(GameUi, GuildShardDonationAssets):
         if self.appear(self.I_CANCEL):
             self.ui_click_until_disappear(self.I_CANCEL)
         else:
-            logger.warning("未找到专用取消按钮，尝试通过通用返回恢复")
+            logger.warning("未识别到专用取消按钮，仍在专用取消区域 0.3 秒内连点两次")
+            self.click(self.I_CANCEL)
+            time.sleep(0.15)
+            self.click(self.I_CANCEL)
 
     def _wait_and_close_reward(self):
         timer = Timer(15).start()
