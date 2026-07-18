@@ -94,6 +94,30 @@ class ScriptTask(GameUi, GeneralInvite, GeneralRoom, BondlingBattle, SwitchSoul,
         logger.hr('Start run leader', 2)
         success = True
         is_first = True
+
+        def handle_ball_limit_prompt(timeout: int = 3) -> bool | None:
+            """Handle the disk-limit prompt and wait until the create-team page appears."""
+            prompt_timer = Timer(timeout).start()
+            while not prompt_timer.reached():
+                self.screenshot()
+                if self.appear(self.I_CREATE_TEAM):
+                    return True
+                if self.appear(self.I_BALL_LIMIT_PROMPT):
+                    logger.info('Bondling disk limit prompt appeared')
+                    confirm_timer = Timer(timeout).start()
+                    while not confirm_timer.reached():
+                        if self.appear(self.I_CREATE_TEAM):
+                            logger.info('Bondling disk limit prompt closed, create-team page appeared')
+                            return True
+                        if self.appear_then_click(self.I_BALL_LIMIT_CONFIRM, interval=1):
+                            logger.info('Click bondling disk limit confirm')
+                        sleep(0.2)
+                        self.screenshot()
+                    logger.warning('Failed to close bondling disk limit prompt within 3s')
+                    return False
+                sleep(0.2)
+            return None
+
         while 1:
             def create_bond_team():
                 click_count = 0
@@ -101,6 +125,10 @@ class ScriptTask(GameUi, GeneralInvite, GeneralRoom, BondlingBattle, SwitchSoul,
                     self.screenshot()
                     if self.appear(self.I_GI_IN_ROOM):
                         return True
+                    if self.appear(self.I_BALL_LIMIT_PROMPT):
+                        if handle_ball_limit_prompt(timeout=3) is False:
+                            raise RuntimeError('Failed to close bondling disk limit prompt')
+                        continue
                     if click_count >= 6:
                         logger.error('Click fire failed')
                         logger.error(
@@ -134,12 +162,8 @@ class ScriptTask(GameUi, GeneralInvite, GeneralRoom, BondlingBattle, SwitchSoul,
                             logger.info('ball is not enough')
                             return False
                         if self.appear_then_click(self.I_BALL_HELP, interval=2):
-                            sleep(1)
-                            self.screenshot()
-                            if self.appear(self.I_BALL_LIMIT_PROMPT):
-                                logger.info('Bondling disk limit prompt appeared, click confirm')
-                                self.appear_then_click(self.I_BALL_LIMIT_CONFIRM)
-                                sleep(1)
+                            if handle_ball_limit_prompt(timeout=3) is False:
+                                raise RuntimeError('Failed to close bondling disk limit prompt')
                             click_count += 1
                             continue
 
