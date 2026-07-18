@@ -18,6 +18,7 @@ from tasks.Component.config_base import ConfigBase, TimeDelta
 from tasks.Exploration.config import Exploration
 from tasks.RyouToppa.config import RyouToppa
 from tasks.Dokan.config import Dokan
+from tasks.GuildShardDonation.config import GuildShardDonation
 from tasks.Script.config import Script
 from tasks.Restart.config import Restart
 from tasks.GlobalGame.config import GlobalGame
@@ -146,6 +147,7 @@ class ConfigModel(ConfigBase):
     collective_missions: CollectiveMissions = Field(default_factory=CollectiveMissions)
     hunt: Hunt = Field(default_factory=Hunt)
     dokan: Dokan = Field(default_factory=Dokan)
+    guild_shard_donation: GuildShardDonation = Field(default_factory=GuildShardDonation)
     abyss_shadows: AbyssShadows = Field(default_factory=AbyssShadows)
     guild_banquet: GuildBanquet = Field(default_factory=GuildBanquet)
     demon_retreat: DemonRetreat = Field(default_factory=DemonRetreat)
@@ -481,4 +483,3 @@ if __name__ == "__main__":
         c = ConfigModel()
 
     print(c.script_task('GuildBanquet'))
-

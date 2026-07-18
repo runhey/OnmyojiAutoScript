@@ -1,0 +1,74 @@
+[
+  {
+    "itemName": "prayer_entry",
+    "imageName": "guild_shard_donation_prayer_entry.png",
+    "roiFront": "963,628,66,71",
+    "roiBack": "920,590,145,125",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "阴阳寮祈愿入口"
+  },
+  {
+    "itemName": "prayer_page",
+    "imageName": "guild_shard_donation_prayer_page.png",
+    "roiFront": "1166,239,61,99",
+    "roiBack": "1140,205,105,155",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "祈愿页面右侧页签"
+  },
+  {
+    "itemName": "received_popup",
+    "imageName": "guild_shard_donation_received_popup.png",
+    "roiFront": "530,178,127,25",
+    "roiBack": "470,145,260,95",
+    "method": "Template matching",
+    "threshold": 0.78,
+    "description": "收到他人捐赠碎片弹窗"
+  },
+  {
+    "itemName": "give",
+    "imageName": "guild_shard_donation_give.png",
+    "roiFront": "828,274,134,66",
+    "roiBack": "800,130,330,350",
+    "method": "Template matching",
+    "threshold": 0.82,
+    "description": "目标玩家同行赠予按钮"
+  },
+  {
+    "itemName": "confirm_dialog",
+    "imageName": "guild_shard_donation_confirm_dialog.png",
+    "roiFront": "432,400,416,69",
+    "roiBack": "390,370,500,125",
+    "method": "Template matching",
+    "threshold": 0.78,
+    "description": "确认捐赠弹窗按钮组"
+  },
+  {
+    "itemName": "cancel",
+    "imageName": "guild_shard_donation_cancel.png",
+    "roiFront": "432,401,180,67",
+    "roiBack": "400,380,240,110",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "确认捐赠取消按钮"
+  },
+  {
+    "itemName": "confirm",
+    "imageName": "guild_shard_donation_confirm.png",
+    "roiFront": "669,401,179,66",
+    "roiBack": "640,380,240,110",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "确认捐赠确定按钮"
+  },
+  {
+    "itemName": "reward",
+    "imageName": "guild_shard_donation_reward.png",
+    "roiFront": "357,187,566,89",
+    "roiBack": "300,140,680,170",
+    "method": "Template matching",
+    "threshold": 0.75,
+    "description": "碎片捐赠获得奖励"
+  }
+]

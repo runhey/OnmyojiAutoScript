@@ -478,8 +478,17 @@ class Script:
         except GameNotRunningError as e:
             logger.warning(e)
             self.exception_handler(e=e, command=command)
-            self.config.task_call('Restart')
-            return True
+            # Restart may be disabled as a scheduled task. task_call() only
+            # changes next_run, while the scheduler filters disabled tasks out,
+            # which causes the failed task to be selected again in a tight loop.
+            # A missing game is an immediate recovery action rather than a
+            # scheduled daily Restart, so execute it directly. After Restart
+            # returns to the courtyard, the still-pending original task retries.
+            if command == 'Restart':
+                logger.error('Restart reported that the game is not running')
+                return False
+            logger.info('Run Restart immediately to recover a stopped game')
+            return self.run('Restart')
         except (GameStuckError, GameTooManyClickError) as e:
             logger.error(e)
             self.save_error_log()

@@ -41,5 +41,17 @@
   "emulator_startup_lead_time": "模拟器预热时间",
   "emulator_startup_lead_time_help": "在开始运行任务之前提前启动模拟器的时间",
   "exit_four_help": "支持打九退四，保证稳定57级，要求设置好战斗主题，即 脚本->全局配置->游戏装饰自定义->战斗主题",
-  "costume_main_15": "茨心乐园"
+  "costume_main_15": "茨心乐园",
+  "GuildShardDonation": "碎片捐赠",
+  "guild_shard_donation": "碎片捐赠",
+  "donation_config": "捐赠配置",
+  "target_player": "目标玩家昵称",
+  "Target Player": "目标玩家昵称",
+  "target_player_help": "严格匹配玩家昵称，区分英文字母大小写",
+  "target_shard": "目标 SSR/SP 碎片名称",
+  "Target Shard": "目标 SSR/SP 碎片名称",
+  "target_shard_help": "填写式神名称；确认弹窗中的碎片名称必须严格一致",
+  "test_mode": "测试模式",
+  "Test Mode": "测试模式",
+  "test_mode_help": "完成定位和确认信息校验后点击取消，不实际捐赠"
 }

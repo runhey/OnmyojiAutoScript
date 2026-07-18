@@ -123,6 +123,16 @@ async def script_task(script_name: str, task: str):
 
 @script_app.put('/{script_name}/{task}/{group}/{argument}/value')
 async def script_task(script_name: str, task: str, group: str, argument: str, types: str, value):
+    # oasx 0.3.2 can briefly keep the default Overview page title when a newly
+    # added task is selected.  Its edit request then contains Overview instead
+    # of the real task name.  Only repair the unambiguous group owned by this
+    # task; do not silently redirect arbitrary malformed requests.
+    if task == 'Overview' and group == 'donation_config':
+        logger.warning(
+            f'[{script_name}] repair stale OASX task route: '
+            f'Overview/{group}/{argument} -> GuildShardDonation/{group}/{argument}'
+        )
+        task = 'GuildShardDonation'
     try:
         match types:
             case 'integer':

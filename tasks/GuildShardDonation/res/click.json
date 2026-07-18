@@ -1,0 +1,14 @@
+[
+  {
+    "itemName": "received_popup_close",
+    "roiFront": "838,129,58,55",
+    "roiBack": "838,129,58,55",
+    "description": "收到碎片弹窗右上角粉色关闭按钮"
+  },
+  {
+    "itemName": "reward_close",
+    "roiFront": "500,300,280,150",
+    "roiBack": "500,300,280,150",
+    "description": "奖励弹窗安全关闭区域"
+  }
+]

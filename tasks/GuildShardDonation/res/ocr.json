@@ -1,0 +1,20 @@
+[
+  {
+    "itemName": "player_names",
+    "roiFront": "250,135,210,345",
+    "roiBack": "250,135,210,345",
+    "mode": "Full",
+    "method": "Default",
+    "keyword": "",
+    "description": "祈愿列表玩家昵称区域"
+  },
+  {
+    "itemName": "confirm_message",
+    "roiFront": "425,285,435,75",
+    "roiBack": "425,285,435,75",
+    "mode": "Full",
+    "method": "Default",
+    "keyword": "",
+    "description": "确认捐赠完整提示文本"
+  }
+]

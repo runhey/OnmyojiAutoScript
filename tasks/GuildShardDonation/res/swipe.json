@@ -1,0 +1,9 @@
+[
+  {
+    "itemName": "prayer_list_up",
+    "roiFront": "650,440,50,30",
+    "roiBack": "650,190,50,30",
+    "mode": "default",
+    "description": "向上滑动祈愿列表"
+  }
+]
