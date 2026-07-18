@@ -191,19 +191,42 @@ class ScriptTask(GameUi, GuildShardDonationAssets):
             # 连续滚动是这个任务的正常行为。直接调用设备滑动，避免通用控件的
             # “同一控件点击过多”保护把列表扫描误判为死循环。
             x1, y1, x2, y2 = self.S_PRAYER_LIST_UP.coord()
+            swipe_started = time.monotonic()
             self.device.swipe(p1=(x1, y1), p2=(x2, y2))
 
-            # Give the list one full second to settle. Sample three times during
-            # that second so a name is not missed while scroll inertia is ending.
+            # Sample at 0.8s, 1.0s and 1.4s after the swipe. If a sample sees the
+            # target, wait another 0.5s and OCR again; only that confirmed, fresh
+            # position may be used to locate the Give button.
             after_swipe = []
-            for sample_index, delay in enumerate((0.2, 0.4, 0.4), 1):
-                time.sleep(delay)
+            confirmed_target = None
+            for sample_index, sample_at in enumerate((0.8, 1.0, 1.4), 1):
+                remaining = sample_at - (time.monotonic() - swipe_started)
+                if remaining > 0:
+                    time.sleep(remaining)
                 self.screenshot()
                 after_swipe = self._read_visible_names()
-                logger.info("滑动后 OCR 采样 %d/3", sample_index)
+                logger.info("滑动后 OCR 采样 %d/3（目标时间 %.1fs）", sample_index, sample_at)
                 target = self._find_target_in(after_swipe)
                 if target is not None:
-                    return target
+                    logger.info("采样发现目标，等待 0.5 秒后重新识别并更新行坐标")
+                    time.sleep(0.5)
+                    self.screenshot()
+                    confirmed_visible = self._read_visible_names()
+                    confirmed_target = self._find_target_in(confirmed_visible)
+                    if confirmed_target is not None:
+                        logger.info("目标玩家复核成功，使用最新坐标 y=%.1f",
+                                    confirmed_target["center_y"])
+                    else:
+                        logger.info("等待 0.5 秒后未再次识别到目标，继续滑动")
+                    break
+
+            if confirmed_target is not None:
+                return confirmed_target
+
+            # Keep consecutive swipes at least 1.5 seconds apart.
+            remaining = 1.5 - (time.monotonic() - swipe_started)
+            if remaining > 0:
+                time.sleep(remaining)
             after_signature = tuple(item["text"] for item in after_swipe)
 
             if after_signature == signature and after_signature == previous_signature:
