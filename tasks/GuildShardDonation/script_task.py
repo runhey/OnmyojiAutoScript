@@ -5,8 +5,7 @@ import time
 
 from module.base.timer import Timer
 from module.exception import (GameNotRunningError, GamePageUnknownError,
-                              GameStuckError, GameTooManyClickError, TaskEnd,
-                              TaskRestartError)
+                              GameStuckError, GameTooManyClickError, TaskEnd)
 from module.logger import logger
 from tasks.GameUi.game_ui import GameUi
 from tasks.GameUi.page import page_guild, page_main
@@ -76,7 +75,7 @@ class ScriptTask(GameUi, GuildShardDonationAssets):
         except TaskEnd:
             raise
         except (GameNotRunningError, GamePageUnknownError,
-                GameStuckError, GameTooManyClickError, TaskRestartError):
+                GameStuckError, GameTooManyClickError):
             # 这些异常必须交给 OAS 外层调度器处理；外层会调用 Restart，
             # 负责启动模拟器/游戏、登录并回到庭院。
             raise
@@ -233,9 +232,10 @@ class ScriptTask(GameUi, GuildShardDonationAssets):
                         logger.info("目标玩家复核成功，使用最新坐标 y=%.1f",
                                     confirmed_target["center_y"])
                     else:
-                        raise TaskRestartError(
-                            "等待 0.5 秒后未再次识别到目标，立即执行 Restart 并从头重试碎片捐赠"
+                        logger.error(
+                            "碎片捐赠失败：等待 0.5 秒复核时未再次识别到目标玩家，结束当前任务"
                         )
+                        self._finish(False)
                     break
 
             if confirmed_target is not None:

@@ -489,13 +489,6 @@ class Script:
                 return False
             logger.info('Run Restart immediately to recover a stopped game')
             return self.run('Restart')
-        except TaskRestartError as e:
-            logger.warning(e)
-            if command == 'Restart':
-                logger.error('Restart requested another immediate restart')
-                return False
-            logger.info('Task requested an immediate Restart; retry after recovery')
-            return self.run('Restart')
         except (GameStuckError, GameTooManyClickError) as e:
             logger.error(e)
             self.save_error_log()
