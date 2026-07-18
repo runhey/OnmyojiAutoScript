@@ -45,6 +45,24 @@
     "description": "求援"
   },
   {
+    "itemName": "ball_limit_prompt",
+    "imageName": "ball_limit_prompt.png",
+    "roiFront": "428,333,433,146",
+    "roiBack": "390,250,500,260",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "求援后御盘数量达到上限提示"
+  },
+  {
+    "itemName": "ball_limit_confirm",
+    "imageName": "ball_limit_confirm.png",
+    "roiFront": "691,410,135,39",
+    "roiBack": "665,390,190,85",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "御盘数量达到上限提示的确定按钮"
+  },
+  {
     "itemName": "create_team",
     "imageName": "ball_create_team.png",
     "roiFront": "569,491,141,50",

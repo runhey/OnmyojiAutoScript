@@ -135,6 +135,11 @@ class ScriptTask(GameUi, GeneralInvite, GeneralRoom, BondlingBattle, SwitchSoul,
                             return False
                         if self.appear_then_click(self.I_BALL_HELP, interval=2):
                             sleep(1)
+                            self.screenshot()
+                            if self.appear(self.I_BALL_LIMIT_PROMPT):
+                                logger.info('Bondling disk limit prompt appeared, click confirm')
+                                self.appear_then_click(self.I_BALL_LIMIT_CONFIRM)
+                                sleep(1)
                             click_count += 1
                             continue
 

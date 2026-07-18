@@ -61,6 +61,10 @@ class BondlingFairylandAssets:
 	I_BALL_RECORDS = RuleImage(roi_front=(856,566,38,39), roi_back=(856,566,38,39), threshold=0.8, method="Template matching", file="./tasks/BondlingFairyland/ball/ball_ball_records.png")
 	# 求援 
 	I_BALL_HELP = RuleImage(roi_front=(963,571,100,100), roi_back=(963,571,100,100), threshold=0.8, method="Template matching", file="./tasks/BondlingFairyland/ball/ball_ball_help.png")
+	# 求援后御盘数量达到上限提示
+	I_BALL_LIMIT_PROMPT = RuleImage(roi_front=(428,333,433,146), roi_back=(390,250,500,260), threshold=0.8, method="Template matching", file="./tasks/BondlingFairyland/ball/ball_limit_prompt.png")
+	# 御盘数量达到上限提示的确定按钮
+	I_BALL_LIMIT_CONFIRM = RuleImage(roi_front=(691,410,135,39), roi_back=(665,390,190,85), threshold=0.8, method="Template matching", file="./tasks/BondlingFairyland/ball/ball_limit_confirm.png")
 	# 契灵创建队伍 
 	I_CREATE_TEAM = RuleImage(roi_front=(569,491,141,50), roi_back=(569,491,141,50), threshold=0.8, method="Template matching", file="./tasks/BondlingFairyland/ball/ball_create_team.png")
 	# 地域 
@@ -185,5 +189,3 @@ class BondlingFairylandAssets:
 	I_BUY_SUB = RuleImage(roi_front=(468,540,43,40), roi_back=(468,540,43,40), threshold=0.8, method="Template matching", file="./tasks/BondlingFairyland/stone/buy_sub.png")
 	# 关闭购买契灵页面 
 	I_STONE_CLOSE = RuleImage(roi_front=(911,56,42,38), roi_back=(888,49,100,100), threshold=0.8, method="Template matching", file="./tasks/BondlingFairyland/stone/stone_stone_close.png")
-
-
