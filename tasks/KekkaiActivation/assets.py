@@ -115,4 +115,7 @@ class KekkaiActivationAssets:
 	# description 
 	I_CARDS_MOON_1 = RuleImage(roi_front=(190,430,93,74), roi_back=(173,156,123,492), threshold=0.8, method="Template matching", file="./tasks/KekkaiActivation/cards/cards_cards_moon_1.png")
 
+	#auto_put_assets
+	i_AUTO_PUT = RuleImage(roi_front=(1149,509,44,42), roi_back=(1145,504,54,52), threshold=0.8, method="Template matching",file="./tasks/KekkaiActivation/a/a_a_auto_put.png")
+
 

@@ -23,11 +23,9 @@ class ActivationConfig(BaseModel):
     card_type: CardType = Field(default=CardType.TAIKO, description='card_rule_help')
     min_taiko_num: int = Field(default=8, description='挂卡太鼓每小时最少收益,低于则不挂卡')
     min_fish_num: int = Field(default=16, description='挂卡斗鱼每小时最少收益,低于则不挂卡')
-    exchange_before: bool = Field(default=True, description='exchange_before_help')
-    exchange_max: bool = Field(default=True, description='exchange_max_help')
+    exchange_auto: bool = Field(default=True, description='是否使用智能放入')
     shikigami_class: ShikigamiClass = Field(default=ShikigamiClass.N, description='shikigami_class_help')
     card_not_found_count: int = Field(default=0, description='未发现卡次数')
-
 
 class KekkaiActivation(ConfigBase):
     scheduler: ActivationScheduler = Field(default_factory=ActivationScheduler)
