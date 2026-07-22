@@ -21,7 +21,7 @@
     "itemName": "climb_mode_pass",
     "imageName": "as_climb_mode_pass.png",
     "roiFront": "1142,547,21,21",
-    "roiBack": "1096,516,111,68",
+    "roiBack": "1096,516,78,83",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "活动爬塔标志"
