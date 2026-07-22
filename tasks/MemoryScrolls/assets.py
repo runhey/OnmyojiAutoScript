@@ -12,17 +12,17 @@ class MemoryScrollsAssets:
 
 	# Click Rule Assets
 	# 进入卷一 
-	C_MS_SCROLL_1 = RuleClick(roi_front=(170,157,279,192), roi_back=(170,157,279,192), name="ms_scroll_1")
+	C_MS_SCROLL_1 = RuleClick(roi_front=(247,192,279,192), roi_back=(247,192,279,192), name="ms_scroll_1")
 	# 进入卷二 
-	C_MS_SCROLL_2 = RuleClick(roi_front=(490,135,297,210), roi_back=(490,135,297,210), name="ms_scroll_2")
+	C_MS_SCROLL_2 = RuleClick(roi_front=(542,189,274,196), roi_back=(542,189,274,196), name="ms_scroll_2")
 	# 进入卷三 
-	C_MS_SCROLL_3 = RuleClick(roi_front=(836,135,304,210), roi_back=(836,135,304,210), name="ms_scroll_3")
+	C_MS_SCROLL_3 = RuleClick(roi_front=(840,192,279,187), roi_back=(840,192,279,187), name="ms_scroll_3")
 	# 进入卷四 
-	C_MS_SCROLL_4 = RuleClick(roi_front=(137,389,305,206), roi_back=(137,389,305,206), name="ms_scroll_4")
+	C_MS_SCROLL_4 = RuleClick(roi_front=(246,402,279,199), roi_back=(246,402,279,199), name="ms_scroll_4")
 	# 进入卷五 
-	C_MS_SCROLL_5 = RuleClick(roi_front=(491,390,303,207), roi_back=(491,390,303,207), name="ms_scroll_5")
+	C_MS_SCROLL_5 = RuleClick(roi_front=(552,405,271,196), roi_back=(552,405,271,196), name="ms_scroll_5")
 	# 进入卷六 
-	C_MS_SCROLL_6 = RuleClick(roi_front=(835,389,303,204), roi_back=(835,389,303,204), name="ms_scroll_6")
+	C_MS_SCROLL_6 = RuleClick(roi_front=(838,408,277,185), roi_back=(838,408,277,185), name="ms_scroll_6")
 	# 贡献完成跳结算 
 	C_MS_CONTRIBUTED = RuleClick(roi_front=(108,509,993,190), roi_back=(108,509,993,190), name="ms_contributed")
 	# 双绘卷之二 
@@ -33,41 +33,37 @@ class MemoryScrollsAssets:
 	# 进入绘卷主界面 
 	I_MS_ENTER = RuleImage(roi_front=(1169,155,24,55), roi_back=(1169,155,24,55), threshold=0.5, method="Template matching", file="./tasks/MemoryScrolls/ms/ms_ms_enter.png")
 	# 判断是否处于绘卷主界面 
-	I_MS_MAIN = RuleImage(roi_front=(689,3,40,50), roi_back=(689,3,40,50), threshold=0.8, method="Template matching", file="./tasks/MemoryScrolls/ms/ms_ms_main.png")
-	# 退出到召唤界面 
-	I_MS_BACK = RuleImage(roi_front=(32,31,43,45), roi_back=(32,31,43,45), threshold=0.8, method="Template matching", file="./tasks/MemoryScrolls/ms/ms_ms_back.png")
-	# 关闭分卷捐献界面 
-	I_MS_CLOSE = RuleImage(roi_front=(1145,48,39,41), roi_back=(1145,48,39,41), threshold=0.8, method="Template matching", file="./tasks/MemoryScrolls/ms/ms_ms_close.png")
+	I_MS_MAIN = RuleImage(roi_front=(151,390,40,50), roi_back=(151,390,40,50), threshold=0.8, method="Template matching", file="./tasks/MemoryScrolls/ms/ms_ms_main.png")
 	# 贡献碎片 
-	I_MS_CONTRIBUTE = RuleImage(roi_front=(1013,583,125,35), roi_back=(1013,583,125,35), threshold=0.8, method="Template matching", file="./tasks/MemoryScrolls/ms/ms_ms_contribute.png")
+	I_MS_CONTRIBUTE = RuleImage(roi_front=(1015,537,125,35), roi_back=(1015,537,125,35), threshold=0.8, method="Template matching", file="./tasks/MemoryScrolls/ms/ms_ms_contribute.png")
 	# 贡献碎片完成 
 	I_MS_CONTRIBUTED = RuleImage(roi_front=(493,232,63,40), roi_back=(493,232,63,40), threshold=0.8, method="Template matching", file="./tasks/MemoryScrolls/ms/ms_ms_contributed.png")
 	# 绘卷100% 
-	I_MS_COMPLETE = RuleImage(roi_front=(397,593,100,21), roi_back=(397,593,100,21), threshold=0.8, method="Template matching", file="./tasks/MemoryScrolls/ms/ms_ms_complete.png")
+	I_MS_COMPLETE = RuleImage(roi_front=(418,560,100,21), roi_back=(418,560,100,21), threshold=0.8, method="Template matching", file="./tasks/MemoryScrolls/ms/ms_ms_complete.png")
 	# 小绘卷不足 
-	I_MS_ZERO_S = RuleImage(roi_front=(968,160,51,27), roi_back=(968,160,51,27), threshold=0.8, method="Template matching", file="./tasks/MemoryScrolls/ms/ms_ms_zero_s.png")
+	I_MS_ZERO_S = RuleImage(roi_front=(981,124,51,27), roi_back=(981,124,51,27), threshold=0.8, method="Template matching", file="./tasks/MemoryScrolls/ms/ms_ms_zero_s.png")
 	# 中绘卷不足 
-	I_MS_ZERO_M = RuleImage(roi_front=(967,312,54,26), roi_back=(967,312,54,26), threshold=0.8, method="Template matching", file="./tasks/MemoryScrolls/ms/ms_ms_zero_m.png")
+	I_MS_ZERO_M = RuleImage(roi_front=(981,266,54,26), roi_back=(981,266,54,26), threshold=0.8, method="Template matching", file="./tasks/MemoryScrolls/ms/ms_ms_zero_m.png")
 	# 大绘卷不足 
-	I_MS_ZERO_L = RuleImage(roi_front=(968,464,51,27), roi_back=(968,464,51,27), threshold=0.8, method="Template matching", file="./tasks/MemoryScrolls/ms/ms_ms_zero_l.png")
+	I_MS_ZERO_L = RuleImage(roi_front=(982,408,51,27), roi_back=(982,408,51,27), threshold=0.8, method="Template matching", file="./tasks/MemoryScrolls/ms/ms_ms_zero_l.png")
 	# 绘卷到达95%进度 
-	I_MS_COMPLETE_95 = RuleImage(roi_front=(655,594,4,18), roi_back=(655,594,4,18), threshold=0.8, method="Template matching", file="./tasks/MemoryScrolls/ms/ms_ms_complete_100.png")
+	I_MS_COMPLETE_95 = RuleImage(roi_front=(654,562,8,18), roi_back=(654,562,8,18), threshold=0.8, method="Template matching", file="./tasks/MemoryScrolls/ms/ms_ms_complete_100.png")
 	# 小碎片 
-	I_MS_FRAGMENT_S = RuleImage(roi_front=(290,677,40,35), roi_back=(290,677,40,35), threshold=0.8, method="Template matching", file="./tasks/MemoryScrolls/ms/ms_ms_fragment_s.png")
+	I_MS_FRAGMENT_S = RuleImage(roi_front=(651,25,26,23), roi_back=(640,0,58,63), threshold=0.8, method="Template matching", file="./tasks/MemoryScrolls/ms/ms_ms_fragment_s.png")
 	# 小碎片满50 
-	I_MS_FRAGMENT_S_50 = RuleImage(roi_front=(473,517,60,25), roi_back=(473,517,60,25), threshold=0.9, method="Template matching", file="./tasks/MemoryScrolls/ms/ms_ms_fragment_s_50.png")
+	I_MS_FRAGMENT_S_50 = RuleImage(roi_front=(540,314,60,25), roi_back=(507,302,104,45), threshold=0.95, method="Template matching", file="./tasks/MemoryScrolls/ms/ms_ms_fragment_s_50.png")
 	# description 
-	I_MS_FRAGMENT_S_VERIFICATION = RuleImage(roi_front=(522,318,100,100), roi_back=(522,318,100,100), threshold=0.8, method="Template matching", file="./tasks/MemoryScrolls/ms/ms_ms_fragment_s_verification.png")
+	I_MS_FRAGMENT_S_VERIFICATION = RuleImage(roi_front=(615,137,44,39), roi_back=(598,115,100,100), threshold=0.8, method="Template matching", file="./tasks/MemoryScrolls/ms/ms_ms_fragment_s_verification.png")
 	# 双绘卷进入按钮 
 	I_MS_DOUBLE_SCROLLS_ENTER = RuleImage(roi_front=(565,586,154,40), roi_back=(565,586,154,40), threshold=0.8, method="Template matching", file="./tasks/MemoryScrolls/ms/ms_ms_double_scrolls_enter.png")
 
 
 	# Swipe Rule Assets
 	# 小碎片拉满 
-	S_MS_SWIPE_S = RuleSwipe(roi_front=(838,199,37,27), roi_back=(1176,171,80,81), mode="default", name="ms_swipe_s")
+	S_MS_SWIPE_S = RuleSwipe(roi_front=(853,182,37,27), roi_back=(1129,157,49,70), mode="default", name="ms_swipe_s")
 	# 中碎片拉满 
-	S_MS_SWIPE_M = RuleSwipe(roi_front=(838,352,37,23), roi_back=(1176,326,83,84), mode="default", name="ms_swipe_m")
+	S_MS_SWIPE_M = RuleSwipe(roi_front=(852,326,37,23), roi_back=(1129,300,47,81), mode="default", name="ms_swipe_m")
 	# 大碎片拉满 
-	S_MS_SWIPE_L = RuleSwipe(roi_front=(839,503,34,25), roi_back=(1175,473,78,85), mode="default", name="ms_swipe_l")
+	S_MS_SWIPE_L = RuleSwipe(roi_front=(854,465,34,25), roi_back=(1131,440,43,77), mode="default", name="ms_swipe_l")
 
 
