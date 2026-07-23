@@ -28,9 +28,23 @@ class SoloExploration(BaseExploration):
             default_invite=False
         )
 
+    def _handle_treasure_box(self, roi_back=None) -> bool:
+        original_roi_back = self.I_TREASURE_BOX_CLICK.roi_back
+        if roi_back is not None:
+            self.I_TREASURE_BOX_CLICK.roi_back = roi_back
+        try:
+            if self.appear(self.I_TREASURE_BOX_CLICK):
+                logger.info('Treasure box appear, get it.')
+                self.ui_click_until_disappear(self.I_TREASURE_BOX_CLICK)
+                return True
+            return False
+        finally:
+            self.I_TREASURE_BOX_CLICK.roi_back = original_roi_back
+
     def run_solo(self):
         logger.hr('solo')
         search_fail_cnt = 0
+        swipe_unchanged_cnt = 0
 
         while 1:
             self.screenshot()
@@ -38,19 +52,21 @@ class SoloExploration(BaseExploration):
             logger.info(f'[run_solo] Current scene: {scene.name}')  # TODO 2026.06.22 之后删掉这个刷屏的
             #
             if scene == Scene.WORLD:
+                swipe_unchanged_cnt = 0
                 # 打开右边箭头
                 if not self.wait_world_stable():
                     continue
-                if self.appear(self.I_TREASURE_BOX_CLICK):
-                    # 宝箱
-                    logger.info('Treasure box appear, get it.')
-                    self.ui_click_until_disappear(self.I_TREASURE_BOX_CLICK)
+                # if self.appear(self.I_TREASURE_BOX_CLICK):
+                #     # 宝箱
+                #     logger.info('Treasure box appear, get it.')
+                #     self.ui_click_until_disappear(self.I_TREASURE_BOX_CLICK)
                 if self.check_exit():
                     break
                 self.open_expect_level()
                 continue
             #
             elif scene == Scene.ENTRANCE:
+                swipe_unchanged_cnt = 0
                 if self.check_exit():
                     break
                 self.ui_click(self.I_E_EXPLORATION_CLICK, stop=self.I_E_SETTINGS_BUTTON)
@@ -63,6 +79,8 @@ class SoloExploration(BaseExploration):
                     self.ui_click(self.I_E_AUTO_ROTATE_OFF, stop=self.I_E_AUTO_ROTATE_ON)
                     self.explore_init = True
                     continue
+                if self._handle_treasure_box(roi_back=(5, 520, 325, 70)):
+                    continue
                 # 小纸人
                 if self.appear(self.I_BATTLE_REWARD):
                     if self.ui_get_reward(self.I_BATTLE_REWARD):
@@ -70,23 +88,37 @@ class SoloExploration(BaseExploration):
                 # boss
                 if self.appear(self.I_BOSS_BATTLE_BUTTON):
                     if self.fire(self.I_BOSS_BATTLE_BUTTON):
+                        swipe_unchanged_cnt = 0
                         logger.info(f'Boss battle, minions cnt {self.minions_cnt}')
                     continue
                 # 小怪
                 fight_button = self.search_up_fight()
                 if fight_button is not None:
                     if self.fire(fight_button):
+                        swipe_unchanged_cnt = 0
                         logger.info(f'Fight, minions cnt {self.minions_cnt}')
                     continue
                 # 向后拉,寻找怪
                 if search_fail_cnt >= 4:
                     search_fail_cnt = 0
-                    if (self._config.exploration_config.exploration_level == ExplorationLevel.EXPLORATION_28\
-                        and self.appear(self.I_SWIPE_END))\
-                            or self._match_end.stable(self.device.image, refresh_after_stable=True):
+                    # I_SWIPE_END 是第 28 章的末尾标识，其他章节不要用它判断退出。
+                    if (
+                            self._config.exploration_config.exploration_level == ExplorationLevel.EXPLORATION_28
+                            and self.appear(self.I_SWIPE_END)
+                    ):
                         self.quit_explore()
                         continue
+                    before_image = self.device.image.copy()
                     if self.swipe(self.S_SWIPE_BACKGROUND_RIGHT, interval=3):
+                        self.screenshot()
+                        # 单次画面没变化可能是偶发，连续两次滑不动才认为到尽头。
+                        if self.is_swipe_unchanged(before_image, self.device.image):
+                            swipe_unchanged_cnt += 1
+                        else:
+                            swipe_unchanged_cnt = 0
+                        if swipe_unchanged_cnt >= 2:
+                            logger.info('Swipe unchanged twice, quit exploration')
+                            self.quit_explore()
                         continue
                 else:
                     search_fail_cnt += 1
@@ -99,6 +131,7 @@ class SoloExploration(BaseExploration):
     def run_leader(self):
         logger.hr('leader')
         search_fail_cnt = 0
+        swipe_unchanged_cnt = 0
         friend_leave_timer = Timer(10)
 
         while 1:
@@ -107,6 +140,7 @@ class SoloExploration(BaseExploration):
             logger.info(f'[run_leader] Current scene: {scene.name}')  # TODO 2026.06.22 之后删掉这个刷屏的
             # 探索大世界
             if scene == Scene.WORLD:
+                swipe_unchanged_cnt = 0
                 # 打开右边箭头
                 if not self.wait_world_stable():
                     continue
@@ -141,6 +175,7 @@ class SoloExploration(BaseExploration):
 
             # 邀请好友, 非常有可能是后面邀请好友，然后直接跳到组队了
             elif scene == Scene.ENTRANCE:
+                swipe_unchanged_cnt = 0
                 while 1:
                     self.screenshot()
                     if self.is_in_room():
@@ -204,23 +239,37 @@ class SoloExploration(BaseExploration):
                 # boss
                 if self.appear(self.I_BOSS_BATTLE_BUTTON):
                     if self.fire(self.I_BOSS_BATTLE_BUTTON):
+                        swipe_unchanged_cnt = 0
                         logger.info(f'Boss battle, minions cnt {self.minions_cnt}')
                     continue
                 # 小怪
                 fight_button = self.search_up_fight()
                 if fight_button is not None:
                     if self.fire(fight_button):
+                        swipe_unchanged_cnt = 0
                         logger.info(f'Fight, minions cnt {self.minions_cnt}')
                     continue
                 # 向后拉,寻找怪
                 if search_fail_cnt >= 4:
                     search_fail_cnt = 0
-                    if (self._config.exploration_config.exploration_level == ExplorationLevel.EXPLORATION_28\
-                        and self.appear(self.I_SWIPE_END))\
-                            or self._match_end.stable(self.device.image, refresh_after_stable=True):
+                    # I_SWIPE_END 是第 28 章的末尾标识，其他章节不要用它判断退出。
+                    if (
+                            self._config.exploration_config.exploration_level == ExplorationLevel.EXPLORATION_28
+                            and self.appear(self.I_SWIPE_END)
+                    ):
                         self.quit_explore()
                         continue
+                    before_image = self.device.image.copy()
                     if self.swipe(self.S_SWIPE_BACKGROUND_RIGHT, interval=4.5):
+                        self.screenshot()
+                        # 单次画面没变化可能是偶发，连续两次滑不动才认为到尽头。
+                        if self.is_swipe_unchanged(before_image, self.device.image):
+                            swipe_unchanged_cnt += 1
+                        else:
+                            swipe_unchanged_cnt = 0
+                        if swipe_unchanged_cnt >= 2:
+                            logger.info('Swipe unchanged twice, quit exploration')
+                            self.quit_explore()
                         continue
                 else:
                     search_fail_cnt += 1
