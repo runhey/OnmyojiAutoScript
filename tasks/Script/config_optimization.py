@@ -32,4 +32,8 @@ class Optimization(BaseModel):
     emulator_startup_lead_time: Time = Field(default=Time(minute=2),
                                             description='emulator_startup_lead_time_help')
     schedule_rule: ScheduleRule = Field(default=ScheduleRule.FILTER, description='schedule_rule_help')
+    # 排队模式：多个实例排队依次执行任务，避免同时执行造成服务器压力
+    queue_mode: bool = Field(default=False, description='queue_mode_help')
+    # 释放执行权的空闲阈值（分钟），仅 queue_mode=True 时生效
+    queue_idle_threshold: int = Field(default=10, description='queue_idle_threshold_help')
 
