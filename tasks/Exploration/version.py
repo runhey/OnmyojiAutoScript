@@ -66,8 +66,9 @@ class HighLight(BaseTask, ExplorationAssets):
                 self.I_LIGHT1, self.I_LIGHT2, self.I_LIGHT3, self.I_LIGHT4, self.I_LIGHT5,
                 self.I_LIGHT6, self.I_LIGHT7, self.I_LIGHT8, self.I_LIGHT9, self.I_LIGHT10,
                 self.I_LIGHT11, self.I_LIGHT12, self.I_LIGHT13, self.I_LIGHT14, self.I_LIGHT15,
-		self.I_LIGHT16, self.I_LIGHT17, self.I_LIGHT18, self.I_LIGHT19, self.I_LIGHT20,
-		self.I_LIGHT21, self.I_LIGHT22, self.I_LIGHT23, self.I_LIGHT24,
+				self.I_LIGHT16, self.I_LIGHT17, self.I_LIGHT18, self.I_LIGHT19, self.I_LIGHT20,
+				self.I_LIGHT21, self.I_LIGHT22, self.I_LIGHT23, self.I_LIGHT24, self.I_LIGHT25,
+				self.I_LIGHT26,s elf.I_LIGHT27, self.I_LIGHT28,
             ],
         )
 
