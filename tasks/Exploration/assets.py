@@ -41,6 +41,34 @@ class ExplorationAssets:
 	I_LIGHT13 = RuleImage(roi_front=(478,293,82,87), roi_back=(0,0,100,100), threshold=0.6, method="Template matching", file="./tasks/Exploration/highlight/highlight_light13.png")
 	# description 
 	I_LIGHT14 = RuleImage(roi_front=(474,290,82,87), roi_back=(0,0,100,100), threshold=0.6, method="Template matching", file="./tasks/Exploration/highlight/highlight_light14.png")
+	# description 
+	I_LIGHT15 = RuleImage(roi_front=(498,297,77,78), roi_back=(97,182,1130,409), threshold=0.6, method="Template matching", file="./tasks/Exploration/highlight/highlight_light15.png")
+	# description 
+	I_LIGHT16 = RuleImage(roi_front=(497,300,77,73), roi_back=(97,182,1130,409), threshold=0.6, method="Template matching", file="./tasks/Exploration/highlight/highlight_light16.png")
+	# description 
+	I_LIGHT17 = RuleImage(roi_front=(495,301,77,70), roi_back=(97,182,1130,409), threshold=0.6, method="Template matching", file="./tasks/Exploration/highlight/highlight_light17.png")
+	# description 
+	I_LIGHT18 = RuleImage(roi_front=(496,296,77,77), roi_back=(0,0,100,100), threshold=0.6, method="Template matching", file="./tasks/Exploration/highlight/highlight_light18.png")
+	# description 
+	I_LIGHT19 = RuleImage(roi_front=(494,296,74,78), roi_back=(0,0,100,100), threshold=0.6, method="Template matching", file="./tasks/Exploration/highlight/highlight_light19.png")
+	# description 
+	I_LIGHT20 = RuleImage(roi_front=(490,295,75,77), roi_back=(0,0,100,100), threshold=0.6, method="Template matching", file="./tasks/Exploration/highlight/highlight_light20.png")
+	# description 
+	I_LIGHT21 = RuleImage(roi_front=(486,295,76,79), roi_back=(0,0,100,100), threshold=0.6, method="Template matching", file="./tasks/Exploration/highlight/highlight_light21.png")
+	# description 
+	I_LIGHT22 = RuleImage(roi_front=(485,298,75,72), roi_back=(0,0,100,100), threshold=0.6, method="Template matching", file="./tasks/Exploration/highlight/highlight_light22.png")
+	# description 
+	I_LIGHT23 = RuleImage(roi_front=(484,295,76,75), roi_back=(0,0,100,100), threshold=0.6, method="Template matching", file="./tasks/Exploration/highlight/highlight_light23.png")
+	# description 
+	I_LIGHT24 = RuleImage(roi_front=(479,297,75,70), roi_back=(0,0,100,100), threshold=0.6, method="Template matching", file="./tasks/Exploration/highlight/highlight_light24.png")
+	# description 
+	I_LIGHT25 = RuleImage(roi_front=(479,296,75,74), roi_back=(0,0,100,100), threshold=0.6, method="Template matching", file="./tasks/Exploration/highlight/highlight_light25.png")
+	# description 
+	I_LIGHT26 = RuleImage(roi_front=(477,290,76,80), roi_back=(0,0,100,100), threshold=0.6, method="Template matching", file="./tasks/Exploration/highlight/highlight_light26.png")
+	# description 
+	I_LIGHT27 = RuleImage(roi_front=(478,293,74,79), roi_back=(0,0,100,100), threshold=0.6, method="Template matching", file="./tasks/Exploration/highlight/highlight_light27.png")
+	# description 
+	I_LIGHT28 = RuleImage(roi_front=(474,290,74,79), roi_back=(0,0,100,100), threshold=0.6, method="Template matching", file="./tasks/Exploration/highlight/highlight_light28.png")
 	# 经验怪 
 	I_UP_EXP = RuleImage(roi_front=(471,518,74,71), roi_back=(1,225,1278,410), threshold=0.8, method="Sift Flann", file="./tasks/Exploration/highlight/highlight_up_exp.png")
 	# 金币怪 
