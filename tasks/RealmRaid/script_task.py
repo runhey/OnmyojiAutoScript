@@ -517,7 +517,9 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, RealmRaidAssets):
 
             if not self.appear(self.I_RR_PERSON, threshold=0.8):
                 break
-                
+            # https://github.com/runhey/OnmyojiAutoScript/issues/1692
+            if self.appear_then_click(self.I_SOUL_RAID, interval=2):
+                continue
             if self.appear_then_click(self.I_FIRE, interval=1):
                 continue
             if self.click(click, interval=1.8):

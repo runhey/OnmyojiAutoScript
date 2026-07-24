@@ -182,6 +182,8 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AreaBossAssets):
         return self.run_general_battle(self.config.area_boss.general_battle)
 
     def setup_ultra(self) -> bool:
+        # 确定进入鬼王界面
+        self.wait_until_appear(self.I_AB_CLOSE_RED)
         # 尝试切换
         if not self.get_difficulty():
             # 如果可以切换，直接切换
