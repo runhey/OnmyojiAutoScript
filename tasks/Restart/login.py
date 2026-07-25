@@ -7,10 +7,11 @@ from module.exception import RequestHumanTakeover, GameTooManyClickError, GameSt
 from module.logger import logger
 from tasks.Restart.assets import RestartAssets
 from tasks.GameUi.assets import GameUiAssets
+from tasks.Component.GeneralBuff.assets import GeneralBuffAssets
 from tasks.base_task import BaseTask
 import time
 
-class LoginHandler(BaseTask, RestartAssets, GameUiAssets):
+class LoginHandler(BaseTask, RestartAssets, GameUiAssets, GeneralBuffAssets):
     character: str
 
     def __init__(self, *wargs, **kwargs):
@@ -43,34 +44,22 @@ class LoginHandler(BaseTask, RestartAssets, GameUiAssets):
             if self.appear_then_click(self.I_CANCEL_BATTLE, interval=0.8):
                 logger.info('Cancel continue battle')
                 continue
-            # 确认进入庭院(优化：当出现闲庭图片时，点击卷轴关闭区域，然后判断式神录按钮出现就代表登录成功)
-            if self.appear(self.I_LOGIN_COURTYARD, interval=0.2):
-                if self.click(self.C_LOGIN_SCROLL_CLOSE_AREA, interval=2):
-                    logger.info('Click scroll close area because courtyard appears')
-                    self.screenshot()  # 点击后立即获取最新截图，确保后续状态检查准确
-                    continue
-            # 确认进入庭院(兜底：未检测到闲庭图片时，如果识别到卷轴处于关闭状态，直接点击卷轴将其展开)
-            if self.appear_then_click(self.I_LOGIN_SCROOLL_CLOSE, interval=1):
-                logger.info('Click closed scroll to open it')
-                self.screenshot()
-                continue
-            if self.appear(self.I_MAIN_GOTO_SHIKIGAMI_RECORDS, interval=0.2):
-                if confirm_timer.reached():
-                    logger.info('Login to main confirm (shikigami records button appears)')
-                    break
-            elif self.appear(self.I_LOGIN_SCROOLL_OPEN, interval=0.2):
-                if confirm_timer.reached():
-                    logger.info('Login to main confirm (scroll open)')
-                    break
-            else:
-                confirm_timer.reset()
-            # 登录成功
-            if self.appear(self.I_MAIN_GOTO_SHIKIGAMI_RECORDS, interval=0.5):
-                logger.info('Login success: shikigami records button appears')
-                login_success = True
-            elif self.appear(self.I_LOGIN_SCROOLL_OPEN, interval=0.5):
-                logger.info('Login success: scroll open')
-                login_success = True
+            # 确认进入庭院(优化：先检测加成图标确认在庭院页面，再检测式神录图标)
+            if self.appear(self.I_BUFF_1, interval=0.2):
+                # 加成图标存在，确认在庭院页面
+                if self.appear(self.I_MAIN_GOTO_SHIKIGAMI_RECORDS, interval=0.2):
+                    # 式神录图标存在，认为已在庭院
+                    if confirm_timer.reached():
+                        logger.info('Login to main confirm (buff and shikigami records button appears)')
+                        break
+                    login_success = True
+                else:
+                    # 式神录图标不存在，点击展开卷轴
+                    if self.click(self.C_LOGIN_SCROLL_CLOSE_AREA, interval=2):
+                        logger.info('Click scroll expand area because shikigami records not found')
+                        self.screenshot()
+                        continue
+                    confirm_timer.reset()
 
             # 网络异常
             # if self.ocr_appear(self.O_LOGIN_NETWORK):

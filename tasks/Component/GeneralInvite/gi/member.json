@@ -29,8 +29,8 @@
   {
     "itemName": "gi_explore",
     "imageName": "gi_gi_explore.png",
-    "roiFront": "677,11,33,46",
-    "roiBack": "677,11,33,46",
+    "roiFront": "690,16,28,28",
+    "roiBack": "688,8,33,46",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "判断是不是在探索界面"

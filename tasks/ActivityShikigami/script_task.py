@@ -251,6 +251,25 @@ class ScriptTask(StateMachine, GameUi, BaseActivity, SwitchSoul, ActivityShikiga
         """
         logger.hr(f'Start run climb type BOSS')
 
+        self.ui_clicks([self.I_TO_BATTLE_BOSS],
+                       stop=self.I_CHECK_BATTLE_BOSS, interval=1)
+
+
+        while 1:
+            self.screenshot()
+            self.put_status()
+            # --------------------------------------------------------------
+            if not self.ocr_appear(self.O_FIRE):
+                self.appear_then_click(self.I_CHECK_BATTLE_BOSS, interval=4)
+                continue
+
+            if self.conf.general_climb.random_sleep:
+                random_sleep(probability=0.2)
+            if self.start_battle():
+                continue
+
+        self.ui_click(self.I_UI_BACK_YELLOW, stop=self.I_TO_BATTLE_BOSS, interval=1)
+
     def _run_ap100(self):
         """
         更新前请先看 ./README.md

@@ -12,7 +12,7 @@ from module.device.connection import Connection
 from module.device.method.minitouch import smooth_path
 from module.device.method.utils import (RETRY_TRIES, retry_sleep, remove_prefix, handle_adb_error,
                                         ImageTruncated, PackageNotInstalled)
-from module.exception import RequestHumanTakeover, ScriptError
+from module.exception import RequestHumanTakeover, ScriptError, EmulatorNotRunningError
 from module.logger import logger
 
 
@@ -33,6 +33,14 @@ def retry(func):
             # Can't handle
             except RequestHumanTakeover:
                 break
+            # Emulator not running, try to restart it
+            except EmulatorNotRunningError:
+                logger.error('Emulator not running, attempting to restart')
+                if hasattr(self, 'emulator_start'):
+                    self.emulator_start()
+
+                def init():
+                    self.adb_reconnect()
             # When adb server was killed
             except ConnectionResetError as e:
                 logger.error(e)

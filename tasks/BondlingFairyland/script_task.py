@@ -101,19 +101,29 @@ class ScriptTask(GameUi, GeneralInvite, GeneralRoom, BondlingBattle, SwitchSoul,
                     self.screenshot()
                     if self.appear(self.I_GI_IN_ROOM):
                         return True
+                    # 求援后可能出现式盘数量上限确认弹窗
+                    if self.appear_then_click(self.I_UI_CONFIRM, interval=1):
+                        sleep(1)
+                        continue
                     if click_count >= 6:
                         logger.error('Click fire failed')
                         logger.error(
                             'You might need to check your bondling number. It most possibly arrived to the max 500')
                         raise BondlingNumberMax
-                    # 某些活动的时候出现 “选择共鸣的阴阳师”
-                    if self.appear_then_click(self.I_UI_CONFIRM, interval=1):
-                        continue
                     if self.check_and_invite(True):
                         continue
                     if self.appear(self.I_CREATE_TEAM, interval=1):
                         self.ensure_private()
-                        self.appear_then_click(self.I_CREATE_TEAM, interval=2)
+                        if self.appear_then_click(self.I_CREATE_TEAM, interval=2):
+                            logger.info('Wait up to 5s for bondling room after creating team')
+                            enter_timer = Timer(5).start()
+                            while not enter_timer.reached():
+                                self.screenshot()
+                                if self.appear(self.I_GI_IN_ROOM) or self.is_in_room(is_screenshot=False):
+                                    logger.info('Bondling room entered after creating team')
+                                    return True
+                                if self.appear(self.I_BALL_HELP) or self.appear(self.I_CREATE_TEAM):
+                                    break
                         continue
                     # 求援
                     if self.appear(self.I_BALL_AREA, interval=1):

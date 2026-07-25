@@ -74,6 +74,11 @@ class GeneralInvite(BaseTask, BondlingFairylandAssets, GeneralInviteAssets):
                 logger.warning('Timeout, now is no room')
                 return False
 
+            if self.appear(self.I_INVITE_ENSURE) or self.appear(self.I_GI_CANCEL):
+                logger.warning('Invite page is still open, close it before checking room status')
+                self.close_invite_page()
+                continue
+
             if not self.is_in_room():
                 continue
 
@@ -99,6 +104,25 @@ class GeneralInvite(BaseTask, BondlingFairylandAssets, GeneralInviteAssets):
                     logger.info('Wait for 30s and invite again')
                     self.timer_invite.reset()
                 self.invite_friends(config)
+
+    def close_invite_page(self) -> bool:
+        """
+        Close the invite selector if it is still open, returning to the room page.
+        """
+        logger.info('Close invite page')
+        timer = Timer(3).start()
+        closed = False
+        while not timer.reached():
+            self.screenshot()
+            if not self.appear(self.I_INVITE_ENSURE) and not self.appear(self.I_GI_CANCEL):
+                return closed
+            if self.appear_then_click(self.I_GI_CANCEL, interval=0.8):
+                closed = True
+                continue
+            if self.appear_then_click(self.I_INVITE_ENSURE, interval=0.8):
+                closed = True
+                continue
+        return closed
 
     def ensure_enter(self) -> bool:
         """
@@ -343,25 +367,26 @@ class GeneralInvite(BaseTask, BondlingFairylandAssets, GeneralInviteAssets):
             logger.info('Find recent friend')
             # 获取’最近‘在friend_class中的index
             if '最近' not in friend_class:
-                logger.warning('No recent friend')
-                return False
-            recent_index = friend_class.index('最近')
-            while recent_index == 1:
-                self.screenshot()
-                if self.appear(self.I_FLAG_2_ON):
-                    break
-                if self.appear_then_click(self.I_FLAG_2_OFF, interval=1):
-                    continue
+                logger.warning('No recent friend, fallback to auto find')
+                find_mode = FindMode.AUTO_FIND
+            else:
+                recent_index = friend_class.index('最近')
+                while recent_index == 1:
+                    self.screenshot()
+                    if self.appear(self.I_FLAG_2_ON):
+                        break
+                    if self.appear_then_click(self.I_FLAG_2_OFF, interval=1):
+                        continue
 
-            logger.info(f'Now find friend in ”最近“')
-            sleep(1)
-            if not is_select:
-                if self.detect_select(name):
-                    is_select = True
-            sleep(1)
-            if not is_select:
-                if self.detect_select(name):
-                    is_select = True
+                logger.info(f'Now find friend in “最近”')
+                sleep(1)
+                if not is_select:
+                    if self.detect_select(name):
+                        is_select = True
+                sleep(1)
+                if not is_select:
+                    if self.detect_select(name):
+                        is_select = True
 
         for index in range(len(friend_class)):
             # 如果不是自动寻找，就跳过
@@ -472,5 +497,3 @@ if __name__ == '__main__':
     # t.run_invite(c.orochi.invite_config, is_first=True)
     t.screenshot()
     print(t.appear(t.I_FIRE, threshold=0.8))
-
-

@@ -16,7 +16,7 @@ from rich.rule import Rule
 from typing import Callable, List
 
 
-def cleanup_logs(log_dir: str = "./log", keep_days: int = 7):
+def cleanup_logs(log_dir: str = "./log", keep_days: int = 14):
     """删除 log_dir 下所有早于 keep_days 的文件夹和文件"""
     log_path = Path(log_dir)
     if not log_path.exists():
