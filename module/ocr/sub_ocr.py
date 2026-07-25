@@ -124,6 +124,12 @@ class Digit(Single):
         """
         result = self.ocr_single(image)
 
+        if result == "000":
+            return 999
+
+        if result == "00":
+            return 99
+
         if result == "":
             return 0
         else:
