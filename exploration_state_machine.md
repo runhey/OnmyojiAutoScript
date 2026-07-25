@@ -85,6 +85,72 @@ stateDiagram-v2
     END --> [*]
 ```
 
+## 队长邀请好友子状态机
+
+探索队长模式进入 `TEAM` 后，邀请逻辑由两段代码共同驱动：
+
+- `tasks/Exploration/solo.py`
+  - `run_leader()`：识别 `Scene.TEAM`，决定是否直接开火或进入邀请流程。
+  - `invite_friend()`：探索覆盖的好友选择逻辑。
+- `tasks/Component/GeneralInvite/general_invite.py`
+  - `run_invite()`：通用组队等待、重复邀请、开火判断。
+  - `invite_friends()`：调用具体的 `invite_friend()`。
+
+### 子状态定义
+
+| 状态 | 含义 |
+| --- | --- |
+| `TEAM_CHECK` | 队长在组队房间内检查邀请位和挑战按钮。 |
+| `INVITE_ENTER` | 确认已进入组队房间，初始化房间类型和邀请定时器。 |
+| `INVITE_OPEN_LIST` | 点击邀请位 `I_ADD_2`，等待好友列表加载或邀请确认按钮出现。 |
+| `INVITE_SELECT_FRIEND` | 按配置的查找方式选择好友。 |
+| `INVITE_CONFIRM` | 点击邀请确认按钮，关闭好友列表。 |
+| `WAIT_MEMBER` | 等待队友进入房间。 |
+| `INVITE_AGAIN` | 定时器到达后再次邀请。 |
+| `START_CHALLENGE` | 探索双人房检测到 `I_ADD_2` 消失，点击挑战。 |
+| `INVITE_FAILED` | 等待超时、房间消失或好友查找失败。 |
+
+### 子状态图
+
+```mermaid
+stateDiagram-v2
+    [*] --> TEAM_CHECK
+
+    TEAM_CHECK --> START_CHALLENGE: I_FIRE 出现且 I_ADD_2 消失
+    TEAM_CHECK --> INVITE_ENTER: I_ADD_2 出现，调用 run_invite(is_first=True)
+    TEAM_CHECK --> INVITE_FAILED: 无法开火且无法邀请
+
+    INVITE_ENTER --> INVITE_OPEN_LIST: ensure_enter() 成功，初始化 room_type 和 Timer(20)
+    INVITE_ENTER --> INVITE_FAILED: ensure_enter() 失败
+
+    INVITE_OPEN_LIST --> INVITE_SELECT_FRIEND: I_LOAD_FRIEND 或 I_INVITE_ENSURE 出现
+    INVITE_SELECT_FRIEND --> INVITE_CONFIRM: 找到好友或完成查找
+    INVITE_CONFIRM --> WAIT_MEMBER: 关闭邀请列表
+    INVITE_CONFIRM --> INVITE_FAILED: 未找到好友
+
+    WAIT_MEMBER --> START_CHALLENGE: NORMAL_2 且 I_ADD_2 消失
+    WAIT_MEMBER --> INVITE_AGAIN: is_first=True 且 Timer(20) 到达
+    WAIT_MEMBER --> INVITE_FAILED: wait_time 到达或出现 I_MATCHING
+    WAIT_MEMBER --> WAIT_MEMBER: 仍在房间且邀请位未消失
+
+    INVITE_AGAIN --> INVITE_OPEN_LIST: timer_invite.reset() 后再次 invite_friends()
+
+    START_CHALLENGE --> [*]: click_fire() 后进入章节
+    INVITE_FAILED --> [*]: run_leader() 退出房间并回到 WORLD
+```
+
+### 当前边界风险
+
+主等待循环可以处理队友进房：探索房间是 `RoomType.NORMAL_2`，当 `I_ADD_2` 消失时，`run_invite()` 会进入 `START_CHALLENGE` 并点击挑战。
+
+风险在 `INVITE_OPEN_LIST` 到 `INVITE_CONFIRM` 之间。探索自己的 `invite_friend()` 在点击 `I_ADD_2` 后，只等待：
+
+- `I_LOAD_FRIEND`
+- `I_INVITE_ENSURE`
+- 再次点击到 `I_ADD_2` / `I_ADD_5_4`
+
+它没有检测“队友已进入房间导致 `I_ADD_2` 消失”的条件，也没有内部超时。因此如果第二次邀请刚触发时，队友正好进入房间，邀请列表或确认按钮又没有按预期出现，流程可能停在 `INVITE_OPEN_LIST` 或后续好友列表切换循环里，无法回到 `WAIT_MEMBER` 去触发 `START_CHALLENGE`。
+
 ## 关键转换条件
 
 ### `WORLD -> POST_PROCESS`

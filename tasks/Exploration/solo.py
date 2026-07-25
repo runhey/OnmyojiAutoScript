@@ -83,8 +83,7 @@ class SoloExploration(BaseExploration):
                     continue
                 # 小纸人
                 if self.appear(self.I_BATTLE_REWARD):
-                    if self.ui_get_reward(self.I_BATTLE_REWARD):
-                        continue
+                    continue
                 # boss
                 if self.appear(self.I_BOSS_BATTLE_BUTTON):
                     if self.fire(self.I_BOSS_BATTLE_BUTTON):
@@ -144,22 +143,22 @@ class SoloExploration(BaseExploration):
                 # 打开右边箭头
                 if not self.wait_world_stable():
                     continue
-                if self.appear(self.I_TREASURE_BOX_CLICK):
-                    # 宝箱
-                    logger.info('Treasure box appear, get it.')
-                    self.wait_until_stable(self.I_UI_CANCEL, timer=Timer(0.6, 1))
-                    while 1:
-                        self.screenshot()
-                        if self.appear(self.I_REWARD):
-                            self.ui_click_until_disappear(self.I_REWARD)
-                            logger.info('Get reward.')
-                            break
-                        if self.ui_reward_appear_click():
-                            continue
-                        if self.appear_then_click(self.I_UI_CANCEL, interval=0.8):
-                            continue
-                        if self.appear_then_click(self.I_TREASURE_BOX_CLICK, interval=1):
-                            continue
+                # if self.appear(self.I_TREASURE_BOX_CLICK):
+                #     # 宝箱
+                #     logger.info('Treasure box appear, get it.')
+                #     self.wait_until_stable(self.I_UI_CANCEL, timer=Timer(0.6, 1))
+                #     while 1:
+                #         self.screenshot()
+                #         if self.appear(self.I_REWARD):
+                #             self.ui_click_until_disappear(self.I_REWARD)
+                #             logger.info('Get reward.')
+                #             break
+                #         if self.ui_reward_appear_click():
+                #             continue
+                #         if self.appear_then_click(self.I_UI_CANCEL, interval=0.8):
+                #             continue
+                #         if self.appear_then_click(self.I_TREASURE_BOX_CLICK, interval=1):
+                #             continue
                 if self.check_exit():
                     self.wait_until_stable(self.I_UI_CANCEL, timer=Timer(0.6, 2))
                     if self.appear(self.I_UI_CANCEL):
@@ -293,10 +292,10 @@ class SoloExploration(BaseExploration):
                 # 打开右边箭头
                 if not self.wait_world_stable():
                     continue
-                if self.appear(self.I_TREASURE_BOX_CLICK):
-                    # 宝箱
-                    logger.info('Treasure box appear, get it.')
-                    self.ui_click_until_disappear(self.I_TREASURE_BOX_CLICK)
+                # if self.appear(self.I_TREASURE_BOX_CLICK):
+                #     # 宝箱
+                #     logger.info('Treasure box appear, get it.')
+                #     self.ui_click_until_disappear(self.I_TREASURE_BOX_CLICK)
                 if self.check_exit():
                     break
                 if self.check_then_accept():
