@@ -26,7 +26,6 @@ class ConfigManager:
             # 如果没有脚本文件 则创建一个
             ConfigManager.copy(file='oas1', template='template')
             result.append('oas1')
-        result.sort()
         return result
 
     @staticmethod
