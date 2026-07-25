@@ -10,8 +10,8 @@
   },
   {
     "itemName": "b_low_number",
-    "roiFront": "543,14,96,33",
-    "roiBack": "543,14,96,33",
+    "roiFront": "542,19,100,23",
+    "roiBack": "542,19,100,23",
     "mode": "DigitCounter",
     "method": "Default",
     "keyword": "",

@@ -33,7 +33,7 @@ class BondlingFairylandAssets:
 	# Ocr-description 
 	O_B_BONDLING_CLASS = RuleOcr(roi=(266,271,79,112), area=(287,271,36,112), mode="Single", method="Default", keyword="", name="b_bondling_class")
 	# 小盘子 
-	O_B_LOW_NUMBER = RuleOcr(roi=(543,14,96,33), area=(543,14,96,33), mode="DigitCounter", method="Default", keyword="", name="b_low_number")
+	O_B_LOW_NUMBER = RuleOcr(roi=(542,19,100,23), area=(542,19,100,23), mode="DigitCounter", method="Default", keyword="", name="b_low_number")
 	# 中盘子 
 	O_B_MEDIUM_NUMBER = RuleOcr(roi=(734,19,99,25), area=(734,19,99,25), mode="DigitCounter", method="Default", keyword="", name="b_medium_number")
 	# 大盘子 
