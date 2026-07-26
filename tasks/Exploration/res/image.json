@@ -173,7 +173,7 @@
   {
     "itemName": "treasure_box_click",
     "imageName": "res_treasure_box_click.png",
-    "roiFront": "31,537,39,29",
+    "roiFront": "31,543,27,24",
     "roiBack": "11,520,378,65",
     "method": "Template matching",
     "threshold": 0.65,
@@ -232,14 +232,5 @@
     "method": "Template matching",
     "threshold": 0.8,
     "description": "箭头，打开"
-  },
-  {
-    "itemName": "exp_leader",
-    "imageName": "res_exp_leader.png",
-    "roiFront": "119,299,17,21",
-    "roiBack": "1,105,162,248",
-    "method": "Template matching",
-    "threshold": 0.8,
-    "description": "組隊時隊長是否在副本内"
   }
 ]
