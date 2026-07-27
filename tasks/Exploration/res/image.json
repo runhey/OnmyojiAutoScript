@@ -232,5 +232,14 @@
     "method": "Template matching",
     "threshold": 0.8,
     "description": "箭头，打开"
+  },
+  {
+    "itemName": "team_emoji_fight",
+    "imageName": "res_team_emoji_fight.png",
+    "roiFront": "38,405,37,37",
+    "roiBack": "18,386,74,75",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "战斗中的队友标识"
   }
 ]

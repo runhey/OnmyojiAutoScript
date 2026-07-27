@@ -123,6 +123,8 @@ class ExplorationAssets:
 	I_EXP_ARROW_RIGHT = RuleImage(roi_front=(1240,117,24,21), roi_back=(1178,74,100,100), threshold=0.8, method="Template matching", file="./tasks/Exploration/res/res_exp_arrow_right.png")
 	# 箭头，打开 
 	I_EXP_ARROW_LEFT = RuleImage(roi_front=(1244,115,18,26), roi_back=(1178,78,100,100), threshold=0.8, method="Template matching", file="./tasks/Exploration/res/res_exp_arrow_left.png")
+	# 战斗中的队友标识 
+	I_TEAM_EMOJI_FIGHT = RuleImage(roi_front=(38,405,37,37), roi_back=(18,386,74,75), threshold=0.8, method="Template matching", file="./tasks/Exploration/res/res_team_emoji_fight.png")
 
 
 	# Long Click Rule Assets
