@@ -371,7 +371,7 @@ class SoloExploration(BaseExploration):
             if self.appear_then_click(self.I_ADD_5_4, interval=1):
                 continue
             # 避免中途队友进来邀请死循环
-            if not self.appear(self.I_ADD_2) or not self.appear(self.I_ADD_2):
+            if not self.appear(self.I_ADD_2) or not self.appear(self.I_ADD_5_4):
                 # 可能刚好点到人，点一下空地方
                 self.device.click(x=370, y=480, control_name='exploration_invite_friend_prevent')
                 return True
