@@ -10,5 +10,11 @@
     "roiFront": "717,165,100,48",
     "roiBack": "926,165,100,54",
     "description": "出现神赐"
+  },
+  {
+    "itemName": "st_soul_offering_reward",
+    "roiFront": "717,165,100,48",
+    "roiBack": "926,165,100,54",
+    "description": "御魂奉纳奖励"
   }
 ]
