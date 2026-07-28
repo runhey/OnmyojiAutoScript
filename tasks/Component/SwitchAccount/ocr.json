@@ -54,7 +54,7 @@
     "description": "登录界面 用户中心(区别于游戏内用户中心) 账户名"
   },
   {
-    "itemName": "sa_check_selcet_svr",
+    "itemName": "sa_check_select_svr",
     "roiFront": "252,145,97,32",
     "roiBack": "248,141,102,38",
     "mode": "Single",
