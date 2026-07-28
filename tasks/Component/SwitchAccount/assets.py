@@ -81,10 +81,10 @@ class SwitchAccountAssets:
 	# 登录界面-选择手机类型为苹果. 
 	I_SA_LOGIN_FORM_APPLE = RuleImage(roi_front=(508,354,100,100), roi_back=(508,355,100,100), threshold=0.8, method="Template matching", file="./tasks/Component/SwitchAccount/res/res_sa_login_form_apple.png")
 	# 登录界面-选择手机类型为android 
-	I_SA_LOGIN_FORM_ANDROID = RuleImage(roi_front=(671.3333333333333,353.33333333333337,100,100), roi_back=(670.6666666666667,352.33333333333337,100,100), threshold=0.8, method="Template matching", file="./tasks/Component/SwitchAccount/res/res_sa_login_form_android.png")
+	I_SA_LOGIN_FORM_ANDROID = RuleImage(roi_front=(671,353,100,100), roi_back=(670,352,100,100), threshold=0.8, method="Template matching", file="./tasks/Component/SwitchAccount/res/res_sa_login_form_android.png")
 	# 判断是否在 选择服务器 界面的标志物 角色的服务器图标还未显示时 
 	I_SA_CHECK_SELECT_SVR_1 = RuleImage(roi_front=(213,133,181,60), roi_back=(210,128,185,68), threshold=0.8, method="Template matching", file="./tasks/Component/SwitchAccount/res/res_sa_check_select_svr_1.png")
 	# 判断是否在 选择服务器 界面的标志物 角色的服务器图标已经显示时 
-	I_SA_CHECK_SELECT_SVR_2 = RuleImage(roi_front=(209.99999999999994,131.33333333333337,184,64.33333333333334), roi_back=(207.33333333333331,127.00000000000006,187,70), threshold=0.8, method="Template matching", file="./tasks/Component/SwitchAccount/res/res_sa_check_select_svr_2.png")
+	I_SA_CHECK_SELECT_SVR_2 = RuleImage(roi_front=(209,131,184,64), roi_back=(207,127,187,70), threshold=0.8, method="Template matching", file="./tasks/Component/SwitchAccount/res/res_sa_check_select_svr_2.png")
 
 

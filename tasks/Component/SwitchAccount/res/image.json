@@ -92,8 +92,8 @@
   {
     "itemName": "sa_login_form_android",
     "imageName": "res_sa_login_form_android.png",
-    "roiFront": "671.3333333333333,353.33333333333337,100,100",
-    "roiBack": "670.6666666666667,352.33333333333337,100,100",
+    "roiFront": "671,353,100,100",
+    "roiBack": "670,352,100,100",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "登录界面-选择手机类型为android"
@@ -110,8 +110,8 @@
   {
     "itemName": "sa_check_select_svr_2",
     "imageName": "res_sa_check_select_svr_2.png",
-    "roiFront": "209.99999999999994,131.33333333333337,184,64.33333333333334",
-    "roiBack": "207.33333333333331,127.00000000000006,187,70",
+    "roiFront": "209,131,184,64",
+    "roiBack": "207,127,187,70",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "判断是否在 选择服务器 界面的标志物 角色的服务器图标已经显示时"
