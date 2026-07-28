@@ -44,6 +44,18 @@ class RuleGif:
                 return True, target
         return False, None
 
+    def search_with_multi_scale(self, image, roi=None, threshold=None, scale_range=(0.8, 1.1, 0.05)):
+        image = self.pre_process(image)
+        threshold = self.targets[0].threshold if threshold is None else threshold
+        roi = self.targets[0].roi_back if roi is None else roi
+        for target in self.targets:
+            target.roi_back = roi
+            if target.match_multi_scale(image, threshold=threshold, scale_range=scale_range):
+                self.roi_front = target.roi_front
+                self.appear_target = target
+                return True, target
+        return False, None
+
     def match(self, image, threshold: float = None) -> bool:
         return self.search(image, threshold=threshold)[0]
 
