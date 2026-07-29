@@ -112,7 +112,7 @@ class ExplorationAssets:
 	# 宝箱 
 	I_TREASURE_BOX_CLICK = RuleImage(roi_front=(31,543,27,24), roi_back=(11,520,378,65), threshold=0.65, method="Template matching", file="./tasks/Exploration/res/res_treasure_box_click.png")
 	# 困28滚动到最后 
-	I_SWIPE_END = RuleImage(roi_front=(994,234,119,100), roi_back=(968,196,311,165), threshold=0.8, method="Template matching", file="./tasks/Exploration/res/res_swipe_end.png")
+	I_SWIPE_END = RuleImage(roi_front=(1213,79,66,265), roi_back=(1213,79,66,265), threshold=0.8, method="Template matching", file="./tasks/Exploration/res/res_swipe_end.png")
 	# 队伍的表情标志 
 	I_TEAM_EMOJI = RuleImage(roi_front=(36,437,44,46), roi_back=(4,407,100,100), threshold=0.8, method="Template matching", file="./tasks/Exploration/res/res_team_emoji.png")
 	# 组队按钮 

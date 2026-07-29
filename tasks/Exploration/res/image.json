@@ -182,8 +182,8 @@
   {
     "itemName": "swipe_end",
     "imageName": "res_swipe_end.png",
-    "roiFront": "994,234,119,100",
-    "roiBack": "968,196,311,165",
+    "roiFront": "1213,79,66,265",
+    "roiBack": "1213,79,66,265",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "困28滚动到最后"
