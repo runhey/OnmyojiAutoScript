@@ -41,13 +41,15 @@ class SwitchAccountAssets:
 	# 选择服务器界面 底部角色所属服务器名 列表 
 	O_SA_SELECT_SVR_SVR_LIST = RuleOcr(roi=(205,540,815,25), area=(205,540,815,25), mode="FULL", method="Default", keyword="", name="sa_select_svr_svr_list")
 	# 选择服务器界面 底部角色名 列表 
-	O_SA_SELECT_SVR_CHARACTER_LIST = RuleOcr(roi=(205,570,815,40), area=(205,570,815,40), mode="FULL", method="Default", keyword="", name="sa_select_svr_character_list")
+	O_SA_SELECT_SVR_CHARACTER_LIST = RuleOcr(roi=(418,131,641,481), area=(417,135,647,482), mode="Full", method="Default", keyword="", name="sa_select_svr_character_list")
 	# 选择账号界面 账号列表 
 	O_SA_ACCOUNT_ACCOUNT_LIST = RuleOcr(roi=(460,280,440,330), area=(460,280,440,330), mode="FULL", method="Default", keyword="", name="sa_account_account_list")
 	# 选择账号界面 已选择的账号 
 	O_SA_ACCOUNT_ACCOUNT_SELECTED = RuleOcr(roi=(460,280,370,50), area=(460,280,370,50), mode="SINGLE", method="Default", keyword="", name="sa_account_account_selected")
 	# 登录界面 用户中心(区别于游戏内用户中心) 账户名 
 	O_SA_LOGIN_FORM_USER_CENTER_ACCOUNT = RuleOcr(roi=(290,185,290,50), area=(290,185,290,50), mode="SINGLE", method="Default", keyword="", name="sa_login_form_user_center_account")
+	# 判断是否在 选择服务器 界面的文本特质 
+	O_SA_CHECK_SELECT_SVR = RuleOcr(roi=(252,145,97,32), area=(248,141,102,38), mode="Single", method="Default", keyword="已有角色", name="sa_check_select_svr")
 
 
 	# Swipe Rule Assets
@@ -77,12 +79,12 @@ class SwitchAccountAssets:
 	# 登录界面-选取账号界面-账号下拉菜单-已经打开标志. 
 	I_SA_ACCOUNT_LOGIN_BTN = RuleImage(roi_front=(400,400,480,90), roi_back=(400,400,480,90), threshold=0.8, method="Template matching", file="./tasks/Component/SwitchAccount/res/sa_account_login_btn.png")
 	# 登录界面-选择手机类型为苹果. 
-	I_SA_LOGIN_FORM_APPLE = RuleImage(roi_front=(490,350,100,100), roi_back=(490,350,100,100), threshold=0.8, method="Template matching", file="./tasks/Component/SwitchAccount/res/sa_login_form_apple.png")
+	I_SA_LOGIN_FORM_APPLE = RuleImage(roi_front=(508,354,100,100), roi_back=(508,355,100,100), threshold=0.8, method="Template matching", file="./tasks/Component/SwitchAccount/res/res_sa_login_form_apple.png")
 	# 登录界面-选择手机类型为android 
-	I_SA_LOGIN_FORM_ANDROID = RuleImage(roi_front=(690,350,100,100), roi_back=(690,350,100,100), threshold=0.8, method="Template matching", file="./tasks/Component/SwitchAccount/res/sa_login_form_android.png")
+	I_SA_LOGIN_FORM_ANDROID = RuleImage(roi_front=(671,353,100,100), roi_back=(670,352,100,100), threshold=0.8, method="Template matching", file="./tasks/Component/SwitchAccount/res/res_sa_login_form_android.png")
 	# 判断是否在 选择服务器 界面的标志物 角色的服务器图标还未显示时 
-	I_SA_CHECK_SELECT_SVR_1 = RuleImage(roi_front=(240,530,120,40), roi_back=(240,530,120,40), threshold=0.8, method="Template matching", file="./tasks/Component/SwitchAccount/res/sa_check_select_svr.png")
+	I_SA_CHECK_SELECT_SVR_1 = RuleImage(roi_front=(213,133,181,60), roi_back=(210,128,185,68), threshold=0.8, method="Template matching", file="./tasks/Component/SwitchAccount/res/res_sa_check_select_svr_1.png")
 	# 判断是否在 选择服务器 界面的标志物 角色的服务器图标已经显示时 
-	I_SA_CHECK_SELECT_SVR_2 = RuleImage(roi_front=(240,410,120,40), roi_back=(240,410,120,40), threshold=0.8, method="Template matching", file="./tasks/Component/SwitchAccount/res/sa_check_select_svr.png")
+	I_SA_CHECK_SELECT_SVR_2 = RuleImage(roi_front=(209,131,184,64), roi_back=(207,127,187,70), threshold=0.8, method="Template matching", file="./tasks/Component/SwitchAccount/res/res_sa_check_select_svr_2.png")
 
 
