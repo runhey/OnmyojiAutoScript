@@ -37,24 +37,27 @@ class SoloExploration(BaseExploration):
             return True
         return False
 
-    def _check_mate_leave(self, friend_leave_timer: Timer):
-        if not self.appear(self.I_TEAM_EMOJI) and not self.appear(self.I_TEAM_EMOJI_FIGHT):
-            logger.warning('Team emoji not appear')
-            if not friend_leave_timer.started():
-                logger.warning('Mate leave, start timer')
-                friend_leave_timer = Timer(self.FRIEND_LEAVE_TIMEOUT)
-                friend_leave_timer.start()
-            elif friend_leave_timer.reached():
-                logger.warning('Mate leave timer reached')
-                logger.warning('Exit team')
-                self.quit_explore()
-                return friend_leave_timer, True
-        else:
+    def _check_mate_leave(self, friend_leave_timer: Timer) -> bool:
+
+        if self.appear(self.I_TEAM_EMOJI) or self.appear(self.I_TEAM_EMOJI_FIGHT):
             # 再次出现则重新计时，进入对局标志消失
             if friend_leave_timer.started():
                 logger.warning('Team emoji appear again, clear friend_leave_timer')
-            friend_leave_timer = Timer(self.FRIEND_LEAVE_TIMEOUT)
-        return friend_leave_timer, False
+                friend_leave_timer.clear()
+            return False
+
+        logger.warning('Team emoji not appear')
+        if not friend_leave_timer.started():
+            logger.warning('Mate leave, start timer')
+            friend_leave_timer.start()
+            return False
+        if not friend_leave_timer.reached():
+            return False
+
+        logger.warning('Mate leave timer reached')
+        logger.warning('Exit team')
+        self.quit_explore()
+        return True
 
     def run_solo(self):
         logger.hr('solo')
@@ -189,7 +192,6 @@ class SoloExploration(BaseExploration):
                     if self._config.exploration_config.auto_rotate == AutoRotate.yes:
                         self.enter_settings_and_do_operations()
                     self.ui_click(self.I_E_AUTO_ROTATE_OFF, stop=self.I_E_AUTO_ROTATE_ON)
-                    friend_leave_timer = Timer(self.FRIEND_LEAVE_TIMEOUT)
                     self.explore_init = True
                     continue
                 if self._handle_treasure_box():
@@ -199,12 +201,8 @@ class SoloExploration(BaseExploration):
                     if self.ui_get_reward(self.I_BATTLE_REWARD):
                         continue
                 # 中途有人跑路
-                if not self.appear(self.I_TEAM_EMOJI) and not self.appear(self.I_TEAM_EMOJI_FIGHT):
-                    friend_leave_timer, mate_left = self._check_mate_leave(friend_leave_timer)
-                    if mate_left:
-                        continue
-                else:
-                    friend_leave_timer, _ = self._check_mate_leave(friend_leave_timer)
+                if self._check_mate_leave(friend_leave_timer):
+                    continue
                 # boss
                 if self.appear(self.I_BOSS_BATTLE_BUTTON):
                     if self.fire(self.I_BOSS_BATTLE_BUTTON):
@@ -250,7 +248,7 @@ class SoloExploration(BaseExploration):
                     break
                 if self.check_then_accept():
                     # 接受邀请后清掉计时器
-                    wait_timer.reset()
+                    wait_timer.clear()
                     continue
                 if wait_timer.started() and wait_timer.reached():
                     logger.warning('Wait timer reached')
@@ -278,14 +276,9 @@ class SoloExploration(BaseExploration):
                     if self.ui_get_reward(self.I_BATTLE_REWARD):
                         continue
                 #
-                if not self.appear(self.I_TEAM_EMOJI) and not self.appear(self.I_TEAM_EMOJI_FIGHT):
-                    friend_leave_timer, mate_left = self._check_mate_leave(friend_leave_timer)
-                    if mate_left:
-                        wait_timer = Timer(50)
-                        wait_timer.start()
-                        continue
-                else:
-                    friend_leave_timer, _ = self._check_mate_leave(friend_leave_timer)
+                if self._check_mate_leave(friend_leave_timer):
+                    wait_timer.reset()
+                    continue
             #
             elif scene == Scene.BATTLE_PREPARE or scene == Scene.BATTLE_FIGHTING:
                 logger.info('[run_member] Handling scene: BATTLE')
