@@ -13,11 +13,11 @@ class AreaBossFloor(str, Enum):
     NORMAL_LV60 = '普通-60级'
 
 class Boss(BaseModel):
-    boss_number: int = Field(title='Boss Number',
-                             default=3,
-                             description='默认为3 可选[1-3], 当你设置为三时默认你拥有全部的挑战资格，会挑战热门的前三个，\n'
-                                         '如果不是请将你可以挑战的boss进行收藏',
-                             ge=1, le=3)
+    # boss_number: int = Field(title='Boss Number',
+    #                          default=3,
+    #                          description='默认为3 可选[1-3], 当你设置为三时默认你拥有全部的挑战资格，会挑战热门的前三个，\n'
+    #                                      '如果不是请将你可以挑战的boss进行收藏',
+    #                          ge=1, le=3)
     # 是否查找当日悬赏鬼王
     boss_reward: bool = Field(default=False, description='boss_reward_help')
     # 悬赏默认打较简单的一星鬼王，若想要更高悬赏奖励可自行更改为十星或不更改（保留已勾选DEBUFF）

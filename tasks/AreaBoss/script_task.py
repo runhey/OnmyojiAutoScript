@@ -23,6 +23,22 @@ from typing import List
 
 class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AreaBossAssets):
 
+    def _get_dynamic_boss_count(self) -> int:
+        """
+        从地域鬼王主界面 OCR 声望值，动态决定可挑战次数
+        < 2000 → 1次, 2000~5999 → 2次, ≥ 6000 → 3次
+        :return: 可挑战鬼王数量 (1/2/3)
+        """
+        self.screenshot()
+        rep = self.O_AB_REPUTATION.ocr_digit(self.device.image)
+        logger.info(f"Area boss reputation: {rep}")
+        if rep >= 10000:
+            return 3
+        elif rep >= 2000:
+            return 2
+        else:
+            return 1
+
     def run(self) -> bool:
         """
         运行脚本
@@ -59,14 +75,17 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AreaBossAssets):
         else:
             self.switch_to_famous()
 
-        if con.boss_number - boss_fought == 3:
+        # 动态获取可挑战次数
+        dynamic_count = self._get_dynamic_boss_count()
+        available = dynamic_count - boss_fought
+        if available >= 3:
             self.boss_fight(self.I_BATTLE_1)
             self.boss_fight(self.I_BATTLE_2)
             self.boss_fight(self.I_BATTLE_3)
-        elif con.boss_number - boss_fought == 2:
+        elif available == 2:
             self.boss_fight(self.I_BATTLE_1)
             self.boss_fight(self.I_BATTLE_2)
-        elif con.boss_number - boss_fought == 1:
+        elif available == 1:
             self.boss_fight(self.I_BATTLE_1)
         # 退出
         self.go_back()
