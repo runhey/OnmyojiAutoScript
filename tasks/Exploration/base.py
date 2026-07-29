@@ -57,6 +57,15 @@ class BaseExploration(GameUi, GeneralBattle, GeneralRoom, GeneralInvite, Replace
     def _match_end(self):
         return RuleAnimate(self.I_SWIPE_END)
 
+    def is_swipe_unchanged(self, before_image, after_image, threshold: float = 20) -> bool:
+        # 对比滑屏前后同一块区域，变化很小说明地图大概率没有移动，已经滑到尽头。
+        swipe_check_roi = (1216, 86, 64, 225)
+        before = self.I_SWIPE_END.corp(before_image, swipe_check_roi)
+        after = self.I_SWIPE_END.corp(after_image, swipe_check_roi)
+        diff = np.mean(np.abs(before.astype(np.int16) - after.astype(np.int16)))
+        logger.info(f'Swipe end area diff: {diff:.2f}')
+        return diff <= threshold
+
     def get_current_scene(self, reuse_screenshot: bool = True) -> Scene:
         if not reuse_screenshot:
             self.screenshot()
@@ -464,4 +473,3 @@ if __name__ == "__main__":
         print(t.get_current_scene())
     from PIL import Image
     # Image.fromarray(t.device.image.astype(np.uint8)).show()
-
