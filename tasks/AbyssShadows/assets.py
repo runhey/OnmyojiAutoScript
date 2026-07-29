@@ -102,3 +102,4 @@ class AbyssShadowsAssets:
 	# 滑到狭间 
 	S_TO_ABBSY_SHADOWS = RuleSwipe(roi_front=(752,395,62,66), roi_back=(758,193,62,48), mode="default", name="to_abbsy_shadows")
 
+

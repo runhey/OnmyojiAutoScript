@@ -111,3 +111,4 @@ class HeroTestAssets:
 	# 挑战按钮 
 	O_FIRE = RuleOcr(roi=(1130,585,92,55), area=(1126,576,100,99), mode="Single", method="Default", keyword="挑战", name="fire")
 
+
