@@ -26,7 +26,6 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AreaBossAssets):
     def _get_dynamic_boss_count(self) -> int:
         """
         从地域鬼王主界面 OCR 声望值，动态决定可挑战次数
-        < 2000 → 1次, 2000~5999 → 2次, ≥ 6000 → 3次
         :return: 可挑战鬼王数量 (1/2/3)
         """
         self.screenshot()
@@ -163,10 +162,10 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AreaBossAssets):
             return False
 
         # 如果已经打过该BOSS,直接跳过不打了
-        # if self.is_group_ranked():
-        #     logger.warning("There is no boss could be challenged")
-        #     self.ui_click_until_disappear(self.I_AB_CLOSE_RED, interval=3)
-        #     return True
+        if self.is_group_ranked():
+            logger.warning("There is no boss could be challenged")
+            self.ui_click_until_disappear(self.I_AB_CLOSE_RED, interval=3)
+            return True
 
         # 根据 reward_floor 决定模式
         if reward_floor in (AreaBossFloor.ONE, AreaBossFloor.TEN):
@@ -177,11 +176,6 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AreaBossAssets):
             # 普通模式-拉到60级
             self.setup_normal()
             self.switch_to_level_60()
-            if not self.start_fight():
-                logger.warning("you are so weakness!")
-                self.wait_until_appear(self.I_AB_CLOSE_RED)
-                self.ui_click_until_disappear(self.I_AB_CLOSE_RED, interval=3)
-                return False
         elif reward_floor == AreaBossFloor.NORMAL_LV1:
             # 普通模式-保持1级
             self.setup_normal()
@@ -193,7 +187,7 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AreaBossAssets):
             logger.warning("Area Boss Fight Failed ")
         self.wait_until_appear(self.I_AB_CLOSE_RED)
         self.ui_click_until_disappear(self.I_AB_CLOSE_RED, interval=1)
-        # return result
+        return result
 
     def start_fight(self) -> bool:
         while 1:
