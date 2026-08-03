@@ -340,10 +340,16 @@ class Scales(Buy, MallNavbar):
             buy_res_number = buy_number
         if buy_cycles_number:
             for i in range(buy_cycles_number):
-                self._scales_buy_sea_more(self.I_SCA_PICTURE_BOOK)
+                if self.config.rich_man.scales.enable_book_auto:
+                    self._scales_buy_more(self.I_SCA_PICTURE_BOOK)
+                else:
+                    self._scales_buy_sea_more(self.I_SCA_PICTURE_BOOK)
                 time.sleep(0.5)
         if buy_res_number and buy_res_number >= 2:
-            self._scales_buy_sea_more(self.I_SCA_PICTURE_BOOK, buy_res_number)
+            if self.config.rich_man.scales.enable_book_auto:
+                self._scales_buy_more(self.I_SCA_PICTURE_BOOK, buy_res_number)
+            else:
+                self._scales_buy_sea_more(self.I_SCA_PICTURE_BOOK, buy_res_number)
             time.sleep(0.5)
 
 
