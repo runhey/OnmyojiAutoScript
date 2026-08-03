@@ -14,11 +14,12 @@ from tasks.GameUi.game_ui import GameUi
 from tasks.GameUi.page import page_main, page_soul_zones, page_shikigami_records
 from tasks.Orochi.assets import OrochiAssets
 from tasks.Orochi.config import Orochi, UserStatus, Layer
+from tasks.TrueOrochi.assets import TrueOrochiAssets
 from module.logger import logger
 from module.exception import TaskEnd
 
 
-class ScriptTask(GeneralBattle, GeneralInvite, GeneralBuff, GeneralRoom, GameUi, SwitchSoul, OrochiAssets):
+class ScriptTask(GeneralBattle, GeneralInvite, GeneralBuff, GeneralRoom, GameUi, SwitchSoul, OrochiAssets, TrueOrochiAssets):
 
     def run(self) -> bool:
         # 御魂切换方式一
@@ -59,6 +60,16 @@ class ScriptTask(GeneralBattle, GeneralInvite, GeneralBuff, GeneralRoom, GameUi,
             case UserStatus.WILD: success = self.run_wild()
             case _: logger.error('Unknown user status')
 
+        # 御魂结束后检测是否出现真蛇
+        if config.orochi_config.check_true_orochi_enable:
+            self.ui_get_current_page()
+            self.ui_goto(page_soul_zones)
+            self.orochi_enter()
+            self.screenshot()
+            if self.appear(self.I_FIND_TS):
+                logger.info('Find true orochi after orochi battle, set TrueOrochi task to run now')
+                self.set_next_run(task='TrueOrochi', success=False, finish=False, server=False, target=datetime.now())
+        self.ui_goto(page_main)
         # 记得关掉
         if config.orochi_config.soul_buff_enable:
             self.open_buff()
