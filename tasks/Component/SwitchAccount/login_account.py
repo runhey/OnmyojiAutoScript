@@ -90,7 +90,7 @@ class LoginAccount(BaseTask, SwitchAccountAssets):
         """
         logger.info("start switch_character")
         # 改成对比是否出现 已有角色 
-        self.ui_click(self.C_SA_LOGIN_FORM_SWITCH_SVR_BTN, self.O_SA_CHECK_SELCET_SVR)
+        self.ui_click(self.C_SA_LOGIN_FORM_SWITCH_SVR_BTN, self.O_SA_CHECK_SELECT_SVR)
         # 展开底部角色列表,显示角色所属服务器
         self.screenshot()
         while (not self.appear(self.I_SA_CHECK_SELECT_SVR_2)) and self.appear(self.I_SA_CHECK_SELECT_SVR_1):
