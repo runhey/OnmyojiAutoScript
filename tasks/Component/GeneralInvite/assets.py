@@ -128,3 +128,4 @@ class GeneralInviteAssets:
 	# Ocr-description 
 	O_ONLINE = RuleOcr(roi=(790,102,124,42), area=(0,0,100,100), mode="Single", method="Default", keyword="", name="online")
 
+

@@ -21,7 +21,7 @@
     "itemName": "sa_user_center_profile",
     "imageName": "sa_user_center_profile.png",
     "roiFront": "590,60,90,55",
-    "roiBack":  "590,60,90,55",
+    "roiBack": "590,60,90,55",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "游戏内-点击头像弹出的设置界面-顶部设置字样"
@@ -82,36 +82,36 @@
   },
   {
     "itemName": "sa_login_form_apple",
-    "imageName": "sa_login_form_apple.png",
-    "roiFront": "490,350,100,100",
-    "roiBack": "490,350,100,100",
+    "imageName": "res_sa_login_form_apple.png",
+    "roiFront": "508,354,100,100",
+    "roiBack": "508,355,100,100",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "登录界面-选择手机类型为苹果."
   },
   {
     "itemName": "sa_login_form_android",
-    "imageName": "sa_login_form_android.png",
-    "roiFront": "690,350,100,100",
-    "roiBack": "690,350,100,100",
+    "imageName": "res_sa_login_form_android.png",
+    "roiFront": "671,353,100,100",
+    "roiBack": "670,352,100,100",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "登录界面-选择手机类型为android"
   },
   {
     "itemName": "sa_check_select_svr_1",
-    "imageName": "sa_check_select_svr.png",
-    "roiFront": "240,530,120,40",
-    "roiBack": "240,530,120,40",
+    "imageName": "res_sa_check_select_svr_1.png",
+    "roiFront": "213,133,181,60",
+    "roiBack": "210,128,185,68",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "判断是否在 选择服务器 界面的标志物 角色的服务器图标还未显示时"
   },
   {
     "itemName": "sa_check_select_svr_2",
-    "imageName": "sa_check_select_svr.png",
-    "roiFront": "240,410,120,40",
-    "roiBack": "240,410,120,40",
+    "imageName": "res_sa_check_select_svr_2.png",
+    "roiFront": "209,131,184,64",
+    "roiBack": "207,127,187,70",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "判断是否在 选择服务器 界面的标志物 角色的服务器图标已经显示时"

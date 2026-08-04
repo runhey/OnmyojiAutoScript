@@ -173,8 +173,8 @@
   {
     "itemName": "treasure_box_click",
     "imageName": "res_treasure_box_click.png",
-    "roiFront": "34,386,47,37",
-    "roiBack": "2,130,135,406",
+    "roiFront": "31,543,27,24",
+    "roiBack": "11,520,378,65",
     "method": "Template matching",
     "threshold": 0.65,
     "description": "宝箱"
@@ -182,8 +182,8 @@
   {
     "itemName": "swipe_end",
     "imageName": "res_swipe_end.png",
-    "roiFront": "994,234,119,100",
-    "roiBack": "968,196,311,165",
+    "roiFront": "1213,79,66,265",
+    "roiBack": "1213,79,66,265",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "困28滚动到最后"
@@ -232,5 +232,14 @@
     "method": "Template matching",
     "threshold": 0.8,
     "description": "箭头，打开"
+  },
+  {
+    "itemName": "team_emoji_fight",
+    "imageName": "res_team_emoji_fight.png",
+    "roiFront": "38,405,37,37",
+    "roiBack": "18,386,74,75",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "战斗中的队友标识"
   }
 ]

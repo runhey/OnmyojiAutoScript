@@ -52,5 +52,14 @@
     "method": "Default",
     "keyword": "",
     "description": "地鬼名字"
+  },
+  {
+    "itemName": "ab_reputation",
+    "roiFront": "1180,61,82,32",
+    "roiBack": "1180,61,82,32",
+    "mode": "Digit",
+    "method": "Default",
+    "keyword": "",
+    "description": "声望值"
   }
 ]

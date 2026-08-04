@@ -89,7 +89,8 @@ class LoginAccount(BaseTask, SwitchAccountAssets):
         @rtype:
         """
         logger.info("start switch_character")
-        self.ui_click(self.C_SA_LOGIN_FORM_SWITCH_SVR_BTN, self.I_SA_CHECK_SELECT_SVR_1)
+        # 改成对比是否出现 已有角色 
+        self.ui_click(self.C_SA_LOGIN_FORM_SWITCH_SVR_BTN, self.O_SA_CHECK_SELCET_SVR)
         # 展开底部角色列表,显示角色所属服务器
         self.screenshot()
         while (not self.appear(self.I_SA_CHECK_SELECT_SVR_2)) and self.appear(self.I_SA_CHECK_SELECT_SVR_1):
@@ -134,7 +135,7 @@ class LoginAccount(BaseTask, SwitchAccountAssets):
                 break
             logger.info(f'{characterName} not found,start swipe')
             lastCharacterNameList = characterNameList
-            self.swipe(self.S_SA_SVR_SWIPE_LEFT)
+            self.swipe(self.S_SA_ACCOUNT_LIST_UP)
             # 等待滑动动画完成
             time.sleep(1.5)
 

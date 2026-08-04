@@ -19,9 +19,9 @@
   },
   {
     "itemName": "sa_select_svr_character_list",
-    "roiFront": "205,570,815,40",
-    "roiBack": "205,570,815,40",
-    "mode": "FULL",
+    "roiFront": "418,131,641,481",
+    "roiBack": "417,135,647,482",
+    "mode": "Full",
     "method": "Default",
     "keyword": "",
     "description": "选择服务器界面 底部角色名 列表"
@@ -52,5 +52,14 @@
     "method": "Default",
     "keyword": "",
     "description": "登录界面 用户中心(区别于游戏内用户中心) 账户名"
+  },
+  {
+    "itemName": "sa_check_select_svr",
+    "roiFront": "252,145,97,32",
+    "roiBack": "248,141,102,38",
+    "mode": "Single",
+    "method": "Default",
+    "keyword": "已有角色",
+    "description": "判断是否在 选择服务器 界面的文本特质"
   }
 ]

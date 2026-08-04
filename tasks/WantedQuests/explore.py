@@ -27,6 +27,13 @@ class WQExplore(BaseExploration, HighLight):
         _cnt_exploration = 0
         search_fail_cnt = 0
         search_fail_timer = Timer(3.2)  # 这里设置的时间一定要大于S_SWIPE_BACKGROUND_RIGHT滑动的时间
+        # https://github.com/runhey/OnmyojiAutoScript/pull/1697 云景阆苑 皮肤
+        from tasks.Component.Costume.config import MainType
+        if self.config.model.global_game.costume_config.costume_main_type == MainType.COSTUME_MAIN_13:
+            self.TEMPLATE_GIF.match = self.TEMPLATE_GIF.match_with_multi_scale
+            logger.info("Costume '云景阆苑' detected, enable multi-scale matching for highlight")
+        else:
+            self.TEMPLATE_GIF.match = self.TEMPLATE_GIF.match_origin
         while 1:
             self.screenshot()
             if self.appear(self.I_UI_BACK_YELLOW) and self.appear(self.I_E_EXPLORATION_CLICK):

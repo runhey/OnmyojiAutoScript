@@ -100,9 +100,8 @@
     "boss": {
       "boss_number": 3,
       "boss_reward": false,
-      "reward_floor": "一星",
-      "use_collect": false,
-      "Attack_60": false
+      "reward_floor": "不更改",
+      "use_collect": false
     },
     "general_battle": {
       "lock_team_enable": false,

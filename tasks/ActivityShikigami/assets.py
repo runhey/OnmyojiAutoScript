@@ -93,13 +93,10 @@ class ActivityShikigamiAssets:
 	# Ocr Rule Assets
 	# 挑战 
 	O_FIRE = RuleOcr(roi=(1124,599,96,50), area=(1123,570,106,100), mode="Single", method="Default", keyword="挑战", name="fire")
-	# 20260725 缩小体力和活动体力的检测范围，范围太大，有可能把0识别为10的情况。
-	# 潜在风险1，超过1000的数字可能会只识别到最后的000，还有识别0的时候，score比较低，只有0.3，不知道怎么优化。
-	# 潜在风险2，部分数字，遇到过300等，会识别为0，之前没截上图，待后面遇到再处理这种情况。
 	# 体力的数量检测 
-	O_REMAIN_AP = RuleOcr(roi=(793, 18, 44, 25), area=(793, 18, 44, 25), mode="DigitCounter", method="Default",           keyword="", name="remain_ap")
-	# 活动体力的剩余检测
-	O_REMAIN_PASS = RuleOcr(roi=(600, 18, 44, 25), area=(600, 18, 44, 25), mode="DigitCounter", method="Default",         keyword="", name="remain_pass")
+	O_REMAIN_AP = RuleOcr(roi=(777,17,63,30), area=(776,16,63,30), mode="DigitCounter", method="Default", keyword="", name="remain_ap")
+	# 活动体力的剩余检测 
+	O_REMAIN_PASS = RuleOcr(roi=(599,15,50,29), area=(600,16,49,28), mode="DigitCounter", method="Default", keyword="", name="remain_pass")
 	# 还有多少次购买体力的机会 
 	O_REMAIN_BUY = RuleOcr(roi=(808,531,39,42), area=(808,531,39,42), mode="DigitCounter", method="Default", keyword="", name="remain_buy")
 	# 活动票数（没有百分比） 

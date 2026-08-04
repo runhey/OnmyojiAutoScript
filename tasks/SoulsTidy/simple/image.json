@@ -150,7 +150,7 @@
     "roiBack": "142,234,20,16",
     "method": "Template matching",
     "threshold": 0.8,
-    "description": "狗粮御魂的堆叠标识"
+    "description": "5星御魂的堆叠标识_大于1个"
   },
   {
     "itemName": "st_souls_close",
@@ -160,5 +160,32 @@
     "method": "Template matching",
     "threshold": 0.8,
     "description": "御魂关闭状态"
+  },
+  {
+    "itemName": "st_soul_stack_1",
+    "imageName": "simple_st_soul_stack_1.png",
+    "roiFront": "89,239,105,19",
+    "roiBack": "89,239,105,19",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "5星御魂堆叠标识_1个"
+  },
+  {
+    "itemName": "st_luck",
+    "imageName": "simple_st_luck.png",
+    "roiFront": "596,236,110,56",
+    "roiBack": "596,236,110,56",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "吉运"
+  },
+  {
+    "itemName": "st_small_luck",
+    "imageName": "simple_st_small_luck.png",
+    "roiFront": "549,236,201,35",
+    "roiBack": "549,236,201,35",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "小吉运"
   }
 ]
