@@ -45,5 +45,7 @@
   "check_true_orochi_enable": "是否在结束后检测真蛇",
   "check_true_orochi_enable_help": "开启后会在任务结束后检测是否出现真蛇, 若出现则自动拉起真蛇",
   "enable_book_auto": "自动选择",
-  "enable_book_auto_help": "游戏内是否开启自动选择御魂"
+  "enable_book_auto_help": "游戏内是否开启自动选择御魂",
+  "earn_money": "获取樱灯饰",
+  "earn_money_help": "通过放置借处式神获取500樱灯饰\n开启前确保已放置借出式神"
 }

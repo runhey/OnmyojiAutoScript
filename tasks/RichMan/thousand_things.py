@@ -25,6 +25,10 @@ class ThousandThings(GameUi, RichManAssets):
         self.ui_get_current_page()
         self.ui_goto(page_travel)
 
+        if con.earn_money:
+            logger.info('Start Earn Money')
+            self.tt_earn_money()
+
         while 1:
             self.screenshot()
             if self.appear(self.I_TT_CHECK):
@@ -166,6 +170,29 @@ class ThousandThings(GameUi, RichManAssets):
                 click_count += 1
                 continue
         return True
+
+    def tt_earn_money(self):
+
+        # 进入界面
+        self.ui_click(self.I_TT_BORROW, self.I_TT_CONFIGURE)
+        self.ui_click(self.I_TT_CONFIGURE, self.I_TT_CONFIRM)
+        #替换式神
+        self.ui_click(self.I_TT_SHIKIGAMI, self.I_TT_SHIKIGAMI_REPLACE)
+        while 1:
+            self.screenshot()
+            if not self.appear(self.I_TT_SHIKIGAMI_REPLACE):
+                break
+            if self.appear_then_click(self.I_UI_CONFIRM):
+                continue
+            if self.appear_then_click(self.I_TT_SHIKIGAMI_REPLACE):
+                continue
+        self.ui_click(self.I_TT_CONFIRM, self.I_TT_BORROW_CONFIRM)
+
+        # 获取奖励
+        self.ui_get_reward(self.I_TT_BORROW_CONFIRM)
+
+        # 退出界面
+        self.ui_click(self.I_UI_BACK_RED, self.I_TT_ENTER)
 
 
 if __name__ == '__main__':

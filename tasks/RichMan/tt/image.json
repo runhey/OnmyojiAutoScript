@@ -61,5 +61,59 @@
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"
+  },
+  {
+    "itemName": "tt_borrow",
+    "imageName": "tt_tt_borrow.png",
+    "roiFront": "1043,262,39,149",
+    "roiBack": "960,169,208,309",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "唤妖借处"
+  },
+  {
+    "itemName": "tt_configure",
+    "imageName": "tt_tt_configure.png",
+    "roiFront": "1129,608,42,44",
+    "roiBack": "1036,523,240,197",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "配置式神"
+  },
+  {
+    "itemName": "tt_confirm",
+    "imageName": "tt_tt_confirm.png",
+    "roiFront": "1129,608,42,44",
+    "roiBack": "1036,523,240,197",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "确认配置"
+  },
+  {
+    "itemName": "tt_shikigami",
+    "imageName": "tt_tt_shikigami.png",
+    "roiFront": "682,257,15,14",
+    "roiBack": "652,221,151,148",
+    "method": "Template matching",
+    "threshold": 0.7,
+    "description": "选择式神（第四个）"
+  },
+  {
+    "itemName": "tt_shikigami_replace",
+    "imageName": "tt_tt_shikigami_replace.png",
+    "roiFront": "755,641,57,19",
+    "roiBack": "703,580,148,134",
+    "method": "Template matching",
+    "threshold": 0.7,
+    "description": "替换式神"
+  },
+  {
+    "itemName": "tt_borrow_confirm",
+    "imageName": "tt_tt_borrow_confirm.png",
+    "roiFront": "960,508,50,53",
+    "roiBack": "886,444,222,194",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "借出确认"
   }
 ]

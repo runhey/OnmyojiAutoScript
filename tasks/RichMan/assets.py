@@ -397,6 +397,18 @@ class RichManAssets:
 	I_TT_BUY_UP = RuleImage(roi_front=(755,427,59,57), roi_back=(740,386,80,146), threshold=0.8, method="Template matching", file="./tasks/RichMan/tt/tt_tt_buy_up.png")
 	# description 
 	I_TT_BUY_CONFIRM = RuleImage(roi_front=(584,512,53,53), roi_back=(553,487,169,115), threshold=0.8, method="Template matching", file="./tasks/RichMan/tt/tt_tt_buy_confirm.png")
+	# 唤妖借处 
+	I_TT_BORROW = RuleImage(roi_front=(1043,262,39,149), roi_back=(960,169,208,309), threshold=0.8, method="Template matching", file="./tasks/RichMan/tt/tt_tt_borrow.png")
+	# 配置式神 
+	I_TT_CONFIGURE = RuleImage(roi_front=(1129,608,42,44), roi_back=(1036,523,240,197), threshold=0.8, method="Template matching", file="./tasks/RichMan/tt/tt_tt_configure.png")
+	# 确认配置 
+	I_TT_CONFIRM = RuleImage(roi_front=(1129,608,42,44), roi_back=(1036,523,240,197), threshold=0.8, method="Template matching", file="./tasks/RichMan/tt/tt_tt_confirm.png")
+	# 选择式神（第四个） 
+	I_TT_SHIKIGAMI = RuleImage(roi_front=(682,257,15,14), roi_back=(652,221,151,148), threshold=0.7, method="Template matching", file="./tasks/RichMan/tt/tt_tt_shikigami.png")
+	# 替换式神 
+	I_TT_SHIKIGAMI_REPLACE = RuleImage(roi_front=(755,641,57,19), roi_back=(703,580,148,134), threshold=0.7, method="Template matching", file="./tasks/RichMan/tt/tt_tt_shikigami_replace.png")
+	# 借出确认 
+	I_TT_BORROW_CONFIRM = RuleImage(roi_front=(960,508,50,53), roi_back=(886,444,222,194), threshold=0.8, method="Template matching", file="./tasks/RichMan/tt/tt_tt_borrow_confirm.png")
 
 
 	# Ocr Rule Assets

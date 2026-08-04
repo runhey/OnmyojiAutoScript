@@ -12,6 +12,7 @@ from tasks.Utils.config_enum import DemonClass
 class ThousandThings(BaseModel):
     # 千物宝箱
     enable: bool = Field(title='Enable', default=False)
+    earn_money: bool = Field(title='Earn Money', default=False, description='earn_money_help')
     mystery_amulet: bool = Field(title='Mystery Amulet', default=False)
     black_daruma_fragment: bool = Field(title='Black Daruma Fragment', default=False)
     ap: bool = Field(title='AP', default=False, description='ap_help')
