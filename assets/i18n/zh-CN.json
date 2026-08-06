@@ -41,5 +41,11 @@
   "emulator_startup_lead_time": "模拟器预热时间",
   "emulator_startup_lead_time_help": "在开始运行任务之前提前启动模拟器的时间",
   "exit_four_help": "支持打九退四，保证稳定57级，要求设置好战斗主题，即 脚本->全局配置->游戏装饰自定义->战斗主题",
-  "costume_main_15": "茨心乐园"
+  "costume_main_15": "茨心乐园",
+  "check_true_orochi_enable": "是否在结束后检测真蛇",
+  "check_true_orochi_enable_help": "开启后会在任务结束后检测是否出现真蛇, 若出现则自动拉起真蛇",
+  "enable_book_auto": "自动选择",
+  "enable_book_auto_help": "游戏内是否开启自动选择御魂",
+  "earn_money": "获取樱灯饰",
+  "earn_money_help": "通过放置借处式神获取500樱灯饰\n开启前确保已放置借出式神"
 }

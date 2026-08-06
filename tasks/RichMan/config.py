@@ -12,6 +12,7 @@ from tasks.Utils.config_enum import DemonClass
 class ThousandThings(BaseModel):
     # 千物宝箱
     enable: bool = Field(title='Enable', default=False)
+    earn_money: bool = Field(title='Earn Money', default=False, description='earn_money_help')
     mystery_amulet: bool = Field(title='Mystery Amulet', default=False)
     black_daruma_fragment: bool = Field(title='Black Daruma Fragment', default=False)
     ap: bool = Field(title='AP', default=False, description='ap_help')
@@ -29,6 +30,7 @@ class Scales(BaseModel):
     demon_class: DemonClass = Field(title='DemonClass', default=DemonClass.TSUCHIGUMO, description='demon_class_help')
     demon_position: int = Field(title='Demon Position', default=1, description='demon_position_help')
     picture_book_scrap: int = Field(title='Picture Book Scrap', default=30, description='picture_book_scrap_help')
+    enable_book_auto: bool = Field(title='Enable Book Auto', default=False, description='enable_book_auto_help')
     picture_book_rule: str = Field(title='Picture Book Rule', default='auto', description='picture_book_rule_help')
 
 

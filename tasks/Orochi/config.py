@@ -45,6 +45,8 @@ class OrochiConfig(ConfigBase):
     limit_count: int = Field(default=30, description='limit_count_help')
     # 是否开启御魂加成
     soul_buff_enable: bool = Field(default=False, description='soul_buff_enable_help')
+    # 是否御魂结束检测是否出现真蛇
+    check_true_orochi_enable: bool = Field(default=False, description='check_true_orochi_enable_help')
 
 class SwitchSoulConfig(BaseSwitchSoulConfig):
     enable: bool = Field(default=False)
