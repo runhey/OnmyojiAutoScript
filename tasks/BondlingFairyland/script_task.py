@@ -347,18 +347,23 @@ class ScriptTask(GameUi, GeneralInvite, GeneralRoom, BondlingBattle, SwitchSoul,
             self.ui_click_until_disappear(self.I_STONE_CLOSE, interval=1.2)
             logger.warning(f'已经没有鸣契石召唤契灵了')
             return False
+        cnt = 0
         while 1:
             self.screenshot()
             if not self.appear(self.I_STONE_SURE):
                 sleep(random.uniform(1.5, 2))  # 等待购买后的动画, 否则已经买了但是下次再点击还会出现该界面
                 return True
+            if cnt >= 6:
+                logger.warning("")
+                return False
             for i in range(3):
                 if self.appear_then_click(self.I_BUY_PLUS, interval=1):
                     sleep(0.5)
             if self.appear_then_click(self.I_GI_SURE, interval=1):
                 continue
-            if self.appear_then_click(self.I_STONE_SURE, interval=1):
+            if self.appear_then_click(self.I_STONE_SURE, interval=2):
                 continue
+
 
     def run_search(self, bondling_config: BondlingConfig, limit_cnt: int = None):
         """
