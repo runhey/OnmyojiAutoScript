@@ -111,7 +111,7 @@
     "itemName": "sca_six_star",
     "imageName": "scales_sca_six_star.png",
     "roiFront": "120,216,97,22",
-    "roiBack": "113,102,1057,157",
+    "roiBack": "113,102,1056,257",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "获得的六星"

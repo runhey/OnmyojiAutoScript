@@ -170,8 +170,15 @@ class ScriptTask(GameUi, GeneralBattle, HeroTestAssets, SwitchSoul):
             SkillMode.PVP: pvp_skill,
         }
         target_skills = target_skill_dict[self.conf.herotest.skill_mode]
+        timer = Timer(10).start()
         while True:
             self.screenshot()
+            if timer.reached_and_reset():
+                if self.appear(self.I_BCMJ_SKILL_ADD_CONFIRM):
+                    logger.warning('No skill selected for 10s, panel still open, retrying')
+                    continue
+                logger.warning('Skill selection panel closed unexpectedly, exit')
+                break
             if any(self.appear_then_click(ts, interval=1) for ts in target_skills):
                 break
         self.ui_click_until_disappear(self.I_BCMJ_SKILL_ADD_CONFIRM, interval=1.5)

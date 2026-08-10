@@ -66,6 +66,8 @@ class SwitchSoulAssets:
 	I_SOU_CLICK_PRESENT = RuleImage(roi_front=(978,304,25,26), roi_back=(965,142,48,480), threshold=0.9, method="Template matching", file="./tasks/Component/SwitchSoul/ss/ss_sou_click_present.png")
 	# 误触点到式神检查 
 	I_CHECK_BLOCK = RuleImage(roi_front=(572,408,137,49), roi_back=(572,408,137,49), threshold=0.8, method="Template matching", file="./tasks/Component/SwitchSoul/ss/ss_check_block.png")
+	# 通用进入式神录 
+	I_GOTO_SHIKIGAMI_COMMON = RuleImage(roi_front=(1037,567,36,36), roi_back=(617,503,487,134), threshold=0.8, method="Template matching", file="./tasks/Component/SwitchSoul/ss/ss_goto_shikigami_common.png")
 
 
 	# Ocr Rule Assets

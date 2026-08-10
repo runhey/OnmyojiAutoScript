@@ -160,5 +160,14 @@
     "method": "Template matching",
     "threshold": 0.8,
     "description": "误触点到式神检查"
+  },
+  {
+    "itemName": "goto_shikigami_common",
+    "imageName": "ss_goto_shikigami_common.png",
+    "roiFront": "1037,567,36,36",
+    "roiBack": "617,503,487,134",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "通用进入式神录"
   }
 ]

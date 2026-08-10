@@ -8,11 +8,14 @@ from module.atom.click import RuleClick
 from module.atom.long_click import RuleLongClick
 from module.atom.ocr import RuleOcr
 from module.base.timer import Timer
+from module.logger import logger
+
 from tasks.base_task import BaseTask
+from tasks.GameUi.assets import GameUiAssets
 from tasks.Component.GeneralInvite.assets import GeneralInviteAssets
 from tasks.Component.GeneralInvite.config_invite import InviteConfig, InviteNumber, FindMode
 from tasks.Component.SwitchSoul.assets import SwitchSoulAssets
-from module.logger import logger
+
 
 
 def switch_parser(switch_str: str) -> tuple:
@@ -23,6 +26,32 @@ def switch_parser(switch_str: str) -> tuple:
 
 
 class SwitchSoul(BaseTask, SwitchSoulAssets):
+
+    def goto_shikigami_records(self, button):
+        """
+        进入式神录
+        """
+        while 1:
+            self.screenshot()
+            if self.appear(GameUiAssets.I_CHECK_RECORDS):
+                break
+            if self.appear_then_click(button, interval=1.5):
+                continue
+        logger.info('Entry shikigami records')
+
+    def exit_shikigami_records(self) -> None:
+        """
+        退出式神录的界面
+        :return:
+        """
+        while 1:
+            self.screenshot()
+            if not self.appear(self.I_SOU_CHECK_IN):
+                break
+            if self.appear_then_click(self.I_RECORD_SOUL_BACK, interval=3.5):
+                continue
+        logger.info('Exit shikigami records')
+
 
     def run_switch_soul(self, target: tuple | list[tuple] | str):
         """
@@ -152,19 +181,6 @@ class SwitchSoul(BaseTask, SwitchSoulAssets):
             group = int(group)
             team = int(team)
             self.switch_soul_one(group, team)
-
-    def exit_shikigami_records(self) -> None:
-        """
-        退出式神录的界面
-        :return:
-        """
-        while 1:
-            self.screenshot()
-            if not self.appear(self.I_SOU_CHECK_IN):
-                break
-            if self.appear_then_click(self.I_RECORD_SOUL_BACK, interval=3.5):
-                continue
-        logger.info('Exit shikigami records')
 
     def run_switch_soul_by_name(self, groupName, teamName):
         """

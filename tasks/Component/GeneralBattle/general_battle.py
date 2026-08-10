@@ -253,6 +253,63 @@ class GeneralBattle(GeneralBuff, GeneralBattleAssets):
 
         return win
 
+    def battle_wait_v2(self, random_click_swipt_enable: bool) -> bool:
+        """
+        第二版战斗等待，参考 Orochi 和 Secret 的优化版本。
+        :return: 胜利返回 True，失败返回 False
+        """
+        # 统一点击名称，防止 GameTooManyClickError 误报
+        self.C_REWARD_1.name, self.C_REWARD_2.name, self.C_REWARD_3.name = 'C_REWARD', 'C_REWARD', 'C_REWARD'
+        self.device.stuck_record_add('BATTLE_STATUS_S')
+        self.device.click_record_clear()
+
+        logger.info("Start battle process")
+        while 1:
+            self.screenshot()
+            # 出现赢的鼓，点击直到消失
+            if self.appear_then_click(self.I_WIN, interval=0.8):
+                continue
+            # 逢魔胜利图
+            if self.appear(self.I_DE_WIN):
+                self.ui_click_until_disappear(self.I_DE_WIN)
+                continue
+            if self.appear(self.I_FALSE, threshold=0.8):
+                logger.warning('False battle')
+                self.ui_click_until_disappear(self.I_FALSE)
+                return False
+            appear_ghost, appear_reward, appear_gold = (
+                self.appear(self.I_GREED_GHOST),
+                self.appear(self.I_REWARD),
+                self.appear(self.I_REWARD_GOLD)
+            )
+            if appear_ghost or appear_reward or appear_gold:
+                logger.info('Win battle')
+                timer = Timer(20).start()
+                while 1:
+                    self.screenshot()
+
+                    _appear_ghost, _appear_reward, _appear_gold = (
+                        self.appear(self.I_GREED_GHOST, threshold=0.6),
+                        self.appear(self.I_REWARD),
+                        self.appear(self.I_REWARD_GOLD)
+                    )
+                    # logger.info(f'_appear_ghost: {_appear_ghost} _appear_reward: {_appear_reward} _appear_gold: {_appear_gold}')
+                    if any([_appear_ghost, _appear_reward, _appear_gold]):
+                        action_click = random.choice([self.C_REWARD_1, self.C_REWARD_2, self.C_REWARD_3])
+                        self.click(action_click, interval=1.5)
+                    else:
+                        logger.info('Battle done')
+                        return True
+                    if self._hook_special_reward():
+                        continue
+                    if timer.reached_and_reset():
+                        logger.warning('battle ')
+                        break
+            # 随机滑动
+            if random_click_swipt_enable:
+                self.random_click_swipt()
+        return False
+
     def _hook_special_reward(self) -> bool:
         """
         For overwrite https://github.com/runhey/OnmyojiAutoScript/issues/1580
