@@ -3,7 +3,7 @@
     "itemName": "lock",
     "imageName": "as_lock.png",
     "roiFront": "825,657,28,25",
-    "roiBack": "739,613,276,85",
+    "roiBack": "739,432,440,266",
     "method": "Template matching",
     "threshold": 0.5,
     "description": "上锁图标"
@@ -12,7 +12,7 @@
     "itemName": "unlock",
     "imageName": "as_unlock.png",
     "roiFront": "884,648,28,25",
-    "roiBack": "733,607,266,95",
+    "roiBack": "733,426,444,276",
     "method": "Template matching",
     "threshold": 0.5,
     "description": "还未上锁图片"
