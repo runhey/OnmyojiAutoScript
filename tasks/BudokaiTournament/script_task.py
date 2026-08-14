@@ -340,6 +340,9 @@ class ScriptTask(Foot):
             self.lock_team(self.conf.general_battle)
             if not self.check_tickets_enough():
                 logger.warning(f'No tickets left, wait for next time')
+                if not self.ui_click(self.C_BOSS_DETAIL_CLOSE, stop=self.I_CHECK_BATTLE_BOSS,
+                                     interval=1, timeout=10):
+                    raise GameStuckError('Unable to close cultivation drills boss detail')
                 break
             if self.conf.daily_training.random_sleep:
                 random_sleep(probability=0.2)
