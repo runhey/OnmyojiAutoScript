@@ -322,6 +322,9 @@ class ScriptTask(Foot):
 
             # 搜寻
             if self.appear(self.I_IMG1):
+                if not self.check_tickets_enough():
+                    logger.warning(f'No tickets left, wait for next time')
+                    break
                 # self.put_status()
                 if cnt_scout >= self.conf.daily_training.limit_cultivation_drills:
                     raise LimitCountOut
