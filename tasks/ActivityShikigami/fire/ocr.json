@@ -10,8 +10,8 @@
   },
   {
     "itemName": "remain_ap",
-    "roiFront": "777,17,63,30",
-    "roiBack": "776,16,63,30",
+    "roiFront": "1153,16,63,27",
+    "roiBack": "1151,15,63,30",
     "mode": "DigitCounter",
     "method": "Default",
     "keyword": "",
@@ -46,8 +46,8 @@
   },
   {
     "itemName": "remain_boss",
-    "roiFront": "1113,669,131,31",
-    "roiBack": "1099,659,162,52",
+    "roiFront": "970,16,42,29",
+    "roiBack": "970,16,42,29",
     "mode": "DigitCounter",
     "method": "Default",
     "keyword": "",

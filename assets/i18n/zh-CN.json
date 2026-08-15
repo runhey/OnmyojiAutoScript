@@ -47,5 +47,13 @@
   "enable_book_auto": "自动选择",
   "enable_book_auto_help": "游戏内是否开启自动选择御魂",
   "earn_money": "获取樱灯饰",
-  "earn_money_help": "通过放置借处式神获取500樱灯饰\n开启前确保已放置借出式神"
+  "BudokaiTournament": "武道大会",
+  "earn_money_help": "通过放置借处式神获取500樱灯饰\n开启前确保已放置借出式神",
+  "daily_training": "配置",
+  "limit_daily_training": "日常训练限制次数",
+  "limit_daily_training_help": "",
+  "limit_cultivation_drills": "修行合训挑战鬼王数量",
+  "limit_cultivation_drills_help": "搜寻到一只后会一直打，直到打完算一次",
+  "enable_switch_daily_training": "日常训练开启切换御魂",
+  "enable_switch_cultivation_drills": "修行合训开启切换御魂"
 }

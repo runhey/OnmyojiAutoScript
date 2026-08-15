@@ -1,0 +1,65 @@
+[
+  {
+    "itemName": "img2",
+    "imageName": "bt_img2.png",
+    "roiFront": "225,70,60,54",
+    "roiBack": "187,48,152,432",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "自己发现"
+  },
+  {
+    "itemName": "img3",
+    "imageName": "bt_img3.png",
+    "roiFront": "1108,530,70,82",
+    "roiBack": "1068,500,161,139",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "开启挑战"
+  },
+  {
+    "itemName": "img4",
+    "imageName": "bt_img4.png",
+    "roiFront": "1106,541,72,72",
+    "roiBack": "1076,414,170,234",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "继续挑战"
+  },
+  {
+    "itemName": "item_5",
+    "imageName": "bt_item_5.png",
+    "roiFront": "1186,215,42,37",
+    "roiBack": "1164,122,80,434",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": ""
+  },
+  {
+    "itemName": "item_6",
+    "imageName": "bt_item_6.png",
+    "roiFront": "1186,215,42,37",
+    "roiBack": "1164,122,80,434",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": ""
+  },
+  {
+    "itemName": "item_7",
+    "imageName": "bt_item_7.png",
+    "roiFront": "1186,215,42,37",
+    "roiBack": "1164,122,80,434",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": ""
+  },
+  {
+    "itemName": "img1",
+    "imageName": "bt_img1.png",
+    "roiFront": "1102,590,86,73",
+    "roiBack": "1059,547,161,139",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "搜寻"
+  }
+]

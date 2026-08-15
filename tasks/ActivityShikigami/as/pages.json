@@ -2,8 +2,8 @@
   {
     "itemName": "shi",
     "imageName": "as_shi.png",
-    "roiFront": "1189,467,39,28",
-    "roiBack": "1164,134,83,393",
+    "roiFront": "1186,220,39,28",
+    "roiBack": "1165,128,83,393",
     "method": "Template matching",
     "threshold": 0.7,
     "description": "进入活动"
@@ -38,8 +38,8 @@
   {
     "itemName": "to_battle_main",
     "imageName": "as_to_battle_main.png",
-    "roiFront": "1040,173,38,152",
-    "roiBack": "951,101,238,269",
+    "roiFront": "180,207,38,152",
+    "roiBack": "118,145,238,269",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "进入主要的战斗界面"
@@ -47,8 +47,8 @@
   {
     "itemName": "to_battle_boss",
     "imageName": "as_to_battle_boss.png",
-    "roiFront": "1076,241,37,136",
-    "roiBack": "934,209,234,327",
+    "roiFront": "1111,248,37,136",
+    "roiBack": "973,174,234,327",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "点击进入boss战斗页面"
@@ -59,14 +59,14 @@
     "roiFront": "50,642,62,58",
     "roiBack": "1,510,415,203",
     "method": "Template matching",
-    "threshold": 0.8,
+    "threshold": 0.65,
     "description": "description"
   },
   {
     "itemName": "check_battle_boss",
     "imageName": "as_check_battle_boss.png",
-    "roiFront": "34,365,45,35",
-    "roiBack": "20,328,100,100",
+    "roiFront": "978,636,43,31",
+    "roiBack": "899,537,167,154",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"
@@ -74,7 +74,7 @@
   {
     "itemName": "battle_main_to_records",
     "imageName": "as_battle_main_to_records.png",
-    "roiFront": "1018,562,39,42",
+    "roiFront": "1001,558,39,42",
     "roiBack": "966,534,140,100",
     "method": "Template matching",
     "threshold": 0.7,
