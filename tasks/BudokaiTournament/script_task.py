@@ -312,6 +312,13 @@ class ScriptTask(Foot):
         while 1:
             self.screenshot()
             # --------------------------------------------------------------
+            # A delayed search click can land on the challenge button after the
+            # boss-detail page has already appeared. Recover by attaching to an
+            # already-started battle instead of waiting forever on a UI image.
+            if self.is_in_battle(False):
+                logger.warning('Cultivation drill battle already started, attach to battle process')
+                self.run_general_battle(config=self.get_general_battle_conf())
+                continue
             if (self.appear_then_click(self.I_UI_CONFIRM, interval=0.5)
                     or self.appear_then_click(self.I_UI_CONFIRM_SAMLL, interval=0.5)):
                 continue
@@ -328,10 +335,21 @@ class ScriptTask(Foot):
                 # self.put_status()
                 if cnt_scout >= self.conf.daily_training.limit_cultivation_drills:
                     raise LimitCountOut
-                if self.ui_click(self.I_IMG1, stop=self.I_IMG3, interval=1.5, timeout=10):
-                    logger.info(f'Cultivation drill done, for next time {cnt_scout}')
-                    cnt_scout += 1
-                    pass
+                # Click search only once, then wait without sending more input.
+                # Repeated clicks can cross the page transition and hit the
+                # overlapping challenge button on the boss-detail page.
+                if self.appear_then_click(self.I_IMG1, interval=1.5):
+                    transition_timer = Timer(10).start()
+                    while 1:
+                        self.screenshot()
+                        if (self.appear(self.I_IMG3) or self.appear(self.I_IMG4)
+                                or self.is_in_battle(False)):
+                            logger.info(f'Cultivation drill done, for next time {cnt_scout}')
+                            cnt_scout += 1
+                            break
+                        if transition_timer.reached():
+                            logger.warning('Wait cultivation drill boss detail timeout, retry search')
+                            break
                 continue
             if not (self.appear(self.I_IMG3) or self.appear(self.I_IMG4)):
                 continue
@@ -388,5 +406,4 @@ if __name__ == '__main__':
     t = ScriptTask(c, d)
 
     t.run()
-
 
