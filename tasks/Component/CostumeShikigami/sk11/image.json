@@ -1,0 +1,182 @@
+[
+  {
+    "itemName": "check_records_11",
+    "imageName": "sk11_check_records_11.png",
+    "roiFront": "276,81,31,36",
+    "roiBack": "269,73,44,48",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "record_soul_back_11",
+    "imageName": "sk11_record_soul_back_11.png",
+    "roiFront": "17,13,43,47",
+    "roiBack": "12,10,52,55",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "sou_check_group_1_11",
+    "imageName": "sk11_sou_check_group_1_11.png",
+    "roiFront": "1095,83,14,50",
+    "roiBack": "1092,81,21,55",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "sou_check_group_2_11",
+    "imageName": "sk11_sou_check_group_2_11.png",
+    "roiFront": "1095,155,14,39",
+    "roiBack": "1092,149,20,51",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "sou_check_group_3_11",
+    "imageName": "sk11_sou_check_group_3_11.png",
+    "roiFront": "1096,225,8,50",
+    "roiBack": "1093,220,17,56",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "sou_check_group_4_11",
+    "imageName": "sk11_sou_check_group_4_11.png",
+    "roiFront": "1093,295,11,47",
+    "roiBack": "1090,293,19,51",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "sou_check_group_5_11",
+    "imageName": "sk11_sou_check_group_5_11.png",
+    "roiFront": "1093,364,16,49",
+    "roiBack": "1092,361,19,55",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "sou_check_group_6_11",
+    "imageName": "sk11_sou_check_group_6_11.png",
+    "roiFront": "1093,442,14,37",
+    "roiBack": "1088,437,24,48",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "sou_check_group_7_11",
+    "imageName": "sk11_sou_check_group_7_11.png",
+    "roiFront": "1093,506,6,41",
+    "roiBack": "1091,500,13,53",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "sou_switch_1_11",
+    "imageName": "sk11_sou_switch_1_11.png",
+    "roiFront": "977,138,32,30",
+    "roiBack": "969,129,48,50",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "sou_switch_2_11",
+    "imageName": "sk11_sou_switch_2_11.png",
+    "roiFront": "973,293,37,32",
+    "roiBack": "968,287,50,49",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "sou_switch_3_11",
+    "imageName": "sk11_sou_switch_3_11.png",
+    "roiFront": "981,445,26,35",
+    "roiBack": "979,443,32,40",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "sou_switch_4_11",
+    "imageName": "sk11_sou_switch_4_11.png",
+    "roiFront": "979,602,28,25",
+    "roiBack": "973,598,39,34",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "sou_team_present_11",
+    "imageName": "sk11_sou_team_present_11.png",
+    "roiFront": "734,77,100,41",
+    "roiBack": "726,71,115,54",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "sou_switch_sure_11",
+    "imageName": "sk11_sou_switch_sure_11.png",
+    "roiFront": "702,401,116,55",
+    "roiBack": "690,399,148,64",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "soul_preset_11",
+    "imageName": "sk11_soul_preset_11.png",
+    "roiFront": "342,85,74,31",
+    "roiBack": "338,77,83,44",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "st_replace_11",
+    "imageName": "sk11_st_replace_11.png",
+    "roiFront": "884,169,63,67",
+    "roiBack": "872,155,86,99",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "st_souls_11",
+    "imageName": "sk11_st_souls_11.png",
+    "roiFront": "1192,237,40,67",
+    "roiBack": "1182,229,59,86",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "sou_check_in_11",
+    "imageName": "sk11_sou_check_in_11.png",
+    "roiFront": "274,74,43,49",
+    "roiBack": "271,69,48,61",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "sou_click_present_11",
+    "imageName": "sk11_sou_click_present_11.png",
+    "roiFront": "975,292,34,34",
+    "roiBack": "971,134,42,530",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  }
+]
