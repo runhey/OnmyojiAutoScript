@@ -227,7 +227,7 @@ class CostumeShikigamiAssets:
 
 	# Image Rule Assets
 	# 用于判断在式神录 
-	I_CHECK_RECORDS_5 = RuleImage(roi_front=(267,76,51,46), roi_back=(265,74,55,50), threshold=0.8, method="Template matching", file="./tasks/Component/CostumeShikigami/sk5/sk5_check_records_5.png")
+	I_CHECK_RECORDS_5 = RuleImage(roi_front=(313,75,44,43), roi_back=(308,70,54,53), threshold=0.8, method="Template matching", file="./tasks/Component/CostumeShikigami/sk5/sk5_check_records_5.png")
 	# 退出式神录 
 	I_RECORD_SOUL_BACK_5 = RuleImage(roi_front=(19,9,51,44), roi_back=(19,9,51,44), threshold=0.8, method="Template matching", file="./tasks/Component/CostumeShikigami/sk5/sk5_record_soul_back_5.png")
 	# 预设 
