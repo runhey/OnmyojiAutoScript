@@ -5,6 +5,7 @@ import random
 import traceback
 from module.atom.click import RuleClick
 from tasks.BondlingFairyland.assets import BondlingFairylandAssets
+from tasks.Duel.assets import DuelAssets
 from tasks.GlobalGame.assets import GlobalGameAssets as GGA
 from tasks.GameUi.assets import GameUiAssets as G
 from tasks.KekkaiUtilize.assets import KekkaiUtilizeAssets
@@ -123,6 +124,7 @@ page_exploration.link(button=G.I_EXPLORATION_GOTO_HERO_TEST, destination=page_he
 # ************************************* 町中部分 *****************************************#
 # 斗技 duel
 page_duel = Page(G.I_CHECK_DUEL)
+page_duel.additional = [DuelAssets.I_D_TRY]
 page_duel.link(button=G.I_BACK_YOLLOW, destination=page_town)
 page_town.link(button=G.I_TOWN_GOTO_DUEL, destination=page_duel)
 # 逢魔之时 demon_encounter
