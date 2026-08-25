@@ -322,6 +322,8 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, RyouToppaAssets):
                 click_failure_count += 1
                 continue
             if self.click(rcl, interval=5):
+                # https://github.com/runhey/OnmyojiAutoScript/issues/1748
+                time.sleep(random.uniform(0, 0.3))
                 click_failure_count += 1
                 continue
 
