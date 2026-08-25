@@ -55,5 +55,7 @@
   "limit_cultivation_drills": "修行合训挑战鬼王数量",
   "limit_cultivation_drills_help": "搜寻到一只后会一直打，直到打完算一次",
   "enable_switch_daily_training": "日常训练开启切换御魂",
-  "enable_switch_cultivation_drills": "修行合训开启切换御魂"
+  "enable_switch_cultivation_drills": "修行合训开启切换御魂",
+  "demon_battle_config": "逢魔战斗内切换阵容",
+  "best_demon_battle_config": "极逢魔战斗内切换阵容"
 }

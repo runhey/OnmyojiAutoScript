@@ -322,13 +322,25 @@ class ScriptTask(Foot):
 
             # 搜寻
             if self.appear(self.I_IMG1):
+                if not self.check_tickets_enough():
+                    logger.warning(f'No tickets left, wait for next time')
+                    break
                 # self.put_status()
                 if cnt_scout >= self.conf.daily_training.limit_cultivation_drills:
                     raise LimitCountOut
-                if self.ui_click(self.I_IMG1, stop=self.I_IMG3, interval=1.5, timeout=10):
-                    logger.info(f'Cultivation drill done, for next time {cnt_scout}')
-                    cnt_scout += 1
-                    pass
+                # Click search once, then wait for the boss-detail page without
+                # sending another input during the page transition.
+                if self.appear_then_click(self.I_IMG1, interval=1.5):
+                    transition_timer = Timer(10).start()
+                    while 1:
+                        self.screenshot()
+                        if self.appear(self.I_IMG3) or self.appear(self.I_IMG4):
+                            logger.info(f'Cultivation drill done, for next time {cnt_scout}')
+                            cnt_scout += 1
+                            break
+                        if transition_timer.reached():
+                            logger.warning('Wait cultivation drill boss detail timeout, retry search')
+                            break
                 continue
             if not (self.appear(self.I_IMG3) or self.appear(self.I_IMG4)):
                 continue
@@ -385,5 +397,4 @@ if __name__ == '__main__':
     t = ScriptTask(c, d)
 
     t.run()
-
 

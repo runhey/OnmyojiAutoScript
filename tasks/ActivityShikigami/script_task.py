@@ -158,7 +158,7 @@ class ScriptTask(StateMachine, GameUi, BaseActivity, SwitchSoul, ActivityShikiga
                 method_func = getattr(self, f'_run_{climb_type}')
                 method_func()
             except LimitCountOut as e:
-                self.ui_click(self.I_UI_BACK_YELLOW, stop=self.I_TO_BATTLE_MAIN, interval=1)
+                self.ui_click(self.I_UI_BACK_YELLOW, stop=self.I_TO_BATTLE_MAIN, interval=2.8)
             except LimitTimeOut as e:
                 break
             finally:
@@ -288,7 +288,8 @@ class ScriptTask(StateMachine, GameUi, BaseActivity, SwitchSoul, ActivityShikiga
             if (self.appear_then_click(self.I_UI_CONFIRM_SAMLL, interval=1) or
                     self.appear_then_click(self.I_UI_CONFIRM, interval=1) ):
                 continue
-            if self.ocr_appear_click(self.O_FIRE, interval=2):
+            if (self.appear(self.I_CHECK_BATTLE_MAIN, interval=1) or self.appear(self.I_CHECK_BATTLE_BOSS, interval=1)) \
+                    and  self.ocr_appear_click(self.O_FIRE, interval=2):
                 click_times += 1
                 logger.info(f'Try click fire, remain times[{max_times - click_times}]')
                 continue
