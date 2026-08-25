@@ -2,8 +2,8 @@
   {
     "itemName": "check_records_5",
     "imageName": "sk5_check_records_5.png",
-    "roiFront": "267,76,51,46",
-    "roiBack": "265,74,55,50",
+    "roiFront": "313,75,44,43",
+    "roiBack": "308,70,54,53",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "用于判断在式神录"
