@@ -264,7 +264,7 @@ class Script:
         :return:
         """
         result = {}
-        for key, value in self.config.model.dict().items():
+        for key, value in self.config.model.model_dump().items():
             if isinstance(value, str):
                 continue
             if key == "restart":
