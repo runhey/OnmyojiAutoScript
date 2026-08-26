@@ -143,7 +143,7 @@ async def annotator_upload_images(data: UploadImagesBody):
     try:
         images = annotator_manager.save_uploaded_images_base64(
             data.session_id,
-            [item.dict() for item in data.images],
+            [item.model_dump() for item in data.images],
         )
         return {"code": "ok", "images": images}
     except AnnotatorError as e:

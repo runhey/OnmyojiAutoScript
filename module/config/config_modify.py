@@ -76,7 +76,7 @@ class ConfigModify(Config):
         :return:
         """
         result = {}
-        for key, value in self.model.dict().items():
+        for key, value in self.model.model_dump().items():
             if isinstance(value, str):
                 continue
             if key == "restart":
