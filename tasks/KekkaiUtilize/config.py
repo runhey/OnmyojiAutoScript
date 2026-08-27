@@ -3,7 +3,7 @@
 # github https://github.com/runhey
 from pydantic import BaseModel, Field
 from enum import Enum
-from datetime import datetime, time
+from datetime import datetime, time, timedelta
 
 from tasks.Component.config_scheduler import Scheduler
 from tasks.Component.config_base import ConfigBase, TimeDelta
@@ -31,6 +31,7 @@ class UtilizeConfig(BaseModel):
     select_friend_list: SelectFriendList = Field(default=SelectFriendList.SAME_SERVER, description='select_friend_list_help')
     shikigami_class: ShikigamiClass = Field(default=ShikigamiClass.N, description='shikigami_class_help')
     shikigami_order: int = Field(default=4, description='shikigami_order_help')
+    min_run_interval: TimeDelta = Field(default=timedelta(0), description='min_run_interval_help')
     harvest_guild_max_times: int = Field(default=3, description='收取寮资金或体力失败的最大尝试次数')
     utilize_enable: bool = Field(default=True, description='是否蹭卡，小号可以选择不蹭卡')
     guild_ap_enable: bool = Field(default=True, description='guild_ap_enable_help')
