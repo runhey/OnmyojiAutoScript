@@ -92,6 +92,9 @@ class ScriptTask(GameUi, ReplaceShikigami, KekkaiUtilizeAssets):
                 # 已经蹭上卡了，设置下次蹭卡时间  # 减少30秒
                 # remaining_time = remaining_time - timedelta(seconds=30)
                 next_time = datetime.now() + remaining_time
+                min_interval = con.min_run_interval
+                if min_interval and min_interval.total_seconds() > 0:
+                    next_time = max(next_time, datetime.now() + min_interval)
                 self.set_next_run(task='KekkaiUtilize', target=next_time)
                 return
             if not self.grown_goto_utilize():

@@ -8,6 +8,7 @@ from math import dist
 
 from module.base.decorator import cached_property
 from module.atom.cBezier import BezierTrajectory
+from module.base.utils.utils import random_normal_distribution_int
 from module.logger import logger
 
 
@@ -52,11 +53,11 @@ class RuleSwipe:
         :return: 两个坐标的tuple
         """
         x, y, w, h = self.roi_front
-        x = np.random.randint(x, x + w)
-        y = np.random.randint(y, y + h)
+        x = random_normal_distribution_int(x, x + w)
+        y = random_normal_distribution_int(y, y + h)
         x2, y2, w2, h2 = self.roi_back
-        x2 = np.random.randint(x2, x2 + w2)
-        y2 = np.random.randint(y2, y2 + h2)
+        x2 = random_normal_distribution_int(x2, x2 + w2)
+        y2 = random_normal_distribution_int(y2, y2 + h2)
         return x, y, x2, y2
 
     def trace(self) -> list:

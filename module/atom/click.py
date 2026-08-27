@@ -4,6 +4,7 @@
 import numpy as np
 
 from module.base.decorator import cached_property
+from module.base.utils.utils import random_normal_distribution_int
 from module.logger import logger
 
 class RuleClick:
@@ -27,8 +28,8 @@ class RuleClick:
         :return:
         """
         x, y, w, h = self.roi_front
-        x = np.random.randint(x, x + w)
-        y = np.random.randint(y, y + h)
+        x = random_normal_distribution_int(x, x + w)
+        y = random_normal_distribution_int(y, y + h)
         return x, y
 
     def coord_more(self) -> tuple:
@@ -37,8 +38,8 @@ class RuleClick:
         :return:
         """
         x, y, w, h = self.roi_back
-        x = np.random.randint(x, x + w)
-        y = np.random.randint(y, y + h)
+        x = random_normal_distribution_int(x, x + w)
+        y = random_normal_distribution_int(y, y + h)
         return x, y
 
     @property
