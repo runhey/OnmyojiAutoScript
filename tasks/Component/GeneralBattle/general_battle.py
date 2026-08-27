@@ -15,11 +15,12 @@ from tasks.Component.GeneralBattle.assets import GeneralBattleAssets
 from tasks.Component.GeneralBattle.config_general_battle import GreenMarkType, GeneralBattleConfig
 from tasks.Component.GeneralBuff.config_buff import BuffClass
 from tasks.Component.GeneralBuff.general_buff import GeneralBuff
+from tasks.Component.GeneralBattle.battle_wait import BattleWait
 
 from module.logger import logger
 
 
-class GeneralBattle(GeneralBuff, GeneralBattleAssets):
+class GeneralBattle(BattleWait, GeneralBuff, GeneralBattleAssets):
     """
     使用这个通用的战斗必须要求这个任务的config有config_general_battle
     """
