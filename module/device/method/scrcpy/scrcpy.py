@@ -1,3 +1,4 @@
+import random
 import time
 from functools import wraps
 
@@ -97,7 +98,10 @@ class Scrcpy(ScrcpyCore, Uiautomator2):
 
         with self._scrcpy_control_socket_lock:
             self._scrcpy_control.touch(x, y, const.ACTION_DOWN)
-            self._scrcpy_control.touch(x, y, const.ACTION_UP)
+            self.sleep(random.uniform(0.045, 0.13))
+            mx, my = x + random.randint(-2, 2), y + random.randint(-2, 2)
+            self._scrcpy_control.touch(mx, my, const.ACTION_MOVE)
+            self._scrcpy_control.touch(mx, my, const.ACTION_UP)
             self.sleep(0.05)
 
     @retry
@@ -122,7 +126,7 @@ class Scrcpy(ScrcpyCore, Uiautomator2):
 
             for point in points[1:-1]:
                 self._scrcpy_control.touch(*point, const.ACTION_MOVE)
-                self.sleep(0.002)
+                self.sleep(random.uniform(0.001, 0.004))
 
             self._scrcpy_control.touch(*p2, const.ACTION_MOVE)
             self._scrcpy_control.touch(*p2, const.ACTION_UP)

@@ -318,6 +318,42 @@ class Script:
             if self.config.should_reload():
                 return False
 
+    @staticmethod
+    def _in_sleep_window(t, start, end) -> bool:
+        if start == end:
+            return False
+        if start < end:
+            return start <= t < end
+        return t >= start or t < end
+
+    @staticmethod
+    def _next_time_point(now: datetime, end) -> datetime:
+        candidate = now.replace(hour=end.hour, minute=end.minute, second=end.second, microsecond=0)
+        if candidate <= now:
+            candidate += timedelta(days=1)
+        return candidate
+
+    def _antiban_wake_time(self, now: datetime):
+        ab = self.config.script.anti_ban
+        if not ab.enable:
+            return None
+        wake = None
+        if self._in_sleep_window(now.time(), ab.sleep_start, ab.sleep_end):
+            wake = self._next_time_point(now, ab.sleep_end)
+        limit = ab.daily_active_limit.total_seconds()
+        if limit > 0:
+            if getattr(self, '_active_date', None) != now.date():
+                self._active_date = now.date()
+                self._active_seconds_today = 0
+            rest_until = getattr(self, '_rest_until', None)
+            if rest_until and now < rest_until:
+                wake = max(wake, rest_until) if wake else rest_until
+            elif getattr(self, '_active_seconds_today', 0) >= limit:
+                self._rest_until = now + ab.long_rest_duration
+                self._active_seconds_today = 0
+                wake = max(wake, self._rest_until) if wake else self._rest_until
+        return wake
+
     def get_next_task(self) -> str:
         """
         获取下一个任务的名字, 大驼峰。
@@ -329,6 +365,9 @@ class Script:
             if self.state_queue:
                 self.state_queue.put({"schedule": self.config.get_schedule_data()})
             now = datetime.now()
+            antiban_wake = self._antiban_wake_time(now)
+            if antiban_wake is not None:
+                task.next_run = max(task.next_run, antiban_wake)
             if not self._try_acquire_queue_token():
                 del_cached_property(self, "config")
                 continue
@@ -625,6 +664,9 @@ class Script:
         start_day = date.today()
         logger.info(f'Start scheduler loop: {self.config_name}')
         self.config.model.running_task = ''
+        self._active_seconds_today = 0
+        self._active_date = date.today()
+        self._rest_until = None
 
         # Update GUI 防呆, 读取设置并立刻显示后台模拟器到前台
         if not self.config.script.device.run_background_only and IS_WINDOWS:
@@ -680,10 +722,15 @@ class Script:
             self.device.click_record_clear()
             logger.hr(task, level=0)
             self.config.model.running_task = task
+            _task_start = datetime.now()
             success = self.run(inflection.camelize(task))
             self.config.model.running_task = ''
             logger.info(f'Scheduler: End task `{task}`')
             self.is_first_task = False
+            if self._active_date != date.today():
+                self._active_date = date.today()
+                self._active_seconds_today = 0
+            self._active_seconds_today += (datetime.now() - _task_start).total_seconds()
 
             # Check failures
             # failed = deep_get(self.failure_record, keys=task, default=0)
