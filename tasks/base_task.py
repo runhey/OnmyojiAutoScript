@@ -67,6 +67,10 @@ class BaseTask(GlobalGameAssets, CostumeBase):
         :return: 没有出现返回False, 其他True
         """
         image = self.device.image
+        # 竖屏截图(宽<高, 登录阶段游戏尚未横屏)时跳过检测, 防止roiBack裁剪出空图导致OpenCV断言崩溃
+        # 支持mumu模拟器安卓15: 启动阶段截图为竖屏, 横屏后恢复检测
+        if image is None or image.shape[1] < image.shape[0]:
+            return False
         appear_invitation = self.appear(self.I_G_ACCEPT)
         if not appear_invitation:
             return False
