@@ -158,6 +158,11 @@ class RuleImage(RuleImageMallResourceMixin):
             logger.error(f"Template image is invalid: {mat.shape}")
             return False  # 模板无效，匹配失败
 
+        # 截图竖屏(宽<高, 登录阶段游戏尚未横屏)或roiBack越界时, 裁剪图可能小于模板,
+        # 直接返回False防止matchTemplate断言崩溃, 横屏后自动恢复
+        if source.shape[0] < mat.shape[0] or source.shape[1] < mat.shape[1]:
+            return False
+
         res = cv2.matchTemplate(source, mat, cv2.TM_CCOEFF_NORMED)
         min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(res)  # 最小匹配度，最大匹配度，最小匹配度的坐标，最大匹配度的坐标
         if self.debug_mode:
