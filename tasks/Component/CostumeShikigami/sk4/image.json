@@ -174,7 +174,7 @@
     "itemName": "st_replace_4",
     "imageName": "sk4_st_replace_4.png",
     "roiFront": "860,168,100,100",
-    "roiBack": "872,186,78,63",
+    "roiBack": "860,168,100,100",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "更换"
