@@ -194,6 +194,8 @@ class ScriptTask(GameUi, Summon, DailyTriflesAssets):
                 continue
             if self.appear_then_click(self.I_L_FRIENDS, interval=1):
                 continue
+            if self.appear_then_click(self.I_FRIEND_TAB, interval=3):
+                continue
         logger.info('Start friend love')
         check_timer = Timer(2)
         check_timer.start()
@@ -307,4 +309,4 @@ if __name__ == '__main__':
     d = Device(c)
     t = ScriptTask(c, d)
 
-    t.check_time()
+    t.run_friend_love()

@@ -25,6 +25,8 @@ class DailyTriflesAssets:
 	I_LUCK_TITLE = RuleImage(roi_front=(600,52,131,67), roi_back=(600,52,131,67), threshold=0.8, method="Template matching", file="./tasks/DailyTrifles/love/Screenshots_luck_title.png")
 	# 好友羁绊提升弹窗 
 	I_FRIENDSHIP_UP = RuleImage(roi_front=(1147,80,27,28), roi_back=(1147,80,27,28), threshold=0.8, method="Template matching", file="./tasks/DailyTrifles/love/friendship_up.png")
+	#  
+	I_FRIEND_TAB = RuleImage(roi_front=(143,95,97,49), roi_back=(119,82,151,70), threshold=0.8, method="Template matching", file="./tasks/DailyTrifles/love/love_friend_tab.png")
 
 
 	# Image Rule Assets
