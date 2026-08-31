@@ -282,14 +282,21 @@ class GameUi(BaseTask, GameUiAssets):
             # 跳转页面
             max_wait_timer = Timer(6).start()
             logger.info(f'Wait appear and operate {button} on {current_page}')
+            max_attempts_per_button = 3  # 每个按钮最多尝试 3 次
+            attempts_list = [0] * len(button) if isinstance(button, list) else None
             while not max_wait_timer.reached():
                 if timeout_timer.reached():
                     return False
                 if isinstance(button, list):
-                    exec_operates = [self.appear_then_operate(btn, interval=0.8, skip_first_screenshot=False)
-                                     for btn in button]
-                    if exec_operates[0]:  # 只要第一个成功就跳出
-                        break
+                    for idx, btn in enumerate(button):
+                        if attempts_list[idx] >= max_attempts_per_button:
+                            continue
+                        attempt =  self.appear_then_operate(btn, interval=0.8, skip_first_screenshot=False)
+                        if attempt:
+                            attempts_list[idx] += 1
+                        # 只要第一个成功就跳出
+                        if attempt and idx == 0:
+                            break
                 if self.appear_then_operate(button, interval=0.8, skip_first_screenshot=False):
                     break
             else:
