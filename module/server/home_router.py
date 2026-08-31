@@ -96,3 +96,14 @@ async def additional_translate() -> dict:
     except Exception as e:
         logger.error(e)
     return {}
+
+
+@home_app.get('/export_diagnostic')
+async def export_diagnostic(config_name: str = ''):
+    from module.server.diagnostic import build_diagnostic_zip
+    try:
+        zip_path = build_diagnostic_zip(config_name)
+        return {'success': True, 'path': str(zip_path)}
+    except Exception as e:
+        logger.exception(e)
+        return {'success': False, 'path': '', 'error': str(e)}

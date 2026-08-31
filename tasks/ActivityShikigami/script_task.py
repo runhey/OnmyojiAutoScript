@@ -19,6 +19,7 @@ from module.exception import TaskEnd
 from module.logger import logger
 
 from tasks.base_task import BaseTask
+from tasks.Component.GeneralBattle.battle_wait import battle_wait_strategy
 from tasks.Component.GeneralBattle.config_general_battle import GeneralBattleConfig
 from tasks.ActivityShikigami.assets import ActivityShikigamiAssets
 from tasks.ActivityShikigami.config import SwitchSoulConfig, GeneralBattleConfig, ActivityShikigami
@@ -296,48 +297,52 @@ class ScriptTask(StateMachine, GameUi, BaseActivity, SwitchSoul, ActivityShikiga
         # 运行战斗
         self.run_general_battle(config=self.get_general_battle_conf())
 
-    def battle_wait(self, random_click_swipt_enable: bool) -> bool:
-        # 通用战斗结束判断
-        self.device.stuck_record_add("BATTLE_STATUS_S")
-        self.device.click_record_clear()
-        logger.info(f"Start {self.climb_type} battle process")
-        self.count_map[self.climb_type] = self.current_count
-        for btn in (self.C_RANDOM_LEFT, self.C_RANDOM_RIGHT, self.C_RANDOM_TOP, self.C_RANDOM_BOTTOM):
-            btn.name = "BATTLE_RANDOM"
-        ok_cnt, max_retry = 0, 8
-        while 1:
-            sleep(random.uniform(0.5, 1.5))
-            self.screenshot()
-            # 达到最大重试次数则直接交给上层处理
-            if ok_cnt > max_retry:
-                break
-            # 识别到挑战说明已经退出战斗
-            if ok_cnt > 0 and self.ocr_appear(self.O_FIRE):
-                return True
-            # 战斗失败
-            if self.appear(self.I_FALSE):
-                logger.warning("Battle failed")
-                self.ui_click_until_smt_disappear(self.random_reward_click(click_now=False), self.I_FALSE, interval=1.5)
-                return False
-            # 战斗成功
-            if self.appear_then_click(self.I_WIN, interval=2):
-                continue
-            #  出现 “魂” 和 紫蛇皮
-            if self.appear(self.I_REWARD) or self.appear(self.I_REWARD_PURPLE_SNAKE_SKIN) or \
-                    self.appear(self.I_REWARD_GOLD) or self.appear(self.I_REWARD_GOLD_SNAKE_SKIN):
-                self.random_reward_click(exclude_click=[self.C_RANDOM_TOP, self.C_RANDOM_LEFT])
-                ok_cnt += 1
-                continue
-            # 已经不在战斗中了, 且奖励也识别过了, 则随机点击
-            if ok_cnt > 3 and not self.is_in_battle(False):
-                self.random_reward_click(exclude_click=[self.C_RANDOM_TOP, self.C_RANDOM_LEFT])
-                self.device.stuck_record_clear()
-                ok_cnt += 1
-                continue
-            # 战斗中随机滑动
-            if ok_cnt == 0 and random_click_swipt_enable:
-                self.random_click_swipt()
-        return True
+    # def battle_wait(self, random_click_swipt_enable: bool) -> bool:
+    #     # 通用战斗结束判断
+    #     self.device.stuck_record_add("BATTLE_STATUS_S")
+    #     self.device.click_record_clear()
+    #     logger.info(f"Start {self.climb_type} battle process")
+    #     self.count_map[self.climb_type] = self.current_count
+    #     for btn in (self.C_RANDOM_LEFT, self.C_RANDOM_RIGHT, self.C_RANDOM_TOP, self.C_RANDOM_BOTTOM):
+    #         btn.name = "BATTLE_RANDOM"
+    #     ok_cnt, max_retry = 0, 8
+    #     while 1:
+    #         sleep(random.uniform(0.5, 1.5))
+    #         self.screenshot()
+    #         # 达到最大重试次数则直接交给上层处理
+    #         if ok_cnt > max_retry:
+    #             break
+    #         # 识别到挑战说明已经退出战斗
+    #         if ok_cnt > 0 and self.ocr_appear(self.O_FIRE):
+    #             return True
+    #         # 战斗失败
+    #         if self.appear(self.I_FALSE):
+    #             logger.warning("Battle failed")
+    #             self.ui_click_until_smt_disappear(self.random_reward_click(click_now=False), self.I_FALSE, interval=1.5)
+    #             return False
+    #         # 战斗成功
+    #         if self.appear_then_click(self.I_WIN, interval=2):
+    #             continue
+    #         #  出现 “魂” 和 紫蛇皮
+    #         if self.appear(self.I_REWARD) or self.appear(self.I_REWARD_PURPLE_SNAKE_SKIN) or \
+    #                 self.appear(self.I_REWARD_GOLD) or self.appear(self.I_REWARD_GOLD_SNAKE_SKIN):
+    #             self.random_reward_click(exclude_click=[self.C_RANDOM_TOP, self.C_RANDOM_LEFT])
+    #             ok_cnt += 1
+    #             continue
+    #         # 已经不在战斗中了, 且奖励也识别过了, 则随机点击
+    #         if ok_cnt > 3 and not self.is_in_battle(False):
+    #             self.random_reward_click(exclude_click=[self.C_RANDOM_TOP, self.C_RANDOM_LEFT])
+    #             self.device.stuck_record_clear()
+    #             ok_cnt += 1
+    #             continue
+    #         # 战斗中随机滑动
+    #         if ok_cnt == 0 and random_click_swipt_enable:
+    #             self.random_click_swipt()
+    #     return True
+
+    @battle_wait_strategy('reserve_default', 'idle_default', failure='default', success='soul')
+    def battle_wait(self, *args, **kwargs):
+        return self.battle_wait_with_strategy(*args, **kwargs)
 
     def switch_soul(self, enter_button: RuleImage, cur_img: RuleImage):
         conf = self.conf.switch_soul_config

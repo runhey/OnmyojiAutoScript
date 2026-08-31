@@ -97,6 +97,49 @@ class CostumeShikigamiAssets:
 
 
 	# Image Rule Assets
+	# description 
+	I_CHECK_RECORDS_11 = RuleImage(roi_front=(276,81,31,36), roi_back=(269,73,44,48), threshold=0.8, method="Template matching", file="./tasks/Component/CostumeShikigami/sk11/sk11_check_records_11.png")
+	# description 
+	I_RECORD_SOUL_BACK_11 = RuleImage(roi_front=(17,13,43,47), roi_back=(12,10,52,55), threshold=0.8, method="Template matching", file="./tasks/Component/CostumeShikigami/sk11/sk11_record_soul_back_11.png")
+	# description 
+	I_SOU_CHECK_GROUP_1_11 = RuleImage(roi_front=(1095,83,14,50), roi_back=(1092,81,21,55), threshold=0.8, method="Template matching", file="./tasks/Component/CostumeShikigami/sk11/sk11_sou_check_group_1_11.png")
+	# description 
+	I_SOU_CHECK_GROUP_2_11 = RuleImage(roi_front=(1095,155,14,39), roi_back=(1092,149,20,51), threshold=0.8, method="Template matching", file="./tasks/Component/CostumeShikigami/sk11/sk11_sou_check_group_2_11.png")
+	# description 
+	I_SOU_CHECK_GROUP_3_11 = RuleImage(roi_front=(1096,225,8,50), roi_back=(1093,220,17,56), threshold=0.8, method="Template matching", file="./tasks/Component/CostumeShikigami/sk11/sk11_sou_check_group_3_11.png")
+	# description 
+	I_SOU_CHECK_GROUP_4_11 = RuleImage(roi_front=(1093,295,11,47), roi_back=(1090,293,19,51), threshold=0.8, method="Template matching", file="./tasks/Component/CostumeShikigami/sk11/sk11_sou_check_group_4_11.png")
+	# description 
+	I_SOU_CHECK_GROUP_5_11 = RuleImage(roi_front=(1093,364,16,49), roi_back=(1092,361,19,55), threshold=0.8, method="Template matching", file="./tasks/Component/CostumeShikigami/sk11/sk11_sou_check_group_5_11.png")
+	# description 
+	I_SOU_CHECK_GROUP_6_11 = RuleImage(roi_front=(1093,442,14,37), roi_back=(1088,437,24,48), threshold=0.8, method="Template matching", file="./tasks/Component/CostumeShikigami/sk11/sk11_sou_check_group_6_11.png")
+	# description 
+	I_SOU_CHECK_GROUP_7_11 = RuleImage(roi_front=(1093,506,6,41), roi_back=(1091,500,13,53), threshold=0.8, method="Template matching", file="./tasks/Component/CostumeShikigami/sk11/sk11_sou_check_group_7_11.png")
+	# description 
+	I_SOU_SWITCH_1_11 = RuleImage(roi_front=(977,138,32,30), roi_back=(969,129,48,50), threshold=0.8, method="Template matching", file="./tasks/Component/CostumeShikigami/sk11/sk11_sou_switch_1_11.png")
+	# description 
+	I_SOU_SWITCH_2_11 = RuleImage(roi_front=(973,293,37,32), roi_back=(968,287,50,49), threshold=0.8, method="Template matching", file="./tasks/Component/CostumeShikigami/sk11/sk11_sou_switch_2_11.png")
+	# description 
+	I_SOU_SWITCH_3_11 = RuleImage(roi_front=(981,445,26,35), roi_back=(979,443,32,40), threshold=0.8, method="Template matching", file="./tasks/Component/CostumeShikigami/sk11/sk11_sou_switch_3_11.png")
+	# description 
+	I_SOU_SWITCH_4_11 = RuleImage(roi_front=(979,602,28,25), roi_back=(973,598,39,34), threshold=0.8, method="Template matching", file="./tasks/Component/CostumeShikigami/sk11/sk11_sou_switch_4_11.png")
+	# description 
+	I_SOU_TEAM_PRESENT_11 = RuleImage(roi_front=(734,77,100,41), roi_back=(726,71,115,54), threshold=0.8, method="Template matching", file="./tasks/Component/CostumeShikigami/sk11/sk11_sou_team_present_11.png")
+	# description 
+	I_SOU_SWITCH_SURE_11 = RuleImage(roi_front=(702,401,116,55), roi_back=(690,399,148,64), threshold=0.8, method="Template matching", file="./tasks/Component/CostumeShikigami/sk11/sk11_sou_switch_sure_11.png")
+	# description 
+	I_SOUL_PRESET_11 = RuleImage(roi_front=(342,85,74,31), roi_back=(338,77,83,44), threshold=0.8, method="Template matching", file="./tasks/Component/CostumeShikigami/sk11/sk11_soul_preset_11.png")
+	# description 
+	I_ST_REPLACE_11 = RuleImage(roi_front=(884,169,63,67), roi_back=(872,155,86,99), threshold=0.8, method="Template matching", file="./tasks/Component/CostumeShikigami/sk11/sk11_st_replace_11.png")
+	# description 
+	I_ST_SOULS_11 = RuleImage(roi_front=(1192,237,40,67), roi_back=(1182,229,59,86), threshold=0.8, method="Template matching", file="./tasks/Component/CostumeShikigami/sk11/sk11_st_souls_11.png")
+	# description 
+	I_SOU_CHECK_IN_11 = RuleImage(roi_front=(274,74,43,49), roi_back=(271,69,48,61), threshold=0.8, method="Template matching", file="./tasks/Component/CostumeShikigami/sk11/sk11_sou_check_in_11.png")
+	# description 
+	I_SOU_CLICK_PRESENT_11 = RuleImage(roi_front=(975,292,34,34), roi_back=(971,134,42,530), threshold=0.8, method="Template matching", file="./tasks/Component/CostumeShikigami/sk11/sk11_sou_click_present_11.png")
+
+
+	# Image Rule Assets
 	# 用于判断在式神录 
 	I_CHECK_RECORDS_2 = RuleImage(roi_front=(267,76,51,46), roi_back=(265,74,55,50), threshold=0.8, method="Template matching", file="./tasks/Component/CostumeShikigami/sk2/sk2_check_records_2.png")
 	# 退出式神录 
@@ -227,7 +270,7 @@ class CostumeShikigamiAssets:
 
 	# Image Rule Assets
 	# 用于判断在式神录 
-	I_CHECK_RECORDS_5 = RuleImage(roi_front=(267,76,51,46), roi_back=(265,74,55,50), threshold=0.8, method="Template matching", file="./tasks/Component/CostumeShikigami/sk5/sk5_check_records_5.png")
+	I_CHECK_RECORDS_5 = RuleImage(roi_front=(313,75,44,43), roi_back=(308,70,54,53), threshold=0.8, method="Template matching", file="./tasks/Component/CostumeShikigami/sk5/sk5_check_records_5.png")
 	# 退出式神录 
 	I_RECORD_SOUL_BACK_5 = RuleImage(roi_front=(19,9,51,44), roi_back=(19,9,51,44), threshold=0.8, method="Template matching", file="./tasks/Component/CostumeShikigami/sk5/sk5_record_soul_back_5.png")
 	# 预设 
