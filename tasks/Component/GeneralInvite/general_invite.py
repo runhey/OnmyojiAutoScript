@@ -165,6 +165,9 @@ class GeneralInvite(BaseTask, GeneralInviteAssets):
             return True
         if self.appear(self.I_GI_EMOJI_2):
             return True
+        # 永生之海房间没有表情按钮, 用左下角发言按钮识别
+        if self.appear(self.I_GI_SPEAK):
+            return True
         # if self.appear(self.I_MATCHING):
         #     return False
         return False
