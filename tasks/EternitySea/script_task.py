@@ -4,6 +4,7 @@
 from datetime import datetime, timedelta
 
 from module.exception import TaskEnd
+from module.base.timer import Timer
 from module.logger import logger
 
 from tasks.GameUi.game_ui import GameUi, Page
@@ -121,6 +122,8 @@ class ScriptTask(
                     is_first = False
                     self.run_general_battle(config=self._task_config.general_battle_config)
 
+        # 战斗奖励动画可能还未结束, 先点掉残留奖励弹窗等界面稳定, 防止exit_room识别不到房间
+        self._wait_room_stable()
         # 当结束或者是失败退出循环的时候只有两个UI的可能，在房间或者是在组队界面
         # 如果在房间就退出
         if self.exit_room():
@@ -129,12 +132,50 @@ class ScriptTask(
         if self.exit_team():
             pass
 
+        # 永生之海选层界面无HOME按钮且页面系统识别不了, 点返回箭头回到御魂副本选择界面
+        self._back_to_soul_zones()
+
         self.ui_get_current_page()
         self.ui_goto(page_main)
 
         if not success:
             return False
         return True
+
+    def _wait_room_stable(self) -> None:
+        """
+        打完最后一局领取奖励后, 奖励弹窗/金币动画可能遮挡左下角导致房间识别失败, 等待界面稳定
+        """
+        logger.info('Wait room stable')
+        timer = Timer(8).start()
+        while not timer.reached():
+            self.screenshot()
+            if self.appear_then_click(self.I_REWARD, interval=1.5):
+                continue
+            if self.appear_then_click(self.I_REWARD_GOLD, interval=1.5):
+                continue
+            if not self.appear(self.I_REWARD) and not self.appear(self.I_REWARD_GOLD):
+                sleep(1)
+                return
+
+    def _back_to_soul_zones(self) -> None:
+        """
+        点返回箭头直到回到御魂副本选择界面(page_soul_zones可识别)
+        """
+        logger.info('Back to soul zones')
+        timer = Timer(15).start()
+        while not timer.reached():
+            self.screenshot()
+            if self.ui_page_appear(page_soul_zones):
+                return
+            if self.appear_then_click(self.I_GI_SURE, interval=1):
+                continue
+            if self.appear_then_click(self.I_BACK_YELLOW, interval=1):
+                continue
+            if self.appear_then_click(self.I_BACK_YELLOW_SEA, interval=1):
+                continue
+            if self.appear_then_click(self.I_BACK_BOTTOM, interval=1):
+                continue
 
 
     def run_member(self):

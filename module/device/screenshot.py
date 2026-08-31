@@ -232,6 +232,9 @@ class Screenshot(Adb, DroidCast, Scrcpy, Window, NemuIpc):
                 logger.critical('Please set emulator resolution to 1280x720')
                 raise RequestHumanTakeover
 
+    def check_screen_size_sample(self):
+        return self.image.shape  == (720, 1280, 3)
+
     def check_screen_black(self):
         if self._screen_black_checked:
             return True

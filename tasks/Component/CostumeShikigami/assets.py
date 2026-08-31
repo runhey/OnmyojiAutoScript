@@ -179,7 +179,7 @@ class CostumeShikigamiAssets:
 	# 点击御魂 
 	I_ST_SOULS_2 = RuleImage(roi_front=(1176,227,70,80), roi_back=(1181,234,58,69), threshold=0.8, method="Template matching", file="./tasks/Component/CostumeShikigami/sk2/sk2_st_souls_2.png")
 	# 更换 
-	I_ST_REPLACE_2 = RuleImage(roi_front=(861,150,100,100), roi_back=(872,169,78,63), threshold=0.8, method="Template matching", file="./tasks/Component/CostumeShikigami/sk2/sk2_st_replace_2.png")
+	I_ST_REPLACE_2 = RuleImage(roi_front=(861,150,100,100), roi_back=(861,150,100,100), threshold=0.8, method="Template matching", file="./tasks/Component/CostumeShikigami/sk2/sk2_st_replace_2.png")
 
 
 	# Image Rule Assets
@@ -222,7 +222,7 @@ class CostumeShikigamiAssets:
 	# 点击御魂 
 	I_ST_SOULS_3 = RuleImage(roi_front=(1176,227,70,80), roi_back=(1181,234,58,69), threshold=0.8, method="Template matching", file="./tasks/Component/CostumeShikigami/sk3/sk3_st_souls_3.png")
 	# 更换 
-	I_ST_REPLACE_3 = RuleImage(roi_front=(860,168,100,100), roi_back=(872,186,78,63), threshold=0.8, method="Template matching", file="./tasks/Component/CostumeShikigami/sk3/sk3_st_replace_3.png")
+	I_ST_REPLACE_3 = RuleImage(roi_front=(860,168,100,100), roi_back=(860,168,100,100), threshold=0.8, method="Template matching", file="./tasks/Component/CostumeShikigami/sk3/sk3_st_replace_3.png")
 
 
 	# Image Rule Assets
@@ -265,7 +265,7 @@ class CostumeShikigamiAssets:
 	# 点击御魂 
 	I_ST_SOULS_4 = RuleImage(roi_front=(1176,227,70,80), roi_back=(1181,234,58,69), threshold=0.8, method="Template matching", file="./tasks/Component/CostumeShikigami/sk4/sk4_st_souls_4.png")
 	# 更换 
-	I_ST_REPLACE_4 = RuleImage(roi_front=(860,168,100,100), roi_back=(872,186,78,63), threshold=0.8, method="Template matching", file="./tasks/Component/CostumeShikigami/sk4/sk4_st_replace_4.png")
+	I_ST_REPLACE_4 = RuleImage(roi_front=(860,168,100,100), roi_back=(860,168,100,100), threshold=0.8, method="Template matching", file="./tasks/Component/CostumeShikigami/sk4/sk4_st_replace_4.png")
 
 
 	# Image Rule Assets
@@ -308,7 +308,7 @@ class CostumeShikigamiAssets:
 	# 点击御魂 
 	I_ST_SOULS_5 = RuleImage(roi_front=(1176,227,70,80), roi_back=(1181,234,58,69), threshold=0.8, method="Template matching", file="./tasks/Component/CostumeShikigami/sk5/sk5_st_souls_5.png")
 	# 更换 
-	I_ST_REPLACE_5 = RuleImage(roi_front=(860,168,100,100), roi_back=(872,186,78,63), threshold=0.8, method="Template matching", file="./tasks/Component/CostumeShikigami/sk5/sk5_st_replace_5.png")
+	I_ST_REPLACE_5 = RuleImage(roi_front=(860,168,100,100), roi_back=(860,168,100,100), threshold=0.8, method="Template matching", file="./tasks/Component/CostumeShikigami/sk5/sk5_st_replace_5.png")
 
 
 	# Image Rule Assets

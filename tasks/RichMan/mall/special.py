@@ -163,15 +163,9 @@ class Special(Buy, MallNavbar):
                   .replace(':', '：').replace('火', '次')
                   .replace('教', '数').replace('刺', '剩')
                   .replace('头', '买'))
-        try:
-            if '：' in result:
-                result = re.findall(r'(?:剩余)?购买次数：(\d+)', result)[0]
-                result = int(result)
-            else:
-                result = re.findall(r'本周剩余数量(\d+)', result)[0]
-                result = int(result)
-        except:
-            result = 0
+        # 冒号可能被漏识别, 如"剩余购买次数2", 所以冒号设为可选
+        matched = re.search(r'(?:剩余)?(?:购买次数|本周剩余数量)：?(\d+)', result)
+        result = int(matched.group(1)) if matched else 0
         logger.info(f'Remain [{result}]')
         return result
 
