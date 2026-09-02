@@ -10,11 +10,11 @@
   },
   {
     "itemName": "login_enter_game",
-    "roiFront": "550,567,176,56",
+    "roiFront": "589,544,101,107",
     "roiBack": "558,574,154,49",
     "mode": "Single",
     "method": "Default",
-    "keyword": "进入游戏",
+    "keyword": "进入",
     "description": "Ocr-description"
   },
   {
