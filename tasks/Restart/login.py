@@ -139,7 +139,7 @@ class LoginHandler(BaseTask, RestartAssets, GameUiAssets, GeneralBuffAssets):
                 if self.appear_then_click(self.I_EARLY_SERVER_CANCEL):
                     logger.info('Cancel switch from early server to normal server')
                     continue
-            if self.ocr_appear_click(self.O_LOGIN_ENTER_GAME, interval=3):
+            if self.ocr_appear_click(self.O_LOGIN_ENTER_GAME, self.C_LOGIN_ENTER_GAME_BUTTON, interval=3):
                 self.wait_until_appear(self.I_LOGIN_SPECIFIC_SERVE, True, wait_time=5)
                 continue
 

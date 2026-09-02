@@ -93,6 +93,8 @@ class RestartAssets:
 	C_LOGIN_ENSURE_LOGIN_CHARACTER_IN_SAME_SVR = RuleClick(roi_front=(600,240,500,400), roi_back=(600,240,500,400), name="login_ensure_login_character_in_same_svr")
 	# 卷轴关闭区域点击(用户新增，用于点击I_LOGIN_SCROOLL_CLOSE的区域而不依赖图片识别) 
 	C_LOGIN_SCROLL_CLOSE_AREA = RuleClick(roi_front=(1181,634,28,39), roi_back=(1162,595,77,112), name="login_scroll_close_area")
+	# 十周年登录界面进入游戏按钮随机点击区域
+	C_LOGIN_ENTER_GAME_BUTTON = RuleClick(roi_front=(589,544,101,107), roi_back=(589,544,101,107), name="login_enter_game_button")
 
 
 	# Image Rule Assets
@@ -143,5 +145,4 @@ class RestartAssets:
 	O_LOGIN_SKIP_1 = RuleOcr(roi=(1046,35,130,37), area=(1046,35,130,37), mode="Single", method="Default", keyword="点击屏幕跳过", name="login_skip_1")
 	# 登录指定角色，默认第一个 
 	O_LOGIN_SPECIFIC_SERVE = RuleOcr(roi=(110,120,350,600), area=(110,120,350,600), mode="Full", method="Default", keyword="", name="login_specific_serve")
-
 
