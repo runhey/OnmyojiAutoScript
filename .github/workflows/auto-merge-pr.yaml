@@ -1,0 +1,43 @@
+name: Auto Merge Sync PR
+
+on:
+  schedule:
+    # 每周五北京时间12点触发（UTC时间4点）
+    - cron: '0 4 * * 5'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  merge-pr:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Find automated sync PR
+        id: pr
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          PR_NUMBER=$(gh pr list \
+            --base master \
+            --head dev \
+            --state open \
+            --label automated \
+            --json number \
+            --jq '.[0].number')
+
+          if [ -z "$PR_NUMBER" ]; then
+            echo "No open automated sync PR found."
+            exit 0
+          fi
+
+          echo "number=$PR_NUMBER" >> "$GITHUB_OUTPUT"
+
+      - name: Merge automated sync PR
+        if: steps.pr.outputs.number != ''
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_REPO: ${{ github.repository }}
+        run: gh pr merge "${{ steps.pr.outputs.number }}" --merge

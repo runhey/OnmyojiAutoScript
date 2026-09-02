@@ -95,6 +95,8 @@ class GeneralInviteAssets:
 	I_BACK_YELLOW_SEA = RuleImage(roi_front=(31,16,42,42), roi_back=(31,16,42,42), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralInvite/gi/gi_back_yellow_sea.png")
 	# 识别到寄养邀请 
 	I_I_ACCEPT_JY = RuleImage(roi_front=(248,258,46,25), roi_back=(231,205,75,326), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralInvite/gi/gi_i_accept_jy.png")
+	# 房间左下角发言按钮(永生之海房间无表情按钮, 用此图识别) 
+	I_GI_SPEAK = RuleImage(roi_front=(23,503,82,85), roi_back=(23,503,82,85), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralInvite/gi/gi_gi_speak.png")
 
 
 	# Image Rule Assets

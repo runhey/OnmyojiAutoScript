@@ -1,0 +1,11 @@
+[
+  {
+    "itemName": "guild_activity_notify",
+    "roiFront": "13,213,457,86",
+    "roiBack": "13,213,457,86",
+    "mode": "Full",
+    "method": "Default",
+    "keyword": "",
+    "description": "寮活动通知检测区域"
+  }
+]
