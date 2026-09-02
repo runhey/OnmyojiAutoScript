@@ -18,6 +18,15 @@
     "description": "Ocr-description"
   },
   {
+    "itemName": "login_enter_game_origin",
+    "roiFront": "550,567,176,56",
+    "roiBack": "558,574,154,49",
+    "mode": "Single",
+    "method": "Default",
+    "keyword": "进入游戏",
+    "description": "兼容原先的进入游戏"
+  },
+  {
     "itemName": "login_skip_1",
     "roiFront": "1046,35,130,37",
     "roiBack": "1046,35,130,37",

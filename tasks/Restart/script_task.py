@@ -80,7 +80,8 @@ if __name__ == '__main__':
     config = Config('oas1')
     device = Device(config)
     task = ScriptTask(config, device)
-    task.app_restart()
+    for i in range(3):
+        task.app_restart()
     # task.config.update_scheduler()
     # task.delay_pending_tasks()
 
