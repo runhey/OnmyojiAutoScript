@@ -39,10 +39,11 @@ class LoginHandler(BaseTask, RestartAssets, GameUiAssets, GeneralBuffAssets):
                 self.device.get_orientation()
                 orientation_timer.reset()
 
-            self.screenshot()
+            self.device.screenshot()
             # https://github.com/runhey/OnmyojiAutoScript/pull/1761
             if not self.device.check_screen_size_sample():
                 continue
+            self._burst()
 
             # 取消继续战斗
             if self.appear_then_click(self.I_CANCEL_BATTLE, interval=0.8):
@@ -174,10 +175,11 @@ class LoginHandler(BaseTask, RestartAssets, GameUiAssets, GeneralBuffAssets):
         skip_default = False
         courtyard_affairs_done = False  # 庭院事务只执行一次
         while 1:
-            self.screenshot()
+            self.device.screenshot()
             # https://github.com/runhey/OnmyojiAutoScript/pull/1761
             if not self.device.check_screen_size_sample():
                 continue
+            self._burst()
 
             # 点击'获得奖励'
             if self.ui_reward_appear_click():
