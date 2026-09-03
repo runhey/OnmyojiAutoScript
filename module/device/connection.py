@@ -15,6 +15,7 @@ from adbutils.errors import AdbError
 from module.base.decorator import Config, cached_property, del_cached_property
 from module.base.utils import ensure_time
 from module.device.connection_attr import ConnectionAttr
+from module.device.method.playcover import PlayCoverClient
 from module.device.method.utils import (
     RETRY_TRIES, remove_shell_warning, retry_sleep,
     handle_adb_error, PackageNotInstalled,
@@ -95,6 +96,14 @@ class Connection(ConnectionAttr):
             config (AzurLaneConfig, str): Name of the user config under ./config
         """
         super().__init__(config)
+        if self.is_playcover:
+            self.playcover_client = PlayCoverClient(
+                self.serial,
+                screenshot_mode=self.config.script.device.screenshot_method,
+            )
+            self.playcover_client.connect()
+            self.package = 'com.netease.onmyoji'
+            return
         if not self.is_over_http:
             self.detect_device()
 
