@@ -138,6 +138,18 @@ class RuleImage(RuleImageMallResourceMixin):
         x, y, w, h = int(x), int(y), int(w), int(h)
         return image[y:y + h, x:x + w]
 
+    @staticmethod
+    def _safe_match_template(source: np.array, mat: np.array):
+        """
+        matchTemplate统一入口: 裁剪图小于模板时(如启动期竖屏截图)返回None,
+        由各调用点转为False/[], 防止OpenCV断言崩溃
+        """
+        if source is None or mat is None or len(source.shape) < 2 or len(mat.shape) < 2:
+            return None
+        if source.shape[0] < mat.shape[0] or source.shape[1] < mat.shape[1]:
+            return None
+        return cv2.matchTemplate(source, mat, cv2.TM_CCOEFF_NORMED)
+
     def match(self, image: np.array, threshold: float = None) -> bool:
         """
         :param threshold:
@@ -158,7 +170,10 @@ class RuleImage(RuleImageMallResourceMixin):
             logger.error(f"Template image is invalid: {mat.shape}")
             return False  # 模板无效，匹配失败
 
-        res = cv2.matchTemplate(source, mat, cv2.TM_CCOEFF_NORMED)
+        res = self._safe_match_template(source, mat)
+        if res is None:
+            # 裁剪图小于模板(如启动期竖屏截图), 跳过匹配
+            return False
         min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(res)  # 最小匹配度，最大匹配度，最小匹配度的坐标，最大匹配度的坐标
         if self.debug_mode:
             logger.attr(self.name, f'matching score {max_val:.5f}')
@@ -219,7 +234,10 @@ class RuleImage(RuleImageMallResourceMixin):
 
             try:
                 scaled_mat = cv2.resize(mat, (scaled_w, scaled_h))
-                res = cv2.matchTemplate(source, scaled_mat, cv2.TM_CCOEFF_NORMED)
+                res = self._safe_match_template(source, scaled_mat)
+                if res is None:
+                    # 裁剪图小于缩放后模板, 该scale跳过
+                    continue
                 _, max_val, _, max_loc = cv2.minMaxLoc(res)
 
                 if max_val > best_score:
@@ -257,11 +275,14 @@ class RuleImage(RuleImageMallResourceMixin):
             raise Exception(f"unknown method {self.method}")
         source = self.corp(image)
         mat = self.image
-        results = cv2.matchTemplate(source, mat, cv2.TM_CCOEFF_NORMED)
-        locations = np.where(results >= threshold)
+        res = self._safe_match_template(source, mat)
+        if res is None:
+            # 裁剪图小于模板(如启动期竖屏截图), 跳过匹配
+            return []
+        locations = np.where(res >= threshold)
         matches = []
         for pt in zip(*locations[::-1]):  # (x, y) coordinates
-            score = results[pt[1], pt[0]]
+            score = res[pt[1], pt[0]]
             # 得分, x, y, w, h
             x = self.roi_back[0] + pt[0]
             y = self.roi_back[1] + pt[1]
@@ -284,11 +305,14 @@ class RuleImage(RuleImageMallResourceMixin):
             raise Exception(f"unknown method {self.method}")
         source = self.corp(image)
         mat = self.image
-        results = cv2.matchTemplate(source, mat, cv2.TM_CCOEFF_NORMED)
-        locations = np.where(results >= threshold)
+        res = self._safe_match_template(source, mat)
+        if res is None:
+            # 裁剪图小于模板(如启动期竖屏截图), 跳过匹配
+            return []
+        locations = np.where(res >= threshold)
         matches = []
         for pt in zip(*locations[::-1]):  # (x, y) coordinates
-            score = results[pt[1], pt[0]]
+            score = res[pt[1], pt[0]]
             # 得分, x, y, w, h
             x = self.roi_back[0] + pt[0]
             y = self.roi_back[1] + pt[1]
