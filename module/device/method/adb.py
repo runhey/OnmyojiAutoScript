@@ -177,7 +177,11 @@ class Adb(Connection):
     @retry
     @Config.when(DEVICE_OVER_HTTP=True)
     def screenshot_adb(self):
-        data = self.adb_shell(['screencap'], stream=True)
+        sysversion = self.adb_shell(['getprop', 'ro.build.version.release'], stream=False)
+        if sysversion == "15" :
+            data = self.adb_shell(['screencap','-d', '4619827767814508545', '-p'], stream=True)
+        else:
+            data = self.adb_shell(['screencap'], stream=True)
 
 
         if len(data) < 500:
