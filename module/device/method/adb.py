@@ -160,7 +160,15 @@ class Adb(Connection):
     @retry
     @Config.when(DEVICE_OVER_HTTP=False)
     def screenshot_adb(self):
-        data = self.adb_shell(['screencap', '-p'], stream=True)
+
+        data = b'ss'
+        # 判断系统是安卓12还是安卓15,安卓15截图增加-d 参数
+        sysversion = self.adb_shell(['getprop', 'ro.build.version.release'], stream=False)
+        if sysversion == "15" :
+            data = self.adb_shell(['screencap','-d', '4619827767814508545', '-p'], stream=True)
+        else:
+            data = self.adb_shell(['screencap', '-p'], stream=True)
+
         if len(data) < 500:
             logger.warning(f'Unexpected screenshot: {data}')
 
@@ -170,6 +178,8 @@ class Adb(Connection):
     @Config.when(DEVICE_OVER_HTTP=True)
     def screenshot_adb(self):
         data = self.adb_shell(['screencap'], stream=True)
+
+
         if len(data) < 500:
             logger.warning(f'Unexpected screenshot: {data}')
 
@@ -186,7 +196,12 @@ class Adb(Connection):
     @retry
     def click_adb(self, x, y):
         start = time.time()
-        self.adb_shell(['input', 'tap', x, y])
+        # 安卓15需要制定屏幕ID，增加制定屏幕的判断
+        sysversion = self.adb_shell(['getprop', 'ro.build.version.release'], stream=False)
+        if sysversion == "15":
+            self.adb_shell(['input','-d','2', 'tap', x, y])
+        else:
+            self.adb_shell(['input', 'tap', x, y])
         if time.time() - start <= 0.05:
             self.sleep(0.05)
 
