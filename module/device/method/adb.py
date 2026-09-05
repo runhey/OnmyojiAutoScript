@@ -7,7 +7,7 @@ import time
 from adbutils.errors import AdbError
 from lxml import etree
 
-from module.base.decorator import Config
+from module.base.decorator import Config, cached_property
 from module.device.connection import Connection
 from module.device.method.minitouch import smooth_path
 from module.device.method.utils import (RETRY_TRIES, retry_sleep, remove_prefix, handle_adb_error,
@@ -157,10 +157,21 @@ class Adb(Connection):
             logger.warning(f'Unexpected screenshot: {screenshot}')
         raise OSError(f'cannot load screenshot')
 
+
+    @cached_property
+    def sys_version(self):
+        return self.adb_shell(['getprop', 'ro.build.version.release'], stream=False)
+
     @retry
     @Config.when(DEVICE_OVER_HTTP=False)
     def screenshot_adb(self):
-        data = self.adb_shell(['screencap', '-p'], stream=True)
+        # 安卓15使用-d制定屏幕id
+        data = b'ss'
+        if self.sys_version  == "15":
+            data = self.adb_shell(['screencap','-d', '4619827767814508545', '-p'], stream=True)
+        else:
+            data = self.adb_shell(['screencap', '-p'], stream=True)
+
         if len(data) < 500:
             logger.warning(f'Unexpected screenshot: {data}')
 
@@ -169,7 +180,9 @@ class Adb(Connection):
     @retry
     @Config.when(DEVICE_OVER_HTTP=True)
     def screenshot_adb(self):
+        # 安卓15暂不支持
         data = self.adb_shell(['screencap'], stream=True)
+
         if len(data) < 500:
             logger.warning(f'Unexpected screenshot: {data}')
 
@@ -177,6 +190,7 @@ class Adb(Connection):
 
     @retry
     def screenshot_adb_nc(self):
+        # 安卓15暂不支持
         data = self.adb_shell_nc(['screencap'])
         if len(data) < 500:
             logger.warning(f'Unexpected screenshot: {data}')
@@ -186,14 +200,22 @@ class Adb(Connection):
     @retry
     def click_adb(self, x, y):
         start = time.time()
-        self.adb_shell(['input', 'tap', x, y])
+        # 安卓15需要指定屏幕ID，增加指定屏幕id
+        if self.sys_version  == "15":
+            self.adb_shell(['input','-d','2', 'tap', x, y])
+        else:
+            self.adb_shell(['input', 'tap', x, y])
         if time.time() - start <= 0.05:
             self.sleep(0.05)
 
     @retry
     def swipe_adb(self, p1, p2, duration=0.1):
         duration = int(duration * 1000)
-        self.adb_shell(['input', 'swipe', *p1, *p2, duration])
+        # 安卓15需要指定屏幕ID，增加指定屏幕id
+        if self.sys_version == "15":
+            self.adb_shell(['input', '-d', '2', 'swipe', *p1, *p2, duration])
+        else:
+            self.adb_shell(['input', 'swipe', *p1, *p2, duration])
 
     def long_click_adb(self, x: float, y: float, duration: float):
         """
@@ -205,7 +227,12 @@ class Adb(Connection):
         """
         if not 0 < duration < 3:
             duration = duration / 1000
-        self.adb_shell(['input', 'swipe', x, y, x, y, int(duration*1000)])
+        # 安卓15需要指定屏幕ID，增加指定屏幕id
+        if self.sys_version  == "15":
+            self.adb_shell(['input', '-d', '2', 'swipe', x, y, x, y, int(duration*1000)])
+        else:
+            self.adb_shell(['input', 'swipe', x, y, x, y, int(duration*1000)])
+
 
     @retry
     def app_current_adb(self):
@@ -366,17 +393,27 @@ class Adb(Connection):
         start_point = smooth_points[0]
 
         # 按下起始点
-        self.adb_shell(['input', 'motionevent', 'DOWN', str(start_point[0]), str(start_point[1])])
+        # 安卓15需要指定屏幕ID，增加指定屏幕id
+        if self.sys_version == "15":
+            self.adb_shell(['input','-d','2', 'motionevent', 'DOWN', str(start_point[0]), str(start_point[1])])
+        else:
+            self.adb_shell(['input', 'motionevent', 'DOWN', str(start_point[0]), str(start_point[1])])
 
         # 移动到后续点
         for i, point in enumerate(smooth_points[1:], start=1):
             # 给点间隔
             time.sleep(interval)
-            self.adb_shell(['input', 'motionevent', 'MOVE', str(point[0]), str(point[1])])
+            if self.sys_version == "15":
+                self.adb_shell(['input','-d','2', 'motionevent', 'MOVE', str(point[0]), str(point[1])])
+            else:
+                self.adb_shell(['input', 'motionevent', 'MOVE', str(point[0]), str(point[1])])
 
         # 抬起手指
         final_point = smooth_points[-1]
-        self.adb_shell(['input', 'motionevent', 'UP', str(final_point[0]), str(final_point[1])])
+        if self.sys_version == "15":
+            self.adb_shell(['input','-d','2', 'motionevent', 'UP', str(final_point[0]), str(final_point[1])])
+        else:
+            self.adb_shell(['input', 'motionevent', 'UP', str(final_point[0]), str(final_point[1])])
 
 
 if __name__ == "__main__":
