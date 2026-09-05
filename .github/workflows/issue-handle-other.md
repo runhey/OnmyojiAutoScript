@@ -22,6 +22,7 @@ permissions:
   statuses: read
 
 tools:
+  bash: true
   github:
     toolsets: [default]
     min-integrity: none

@@ -16,6 +16,7 @@ imports:
   - shared/network.md
 
 tools:
+  bash: true
   github:
     toolsets: [default]
     min-integrity: none
@@ -28,7 +29,7 @@ safe-outputs:
     title-prefix: "Weekly Report: "
     labels: [weekly-report, report]
     close-older-issues: true
-    expires: 30
+    expires: 30d
 
 timeout-minutes: 20
 ---
@@ -181,4 +182,3 @@ timeout-minutes: 20
 ### 💭 AI 总结
 - **要求**：请你自由发挥，不用模板
 - **可选**：亮点、问题、展望、闲聊
-
