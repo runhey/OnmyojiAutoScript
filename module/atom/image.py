@@ -156,9 +156,9 @@ class RuleImage(RuleImageMallResourceMixin):
 
         if mat is None or mat.shape[0] == 0 or mat.shape[1] == 0:
             logger.error(f"Template image is invalid: {mat.shape}")
-            return False  # 模板无效，匹配失败
+            return False  # 模板无效, 匹配失败
         if mat.shape[0] > source.shape[0] or mat.shape[1] > source.shape[1]:
-            # 模板大于源图，视为无效匹配（避免 matchTemplate 的异常行为）
+            # 模板大于源图, 视为无效匹配(避免 matchTemplate 的异常行为)
             return False
 
         res = cv2.matchTemplate(source, mat, cv2.TM_CCOEFF_NORMED)
@@ -203,9 +203,6 @@ class RuleImage(RuleImageMallResourceMixin):
         if mat is None or mat.shape[0] == 0 or mat.shape[1] == 0:
             logger.error(f"Template image is invalid: {mat.shape}")
             return False
-        if mat.shape[0] > source.shape[0] or mat.shape[1] > source.shape[1]:
-            # 模板大于源图，视为无效匹配（避免 matchTemplate 的异常行为）
-            return False
 
         # 预计算模板尺寸
         mat_h, mat_w = mat.shape[:2]
@@ -221,6 +218,9 @@ class RuleImage(RuleImageMallResourceMixin):
 
             # 跳过无效缩放
             if scaled_w < 10 or scaled_h < 10:
+                continue
+            # 缩放后仍大于源图则跳过该尺度(避免 matchTemplate 契约问题)
+            if scaled_w > source_w or scaled_h > source_h:
                 continue
 
             try:
