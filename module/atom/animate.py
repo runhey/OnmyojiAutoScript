@@ -55,7 +55,7 @@ class RuleAnimate(RuleImage):
         @return:
         """
         if self._last_image is None:
-            self._last_image = image
+            self._last_image = self.corp(image, self.roi_front)
             return False
 
         self._image = self._last_image

@@ -21,7 +21,11 @@ permissions:
   checks: read
   statuses: read
 
+concurrency:
+  job-discriminator: ${{ inputs.issue_number || github.event.issue.number || github.run_id }}
+
 tools:
+  bash: true
   github:
     toolsets: [default]
     min-integrity: none

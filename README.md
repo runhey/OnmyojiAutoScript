@@ -116,7 +116,7 @@ OAS 在其基础上进行了如下优化：
 
 ## Star History
 
-[![Star History Chart](https://api.star-history.com/svg?repos=runhey/OnmyojiAutoScript&type=Date)](https://star-history.com/#runhey/OnmyojiAutoScript&Date)
+[![Star History Chart](https://star-history.dera.page/svg?repos=runhey/OnmyojiAutoScript&type=Date)](https://star-history.dera.page/#runhey/OnmyojiAutoScript&Date)
 
 
 ## ⚡ Visitor count

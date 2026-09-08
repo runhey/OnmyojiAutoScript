@@ -8,6 +8,7 @@ on:
       - dev
   roles: all
 
+checkout: false
 permissions:
   contents: read
   issues: read
@@ -16,6 +17,7 @@ permissions:
   statuses: read
 
 tools:
+  bash: true
   github:
     toolsets: [default]
     min-integrity: none
