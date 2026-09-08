@@ -331,7 +331,6 @@ class ScriptTask(GeneralBattle, GeneralInvite, GeneralBuff, GeneralRoom, GameUi,
 
 
     @battle_wait_strategy()
-    # @battle_wait_strategy(options={'success': {}})
     def battle_wait(self, *args, **kwargs):
         return self.battle_wait_with_strategy(*args, **kwargs)
 

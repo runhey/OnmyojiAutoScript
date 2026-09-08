@@ -20,7 +20,7 @@ from tasks.Component.GeneralBattle.battle_wait import BattleWait
 from module.logger import logger
 
 
-class GeneralBattle(BattleWait, GeneralBuff, GeneralBattleAssets):
+class GeneralBattle(BattleWait, GeneralBuff):
     """
     使用这个通用的战斗必须要求这个任务的config有config_general_battle
     """

@@ -194,3 +194,18 @@ class RuleClickExclude(RuleClick):
         if self.strategy == 'rejection':
             return self._coord_rejection(self.distribution)
         return self._coord_complement(self.distribution)
+
+    def coord_in_excluded(self, areas: list[str] | None = None) -> tuple:
+        """Return a random coordinate inside one of the named excluded areas."""
+        if not areas:
+            areas = ['C_END_1_1', 'C_END_1_2', 'C_END_1_3', 'C_END_1_4', 'C_END_1_5', 'C_END_1_6',
+                     'C_END_2_1', 'C_END_2_2', 'C_END_2_3', 'C_END_2_4', 'C_END_2_5', 'C_END_2_6']
+        area_names = {area.casefold() for area in areas}
+        matched = []
+        for click in self.clicks:
+            names = {str(click), click.name, click.name.upper(), f'C_{click.name.upper()}'}
+            if area_names.intersection(name.casefold() for name in names):
+                matched.append(click)
+        if not matched:
+            raise ValueError(f'No excluded click matches areas: {areas!r}')
+        return random.choice(matched).coord()

@@ -186,8 +186,17 @@ def test_dynamic_override_is_only_valid_for_the_current_call():
 # 验证单层装饰器保存自己的 options，with_options() 只在上下文内临时覆盖，退出后恢复。
 def test_decorator_options_and_with_options_are_scoped_to_the_current_call():
     received_options = []
-    decorator_options = {'completion': {'source': 'decorator'}}
-    context_options = {'completion': {'source': 'with'}}
+    decorator_options = {
+        'completion': {'source': 'decorator'},
+        'success': {'excludes': ['C_REWARD_1']},
+    }
+    context_options = {
+        'success': {'excludes': ['C_END_MESSAGE_RIGHT_TOP']},
+    }
+
+    strategy = battle_wait_strategy(
+        'setup_record', 'completion_record', options=decorator_options
+    )
 
     class OptionBattleWait(BattleWait):
         def screenshot(self):
@@ -200,7 +209,7 @@ def test_decorator_options_and_with_options_are_scoped_to_the_current_call():
             received_options.append(bw_ctx.options)
             return HookSignal.DONE
 
-        @battle_wait_strategy('setup_record', 'completion_record', options=decorator_options)
+        @strategy
         def battle_wait(self, *args, **kwargs):
             return self.battle_wait_with_strategy(*args, **kwargs)
 
@@ -209,9 +218,16 @@ def test_decorator_options_and_with_options_are_scoped_to_the_current_call():
     assert battle_wait.battle_wait() is True
     assert received_options[-1] == decorator_options
 
-    with battle_wait_strategy().with_options(context_options):
+    with strategy.with_options(context_options):
         assert battle_wait.battle_wait() is True
-        assert received_options[-1] == context_options
+        assert received_options[-1] == {
+            'completion': {'source': 'decorator'},
+            'success': {'excludes': ['C_END_MESSAGE_RIGHT_TOP']},
+        }
+        strategy_text = str(strategy)
+        assert 'options=' in strategy_text
+        assert 'C_END_MESSAGE_RIGHT_TOP' in strategy_text
 
     assert battle_wait.battle_wait() is True
     assert received_options[-1] == decorator_options
+    assert 'C_REWARD_1' in str(strategy)

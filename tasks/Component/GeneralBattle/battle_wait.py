@@ -14,6 +14,7 @@ from module.base.timer import Timer
 from module.atom.click import RuleClickExclude
 
 from tasks.base_task import BaseTask
+from tasks.Component.GeneralBattle.assets import GeneralBattleAssets
 
 
 P = ParamSpec('P')
@@ -194,7 +195,14 @@ class battle_wait_strategy:
     首次装饰 func 初始化 battle_wait_plan
     """
     battle_wait_plan: BattleWaitPlan = None
-    options: dict[str: dict] = None
+    options: dict[str: dict] = {
+        'success': {
+            'reward_exclude_click_1': ['C_END_MESSAGE_RIGHT_TOP', 'C_END_BUFF_AREA_1', 'C_END_BUFF_AREA_2', 'C_END_SOUL_RECORD', 'C_END_SOUL_DETAILS',],
+            'reward_exclude_click_2': ['C_END_MESSAGE_RIGHT_TOP', 'C_END_BUFF_AREA_1', 'C_END_BUFF_AREA_2', 'C_END_SOUL_RECORD', 'C_END_SOUL_DETAILS',
+                                       'C_END_1_1', 'C_END_1_2', 'C_END_1_3', 'C_END_1_4', 'C_END_1_5', 'C_END_1_6',
+                                       ]
+        }
+    }
 
 
     def __init__(self, *arg, **kwargs):
@@ -207,8 +215,7 @@ class battle_wait_strategy:
                     raise
                 if not isinstance(value, dict):
                     raise TypeError(f'temp_options must be a dict, got {self._temp_options!r}')
-            if battle_wait_strategy.options is None:
-                battle_wait_strategy.options = self._temp_options
+            battle_wait_strategy.options.update(self._temp_options)
 
         self._temp_battle_wait_plan = None
         if battle_wait_strategy.battle_wait_plan is None:
@@ -227,11 +234,14 @@ class battle_wait_strategy:
 
     def __exit__(self, *exc):
         battle_wait_strategy.battle_wait_plan = self._previous_plan
+        self._temp_options = None
         return False
 
     def __str__(self):
         temp_plan = getattr(self, '_temp_battle_wait_plan', None)
         default_plan = getattr(self, 'battle_wait_plan', None)
+        options = dict(battle_wait_strategy.options or {})
+        options.update(self._temp_options or {})
 
         if temp_plan is not None:
             plan = temp_plan
@@ -241,11 +251,12 @@ class battle_wait_strategy:
             scope = 'decorator'
 
         if plan is None:
-            return f'{type(self).__name__}(plan=None)'
+            return f'{type(self).__name__}(options={options}, plan=None)'
 
         return (
             f'{type(self).__name__}('
             f'scope={scope}, '
+            f'options={options}, '
             f'plan=\n{plan}'
             f')'
         )
@@ -277,9 +288,10 @@ class battle_wait_strategy:
             #     'battle_wait_plan',
             #     self.battle_wait_plan,
             # )
-            options = self.options if self.options is not None else battle_wait_strategy.options
+            options = dict(battle_wait_strategy.options or {})
+            options.update(self._temp_options or {})
             return func(owner, battle_wait_plan=current_plan, options=options) \
-                if options is not None else func(owner, battle_wait_plan=current_plan)
+                if options else func(owner, battle_wait_plan=current_plan)
 
         return inner
 
@@ -294,30 +306,26 @@ class battle_wait_strategy:
         # 先装饰器, 后临时变量
         if battle_wait_strategy.options is None:
             battle_wait_strategy.options = options
+            self._temp_options = None
         else:
             self._temp_options = options
         return self
 
 
-class BattleWait(BaseTask):
-    # build in
+class BattleWait(BaseTask, GeneralBattleAssets):
+
     # ------------------------------------------------------------------------------------------------------------------
-    # @property
-    # def reward_exclude_click(self):
-    #     if not hasattr(self, '_reward_exclude_click'):
-    #         self._reward_exclude_click = RuleClickExclude(
-    #             [self.C_REWARD_1, self.C_REWARD_2, self.C_REWARD_3]
-    #         )
-    #     return self._reward_exclude_click
     @cached_property
     def exclude_button_stage_1(self):
         return ['C_END_MESSAGE_RIGHT_TOP', 'C_END_BUFF_AREA_1', 'C_END_BUFF_AREA_2',
-                'C_END_SOUL_RECORD', 'C_END_SOUL_DETAILS', 'C_END_FRIENDS_1'
+                'C_END_SOUL_RECORD', 'C_END_SOUL_DETAILS',
                 ]
 
     @cached_property
     def exclude_button_stage_2(self):
-        return []
+        return ['C_END_MESSAGE_RIGHT_TOP', 'C_END_BUFF_AREA_1', 'C_END_BUFF_AREA_2', 'C_END_SOUL_RECORD', 'C_END_SOUL_DETAILS',
+                'C_END_1_1', 'C_END_1_2', 'C_END_1_3', 'C_END_1_4', 'C_END_1_5', 'C_END_1_6',
+                ]
 
     def reward_exclude_click(self, areas: list[str] = None, name: str = 'success_exclude_click') -> RuleClickExclude:
         inputs = []
@@ -363,11 +371,10 @@ class BattleWait(BaseTask):
         return HookSignal.CONTINUE
 
     def _bw_interrupt_default(self, bw_ctx: BattleWaitContext) -> HookSignal:
+        # 比如 御魂溢出
         return HookSignal.CONTINUE
 
     def _bw_success_default(self, bw_ctx: BattleWaitContext) -> HookSignal:
-
-
         if self.appear_then_click(self.I_WIN, interval=0.8):
             self.click(self._reward_exclude_click_1)
             return HookSignal.CONTINUE
@@ -384,6 +391,10 @@ class BattleWait(BaseTask):
         while 1:
             self.screenshot()
 
+            # 不小心点到了具体的奖励，他会弹出这个物品的详细描述 里面必定包含有“获取途径”
+            if self.appear(self.I_END_FIX_1) or self.appear(self.I_END_FIX_2):
+                self.click(self.C_REWARD_2, interval=1.5)
+
             _appear_ghost, _appear_reward, _appear_gold, _appear_skin = (
                 self.appear(self.I_GREED_GHOST, threshold=0.6),
                 self.appear(self.I_REWARD),
@@ -392,7 +403,13 @@ class BattleWait(BaseTask):
             )
             # logger.info(f'_appear_ghost: {_appear_ghost} _appear_reward: {_appear_reward} _appear_gold: {_appear_gold} _appear_skin: {_appear_skin}')
             if any([_appear_ghost, _appear_reward, _appear_gold, _appear_skin]):
+                if random.random() < 0.02:
+                    # 有一定的概率专门点击具体的奖励物品
+                    x, y = self._reward_exclude_click_2.coord_in_excluded(None)
+                    self.device.click(x=x, y=y, control_name='reward_item')
+                    continue
                 self.click(self._reward_exclude_click_2, interval=1.5)
+                pass
             else:
                 logger.info('Get all reward')
                 bw_ctx.success = True
@@ -409,8 +426,8 @@ class BattleWait(BaseTask):
             logger.warning('False battle')
             self.ui_click_until_disappear(self.I_FALSE)
             bw_ctx.completion = True
-            return True
-        return True
+            return HookSignal.CONTINUE
+        return HookSignal.CONTINUE
 
     def _bw_idle_default(self, bw_ctx: BattleWaitContext) -> HookSignal:
         return HookSignal.CONTINUE
@@ -478,36 +495,6 @@ class BattleWait(BaseTask):
                 break
         return HookSignal.CONTINUE
 
-
-    # def _bw_idle_random_click(self, bw_ctx: BattleWaitContext):
-    #     if 0 <= random.randint(0, 500) <= 3:  # 百分之4的概率
-    #         rand_type = random.randint(0, 2)
-    #         match rand_type:
-    #             case 0:
-    #                 self.click(self.C_RANDOM_CLICK, interval=20)
-    #             case 1:
-    #                 self.swipe(self.S_BATTLE_RANDOM_LEFT, interval=20)
-    #             case 2:
-    #                 self.swipe(self.S_BATTLE_RANDOM_RIGHT, interval=20)
-    #         # 重新设置为长战斗
-    #         # self.device.stuck_record_add('BATTLE_STATUS_S')
-    #     else:
-    #         time.sleep(0.4)  # 这样的好像不对
-    #
-    # def _bw_random_click(self, bw_ctx: BattleWaitContext):
-    #     if 0 <= random.randint(0, 500) <= 3:  # 百分之4的概率
-    #         rand_type = random.randint(0, 2)
-    #         match rand_type:
-    #             case 0:
-    #                 self.click(self.C_RANDOM_CLICK, interval=20)
-    #             case 1:
-    #                 self.swipe(self.S_BATTLE_RANDOM_LEFT, interval=20)
-    #             case 2:
-    #                 self.swipe(self.S_BATTLE_RANDOM_RIGHT, interval=20)
-    #         # 重新设置为长战斗
-    #         # self.device.stuck_record_add('BATTLE_STATUS_S')
-    #     else:
-    #         time.sleep(0.4)  # 这样的好像不对
 
     # ------------------------------------------------------------------------------------------------------------------
     def battle_wait_with_strategy(self, *args, **kwargs) -> bool:
@@ -594,7 +581,6 @@ if __name__ == '__main__':
     test_battle_wait.battle_wait(random_click_swipt_enable=1)
     with battle_wait_strategy(sequence='completion > interrupt > success > failure > idle').with_options(options={"setup": {"11": "11"}}):
         test_battle_wait.battle_wait()
-
 
 
 
