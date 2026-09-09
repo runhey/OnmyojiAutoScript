@@ -520,8 +520,8 @@ class BattleWait(BaseTask, GeneralBattleAssets):
             self.screenshot()
 
             # 不小心点到了具体的奖励，他会弹出这个物品的详细描述 里面必定包含有“获取途径”
-            if self.appear(self.I_END_FIX_1) or self.appear(self.I_END_FIX_2):
-                self.click(self.C_REWARD_2, interval=1.5)
+            if self.appear(self.I_END_FIX_1) or self.appear(self.I_END_FIX_2) or self.appear(self.I_END_FIX_3):
+                self.click(self.C_REWARD_2, interval=2.5)
                 continue
 
             if self.appear(self.I_UI_REWARD):
@@ -533,7 +533,7 @@ class BattleWait(BaseTask, GeneralBattleAssets):
                 self.click(self.exclude_click_activity, interval=1.5)
             elif not self.appear(self.I_END_FIX_2):
                 self.screenshot()
-                if self.appear(self.I_UI_REWARD) or self.appear(self.I_END_FIX_2):
+                if any([self.appear(self.I_UI_REWARD), self.appear(self.I_END_FIX_1), self.appear(self.I_END_FIX_2), self.appear(self.I_END_FIX_3)]):
                     continue
                 logger.info('Get all reward')
                 bw_ctx.success = True

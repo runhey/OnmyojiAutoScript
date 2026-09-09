@@ -2,10 +2,10 @@
   {
     "itemName": "end_fix_1",
     "imageName": "gw_end_fix_1.png",
-    "roiFront": "896,251,218,64",
+    "roiFront": "721,119,89,58",
     "roiBack": "119,66,1136,620",
     "method": "Template matching",
-    "threshold": 0.8,
+    "threshold": 0.85,
     "description": "description"
   },
   {
@@ -14,7 +14,16 @@
     "roiFront": "800,251,100,33",
     "roiBack": "32,90,1137,547",
     "method": "Template matching",
-    "threshold": 0.7,
+    "threshold": 0.85,
     "description": "description"
+  },
+  {
+    "itemName": "end_fix_3",
+    "imageName": "gw_end_fix_3.png",
+    "roiFront": "871,278,150,49",
+    "roiBack": "119,66,1136,620",
+    "method": "Template matching",
+    "threshold": 0.85,
+    "description": ""
   }
 ]
