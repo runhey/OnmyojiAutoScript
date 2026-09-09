@@ -38,7 +38,13 @@ class GeneralBattle(BattleWait, GeneralBuff):
         self.current_count += 1
         logger.info(f"Current count: {self.current_count}")
         # 战前设置
-        self.battle_before(buff, config)
+        if not self.battle_before(buff, config):
+            # battle_before 返回 False: 超时内既未进入战斗、也未成功点击准备按钮。
+            # 此时若继续调用 battle_wait, 会因永远等不到胜负画面而无限空等,
+            # 表现为战斗长时间不开始、脚本无任何操作。
+            logger.warning('battle_before failed: not in real battle within timeout, '
+                           'skip this battle and return False')
+            return False
         # 绿标
         if self.is_in_battle(False):
             self.green_mark(config.green_enable, config.green_mark)
