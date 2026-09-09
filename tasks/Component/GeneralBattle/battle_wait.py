@@ -502,7 +502,7 @@ class BattleWait(BaseTask, GeneralBattleAssets):
             if click is None:
                 raise ValueError(f'Unknown success exclusion click: {area!r}')
             inputs.append(click)
-        return RuleClickExclude(inputs, name='exclude_click_activity')
+        return RuleClickExclude(inputs, name='exclude_click_activity', strategy='rejection', distribution='uniform')
 
     def _bw_success_activity(self, bw_ctx: BattleWaitContext) -> HookSignal:
         if not self.appear(self.I_UI_REWARD):
@@ -523,7 +523,7 @@ class BattleWait(BaseTask, GeneralBattleAssets):
             if self.appear(self.I_UI_REWARD):
                 if random.random() < 0.02:
                     # 有一定的概率专门点击具体的奖励物品
-                    x, y = self.exclude_click_activity.coord_in_excluded(None)
+                    x, y = self.exclude_click_activity.coord_in_excluded(['C_END_ACTIVITY_REWARD'])
                     self.device.click(x=x, y=y, control_name='reward_item')
                     continue
                 self.click(self.exclude_click_activity, interval=1.5)

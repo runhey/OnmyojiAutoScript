@@ -196,7 +196,9 @@ class RuleClickExclude(RuleClick):
         return self._coord_complement(self.distribution)
 
     def coord_in_excluded(self, areas: list[str] | None = None) -> tuple:
-        """Return a random coordinate inside one of the named excluded areas."""
+        """
+        
+        """
         if not areas:
             areas = ['C_END_1_1', 'C_END_1_2', 'C_END_1_3', 'C_END_1_4', 'C_END_1_5', 'C_END_1_6',
                      'C_END_2_1', 'C_END_2_2', 'C_END_2_3', 'C_END_2_4', 'C_END_2_5', 'C_END_2_6']
