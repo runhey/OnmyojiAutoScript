@@ -505,6 +505,9 @@ class BattleWait(BaseTask, GeneralBattleAssets):
         return RuleClickExclude(inputs, name='exclude_click_activity', strategy='rejection', distribution='uniform')
 
     def _bw_success_activity(self, bw_ctx: BattleWaitContext) -> HookSignal:
+        """
+        战斗结算是有 “获得奖励” 的适用
+        """
         if not self.appear(self.I_UI_REWARD):
             return HookSignal.CONTINUE
         self.screenshot()
@@ -527,7 +530,10 @@ class BattleWait(BaseTask, GeneralBattleAssets):
                     self.device.click(x=x, y=y, control_name='reward_item')
                     continue
                 self.click(self.exclude_click_activity, interval=1.5)
-            else:
+            elif not self.appear(self.I_END_FIX_2):
+                self.screenshot()
+                if self.appear(self.I_UI_REWARD) or self.appear(self.I_END_FIX_2):
+                    continue
                 logger.info('Get all reward')
                 bw_ctx.success = True
                 bw_ctx.completion = True

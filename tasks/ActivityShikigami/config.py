@@ -36,25 +36,25 @@ def check_soul_by_ocr(enable_switch: bool, group_team: str, label: str):
 
 
 class SwitchSoulConfig(BaseModel):
-    enable_switch_pass: bool = Field(default=False, description='是否切换门票爬塔御魂')
-    pass_group_team: str = Field(default='-1,-1', description='组1-7,队伍1-4 中间用英文,分隔')
-    enable_switch_pass_by_name: bool = Field(default=False, description='是否通过ocr切换御魂')
-    pass_group_team_name: str = Field(default='', description='组名,队伍名 中间用英文,分隔')
+    enable_switch_pass: bool = Field(default=False, description='enable_switch_pass_help')
+    pass_group_team: str = Field(default='-1,-1', description='pass_group_team_help')
+    enable_switch_pass_by_name: bool = Field(default=False, description='enable_switch_pass_by_name_help')
+    pass_group_team_name: str = Field(default='', description='pass_group_team_name_help')
 
-    enable_switch_ap: bool = Field(default=False, description='是否切换体力爬塔御魂')
-    ap_group_team: str = Field(default='-1,-1', description='组1-7,队伍1-4 中间用英文,分隔')
-    enable_switch_ap_by_name: bool = Field(default=False, description='是否通过ocr切换御魂')
-    ap_group_team_name: str = Field(default='', description='组名,队伍名 中间用英文,分隔')
+    enable_switch_ap: bool = Field(default=False, description='enable_switch_ap_help')
+    ap_group_team: str = Field(default='-1,-1', description='ap_group_team_help')
+    enable_switch_ap_by_name: bool = Field(default=False, description='enable_switch_ap_by_name_help')
+    ap_group_team_name: str = Field(default='', description='ap_group_team_name_help')
 
-    enable_switch_boss: bool = Field(default=False, description='是否切换boss爬塔御魂')
-    boss_group_team: str = Field(default='-1,-1', description='组1-7,队伍1-4 中间用英文,分隔')
-    enable_switch_boss_by_name: bool = Field(default=False, description='是否通过ocr切换御魂')
-    boss_group_team_name: str = Field(default='', description='组名,队伍名 中间用英文,分隔')
+    enable_switch_boss: bool = Field(default=False, description='enable_switch_boss_help')
+    boss_group_team: str = Field(default='-1,-1', description='boss_group_team_help')
+    enable_switch_boss_by_name: bool = Field(default=False, description='enable_switch_boss_by_name_help')
+    boss_group_team_name: str = Field(default='', description='boss_group_team_name_help')
 
-    enable_switch_ap100: bool = Field(default=False, description='是否切换100体爬塔御魂')
-    ap100_group_team: str = Field(default='-1,-1', description='组1-7,队伍1-4 中间用英文,分隔')
-    enable_switch_ap100_by_name: bool = Field(default=False, description='是否通过ocr切换御魂')
-    ap100_group_team_name: str = Field(default='', description='组名,队伍名 中间用英文,分隔')
+    enable_switch_ap100: bool = Field(default=False, description='enable_switch_ap100_help')
+    ap100_group_team: str = Field(default='-1,-1', description='ap100_group_team_help')
+    enable_switch_ap100_by_name: bool = Field(default=False, description='enable_switch_ap100_by_name_help')
+    ap100_group_team_name: str = Field(default='', description='ap100_group_team_name_help')
 
     # @model_validator(mode='after')
     def validate_switch_soul(self):
@@ -75,25 +75,25 @@ class SwitchSoulConfig(BaseModel):
 
 
 class GeneralBattleConfig(BaseModel):
-    enable_pass_preset: bool = Field(default=False, description='是否切换门票爬塔预设, 仅数字切换御魂可用')
-    enable_pass_green: bool = Field(default=False, description='是否开启门票爬塔绿标')
-    pass_green_mark: GreenMarkType = Field(default=GreenMarkType.GREEN_LEFT1, description='门票爬塔绿标位置')
-    enable_pass_anti_detect: bool = Field(default=False, description='门票爬塔战斗过程是否随机点击或滑动')
+    enable_pass_preset: bool = Field(default=False, description='enable_pass_preset_help')
+    enable_pass_green: bool = Field(default=False, description='enable_pass_green_help')
+    pass_green_mark: GreenMarkType = Field(default=GreenMarkType.GREEN_LEFT1, description='pass_green_mark_help')
+    enable_pass_anti_detect: bool = Field(default=False, description='enable_pass_anti_detect_help')
 
-    enable_ap_preset: bool = Field(default=False, description='是否切换体力爬塔预设, 仅数字切换御魂可用')
-    enable_ap_green: bool = Field(default=False, description='是否开启体力爬塔绿标')
-    ap_green_mark: GreenMarkType = Field(default=GreenMarkType.GREEN_LEFT1, description='体力爬塔绿标位置')
-    enable_ap_anti_detect: bool = Field(default=False, description='体力爬塔战斗过程是否随机点击或滑动')
+    enable_ap_preset: bool = Field(default=False, description='enable_ap_preset_help')
+    enable_ap_green: bool = Field(default=False, description='enable_ap_green_help')
+    ap_green_mark: GreenMarkType = Field(default=GreenMarkType.GREEN_LEFT1, description='ap_green_mark_help')
+    enable_ap_anti_detect: bool = Field(default=False, description='enable_ap_anti_detect_help')
 
-    enable_boss_preset: bool = Field(default=False, description='是否切换boss爬塔预设, 仅数字切换御魂可用')
-    enable_boss_green: bool = Field(default=False, description='是否开启boss爬塔绿标')
-    boss_green_mark: GreenMarkType = Field(default=GreenMarkType.GREEN_LEFT1, description='boss爬塔绿标位置')
-    enable_boss_anti_detect: bool = Field(default=False, description='boss爬塔战斗过程是否随机点击或滑动')
+    enable_boss_preset: bool = Field(default=False, description='enable_boss_preset_help')
+    enable_boss_green: bool = Field(default=False, description='enable_boss_green_help')
+    boss_green_mark: GreenMarkType = Field(default=GreenMarkType.GREEN_LEFT1, description='boss_green_mark_help')
+    enable_boss_anti_detect: bool = Field(default=False, description='enable_boss_anti_detect_help')
 
-    enable_ap100_preset: bool = Field(default=False, description='是否切换100体爬塔预设, 仅数字切换御魂可用')
-    enable_ap100_green: bool = Field(default=False, description='是否开启100体爬塔绿标')
-    ap100_green_mark: GreenMarkType = Field(default=GreenMarkType.GREEN_LEFT1, description='100体爬塔绿标位置')
-    enable_ap100_anti_detect: bool = Field(default=False, description='100体爬塔战斗过程是否随机点击或滑动')
+    enable_ap100_preset: bool = Field(default=False, description='enable_ap100_preset_help')
+    enable_ap100_green: bool = Field(default=False, description='enable_ap100_green_help')
+    ap100_green_mark: GreenMarkType = Field(default=GreenMarkType.GREEN_LEFT1, description='ap100_green_mark_help')
+    enable_ap100_anti_detect: bool = Field(default=False, description='enable_ap100_anti_detect_help')
 
 
 class ActivityShikigami(ConfigBase):
