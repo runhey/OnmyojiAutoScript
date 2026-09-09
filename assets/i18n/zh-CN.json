@@ -134,5 +134,7 @@
   "ap100_green_mark": "100体爬塔绿标位置",
   "ap100_green_mark_help": "100体爬塔绿标位置",
   "enable_ap100_anti_detect": "100体爬塔防检测",
-  "enable_ap100_anti_detect_help": "100体爬塔战斗过程是否随机点击或滑动"
+  "enable_ap100_anti_detect_help": "100体爬塔战斗过程是否随机点击或滑动",
+  "costume_battle_15": "灵狐寄愿",
+  "costume_shikigami_12": "拾光之窗"
 }

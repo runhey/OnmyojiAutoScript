@@ -46,7 +46,7 @@ battle_theme_model = {
         'I_WIN': f'I_WIN_{i}', # 已知：8，12，13，14
         'I_DE_WIN': f'I_DE_WIN_{i}', # 已知：8，12，13，14
         'I_FALSE': f'I_FALSE_{i}' # 已知：8，12，13，14
-    } for i in range(1, 15)
+    } for i in range(1, 16)
 }
 
 # 幕间主题
@@ -69,7 +69,7 @@ shikigami_costume_model = {
         'I_ST_SOULS': f'I_ST_SOULS_{i}',
         'I_ST_REPLACE': f'I_ST_REPLACE_{i}',
     }
-    for i in range(1, 12)  # 目前支持 COSTUME_SHIKIGAMI_1 到 COSTUME_SHIKIGAMI_10
+    for i in range(1, 13)  # 目前支持 COSTUME_SHIKIGAMI_1 到 COSTUME_SHIKIGAMI_12
 }
 
 class CostumeBase:
