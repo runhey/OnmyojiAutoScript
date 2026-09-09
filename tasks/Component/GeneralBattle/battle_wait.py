@@ -409,7 +409,6 @@ class BattleWait(BaseTask, GeneralBattleAssets):
                     self.device.click(x=x, y=y, control_name='reward_item')
                     continue
                 self.click(self._reward_exclude_click_2, interval=1.5)
-                pass
             else:
                 logger.info('Get all reward')
                 bw_ctx.success = True
@@ -490,6 +489,50 @@ class BattleWait(BaseTask, GeneralBattleAssets):
                 bw_ctx.success = True
                 bw_ctx.completion = True
                 return HookSignal.CONTINUE
+            if timer.reached_and_reset():
+                logger.warning('battle ')
+                break
+        return HookSignal.CONTINUE
+
+    @cached_property
+    def exclude_click_activity(self, areas: list[str] = None) -> RuleClickExclude:
+        inputs = []
+        for area in ['C_END_MESSAGE_RIGHT_TOP', 'C_END_ACTIVITY_REWARD']:
+            click = getattr(self, area, None)
+            if click is None:
+                raise ValueError(f'Unknown success exclusion click: {area!r}')
+            inputs.append(click)
+        return RuleClickExclude(inputs, name='exclude_click_activity')
+
+    def _bw_success_activity(self, bw_ctx: BattleWaitContext) -> HookSignal:
+        if not self.appear(self.I_UI_REWARD):
+            return HookSignal.CONTINUE
+        self.screenshot()
+        if not self.appear(self.I_UI_REWARD):
+            return HookSignal.CONTINUE
+
+        logger.info('Win battle')
+        timer = Timer(20).start()
+        while 1:
+            self.screenshot()
+
+            # 不小心点到了具体的奖励，他会弹出这个物品的详细描述 里面必定包含有“获取途径”
+            if self.appear(self.I_END_FIX_1) or self.appear(self.I_END_FIX_2):
+                self.click(self.C_REWARD_2, interval=1.5)
+
+            if self.appear(self.I_UI_REWARD):
+                if random.random() < 0.02:
+                    # 有一定的概率专门点击具体的奖励物品
+                    x, y = self.exclude_click_activity.coord_in_excluded(None)
+                    self.device.click(x=x, y=y, control_name='reward_item')
+                    continue
+                self.click(self.exclude_click_activity, interval=1.5)
+            else:
+                logger.info('Get all reward')
+                bw_ctx.success = True
+                bw_ctx.completion = True
+                return HookSignal.DONE
+
             if timer.reached_and_reset():
                 logger.warning('battle ')
                 break
