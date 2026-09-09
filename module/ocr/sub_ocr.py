@@ -110,6 +110,12 @@ class Digit(Single):
         result = [char for char in result if char.isdigit()]
         result = ''.join(result)
 
+        # 如果结果全部是 '0' 且长度 >= 2，视为 OCR 错误（例如 900 → 00），强制设为 "1"
+        if result and all(ch == '0' for ch in result) and len(result) >= 2:
+            logger.warning(f'OCR [{self.name} {result}] all-zero with length>=2, force set to "1"')
+            result = '1'
+
+
         prev = result
         result = int(result) if result else 0
         if str(result) != prev:

@@ -522,6 +522,7 @@ class BattleWait(BaseTask, GeneralBattleAssets):
             # 不小心点到了具体的奖励，他会弹出这个物品的详细描述 里面必定包含有“获取途径”
             if self.appear(self.I_END_FIX_1) or self.appear(self.I_END_FIX_2):
                 self.click(self.C_REWARD_2, interval=1.5)
+                continue
 
             if self.appear(self.I_UI_REWARD):
                 if random.random() < 0.02:
