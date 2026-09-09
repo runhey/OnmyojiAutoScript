@@ -22,6 +22,7 @@ class MainType(str, Enum):
     COSTUME_MAIN_13 = 'costume_main_13'  # 云景阆苑
     COSTUME_MAIN_14 = 'costume_main_14'  # 雪月华庭
     COSTUME_MAIN_15 = 'costume_main_15'  # 茨心乐园
+    COSTUME_MAIN_16 = 'costume_main_16'  # 狐栖归处
 
 # 结界皮肤
 class RealmType(str, Enum):
@@ -93,7 +94,6 @@ class CostumeConfig(BaseModel):
         if v and v not in RealmType._value2member_map_:
             return RealmType.COSTUME_REALM_DEFAULT
         return v
-
 
 
 
