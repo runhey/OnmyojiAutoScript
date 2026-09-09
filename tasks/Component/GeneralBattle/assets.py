@@ -166,3 +166,85 @@ class GeneralBattleAssets:
 	S_BATTLE_RANDOM_RIGHT = RuleSwipe(roi_front=(719,138,417,392), roi_back=(237,163,387,394), mode="default", name="battle_random_right")
 
 
+	# Click Rule Assets
+	# 右上角的聊天信息 
+	C_END_MESSAGE_RIGHT_TOP = RuleClick(roi_front=(846,4,404,34), roi_back=(846,4,404,34), name="end_message_right_top")
+	# description 
+	C_END_BUFF_AREA_1 = RuleClick(roi_front=(150,638,295,41), roi_back=(150,638,295,41), name="end_buff_area_1")
+	# description 
+	C_END_BUFF_AREA_2 = RuleClick(roi_front=(457,635,273,43), roi_back=(457,635,273,43), name="end_buff_area_2")
+	# 給地鬼的 
+	C_END_AREA_BOSS = RuleClick(roi_front=(1093,550,127,120), roi_back=(1093,550,127,120), name="end_area_boss")
+	# description 
+	C_END_BUFF_AREA_3 = RuleClick(roi_front=(764,636,282,42), roi_back=(764,636,282,42), name="end_buff_area_3")
+	# 记录通关时间的按钮 
+	C_END_SOUL_RECORD = RuleClick(roi_front=(317,561,53,49), roi_back=(317,561,53,49), name="end_soul_record")
+	# 战斗数据详细 
+	C_END_SOUL_DETAILS = RuleClick(roi_front=(383,559,52,49), roi_back=(383,559,52,49), name="end_soul_details")
+	# 单人好友头像 
+	C_END_FRIENDS_1 = RuleClick(roi_front=(581,402,118,135), roi_back=(581,402,118,135), name="end_friends_1")
+	# 多人好友头像第一个 
+	C_END_FRIENDS_21 = RuleClick(roi_front=(0,0,100,100), roi_back=(0,0,100,100), name="end_friends_21")
+	# description 
+	C_END_FRIENDS_22 = RuleClick(roi_front=(0,0,100,100), roi_back=(0,0,100,100), name="end_friends_22")
+	# description 
+	C_END_FRIENDS_31 = RuleClick(roi_front=(0,0,100,100), roi_back=(0,0,100,100), name="end_friends_31")
+	# description 
+	C_END_FRIENDS_32 = RuleClick(roi_front=(0,0,100,100), roi_back=(0,0,100,100), name="end_friends_32")
+	# description 
+	C_END_FRIENDS_23 = RuleClick(roi_front=(0,0,100,100), roi_back=(0,0,100,100), name="end_friends_23")
+
+
+	# Click Rule Assets
+	# description 
+	C_END_1_1 = RuleClick(roi_front=(266,175,100,100), roi_back=(266,175,100,100), name="end_1_1")
+	# description 
+	C_END_1_2 = RuleClick(roi_front=(400,174,100,100), roi_back=(400,174,100,100), name="end_1_2")
+	# description 
+	C_END_1_3 = RuleClick(roi_front=(536,173,100,100), roi_back=(536,173,100,100), name="end_1_3")
+	# description 
+	C_END_1_4 = RuleClick(roi_front=(671,173,100,100), roi_back=(671,173,100,100), name="end_1_4")
+	# description 
+	C_END_1_5 = RuleClick(roi_front=(805,174,100,100), roi_back=(805,174,100,100), name="end_1_5")
+	# description 
+	C_END_1_6 = RuleClick(roi_front=(942,175,100,100), roi_back=(942,175,100,100), name="end_1_6")
+	# description 
+	C_END_2_1 = RuleClick(roi_front=(266,310,100,100), roi_back=(266,310,100,100), name="end_2_1")
+	# description 
+	C_END_2_2 = RuleClick(roi_front=(401,310,100,100), roi_back=(401,310,100,100), name="end_2_2")
+	# description 
+	C_END_2_3 = RuleClick(roi_front=(536,309,100,100), roi_back=(536,309,100,100), name="end_2_3")
+	# description 
+	C_END_2_4 = RuleClick(roi_front=(671,311,100,100), roi_back=(671,311,100,100), name="end_2_4")
+	# description 
+	C_END_2_5 = RuleClick(roi_front=(806,310,100,100), roi_back=(806,310,100,100), name="end_2_5")
+	# description 
+	C_END_2_6 = RuleClick(roi_front=(942,312,100,100), roi_back=(942,312,100,100), name="end_2_6")
+	# description 
+	C_END_3_1 = RuleClick(roi_front=(266,444,100,100), roi_back=(266,444,100,100), name="end_3_1")
+	# description 
+	C_END_3_2 = RuleClick(roi_front=(0,0,100,100), roi_back=(0,0,100,100), name="end_3_2")
+	# description 
+	C_END_3_3 = RuleClick(roi_front=(0,0,100,100), roi_back=(0,0,100,100), name="end_3_3")
+	# description 
+	C_END_3_4 = RuleClick(roi_front=(0,0,100,100), roi_back=(0,0,100,100), name="end_3_4")
+	# description 
+	C_END_3_5 = RuleClick(roi_front=(0,0,100,100), roi_back=(0,0,100,100), name="end_3_5")
+	# description 
+	C_END_3_6 = RuleClick(roi_front=(0,0,100,100), roi_back=(0,0,100,100), name="end_3_6")
+	# 其实贪吃鬼这个点了也是没事儿 
+	C_END_GREED = RuleClick(roi_front=(138,16,512,93), roi_back=(138,16,512,93), name="end_greed")
+
+
+	# Click Rule Assets
+	# 获得奖励中间的区域 
+	C_END_ACTIVITY_REWARD = RuleClick(roi_front=(400,250,493,226), roi_back=(401,252,494,230), name="end_activity_reward")
+
+
+	# Image Rule Assets
+	# description 
+	I_END_FIX_1 = RuleImage(roi_front=(896,251,218,64), roi_back=(119,66,1136,620), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralBattle/gw/gw_end_fix_1.png")
+	# description 
+	I_END_FIX_2 = RuleImage(roi_front=(800,251,100,33), roi_back=(32,90,1137,547), threshold=0.7, method="Template matching", file="./tasks/Component/GeneralBattle/gw/gw_end_fix_2.png")
+
+

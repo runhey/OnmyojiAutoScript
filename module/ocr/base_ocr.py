@@ -215,11 +215,12 @@ class BaseCor:
         else:
             return self.keyword == result
 
-    def filter(self, boxed_results: list[BoxedResult], keyword: str=None) -> list or None:
+    def filter(self, boxed_results: list[BoxedResult], keyword: str=None, exact: bool=False) -> list or None:
         """
         使用ocr获取结果后和keyword进行匹配. 返回匹配的index list
         :param keyword: 如果不指定默认适用对象的keyword
         :param boxed_results:
+        :param exact: 是否只匹配完整的单个 OCR 文本
         :return:
         """
         # 首先先将所有的ocr的str顺序拼接起来, 然后再进行匹配
@@ -228,7 +229,10 @@ class BaseCor:
         concatenated_string = "".join(strings)
         if keyword is None:
             keyword = self.keyword
-        if keyword in concatenated_string:
+        if exact:
+            result = [index for index, word in enumerate(strings) if word == keyword]
+            return result or None
+        elif keyword in concatenated_string:
             result = [index for index, word in enumerate(strings) if keyword in word]
         else:
             result = None

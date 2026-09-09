@@ -21,7 +21,7 @@ class NianAssets:
 	# 判断是否在年的界面 
 	I_N_CHECK = RuleImage(roi_front=(793,279,242,246), roi_back=(793,279,242,246), threshold=0.8, method="Template matching", file="./tasks/Nian/nian/nian_n_check.png")
 	# 等待进入，也是关闭按钮 
-	I_N_WAITING = RuleImage(roi_front=(735,28,54,51), roi_back=(735,28,54,51), threshold=0.7, method="Template matching", file="./tasks/Nian/nian/nian_n_waiting.png")
+	I_N_WAITING = RuleImage(roi_front=(825,34,54,51), roi_back=(735,12,202,99), threshold=0.7, method="Template matching", file="./tasks/Nian/nian/nian_n_waiting.png")
 
 
 	# Ocr Rule Assets

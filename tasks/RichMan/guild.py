@@ -67,8 +67,10 @@ class Guild(Buy, GameUi, RichManAssets):
             *([(self.I_GUILD_SKIN, self._guild_skin_ticket)] if con.skin_ticket else []),
         ]
         items_all_done = False
+        swipe_no_progress = 0
         while 1:
             self.screenshot()
+            bought_this_round = False
             for item in items:
                 button, func = item
                 if not self.appear(button):
@@ -80,11 +82,22 @@ class Guild(Buy, GameUi, RichManAssets):
                     if item == items[-1]:
                         items_all_done = True
                     items.remove(item)
+                    bought_this_round = True
+                    swipe_no_progress = 0
                 except ButtonException as e:
                     logger.warning(f'Button {button.name} click failed')
                 break
             if items_all_done:
                 logger.info(f'All items have been purchased {items}')
+                break
+            # 刚购买成功: 先等待界面稳定并重新识别, 视野内还有商品就继续买, 不要急着滑动
+            if bought_this_round:
+                time.sleep(1)
+                continue
+            # 连续多次滑动都没有买到东西, 防止无限滑动触发点击保护
+            swipe_no_progress += 1
+            if swipe_no_progress >= 8:
+                logger.warning(f'Swipe {swipe_no_progress} times without buying, stop guild store')
                 break
             if self.swipe(self.S_GUILD_STORE, interval=1.5):
                 time.sleep(2)

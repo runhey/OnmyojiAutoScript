@@ -13,6 +13,8 @@ from tasks.GameUi.game_ui import GameUi
 from tasks.GameUi.page import page_main, page_awake_zones, page_shikigami_records
 from tasks.EvoZone.assets import EvoZoneAssets
 from tasks.EvoZone.config import EvoZone, UserStatus, KirinType
+from tasks.Component.GeneralBattle.battle_wait import battle_wait_strategy
+
 from module.logger import logger
 from module.exception import TaskEnd
 
@@ -326,6 +328,12 @@ class ScriptTask(GeneralBattle, GeneralInvite, GeneralBuff, GeneralRoom, GameUi,
     def run_wild(self):
         logger.error('Wild mode is not implemented')
         pass
+
+
+    @battle_wait_strategy()
+    def battle_wait(self, *args, **kwargs):
+        return self.battle_wait_with_strategy(*args, **kwargs)
+
 
 
 if __name__ == '__main__':

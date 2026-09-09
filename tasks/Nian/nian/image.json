@@ -20,8 +20,8 @@
   {
     "itemName": "n_waiting",
     "imageName": "nian_n_waiting.png",
-    "roiFront": "735,28,54,51",
-    "roiBack": "735,28,54,51",
+    "roiFront": "825,34,54,51",
+    "roiBack": "735,12,202,99",
     "method": "Template matching",
     "threshold": 0.7,
     "description": "等待进入，也是关闭按钮"

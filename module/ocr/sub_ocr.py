@@ -23,11 +23,12 @@ class Full(BaseCor):
     def after_process(self, result):
         return result
 
-    def ocr_full(self, image, keyword: str=None) -> tuple:
+    def ocr_full(self, image, keyword: str=None, exact: bool=False) -> tuple:
         """
         检测整个图片的文本,并对结果进行过滤。返回的是匹配到的keyword的左边。如果没有匹配到返回(0, 0, 0, 0)
         :param image:
         :param keyword:
+        :param exact: 是否只匹配完整的单个 OCR 文本
         :return:
         """
         if keyword is None:
@@ -37,7 +38,7 @@ class Full(BaseCor):
         if not boxed_results:
             return 0, 0, 0, 0
 
-        index_list = self.filter(boxed_results, keyword)
+        index_list = self.filter(boxed_results, keyword, exact=exact)
         logger.info(f"OCR [{self.name}] detected in {index_list}")
         # 如果一个都没有匹配到
         if not index_list:
@@ -258,4 +259,3 @@ class Quantity(BaseCor):
 if __name__ == '__main__':
     import cv2
     image = cv2.imread(r'E:\Project\OnmyojiAutoScript-assets\jade.png')
-

@@ -28,10 +28,10 @@ class RuleOcr(Digit, DigitCounter, Duration, Single, Full, Quantity):
             case OcrMode.QUANTITY: return Quantity.after_process(self, result)
             case _: return result
 
-    def ocr(self, image, keyword=None):
+    def ocr(self, image, keyword=None, exact: bool=False):
 
         match self.mode:
-            case OcrMode.FULL: return Full.ocr_full(self, image, keyword)
+            case OcrMode.FULL: return Full.ocr_full(self, image, keyword, exact=exact)
             case OcrMode.SINGLE: return Single.ocr_single(self, image)
             case OcrMode.DIGIT: return Digit.ocr_digit(self, image)
             case OcrMode.DIGITCOUNTER: return DigitCounter.ocr_digit_counter(self, image)
@@ -88,4 +88,3 @@ if __name__ == "__main__":
     )
 
     print(rule.ocr_quantity(image))
-

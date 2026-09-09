@@ -11,7 +11,7 @@ class BudokaiTournamentAssets:
 
 
 	# Click Rule Assets
-	# Close cultivation drills boss detail
+	# Close cultivation drills boss detail 
 	C_BOSS_DETAIL_CLOSE = RuleClick(roi_front=(1182,73,47,43), roi_back=(1182,73,47,43), name="boss_detail_close")
 
 

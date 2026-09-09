@@ -289,9 +289,8 @@ class GameUi(BaseTask, GameUiAssets):
                     return False
                 if isinstance(button, list):
                     for idx, btn in enumerate(button):
-                        if attempts_list[idx] >= max_attempts_per_button:
-                            continue
-                        attempt =  self.appear_then_operate(btn, interval=0.8, skip_first_screenshot=False)
+                        click_interval = 2.5 if attempts_list[idx] >= max_attempts_per_button else 0.8
+                        attempt =  self.appear_then_operate(btn, interval=click_interval, skip_first_screenshot=False)
                         if attempt:
                             attempts_list[idx] += 1
                         # 只要第一个成功就跳出

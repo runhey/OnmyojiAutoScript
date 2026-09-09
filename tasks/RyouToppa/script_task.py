@@ -12,6 +12,7 @@ from tasks.Component.config_base import ConfigBase, Time
 from tasks.GameUi.game_ui import GameUi
 from tasks.GameUi.page import page_realm_raid, page_main, page_kekkai_toppa, page_shikigami_records
 from tasks.RealmRaid.assets import RealmRaidAssets
+from tasks.Component.GeneralBattle.battle_wait import battle_wait_strategy
 
 from module.logger import logger
 from module.exception import TaskEnd
@@ -326,6 +327,10 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, RyouToppaAssets):
                 time.sleep(random.uniform(0, 0.3))
                 click_failure_count += 1
                 continue
+
+    @battle_wait_strategy()
+    def battle_wait(self, *args, **kwargs):
+        return self.battle_wait_with_strategy(*args, **kwargs)
 
 
 if __name__ == "__main__":

@@ -12,6 +12,7 @@ from tasks.GameUi.page import page_realm_raid, page_main, page_shikigami_records
 from tasks.RealmRaid.assets import RealmRaidAssets
 from tasks.RealmRaid.config import RealmRaid, RaidMode, AttackNumber, WhenAttackFail
 from tasks.Component.SwitchSoul.switch_soul import SwitchSoul
+from tasks.Component.GeneralBattle.battle_wait import battle_wait_strategy
 
 
 from module.logger import logger
@@ -557,8 +558,9 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, RealmRaidAssets):
                          method="Template matching",
                          file="./tasks/RyouToppa/dev/loser_sign_1.png")
 
-    def battle_wait(self, random_click_swipt_enable: bool) -> bool:
-        return self.battle_wait_v2(random_click_swipt_enable=random_click_swipt_enable)
+    @battle_wait_strategy()
+    def battle_wait(self, *args, **kwargs):
+        return self.battle_wait_with_strategy(*args, **kwargs)
 
 
 if __name__ == "__main__":

@@ -1,0 +1,116 @@
+[
+  {
+    "itemName": "end_1_1",
+    "roiFront": "266,175,100,100",
+    "roiBack": "266,175,100,100",
+    "description": "description"
+  },
+  {
+    "itemName": "end_1_2",
+    "roiFront": "400,174,100,100",
+    "roiBack": "400,174,100,100",
+    "description": "description"
+  },
+  {
+    "itemName": "end_1_3",
+    "roiFront": "536,173,100,100",
+    "roiBack": "536,173,100,100",
+    "description": "description"
+  },
+  {
+    "itemName": "end_1_4",
+    "roiFront": "671,173,100,100",
+    "roiBack": "671,173,100,100",
+    "description": "description"
+  },
+  {
+    "itemName": "end_1_5",
+    "roiFront": "805,174,100,100",
+    "roiBack": "805,174,100,100",
+    "description": "description"
+  },
+  {
+    "itemName": "end_1_6",
+    "roiFront": "942,175,100,100",
+    "roiBack": "942,175,100,100",
+    "description": "description"
+  },
+  {
+    "itemName": "end_2_1",
+    "roiFront": "266,310,100,100",
+    "roiBack": "266,310,100,100",
+    "description": "description"
+  },
+  {
+    "itemName": "end_2_2",
+    "roiFront": "401,310,100,100",
+    "roiBack": "401,310,100,100",
+    "description": "description"
+  },
+  {
+    "itemName": "end_2_3",
+    "roiFront": "536,309,100,100",
+    "roiBack": "536,309,100,100",
+    "description": "description"
+  },
+  {
+    "itemName": "end_2_4",
+    "roiFront": "671,311,100,100",
+    "roiBack": "671,311,100,100",
+    "description": "description"
+  },
+  {
+    "itemName": "end_2_5",
+    "roiFront": "806,310,100,100",
+    "roiBack": "806,310,100,100",
+    "description": "description"
+  },
+  {
+    "itemName": "end_2_6",
+    "roiFront": "942,312,100,100",
+    "roiBack": "942,312,100,100",
+    "description": "description"
+  },
+  {
+    "itemName": "end_3_1",
+    "roiFront": "266,444,100,100",
+    "roiBack": "266,444,100,100",
+    "description": "description"
+  },
+  {
+    "itemName": "end_3_2",
+    "roiFront": "0,0,100,100",
+    "roiBack": "0,0,100,100",
+    "description": "description"
+  },
+  {
+    "itemName": "end_3_3",
+    "roiFront": "0,0,100,100",
+    "roiBack": "0,0,100,100",
+    "description": "description"
+  },
+  {
+    "itemName": "end_3_4",
+    "roiFront": "0,0,100,100",
+    "roiBack": "0,0,100,100",
+    "description": "description"
+  },
+  {
+    "itemName": "end_3_5",
+    "roiFront": "0,0,100,100",
+    "roiBack": "0,0,100,100",
+    "description": "description"
+  },
+  {
+    "itemName": "end_3_6",
+    "roiFront": "0,0,100,100",
+    "roiBack": "0,0,100,100",
+    "description": "description"
+  },
+  {
+    "itemName": "end_greed",
+    "roiFront": "138,16,512,93",
+    "roiBack": "138,16,512,93",
+    "description": "其实贪吃鬼这个点了也是没事儿"
+  }
+]

@@ -1,0 +1,20 @@
+[
+  {
+    "itemName": "end_fix_1",
+    "imageName": "gw_end_fix_1.png",
+    "roiFront": "896,251,218,64",
+    "roiBack": "119,66,1136,620",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "end_fix_2",
+    "imageName": "gw_end_fix_2.png",
+    "roiFront": "800,251,100,33",
+    "roiBack": "32,90,1137,547",
+    "method": "Template matching",
+    "threshold": 0.7,
+    "description": "description"
+  }
+]

@@ -1,0 +1,80 @@
+[
+  {
+    "itemName": "end_message_right_top",
+    "roiFront": "846,4,404,34",
+    "roiBack": "846,4,404,34",
+    "description": "右上角的聊天信息"
+  },
+  {
+    "itemName": "end_buff_area_1",
+    "roiFront": "150,638,295,41",
+    "roiBack": "150,638,295,41",
+    "description": "description"
+  },
+  {
+    "itemName": "end_buff_area_2",
+    "roiFront": "457,635,273,43",
+    "roiBack": "457,635,273,43",
+    "description": "description"
+  },
+  {
+    "itemName": "end_area_boss",
+    "roiFront": "1093,550,127,120",
+    "roiBack": "1093,550,127,120",
+    "description": "給地鬼的"
+  },
+  {
+    "itemName": "end_buff_area_3",
+    "roiFront": "764,636,282,42",
+    "roiBack": "764,636,282,42",
+    "description": "description"
+  },
+  {
+    "itemName": "end_soul_record",
+    "roiFront": "317,561,53,49",
+    "roiBack": "317,561,53,49",
+    "description": "记录通关时间的按钮"
+  },
+  {
+    "itemName": "end_soul_details",
+    "roiFront": "383,559,52,49",
+    "roiBack": "383,559,52,49",
+    "description": "战斗数据详细"
+  },
+  {
+    "itemName": "end_friends_1",
+    "roiFront": "581,402,118,135",
+    "roiBack": "581,402,118,135",
+    "description": "单人好友头像"
+  },
+  {
+    "itemName": "end_friends_21",
+    "roiFront": "0,0,100,100",
+    "roiBack": "0,0,100,100",
+    "description": "多人好友头像第一个"
+  },
+  {
+    "itemName": "end_friends_22",
+    "roiFront": "0,0,100,100",
+    "roiBack": "0,0,100,100",
+    "description": "description"
+  },
+  {
+    "itemName": "end_friends_31",
+    "roiFront": "0,0,100,100",
+    "roiBack": "0,0,100,100",
+    "description": "description"
+  },
+  {
+    "itemName": "end_friends_32",
+    "roiFront": "0,0,100,100",
+    "roiBack": "0,0,100,100",
+    "description": "description"
+  },
+  {
+    "itemName": "end_friends_23",
+    "roiFront": "0,0,100,100",
+    "roiBack": "0,0,100,100",
+    "description": "description"
+  }
+]
