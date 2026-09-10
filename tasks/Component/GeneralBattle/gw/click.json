@@ -1,8 +1,8 @@
 [
   {
     "itemName": "end_message_right_top",
-    "roiFront": "846,4,404,34",
-    "roiBack": "846,4,404,34",
+    "roiFront": "848,0,399,46",
+    "roiBack": "849,0,397,45",
     "description": "右上角的聊天信息"
   },
   {

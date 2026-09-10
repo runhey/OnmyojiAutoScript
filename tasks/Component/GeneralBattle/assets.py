@@ -168,7 +168,7 @@ class GeneralBattleAssets:
 
 	# Click Rule Assets
 	# 右上角的聊天信息 
-	C_END_MESSAGE_RIGHT_TOP = RuleClick(roi_front=(846,4,404,34), roi_back=(846,4,404,34), name="end_message_right_top")
+	C_END_MESSAGE_RIGHT_TOP = RuleClick(roi_front=(848,0,399,46), roi_back=(849,0,397,45), name="end_message_right_top")
 	# description 
 	C_END_BUFF_AREA_1 = RuleClick(roi_front=(150,638,295,41), roi_back=(150,638,295,41), name="end_buff_area_1")
 	# description 
@@ -246,6 +246,7 @@ class GeneralBattleAssets:
 	I_END_FIX_1 = RuleImage(roi_front=(721,119,89,58), roi_back=(119,66,1136,620), threshold=0.85, method="Template matching", file="./tasks/Component/GeneralBattle/gw/gw_end_fix_1.png")
 	# description 
 	I_END_FIX_2 = RuleImage(roi_front=(800,251,100,33), roi_back=(32,90,1137,547), threshold=0.85, method="Template matching", file="./tasks/Component/GeneralBattle/gw/gw_end_fix_2.png")
-	#
+	#  
 	I_END_FIX_3 = RuleImage(roi_front=(871,278,150,49), roi_back=(119,66,1136,620), threshold=0.85, method="Template matching", file="./tasks/Component/GeneralBattle/gw/gw_end_fix_3.png")
+
 
