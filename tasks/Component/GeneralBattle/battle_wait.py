@@ -440,7 +440,7 @@ class BattleWait(BaseTask, GeneralBattleAssets):
             return HookSignal.CONTINUE
         if not self.is_in_battle(is_screenshot=False):
             return HookSignal.CONTINUE
-        if random.random() < 0.01 :  # 低概率
+        if random.random() < 0.005 :  # 低概率
             rand_type = random.randint(0, 2)
             match rand_type:
                 case 0:

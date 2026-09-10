@@ -87,10 +87,13 @@ class SoloExploration(BaseExploration):
                 if not self.explore_init:
                     if self._config.exploration_config.auto_rotate == AutoRotate.yes:
                         self.enter_settings_and_do_operations()
-                    self.ui_click(self.I_E_AUTO_ROTATE_OFF, stop=self.I_E_AUTO_ROTATE_ON)
+                    self.ui_click(self.I_E_AUTO_ROTATE_OFF, stop=self.I_E_AUTO_ROTATE_ON, timeout=5)
                     self.explore_init = True
                     continue
                 if self._handle_treasure_box():
+                    continue
+                if (self.appear_then_click(self.I_UI_CONFIRM, interval=1)
+                        or self.appear_then_click(self.I_UI_CONFIRM_SAMLL, interval=1)):
                     continue
                 # 小纸人
                 if self.appear(self.I_BATTLE_REWARD):
