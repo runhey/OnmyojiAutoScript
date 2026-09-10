@@ -50,7 +50,7 @@ class GeneralBattle(BattleWait, GeneralBuff):
         if self.is_in_battle(False):
             self.green_mark(config.green_enable, config.green_mark)
         # 战中设置
-        win = self.battle_wait(config.random_click_swipt_enable)
+        win = self.battle_wait(random_click_swipt_enable=config.random_click_swipt_enable)
         if win:
             return True
         else:

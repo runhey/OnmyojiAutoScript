@@ -435,9 +435,12 @@ class BattleWait(BaseTask, GeneralBattleAssets):
         return HookSignal.CONTINUE
 
     def _bw_randomclick_default(self, bw_ctx: BattleWaitContext) -> HookSignal:
+        done = getattr(bw_ctx, '_bw_randomclick_state', False)
+        if done:
+            return HookSignal.CONTINUE
         if not self.is_in_battle(is_screenshot=False):
             return HookSignal.CONTINUE
-        if 0 <= random.randint(0, 500) <= 20:  # 百分之4的概率
+        if random.random() < 0.01 :  # 低概率
             rand_type = random.randint(0, 2)
             match rand_type:
                 case 0:
@@ -446,6 +449,7 @@ class BattleWait(BaseTask, GeneralBattleAssets):
                     self.swipe(self.S_BATTLE_RANDOM_LEFT, interval=20)
                 case 2:
                     self.swipe(self.S_BATTLE_RANDOM_RIGHT, interval=20)
+            setattr(bw_ctx, f'_bw_randomclick_state', True)
             # 重新设置为长战斗
             # self.device.stuck_record_add('BATTLE_STATUS_S')
         else:
@@ -521,7 +525,9 @@ class BattleWait(BaseTask, GeneralBattleAssets):
 
             # 不小心点到了具体的奖励，他会弹出这个物品的详细描述 里面必定包含有“获取途径”
             if self.appear(self.I_END_FIX_1) or self.appear(self.I_END_FIX_2) or self.appear(self.I_END_FIX_3):
-                self.click(self.C_REWARD_2, interval=2.5)
+                self.screenshot()
+                if self.appear(self.I_END_FIX_1) or self.appear(self.I_END_FIX_2) or self.appear(self.I_END_FIX_3):
+                    self.click(self.C_REWARD_2, interval=2.5)
                 continue
 
             if self.appear(self.I_UI_REWARD):
