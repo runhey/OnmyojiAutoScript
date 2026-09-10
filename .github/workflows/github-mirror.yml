@@ -6,6 +6,8 @@ on:
   push:
     branches:
       - master
+      - dev
+  pull_request:
 name: GitHub-Mirrors
 
 jobs:
