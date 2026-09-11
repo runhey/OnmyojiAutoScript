@@ -198,6 +198,9 @@ class BaseExploration(GameUi, GeneralBattle, GeneralRoom, GeneralInvite, Replace
             if self.is_in_battle():
                 logger.warning('Opening settings failed due to now in battle')
                 return
+            if (self.appear_then_click(self.I_UI_CONFIRM, interval=1)
+                    or self.appear_then_click(self.I_UI_CONFIRM_SAMLL, interval=1)):
+                continue
             if self.click(self.C_CLICK_SETTINGS, interval=2):
                 continue
 
