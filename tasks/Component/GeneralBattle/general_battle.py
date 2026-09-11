@@ -87,7 +87,7 @@ class GeneralBattle(BattleWait, GeneralBuff):
         # 如果没有锁定队伍那么在点击准备后才退出的,退四的话就直接退出
         if not config.lock_team_enable and not exit_four:
             # 点击准备按钮
-            self.wait_until_appear(self.I_PREPARE_HIGHLIGHT)
+            self.wait_until_appear(self.I_PREPARE_HIGHLIGHT, wait_time=5)
             while 1:
                 self.screenshot()
                 if self.appear_then_click(self.I_PREPARE_HIGHLIGHT, interval=1.5):

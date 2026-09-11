@@ -424,6 +424,7 @@ class BattleWait(BaseTask, GeneralBattleAssets):
         if self.appear(self.I_FALSE, threshold=0.8):
             logger.warning('False battle')
             self.ui_click_until_disappear(self.I_FALSE)
+            bw_ctx.success = False
             bw_ctx.completion = True
             return HookSignal.CONTINUE
         return HookSignal.CONTINUE
@@ -609,7 +610,7 @@ class BattleWait(BaseTask, GeneralBattleAssets):
             for handler in handlers:
                 result = handler(bw_ctx)
                 if handler.__name__.startswith('_bw_completion') and result == HookSignal.DONE:
-                    return True
+                    return bw_ctx.success
                 if result == HookSignal.CONTINUE:
                     continue
 
@@ -637,7 +638,6 @@ if __name__ == '__main__':
     test_battle_wait.battle_wait(random_click_swipt_enable=1)
     with battle_wait_strategy(sequence='completion > interrupt > success > failure > idle').with_options(options={"setup": {"11": "11"}}):
         test_battle_wait.battle_wait()
-
 
 
 
