@@ -222,7 +222,8 @@ class ScriptTask(GameUi, Summon, DailyTriflesAssets):
         if self.config.daily_trifles.trifles_config.buy_sushi_count > 0:
             self.run_buy_sushi()
 
-        self.ui_click(self.I_UI_BACK_YELLOW, self.I_CHECK_MALL)
+        if not self.ui_click(self.I_UI_BACK_YELLOW, self.I_ROOM_GIFT, timeout=10):
+            logger.warning('Back to mall confirm timeout, continue to main page')
         self.ui_get_current_page()
         self.ui_goto(page_main)
 

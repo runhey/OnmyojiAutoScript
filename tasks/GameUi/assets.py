@@ -170,8 +170,8 @@ class GameUiAssets:
 	I_CHECK_FRIENDS = RuleImage(roi_front=(27,251,29,47), roi_back=(5,216,86,106), threshold=0.7, method="Template matching", file="./tasks/GameUi/page/page_check_friends.png")
 	# description 
 	I_CHECK_DAILY = RuleImage(roi_front=(28,515,58,62), roi_back=(1,487,154,145), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_check_daily.png")
-	# description 
-	I_CHECK_MALL = RuleImage(roi_front=(147,527,82,82), roi_back=(147,527,82,82), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_check_mall.png")
+	# description 商店主界面确认：使用礼屋入口图标（2026-09-11 更新，旧模板匹配度0.033失效）
+	I_CHECK_MALL = RuleImage(roi_front=(1138,658,52,40), roi_back=(1119,621,103,94), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_check_mall.png")
 	# description 
 	I_CHECK_GUILD = RuleImage(roi_front=(1072,630,49,46), roi_back=(1072,630,49,46), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_check_guild.png")
 	# description 

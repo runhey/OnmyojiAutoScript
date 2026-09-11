@@ -89,7 +89,8 @@ class MallNavbar(GameUi, RichManAssets):
         返回商城
         :return:
         """
-        self.ui_click(self.I_UI_BACK_YELLOW, self.I_CHECK_MALL)
+        if not self.ui_click(self.I_UI_BACK_YELLOW, self.I_CHECK_MALL, timeout=10):
+            logger.warning('Back to mall confirm timeout, continue')
 
     def mall_resource(self, index: int) -> int:
         """
