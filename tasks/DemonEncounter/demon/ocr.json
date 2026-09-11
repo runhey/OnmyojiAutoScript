@@ -10,8 +10,8 @@
   },
   {
     "itemName": "de_challenge_count",
-    "roiFront": "680,68,75,36",
-    "roiBack": "680,68,75,36",
+    "roiFront": "705,68,45,36",
+    "roiBack": "705,68,45,36",
     "mode": "Full",
     "method": "Default",
     "keyword": "",
