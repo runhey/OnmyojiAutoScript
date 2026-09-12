@@ -140,8 +140,6 @@ class RichManAssets:
 	I_ME_RED = RuleImage(roi_front=(847,146,137,129), roi_back=(141,129,864,454), threshold=0.8, method="Template matching", file="./tasks/RichMan/mall/medal/medal_me_red.png")
 	# 破碎的咒符 
 	I_ME_BROKEN = RuleImage(roi_front=(398,144,143,116), roi_back=(146,116,866,475), threshold=0.8, method="Template matching", file="./tasks/RichMan/mall/medal/medal_me_broken.png")
-	# 售罄 OCR：统计勋章商店页面中"售"字（售罄标签）数量，用于核对识别失败的商品是否均为售罄
-	O_SOLD_OUT = RuleOcr(roi=(0,100,1280,500), area=(0,100,1280,500), mode="Full", method="Default", keyword="售", name="medal_sold_out")
 	# 购买检查 
 	I_ME_CHECK_BLACK = RuleImage(roi_front=(593,229,100,100), roi_back=(558,177,202,200), threshold=0.8, method="Template matching", file="./tasks/RichMan/mall/medal/medal_me_check_black.png")
 	# 购买检查 
@@ -150,6 +148,11 @@ class RichManAssets:
 	I_ME_CHECK_AP = RuleImage(roi_front=(590,231,100,100), roi_back=(539,194,189,162), threshold=0.8, method="Template matching", file="./tasks/RichMan/mall/medal/medal_me_check_ap.png")
 	# 购买检查 
 	I_ME_CHECK_SOULS = RuleImage(roi_front=(611,225,100,100), roi_back=(507,199,272,175), threshold=0.8, method="Template matching", file="./tasks/RichMan/mall/medal/medal_me_check_souls.png")
+
+
+	# Ocr Rule Assets
+	# Count sold-out labels in medal shop page 
+	O_SOLD_OUT = RuleOcr(roi=(0,100,1280,500), area=(0,100,1280,500), mode="Full", method="Default", keyword="售", name="sold_out")
 
 
 	# Image Rule Assets
