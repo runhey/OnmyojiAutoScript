@@ -77,6 +77,46 @@ OAS 在其基础上进行了如下优化：
 - [ppocr-onnx](https://github.com/triwinds/ppocr-onnx): OCR 库，基于 onnxruntime 和 PaddleOCR
 - [gurs](https://github.com/2833844911/gurs): 基于赛贝尔曲线模拟滑动轨迹, 引入其轨迹模拟人手滑动
 
+## macOS PlayCover / MaaTools（实验性支持）
+
+### 中文说明
+
+本实验性接入借鉴了 MAA（明日方舟小助手）的 [macOS PlayCover / MaaTools 接入思路](https://docs.maa.plus/zh-cn/manual/device/macos.html)，并使用 [OASX](https://github.com/runhey/OASX) 作为界面。我们已从 OASX Flutter 源码编译出一个可在 macOS 本地运行的 app，用于本集成验证；本 PR 不上传或分发该二进制。此功能仍处于试验性阶段，不代表官方 release 已经包含 macOS app。
+
+Flutter app 仅是界面，不内置 Python 解释器、OCR、本地 OAS 服务或其依赖。请在 macOS 主机上安装 Python 3.10，创建 venv，并手动安装 [requirements-macos-playcover.txt](requirements-macos-playcover.txt) 中的 pip 包：
+
+```bash
+python3.10 -m venv .venv
+source .venv/bin/activate
+python -m pip install --upgrade pip
+python -m pip install -r requirements-macos-playcover.txt
+```
+
+这份文件只是 pip 包清单，不包含 Python 解释器或 OCR 模型文件；这些内容也不会由 Flutter app 内置提供。
+
+PlayCover 需要 MaaTools。请先按 [MAA macOS 手册](https://docs.maa.plus/zh-cn/manual/device/macos.html) 配置 PlayCover/MaaTools，然后在 OASX 现有下拉框中选择 PlayCover（`control=MacPlayTools`），`screenshot` 选择 `MacBGR`、`RGBA` 或 `MacSCK`，并将 `serial` 填为标题栏中的 `localhost:1718`。PlayCover、ADB 和 minitouch 是并列可选的控制方式；选择 `adb` 或 `minitouch` 时使用 Android 模拟器。
+
+请在 PlayCover 中将游戏分辨率设置为 1280×720。OAS 要求使用该分辨率，否则无法正常识别和点击。
+
+### English
+
+This experimental integration follows the [macOS PlayCover / MaaTools approach used by MAA (MaaAssistantArknights)](https://docs.maa.plus/zh-cn/manual/device/macos.html) and uses [OASX](https://github.com/runhey/OASX) as its UI. We compiled an app from the OASX Flutter source that runs locally on macOS for integration validation; this PR does not upload or distribute that binary. This remains experimental support and does not claim that an official release already includes a macOS app.
+
+The Flutter app is UI-only. It does not bundle a Python interpreter, OCR, the OAS service, or its dependencies. On the macOS host, install Python 3.10, create a venv, and manually install the pip packages in [requirements-macos-playcover.txt](requirements-macos-playcover.txt):
+
+```bash
+python3.10 -m venv .venv
+source .venv/bin/activate
+python -m pip install --upgrade pip
+python -m pip install -r requirements-macos-playcover.txt
+```
+
+That file is only a pip package list; it does not include the Python interpreter or OCR model files, and the Flutter app does not bundle or provide them.
+
+PlayCover requires MaaTools. First configure PlayCover/MaaTools according to the [MAA macOS manual](https://docs.maa.plus/zh-cn/manual/device/macos.html), then in OASX's existing dropdowns select PlayCover (`control=MacPlayTools`), choose `MacBGR`, `RGBA`, or `MacSCK` for `screenshot`, and set `serial` to `localhost:1718` shown in the title bar. PlayCover, ADB, and minitouch are parallel control options; selecting `adb` or `minitouch` uses the Android emulator.
+
+Set the game resolution in PlayCover to 1280×720. OAS requires this resolution; otherwise recognition and tapping will not work correctly.
+
 ## 联系/加入我们 Contact/Join Us
 
 
