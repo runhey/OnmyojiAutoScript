@@ -69,9 +69,9 @@ class GeneralBattle(BattleWait, GeneralBuff):
                         self.switch_preset_team(config.preset_enable, config.preset_group, config.preset_team)
                         self.check_and_open_buff(buff)
                         confed = True
-                # 点击准备(锁定阵容自动点准备,不锁定阵容前面也已经配置完毕需要点准备)
-                if self.appear_then_click(self.I_PREPARE_HIGHLIGHT, interval=0.8):
-                    continue
+                    # 点击准备(锁定阵容自动点准备,不锁定阵容前面也已经配置完毕需要点准备)
+                    if self.appear_then_click(self.I_PREPARE_HIGHLIGHT, interval=0.8):
+                        continue
                 continue
             # 未知界面, 既不是准备界面也不是战斗界面
             # logger.info('Wait for preparation page')  # 这玩意刷屏

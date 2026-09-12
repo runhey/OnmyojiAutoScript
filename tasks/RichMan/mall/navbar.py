@@ -89,7 +89,7 @@ class MallNavbar(GameUi, RichManAssets):
         返回商城
         :return:
         """
-        self.ui_click(self.I_UI_BACK_YELLOW, self.I_CHECK_MALL)
+        self.ui_click(self.I_UI_BACK_YELLOW, self.I_CHECK_MALL, interval=3, timeout=6)
 
     def mall_resource(self, index: int) -> int:
         """
