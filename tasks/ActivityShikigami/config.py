@@ -78,22 +78,22 @@ class GeneralBattleConfig(BaseModel):
     enable_pass_preset: bool = Field(default=False, description='enable_pass_preset_help')
     enable_pass_green: bool = Field(default=False, description='enable_pass_green_help')
     pass_green_mark: GreenMarkType = Field(default=GreenMarkType.GREEN_LEFT1, description='pass_green_mark_help')
-    enable_pass_anti_detect: bool = Field(default=False, description='enable_pass_anti_detect_help')
+    enable_pass_anti_detect: bool = Field(default=True, description='enable_pass_anti_detect_help')
 
     enable_ap_preset: bool = Field(default=False, description='enable_ap_preset_help')
     enable_ap_green: bool = Field(default=False, description='enable_ap_green_help')
     ap_green_mark: GreenMarkType = Field(default=GreenMarkType.GREEN_LEFT1, description='ap_green_mark_help')
-    enable_ap_anti_detect: bool = Field(default=False, description='enable_ap_anti_detect_help')
+    enable_ap_anti_detect: bool = Field(default=True, description='enable_ap_anti_detect_help')
 
     enable_boss_preset: bool = Field(default=False, description='enable_boss_preset_help')
     enable_boss_green: bool = Field(default=False, description='enable_boss_green_help')
     boss_green_mark: GreenMarkType = Field(default=GreenMarkType.GREEN_LEFT1, description='boss_green_mark_help')
-    enable_boss_anti_detect: bool = Field(default=False, description='enable_boss_anti_detect_help')
+    enable_boss_anti_detect: bool = Field(default=True, description='enable_boss_anti_detect_help')
 
     enable_ap100_preset: bool = Field(default=False, description='enable_ap100_preset_help')
     enable_ap100_green: bool = Field(default=False, description='enable_ap100_green_help')
     ap100_green_mark: GreenMarkType = Field(default=GreenMarkType.GREEN_LEFT1, description='ap100_green_mark_help')
-    enable_ap100_anti_detect: bool = Field(default=False, description='enable_ap100_anti_detect_help')
+    enable_ap100_anti_detect: bool = Field(default=True, description='enable_ap100_anti_detect_help')
 
 
 class ActivityShikigami(ConfigBase):

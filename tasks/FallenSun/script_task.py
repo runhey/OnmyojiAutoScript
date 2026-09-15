@@ -5,6 +5,9 @@ import random
 from time import sleep
 from datetime import time, datetime, timedelta
 
+from module.logger import logger
+from module.exception import TaskEnd
+
 from tasks.Component.GeneralBattle.general_battle import GeneralBattle
 from tasks.Component.GeneralInvite.general_invite import GeneralInvite
 from tasks.Component.GeneralBuff.general_buff import GeneralBuff
@@ -14,8 +17,8 @@ from tasks.GameUi.game_ui import GameUi
 from tasks.GameUi.page import page_main, page_soul_zones, page_shikigami_records
 from tasks.FallenSun.assets import FallenSunAssets
 from tasks.FallenSun.config import FallenSun, UserStatus
-from module.logger import logger
-from module.exception import TaskEnd
+from tasks.Component.GeneralBattle.battle_wait import battle_wait_strategy
+
 
 class ScriptTask(GeneralBattle, GeneralInvite, GeneralBuff, GeneralRoom, GameUi, SwitchSoul, FallenSunAssets):
 
@@ -457,8 +460,9 @@ class ScriptTask(GeneralBattle, GeneralInvite, GeneralBuff, GeneralRoom, GameUi,
     #             break
     #
     #     return win
-    def battle_wait(self, random_click_swipt_enable: bool) -> bool:
-        return self.battle_wait_v2(random_click_swipt_enable=random_click_swipt_enable)
+    @battle_wait_strategy()
+    def battle_wait(self, *args, **kwargs):
+        return self.battle_wait_with_strategy(*args, **kwargs)
 
 
 if __name__ == '__main__':

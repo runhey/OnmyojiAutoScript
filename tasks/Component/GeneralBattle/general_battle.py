@@ -38,14 +38,7 @@ class GeneralBattle(BattleWait, GeneralBuff):
         self.current_count += 1
         logger.info(f"Current count: {self.current_count}")
         # 战前设置
-        if not self.battle_before(buff, config):
-            # battle_before 超时未进入战斗: 常见原因是点击"开始战斗"时被预设面板的关闭动画拦截,
-            # 点击未生效。此时画面已经稳定(面板动画已结束), 再识别一次:
-            # 若仍在战斗准备界面则再点击一次开始战斗, 若已进入战斗则直接继续。
-            if not self.retry_prepare_click():
-                logger.warning('battle_before failed: not in real battle within timeout, '
-                               'skip this battle and return False')
-                return False
+        self.battle_before(buff, config)
         # 绿标
         if self.is_in_battle(False):
             self.green_mark(config.green_enable, config.green_mark)
@@ -76,40 +69,12 @@ class GeneralBattle(BattleWait, GeneralBuff):
                         self.switch_preset_team(config.preset_enable, config.preset_group, config.preset_team)
                         self.check_and_open_buff(buff)
                         confed = True
-                # 点击准备(锁定阵容自动点准备,不锁定阵容前面也已经配置完毕需要点准备)
-                if self.appear_then_click(self.I_PREPARE_HIGHLIGHT, interval=0.8):
-                    continue
+                    # 点击准备(锁定阵容自动点准备,不锁定阵容前面也已经配置完毕需要点准备)
+                    if self.appear_then_click(self.I_PREPARE_HIGHLIGHT, interval=0.8):
+                        continue
                 continue
             # 未知界面, 既不是准备界面也不是战斗界面
             # logger.info('Wait for preparation page')  # 这玩意刷屏
-            sleep(random.uniform(0.4, 0.8))
-        return False
-
-    def retry_prepare_click(self, timeout: float = 3) -> bool:
-        """
-        battle_before 超时后的补偿: 再次识别画面并尝试开始战斗。
-        点击"开始战斗"可能被预设面板关闭动画拦截而未生效, 超时返回后画面已稳定,
-        此时若仍在战斗准备界面则再点击一次开始战斗; 若已进入战斗则直接成功。
-        :return: True: 超时内确认已进入真实战斗
-                 False: 超时仍未进入战斗(界面异常, 应由上层按战斗失败处理)
-        """
-        timer = Timer(timeout).start()
-        clicked = False  # 只补点一次, 避免在界面切换/点击延迟期间重复触发开始战斗
-        while not timer.reached():
-            self.screenshot()
-            if self.is_in_real_battle(False):  # 已经进入战斗
-                return True
-            if self.is_in_prepare(False):  # 仍在准备界面
-                if not clicked:
-                    clicked = True  # 只补点一次: 无论本次点击是否成功, 之后仅轮询
-                    if self.appear_then_click(self.I_PREPARE_HIGHLIGHT, interval=0.8):
-                        continue
-                    sleep(0.3)
-                    continue
-                # 已补点过一次, 只轮询等待进入战斗, 不再重复点击
-                sleep(0.3)
-                continue
-            # 未知界面, 等待画面变化
             sleep(random.uniform(0.4, 0.8))
         return False
 
@@ -122,7 +87,7 @@ class GeneralBattle(BattleWait, GeneralBuff):
         # 如果没有锁定队伍那么在点击准备后才退出的,退四的话就直接退出
         if not config.lock_team_enable and not exit_four:
             # 点击准备按钮
-            self.wait_until_appear(self.I_PREPARE_HIGHLIGHT)
+            self.wait_until_appear(self.I_PREPARE_HIGHLIGHT, wait_time=5)
             while 1:
                 self.screenshot()
                 if self.appear_then_click(self.I_PREPARE_HIGHLIGHT, interval=1.5):
