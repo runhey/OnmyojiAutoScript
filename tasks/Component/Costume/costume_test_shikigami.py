@@ -162,6 +162,6 @@ if __name__ == '__main__':
     c = Config('oas1')
     d = Device(c)
     t = ScriptTask(c, d)
-    t.set_costume(ShikigamiType.COSTUME_SHIKIGAMI_4)
+    t.set_costume(ShikigamiType.COSTUME_SHIKIGAMI_12)
     # t.set_costume(ShikigamiType.COSTUME_SHIKIGAMI_DEFAULT)
     t.run()

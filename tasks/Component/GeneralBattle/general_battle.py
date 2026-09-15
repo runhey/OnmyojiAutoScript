@@ -43,7 +43,7 @@ class GeneralBattle(BattleWait, GeneralBuff):
         if self.is_in_battle(False):
             self.green_mark(config.green_enable, config.green_mark)
         # 战中设置
-        win = self.battle_wait(config.random_click_swipt_enable)
+        win = self.battle_wait(random_click_swipt_enable=config.random_click_swipt_enable)
         if win:
             return True
         else:
@@ -69,9 +69,9 @@ class GeneralBattle(BattleWait, GeneralBuff):
                         self.switch_preset_team(config.preset_enable, config.preset_group, config.preset_team)
                         self.check_and_open_buff(buff)
                         confed = True
-                # 点击准备(锁定阵容自动点准备,不锁定阵容前面也已经配置完毕需要点准备)
-                if self.appear_then_click(self.I_PREPARE_HIGHLIGHT, interval=0.8):
-                    continue
+                    # 点击准备(锁定阵容自动点准备,不锁定阵容前面也已经配置完毕需要点准备)
+                    if self.appear_then_click(self.I_PREPARE_HIGHLIGHT, interval=0.8):
+                        continue
                 continue
             # 未知界面, 既不是准备界面也不是战斗界面
             # logger.info('Wait for preparation page')  # 这玩意刷屏
@@ -87,7 +87,7 @@ class GeneralBattle(BattleWait, GeneralBuff):
         # 如果没有锁定队伍那么在点击准备后才退出的,退四的话就直接退出
         if not config.lock_team_enable and not exit_four:
             # 点击准备按钮
-            self.wait_until_appear(self.I_PREPARE_HIGHLIGHT)
+            self.wait_until_appear(self.I_PREPARE_HIGHLIGHT, wait_time=5)
             while 1:
                 self.screenshot()
                 if self.appear_then_click(self.I_PREPARE_HIGHLIGHT, interval=1.5):

@@ -1,6 +1,7 @@
 import random
 import time
 import copy
+from copy import deepcopy
 
 
 from functools import wraps
@@ -190,12 +191,7 @@ class BattleWaitPlan:
         return self
 
 class battle_wait_strategy:
-    """
-    使用with 上下文临时修改  battle_wait_plan
-    首次装饰 func 初始化 battle_wait_plan
-    """
-    battle_wait_plan: BattleWaitPlan = None
-    options: dict[str: dict] = {
+    _DEFAULT_OPTIONS: dict[str: dict] = {
         'success': {
             'reward_exclude_click_1': ['C_END_MESSAGE_RIGHT_TOP', 'C_END_BUFF_AREA_1', 'C_END_BUFF_AREA_2', 'C_END_SOUL_RECORD', 'C_END_SOUL_DETAILS',],
             'reward_exclude_click_2': ['C_END_MESSAGE_RIGHT_TOP', 'C_END_BUFF_AREA_1', 'C_END_BUFF_AREA_2', 'C_END_SOUL_RECORD', 'C_END_SOUL_DETAILS',
@@ -204,44 +200,39 @@ class battle_wait_strategy:
         }
     }
 
+    battle_wait_plan: BattleWaitPlan = None
+    options: dict[str: dict] = deepcopy(_DEFAULT_OPTIONS)
+
+
 
     def __init__(self, *arg, **kwargs):
-        self._temp_options = kwargs.pop('options', None)
-        if self._temp_options is not None:
-            if not isinstance(self._temp_options, dict):
-                raise TypeError(f'temp_options must be a dict, got {self._temp_options!r}')
-            for key, value in self._temp_options.items():
+        self._options = kwargs.pop('options', None)
+        if self._options is not None:
+            if not isinstance(self._options, dict):
+                raise TypeError(f'temp_options must be a dict, got {self._options!r}')
+            for key, value in self._options.items():
                 if not isinstance(key, str):
                     raise
                 if not isinstance(value, dict):
-                    raise TypeError(f'temp_options must be a dict, got {self._temp_options!r}')
-            battle_wait_strategy.options.update(self._temp_options)
+                    raise TypeError(f'temp_options must be a dict, got {self._options!r}')
+            # battle_wait_strategy.options.update(self._options)
 
-        self._temp_battle_wait_plan = None
-        if battle_wait_strategy.battle_wait_plan is None:
-            # 首次装饰 func 初始化 battle_wait_plan
-            battle_wait_strategy.battle_wait_plan = BattleWaitPlan(*arg, **kwargs)  # pylint: disable=unused-argument
-        elif self._temp_battle_wait_plan is None:
-            # 使用 with 上下文临时修改 battle_wait_plan
-            self._temp_battle_wait_plan = BattleWaitPlan(*arg, **kwargs)
+        self._battle_wait_plan = BattleWaitPlan(*arg, **kwargs)
 
     def __enter__(self):
         self._previous_plan = battle_wait_strategy.battle_wait_plan
-
-        if self._temp_battle_wait_plan is not None:
-            battle_wait_strategy.battle_wait_plan = self._temp_battle_wait_plan
+        battle_wait_strategy.battle_wait_plan = self._battle_wait_plan
         return self
 
     def __exit__(self, *exc):
         battle_wait_strategy.battle_wait_plan = self._previous_plan
-        self._temp_options = None
+        self._options = None
         return False
 
     def __str__(self):
-        temp_plan = getattr(self, '_temp_battle_wait_plan', None)
+        temp_plan = getattr(self, '_battle_wait_plan', None)
         default_plan = getattr(self, 'battle_wait_plan', None)
         options = dict(battle_wait_strategy.options or {})
-        options.update(self._temp_options or {})
 
         if temp_plan is not None:
             plan = temp_plan
@@ -268,6 +259,14 @@ class battle_wait_strategy:
         return self
 
     def __call__(self, func: Callable[P, T]) -> Callable[P, T]:
+        # 跨任务重置配置和策略，但是不重置状态
+        battle_wait_strategy.options = (
+            deepcopy(self._options)
+            if self._options is not None
+            else deepcopy(self._DEFAULT_OPTIONS)
+        )
+        battle_wait_strategy.battle_wait_plan = self._battle_wait_plan
+
         @wraps(func)
         def inner(owner, *args: P.args, **kwargs: P.kwargs) -> T:
             # 兼容性处理
@@ -289,7 +288,6 @@ class battle_wait_strategy:
             #     self.battle_wait_plan,
             # )
             options = dict(battle_wait_strategy.options or {})
-            options.update(self._temp_options or {})
             return func(owner, battle_wait_plan=current_plan, options=options) \
                 if options else func(owner, battle_wait_plan=current_plan)
 
@@ -304,11 +302,8 @@ class battle_wait_strategy:
             if not isinstance(v, dict):
                 raise TypeError()
         # 先装饰器, 后临时变量
-        if battle_wait_strategy.options is None:
-            battle_wait_strategy.options = options
-            self._temp_options = None
-        else:
-            self._temp_options = options
+        self._previous_options = battle_wait_strategy.options
+        battle_wait_strategy.options = deepcopy(options)
         return self
 
 
@@ -409,7 +404,6 @@ class BattleWait(BaseTask, GeneralBattleAssets):
                     self.device.click(x=x, y=y, control_name='reward_item')
                     continue
                 self.click(self._reward_exclude_click_2, interval=1.5)
-                pass
             else:
                 logger.info('Get all reward')
                 bw_ctx.success = True
@@ -425,6 +419,7 @@ class BattleWait(BaseTask, GeneralBattleAssets):
         if self.appear(self.I_FALSE, threshold=0.8):
             logger.warning('False battle')
             self.ui_click_until_disappear(self.I_FALSE)
+            bw_ctx.success = False
             bw_ctx.completion = True
             return HookSignal.CONTINUE
         return HookSignal.CONTINUE
@@ -436,9 +431,12 @@ class BattleWait(BaseTask, GeneralBattleAssets):
         return HookSignal.CONTINUE
 
     def _bw_randomclick_default(self, bw_ctx: BattleWaitContext) -> HookSignal:
+        done = getattr(bw_ctx, '_bw_randomclick_state', False)
+        if done:
+            return HookSignal.CONTINUE
         if not self.is_in_battle(is_screenshot=False):
             return HookSignal.CONTINUE
-        if 0 <= random.randint(0, 500) <= 20:  # 百分之4的概率
+        if random.random() < 0.005 :  # 低概率
             rand_type = random.randint(0, 2)
             match rand_type:
                 case 0:
@@ -447,6 +445,7 @@ class BattleWait(BaseTask, GeneralBattleAssets):
                     self.swipe(self.S_BATTLE_RANDOM_LEFT, interval=20)
                 case 2:
                     self.swipe(self.S_BATTLE_RANDOM_RIGHT, interval=20)
+            setattr(bw_ctx, f'_bw_randomclick_state', True)
             # 重新设置为长战斗
             # self.device.stuck_record_add('BATTLE_STATUS_S')
         else:
@@ -495,19 +494,72 @@ class BattleWait(BaseTask, GeneralBattleAssets):
                 break
         return HookSignal.CONTINUE
 
+    @cached_property
+    def exclude_click_activity(self, areas: list[str] = None) -> RuleClickExclude:
+        inputs = []
+        for area in ['C_END_MESSAGE_RIGHT_TOP', 'C_END_ACTIVITY_REWARD']:
+            click = getattr(self, area, None)
+            if click is None:
+                raise ValueError(f'Unknown success exclusion click: {area!r}')
+            inputs.append(click)
+        return RuleClickExclude(inputs, name='exclude_click_activity', strategy='rejection', distribution='uniform')
+
+    def _bw_success_activity(self, bw_ctx: BattleWaitContext) -> HookSignal:
+        """
+        战斗结算是有 “获得奖励” 的适用
+        """
+        if not self.appear(self.I_UI_REWARD):
+            return HookSignal.CONTINUE
+        self.screenshot()
+        if not self.appear(self.I_UI_REWARD):
+            return HookSignal.CONTINUE
+
+        logger.info('Win battle')
+        timer = Timer(20).start()
+        while 1:
+            self.screenshot()
+
+            # 不小心点到了具体的奖励，他会弹出这个物品的详细描述 里面必定包含有“获取途径”
+            if self.appear(self.I_END_FIX_1) or self.appear(self.I_END_FIX_2) or self.appear(self.I_END_FIX_3):
+                self.screenshot()
+                if self.appear(self.I_END_FIX_1) or self.appear(self.I_END_FIX_2) or self.appear(self.I_END_FIX_3):
+                    self.click(self.C_REWARD_2, interval=2.5)
+                continue
+
+            if self.appear(self.I_UI_REWARD):
+                if random.random() < 0.02:
+                    # 有一定的概率专门点击具体的奖励物品
+                    x, y = self.exclude_click_activity.coord_in_excluded(['C_END_ACTIVITY_REWARD'])
+                    self.device.click(x=x, y=y, control_name='reward_item')
+                    continue
+                self.click(self.exclude_click_activity, interval=2.5)
+            elif not self.appear(self.I_END_FIX_2):
+                self.screenshot()
+                if any([self.appear(self.I_UI_REWARD), self.appear(self.I_END_FIX_1), self.appear(self.I_END_FIX_2), self.appear(self.I_END_FIX_3)]):
+                    continue
+                logger.info('Get all reward')
+                bw_ctx.success = True
+                bw_ctx.completion = True
+                return HookSignal.DONE
+
+            if timer.reached_and_reset():
+                logger.warning('battle ')
+                break
+        return HookSignal.CONTINUE
+
 
     # ------------------------------------------------------------------------------------------------------------------
     def battle_wait_with_strategy(self, *args, **kwargs) -> bool:
         """
         三种自定义配置方法：
-        1. 使用装饰器battle_wait_strategy
+        1. 使用装饰器battle_wait_strategy, 将会覆盖掉类变量
             @battle_wait_strategy( 'reserve_default', 'idle_default', failure='default')
             def battle_wait(self, *args, **kwargs):
                 return self.battle_wait_with_strategy(*args, **kwargs)
-        2. 使用 with 上下文 （！在1基础上）
+        2. 使用 with 上下文 （！在1基础上）, 将会临时覆盖掉原先的类变量，退出后恢复
             with battle_wait_strategy('reserve_default'):
                 test_battle_wait.battle_wait()
-        3. 调用时动态传参 （！在2基础上）
+        3. 调用时动态传参 （！在1基础上）， 不覆盖，就临时更新策略
             obj.battle_wait(random_click_swipt_enable=1)  # 详细参数看 battle_wait_strategy.__call__()
 
         理解 event + strategy 概念： 把战斗过程抽象为一系列触发事件以及对应的实现函数，也称hook。
@@ -515,7 +567,7 @@ class BattleWait(BaseTask, GeneralBattleAssets):
         这些 hook 跑在一个 while 里面，默认的调用顺序 BattleWaitPlan.SEQUENCE_DEFAULT = 'completion > interrupt > success > failure > idle'
         setup 没有跑在 while里面 而是在 while之前
 
-        event + strategy 拼成了一个hook, 一个 event 在一次战斗过程中只能挂载一个 strategy】
+        event + strategy 拼成了一个hook, 一个 event 在一次战斗过程中只能挂载一个 strategy
         自定义hook就是字符串拼起来：  battle_wait_strategy的入参可以有 ‘event_strategy’ 或者 'event=strategy'
         可以添加任意 event 以及其对应的 strategy。比如 ‘yyy_default’ 'abcd_edf'
         但是必须要实现对应的hook 上面的比如 _bw_yyy_default() 以及 _bw_abcd_edf()
@@ -523,13 +575,19 @@ class BattleWait(BaseTask, GeneralBattleAssets):
         hook 可以自定义顺序，比如 battle_wait_strategy(sequence='completion > interrupt > success > failure > idle')
         如果没有指定sequence， 新增的event会按照传参时候从左到右排序，左边高优先级，新增的会插入到 failure 和 idle 之间
 
+        ----------------------------------------------------------------------------------------------------------------
         如果希望每一个hook带上参数：
-        1. 可以在装饰器定义 @battle_wait_strategy(options = options)
-        2. 上下文带上  with battle_wait_strategy(...).with_options(options)
+        1. 在 battle_wait_strategy 定义了一组默认的 options
+        2. 可以在装饰器定义 @battle_wait_strategy(options = options)，这里将会覆盖掉原先的 battle_wait_strategy.options
+        3. 上下文带上  with battle_wait_strategy(...).with_options(options)，同样也是临时覆盖掉 battle_wait_strategy.options
+        4.
         options: dict[str: dict] = {
             "setup": {...}
             ...
         }
+        ----------------------------------------------------------------------------------------------------------------
+        跨战斗，考虑把状态挂到方法上，而不是挂到类对象上。】
+        我突然感觉 一个类里面装了 策略和参数，这样不好，考虑拆分成两个装饰器
 
         """
         bw_ctx = BattleWaitContext()
@@ -553,7 +611,7 @@ class BattleWait(BaseTask, GeneralBattleAssets):
             for handler in handlers:
                 result = handler(bw_ctx)
                 if handler.__name__.startswith('_bw_completion') and result == HookSignal.DONE:
-                    return True
+                    return bw_ctx.success
                 if result == HookSignal.CONTINUE:
                     continue
 
@@ -581,7 +639,6 @@ if __name__ == '__main__':
     test_battle_wait.battle_wait(random_click_swipt_enable=1)
     with battle_wait_strategy(sequence='completion > interrupt > success > failure > idle').with_options(options={"setup": {"11": "11"}}):
         test_battle_wait.battle_wait()
-
 
 
 
