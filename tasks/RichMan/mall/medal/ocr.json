@@ -1,0 +1,11 @@
+[
+  {
+    "itemName": "sold_out",
+    "roiFront": "0,100,1280,500",
+    "roiBack": "0,100,1280,500",
+    "mode": "Full",
+    "method": "Default",
+    "keyword": "售",
+    "description": "Count sold-out labels in medal shop page"
+  }
+]
