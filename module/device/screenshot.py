@@ -45,8 +45,14 @@ class Screenshot(Adb, DroidCast, Scrcpy, Window, NemuIpc):
             'DroidCast_raw': self.screenshot_droidcast_raw,
             'scrcpy': self.screenshot_scrcpy,
             'window_background': self.screenshot_window_background if IS_WINDOWS else None,
-            'nemu_ipc': self.screenshot_nemu_ipc
+            'nemu_ipc': self.screenshot_nemu_ipc,
+            'MacBGR': self.screenshot_playcover,
+            'RGBA': self.screenshot_playcover,
+            'MacSCK': self.screenshot_playcover,
         }
+
+    def screenshot_playcover(self):
+        return self.playcover_client.screenshot()
 
     def screenshot(self):
         """
