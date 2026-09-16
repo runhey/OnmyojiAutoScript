@@ -1,11 +1,86 @@
+"""
+╔══════════════════════════════════════════════════════════════════════════════════╗
+║                         battle_wait.py  调用链地图                               ║
+╚══════════════════════════════════════════════════════════════════════════════════╝
+
+  装饰器双层栈(任务级)
+  ───────────────────────────────────────────────────────────────────
+  @battle_wait_options(excludes=[...])   ← 覆盖 options
+  @battle_wait_strategy(success='activity') ← 覆盖 plan
+       ↓
+  script_task.battle_wait()
+       ↓
+  ┌─────────────────────────────────────────────────────────┐
+  │ battle_wait_options.__call__.inner                      │
+  │   options → pub.options                                  │
+  │   finally: 还原 class options                            │
+  └───────────────────────────┬─────────────────────────────┘
+                              ↓
+  ┌─────────────────────────────────────────────────────────┐
+  │ battle_wait_strategy.__call__.inner                     │
+  │   current_plan = deepcopy(类 plan).override(kwargs)      │
+  │   runtime.reset_per_battle()   ← 每场新状态              │
+  │   runtime.update_options()     ← 按事件切片到各 pri      │
+  └───────────────────────────┬─────────────────────────────┘
+                              ↓
+  ┌─────────────────────────────────────────────────────────┐
+  │ battle_wait_with_strategy(plan)                          │
+  │                                                          │
+  │   setup hook ──────────────────────── run 一次           │
+  │   hook_enabled = sequence events − {completion}          │
+  │                                                          │
+  │   ┌─── while True ─────────────────────────────────┐    │
+  │   │  screenshot()                                   │    │
+  │   │  for handler in sequence顺序:                   │    │
+  │   │      if event not in hook_enabled: skip         │    │
+  │   │      result = handler()  ──┐                    │    │
+  │   │          ↓                 │                    │    │
+  │   │      DONE  ────────────────┤  结束循环           │    │
+  │   │      CONTINUE ──→ 下一个 handler               │    │
+  │   │                                                   │    │
+  │   │  success/failure 结算后:                          │    │
+  │   │    per_battle['success'] = BattleResult.X         │    │
+  │   │    enable=('completion',)  ← completion 开门      │    │
+  │   └───────────────────────────────────────────────────┘    │
+  │                                                          │
+  │   return per_battle['success'] == BattleResult.SUCCESS   │
+  └─────────────────────────────────────────────────────────┘
+
+  ┌──────────────────── Hook 调用 ────────────────────────────┐
+  │ BattleWait.__new__  遍历 MRO, _bw_* → runtime 包装       │
+  │ handler()                                                      │
+  │   → runtime.__call__(owner)                                    │
+  │     → func(owner, pub=pub_ctx, pri=pri_ctx[hook_name])        │
+  └───────────────────────────────────────────────────────────────┘
+
+  ┌──────────────────── 数据流 ─────────────────────────────────┐
+  │                                                             │
+  │  battle_wait_options.options  (类槽, 装饰器/with 写入)     │
+  │        ↓ pub.options = 上面整个                              │
+  │        ↓ pri[hook].options = 按事件名切片                   │
+  │                                                             │
+  │  pub (全局)          pri (每个 hook 各一份)                 │
+  │  ├─ cross             ├─ cross                               │
+  │  ├─ per_task          ├─ per_task                            │
+  │  ├─ per_battle        ├─ per_battle                          │
+  │  │   ├─ success       │                                     │
+  │  │   └─ hook_enabled  │                                     │
+  │  └─ options           └─ options(本事件切片)                │
+  │                                                             │
+  │  生命周期:                                                  │
+  │    reset_per_task    runtime 首次遇到新 task_owner           │
+  │    reset_per_battle  每次 battle_wait_strategy.__call__     │
+  └─────────────────────────────────────────────────────────────┘
+"""
+
 import random
 import time
 import copy
 from copy import deepcopy
 
 
-from functools import wraps
-from dataclasses import dataclass
+from functools import wraps, update_wrapper
+from dataclasses import dataclass, field
 from typing import TypeVar, ParamSpec, Callable
 from enum import Enum, auto
 from cached_property import cached_property
@@ -27,23 +102,58 @@ class HookSignal(Enum):
     BUSY = auto()  # 处理了，继续
     DONE = auto()  # 流程结束
 
-@dataclass
-class BattleWaitContext:
-    options: dict[str: dict] = None
-    completion = False
-    success = False
 
-    def __getattr__(self, name):
-        if name in self.__dict__:
-            return self.__dict__[name]
-        return None
+class BattleResult(Enum):
+    SUCCESS = auto()
+    FAILURE = auto()
+
+
+# ─── 默认值常量 ───────────────────────────────────
+# 战斗 hook 事件列表 & 默认调用顺序
+_HOOKS_DEFAULT: tuple[str, ...] = (
+    'setup', 'completion', 'interrupt', 'success', 'failure', 'idle',
+)
+_SEQUENCE_DEFAULT: str = 'completion > interrupt > success > failure >'
+
+# hook options 默认值（装饰器 @battle_wait_options / with 上下文写入类槽）
+_DEFAULT_OPTIONS: dict[str, dict] = {
+    'success': {
+        'reward_exclude_click_1': [
+            'C_END_MESSAGE_RIGHT_TOP', 'C_END_BUFF_AREA_1',
+            'C_END_BUFF_AREA_2', 'C_END_SOUL_RECORD', 'C_END_SOUL_DETAILS',
+        ],
+        'reward_exclude_click_2': [
+            'C_END_MESSAGE_RIGHT_TOP', 'C_END_BUFF_AREA_1',
+            'C_END_BUFF_AREA_2', 'C_END_SOUL_RECORD', 'C_END_SOUL_DETAILS',
+            'C_END_1_1', 'C_END_1_2', 'C_END_1_3', 'C_END_1_4',
+            'C_END_1_5', 'C_END_1_6',
+        ],
+    },
+}
+
+# 跨任务/跨战斗状态的初始
+@dataclass
+class PerTaskState:
+    """跨任务状态, 单个任务全程共享, reset_per_task 时重建"""
+    count: int = 0
+
+
+@dataclass
+class PerBattleState:
+    """跨战斗状态, 每场战斗独立, reset_per_battle 时重建"""
+    success: BattleResult = BattleResult.FAILURE
+    hook_enabled: set = field(default_factory=lambda: set(_HOOKS_DEFAULT) - {'completion'})
+
+# ────────────────────────────────────────────
+
+
 
 class BattleWaitPlan:
     """
     就是一个超级大的状态机，这里拆成了很多hook
     """
-    HOOKS_DEFAULT = ('setup', 'completion', 'interrupt', 'success', 'failure', 'idle')
-    SEQUENCE_DEFAULT = 'completion > interrupt > success > failure >'
+    HOOKS_DEFAULT = _HOOKS_DEFAULT
+    SEQUENCE_DEFAULT = _SEQUENCE_DEFAULT
 
     def __init__(self, *arg, **kwargs):
         extra_sequence: str = ''
@@ -140,6 +250,9 @@ class BattleWaitPlan:
         return f'_bw_setup_{self.setup}'
 
     def sequence_function_names(self) -> list[str]:
+        """
+         注意，这里是没有setup的
+        """
         function_names = []
         for event_name in self.sequence.split('>'):
             event_name = event_name.strip()
@@ -191,66 +304,34 @@ class BattleWaitPlan:
         return self
 
 class battle_wait_strategy:
-    _DEFAULT_OPTIONS: dict[str: dict] = {
-        'success': {
-            'reward_exclude_click_1': ['C_END_MESSAGE_RIGHT_TOP', 'C_END_BUFF_AREA_1', 'C_END_BUFF_AREA_2', 'C_END_SOUL_RECORD', 'C_END_SOUL_DETAILS',],
-            'reward_exclude_click_2': ['C_END_MESSAGE_RIGHT_TOP', 'C_END_BUFF_AREA_1', 'C_END_BUFF_AREA_2', 'C_END_SOUL_RECORD', 'C_END_SOUL_DETAILS',
-                                       'C_END_1_1', 'C_END_1_2', 'C_END_1_3', 'C_END_1_4', 'C_END_1_5', 'C_END_1_6',
-                                       ]
-        }
-    }
-
     battle_wait_plan: BattleWaitPlan = None
-    options: dict[str: dict] = deepcopy(_DEFAULT_OPTIONS)
-
-
 
     def __init__(self, *arg, **kwargs):
-        self._options = kwargs.pop('options', None)
-        if self._options is not None:
-            if not isinstance(self._options, dict):
-                raise TypeError(f'temp_options must be a dict, got {self._options!r}')
-            for key, value in self._options.items():
-                if not isinstance(key, str):
-                    raise
-                if not isinstance(value, dict):
-                    raise TypeError(f'temp_options must be a dict, got {self._options!r}')
-            # battle_wait_strategy.options.update(self._options)
-
+        self._scope = 'decorator'
         self._battle_wait_plan = BattleWaitPlan(*arg, **kwargs)
 
     def __enter__(self):
+        self._scope = 'temporary'
         self._previous_plan = battle_wait_strategy.battle_wait_plan
         battle_wait_strategy.battle_wait_plan = self._battle_wait_plan
         return self
 
     def __exit__(self, *exc):
         battle_wait_strategy.battle_wait_plan = self._previous_plan
-        self._options = None
         return False
 
     def __str__(self):
-        temp_plan = getattr(self, '_battle_wait_plan', None)
-        default_plan = getattr(self, 'battle_wait_plan', None)
-        options = dict(battle_wait_strategy.options or {})
-
-        if temp_plan is not None:
-            plan = temp_plan
-            scope = 'temporary'
-        else:
-            plan = default_plan
-            scope = 'decorator'
-
-        if plan is None:
-            return f'{type(self).__name__}(options={options}, plan=None)'
-
+        plan = getattr(self, '_battle_wait_plan', None)
+        scope = getattr(self, '_scope', 'decorator')
+        active_plan = battle_wait_strategy.battle_wait_plan
         return (
             f'{type(self).__name__}('
             f'scope={scope}, '
-            f'options={options}, '
-            f'plan=\n{plan}'
+            f'plan=\n{plan}, '
+            f'active_plan=\n{active_plan}'
             f')'
         )
+
     def __repr__(self):
         return self.__str__()
 
@@ -260,11 +341,6 @@ class battle_wait_strategy:
 
     def __call__(self, func: Callable[P, T]) -> Callable[P, T]:
         # 跨任务重置配置和策略，但是不重置状态
-        battle_wait_strategy.options = (
-            deepcopy(self._options)
-            if self._options is not None
-            else deepcopy(self._DEFAULT_OPTIONS)
-        )
         battle_wait_strategy.battle_wait_plan = self._battle_wait_plan
 
         @wraps(func)
@@ -287,27 +363,212 @@ class battle_wait_strategy:
             #     'battle_wait_plan',
             #     self.battle_wait_plan,
             # )
-            options = dict(battle_wait_strategy.options or {})
+            options = battle_wait_options.options or None
+            runtime.reset_per_battle()
+            runtime.update_options(options)
             return func(owner, battle_wait_plan=current_plan, options=options) \
                 if options else func(owner, battle_wait_plan=current_plan)
 
         return inner
 
-    def with_options(self, options: dict) -> "battle_wait_strategy":
-        if not isinstance(options, dict):
-            raise
-        for event, v in options.items():
-            if not isinstance(event, str):
-                raise TypeError()
-            if not isinstance(v, dict):
-                raise TypeError()
-        # 先装饰器, 后临时变量
-        self._previous_options = battle_wait_strategy.options
-        battle_wait_strategy.options = deepcopy(options)
+
+class battle_wait_options:
+    """
+    用法（输入为按 hook 名的 kwargs, 每个值必须是 dict[str, dict]）:
+    1) 装饰器 = 永久覆盖（任务级）:
+         @battle_wait_options(success={'excludes': [...]})  # 参数
+         @battle_wait_strategy(success='activity')   # 策略, 只管 hook 与顺序
+         def battle_wait(self, *args, **kwargs):
+             return self.battle_wait_with_strategy(*args, **kwargs)
+    2) with = 临时覆盖（本次调用, 退出还原）:
+         with battle_wait_options(failure={'excludes': [...]}):
+             task.battle_wait()
+    """
+    _DEFAULT_OPTIONS = _DEFAULT_OPTIONS
+    options: dict[str, dict] = deepcopy(_DEFAULT_OPTIONS)
+
+    def __init__(self, *arg, **kwargs):
+        self._scope = 'decorator'
+        self._overrides = dict(kwargs)
+
+    def __enter__(self):
+        self._scope = 'temporary'
+        self._prev = type(self).options
+        merged = deepcopy(self._prev) or {}
+        merged.update(self._overrides)
+        type(self).options = merged
         return self
+
+    def __exit__(self, *exc):
+        type(self).options = self._prev
+        return False
+
+    def __str__(self):
+        scope = getattr(self, '_scope', 'decorator')
+        return (
+            f'{type(self).__name__}('
+            f'scope={scope}, '
+            f'overrides={self._overrides}, '
+            f'options={battle_wait_options.options or {}}'
+            f')'
+        )
+    def __repr__(self):
+        return self.__str__()
+
+    def __call__(self, func: Callable[P, T]) -> Callable[P, T]:
+        # 装饰器 = 永久覆盖（任务级）; 调用结束后还原，避免跨任务污染
+        self._options_saved = type(self).options
+
+        @wraps(func)
+        def inner(owner, *args: P.args, **kwargs: P.kwargs) -> T:
+            type(self).options = deepcopy(self._overrides)
+            try:
+                return func(owner, *args, **kwargs)
+            finally:
+                type(self).options = self._options_saved
+
+        return inner
+
+
+@dataclass
+class PublicContext:
+    cross: dict = field(default_factory=dict)
+    per_task: PerTaskState = field(default_factory=PerTaskState)
+    per_battle: PerBattleState = field(default_factory=PerBattleState)
+    options: dict = field(default_factory=dict)  # 所有hook的options
+
+@dataclass
+class PrivateContext:
+    cross: dict = field(default_factory=dict)
+    per_task: dict = field(default_factory=dict)
+    per_battle: dict = field(default_factory=dict)
+    options: dict = field(default_factory=dict)   # 单个hook的options
+
+
+class runtime:
+
+    task_owner = None
+    pri_ctx: dict[str, PrivateContext] = {}
+    pub_ctx: PublicContext = None
+
+    def __init__(self, func: Callable):
+        self.func = func
+        self.hook_name = func.__name__
+        update_wrapper(self, func)
+
+    def __get__(self, obj, objtype=None):
+        if obj is None:
+            return self
+        runtime._ensure_pub()
+        runtime._ensure_pri(self.hook_name)
+
+        @wraps(self.func)
+        def bound(*args, **kwargs):
+            return self(obj, *args, **kwargs)
+        return bound
+
+    def __call__(self, owner, *args, **kwargs):
+        # 新任务重置一下
+        if runtime.task_owner is None or owner is not runtime.task_owner:
+            runtime.task_owner = owner
+            runtime.reset_per_task()
+        runtime._ensure_pub()
+        runtime._ensure_pri(self.hook_name)
+
+        return self.func(owner, pub=runtime.pub_ctx, pri=runtime.pri_ctx[self.hook_name])
+
+    def __str__(self):
+        pub = runtime.pub_ctx or PublicContext()
+        pri = runtime.pri_ctx.get(self.hook_name) or PrivateContext()
+
+        def _keys(d):
+            if isinstance(d, dict):
+                return ','.join(d.keys()) or '-'
+            if isinstance(d, (PerTaskState, PerBattleState)):
+                return ','.join(d.__dataclass_fields__) or '-'
+            return str(d)
+
+        return (
+            f'runtime({self.hook_name}) '
+            f'pub[c:{_keys(pub.cross)},t:{_keys(pub.per_task)},b:{_keys(pub.per_battle)},o:{_keys(pub.options)}] '
+            f'pri[c:{_keys(pri.cross)},t:{_keys(pri.per_task)},b:{_keys(pri.per_battle)},o:{_keys(pri.options)}]'
+        )
+
+    def __repr__(self):
+        return self.__str__()
+
+    @classmethod
+    def reset_per_task(cls):
+        cls._ensure_pub()
+        cls.pub_ctx.per_task = PerTaskState()
+        for ctx in cls.pri_ctx.values():
+            ctx.per_task = {}
+
+    @classmethod
+    def reset_per_battle(cls):
+        cls._ensure_pub()
+        cls.pub_ctx.per_battle = PerBattleState()
+        for ctx in cls.pri_ctx.values():
+            ctx.per_battle = {}
+
+    @classmethod
+    def _ensure_pub(cls):
+        if cls.pub_ctx is None:
+            cls.pub_ctx = PublicContext()
+
+    @classmethod
+    def _ensure_pri(cls, name):
+        if name not in cls.pri_ctx:
+            cls.pri_ctx[name] = PrivateContext()
+
+    @classmethod
+    def hook2event(cls, func_name: str) -> str:
+        # '_bw_success_soul'    -> 'success'（strategy 名里带下划线也能正确切出事件名）
+        return func_name[len('_bw_'):].rsplit('_', 1)[0]
+
+    @classmethod
+    def update_options(cls, options: dict[str, dict]):
+        cls._ensure_pub()
+        if not isinstance(options, dict):
+            cls.pub_ctx.options = {}
+            for ctx in cls.pri_ctx.values():
+                ctx.options = {}
+            return
+        cls.pub_ctx.options = options
+        for hook_name, ctx in cls.pri_ctx.items():
+            ctx.options = options.get(cls.hook2event(hook_name)) or {}
+
+    @classmethod
+    def hook_enabled(cls) -> set:
+        _hook_enabled = cls.pub_ctx.per_battle.hook_enabled
+        if not _hook_enabled:
+            raise
+        return _hook_enabled
+
+    @classmethod
+    def hook_enabled_update(cls, enable: tuple[str, ...], disable: tuple[str, ...]) -> HookSignal:
+        """
+        hook_enabled 的更新只能在 BattleWait 上。不可以在 battle_wait_options 或者 battle_wait_strategy 上
+        """
+        cls.pub_ctx.per_battle.hook_enabled.update(enable)
+        cls.pub_ctx.per_battle.hook_enabled.difference_update(disable)
+        return HookSignal.CONTINUE
 
 
 class BattleWait(BaseTask, GeneralBattleAssets):
+
+    def __new__(cls, *args, **kwargs):
+        for klass in reversed(cls.__mro__):
+            # 找遍整个继承链，从父到子
+            if klass is object:
+                continue
+            if klass.__dict__.get('_runtime_auto_decorated'):
+                continue
+            klass._runtime_auto_decorated = True
+            for name, attr in list(vars(klass).items()):
+                if name.startswith('_bw_') and callable(attr) and not isinstance(attr, runtime):
+                    setattr(klass, name, runtime(attr))
+        return super().__new__(cls)
 
     # ------------------------------------------------------------------------------------------------------------------
     @cached_property
@@ -339,15 +600,21 @@ class BattleWait(BaseTask, GeneralBattleAssets):
 
     # build in
     # ------------------------------------------------------------------------------------------------------------------
-    def _bw_setup_default(self, bw_ctx: BattleWaitContext) -> HookSignal:
+    def _bw_setup_default(self, pub: PublicContext, pri: PrivateContext) -> HookSignal:
+        """
+        options: dict = {
+            ‘excludes’
+        }
+        """
         self.C_REWARD_1.name = 'C_REWARD'
         self.C_REWARD_2.name = 'C_REWARD'
         self.C_REWARD_3.name = 'C_REWARD'
         self.device.stuck_record_add('BATTLE_STATUS_S')
         self.device.click_record_clear()
         logger.info('Start battle process')
-        options: dict[str, dict] = getattr(bw_ctx, 'options', None) or {}
-        success_options = options.get('success') or {}
+
+        pri_options = pri.options if isinstance(pri.options, dict) else {}
+        success_options = pri_options.get('success') or {}
         if not isinstance(success_options, dict):
             raise TypeError("battle wait option 'success' must be a dict")
         excludes = success_options.get('excludes')
@@ -359,17 +626,16 @@ class BattleWait(BaseTask, GeneralBattleAssets):
         # print(self._reward_exclude_click_2)
         return HookSignal.DONE
 
-    def _bw_completion_default(self, bw_ctx: BattleWaitContext) -> HookSignal:
-        if bw_ctx.completion:
-            logger.info('Battle done')
-            return HookSignal.DONE
-        return HookSignal.CONTINUE
+    def _bw_completion_default(self, pub: PublicContext, pri: PrivateContext) -> HookSignal:
+        logger.info('Battle completion process')
+        pub.per_task.count += 1
+        return HookSignal.DONE
 
-    def _bw_interrupt_default(self, bw_ctx: BattleWaitContext) -> HookSignal:
+    def _bw_interrupt_default(self, pub: PublicContext, pri: PrivateContext) -> HookSignal:
         # 比如 御魂溢出
         return HookSignal.CONTINUE
 
-    def _bw_success_default(self, bw_ctx: BattleWaitContext) -> HookSignal:
+    def _bw_success_default(self, pub: PublicContext, pri: PrivateContext) -> HookSignal:
         if self.appear_then_click(self.I_WIN, interval=0.8):
             self.click(self._reward_exclude_click_1)
             return HookSignal.CONTINUE
@@ -406,32 +672,31 @@ class BattleWait(BaseTask, GeneralBattleAssets):
                 self.click(self._reward_exclude_click_2, interval=1.5)
             else:
                 logger.info('Get all reward')
-                bw_ctx.success = True
-                bw_ctx.completion = True
+                pub.success = True
+                pub.completion = True
                 return HookSignal.CONTINUE
             if timer.reached_and_reset():
-                logger.warning('battle ')
+                logger.warning('battle')
                 break
         return HookSignal.CONTINUE
 
-
-    def _bw_failure_default(self, bw_ctx: BattleWaitContext) -> HookSignal:
+    def _bw_failure_default(self, pub: PublicContext, pri: PrivateContext) -> HookSignal:
         if self.appear(self.I_FALSE, threshold=0.8):
             logger.warning('False battle')
             self.ui_click_until_disappear(self.I_FALSE)
-            bw_ctx.success = False
-            bw_ctx.completion = True
-            return HookSignal.CONTINUE
+            pub.per_battle.success = BattleResult.FAILURE
+            return runtime.hook_enabled_update(
+                enable=('completion', ),
+                disable=tuple(['success', 'failure']),
+            )
         return HookSignal.CONTINUE
 
-    def _bw_idle_default(self, bw_ctx: BattleWaitContext) -> HookSignal:
+    def _bw_idle_default(self, pub: PublicContext, pri: PrivateContext) -> HookSignal:
         return HookSignal.CONTINUE
 
-    def _bw_reserve_default(self, bw_ctx: BattleWaitContext) -> HookSignal:
+    def _bw_randomclick_default(self, pub: PublicContext, pri: PrivateContext) -> HookSignal:
         return HookSignal.CONTINUE
-
-    def _bw_randomclick_default(self, bw_ctx: BattleWaitContext) -> HookSignal:
-        done = getattr(bw_ctx, '_bw_randomclick_state', False)
+        done = pri.per_battle.get('_bw_randomclick_state', False)
         if done:
             return HookSignal.CONTINUE
         if not self.is_in_battle(is_screenshot=False):
@@ -445,7 +710,7 @@ class BattleWait(BaseTask, GeneralBattleAssets):
                     self.swipe(self.S_BATTLE_RANDOM_LEFT, interval=20)
                 case 2:
                     self.swipe(self.S_BATTLE_RANDOM_RIGHT, interval=20)
-            setattr(bw_ctx, f'_bw_randomclick_state', True)
+            pri.per_battle['_bw_randomclick_state'] = True
             # 重新设置为长战斗
             # self.device.stuck_record_add('BATTLE_STATUS_S')
         else:
@@ -454,8 +719,8 @@ class BattleWait(BaseTask, GeneralBattleAssets):
 
     # custom
     # ------------------------------------------------------------------------------------------------------------------
-    def _bw_success_soul(self, bw_ctx: BattleWaitContext) -> HookSignal:
-        options: dict[str, dict] = getattr(bw_ctx, 'options', None) or {}
+    def _bw_success_soul(self, pub: PublicContext, pri: PrivateContext) -> HookSignal:
+        options: dict[str, dict] = pub.options if isinstance(pub.options, dict) else {}
         success_options = options.get('success') or {}
         if not isinstance(success_options, dict):
             raise TypeError("battle wait option 'success' must be a dict")
@@ -486,8 +751,8 @@ class BattleWait(BaseTask, GeneralBattleAssets):
                 self.click(action_click, interval=1.5)
             else:
                 logger.info('Get all reward')
-                bw_ctx.success = True
-                bw_ctx.completion = True
+                pub.success = True
+                pub.completion = True
                 return HookSignal.CONTINUE
             if timer.reached_and_reset():
                 logger.warning('battle ')
@@ -504,7 +769,7 @@ class BattleWait(BaseTask, GeneralBattleAssets):
             inputs.append(click)
         return RuleClickExclude(inputs, name='exclude_click_activity', strategy='rejection', distribution='uniform')
 
-    def _bw_success_activity(self, bw_ctx: BattleWaitContext) -> HookSignal:
+    def _bw_success_activity(self, pub: PublicContext, pri: PrivateContext) -> HookSignal:
         """
         战斗结算是有 “获得奖励” 的适用
         """
@@ -538,9 +803,11 @@ class BattleWait(BaseTask, GeneralBattleAssets):
                 if any([self.appear(self.I_UI_REWARD), self.appear(self.I_END_FIX_1), self.appear(self.I_END_FIX_2), self.appear(self.I_END_FIX_3)]):
                     continue
                 logger.info('Get all reward')
-                bw_ctx.success = True
-                bw_ctx.completion = True
-                return HookSignal.DONE
+                pub.per_battle.success = BattleResult.SUCCESS
+                return runtime.hook_enabled_update(
+                    enable=('completion', ),
+                    disable=tuple(['success', 'failure']),
+                )
 
             if timer.reached_and_reset():
                 logger.warning('battle ')
@@ -551,7 +818,28 @@ class BattleWait(BaseTask, GeneralBattleAssets):
     # ------------------------------------------------------------------------------------------------------------------
     def battle_wait_with_strategy(self, *args, **kwargs) -> bool:
         """
-        三种自定义配置方法：
+        理解 event + strategy 概念： 把战斗过程抽象为一系列触发事件以及对应的实现函数，也称hook。
+        event + strategy 拼成了一个hook, 一个 event 在一次战斗过程中只能挂载一个 strategy
+        默认定义的 hook 有 BattleWaitPlan.HOOKS_DEFAULT = ('setup', 'completion', 'interrupt', 'success', 'failure', 'idle')
+        这些 hook 跑在一个 while 里面，默认的调用顺序 BattleWaitPlan.SEQUENCE_DEFAULT = 'completion > interrupt > success > failure > idle'
+        setup 没有跑在 while里面 而是在 while之前， 比如一个战斗过程可以表示为:
+        setup_default()
+        while 1:
+            completion_default()
+            interrupt_default()
+            success_default()
+            failure_default()
+            idle_default()
+        围绕hook从两个维度来构建一个战斗系统， options 表示每一个hook的配置选项， public 和 private 表示每一个hook的共享和私有状态。分别有两个生命周期
+        | 自定义 /生命周期 | 跨任务 | 任务共享               | 单次战斗       |
+        | ------------- | ----- | --------------------- | ------------ |
+        |   strategy    | 不做   | @battle_wait_strategy | with 上下文   |
+        |   options     | 不做   | @battle_wait_options  | with 上下文   |
+        |   public      | cross | per_task              | per_battle   |
+        |   private     | cross | per_task              | per_battle   |
+
+        ----------------------------------------------------------------------------------------------------------------
+        三种自定义策略方法：
         1. 使用装饰器battle_wait_strategy, 将会覆盖掉类变量
             @battle_wait_strategy( 'reserve_default', 'idle_default', failure='default')
             def battle_wait(self, *args, **kwargs):
@@ -562,16 +850,9 @@ class BattleWait(BaseTask, GeneralBattleAssets):
         3. 调用时动态传参 （！在1基础上）， 不覆盖，就临时更新策略
             obj.battle_wait(random_click_swipt_enable=1)  # 详细参数看 battle_wait_strategy.__call__()
 
-        理解 event + strategy 概念： 把战斗过程抽象为一系列触发事件以及对应的实现函数，也称hook。
-        默认定义的 hook 有 BattleWaitPlan.HOOKS_DEFAULT = ('setup', 'completion', 'interrupt', 'success', 'failure', 'idle')
-        这些 hook 跑在一个 while 里面，默认的调用顺序 BattleWaitPlan.SEQUENCE_DEFAULT = 'completion > interrupt > success > failure > idle'
-        setup 没有跑在 while里面 而是在 while之前
-
-        event + strategy 拼成了一个hook, 一个 event 在一次战斗过程中只能挂载一个 strategy
         自定义hook就是字符串拼起来：  battle_wait_strategy的入参可以有 ‘event_strategy’ 或者 'event=strategy'
         可以添加任意 event 以及其对应的 strategy。比如 ‘yyy_default’ 'abcd_edf'
         但是必须要实现对应的hook 上面的比如 _bw_yyy_default() 以及 _bw_abcd_edf()
-
         hook 可以自定义顺序，比如 battle_wait_strategy(sequence='completion > interrupt > success > failure > idle')
         如果没有指定sequence， 新增的event会按照传参时候从左到右排序，左边高优先级，新增的会插入到 failure 和 idle 之间
 
@@ -590,32 +871,33 @@ class BattleWait(BaseTask, GeneralBattleAssets):
         我突然感觉 一个类里面装了 策略和参数，这样不好，考虑拆分成两个装饰器
 
         """
-        bw_ctx = BattleWaitContext()
-
         battle_wait_plan = kwargs.get('battle_wait_plan')
         if battle_wait_plan is None:
             battle_wait_plan = BattleWaitPlan()
-        # print(battle_wait_plan)
+        print(battle_wait_plan)
         # print(battle_wait_plan.sequence_function_names())
-        options = kwargs.get('options', None)
-        if options is not None:
-            bw_ctx.options = options
-            # logger.info('options: {}'.format(options))
+        options = runtime.pub_ctx.options
+        logger.info('options: {}'.format(options))
 
         setup_func = getattr(self, battle_wait_plan.function_setup_name, self._bw_setup_default)
-        setup_func(bw_ctx)
+        setup_func()
         handlers = [getattr(self, func_name, None) for func_name in battle_wait_plan.sequence_function_names()]
+        _hook_enabled = tuple(runtime.hook2event(h.__name__) for h in handlers if h)
+        _hook_disabled = ('completion', )
+        runtime.hook_enabled_update(enable=_hook_enabled, disable=_hook_disabled)
+        print(f'first runtime.hook_enabled(): {runtime.hook_enabled()}')
 
         while True:
             self.screenshot()
+            hook_enabled = runtime.hook_enabled()
             for handler in handlers:
-                result = handler(bw_ctx)
+                if runtime.hook2event(handler.__name__) not in hook_enabled:
+                    continue
+                result = handler()
                 if handler.__name__.startswith('_bw_completion') and result == HookSignal.DONE:
-                    return bw_ctx.success
+                    return runtime.pub_ctx.per_battle.success == BattleResult.SUCCESS
                 if result == HookSignal.CONTINUE:
                     continue
-
-            # bw_ctx.completion = True
 
 
 
