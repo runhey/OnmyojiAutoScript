@@ -115,22 +115,6 @@ _HOOKS_DEFAULT: tuple[str, ...] = (
 )
 _SEQUENCE_DEFAULT: str = 'completion > interrupt > success > failure >'
 
-# hook options 默认值（装饰器 @battle_wait_options / with 上下文写入类槽）
-_DEFAULT_OPTIONS: dict[str, dict] = {
-    'success': {
-        'reward_exclude_click_1': [
-            'C_END_MESSAGE_RIGHT_TOP', 'C_END_BUFF_AREA_1',
-            'C_END_BUFF_AREA_2', 'C_END_SOUL_RECORD', 'C_END_SOUL_DETAILS',
-        ],
-        'reward_exclude_click_2': [
-            'C_END_MESSAGE_RIGHT_TOP', 'C_END_BUFF_AREA_1',
-            'C_END_BUFF_AREA_2', 'C_END_SOUL_RECORD', 'C_END_SOUL_DETAILS',
-            'C_END_1_1', 'C_END_1_2', 'C_END_1_3', 'C_END_1_4',
-            'C_END_1_5', 'C_END_1_6',
-        ],
-    },
-}
-
 # 跨任务/跨战斗状态的初始
 @dataclass
 class PerTaskState:
@@ -143,6 +127,155 @@ class PerBattleState:
     """跨战斗状态, 每场战斗独立, reset_per_battle 时重建"""
     success: BattleResult = BattleResult.FAILURE
     hook_enabled: set = field(default_factory=lambda: set(_HOOKS_DEFAULT) - {'completion'})
+
+
+# 每个 hook 事件的 options 数据类: pri[hook].options 就是这个实例。
+# 按 event 建模 —— 不管 success 挂的是什么 strategy, OptionSuccessDefault 都是它的配置。
+@dataclass
+class OptionSetupDefault:
+    excludes: list | None = None
+
+
+@dataclass
+class OptionCompletionDefault:
+    reward_exclude_click_1 = [
+            'C_END_MESSAGE_RIGHT_TOP', 'C_END_BUFF_AREA_1',
+            'C_END_BUFF_AREA_2', 'C_END_SOUL_RECORD', 'C_END_SOUL_DETAILS',
+        ]
+    reward_exclude_click_2 = [
+        'C_END_MESSAGE_RIGHT_TOP', 'C_END_BUFF_AREA_1',
+        'C_END_BUFF_AREA_2', 'C_END_SOUL_RECORD', 'C_END_SOUL_DETAILS',
+        'C_END_1_1', 'C_END_1_2', 'C_END_1_3', 'C_END_1_4',
+        'C_END_1_5', 'C_END_1_6',
+    ]
+
+
+@dataclass
+class OptionInterruptDefault:
+    pass
+
+
+@dataclass
+class OptionSuccessDefault:
+    excludes: list | None = None
+
+
+@dataclass
+class OptionFailureDefault:
+    pass
+
+
+@dataclass
+class OptionIdleDefault:
+    pass
+
+
+# event → options 数据类, update_options 靠它按 hook2event 自动实例化分发
+_OPTION_CLASSES: dict[str, type] = {
+    'setup': OptionSetupDefault,
+    'completion': OptionCompletionDefault,
+    'interrupt': OptionInterruptDefault,
+    'success': OptionSuccessDefault,
+    'failure': OptionFailureDefault,
+    'idle': OptionIdleDefault,
+}
+
+
+def _options_to_instances(raw: dict) -> dict:
+    """把按 event 分组的原始 dict 转成对应的 Option 数据类实例（未知 key 过滤）"""
+    result = {}
+    for event, value in (raw or {}).items():
+        opt_cls = _OPTION_CLASSES.get(event)
+        if opt_cls is not None and isinstance(value, opt_cls):
+            result[event] = value
+        elif opt_cls is not None and isinstance(value, dict):
+            known = {k: v for k, v in value.items() if k in opt_cls.__dataclass_fields__}
+            result[event] = opt_cls(**known)
+        else:
+            result[event] = deepcopy(value)
+    return result
+
+
+# pri 层的私有状态, 同样按 event 建模: pri[hook].per_task / per_battle 就是这个实例。
+# 字段按需声明 —— 有自定义私有状态的 strategy 往自己 event 的类里加字段。
+@dataclass
+class PerTaskSetup:
+    pass
+
+
+@dataclass
+class PerTaskCompletion:
+    pass
+
+
+@dataclass
+class PerTaskInterrupt:
+    pass
+
+
+@dataclass
+class PerTaskSuccess:
+    pass
+
+
+@dataclass
+class PerTaskFailure:
+    pass
+
+
+@dataclass
+class PerTaskIdle:
+    pass
+
+
+@dataclass
+class PerBattleSetup:
+    pass
+
+
+@dataclass
+class PerBattleCompletion:
+    pass
+
+
+@dataclass
+class PerBattleInterrupt:
+    pass
+
+
+@dataclass
+class PerBattleSuccess:
+    pass
+
+
+@dataclass
+class PerBattleFailure:
+    pass
+
+
+@dataclass
+class PerBattleIdle:
+    pass
+
+
+# event → pri 私有状态数据类
+_PER_TASK_CLASSES: dict[str, type] = {
+    'setup': PerTaskSetup,
+    'completion': PerTaskCompletion,
+    'interrupt': PerTaskInterrupt,
+    'success': PerTaskSuccess,
+    'failure': PerTaskFailure,
+    'idle': PerTaskIdle,
+}
+
+_PER_BATTLE_CLASSES: dict[str, type] = {
+    'setup': PerBattleSetup,
+    'completion': PerBattleCompletion,
+    'interrupt': PerBattleInterrupt,
+    'success': PerBattleSuccess,
+    'failure': PerBattleFailure,
+    'idle': PerBattleIdle,
+}
 
 # ────────────────────────────────────────────
 
@@ -384,12 +517,11 @@ class battle_wait_options:
          with battle_wait_options(failure={'excludes': [...]}):
              task.battle_wait()
     """
-    _DEFAULT_OPTIONS = _DEFAULT_OPTIONS
-    options: dict[str, dict] = deepcopy(_DEFAULT_OPTIONS)
+    options: dict = {event: cls() for event, cls in _OPTION_CLASSES.items()}
 
     def __init__(self, *arg, **kwargs):
         self._scope = 'decorator'
-        self._overrides = dict(kwargs)
+        self._overrides = _options_to_instances(dict(kwargs))
 
     def __enter__(self):
         self._scope = 'temporary'
@@ -484,7 +616,7 @@ class runtime:
         def _keys(d):
             if isinstance(d, dict):
                 return ','.join(d.keys()) or '-'
-            if isinstance(d, (PerTaskState, PerBattleState)):
+            if isinstance(d, tuple(_OPTION_CLASSES.values())) or isinstance(d, tuple(_PER_TASK_CLASSES.values())) or isinstance(d, tuple(_PER_BATTLE_CLASSES.values())) or isinstance(d, (PerTaskState, PerBattleState)):
                 return ','.join(d.__dataclass_fields__) or '-'
             return str(d)
 
@@ -501,15 +633,19 @@ class runtime:
     def reset_per_task(cls):
         cls._ensure_pub()
         cls.pub_ctx.per_task = PerTaskState()
-        for ctx in cls.pri_ctx.values():
-            ctx.per_task = {}
+        for hook_name, ctx in cls.pri_ctx.items():
+            event = cls.hook2event(hook_name)
+            cls_type = _PER_TASK_CLASSES.get(event, dict)
+            ctx.per_task = cls_type()
 
     @classmethod
     def reset_per_battle(cls):
         cls._ensure_pub()
         cls.pub_ctx.per_battle = PerBattleState()
-        for ctx in cls.pri_ctx.values():
-            ctx.per_battle = {}
+        for hook_name, ctx in cls.pri_ctx.items():
+            event = cls.hook2event(hook_name)
+            cls_type = _PER_BATTLE_CLASSES.get(event, dict)
+            ctx.per_battle = cls_type()
 
     @classmethod
     def _ensure_pub(cls):
@@ -519,7 +655,11 @@ class runtime:
     @classmethod
     def _ensure_pri(cls, name):
         if name not in cls.pri_ctx:
-            cls.pri_ctx[name] = PrivateContext()
+            event = cls.hook2event(name)
+            cls.pri_ctx[name] = PrivateContext(
+                per_task=_PER_TASK_CLASSES.get(event, dict)(),
+                per_battle=_PER_BATTLE_CLASSES.get(event, dict)(),
+            )
 
     @classmethod
     def hook2event(cls, func_name: str) -> str:
@@ -527,16 +667,23 @@ class runtime:
         return func_name[len('_bw_'):].rsplit('_', 1)[0]
 
     @classmethod
-    def update_options(cls, options: dict[str, dict]):
+    def update_options(cls, options: dict[str, object] | None):
+        """options 是 dict[str, OptionXxx] 实例（由 battle_wait_options 转好），直接按 event 分发"""
         cls._ensure_pub()
         if not isinstance(options, dict):
             cls.pub_ctx.options = {}
-            for ctx in cls.pri_ctx.values():
-                ctx.options = {}
+            for hook_name, ctx in cls.pri_ctx.items():
+                ctx.options = cls._option_class(hook_name)()
             return
         cls.pub_ctx.options = options
         for hook_name, ctx in cls.pri_ctx.items():
-            ctx.options = options.get(cls.hook2event(hook_name)) or {}
+            event = cls.hook2event(hook_name)
+            opt = options.get(event)
+            ctx.options = opt if isinstance(opt, cls._option_class(hook_name)) else cls._option_class(hook_name)()
+
+    @classmethod
+    def _option_class(cls, hook_name: str) -> type:
+        return _OPTION_CLASSES.get(cls.hook2event(hook_name)) or dict
 
     @classmethod
     def hook_enabled(cls) -> set:
@@ -720,11 +867,14 @@ class BattleWait(BaseTask, GeneralBattleAssets):
     # custom
     # ------------------------------------------------------------------------------------------------------------------
     def _bw_success_soul(self, pub: PublicContext, pri: PrivateContext) -> HookSignal:
-        options: dict[str, dict] = pub.options if isinstance(pub.options, dict) else {}
-        success_options = options.get('success') or {}
-        if not isinstance(success_options, dict):
-            raise TypeError("battle wait option 'success' must be a dict")
-        action_click = self.reward_exclude_click(success_options.get('excludes'))
+        success_options = pub.options.get('success') if isinstance(pub.options, dict) else {}
+        if isinstance(success_options, OptionSuccessDefault):
+            excludes = success_options.excludes
+        elif isinstance(success_options, dict):
+            excludes = success_options.get('excludes')
+        else:
+            raise TypeError("battle wait option 'success' must be an OptionSuccessDefault")
+        action_click = self.reward_exclude_click(excludes)
         if self.appear_then_click(self.I_WIN, interval=0.8):
             return HookSignal.CONTINUE
         appear_ghost, appear_reward, appear_gold, appear_skin = (
@@ -908,19 +1058,6 @@ if __name__ == '__main__':
     c = Config('oas1')
     d = Device(c)
 
-
-    class TestBattleWait(GeneralBattle, BattleWait):
-        def _bw_settlement(self):
-            pass
-
-        @battle_wait_strategy( 'reserve_default', 'idle_default', failure='default')
-        def battle_wait(self, *args, **kwargs):
-            return self.battle_wait_with_strategy(*args, **kwargs)
-
-    test_battle_wait = TestBattleWait(c,d)
-    test_battle_wait.battle_wait(random_click_swipt_enable=1)
-    with battle_wait_strategy(sequence='completion > interrupt > success > failure > idle').with_options(options={"setup": {"11": "11"}}):
-        test_battle_wait.battle_wait()
 
 
 
