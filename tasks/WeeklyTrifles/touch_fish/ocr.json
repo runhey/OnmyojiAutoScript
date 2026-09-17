@@ -1,0 +1,20 @@
+[
+  {
+    "itemName": "wt_lucky_tickets",
+    "roiFront": "1145,16,95,32",
+    "roiBack": "1145,16,95,32",
+    "mode": "DigitCounter",
+    "method": "Default",
+    "keyword": "",
+    "description": "现有福运御守数量"
+  },
+  {
+    "itemName": "wt_save_cost",
+    "roiFront": "1162,676,35,24",
+    "roiBack": "1156,670,52,40",
+    "mode": "Digit",
+    "method": "Default",
+    "keyword": "",
+    "description": "全部储存需要的御守数量"
+  }
+]

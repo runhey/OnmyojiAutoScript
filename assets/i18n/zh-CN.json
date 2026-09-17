@@ -137,5 +137,7 @@
   "enable_ap100_anti_detect": "100体爬塔防检测",
   "enable_ap100_anti_detect_help": "100体爬塔战斗过程是否随机点击或滑动",
   "costume_battle_15": "灵狐寄愿",
-  "costume_shikigami_12": "拾光之窗"
+  "costume_shikigami_12": "拾光之窗",
+  "save_touch_fish": "惠比寿的摸鱼行动",
+  "save_touch_fish_help": "默认使用全部存储按钮，主要目的是为了配合真蛇每周打一次即可获得俩次奖励(并不会节省体力)"
 }
