@@ -80,7 +80,7 @@ from copy import deepcopy
 
 
 from functools import wraps, update_wrapper
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, fields
 from typing import TypeVar, ParamSpec, Callable
 from enum import Enum, auto
 from cached_property import cached_property
@@ -88,9 +88,11 @@ from cached_property import cached_property
 from module.logger import logger
 from module.base.timer import Timer
 from module.atom.click import RuleClickExclude
+from module.base.utils import get_color, color_similar
 
 from tasks.base_task import BaseTask
 from tasks.Component.GeneralBattle.assets import GeneralBattleAssets
+from tasks.Component.GeneralBattle.config_general_battle import GreenMarkType
 
 
 P = ParamSpec('P')
@@ -111,9 +113,9 @@ class BattleResult(Enum):
 # ─── 默认值常量 ───────────────────────────────────
 # 战斗 hook 事件列表 & 默认调用顺序
 _HOOKS_DEFAULT: tuple[str, ...] = (
-    'setup', 'completion', 'interrupt', 'success', 'failure', 'idle',
+    'setup', 'completion', 'interrupt', 'prepare', 'preset', 'green', 'red', 'echo', 'success', 'failure', 'idle',
 )
-_SEQUENCE_DEFAULT: str = 'completion > interrupt > success > failure >'
+_SEQUENCE_DEFAULT: str = 'completion > interrupt > prepare > preset > green > red > echo > success > failure >'
 
 # 跨任务/跨战斗状态的初始
 @dataclass
@@ -138,16 +140,7 @@ class OptionSetupDefault:
 
 @dataclass
 class OptionCompletionDefault:
-    reward_exclude_click_1 = [
-            'C_END_MESSAGE_RIGHT_TOP', 'C_END_BUFF_AREA_1',
-            'C_END_BUFF_AREA_2', 'C_END_SOUL_RECORD', 'C_END_SOUL_DETAILS',
-        ]
-    reward_exclude_click_2 = [
-        'C_END_MESSAGE_RIGHT_TOP', 'C_END_BUFF_AREA_1',
-        'C_END_BUFF_AREA_2', 'C_END_SOUL_RECORD', 'C_END_SOUL_DETAILS',
-        'C_END_1_1', 'C_END_1_2', 'C_END_1_3', 'C_END_1_4',
-        'C_END_1_5', 'C_END_1_6',
-    ]
+    pass
 
 
 @dataclass
@@ -157,7 +150,18 @@ class OptionInterruptDefault:
 
 @dataclass
 class OptionSuccessDefault:
-    excludes: list | None = None
+    excludes_1: list[str] = field(default_factory=lambda:
+    [
+        'C_END_MESSAGE_RIGHT_TOP', 'C_END_BUFF_AREA_1',
+        'C_END_BUFF_AREA_2', 'C_END_SOUL_RECORD', 'C_END_SOUL_DETAILS',
+    ])
+    excludes_2: list[str] = field(default_factory=lambda:
+    [
+        'C_END_MESSAGE_RIGHT_TOP', 'C_END_BUFF_AREA_1',
+        'C_END_BUFF_AREA_2', 'C_END_SOUL_RECORD', 'C_END_SOUL_DETAILS',
+        'C_END_1_1', 'C_END_1_2', 'C_END_1_3', 'C_END_1_4',
+        'C_END_1_5', 'C_END_1_6',
+    ])
 
 
 @dataclass
@@ -170,6 +174,46 @@ class OptionIdleDefault:
     pass
 
 
+@dataclass
+class OptionPrepareDefault:
+    lock_team: bool = False
+
+
+@dataclass
+class OptionPresetDefault:
+    preset_enable: bool = False
+    preset_group: int = 1
+    preset_team: int = 1
+
+
+@dataclass
+class OptionGreenDefault:
+    green_enable: bool = False
+    green_mark: GreenMarkType = GreenMarkType.GREEN_LEFT1
+
+
+@dataclass
+class OptionRedDefault:
+    pass
+
+
+@dataclass
+class OptionEchoDefault:
+    pass
+
+
+@dataclass
+class OptionRandomclickDefault:
+    # 战斗开始后，首次允许执行前等待多久
+    start_delay: tuple[float, float] = (5.0, 10.0)
+    # 两次执行之间的最小间隔
+    cooldown: tuple[float, float] = (15.0, 30.0)
+    # 到达可执行时间后，本次实际执行的概率
+    trigger_probability: float = 0.6
+    # 本场战斗最多执行几次；元组表示开场时随机取一个上限
+    execution_limit: tuple[int, int] = (1, 2)
+
+
 # event → options 数据类, update_options 靠它按 hook2event 自动实例化分发
 _OPTION_CLASSES: dict[str, type] = {
     'setup': OptionSetupDefault,
@@ -178,6 +222,12 @@ _OPTION_CLASSES: dict[str, type] = {
     'success': OptionSuccessDefault,
     'failure': OptionFailureDefault,
     'idle': OptionIdleDefault,
+    'prepare': OptionPrepareDefault,
+    'preset': OptionPresetDefault,
+    'green': OptionGreenDefault,
+    'red': OptionRedDefault,
+    'echo': OptionEchoDefault,
+    'randomclick': OptionRandomclickDefault,
 }
 
 
@@ -229,6 +279,38 @@ class PerTaskIdle:
 
 
 @dataclass
+class PerTaskPrepare:
+    pass
+
+
+@dataclass
+class PerTaskPreset:
+    # 一次任务类型触发一次，想要再次触发把done设置False
+    done: bool = False
+
+
+@dataclass
+class PerTaskGreen:
+    pass
+
+
+@dataclass
+class PerTaskRed:
+    pass
+
+
+@dataclass
+class PerTaskEcho:
+    pass
+
+
+@dataclass
+class PerTaskRandomclick:
+    # 上一次点击的时间
+    last_attempt_time: float = 0.0
+
+
+@dataclass
 class PerBattleSetup:
     pass
 
@@ -245,7 +327,23 @@ class PerBattleInterrupt:
 
 @dataclass
 class PerBattleSuccess:
-    pass
+    click_stage_1: RuleClickExclude | None = None
+    click_stage_2: RuleClickExclude | None = None
+
+    @classmethod
+    def reward_exclude_click(
+            cls,
+            onwer,
+            areas: list[str] = None,
+            name: str = 'success_exclude_click'
+    ) -> RuleClickExclude:
+        inputs = []
+        for area in areas:
+            click = getattr(onwer, area, None)
+            if click is None:
+                raise ValueError(f'Unknown success exclusion click: {area!r}')
+            inputs.append(click)
+        return RuleClickExclude(inputs, name=name)
 
 
 @dataclass
@@ -258,6 +356,41 @@ class PerBattleIdle:
     pass
 
 
+@dataclass
+class PerBattlePrepare:
+    done: bool = False
+    timer: Timer = None
+
+
+@dataclass
+class PerBattlePreset:
+    pass
+
+
+@dataclass
+class PerBattleGreen:
+    # 本场战斗完成
+    done: bool = False
+
+
+@dataclass
+class PerBattleRed:
+    pass
+
+
+@dataclass
+class PerBattleEcho:
+    pass
+
+
+@dataclass
+class PerBattleRandomclick:
+    execution_count: int = 0
+    execution_limit_resolved: int = 0
+    start_delay_resolved: float = 0.0
+    first_allowed_time: float = 0.0
+
+
 # event → pri 私有状态数据类
 _PER_TASK_CLASSES: dict[str, type] = {
     'setup': PerTaskSetup,
@@ -266,6 +399,12 @@ _PER_TASK_CLASSES: dict[str, type] = {
     'success': PerTaskSuccess,
     'failure': PerTaskFailure,
     'idle': PerTaskIdle,
+    'prepare': PerTaskPrepare,
+    'preset': PerTaskPreset,
+    'green': PerTaskGreen,
+    'red': PerTaskRed,
+    'echo': PerTaskEcho,
+    'randomclick': PerTaskRandomclick,
 }
 
 _PER_BATTLE_CLASSES: dict[str, type] = {
@@ -275,6 +414,12 @@ _PER_BATTLE_CLASSES: dict[str, type] = {
     'success': PerBattleSuccess,
     'failure': PerBattleFailure,
     'idle': PerBattleIdle,
+    'prepare': PerBattlePrepare,
+    'preset': PerBattlePreset,
+    'green': PerBattleGreen,
+    'red': PerBattleRed,
+    'echo': PerBattleEcho,
+    'randomclick': PerBattleRandomclick,
 }
 
 # ────────────────────────────────────────────
@@ -498,7 +643,7 @@ class battle_wait_strategy:
             # )
             options = battle_wait_options.options or None
             runtime.reset_per_battle()
-            runtime.update_options(options)
+            runtime.update_options(options, plan=current_plan)
             return func(owner, battle_wait_plan=current_plan, options=options) \
                 if options else func(owner, battle_wait_plan=current_plan)
 
@@ -591,8 +736,8 @@ class runtime:
     def __get__(self, obj, objtype=None):
         if obj is None:
             return self
-        runtime._ensure_pub()
-        runtime._ensure_pri(self.hook_name)
+        runtime._ensure_pub_default()
+        runtime._ensure_pri_default(self.hook_name)
 
         @wraps(self.func)
         def bound(*args, **kwargs):
@@ -604,8 +749,8 @@ class runtime:
         if runtime.task_owner is None or owner is not runtime.task_owner:
             runtime.task_owner = owner
             runtime.reset_per_task()
-        runtime._ensure_pub()
-        runtime._ensure_pri(self.hook_name)
+        runtime._ensure_pub_default()
+        runtime._ensure_pri_default(self.hook_name)
 
         return self.func(owner, pub=runtime.pub_ctx, pri=runtime.pri_ctx[self.hook_name])
 
@@ -631,7 +776,7 @@ class runtime:
 
     @classmethod
     def reset_per_task(cls):
-        cls._ensure_pub()
+        cls._ensure_pub_default()
         cls.pub_ctx.per_task = PerTaskState()
         for hook_name, ctx in cls.pri_ctx.items():
             event = cls.hook2event(hook_name)
@@ -640,7 +785,7 @@ class runtime:
 
     @classmethod
     def reset_per_battle(cls):
-        cls._ensure_pub()
+        cls._ensure_pub_default()
         cls.pub_ctx.per_battle = PerBattleState()
         for hook_name, ctx in cls.pri_ctx.items():
             event = cls.hook2event(hook_name)
@@ -648,12 +793,12 @@ class runtime:
             ctx.per_battle = cls_type()
 
     @classmethod
-    def _ensure_pub(cls):
+    def _ensure_pub_default(cls):
         if cls.pub_ctx is None:
             cls.pub_ctx = PublicContext()
 
     @classmethod
-    def _ensure_pri(cls, name):
+    def _ensure_pri_default(cls, name):
         if name not in cls.pri_ctx:
             event = cls.hook2event(name)
             cls.pri_ctx[name] = PrivateContext(
@@ -667,19 +812,38 @@ class runtime:
         return func_name[len('_bw_'):].rsplit('_', 1)[0]
 
     @classmethod
-    def update_options(cls, options: dict[str, object] | None):
-        """options 是 dict[str, OptionXxx] 实例（由 battle_wait_options 转好），直接按 event 分发"""
-        cls._ensure_pub()
+    def event2hook(cls, event_name: str, strategy_name: str) -> str:
+        return f'_bw_{event_name}_{strategy_name}'
+
+    @classmethod
+    def update_options(cls, options: dict[str, object] | None, plan: BattleWaitPlan):
+        """
+        输入 options = {
+                'setup':     OptionSetupDefault(excludes=None),
+                'completion': OptionCompletionDefault(),
+                'prepare':   OptionPrepareDefault(lock_team=True),
+                'preset':    OptionPresetDefault(preset_enable=True, preset_group=1, preset_team=2),
+                'success':   OptionSuccessDefault(),                  # 没传字段 → 全默认
+                ... # 其余 event 都有
+                }
+
+        设置值, 这里key没有直接使用 event 而是 _bw_event_strategy 是因为可能这场战斗和下一场战斗的options不同，需要区分开来
+        cls.pub_ctx.options = options  // 直接的一个引用
+        runtime.pri_ctx['_bw_prepare_default'].options == OptionPrepareDefault(lock_team=True)
+        runtime.pri_ctx['_bw_preset_default'].options  == OptionPresetDefault(preset_enable=True, preset_group=1, preset_team=2)
+        runtime.pri_ctx['_bw_success_default'].options == OptionSuccessDefault()
+        """
+        cls._ensure_pub_default()
         if not isinstance(options, dict):
-            cls.pub_ctx.options = {}
-            for hook_name, ctx in cls.pri_ctx.items():
-                ctx.options = cls._option_class(hook_name)()
-            return
+            raise
         cls.pub_ctx.options = options
-        for hook_name, ctx in cls.pri_ctx.items():
-            event = cls.hook2event(hook_name)
-            opt = options.get(event)
-            ctx.options = opt if isinstance(opt, cls._option_class(hook_name)) else cls._option_class(hook_name)()
+        if plan is not None:
+            for hook in [plan.function_setup_name] + plan.sequence_function_names():
+                cls._ensure_pri_default(hook)
+                opt = options.get(cls.hook2event(hook))
+                ctx = cls.pri_ctx[hook]
+                ctx.options = opt if isinstance(opt, cls._option_class(hook)) \
+                    else cls._option_class(hook)()
 
     @classmethod
     def _option_class(cls, hook_name: str) -> type:
@@ -697,9 +861,67 @@ class runtime:
         """
         hook_enabled 的更新只能在 BattleWait 上。不可以在 battle_wait_options 或者 battle_wait_strategy 上
         """
-        cls.pub_ctx.per_battle.hook_enabled.update(enable)
-        cls.pub_ctx.per_battle.hook_enabled.difference_update(disable)
+        if enable:
+            cls.pub_ctx.per_battle.hook_enabled.update(enable)
+        if disable:
+            cls.pub_ctx.per_battle.hook_enabled.difference_update(disable)
         return HookSignal.CONTINUE
+
+
+def randomclick_gate(func: Callable) -> Callable:
+    """
+    randomclick 专属拦截装饰器，零自身状态。全部状态读写透传进来的 pri：
+      - per_battle(PerBattleRandomclick): 开场 delay/上限/次数，每场重置
+      - per_task (PerTaskRandomclick):   cooldown 上次尝试时刻，跨战斗
+    四道门全过才放行 func 真正执行随机动作。
+    """
+    @wraps(func)
+    def wrapper(self, pub: PublicContext, pri: PrivateContext) -> HookSignal:
+        options = pub.options.get('randomclick')
+        state_battle = pri.per_battle
+        state_task = pri.per_task
+        if not isinstance(options, OptionRandomclickDefault):
+            raise TypeError(f"randomclick options must be OptionRandomclickDefault, got {type(options)!r}")
+        if not isinstance(state_battle, PerBattleRandomclick):
+            raise TypeError(f"randomclick per_battle state must be PerBattleRandomclick, got {type(state_battle)!r}")
+        if not isinstance(state_task, PerTaskRandomclick):
+            raise TypeError(f"randomclick per_task state must be PerTaskRandomclick, got {type(state_task)!r}")
+        if not self.is_in_battle(is_screenshot=False):
+            return HookSignal.CONTINUE
+
+        now = time.time()
+
+        # 第一次调用：解析 start_delay 和 execution_limit（只解析一次）
+        if state_battle.first_allowed_time == 0.0:
+            state_battle.start_delay_resolved = random.uniform(*options.start_delay)
+            state_battle.execution_limit_resolved = random.randint(*options.execution_limit)
+            state_battle.first_allowed_time = now + state_battle.start_delay_resolved
+            return HookSignal.CONTINUE
+
+        # Gate 1: start_delay 未到
+        if now < state_battle.first_allowed_time:
+            return HookSignal.CONTINUE
+
+        # Gate 2: execution_limit 已满
+        if state_battle.execution_count >= state_battle.execution_limit_resolved:
+            return HookSignal.CONTINUE
+
+        # Gate 3: cooldown 未到（记在 per_task 跨战斗，秒掉的小战斗也能续上间隔）
+        if now - state_task.last_attempt_time < random.uniform(*options.cooldown):
+            return HookSignal.CONTINUE
+
+        # 记录本次尝试时间（无论概率是否通过，都算一次 cooldown 周期）
+        state_task.last_attempt_time = now
+
+        # Gate 4: trigger_probability 概率判定
+        if random.random() >= options.trigger_probability:
+            return HookSignal.CONTINUE
+
+        # 通过全部四道门，放行真正执行随机动作
+        state_battle.execution_count += 1
+        return func(self, pub, pri)
+
+    return wrapper
 
 
 class BattleWait(BaseTask, GeneralBattleAssets):
@@ -717,60 +939,102 @@ class BattleWait(BaseTask, GeneralBattleAssets):
                     setattr(klass, name, runtime(attr))
         return super().__new__(cls)
 
+    # ----------------------------------------------------------------------------------------------------------------
+    # loadout：一行一个 event（event + strategy + options），全量快照，默认值来源 battle_wait.py，不裸写：
+    #   strategies: dict[event -> strategy]，有序，key 是 hook 名，支持 prepare='default' 这类逐 hook 设置
+    #   options:    dict[event -> Option 实例]，全部字段可见
+    # 跑法：
+    #   with battle_wait_strategy(**strategies), battle_wait_options(**options):
+    #       self.battle_wait()
+    # ----------------------------------------------------------------------------------------------------------------
+    @classmethod
+    def loadout_default(cls) -> tuple[dict, dict]:
+        """
+        默认策略 + 默认 options 的全量快照（不是 diff，是完整的）。
+          策略来源 BattleWaitPlan()（battle_wait.py），按 sequence 顺序展开成 dict；
+          options 来源 battle_wait_options.options（battle_wait.py）。
+        """
+        plan = BattleWaitPlan()
+        strategies = {e: getattr(plan, e) for e in plan.sequence.replace(' ', '').split('>') if e}
+        options = deepcopy(battle_wait_options.options) or {}
+        return strategies, options
+
+    @classmethod
+    def loadout_show(cls, loadout: tuple[dict, dict] | None = None) -> None:
+        """
+        输出类似：
+        event       strategy    options
+        idle        default     OptionIdleDefault()
+        prepare     default     OptionPrepareDefault(lock_team=False)
+        preset      default     OptionPresetDefault(preset_enable=False, preset_group=1, preset_team=1)
+        green       default     OptionGreenDefault(green_enable=False, green_mark=<GreenMarkType.GREEN_LEFT1: 'green_left1'>)
+        """
+        strategies, options = loadout if loadout is not None else cls.loadout_default()
+        order = []
+        seen = set()
+        for event in options:
+            order.append(event)
+            seen.add(event)
+        for event in strategies:
+            if event not in seen:
+                order.append(event)
+        print('=' * 64)
+        print(f'{"event":<12}{"strategy":<12}options')
+        for event in order:
+            print(f'{event:<12}{strategies.get(event, "default"):<12}{options.get(event)!r}')
+        print('=' * 64)
+
+    @classmethod
+    def state_show(cls) -> None:
+        """
+        输出类似：
+        event       strategy    enabled   per_task | per_battle
+        completion  default     True      {} | {}
+        idle        default     True      {} | {}
+        prepare     default     False     {} | {'done': True}
+        ----------------------------------------------------------------
+        pub         per_task    count 等全局跨任务状态
+        pub         per_battle  success / hook_enabled 等全局跨战斗状态
+        """
+        runtime._ensure_pub_default()
+        enabled = runtime.hook_enabled()
+
+        def _nondefault(o):
+            if isinstance(o, dict):
+                return dict(o)
+            return {f.name: getattr(o, f.name) for f in fields(o) if getattr(o, f.name) != f.default}
+
+        options = cls.loadout_default()[1]
+        order = list(options)
+        hooks = sorted(
+            runtime.pri_ctx,
+            key=lambda h: order.index(runtime.hook2event(h)) if runtime.hook2event(h) in order else len(order),
+        )
+        print('=' * 64)
+        print(f'{"event":<12}{"strategy":<12}{"enabled":<10}per_task | per_battle')
+        for hook in hooks:
+            event = runtime.hook2event(hook)
+            strategy = hook[len(f'_bw_{event}_'):]
+            ctx = runtime.pri_ctx[hook]
+            print(f'{event:<12}{strategy:<12}{str(event in enabled):<10}'
+                  f'{_nondefault(ctx.per_task)} | {_nondefault(ctx.per_battle)}')
+        print('-' * 64)
+        pub = runtime.pub_ctx
+        print(f'{"pub":<12}{"":<12}{"per_task":<10}{_nondefault(pub.per_task)}')
+        print(f'{"pub":<12}{"":<12}{"per_battle":<10}{_nondefault(pub.per_battle)}')
+        print('=' * 64)
+        time.sleep(0.6)
+
     # ------------------------------------------------------------------------------------------------------------------
-    @cached_property
-    def exclude_button_stage_1(self):
-        return ['C_END_MESSAGE_RIGHT_TOP', 'C_END_BUFF_AREA_1', 'C_END_BUFF_AREA_2',
-                'C_END_SOUL_RECORD', 'C_END_SOUL_DETAILS',
-                ]
-
-    @cached_property
-    def exclude_button_stage_2(self):
-        return ['C_END_MESSAGE_RIGHT_TOP', 'C_END_BUFF_AREA_1', 'C_END_BUFF_AREA_2', 'C_END_SOUL_RECORD', 'C_END_SOUL_DETAILS',
-                'C_END_1_1', 'C_END_1_2', 'C_END_1_3', 'C_END_1_4', 'C_END_1_5', 'C_END_1_6',
-                ]
-
-    def reward_exclude_click(self, areas: list[str] = None, name: str = 'success_exclude_click') -> RuleClickExclude:
-        inputs = []
-        for area in areas:
-            click = getattr(self, area, None)
-            if click is None:
-                raise ValueError(f'Unknown success exclusion click: {area!r}')
-            inputs.append(click)
-        return RuleClickExclude(inputs, name=name)
-
-    def reward_exclude_click_1(self, areas: list[str] = None) -> RuleClickExclude:
-        return self.reward_exclude_click(areas, name='reward_exclude_click_1')
-
-    def reward_exclude_click_2(self, areas: list[str] = None) -> RuleClickExclude:
-        return self.reward_exclude_click(areas, name='reward_exclude_click_2')
-
     # build in
     # ------------------------------------------------------------------------------------------------------------------
     def _bw_setup_default(self, pub: PublicContext, pri: PrivateContext) -> HookSignal:
-        """
-        options: dict = {
-            ‘excludes’
-        }
-        """
         self.C_REWARD_1.name = 'C_REWARD'
         self.C_REWARD_2.name = 'C_REWARD'
         self.C_REWARD_3.name = 'C_REWARD'
         self.device.stuck_record_add('BATTLE_STATUS_S')
         self.device.click_record_clear()
         logger.info('Start battle process')
-
-        pri_options = pri.options if isinstance(pri.options, dict) else {}
-        success_options = pri_options.get('success') or {}
-        if not isinstance(success_options, dict):
-            raise TypeError("battle wait option 'success' must be a dict")
-        excludes = success_options.get('excludes')
-        exclude_stage_1 = excludes if excludes is not None else self.exclude_button_stage_1
-        exclude_stage_2 = excludes if excludes is not None else self.exclude_button_stage_2
-        self._reward_exclude_click_1 = self.reward_exclude_click_1(exclude_stage_1)
-        self._reward_exclude_click_2 = self.reward_exclude_click_2(exclude_stage_2)
-        # print(self._reward_exclude_click_1)
-        # print(self._reward_exclude_click_2)
         return HookSignal.DONE
 
     def _bw_completion_default(self, pub: PublicContext, pri: PrivateContext) -> HookSignal:
@@ -783,8 +1047,17 @@ class BattleWait(BaseTask, GeneralBattleAssets):
         return HookSignal.CONTINUE
 
     def _bw_success_default(self, pub: PublicContext, pri: PrivateContext) -> HookSignal:
+        state = pri.per_battle
+        options = pri.options
+        if not isinstance(state, PerBattleSuccess) or not isinstance(options, OptionSuccessDefault):
+            raise
+        if state.click_stage_1 is None:
+            state.click_stage_1 = PerBattleSuccess.reward_exclude_click(self, pri.options.excludes_1, name='reward_exclude_click_1')
+        if state.click_stage_2 is None:
+            state.click_stage_2 = PerBattleSuccess.reward_exclude_click(self, pri.options.excludes_2, name='reward_exclude_click_2')
+
         if self.appear_then_click(self.I_WIN, interval=0.8):
-            self.click(self._reward_exclude_click_1)
+            self.click(state.click_stage_1)
             return HookSignal.CONTINUE
         appear_ghost, appear_reward, appear_gold, appear_skin = (
             self.appear(self.I_GREED_GHOST),
@@ -813,15 +1086,17 @@ class BattleWait(BaseTask, GeneralBattleAssets):
             if any([_appear_ghost, _appear_reward, _appear_gold, _appear_skin]):
                 if random.random() < 0.02:
                     # 有一定的概率专门点击具体的奖励物品
-                    x, y = self._reward_exclude_click_2.coord_in_excluded(None)
+                    x, y = state.click_stage_2.coord_in_excluded(None)
                     self.device.click(x=x, y=y, control_name='reward_item')
                     continue
-                self.click(self._reward_exclude_click_2, interval=1.5)
+                self.click(state.click_stage_2, interval=1.5)
             else:
                 logger.info('Get all reward')
-                pub.success = True
-                pub.completion = True
-                return HookSignal.CONTINUE
+                pub.per_battle.success = BattleResult.SUCCESS
+                return runtime.hook_enabled_update(
+                    enable=('completion',),
+                    disable=tuple(['success', 'failure']),
+                )
             if timer.reached_and_reset():
                 logger.warning('battle')
                 break
@@ -841,40 +1116,252 @@ class BattleWait(BaseTask, GeneralBattleAssets):
     def _bw_idle_default(self, pub: PublicContext, pri: PrivateContext) -> HookSignal:
         return HookSignal.CONTINUE
 
-    def _bw_randomclick_default(self, pub: PublicContext, pri: PrivateContext) -> HookSignal:
+    def _bw_prepare_default(self, pub: PublicContext, pri: PrivateContext) -> HookSignal:
+        pri_options = pri.options if isinstance(pri.options, OptionPrepareDefault) else None
+        state = pri.per_battle if isinstance(pri.per_battle, PerBattlePrepare) else None
+        if pri_options is None or state is None:
+            return HookSignal.CONTINUE
+        if state.done:
+            return HookSignal.CONTINUE
+        # 如果是锁队伍的，就直接跳过, 开启后面的 绿标，红标，应声虫
+        # 如果确定进入正式战斗中了 也是同样的操作
+        if pri_options.lock_team or self.is_in_real_battle(False):
+            logger.info('Prepare stage finish')
+            state.done = True
+            return runtime.hook_enabled_update(
+                enable=('green', 'red', 'echo'),
+                disable=('prepare', 'preset'),
+            )
+        # 如果开启了切阵容，就等执行切阵容完成(切阵容操作会自动把准备按钮给按消失), 这里会等8秒钟，时间一到自动关闭准备阶段
+        # 切阵容按 per_task 是一次性的：本任务已切过（done）就不再开定时器等，直接按准备开打
+        preset_done = next((
+            ctx.per_task.done
+            for hook, ctx in runtime.pri_ctx.items()
+            if runtime.hook2event(hook) == 'preset' and isinstance(ctx.per_task, PerTaskPreset)
+        ), False)
+        if pub.options.get('preset', OptionPresetDefault).preset_enable and not preset_done:
+            if state.timer is None:
+                state.timer = Timer(6).start()
+                # return HookSignal.CONTINUE
+                return runtime.hook_enabled_update(
+                    enable=('preset',),
+                    disable=(),
+                )
+            # 时间没到就一直等吧
+            if not state.timer.reached():
+                return HookSignal.CONTINUE
+            # 计时8秒时间到了， 那就一直按 准备按钮 直到消失去
+            # 不要把这行代码合并到下面去
+            self.appear_then_click(self.I_PREPARE_HIGHLIGHT, interval=0.8)
+            return HookSignal.CONTINUE
+
+        # 没有切阵容那就一直按 准备按钮 直到消失去]
+
+        self.appear_then_click(self.I_PREPARE_HIGHLIGHT, interval=1)
         return HookSignal.CONTINUE
-        done = pri.per_battle.get('_bw_randomclick_state', False)
-        if done:
+
+    def _bw_preset_default(self, pub: PublicContext, pri: PrivateContext) -> HookSignal:
+        """
+        切阵容：切换预设队伍，每个任务只执行一次
+        """
+        pri_options = pri.options if isinstance(pri.options, OptionPresetDefault) else None
+        state = pri.per_task if isinstance(pri.per_task, PerTaskPreset) else None
+        if pri_options is None or state is None:
             return HookSignal.CONTINUE
-        if not self.is_in_battle(is_screenshot=False):
+        if not pri_options.preset_enable or state.done:
             return HookSignal.CONTINUE
-        if random.random() < 0.005 :  # 低概率
-            rand_type = random.randint(0, 2)
-            match rand_type:
-                case 0:
-                    self.click(self.C_RANDOM_CLICK, interval=20)
-                case 1:
-                    self.swipe(self.S_BATTLE_RANDOM_LEFT, interval=20)
-                case 2:
-                    self.swipe(self.S_BATTLE_RANDOM_RIGHT, interval=20)
-            pri.per_battle['_bw_randomclick_state'] = True
-            # 重新设置为长战斗
-            # self.device.stuck_record_add('BATTLE_STATUS_S')
-        else:
-            time.sleep(0.4)  # 这样的好像不对
+
+        logger.info("Preset is enable")
+        # 点击预设按钮
+        while 1:
+            self.screenshot()
+            if self.appear(self.I_PRESET_ENSURE):
+                break
+            # 首个队伍没有满足5个式神，未出现预设按钮的情况下跳出循环
+            if self.appear(self.I_PRESENT_LESS_THAN_5):
+                break
+            if self.appear_then_click(self.I_PRESET, threshold=0.8, interval=1):
+                continue
+            if self.appear_then_click(self.I_PRESET_WIT_NUMBER, threshold=0.8, interval=1):
+                continue
+            if self.ocr_appear(self.O_PRESET):
+                self.click(self.O_PRESET, interval=1)
+                continue
+            if self.ocr_appear(self.O_PRESET_FULL):
+                self.click(self.O_PRESET_FULL, interval=1)
+                continue
+        logger.info("Click preset button")
+
+        def get_unselect_color(tmp1, tmp2, tmp3, size):
+            # 获取未选择分组的颜色，3组之中必定存在两个颜色相似
+            color_1 = get_color(self.device.image,
+                                (tmp1.roi_back[0], tmp1.roi_back[1],
+                                 tmp1.roi_back[0] + size[0], tmp1.roi_back[1] + size[1]))
+            color_2 = get_color(self.device.image,
+                                (tmp2.roi_back[0], tmp2.roi_back[1],
+                                 tmp2.roi_back[0] + size[0], tmp2.roi_back[1] + size[1]))
+            color_3 = get_color(self.device.image,
+                                (tmp3.roi_back[0], tmp3.roi_back[1],
+                                 tmp3.roi_back[0] + size[0], tmp3.roi_back[1] + size[1]))
+            if color_similar(color_1, color_2):
+                return color_1
+            if color_similar(color_2, color_3):
+                return color_2
+            return color_3
+
+        # 选择预设组
+        tmp = self.__getattribute__("C_PRESET_GROUP_" + str(pri_options.preset_group))
+        if tmp is None:
+            tmp = self.C_PRESET_GROUP_1
+        color_size = [self.C_PRESET_GROUP_1.roi_back[2],
+                      self.C_PRESET_GROUP_1.roi_back[3]]
+        unselected_color = (224.9, 208.3, 187.4)
+        while True:
+            self.screenshot()
+            color_tmp = get_color(self.device.image,
+                                  (tmp.roi_back[0], tmp.roi_back[1], tmp.roi_back[0] + color_size[0],
+                                   tmp.roi_back[1] + color_size[1]))
+            if color_similar(color_tmp, unselected_color):
+                self.click(tmp, interval=0.2)
+                continue
+            break
+        logger.info("Select preset group")
+
+        # 选择预设的队伍
+        time.sleep(0.5)
+        tmp = self.__getattribute__("C_PRESET_TEAM_" + str(pri_options.preset_team))
+        if tmp is None:
+            tmp = self.C_PRESET_TEAM_1
+        color_size = [5, 5]
+        unselected_color = (216.8, 185.0, 146.8)
+        while True:
+            self.screenshot()
+            color_tmp = get_color(self.device.image,
+                                  (tmp.roi_back[0], tmp.roi_back[1], tmp.roi_back[0] + color_size[0],
+                                   tmp.roi_back[1] + color_size[1]))
+            if color_similar(color_tmp, unselected_color):
+                self.click(tmp, interval=0.2)
+                continue
+            break
+        self.click(tmp)
+        logger.info("Select preset team")
+
+        # 点击预设确认
+        self.wait_until_appear(self.I_PRESET_ENSURE, wait_time=1)
+        click_timer = Timer(4).start()
+        while 1:
+            self.screenshot()
+            if click_timer.reached():
+                logger.warning("Switch preset failure")
+            if not self.appear(self.I_PRESET_ENSURE):
+                break
+            if self.appear_then_click(self.I_PRESET_ENSURE, threshold=0.8, interval=1):
+                continue
+        logger.info("Click preset ensure")
+        state.done = True
+        return runtime.hook_enabled_update(
+            enable=(),
+            disable=('preset',),
+        )
+
+    def _bw_green_default(self, pub: PublicContext, pri: PrivateContext) -> HookSignal:
+        """
+        绿标：标记己方式神，每场战斗只执行一次
+        """
+        pri_options = pri.options if isinstance(pri.options, OptionGreenDefault) else None
+        state = pri.per_battle if isinstance(pri.per_battle, PerBattleGreen) else None
+        if pri_options is None or state is None:
+            return HookSignal.CONTINUE
+        if not pri_options.green_enable or state.done:
+            return runtime.hook_enabled_update(
+                enable=(),
+                disable=('green',),
+            )
+
+        logger.info("Green is enable")
+        x, y = None, None
+        match pri_options.green_mark:
+            case GreenMarkType.GREEN_LEFT1:
+                x, y = self.C_GREEN_LEFT_1.coord()
+                logger.info("Green left 1")
+            case GreenMarkType.GREEN_LEFT2:
+                x, y = self.C_GREEN_LEFT_2.coord()
+                logger.info("Green left 2")
+            case GreenMarkType.GREEN_LEFT3:
+                x, y = self.C_GREEN_LEFT_3.coord()
+                logger.info("Green left 3")
+            case GreenMarkType.GREEN_LEFT4:
+                x, y = self.C_GREEN_LEFT_4.coord()
+                logger.info("Green left 4")
+            case GreenMarkType.GREEN_LEFT5:
+                x, y = self.C_GREEN_LEFT_5.coord()
+                logger.info("Green left 5")
+            case GreenMarkType.GREEN_MAIN:
+                x, y = self.C_GREEN_MAIN.coord()
+                logger.info("Green main")
+
+        # 等待那个准备的消失
+        while 1:
+            self.screenshot()
+            if not self.appear(self.I_PREPARE_HIGHLIGHT):
+                break
+
+        # 判断有无坐标的偏移
+        self.appear_then_click(self.I_LOCAL)
+        time.sleep(0.3)
+        # 点击绿标
+        self.device.click(x, y)
+        state.done = True
+        return runtime.hook_enabled_update(
+            enable=(),
+            disable=('green',),
+        )
+
+    def _bw_red_default(self, pub: PublicContext, pri: PrivateContext) -> HookSignal:
+        """
+        红标：点击对手的式神，暂为空壳
+        """
+        state = pri.per_battle
+
+        state.done = True
+        return runtime.hook_enabled_update(
+            enable=(),
+            disable=('red',),
+        )
+
+    def _bw_echo_default(self, pub: PublicContext, pri: PrivateContext) -> HookSignal:
+        """
+        应声虫：战斗中进入聊天界面复制粘贴，暂为空壳
+        """
+        state = pri.per_battle
+
+        state.done = True
+        return runtime.hook_enabled_update(
+            enable=(),
+            disable=('echo',),
+        )
+
+    @randomclick_gate
+    def _bw_randomclick_default(self, pub: PublicContext, pri: PrivateContext) -> HookSignal:
+        match random.randint(0, 2):
+            case 0:
+                self.click(self.C_RANDOM_CLICK, interval=20)
+            case 1:
+                self.swipe(self.S_BATTLE_RANDOM_LEFT, interval=20)
+            case 2:
+                self.swipe(self.S_BATTLE_RANDOM_RIGHT, interval=20)
         return HookSignal.CONTINUE
 
     # custom
     # ------------------------------------------------------------------------------------------------------------------
     def _bw_success_soul(self, pub: PublicContext, pri: PrivateContext) -> HookSignal:
-        success_options = pub.options.get('success') if isinstance(pub.options, dict) else {}
-        if isinstance(success_options, OptionSuccessDefault):
-            excludes = success_options.excludes
-        elif isinstance(success_options, dict):
-            excludes = success_options.get('excludes')
-        else:
+        state = pri.per_battle
+        options = pri.options
+        if not isinstance(state, PerBattleSuccess) or not isinstance(options, OptionSuccessDefault):
             raise TypeError("battle wait option 'success' must be an OptionSuccessDefault")
-        action_click = self.reward_exclude_click(excludes)
+        if state.click_stage_1 is None:
+            state.click_stage_1 = PerBattleSuccess.reward_exclude_click(self, options.excludes_1, name='success_exclude_click')
+        action_click = state.click_stage_1
         if self.appear_then_click(self.I_WIN, interval=0.8):
             return HookSignal.CONTINUE
         appear_ghost, appear_reward, appear_gold, appear_skin = (
@@ -901,9 +1388,11 @@ class BattleWait(BaseTask, GeneralBattleAssets):
                 self.click(action_click, interval=1.5)
             else:
                 logger.info('Get all reward')
-                pub.success = True
-                pub.completion = True
-                return HookSignal.CONTINUE
+                pub.per_battle.success = BattleResult.SUCCESS
+                return runtime.hook_enabled_update(
+                    enable=('completion',),
+                    disable=tuple(['success', 'failure']),
+                )
             if timer.reached_and_reset():
                 logger.warning('battle ')
                 break
@@ -970,8 +1459,8 @@ class BattleWait(BaseTask, GeneralBattleAssets):
         """
         理解 event + strategy 概念： 把战斗过程抽象为一系列触发事件以及对应的实现函数，也称hook。
         event + strategy 拼成了一个hook, 一个 event 在一次战斗过程中只能挂载一个 strategy
-        默认定义的 hook 有 BattleWaitPlan.HOOKS_DEFAULT = ('setup', 'completion', 'interrupt', 'success', 'failure', 'idle')
-        这些 hook 跑在一个 while 里面，默认的调用顺序 BattleWaitPlan.SEQUENCE_DEFAULT = 'completion > interrupt > success > failure > idle'
+        默认定义的 hook 有 BattleWaitPlan.HOOKS_DEFAULT = ('setup', 'completion', 'interrupt', 'success', 'failure', 'idle', 'prepare', 'preset', 'green', 'red', 'echo')  如果你填的没有，会使用默认的补全去的
+        这些 hook 跑在一个 while 里面，默认的调用顺序 BattleWaitPlan.SEQUENCE_DEFAULT = 'completion > interrupt > prepare > preset > green > red > echo > success > failure > idle'
         setup 没有跑在 while里面 而是在 while之前， 比如一个战斗过程可以表示为:
         setup_default()
         while 1:
@@ -1024,22 +1513,20 @@ class BattleWait(BaseTask, GeneralBattleAssets):
         battle_wait_plan = kwargs.get('battle_wait_plan')
         if battle_wait_plan is None:
             battle_wait_plan = BattleWaitPlan()
-        print(battle_wait_plan)
-        # print(battle_wait_plan.sequence_function_names())
-        options = runtime.pub_ctx.options
-        logger.info('options: {}'.format(options))
 
         setup_func = getattr(self, battle_wait_plan.function_setup_name, self._bw_setup_default)
         setup_func()
+        runtime.hook_enabled_update(
+            enable=(),
+            disable=('setup',),
+        )
         handlers = [getattr(self, func_name, None) for func_name in battle_wait_plan.sequence_function_names()]
-        _hook_enabled = tuple(runtime.hook2event(h.__name__) for h in handlers if h)
-        _hook_disabled = ('completion', )
-        runtime.hook_enabled_update(enable=_hook_enabled, disable=_hook_disabled)
-        print(f'first runtime.hook_enabled(): {runtime.hook_enabled()}')
+        self.setup_hook(handlers=handlers)
 
         while True:
             self.screenshot()
             hook_enabled = runtime.hook_enabled()
+            # self.state_show()
             for handler in handlers:
                 if runtime.hook2event(handler.__name__) not in hook_enabled:
                     continue
@@ -1048,6 +1535,19 @@ class BattleWait(BaseTask, GeneralBattleAssets):
                     return runtime.pub_ctx.per_battle.success == BattleResult.SUCCESS
                 if result == HookSignal.CONTINUE:
                     continue
+
+    @classmethod
+    def setup_hook(cls, handlers: list[Callable]):
+        """
+        默认的： 'setup', 'completion', 'interrupt', 'prepare', 'preset', 'green', 'red', 'echo', 'success', 'failure', 'idle'
+        战斗开始下关闭的 completion, 'preset', 'green', 'red', 'echo'
+        检测到进入准备阶段后开启 `preset` 来进入切换阵容，准备阶段结束后开启  'green', 'red', 'echo'
+
+        """
+        _hook_enabled = tuple(runtime.hook2event(h.__name__) for h in handlers if h)
+        _hook_disabled = ('completion', 'preset', 'green', 'red', 'echo')
+        runtime.hook_enabled_update(enable=_hook_enabled, disable=_hook_disabled)
+
 
 
 

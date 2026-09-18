@@ -19,8 +19,8 @@ from module.exception import TaskEnd
 from module.logger import logger
 
 from tasks.base_task import BaseTask
-from tasks.Component.GeneralBattle.battle_wait import battle_wait_strategy
-from tasks.Component.GeneralBattle.config_general_battle import GeneralBattleConfig
+from tasks.Component.GeneralBattle.battle_wait import battle_wait_strategy, battle_wait_options
+from tasks.Component.GeneralBattle.battle import Battle
 from tasks.ActivityShikigami.assets import ActivityShikigamiAssets
 from tasks.ActivityShikigami.config import SwitchSoulConfig, GeneralBattleConfig, ActivityShikigami
 from tasks.Component.BaseActivity.base_activity import BaseActivity
@@ -143,7 +143,7 @@ class StateMachine(BaseTask):
         return True
 
 
-class ScriptTask(StateMachine, GameUi, BaseActivity, SwitchSoul, ActivityShikigamiAssets):
+class ScriptTask(StateMachine, GameUi, Battle, BaseActivity, SwitchSoul, ActivityShikigamiAssets):
     """
     更新前请先看 ./README.md
     """
@@ -295,11 +295,17 @@ class ScriptTask(StateMachine, GameUi, BaseActivity, SwitchSoul, ActivityShikiga
                 logger.info(f'Try click fire, remain times[{max_times - click_times}]')
                 continue
         # 运行战斗
-        self.run_general_battle(config=self.get_general_battle_conf())
+        # self.run_general_battle(config=self.get_general_battle_conf())
+        strategies, options = self.loadout_from_config(self.get_general_battle_conf())
+        strategies['success'] = 'activity'
+        self.loadout_show((strategies, options))
+        self.state_show()
+        with battle_wait_strategy(**strategies), battle_wait_options(**options):
+            return self.battle_wait()
 
-    @battle_wait_strategy(success='activity')
-    def battle_wait(self, *args, **kwargs):
-        return self.battle_wait_with_strategy(*args, **kwargs)
+    # @battle_wait_strategy(success='activity')
+    # def battle_wait(self, *args, **kwargs):
+    #     return self.battle_wait_with_strategy(*args, **kwargs)
 
     def switch_soul(self, enter_button: RuleImage, cur_img: RuleImage):
         conf = self.conf.switch_soul_config
