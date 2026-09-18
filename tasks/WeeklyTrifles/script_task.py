@@ -26,14 +26,14 @@ class ScriptTask(GameUi, WeeklyTriflesAssets):
 
     def run(self):
         con = self.config.weekly_trifles.trifles
-        if con.save_touch_fish:
-            self._save_touch_fish()
         if con.share_collect:
             self._share_collect()
         if con.share_area_boss:
             self._share_area_boss()
         if con.share_secret:
             self._share_secret()
+        if con.save_touch_fish:
+            self._save_touch_fish()
         if con.broken_amulet:
             self._broken_amulet(con.broken_amulet)
 
