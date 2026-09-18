@@ -16,8 +16,7 @@ class ScriptTask(GameUi, GuildActivityMonitorAssets):
         """阴阳寮活动监控主函数"""
         if not self.check_run_days():
             raise TaskEnd('GuildActivityMonitor')
-        self.ui_get_current_page()
-        self.ui_goto(page_main)
+        self.goto_page(page_main)
         keyword_map = self.build_keyword_map()
         self.monitor_activities(keyword_map)
 

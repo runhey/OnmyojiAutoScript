@@ -22,8 +22,7 @@ class ScriptTask(GameUi, SwitchSoul, SwitchSoulAssets, SoulsTidyAssets):
 
     def run(self):
         # 定位并进入式神录
-        self.ui_get_current_page()
-        self.ui_goto(page_shikigami_records)
+        self.goto_page(page_shikigami_records)
 
         # 关键识别点统计
         images_count = [
@@ -84,8 +83,7 @@ class ScriptTask(GameUi, SwitchSoul, SwitchSoulAssets, SoulsTidyAssets):
         logger.hr('Switch Soul Test - All Groups')
         
         # 进入式神录
-        self.ui_get_current_page()
-        self.ui_goto(page_shikigami_records)
+        self.goto_page(page_shikigami_records)
         
         # 点击预设按钮
         self.click_preset()
@@ -111,8 +109,7 @@ class ScriptTask(GameUi, SwitchSoul, SwitchSoulAssets, SoulsTidyAssets):
         logger.hr('Souls Tidy Donation Test')
         
         # 进入式神录
-        self.ui_get_current_page()
-        self.ui_goto(page_shikigami_records)
+        self.goto_page(page_shikigami_records)
         
         # 进入御魂界面
         souls_tidy_task = SoulsTidyTask(self.config, self.device)
@@ -150,8 +147,7 @@ class ScriptTask(GameUi, SwitchSoul, SwitchSoulAssets, SoulsTidyAssets):
         souls_tidy_task.back_records()
         
         # 退出式神录
-        self.ui_get_current_page()
-        self.ui_goto(page_main)
+        self.goto_page(page_main)
         logger.info('Souls Tidy Donation Test completed')
 
 

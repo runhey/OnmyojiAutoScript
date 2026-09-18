@@ -17,8 +17,7 @@ from tasks.SoulsTidy.config import SimpleTidy
 
 class ScriptTask(GameUi, SoulsTidyAssets):
     def run(self):
-        self.ui_get_current_page()
-        self.ui_goto(page_shikigami_records)
+        self.goto_page(page_shikigami_records)
         con = self.config.souls_tidy
         if con.simple_tidy.enable_greed or con.simple_tidy.enable_maneki:
             self.goto_souls()

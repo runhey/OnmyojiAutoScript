@@ -24,21 +24,17 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, DyeTrialsAssets):
 
         # 自动换御魂
         if cfg.switch_soul_config.enable:
-            self.ui_get_current_page()
-            self.ui_goto(page_shikigami_records)
+            self.goto_page(page_shikigami_records)
             self.run_switch_soul(cfg.switch_soul_config.switch_group_team)
         if cfg.switch_soul_config.enable_switch_by_name:
-            self.ui_get_current_page()
-            self.ui_goto(page_shikigami_records)
+            self.goto_page(page_shikigami_records)
             self.run_switch_soul_by_name(cfg.switch_soul_config.group_name, cfg.switch_soul_config.team_name)
 
-        self.ui_get_current_page()
-        self.ui_goto(page_main)
+        self.goto_page(page_main)
 
         self.get_all()
 
-        self.ui_get_current_page()
-        self.ui_goto(page_main)
+        self.goto_page(page_main)
 
         self.set_next_run(task='DyeTrials', success=True, finish=True)
         raise TaskEnd('DyeTrials')

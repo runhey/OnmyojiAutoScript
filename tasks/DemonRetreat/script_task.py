@@ -49,12 +49,10 @@ class ScriptTask(GameUi, GeneralBattle, SwitchSoul, DemonRetreatAssets, AbyssSha
             raise TaskEnd
 
         if cfg.switch_soul_config.enable:
-            self.ui_get_current_page()
-            self.ui_goto(page_shikigami_records)
+            self.goto_page(page_shikigami_records)
             self.run_switch_soul(cfg.switch_soul_config.switch_group_team)
         if cfg.switch_soul_config.enable_switch_by_name:
-            self.ui_get_current_page()
-            self.ui_goto(page_shikigami_records)
+            self.goto_page(page_shikigami_records)
             self.run_switch_soul_by_name(cfg.switch_soul_config.group_name, cfg.switch_soul_config.team_name)
 
         # 进入妖怪退治
@@ -105,9 +103,8 @@ class ScriptTask(GameUi, GeneralBattle, SwitchSoul, DemonRetreatAssets, AbyssSha
         进入首领退治
         """
         cfg: DemonRetreat = self.config.demon_retreat
-        self.ui_get_current_page()
         logger.info("Entering demon_retreat")
-        self.ui_goto(page_guild)
+        self.goto_page(page_guild)
 
         goto_demon_retreat_num = 0
         while 1:
@@ -262,9 +259,8 @@ class ScriptTask(GameUi, GeneralBattle, SwitchSoul, DemonRetreatAssets, AbyssSha
     def goto_main(self):
         ''' 保持好习惯，一个任务结束了就返回庭院，方便下一任务的开始或者是出错重启
         '''
-        self.ui_get_current_page()
         logger.info("Exiting DemonRetreat")
-        self.ui_goto(page_main)
+        self.goto_page(page_main)
 
 
 

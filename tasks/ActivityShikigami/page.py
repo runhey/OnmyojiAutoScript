@@ -19,9 +19,9 @@ from tasks.base_task import BaseTask as BT
 
 # 爬塔活动主要界面
 page_climb_act = Page(asa.I_TO_BATTLE_MAIN)
-page_climb_act.additional = [gga.I_UI_REWARD, asa.I_SKIP_BUTTON, asa.I_CONFIRM_SKIP, asa.I_RED_EXIT]
-page_climb_act.link(button=G.I_BACK_Y, destination=page_main)
-page_main.link(button=[asa.I_SHI, RAA.I_TOGGLE_BUTTON], destination=page_climb_act)
+page_climb_act.add_enter_success_hooks(gga.I_UI_REWARD, asa.I_SKIP_BUTTON, asa.I_CONFIRM_SKIP, asa.I_RED_EXIT)
+page_climb_act.connect(page_main, G.I_BACK_Y, key="page_climb_act->page_main")
+page_main.connect(page_climb_act, [asa.I_SHI, RAA.I_TOGGLE_BUTTON], key="page_main->page_climb_act")
 
 # page_act_list_climb_act.link(button=G.I_ACT_LIST_GOTO_ACT, destination=page_climb_act)
 # # 爬塔活动副界面

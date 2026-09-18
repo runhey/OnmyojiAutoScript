@@ -51,6 +51,8 @@ class GlobalGameAssets:
 	I_UI_BACK_YELLOW = RuleImage(roi_front=(26,17,47,46), roi_back=(0,0,100,100), threshold=0.8, method="Template matching", file="./tasks/GlobalGame/ui/ui_ui_back_yellow.png")
 	# description 
 	I_UI_BACK_BLUE = RuleImage(roi_front=(32,37,51,45), roi_back=(2,1,133,119), threshold=0.8, method="Template matching", file="./tasks/GlobalGame/ui/ui_ui_back_blue.png")
+	# 圆形返回按钮(移植自mine)
+	I_UI_BACK_CIRCLE = RuleImage(roi_front=(24,21,36,39), roi_back=(0,0,95,101), threshold=0.8, method="Template matching", file="./tasks/GlobalGame/ui/ui_ui_back_circle.png")
 	# description 
 	I_UI_AWARD = RuleImage(roi_front=(577,499,100,100), roi_back=(530,408,199,220), threshold=0.8, method="Template matching", file="./tasks/GlobalGame/ui/ui_ui_award.png")
 	# 短一点的确认 

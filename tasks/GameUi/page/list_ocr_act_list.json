@@ -1,0 +1,13 @@
+{
+  "name": "act_list_ocr",
+  "direction": "vertical",
+  "type": "ocr",
+  "roiBack": "50,123,49,553",
+  "description": "活动列表页爬塔活动文字",
+  "list": [
+    {
+      "itemName": "版本",
+      "roiFront": "52,124,45,69"
+    }
+  ]
+}

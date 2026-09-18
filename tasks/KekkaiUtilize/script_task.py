@@ -33,8 +33,7 @@ class ScriptTask(GameUi, ReplaceShikigami, KekkaiUtilizeAssets):
 
     def run(self):
         con = self.config.kekkai_utilize.utilize_config
-        self.ui_get_current_page()
-        self.ui_goto(page_guild)
+        self.goto_page(page_guild)
 
         # 进入寮结界
         self.goto_realm()
@@ -57,16 +56,15 @@ class ScriptTask(GameUi, ReplaceShikigami, KekkaiUtilizeAssets):
 
     def recive_guild_ap_or_assets(self, max_tries: int = 3):
         for i in range(1, max_tries+1):
-            self.ui_get_current_page()
-            self.ui_goto(page_guild)
+            self.goto_page(page_guild)
             # 在寮的主界面 检查是否有收取体力或者是收取寮资金
             if self.check_guild_ap_or_assets():
                 logger.warning(f'第[{i}]次检查寮收获,成功')
-                self.ui_goto(page_main)
+                self.goto_page(page_main)
                 break
             else:
                 logger.warning(f'第[{i}]次检查寮收获寮收获,失败')
-            self.ui_goto(page_main)
+            self.goto_page(page_main)
 
     def check_utilize_add(self):
         con = self.config.kekkai_utilize.utilize_config
