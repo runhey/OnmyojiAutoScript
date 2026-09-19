@@ -7,6 +7,7 @@ from module.atom.ocr import RuleOcr
 from tasks.Component.GeneralBattle.battle_wait import (
     BattleWait, battle_wait_strategy, battle_wait_options,
     OptionPrepareDefault, OptionPresetDefault, OptionGreenDefault, OptionRandomclickDefault,
+    runtime,
 )
 from tasks.Component.GeneralBattle.config_general_battle import GeneralBattleConfig, GreenMarkType
 
@@ -54,6 +55,26 @@ class Battle(BattleWait):
     def battle_run(self):
         with battle_wait_strategy(), battle_wait_options():
             return self.battle_wait()
+
+    @classmethod
+    def battle_count_reached(cls, limit: int) -> bool:
+        """
+        判断当前任务累计战斗次数是否已达到上限。
+        对比的是新流程的任务级计数 per_task.count（每完成一场结算 +1）。
+
+        Args:
+            limit: 上限对比值，如 FallenSun 的 limit_count。
+
+        Returns:
+            达到或超过上限返回 True，否则 False。
+        """
+        count = runtime.pub_ctx.per_task.count if runtime.pub_ctx else 0
+        return count >= limit
+
+    @classmethod
+    def battle_state_reset(cls):
+        runtime.reset_per_task()
+        runtime.reset_per_battle()
 
     def battle_setup(self):
         pass

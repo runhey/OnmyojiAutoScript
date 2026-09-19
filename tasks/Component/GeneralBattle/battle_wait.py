@@ -634,6 +634,21 @@ class BattleWaitPlan:
         return self
 
 class battle_wait_strategy:
+    """
+    用法（入参为 'event_strategy' 字符串或 event=strategy 的 kwargs）:
+    1) 装饰器 = 永久覆盖（任务级）:
+         @battle_wait_strategy(success='activity')
+         def battle_wait(self, *args, **kwargs):
+             return self.battle_wait_with_strategy(*args, **kwargs)
+    2) with = 临时覆盖（本次调用, 退出还原）:
+         with battle_wait_strategy(success='activity'):
+             task.battle_wait()
+    3) 调用时动态传参（临时更新, 不覆盖, 兼容旧接口）:
+         task.battle_wait(random_click_swipt_enable=True)
+
+    新增事件需实现对应 _bw_<event>_<strategy> 的 hook；自定义顺序用 sequence 参数,
+    未指定时新增事件插到 failure 与 idle 之间。
+    """
     battle_wait_plan: BattleWaitPlan = None
 
     def __init__(self, *arg, **kwargs):
@@ -1097,6 +1112,7 @@ class BattleWait(BaseTask, GeneralBattleAssets):
             raise
         if options.check_imgs is None:
             pub.per_task.count += 1
+            # self.current_count += 1  # 兼容旧的计数
             return HookSignal.DONE
         # 如果需要进一步确认
         if not isinstance(options.check_imgs, list):
@@ -1104,6 +1120,7 @@ class BattleWait(BaseTask, GeneralBattleAssets):
         appears = [self.appear(check) for check in options.check_imgs]
         if any(appears):
             pub.per_task.count += 1
+            # self.current_count += 1  # 兼容旧的计数
             return HookSignal.DONE
         # check_imgs 全没出现 → 兜底点击回退界面：进入 completion 满 8s 才首次点击，之后每 8s 一次
         if state.fallback_timer is None:
@@ -1554,38 +1571,8 @@ class BattleWait(BaseTask, GeneralBattleAssets):
         |   public      | cross | per_task              | per_battle   |
         |   private     | cross | per_task              | per_battle   |
 
-        ----------------------------------------------------------------------------------------------------------------
-        三种自定义策略方法：
-        1. 使用装饰器battle_wait_strategy, 将会覆盖掉类变量
-            @battle_wait_strategy( 'reserve_default', 'idle_default', failure='default')
-            def battle_wait(self, *args, **kwargs):
-                return self.battle_wait_with_strategy(*args, **kwargs)
-        2. 使用 with 上下文 （！在1基础上）, 将会临时覆盖掉原先的类变量，退出后恢复
-            with battle_wait_strategy('reserve_default'):
-                test_battle_wait.battle_wait()
-        3. 调用时动态传参 （！在1基础上）， 不覆盖，就临时更新策略
-            obj.battle_wait(random_click_swipt_enable=1)  # 详细参数看 battle_wait_strategy.__call__()
-
-        自定义hook就是字符串拼起来：  battle_wait_strategy的入参可以有 ‘event_strategy’ 或者 'event=strategy'
-        可以添加任意 event 以及其对应的 strategy。比如 ‘yyy_default’ 'abcd_edf'
-        但是必须要实现对应的hook 上面的比如 _bw_yyy_default() 以及 _bw_abcd_edf()
-        hook 可以自定义顺序，比如 battle_wait_strategy(sequence='completion > interrupt > success > failure > idle')
-        如果没有指定sequence， 新增的event会按照传参时候从左到右排序，左边高优先级，新增的会插入到 failure 和 idle 之间
-
-        ----------------------------------------------------------------------------------------------------------------
-        如果希望每一个hook带上参数：
-        1. 在 battle_wait_strategy 定义了一组默认的 options
-        2. 可以在装饰器定义 @battle_wait_strategy(options = options)，这里将会覆盖掉原先的 battle_wait_strategy.options
-        3. 上下文带上  with battle_wait_strategy(...).with_options(options)，同样也是临时覆盖掉 battle_wait_strategy.options
-        4.
-        options: dict[str: dict] = {
-            "setup": {...}
-            ...
-        }
-        ----------------------------------------------------------------------------------------------------------------
-        跨战斗，考虑把状态挂到方法上，而不是挂到类对象上。】
-        我突然感觉 一个类里面装了 策略和参数，这样不好，考虑拆分成两个装饰器
-
+        三种自定义策略方法见 battle_wait_strategy 的 docstring。
+        自定义options方法见 battle_wait_options 的 docstring
         """
         battle_wait_plan = kwargs.get('battle_wait_plan')
         if battle_wait_plan is None:
