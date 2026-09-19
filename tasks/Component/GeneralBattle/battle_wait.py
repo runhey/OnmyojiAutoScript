@@ -76,6 +76,7 @@
 import random
 import time
 import copy
+import math
 from copy import deepcopy
 
 
@@ -88,6 +89,7 @@ from cached_property import cached_property
 from module.logger import logger
 from module.base.timer import Timer
 from module.atom.click import RuleClickExclude
+from module.atom.image import RuleImage
 from module.base.utils import get_color, color_similar
 
 from tasks.base_task import BaseTask
@@ -140,7 +142,10 @@ class OptionSetupDefault:
 
 @dataclass
 class OptionCompletionDefault:
-    pass
+    # 这里是为了， 确认结束战斗后退回到 “fire” 的界面
+    check_imgs: list[RuleImage] = None
+    # 兜底：check_imgs 都检测不到时，间隔点击的排除位
+    excludes: list[str] = field(default_factory=list)
 
 
 @dataclass
@@ -204,14 +209,55 @@ class OptionEchoDefault:
 
 @dataclass
 class OptionRandomclickDefault:
-    # 战斗开始后，首次允许执行前等待多久
+    # 战斗开始后，首次允许执行前等待多久 每次战斗重抽存状态到 per_battle.start_delay_resolved
     start_delay: tuple[float, float] = (5.0, 10.0)
-    # 两次执行之间的最小间隔
-    cooldown: tuple[float, float] = (15.0, 30.0)
+    # 两次执行之间的最小间隔, 每次执行的时候随机选一个，不存状态, 这个时间包括战斗结束后到下一轮的时间哈
+    cooldown: tuple[float, float] = (30.0, 60.0)
     # 到达可执行时间后，本次实际执行的概率
     trigger_probability: float = 0.6
-    # 本场战斗最多执行几次；元组表示开场时随机取一个上限
+    # 本场战斗最多执行几次；元组表示开场时随机取一个上限， 每次战斗重抽一次，存状态到per_battle.execution_limit_resolved
     execution_limit: tuple[int, int] = (1, 2)
+
+    def expected_random_clicks(
+            self,
+            battle_seconds: float = 30.0,
+            gap_seconds: float = 10.0,
+            battles: int = 100
+    ) -> float:
+        """估算多场战斗累计的期望随机动作执行次数（稳态解析模型）。
+
+        实际触发	14/115 ≈ 12.2%	swipe 8 + random_click 6，平均约每 8.2 场实操一次
+        模型预测	单场 0.125 → 115 场 ≈ 14.4 次 (12.5%)	expected_random_clicks(8.75, 6.24, 115)
+        这行是统计数据： 实际战斗时间，约 7.0 ~ 7.7 s：约 30 场，约 8.9 ~ 10.2 s：约 85 场。gap时间平均gap	约 6.24 s。 整体周期均值8.75 + 6.24 ≈ 15.0 s
+
+        Args:
+            battle_seconds: 单场战斗的持续时间（秒）。
+            gap_seconds: 战斗结束到下一轮战斗的间隔（秒），冷却在该时段内持续流逝。
+            battles: 统计的战斗场数。
+
+        Returns:
+            累计 battles 场的期望随机动作执行次数。
+        """
+        cooldown_low, cooldown_high = self.cooldown
+        cooldown_window_mean = cooldown_low + (math.sqrt(math.pi) / 2) * math.sqrt(cooldown_high - cooldown_low)
+        start_delay_low, start_delay_high = self.start_delay
+        start_delay_mean = (start_delay_low + start_delay_high) / 2
+        attempts_per_battle = (battle_seconds + gap_seconds - start_delay_mean) / cooldown_window_mean
+        attempts_can_execute = self.trigger_probability * attempts_per_battle
+        attempts_can_execute_exp = math.exp(-attempts_can_execute)
+        # 这里建模成泊松分布
+        limit_low, limit_high = self.execution_limit
+        per_battle = 0.0
+        for limit in range(limit_low, limit_high + 1):
+            probability_below = attempts_can_execute_exp  # P(成功次数 < k)
+            expected_with_limit = 0.0
+            # E[min(H, limit)] = Σ_{k=1}^{limit} P(成功次数 ≥ k)
+            for k in range(1, limit + 1):
+                expected_with_limit += 1 - probability_below
+                probability_below += attempts_can_execute_exp * attempts_can_execute ** k / math.factorial(k)
+            per_battle += expected_with_limit
+        per_battle /= limit_high - limit_low + 1
+        return per_battle * battles
 
 
 # event → options 数据类, update_options 靠它按 hook2event 自动实例化分发
@@ -317,7 +363,9 @@ class PerBattleSetup:
 
 @dataclass
 class PerBattleCompletion:
-    pass
+    click_stage_2: RuleClickExclude | None = None
+    # 兜底点击节拍器：进入 completion 起算，满 8s 才首次点击，之后每 8s 一次
+    fallback_timer: Timer | None = None
 
 
 @dataclass
@@ -385,9 +433,13 @@ class PerBattleEcho:
 
 @dataclass
 class PerBattleRandomclick:
+    # 本场战斗已执行的随机动作次数
     execution_count: int = 0
+    # 本场战斗的执行次数上限，首次拦截时从 execution_limit 随机解析
     execution_limit_resolved: int = 0
+    # 本场战斗的首次执行延迟，首次拦截时从 start_delay 随机解析
     start_delay_resolved: float = 0.0
+    # 首次允许执行的时间戳（0.0 表示尚未解析，首次拦截时写入）
     first_allowed_time: float = 0.0
 
 
@@ -1039,8 +1091,33 @@ class BattleWait(BaseTask, GeneralBattleAssets):
 
     def _bw_completion_default(self, pub: PublicContext, pri: PrivateContext) -> HookSignal:
         logger.info('Battle completion process')
-        pub.per_task.count += 1
-        return HookSignal.DONE
+        state = pri.per_battle
+        options = pri.options
+        if not isinstance(state, PerBattleCompletion) or not isinstance(options, OptionCompletionDefault):
+            raise
+        if options.check_imgs is None:
+            pub.per_task.count += 1
+            return HookSignal.DONE
+        # 如果需要进一步确认
+        if not isinstance(options.check_imgs, list):
+            raise
+        appears = [self.appear(check) for check in options.check_imgs]
+        if any(appears):
+            pub.per_task.count += 1
+            return HookSignal.DONE
+        # check_imgs 全没出现 → 兜底点击回退界面：进入 completion 满 8s 才首次点击，之后每 8s 一次
+        if state.fallback_timer is None:
+            state.fallback_timer = Timer(8).start()
+        if not isinstance(state.fallback_timer, Timer):
+            raise
+        if not state.fallback_timer.reached():
+            return HookSignal.CONTINUE
+        state.fallback_timer.reset()
+        if state.click_stage_2 is None:
+            state.click_stage_2 = PerBattleSuccess.reward_exclude_click(self, options.excludes, name='completion_exclude_click')
+        x, y = state.click_stage_2.coord()
+        self.device.click(x=x, y=y, control_name='completion_exclude_click')
+        return HookSignal.CONTINUE
 
     def _bw_interrupt_default(self, pub: PublicContext, pri: PrivateContext) -> HookSignal:
         # 比如 御魂溢出
