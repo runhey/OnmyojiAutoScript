@@ -885,3 +885,4 @@ class GameUi(BaseTask, GameUiAssets):
                     repeated_failure_count=repeated_failure_count,
                     last_repeated_failure_close_result=last_repeated_failure_close_result,
                 )
+                raise GamePageUnknownError(f"Cannot goto page[{destination}]")

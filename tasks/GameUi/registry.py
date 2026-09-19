@@ -79,7 +79,7 @@ class PageRegistry:
         for task_dir in base_dir.iterdir():
             if not task_dir.is_dir():
                 continue
-            for module_name in ("page"):
+            for module_name in ("page",):
                 module_file = task_dir / f"{module_name}.py"
                 if not module_file.exists():
                     continue
