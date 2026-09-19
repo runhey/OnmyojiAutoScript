@@ -283,7 +283,7 @@ class BaseTask(GlobalGameAssets, CostumeBase):
         return appear
 
     def wait_until_appear(self,
-                          target: RuleImage | RuleOcr,
+                          target: RuleImage | RuleGif | RuleOcr,
                           skip_first_screenshot=False,
                           wait_time: int = None) -> bool:
         """
@@ -305,13 +305,13 @@ class BaseTask(GlobalGameAssets, CostumeBase):
             if wait_timer and wait_timer.reached():
                 logger.warning(f"Wait until appear {target.name} timeout")
                 return False
-            if isinstance(target, RuleImage) and self.appear(target):
+            if isinstance(target, (RuleImage, RuleGif)) and self.appear(target):
                 return True
             if isinstance(target, RuleOcr) and self.ocr_appear(target):
                 return True
 
     def wait_until_appear_then_click(self,
-                                     target: RuleImage,
+                                     target: RuleImage | RuleGif,
                                      action: Union[RuleClick, RuleLongClick] = None,
                                      wait_time: int = None) -> bool:
         """

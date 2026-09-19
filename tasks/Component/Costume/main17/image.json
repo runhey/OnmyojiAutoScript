@@ -1,0 +1,137 @@
+[
+  {
+    "itemName": "check_main_17_a",
+    "imageName": "main17_check_main_17_a.png",
+    "roiFront": "260,168,80,54",
+    "roiBack": "180,100,240,180",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "庭院判定 a"
+  },
+  {
+    "itemName": "check_main_17_b",
+    "imageName": "main17_check_main_17_b.png",
+    "roiFront": "260,168,80,54",
+    "roiBack": "180,100,240,180",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "庭院判定 b"
+  },
+  {
+    "itemName": "check_main_17_c",
+    "imageName": "main17_check_main_17_c.png",
+    "roiFront": "260,168,80,54",
+    "roiBack": "180,100,240,180",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "庭院判定 c"
+  },
+  {
+    "itemName": "main_goto_exploration_17_a",
+    "imageName": "main17_main_goto_exploration_17_a.png",
+    "roiFront": "714,224,43,40",
+    "roiBack": "680,180,130,150",
+    "method": "Template matching",
+    "threshold": 0.55,
+    "description": "探索 a"
+  },
+  {
+    "itemName": "main_goto_exploration_17_b",
+    "imageName": "main17_main_goto_exploration_17_b.png",
+    "roiFront": "719,216,41,42",
+    "roiBack": "667,180,143,106",
+    "method": "Template matching",
+    "threshold": 0.55,
+    "description": "探索 b"
+  },
+  {
+    "itemName": "main_goto_exploration_17_c",
+    "imageName": "main17_main_goto_exploration_17_c.png",
+    "roiFront": "717,222,43,42",
+    "roiBack": "680,180,125,110",
+    "method": "Template matching",
+    "threshold": 0.55,
+    "description": "探索 c"
+  },
+  {
+    "itemName": "main_goto_summon_17_a",
+    "imageName": "main17_main_goto_summon_17_a.png",
+    "roiFront": "981,218,40,41",
+    "roiBack": "930,170,130,150",
+    "method": "Template matching",
+    "threshold": 0.55,
+    "description": "召唤屋 a"
+  },
+  {
+    "itemName": "main_goto_summon_17_b",
+    "imageName": "main17_main_goto_summon_17_b.png",
+    "roiFront": "981,218,39,38",
+    "roiBack": "930,170,130,150",
+    "method": "Template matching",
+    "threshold": 0.55,
+    "description": "召唤屋 b"
+  },
+  {
+    "itemName": "main_goto_summon_17_c",
+    "imageName": "main17_main_goto_summon_17_c.png",
+    "roiFront": "981,218,39,37",
+    "roiBack": "930,170,130,150",
+    "method": "Template matching",
+    "threshold": 0.55,
+    "description": "召唤屋 c"
+  },
+  {
+    "itemName": "main_goto_town_17_a",
+    "imageName": "main17_main_goto_town_17_a.png",
+    "roiFront": "1004,336,35,49",
+    "roiBack": "960,300,100,120",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "町中 a"
+  },
+  {
+    "itemName": "main_goto_town_17_b",
+    "imageName": "main17_main_goto_town_17_b.png",
+    "roiFront": "1007,346,26,31",
+    "roiBack": "960,300,100,120",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "町中 b"
+  },
+  {
+    "itemName": "main_goto_town_17_c",
+    "imageName": "main17_main_goto_town_17_c.png",
+    "roiFront": "1008,343,29,43",
+    "roiBack": "960,300,100,120",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "町中 c"
+  },
+  {
+    "itemName": "pet_house_17_a",
+    "imageName": "main17_pet_house_17_a.png",
+    "roiFront": "1226,423,34,37",
+    "roiBack": "1191,340,89,152",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "宠物屋 a"
+  },
+  {
+    "itemName": "pet_house_17_b",
+    "imageName": "main17_pet_house_17_b.png",
+    "roiFront": "1221,422,33,39",
+    "roiBack": "1191,366,89,116",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "宠物屋 b"
+  },
+  {
+    "itemName": "pet_house_17_c",
+    "imageName": "main17_pet_house_17_c.png",
+    "roiFront": "1226,417,42,45",
+    "roiBack": "1210,340,70,140",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "宠物屋 c"
+  }
+]
