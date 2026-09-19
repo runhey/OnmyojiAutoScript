@@ -73,13 +73,11 @@ class ScriptTask(RightActivity, GeneralBattle, SwitchSoul, Star56):
 
     def run(self):
         if self.config.meta_demon.switch_soul.enable:
-            self.ui_get_current_page()
-            self.ui_goto(page_shikigami_records)
+            self.goto_page(page_shikigami_records)
             self.run_switch_soul(self.config.meta_demon.switch_soul.switch_group_team)
 
         if self.config.meta_demon.switch_soul.enable_switch_by_name:
-            self.ui_get_current_page()
-            self.ui_goto(page_shikigami_records)
+            self.goto_page(page_shikigami_records)
             self.run_switch_soul_by_name(self.config.meta_demon.switch_soul.group_name,
                                          self.config.meta_demon.switch_soul.team_name)
 

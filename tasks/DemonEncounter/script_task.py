@@ -41,14 +41,13 @@ class ScriptTask(GameUi, GeneralBattle, DemonEncounterAssets, SwitchSoul):
         if not self.check_time():
             logger.warning('Time is not right')
             raise TaskEnd('DemonEncounter')
-        self.ui_get_current_page()
         # 切换御魂
         soul_config = self.config.demon_encounter.demon_soul_config
         best_soul_config = self.config.demon_encounter.best_demon_soul_config
         if soul_config.enable or best_soul_config.enable:
-            self.ui_goto(page_shikigami_records)
+            self.goto_page(page_shikigami_records)
             self.checkout_soul()
-        self.ui_goto(page_demon_encounter_realworld)
+        self.goto_page(page_demon_encounter_realworld)
         # 顶部"今日挑战次数:X/1"检测, 0/1表示今日已打过, 直接结束
         if self.check_challenge_done():
             logger.info('Challenge count 0/1, already challenged today')

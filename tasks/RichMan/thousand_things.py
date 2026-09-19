@@ -22,8 +22,7 @@ class ThousandThings(GameUi, RichManAssets):
         if not con.enable:
             logger.info('Thousand Things is disabled')
             return
-        self.ui_get_current_page()
-        self.ui_goto(page_travel)
+        self.goto_page(page_travel)
 
         if con.earn_money:
             logger.info('Start Earn Money')

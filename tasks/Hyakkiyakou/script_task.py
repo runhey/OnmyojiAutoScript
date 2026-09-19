@@ -123,9 +123,9 @@ class ScriptTask(GameUi, HyaSlave, SwitchOnmyoji):
         limit_time = self._config.hyakkiyakou_config.hya_limit_time
         self.limit_time: timedelta = timedelta(hours=limit_time.hour, minutes=limit_time.minute,
                                                seconds=limit_time.second)
-        self.ui_goto_page(page_onmyodo)
+        self.goto_page(page_onmyodo)
         self.switch_onmyoji(self._config.hyakkiyakou_config.hya_onmyoji)
-        self.ui_goto_page(page_hyakkiyakou)
+        self.goto_page(page_hyakkiyakou)
 
         while 1:
             if hya_count >= self.limit_count:

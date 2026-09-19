@@ -45,8 +45,7 @@ class ScriptTask(GameUi, GuildBanquetAssets):
         self.banquet_day_2_start_time = self.run_time.run_time_2
         
         
-        self.ui_get_current_page()
-        self.ui_goto(page_guild)
+        self.goto_page(page_guild)
         
         if self.appear(self.I_FLAG):
             wait_count = 0
@@ -62,8 +61,7 @@ class ScriptTask(GameUi, GuildBanquetAssets):
                 self.set_next_run(task='GuildBanquet',
                               finish=True,
                               target=time_later)
-            self.ui_get_current_page()
-            self.ui_goto(page_main)
+            self.goto_page(page_main)
             raise TaskEnd
 
         last_check_time = 0  # 记录上次实际检测时间
@@ -110,8 +108,7 @@ class ScriptTask(GameUi, GuildBanquetAssets):
                 self.device.stuck_record_add('BATTLE_STATUS_S')
         self.device.stuck_record_clear()
         self.set_config()
-        self.ui_get_current_page()
-        self.ui_goto(page_main)
+        self.goto_page(page_main)
         self.plan_next_run()
         raise TaskEnd
     

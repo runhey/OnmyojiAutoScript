@@ -35,11 +35,11 @@ class SwitchAccount(LoginAccount, ExitGame, GameUi, SwitchAccountAssets):
     def switchAccount(self):
         logger.info("start switchAccount %s-%s", self.to_account_info.character, self.to_account_info.svr)
         # 判断所处界面
-        curPage = self.ui_get_current_page()
+        curPage = self.get_current_page()
 
         if curPage != page_login and curPage != page_main:
-            self.ui_goto(page_main)
-            curPage = self.ui_get_current_page()
+            self.goto_page(page_main)
+            curPage = self.get_current_page()
         if curPage == page_main:
             self.exitGame()
 

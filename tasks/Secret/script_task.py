@@ -45,15 +45,12 @@ class ScriptTask(GameUi, GeneralBattle, SwitchSoul, SecretAssets):
         secret: Secret = self.config.secret
         con = secret.secret_config
         if secret.switch_soul.enable:
-            self.ui_get_current_page()
-            self.ui_goto(page_shikigami_records)
+            self.goto_page(page_shikigami_records)
             self.run_switch_soul(secret.switch_soul.switch_group_team)
         if secret.switch_soul.enable_switch_by_name:
-            self.ui_get_current_page()
-            self.ui_goto(page_shikigami_records)
+            self.goto_page(page_shikigami_records)
             self.run_switch_soul_by_name(secret.switch_soul.group_name, secret.switch_soul.team_name)
-        self.ui_get_current_page()
-        self.ui_goto(page_secret_zones)
+        self.goto_page(page_secret_zones)
 
         # 进入
         success = True
@@ -132,8 +129,7 @@ class ScriptTask(GameUi, GeneralBattle, SwitchSoul, SecretAssets):
 
         self.ui_click(self.I_UI_BACK_BLUE, self.I_UI_BACK_YELLOW)
         self.ui_click(self.I_UI_BACK_YELLOW, self.I_CHECK_MAIN)
-        self.ui_get_current_page()
-        self.ui_goto(page_main)
+        self.goto_page(page_main)
         if con.secret_gold_50 or con.secret_gold_100:
             self.open_buff()
             if con.secret_gold_50:

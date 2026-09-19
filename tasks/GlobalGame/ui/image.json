@@ -106,5 +106,14 @@
     "method": "Template matching",
     "threshold": 0.8,
     "description": "知道了"
+  },
+  {
+    "itemName": "ui_back_circle",
+    "imageName": "ui_ui_back_circle.png",
+    "roiFront": "24,21,36,39",
+    "roiBack": "0,0,95,101",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "圆形返回按钮(移植自mine)"
   }
 ]

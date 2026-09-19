@@ -10,6 +10,5 @@ from module.exception import TaskEnd
 class ScriptTask(GameUi):
 
     def run(self) -> None:
-        self.ui_get_current_page()
-        self.ui_goto(page_main)
+        self.goto_page(page_main)
         raise TaskEnd('Goto main end')

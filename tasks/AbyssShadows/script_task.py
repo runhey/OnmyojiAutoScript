@@ -96,12 +96,10 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AbyssShadowsAssets):
         cfg: AbyssShadows = self.config.abyss_shadows
 
         if cfg.switch_soul_config.enable:
-            self.ui_get_current_page()
-            self.ui_goto(page_shikigami_records)
+            self.goto_page(page_shikigami_records)
             self.run_switch_soul(cfg.switch_soul_config.switch_group_team)
         if cfg.switch_soul_config.enable_switch_by_name:
-            self.ui_get_current_page()
-            self.ui_goto(page_shikigami_records)
+            self.goto_page(page_shikigami_records)
             self.run_switch_soul_by_name(cfg.switch_soul_config.group_name, cfg.switch_soul_config.team_name)
         today = datetime.now().weekday()
         if today not in [4, 5, 6]:
@@ -303,17 +301,15 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AbyssShadowsAssets):
     def goto_main(self):
         ''' 保持好习惯，一个任务结束了就返回庭院，方便下一任务的开始或者是出错重启
         '''
-        self.ui_get_current_page()
         logger.info("Exiting abyss_shadows")
-        self.ui_goto(page_main)
+        self.goto_page(page_main)
 
     def goto_abyss_shadows(self) -> bool:
         ''' 进入狭间
         :return bool
         '''
-        self.ui_get_current_page()
         logger.info("Entering abyss_shadows")
-        self.ui_goto(page_guild)
+        self.goto_page(page_guild)
         
         while 1:
             self.screenshot()

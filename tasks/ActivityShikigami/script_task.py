@@ -153,8 +153,7 @@ class ScriptTask(StateMachine, GameUi, Battle, BaseActivity, SwitchSoul, Activit
         #
         for climb_type in self.conf.general_climb.run_sequence_v:
             # 进入到活动的主页面，不是具体的战斗页面
-            self.ui_get_current_page()
-            self.ui_goto(game.page_climb_act)
+            self.goto_page(game.page_climb_act)
             try:
                 method_func = getattr(self, f'_run_{climb_type}')
                 method_func()
@@ -168,8 +167,7 @@ class ScriptTask(StateMachine, GameUi, Battle, BaseActivity, SwitchSoul, Activit
 
         # 返回庭院
         logger.hr("Exit Shikigami", 2)
-        self.ui_get_current_page(False)
-        self.ui_goto(game.page_main)
+        self.goto_page(game.page_main)
         if self.conf.general_climb.active_souls_clean:
             self.set_next_run(task='SoulsTidy', success=False, finish=False, target=datetime.now())
         self.set_next_run(task="ActivityShikigami", success=True)
