@@ -110,8 +110,8 @@
   {
     "itemName": "pet_house_17_a",
     "imageName": "main17_pet_house_17_a.png",
-    "roiFront": "1226,423,34,37",
-    "roiBack": "1191,340,89,152",
+    "roiFront": "1249,404,23,56",
+    "roiBack": "1231,340,49,154",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "宠物屋 a"
@@ -119,8 +119,8 @@
   {
     "itemName": "pet_house_17_b",
     "imageName": "main17_pet_house_17_b.png",
-    "roiFront": "1221,422,33,39",
-    "roiBack": "1191,366,89,116",
+    "roiFront": "1251,417,19,45",
+    "roiBack": "1231,366,49,124",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "宠物屋 b"
@@ -128,8 +128,8 @@
   {
     "itemName": "pet_house_17_c",
     "imageName": "main17_pet_house_17_c.png",
-    "roiFront": "1226,417,42,45",
-    "roiBack": "1210,340,70,140",
+    "roiFront": "1248,406,19,59",
+    "roiBack": "1228,340,52,176",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "宠物屋 c"

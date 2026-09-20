@@ -1,6 +1,8 @@
 # This Python file uses the following encoding: utf-8
 # @author runhey
 # github https://github.com/runhey
+import types
+
 import numpy as np
 
 from module.atom.image import RuleImage
@@ -9,6 +11,30 @@ from module.atom.image import RuleImage
 
 class RuleGif:
     # 大部分实现同RuleImage 的接口
+
+    @staticmethod
+    def attach_to(image_obj: RuleImage, targets: list[RuleImage]) -> None:
+        """
+        把GIF的多帧匹配行为原地挂载到一个RuleImage实例上
+
+        与replace_img的原地换属性同思路: 不换对象、不换引用,
+        持有该对象引用的Page/寻路会立即生效
+        :param image_obj: 被挂载的RuleImage实例
+        :param targets: 多帧RuleImage, 顺序即匹配优先级
+        """
+        # GIF状态
+        image_obj.targets = targets
+        image_obj.roi_front = [0, 0, 0, 0]
+        image_obj.roi_back = targets[0].roi_back
+        image_obj.appear_target = targets[0]
+        image_obj.name = targets[0].name
+        image_obj._match_init = False
+        # 方法级替换: 把RuleGif的所有公开方法绑定到该实例上
+        for name, attr in RuleGif.__dict__.items():
+            if name.startswith('_'):
+                continue
+            if isinstance(attr, types.FunctionType):
+                setattr(image_obj, name, types.MethodType(attr, image_obj))
 
     @property
     def name(self) -> str:
