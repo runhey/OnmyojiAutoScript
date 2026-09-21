@@ -119,6 +119,8 @@ class CostumeBase:
         costume_assets = CostumeAssets()
         for key, value in main_costume_model[main_type].items():
             if isinstance(value, list):
+                if not hasattr(self, key):
+                    continue
                 rules: list[RuleImage] = [getattr(costume_assets, item) for item in value]
                 RuleGif.attach_to(getattr(self, key), rules)
             else:
