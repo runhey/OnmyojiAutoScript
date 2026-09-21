@@ -24,6 +24,7 @@ class Control(Minitouch, Adb, Scrcpy, Window):
             'uiautomator2': self.click_uiautomator2,
             'minitouch': self.click_minitouch,
             'window_message': self.click_window_message if IS_WINDOWS else None,
+            'MacPlayTools': self.click_playcover,
             # 'Hermit': self.click_hermit,
             # 'MaaTouch': self.click_maatouch,
         }
@@ -35,7 +36,8 @@ class Control(Minitouch, Adb, Scrcpy, Window):
             'uiautomator2': self.long_click_uiautomator2,
             'minitouch': self.long_click_minitouch,
             'window_message': self.long_click_window_message if IS_WINDOWS else None,
-            'scrcpy': self.long_click_scrcpy
+            'scrcpy': self.long_click_scrcpy,
+            'MacPlayTools': self.long_click_playcover,
             # 'Hermit': self.click_hermit,
             # 'MaaTouch': self.click_maatouch,
         }
@@ -80,6 +82,15 @@ class Control(Minitouch, Adb, Scrcpy, Window):
             self.click_adb
         )
         method(x, y)
+
+    def click_playcover(self, x, y):
+        self.playcover_client.click(x, y)
+
+    def long_click_playcover(self, x, y, duration=0.8):
+        self.playcover_client.long_click(x, y, duration=duration)
+
+    def swipe_playcover(self, p1, p2, duration=0.1):
+        self.playcover_client.swipe(p1, p2, duration=duration)
 
 
     def multi_click(self, button, n, interval=(0.1, 0.2)):
@@ -163,6 +174,8 @@ class Control(Minitouch, Adb, Scrcpy, Window):
             logger.info('Swipe %s -> %s, %s' % (point2str(*p1), point2str(*p2), duration))
         elif method == 'scrcpy':
             logger.info('Swipe %s -> %s' % (point2str(*p1), point2str(*p2)))
+        elif method == 'MacPlayTools':
+            logger.info('Swipe %s -> %s' % (point2str(*p1), point2str(*p2)))
         # elif method == 'MaaTouch':
         #     logger.info('Swipe %s -> %s' % (point2str(*p1), point2str(*p2)))
         else:
@@ -192,6 +205,8 @@ class Control(Minitouch, Adb, Scrcpy, Window):
             self.swipe_uiautomator2(p1, p2, duration=duration)
         elif method == 'scrcpy':
             self.swipe_scrcpy(p1, p2)
+        elif method == 'MacPlayTools':
+            self.swipe_playcover(p1, p2, duration=duration)
         # elif method == 'MaaTouch':
         #     self.swipe_maatouch(p1, p2)
         else:

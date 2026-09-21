@@ -6,12 +6,13 @@ from module.device.method.utils import HierarchyButton
 # from module.device.method.wsa import WSA
 from module.logger import logger
 
-
 class AppControl(Adb, Uiautomator2):
     hierarchy: etree._Element
     _app_u2_family = ['uiautomator2', 'minitouch', 'scrcpy']
 
     def app_is_running(self) -> bool:
+        if self.is_playcover:
+            return True
         method = self.config.script.device.control_method
         # if self.is_wsa:
         #     package = self.app_current_wsa()
@@ -25,6 +26,8 @@ class AppControl(Adb, Uiautomator2):
         return package == self.package
 
     def app_start(self):
+        if self.is_playcover:
+            return
         method = self.config.script.device.screenshot_method
         logger.info(f'App start: {self.package}')
         # if self.config.Emulator_Serial == 'wsa-0':
@@ -35,6 +38,8 @@ class AppControl(Adb, Uiautomator2):
             self.app_start_adb()
 
     def app_stop(self):
+        if self.is_playcover:
+            return
         method = self.config.script.device.screenshot_method
         logger.info(f'App stop: {self.package}')
         if method in AppControl._app_u2_family:
@@ -47,6 +52,8 @@ class AppControl(Adb, Uiautomator2):
         Returns:
             etree._Element: Select elements with `self.hierarchy.xpath('//*[@text="Hermit"]')` for example.
         """
+        if self.is_playcover:
+            return None
         method = self.config.script.device.screenshot_method
         if method in AppControl._app_u2_family:
             self.hierarchy = self.dump_hierarchy_uiautomator2()
