@@ -91,8 +91,11 @@ class ScriptTask(GameUi, WeeklyTriflesAssets):
         self.ui_goto(page_touch_fish)
         self.screenshot()
         if self.appear(self.I_WT_SAVE_ALL):
-            _, cu_tickts, _ = self.O_WT_LUCKY_TICKETS.ocr(self.device.image)
+            cu_tickts, _, _ = self.O_WT_LUCKY_TICKETS.ocr(self.device.image)
+            logger.info(f"当前的福运御守数量：{cu_tickts}")
             cost_tickts = self.O_WT_SAVE_COST.ocr(self.device.image)
+            logger.info(f"全部存储需要花费的福运御守数量：{cost_tickts}")
+            not_save_flag = True
             get_timer = Timer(7)
             get_timer.start()
             while 1:
@@ -105,9 +108,9 @@ class ScriptTask(GameUi, WeeklyTriflesAssets):
                     continue
                 if self.appear_then_click(self.I_WT_HAPPY_GET):
                     continue
-                if cu_tickts >= cost_tickts:
+                if cu_tickts >= cost_tickts and not_save_flag:
                     self.appear_then_click(self.I_WT_SAVE_ALL)
-                    cu_tickts = 0
+                    not_save_flag = False
                     continue
                 if self.appear_then_click(self.I_WT_TF_CONFIRM):
                     continue
@@ -116,7 +119,7 @@ class ScriptTask(GameUi, WeeklyTriflesAssets):
                 ):
                     logger.info('Touch fish save success')
                     break
-                if cu_tickts < cost_tickts:
+                if cu_tickts < cost_tickts and not_save_flag:
                     logger.warning('Touch fish tickts not enough, exit!')
                     break
                 if get_timer.reached():
