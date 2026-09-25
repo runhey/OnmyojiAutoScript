@@ -1,4 +1,6 @@
 from module.atom.image import RuleImage
+from module.base.timer import Timer
+from module.exception import ScriptError
 from tasks.Component.SwitchOnmyoji.assets import SwitchOnmyojiAssets
 from tasks.Component.SwitchOnmyoji.config import Onmyoji
 from tasks.base_task import BaseTask
@@ -6,6 +8,10 @@ from module.logger import logger
 
 
 class SwitchOnmyoji(BaseTask, SwitchOnmyojiAssets):
+    # 上限用来给两个 while 循环兜底：资源坐标过期或页面不对时不再无限点，
+    # 改为抛出带上下文的 ScriptError，让上层决定重启还是人工接管。
+    SWITCH_TAB_TIMEOUT = 20
+    SWITCH_BATTLE_TIMEOUT = 20
 
     def switch_onmyoji(self, onmyoji: Onmyoji):
         """
@@ -29,7 +35,14 @@ class SwitchOnmyoji(BaseTask, SwitchOnmyojiAssets):
         :param battle_dict: 角色与战斗图标的映射
         :param check_img: 检查是否回到主界面的图标
         """
+        # 两个循环都必须在超时后抛出，而不是继续点击
+        tab_timer = Timer(self.SWITCH_TAB_TIMEOUT).start()
         while True:
+            if tab_timer.reached():
+                raise ScriptError('Switch onmyoji: cannot reach the role list, '
+                                  'the onmyoji tab was not opened after '
+                                  f'{self.SWITCH_TAB_TIMEOUT}s. '
+                                  'Check whether the onmyoji/hero assets still match the game UI')
             self.screenshot()
             if any(self.appear(battle_icon) for battle_icon in battle_dict.values()):
                 break
@@ -37,7 +50,12 @@ class SwitchOnmyoji(BaseTask, SwitchOnmyojiAssets):
         battle_img = battle_dict.get(role, None)
         if not battle_img:
             raise ValueError('Incorrect role type')
+        battle_timer = Timer(self.SWITCH_BATTLE_TIMEOUT).start()
         while True:
+            if battle_timer.reached():
+                raise ScriptError(f'Switch onmyoji: cannot select {role}, '
+                                  'the role list stayed unconfirmed after '
+                                  f'{self.SWITCH_BATTLE_TIMEOUT}s')
             self.screenshot()
             if self.appear(check_img, interval=0.8):
                 break
