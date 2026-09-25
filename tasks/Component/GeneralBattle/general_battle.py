@@ -666,9 +666,7 @@ if __name__ == '__main__':
                   self.C_PRESET_GROUP_1.roi_back[3]]
     unselected_color = get_unselect_color(self.C_PRESET_GROUP_1, self.C_PRESET_GROUP_2, self.C_PRESET_GROUP_3,
                                           size=color_size)
-    print("")
     color_size = [5, 5]
     unselected_color = get_unselect_color(self.C_PRESET_TEAM_1, self.C_PRESET_TEAM_2, self.C_PRESET_TEAM_3,
                                           size=color_size
                                           )
-    print("")
