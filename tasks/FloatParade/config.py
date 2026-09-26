@@ -1,6 +1,3 @@
-# This Python file uses the following encoding: utf-8
-# @author runhey
-# github https://github.com/runhey
 from datetime import timedelta
 from enum import Enum
 from pydantic import BaseModel, Field

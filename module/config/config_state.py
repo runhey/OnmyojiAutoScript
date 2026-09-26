@@ -1,8 +1,3 @@
-# This Python file uses the following encoding: utf-8
-# @author runhey
-# github https://github.com/runhey
-
-
 class ConfigState:
     """
     这个类用于 先定义运行过程中所需要的变量

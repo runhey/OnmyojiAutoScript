@@ -1,8 +1,3 @@
-# This Python file uses the following encoding: utf-8
-# @author runhey
-# github https://github.com/runhey
-
-
 def _merge_area(area1, area2):
     xa1, ya1, xa2, ya2 = area1
     xb1, yb1, xb2, yb2 = area2

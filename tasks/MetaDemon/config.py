@@ -1,7 +1,3 @@
-# This Python file uses the following encoding: utf-8
-# @author runhey
-# github https://github.com/runhey
-
 from pydantic import BaseModel, ValidationError, validator, Field, field_validator
 from pydantic import Field, BaseModel, model_validator, model_serializer, ValidationError
 from enum import Enum

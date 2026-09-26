@@ -1,7 +1,4 @@
-# This Python file uses the following encoding: utf-8
-# @author runhey
 # 脚本进程
-# github https://github.com/runhey
 import sys, os
 import signal
 import multiprocessing

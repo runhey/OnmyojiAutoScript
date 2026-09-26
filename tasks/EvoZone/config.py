@@ -1,6 +1,3 @@
-# This Python file uses the following encoding: utf-8
-# @author TripleEarth
-# github https://github.com/TripleEarth
 from pydantic import BaseModel, Field
 from enum import Enum
 from datetime import datetime, time

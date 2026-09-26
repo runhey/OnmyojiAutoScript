@@ -1,4 +1,3 @@
-# This Python file uses the following encoding: utf-8
 # copy from alas
 import os
 import re

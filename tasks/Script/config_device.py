@@ -1,6 +1,3 @@
-# This Python file uses the following encoding: utf-8
-# @author runhey
-# github https://github.com/runhey
 from enum import Enum
 from typing import Union
 from pydantic import BaseModel, ValidationError, Field

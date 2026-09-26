@@ -1,6 +1,3 @@
-# This Python file uses the following encoding: utf-8
-# @author ghg11
-# github https://github.com/ghg11
 from time import sleep
 from enum import Enum
 from module.logger import logger

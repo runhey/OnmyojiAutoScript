@@ -61,6 +61,8 @@ macos = []
 test = [
     "pytest>=8.4.2",
     "pytest-trio>=0.8.0",
+    "ruff>=0.16.8",
+    "isort>=9.0.1",
 ]
 
 

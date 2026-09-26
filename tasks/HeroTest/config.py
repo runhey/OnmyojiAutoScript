@@ -1,6 +1,3 @@
-# This Python file uses the following encoding: utf-8
-# @author runhey
-# github https://github.com/runhey
 from enum import Enum  # type: ignore
 from datetime import datetime, time  # type: ignore
 from pydantic import BaseModel, Field

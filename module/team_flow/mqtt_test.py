@@ -1,6 +1,3 @@
-# This Python file uses the following encoding: utf-8
-# @author runhey
-# github https://github.com/runhey
 from time import sleep
 from random import randint
 from paho.mqtt import client as mqtt_client

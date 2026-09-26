@@ -1,6 +1,3 @@
-# This Python file uses the following encoding: utf-8
-# @author runhey
-# github https://github.com/runhey
 import json
 from fastapi import APIRouter, Body
 from pathlib import Path

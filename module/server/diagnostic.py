@@ -1,5 +1,3 @@
-# This Python file uses the following encoding: utf-8
-# @author runhey
 """导出脱敏后的配置摘要与最近日志为 zip，用于风控对照分析。不导出账号/token/密码。"""
 import json
 import platform

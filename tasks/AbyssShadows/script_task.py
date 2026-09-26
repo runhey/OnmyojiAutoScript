@@ -1,8 +1,5 @@
-# This Python file uses the following encoding: utf-8
 # @brief    Ryou Dokan Toppa (阴阳竂道馆突破功能)
-# @author   jackyhwei
 # @note     draft version without full test
-# github    https://github.com/roarhill/oas
 
 from datetime import datetime, timedelta
 import random

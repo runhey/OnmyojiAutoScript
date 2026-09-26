@@ -1,6 +1,3 @@
-# This Python file uses the following encoding: utf-8
-# @author handman123
-# github https://github.com/runhey
 """跨进程实例看守器。
 
 通过共享 JSON 状态文件协调多个进程的实例执行顺序，确保同一时间

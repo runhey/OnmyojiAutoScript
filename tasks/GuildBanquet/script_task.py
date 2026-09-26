@@ -1,6 +1,3 @@
-# This Python file uses the following encoding: utf-8
-# @author ohspecial
-# github https://github.com/ohspecial
 from datetime import datetime ,timedelta
 from enum import Enum
 import time

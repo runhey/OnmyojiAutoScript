@@ -1,5 +1,3 @@
-# This Python file uses the following encoding: utf-8
-
 import time
 from datetime import datetime, timedelta
 from functools import wraps

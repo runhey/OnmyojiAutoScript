@@ -1,4 +1,3 @@
-# This Python file uses the following encoding: utf-8
 # https://github.com/LmeSzinc/StarRailCopilot/blob/master/module/device/env.py
 import sys
 

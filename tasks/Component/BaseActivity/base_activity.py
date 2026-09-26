@@ -1,6 +1,3 @@
-# This Python file uses the following encoding: utf-8
-# @author runhey
-# github https://github.com/runhey
 from tasks.Component.GeneralBattle.general_battle import GeneralBattle
 from abc import abstractmethod
 

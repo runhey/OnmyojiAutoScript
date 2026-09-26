@@ -1,7 +1,3 @@
-# This Python file uses the following encoding: utf-8
-# @author runhey
-# github https://github.com/runhey
-
 from module.gui.utils import check_admin
 from module.gui.context.add import Add
 from module.gui.context.settings import Setting

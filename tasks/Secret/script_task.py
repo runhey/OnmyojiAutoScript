@@ -1,6 +1,3 @@
-# This Python file uses the following encoding: utf-8
-# @author runhey
-# github https://github.com/runhey
 import time
 from cached_property import cached_property
 from datetime import datetime

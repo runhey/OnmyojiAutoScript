@@ -1,4 +1,3 @@
-# This Python file uses the following encoding: utf-8
 # Copy from https://github.com/LmeSzinc/AzurLaneAutoScript/gui.py
 
 

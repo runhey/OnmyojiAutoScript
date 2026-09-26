@@ -1,6 +1,3 @@
-# This Python file uses the following encoding: utf-8
-# @author runhey
-# github https://github.com/runhey
 from pydantic import BaseModel, Field, field_validator
 from enum import Enum
 from datetime import datetime, time

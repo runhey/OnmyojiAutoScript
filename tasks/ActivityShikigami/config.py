@@ -1,6 +1,3 @@
-# This Python file uses the following encoding: utf-8
-# @author runhey
-# github https://github.com/runhey
 from pydantic import BaseModel, Field, model_validator
 
 from tasks.Component.GeneralBattle.config_general_battle import GreenMarkType

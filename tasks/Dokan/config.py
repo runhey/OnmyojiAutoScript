@@ -1,8 +1,5 @@
-# This Python file uses the following encoding: utf-8
 # @brief    Configurations for Ryou Dokan Toppa (阴阳竂道馆突破配置)
-# @author   jackyhwei
 # @note     draft version without full test
-# github    https://github.com/roarhill/oas
 import re
 from datetime import datetime
 from enum import Enum

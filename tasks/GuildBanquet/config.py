@@ -1,6 +1,3 @@
-# This Python file uses the following encoding: utf-8
-# @author ohspecial
-# github https://github.com/ohspecial
 from enum import Enum  
 
 from pydantic import Field, BaseModel, SerializationInfo, field_serializer

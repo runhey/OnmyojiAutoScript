@@ -1,6 +1,3 @@
-# This Python file uses the following encoding: utf-8
-# @author runhey
-# github https://github.com/runhey
 from pydantic import Field
 
 from tasks.Component.SwitchSoul.switch_soul_config import SwitchSoulConfig

@@ -1,4 +1,3 @@
-# This Python file uses the following encoding: utf-8
 """防风控作息看守器: 睡眠窗 / 每日活跃上限 / 强制长休息, 由 Script 持有。"""
 from datetime import datetime, timedelta
 

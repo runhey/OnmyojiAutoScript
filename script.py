@@ -1,7 +1,3 @@
-# This Python file uses the following encoding: utf-8
-# @author runhey
-# github https://github.com/runhey
-
 from functools import wraps
 import zerorpc
 import zmq
