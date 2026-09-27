@@ -7,7 +7,6 @@ import re
 import cv2
 import time
 import os
-import inflection
 import asyncio
 import json
 
@@ -22,6 +21,7 @@ from threading import Thread
 from multiprocessing.queues import Queue
 
 
+from oas.ext import inflection
 from module.config.utils import convert_to_underscore
 from module.config.config import Config
 from module.config.config_model import ConfigModel

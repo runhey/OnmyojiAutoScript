@@ -25,7 +25,6 @@ dependencies = [
     "cryptography>=42.0.7",
     "fastapi>=0.141.1",
     "httpx>=0.28.1",
-    "inflection==0.5.1",
     "msgspec>=0.21.1",
     "numpy>=2.5.3",
     "onepush==1.3.0",

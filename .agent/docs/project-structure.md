@@ -20,7 +20,7 @@
 │  ├─ handler/                   # 敏感信息处理
 │  ├─ notify/                    # 通知推送（onepush）
 │  └─ team_flow/                 # 组队流程（host/player/mqtt）
-├─ tasks/                        # 59 个游戏任务（原样不动）
+├─ tasks/                        # 游戏任务（原样不动）
 │  └─ Component/                 # 任务共享组件（config_base/GeneralBuff...）
 ├─ assets/                       # 图片资源
 ├─ config/                       # 配置模板数据（与 oas/config 同名共存）

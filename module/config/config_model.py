@@ -2,11 +2,11 @@ from tasks.GuildActivityMonitor.config import GuildActivityMonitor
 from typing import Dict, Any
 
 import re
-import inflection
 
 from pathlib import Path
 from pydantic import BaseModel, ValidationError, Field
 
+from oas.ext import inflection
 from module.config.utils import *
 from module.logger import logger
 
