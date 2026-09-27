@@ -403,9 +403,21 @@ class GeneralBattle(BattleWait, GeneralBuff):
             return None
 
         logger.info("Preset is enable")
+        # 挑战类战斗没有准备阶段，点挑战后直接开战。战斗开始后左下角预设按钮的位置
+        # 会变成手动/自动切换按钮，OCR 永远读不到'预设'，此循环必须能退出，
+        # 否则无点击死循环 60 秒触发 GameStuckError（2026-09-26 悬赏式神挑战卡死重启的根因）
+        preset_timer = Timer(15).start()
         # 点击预设按钮
         while 1:
             self.screenshot()
+            if preset_timer.reached():
+                logger.warning('Preset button not found in 15s, skip preset team')
+                return
+            # 战斗已经开打（左下角是手动/自动切换按钮），预设无法进行，
+            # 直接返回让 battle_before 走 ensure_auto_battle 切回自动
+            if self.appear(self.O_BATTLE_HAND) or self.appear(self.O_BATTLE_AUTO):
+                logger.warning('Battle already started, skip preset team')
+                return
 
             if self.appear(self.I_PRESET_ENSURE):
                 break

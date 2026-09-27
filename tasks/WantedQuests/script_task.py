@@ -12,7 +12,7 @@ from cached_property import cached_property
 from module.atom.image import RuleImage
 from module.atom.ocr import RuleOcr
 from module.base.timer import Timer
-from module.exception import TaskEnd
+from module.exception import TaskEnd, GameStuckError
 from module.logger import logger
 from tasks.Component.Costume.config import MainType
 from tasks.Component.GeneralBattle.config_general_battle import GeneralBattleConfig
@@ -284,10 +284,12 @@ class ScriptTask(WQExplore, SecretScriptTask, WantedQuestsAssets):
                 return None
             wq_destination = match.group(1)
             wq_number = int(match.group(2))
-            # 跳过高层秘闻
+            # 秘闻层数超限：不直接丢弃，记入兜底候选——当某悬赏全部目的地都超限时
+            # execute_mission 会选层数最低的一个执行，保证悬赏总能推进
+            over_limit_layer = -1
             if wq_destination[-1] in layer_limit:
                 logger.warning('This secret layer is too high')
-                return None
+                over_limit_layer = all_layers.index(wq_destination[-1])
             result[1] = wq_destination
             result[2] = wq_number
             order_list = self.config.model.wanted_quests.wanted_quests_config.battle_priority
@@ -299,7 +301,12 @@ class ScriptTask(WQExplore, SecretScriptTask, WantedQuestsAssets):
             result[4] = name_funcs.get(type_wq, lambda: logger.warning('No task can be challenged'))
             result[5] = type_wq
             logger.info(f'[Wanted Quests] type: {type_wq} destination: {wq_destination} number: {wq_number} ')
-            return tuple(result) if result[0] != -1 else None
+            if result[0] == -1:
+                return None
+            if over_limit_layer >= 0:
+                over_limit_wq_list.append((over_limit_layer, tuple(result)))
+                return None
+            return tuple(result)
 
         logger.hr('Start wanted quests')
         while 1:
@@ -308,8 +315,10 @@ class ScriptTask(WQExplore, SecretScriptTask, WantedQuestsAssets):
                 break
             if self.click(ocr, interval=1):
                 continue
-        if not self.appear(self.I_GOTO_1):
-            # 如果没有出现 '前往'按钮， 那就是这个可能是神秘任务但是没有解锁
+        # 详情页的'前往'按钮可能比追踪按钮晚加载（服务器异步返回目的地列表），
+        # 不等待就判定会把正常任务误认为未解锁的神秘任务而跳过（2026-09-25 食梦貘悬赏被跳过的根因）
+        if not self.wait_until_appear(self.I_GOTO_1, wait_time=3):
+            # 等待后仍没有 '前往'按钮，那这个可能是神秘任务但是没有解锁
             logger.warning('This is a secret mission but not unlock')
             self.ui_click(self.I_TRACE_TRUE, self.I_TRACE_FALSE)
             return False
@@ -322,11 +331,16 @@ class ScriptTask(WQExplore, SecretScriptTask, WantedQuestsAssets):
             return False
 
         info_wq_list = []
+        over_limit_wq_list = []
         for i in range(4):
             info_wq = extract_info(i)
             if info_wq:
                 info_wq_list.append(info_wq)
         info_wq_list = [item for item in info_wq_list if item not in self.want_strategy_excluding]
+        if not info_wq_list and over_limit_wq_list:
+            # 全部目的地都因层号超限被过滤：选层数最低的超层秘闻兜底
+            logger.warning('All destinations are over layer limit, fallback to the lowest over-limit secret')
+            info_wq_list.append(min(over_limit_wq_list, key=lambda x: x[0])[1])
         if not info_wq_list:
             logger.warning('No wanted quests can be challenged')
             self.ui_click(self.I_TRACE_TRUE, self.I_TRACE_FALSE)
@@ -334,7 +348,7 @@ class ScriptTask(WQExplore, SecretScriptTask, WantedQuestsAssets):
         # sort
         info_wq_list.sort(key=lambda x: x[0])
         filtered = list(filter(lambda x: (x[5] == '秘闻' or x[5] == '式神') and x[2] >= 3, info_wq_list))
-        if not filtered and len(filtered) != 0:
+        if filtered:
             info_wq_list = filtered
         best_type, destination, once_number, goto_button, func, _ = info_wq_list[0]
         do_number = 1 if once_number >= num_want else num_want // once_number + (1 if num_want % once_number > 0 else 0)
@@ -366,15 +380,25 @@ class ScriptTask(WQExplore, SecretScriptTask, WantedQuestsAssets):
             # self.ui_click_until_disappear(self.I_WQSE_FIRE)
             # 又臭又长的对话针的是服了这个网易
             click_count = 0
+            # 对话点击每次都会重置设备卡死计时（handle_control_check → stuck_record_clear），
+            # 若点击无效对话永远关不掉，卡死检测永远不会触发，必须自带总上限
+            # （实测合法长对话约 15 秒/12 连点，60 秒为 4 倍余量）
+            chat_timer = Timer(60).start()
             while 1:
                 self.screenshot()
                 if not self.appear(self.I_UI_BACK_RED, threshold=0.7):
                     break
+                if chat_timer.reached():
+                    logger.error('Secret mission chat not closed in 60s')
+                    raise GameStuckError('Secret mission chat not closed in 60s')
                 if self.appear_then_click(self.I_WQSE_FIRE, interval=1):
                     continue
                 if self.appear(self.I_UI_BACK_RED, threshold=0.7) and not self.appear(self.I_WQSE_FIRE):
-                    self.click(self.C_SECRET_CHAT, interval=0.8)
-                    click_count += 1
+                    # click 返回 False 表示被 interval 拦截未实际点击，不计入；
+                    # 按真实点击计数，6 次（约 4.8s）清零一次，保证合法长对话
+                    # 不撞 GameTooManyClickError（同按钮 15 窗口内 ≥10 次即抛）
+                    if self.click(self.C_SECRET_CHAT, interval=0.8):
+                        click_count += 1
                     if click_count >= 6:
                         logger.warning('Secret mission chat too long, force to close')
                         click_count = 0
