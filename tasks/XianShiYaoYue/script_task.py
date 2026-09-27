@@ -168,18 +168,39 @@ class ScriptTask(GameUi, SwitchSoul, GeneralBattle, XianShiYaoYueAssets):
                 break
             logger.info(f'Find XianShi blessing, try buy, attempt {attempt + 1}')
             self.click(self.C_XY_BLESSING)
-            # 处理可能的购买确认弹窗
-            confirm_timer = Timer(6).start()
-            while not confirm_timer.reached():
-                self.screenshot()
-                if self.appear_then_click(self.I_UI_CONFIRM, interval=1):
-                    continue
-                if self.appear_then_click(self.I_UI_CONFIRM_SAMLL, interval=1):
-                    continue
-                sleep(0.5)
+            if self._click_blessing_buy():
+                break
+            # 弹窗没弹出或按钮没等到: 关掉弹窗后重试
+            logger.warning('Buy button not appear, close popup and retry')
             self._close_popup()
         # 切换回活动界面
         self._switch_to_activity()
+
+    def _click_blessing_buy(self) -> bool:
+        """
+        点击卡片后弹出详情弹窗: 底部是金色"100勾玉"价格按钮, 它本身就是购买按钮
+        (没有确定/取消对, I_UI_CONFIRM 系列全部不适用, 2026-09-27 实测)。
+        等弹窗淡入后点购买按钮, 再等按钮消失(购买完成弹窗自动关闭)。
+        :return: 是否完成购买
+        """
+        timer = Timer(8).start()
+        while not timer.reached():
+            self.screenshot()
+            if self.appear_then_click(self.I_XY_BUY_BLESSING, interval=1.5):
+                # 防御: 个别购买可能还有系统级二次确认; 按钮消失即弹窗关闭
+                gone_timer = Timer(8).start()
+                while not gone_timer.reached():
+                    self.screenshot()
+                    if (self.appear_then_click(self.I_UI_CONFIRM, interval=1) or
+                            self.appear_then_click(self.I_UI_CONFIRM_SAMLL, interval=1)):
+                        continue
+                    if not self.appear(self.I_XY_BUY_BLESSING):
+                        break
+                    sleep(0.3)
+                logger.info('Blessing bought')
+                return True
+            sleep(0.3)
+        return False
 
     def _switch_to_activity(self) -> None:
         """

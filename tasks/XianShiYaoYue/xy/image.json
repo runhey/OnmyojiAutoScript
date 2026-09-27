@@ -133,5 +133,14 @@
     "method": "Template matching",
     "threshold": 0.8,
     "description": "结算重复奖励弹窗-确定按钮(内容不定, 只认按钮)"
+  },
+  {
+    "itemName": "buy_blessing",
+    "imageName": "xy_blessing_buy.png",
+    "roiFront": "558,491,166,59",
+    "roiBack": "430,140,430,470",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "祝福详情弹窗-金色勾玉价格按钮(即购买按钮, 无确定/取消)"
   }
 ]

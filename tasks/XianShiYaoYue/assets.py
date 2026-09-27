@@ -41,6 +41,8 @@ class XianShiYaoYueAssets:
 	I_XY_CREATE = RuleImage(roi_front=(578,481,124,60), roi_back=(430,130,440,460), threshold=0.8, method="Template matching", file="./tasks/XianShiYaoYue/xy/xy_create_team.png")
 	# description 结算重复奖励弹窗-确定按钮(内容不定, 只认按钮)
 	I_XY_CONFIRM = RuleImage(roi_front=(578,446,120,53), roi_back=(380,150,520,420), threshold=0.8, method="Template matching", file="./tasks/XianShiYaoYue/xy/xy_confirm.png")
+	# description 祝福详情弹窗-金色勾玉价格按钮(即购买按钮, 无确定/取消)
+	I_XY_BUY_BLESSING = RuleImage(roi_front=(558,491,166,59), roi_back=(430,140,430,470), threshold=0.8, method="Template matching", file="./tasks/XianShiYaoYue/xy/xy_blessing_buy.png")
 
 	# Ocr Rule Assets
 	# description 商店绿框区域现世祝福识别
