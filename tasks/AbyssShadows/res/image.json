@@ -138,7 +138,7 @@
     "itemName": "is_attack",
     "imageName": "res_is_attack.png",
     "roiFront": "586,62,73,27",
-    "roiBack": "586,62,73,27",
+    "roiBack": "420,50,460,55",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "进攻中"
@@ -192,7 +192,7 @@
     "itemName": "wait_to_start",
     "imageName": "res_wait_to_start.png",
     "roiFront": "588,64,70,26",
-    "roiBack": "588,64,70,26",
+    "roiBack": "420,50,460,55",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"

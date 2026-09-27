@@ -25,7 +25,7 @@ from module.exception import TaskEnd
 from module.atom.image_grid import ImageGrid
 from module.base.utils import point2str
 from module.base.timer import Timer
-from module.exception import GamePageUnknownError
+from module.exception import GamePageUnknownError, GameStuckError
 from pathlib import Path
 from tasks.AbyssShadows.config import AbyssShadows
 from tasks.AbyssShadows.assets import AbyssShadowsAssets
@@ -119,11 +119,12 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AbyssShadowsAssets):
             self.set_next_run(task='AbyssShadows', finish=False, server=True, success=False)
             raise TaskEnd
         
-        # 等待可进攻时间  
-        self.device.stuck_record_add('BATTLE_STATUS_S')
-        # 集结中图片
-        self.wait_until_disappear(self.I_WAIT_TO_START)
-        self.device.stuck_record_clear()
+        # 等待集结结束（顶部横幅 集结中 -> 进攻中）后再开始进攻
+        if not self.wait_rally_finish():
+            logger.warning("Rally not finished, exit and retry later")
+            self.goto_main()
+            self.set_next_run(task='AbyssShadows', finish=False, server=True, success=False)
+            raise TaskEnd
 
         # 未开启智能伤害准备攻打精英、副将、首领
         if not cfg.abyss_shadows_combat_time.CombatTime_enable:
@@ -361,6 +362,33 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AbyssShadowsAssets):
                 break
         return True
 
+    def wait_rally_finish(self, timeout: int = 900) -> bool:
+        ''' 等待狭间集结结束
+
+        以顶部横幅出现"进攻中"作为进攻阶段开始的正向信号。
+        不能用"集结中"横幅消失代替：进入地图的过渡动画期间横幅尚未渲染，
+        wait_until_disappear 会在第一帧就误判为集结已结束，导致集结期间开始进攻。
+        :param timeout: 最长等待秒数
+        :return 是否等到进攻阶段
+        '''
+        logger.info("Wait rally finish")
+        timer = Timer(timeout).start()
+        rally_seen = False
+        while 1:
+            self.screenshot()
+            # 集结期间无任何点击，保活避免 60 秒卡死重启
+            self.device.stuck_record_clear()
+            if self.appear(self.I_IS_ATTACK):
+                logger.info("Rally finished, attack phase started")
+                return True
+            if self.appear(self.I_WAIT_TO_START):
+                if not rally_seen:
+                    rally_seen = True
+                    logger.info("Rally in progress, keep waiting")
+            if timer.reached():
+                logger.warning(f"Wait rally finish timeout ({timeout}s), rally banner seen: {rally_seen}")
+                return False
+
     def find_enemy(self, enemy_type: EmemyType) -> bool:
         ''' 寻找敌人,并开始寻路进入战斗
         :return 是否找到敌人，若目标已死亡则返回False，否则返回True
@@ -526,7 +554,6 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AbyssShadowsAssets):
         # 进入战斗后，开始计时
         start_time = time.time()
         if cfg.abyss_shadows_combat_time.CombatTime_enable:
-            self.device.stuck_record_add('BATTLE_STATUS_S')
             if Monster_type == "BOSS":  # BOSS战斗
                 combat_time = cfg.abyss_shadows_combat_time.boss_combat_time
             elif Monster_type == "GENERAL":  # 是副将战斗
@@ -535,29 +562,41 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AbyssShadowsAssets):
                 combat_time = cfg.abyss_shadows_combat_time.elite_combat_time
             else:
                 combat_time = 60  # 默认为 60 秒
-            # 等待设定的战斗时间
+            # 等待设定的战斗时间；期间首领可能被其他寮友击败导致战斗提前结束：
+            # 直接退回集结地图（顶部横幅"进攻中"，右下角"战报"按钮可用），或弹出结算
             while time.time() - start_time < combat_time:
                 self.screenshot()
+                # 战斗中无点击，保活避免卡死误判
+                self.device.stuck_record_clear()
+                if self.appear(self.I_ABYSS_NAVIGATION) or self.appear(self.I_IS_ATTACK):
+                    logger.info("Battle ended early, back to rally map")
+                    break
                 if self.appear_then_click(self.I_WIN, interval=1.5):
                     break
             logger.info("Combat time ended, proceeding to exit.")
-            self.device.stuck_record_clear()
-        # 战斗提前结束这时没有返回按钮
-        if self.appear_then_click(self.I_WIN, interval=1.5):
+        # 战斗提前结束（无结算）时已回到集结地图，无需任何退出操作
+        if self.appear(self.I_ABYSS_NAVIGATION) or self.appear(self.I_IS_ATTACK):
             return True
 
-        # 点击返回
+        # 处理仍在战斗中的退出、结算界面残留、未知界面，直到回到集结地图
+        exit_timer = Timer(120).start()
         while 1:
             self.screenshot()
+            if self.appear(self.I_ABYSS_NAVIGATION) or self.appear(self.I_IS_ATTACK):
+                break
+            if exit_timer.reached():
+                logger.warning("Exit battle timeout, unknown screen")
+                raise GameStuckError("AbyssShadows failed to exit battle in 120s")
             if self.appear_then_click(self.I_EXIT, interval=2):
                 continue
             if self.appear_then_click(self.I_EXIT_ENSURE, interval=2):
                 continue
             if self.appear_then_click(self.I_WIN, interval=2):
                 continue
-            if self.appear(self.I_ABYSS_NAVIGATION):
-                break
-        logger.info(f"Click {self.I_EXIT_ENSURE.name}")
+            # 未知界面兜底：点一下屏幕推进（结算/奖励页点击任意处可继续），2 秒后复查是否回到集结地图
+            self.device.click(640, 360, control_name='ABYSS_UNKNOWN_SCREEN')
+            sleep(2)
+        logger.info("Back to rally map")
 
         return True
 
