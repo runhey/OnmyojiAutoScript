@@ -1,6 +1,8 @@
 # This Python file uses the following encoding: utf-8
 # @author runhey
 # github https://github.com/runhey
+import types
+
 import numpy as np
 
 from module.atom.image import RuleImage
@@ -10,13 +12,39 @@ from module.atom.image import RuleImage
 class RuleGif:
     # 大部分实现同RuleImage 的接口
 
+    @staticmethod
+    def attach_to(image_obj: RuleImage, targets: list[RuleImage]) -> None:
+        """
+        把GIF的多帧匹配行为原地挂载到一个RuleImage实例上
+
+        与replace_img的原地换属性同思路: 不换对象、不换引用,
+        持有该对象引用的Page/寻路会立即生效
+        :param image_obj: 被挂载的RuleImage实例
+        :param targets: 多帧RuleImage, 顺序即匹配优先级
+        """
+        # GIF状态
+        image_obj.targets = targets
+        image_obj.roi_front = [0, 0, 0, 0]
+        image_obj.roi_back = targets[0].roi_back
+        image_obj.appear_target = targets[0]
+        image_obj.name = targets[0].name
+        image_obj._match_init = False
+        # 方法级替换: 把RuleGif的所有公开方法绑定到该实例上
+        for name, attr in RuleGif.__dict__.items():
+            if name.startswith('_'):
+                continue
+            if isinstance(attr, types.FunctionType):
+                setattr(image_obj, name, types.MethodType(attr, image_obj))
+
     @property
     def name(self) -> str:
-        return self.appear_target.name
+        return self.targets[0].name
 
     def __init__(self, targets: list[RuleImage]):
         self.targets = targets
         self.roi_front: list = [0, 0, 0, 0]
+        self.roi_back: list = targets[0].roi_back
+        self._match_init = False
         self.appear_target = targets[0]
 
     def pre_process(self, image):
@@ -44,17 +72,20 @@ class RuleGif:
                 return True, target
         return False, None
 
-    def search_with_multi_scale(self, image, roi=None, threshold=None, scale_range=(0.8, 1.1, 0.05)):
+    def search_with_multi_scale(self, image, roi=None, threshold=None, scales=None, scale_range=(0.8, 1.1, 0.05)):
         image = self.pre_process(image)
         threshold = self.targets[0].threshold if threshold is None else threshold
         roi = self.targets[0].roi_back if roi is None else roi
         for target in self.targets:
             target.roi_back = roi
-            if target.match_multi_scale(image, threshold=threshold, scale_range=scale_range):
+            if target.match_multi_scale(image, threshold=threshold, scales=scales, scale_range=scale_range):
                 self.roi_front = target.roi_front
                 self.appear_target = target
                 return True, target
         return False, None
+
+    def match_multi_scale(self, image, threshold: float = None, scales: list = None, scale_range: tuple = None) -> bool:
+        return self.search_with_multi_scale(image, threshold=threshold, scales=scales, scale_range=scale_range)[0]
 
     def match(self, image, threshold: float = None) -> bool:
         return self.search(image, threshold=threshold)[0]

@@ -209,6 +209,12 @@ page_dokan = Page(DokanAssets.I_RYOU_DOKAN_CHECK)
 page_dokan.additional = [GeneralBattleAssets.I_EXIT, DokanAssets.I_RYOU_DOKAN_EXIT_ENSURE, G.I_BACK_BLUE]
 page_dokan.link(button=G.I_BACK_Y, destination=page_main)
 
+# 摸鱼行动页面
+from tasks.WeeklyTrifles.assets import WeeklyTriflesAssets
+page_touch_fish = Page(WeeklyTriflesAssets.I_CHECK_TOUCH_FISH)
+page_guild.link(button=WeeklyTriflesAssets.I_GUILD_GOTO_TF,destination=page_touch_fish)
+page_touch_fish.link(button=WeeklyTriflesAssets.I_WT_TF_GOTO_MAIN,destination=page_main)
+
 
 # ************************************* 战斗部分 *****************************************#
 # 战斗界面
