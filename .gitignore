@@ -275,4 +275,8 @@ oas.bat
 
 # ZCode 会话本地文件与 Flutter 构建产物（e7366c0d 曾误提交）
 .zcode/
-data/flutter_assets/
+# 保留 flutter_assets 下的清单文件：FontManifest.json 丢失会导致 OASX 图标全部显示为方框
+data/flutter_assets/*
+!data/flutter_assets/FontManifest.json
+!data/flutter_assets/AssetManifest.json
+!data/flutter_assets/AssetManifest.bin
