@@ -2,6 +2,7 @@
 # @author runhey
 # github https://github.com/runhey
 from time import sleep
+from copy import deepcopy
 from cached_property import cached_property
 
 from module.logger import logger
@@ -134,7 +135,6 @@ class SoloExploration(BaseExploration):
         while 1:
             self.screenshot()
             scene = self.get_current_scene()
-            logger.info(f'[run_leader] Current scene: {scene.name}')  # TODO 2026.06.22 之后删掉这个刷屏的
             # 探索大世界
             if scene == Scene.WORLD:
                 # 打开右边箭头
@@ -337,6 +337,15 @@ class SoloExploration(BaseExploration):
                 friend_class[i] = '跨区'
         logger.info(f'Friend class: {friend_class}')
 
+        # 76e2a874(#1509) 把 I_FLAG_2_ON 的 roi 改到了 tab 标签栏上方的空白区
+        # (472,82,32,11) / (454,74,56,26)，导致第 2 个 tab 的选中态永远匹配不上，
+        # while index == 1 死循环点满 10 次触发 GameTooManyClickError。
+        # 这里深拷贝一份并还原成 439be142(#1443) 的 roi，不改动原资源。
+        # https://github.com/runhey/OnmyojiAutoScript/issues/1844
+        flag_2_on = deepcopy(self.I_FLAG_2_ON)
+        flag_2_on.roi_front = [471, 128, 54, 18]
+        flag_2_on.roi_back = (471, 128, 54, 18)
+
         is_select: bool = False  # 是否选中了好友
         if find_mode == FindMode.RECENT_FRIEND:
             logger.info('Find recent friend')
@@ -347,7 +356,7 @@ class SoloExploration(BaseExploration):
             recent_index = friend_class.index('最近')
             while recent_index == 1:
                 self.screenshot()
-                if self.appear(self.I_FLAG_2_ON):
+                if self.appear(flag_2_on):
                     break
                 if self.appear_then_click(self.I_FLAG_2_OFF, interval=1):
                     continue
@@ -378,7 +387,7 @@ class SoloExploration(BaseExploration):
                     continue
             while index == 1:
                 self.screenshot()
-                if self.I_FLAG_2_ON.match_mean_color(self.device.image, self.INVITE_FLAG_ON, 10):
+                if flag_2_on.match_mean_color(self.device.image, self.INVITE_FLAG_ON, 10):
                     break
                 if self.click(self.I_FLAG_2_OFF, interval=1):
                     continue
