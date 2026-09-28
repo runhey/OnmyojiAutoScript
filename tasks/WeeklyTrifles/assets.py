@@ -79,3 +79,33 @@ class WeeklyTriflesAssets:
 	I_WT_SE_RANK = RuleImage(roi_front=(1017,572,45,44), roi_back=(989,556,103,81), threshold=0.8, method="Template matching", file="./tasks/WeeklyTrifles/secret/secret_wt_se_rank.png")
 
 
+	# Image Rule Assets
+	# 前往摸鱼页面 
+	I_GUILD_GOTO_TF = RuleImage(roi_front=(30,433,88,30), roi_back=(7,153,227,329), threshold=0.8, method="Template matching", file="./tasks/WeeklyTrifles/touch_fish/touch_fish_guild_goto_tf.png")
+	# 关闭首次进入弹窗 
+	I_WT_HAPPY_GET = RuleImage(roi_front=(736,461,119,35), roi_back=(736,461,119,35), threshold=0.8, method="Template matching", file="./tasks/WeeklyTrifles/touch_fish/touch_fish_wt_happy_get.png")
+	# 全部保存本周次数 
+	I_WT_SAVE_ALL = RuleImage(roi_front=(1115,598,79,74), roi_back=(1115,598,79,74), threshold=0.8, method="Template matching", file="./tasks/WeeklyTrifles/touch_fish/touch_fish_wt_save_all.png")
+	# 摸鱼行动页面标志 
+	I_CHECK_TOUCH_FISH = RuleImage(roi_front=(1082,20,27,27), roi_back=(1082,20,27,27), threshold=0.8, method="Template matching", file="./tasks/WeeklyTrifles/touch_fish/touch_fish_check_touch_fish.png")
+	# 返回庭院 
+	I_WT_TF_GOTO_MAIN = RuleImage(roi_front=(93,17,42,39), roi_back=(0,0,198,82), threshold=0.8, method="Template matching", file="./tasks/WeeklyTrifles/touch_fish/touch_fish_wt_tf_goto_main.png")
+	# 打开折叠窗口 
+	I_WT_OPEN_FOLD_WINDOW = RuleImage(roi_front=(28,155,21,21), roi_back=(28,155,21,21), threshold=0.8, method="Template matching", file="./tasks/WeeklyTrifles/touch_fish/touch_fish_wt_open_fold_window.png")
+	# 已经打开的折叠窗口 
+	I_WT_FOLD_WINDOW = RuleImage(roi_front=(261,155,21,21), roi_back=(261,155,21,21), threshold=0.8, method="Template matching", file="./tasks/WeeklyTrifles/touch_fish/touch_fish_wt_fold_window.png")
+	# 确认储存的按钮 
+	I_WT_TF_CONFIRM = RuleImage(roi_front=(672,588,139,56), roi_back=(672,588,139,56), threshold=0.8, method="Template matching", file="./tasks/WeeklyTrifles/touch_fish/touch_fish_wt_tf_confirm.png")
+	# 储存成功的标志 
+	I_WT_TF_SAVE_SUCCESS = RuleImage(roi_front=(942,243,62,25), roi_back=(871,212,219,70), threshold=0.8, method="Template matching", file="./tasks/WeeklyTrifles/touch_fish/touch_fish_wt_tf_save_success.png")
+	# 上周存储界面 
+	I_WT_LAST_SAVE = RuleImage(roi_front=(590,78,99,24), roi_back=(540,58,213,59), threshold=0.8, method="Template matching", file="./tasks/WeeklyTrifles/touch_fish/touch_fish_wt_last_save.png")
+
+
+	# Ocr Rule Assets
+	# 现有福运御守数量 
+	O_WT_LUCKY_TICKETS = RuleOcr(roi=(1145,16,95,32), area=(1145,16,95,32), mode="DigitCounter", method="Default", keyword="", name="wt_lucky_tickets")
+	# 全部储存需要的御守数量 
+	O_WT_SAVE_COST = RuleOcr(roi=(1162,676,35,24), area=(1156,670,52,40), mode="Digit", method="Default", keyword="", name="wt_save_cost")
+
+

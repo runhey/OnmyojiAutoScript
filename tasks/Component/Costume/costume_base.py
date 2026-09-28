@@ -32,6 +32,14 @@ main_costume_model[getattr(MainType, "COSTUME_MAIN_17")] = {
     'I_MAIN_GOTO_TOWN': ['I_MAIN_GOTO_TOWN_17_A', 'I_MAIN_GOTO_TOWN_17_B', 'I_MAIN_GOTO_TOWN_17_C'],
     'I_PET_HOUSE': ['I_PET_HOUSE_17_A', 'I_PET_HOUSE_17_B', 'I_PET_HOUSE_17_C'],
 }
+main_costume_model[getattr(MainType, "COSTUME_MAIN_13")] = {
+    'I_CHECK_MAIN': ['I_CHECK_MAIN_13',],
+    'I_MAIN_GOTO_EXPLORATION': ['I_MAIN_GOTO_EXPLORATION_13', ],
+    'I_MAIN_GOTO_SUMMON': ['I_MAIN_GOTO_SUMMON_13',],
+    'I_MAIN_GOTO_TOWN': ['I_MAIN_GOTO_TOWN_13',],
+    'I_PET_HOUSE': ['I_PET_HOUSE_13',],
+}
+
 
 
 # 鲤鱼旗皮肤
@@ -104,9 +112,6 @@ class CostumeBase:
         asset_before_object.threshold = asset_after.threshold
         asset_before_object.file = asset_after.file
 
-    def set_asset(self, asset_before: str, rule: RuleImage | RuleGif) -> None:
-        setattr(self, asset_before, rule)
-
     def check_costume_main(self, main_type: MainType):
         if main_type == MainType.COSTUME_MAIN:
             return
@@ -114,8 +119,10 @@ class CostumeBase:
         costume_assets = CostumeAssets()
         for key, value in main_costume_model[main_type].items():
             if isinstance(value, list):
+                if not hasattr(self, key):
+                    continue
                 rules: list[RuleImage] = [getattr(costume_assets, item) for item in value]
-                self.set_asset(key, RuleGif(rules))
+                RuleGif.attach_to(getattr(self, key), rules)
             else:
                 assert_value: RuleImage = getattr(costume_assets, value)
                 self.replace_img(key, assert_value)
@@ -167,4 +174,4 @@ class CostumeBase:
 
 if __name__ == '__main__':
     c = CostumeBase()
-    c.check_costume_main(MainType.COSTUME_MAIN_2)
+    c.check_costume_main(MainType.COSTUME_MAIN_13)
