@@ -129,6 +129,12 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, RyouToppaAssets):
             elif self.appear(self.I_RYOU_REWARD, threshold=0.8) or self.appear(self.I_RYOU_REWARD_90, threshold=0.8):
                 ryou_toppa_start_flag = True
                 break
+            # 出现突破记录按钮，说明已进入寮突进攻界面（寮突已开），可能已被其他成员打完
+            elif self.appear(self.I_TOPPA_RECORD, threshold=0.8):
+                ryou_toppa_start_flag = True
+                if self.is_all_area_finished():
+                    ryou_toppa_success_penetration = True
+                break
 
         logger.attr('ryou_toppa_start_flag', ryou_toppa_start_flag)
         logger.attr('ryou_toppa_success_penetration', ryou_toppa_success_penetration)
@@ -234,6 +240,20 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, RyouToppaAssets):
             if self.appear(self.I_RYOU_REWARD, threshold=0.8):
                 break
         logger.info(f'Click {self.I_START_TOPPA_BUTTON.name}')
+
+    def is_all_area_finished(self) -> bool:
+        """
+        检查当前显示的所有结界区域是否全部已攻破（带"破"角标）。
+        用于寮突开启后、拉起前已被其他成员打完的场景。
+        """
+        finished_count = 0
+        for index in range(len(area_map)):
+            f3, f4 = area_map[index].get("finished_sign")
+            if self.appear(f3, threshold=0.8) or self.appear(f4, threshold=0.8):
+                finished_count += 1
+        # 当前界面固定显示 8 个区域，全部已攻破才算完成
+        logger.attr('ryou_toppa_finished_areas', f'{finished_count}/{len(area_map)}')
+        return finished_count >= len(area_map)
 
     def has_ticket(self) -> bool:
         """
