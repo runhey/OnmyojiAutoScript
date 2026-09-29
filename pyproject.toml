@@ -60,11 +60,12 @@ macos = []
 test = [
     "pytest>=8.4.2",
     "pytest-trio>=0.8.0",
+    "pytest-benchmark>=5.3.0",
     "ruff>=0.16.8",
     "isort>=9.0.1",
 ]
 
-
+# uv sync --extra default
 default = ["onmyojiautoscript[windows,test]"]
 
 
@@ -75,6 +76,19 @@ pythonpath = ["."]
 markers = [
     "slow: marks tests as slow (deselect with '-m \"not slow\"')",
     "network: marks tests that require external network access (skip with '--run-network' unset)",
+]
+# pytest-benchmark lives entirely on CLI options (no ini keys registered):
+# wire the defaults through addopts so every invocation gets them.
+#   * --benchmark-skip             plain `pytest` skips benchmarks (fast);
+#                                  run them explicitly with `pytest --benchmark-only`
+#   * --benchmark-max-time=0.1     default 1.0 spends ~1s calibrating per case
+#                                  (30 cases -> ~26s); 0.1s keeps it ~3s
+#   * --benchmark-calibration-precision=5
+#                                  fewer calibration steps (default 10)
+addopts = [
+    "--benchmark-skip",
+    "--benchmark-max-time=0.1",
+    "--benchmark-calibration-precision=5",
 ]
 
 
