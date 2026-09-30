@@ -156,5 +156,36 @@ class BezierTrajectory:
         # return {"trackArray": np.array(s), "P": w}
         return [[int(s[0]), int(s[1])] for s in s]
 
+
+def human_track(start, end, interval=10):
+    """
+    生成 start → end 的拟人贝塞尔轨迹点，相邻两点间隔约 interval 像素。
+    轨迹阶数、波动幅度、速度分布随机，供模拟器滑动与桌面客户端滑动共用。
+
+    两种退化输入单独处理：起点终点 x 相同时贝塞尔以 x 做参数化会除零，
+    纯垂直移动退化为直线插值；距离不足以生成一个点时直接返回终点，
+    避免调用方拿到空轨迹再去取 [0]。
+    """
+    number_list = int(math.dist(start, end) / (1 * interval))
+    if number_list < 1:
+        return [tuple(end)]
+    if start[0] == end[0]:
+        dy = end[1] - start[1]
+        return [[int(start[0]), int(start[1] + dy * i / number_list)]
+                for i in range(1, number_list + 1)]
+    le = random.randint(2, 4)
+    deviation = random.randint(20, 40)
+    obbs_type = random.random()
+    # 0.8 概率先快中间慢后面快，0.1 先快后慢，0.1 先慢后快
+    if 0 < obbs_type <= 0.8:
+        b_type = 3
+    elif obbs_type < 0.9:
+        b_type = 2
+    else:
+        b_type = 1
+    return BezierTrajectory.trackArray(start=list(start), end=list(end), numberList=number_list,
+                                       le=le, deviation=deviation, bias=0.5, type=b_type,
+                                       cbb=0, yhh=20)
+
 # print(BezierTrajectory.trackArray(start=[0, 0], end=[100, 100], numberList=50, le=2,
 #                     deviation=0, bias=0.5, type=0, cbb=0, yhh=10))
