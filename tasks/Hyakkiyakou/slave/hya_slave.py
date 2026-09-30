@@ -262,11 +262,15 @@ class HyaSlave(HyaDevice, HyaColor, HyakkiyakouAssets):
 
         # 依次邀请,
         self.friend_state = 0  # 不需要每一次都从0开始，可以固定一下
+        scroll_x = 470 if hya_recall_activity else 620
         while self.friend_state < 3:
             match self.friend_state:
                 case 0:
                     logger.info('Invite same server friend')
-                    if not self._invite_friend(button1=friend_buttons1[0], button2=friend_buttons2[0], hya_recall_activity=hya_recall_activity):
+                    # 指定好友查找失败后列表可能停在底部(全是灰名)，第一个页签先划回顶部点第一个
+                    if not self._invite_friend(button1=friend_buttons1[0], button2=friend_buttons2[0],
+                                               hya_recall_activity=hya_recall_activity,
+                                               scroll_to_top=bool(friend_name), scroll_x=scroll_x):
                         self.friend_state += 1
                     else:
                         return True
@@ -285,10 +289,27 @@ class HyaSlave(HyaDevice, HyaColor, HyakkiyakouAssets):
                 case _:
                     raise RequestHumanTakeover('Invite friend failed')
 
-    def _invite_friend(self, button1: RuleImage, button2: RuleImage, hya_recall_activity: bool = False ) -> bool:
+    def _scroll_friend_list_to_top(self, rules: list[RuleOcr], scroll_x: int):
+        """
+        把好友列表划回最顶部。指定好友查找会把列表翻到中部甚至底部，
+        底部一页往往全是"最近受邀"的灰名无法再邀请，回退随机邀请前必须先回到顶部
+        """
+        for _ in range(8):
+            if not self._scroll_friend_list(rules, scroll_x, direction=-1):
+                break
+        logger.info('Friend list scrolled back to top')
+
+    def _invite_friend(self, button1: RuleImage, button2: RuleImage, hya_recall_activity: bool = False,
+                       scroll_to_top: bool = False, scroll_x: int = 620) -> bool:
         logger.info('Start clicking')
         self.ui_click(button1, button2)
         logger.info('End clicking')
+        # 列表可能停在底部(全是最近受邀的灰名)，先划回顶部再点左上第一个好友
+        if scroll_to_top:
+            rules = ([self.O_HYA_FRIEND_NAME_L_RECALL, self.O_HYA_FRIEND_NAME_R_RECALL]
+                     if hya_recall_activity else
+                     [self.O_HYA_FRIEND_NAME_L, self.O_HYA_FRIEND_NAME_R])
+            self._scroll_friend_list_to_top(rules, scroll_x)
         invite_timer = Timer(8)
         invite_timer.start()
         while 1:
@@ -367,6 +388,37 @@ class HyaSlave(HyaDevice, HyaColor, HyakkiyakouAssets):
                 return False
             time.sleep(0.5)
 
+    def _friend_list_names(self, rules: list[RuleOcr]) -> list[str]:
+        """
+        读取当前好友列表可见的名字(左右两列)，用于判断滑动是否真的翻页
+        """
+        names = []
+        for rule in rules:
+            results = rule.detect_and_ocr(self.device.image)
+            for result in results:
+                text = (result.ocr_text or '').replace(' ', '')
+                if text:
+                    names.append(text)
+        return names
+
+    def _scroll_friend_list(self, rules: list[RuleOcr], scroll_x: int, direction: int) -> bool:
+        """
+        滑动好友列表并确认是否真的翻页。
+        游戏偶尔吞掉滑动(日志里 "Swipe x distance is 0")，此时列表没动，
+        盲滑会一路翻到底部卡死，所以滑动前后对比OCR名字
+        :param direction: 1 向下翻页; -1 向上翻页
+        :return: True 列表内容发生了变化
+        """
+        before = self._friend_list_names(rules)
+        if direction > 0:
+            self.device.swipe(p1=(scroll_x, 550), p2=(scroll_x, 320), control_name='hya_friend_scroll')
+        else:
+            self.device.swipe(p1=(scroll_x, 320), p2=(scroll_x, 550), control_name='hya_friend_scroll')
+        time.sleep(1)
+        self.screenshot()
+        after = self._friend_list_names(rules)
+        return after != before
+
     def _invite_specific_friend(self, friend_name: str, hya_recall_activity: bool = False) -> bool:
         """
         在好友/寮友/跨区页签中查找指定好友并邀请，列表支持向下滑动
@@ -387,13 +439,14 @@ class HyaSlave(HyaDevice, HyaColor, HyakkiyakouAssets):
         for tab_off, tab_on in tabs:
             self.ui_click(tab_off, tab_on, interval=1)
             time.sleep(1.5)  # 等待好友列表加载完成
-            for _ in range(4):  # 每个页签最多向下滑动3次
+            for _ in range(8):  # 每个页签最多向下滑动8次(滑动被吞掉的不计入翻页)
                 self.screenshot()
                 if self._find_friend_click(rules, friend_name):
                     return self._wait_invite_result()
-                # 当前屏幕没有该好友，向下滑动列表继续找
-                self.device.swipe(p1=(scroll_x, 550), p2=(scroll_x, 320), control_name='hya_friend_scroll')
-                time.sleep(1)
+                # 当前屏幕没有该好友，向下滑动列表继续找；滑动没生效就重试
+                if not self._scroll_friend_list(rules, scroll_x, direction=1):
+                    logger.info('Friend list scroll has no effect, reached bottom or swipe ignored')
+                    break
         logger.warning(f'Not find friend {friend_name} in all tabs')
         return False
 
