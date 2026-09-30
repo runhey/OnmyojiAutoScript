@@ -2,10 +2,11 @@
   {
     "itemName": "frog_boss_enter",
     "imageName": "fb_frog_boss_enter.png",
-    "roiFront": "1191,391,36,38",
-    "roiBack": "1174,135,78,320",
+    "roiFront": "1188,303,36,38",
+    "roiBack": "1169,203,78,320",
     "method": "Template matching",
     "threshold": 0.7,
+    "profile": "Default",
     "description": "description"
   },
   {
@@ -15,6 +16,17 @@
     "roiBack": "492,260,220,113",
     "method": "Template matching",
     "threshold": 0.8,
+    "profile": "Default",
     "description": "休息中"
+  },
+  {
+    "itemName": "frog_check",
+    "imageName": "fb_frog_check.png",
+    "roiFront": "664,31,148,65",
+    "roiBack": "551,4,371,145",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "profile": "Default",
+    "description": "竞猜主页面"
   }
 ]

@@ -6,8 +6,9 @@ from datetime import datetime
 import requests
 import re
 import json
+from pathlib import Path
 
-from module.exception import TaskEnd
+from module.exception import GameStuckError, TaskEnd
 from module.logger import logger
 from module.atom.image import RuleImage
 from module.base.timer import Timer
@@ -19,11 +20,34 @@ from tasks.Component.GeneralBattle.assets import GeneralBattleAssets
 from tasks.Component.config_base import TimeDelta
 from tasks.FrogBoss.assets import FrogBossAssets
 from tasks.FrogBoss.config import Strategy
+from tasks.FrogBoss.frog_oas import OasHistory, fetch_predictions, fingerprint
 
 
 class ScriptTask(RightActivity, FrogBossAssets, GeneralBattleAssets):
-    def run(self):
+    @cached_property
+    def oas_history(self):
+        instance = re.sub(r'[^\w.-]', '_', self.config.config_name)
+        return OasHistory(Path('data/frog_oas') / f'{instance}.jsonl')
+
+    def record_oas_result(self):
+        if self.config.model.frog_boss.frog_boss_config.strategy_frog != Strategy.Oas:
+            return
+        winner = self.detect()
+        if winner is not None:
+            result = self.oas_history.settle(
+                fingerprint(self.device.image), 'LEFT' if winner else 'RIGHT')
+            logger.info(f'frog_oas result: {result}')
+
+    def enter_frog_boss(self):
+        self.screenshot()
+        if self.appear(self.I_FROG_CHECK):
+            return
         self.enter(self.I_FROG_BOSS_ENTER)
+        if not self.wait_until_appear(self.I_FROG_CHECK, wait_time=10):
+            raise GameStuckError('FrogBoss page not detected after entering activity')
+
+    def run(self):
+        self.enter_frog_boss()
         # 进入主界面
         while 1:
             self.screenshot()
@@ -39,6 +63,7 @@ class ScriptTask(RightActivity, FrogBossAssets, GeneralBattleAssets):
             # 竞猜成功
             if self.appear(self.I_BET_SUCCESS):
                 logger.info('You bet win')
+                self.record_oas_result()
                 self.detect()
                 while 1:
                     self.screenshot()
@@ -54,6 +79,7 @@ class ScriptTask(RightActivity, FrogBossAssets, GeneralBattleAssets):
             # 竞猜失败
             if self.appear(self.I_BET_FAILURE):
                 logger.info('You bet lose')
+                self.record_oas_result()
                 self.ui_click_until_disappear(self.I_NEXT_COMPETITION)
                 self.detect()
                 continue
@@ -105,6 +131,22 @@ class ScriptTask(RightActivity, FrogBossAssets, GeneralBattleAssets):
                 click_image = self.I_BET_LEFT if count_left > count_right else self.I_BET_RIGHT
             case Strategy.Dashen:
                 click_image = self.get_dashen(count_left, count_right)
+            case Strategy.Oas:
+                signature = fingerprint(self.device.image)
+                predictions = fetch_predictions(self.oas_history)
+                try:
+                    decision = self.oas_history.choose(signature, count_left, count_right, predictions)
+                except ValueError as exc:
+                    raise GameStuckError(str(exc)) from exc
+                logger.info(f'frog_oas decision: {decision}')
+                # Fetching may span a round transition; never click a stale frame.
+                self.screenshot()
+                from tasks.FrogBoss.frog_oas import same_lineup
+                if not same_lineup(signature, fingerprint(self.device.image)):
+                    raise GameStuckError('FrogBoss lineup changed while fetching predictions')
+                if not (self.appear(self.I_BET_LEFT) and self.appear(self.I_BET_RIGHT)):
+                    raise GameStuckError('FrogBoss betting closed while fetching predictions')
+                click_image = self.I_BET_LEFT if decision['side'] == 'LEFT' else self.I_BET_RIGHT
             case Strategy.AlwaysRed:
                 click_image = self.I_BET_LEFT
             case Strategy.AlwaysBlue:
@@ -152,7 +194,7 @@ class ScriptTask(RightActivity, FrogBossAssets, GeneralBattleAssets):
             result = False
             logger.info('Right win')
         else:
-            result = True
+            result = None
         return result
 
     def get_bilibili(self) -> RuleImage:

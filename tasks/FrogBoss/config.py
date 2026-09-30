@@ -14,6 +14,7 @@ class Strategy(str, Enum):
     Minority = 'frog_minority'
     Bilibili = 'frog_bilibili'
     Dashen = 'frog_dashen'
+    Oas = 'frog_oas'
     AlwaysRed = 'frog_always_red'
     AlwaysBlue = 'frog_always_blue'
 
