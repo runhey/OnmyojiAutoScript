@@ -11,18 +11,18 @@ class FrogBossAssets:
 
 
 	# Image Rule Assets
-	# 左边竞猜 
-	I_BET_LEFT = RuleImage(roi_front=(95,308,145,100), roi_back=(58,248,245,195), threshold=0.8, method="Template matching", file="./tasks/FrogBoss/fb/fb_bet_left.png")
-	# 右边竞猜 
-	I_BET_RIGHT = RuleImage(roi_front=(1038,303,146,100), roi_back=(1012,268,187,208), threshold=0.8, method="Template matching", file="./tasks/FrogBoss/fb/fb_bet_right.png")
-	# description 
-	I_BET_SUCCESS_BOX = RuleImage(roi_front=(593,419,87,50), roi_back=(564,378,140,133), threshold=0.75, method="Template matching", file="./tasks/FrogBoss/fb/fb_bet_success_box.png")
-	# 左边赢了 
-	I_SUCCESS_LEFT = RuleImage(roi_front=(123,316,100,100), roi_back=(91,254,202,221), threshold=0.8, method="Template matching", file="./tasks/FrogBoss/fb/fb_success_left.png")
-	# 右边输了 
-	I_FAILURE_RIGHT = RuleImage(roi_front=(1063,291,100,100), roi_back=(993,242,224,199), threshold=0.8, method="Template matching", file="./tasks/FrogBoss/fb/fb_failure_right.png")
-	# description 
-	I_NEXT_COMPETITION = RuleImage(roi_front=(673,510,42,36), roi_back=(658,488,91,98), threshold=0.8, method="Template matching", file="./tasks/FrogBoss/fb/fb_next_competition.png")
+	# 左边竞猜鼓(可下注)
+	I_BET_LEFT = RuleImage(roi_front=(283,302,127,89), roi_back=(240,262,260,185), threshold=0.8, method="Template matching", file="./tasks/FrogBoss/fb/fb_bet_left.png")
+	# 右边竞猜鼓(可下注)
+	I_BET_RIGHT = RuleImage(roi_front=(1084,306,128,89), roi_back=(1025,262,255,185), threshold=0.8, method="Template matching", file="./tasks/FrogBoss/fb/fb_bet_right.png")
+	# 竞猜成功宝箱
+	I_BET_SUCCESS_BOX = RuleImage(roi_front=(709,375,79,70), roi_back=(630,320,240,190), threshold=0.75, method="Template matching", file="./tasks/FrogBoss/fb/fb_bet_success_box.png")
+	# 胜字鼓(宽roi判左右)
+	I_SUCCESS_LEFT = RuleImage(roi_front=(299,311,89,89), roi_back=(250,260,980,190), threshold=0.8, method="Template matching", file="./tasks/FrogBoss/fb/fb_success_left.png")
+	# 败字鼓(宽roi判左右)
+	I_FAILURE_RIGHT = RuleImage(roi_front=(1100,304,89,89), roi_back=(250,260,980,190), threshold=0.8, method="Template matching", file="./tasks/FrogBoss/fb/fb_failure_right.png")
+	# 下一局按钮
+	I_NEXT_COMPETITION = RuleImage(roi_front=(763,483,64,77), roi_back=(700,440,190,140), threshold=0.8, method="Template matching", file="./tasks/FrogBoss/fb/fb_next_competition.png")
 	# 30万金币 
 	I_GOLD_30 = RuleImage(roi_front=(858,494,78,76), roi_back=(809,427,147,187), threshold=0.8, method="Template matching", file="./tasks/FrogBoss/fb/fb_gold_30.png")
 	# 确认竞猜 
@@ -38,7 +38,7 @@ class FrogBossAssets:
 	# description 
 	I_BET_FAILURE = RuleImage(roi_front=(496,252,269,72), roi_back=(439,220,400,152), threshold=0.8, method="Template matching", file="./tasks/FrogBoss/fb/fb_bet_failure.png")
 	# description 
-	I_BET_SUCCESS = RuleImage(roi_front=(512,264,260,73), roi_back=(433,214,418,151), threshold=0.8, method="Template matching", file="./tasks/FrogBoss/fb/fb_bet_success.png")
+	I_BET_SUCCESS = RuleImage(roi_front=(638,274,229,70), roi_back=(580,230,340,170), threshold=0.8, method="Template matching", file="./tasks/FrogBoss/fb/fb_bet_success.png")
 
 
 	# Image Rule Assets
@@ -49,11 +49,11 @@ class FrogBossAssets:
 
 
 	# Ocr Rule Assets
-	# Ocr-description 
-	O_LEFT_COUNT = RuleOcr(roi=(143,496,69,31), area=(143,496,69,31), mode="Digit", method="Default", keyword="", name="left_count")
-	# Ocr-description 
-	O_RIGHT_COUNT = RuleOcr(roi=(1105,497,77,32), area=(1105,497,77,32), mode="Digit", method="Default", keyword="", name="right_count")
-	# Ocr-description 
-	O_TIME_REMAIN = RuleOcr(roi=(594,564,91,35), area=(594,564,91,35), mode="Duration", method="Default", keyword="", name="time_remain")
+	# 左边押注人数
+	O_LEFT_COUNT = RuleOcr(roi=(305,470,125,32), area=(305,470,125,32), mode="Digit", method="Default", keyword="", name="left_count")
+	# 右边押注人数
+	O_RIGHT_COUNT = RuleOcr(roi=(1108,470,128,32), area=(1108,470,128,32), mode="Digit", method="Default", keyword="", name="right_count")
+	# 剩余结算时间MM:SS
+	O_TIME_REMAIN = RuleOcr(roi=(690,536,124,28), area=(690,536,124,28), mode="Single", method="Default", keyword="", name="time_remain")
 
 

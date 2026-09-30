@@ -1,29 +1,29 @@
 [
   {
     "itemName": "left_count",
-    "roiFront": "143,496,69,31",
-    "roiBack": "143,496,69,31",
+    "roiFront": "305,470,125,32",
+    "roiBack": "305,470,125,32",
     "mode": "Digit",
     "method": "Default",
     "keyword": "",
-    "description": "Ocr-description"
+    "description": "左边押注人数"
   },
   {
     "itemName": "right_count",
-    "roiFront": "1105,497,77,32",
-    "roiBack": "1105,497,77,32",
+    "roiFront": "1108,470,128,32",
+    "roiBack": "1108,470,128,32",
     "mode": "Digit",
     "method": "Default",
     "keyword": "",
-    "description": "Ocr-description"
+    "description": "右边押注人数"
   },
   {
     "itemName": "time_remain",
-    "roiFront": "594,564,91,35",
-    "roiBack": "594,564,91,35",
-    "mode": "Duration",
+    "roiFront": "690,536,124,28",
+    "roiBack": "690,536,124,28",
+    "mode": "Single",
     "method": "Default",
     "keyword": "",
-    "description": "Ocr-description"
+    "description": "剩余结算时间MM:SS"
   }
 ]

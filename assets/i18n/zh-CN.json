@@ -160,5 +160,18 @@
   "buy_blessing": "购买现世祝福",
   "xy_buy_blessing_help": "进入商店后检测绿框位置，若识别到现世祝福(100勾玉)则自动购买；已购买则自动跳过",
   "direct_challenge": "直接组队挑战(虚拟定位)",
-  "xy_direct_challenge_help": "开启虚拟定位并定位到活动城市后，可直接点击组队挑战，无需等待"
+  "xy_direct_challenge_help": "开启虚拟定位并定位到活动城市后，可直接点击组队挑战，无需等待",
+  "frog_gold_preset": "每轮投入档位",
+  "frog_gold_preset_help": "点竞猜鼓后弹窗里的5档投入，1最低5最高。金币不足会自动降档重试，最低档也不行则跳过本轮并推送通知",
+  "dashen_uid": "指定博主UID",
+  "dashen_uid_help": "策略=大神-跟随指定博主时生效。填大神博主主页网址 ds.163.com/user/ 后面那串hex id。该博主本场没发帖时自动回退为跟随多数",
+  "dashen_pool": "自定义博主池",
+  "dashen_pool_help": "每行一条：昵称,UID（只有UID也行）。留空使用内置26人池。UID=大神主页网址 ds.163.com/user/ 后那串",
+  "frog_majority": "跟随多数",
+  "frog_minority": "跟随少数",
+  "frog_bilibili": "B站(同跟随多数)",
+  "frog_dashen": "大神-跟随多数博主",
+  "frog_dashen_specific": "大神-跟随指定博主",
+  "frog_always_red": "永远红方(左)",
+  "frog_always_blue": "永远蓝方(右)"
 }

@@ -14,16 +14,17 @@ class Strategy(str, Enum):
     Minority = 'frog_minority'
     Bilibili = 'frog_bilibili'
     Dashen = 'frog_dashen'
+    DashenSpecific = 'frog_dashen_specific'
     AlwaysRed = 'frog_always_red'
     AlwaysBlue = 'frog_always_blue'
 
 class FrogBossConfig(ConfigBase):
     before_end_frog: Time = Field(default=Time(0, 15, 0), description='before_end_frog_help')
-    strategy_frog: Strategy = Field(default=Strategy.Majority, description='strategy_frog_help')
+    strategy_frog: Strategy = Field(default=Strategy.Dashen, description='strategy_frog_help')
+    frog_gold_preset: int = Field(default=1, description='frog_gold_preset_help')
+    dashen_uid: str = Field(default='', description='dashen_uid_help')
+    dashen_pool: str = Field(default='', description='dashen_pool_help')
 
 class FrogBoss(ConfigBase):
     scheduler: Scheduler = Field(default_factory=Scheduler)
     frog_boss_config: FrogBossConfig = Field(default_factory=FrogBossConfig)
-
-
-
