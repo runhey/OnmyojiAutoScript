@@ -166,7 +166,7 @@
   "dashen_uid": "指定博主UID",
   "dashen_uid_help": "策略=大神-跟随指定博主时生效。填大神博主主页网址 ds.163.com/user/ 后面那串hex id。该博主本场没发帖时自动回退为跟随多数",
   "dashen_pool": "自定义博主池",
-  "dashen_pool_help": "每行一条：昵称,UID（只有UID也行）。留空使用内置26人池。UID=大神主页网址 ds.163.com/user/ 后那串",
+  "dashen_pool_help": "大神博主池，每行一条：昵称,UID（只有UID也行）。已预填内置26人池，可自由增删改；清空则回退代码内置池。UID=大神博主主页网址 ds.163.com/user/ 后那串hex id",
   "frog_majority": "跟随多数",
   "frog_minority": "跟随少数",
   "frog_bilibili": "B站(同跟随多数)",

@@ -16,7 +16,7 @@ from tasks.GameUi.page import page_main
 from tasks.Component.RightActivity.right_activity import RightActivity
 from tasks.Component.GeneralBattle.assets import GeneralBattleAssets
 from tasks.FrogBoss.assets import FrogBossAssets
-from tasks.FrogBoss.config import Strategy
+from tasks.FrogBoss.config import Strategy, DASHEN_BUILTIN_UPS
 
 # 每轮竞猜时长（小时），用于推算下一轮的下注时刻
 ROUND_HOURS = 2
@@ -24,36 +24,6 @@ ROUND_HOURS = 2
 ROUND_STARTS = [time_of_day(8, 30)] + [time_of_day(h, 0) for h in range(10, 23, 2)]
 # 下注界面 5 档投入按钮坐标（2万/5万/10万/20万/30万，1280x720）
 TIER_POINTS = {1: (273, 610), 2: (430, 610), 3: (593, 610), 4: (750, 610), 5: (907, 610)}
-
-# 网易大神内置博主池：昵称, hex uid（用户主页网址 ds.163.com/user/<uid> 里那串）
-DASHEN_BUILTIN_UPS = [
-    ("面灵气喵", "462382f1127b46c5add1185d88f0ea40"),
-    ("余岁岁", "54399446d5084a0e8878dac8f6ff56d0"),
-    ("七面相", "840742d60e4a43208605ae68ca8c3f64"),
-    ("待机中的徐ok", "c3c989fae4074d04b478b8ba47ae4120"),
-    ("雯雯", "aaa923436aa440df9ac1ee3f47387b99"),
-    ("晨时微凉", "72584a679e2f45b6859566b5523400d5"),
-    ("梅布斯尼", "3d4726d99f2642a485729695b798cb8c"),
-    ("鸽海成路", "1d2dcbbd7e3d481c8d0f27ba4ff0dc71"),
-    ("徐清林", "21657a558bdd4ddfb6501298350336e7"),
-    ("不包邮哦亲", "0e4e0c5a1e494a1fa9a58ac55de689c1"),
-    ("天真珈百璃", "30e383c884f844a18a7a76fe3c1e888f"),
-    ("薛定谔家查查尔", "d9dc2a75497c4a91b2db1e909a36544d"),
-    ("嘤嘤井", "e7107cd3010e418da26672669d8eeb5e"),
-    ("Prince班崎", "74adeb1bfb2b4cf382edbbb430da2149"),
-    ("靠脸混饭", "e87f855f36f24b34b9d8f8a4fb2d62b2"),
-    ("夜神月丶L", "82de68c7672e4b6da65493fb829b57b6"),
-    ("是大荣啦", "f6d6bb15d6024200a985752e2ab4c373"),
-    ("炒饭菌", "06e2bba14a914012bc8064601cfa19ea"),
-    ("清流不加班", "8982241de1844638b4bb455139b8dcc0"),
-    ("槐夏三十", "a9724e98c1cb4a4e931ebc3f467ea73d"),
-    ("落沫颜", "e9b0a16325af46628e8dfb9e7942cf1d"),
-    ("Mico林木森", "b6b5bc8277e34f69aeca018db0081397"),
-    ("CC南浔", "74db771d92a54c28ae3e98d19aa565a3"),
-    ("冰七喜Den", "e498e524252041e29999b38e57c4df1d"),
-    ("行水姑娘", "30b0c2923faa483f95572c324a5bc910"),
-    ("更慕林", "e32aedbdd8da46a5b5b497a16c4b7658"),
-]
 
 # 押红/押蓝关键词，取在文中出现更靠前的一边
 RED_REGEX = re.compile(r'(押红|押左|压红|压左|红方|红色|我红|我左|红优|左|红六|红七|红八|红九|红十|91开|82开|73开|64开)')
@@ -67,7 +37,14 @@ class ScriptTask(RightActivity, FrogBossAssets, GeneralBattleAssets):
     def run(self):
         if not self._enter_activity():
             logger.warning('FrogBoss entrance not found, treat as rest')
-            self._schedule_from_rest()
+            # 场次正在进行时可能是活动加载慢，10 分钟内重试；否则按场次表到下一场开场
+            if self._active_round_start() is not None:
+                target = datetime.now() + timedelta(minutes=10)
+                logger.info(f'Round is active but entrance missing, retry at {target}')
+            else:
+                target = self._next_round_start()
+                logger.info(f'No active round, next round start {target}')
+            self.set_next_run(task='FrogBoss', target=target)
             raise TaskEnd('FrogBoss')
 
         # 兜底软超时：界面识别不了时不无限空转（也绝不让 60s 卡死保护重启游戏）
@@ -124,6 +101,18 @@ class ScriptTask(RightActivity, FrogBossAssets, GeneralBattleAssets):
             if now.time() < t:
                 return datetime.combine(now.date(), t) + timedelta(minutes=3)
         return datetime.combine(now.date() + timedelta(days=1), ROUND_STARTS[0]) + timedelta(minutes=3)
+
+    @staticmethod
+    def _active_round_start():
+        """当前进行中场次的开始时刻（8:30-10:00 与各整点场）；无进行中场次返回 None"""
+        now = datetime.now().time()
+        bounds = [(time_of_day(8, 30), time_of_day(10, 0))]
+        bounds += [(time_of_day(h, 0), time_of_day(h + 2, 0)) for h in range(10, 22, 2)]
+        bounds += [(time_of_day(22, 0), None)]  # 22-24 场跨到午夜
+        for s, e in bounds:
+            if now >= s and (e is None or now < e):
+                return s
+        return None
 
     def _schedule_after_bet(self):
         """已竞猜态（含手动下注后再次进入）：按剩余时间推算下一轮下注时刻"""
