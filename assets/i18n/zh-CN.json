@@ -1,4 +1,6 @@
 {
+  "desktop_game_path": "桌面版安装目录",
+  "desktop_game_path_help": "本项：游戏安装目录（如D:\\yys）留空则自动查找。\n\n桌面版模式（Serial 填 \"desktop\" 启用；截图和控制方式只能选 window开头的，支持多开，不支持最小化）:\n\n句柄Handle 填游戏窗口的进程 PID（多开时用于区分实例），PID 每次重启客户端都会变、需重新绑定（单开理论上只有第一次需要绑定）；\n可以空启动一次脚本获取PID，使句柄Handle可展开进行选择\n或任务栏管理器查找直接填写；也可用管理员 cmd 在 OAS 目录下执行 【.\\toolkit\\python.exe -m dev_tools.bind_desktop_window --config 配置名 --pick】 一键绑定（配置名不带 .json；--pick 后把鼠标移到游戏窗口上回车，不用点击；多开改用 --list 选序号）\n\n游戏以管理员运行时 OAS 也需以管理员启动，否则 UIPI 会拦截点击（截图正常但无法点击点）。\n\n高分辨率设备请在游戏目录\\bin\\onmyoji.exe属性设置\\兼容性\\高DPI设置中勾选“替代高DPI缩放行为”，并选择“由应用程序执行”。",
   "boss_limit_time": "单局Boss限制时间",
   "kirin_battle_config": "麒麟战斗配置",
   "netherworld_battle_config": "阴界之门战斗配置",

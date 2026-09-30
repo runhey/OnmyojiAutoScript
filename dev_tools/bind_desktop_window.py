@@ -108,7 +108,7 @@ def main():
         sys.exit(1)
     for i, (title, hwnd, pid) in enumerate(windows):
         print(f'[{i}] {title}  PID={pid}  HWND=0x{hwnd:X}')
-    choice = input('请输入要绑定的序号: ')
+    choice = input('请输入方括号内的序号: ')
     idx = int(choice)
     _, _, pid = windows[idx]
     bind_pid_to_config(args.config, pid)
