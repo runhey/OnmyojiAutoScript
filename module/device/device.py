@@ -12,6 +12,7 @@ from module.base.timer import Timer
 from module.config.utils import get_server_next_update
 from module.device.app_control import AppControl
 from module.device.control import Control
+from module.device.desktop_device import DesktopDevice
 from module.device.platform2 import Platform
 from module.device.screenshot import Screenshot
 from module.exception import (GameNotRunningError,
@@ -22,7 +23,7 @@ from module.exception import (GameNotRunningError,
 from module.logger import logger
 
 
-class Device(Platform, Screenshot, Control, AppControl):
+class Device(DesktopDevice, Platform, Screenshot, Control, AppControl):
     _screen_size_checked = False
     detect_record = set()
     click_record = deque(maxlen=15)
@@ -36,6 +37,13 @@ class Device(Platform, Screenshot, Control, AppControl):
                 super().__init__(*args, **kwargs)
                 break
             except EmulatorNotRunningError:
+                # 桌面客户端没有模拟器可拉：确保客户端在，再重跑一次基类完成窗口绑定
+                if self.is_desktop:
+                    if trial >= 1 or not self._desktop_ensure_launched():
+                        logger.critical('Desktop client not found and auto-launch failed, '
+                                        'please start the game and bind PID first')
+                        raise RequestHumanTakeover from None
+                    continue
                 if trial >= 3:
                     logger.critical('Failed to start emulator after 3 trial')
                     raise RequestHumanTakeover
@@ -48,6 +56,11 @@ class Device(Platform, Screenshot, Control, AppControl):
                         f'please set a correct serial'
                     )
                     raise RequestHumanTakeover
+
+        # 桌面客户端模式：无模拟器生命周期
+        if self.is_desktop:
+            self._init_desktop()
+            return
 
         # Auto-fill emulator info
         if IS_WINDOWS and self.config.script.device.emulatorinfo_type == 'auto':
@@ -103,6 +116,12 @@ class Device(Platform, Screenshot, Control, AppControl):
             np.ndarray:
         """
         self.stuck_record_check()
+
+        # 桌面模式：窗口缺失说明客户端当前不可用（启动期未出窗口，或客户端崩了）。
+        # 直接截图会抛 (1400, '无效的窗口句柄') 搞崩整个进程，必须先拦下；拉客户端
+        # 是 Restart 的职责。最小化不算窗口缺失——BitBlt 截图前会先还原窗口。
+        if self.is_desktop and not self.desktop_window_exists():
+            raise GameNotRunningError('Desktop client window not found')
 
         try:
             super().screenshot()
@@ -227,6 +246,17 @@ class Device(Platform, Screenshot, Control, AppControl):
         self.stuck_record_check = empty_function
 
     def app_start(self):
+        # 桌面模式：窗口缺失时自动启动客户端并绑定 PID（空闲关闭后由 Restart 重新拉起）
+        if self.is_desktop:
+            if not self._desktop_ensure_launched():
+                logger.error('Desktop client not running and auto-launch failed, '
+                             'please start the game manually or check desktop_game_path')
+                raise GameNotRunningError('Desktop client auto-launch failed')
+            # 这里必然早于 app_handle_login，且是拉起客户端的唯一入口：客户区没校准到
+            # 1280x720 的话登录 OCR 与点击坐标全错。运行期重拉时 Device 对象是复用的，
+            # _init_desktop 不会再跑，所以校准不能只挂在初始化路径上
+            self.desktop_window_set_size()
+            return
         if not self.config.script.error.handle_error:
             logger.critical('No app stop/start, because HandleError disabled')
             logger.critical('Please enable Alas.Error.HandleError or manually login to AzurLane')
@@ -236,6 +266,12 @@ class Device(Platform, Screenshot, Control, AppControl):
         self.click_record_clear()
 
     def app_stop(self):
+        # 桌面模式：关闭客户端。desktop_stop_client 内部已做「窗口消失 且 进程退出」
+        # 验证并多轮重杀，关不掉时它已记 ERROR，这里只把结论透出
+        if self.is_desktop:
+            if not self.desktop_stop_client():
+                logger.warning('Desktop client not released, residual process may remain')
+            return
         if not self.config.script.error.handle_error:
             logger.critical('No app stop/start, because HandleError disabled')
             logger.critical('Please enable Alas.Error.HandleError or manually login to AzurLane')
