@@ -375,8 +375,10 @@ class ConfigModel(ConfigBase):
                 item["title"] = title
                 if "description" in value:
                     item["description"] = _translate_text(value["description"])
-                item["default"] = value["default"]
-                item["value"] = jsons[key] if key in jsons else value["default"]
+                # default_factory 字段(如 list)的 schema 里没有 default 键, 兜底取值避免 KeyError
+                default = value.get("default")
+                item["default"] = default
+                item["value"] = jsons[key] if key in jsons else default
                 item["type"] = value["type"] if "type" in value else "enum"
                 if '$ref' in value:  # list
                     enum_key = re.search(r"/([^/]+)$", value['$ref']).group(1)

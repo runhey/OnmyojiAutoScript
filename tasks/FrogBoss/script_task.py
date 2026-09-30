@@ -402,20 +402,23 @@ class ScriptTask(RightActivity, FrogBossAssets, GeneralBattleAssets):
                 raise ValueError(f'Unknown bet mode: {strategy}')
 
     def _dashen_pool(self) -> list:
-        """自定义博主池优先（每行“昵称,uid”，只有 uid 也行），留空用内置池"""
+        """博主池：界面里逐条“昵称,uid”（默认预填内置21人池）；兼容旧版多行字符串存档"""
+        raw = self.config.model.frog_boss.frog_boss_config.dashen_pool or []
+        if isinstance(raw, str):
+            raw = raw.replace('，', ',').splitlines()
         pool = []
-        custom = self.config.model.frog_boss.frog_boss_config.dashen_pool or ''
-        for line in custom.replace('，', ',').splitlines():
-            line = line.strip()
-            if not line:
-                continue
-            if ',' in line:
-                name, uid = line.split(',', 1)
-                name, uid = name.strip(), uid.strip()
-            else:
-                uid = name = line
-            if uid:
-                pool.append((name or uid[:8], uid))
+        for line in raw:
+            for part in str(line).replace('，', ',').splitlines():
+                part = part.strip()
+                if not part:
+                    continue
+                if ',' in part:
+                    name, uid = part.split(',', 1)
+                    name, uid = name.strip(), uid.strip()
+                else:
+                    uid = name = part
+                if uid:
+                    pool.append((name or uid[:8], uid))
         if not pool:
             pool = DASHEN_BUILTIN_UPS
         logger.info(f'Dashen pool size: {len(pool)}')
