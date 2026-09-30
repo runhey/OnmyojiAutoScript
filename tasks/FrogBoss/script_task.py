@@ -18,11 +18,12 @@ from tasks.Component.GeneralBattle.assets import GeneralBattleAssets
 from tasks.FrogBoss.assets import FrogBossAssets
 from tasks.FrogBoss.config import Strategy
 
-# 竞猜活动每日开放窗口（休息态据此计算下次唤醒）
-BET_DAY_START = time_of_day(8, 30)
-BET_DAY_END = time_of_day(23, 59)
 # 每轮竞猜时长（小时），用于推算下一轮的下注时刻
 ROUND_HOURS = 2
+# 场次表：首场 8:30 开（10:00 结算），其余整点开、两小时后整点结算
+ROUND_STARTS = [time_of_day(8, 30)] + [time_of_day(h, 0) for h in range(10, 23, 2)]
+# 下注界面 5 档投入按钮坐标（2万/5万/10万/20万/30万，1280x720）
+TIER_POINTS = {1: (273, 610), 2: (430, 610), 3: (593, 610), 4: (750, 610), 5: (907, 610)}
 
 # 网易大神内置博主池：昵称, hex uid（用户主页网址 ds.163.com/user/<uid> 里那串）
 DASHEN_BUILTIN_UPS = [
@@ -112,45 +113,39 @@ class ScriptTask(RightActivity, FrogBossAssets, GeneralBattleAssets):
     # ---------- 调度 ----------
 
     def _schedule_from_rest(self):
-        """休息态：竞猜时间窗(8:30-23:59)内则下一个偶数整点后再看，窗外则明早再看"""
-        now = datetime.now()
-        if BET_DAY_START <= now.time() <= BET_DAY_END:
-            self._schedule_next_even_hour()
-        else:
-            target = self._tomorrow_start()
-            logger.info(f'FrogBoss rest out of window, next run {target}')
-            self.set_next_run(task='FrogBoss', target=target)
-
-    def _schedule_next_even_hour(self):
-        now = datetime.now()
-        next_hour = (now.hour // 2 + 1) * 2
-        if next_hour >= 24:
-            target = self._tomorrow_start()
-        else:
-            target = datetime.combine(now.date(), time_of_day(next_hour, 0)) + timedelta(minutes=5)
-        logger.info(f'FrogBoss rest in window, next run {target}')
+        """休息态：按场次表唤醒到下一场开场后 3 分钟"""
+        target = self._next_round_start()
+        logger.info(f'FrogBoss rest, next round start {target}')
         self.set_next_run(task='FrogBoss', target=target)
+
+    def _next_round_start(self) -> datetime:
+        now = datetime.now()
+        for t in ROUND_STARTS:
+            if now.time() < t:
+                return datetime.combine(now.date(), t) + timedelta(minutes=3)
+        return datetime.combine(now.date() + timedelta(days=1), ROUND_STARTS[0]) + timedelta(minutes=3)
 
     def _schedule_after_bet(self):
         """已竞猜态（含手动下注后再次进入）：按剩余时间推算下一轮下注时刻"""
         remaining = self._ocr_remaining()
         if remaining is None:
-            self._schedule_next_even_hour()
+            self._schedule_from_rest()
             return
         self._schedule_next_round(datetime.now() + timedelta(seconds=remaining))
 
     def _schedule_next_round(self, settlement: datetime):
         """
         本轮结算时刻 settlement → 下一轮下注时刻 = 结算 + 2h - before_end(+1min 余量)。
-        若已越过当日窗口（最后一场下注完）→ 明早窗口开启 5 分钟后再来，
-        顺带收取昨晚的结果。调度器不用改，竞猜用自己的时间计算。
+        （首场 8:30-10:00 之后的场次都是 2 小时一场，公式通用；估错场次时下次到点
+        会按倒计时再校正，自愈。）若已越过当日最后一场（结算跨到明天）→ 明早首场后再来。
+        调度器不用改，竞猜用自己的时间计算。
         """
         before_end = self._before_end_seconds()
         target = settlement + timedelta(hours=ROUND_HOURS) - timedelta(seconds=before_end) + timedelta(seconds=60)
         tomorrow = False
         if settlement.date() > datetime.now().date() or settlement.hour >= 23 or settlement.hour < 8:
             tomorrow = True
-            target = self._tomorrow_start()
+            target = datetime.combine(datetime.now().date() + timedelta(days=1), ROUND_STARTS[0]) + timedelta(minutes=3)
         logger.info(f'FrogBoss settlement {settlement}, next bet at {target}' + (' (tomorrow)' if tomorrow else ''))
         self.set_next_run(task='FrogBoss', target=target)
 
@@ -158,10 +153,6 @@ class ScriptTask(RightActivity, FrogBossAssets, GeneralBattleAssets):
         target = datetime.now() + timedelta(minutes=30)
         logger.info(f'FrogBoss retry at {target}')
         self.set_next_run(task='FrogBoss', target=target)
-
-    def _tomorrow_start(self) -> datetime:
-        tomorrow = datetime.now().date() + timedelta(days=1)
-        return datetime.combine(tomorrow, BET_DAY_START) + timedelta(minutes=5)
 
     def _before_end_seconds(self) -> int:
         t = self.config.model.frog_boss.frog_boss_config.before_end_frog
@@ -211,7 +202,7 @@ class ScriptTask(RightActivity, FrogBossAssets, GeneralBattleAssets):
         remaining = self._ocr_remaining()
         if remaining is None:
             logger.warning('Cannot OCR remaining time on betting page')
-            self._schedule_next_even_hour()
+            self._schedule_from_rest()
             return False
         before_end = self._before_end_seconds()
         if remaining > before_end + 90:
@@ -237,22 +228,27 @@ class ScriptTask(RightActivity, FrogBossAssets, GeneralBattleAssets):
         """结果页（图1/图9）：赢了点宝箱→关结算→点下一局；输了直接点下一局"""
         self._log_side()
         if win:
+            # 宝箱有两种外观：未开启的紫金箱 / 开启后带内容物，任一命中即点
             box = Timer(15).start()
             while not box.reached():
                 self.screenshot()
                 self.device.stuck_record_clear()
                 if self.appear_then_click(self.I_BET_SUCCESS_BOX, interval=2):
                     break
-            # 奖励结算页（图6）：优先点结算模板，点不到就隔 2.5 秒点宝箱原位置（避开奖励图标）
+                if self.appear_then_click(self.I_BET_SUCCESS_BOX2, interval=2):
+                    break
+            # 奖励结算页（图6“点击屏幕继续”）：优先点继续文字，退而点宝箱原位置（避开奖励图标）
             reward = Timer(15).start()
             blind = Timer(2.5).start()
             while not reward.reached():
                 self.screenshot()
                 self.device.stuck_record_clear()
+                if self.appear(self.I_NEXT_COMPETITION) or self.appear(self.I_BET_LEFT) or self.appear(self.I_BETTED):
+                    break
+                if self.appear_then_click(self.I_CLICK_CONTINUE, interval=2):
+                    continue
                 if self.appear_then_click(self.I_REWARD, interval=2):
                     continue
-                if self.appear(self.I_NEXT_COMPETITION) or self.appear(self.I_BET_LEFT):
-                    break
                 if blind.reached():
                     self.device.click(750, 410)
                     blind.reset()
@@ -271,87 +267,94 @@ class ScriptTask(RightActivity, FrogBossAssets, GeneralBattleAssets):
 
     def _do_bet(self, side: RuleImage) -> bool:
         """
-        点竞猜鼓 → 选档投入 → 点竞猜 → 确认（图2/图8）。
-        两步都有验证+超时兜底，弹窗识别不了时绝不无限等待/重启游戏。
-        注意：弹窗内的档位/竞猜/确认模板还没裁（等图2、图8素材），
-        现在用旧资产尽力点，点不中会走失败路径安全退出。
+        点竞猜鼓 → 全屏下注界面点档位(2万~30万) → 点竞猜按钮 → “是否确认”弹窗点确定。
+        默认从配置档位开始，金币不足（点了竞猜不出确认弹窗）自动降档重试，
+        最低档也不行则报告失败。所有环节都有超时验证，绝不无限等待/重启。
         """
         logger.hr('FrogBoss do bet', level=2)
-        preset = max(1, min(5, self.config.model.frog_boss.frog_boss_config.frog_gold_preset))
-        for tier in (preset, 1):
-            if not self._click_drum(side):
-                logger.warning('Drum click did not open bet popup')
-            # TODO(图2素材): 在下注弹窗点第 tier 档投入
-            if self._click_tier(tier) and self._confirm_bet():
-                if self._verify_betted():
+        preset = min(5, max(1, self.config.model.frog_boss.frog_boss_config.frog_gold_preset))
+        if not self._open_bet_dialog(side):
+            logger.warning('Bet dialog did not open')
+            return False
+        try:
+            for tier in range(preset, 0, -1):
+                x, y = TIER_POINTS[tier]
+                logger.info(f'Bet tier {tier} at ({x},{y})')
+                self.device.click(x, y)
+                self.device.sleep(0.8)
+                if self._click_go_and_confirm() and self._verify_betted():
                     logger.info(f'Bet done (tier {tier})')
                     return True
-            self._dismiss_popup()
-        logger.error('FrogBoss bet failed: popup not usable (insufficient gold or missing assets)')
-        return False
+                logger.warning(f'Tier {tier} no confirm popup (gold not enough?), try lower')
+            return False
+        finally:
+            self._close_bet_dialog()
 
-    def _click_drum(self, side: RuleImage) -> bool:
+    def _open_bet_dialog(self, side: RuleImage) -> bool:
+        """点竞猜鼓直到下注界面出现；已竞猜则不打扰"""
         timer = Timer(25).start()
         while not timer.reached():
             self.screenshot()
             self.device.stuck_record_clear()
-            if not self.appear(side):
+            if self.appear(self.I_BET_DIALOG):
                 return True
+            if self.appear(self.I_BETTED):
+                logger.info('Already betted, skip opening dialog')
+                return False
             if self.appear_then_click(side, interval=2):
                 continue
         return False
 
-    def _click_tier(self, tier: int) -> bool:
-        # TODO(图2素材): 新版弹窗是5档投入按钮，按 frog_gold_preset 点对应档位
+    def _click_go_and_confirm(self) -> bool:
+        """点右侧竞猜按钮，等“是否确认”弹窗出现后点确定，弹窗消失算成功"""
+        timer = Timer(12).start()
+        popup = False
+        while not timer.reached():
+            self.screenshot()
+            self.device.stuck_record_clear()
+            if self.appear(self.I_BET_SURE):
+                popup = True
+                break
+            if self.appear_then_click(self.I_BET_GO, interval=2):
+                continue
+        if not popup:
+            return False
         timer = Timer(8).start()
         while not timer.reached():
             self.screenshot()
             self.device.stuck_record_clear()
-            if self.appear_then_click(self.I_GOLD_30, interval=2):
+            if not self.appear(self.I_BET_SURE):
                 return True
-        return False
-
-    def _confirm_bet(self) -> bool:
-        # TODO(图8素材): 点竞猜后若有确认弹窗则点确认
-        timer = Timer(10).start()
-        while not timer.reached():
-            self.screenshot()
-            self.device.stuck_record_clear()
             if self.appear_then_click(self.I_BET_SURE, interval=2):
-                return True
-            if self.appear_then_click(self.I_UI_CONFIRM, interval=2):
-                return True
-            if self.appear_then_click(self.I_UI_CONFIRM_SAMLL, interval=2):
-                return True
+                continue
         return False
 
     def _verify_betted(self) -> bool:
-        """下注成功的判据：单鼓已竞猜出现，或双竞猜鼓消失。30 秒内都等不到算失败"""
+        """下注成功的判据：已竞猜出现，或下注界面与双竞猜鼓都已消失。30 秒内等不到算失败"""
         timer = Timer(30).start()
         while not timer.reached():
             self.screenshot()
             self.device.stuck_record_clear()
             if self.appear(self.I_BETTED):
                 return True
-            if not (self.appear(self.I_BET_LEFT) and self.appear(self.I_BET_RIGHT)):
+            if not self.appear(self.I_BET_DIALOG) and not (self.appear(self.I_BET_LEFT) and self.appear(self.I_BET_RIGHT)):
                 return True
             self.appear_then_click(self.I_UI_CONFIRM, interval=3)
-            self.appear_then_click(self.I_UI_CONFIRM_SAMLL, interval=3)
         return False
 
-    def _dismiss_popup(self):
-        """尽力关掉残留弹窗，失败也没关系（软超时会兜底）"""
+    def _close_bet_dialog(self):
+        """尽力关掉残留的下注界面（点红叉），失败也没关系（软超时会兜底）"""
         timer = Timer(8).start()
         blind = Timer(2.5).start()
         while not timer.reached():
             self.screenshot()
             self.device.stuck_record_clear()
-            if self.appear(self.I_BET_LEFT) or self.appear(self.I_NEXT_COMPETITION):
+            if not self.appear(self.I_BET_DIALOG):
                 return
-            if self.appear_then_click(self.I_UI_BACK_RED, interval=2):
+            if self.appear_then_click(self.I_BET_CLOSE, interval=2):
                 continue
             if blind.reached():
-                self.device.click(640, 680)
+                self.device.click(1191, 158)
                 blind.reset()
 
     # ---------- 识别 ----------

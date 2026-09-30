@@ -17,26 +17,26 @@ class FrogBossAssets:
 	I_BET_RIGHT = RuleImage(roi_front=(1084,306,128,89), roi_back=(1025,262,255,185), threshold=0.8, method="Template matching", file="./tasks/FrogBoss/fb/fb_bet_right.png")
 	# 竞猜成功宝箱
 	I_BET_SUCCESS_BOX = RuleImage(roi_front=(709,375,79,70), roi_back=(630,320,240,190), threshold=0.75, method="Template matching", file="./tasks/FrogBoss/fb/fb_bet_success_box.png")
+	# 竞猜成功宝箱(未开启)
+	I_BET_SUCCESS_BOX2 = RuleImage(roi_front=(693,369,118,89), roi_back=(630,320,240,190), threshold=0.75, method="Template matching", file="./tasks/FrogBoss/fb/fb_bet_success_box2.png")
 	# 胜字鼓(宽roi判左右)
 	I_SUCCESS_LEFT = RuleImage(roi_front=(299,311,89,89), roi_back=(250,260,980,190), threshold=0.8, method="Template matching", file="./tasks/FrogBoss/fb/fb_success_left.png")
 	# 败字鼓(宽roi判左右)
 	I_FAILURE_RIGHT = RuleImage(roi_front=(1100,304,89,89), roi_back=(250,260,980,190), threshold=0.8, method="Template matching", file="./tasks/FrogBoss/fb/fb_failure_right.png")
 	# 下一局按钮
 	I_NEXT_COMPETITION = RuleImage(roi_front=(763,483,64,77), roi_back=(700,440,190,140), threshold=0.8, method="Template matching", file="./tasks/FrogBoss/fb/fb_next_competition.png")
-	# 30万金币 
-	I_GOLD_30 = RuleImage(roi_front=(858,494,78,76), roi_back=(809,427,147,187), threshold=0.8, method="Template matching", file="./tasks/FrogBoss/fb/fb_gold_30.png")
-	# 确认竞猜 
-	I_BET_SURE = RuleImage(roi_front=(1025,402,100,100), roi_back=(1000,297,200,226), threshold=0.8, method="Template matching", file="./tasks/FrogBoss/fb/fb_bet_sure.png")
-	# description 
-	I_GOLD_30_CHECK = RuleImage(roi_front=(513,196,58,53), roi_back=(402,141,459,489), threshold=0.8, method="Template matching", file="./tasks/FrogBoss/fb/fb_gold_30_check.png")
-	# description 
-	I_BETTED = RuleImage(roi_front=(93,352,125,54), roi_back=(49,283,1192,161), threshold=0.8, method="Template matching", file="./tasks/FrogBoss/fb/fb_betted.png")
+	# 确认弹窗确定按钮
+	I_BET_SURE = RuleImage(roi_front=(638,398,120,79), roi_back=(540,340,420,200), threshold=0.8, method="Template matching", file="./tasks/FrogBoss/fb/fb_bet_sure.png")
+	# 已竞猜(单鼓)
+	I_BETTED = RuleImage(roi_front=(1062,303,160,64), roi_back=(250,260,1000,200), threshold=0.8, method="Template matching", file="./tasks/FrogBoss/fb/fb_betted.png")
 	# description 
 	I_SUCCESS_RIGHT = RuleImage(roi_front=(1048,341,122,116), roi_back=(999,243,201,260), threshold=0.8, method="Template matching", file="./tasks/FrogBoss/fb/fb_success_right.png")
 	# description 
 	I_FAILURE_LEFT = RuleImage(roi_front=(116,307,100,100), roi_back=(76,256,193,219), threshold=0.8, method="Template matching", file="./tasks/FrogBoss/fb/fb_failure_left.png")
 	# description 
-	I_BET_FAILURE = RuleImage(roi_front=(496,252,269,72), roi_back=(439,220,400,152), threshold=0.8, method="Template matching", file="./tasks/FrogBoss/fb/fb_bet_failure.png")
+	I_BET_FAILURE = RuleImage(roi_front=(588,258,284,94), roi_back=(480,210,500,200), threshold=0.8, method="Template matching", file="./tasks/FrogBoss/fb/fb_bet_failure.png")
+	# 奖励结算点击屏幕继续
+	I_CLICK_CONTINUE = RuleImage(roi_front=(560,672,140,40), roi_back=(440,630,420,88), threshold=0.75, method="Template matching", file="./tasks/FrogBoss/fb/fb_click_continue.png")
 	# description 
 	I_BET_SUCCESS = RuleImage(roi_front=(638,274,229,70), roi_back=(580,230,340,170), threshold=0.8, method="Template matching", file="./tasks/FrogBoss/fb/fb_bet_success.png")
 
@@ -44,8 +44,14 @@ class FrogBossAssets:
 	# Image Rule Assets
 	# description 
 	I_FROG_BOSS_ENTER = RuleImage(roi_front=(1191,391,36,38), roi_back=(1174,135,78,320), threshold=0.7, method="Template matching", file="./tasks/FrogBoss/fb/fb_frog_boss_enter.png")
-	# 休息中 
-	I_FROG_BOSS_REST = RuleImage(roi_front=(510,274,169,64), roi_back=(492,260,220,113), threshold=0.8, method="Template matching", file="./tasks/FrogBoss/fb/fb_frog_boss_rest.png")
+	# 休息中
+	I_FROG_BOSS_REST = RuleImage(roi_front=(600,298,162,58), roi_back=(500,250,380,160), threshold=0.8, method="Template matching", file="./tasks/FrogBoss/fb/fb_frog_boss_rest.png")
+	# 下注界面标题竞猜
+	I_BET_DIALOG = RuleImage(roi_front=(588,114,90,44), roi_back=(520,80,320,130), threshold=0.8, method="Template matching", file="./tasks/FrogBoss/fb/fb_bet_dialog.png")
+	# 下注界面红叉
+	I_BET_CLOSE = RuleImage(roi_front=(1170,140,42,38), roi_back=(1100,100,180,120), threshold=0.8, method="Template matching", file="./tasks/FrogBoss/fb/fb_bet_close.png")
+	# 下注界面竞猜按钮
+	I_BET_GO = RuleImage(roi_front=(1023,393,125,110), roi_back=(960,300,320,280), threshold=0.8, method="Template matching", file="./tasks/FrogBoss/fb/fb_bet_go.png")
 
 
 	# Ocr Rule Assets

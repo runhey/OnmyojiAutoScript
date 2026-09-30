@@ -162,7 +162,7 @@
   "direct_challenge": "直接组队挑战(虚拟定位)",
   "xy_direct_challenge_help": "开启虚拟定位并定位到活动城市后，可直接点击组队挑战，无需等待",
   "frog_gold_preset": "每轮投入档位",
-  "frog_gold_preset_help": "点竞猜鼓后弹窗里的5档投入，1最低5最高。金币不足会自动降档重试，最低档也不行则跳过本轮并推送通知",
+  "frog_gold_preset_help": "下注界面5档投入：1=2万 2=5万 3=10万 4=20万 5=30万，默认5(30万)。金币不足自动降档，最低档也不行则跳过本轮并推送通知",
   "dashen_uid": "指定博主UID",
   "dashen_uid_help": "策略=大神-跟随指定博主时生效。填大神博主主页网址 ds.163.com/user/ 后面那串hex id。该博主本场没发帖时自动回退为跟随多数",
   "dashen_pool": "自定义博主池",

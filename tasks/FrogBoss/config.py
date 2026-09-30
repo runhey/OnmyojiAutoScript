@@ -21,7 +21,7 @@ class Strategy(str, Enum):
 class FrogBossConfig(ConfigBase):
     before_end_frog: Time = Field(default=Time(0, 15, 0), description='before_end_frog_help')
     strategy_frog: Strategy = Field(default=Strategy.Dashen, description='strategy_frog_help')
-    frog_gold_preset: int = Field(default=1, description='frog_gold_preset_help')
+    frog_gold_preset: int = Field(default=5, description='frog_gold_preset_help')
     dashen_uid: str = Field(default='', description='dashen_uid_help')
     dashen_pool: str = Field(default='', description='dashen_pool_help')
 

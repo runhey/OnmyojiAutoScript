@@ -54,40 +54,22 @@
     "description": "下一局按钮"
   },
   {
-    "itemName": "gold_30",
-    "imageName": "fb_gold_30.png",
-    "roiFront": "858,494,78,76",
-    "roiBack": "809,427,147,187",
-    "method": "Template matching",
-    "threshold": 0.8,
-    "description": "30万金币"
-  },
-  {
     "itemName": "bet_sure",
     "imageName": "fb_bet_sure.png",
-    "roiFront": "1025,402,100,100",
-    "roiBack": "1000,297,200,226",
+    "roiFront": "638,398,120,79",
+    "roiBack": "540,340,420,200",
     "method": "Template matching",
-    "threshold": 0.8,
-    "description": "确认竞猜"
-  },
-  {
-    "itemName": "gold_30_check",
-    "imageName": "fb_gold_30_check.png",
-    "roiFront": "513,196,58,53",
-    "roiBack": "402,141,459,489",
-    "method": "Template matching",
-    "threshold": 0.8,
-    "description": "description"
+    "threshold": "0.8",
+    "description": "确认弹窗确定按钮"
   },
   {
     "itemName": "betted",
     "imageName": "fb_betted.png",
-    "roiFront": "93,352,125,54",
-    "roiBack": "49,283,1192,161",
+    "roiFront": "1062,303,160,64",
+    "roiBack": "250,260,1000,200",
     "method": "Template matching",
-    "threshold": 0.8,
-    "description": "description"
+    "threshold": "0.8",
+    "description": "已竞猜(单鼓)"
   },
   {
     "itemName": "success_right",
@@ -110,11 +92,11 @@
   {
     "itemName": "bet_failure",
     "imageName": "fb_bet_failure.png",
-    "roiFront": "496,252,269,72",
-    "roiBack": "439,220,400,152",
+    "roiFront": "588,258,284,94",
+    "roiBack": "480,210,500,200",
     "method": "Template matching",
-    "threshold": 0.8,
-    "description": "description"
+    "threshold": "0.8",
+    "description": "竞猜失败大字"
   },
   {
     "itemName": "bet_success",
@@ -124,5 +106,50 @@
     "method": "Template matching",
     "threshold": "0.8",
     "description": "竞猜成功大字"
+  },
+  {
+    "itemName": "bet_dialog",
+    "imageName": "fb_bet_dialog.png",
+    "roiFront": "588,114,90,44",
+    "roiBack": "520,80,320,130",
+    "method": "Template matching",
+    "threshold": "0.8",
+    "description": "下注界面标题竞猜"
+  },
+  {
+    "itemName": "bet_close",
+    "imageName": "fb_bet_close.png",
+    "roiFront": "1170,140,42,38",
+    "roiBack": "1100,100,180,120",
+    "method": "Template matching",
+    "threshold": "0.8",
+    "description": "下注界面红叉"
+  },
+  {
+    "itemName": "bet_go",
+    "imageName": "fb_bet_go.png",
+    "roiFront": "1023,393,125,110",
+    "roiBack": "960,300,320,280",
+    "method": "Template matching",
+    "threshold": "0.8",
+    "description": "下注界面竞猜按钮"
+  },
+  {
+    "itemName": "click_continue",
+    "imageName": "fb_click_continue.png",
+    "roiFront": "560,672,140,40",
+    "roiBack": "440,630,420,88",
+    "method": "Template matching",
+    "threshold": "0.75",
+    "description": "奖励结算点击屏幕继续"
+  },
+  {
+    "itemName": "bet_success_box2",
+    "imageName": "fb_bet_success_box2.png",
+    "roiFront": "693,369,118,89",
+    "roiBack": "630,320,240,190",
+    "method": "Template matching",
+    "threshold": "0.75",
+    "description": "竞猜成功宝箱(未开启)"
   }
 ]
