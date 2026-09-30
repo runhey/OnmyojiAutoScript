@@ -402,23 +402,22 @@ class ScriptTask(RightActivity, FrogBossAssets, GeneralBattleAssets):
                 raise ValueError(f'Unknown bet mode: {strategy}')
 
     def _dashen_pool(self) -> list:
-        """博主池：界面里逐条“昵称,uid”（默认预填内置21人池）；兼容旧版多行字符串存档"""
-        raw = self.config.model.frog_boss.frog_boss_config.dashen_pool or []
-        if isinstance(raw, str):
-            raw = raw.replace('，', ',').splitlines()
+        """博主池：单行文本，每条“昵称,uid”用分号分隔（换行也认）；空则回退内置池"""
+        raw = self.config.model.frog_boss.frog_boss_config.dashen_pool or ''
+        if isinstance(raw, (list, tuple)):
+            raw = ';'.join(str(x) for x in raw)
         pool = []
-        for line in raw:
-            for part in str(line).replace('，', ',').splitlines():
-                part = part.strip()
-                if not part:
-                    continue
-                if ',' in part:
-                    name, uid = part.split(',', 1)
-                    name, uid = name.strip(), uid.strip()
-                else:
-                    uid = name = part
-                if uid:
-                    pool.append((name or uid[:8], uid))
+        for seg in str(raw).replace('，', ',').replace('；', ';').replace('\n', ';').split(';'):
+            seg = seg.strip()
+            if not seg:
+                continue
+            if ',' in seg:
+                name, uid = seg.split(',', 1)
+                name, uid = name.strip(), uid.strip()
+            else:
+                uid = name = seg
+            if uid:
+                pool.append((name or uid[:8], uid))
         if not pool:
             pool = DASHEN_BUILTIN_UPS
         logger.info(f'Dashen pool size: {len(pool)}')

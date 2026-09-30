@@ -43,8 +43,8 @@ DASHEN_BUILTIN_UPS = [
     ("行水姑娘", "30b0c2923faa483f95572c324a5bc910"),
     ("更慕林", "e32aedbdd8da46a5b5b497a16c4b7658"),
 ]
-# 配置默认值：内置池直接写出来，使用者在界面里逐条增删改（每条 昵称,uid）
-DASHEN_POOL_DEFAULT = [f'{n},{u}' for n, u in DASHEN_BUILTIN_UPS]
+# 配置默认值：内置池直接写出来（单行分号分隔，GUI 的文本框只有单行可编辑）
+DASHEN_POOL_DEFAULT = ';'.join(f'{n},{u}' for n, u in DASHEN_BUILTIN_UPS)
 
 
 class FrogBossConfig(ConfigBase):
@@ -52,14 +52,16 @@ class FrogBossConfig(ConfigBase):
     strategy_frog: Strategy = Field(default=Strategy.Dashen, description='strategy_frog_help')
     frog_gold_preset: int = Field(default=5, description='frog_gold_preset_help')
     dashen_uid: str = Field(default='', description='dashen_uid_help')
-    dashen_pool: list[str] = Field(default=list(DASHEN_POOL_DEFAULT), description='dashen_pool_help')
+    dashen_pool: str = Field(default=DASHEN_POOL_DEFAULT, description='dashen_pool_help')
 
     @field_validator('dashen_pool', mode='before')
     @classmethod
     def parse_pool(cls, v):
-        """兼容旧版多行字符串存档：按行拆成列表"""
+        """兼容列表/多行存档：统一拍平成单行分号分隔"""
+        if isinstance(v, (list, tuple)):
+            return ';'.join(str(x).replace('\n', ';').strip(' ;') for x in v if str(x).strip(' ;\n'))
         if isinstance(v, str):
-            return [line.strip() for line in v.replace('，', ',').splitlines() if line.strip()]
+            return v.replace('\n', ';')
         return v
 
 class FrogBoss(ConfigBase):
