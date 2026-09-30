@@ -246,8 +246,10 @@ class HyaSlave(HyaDevice, HyaColor, HyakkiyakouAssets):
             friend_buttons2 = [self.I_FRIEND_SAME_2_RECALL, self.I_FRIEND_REMOTE_2_RECALL, ]
         else:
             hya_recall_activity = False
-            friend_buttons1 = [self.I_FRIEND_SAME_1, self.I_FRIEND_REMOTE_1, self.I_FRIEND_RYOU_1]
-            friend_buttons2 = [self.I_FRIEND_SAME_2, self.I_FRIEND_REMOTE_2, self.I_FRIEND_RYOU_2]
+            # 资产命名与页签文字相反：REMOTE 模板是"跨区"，RYOU 模板是"寮友"
+            # 必须按面板实际位置排：好友(SAME) / 寮友(RYOU) / 跨区(REMOTE)，否则点页签永远点不中
+            friend_buttons1 = [self.I_FRIEND_SAME_1, self.I_FRIEND_RYOU_1, self.I_FRIEND_REMOTE_1]
+            friend_buttons2 = [self.I_FRIEND_SAME_2, self.I_FRIEND_RYOU_2, self.I_FRIEND_REMOTE_2]
 
         # 优先邀请指定好友，失败则退回默认邀请
         if friend_name:
@@ -275,13 +277,13 @@ class HyaSlave(HyaDevice, HyaColor, HyakkiyakouAssets):
                     else:
                         return True
                 case 1:
-                    logger.info('Invite remote friend')
+                    logger.info('Invite guild friend')
                     if not self._invite_friend(button1=friend_buttons1[1], button2=friend_buttons2[1], hya_recall_activity=hya_recall_activity):
                         self.friend_state += 1
                     else:
                         return True
                 case 2:
-                    logger.info('Invite guild friend')
+                    logger.info('Invite remote friend')
                     if not self._invite_friend(button1=friend_buttons1[2], button2=friend_buttons2[2], hya_recall_activity=hya_recall_activity):
                         self.friend_state += 1
                     else:
@@ -431,10 +433,11 @@ class HyaSlave(HyaDevice, HyaColor, HyakkiyakouAssets):
             scroll_x = 470
         else:
             rules = [self.O_HYA_FRIEND_NAME_L, self.O_HYA_FRIEND_NAME_R]
-            # 注意资产命名与游戏页签文字不一致(REMOTE对应寮友页签, RYOU对应跨区页签)，按面板位置依次切换
+            # 资产命名与页签文字相反：REMOTE 模板是"跨区"，RYOU 模板是"寮友"
+            # 按面板实际位置依次切换：好友 / 寮友 / 跨区
             tabs = [(self.I_FRIEND_SAME_1, self.I_FRIEND_SAME_2),
-                    (self.I_FRIEND_REMOTE_1, self.I_FRIEND_REMOTE_2),
-                    (self.I_FRIEND_RYOU_1, self.I_FRIEND_RYOU_2)]
+                    (self.I_FRIEND_RYOU_1, self.I_FRIEND_RYOU_2),
+                    (self.I_FRIEND_REMOTE_1, self.I_FRIEND_REMOTE_2)]
             scroll_x = 620
         for tab_off, tab_on in tabs:
             self.ui_click(tab_off, tab_on, interval=1)
