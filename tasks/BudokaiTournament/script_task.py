@@ -238,8 +238,7 @@ class ScriptTask(Foot):
         #
         for climb_type in self.conf.run_sequence():
             # 进入到活动的主页面，不是具体的战斗页面
-            self.ui_get_current_page()
-            self.ui_goto(game.page_climb_act)
+            self.goto_page(game.page_climb_act)
             try:
                 if getattr(self.conf.daily_training, f'limit_{self.climb_type}') > 0:
                     method_func = getattr(self, f'_run_{climb_type}')
@@ -254,8 +253,7 @@ class ScriptTask(Foot):
 
         # 返回庭院
         logger.hr("Exit BudokaiTournament", 2)
-        self.ui_get_current_page(False)
-        self.ui_goto(game.page_main)
+        self.goto_page(game.page_main)
         if self.conf.daily_training.active_souls_clean:
             self.set_next_run(task='SoulsTidy', success=False, finish=False, target=datetime.now())
         self.set_next_run(task="BudokaiTournament", success=True)

@@ -121,16 +121,13 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, RealmRaidAssets):
     def run_2(self):
         con = self.config.realm_raid
         if con.switch_soul_config.enable:
-            self.ui_get_current_page()
-            self.ui_goto(page_shikigami_records)
+            self.goto_page(page_shikigami_records)
             self.run_switch_soul(con.switch_soul_config.switch_group_team)
         if con.switch_soul_config.enable_switch_by_name:
-            self.ui_get_current_page()
-            self.ui_goto(page_shikigami_records)
+            self.goto_page(page_shikigami_records)
             self.run_switch_soul_by_name(con.switch_soul_config.group_name, con.switch_soul_config.team_name)
 
-        self.ui_get_current_page()
-        self.ui_goto(page_realm_raid)
+        self.goto_page(page_realm_raid)
 
         # 有呱太活动的时候第一次进入还会 出现一个弹窗
         self.screenshot()
@@ -236,8 +233,7 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, RealmRaidAssets):
 
 
         self.ui_click(self.I_BACK_RED, self.I_CHECK_EXPLORATION)
-        self.ui_get_current_page()
-        self.ui_goto(page_main)
+        self.goto_page(page_main)
         self.set_next_run(task='RealmRaid', success=success, finish=True)
         raise TaskEnd
 

@@ -18,8 +18,7 @@ from tasks.MemoryScrolls.config import ScrollNumber
 class ScriptTask(GameUi, MemoryScrollsAssets):
 
     def run(self):        
-        self.ui_get_current_page()
-        self.ui_goto(page_summon)
+        self.goto_page(page_summon)
         con = self.config.memory_scrolls.memory_scrolls_config
         # 进入绘卷主界面
         self.goto_memoryscrolls_main(con) 

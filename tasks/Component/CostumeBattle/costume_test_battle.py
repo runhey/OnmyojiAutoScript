@@ -13,8 +13,7 @@ from tasks.Component.Costume.config import BattleType
 class ScriptTask(ScriptTaskBase):
 
     def run(self):
-        self.ui_get_current_page()
-        self.ui_goto(page_kekkai_toppa)
+        self.goto_page(page_kekkai_toppa)
 
         self.attack()
 

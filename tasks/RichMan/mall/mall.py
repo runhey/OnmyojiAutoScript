@@ -18,8 +18,7 @@ class Mall(Medal, Charisma, Honor, Consignment, Scales, Bondlings):
 
     def execute_mall(self):
         logger.hr('Mall', 1)
-        self.ui_get_current_page()
-        self.ui_goto(page_mall, confirm_wait=2.5)
+        self.goto_page(page_mall, confirm_wait=2.5)
 
         # 寄售屋
         self.execute_consignment()

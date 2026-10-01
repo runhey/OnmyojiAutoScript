@@ -37,12 +37,10 @@ class ScriptTask(WQExplore, SecretScriptTask, WantedQuestsAssets):
 
         # 自动换御魂
         if con.switch_soul_config.enable:
-            self.ui_get_current_page()
-            self.ui_goto(page_shikigami_records)
+            self.goto_page(page_shikigami_records)
             self.run_switch_soul(con.switch_soul_config.switch_group_team)
         if con.switch_soul_config.enable_switch_by_name:
-            self.ui_get_current_page()
-            self.ui_goto(page_shikigami_records)
+            self.goto_page(page_shikigami_records)
             self.run_switch_soul_by_name(con.switch_soul_config.group_name, con.switch_soul_config.team_name)
 
         preSuc = False
@@ -126,8 +124,7 @@ class ScriptTask(WQExplore, SecretScriptTask, WantedQuestsAssets):
         前置工作，
         :return:
         """
-        self.ui_get_current_page()
-        self.ui_goto(page_main)
+        self.goto_page(page_main)
         done_timer = Timer(5)
         while 1:
             self.screenshot()
@@ -159,13 +156,13 @@ class ScriptTask(WQExplore, SecretScriptTask, WantedQuestsAssets):
             else:
                 self.invite_five()
         self.ui_click_until_disappear(self.I_UI_BACK_RED)
-        self.ui_goto(page_exploration)
+        self.goto_page(page_exploration)
         return True
 
     def pre_work_cooperation_only(self):
         #
-        if self.ui_get_current_page() != page_main:
-            self.ui_goto(page_main)
+        if self.get_current_page() != page_main:
+            self.goto_page(page_main)
         # 打开悬赏封印 界面
         done_timer = Timer(5)
         while 1:
@@ -201,7 +198,7 @@ class ScriptTask(WQExplore, SecretScriptTask, WantedQuestsAssets):
         self.all_cooperation_invite()
 
         self.ui_click_until_disappear(self.I_UI_BACK_RED)
-        self.ui_goto(page_exploration)
+        self.goto_page(page_exploration)
         return True
 
     def trace_one(self, btn: RuleImage):
@@ -386,8 +383,7 @@ class ScriptTask(WQExplore, SecretScriptTask, WantedQuestsAssets):
                 continue
             if self.appear_then_click(self.I_UI_BACK_BLUE, interval=1.5):
                 continue
-        self.ui_get_current_page()
-        self.ui_goto(page_exploration)
+        self.goto_page(page_exploration)
         self.wait_until_stable(self.I_CHECK_EXPLORATION)
         logger.info('Secret mission finished')
 

@@ -13,8 +13,7 @@ from tasks.ActivityShikigami.script_task import ScriptTask
 class ImplScriptTask(ScriptTask, ABC):
     def test_battle_main(self) -> bool:
         # 从别的地方到活动主页面
-        self.ui_get_current_page()
-        self.ui_goto(page_climb_act)
+        self.goto_page(page_climb_act)
         # 从活动主页面到默认战斗页面
         self.ui_click(self.I_TO_BATTLE_MAIN, stop=self.I_CHECK_BATTLE_MAIN, interval=1)
         # 从默认战斗页面到式神录 再返回

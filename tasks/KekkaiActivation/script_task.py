@@ -30,8 +30,7 @@ class ScriptTask(KU, KekkaiActivationAssets):
 
     def run(self):
         con = self.config.kekkai_activation.activation_config
-        self.ui_get_current_page()
-        self.ui_goto(page_guild)
+        self.goto_page(page_guild)
 
         # 在寮的主界面 检查是否有收取体力或者是收取寮资金
         # self.check_guild_ap_or_assets()
@@ -58,8 +57,7 @@ class ScriptTask(KU, KekkaiActivationAssets):
         if con.exchange_max:
             self.check_max_lv(con.shikigami_class)
         # self.back_guild()
-        self.ui_get_current_page()
-        self.ui_goto(page_main)
+        self.goto_page(page_main)
 
         raise TaskEnd('KekkaiActivation')
 

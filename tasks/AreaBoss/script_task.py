@@ -48,18 +48,15 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AreaBossAssets):
         con = self.config.area_boss.boss
 
         if self.config.area_boss.switch_soul.enable:
-            self.ui_get_current_page()
-            self.ui_goto(page_shikigami_records)
+            self.goto_page(page_shikigami_records)
             self.run_switch_soul(self.config.area_boss.switch_soul.switch_group_team)
 
         if self.config.area_boss.switch_soul.enable_switch_by_name:
-            self.ui_get_current_page()
-            self.ui_goto(page_shikigami_records)
+            self.goto_page(page_shikigami_records)
             self.run_switch_soul_by_name(self.config.area_boss.switch_soul.group_name,
                                          self.config.area_boss.switch_soul.team_name)
 
-        self.ui_get_current_page()
-        self.ui_goto(page_area_boss)
+        self.goto_page(page_area_boss)
 
         # 已挑战鬼王数量
         boss_fought = 0

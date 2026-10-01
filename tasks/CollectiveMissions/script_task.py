@@ -46,8 +46,7 @@ class ScriptTask(GameUi, CollectiveMissionsAssets):
         return rule
 
     def run(self):
-        self.ui_get_current_page()
-        self.ui_goto(page_guild)
+        self.goto_page(page_guild)
         rule = self.config.collective_missions.missions_config.missions_rule
         self.ui_click(self.I_CM_SHRINE, self.I_CM_CM)
         self.ui_click(self.I_CM_CM, self.I_CM_RECORDS)

@@ -31,16 +31,13 @@ class ScriptTask(GeneralBattle, GeneralInvite, GeneralBuff, GeneralRoom, GameUi,
                                                seconds=limit_time.second)
         con = self.config.evo_zone
         if con.switch_soul_config.enable:
-            self.ui_get_current_page()
-            self.ui_goto(page_shikigami_records)
+            self.goto_page(page_shikigami_records)
             self.run_switch_soul(con.switch_soul_config.switch_group_team)
         if con.switch_soul_config.enable_switch_by_name:
-            self.ui_get_current_page()
-            self.ui_goto(page_shikigami_records)
+            self.goto_page(page_shikigami_records)
             self.run_switch_soul_by_name(con.switch_soul_config.group_name, con.switch_soul_config.team_name)
 
-        self.ui_get_current_page()
-        self.ui_goto(page_main)
+        self.goto_page(page_main)
         config: EvoZone = self.config.evo_zone
         if config.evo_zone_config.soul_buff_enable:
             self.open_buff()
@@ -126,9 +123,8 @@ class ScriptTask(GeneralBattle, GeneralInvite, GeneralBuff, GeneralRoom, GameUi,
 
     def run_leader(self):
         logger.info('Start run leader')
-        self.ui_get_current_page()
         # self.ui_goto(page_soul_zones)
-        self.ui_goto(page_awake_zones)
+        self.goto_page(page_awake_zones)
         self.evozone_enter()
         layer = self.config.evo_zone.evo_zone_config.layer
         logger.info("test0")
@@ -215,8 +211,7 @@ class ScriptTask(GeneralBattle, GeneralInvite, GeneralBuff, GeneralRoom, GameUi,
         if self.exit_team():
             pass
 
-        self.ui_get_current_page()
-        self.ui_goto(page_main)
+        self.goto_page(page_main)
 
         if not success:
             return False
@@ -224,7 +219,6 @@ class ScriptTask(GeneralBattle, GeneralInvite, GeneralBuff, GeneralRoom, GameUi,
 
     def run_member(self):
         logger.info('Start run member')
-        self.ui_get_current_page()
         # self.ui_goto(page_soul_zones)
         # self.evozone_enter()
         # self.check_lock(self.config.evo_zone.general_battle_config.lock_team_enable)
@@ -269,14 +263,12 @@ class ScriptTask(GeneralBattle, GeneralInvite, GeneralBuff, GeneralRoom, GameUi,
             if self.exit_battle():
                 pass
 
-        self.ui_get_current_page()
-        self.ui_goto(page_main)
+        self.goto_page(page_main)
         return True
 
     def run_alone(self):
         logger.info('Start run alone')
-        self.ui_get_current_page()
-        self.ui_goto(page_awake_zones)
+        self.goto_page(page_awake_zones)
         self.evozone_enter()
         layer = self.config.evo_zone.evo_zone_config.layer
         self.check_layer(layer)
@@ -322,8 +314,7 @@ class ScriptTask(GeneralBattle, GeneralInvite, GeneralBuff, GeneralRoom, GameUi,
             if self.appear_then_click(self.I_BACK_Y, interval=1):
                 continue
 
-        self.ui_current = page_awake_zones
-        self.ui_goto(page_main)
+        self.goto_page(page_main)
 
     def run_wild(self):
         logger.error('Wild mode is not implemented')
