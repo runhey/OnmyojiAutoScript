@@ -343,11 +343,11 @@ class RichManAssets:
 	# 下期预览 
 	I_S_NEXT_PERIOD = RuleImage(roi_front=(1083,574,90,86), roi_back=(1083,574,90,86), threshold=0.8, method="Template matching", file="./tasks/RichMan/shrine/shrine_s_next_period.png")
 	# description 
-	I_S_WHITE_FIVE = RuleImage(roi_front=(769,143,77,85), roi_back=(769,143,77,85), threshold=0.85, method="Template matching", file="./tasks/RichMan/shrine/shrine_s_white_five.png")
+	I_S_WHITE_FIVE = RuleImage(roi_front=(770,147,77,85), roi_back=(756,121,321,169), threshold=0.9, method="Template matching", file="./tasks/RichMan/shrine/shrine_s_white_five.png")
 	# description 
-	I_S_WHITE_FOUR = RuleImage(roi_front=(951,144,73,82), roi_back=(951,144,73,82), threshold=0.85, method="Template matching", file="./tasks/RichMan/shrine/shrine_s_white_four.png")
+	I_S_WHITE_FOUR = RuleImage(roi_front=(953,149,73,82), roi_back=(209,109,847,422), threshold=0.9, method="Template matching", file="./tasks/RichMan/shrine/shrine_s_white_four.png")
 	# 黑蛋 
-	I_S_BLACK = RuleImage(roi_front=(588,143,78,83), roi_back=(588,143,78,83), threshold=0.9, method="Template matching", file="./tasks/RichMan/shrine/shrine_s_black.png")
+	I_S_BLACK = RuleImage(roi_front=(772,144,78,83), roi_back=(565,109,310,182), threshold=0.9, method="Template matching", file="./tasks/RichMan/shrine/shrine_s_black.png")
 	# description 
 	I_S_BUY_BLACK = RuleImage(roi_front=(777,508,173,60), roi_back=(777,508,173,60), threshold=0.8, method="Template matching", file="./tasks/RichMan/shrine/shrine_s_buy_black.png")
 	# description 
