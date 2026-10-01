@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from tasks.GameUi.default_pages import page_friends
+
 """GameUi 运行时公共导出层。"""
 
 from tasks.GameUi.navigator import GameUi
@@ -14,8 +16,8 @@ if __name__ == "__main__":
     from module.device.device import Device
     from tasks.GameUi.page import page_main
 
-    c = Config("oas2")
+    c = Config("oas1")
     d = Device(c)
     game = GameUi(config=c, device=d)
     game.get_current_page()
-    game.goto_page(page_main)
+    game.goto_page(page_friends)
