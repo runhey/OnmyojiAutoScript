@@ -122,17 +122,17 @@ class ScriptTask(GameUi, GuildActivityMonitorAssets):
         raise TaskEnd('GuildActivityMonitor')
 
     def yield_to_time_critical_tasks(self):
-        """时间窗口型任务（对弈竞猜下注窗口）即将到期时让位，避免监控长跑挤掉窗口。
-        让位后监控改期到窗口结束再继续，而不是等到下个运行日"""
+        """对弈竞猜下注时刻前后3分钟内让位，避免监控长跑挤掉下注窗口。
+        让位后监控3分钟恢复续跑，而不是等到下个运行日"""
         try:
             frog = self.config.model.frog_boss
             if not frog.scheduler.enable:
                 return
             nxt = frog.scheduler.next_run
             now = datetime.now()
-            if not (now - timedelta(minutes=20) <= nxt <= now + timedelta(minutes=3)):
+            if not (now - timedelta(minutes=3) <= nxt <= now + timedelta(minutes=3)):
                 return
-            resume = max(nxt, now) + timedelta(minutes=20)
+            resume = max(nxt, now) + timedelta(minutes=3)
             logger.info(f'FrogBoss bet window at {nxt}, monitor yields and resumes at {resume}')
             self.set_next_run(task='GuildActivityMonitor', success=None, finish=False,
                               server=False, target=resume)
