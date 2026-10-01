@@ -20,8 +20,9 @@ from tasks.FrogBoss.config import Strategy, DASHEN_BUILTIN_UPS
 
 # 每轮竞猜时长（小时），用于推算下一轮的下注时刻
 ROUND_HOURS = 2
-# 场次表：首场 8:30 开（10:00 结算），其余整点开、两小时后整点结算
-ROUND_STARTS = [time_of_day(8, 30)] + [time_of_day(h, 0) for h in range(10, 23, 2)]
+# 场次表：每场整点开、两小时后整点结算，首场 10:00 开（12:00 结算）；
+# 活动页 8:30 起可进入但显示休息中
+ROUND_STARTS = [time_of_day(h, 0) for h in range(10, 23, 2)]
 # 下注界面 5 档投入按钮坐标（2万/5万/10万/20万/30万，1280x720）
 TIER_POINTS = {1: (273, 610), 2: (430, 610), 3: (593, 610), 4: (750, 610), 5: (907, 610)}
 
@@ -90,10 +91,27 @@ class ScriptTask(RightActivity, FrogBossAssets, GeneralBattleAssets):
     # ---------- 调度 ----------
 
     def _schedule_from_rest(self):
-        """休息态：按场次表唤醒到下一场开场后 3 分钟"""
-        target = self._next_round_start()
-        logger.info(f'FrogBoss rest, next round start {target}')
+        """休息态（下注此刻不可能）：直接约到下一个“结算前 before_end”的下注时刻。
+        修复点：以前跳“下一场开场+3分钟”，开场早于下注窗口时会白跑甚至错过本场下注"""
+        target = self._next_bet_time()
+        logger.info(f'FrogBoss rest, next bet at {target}')
         self.set_next_run(task='FrogBoss', target=target)
+
+    def _settlement_datetimes(self, date) -> list:
+        """date 当天的全部结算时刻：12:00, 14:00 ... 22:00, 以及次日 0:00（22-24 场）"""
+        out = [datetime.combine(date, time_of_day(h, 0)) for h in range(12, 24, 2)]
+        out.append(datetime.combine(date + timedelta(days=1), time_of_day(0, 0)))
+        return out
+
+    def _next_bet_time(self) -> datetime:
+        """下一个下注时刻 = 未来最近的“场次结算 - before_end”；明天首场为 11:45（12:00 结算）"""
+        now = datetime.now()
+        before_end = timedelta(seconds=self._before_end_seconds())
+        for date in (now.date(), now.date() + timedelta(days=1)):
+            for s in self._settlement_datetimes(date):
+                if now < s - before_end:
+                    return s - before_end
+        return now + timedelta(minutes=30)
 
     def _next_round_start(self) -> datetime:
         now = datetime.now()
@@ -104,10 +122,9 @@ class ScriptTask(RightActivity, FrogBossAssets, GeneralBattleAssets):
 
     @staticmethod
     def _active_round_start():
-        """当前进行中场次的开始时刻（8:30-10:00 与各整点场）；无进行中场次返回 None"""
+        """当前进行中场次的开始时刻（10-12 与各整点场）；无进行中场次返回 None"""
         now = datetime.now().time()
-        bounds = [(time_of_day(8, 30), time_of_day(10, 0))]
-        bounds += [(time_of_day(h, 0), time_of_day(h + 2, 0)) for h in range(10, 22, 2)]
+        bounds = [(time_of_day(h, 0), time_of_day(h + 2, 0)) for h in range(10, 22, 2)]
         bounds += [(time_of_day(22, 0), None)]  # 22-24 场跨到午夜
         for s, e in bounds:
             if now >= s and (e is None or now < e):
@@ -124,17 +141,17 @@ class ScriptTask(RightActivity, FrogBossAssets, GeneralBattleAssets):
 
     def _schedule_next_round(self, settlement: datetime):
         """
-        本轮结算时刻 settlement → 下一轮下注时刻 = 结算 + 2h - before_end(+1min 余量)。
-        （首场 8:30-10:00 之后的场次都是 2 小时一场，公式通用；估错场次时下次到点
-        会按倒计时再校正，自愈。）若已越过当日最后一场（结算跨到明天）→ 明早首场后再来。
+        本轮结算时刻 settlement → 下一轮下注时刻 = 结算 + 2h - before_end（正好卡在下注窗口起点，
+        主循环里 remaining 判定有 90 秒容差，不怕秒级漂移提前唤醒）。
+        若已越过当日最后一场（结算跨到明天）→ 明天首场的下注时刻（11:45）。
         调度器不用改，竞猜用自己的时间计算。
         """
-        before_end = self._before_end_seconds()
-        target = settlement + timedelta(hours=ROUND_HOURS) - timedelta(seconds=before_end) + timedelta(seconds=60)
+        before_end = timedelta(seconds=self._before_end_seconds())
+        target = settlement + timedelta(hours=ROUND_HOURS) - before_end
         tomorrow = False
-        if settlement.date() > datetime.now().date() or settlement.hour >= 23 or settlement.hour < 8:
+        if settlement.date() > datetime.now().date():
             tomorrow = True
-            target = datetime.combine(datetime.now().date() + timedelta(days=1), ROUND_STARTS[0]) + timedelta(minutes=3)
+            target = datetime.combine(settlement.date(), time_of_day(12, 0)) - before_end
         logger.info(f'FrogBoss settlement {settlement}, next bet at {target}' + (' (tomorrow)' if tomorrow else ''))
         self.set_next_run(task='FrogBoss', target=target)
 
@@ -195,7 +212,7 @@ class ScriptTask(RightActivity, FrogBossAssets, GeneralBattleAssets):
             return False
         before_end = self._before_end_seconds()
         if remaining > before_end + 90:
-            target = datetime.now() + timedelta(seconds=remaining - before_end + 60)
+            target = datetime.now() + timedelta(seconds=remaining - before_end)
             logger.info(f'Remaining {remaining}s > before_end, next bet at {target}')
             self.set_next_run(task='FrogBoss', target=target)
             return False
