@@ -137,7 +137,8 @@ class Special(Buy, MallNavbar):
             buy_res_number = buy_number
         if buy_cycles_number:
             for i in range(buy_cycles_number):
-                self.buy_more(self.I_SP_BUY_LOW)
+                if not self.buy_more(self.I_SP_BUY_LOW):
+                    return
                 time.sleep(0.5)
         if buy_res_number:
             self.buy_more(self.I_SP_BUY_LOW, buy_res_number)
