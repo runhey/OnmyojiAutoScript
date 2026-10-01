@@ -25,5 +25,14 @@
     "method": "Default",
     "keyword": "",
     "description": "Ocr-description"
+  },
+  {
+    "itemName": "frog_last_time",
+    "roiFront": "120,154,160,30",
+    "roiBack": "120,154,160,30",
+    "mode": "Single",
+    "method": "Default",
+    "keyword": "",
+    "description": "上一句对局时间"
   }
 ]
