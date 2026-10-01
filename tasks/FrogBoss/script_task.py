@@ -248,16 +248,27 @@ class ScriptTask(RightActivity, FrogBossAssets, GeneralBattleAssets):
                     break
                 if self.appear_then_click(self.I_BET_SUCCESS_BOX2, interval=2):
                     break
-            # 奖励结算浮层（图6“点击屏幕继续”）：点到它消失为止。
-            # 注意退出条件不能是“下一局出现”——下一局按钮会透过浮层可见
-            # （2026-10-01 oas2 实测因此跳过关浮层，浮层点不掉卡到软超时）
+            # 奖励结算浮层（图6“点击屏幕继续”）：点屏幕中间的宝箱位置过掉，
+            # 避开上方奖励图标和右侧“下一局”按钮；一次没掉隔0.5秒再点3次
+            # （2026-10-01 oas2 实测点“点击屏幕继续”文字位置关不掉浮层）
             appear_t = Timer(10).start()
             while not appear_t.reached():
                 self.screenshot()
                 self.device.stuck_record_clear()
                 if self.appear(self.I_CLICK_CONTINUE):
                     break
-            reward = Timer(20).start()
+            if self.appear(self.I_CLICK_CONTINUE):
+                chest = (630, 530)
+                self.device.click(*chest)
+                for _ in range(3):
+                    self.device.sleep(0.5)
+                    self.screenshot()
+                    self.device.stuck_record_clear()
+                    if not self.appear(self.I_CLICK_CONTINUE):
+                        break
+                    self.device.click(*chest)
+            # 兜底：浮层仍在则慢速继续点（点继续文字/通用结算/宝箱位置），有界退出
+            reward = Timer(15).start()
             blind = Timer(2.5).start()
             while not reward.reached():
                 self.screenshot()
@@ -269,7 +280,7 @@ class ScriptTask(RightActivity, FrogBossAssets, GeneralBattleAssets):
                 if self.appear_then_click(self.I_REWARD, interval=2):
                     continue
                 if blind.reached():
-                    self.device.click(750, 410)
+                    self.device.click(630, 530)
                     blind.reset()
         self._click_next()
 
