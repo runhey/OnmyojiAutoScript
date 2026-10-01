@@ -132,12 +132,8 @@ class ScriptTask(RightActivity, FrogBossAssets, GeneralBattleAssets):
         return None
 
     def _schedule_after_bet(self):
-        """已竞猜态（含手动下注后再次进入）：按剩余时间推算下一轮下注时刻"""
-        remaining = self._ocr_remaining()
-        if remaining is None:
-            self._schedule_from_rest()
-            return
-        self._schedule_next_round(datetime.now() + timedelta(seconds=remaining))
+        """已竞猜态（含手动下注后再次进入）：下一轮下注 = 本场结算（场次表） + 2h - before_end"""
+        self._schedule_next_round(self._table_next_settlement())
 
     def _schedule_next_round(self, settlement: datetime):
         """
@@ -203,17 +199,27 @@ class ScriptTask(RightActivity, FrogBossAssets, GeneralBattleAssets):
     def _handle_betting(self) -> bool:
         """
         双鼓可下注（图3）。没到下注窗口就改期到本轮结算前 before_end；到了就策略选边下注。
+        结算时刻以场次表为准（系统时间+整点表），OCR 只用来发现与场次表偏离 10 分钟以上的
+        异常排期（2026-10-01 实测 '23:31' 被误读成 '3:31'，OCR 不再单独可信）。
         返回 False 表示已设置 next_run，任务结束；True 回主循环继续。
         """
-        remaining = self._ocr_remaining()
-        if remaining is None:
-            logger.warning('Cannot OCR remaining time on betting page')
-            self._schedule_from_rest()
-            return False
+        now = datetime.now()
+        table_settlement = self._table_next_settlement(now)
+        settlement = table_settlement
+        remaining_ocr = self._ocr_remaining()
+        if remaining_ocr is not None:
+            ocr_settlement = now + timedelta(seconds=remaining_ocr)
+            if abs((ocr_settlement - table_settlement).total_seconds()) > 600:
+                logger.warning(f'OCR settlement {ocr_settlement:%H:%M:%S} deviates from '
+                               f'table {table_settlement:%H:%M:%S}, trust OCR')
+                settlement = ocr_settlement
+            else:
+                logger.info(f'Remaining OCR ok, settlement {table_settlement:%H:%M:%S}')
         before_end = self._before_end_seconds()
+        remaining = (settlement - now).total_seconds()
         if remaining > before_end + 90:
-            target = datetime.now() + timedelta(seconds=remaining - before_end)
-            logger.info(f'Remaining {remaining}s > before_end, next bet at {target}')
+            target = settlement - timedelta(seconds=before_end)
+            logger.info(f'Settles {settlement:%H:%M:%S}, > before_end, next bet at {target}')
             self.set_next_run(task='FrogBoss', target=target)
             return False
 
@@ -223,7 +229,6 @@ class ScriptTask(RightActivity, FrogBossAssets, GeneralBattleAssets):
         side = self._decide_side(count_left, count_right)
         logger.info(f'Bet on {"LEFT(red)" if side is self.I_BET_LEFT else "RIGHT(blue)"}')
         if self._do_bet(side):
-            settlement = datetime.now() + timedelta(seconds=remaining)
             self._schedule_next_round(settlement)
         else:
             self._notify('对弈竞猜下注未完成', '金币不足或下注弹窗无法识别，已跳过本轮，30分钟后重试')
@@ -243,13 +248,21 @@ class ScriptTask(RightActivity, FrogBossAssets, GeneralBattleAssets):
                     break
                 if self.appear_then_click(self.I_BET_SUCCESS_BOX2, interval=2):
                     break
-            # 奖励结算页（图6“点击屏幕继续”）：优先点继续文字，退而点宝箱原位置（避开奖励图标）
-            reward = Timer(15).start()
+            # 奖励结算浮层（图6“点击屏幕继续”）：点到它消失为止。
+            # 注意退出条件不能是“下一局出现”——下一局按钮会透过浮层可见
+            # （2026-10-01 oas2 实测因此跳过关浮层，浮层点不掉卡到软超时）
+            appear_t = Timer(10).start()
+            while not appear_t.reached():
+                self.screenshot()
+                self.device.stuck_record_clear()
+                if self.appear(self.I_CLICK_CONTINUE):
+                    break
+            reward = Timer(20).start()
             blind = Timer(2.5).start()
             while not reward.reached():
                 self.screenshot()
                 self.device.stuck_record_clear()
-                if self.appear(self.I_NEXT_COMPETITION) or self.appear(self.I_BET_LEFT) or self.appear(self.I_BETTED):
+                if not self.appear(self.I_CLICK_CONTINUE):
                     break
                 if self.appear_then_click(self.I_CLICK_CONTINUE, interval=2):
                     continue
@@ -365,17 +378,31 @@ class ScriptTask(RightActivity, FrogBossAssets, GeneralBattleAssets):
 
     # ---------- 识别 ----------
 
+    def _table_next_settlement(self, now: datetime = None) -> datetime:
+        """场次表推算：下一个结算时刻（偶数整点；22-24 场为次日 0 点）"""
+        now = now or datetime.now()
+        for date in (now.date(), now.date() + timedelta(days=1)):
+            for s in self._settlement_datetimes(date):
+                if s > now:
+                    return s
+        return now + timedelta(hours=2)
+
     def _ocr_remaining(self):
-        """剩余结算时间 MM:SS → 秒；读不到返回 None"""
+        """剩余结算时间 MM:SS → 秒。
+        校验：隐含结算时刻必须落在整点 ±2 分钟内（场次表所有结算都在整点），
+        像 '23:31' 被误读成 '3:31'（隐含结算 17:40）这种直接拒识重试；全部失败返回 None"""
         for _ in range(3):
             self.screenshot()
             text = str(self.O_TIME_REMAIN.ocr(self.device.image))
             m = re.search(r'(\d{1,3})[:：](\d{2})', text)
+            if not m:
+                m = re.fullmatch(r'(\d{1,3})(\d{2})', text.strip())
             if m:
-                return int(m.group(1)) * 60 + int(m.group(2))
-            m = re.fullmatch(r'(\d{1,3})(\d{2})', text.strip())
-            if m:
-                return int(m.group(1)) * 60 + int(m.group(2))
+                seconds = int(m.group(1)) * 60 + int(m.group(2))
+                settle = datetime.now() + timedelta(seconds=seconds)
+                if settle.minute <= 2 or settle.minute >= 58:
+                    return seconds
+                logger.warning(f'OCR remaining "{text}" -> settlement {settle:%H:%M} not on hour, retry')
         return None
 
     def _ocr_count(self, rule) -> int:
