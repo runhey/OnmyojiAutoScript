@@ -475,6 +475,9 @@ class TestOasCallSites:
         assert names, 'tasks/ 为空，断言失去意义'
 
         for name in names:
+            if name.startswith('__') or name.endswith('__'):
+                # __pycache__ 由导入副作用生成，不是任务目录，且不满足往返约束
+                continue
             assert inflection.camelize(inflection.underscore(name)) == name, (
                 f'{name}: camelize(underscore(name)) 往返不一致，'
                 f'得到 {inflection.camelize(inflection.underscore(name))!r}'

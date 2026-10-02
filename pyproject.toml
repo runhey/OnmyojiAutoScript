@@ -35,6 +35,7 @@ dependencies = [
     "psutil>=7.2.2",
     "pydantic>=2.13.5",
     "pyyaml>=6.0.3",
+    "requests>=2.32.0",
     "rich>=15.0.0",
     "tqdm==4.65.0",
     "uiautomator2==2.16.17",
