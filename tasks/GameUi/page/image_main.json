@@ -3,7 +3,7 @@
     "itemName": "check_main",
     "imageName": "page_check_main.png",
     "roiFront": "807,108,76,45",
-    "roiBack": "49,98,1033,61",
+    "roiBack": "49,98,1033,74",
     "method": "Template matching",
     "threshold": 0.95,
     "description": "庭院标志"
@@ -258,9 +258,8 @@
     "roiBack": "1,2,100,91",
     "method": "Template matching",
     "threshold": 0.8,
-    "description": "黄色返回按钮(移植自mine)"
-  }
-,
+    "description": "黄色返回按钮"
+  },
   {
     "itemName": "back_yollow",
     "imageName": "page_back_yollow.png",
@@ -268,9 +267,8 @@
     "roiBack": "0,0,100,100",
     "method": "Template matching",
     "threshold": 0.8,
-    "description": "黄色返回按钮-大(移植自mine)"
-  }
-,
+    "description": "黄色返回按钮-大"
+  },
   {
     "itemName": "summon_goto_main",
     "imageName": "page_summon_goto_main.png",
@@ -278,6 +276,6 @@
     "roiBack": "0,0,100,100",
     "method": "Template matching",
     "threshold": 0.8,
-    "description": "召唤页返回主页(移植自mine)"
+    "description": "召唤页返回主页"
   }
 ]
