@@ -284,7 +284,7 @@ class ScriptTask(GeneralBattle, GeneralInvite, GeneralBuff, GeneralRoom, GameUi,
             self.screenshot()
             if not self.appear(self.I_FORM_TEAM):
                 break
-            if self.appear_then_click(self.I_BACK_BL, interval=2):
+            if self.appear_then_click(self.I_UI_BACK_BLUE, interval=2):
                 continue
             if self.appear_then_click(self.I_UI_BACK_YELLOW, interval=2):
                 continue
