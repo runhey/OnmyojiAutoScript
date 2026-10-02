@@ -43,6 +43,7 @@ dependencies = [
     "websockets==13.1",
     "wrapt>=1.17.3",
     "zerorpc==0.6.3",
+    "zstandard>=0.23.0",
 ]
 [project.optional-dependencies]
 windows = [
