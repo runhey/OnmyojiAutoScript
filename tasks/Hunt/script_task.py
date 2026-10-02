@@ -29,8 +29,7 @@ class ScriptTask(GameUi, GeneralBattle, GeneralInvite, SwitchSoul, HuntAssets):
             raise TaskEnd('Hunt')
         con = self.config.hunt.hunt_config
         if con.kirin_group_team != '-1,-1' or con.netherworld_group_team != '-1,-1':
-            self.ui_get_current_page()
-            self.ui_goto(page_shikigami_records)
+            self.goto_page(page_shikigami_records)
 
             if self.kirin_day:
                 if con.kirin_group_team != '-1,-1':
@@ -38,12 +37,11 @@ class ScriptTask(GameUi, GeneralBattle, GeneralInvite, SwitchSoul, HuntAssets):
             else:
                 if con.netherworld_group_team != '-1,-1':
                     self.run_switch_soul(con.netherworld_group_team)
-        self.ui_get_current_page()
         if self.kirin_day:
-            self.ui_goto(page_hunt_kirin)
+            self.goto_page(page_hunt_kirin)
             self.kirin()
         else:
-            self.ui_goto(page_hunt)
+            self.goto_page(page_hunt)
             self.netherworld()
         sleep(1)
 

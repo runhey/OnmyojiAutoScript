@@ -4,6 +4,7 @@
 import time
 
 from module.logger import logger
+from module.base.timer import Timer
 
 from tasks.GameUi.page import page_main, page_summon
 from tasks.GameUi.game_ui import GameUi
@@ -18,8 +19,7 @@ class Shrine(GameUi, RichManAssets):
         if not con.enable:
             logger.info('Shrine is disabled')
             return
-        self.ui_get_current_page()
-        self.ui_goto(page_summon)
+        self.goto_page(page_summon)
 
         while 1:
             self.screenshot()
@@ -73,15 +73,31 @@ class Shrine(GameUi, RichManAssets):
         if not self.appear(self.I_S_BLACK):
             logger.info('Already bought black daruma')
             return
-        self.ui_click(self.I_S_BLACK, self.I_S_CHECK_BLACK)
-        self.screenshot()
-        if not self.appear(self.I_S_BUY_BLACK, threshold=0.6):
-            logger.info('Already bought black daruma')
-            self.ui_click_until_disappear(self.I_UI_BACK_RED)
-            time.sleep(0.5)
-            return
-        self.ui_click(self.I_S_BUY_BLACK, self.I_S_CONFIRM_BLACK)
-        self.ui_get_reward(self.I_S_CONFIRM_BLACK)
+        # self.ui_click(self.I_S_BLACK, self.I_S_BUY_BLACK, interval=2, timeout=5)
+        # self.screenshot()
+        # if not self.appear(self.I_S_BUY_BLACK, threshold=0.6):
+        #     logger.info('Already bought black daruma')
+        #     self.ui_click_until_disappear(self.I_UI_BACK_RED)
+        #     time.sleep(0.5)
+        #     return
+        # self.ui_click(self.I_S_BUY_BLACK, self.I_S_CONFIRM_BLACK)
+        # self.ui_get_reward(self.I_S_CONFIRM_BLACK)
+
+        timer = Timer(10).start()
+        while 1:
+            self.screenshot()
+            if timer.reached():
+                logger.warning('Reached time')
+                break
+            if self.ui_reward_appear_click():
+                logger.info('Reward appear')
+                break
+            if self.appear_then_click(self.I_S_CONFIRM_BLACK, interval=1):
+                continue
+            if self.appear_then_click(self.I_S_BUY_BLACK, interval=1):
+                continue
+            if self.appear_then_click(self.I_S_BLACK, interval=2.5):
+                continue
         self.ui_click_until_disappear(self.I_UI_BACK_RED)
         time.sleep(1)
 
@@ -93,15 +109,21 @@ class Shrine(GameUi, RichManAssets):
             return
         if not self.shrine_check_money(1200):
             return
-        self.ui_click(self.I_S_WHITE_FIVE, self.I_S_CHECK_WHITE_FIVE)
-        self.screenshot()
-        if not self.appear(self.I_S_BUY_WHITE_FIVE, threshold=0.9):
-            logger.info('Already bought white five')
-            self.ui_click_until_disappear(self.I_UI_BACK_RED)
-            time.sleep(1)
-            return
-        self.ui_click(self.I_S_BUY_WHITE_FIVE, self.I_S_CONFIRM_WHITE_FIVE)
-        self.ui_get_reward(self.I_S_CONFIRM_WHITE_FIVE)
+        timer = Timer(10).start()
+        while 1:
+            self.screenshot()
+            if timer.reached():
+                logger.warning('Reached time')
+                break
+            if self.ui_reward_appear_click():
+                logger.info('Reward appear')
+                break
+            if self.appear_then_click(self.I_S_CONFIRM_WHITE_FIVE, interval=1):
+                continue
+            if self.appear_then_click(self.I_S_BUY_WHITE_FIVE, interval=1):
+                continue
+            if self.appear_then_click(self.I_S_WHITE_FIVE, interval=2.5):
+                continue
         self.ui_click_until_disappear(self.I_UI_BACK_RED)
         time.sleep(1)
 
@@ -113,15 +135,21 @@ class Shrine(GameUi, RichManAssets):
             return
         if not self.shrine_check_money(400):
             return
-        self.ui_click(self.I_S_WHITE_FOUR, self.I_S_CHECK_WHITE_FOUR)
-        self.screenshot()
-        if not self.appear(self.I_S_BUY_WHITE_FOUR, threshold=0.9):
-            logger.info('Already bought white four')
-            self.ui_click_until_disappear(self.I_UI_BACK_RED)
-            time.sleep(1)
-            return
-        self.ui_click(self.I_S_BUY_WHITE_FOUR, self.I_S_CONFIRM_WHITE_FOUR)
-        self.ui_get_reward(self.I_S_CONFIRM_WHITE_FOUR)
+        timer = Timer(10).start()
+        while 1:
+            self.screenshot()
+            if timer.reached():
+                logger.warning('Reached time')
+                break
+            if self.ui_reward_appear_click():
+                logger.info('Reward appear')
+                break
+            if self.appear_then_click(self.I_S_CONFIRM_WHITE_FOUR, interval=1):
+                continue
+            if self.appear_then_click(self.I_S_BUY_WHITE_FOUR, interval=1):
+                continue
+            if self.appear_then_click(self.I_S_WHITE_FOUR, interval=2.5):
+                continue
         self.ui_click_until_disappear(self.I_UI_BACK_RED)
         time.sleep(1)
 

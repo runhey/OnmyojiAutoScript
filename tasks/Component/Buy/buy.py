@@ -77,7 +77,7 @@ class Buy(BaseTask, BuyAssets):
         return True
 
     def buy_more(self, start_click: Union[RuleImage, RuleOcr, RuleClick],
-                 number: int = None):
+                 number: int = None) -> bool:
         """
         购买多个物品
         :param start_click:
@@ -93,7 +93,7 @@ class Buy(BaseTask, BuyAssets):
             if try_click_count >= 5:
                 logger.warning(f'Buy_more failed, try_click_count: {try_click_count}')
                 logger.warning('Close the purchase')
-                return
+                return False
 
             if isinstance(start_click, RuleImage):
                 if self.appear_then_click(start_click, interval=1):
@@ -162,6 +162,7 @@ class Buy(BaseTask, BuyAssets):
 
             if self.click(self.C_BUY_MORE, interval=2):
                 continue
+        return True
 
     def buy_check_money(self, target: RuleOcr, minimum: int):
         """

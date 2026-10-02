@@ -25,8 +25,7 @@ class ScriptTask(FriendshipPoints, MysteryShopAssets, GeneralInvite):
         if day_of_week != 2 and day_of_week != 5:
             logger.warning('Today is not MysteryShop day')
             self.next_time(False)
-        self.ui_get_current_page()
-        self.ui_goto(page_mall)
+        self.goto_page(page_mall)
         self.ui_click(self.I_ME_ENTER, self.I_MS_SHARE)
         logger.info('Enter MysteryShop')
         con = self.config.mystery_shop
