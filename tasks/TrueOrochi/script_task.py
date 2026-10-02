@@ -14,7 +14,8 @@ from tasks.Component.GeneralInvite.general_invite import GeneralInvite
 from tasks.Component.GeneralRoom.general_room import GeneralRoom
 from tasks.Orochi.script_task import ScriptTask as OrochiScriptTask
 from tasks.Orochi.config import Layer
-from tasks.GameUi.page import page_main, page_soul_zones, page_shikigami_records
+from tasks.Orochi.page import page_orochi
+from tasks.GameUi.page import page_main, page_shikigami_records
 from tasks.TrueOrochi.assets import TrueOrochiAssets
 
 
@@ -40,8 +41,7 @@ class ScriptTask(OrochiScriptTask, TrueOrochiAssets):
             self.run_switch_soul_by_name(self.config.true_orochi.switch_soul.group_name,
                                          self.config.true_orochi.switch_soul.team_name)
 
-        self.goto_page(page_soul_zones)
-        self.orochi_enter()
+        self.goto_page(page_orochi)
         sleep(0.5)
         battle = self.check_true_orochi(True)
         if not battle:
@@ -89,8 +89,7 @@ class ScriptTask(OrochiScriptTask, TrueOrochiAssets):
         self.check_times(True)
 
         # 检查是否还有真蛇入口，支持存储两次
-        self.goto_page(page_soul_zones)
-        self.orochi_enter()
+        self.goto_page(page_orochi)
         sleep(0.5)
         if conf.current_success < 2 and self.check_true_orochi(True):
             battle = True

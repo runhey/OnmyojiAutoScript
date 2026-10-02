@@ -25,6 +25,14 @@ class OrochiAssets:
 	I_SHI_RECORDS = RuleImage(roi_front=(842,569,48,45), roi_back=(842,569,48,45), threshold=0.8, method="Template matching", file="./tasks/Orochi/o/o_shi_records.png")
 	# 小小宠物，发现宝藏 
 	I_PET_PRESENT = RuleImage(roi_front=(873,184,62,147), roi_back=(873,184,62,147), threshold=0.8, method="Template matching", file="./tasks/Orochi/o/o_pet_present.png")
+	# 八岐大蛇标志 
+	I_OROCHI_CHECK_10 = RuleImage(roi_front=(929,123,203,39), roi_back=(896,100,269,84), threshold=0.8, method="Template matching", file="./tasks/Orochi/o/o_orochi_check_10.png")
+	# 巫女大蛇标志 
+	I_OROCHI_CHECK_11 = RuleImage(roi_front=(929,123,203,39), roi_back=(896,100,269,84), threshold=0.8, method="Template matching", file="./tasks/Orochi/o/o_orochi_check_11.png")
+	# 神罚标志 
+	I_OROCHI_CHECK_12 = RuleImage(roi_front=(929,116,100,46), roi_back=(896,100,269,84), threshold=0.8, method="Template matching", file="./tasks/Orochi/o/o_orochi_check_12.png")
+	# 虚无大蛇标志 
+	I_OROCHI_CHECK_13 = RuleImage(roi_front=(929,121,211,41), roi_back=(896,100,269,84), threshold=0.8, method="Template matching", file="./tasks/Orochi/o/o_orochi_check_13.png")
 
 
 	# List Rule Assets
