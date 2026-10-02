@@ -3,7 +3,6 @@
 # github https://github.com/runhey
 import time
 from time import sleep
-import re
 
 from enum import Enum
 from cached_property import cached_property
@@ -61,16 +60,16 @@ class ScriptTask(GameUi, GeneralBattle, DemonEncounterAssets, SwitchSoul):
 
     def check_challenge_done(self) -> bool:
         """
-        OCR识别现世逢魔顶部"今日挑战次数:X/1"
-        :return: True表示0/1今日已打过
+        OCR识别现世逢魔顶部"今日挑战次数:剩余/总", 支持老号X/1与新号X/2
+        DigitCounter 返回 (current, remain, total), current 即剩余次数
+        :return: True表示剩余=0, 今日已打过
         """
-        results = self.O_DE_CHALLENGE_COUNT.detect_and_ocr(self.device.image)
-        text = ''.join(r.ocr_text for r in results)
-        m = re.search(r'([01])\s*/\s*1', text)
-        if not m:
-            logger.warning(f'Challenge count not recognized: [{text}], continue by default')
-            return False
-        return m.group(1) == '0'
+        current, _remain, total = self.O_DE_CHALLENGE_COUNT.ocr(self.device.image)
+        if total > 0:
+            logger.info(f'Demon encounter challenge count: {current}/{total}')
+            return current == 0
+        logger.warning('Challenge count not recognized, assume attempts remain')
+        return False
 
     def checkout_soul(self):
         """
