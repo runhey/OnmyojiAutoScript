@@ -7,7 +7,7 @@ from module.exception import TaskEnd
 from module.base.timer import Timer
 from module.logger import logger
 
-from tasks.GameUi.game_ui import GameUi, Page
+from tasks.GameUi.game_ui import GameUi
 from tasks.GameUi.page import page_soul_zones, page_shikigami_records
 from tasks.Component.GeneralBattle.general_battle import GeneralBattle
 from tasks.Component.GeneralRoom.general_room import GeneralRoom
@@ -44,7 +44,7 @@ class ScriptTask(
             case UserStatus.MEMBER: success = self.run_member()
             case UserStatus.ALONE: success = self.run_alone()
             case _: logger.error('Unknown user status')
-
+        self.goto_page(page_main)
         if success:
             self.set_next_run(self.task_name, finish=True, success=True)
         else:
@@ -55,7 +55,7 @@ class ScriptTask(
 
     def run_leader(self):
         logger.info('Start run leader')
-        self._navigate_to_soul_zones()
+        self.goto_page(page_soul_zones)
         self._enter_eternity_sea()
         layer = self._task_config.eternity_sea_config.layer
         self.check_layer(layer)
@@ -224,7 +224,7 @@ class ScriptTask(
 
     def run_alone(self) -> bool:
         logger.info("Start run alone")
-        self._navigate_to_soul_zones()
+        self.goto_page(page_soul_zones)
         self._enter_eternity_sea()
 
         if self._task_config.general_battle_config.lock_team_enable == False:
@@ -266,16 +266,6 @@ class ScriptTask(
                 return True
         return False
 
-    def eternitysea_enter(self) -> bool:
-        logger.info('Enter EternitySea')
-        while True:
-            self.screenshot()
-            if self.appear(self.I_FORM_TEAM):
-                return True
-            if self.appear_then_click(self.I_ETERNITY_SEA, interval=1):
-                continue
-
-
     def _is_in_eternity_sea(self) -> bool:
         self.screenshot()
         return self.appear(self.I_ETERNITY_SEA_FIRE)
@@ -298,12 +288,6 @@ class ScriptTask(
             #有可能点击到录像
             if self.appear_then_click(self.I_BACK_BOTTOM, interval=1):
                 continue
-
-    def _navigate_to_soul_zones(self) -> None:
-        self.goto_page(page_soul_zones)
-
-    def _navigate_to_game_page(self, destination: Page) -> None:
-        self.goto_page(destination)
 
     @property
     def _task_config(self) -> EternitySea:
