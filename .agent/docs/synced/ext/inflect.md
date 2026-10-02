@@ -1,0 +1,1 @@
+未迁,无需迁。solana `oas/ext/inflection`(vendored 413 行)是 Alasio `ext/inflect.py` 的超集,只多认空格/点/撇号当分隔符。Alasio 唯一调用点 `mcp/std_server.py:52` 只需 method→类名,`camelize` 对 exec_shell/exec_python 与 `to_pascal_case` 结果一致。坑:`camelize` 保留 `HTTPServer`,`to_pascal_case` 压成 `HttpServer`,勿混用。
