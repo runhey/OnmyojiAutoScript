@@ -50,6 +50,10 @@ class ScriptTask(RightActivity, FrogBossAssets, GeneralBattleAssets):
 
         # 兜底软超时：界面识别不了时不无限空转（也绝不让 60s 卡死保护重启游戏）
         soft = Timer(150).start()
+        # 结算浮层把整个画面压暗后模板会全部失配（2026-10-02 oas1 实测卡 150 秒），
+        # 收过结果页后再遇到"什么都不匹配"就按已知坐标盲点，把界面点回可识别状态
+        saw_result = False
+        blind = Timer(2.5).start()
         while 1:
             self.screenshot()
             self.device.stuck_record_clear()
@@ -61,11 +65,13 @@ class ScriptTask(RightActivity, FrogBossAssets, GeneralBattleAssets):
             # 竞猜成功（图1：中间有宝箱）
             if self.appear(self.I_BET_SUCCESS):
                 logger.info('You bet win')
+                saw_result = True
                 self._collect_result(win=True)
                 continue
             # 竞猜失败（图9：中间无宝箱）
             if self.appear(self.I_BET_FAILURE):
                 logger.info('You bet lose')
+                saw_result = True
                 self._collect_result(win=False)
                 continue
             # 已竞猜（图4：单鼓）
@@ -78,6 +84,12 @@ class ScriptTask(RightActivity, FrogBossAssets, GeneralBattleAssets):
                 if not self._handle_betting():
                     break
                 continue
+            if saw_result and blind.reached():
+                logger.info('Blind click to dismiss leftover result overlay')
+                self.device.click(630, 530)  # "点击屏幕继续"浮层宝箱位
+                self.device.sleep(0.7)
+                self.device.click(795, 515)  # "下一局"按钮位
+                blind.reset()
             if soft.reached():
                 logger.warning('FrogBoss unknown state too long, skip this round')
                 self._save_debug_screenshot()
@@ -152,7 +164,20 @@ class ScriptTask(RightActivity, FrogBossAssets, GeneralBattleAssets):
         self.set_next_run(task='FrogBoss', target=target)
 
     def _schedule_retry(self):
-        target = datetime.now() + timedelta(minutes=30)
+        """
+        异常重试：本场仍在进行且来得及下注时，5 分钟后重试（2026-10-02 oas1 实测
+        11:47 跳过后约 12:17，本场 12:00 已结算白跑）；否则约到下一个下注时刻
+        """
+        now = datetime.now()
+        target = None
+        active = self._active_round_start()
+        if active is not None:
+            settlement = datetime.combine(now.date(), active) + timedelta(hours=ROUND_HOURS)
+            candidate = now + timedelta(minutes=5)
+            if candidate < settlement - timedelta(minutes=2):
+                target = candidate
+        if target is None:
+            target = self._next_bet_time()
         logger.info(f'FrogBoss retry at {target}')
         self.set_next_run(task='FrogBoss', target=target)
 
@@ -231,7 +256,7 @@ class ScriptTask(RightActivity, FrogBossAssets, GeneralBattleAssets):
         if self._do_bet(side):
             self._schedule_next_round(settlement)
         else:
-            self._notify('对弈竞猜下注未完成', '金币不足或下注弹窗无法识别，已跳过本轮，30分钟后重试')
+            self._notify('对弈竞猜下注未完成', '金币不足或下注弹窗无法识别，已跳过本轮稍后重试')
             self._schedule_retry()
         return False
 
