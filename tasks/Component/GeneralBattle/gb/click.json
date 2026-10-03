@@ -112,5 +112,29 @@
     "roiFront": "104,79,1050,507",
     "roiBack": "255,65,100,100",
     "description": "战斗的时候有一定的概率随机点击"
+  },
+  {
+    "itemName": "random_left",
+    "roiFront": "17,104,55,370",
+    "roiBack": "17,104,55,370",
+    "description": "左边随机点击"
+  },
+  {
+    "itemName": "random_right",
+    "roiFront": "1185,115,79,388",
+    "roiBack": "1185,115,79,388",
+    "description": "右边随机点击"
+  },
+  {
+    "itemName": "random_top",
+    "roiFront": "250,58,868,68",
+    "roiBack": "250,58,868,68",
+    "description": "上边随机点击"
+  },
+  {
+    "itemName": "random_bottom",
+    "roiFront": "462,599,492,78",
+    "roiBack": "462,599,492,78",
+    "description": "下边随机点击"
   }
 ]
