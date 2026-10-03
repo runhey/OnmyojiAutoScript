@@ -252,3 +252,25 @@ while 1:
 - **判"下注/购买类操作是否成功"要找不依赖新素材的判据**：如双鼓消失、页面离开原状态；
   弹窗内部按钮素材没到位时，宁可走失败路径推送通知，也不要盲点（涉及真实金币）。
 - 相关文件：`tasks/FrogBoss/`（README 记录完整流程与待补素材清单）。
+
+## 15. 首领退治：未开启等待界面的无限空转与退避重进（2026-10-03）
+
+- **现场特征**：定时/寮活动监控拉起时退治还没开，进入后停在未开启的等待界面，
+  日志每 ~23s 一条 `Enter demon_retreat false` 无限刷（10-03 现场 oas2/oas3 各空转
+  350~440 轮、7 小时以上，整个调度器被这一个任务堵死，其他任务全部排不上）。
+- **根因两个叠加**：① `goto_demon_retreat` 的 `I_RANK_LSIT`（"首领退治"标题）分支
+  原实现只有 sleep 无计数无出口，循环唯一的退出条件 `goto_demon_retreat_num >= 5`
+  只在点 `I_HUNT` 时递增，进了界面后就永远凑不够；② 该界面的返回箭头与
+  `I_DEMON_BACK_CHECK` 模板不一致点不到，日志里 9 分钟一条返回点击都没有。
+  设备 60s 卡死检测也不触发——没有 `stuck_record_add`，纯 sleep 循环不判卡死。
+- **修法（退避重进，2026-10-03 已提交）**：等待界面不自动刷新开启状态，必须退回庭院
+  重新进才会更新。`not_open_count` 计数，每轮回 `_exit_demon_retreat()`（依次尝试
+  `I_DEMON_BACK_CHECK` → `I_UI_BACK_RED/YELLOW/BLUE` 通用返回链，60s 上限，识别到
+  page_main/page_guild/page_town 任一已知页即设 `ui_current` 返回）→ `goto_main()`
+  → 停 30s → 重进；连续 `NOT_OPEN_REENTER_COUNT`(5) 次仍未开启先退出再 `return False`，
+  交给 `run()` 既有失败路径 `set_next_run(success=False)` 推到第二天
+  （failure_interval 配置 1 天），寮活动监控后续检测到开启通知仍可随时插队拉起。
+- **通用教训**：任何"等某个状态出现"的 while 循环，计数器必须放在**循环内实际观察到的
+  状态分支**里递增，不能只依赖某个点击动作；界面专属返回模板点不到时要有通用返回链
+  （I_UI_BACK_RED/YELLOW/BLUE）兜底，超时宁可抛错走重启也不要无限空转。
+- 相关文件：`tasks/DemonRetreat/script_task.py`（`goto_demon_retreat` / `_exit_demon_retreat`）。

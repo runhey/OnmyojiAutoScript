@@ -10,7 +10,7 @@ from module.logger import logger
 from module.base.timer import Timer
 
 from tasks.GameUi.game_ui import GameUi
-from tasks.GameUi.page import page_main, page_hunt, page_shikigami_records, page_guild
+from tasks.GameUi.page import page_main, page_town, page_hunt, page_shikigami_records, page_guild
 from tasks.Component.GeneralBattle.general_battle import GeneralBattle
 from tasks.Component.GeneralBattle.config_general_battle import GeneralBattleConfig
 from tasks.Component.GeneralInvite.general_invite import GeneralInvite
@@ -18,6 +18,12 @@ from tasks.Component.SwitchSoul.switch_soul import SwitchSoul
 from tasks.DemonRetreat.assets import DemonRetreatAssets
 from tasks.AbyssShadows.assets import AbyssShadowsAssets
 from tasks.DemonRetreat.config import DemonRetreat
+
+# 退治未开启时退避重进的次数与每次间隔。现场（09-26/10-03）：拉起时退治未开启，
+# 客户端停在等待界面且不会自动刷新，原实现在该分支无计数无出口、等待界面的返回箭头
+# 又点不到 I_DEMON_BACK_CHECK，导致每 23s 一轮无限空转，把整个调度器堵死 7 小时以上
+NOT_OPEN_REENTER_COUNT = 5
+NOT_OPEN_REENTER_WAIT = 30
 
 class ScriptTask(GameUi, GeneralBattle, SwitchSoul, DemonRetreatAssets, AbyssShadowsAssets):
 
@@ -110,6 +116,7 @@ class ScriptTask(GameUi, GeneralBattle, SwitchSoul, DemonRetreatAssets, AbyssSha
         self.ui_goto(page_guild)
 
         goto_demon_retreat_num = 0
+        not_open_count = 0
         while 1:
             self.screenshot()
             # 进入神社
@@ -143,15 +150,55 @@ class ScriptTask(GameUi, GeneralBattle, SwitchSoul, DemonRetreatAssets, AbyssSha
                 raise TaskEnd
 
             if self.appear(self.I_RANK_LSIT):
-                logger.info("Enter demon_retreat false")
-                sleep(3)
-                if self.appear_then_click(self.I_DEMON_BACK_CHECK, interval=1):
-                    pass
-                sleep(20)
+                # 等待界面还没开启：客户端不会自动刷新开启状态，必须退回庭院重新进。
+                # 连续重进仍未开启则返回 False，交给 run() 的失败路径把 next_run 推到第二天
+                not_open_count += 1
+                if not_open_count > NOT_OPEN_REENTER_COUNT:
+                    logger.warning(
+                        f"Demon retreat not open after {NOT_OPEN_REENTER_COUNT} re-entries, give up today")
+                    self._exit_demon_retreat()
+                    self.goto_main()
+                    return False
+                logger.info(
+                    f"Enter demon_retreat false, not open yet, "
+                    f"back to main and re-enter ({not_open_count}/{NOT_OPEN_REENTER_COUNT})")
+                self._exit_demon_retreat()
+                self.goto_main()
+                nap = Timer(NOT_OPEN_REENTER_WAIT).start()
+                while not nap.reached():
+                    self.screenshot()
+                    self.device.stuck_record_clear()
+                self.ui_goto(page_guild)
+                continue
             # 超过五次没有进入进入认为失败
             if goto_demon_retreat_num >= 5:
                 break
         return False
+
+    def _exit_demon_retreat(self) -> None:
+        """从首领退治界面退回到已知页面（庭院/寮/町），供未开启退避重进使用。
+
+        等待界面的返回箭头与 I_DEMON_BACK_CHECK 模板不一致（09-26 现场空转 9 分钟
+        一次都没点到），因此依次尝试退治返回键和通用返回链（红叉/黄箭头/蓝箭头），
+        最久 60s，识别到任一已知页面即设置 ui_current 返回，后续由 goto_main 导航；
+        超时则交给 ui_get_current_page 兜底（识别不出会抛错走重启，好过无限空转）。
+        """
+        logger.info("Exit demon retreat interface")
+        back_buttons = [self.I_DEMON_BACK_CHECK, self.I_UI_BACK_RED,
+                        self.I_UI_BACK_YELLOW, self.I_UI_BACK_BLUE]
+        back_timer = Timer(60).start()
+        while not back_timer.reached():
+            self.screenshot()
+            for page in (page_main, page_guild, page_town):
+                if self.ui_page_appear(page, skip_first_screenshot=False):
+                    self.ui_current = page
+                    logger.attr("UI", page.name)
+                    return
+            for back in back_buttons:
+                if self.appear_then_click(back, interval=1.5):
+                    break
+            self.device.stuck_record_clear()
+        logger.warning("Exit demon retreat timeout, fallback to ui_get_current_page")
 
     def demon_retreat(self):
         cfg: DemonRetreat = self.config.demon_retreat
