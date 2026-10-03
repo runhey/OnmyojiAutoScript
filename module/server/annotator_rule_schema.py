@@ -29,7 +29,7 @@ RULE_TYPE_SCHEMAS: OrderedDict[str, dict[str, Any]] = OrderedDict(
                     "label": "method",
                     "control": "select",
                     "default": "Template matching",
-                    "options": ["Template matching", "Sift Flann"],
+                    "options": ["Template matching", "Masked template matching", "Multi-scale template matching", "Sift Flann"],
                 },
                 {
                     "key": "threshold",

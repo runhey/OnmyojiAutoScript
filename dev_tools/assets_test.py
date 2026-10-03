@@ -74,12 +74,20 @@ def detect_image_detail(file: str, target: RuleImage) -> dict:
         target.roi_front[3] = int(mat.shape[0])
         message = "match" if matched else "not_match"
     else:
+        # 掩码 / 多尺度 / SIFT 走本地 test_match
         try:
             matched = bool(target.test_match(img))
-            similarity = 1.0 if matched else 0.0
+            # 优先取匹配过程记录的真实分数; SIFT 等未记录分数的方法退回 0/1
+            similarity = float(getattr(target, "last_score", -1.0))
+            if similarity < 0:
+                similarity = 1.0 if matched else 0.0
             message = "match" if matched else "not_match"
+            # 多尺度命中时带回最高分档的缩放倍数
+            scale = getattr(target, "last_scale", None)
+            if matched and scale is not None:
+                message += f" scale={float(scale):.2f}"
         except Exception as e:
-            message = f"sift_error:{e}"
+            message = f"match_error:{e}"
 
     return {
         "matched": matched,
