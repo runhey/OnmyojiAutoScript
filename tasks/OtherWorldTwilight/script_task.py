@@ -54,9 +54,13 @@ class ScriptTask(GeneralBattle, GeneralInvite, GeneralRoom, GameUi, SwitchSoul, 
         logger.info('Create team')
         self.ui_click(self.I_OWT_TEAM, self.I_CHECK_TEAM, interval=1)
         # 创建房间
-        self.create_room()
+        if not self.create_room():
+            logger.warning('Create room failed')
+            return False
         self.ensure_private()
-        self.create_ensure()
+        if not self.create_ensure():
+            logger.warning('Create ensure failed')
+            return False
         # 邀请队友
         success = True
         is_first = True

@@ -30,6 +30,9 @@ class OtherWorldTwilightConfig(ConfigBase):
 class OWTBattleConfig(GeneralBattleConfig):
     hide_fields = dynamic_hide('preset_enable', 'preset_group', 'preset_team', 'green_mark', 'green_mark_type')
 
+    # pydantic v2 默认不校验默认值, validator 拦不到 CHOOSE, 必须直接给 NAME
+    green_mark_type: GreenMarkEnum = Field(default=GreenMarkEnum.NAME, description='green_mark_type_help')
+
     @field_validator('green_mark_type')
     @classmethod
     def green_mark_type_validator(cls, v):

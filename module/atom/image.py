@@ -172,8 +172,8 @@ class RuleImage(RuleImageMallResourceMixin):
         """
         判断模板在参与匹配的区域内是否逐通道恒为常量。
 
-        CCOEFF_NORMED 归一化时分母来自各通道的方差，参与区域内只要有通道完全没有起伏，
-        分母就是 0，OpenCV 会走特判：无掩码时整张结果矩阵被填成 1.0（恒假阳性，且落点固定
+        CCOEFF_NORMED 归一化时分母来自各通道的方差，参与区域内所有通道都完全没有起伏时，
+        分母才是 0，OpenCV 会走特判：无掩码时整张结果矩阵被填成 1.0（恒假阳性，且落点固定
         在 roi_back 左上角），带掩码时整张变成 0/0 的 nan。两种都让这条规则失去意义，
         这里提前拦掉，而不是把异常数值当成命中。
         """
@@ -322,6 +322,7 @@ class RuleImage(RuleImageMallResourceMixin):
             try:
                 scaled_mat = cv2.resize(mat, (scaled_w, scaled_h))
                 res = cv2.matchTemplate(source, scaled_mat, cv2.TM_CCOEFF_NORMED)
+                res = self._sanitize_match_result(res)
                 _, max_val, _, max_loc = cv2.minMaxLoc(res)
 
                 if max_val > best_score:
