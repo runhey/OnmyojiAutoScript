@@ -267,9 +267,15 @@ while 1:
   重新进才会更新。`not_open_count` 计数，每轮回 `_exit_demon_retreat()`（依次尝试
   `I_DEMON_BACK_CHECK` → `I_UI_BACK_RED/YELLOW/BLUE` 通用返回链，60s 上限，识别到
   page_main/page_guild/page_town 任一已知页即设 `ui_current` 返回）→ `goto_main()`
-  → 停 30s → 重进；连续 `NOT_OPEN_REENTER_COUNT`(5) 次仍未开启先退出再 `return False`，
-  交给 `run()` 既有失败路径 `set_next_run(success=False)` 推到第二天
+  → 停 30s → 重进；第 2 次仍未开启（`NOT_OPEN_REENTER_COUNT`=2，用户指定）先退出再
+  `return False`，交给 `run()` 既有失败路径 `set_next_run(success=False)` 推到第二天
   （failure_interval 配置 1 天），寮活动监控后续检测到开启通知仍可随时插队拉起。
+- **等待界面截图（用户提供）离线验证**：`I_RANK_LSIT` 0.998 命中（就是它判定"未开启"
+  等待态）；该界面左上是标准黄箭头，`I_UI_BACK_YELLOW` 0.985 命中 @(38,24)，通用返回链
+  可退出。注意开启窗口为周六 10:00~23:00、由会长/副会长**手动开启**，定时 10:00 拉起时
+  没开大概率是寮还没开，不是客户端状态过期——所以重进一次确认即放弃，别恋战。
+  离线验证模板对截图时：RuleImage 按 RGB 加载，cv2 读图须先 BGR2RGB，命中判定要拿
+  匹配坐标 (x+loc) 与 roi_front 求交，别只看分数。
 - **通用教训**：任何"等某个状态出现"的 while 循环，计数器必须放在**循环内实际观察到的
   状态分支**里递增，不能只依赖某个点击动作；界面专属返回模板点不到时要有通用返回链
   （I_UI_BACK_RED/YELLOW/BLUE）兜底，超时宁可抛错走重启也不要无限空转。

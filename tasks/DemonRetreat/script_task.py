@@ -21,8 +21,10 @@ from tasks.DemonRetreat.config import DemonRetreat
 
 # 退治未开启时退避重进的次数与每次间隔。现场（09-26/10-03）：拉起时退治未开启，
 # 客户端停在等待界面且不会自动刷新，原实现在该分支无计数无出口、等待界面的返回箭头
-# 又点不到 I_DEMON_BACK_CHECK，导致每 23s 一轮无限空转，把整个调度器堵死 7 小时以上
-NOT_OPEN_REENTER_COUNT = 5
+# 又点不到 I_DEMON_BACK_CHECK，导致每 23s 一轮无限空转，把整个调度器堵死 7 小时以上。
+# 开启窗口为周六 10:00~23:00、由会长/副会长手动开启，拉起时没开大概率是寮还没开，
+# 重进一次确认后即放弃当天（用户指定），之后由寮活动监控检测到开启通知再拉起
+NOT_OPEN_REENTER_COUNT = 2
 NOT_OPEN_REENTER_WAIT = 30
 
 class ScriptTask(GameUi, GeneralBattle, SwitchSoul, DemonRetreatAssets, AbyssShadowsAssets):
@@ -153,9 +155,9 @@ class ScriptTask(GameUi, GeneralBattle, SwitchSoul, DemonRetreatAssets, AbyssSha
                 # 等待界面还没开启：客户端不会自动刷新开启状态，必须退回庭院重新进。
                 # 连续重进仍未开启则返回 False，交给 run() 的失败路径把 next_run 推到第二天
                 not_open_count += 1
-                if not_open_count > NOT_OPEN_REENTER_COUNT:
+                if not_open_count >= NOT_OPEN_REENTER_COUNT:
                     logger.warning(
-                        f"Demon retreat not open after {NOT_OPEN_REENTER_COUNT} re-entries, give up today")
+                        f"Demon retreat not open after {not_open_count} attempts, give up today")
                     self._exit_demon_retreat()
                     self.goto_main()
                     return False
