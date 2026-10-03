@@ -260,7 +260,7 @@ class HyaSlave(HyaDevice, HyaColor, HyakkiyakouAssets):
             # 面板可能已关闭，重新进入
             self.screenshot()
             if not self.appear(self.I_CHECK_INVITATION):
-                self.ui_click(self.I_HINVITE, self.I_CHECK_INVITATION, interval=4)
+                self.ui_click(self.I_HINVITE, self.I_CHECK_INVITATION, interval=4, timeout=10)
 
         # 依次邀请,
         self.friend_state = 0  # 不需要每一次都从0开始，可以固定一下
@@ -278,13 +278,17 @@ class HyaSlave(HyaDevice, HyaColor, HyakkiyakouAssets):
                         return True
                 case 1:
                     logger.info('Invite guild friend')
-                    if not self._invite_friend(button1=friend_buttons1[1], button2=friend_buttons2[1], hya_recall_activity=hya_recall_activity):
+                    if not self._invite_friend(button1=friend_buttons1[1], button2=friend_buttons2[1],
+                                               hya_recall_activity=hya_recall_activity,
+                                               scroll_to_top=bool(friend_name), scroll_x=scroll_x):
                         self.friend_state += 1
                     else:
                         return True
                 case 2:
                     logger.info('Invite remote friend')
-                    if not self._invite_friend(button1=friend_buttons1[2], button2=friend_buttons2[2], hya_recall_activity=hya_recall_activity):
+                    if not self._invite_friend(button1=friend_buttons1[2], button2=friend_buttons2[2],
+                                               hya_recall_activity=hya_recall_activity,
+                                               scroll_to_top=bool(friend_name), scroll_x=scroll_x):
                         self.friend_state += 1
                     else:
                         return True
@@ -304,7 +308,7 @@ class HyaSlave(HyaDevice, HyaColor, HyakkiyakouAssets):
     def _invite_friend(self, button1: RuleImage, button2: RuleImage, hya_recall_activity: bool = False,
                        scroll_to_top: bool = False, scroll_x: int = 620) -> bool:
         logger.info('Start clicking')
-        self.ui_click(button1, button2)
+        self.ui_click(button1, button2, timeout=10)
         logger.info('End clicking')
         # 列表可能停在底部(全是最近受邀的灰名)，先划回顶部再点左上第一个好友
         if scroll_to_top:
@@ -440,7 +444,8 @@ class HyaSlave(HyaDevice, HyaColor, HyakkiyakouAssets):
                     (self.I_FRIEND_REMOTE_1, self.I_FRIEND_REMOTE_2)]
             scroll_x = 620
         for tab_off, tab_on in tabs:
-            self.ui_click(tab_off, tab_on, interval=1)
+            # 超时兜底：页签模板失配时跳过该页签而不是无限等待触发卡死重启
+            self.ui_click(tab_off, tab_on, interval=1, timeout=10)
             time.sleep(1.5)  # 等待好友列表加载完成
             for _ in range(8):  # 每个页签最多向下滑动8次(滑动被吞掉的不计入翻页)
                 self.screenshot()
