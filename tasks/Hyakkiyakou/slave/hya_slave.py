@@ -264,15 +264,14 @@ class HyaSlave(HyaDevice, HyaColor, HyakkiyakouAssets):
 
         # 依次邀请,
         self.friend_state = 0  # 不需要每一次都从0开始，可以固定一下
-        scroll_x = 470 if hya_recall_activity else 620
         while self.friend_state < 3:
             match self.friend_state:
                 case 0:
                     logger.info('Invite same server friend')
-                    # 指定好友查找失败后列表可能停在底部(全是灰名)，第一个页签先划回顶部点第一个
+                    # 指定好友查找失败后列表可能停在底部(全是灰名)，先重开面板回顶部再点第一个
                     if not self._invite_friend(button1=friend_buttons1[0], button2=friend_buttons2[0],
                                                hya_recall_activity=hya_recall_activity,
-                                               scroll_to_top=bool(friend_name), scroll_x=scroll_x):
+                                               reopen_panel=bool(friend_name)):
                         self.friend_state += 1
                     else:
                         return True
@@ -280,7 +279,7 @@ class HyaSlave(HyaDevice, HyaColor, HyakkiyakouAssets):
                     logger.info('Invite guild friend')
                     if not self._invite_friend(button1=friend_buttons1[1], button2=friend_buttons2[1],
                                                hya_recall_activity=hya_recall_activity,
-                                               scroll_to_top=bool(friend_name), scroll_x=scroll_x):
+                                               reopen_panel=bool(friend_name)):
                         self.friend_state += 1
                     else:
                         return True
@@ -288,34 +287,30 @@ class HyaSlave(HyaDevice, HyaColor, HyakkiyakouAssets):
                     logger.info('Invite remote friend')
                     if not self._invite_friend(button1=friend_buttons1[2], button2=friend_buttons2[2],
                                                hya_recall_activity=hya_recall_activity,
-                                               scroll_to_top=bool(friend_name), scroll_x=scroll_x):
+                                               reopen_panel=bool(friend_name)):
                         self.friend_state += 1
                     else:
                         return True
                 case _:
                     raise RequestHumanTakeover('Invite friend failed')
 
-    def _scroll_friend_list_to_top(self, rules: list[RuleOcr], scroll_x: int):
+    def _reopen_invite_panel(self):
         """
-        把好友列表划回最顶部。指定好友查找会把列表翻到中部甚至底部，
-        底部一页往往全是"最近受邀"的灰名无法再邀请，回退随机邀请前必须先回到顶部
+        粉叉关闭邀请面板再重新打开，让列表回到顶部。
+        不用向上滑动：划到顶部会触发好友搜索框挡住列表，且滑动可能被游戏吞掉
         """
-        for _ in range(8):
-            if not self._scroll_friend_list(rules, scroll_x, direction=-1):
-                break
-        logger.info('Friend list scrolled back to top')
+        logger.info('Reopen invite panel to reset friend list to top')
+        self.ui_click(self.I_HCLOSE_RED, self.I_HINVITE, interval=1, timeout=10)
+        self.ui_click(self.I_HINVITE, self.I_CHECK_INVITATION, interval=2, timeout=10)
 
     def _invite_friend(self, button1: RuleImage, button2: RuleImage, hya_recall_activity: bool = False,
-                       scroll_to_top: bool = False, scroll_x: int = 620) -> bool:
+                       reopen_panel: bool = False) -> bool:
         logger.info('Start clicking')
         self.ui_click(button1, button2, timeout=10)
         logger.info('End clicking')
-        # 列表可能停在底部(全是最近受邀的灰名)，先划回顶部再点左上第一个好友
-        if scroll_to_top:
-            rules = ([self.O_HYA_FRIEND_NAME_L_RECALL, self.O_HYA_FRIEND_NAME_R_RECALL]
-                     if hya_recall_activity else
-                     [self.O_HYA_FRIEND_NAME_L, self.O_HYA_FRIEND_NAME_R])
-            self._scroll_friend_list_to_top(rules, scroll_x)
+        # 列表可能停在底部(全是最近受邀的灰名)，重开面板让列表回到顶部再点左上第一个好友
+        if reopen_panel:
+            self._reopen_invite_panel()
         invite_timer = Timer(8)
         invite_timer.start()
         while 1:

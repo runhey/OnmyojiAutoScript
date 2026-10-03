@@ -59,7 +59,7 @@ class HyakkiyakouAssets:
 	# description 
 	I_HTITLE = RuleImage(roi_front=(578,21,134,48), roi_back=(578,21,134,48), threshold=0.8, method="Template matching", file="./tasks/Hyakkiyakou/hya/hya_htitle.png")
 	# description 
-	I_HCLOSE_RED = RuleImage(roi_front=(1056,177,54,54), roi_back=(1056,177,54,54), threshold=0.8, method="Template matching", file="./tasks/Hyakkiyakou/hya/hya_hclose_red.png")
+	I_HCLOSE_RED = RuleImage(roi_front=(1053,177,54,54), roi_back=(1044,168,74,72), threshold=0.8, method="Template matching", file="./tasks/Hyakkiyakou/hya/hya_hclose_red.png")
 	# 回归任务 
 	I_ENSURE_RECALL = RuleImage(roi_front=(1060,145,66,62), roi_back=(877,72,307,211), threshold=0.8, method="Template matching", file="./tasks/Hyakkiyakou/hya/hya_ensure_recall.png")
 
