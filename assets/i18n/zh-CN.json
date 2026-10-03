@@ -60,6 +60,8 @@
   "enable_switch_cultivation_drills": "修行合训开启切换御魂",
   "demon_battle_config": "逢魔战斗内切换阵容",
   "best_demon_battle_config": "极逢魔战斗内切换阵容",
+  "OtherWorldTwilight": "彼世逢魔",
+  "other_world_twilight_config": "彼世逢魔配置",
   "anti_ban": "防风控作息",
   "antiban_enable_help": "开启后启用作息约束（睡眠时间窗、累计活跃上限、强制休息），用于避免24小时不间断/深夜连续运行这类服务端可见的异常行为特征。\n注意：点击/滑动的拟人化（真实按压时长、坐标高斯化、微动、压力抖动）始终生效，不受此开关控制。",
   "sleep_start": "睡眠开始时间",
