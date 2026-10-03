@@ -13,6 +13,12 @@ class GreenMarkType(str, Enum):
     GREEN_LEFT5 = 'green_left5'
     GREEN_MAIN = 'green_main'
 
+class GreenMarkEnum(str, Enum):
+    # 按 green_mark 指定的坐标点击
+    CHOOSE = 'choose'
+    # 按式神名OCR 匹配后点击
+    NAME = 'name'
+
 class GeneralBattleConfig(BaseModel):
 
     # 是否锁定阵容, 有些的战斗是外边的锁定阵容甚至有些的战斗没有锁定阵容的
@@ -43,6 +49,10 @@ class GeneralBattleConfig(BaseModel):
     green_enable: bool = Field(default=False, description='green_enable_help')
     # 选哪一个绿标
     green_mark: GreenMarkType = Field(default=GreenMarkType.GREEN_LEFT1, description='green_mark_help')
+    # 绿标按坐标还是按式神名点击
+    green_mark_type: GreenMarkEnum = Field(default=GreenMarkEnum.CHOOSE, description='green_mark_type_help')
+    # 绿标式神的名称
+    green_mark_name: str = Field(default='', description='green_mark_name_help')
 
     # 是否启动战斗时随机点击或者随机滑动
     random_click_swipt_enable: bool = Field(default=False, description='random_click_swipt_enable_help')
