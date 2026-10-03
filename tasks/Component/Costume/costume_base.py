@@ -5,6 +5,7 @@
 from module.atom.image import RuleImage
 from module.atom.gif import RuleGif
 from module.logger import logger
+from module.server.i18n import I18n
 
 from tasks.Component.Costume.config import (
     MainType, CostumeConfig, RealmType,
@@ -129,7 +130,7 @@ class CostumeBase:
     def check_costume_main(self, main_type: MainType):
         if main_type == MainType.COSTUME_MAIN:
             return
-        logger.info(f'Switch main costume to {main_type}')
+        logger.info(f'Switch main costume to {main_type} ({I18n.trans_zh_cn(main_type)})')
         costume_assets = CostumeAssets()
         for key, value in main_costume_model[main_type].items():
             if isinstance(value, list):
@@ -144,7 +145,7 @@ class CostumeBase:
     def check_costume_carpbanner(self, carpbanner_type: CarpBannerType):
         if carpbanner_type == CarpBannerType.COSTUME_CARPBANNER_DEFAULT:
             return
-        logger.info(f'Switch carp banner theme {carpbanner_type} (override realm assets)')
+        logger.info(f'Switch carp banner theme {carpbanner_type} (override realm assets) ({I18n.trans_zh_cn(carpbanner_type)})')
         carpbanner_assets = CostumeCarpBannerAssets()
         model = carpbanner_costume_model.get(carpbanner_type, {})
         for key, value in model.items():
@@ -158,7 +159,7 @@ class CostumeBase:
     def check_costume_battle(self, battle_type: BattleType):
         if battle_type == BattleType.COSTUME_BATTLE_DEFAULT:
             return
-        logger.info(f'Switch battle theme {battle_type}')
+        logger.info(f'Switch battle theme {battle_type} ({I18n.trans_zh_cn(battle_type)})')
         costume_battle_assets = CostumeBattleAssets()
         for key, value in battle_theme_model[battle_type].items():
             if not hasattr(costume_battle_assets, value):
@@ -174,7 +175,7 @@ class CostumeBase:
     def check_costume_battle_scene(self, scene_type: BattleSceneType):
         if scene_type == BattleSceneType.COSTUME_BATTLE_SCENE_DEFAULT:
             return
-        logger.info(f'Switch battle scene skin {scene_type}')
+        logger.info(f'Switch battle scene skin {scene_type} ({I18n.trans_zh_cn(scene_type)})')
         current_task = self.get_task_name()
         allowed_tasks = {
             'Orochi',
@@ -193,7 +194,7 @@ class CostumeBase:
     def check_costume_shikigami(self, shikigami_type: ShikigamiType):
         if shikigami_type == ShikigamiType.COSTUME_SHIKIGAMI_DEFAULT:
             return
-        logger.info(f'Switch shikigami theme {shikigami_type}')
+        logger.info(f'Switch shikigami theme {shikigami_type} ({I18n.trans_zh_cn(shikigami_type)})')
         shikigami_assets = CostumeShikigamiAssets()
         model = shikigami_costume_model.get(shikigami_type, {})
         for key, value in model.items():
