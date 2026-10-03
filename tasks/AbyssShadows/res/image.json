@@ -198,6 +198,15 @@
     "description": "description"
   },
   {
+    "itemName": "abyss_sealed",
+    "imageName": "res_abyss_sealed.png",
+    "roiFront": "182,238,44,200",
+    "roiBack": "60,120,1160,460",
+    "method": "Template matching",
+    "threshold": 0.75,
+    "description": "已封印"
+  },
+  {
     "itemName": "equipping",
     "imageName": "res_equipping.png",
     "roiFront": "1126,545,100,83",
