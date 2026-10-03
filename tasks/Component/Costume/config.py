@@ -79,6 +79,11 @@ class BattleType(str, Enum):
     COSTUME_BATTLE_14 = 'costume_battle_14'  # 茸茨跃动
     COSTUME_BATTLE_15 = 'costume_battle_15'  # 灵狐寄愿
 
+# 战斗场景
+class BattleSceneType(str, Enum):
+    COSTUME_BATTLE_SCENE_DEFAULT = 'costume_battle_scene_default'  # 默认
+    COSTUME_BATTLE_SCENE_1 = 'costume_battle_scene_1'  # 鎏金圣域
+
 
 class CostumeConfig(BaseModel):
     # 皮肤配置
@@ -89,6 +94,7 @@ class CostumeConfig(BaseModel):
     costume_shikigami_type: ShikigamiType = Field(default=ShikigamiType.COSTUME_SHIKIGAMI_DEFAULT, description='costume_shikigami_type_help')
     costume_sign_type: SignType = Field(default=SignType.COSTUME_SIGN_DEFAULT, description='costume_sign_type_help')
     costume_battle_type: BattleType = Field(default=BattleType.COSTUME_BATTLE_DEFAULT, description='costume_battle_type_help')
+    costume_battle_scene_type: BattleSceneType = Field(default=BattleSceneType.COSTUME_BATTLE_SCENE_DEFAULT, description='costume_battle_scene_type_help')
 
     @field_validator('costume_realm_type', mode='before')
     @classmethod
@@ -96,7 +102,6 @@ class CostumeConfig(BaseModel):
         if v and v not in RealmType._value2member_map_:
             return RealmType.COSTUME_REALM_DEFAULT
         return v
-
 
 
 

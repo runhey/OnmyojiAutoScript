@@ -74,7 +74,8 @@
       "costume_theme_type": "costume_theme_default",
       "costume_shikigami_type": "costume_shikigami_default",
       "costume_sign_type": "costume_sign_default",
-      "costume_battle_type": "costume_battle_default"
+      "costume_battle_type": "costume_battle_default",
+      "costume_battle_scene_type": "costume_battle_scene_default"
     },
     "team_flow": {
       "enable": false,

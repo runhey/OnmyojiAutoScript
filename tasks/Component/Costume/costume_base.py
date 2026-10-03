@@ -5,13 +5,18 @@
 from module.atom.image import RuleImage
 from module.atom.gif import RuleGif
 from module.logger import logger
+from module.server.i18n import I18n
 
-from tasks.Component.Costume.config import (MainType, CostumeConfig, RealmType,
-                                            ThemeType, ShikigamiType, SignType, BattleType, CarpBannerType)
+from tasks.Component.Costume.config import (
+    MainType, CostumeConfig, RealmType,
+    ThemeType, ShikigamiType, SignType,
+    BattleType, BattleSceneType, CarpBannerType
+)
 from tasks.Component.Costume.assets import CostumeAssets
 from tasks.Component.CostumeBattle.assets import CostumeBattleAssets
 from tasks.Component.CostumeShikigami.assets import CostumeShikigamiAssets
 from tasks.Component.CostumeCarpBanner.assets import CostumeCarpBannerAssets
+from tasks.Component.CostumeBattleScene.assets import CostumeBattleSceneAssets
 
 # 庭院皮肤
 # 主界面皮肤（使用字典推导式动态生成）
@@ -66,6 +71,13 @@ battle_theme_model = {
     } for i in range(1, 16)
 }
 
+# 战斗场景皮肤。图片资源待补充，先保留空映射。
+battle_scene_model = {
+    BattleSceneType.COSTUME_BATTLE_SCENE_1: {
+        'I_REWARD': 'I_REWARD_1',
+    },
+}
+
 # 幕间主题
 shikigami_costume_model = {
     getattr(ShikigamiType, f"COSTUME_SHIKIGAMI_{i}"): {
@@ -93,9 +105,12 @@ class CostumeBase:
     def check_costume(self, config: CostumeConfig=None):
         if config is None:
             config: CostumeConfig = self.config.model.global_game.costume_config
+        current_task = self.get_task_name()
+        logger.info(f'Current task: {current_task}')
         self.check_costume_main(config.costume_main_type)
         self.check_costume_carpbanner(config.costume_carpbanner_type)
         self.check_costume_battle(config.costume_battle_type)
+        self.check_costume_battle_scene(config.costume_battle_scene_type)
         self.check_costume_shikigami(config.costume_shikigami_type)
 
     def replace_img(self,
@@ -115,7 +130,7 @@ class CostumeBase:
     def check_costume_main(self, main_type: MainType):
         if main_type == MainType.COSTUME_MAIN:
             return
-        logger.info(f'Switch main costume to {main_type}')
+        logger.info(f'Switch main costume to {main_type} ({I18n.trans_zh_cn(main_type)})')
         costume_assets = CostumeAssets()
         for key, value in main_costume_model[main_type].items():
             if isinstance(value, list):
@@ -130,7 +145,7 @@ class CostumeBase:
     def check_costume_carpbanner(self, carpbanner_type: CarpBannerType):
         if carpbanner_type == CarpBannerType.COSTUME_CARPBANNER_DEFAULT:
             return
-        logger.info(f'Switch carp banner theme {carpbanner_type} (override realm assets)')
+        logger.info(f'Switch carp banner theme {carpbanner_type} (override realm assets) ({I18n.trans_zh_cn(carpbanner_type)})')
         carpbanner_assets = CostumeCarpBannerAssets()
         model = carpbanner_costume_model.get(carpbanner_type, {})
         for key, value in model.items():
@@ -144,7 +159,7 @@ class CostumeBase:
     def check_costume_battle(self, battle_type: BattleType):
         if battle_type == BattleType.COSTUME_BATTLE_DEFAULT:
             return
-        logger.info(f'Switch battle theme {battle_type}')
+        logger.info(f'Switch battle theme {battle_type} ({I18n.trans_zh_cn(battle_type)})')
         costume_battle_assets = CostumeBattleAssets()
         for key, value in battle_theme_model[battle_type].items():
             if not hasattr(costume_battle_assets, value):
@@ -157,10 +172,29 @@ class CostumeBase:
             else:
                 self.replace_img(key, assert_value)
 
+    def check_costume_battle_scene(self, scene_type: BattleSceneType):
+        if scene_type == BattleSceneType.COSTUME_BATTLE_SCENE_DEFAULT:
+            return
+        logger.info(f'Switch battle scene skin {scene_type} ({I18n.trans_zh_cn(scene_type)})')
+        current_task = self.get_task_name()
+        allowed_tasks = {
+            'Orochi',
+        }
+        if current_task not in allowed_tasks:
+            return
+
+        costume_assets = CostumeBattleSceneAssets()
+        for key, value in battle_scene_model.get(scene_type, {}).items():
+            if not hasattr(costume_assets, value):
+                # 尚未采集完成的资产，跳过
+                continue
+            assert_value: RuleImage = getattr(costume_assets, value)
+            self.replace_img(key, assert_value)
+
     def check_costume_shikigami(self, shikigami_type: ShikigamiType):
         if shikigami_type == ShikigamiType.COSTUME_SHIKIGAMI_DEFAULT:
             return
-        logger.info(f'Switch shikigami theme {shikigami_type}')
+        logger.info(f'Switch shikigami theme {shikigami_type} ({I18n.trans_zh_cn(shikigami_type)})')
         shikigami_assets = CostumeShikigamiAssets()
         model = shikigami_costume_model.get(shikigami_type, {})
         for key, value in model.items():
