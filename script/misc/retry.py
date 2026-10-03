@@ -1,9 +1,10 @@
+
 import functools
 import random
 import time
 from functools import partial
 
-from module.logger import logger as logging_logger
+from oas.logger import logger as logging_logger
 
 """
 Copied from Alas

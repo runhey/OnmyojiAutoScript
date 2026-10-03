@@ -1,7 +1,8 @@
+
 import random
 from time import sleep
 
-from module.logger import logger
+from oas.logger import logger
 
 
 def random_delay(min_value: float = 2.0, max_value: float = 6.0, decimal: int = 1):

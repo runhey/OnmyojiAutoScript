@@ -50,12 +50,21 @@ AST 级别扫描 297 个符号，33 个同名命中（31 个签名一致）。
 11 个方法里只有 `reached_and_reset` 和 `__str__` body 一致。
 **Alasio 用 `monotonic()` 更对** —— 计时器不受 NTP 校正/系统时间跳变影响。
 
-## 顺带：6 处迁移遗留
+## oas/base 老拷贝的最终处置
 
-`oas/base/` 里 6 处 `from module.logger import logger` 没跟着改（`module/` 完整存在所以能跑，
-但 `oas/logger` 已迁好）：
+`oas/base` 是 `02c3651f` 从 `module/base` 字节拷贝的产物（pending import rewrite）。
+Alasio 迁入物落在 `script/misc`；OAS 原生老文件按下表处理，现在 `oas/base` 只剩 `pretty.py`：
 
-```
-oas/base/decorator.py:44,148    oas/base/filter.py:4
-oas/base/protect.py:4           oas/base/retry.py:6     oas/base/timer.py:157
-```
+| oas/base 老文件 | 处置 | 去向 / 理由 |
+|---|---|---|
+| `cBezier.py` | 搬 | `script/misc/cBezier.py` |
+| `protect.py` | 搬 | `script/misc/protect.py`（`module.logger`→`oas.logger`） |
+| `retry.py` | 搬 | `script/misc/retry.py`（同上） |
+| `decorator.py` | 删 | 均有替代：`cached_property`→`oas/ext/cache`；`del/has_cached_property`→`InstanceCacheOperation.pop/has`；`function_drop`→`oas/testing/drop.py`；`run_once`→`oas/backport/once.py`；`Config`→`script/misc/state.py` |
+| `filter.py` | 删 | `script/misc/filter.py`（Alasio `parse_filter`）已有 |
+| `timer.py` | 删 | 已被 `script/misc/timer.py` 合并版覆盖 |
+| `log_highlighter.py` | 删 | 只被旧 `module/gui` 用；旧树 `module/base` 副本仍在 |
+| `utils/{grids,points,utils}.py` | 删 | 对应 `script/misc/op`+`image`（Alasio 为改名/不同实现） |
+| `pretty.py` | 留 | Alasio 迁入物；`oas/ext/perf.py` 消费，底层不能依赖 `script` |
+
+验证：`tests/script/misc` + `tests/oas/base` 735 passed, 1 skipped。
