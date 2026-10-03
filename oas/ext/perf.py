@@ -1,22 +1,6 @@
 import time
 
-
-def pretty_time(second):
-    """Format time with adaptive units (s or ms or us)
-
-    Inlined from alasio.base.pretty (OAS has no oas.base.pretty yet).
-
-    Args:
-        second (float): Time in seconds
-
-    Returns:
-        str: Formatted time string
-    """
-    if second >= 1:
-        return f'{second:.3f}s'
-    if second >= 0.001:
-        return f"{second * 1000:.3f}ms"
-    return f"{second * 1000000:.3f}us"
+from oas.base.pretty import pretty_time
 
 
 class PerformanceTest:
