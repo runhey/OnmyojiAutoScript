@@ -294,23 +294,39 @@ class HyaSlave(HyaDevice, HyaColor, HyakkiyakouAssets):
                 case _:
                     raise RequestHumanTakeover('Invite friend failed')
 
-    def _reopen_invite_panel(self):
+    def _reopen_invite_panel(self) -> bool:
         """
         粉叉关闭邀请面板再重新打开，让列表回到顶部。
-        不用向上滑动：划到顶部会触发好友搜索框挡住列表，且滑动可能被游戏吞掉
+        不用向上滑动：划到顶部会触发好友搜索框挡住列表，且滑动可能被游戏吞掉。
+        注意不能用 I_HINVITE 判断面板已关闭——它在面板打开时也一直可见
+        :return: 面板是否成功重新打开
         """
         logger.info('Reopen invite panel to reset friend list to top')
-        self.ui_click(self.I_HCLOSE_RED, self.I_HINVITE, interval=1, timeout=10)
+        timer = Timer(10).start()
+        while 1:
+            self.screenshot()
+            # 面板是否打开以 I_CHECK_INVITATION 为准，它只在面板存在时出现
+            if not self.appear(self.I_CHECK_INVITATION) or timer.reached():
+                break
+            self.appear_then_click(self.I_HCLOSE_RED, interval=2)
+        # 重新打开面板
         self.ui_click(self.I_HINVITE, self.I_CHECK_INVITATION, interval=2, timeout=10)
+        self.screenshot()
+        if not self.appear(self.I_CHECK_INVITATION):
+            logger.warning('Reopen invite panel failed')
+            return False
+        return True
 
     def _invite_friend(self, button1: RuleImage, button2: RuleImage, hya_recall_activity: bool = False,
                        reopen_panel: bool = False) -> bool:
         logger.info('Start clicking')
+        # 清空点击记录，防止三个页签连续对灰名交替点击累计触发 GameTooManyClickError
+        self.device.click_record_clear()
         self.ui_click(button1, button2, timeout=10)
         logger.info('End clicking')
         # 列表可能停在底部(全是最近受邀的灰名)，重开面板让列表回到顶部再点左上第一个好友
-        if reopen_panel:
-            self._reopen_invite_panel()
+        if reopen_panel and not self._reopen_invite_panel():
+            return False
         invite_timer = Timer(8)
         invite_timer.start()
         while 1:
