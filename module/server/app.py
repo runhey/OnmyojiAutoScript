@@ -46,8 +46,24 @@ app.include_router(script_app)
 app.include_router(tool_app)
 
 annotator_static_dir = Path(__file__).resolve().parent / "web" / "annotator" / "static"
+
+
+class NoCacheStaticFiles(StaticFiles):
+    """
+    静态资源响应加 Cache-Control: no-cache：
+    浏览器仍可缓存，但每次都携带 ETag 回源校验，未变更返回 304。
+    StaticFiles 默认不下发 Cache-Control，Edge 等按启发式缓存旧 JS，
+    前端更新后页面会继续执行旧脚本（表现为控件读不到数据/点了没反应）。
+    """
+
+    def file_response(self, *args, **kwargs):
+        response = super().file_response(*args, **kwargs)
+        response.headers["Cache-Control"] = "no-cache"
+        return response
+
+
 if annotator_static_dir.exists():
-    app.mount("/tool/annotator/static", StaticFiles(directory=str(annotator_static_dir)), name="annotator_static")
+    app.mount("/tool/annotator/static", NoCacheStaticFiles(directory=str(annotator_static_dir)), name="annotator_static")
 
 
 async def on_startup():

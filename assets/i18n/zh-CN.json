@@ -60,6 +60,8 @@
   "enable_switch_cultivation_drills": "修行合训开启切换御魂",
   "demon_battle_config": "逢魔战斗内切换阵容",
   "best_demon_battle_config": "极逢魔战斗内切换阵容",
+  "OtherWorldTwilight": "彼世逢魔",
+  "other_world_twilight_config": "彼世逢魔配置",
   "anti_ban": "防风控作息",
   "antiban_enable_help": "开启后启用作息约束（睡眠时间窗、累计活跃上限、强制休息），用于避免24小时不间断/深夜连续运行这类服务端可见的异常行为特征。\n注意：点击/滑动的拟人化（真实按压时长、坐标高斯化、微动、压力抖动）始终生效，不受此开关控制。",
   "sleep_start": "睡眠开始时间",
@@ -144,5 +146,9 @@
   "costume_battle_scene_type_help": "",
   "costume_shikigami_12": "拾光之窗",
   "save_touch_fish": "惠比寿的摸鱼行动",
-  "save_touch_fish_help": "默认使用全部存储按钮，主要目的是为了配合真蛇每周打一次即可获得俩次奖励(并不会节省体力)"
+  "save_touch_fish_help": "默认使用全部存储按钮，主要目的是为了配合真蛇每周打一次即可获得俩次奖励(并不会节省体力)",
+  "green_mark_type": "绿标匹配方式",
+  "green_mark_type_help": "按坐标点击指定绿标，或按式神名OCR 匹配后点击",
+  "green_mark_name": "绿标式神名称",
+  "green_mark_name_help": "仅当绿标按式神名匹配时生效，填写目标式神名"
 }
