@@ -77,6 +77,7 @@ import random
 import time
 import copy
 import math
+import difflib
 from copy import deepcopy
 
 
@@ -94,7 +95,7 @@ from module.base.utils import get_color, color_similar
 
 from tasks.base_task import BaseTask
 from tasks.Component.GeneralBattle.assets import GeneralBattleAssets
-from tasks.Component.GeneralBattle.config_general_battle import GreenMarkType
+from tasks.Component.GeneralBattle.config_general_battle import GreenMarkType, GreenMarkEnum
 
 
 P = ParamSpec('P')
@@ -195,6 +196,8 @@ class OptionPresetDefault:
 class OptionGreenDefault:
     green_enable: bool = False
     green_mark: GreenMarkType = GreenMarkType.GREEN_LEFT1
+    green_mark_type: GreenMarkEnum = GreenMarkEnum.CHOOSE
+    green_mark_name: str = ''
 
 
 @dataclass
@@ -1372,39 +1375,85 @@ class BattleWait(BaseTask, GeneralBattleAssets):
                 disable=('green',),
             )
 
-        logger.info("Green is enable")
-        x, y = None, None
-        match pri_options.green_mark:
-            case GreenMarkType.GREEN_LEFT1:
-                x, y = self.C_GREEN_LEFT_1.coord()
-                logger.info("Green left 1")
-            case GreenMarkType.GREEN_LEFT2:
-                x, y = self.C_GREEN_LEFT_2.coord()
-                logger.info("Green left 2")
-            case GreenMarkType.GREEN_LEFT3:
-                x, y = self.C_GREEN_LEFT_3.coord()
-                logger.info("Green left 3")
-            case GreenMarkType.GREEN_LEFT4:
-                x, y = self.C_GREEN_LEFT_4.coord()
-                logger.info("Green left 4")
-            case GreenMarkType.GREEN_LEFT5:
-                x, y = self.C_GREEN_LEFT_5.coord()
-                logger.info("Green left 5")
-            case GreenMarkType.GREEN_MAIN:
-                x, y = self.C_GREEN_MAIN.coord()
-                logger.info("Green main")
-
         # 等待那个准备的消失
         while 1:
             self.screenshot()
             if not self.appear(self.I_PREPARE_HIGHLIGHT):
                 break
 
-        # 判断有无坐标的偏移
-        self.appear_then_click(self.I_LOCAL)
-        time.sleep(0.3)
-        # 点击绿标
-        self.device.click(x, y)
+        if pri_options.green_mark_type == GreenMarkEnum.NAME:
+            name = pri_options.green_mark_name
+            if not name:
+                logger.warning("Green mark name is empty")
+            else:
+                timeout_timer = Timer(6).start()
+                best = {
+                    'name': '',
+                    'x': -1,
+                    'y': -1,
+                    'similarity': 0.0,
+                }
+                while not timeout_timer.reached():
+                    self.screenshot()
+                    results = self.O_GREEN_MARK_AREA.detect_and_ocr(self.device.image)
+                    for ret in results:
+                        similarity = difflib.SequenceMatcher(
+                            None,
+                            ret.ocr_text,
+                            name,
+                        ).ratio()
+                        if similarity > best['similarity']:
+                            x = self.O_GREEN_MARK_AREA.roi[0] + ret.box[0, 0] + 5
+                            y = self.O_GREEN_MARK_AREA.roi[1] + ret.box[0, 1] + 30
+                            best = {
+                                'name': ret.ocr_text,
+                                'x': min(1279, x),
+                                'y': min(719, y),
+                                'similarity': similarity,
+                            }
+                    if best['similarity'] > 0.5:
+                        logger.info(
+                            f'Green name success, text: {best["name"]}'
+                            f'[{best["similarity"]:.2f}]'
+                        )
+                        self.device.click(
+                            best['x'],
+                            best['y'],
+                            control_name=best['name'],
+                        )
+                        break
+                else:
+                    logger.warning(
+                        f'Green name failed, best text: {best["name"]}'
+                        f'[{best["similarity"]:.2f}]'
+                    )
+        else:
+            x, y = None, None
+            match pri_options.green_mark:
+                case GreenMarkType.GREEN_LEFT1:
+                    x, y = self.C_GREEN_LEFT_1.coord()
+                    logger.info("Green left 1")
+                case GreenMarkType.GREEN_LEFT2:
+                    x, y = self.C_GREEN_LEFT_2.coord()
+                    logger.info("Green left 2")
+                case GreenMarkType.GREEN_LEFT3:
+                    x, y = self.C_GREEN_LEFT_3.coord()
+                    logger.info("Green left 3")
+                case GreenMarkType.GREEN_LEFT4:
+                    x, y = self.C_GREEN_LEFT_4.coord()
+                    logger.info("Green left 4")
+                case GreenMarkType.GREEN_LEFT5:
+                    x, y = self.C_GREEN_LEFT_5.coord()
+                    logger.info("Green left 5")
+                case GreenMarkType.GREEN_MAIN:
+                    x, y = self.C_GREEN_MAIN.coord()
+                    logger.info("Green main")
+
+            # 判断有无坐标的偏移
+            self.appear_then_click(self.I_LOCAL)
+            time.sleep(0.3)
+            # 点击绿标
+            self.device.click(x, y)
         state.done = True
         return runtime.hook_enabled_update(
             enable=(),
