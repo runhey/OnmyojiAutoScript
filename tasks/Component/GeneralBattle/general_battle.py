@@ -9,6 +9,7 @@ import cv2
 from module.base.timer import Timer
 
 from module.base.utils import get_color, color_similar
+from module.exception import GameStuckError
 from tasks.base_task import BaseTask
 from tasks.Component.GeneralBattle.config_general_battle import GreenMarkType, GeneralBattleConfig
 from tasks.Component.GeneralBattle.assets import GeneralBattleAssets
@@ -49,25 +50,28 @@ class GeneralBattle(BattleWait, GeneralBuff):
         else:
             return False
 
-    def ensure_auto_battle(self, timeout: float = 5) -> bool:
+    def ensure_auto_battle(self, timeout: float = 10) -> bool:
         """
-        进入战斗后检查左下角是否为"手动"，如果是则点击齿轮切换为"自动"。
+        进入战斗后检查左下角是否为"手动"，如果是则点击切换为"自动"。
         手动模式下脚本不会自动开始战斗，会一直卡住等待。
         :return: True 表示当前为自动（或成功切换为自动）
         """
         timer = Timer(timeout).start()
         while not timer.reached():
-            if self.appear(self.O_BATTLE_HAND, interval=1.5):
+            # NOTE: 此处不能写 appear(O_BATTLE_HAND, interval) + click(O_BATTLE_HAND, interval)：
+            # appear 与 click 共用同名 interval 计时器，appear 命中即 reset，
+            # 紧跟的 click 永远被同一计时器拦下静默不点（2026-10-04 oas3 切自动失效根因）。
+            # appear_then_click 内部直接 device.click，无此问题
+            if self.appear_then_click(self.O_BATTLE_HAND, interval=1.5):
                 logger.info('Battle is in manual mode, click to switch auto')
-                self.click(self.O_BATTLE_HAND, interval=1.5)
                 continue
             if self.appear(self.O_BATTLE_AUTO):
                 return True
             self.screenshot()
         if self.appear(self.O_BATTLE_AUTO):
             return True
-        logger.warning('Failed to switch battle to auto mode')
-        return False
+        logger.error('Failed to switch battle to auto mode')
+        raise GameStuckError('Battle is in manual mode and switch to auto failed')
 
     def battle_before(self, buff: BuffClass | list[BuffClass], config: GeneralBattleConfig, timeout: float = 5) -> bool:
         """战斗前设置

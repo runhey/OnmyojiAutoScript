@@ -147,6 +147,14 @@ while 1:
 - 跳转型点击：`ui_click(click, stop=目标页元素, interval=1.5, timeout=20)` 自带重试；
   返回 False 即失败
 - 状态型点击（点了会消失的按钮）：循环 `appear(按钮)` + `click(interval=2)`，直到消失
+- **坑：`appear(X, interval=…)` 命中后紧跟 `self.click(X, interval=…)` 会静默不点**
+  （2026-10-04 oas3 手动模式切自动失效的根因）：`appear`/`click`/`ocr_appear` 按
+  `target.name` **共用同一个 interval 计时器**，appear 命中就 reset，紧跟着的
+  click 查同一计时器永远"没到时间"，直接 return False——日志特征是打了
+  "click to switch auto" 却没有 `Click (x,y) @ X` 行。要用 `appear_then_click(X, interval=…)`
+  （内部直接 `device.click`，不走 interval 拦截），或让 click 不传 interval。
+  注意"状态型点击"那条的 appear+click 组合里两者间隔了截图/耗时操作，计时器
+  自然到期才没踩坑；紧跟式调用必踩
 - 重试耗尽的处置要区分场景：
   - **可能是正常业务结束**（如挑战次数用尽导致点击无响应）→ 先做业务检测
     （OCR 次数），用尽则抛业务异常（`BattleCountOut`）判定任务完成，正常收尾
