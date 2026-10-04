@@ -2,10 +2,14 @@
 # @author runhey
 # github https://github.com/runhey
 
+import inspect
+import inflection
+import random
+from typing import Union
+from datetime import datetime, timedelta
+from pathlib import Path
 from time import sleep, time
 
-import random
-from datetime import datetime, timedelta
 from module.atom.animate import RuleAnimate
 from module.atom.click import RuleClick
 from module.atom.gif import RuleGif
@@ -20,11 +24,12 @@ from module.device.device import Device
 from module.exception import ScriptError
 from module.logger import logger
 from module.ocr.base_ocr import OcrMode
+
 from tasks.Component.Costume.costume_base import CostumeBase
 from tasks.Component.config_base import Time
 from tasks.GlobalGame.assets import GlobalGameAssets
 from tasks.GlobalGame.config_emergency import FriendInvitation
-from typing import Union
+
 
 
 class BaseTask(GlobalGameAssets, CostumeBase):
@@ -60,6 +65,26 @@ class BaseTask(GlobalGameAssets, CostumeBase):
         # 战斗次数相关
         self.current_count = 0  # 战斗次数
         self._boss_mark_flag = False
+
+    def get_task_name(self) -> str:
+        model_task_name = getattr(self.config.model, 'running_task', '')
+        class_file = inspect.getfile(type(self))
+        path_task_name = Path(class_file).parent.name
+
+        model_task_name = (
+            inflection.camelize(model_task_name, uppercase_first_letter=True)
+            if model_task_name else ''
+        )
+        path_task_name = inflection.camelize(
+            path_task_name,
+            uppercase_first_letter=True,
+        )
+
+        if model_task_name and model_task_name != path_task_name:
+            raise ScriptError(
+                f'Task name mismatch: model={model_task_name}, path={path_task_name}'
+            )
+        return model_task_name or path_task_name
 
     def _burst(self) -> bool:
         """

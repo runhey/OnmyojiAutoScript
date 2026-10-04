@@ -13,6 +13,7 @@ from tasks.Component.SwitchSoul.switch_soul import SwitchSoul
 from tasks.GameUi.game_ui import GameUi
 from tasks.GameUi.page import page_main, page_soul_zones, page_shikigami_records
 from tasks.Orochi.assets import OrochiAssets
+from tasks.Orochi.page import page_orochi
 from tasks.Orochi.config import Orochi, UserStatus, Layer
 from tasks.TrueOrochi.assets import TrueOrochiAssets
 from module.logger import logger
@@ -43,8 +44,8 @@ class ScriptTask(GeneralBattle, GeneralInvite, GeneralBuff, GeneralRoom, GameUi,
 
         config: Orochi = self.config.orochi
         if not self.is_in_battle(True):
-            self.goto_page(page_main)
             if config.orochi_config.soul_buff_enable:
+                self.goto_page(page_main)
                 self.open_buff()
                 self.soul(is_open=True)
                 self.close_buff()
@@ -59,15 +60,14 @@ class ScriptTask(GeneralBattle, GeneralInvite, GeneralBuff, GeneralRoom, GameUi,
 
         # 御魂结束后检测是否出现真蛇
         if config.orochi_config.check_true_orochi_enable:
-            self.goto_page(page_soul_zones)
-            self.orochi_enter()
+            self.goto_page(page_orochi)
             self.screenshot()
             if self.appear(self.I_FIND_TS):
                 logger.info('Find true orochi after orochi battle, set TrueOrochi task to run now')
                 self.set_next_run(task='TrueOrochi', success=False, finish=False, server=False, target=datetime.now())
-        self.goto_page(page_main)
         # 记得关掉
         if config.orochi_config.soul_buff_enable:
+            self.goto_page(page_main)
             self.open_buff()
             self.soul(is_open=False)
             self.close_buff()
@@ -79,14 +79,6 @@ class ScriptTask(GeneralBattle, GeneralInvite, GeneralBuff, GeneralRoom, GameUi,
 
         raise TaskEnd
 
-    def orochi_enter(self) -> bool:
-        logger.info('Enter orochi')
-        while True:
-            self.screenshot()
-            if self.appear(self.I_FORM_TEAM):
-                return True
-            if self.appear_then_click(self.I_OROCHI, interval=1):
-                continue
 
     def check_layer(self, layer: str) -> bool:
         """
@@ -132,8 +124,7 @@ class ScriptTask(GeneralBattle, GeneralInvite, GeneralBuff, GeneralRoom, GameUi,
 
     def run_leader(self):
         logger.info('Start run leader')
-        self.goto_page(page_soul_zones)
-        self.orochi_enter()
+        self.goto_page(page_orochi)
         layer = self.config.orochi.orochi_config.layer
         self.check_layer(layer)
         # https://github.com/runhey/OnmyojiAutoScript/issues/592
@@ -224,7 +215,6 @@ class ScriptTask(GeneralBattle, GeneralInvite, GeneralBuff, GeneralRoom, GameUi,
     def run_member(self):
         logger.info('Start run member')
         # self.ui_goto(page_soul_zones)
-        # self.orochi_enter()
         # self.check_lock(self.config.orochi.general_battle_config.lock_team_enable)
 
         # 进入战斗流程
@@ -273,8 +263,7 @@ class ScriptTask(GeneralBattle, GeneralInvite, GeneralBuff, GeneralRoom, GameUi,
 
     def run_alone(self):
         logger.info('Start run alone')
-        self.goto_page(page_soul_zones)
-        self.orochi_enter()
+        self.goto_page(page_orochi)
         layer = self.config.orochi.orochi_config.layer
         self.check_layer(layer)
         self.check_lock(self.config.orochi.general_battle_config.lock_team_enable)
@@ -326,8 +315,7 @@ class ScriptTask(GeneralBattle, GeneralInvite, GeneralBuff, GeneralRoom, GameUi,
 
         # 已经在战斗中不必初始化，保证已经组队开始战斗的情况下可以自动执行后续任务
         if not self.is_in_battle(True):
-            self.goto_page(page_soul_zones)
-            self.orochi_enter()
+            self.goto_page(page_orochi)
             layer = self.config.orochi.orochi_config.layer
             self.check_layer(layer)
             self.check_lock(self.config.orochi.general_battle_config.lock_team_enable)

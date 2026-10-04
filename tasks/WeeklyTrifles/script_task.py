@@ -76,8 +76,7 @@ class ScriptTask(GameUi, WeeklyTriflesAssets):
         :return:
         """
         logger.hr('Touch fish start')
-        self.ui_get_current_page()
-        self.ui_goto(page_guild)
+        self.goto_page(page_guild)
         # 防止入口被折叠
         while 1:
             # 等个折叠窗口展开动画
@@ -88,7 +87,7 @@ class ScriptTask(GameUi, WeeklyTriflesAssets):
             if self.appear(self.I_WT_FOLD_WINDOW):
                 break
         # 保存次数，后续做了也会邮件返还福运御守
-        self.ui_goto(page_touch_fish)
+        self.goto_page(page_touch_fish)
         self.screenshot()
         if self.appear(self.I_WT_SAVE_ALL):
             cu_tickts, _, _ = self.O_WT_LUCKY_TICKETS.ocr(self.device.image)
@@ -126,7 +125,7 @@ class ScriptTask(GameUi, WeeklyTriflesAssets):
                     logger.warning('Touch fish timeout, exit!')
                     break
         logger.hr('Touch fish finished')
-        self.ui_goto(page_main)
+        self.goto_page(page_main)
 
     def _share_collect(self):
         """
@@ -369,6 +368,7 @@ if __name__ == '__main__':
     t = ScriptTask(c, d)
     t.screenshot()
 
+    t.run()
     # t._share_collect()
     t._share_area_boss()
     # t.click_share(t.I_WT_SE_WECHAT)

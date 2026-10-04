@@ -1,26 +1,50 @@
 [
   {
     "itemName": "de_1",
-    "roiFront": "1211,478,61,58",
-    "roiBack": "1211,478,61,58",
+    "roiFront": "1222,497,39,25",
+    "roiBack": "1222,497,39,25",
     "description": "从下开始数第一个"
   },
   {
     "itemName": "de_2",
-    "roiFront": "1196,409,55,56",
-    "roiBack": "1196,409,55,56",
+    "roiFront": "1204,424,39,31",
+    "roiBack": "1204,424,39,31",
     "description": "2"
   },
   {
     "itemName": "de_3",
-    "roiFront": "1225,344,53,55",
-    "roiBack": "1225,344,53,55",
+    "roiFront": "1234,364,32,22",
+    "roiBack": "1234,364,32,22",
     "description": "3"
   },
   {
     "itemName": "de_4",
+    "roiFront": "1214,297,34,27",
+    "roiBack": "1214,297,34,27",
+    "description": "第四个"
+  },
+  {
+    "itemName": "de_match_1",
+    "roiFront": "1211,478,61,58",
+    "roiBack": "1211,478,61,58",
+    "description": "灯笼1类型识别搜索区(须容纳完整灯笼图案, 仅供check_lantern匹配, 不用于点击)"
+  },
+  {
+    "itemName": "de_match_2",
+    "roiFront": "1196,409,55,56",
+    "roiBack": "1196,409,55,56",
+    "description": "灯笼2类型识别搜索区"
+  },
+  {
+    "itemName": "de_match_3",
+    "roiFront": "1225,344,53,55",
+    "roiBack": "1225,344,53,55",
+    "description": "灯笼3类型识别搜索区"
+  },
+  {
+    "itemName": "de_match_4",
     "roiFront": "1200,282,56,53",
     "roiBack": "1200,282,56,53",
-    "description": "第四个"
+    "description": "灯笼4类型识别搜索区"
   }
 ]
