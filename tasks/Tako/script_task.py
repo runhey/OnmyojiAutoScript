@@ -74,6 +74,21 @@ class ScriptTask(GameUi, GeneralBattle, GeneralRoom, GeneralInvite, SwitchSoul):
                 break
         self.exit_task()
 
+    def next_tako_time(self) -> datetime:
+        """
+        计算自定义运行时间（tako_time 双时间点）中最近的下一个未来时刻
+        :return: 下次运行时间
+        """
+        now = datetime.now()
+        tako_time = self.config.tako.tako_time
+        candidates = []
+        for day in range(2):
+            base = now.date() + timedelta(days=day)
+            candidates.append(datetime.combine(base, tako_time.first_time))
+            candidates.append(datetime.combine(base, tako_time.second_time))
+        future = [c for c in candidates if c > now]
+        return min(future)
+
     def exit_task(self):
         """
         退出任务
@@ -94,7 +109,7 @@ class ScriptTask(GameUi, GeneralBattle, GeneralRoom, GeneralInvite, SwitchSoul):
                 self.exp_100(False)
             self.close_buff()
 
-        self.set_next_run(task='Tako', success=True, finish=False)
+        self.set_next_run(task='Tako', target=self.next_tako_time(), finish=False)
         raise TaskEnd('Tako')
 
     def battle_wait(self, random_click_swipt_enable: bool) -> bool:
