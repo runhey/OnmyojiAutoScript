@@ -22,7 +22,7 @@ class RuleImage(RuleImageMallResourceMixin):
         初始化
         :param roi_front: 前置roi
         :param roi_back: 后置roi 用于匹配的区域
-        :param method: 匹配方法 "Template matching"
+        :param method: 匹配方法 "Template matching" / "Masked template matching" / "Multi-scale template matching" / "Sift Flann"
         :param threshold: 阈值  0.8
         :param file: 相对路径, 带后缀
         """
@@ -30,6 +30,10 @@ class RuleImage(RuleImageMallResourceMixin):
         self._image = None  # 这个是匹配的目标
         self._kp = None  #
         self._des = None
+        self._mask_loaded = False  # 掩码懒加载标记: False=未加载, 加载后看 _mask
+        self._mask = None  # 掩码图, None 表示无掩码(回退普通匹配)
+        self.last_score = -1.0  # 最近一次匹配的真实分数, -1 表示本次未产生分数
+        self.last_scale = None  # 最近一次多尺度匹配命中的缩放倍数, 仅 Multi-scale 方法写入
         self.method = method
 
         self.roi_front: list = list(roi_front)
@@ -105,6 +109,18 @@ class RuleImage(RuleImageMallResourceMixin):
         return self.method == "Template matching"
 
     @cached_property
+    def is_masked_template_match(self) -> bool:
+        """
+        是否是掩码模板匹配，掩码取自同目录下 `xxx_mask.png`
+        :return:
+        """
+        return self.method == "Masked template matching"
+
+    @cached_property
+    def is_multi_scale_template_match(self) -> bool:
+        return self.method == "Multi-scale template matching"
+
+    @cached_property
     def is_sift_flann(self) -> bool:
         return self.method == "Sift Flann"
 
@@ -123,6 +139,68 @@ class RuleImage(RuleImageMallResourceMixin):
         if self._des is None:
             self.load_kp_des()
         return self._des
+
+    @property
+    def mask(self):
+        """
+        掩码图，取模板同目录下 `xxx_mask.png`（`xxx.png` -> `xxx_mask.png`）。
+        语义为「非零参与匹配，零忽略」。文件缺失、读取失败或尺寸与模板不一致时
+        返回 None，由调用方回退到普通匹配，避免一张画错尺寸的掩码直接让规则报错。
+        :return:
+        """
+        if not self._mask_loaded:
+            self._mask_loaded = True
+            path = Path(self.file)
+            mask_path = path.with_name(f"{path.stem}_mask{path.suffix}")
+            try:
+                mask = cv2.imdecode(fromfile(str(mask_path), dtype=uint8), cv2.IMREAD_GRAYSCALE)
+            except OSError:
+                mask = None
+            if mask is None:
+                logger.debug(f"{self.name} template mask unavailable, fallback to plain matching: {mask_path}")
+            elif mask.shape[:2] != self.image.shape[:2]:
+                logger.error(
+                    f"{self.name} template mask size mismatch "
+                    f"{mask.shape[:2]} != {self.image.shape[:2]}, fallback to plain matching"
+                )
+            else:
+                self._mask = mask
+        return self._mask
+
+    @staticmethod
+    def _template_is_degenerate(template: np.ndarray, mask: np.ndarray | None = None) -> bool:
+        """
+        判断模板在参与匹配的区域内是否逐通道恒为常量。
+
+        CCOEFF_NORMED 归一化时分母来自各通道的方差，参与区域内所有通道都完全没有起伏时，
+        分母才是 0，OpenCV 会走特判：无掩码时整张结果矩阵被填成 1.0（恒假阳性，且落点固定
+        在 roi_back 左上角），带掩码时整张变成 0/0 的 nan。两种都让这条规则失去意义，
+        这里提前拦掉，而不是把异常数值当成命中。
+        """
+        if template is None or template.size == 0:
+            return True
+        region = template if mask is None else template[mask > 0]
+        if region.size == 0:
+            return True
+        # 掩码取值后是 `(N, C)`、整体模板是 `(H, W, C)`、灰度图是 `(H, W)` 或 `(N,)`，
+        # 通道数只认模板本身，再统一摊平成 `(N, C)` 逐通道判断。
+        channels = 1 if template.ndim == 2 else template.shape[-1]
+        samples = region.reshape(-1, channels)
+        return all(float(samples[:, channel].std()) == 0.0 for channel in range(channels))
+
+    @staticmethod
+    def _sanitize_match_result(result: np.ndarray) -> np.ndarray:
+        """
+        压掉匹配结果矩阵里的非有限值。
+
+        源图窗口整块同色时 CCOEFF_NORMED 会算出 nan/inf：nan 会让
+        `max_val > threshold` 恒为假而静默漏检，inf 则会越过阈值并把命中位置指到随机
+        坐标（假阳性，点错位置）。这里统一替换为 -1.0，等价于「该位置判不匹配」。
+        """
+        if np.isfinite(result).all():
+            return result
+        logger.error("match result contains nan/inf (solid-color region), treated as not matched")
+        return np.nan_to_num(result, nan=-1.0, posinf=-1.0, neginf=-1.0)
 
     def corp(self, image: np.array, roi: list = None) -> np.array:
         """
@@ -147,7 +225,10 @@ class RuleImage(RuleImageMallResourceMixin):
         if threshold is None:
             threshold = self.threshold
 
-        if not self.is_template_match:
+        if self.is_multi_scale_template_match:
+            return self.match_multi_scale(image, threshold, scale_range=(0.6, 1.2))
+
+        if not (self.is_template_match or self.is_masked_template_match):
             return self.sift_match(image)
             # raise Exception(f"unknown method {self.method}")
 
@@ -161,8 +242,18 @@ class RuleImage(RuleImageMallResourceMixin):
             # 模板大于源图, 视为无效匹配(避免 matchTemplate 的异常行为)
             return False
 
-        res = cv2.matchTemplate(source, mat, cv2.TM_CCOEFF_NORMED)
+        mask = self.mask if self.is_masked_template_match else None
+        if self._template_is_degenerate(mat, mask):
+            logger.error(f"{self.name} template is flat (no variance in matching area), treated as not matched")
+            return False
+
+        if mask is None:
+            res = cv2.matchTemplate(source, mat, cv2.TM_CCOEFF_NORMED)
+        else:
+            res = cv2.matchTemplate(source, mat, cv2.TM_CCOEFF_NORMED, mask=mask)
+        res = self._sanitize_match_result(res)
         min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(res)  # 最小匹配度，最大匹配度，最小匹配度的坐标，最大匹配度的坐标
+        self.last_score = float(max_val)
         if self.debug_mode:
             logger.attr(self.name, f'matching score {max_val:.5f}')
 
@@ -203,6 +294,9 @@ class RuleImage(RuleImageMallResourceMixin):
         if mat is None or mat.shape[0] == 0 or mat.shape[1] == 0:
             logger.error(f"Template image is invalid: {mat.shape}")
             return False
+        if self._template_is_degenerate(mat):
+            logger.error(f"{self.name} template is flat (no variance), treated as not matched")
+            return False
 
         # 预计算模板尺寸
         mat_h, mat_w = mat.shape[:2]
@@ -211,6 +305,8 @@ class RuleImage(RuleImageMallResourceMixin):
         best_score = 0
         best_loc = None
         best_scale = 1.0
+        best_shape = None  # 最佳得分对应的是哪一档缩放尺寸, 回写 roi_front 只能用它
+        self.last_scale = None
 
         for scale in scales:
             scaled_w = int(mat_w * scale)
@@ -226,23 +322,28 @@ class RuleImage(RuleImageMallResourceMixin):
             try:
                 scaled_mat = cv2.resize(mat, (scaled_w, scaled_h))
                 res = cv2.matchTemplate(source, scaled_mat, cv2.TM_CCOEFF_NORMED)
+                res = self._sanitize_match_result(res)
                 _, max_val, _, max_loc = cv2.minMaxLoc(res)
 
                 if max_val > best_score:
                     best_score = max_val
                     best_loc = max_loc
                     best_scale = scale
+                    best_shape = (scaled_w, scaled_h)
             except Exception as e:
                 continue
 
         if self.debug_mode:
             logger.attr(self.name, f'best scale: {best_scale:.2f}, best score: {best_score:.5f}')
+        self.last_score = float(best_score)
+        if best_loc is not None:
+            self.last_scale = float(best_scale)
 
-        if best_score > threshold and best_loc is not None:
+        if best_score > threshold and best_loc is not None and best_shape is not None:
             self.roi_front[0] = best_loc[0] + self.roi_back[0]
             self.roi_front[1] = best_loc[1] + self.roi_back[1]
-            self.roi_front[2] = scaled_w
-            self.roi_front[3] = scaled_h
+            self.roi_front[2] = best_shape[0]
+            self.roi_front[3] = best_shape[1]
             return True
         else:
             return False
@@ -259,11 +360,21 @@ class RuleImage(RuleImageMallResourceMixin):
             self.roi_back = roi
         if threshold is None:
             threshold = self.threshold
-        if not self.is_template_match:
+        if not (self.is_template_match or self.is_masked_template_match):
             raise Exception(f"unknown method {self.method}")
         source = self.corp(image)
         mat = self.image
-        results = cv2.matchTemplate(source, mat, cv2.TM_CCOEFF_NORMED)
+        mask = self.mask if self.is_masked_template_match else None
+        if self._template_is_degenerate(mat, mask):
+            logger.error(f"{self.name} template is flat (no variance in matching area), treated as not matched")
+            return []
+        if mask is None:
+            results = cv2.matchTemplate(source, mat, cv2.TM_CCOEFF_NORMED)
+        else:
+            results = cv2.matchTemplate(source, mat, cv2.TM_CCOEFF_NORMED, mask=mask)
+        results = self._sanitize_match_result(results)
+        if results.size:
+            self.last_score = float(results.max())
         locations = np.where(results >= threshold)
         matches = []
         for pt in zip(*locations[::-1]):  # (x, y) coordinates
@@ -286,11 +397,21 @@ class RuleImage(RuleImageMallResourceMixin):
             self.roi_back = roi
         if threshold is None:
             threshold = self.threshold
-        if not self.is_template_match:
+        if not (self.is_template_match or self.is_masked_template_match):
             raise Exception(f"unknown method {self.method}")
         source = self.corp(image)
         mat = self.image
-        results = cv2.matchTemplate(source, mat, cv2.TM_CCOEFF_NORMED)
+        mask = self.mask if self.is_masked_template_match else None
+        if self._template_is_degenerate(mat, mask):
+            logger.error(f"{self.name} template is flat (no variance in matching area), treated as not matched")
+            return []
+        if mask is None:
+            results = cv2.matchTemplate(source, mat, cv2.TM_CCOEFF_NORMED)
+        else:
+            results = cv2.matchTemplate(source, mat, cv2.TM_CCOEFF_NORMED, mask=mask)
+        results = self._sanitize_match_result(results)
+        if results.size:
+            self.last_score = float(results.max())
         locations = np.where(results >= threshold)
         matches = []
         for pt in zip(*locations[::-1]):  # (x, y) coordinates
@@ -334,7 +455,7 @@ class RuleImage(RuleImageMallResourceMixin):
 
     def test_match(self, image: np.array):
         self.debug_mode = True
-        if self.is_template_match:
+        if self.is_template_match or self.is_masked_template_match or self.is_multi_scale_template_match:
             return self.match(image)
         if self.is_sift_flann:
             return self.sift_match(image, show=True)
