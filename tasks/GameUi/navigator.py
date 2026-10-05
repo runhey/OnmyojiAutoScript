@@ -766,7 +766,7 @@ class GameUi(BaseTask, GameUiAssets):
         return True
 
     def goto_page(self, destination: Page, confirm_wait: float = 0, skip_first_screenshot: bool = True,
-                  timeout: int = 30) -> bool | None:
+                  timeout: int = 30, *, accepted_pages: tuple[Page, ...] = ()) -> bool | None:
         """导航到目标页面。
 
         Args:
@@ -774,6 +774,7 @@ class GameUi(BaseTask, GameUiAssets):
             confirm_wait: 到达目标页面后额外等待的确认时间。
             skip_first_screenshot: 是否复用当前截图。
             timeout: 无有效进展超时时间，单位秒。
+            accepted_pages: 可直接继续任务的其他页面，识别到后无需转往目标页。
 
         Returns:
             是否成功到达目标页面。
@@ -824,9 +825,9 @@ class GameUi(BaseTask, GameUiAssets):
                 last_detected_page_key = current.key
                 reset_repeated_transition_failures()
 
-            if current == destination:
+            if current == destination or any(current.key == page.key for page in accepted_pages):
                 # current 来自 _refresh_current_page，其返回已是两帧稳定确认的结果，无需再次 confirm。
-                return self._finalize_arrival(destination, confirm_wait, start_time)
+                return self._finalize_arrival(current, confirm_wait, start_time)
 
             path = self._build_path(current, destination)
             if not path:
