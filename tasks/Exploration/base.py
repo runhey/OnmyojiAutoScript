@@ -16,7 +16,8 @@ from tasks.Exploration.assets import ExplorationAssets
 from tasks.Exploration.config import ChooseRarity, AutoRotate, AttackNumber, UpType
 from tasks.Component.GeneralBattle.general_battle import GeneralBattle
 from tasks.GameUi.game_ui import GameUi
-from tasks.GameUi.page import page_exploration, page_shikigami_records, page_main
+from tasks.GameUi.page import page_shikigami_records, page_main
+import tasks.Exploration.page as pages
 from tasks.RealmRaid.script_task import ScriptTask as RealmRaidScriptTask
 from tasks.Utils.config_enum import ShikigamiClass
 
@@ -112,8 +113,9 @@ class BaseExploration(GameUi, GeneralBattle, GeneralRoom, GeneralInvite, Replace
                 self.exp_100()
             self.close_buff()
 
-        # 探索页面
-        self.goto_page(page_exploration)
+        # 探索页面（大地图始终处于主线/玩法 tab 之一，裸 page_exploration 永远被 prio 60 的 tab 页遮蔽、
+        # 无法作为当前页抵达，故直接进入主线 tab）
+        self.goto_page(pages.page_mainline)
 
     def post_process(self):
         self.wait_until_stable(self.I_UI_BACK_RED)
@@ -133,6 +135,11 @@ class BaseExploration(GameUi, GeneralBattle, GeneralRoom, GeneralInvite, Replace
 
     # 打开指定的章节：
     def open_expect_level(self):
+        # 选关依赖主线 tab 右侧的章节列表（I_E_EXPLORATION_CLICK + 章节名 OCR）。
+        # 探索大地图常驻「主线/玩法」之一，若停在玩法 tab 不选回主线，右边会是御魂/今日掉落等模块名，
+        # I_E_EXPLORATION_CLICK 不出现、OCR 交集为空 → 一直滑屏卡死。故进选关前无条件确保主线 tab。
+        self.goto_page(pages.page_mainline)
+
         swipeCount = 0
         while 1:
             # 探索的 config

@@ -52,5 +52,17 @@
     "roiFront": "0,0,111,12",
     "roiBack": "0,0,111,12",
     "description": "随机点"
+  },
+  {
+    "itemName": "click_main_title",
+    "roiFront": "1070,174,77,28",
+    "roiBack": "1070,174,77,28",
+    "description": "点击探索大地图主线tab标题"
+  },
+  {
+    "itemName": "click_paly_title",
+    "roiFront": "1178,172,77,28",
+    "roiBack": "1178,172,77,28",
+    "description": "点击探索大地图玩法tab标题"
   }
 ]
