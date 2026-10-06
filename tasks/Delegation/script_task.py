@@ -121,7 +121,19 @@ class ScriptTask(GameUi, DelegationAssets):
                 continue
             if check_timer.reached():
                 break
-            if self.ocr_appear_click(self.O_D_DONE, interval=1):
+            # O_D_DONE 命中的是卡片上“完成”缎带，可点的领取位置在其正下方同样大小的一块
+            if self.ocr_appear(self.O_D_DONE, interval=1):
+                # 同一帧里可能有多张卡都显示“完成”，此时 Full 模式会把多个命中框合并成一个，
+                # 合并框正下方不一定是可点的领取位置；这里取单个命中框，点它正下方同样大小的一块
+                results = self.O_D_DONE.detect_and_ocr(self.device.image, logDisplay=False)
+                index_list = self.O_D_DONE.filter(results, self.O_D_DONE.keyword) if results else None
+                if index_list:
+                    box = results[index_list[0]].box
+                    x = box[0, 0] + self.O_D_DONE.roi[0]
+                    y = box[0, 1] + self.O_D_DONE.roi[1]
+                    w = box[1, 0] - box[0, 0]
+                    h = box[2, 1] - box[0, 1]
+                    self.device.click(x=x + w / 2, y=y + h + h / 2, control_name=self.O_D_DONE.name)
                 check_timer.reset()
                 continue
 
