@@ -6,7 +6,7 @@
 
 
 
-
+### Option
 
 ```python
 class OptionItem(xxx):
@@ -26,9 +26,9 @@ class Option(xxx):
     ...
     
     @classmethod
-    def new(cls, xxx):
+    def field(cls, xxx):
         """
-        和上面的工厂函数类似，也是返回一个, 不过new这个函数名不太好，看看下什么合适
+        和上面的工厂函数类似，也是返回一个
         也是把额外的schema注入到Field里面去
         """
         return Field(xxx)
@@ -43,3 +43,43 @@ class Config(BaseModel):
 3. 接口简洁，越少越好 
 4. 用法兼容enum的常见用法。
 5. schema这个非常重要，我希望OptionItem导出的shema每一个选项都是独立的，保持标准的比如description、type我也不知道标准的有什么。
+
+
+
+### Options
+
+```python
+class OptionItem 和 上面一致
+
+class Options(Option):
+    ...
+
+class Prioritys(Options):
+    HIGH: OptionItem = OptionItem.str(default='xx',title="高优先级", description="最紧急")
+    LOW: OptionItem = OptionItem.str(default='xx',title="低优先级", description="xxx")
+    
+    ...
+    
+    @classmethod
+    def field(cls, xxx):
+        """
+        函数保持和Options一致，不过default是list
+        """
+        return Field(xxx)
+    
+    @classmethod
+    def annotated(cls):
+        return Annotated(
+            list["Prioritys"],
+            ... 自定义的一下
+        )
+    
+    
+class Config(BaseModel):
+    prioritys: Prioritys = Options.field(description="选个优先级")
+    # 这里我希望坚持的一个点是prioritys:类型标注是Prioritys本身，
+
+```
+
+1. 保持接口整洁，
+2. schema json 类似于Option

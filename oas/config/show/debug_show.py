@@ -9,8 +9,7 @@ from rich.console import Console
 sys.path.insert(0, str(Path(__file__).resolve().parents[3]))
 
 from oas.config.show.option_item import export_option_items
-from oas.config.show.option_json import export_option_json
-from oas.config.show.option_json_schema import export_option_json_schema
+from oas.config.show.option import export_option_json, export_option_json_schema
 
 
 console = Console(legacy_windows=False)
@@ -20,7 +19,7 @@ def main() -> None:
     if hasattr(sys.stdout, "reconfigure"):
         sys.stdout.reconfigure(encoding="utf-8")
     option_item = export_option_items()
-    option_json = json.loads(export_option_json())
+    option_json = export_option_json()
     option_json_schema = export_option_json_schema()
     data = {
         "option_item": option_item,
