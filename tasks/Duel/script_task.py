@@ -305,6 +305,9 @@ class ScriptTask(GameUi, GeneralBattle, SwitchSoul, DuelAssets, SwitchOnmyoji):
     def is_battle_win(self) -> bool:
         if self.appear(self.I_WIN) or self.appear(self.I_D_VICTORY):
             return True
+        # 战斗进行中不可能出现分享页, 直接跳过 OCR, 否则每轮循环都会跑一次全图检测刷屏
+        if self.is_in_real_battle(is_screenshot=False):
+            return False
         # 斗技胜利后的 MVP 分享页(标题"拔得头筹", 左下"我的阵容", 右下"分享")没有常规的
         # 胜利标识, 模板匹配认不出, 会导致 wait_battle 一直等到超时再人工接管。
         # 分享页的标题是书法体 OCR 认不出, 用标准字体的"我的阵容"横幅来识别。
