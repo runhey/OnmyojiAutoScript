@@ -1,9 +1,11 @@
 from __future__ import annotations
 
-from collections.abc import Callable
 import math
+import re
+from collections.abc import Callable
+from datetime import time as datetime_time
 from types import MappingProxyType
-from typing import Annotated, Any, ClassVar, Literal
+from typing import Annotated, Any, ClassVar, Literal, Self
 
 from pydantic import Field, GetJsonSchemaHandler, TypeAdapter
 from pydantic.fields import FieldInfo
@@ -492,6 +494,200 @@ class Slider(Input):
     def secret_str(cls, **kwargs: Any) -> FieldInfo:
         raise TypeError("Slider does not support secret_str input")
 
+
+class Time(datetime_time):
+    """Create Pydantic fields for a time of day.
+
+    ``Time`` is a :class:`datetime.time` subclass.  It preserves the native
+    ``time`` API for existing code, including value construction with
+    ``Time(19, 0)`` and access to ``hour``, ``minute``, and ``second``.  Use
+    ``Time.field`` when declaring a Pydantic model field; the factory returns a
+    :class:`pydantic.fields.FieldInfo` with the ``type="Time"`` UI marker.
+
+    Values are naive and have second precision.  Timezone information and
+    non-zero microseconds are rejected.  String input uses the strict
+    ``HH:MM`` or ``HH:MM:SS`` forms, and serialization always emits
+    ``HH:MM:SS``.
+
+    Args:
+        default (Any): Required default value.  It must be supplied unless
+            ``default_factory`` is provided; ``Time`` values and supported time
+            strings such as ``"09:30"`` are accepted.
+        default_factory (Callable): Callable used to create a default value.
+            Its result is validated by Pydantic and omitted from JSON Schema.
+        hide (bool | None): UI visibility metadata.  Defaults to ``False``;
+            ``None`` omits the key.
+        description (str | None): Standard Pydantic field description.
+        icon (str | None): UI icon metadata.
+        title (str | None): Standard Pydantic field title.
+        alias (str | None): Reserved for future alias support and currently
+            has no effect.
+        depends (str | None): UI dependency metadata.
+        readOnly (bool | None): Optional read-only schema metadata.
+        json_schema_extra (dict[str, Any] | None): Additional schema metadata
+            with highest precedence.  It may override the generated ``type``.
+        **kwargs (Any): Other keyword arguments accepted by
+            :func:`pydantic.Field`.
+
+    Raises:
+        TypeError: If neither or both of ``default`` and ``default_factory``
+            are provided.
+        ValueError: If a value has invalid time components, non-zero
+            microseconds, timezone information, or an invalid string format.
+
+    Example:
+        ```python
+        from pydantic import BaseModel
+
+        class Config(BaseModel):
+            run_time: Time = Time.field(
+                default=Time(19, 0),
+                description="每天运行时间",
+            )
+        ```
+
+    Notes:
+        ``Time`` represents a time of day, not a duration.  Multi-value fields
+        use normal type composition such as ``list[Time]``; no separate
+        multi-value component is provided.
+    """
+
+    _type_name = "Time"
+
+    def __new__(
+        cls,
+        hour: int = 0,
+        minute: int = 0,
+        second: int = 0,
+        microsecond: int = 0,
+        tzinfo: Any = None,
+        *,
+        fold: int = 0,
+    ) -> Self:
+        if microsecond != 0:
+            raise ValueError("Time microsecond must be 0")
+        if tzinfo is not None:
+            raise ValueError("Time does not support timezone information")
+        return super().__new__(
+            cls,
+            hour,
+            minute,
+            second,
+            microsecond,
+            tzinfo,
+            fold=fold,
+        )
+
+    @classmethod
+    def _coerce(cls, value: Any) -> Self:
+        if isinstance(value, cls):
+            return value
+        if isinstance(value, datetime_time):
+            return cls(
+                value.hour,
+                value.minute,
+                value.second,
+                value.microsecond,
+                value.tzinfo,
+                fold=value.fold,
+            )
+        if isinstance(value, str):
+            if not re.fullmatch(
+                r"(?:[01]\d|2[0-3]):[0-5]\d(?::[0-5]\d)?",
+                value,
+            ):
+                raise ValueError("Invalid time value. Expected HH:MM or HH:MM:SS")
+            try:
+                parsed = datetime_time.fromisoformat(value)
+                return cls(
+                    parsed.hour,
+                    parsed.minute,
+                    parsed.second,
+                    parsed.microsecond,
+                    parsed.tzinfo,
+                    fold=parsed.fold,
+                )
+            except (TypeError, ValueError) as exc:
+                if "microsecond" in str(exc) or "timezone" in str(exc):
+                    raise
+                raise ValueError(
+                    "Invalid time value. Expected HH:MM or HH:MM:SS"
+                ) from exc
+        raise ValueError(
+            f"Time requires a string or datetime.time, got {type(value).__name__}"
+        )
+
+    @classmethod
+    def _validate(cls, value: Any) -> Self:
+        return cls._coerce(value)
+
+    @staticmethod
+    def _serialize(value: Self) -> str:
+        return value.strftime("%H:%M:%S")
+
+    @classmethod
+    def field(
+        cls,
+        *,
+        default: Any = UNSET,
+        default_factory: Callable[[], Any] | None = None,
+        hide: bool | None = False,
+        description: str | None = None,
+        icon: str | None = None,
+        title: str | None = None,
+        alias: str | None = None,
+        depends: str | None = None,
+        readOnly: bool | None = None,
+        json_schema_extra: dict[str, Any] | None = None,
+        **kwargs: Any,
+    ) -> FieldInfo:
+        if default is UNSET and default_factory is None:
+            raise TypeError("Time.field requires default or default_factory")
+        if default is not UNSET and default_factory is not None:
+            raise TypeError("Time.field cannot set both default and default_factory")
+
+        field_kwargs = dict(kwargs)
+        field_kwargs["validate_default"] = True
+        if default_factory is not None:
+            field_kwargs["default_factory"] = default_factory
+        else:
+            field_kwargs["default"] = default
+        generated = {"type": cls._type_name}
+        if readOnly is not None:
+            generated["readOnly"] = readOnly
+        field_kwargs["json_schema_extra"] = build_field_schema_extra(
+            hide=hide,
+            icon=icon,
+            alias=alias,
+            depends=depends,
+            json_schema_extra=json_schema_extra,
+            **generated,
+        )
+        if description is not None:
+            field_kwargs["description"] = description
+        if title is not None:
+            field_kwargs["title"] = title
+        return Field(**field_kwargs)
+
+    @classmethod
+    def __get_pydantic_core_schema__(cls, source_type: Any, handler: Any) -> CoreSchema:
+        return core_schema.no_info_after_validator_function(
+            cls._validate,
+            core_schema.any_schema(),
+            serialization=core_schema.plain_serializer_function_ser_schema(
+                cls._serialize,
+                return_schema=core_schema.str_schema(),
+            ),
+        )
+
+    @classmethod
+    def __get_pydantic_json_schema__(
+        cls, core_schema: CoreSchema, handler: GetJsonSchemaHandler
+    ) -> JsonSchemaValue:
+        schema = handler.resolve_ref_schema(handler(core_schema))
+        schema.clear()
+        schema["type"] = cls._type_name
+        return schema
 
 class Switch:
     """Create boolean fields rendered as switch or checkbox controls.
