@@ -59,7 +59,17 @@ page_login = Page(SwitchAccountAssets.I_CHECK_LOGIN_FORM, category="global")
 page_login.add_enter_success_hooks(handle_login_page)
 
 # 庭院主页(此处通过提高阈值来处理部分探索章节会识别成原始庭院的问题, 后续有其他更好方法需改善)
-page_main = Page(GameUiAssets.I_CHECK_MAIN, category="global")
+# I_CHECK_MAIN 是正午晴空碎片(阈值 0.95), 十周年夜樱皮肤下早晚/夜间天空完全不同, 实测
+# 07:07/20:30 均识别失败导致任务直接人工接管。加两处探索灯笼 OCR 兜底(夜/晨布局不同,
+# 灯笼位置不一样): 文字黑体不受光照影响, 且 ROI 很小。探索章节误识别风险见 PR 说明。
+page_main = Page(
+    any_of(
+        GameUiAssets.I_CHECK_MAIN,
+        GameUiAssets.O_CHECK_MAIN_LANTERN_NIGHT,
+        GameUiAssets.O_CHECK_MAIN_LANTERN_DAWN,
+    ),
+    category="global",
+)
 page_main.add_enter_success_hooks(
     GameUiAssets.I_AD_CLOSE_RED, GlobalGameAssets.I_UI_BACK_RED, RestartAssets.I_CANCEL_BATTLE,
     conditional_action(RestartAssets.I_LOGIN_COURTYARD, RestartAssets.C_LOGIN_SCROLL_CLOSE_AREA),
@@ -167,8 +177,16 @@ page_summon = Page(GameUiAssets.I_CHECK_SUMMON, category="global")
 page_summon.connect(page_main, GlobalGameAssets.I_UI_BACK_YELLOW, key="page_summon->page_main")
 page_main.connect(page_summon, GameUiAssets.I_MAIN_GOTO_SUMMON, key="page_main->page_summon")
 
-# 町中主页。
-page_town = Page(GameUiAssets.I_CHECK_TOWN, category="global")
+# 町中主页。I_CHECK_TOWN 是夜景剪影碎片, 同样受皮肤/布局影响; 加町中木牌 OCR 兜底。
+# 木牌文字在町中独有。注意町中也有探索灯笼会同时命中 page_main, 故 town 优先级更高。
+page_town = Page(
+    any_of(
+        GameUiAssets.I_CHECK_TOWN,
+        GameUiAssets.O_CHECK_TOWN_PLAQUE,
+    ),
+    category="global",
+    priority=60,
+)
 page_town.connect(page_main, GameUiAssets.I_TOWN_GOTO_MAIN, key="page_town->page_main")
 page_main.connect(page_town, GameUiAssets.I_MAIN_GOTO_TOWN, key="page_main->page_town")
 
