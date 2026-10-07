@@ -309,6 +309,83 @@ class InputArea(Input):
         raise TypeError("InputArea does not support float input")
 
 
+class Switch:
+    """Create boolean fields rendered as switch or checkbox controls.
+
+    ``Switch.field`` returns a Pydantic :class:`FieldInfo`; the Python field
+    annotation remains ``bool``.  Pydantic performs validation and
+    serialization, while the generated schema uses ``type="Switch"`` for the
+    frontend component marker.  A default value or ``default_factory`` is
+    required for every switch field.
+
+    Args:
+        default (bool | None): Required default value.  Explicit ``None`` is
+            accepted by the factory and then validated against the annotated
+            field type by Pydantic.
+        default_factory (Callable): Callable used to create a default value;
+            it is not emitted into JSON Schema.
+        hide (bool | None): UI visibility metadata.  Defaults to ``False``;
+            ``None`` omits the key.
+        description (str | None): Standard Pydantic field description.
+        icon (str | None): UI icon metadata.
+        title (str | None): Standard Pydantic field title.
+        alias (str | None): Reserved for future alias support and currently
+            has no effect.
+        depends (str | None): UI dependency metadata.
+        json_schema_extra (dict[str, Any] | None): Extra schema metadata with
+            highest precedence; it may override the generated ``type`` key.
+
+    Example:
+        ```python
+        class Config(BaseModel):
+            enabled: bool = Switch.field(
+                default=False,
+                description="是否启用",
+            )
+        ```
+    """
+
+    @classmethod
+    def field(
+        cls,
+        *,
+        default: Any = UNSET,
+        default_factory: Callable[[], Any] | None = None,
+        hide: bool | None = False,
+        description: str | None = None,
+        icon: str | None = None,
+        title: str | None = None,
+        alias: str | None = None,
+        depends: str | None = None,
+        json_schema_extra: dict[str, Any] | None = None,
+        **kwargs: Any,
+    ) -> FieldInfo:
+        if default is UNSET and default_factory is None:
+            raise TypeError("Switch field requires default or default_factory")
+        if default is not UNSET and default_factory is not None:
+            raise TypeError("Switch field cannot set both default and default_factory")
+
+        field_kwargs = dict(kwargs)
+        if default_factory is not None:
+            field_kwargs["default_factory"] = default_factory
+        else:
+            field_kwargs["default"] = default
+        field_kwargs["validate_default"] = True
+        field_kwargs["json_schema_extra"] = build_field_schema_extra(
+            hide=hide,
+            icon=icon,
+            alias=alias,
+            depends=depends,
+            json_schema_extra=json_schema_extra,
+            type="Switch",
+        )
+        if description is not None:
+            field_kwargs["description"] = description
+        if title is not None:
+            field_kwargs["title"] = title
+        return Field(**field_kwargs)
+
+
 class OptionItem:
     """Define one member of an :class:`Option` type.
 

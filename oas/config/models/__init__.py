@@ -1,3 +1,3 @@
-from oas.config.models.args import Input, InputArea, Option, OptionItem, Options
+from oas.config.models.args import Input, InputArea, Option, OptionItem, Options, Switch
 
-__all__ = ["Input", "InputArea", "Option", "OptionItem", "Options"]
+__all__ = ["Input", "InputArea", "Option", "OptionItem", "Options", "Switch"]
