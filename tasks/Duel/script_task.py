@@ -314,7 +314,15 @@ class ScriptTask(GameUi, GeneralBattle, SwitchSoul, DuelAssets, SwitchOnmyoji):
         return self.appear(self.O_D_VICTORY_SHARE, interval=1.0)
 
     def is_battle_lose(self) -> bool:
-        return self.appear(self.I_FALSE) or self.appear(self.I_D_FAIL)
+        if self.appear(self.I_FALSE) or self.appear(self.I_D_FAIL):
+            return True
+        # 协同斗技的失败结算页与常规失败页版式不同, 模板匹配认不出。
+        # "失败"是书法体, 小 ROI 检不出, 用顶部大 ROI 做 Full 检测。已验证:
+        # 协同失败页命中, 战斗中/MVP 分享页不误报。wait_battle 里先判胜利后判失败,
+        # 所以这里不会把胜利页误判成失败。
+        if self.is_in_real_battle(is_screenshot=False):
+            return False
+        return self.appear(self.O_D_BATTLE_FAIL, interval=1.0)
 
     def is_battle_end(self) -> bool:
         return self.is_battle_win() or self.is_battle_lose() or \

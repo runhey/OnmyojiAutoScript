@@ -77,5 +77,7 @@ class DuelAssets:
 	O_D_BAN_NAME = RuleOcr(roi=(92,97,82,25), area=(92,97,82,25), mode="Single", method="Default", keyword="", name="d_ban_name")
 	# 斗技胜利MVP分享页 
 	O_D_VICTORY_SHARE = RuleOcr(roi=(0,540,360,180), area=(0,540,360,180), mode="Full", method="Default", keyword="我的阵容", name="d_victory_share")
+	# 协同斗技失败结算页 
+	O_D_BATTLE_FAIL = RuleOcr(roi=(300,0,680,220), area=(300,0,680,220), mode="Full", method="Default", keyword="失败", name="d_battle_fail")
 
 
