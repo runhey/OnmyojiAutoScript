@@ -1,4 +1,5 @@
 from oas.config.models.args import (
+    Cron,
     DateTime,
     Input,
     InputArea,
@@ -12,6 +13,7 @@ from oas.config.models.args import (
 )
 
 __all__ = [
+    "Cron",
     "DateTime",
     "Input",
     "InputArea",

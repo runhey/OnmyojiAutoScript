@@ -22,6 +22,7 @@ dependencies = [
     "adbutils==0.11.0",
     "anytree==2.8.0",
     "cn2an==0.5.23",
+    "cron-converter>=2.0.2",
     "cryptography>=42.0.7",
     "fastapi>=0.141.1",
     "httpx>=0.28.1",

@@ -9,6 +9,8 @@ from datetime import timedelta as datetime_timedelta
 from types import MappingProxyType
 from typing import Annotated, Any, ClassVar, Literal, Self
 
+from cron_converter import Cron as CronConverter
+from cron_converter.sub_modules.seeker import Seeker as CronSeeker
 from pydantic import Field, GetJsonSchemaHandler, TypeAdapter
 from pydantic.fields import FieldInfo
 from pydantic.json_schema import JsonSchemaValue
@@ -1040,6 +1042,222 @@ class DateTime(datetime_datetime):
         schema.clear()
         schema["type"] = cls._type_name
         return schema
+
+
+class Cron(str):
+    """Create Pydantic fields for five-part cron expressions.
+
+    ``Cron`` is a :class:`str` subclass validated by
+    :mod:`cron_converter`.  It preserves the expression as a string while
+    exposing the parsed converter object and scheduling helpers.  Use
+    ``Cron.field`` when declaring a Pydantic model field; the factory returns
+    a :class:`pydantic.fields.FieldInfo` with the ``type="Cron"`` UI marker.
+
+    Args:
+        cron_expression (str): Five space-separated cron components in minute,
+            hour, day-of-month, month, and day-of-week order.
+        default (Any): Required default value for ``Cron.field``.  It must be
+            supplied unless ``default_factory`` is provided.
+        default_factory (Callable): Callable used to create a default value.
+            Its result is validated by Pydantic and omitted from JSON Schema.
+        hide (bool | None): UI visibility metadata.  Defaults to ``False``;
+            ``None`` omits the key.
+        description (str | None): Standard Pydantic field description.
+        icon (str | None): UI icon metadata.
+        title (str | None): Standard Pydantic field title.
+        alias (str | None): Reserved for future alias support and currently
+            has no effect.
+        depends (str | None): UI dependency metadata.
+        readOnly (bool | None): Optional read-only schema metadata.
+        json_schema_extra (dict[str, Any] | None): Additional schema metadata
+            with highest precedence.  It may override the generated ``type``.
+        **kwargs (Any): Other keyword arguments accepted by
+            :func:`pydantic.Field`.
+
+    Raises:
+        TypeError: If neither or both default forms are provided.
+        ValueError: If the expression is not a valid five-part cron schedule.
+
+    Example:
+        ```python
+        class Config(BaseModel):
+            schedule: Cron = Cron.field(
+                default=Cron("*/5 * * * *"),
+                description="周期任务",
+            )
+        ```
+
+    Notes:
+        Month and weekday names supported by ``cron-converter`` are accepted.
+        The stored value uses the converter's canonical expression, so ``7``
+        for Sunday becomes ``0`` and surrounding whitespace is removed.
+        Seconds fields and ``@daily``-style cron macros are not supported.
+    """
+
+    _type_name = "Cron"
+    _component_names = (
+        "minute",
+        "hour",
+        "day_of_the_month",
+        "month",
+        "day_of_the_week",
+    )
+
+    minute: str
+    hour: str
+    day_of_the_month: str
+    month: str
+    day_of_the_week: str
+    cron_obj: CronConverter
+
+    def __new__(
+        cls,
+        cron_expression: str,
+        *,
+        _cron: CronConverter | None = None,
+    ) -> Self:
+        if _cron is None:
+            if isinstance(cron_expression, cls):
+                canonical = str(cron_expression)
+                cron_obj = cron_expression.cron_obj
+            else:
+                canonical, cron_obj = cls._parse(cron_expression)
+        else:
+            cron_obj = _cron
+            canonical = cron_obj.to_string()
+
+        obj = super().__new__(cls, canonical)
+        obj._apply_cron(cron_obj)
+        return obj
+
+    def _apply_cron(self, cron_obj: CronConverter) -> None:
+        self.cron_obj = cron_obj
+        components = str(self).split()
+        (
+            self.minute,
+            self.hour,
+            self.day_of_the_month,
+            self.month,
+            self.day_of_the_week,
+        ) = components
+
+    @classmethod
+    def _parse(cls, value: Any) -> tuple[str, CronConverter]:
+        if not isinstance(value, str):
+            raise ValueError(  # noqa: TRY004
+                "Cron requires a string value, "
+                f"got {type(value).__name__}"
+            )
+
+        expression = value.strip()
+        if not expression:
+            raise ValueError("Cron expression must not be empty")
+
+        parts = expression.split()
+        if len(parts) != len(cls._component_names):
+            names = ", ".join(cls._component_names)
+            raise ValueError(
+                "Cron expression must contain 5 space separated components: "
+                f"{names}"
+            )
+
+        try:
+            cron_obj = CronConverter(expression)
+            return cron_obj.to_string(), cron_obj
+        except (TypeError, ValueError) as exc:
+            raise ValueError(f"Invalid cron expression: {exc}") from exc
+
+    @classmethod
+    def _validate(cls, value: Any) -> Self:
+        return cls(value)
+
+    @classmethod
+    def field(
+        cls,
+        *,
+        default: Any = UNSET,
+        default_factory: Callable[[], Any] | None = None,
+        hide: bool | None = False,
+        description: str | None = None,
+        icon: str | None = None,
+        title: str | None = None,
+        alias: str | None = None,
+        depends: str | None = None,
+        readOnly: bool | None = None,
+        json_schema_extra: dict[str, Any] | None = None,
+        **kwargs: Any,
+    ) -> FieldInfo:
+        return temporal_field(
+            cls._type_name,
+            default=default,
+            default_factory=default_factory,
+            hide=hide,
+            description=description,
+            icon=icon,
+            title=title,
+            alias=alias,
+            depends=depends,
+            read_only=readOnly,
+            json_schema_extra=json_schema_extra,
+            kwargs=kwargs,
+        )
+
+    @classmethod
+    def __get_pydantic_core_schema__(cls, source_type: Any, handler: Any) -> CoreSchema:
+        return core_schema.no_info_after_validator_function(
+            cls._validate,
+            core_schema.any_schema(),
+            serialization=core_schema.plain_serializer_function_ser_schema(
+                str,
+                return_schema=core_schema.str_schema(),
+            ),
+        )
+
+    @classmethod
+    def __get_pydantic_json_schema__(
+        cls, core_schema: CoreSchema, handler: GetJsonSchemaHandler
+    ) -> JsonSchemaValue:
+        schema = handler.resolve_ref_schema(handler(core_schema))
+        schema.clear()
+        schema["type"] = cls._type_name
+        return schema
+
+    def schedule(
+        self,
+        start_date: datetime_datetime | None = None,
+        timezone_str: str | None = None,
+    ) -> CronSeeker:
+        """Return the converter iterator for this expression.
+
+        Args:
+            start_date: Optional starting datetime.  It cannot be combined
+                with ``timezone_str``.
+            timezone_str: Optional IANA timezone name used as the current time.
+
+        Returns:
+            The next-run iterator provided by ``cron-converter``.
+        """
+        return self.cron_obj.schedule(
+            start_date=start_date,
+            timezone_str=timezone_str,
+        )
+
+    def next_after(
+        self,
+        start_date: datetime_datetime | None = None,
+        timezone_str: str | None = None,
+    ) -> datetime_datetime:
+        """Return the first scheduled datetime after the given start point."""
+        return self.schedule(
+            start_date=start_date,
+            timezone_str=timezone_str,
+        ).next()
+
+    @property
+    def next_run(self) -> str:
+        """Return the next scheduled datetime as an ISO-formatted string."""
+        return self.next_after().isoformat()
+
 
 class Switch:
     """Create boolean fields rendered as switch or checkbox controls.
