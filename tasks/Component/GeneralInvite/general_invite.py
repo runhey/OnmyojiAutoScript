@@ -538,9 +538,18 @@ class GeneralInvite(BaseTask, GeneralInviteAssets):
             # 有可能是挑战失败的
             if self.appear(self.I_I_DEFAULT) or self.appear(self.I_I_NO_DEFAULT):
                 logger.info('Click default invite')
+                # 点完确定后弹窗的淡出动画会让本函数被再次误触发，此时弹窗已消失，
+                # 复选框不会再出现，必须以弹窗消失为出口，否则60秒无点击触发GameStuck
+                timer_checkbox = Timer(10)
+                timer_checkbox.start()
                 while 1:
                     self.screenshot()
+                    if not self.appear(self.I_GI_SURE):
+                        return True
                     if self.appear(self.I_I_DEFAULT):
+                        break
+                    if timer_checkbox.reached():
+                        logger.warning('Wait default invite checkbox timeout')
                         break
                     if self.appear_then_click(self.I_I_NO_DEFAULT, interval=1):
                         continue
