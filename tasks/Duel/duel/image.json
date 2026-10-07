@@ -81,6 +81,15 @@
     "description": "失败"
   },
   {
+    "itemName": "d_fail_coop",
+    "imageName": "duel_d_fail_coop.png",
+    "roiFront": "400,40,170,180",
+    "roiBack": "350,0,300,260",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "协同斗技失败破鼓"
+  },
+  {
     "itemName": "d_word_battle",
     "imageName": "duel_d_word_battle.png",
     "roiFront": "613,41,54,54",

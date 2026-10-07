@@ -61,14 +61,5 @@
     "method": "Default",
     "keyword": "我的阵容",
     "description": "斗技胜利MVP分享页"
-  },
-  {
-    "itemName": "d_battle_fail",
-    "roiFront": "300,0,680,220",
-    "roiBack": "300,0,680,220",
-    "mode": "Full",
-    "method": "Default",
-    "keyword": "失败",
-    "description": "协同斗技失败结算页"
   }
 ]
