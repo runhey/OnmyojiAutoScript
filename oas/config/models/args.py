@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from collections.abc import Callable
 from types import MappingProxyType
 from typing import Annotated, Any, ClassVar, Literal
 
@@ -8,7 +9,283 @@ from pydantic.fields import FieldInfo
 from pydantic.json_schema import JsonSchemaValue
 from pydantic_core import CoreSchema, core_schema
 
+from oas.config.models.base import UNSET, build_field_schema_extra
 from oas.ext.inflection import underscore
+
+
+class Input:
+    """Create Pydantic fields for free-form UI input components.
+
+    The factory methods return :class:`pydantic.fields.FieldInfo`; the field's
+    Python annotation remains the corresponding native type (``int``,
+    ``float``, or ``str``).  Pydantic therefore performs the value validation
+    and serialization, while the generated JSON Schema receives the custom
+    ``type="Input"`` marker and an ``input`` discriminator for the frontend.
+
+    Factories:
+        ``Input.int`` creates an integer input.
+        ``Input.float`` creates a floating-point input.
+        ``Input.str`` creates a normal string input.
+        ``Input.secret_str`` creates a string input with ``writeOnly=True``.
+
+    Args:
+        default (Any): Required default value.  It must be supplied even when
+            the intended value is empty, such as ``default=""``.
+        default_factory (Callable): Callable used by Pydantic to construct a
+            default value.  It is not emitted into JSON Schema.
+        hide (bool | None): UI visibility metadata.  Defaults to ``False``;
+            ``None`` omits the key.
+        description (str | None): Standard Pydantic field description.
+        icon (str | None): UI icon metadata.
+        title (str | None): Standard Pydantic field title.
+        alias (str | None): Reserved for future alias support and currently
+            has no effect, matching :meth:`Option.field`.
+        depends (str | None): UI dependency metadata.
+        json_schema_extra (dict[str, Any] | None): Extra schema metadata.  It
+            has the highest precedence and can override generated keys.
+        readOnly (bool | None): Optional explicit read-only metadata.  Input
+            fields do not include this key unless it is provided.
+
+    Constraints:
+        Integer and float factories accept ``gt``, ``ge``, ``lt``, ``le``,
+        and ``multiple_of``.  String factories accept ``min_length``,
+        ``max_length``, and ``pattern``.  These are passed directly to
+        :func:`pydantic.Field` and become the corresponding JSON Schema
+        constraints.
+
+    Example:
+        ```python
+        class Config(BaseModel):
+            age: int = Input.int(default=18, ge=0, le=150, description="年龄")
+            password: str = Input.secret_str(default="", min_length=8)
+        ```
+    """
+
+    @classmethod
+    def int(
+        cls,
+        *,
+        default: Any = UNSET,
+        default_factory: Callable[[], Any] | None = None,
+        gt: int | None = None,
+        ge: int | None = None,
+        lt: int | None = None,
+        le: int | None = None,
+        multiple_of: int | None = None,
+        hide: bool | None = False,
+        description: str | None = None,
+        icon: str | None = None,
+        title: str | None = None,
+        alias: str | None = None,
+        depends: str | None = None,
+        readOnly: bool | None = None,
+        json_schema_extra: dict[str, Any] | None = None,
+        **kwargs: Any,
+    ) -> FieldInfo:
+        return cls._make(
+            int,
+            "int",
+            default=default,
+            default_factory=default_factory,
+            constraints={
+                "gt": gt,
+                "ge": ge,
+                "lt": lt,
+                "le": le,
+                "multiple_of": multiple_of,
+            },
+            hide=hide,
+            description=description,
+            icon=icon,
+            title=title,
+            alias=alias,
+            depends=depends,
+            read_only=readOnly,
+            json_schema_extra=json_schema_extra,
+            kwargs=kwargs,
+        )
+
+    @classmethod
+    def float(
+        cls,
+        *,
+        default: Any = UNSET,
+        default_factory: Callable[[], Any] | None = None,
+        gt: float | None = None,
+        ge: float | None = None,
+        lt: float | None = None,
+        le: float | None = None,
+        multiple_of: float | None = None,
+        hide: bool | None = False,
+        description: str | None = None,
+        icon: str | None = None,
+        title: str | None = None,
+        alias: str | None = None,
+        depends: str | None = None,
+        readOnly: bool | None = None,
+        json_schema_extra: dict[str, Any] | None = None,
+        **kwargs: Any,
+    ) -> FieldInfo:
+        return cls._make(
+            float,
+            "float",
+            default=default,
+            default_factory=default_factory,
+            constraints={
+                "gt": gt,
+                "ge": ge,
+                "lt": lt,
+                "le": le,
+                "multiple_of": multiple_of,
+            },
+            hide=hide,
+            description=description,
+            icon=icon,
+            title=title,
+            alias=alias,
+            depends=depends,
+            read_only=readOnly,
+            json_schema_extra=json_schema_extra,
+            kwargs=kwargs,
+        )
+
+    @classmethod
+    def str(
+        cls,
+        *,
+        default: Any = UNSET,
+        default_factory: Callable[[], Any] | None = None,
+        min_length: int | None = None,
+        max_length: int | None = None,
+        pattern: str | None = None,
+        hide: bool | None = False,
+        description: str | None = None,
+        icon: str | None = None,
+        title: str | None = None,
+        alias: str | None = None,
+        depends: str | None = None,
+        readOnly: bool | None = None,
+        json_schema_extra: dict[str, Any] | None = None,
+        **kwargs: Any,
+    ) -> FieldInfo:
+        return cls._make(
+            str,
+            "str",
+            default=default,
+            default_factory=default_factory,
+            constraints={
+                "min_length": min_length,
+                "max_length": max_length,
+                "pattern": pattern,
+            },
+            hide=hide,
+            description=description,
+            icon=icon,
+            title=title,
+            alias=alias,
+            depends=depends,
+            read_only=readOnly,
+            json_schema_extra=json_schema_extra,
+            kwargs=kwargs,
+        )
+
+    @classmethod
+    def secret_str(
+        cls,
+        *,
+        default: Any = UNSET,
+        default_factory: Callable[[], Any] | None = None,
+        min_length: int | None = None,
+        max_length: int | None = None,
+        pattern: str | None = None,
+        hide: bool | None = False,
+        description: str | None = None,
+        icon: str | None = None,
+        title: str | None = None,
+        alias: str | None = None,
+        depends: str | None = None,
+        readOnly: bool | None = None,
+        json_schema_extra: dict[str, Any] | None = None,
+        **kwargs: Any,
+    ) -> FieldInfo:
+        return cls._make(
+            str,
+            "secret_str",
+            default=default,
+            default_factory=default_factory,
+            constraints={
+                "min_length": min_length,
+                "max_length": max_length,
+                "pattern": pattern,
+            },
+            hide=hide,
+            description=description,
+            icon=icon,
+            title=title,
+            alias=alias,
+            depends=depends,
+            read_only=readOnly,
+            json_schema_extra=json_schema_extra,
+            kwargs=kwargs,
+            write_only=True,
+        )
+
+    @classmethod
+    def _make(
+        cls,
+        core_type: type,
+        input_type: str,
+        *,
+        default: Any,
+        default_factory: Callable[[], Any] | None,
+        constraints: dict[str, Any],
+        hide: bool | None,
+        description: str | None,
+        icon: str | None,
+        title: str | None,
+        alias: str | None,
+        depends: str | None,
+        read_only: bool | None,
+        json_schema_extra: dict[str, Any] | None,
+        kwargs: dict[str, Any],
+        write_only: bool = False,
+    ) -> FieldInfo:
+        if default is UNSET and default_factory is None:
+            raise TypeError("Input field requires default or default_factory")
+        if default is not UNSET and default_factory is not None:
+            raise TypeError("Input field cannot set both default and default_factory")
+
+        field_kwargs = dict(kwargs)
+        field_kwargs.update(
+            {key: value for key, value in constraints.items() if value is not None}
+        )
+        if default_factory is not None:
+            field_kwargs["default_factory"] = default_factory
+        elif default is not UNSET:
+            field_kwargs["default"] = default
+        field_kwargs["validate_default"] = True
+        generated = {
+            "type": "Input",
+            "input": input_type,
+        }
+        if write_only:
+            generated["writeOnly"] = True
+        if read_only is not None:
+            generated["readOnly"] = read_only
+        extra = build_field_schema_extra(
+            hide=hide,
+            icon=icon,
+            alias=alias,
+            depends=depends,
+            json_schema_extra=json_schema_extra,
+            **generated,
+        )
+        field_kwargs["json_schema_extra"] = extra
+        if description is not None:
+            field_kwargs["description"] = description
+        if title is not None:
+            field_kwargs["title"] = title
+        return Field(**field_kwargs)
 
 
 class OptionItem:
@@ -373,20 +650,13 @@ class Option(metaclass=OptionMeta):
         json_schema_extra: dict[str, Any] | None = None,
         **kwargs: Any,
     ) -> FieldInfo:
-        if json_schema_extra is not None and not isinstance(json_schema_extra, dict):
-            raise TypeError("json_schema_extra must be a dictionary")
-
-        extra: dict[str, Any] = {}
-        if hide is not None:
-            extra["hide"] = hide
-        if icon is not None:
-            extra["icon"] = icon
-        if depends is not None:
-            extra["depends"] = depends
-        extra.update(json_schema_extra or {})
-        # ``alias`` is intentionally reserved for future Pydantic alias
-        # support.  It is accepted by the signature but currently ignored.
-        del alias
+        extra = build_field_schema_extra(
+            hide=hide,
+            icon=icon,
+            alias=alias,
+            depends=depends,
+            json_schema_extra=json_schema_extra,
+        )
         kwargs["validate_default"] = True
         is_multi = bool(getattr(cls, "__option_is_multi__", False))
         if "default" in kwargs:
