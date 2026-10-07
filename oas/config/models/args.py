@@ -3,7 +3,9 @@ from __future__ import annotations
 import math
 import re
 from collections.abc import Callable
+from datetime import datetime as datetime_datetime
 from datetime import time as datetime_time
+from datetime import timedelta as datetime_timedelta
 from types import MappingProxyType
 from typing import Annotated, Any, ClassVar, Literal, Self
 
@@ -12,7 +14,7 @@ from pydantic.fields import FieldInfo
 from pydantic.json_schema import JsonSchemaValue
 from pydantic_core import CoreSchema, core_schema
 
-from oas.config.models.base import UNSET, build_field_schema_extra
+from oas.config.models.base import UNSET, build_field_schema_extra, temporal_field
 from oas.ext.inflection import underscore
 
 
@@ -592,10 +594,12 @@ class Time(datetime_time):
                 fold=value.fold,
             )
         if isinstance(value, str):
-            if not re.fullmatch(
-                r"(?:[01]\d|2[0-3]):[0-5]\d(?::[0-5]\d)?",
+            if re.fullmatch(
+                r"(?:[01]\d|2[0-3]):[0-5]\d(?::[0-5]\d)?\.\d+",
                 value,
             ):
+                raise ValueError("Time microsecond must be 0")
+            if not re.fullmatch(r"(?:[01]\d|2[0-3]):[0-5]\d(?::[0-5]\d)?", value):
                 raise ValueError("Invalid time value. Expected HH:MM or HH:MM:SS")
             try:
                 parsed = datetime_time.fromisoformat(value)
@@ -641,33 +645,381 @@ class Time(datetime_time):
         json_schema_extra: dict[str, Any] | None = None,
         **kwargs: Any,
     ) -> FieldInfo:
-        if default is UNSET and default_factory is None:
-            raise TypeError("Time.field requires default or default_factory")
-        if default is not UNSET and default_factory is not None:
-            raise TypeError("Time.field cannot set both default and default_factory")
-
-        field_kwargs = dict(kwargs)
-        field_kwargs["validate_default"] = True
-        if default_factory is not None:
-            field_kwargs["default_factory"] = default_factory
-        else:
-            field_kwargs["default"] = default
-        generated = {"type": cls._type_name}
-        if readOnly is not None:
-            generated["readOnly"] = readOnly
-        field_kwargs["json_schema_extra"] = build_field_schema_extra(
+        return temporal_field(
+            cls._type_name,
+            default=default,
+            default_factory=default_factory,
             hide=hide,
+            description=description,
             icon=icon,
+            title=title,
             alias=alias,
             depends=depends,
+            read_only=readOnly,
             json_schema_extra=json_schema_extra,
-            **generated,
+            kwargs=kwargs,
         )
-        if description is not None:
-            field_kwargs["description"] = description
-        if title is not None:
-            field_kwargs["title"] = title
-        return Field(**field_kwargs)
+
+    @classmethod
+    def __get_pydantic_core_schema__(cls, source_type: Any, handler: Any) -> CoreSchema:
+        return core_schema.no_info_after_validator_function(
+            cls._validate,
+            core_schema.any_schema(),
+            serialization=core_schema.plain_serializer_function_ser_schema(
+                cls._serialize,
+                return_schema=core_schema.str_schema(),
+            ),
+        )
+
+    @classmethod
+    def __get_pydantic_json_schema__(
+        cls, core_schema: CoreSchema, handler: GetJsonSchemaHandler
+    ) -> JsonSchemaValue:
+        schema = handler.resolve_ref_schema(handler(core_schema))
+        schema.clear()
+        schema["type"] = cls._type_name
+        return schema
+
+
+class TimeDelta(datetime_timedelta):
+    """Create Pydantic fields for elapsed time intervals.
+
+    ``TimeDelta`` is a :class:`datetime.timedelta` subclass, so existing code
+    can construct values with ``TimeDelta(days=1)`` and use normal timedelta
+    arithmetic.  ``TimeDelta.field`` returns the field metadata used by the
+    configuration UI.
+
+    Values use second precision.  String input uses ``DD HH:MM:SS`` with an
+    optional leading minus sign, and serialization always emits that format.
+
+    Args:
+        default (Any): Required default value.  It must be supplied unless
+            ``default_factory`` is provided.
+        default_factory (Callable): Callable used to create a default value.
+            Its result is validated by Pydantic and omitted from JSON Schema.
+        hide (bool | None): UI visibility metadata.  Defaults to ``False``;
+            ``None`` omits the key.
+        description (str | None): Standard Pydantic field description.
+        icon (str | None): UI icon metadata.
+        title (str | None): Standard Pydantic field title.
+        alias (str | None): Reserved for future alias support and currently
+            has no effect.
+        depends (str | None): UI dependency metadata.
+        readOnly (bool | None): Optional read-only schema metadata.
+        json_schema_extra (dict[str, Any] | None): Additional schema metadata
+            with highest precedence.  It may override the generated ``type``.
+        **kwargs (Any): Other keyword arguments accepted by
+            :func:`pydantic.Field`.
+
+    Raises:
+        TypeError: If neither or both default forms are provided.
+        ValueError: If an interval string is invalid or has non-zero
+            microseconds.
+
+    Example:
+        ```python
+        class Config(BaseModel):
+            retry_interval: TimeDelta = TimeDelta.field(
+                default=TimeDelta(hours=6),
+                description="失败后的重试间隔",
+            )
+        ```
+    """
+
+    _type_name = "TimeDelta"
+
+    def __new__(
+        cls,
+        days: float = 0,
+        seconds: float = 0,
+        microseconds: float = 0,
+        milliseconds: float = 0,
+        minutes: float = 0,
+        hours: float = 0,
+        weeks: float = 0,
+    ) -> Self:
+        value = super().__new__(
+            cls,
+            days,
+            seconds,
+            microseconds,
+            milliseconds,
+            minutes,
+            hours,
+            weeks,
+        )
+        if value.microseconds != 0:
+            raise ValueError("TimeDelta microsecond must be 0")
+        return value
+
+    @classmethod
+    def _coerce(cls, value: Any) -> Self:
+        if isinstance(value, cls):
+            return value
+        if isinstance(value, datetime_timedelta):
+            return cls(
+                days=value.days,
+                seconds=value.seconds,
+                microseconds=value.microseconds,
+            )
+        if isinstance(value, str):
+            match = re.fullmatch(
+                r"(?P<sign>-)?(?P<days>\d+)\s+"
+                r"(?P<hours>\d{1,2}):(?P<minutes>\d{1,2}):(?P<seconds>\d{1,2})",
+                value,
+            )
+            if not match:
+                raise ValueError("Invalid interval value. Expected DD HH:MM:SS")
+            days = int(match["days"])
+            hours = int(match["hours"])
+            minutes = int(match["minutes"])
+            seconds = int(match["seconds"])
+            if hours > 23 or minutes > 59 or seconds > 59:
+                raise ValueError("Invalid interval value. Expected DD HH:MM:SS")
+            sign = -1 if match["sign"] else 1
+            return cls(
+                days=sign * days,
+                hours=sign * hours,
+                minutes=sign * minutes,
+                seconds=sign * seconds,
+            )
+        raise ValueError(
+            "TimeDelta requires a string or datetime.timedelta, "
+            f"got {type(value).__name__}"
+        )
+
+    @classmethod
+    def _validate(cls, value: Any) -> Self:
+        return cls._coerce(value)
+
+    @staticmethod
+    def _serialize(value: Self) -> str:
+        total_seconds = int(value.total_seconds())
+        sign = "-" if total_seconds < 0 else ""
+        total_seconds = abs(total_seconds)
+        days, remainder = divmod(total_seconds, 86400)
+        hours, remainder = divmod(remainder, 3600)
+        minutes, seconds = divmod(remainder, 60)
+        return f"{sign}{days:02d} {hours:02d}:{minutes:02d}:{seconds:02d}"
+
+    @classmethod
+    def field(
+        cls,
+        *,
+        default: Any = UNSET,
+        default_factory: Callable[[], Any] | None = None,
+        hide: bool | None = False,
+        description: str | None = None,
+        icon: str | None = None,
+        title: str | None = None,
+        alias: str | None = None,
+        depends: str | None = None,
+        readOnly: bool | None = None,
+        json_schema_extra: dict[str, Any] | None = None,
+        **kwargs: Any,
+    ) -> FieldInfo:
+        return temporal_field(
+            cls._type_name,
+            default=default,
+            default_factory=default_factory,
+            hide=hide,
+            description=description,
+            icon=icon,
+            title=title,
+            alias=alias,
+            depends=depends,
+            read_only=readOnly,
+            json_schema_extra=json_schema_extra,
+            kwargs=kwargs,
+        )
+
+    @classmethod
+    def __get_pydantic_core_schema__(cls, source_type: Any, handler: Any) -> CoreSchema:
+        return core_schema.no_info_after_validator_function(
+            cls._validate,
+            core_schema.any_schema(),
+            serialization=core_schema.plain_serializer_function_ser_schema(
+                cls._serialize,
+                return_schema=core_schema.str_schema(),
+            ),
+        )
+
+    @classmethod
+    def __get_pydantic_json_schema__(
+        cls, core_schema: CoreSchema, handler: GetJsonSchemaHandler
+    ) -> JsonSchemaValue:
+        schema = handler.resolve_ref_schema(handler(core_schema))
+        schema.clear()
+        schema["type"] = cls._type_name
+        return schema
+
+
+class DateTime(datetime_datetime):
+    """Create Pydantic fields for an absolute date and time.
+
+    ``DateTime`` is a :class:`datetime.datetime` subclass and preserves the
+    standard datetime construction and comparison API.  ``DateTime.field``
+    returns the field metadata used by the configuration UI.
+
+    Values are naive and have second precision.  String input accepts ISO
+    date-time values with either ``T`` or a space separator, and serialization
+    always emits ``YYYY-MM-DD HH:MM:SS``.
+
+    Args:
+        default (Any): Required default value.  It must be supplied unless
+            ``default_factory`` is provided.
+        default_factory (Callable): Callable used to create a default value.
+            Its result is validated by Pydantic and omitted from JSON Schema.
+        hide (bool | None): UI visibility metadata.  Defaults to ``False``;
+            ``None`` omits the key.
+        description (str | None): Standard Pydantic field description.
+        icon (str | None): UI icon metadata.
+        title (str | None): Standard Pydantic field title.
+        alias (str | None): Reserved for future alias support and currently
+            has no effect.
+        depends (str | None): UI dependency metadata.
+        readOnly (bool | None): Optional read-only schema metadata.
+        json_schema_extra (dict[str, Any] | None): Additional schema metadata
+            with highest precedence.  It may override the generated ``type``.
+        **kwargs (Any): Other keyword arguments accepted by
+            :func:`pydantic.Field`.
+
+    Raises:
+        TypeError: If neither or both default forms are provided.
+        ValueError: If the datetime has non-zero microseconds, timezone
+            information, or an invalid ISO format.
+
+    Example:
+        ```python
+        class Config(BaseModel):
+            next_run: DateTime = DateTime.field(
+                default=DateTime(2026, 10, 7, 9, 0),
+                description="下一次运行时间",
+            )
+        ```
+    """
+
+    _type_name = "DateTime"
+
+    def __new__(
+        cls,
+        year: int,
+        month: int,
+        day: int,
+        hour: int = 0,
+        minute: int = 0,
+        second: int = 0,
+        microsecond: int = 0,
+        tzinfo: Any = None,
+        *,
+        fold: int = 0,
+    ) -> Self:
+        if microsecond != 0:
+            raise ValueError("DateTime microsecond must be 0")
+        if tzinfo is not None:
+            raise ValueError("DateTime does not support timezone information")
+        return super().__new__(
+            cls,
+            year,
+            month,
+            day,
+            hour,
+            minute,
+            second,
+            microsecond,
+            tzinfo,
+            fold=fold,
+        )
+
+    @classmethod
+    def _coerce(cls, value: Any) -> Self:
+        if isinstance(value, cls):
+            return value
+        if isinstance(value, datetime_datetime):
+            return cls(
+                value.year,
+                value.month,
+                value.day,
+                value.hour,
+                value.minute,
+                value.second,
+                value.microsecond,
+                value.tzinfo,
+                fold=value.fold,
+            )
+        if isinstance(value, str):
+            if re.fullmatch(
+                r"\d{4}-\d{2}-\d{2}[T ]\d{2}:\d{2}:\d{2}\.\d+",
+                value,
+            ):
+                raise ValueError("DateTime microsecond must be 0")
+            if not re.fullmatch(
+                r"\d{4}-\d{2}-\d{2}[T ]\d{2}:\d{2}:\d{2}",
+                value,
+            ):
+                raise ValueError("Invalid datetime value. Expected ISO date-time")
+            try:
+                parsed = datetime_datetime.fromisoformat(value)
+                return cls(
+                    parsed.year,
+                    parsed.month,
+                    parsed.day,
+                    parsed.hour,
+                    parsed.minute,
+                    parsed.second,
+                    parsed.microsecond,
+                    parsed.tzinfo,
+                    fold=parsed.fold,
+                )
+            except (TypeError, ValueError) as exc:
+                if "microsecond" in str(exc) or "timezone" in str(exc):
+                    raise
+                raise ValueError(
+                    "Invalid datetime value. Expected ISO date-time"
+                ) from exc
+        raise ValueError(
+            "DateTime requires a string or datetime.datetime, "
+            f"got {type(value).__name__}"
+        )
+
+    @classmethod
+    def _validate(cls, value: Any) -> Self:
+        return cls._coerce(value)
+
+    @staticmethod
+    def _serialize(value: Self) -> str:
+        return value.strftime("%Y-%m-%d %H:%M:%S")
+
+    @classmethod
+    def field(
+        cls,
+        *,
+        default: Any = UNSET,
+        default_factory: Callable[[], Any] | None = None,
+        hide: bool | None = False,
+        description: str | None = None,
+        icon: str | None = None,
+        title: str | None = None,
+        alias: str | None = None,
+        depends: str | None = None,
+        readOnly: bool | None = None,
+        json_schema_extra: dict[str, Any] | None = None,
+        **kwargs: Any,
+    ) -> FieldInfo:
+        return temporal_field(
+            cls._type_name,
+            default=default,
+            default_factory=default_factory,
+            hide=hide,
+            description=description,
+            icon=icon,
+            title=title,
+            alias=alias,
+            depends=depends,
+            read_only=readOnly,
+            json_schema_extra=json_schema_extra,
+            kwargs=kwargs,
+        )
 
     @classmethod
     def __get_pydantic_core_schema__(cls, source_type: Any, handler: Any) -> CoreSchema:
