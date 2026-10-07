@@ -52,5 +52,14 @@
     "method": "Default",
     "keyword": "",
     "description": "被办式神名称"
+  },
+  {
+    "itemName": "d_victory_share",
+    "roiFront": "0,540,360,180",
+    "roiBack": "0,540,360,180",
+    "mode": "Full",
+    "method": "Default",
+    "keyword": "我的阵容",
+    "description": "斗技胜利MVP分享页"
   }
 ]

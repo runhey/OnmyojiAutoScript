@@ -303,7 +303,12 @@ class ScriptTask(GameUi, GeneralBattle, SwitchSoul, DuelAssets, SwitchOnmyoji):
             self.appear(self.I_D_CHECK_BAN)
 
     def is_battle_win(self) -> bool:
-        return self.appear(self.I_WIN) or self.appear(self.I_D_VICTORY)
+        if self.appear(self.I_WIN) or self.appear(self.I_D_VICTORY):
+            return True
+        # 斗技胜利后的 MVP 分享页(标题"拔得头筹", 左下"我的阵容", 右下"分享")没有常规的
+        # 胜利标识, 模板匹配认不出, 会导致 wait_battle 一直等到超时再人工接管。
+        # 分享页的标题是书法体 OCR 认不出, 用标准字体的"我的阵容"横幅来识别。
+        return self.appear(self.O_D_VICTORY_SHARE, interval=1.0)
 
     def is_battle_lose(self) -> bool:
         return self.appear(self.I_FALSE) or self.appear(self.I_D_FAIL)
