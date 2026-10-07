@@ -61,6 +61,8 @@ class Input:
         ```
     """
 
+    _type_name = "Input"
+
     @classmethod
     def int(
         cls,
@@ -265,7 +267,7 @@ class Input:
             field_kwargs["default"] = default
         field_kwargs["validate_default"] = True
         generated = {
-            "type": "Input",
+            "type": cls._type_name,
             "input": input_type,
         }
         if write_only:
@@ -286,6 +288,25 @@ class Input:
         if title is not None:
             field_kwargs["title"] = title
         return Field(**field_kwargs)
+
+
+class InputArea(Input):
+    """Create multiline string input fields.
+
+    ``InputArea`` reuses :class:`Input` string validation, defaults, metadata,
+    and serialization.  Its only schema difference is ``type="InputArea"``;
+    integer and floating-point factories are intentionally unsupported.
+    """
+
+    _type_name = "InputArea"
+
+    @classmethod
+    def int(cls, **kwargs: Any) -> FieldInfo:
+        raise TypeError("InputArea does not support int input")
+
+    @classmethod
+    def float(cls, **kwargs: Any) -> FieldInfo:
+        raise TypeError("InputArea does not support float input")
 
 
 class OptionItem:
