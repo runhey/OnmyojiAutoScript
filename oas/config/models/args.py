@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from collections.abc import Callable
+import math
 from types import MappingProxyType
 from typing import Annotated, Any, ClassVar, Literal
 
@@ -307,6 +308,189 @@ class InputArea(Input):
     @classmethod
     def float(cls, **kwargs: Any) -> FieldInfo:
         raise TypeError("InputArea does not support float input")
+
+
+class Slider(Input):
+    """Create single-value numeric slider fields.
+
+    ``Slider`` is the numeric counterpart of :class:`Input`: its factories
+    return :class:`pydantic.fields.FieldInfo`, while the field annotation stays
+    a native ``int`` or ``float``.  Pydantic validates and serializes the
+    value.  The generated schema uses ``type="Slider"``, ``input="int"`` or
+    ``input="float"``, and maps the required ``step`` argument to the standard
+    JSON Schema ``multipleOf`` keyword.
+
+    UI display (the thumb is positioned at the current value)::
+        0 ├────────────────●────────────────┤ 100
+          └────────────── slider track ─────┘
+
+    Factories:
+        ``Slider.int`` creates an integer slider.
+        ``Slider.float`` creates a floating-point slider.
+
+    Args:
+        default (Any): Required scalar default value.  It must be supplied
+            unless ``default_factory`` is provided; explicit values such as
+            ``0`` and ``0.0`` are valid.
+        default_factory (Callable): Callable used to create a default value.
+            It is validated by Pydantic and omitted from JSON Schema.
+        step (int | float): Required positive slider step.  ``Slider.int``
+            accepts only an exact ``int`` (``1.0`` and ``True`` are rejected);
+            ``Slider.float`` accepts an exact ``int`` or ``float`` but rejects
+            booleans.  The value is passed to Pydantic as ``multiple_of``.
+        gt (int | float | None): Exclusive lower bound.
+        ge (int | float | None): Inclusive lower bound.
+        lt (int | float | None): Exclusive upper bound.
+        le (int | float | None): Inclusive upper bound.
+        hide (bool | None): UI visibility metadata.  Defaults to ``False``;
+            ``None`` omits the key.
+        description (str | None): Standard Pydantic field description.
+        icon (str | None): UI icon metadata.
+        title (str | None): Standard Pydantic field title.
+        alias (str | None): Reserved for future alias support and currently
+            has no effect.
+        depends (str | None): UI dependency metadata.
+        readOnly (bool | None): Optional read-only schema metadata.
+        json_schema_extra (dict[str, Any] | None): Additional schema metadata
+            with highest precedence.  It may override ``type``, ``input``, or
+            ``multipleOf``.
+
+    Raises:
+        TypeError: If a default is missing, both default forms are provided,
+            an unsupported factory is called, or ``step`` has the wrong type.
+        ValueError: If ``step`` is not greater than zero.
+
+    Example:
+        ```python
+        class Config(BaseModel):
+            age: int = Slider.int(
+                default=18,
+                ge=0,
+                le=150,
+                step=1,
+                description="年龄",
+            )
+            score: float = Slider.float(default=50.0, step=0.5)
+        ```
+
+    Notes:
+        Slider is deliberately a scalar component.  There is no ``Sliders``
+        type and list defaults are not part of this API.  Range sliders and
+        string sliders are also not supported.
+    """
+
+    _type_name = "Slider"
+
+    @staticmethod
+    def _validate_step(step: Any, *, integer: bool) -> int | float:
+        if integer:
+            if type(step) is not int:
+                raise TypeError("Slider.int step must be an int")
+        elif type(step) not in (int, float):
+            raise TypeError("Slider.float step must be an int or float")
+        if not math.isfinite(step):
+            raise ValueError("Slider step must be finite")
+        if step <= 0:
+            raise ValueError("Slider step must be greater than zero")
+        return step
+
+    @classmethod
+    def int(
+        cls,
+        *,
+        default: Any = UNSET,
+        default_factory: Callable[[], Any] | None = None,
+        step: Any = UNSET,
+        gt: int | None = None,
+        ge: int | None = None,
+        lt: int | None = None,
+        le: int | None = None,
+        hide: bool | None = False,
+        description: str | None = None,
+        icon: str | None = None,
+        title: str | None = None,
+        alias: str | None = None,
+        depends: str | None = None,
+        readOnly: bool | None = None,
+        json_schema_extra: dict[str, Any] | None = None,
+        **kwargs: Any,
+    ) -> FieldInfo:
+        if step is UNSET:
+            raise TypeError("Slider.int requires step")
+        if "multiple_of" in kwargs:
+            raise TypeError("Slider.int uses step instead of multiple_of")
+        step = cls._validate_step(step, integer=True)
+        return super().int(
+            default=default,
+            default_factory=default_factory,
+            gt=gt,
+            ge=ge,
+            lt=lt,
+            le=le,
+            multiple_of=step,
+            hide=hide,
+            description=description,
+            icon=icon,
+            title=title,
+            alias=alias,
+            depends=depends,
+            readOnly=readOnly,
+            json_schema_extra=json_schema_extra,
+            **kwargs,
+        )
+
+    @classmethod
+    def float(
+        cls,
+        *,
+        default: Any = UNSET,
+        default_factory: Callable[[], Any] | None = None,
+        step: Any = UNSET,
+        gt: float | None = None,
+        ge: float | None = None,
+        lt: float | None = None,
+        le: float | None = None,
+        hide: bool | None = False,
+        description: str | None = None,
+        icon: str | None = None,
+        title: str | None = None,
+        alias: str | None = None,
+        depends: str | None = None,
+        readOnly: bool | None = None,
+        json_schema_extra: dict[str, Any] | None = None,
+        **kwargs: Any,
+    ) -> FieldInfo:
+        if step is UNSET:
+            raise TypeError("Slider.float requires step")
+        if "multiple_of" in kwargs:
+            raise TypeError("Slider.float uses step instead of multiple_of")
+        step = cls._validate_step(step, integer=False)
+        return super().float(
+            default=default,
+            default_factory=default_factory,
+            gt=gt,
+            ge=ge,
+            lt=lt,
+            le=le,
+            multiple_of=step,
+            hide=hide,
+            description=description,
+            icon=icon,
+            title=title,
+            alias=alias,
+            depends=depends,
+            readOnly=readOnly,
+            json_schema_extra=json_schema_extra,
+            **kwargs,
+        )
+
+    @classmethod
+    def str(cls, **kwargs: Any) -> FieldInfo:
+        raise TypeError("Slider does not support str input")
+
+    @classmethod
+    def secret_str(cls, **kwargs: Any) -> FieldInfo:
+        raise TypeError("Slider does not support secret_str input")
 
 
 class Switch:
