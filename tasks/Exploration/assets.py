@@ -68,6 +68,10 @@ class ExplorationAssets:
 	C_CLICK_ROTATE_4 = RuleClick(roi_front=(921,590,21,21), roi_back=(921,590,21,21), name="click_rotate_4")
 	# 随机点 
 	C_SAFE_RANDOM = RuleClick(roi_front=(0,0,111,12), roi_back=(0,0,111,12), name="safe_random")
+	# 探索大地图 · 主线 tab 标题（"章"字锚点）点击区域 
+	C_CLICK_MAIN_TITLE = RuleClick(roi_front=(1070,174,77,28), roi_back=(1070,174,77,28), name="click_main_title")
+	# 探索大地图 · 玩法 tab 标题（"御魂"标题锚点）点击区域 
+	C_CLICK_PALY_TITLE = RuleClick(roi_front=(1178,172,77,28), roi_back=(1178,172,77,28), name="click_paly_title")
 
 
 	# Image Rule Assets
@@ -127,6 +131,10 @@ class ExplorationAssets:
 	I_EXP_ARROW_LEFT = RuleImage(roi_front=(1244,115,18,26), roi_back=(1178,78,100,100), threshold=0.8, method="Template matching", file="./tasks/Exploration/res/res_exp_arrow_left.png")
 	# 战斗中的队友标识 
 	I_TEAM_EMOJI_FIGHT = RuleImage(roi_front=(38,405,37,37), roi_back=(18,386,74,75), threshold=0.8, method="Template matching", file="./tasks/Exploration/res/res_team_emoji_fight.png")
+	# 探索大地图 · 主线 tab 标题锚点（"章"字，仅主线 tab 命中，玩法 tab 不命中） 
+	I_CHECK_MAIN_TITLE = RuleImage(roi_front=(1150,457,32,32), roi_back=(1069,222,113,336), threshold=0.85, method="Template matching", file="./tasks/Exploration/res/res_check_main_title.png")
+	# 探索大地图 · 玩法 tab 标题锚点（"御魂"标题，仅玩法 tab 命中，主线 tab 不命中） 
+	I_CHECK_PLAY_TITLE = RuleImage(roi_front=(1073,214,40,32), roi_back=(1065,210,190,316), threshold=0.85, method="Template matching", file="./tasks/Exploration/res/res_check_play_title.png")
 
 
 	# Long Click Rule Assets
