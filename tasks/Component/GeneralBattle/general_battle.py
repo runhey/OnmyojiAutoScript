@@ -677,6 +677,10 @@ def run_task_or_default_general_battle(task) -> bool:
     超时或异常时接管战斗的兜底函数
     https://github.com/runhey/OnmyojiAutoScript/issues/1884
     """
-    from tasks.Component.GeneralBattle.general_battle import GeneralBattle
+    try:
+        config = task.config.general_battle_config
+    except AttributeError:
+        # 某些任务(如 DemonEncounter)没有直接的 general_battle_config 字段
+        return False
     gb = GeneralBattle(config=task.config, device=task.device)
-    return gb.run_general_battle(config=task.config.general_battle_config)
+    return gb.run_general_battle(config=config)
