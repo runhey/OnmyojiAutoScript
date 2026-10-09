@@ -250,5 +250,23 @@
     "method": "Template matching",
     "threshold": 0.8,
     "description": "探索章节切换文件夹图标(移植自mine)"
+  },
+  {
+    "itemName": "check_main_title",
+    "imageName": "res_check_main_title.png",
+    "roiFront": "1150,457,32,32",
+    "roiBack": "1069,222,113,336",
+    "method": "Template matching",
+    "threshold": 0.85,
+    "description": "探索大地图主线tab标题锚点(章字)"
+  },
+  {
+    "itemName": "check_play_title",
+    "imageName": "res_check_play_title.png",
+    "roiFront": "1073,214,40,32",
+    "roiBack": "1065,210,190,316",
+    "method": "Template matching",
+    "threshold": 0.85,
+    "description": "探索大地图玩法tab标题锚点(御魂)"
   }
 ]

@@ -3,6 +3,7 @@
 # github https://github.com/runhey
 import time
 import random
+import difflib
 from time import sleep
 
 import cv2
@@ -10,9 +11,9 @@ from module.base.timer import Timer
 
 from module.base.utils import get_color, color_similar
 from tasks.base_task import BaseTask
-from tasks.Component.GeneralBattle.config_general_battle import GreenMarkType, GeneralBattleConfig
+from tasks.Component.GeneralBattle.config_general_battle import GreenMarkType, GreenMarkEnum, GeneralBattleConfig
 from tasks.Component.GeneralBattle.assets import GeneralBattleAssets
-from tasks.Component.GeneralBattle.config_general_battle import GreenMarkType, GeneralBattleConfig
+from tasks.Component.GeneralBattle.config_general_battle import GreenMarkType, GreenMarkEnum, GeneralBattleConfig
 from tasks.Component.GeneralBuff.config_buff import BuffClass
 from tasks.Component.GeneralBuff.general_buff import GeneralBuff
 from tasks.Component.GeneralBattle.battle_wait import BattleWait
@@ -317,47 +318,78 @@ class GeneralBattle(BattleWait, GeneralBuff):
         """
         return False
 
-    def green_mark(self, enable: bool = False, mark_mode: GreenMarkType = GreenMarkType.GREEN_MAIN):
+    def green_mark(self, enable: bool = False, mark_mode: GreenMarkType = GreenMarkType.GREEN_MAIN,
+                   green_mark_type: GreenMarkEnum = GreenMarkEnum.CHOOSE, green_mark_name: str = ''):
         """
         绿标， 如果不使能就直接返回
         :param enable:
-        :param mark_mode:
+        :param mark_mode:绿标目标位置
+        :param green_mark_type: 按坐标还是按式神名点击
+        :param green_mark_name: 式神名，仅 green_mark_type 为 NAME 时生效
         :return:
         """
-        if enable:
-            logger.info("Green is enable")
-            x, y = None, None
-            match mark_mode:
-                case GreenMarkType.GREEN_LEFT1:
-                    x, y = self.C_GREEN_LEFT_1.coord()
-                    logger.info("Green left 1")
-                case GreenMarkType.GREEN_LEFT2:
-                    x, y = self.C_GREEN_LEFT_2.coord()
-                    logger.info("Green left 2")
-                case GreenMarkType.GREEN_LEFT3:
-                    x, y = self.C_GREEN_LEFT_3.coord()
-                    logger.info("Green left 3")
-                case GreenMarkType.GREEN_LEFT4:
-                    x, y = self.C_GREEN_LEFT_4.coord()
-                    logger.info("Green left 4")
-                case GreenMarkType.GREEN_LEFT5:
-                    x, y = self.C_GREEN_LEFT_5.coord()
-                    logger.info("Green left 5")
-                case GreenMarkType.GREEN_MAIN:
-                    x, y = self.C_GREEN_MAIN.coord()
-                    logger.info("Green main")
+        if not enable:
+            return
+        logger.info("Green is enable")
+        self.device.screenshot_interval_set()
+        match green_mark_type:
+            case GreenMarkEnum.CHOOSE:
+                self.green_mark_choose(mark_mode)
+            case GreenMarkEnum.NAME:
+                self.green_mark_name(green_mark_name)
+        self.device.screenshot_interval_set('combat')
 
-            # 等待那个准备的消失
-            while 1:
-                self.screenshot()
-                if not self.appear(self.I_PREPARE_HIGHLIGHT):
-                    break
-
-            # 判断有无坐标的偏移
-            self.appear_then_click(self.I_LOCAL)
+    def green_mark_choose(self, mark_mode: GreenMarkType = GreenMarkType.GREEN_MAIN):
+        x, y = None, None
+        match mark_mode:
+            case GreenMarkType.GREEN_LEFT1:
+                x, y = self.C_GREEN_LEFT_1.coord()
+                logger.info("Green left 1")
+            case GreenMarkType.GREEN_LEFT2:
+                x, y = self.C_GREEN_LEFT_2.coord()
+                logger.info("Green left 2")
+            case GreenMarkType.GREEN_LEFT3:
+                x, y = self.C_GREEN_LEFT_3.coord()
+                logger.info("Green left 3")
+            case GreenMarkType.GREEN_LEFT4:
+                x, y = self.C_GREEN_LEFT_4.coord()
+                logger.info("Green left 4")
+            case GreenMarkType.GREEN_LEFT5:
+                x, y = self.C_GREEN_LEFT_5.coord()
+                logger.info("Green left 5")
+            case GreenMarkType.GREEN_MAIN:
+                x, y = self.C_GREEN_MAIN.coord()
+                logger.info("Green main")
+        while 1:
+            self.screenshot()
+            if not self.appear(self.I_PREPARE_HIGHLIGHT):
+                break
+        if self.appear_then_click(self.I_LOCAL):
             time.sleep(0.3)
-            # 点击绿标
-            self.device.click(x, y)
+        self.device.click(x, y)
+
+    def green_mark_name(self, name: str = ''):
+        if name == '':
+            logger.warning("Green mark name is empty")
+            return
+        timeout_timer = Timer(6).start()
+        best = {'name': '', 'x': -1, 'y': -1, 'similarity': 0.0}
+        while not timeout_timer.reached():
+            self.screenshot()
+            results = self.O_GREEN_MARK_AREA.detect_and_ocr(self.device.image)
+            for ret in results:
+                similarity = difflib.SequenceMatcher(None, ret.ocr_text, name).ratio()
+                if similarity > best['similarity']:
+                    x = self.O_GREEN_MARK_AREA.roi[0] + ret.box[0, 0] + 5
+                    y = self.O_GREEN_MARK_AREA.roi[1] + ret.box[0, 1] + 30
+                    x = 1280 if x > 1280 else x
+                    y = 720 if y > 720 else y
+                    best = {'name': ret.ocr_text, 'x': x, 'y': y, 'similarity': similarity}
+            if best['similarity'] > 0.5:
+                logger.info(f'Green name success, text: {best["name"]}[{best["similarity"]:.2f}]')
+                self.device.click(best['x'], best['y'], control_name=best['name'])
+                return
+        logger.warning(f'Green name failed, best text: {best["name"]}[{best["similarity"]:.2f}]')
 
     def switch_preset_team(self, enable: bool = False, preset_group: int = 1, preset_team: int = 1):
         """
