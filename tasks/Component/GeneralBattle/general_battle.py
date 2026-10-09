@@ -670,3 +670,13 @@ if __name__ == '__main__':
     unselected_color = get_unselect_color(self.C_PRESET_TEAM_1, self.C_PRESET_TEAM_2, self.C_PRESET_TEAM_3,
                                           size=color_size
                                           )
+
+
+def run_task_or_default_general_battle(task) -> bool:
+    """
+    超时或异常时接管战斗的兜底函数
+    https://github.com/runhey/OnmyojiAutoScript/issues/1884
+    """
+    from tasks.Component.GeneralBattle.general_battle import GeneralBattle
+    gb = GeneralBattle(config=task.config, device=task.device)
+    return gb.run_general_battle(config=task.config.general_battle_config)
