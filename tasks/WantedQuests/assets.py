@@ -131,6 +131,8 @@ class WantedQuestsAssets:
 	I_WQ_TRACE_ONE_CHECK_OPENED = RuleImage(roi_front=(510,175,210,60), roi_back=(510,175,210,60), threshold=0.8, method="Template matching", file="./tasks/WantedQuests/wq/wq_trace_one_check_opened.png")
 	# 庭院悬赏任务界面 单个任务点开后的界面 是否为现世任务标志 
 	I_WQ_TRACE_ONE_REALWORLD = RuleImage(roi_front=(850,470,180,180), roi_back=(850,470,180,180), threshold=0.8, method="Template matching", file="./tasks/WantedQuests/wq/wq_trace_one_realworld.png")
+	# 悬赏封印获得奖励
+	I_UI_REWARDNEW = RuleImage(roi_front=(523,248,239,24), roi_back=(500,225,285,70), threshold=0.7, method="Template matching", file="./tasks/WantedQuests/wq/ui_rewardnew.png")
 
 
 	# Ocr Rule Assets

@@ -80,7 +80,8 @@ class WQExplore(BaseExploration, HighLight):
                 #     continue
                 # 小纸人
                 if self.appear(self.I_BATTLE_REWARD):
-                    if self.ui_get_reward(self.I_BATTLE_REWARD):
+                    reward_image = getattr(self, "I_UI_REWARDnew", None)
+                    if self.ui_get_reward(self.I_BATTLE_REWARD, reward_image=reward_image):
                         continue
                 # boss
                 if self.appear(self.I_BOSS_BATTLE_BUTTON):

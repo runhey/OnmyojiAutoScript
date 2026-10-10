@@ -24,6 +24,7 @@ from tasks.WantedQuests.explore import WQExplore, ExploreWantedBoss
 
 
 class ScriptTask(WQExplore, SecretScriptTask, WantedQuestsAssets):
+    I_UI_REWARDnew = WantedQuestsAssets.I_UI_REWARDNEW
     want_strategy_excluding: list[list] = []  # 不需要执行的
     # 追踪界面(显示"前往"按钮的界面,左上角位置,神秘任务不好使)显示以下名称时,任务不再执行
     unwanted_boss_name_list: list = []
@@ -65,11 +66,11 @@ class ScriptTask(WQExplore, SecretScriptTask, WantedQuestsAssets):
                 break
             if self.appear(self.I_WQ_BOX):
                 logger.info("get reward")
-                self.ui_get_reward(self.I_WQ_BOX)
+                self.ui_get_reward(self.I_WQ_BOX, reward_image=self.I_UI_REWARDnew)
                 continue
             if self.appear(self.I_TREASURE_BOX_CLICK):
                 logger.info("get treasure")
-                self.ui_get_reward(self.I_TREASURE_BOX_CLICK)
+                self.ui_get_reward(self.I_TREASURE_BOX_CLICK, reward_image=self.I_UI_REWARDnew)
                 continue
             if error_count > 3:
                 logger.warning('failed too many times, exit')

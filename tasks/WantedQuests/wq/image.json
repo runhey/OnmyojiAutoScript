@@ -142,5 +142,14 @@
     "method": "Template matching",
     "threshold": 0.8,
     "description": "庭院悬赏任务界面 单个任务点开后的界面 是否为现世任务标志"
+  },
+  {
+    "itemName": "ui_rewardnew",
+    "imageName": "ui_rewardnew.png",
+    "roiFront": "523,248,239,24",
+    "roiBack": "500,225,285,70",
+    "method": "Template matching",
+    "threshold": 0.7,
+    "description": "悬赏封印获得奖励"
   }
 ]
