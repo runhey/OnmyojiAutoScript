@@ -356,7 +356,57 @@ class ConfigModel(ConfigBase):
                         groups_value[key] = groups[group_name]
             result[key] = merge_value(groups_value[key], value, schema["$defs"])
 
+        self._inject_desktop_handle_options(result)
+
         return result
+
+    def _inject_desktop_handle_options(self, result: dict) -> None:
+        """桌面模式下把 handle 改成"已开客户端窗口"下拉，供界面选择而非手填 PID。
+
+        仅 serial == 'desktop' 时注入：handle 是桌面与模拟器共用字段，模拟器模式
+        需要保留窗口标题/HWND 的自由输入。字段类型仍是 str，只是补上候选项。
+        """
+        device_items = result.get('device')
+        if not device_items:
+            return
+        if getattr(self.script.device, 'serial', '') != 'desktop':
+            return
+        try:
+            from module.device.method.desktop_impl import desktop_window_option, list_desktop_windows
+            windows = list_desktop_windows()
+        except Exception as e:
+            # 枚举依赖 win32 且只服务于界面展示，失败时退回手填输入框
+            logger.warning(f'list desktop windows failed, handle stays a text input: {e}')
+            return
+
+        options = [desktop_window_option(w) for w in windows]
+        current = ''
+        for item in device_items:
+            if item['name'] == 'handle':
+                current = str(item.get('value') or '')
+                break
+        # 落盘的 handle 是纯 PID，候选项却是带标题坐标的展示串；界面靠"值等于候选项"
+        # 来选中，所以要把当前值换成同款展示串，否则下拉显示为空白
+        display = ''
+        for window, option in zip(windows, options):
+            if str(window['pid']) == current:
+                display = option
+                break
+        # 已绑定的 PID 此刻可能不在枚举结果里（客户端未启动/换了 PID），
+        # 原值仍作候选保留，让界面能看出配置里存的是谁
+        if current and not display:
+            display = current
+            options.append(current)
+        # 空串候选用于解除绑定
+        options.insert(0, '')
+
+        for item in device_items:
+            if item['name'] != 'handle':
+                continue
+            item['type'] = 'enum'
+            item['enumEnum'] = options
+            item['value'] = display
+            break
 
     def script_set_arg(self, task: str, group: str, argument: str, value) -> bool:
         # 验证参数
@@ -385,6 +435,16 @@ class ConfigModel(ConfigBase):
             value = True
         if isinstance(value, str) and value == 'false':
             value = False
+
+        # 桌面模式下 handle 在界面上是下拉项，回传的是 "PID (x,y)" 展示串，落盘前剥回
+        # 纯 PID；必须限定 desktop 模式，模拟器的 handle 允许填窗口标题等非数字文本
+        if (task == 'script' and group == 'device' and argument == 'handle'
+                and isinstance(value, str) and self.script.device.serial == 'desktop'):
+            from module.device.method.desktop_impl import desktop_option2pid
+            resolved = desktop_option2pid(value)
+            if resolved != value:
+                logger.info(f'Desktop handle option resolved to PID: {resolved}')
+            value = resolved
 
         task_object = getattr(self, task, None)
         group_object = getattr(task_object, group, None)

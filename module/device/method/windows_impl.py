@@ -11,28 +11,34 @@ from cached_property import cached_property
 from win32gui import (GetWindowText, EnumWindows, FindWindow, FindWindowEx,
                       IsWindow, GetWindowRect, GetWindowDC, DeleteObject,
                       SetForegroundWindow, IsWindowVisible, GetDC, GetParent,
-                      EnumChildWindows, SetForegroundWindow)
+                      EnumChildWindows, SetForegroundWindow, GetClientRect)
 from win32con import (SRCCOPY, DESKTOPHORZRES, DESKTOPVERTRES, WM_LBUTTONUP,
                       WM_LBUTTONDOWN, WM_ACTIVATE, WA_ACTIVE, MK_LBUTTON,
                       WM_NCHITTEST, WM_SETCURSOR, HTCLIENT, WM_MOUSEMOVE,
                       WM_PARENTNOTIFY, WM_MOUSEACTIVATE, WM_MOUSEWHEEL,
-                      WM_SETFOCUS)
+                      WM_SETFOCUS, WM_CAPTURECHANGED)
 from win32ui import CreateDCFromHandle, CreateBitmap
 from win32api import GetSystemMetrics, SendMessage, MAKELONG, PostMessage
 from win32con import SRCCOPY
 
 
-from module.base.cBezier import BezierTrajectory
+from module.base.cBezier import human_track
 from module.exception import RequestHumanTakeover, ScriptError
 from module.base.decorator import Config
 from module.base.timer import timer
 from module.logger import logger
 from module.device.handle import Handle, window_scale_rate, EmulatorFamily
+from module.device.method.desktop_impl import dpi_awareness
 
 
 
 
 class Window(Handle):
+
+    # 桌面模式鼠标移动：每 N 像素取一个轨迹点，并限制单次移动的点数上限，
+    # 使长距离移动的耗时与距离解耦（移动只为更新客户端悬停状态）。
+    DESKTOP_MOVE_STEP = 60
+    DESKTOP_MOVE_MAX_POINTS = 12
 
     def __init__(self, *args, **kwargs):
         logger.info("Window init")
@@ -43,6 +49,8 @@ class Window(Handle):
         后台截屏
         :return:
         """
+        if getattr(self, 'is_desktop_window', False):
+            return self.screenshot_desktop_bitblt()
         widthScreen, heightScreen = self.screenshot_size
         # 返回句柄窗口的设备环境，覆盖整个窗口，包括非客户区，标题栏，菜单，边框
         hwndDc = GetWindowDC(self.screenshot_handle_num)
@@ -80,6 +88,43 @@ class Window(Handle):
         mfcDc.DeleteDC()
         return imgSrceen
 
+    def screenshot_desktop_bitblt(self):
+        """桌面客户端后台截图：在 DPI 感知上下文内对客户区 DC 做 BitBlt。
+
+        客户端按物理像素原生渲染，感知上下文里取到的就是物理客户区（1280x720），
+        与资产 1:1，客户区 DC 原点即画面左上角、不含标题栏，故无偏移、无缩放。
+        """
+        self.desktop_window_restore_if_minimized()
+        with dpi_awareness():
+            client_rect = GetClientRect(self.screenshot_handle_num)
+            widthScreen = client_rect[2] - client_rect[0]
+            heightScreen = client_rect[3] - client_rect[1]
+            if widthScreen <= 0 or heightScreen <= 0:
+                # 最小化时客户区为 0x0，取不到内容（窗口被遮挡则可以）
+                raise RequestHumanTakeover(
+                    'Desktop client window is minimized, screenshot unavailable. '
+                    '请恢复游戏窗口（可被其他窗口遮挡，但不能最小化）'
+                )
+            hwndDc = GetDC(self.screenshot_handle_num)
+            mfcDc = CreateDCFromHandle(hwndDc)
+            saveDc = mfcDc.CreateCompatibleDC()
+            saveBitMap = CreateBitmap()
+            saveBitMap.CreateCompatibleBitmap(mfcDc, widthScreen, heightScreen)
+            saveDc.SelectObject(saveBitMap)
+            saveDc.BitBlt((0, 0), (widthScreen, heightScreen), mfcDc, (0, 0), SRCCOPY)
+            signedIntsArray = saveBitMap.GetBitmapBits(True)
+            imgSrceen = frombuffer(signedIntsArray, dtype='uint8')
+            imgSrceen.shape = (heightScreen, widthScreen, 4)
+            imgSrceen = cv2.cvtColor(imgSrceen, cv2.COLOR_BGR2RGB)
+            DeleteObject(saveBitMap.GetHandle())
+            saveDc.DeleteDC()
+            mfcDc.DeleteDC()
+        # 客户端锁定大小导致未校准到目标尺寸时兜底缩放，保证与资产同尺寸
+        target_w, target_h = self.screenshot_size
+        if (widthScreen, heightScreen) != (target_w, target_h):
+            imgSrceen = cv2.resize(imgSrceen, (target_w, target_h))
+        return imgSrceen
+
     @cached_property
     def control_handle_list(self) -> list:
         """
@@ -90,6 +135,9 @@ class Window(Handle):
         :return:
         """
         result = []
+        if getattr(self, 'is_desktop_window', False):
+            # 桌面客户端无子渲染窗口，控制句柄即根窗口
+            return [self.root_handle_num]
         if self.emulator_family == EmulatorFamily.FAMILY_MUMU:
             result.append(self.root_node.num)
             result.append(self.root_node.children[0].num)
@@ -141,6 +189,8 @@ class Window(Handle):
         :param fast:
         :return:
         """
+        if getattr(self, 'is_desktop_window', False):
+            return self.click_desktop_window_message(x, y, fast)
         # 我不知道为什么的使用的pywin32==306的版本会导致获取的图片的是(1024, 576)
         # 所有我在点击的时候会除以这个缩放比例
         # 但是后面发现又不是影响的很奇怪
@@ -173,6 +223,72 @@ class Window(Handle):
             time.sleep(press_time)
             SendMessage(self.control_handle_list[0], WM_LBUTTONUP, 0, clickPos)
 
+    def desktop_message_coord(self, x, y) -> tuple:
+        """把资产坐标（截图空间 1280x720）换算成窗口消息坐标。
+
+        截图在 DPI 感知上下文内取得，是物理像素；PostMessage 由 DPI-unaware 的
+        OAS 进程发出，lParam 会被系统按虚拟化空间解释，两者相差系统缩放比。
+        """
+        target_w, target_h = self.screenshot_size
+        virtual_w, virtual_h = self.desktop_client_size_virtual()
+        return int(round(x * virtual_w / target_w)), int(round(y * virtual_h / target_h))
+
+    def _desktop_press(self, x: int, y: int, press_time: float) -> None:
+        """后台按下并保持 press_time 秒。
+
+        客户端是鼠标语义（不是模拟器的触摸协议），控件依赖 hover 状态，必须先把
+        鼠标沿轨迹移到目标点再按下；抬起后补一次移动刷新悬停状态。
+        """
+        self.desktop_window_restore_if_minimized()
+        hwnd = self.root_handle_num
+        self.move_desktop_window_message(x, y)
+        lparam = MAKELONG(*self.desktop_message_coord(x, y))
+        PostMessage(hwnd, WM_LBUTTONDOWN, MK_LBUTTON, lparam)
+        time.sleep(press_time)
+        PostMessage(hwnd, WM_LBUTTONUP, 0, lparam)
+        SendMessage(hwnd, WM_CAPTURECHANGED, 0, 0)
+        PostMessage(hwnd, WM_MOUSEMOVE, 0, lparam)
+
+    def click_desktop_window_message(self, x: int, y: int, fast: bool = False):
+        """桌面客户端后台点击，入参为客户区（1280x720）坐标。
+
+        按压时长只保留随机抖动：点击由客户端按 down/up 事件判定，不需要真人按压。
+        """
+        press_time: float = (random.randint(10, 25) if fast else random.randint(30, 60)) / 1000.0
+        self._desktop_press(x, y, press_time)
+
+    def long_click_desktop_window_message(self, x: int, y: int, duration: float):
+        """桌面客户端后台长按，duration 单位秒。"""
+        self._desktop_press(x, y, duration)
+
+    def move_desktop_window_message(self, x: int, y: int) -> None:
+        """桌面客户端后台鼠标移动：从上一落点沿拟人轨迹移到 (x, y)，入参为资产坐标。
+
+        _desktop_cursor 记录当前位置，使连续操作之间的移动连贯。移动只为让客户端
+        更新悬停状态，因此按 DESKTOP_MOVE_STEP 取点并抽稀到点数上限，
+        长距离移动的耗时与距离解耦。
+        """
+        hwnd = self.root_handle_num
+        start = getattr(self, '_desktop_cursor', None)
+        target = (int(x), int(y))
+
+        def post_move(px, py):
+            PostMessage(hwnd, WM_MOUSEMOVE, 0, MAKELONG(*self.desktop_message_coord(px, py)))
+
+        if start is None or start == target:
+            # 没有历史位置（首次操作）或原地不动：直接发一次移动
+            post_move(target[0], target[1])
+            self._desktop_cursor = target
+            return
+        trace = human_track(start, target, interval=self.DESKTOP_MOVE_STEP)
+        if len(trace) > self.DESKTOP_MOVE_MAX_POINTS:
+            step = len(trace) / self.DESKTOP_MOVE_MAX_POINTS
+            trace = [trace[int(i * step)] for i in range(self.DESKTOP_MOVE_MAX_POINTS)]
+        for px, py in trace:
+            post_move(px, py)
+        post_move(target[0], target[1])
+        self._desktop_cursor = target
+
     def long_click_window_message(self, x: int, y: int, duration: float):
         """
 
@@ -181,6 +297,8 @@ class Window(Handle):
         :param duration: 持续时间 单位秒
         :return:
         """
+        if getattr(self, 'is_desktop_window', False):
+            return self.long_click_desktop_window_message(x, y, duration)
         # 我不知道为什么的使用的pywin32==306的版本会导致获取的图片的是(1024, 576)
         # 所有我在点击的时候会除以这个缩放比例
         x = int(x / self.window_scale_rate)
@@ -214,21 +332,11 @@ class Window(Handle):
         :param endPos:
         :return:
         """
+        if getattr(self, 'is_desktop_window', False):
+            return self.swipe_desktop_window_message(startPos, endPos)
         # 生成的坐标点列表
         interval: int = 10  # 每次移动的间隔时间
-        numberList: int = int(dist(startPos, endPos) / (1 * interval))  # 表示每毫秒移动1.5个像素点， 总的时间除以每个点10ms就得到总的点的个数
-        le = random.randint(2, 4)  #
-        deviation = random.randint(20, 40)  # 幅度
-        _type: int = 3
-        obbsType = random.random()  # 0.8的概率是先快中间慢后面快， 0.1概率是先快后慢， 0.1概率先慢后快
-        if 0 < obbsType <= 0.8:
-            _type = 3
-        elif obbsType < 0.9:
-            _type = 2
-        else:
-            _type = 1
-        trace: list = BezierTrajectory.trackArray(start=startPos, end=endPos, numberList=numberList, le=le,
-                                                  deviation=deviation, bias=0.5, type=_type, cbb=0, yhh=20)
+        trace: list = human_track(startPos, endPos, interval=interval)
 
         # 使用生成的点列表进行拖拽
         handleNum = None
@@ -265,6 +373,32 @@ class Window(Handle):
         time.sleep(0.05)
         end_lparam = MAKELONG(trace[-1][0], trace[-1][1])
         PostMessage(handleNum, WM_LBUTTONUP, 0, end_lparam)
+
+    def swipe_desktop_window_message(self, startPos: list, endPos: list) -> None:
+        """桌面客户端后台滑动：与模拟器同一套拟人轨迹，坐标换算到消息空间后逐点投递。"""
+        self.desktop_window_restore_if_minimized()
+        hwnd = self.root_handle_num
+        interval: int = 10
+        trace = human_track(startPos, endPos, interval=interval)
+        # 先移到起点再按下：客户端靠 hover 状态识别拖拽
+        self.move_desktop_window_message(startPos[0], startPos[1])
+        start_lparam = MAKELONG(*self.desktop_message_coord(startPos[0], startPos[1]))
+        PostMessage(hwnd, WM_LBUTTONDOWN, MK_LBUTTON, start_lparam)
+        # 最后几个点放慢，避免被判定为瞬移
+        manual_control: int = 3
+        total_len: int = len(trace)
+        for index, pos in enumerate(trace):
+            lparam = MAKELONG(*self.desktop_message_coord(pos[0], pos[1]))
+            PostMessage(hwnd, WM_MOUSEMOVE, MK_LBUTTON, lparam)
+            if manual_control >= total_len - index:
+                time.sleep(0.08)
+            else:
+                time.sleep((interval + random.randint(-2, 2)) / 1000.0)
+        time.sleep(0.05)
+        end_lparam = MAKELONG(*self.desktop_message_coord(endPos[0], endPos[1]))
+        PostMessage(hwnd, WM_LBUTTONUP, 0, end_lparam)
+        SendMessage(hwnd, WM_CAPTURECHANGED, 0, 0)
+        self._desktop_cursor = (int(endPos[0]), int(endPos[1]))
 
     def swipe_vector_window_message2(self, startPos: list, endPos: list) -> None:
         """

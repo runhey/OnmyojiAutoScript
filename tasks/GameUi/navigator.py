@@ -710,6 +710,12 @@ class GameUi(BaseTask, GameUiAssets):
         """
 
         self.maybe_screenshot(skip_first_screenshot)
+
+        # 客户端掉回登录态（掉线/被顶号）时页面上的标志全部不可信，点关闭动作
+        # 没有意义，交回 Restart 处理（登录流程会关掉弹窗）
+        if self.device.app_lost_login():
+            raise GameNotRunningError('Client dropped back to login')
+
         logger.warning("Try switch to a supported page")
         for action in [*self.navigator.local_unknown_closers, *self.DEFAULT_UNKNOWN_CLOSERS]:
             action_name = self._action_name(action)

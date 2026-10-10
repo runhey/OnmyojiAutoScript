@@ -13,6 +13,20 @@ from module.logger import logger
 from module.base.utils import is_approx_rectangle
 from module.base.utils.utils import random_normal_distribution_int
 
+# 模板匹配容差：把搜索区域（roi_back）四边各外扩该像素数，用于吸收非原生渲染
+# 环境相对模板截图环境的整体相位差（桌面客户端受 DPI 缩放重采样，约 1px）。
+# 仓库里约 1/3 的模板 roi_back 与模板等宽，此时 matchTemplate 结果只剩 1 列、
+# 横向一格都平移不了，1px 相位差就足以把「元素存在」判成「不存在」。
+# 桌面模式由 Device 置为 2，模拟器保持 0、行为逐位不变。
+ROI_MATCH_PAD = 0
+DESKTOP_ROI_MATCH_PAD = 2
+
+
+def set_roi_match_padding(pad: int) -> None:
+    """设置模板匹配的 roi_back 外扩容差（像素，四边同值）。0 表示不启用。"""
+    global ROI_MATCH_PAD
+    ROI_MATCH_PAD = max(0, int(pad))
+
 
 class RuleImage(RuleImageMallResourceMixin):
     debug_mode: bool = False
@@ -140,6 +154,23 @@ class RuleImage(RuleImageMallResourceMixin):
             self.load_kp_des()
         return self._des
 
+    @staticmethod
+    def _pad_roi(roi) -> tuple:
+        """
+        把 ROI 四边各外扩 ROI_MATCH_PAD 像素，返回 (x0, y0, w, h)。
+
+        左上侧必须夹到 0：numpy 对负索引按「倒数」语义取值，会把裁剪位置算错，
+        并连带把回算出的 roi_front 算偏；右/下侧越界由切片自然截断。
+        返回的 x0/y0 是外扩后的原点，命中回算必须以它做基准。
+        """
+        x, y, w, h = [int(v) for v in roi]
+        pad = ROI_MATCH_PAD
+        if pad <= 0:
+            return x, y, w, h
+        x0 = max(0, x - pad)
+        y0 = max(0, y - pad)
+        return x0, y0, x + w + pad - x0, y + h + pad - y0
+
     @property
     def mask(self):
         """
@@ -209,11 +240,7 @@ class RuleImage(RuleImageMallResourceMixin):
         :param roi
         :return:
         """
-        if roi is None:
-            x, y, w, h = self.roi_back
-        else:
-            x, y, w, h = roi
-        x, y, w, h = int(x), int(y), int(w), int(h)
+        x, y, w, h = self._pad_roi(self.roi_back if roi is None else roi)
         return image[y:y + h, x:x + w]
 
     def match(self, image: np.array, threshold: float = None) -> bool:
@@ -258,8 +285,9 @@ class RuleImage(RuleImageMallResourceMixin):
             logger.attr(self.name, f'matching score {max_val:.5f}')
 
         if max_val > threshold:
-            self.roi_front[0] = max_loc[0] + self.roi_back[0]
-            self.roi_front[1] = max_loc[1] + self.roi_back[1]
+            x0, y0, _, _ = self._pad_roi(self.roi_back)
+            self.roi_front[0] = max_loc[0] + x0
+            self.roi_front[1] = max_loc[1] + y0
             return True
         else:
             return False
@@ -340,8 +368,9 @@ class RuleImage(RuleImageMallResourceMixin):
             self.last_scale = float(best_scale)
 
         if best_score > threshold and best_loc is not None and best_shape is not None:
-            self.roi_front[0] = best_loc[0] + self.roi_back[0]
-            self.roi_front[1] = best_loc[1] + self.roi_back[1]
+            x0, y0, _, _ = self._pad_roi(self.roi_back)
+            self.roi_front[0] = best_loc[0] + x0
+            self.roi_front[1] = best_loc[1] + y0
             self.roi_front[2] = best_shape[0]
             self.roi_front[3] = best_shape[1]
             return True
@@ -377,11 +406,12 @@ class RuleImage(RuleImageMallResourceMixin):
             self.last_score = float(results.max())
         locations = np.where(results >= threshold)
         matches = []
+        x0, y0, _, _ = self._pad_roi(self.roi_back)
         for pt in zip(*locations[::-1]):  # (x, y) coordinates
             score = results[pt[1], pt[0]]
             # 得分, x, y, w, h
-            x = self.roi_back[0] + pt[0]
-            y = self.roi_back[1] + pt[1]
+            x = x0 + pt[0]
+            y = y0 + pt[1]
             matches.append((score, x, y, mat.shape[1], mat.shape[0]))
         return matches
 
@@ -414,11 +444,12 @@ class RuleImage(RuleImageMallResourceMixin):
             self.last_score = float(results.max())
         locations = np.where(results >= threshold)
         matches = []
+        x0, y0, _, _ = self._pad_roi(self.roi_back)
         for pt in zip(*locations[::-1]):  # (x, y) coordinates
             score = results[pt[1], pt[0]]
             # 得分, x, y, w, h
-            x = self.roi_back[0] + pt[0]
-            y = self.roi_back[1] + pt[1]
+            x = x0 + pt[0]
+            y = y0 + pt[1]
             matches.append((score, x, y, mat.shape[1], mat.shape[0]))
         if len(matches) > 0:
             scores = np.array([m[0] for m in matches])
@@ -501,8 +532,9 @@ class RuleImage(RuleImageMallResourceMixin):
                 result = False
             else:
                 dst = int32(cv2.perspectiveTransform(pts, m))
-                self.roi_front[0] = dst[0, 0, 0] + self.roi_back[0]
-                self.roi_front[1] = dst[0, 0, 1] + self.roi_back[1]
+                x0, y0, _, _ = self._pad_roi(self.roi_back)
+                self.roi_front[0] = dst[0, 0, 0] + x0
+                self.roi_front[1] = dst[0, 0, 1] + y0
                 if show:
                     cv2.polylines(source, [dst], isClosed=True, color=(0, 0, 255), thickness=2)
                 if not is_approx_rectangle(np.array([pos[0] for pos in dst])):
