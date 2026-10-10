@@ -162,7 +162,10 @@ class BaseExploration(GameUi, GeneralBattle, GeneralRoom, GeneralInvite, Replace
             if self.appear_then_click(self.I_UI_CONFIRM_SAMLL, interval=1):
                 continue
             self.device.click_record_clear()
-            self.swipe(self.S_SWIPE_LEVEL_UP)
+            # 目标章节在列表下方（进入时列表恒定停在顶部），必须向上拖动手势
+            # （S_SWIPE_LEVEL_DOWN：手指自下而上）才能翻出后面的章节；
+            # S_SWIPE_LEVEL_UP 是向下拉、顶着顶部空转，45 次滑动零位移。
+            self.swipe(self.S_SWIPE_LEVEL_DOWN)
             swipeCount += 1
             debug_info = f"Swiped {swipeCount} times, current exploration level: {text1}"
             logger.info(debug_info)
