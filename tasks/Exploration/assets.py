@@ -159,9 +159,9 @@ class ExplorationAssets:
 
 	# Swipe Rule Assets
 	# 向上滑动章节 
-	S_SWIPE_LEVEL_UP = RuleSwipe(roi_front=(1142,328,21,21), roi_back=(1143,444,21,21), mode="default", name="swipe_level_up")
+	S_SWIPE_LEVEL_UP = RuleSwipe(roi_front=(1142,420,21,21), roi_back=(1142,270,21,21), mode="default", name="swipe_level_up")
 	# 向下滑动章节 
-	S_SWIPE_LEVEL_DOWN = RuleSwipe(roi_front=(1143,486,21,21), roi_back=(1143,367,21,23), mode="default", name="swipe_level_down")
+	S_SWIPE_LEVEL_DOWN = RuleSwipe(roi_front=(1142,270,21,21), roi_back=(1142,420,21,21), mode="default", name="swipe_level_down")
 	# 往左滑动 
 	S_SWIPE_BACKGROUND_RIGHT = RuleSwipe(roi_front=(1093,148,21,21), roi_back=(397,140,21,21), mode="default", name="swipe_background_right")
 	# 往右滑动 
