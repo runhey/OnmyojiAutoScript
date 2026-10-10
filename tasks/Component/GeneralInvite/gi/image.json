@@ -335,8 +335,8 @@
   {
     "itemName": "gi_sure",
     "imageName": "gi_gi_sure.png",
-    "roiFront": "670,402,175,60",
-    "roiBack": "670,402,175,60",
+    "roiFront": "667,412,169,53",
+    "roiBack": "667,412,169,53",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "队长邀请 确定"

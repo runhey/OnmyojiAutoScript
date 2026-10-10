@@ -86,7 +86,7 @@ class GeneralInviteAssets:
 	# description 
 	I_GI_CANCEL = RuleImage(roi_front=(438,407,171,55), roi_back=(438,407,171,55), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralInvite/gi/gi_cancel.png")
 	# 队长邀请 确定 
-	I_GI_SURE = RuleImage(roi_front=(670,402,175,60), roi_back=(670,402,175,60), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralInvite/gi/gi_gi_sure.png")
+	I_GI_SURE = RuleImage(roi_front=(667,412,169,53), roi_back=(667,412,169,53), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralInvite/gi/gi_gi_sure.png")
 	# 所有的组队界面都有加成 
 	I_GI_BUFF = RuleImage(roi_front=(794,38,46,42), roi_back=(794,38,46,42), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralInvite/gi/gi_gi_buff.png")
 	# 三人御魂组队左上角的协站队伍 
