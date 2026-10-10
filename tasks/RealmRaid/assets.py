@@ -39,8 +39,6 @@ class RealmRaidAssets:
 	I_FIRE = RuleImage(roi_front=(982,494,136,63), roi_back=(140,129,1024,584), threshold=0.8, method="Template matching", file="./tasks/RealmRaid/res/res_fire.png")
 	# 打完个后出现的领取奖励 
 	I_SOUL_RAID = RuleImage(roi_front=(577,502,100,100), roi_back=(577,502,100,100), threshold=0.8, method="Template matching", file="./tasks/RealmRaid/res/res_soul_raid.png")
-	# 刷新确认 
-	I_FRESH_ENSURE = RuleImage(roi_front=(672,403,173,59), roi_back=(672,403,173,59), threshold=0.8, method="Template matching", file="./tasks/RealmRaid/res/res_fresh_ensure.png")
 	# 没有锁图片，适配呱太入侵 
 	I_UNLOCK_2 = RuleImage(roi_front=(1002,643,30,41), roi_back=(1002,643,30,41), threshold=0.9, method="Template matching", file="./tasks/RealmRaid/res/res_unlock_2.png")
 	# 以锁图片，适配呱太 

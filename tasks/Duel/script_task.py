@@ -7,6 +7,7 @@ import random
 from datetime import time, datetime, timedelta
 
 from module.logger import logger
+from tasks.GlobalGame.assets import GlobalGameAssets
 from module.exception import TaskEnd
 from module.base.timer import Timer
 
@@ -207,7 +208,7 @@ class ScriptTask(GameUi, GeneralBattle, SwitchSoul, DuelAssets, SwitchOnmyoji):
             self.screenshot()
             if self.appear(self.I_D_FAIL) or self.appear(self.I_FALSE):
                 return
-            if self.appear_then_click(self.I_EXIT_ENSURE):
+            if self.appear_then_click(GlobalGameAssets.I_UI_CONFIRM):
                 continue
             # 选式神界面退出或战斗内退出
             if self.appear_then_click(self.I_DUEL_EXIT, interval=1) or self.appear_then_click(self.I_EXIT, interval=1):
