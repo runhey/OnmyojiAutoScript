@@ -27,6 +27,12 @@ class MemoryScrollsAssets:
 	C_MS_CONTRIBUTED = RuleClick(roi_front=(108,509,993,190), roi_back=(108,509,993,190), name="ms_contributed")
 	# 双绘卷之二 
 	C_MS_DOUBLE_SCROLLS_2 = RuleClick(roi_front=(714,128,464,397), roi_back=(714,128,464,397), name="ms_double_scrolls_2")
+	# 小绘卷最大按钮 
+	C_MS_MAX_S = RuleClick(roi_front=(1106,116,36,36), roi_back=(1106,116,36,36), name="ms_max_s")
+	# 中绘卷最大按钮 
+	C_MS_MAX_M = RuleClick(roi_front=(1106,258,36,36), roi_back=(1106,258,36,36), name="ms_max_m")
+	# 大绘卷最大按钮 
+	C_MS_MAX_L = RuleClick(roi_front=(1106,398,36,36), roi_back=(1106,398,36,36), name="ms_max_l")
 
 
 	# Image Rule Assets
