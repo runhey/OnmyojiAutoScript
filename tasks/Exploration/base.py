@@ -58,9 +58,9 @@ class BaseExploration(GameUi, GeneralBattle, GeneralRoom, GeneralInvite, Replace
     def _match_end(self):
         return RuleAnimate(self.I_SWIPE_END)
 
-    def is_swipe_unchanged(self, before_image, after_image, threshold: float = 20) -> bool:
-        # 对比滑屏前后同一块区域，变化很小说明地图大概率没有移动，已经滑到尽头。
-        swipe_check_roi = (1216, 86, 64, 225)
+    def is_swipe_unchanged(self, before_image, after_image, threshold: float = 15) -> bool:
+        # 对比滑屏前后中上部背景区域(避开顶部跑马灯、下方小怪挑战图标及最右侧浮动鬼火)，变化很小说明地图已滑到尽头。
+        swipe_check_roi = (250, 140, 800, 90)
         before = self.I_SWIPE_END.corp(before_image, swipe_check_roi)
         after = self.I_SWIPE_END.corp(after_image, swipe_check_roi)
         diff = np.mean(np.abs(before.astype(np.int16) - after.astype(np.int16)))
@@ -329,11 +329,11 @@ class BaseExploration(GameUi, GeneralBattle, GeneralRoom, GeneralInvite, Replace
                     self.I_NORMAL_BATTLE_BUTTON.roi_front = roi_front
                     logger.info(f"Target locked: sword at {roi_front} (aligned with UP icon)")
                     return self.I_NORMAL_BATTLE_BUTTON
-            else:
-                # 没找到 UP 图标，返回 None 让外层逻辑去处理(滑动或退出)
-                return None
+            # 没找到 UP 图标或对应战斗图标，返回 None 让外层逻辑去处理(滑动或退出)
+            return None
 
         # 2. 如果是默认情况 (UpType.ALL)，则只要有怪就打
+        self.I_NORMAL_BATTLE_BUTTON.roi_back = (0, 0, 1279, 719)
         if self.appear(self.I_NORMAL_BATTLE_BUTTON):
             return self.I_NORMAL_BATTLE_BUTTON
             
@@ -389,6 +389,7 @@ class BaseExploration(GameUi, GeneralBattle, GeneralRoom, GeneralInvite, Replace
 
     def quit_explore(self):
         logger.info('Quit explore')
+        self.device.click_record_remove(self.S_SWIPE_BACKGROUND_RIGHT.name)
         boss_timer = Timer(15)
         boss_timer.start()
         # click_yellow_button = 0 #用于保证只点一次左上返回按钮，不要直接触发连点回到主界面
