@@ -166,7 +166,7 @@ class BaseExploration(GameUi, GeneralBattle, GeneralRoom, GeneralInvite, Replace
             swipeCount += 1
             debug_info = f"Swiped {swipeCount} times, current exploration level: {text1}"
             logger.info(debug_info)
-            if swipeCount >= 15:
+            if swipeCount >= 30:
                 raise GameStuckError(
                     f"Swiped too many times ({swipeCount}), seems stuck in exploration level selection"
                 )
