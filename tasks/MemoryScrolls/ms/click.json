@@ -46,5 +46,23 @@
     "roiFront": "714,128,464,397",
     "roiBack": "714,128,464,397",
     "description": "双绘卷之二"
+  },
+  {
+    "itemName": "ms_max_s",
+    "roiFront": "1106,116,36,36",
+    "roiBack": "1106,116,36,36",
+    "description": "小绘卷最大按钮"
+  },
+  {
+    "itemName": "ms_max_m",
+    "roiFront": "1106,258,36,36",
+    "roiBack": "1106,258,36,36",
+    "description": "中绘卷最大按钮"
+  },
+  {
+    "itemName": "ms_max_l",
+    "roiFront": "1106,398,36,36",
+    "roiBack": "1106,398,36,36",
+    "description": "大绘卷最大按钮"
   }
 ]
