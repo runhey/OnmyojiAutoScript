@@ -155,8 +155,8 @@
   {
     "itemName": "exit_ensure",
     "imageName": "gb_exit_ensure.png",
-    "roiFront": "674,388,135,63",
-    "roiBack": "674,388,135,63",
+    "roiFront": "701,414,95,46",
+    "roiBack": "648,388,220,96",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "退出确认"

@@ -68,9 +68,9 @@ class ExplorationAssets:
 	C_CLICK_ROTATE_4 = RuleClick(roi_front=(921,590,21,21), roi_back=(921,590,21,21), name="click_rotate_4")
 	# 随机点 
 	C_SAFE_RANDOM = RuleClick(roi_front=(0,0,111,12), roi_back=(0,0,111,12), name="safe_random")
-	# 探索大地图 · 主线 tab 标题（"章"字锚点）点击区域 
+	# 点击探索大地图主线tab标题 
 	C_CLICK_MAIN_TITLE = RuleClick(roi_front=(1070,174,77,28), roi_back=(1070,174,77,28), name="click_main_title")
-	# 探索大地图 · 玩法 tab 标题（"御魂"标题锚点）点击区域 
+	# 点击探索大地图玩法tab标题 
 	C_CLICK_PALY_TITLE = RuleClick(roi_front=(1178,172,77,28), roi_back=(1178,172,77,28), name="click_paly_title")
 
 
@@ -111,10 +111,8 @@ class ExplorationAssets:
 	I_GET_REWARD = RuleImage(roi_front=(464,231,339,44), roi_back=(464,231,339,44), threshold=0.8, method="Template matching", file="./tasks/Exploration/res/res_get_reward.png")
 	# description 
 	I_RED_CLOSE = RuleImage(roi_front=(1027,129,41,42), roi_back=(1021,121,54,55), threshold=0.6, method="Template matching", file="./tasks/Exploration/res/res_red_close.png")
-	# description
+	# description 
 	I_E_EXIT_CONFIRM = RuleImage(roi_front=(694,380,163,49), roi_back=(694,380,163,49), threshold=0.8, method="Template matching", file="./tasks/Exploration/res/res_e_exit_confirm.png")
-	# 探索章节切换文件夹图标(移植自mine)
-	I_E_OPEN_FOLDER = RuleImage(roi_front=(1241,114,22,28), roi_back=(1212,88,68,123), threshold=0.8, method="Template matching", file="./tasks/Exploration/res/res_e_open_folder.png")
 	# 宝箱 
 	I_TREASURE_BOX_CLICK = RuleImage(roi_front=(31,543,27,24), roi_back=(11,520,378,65), threshold=0.65, method="Template matching", file="./tasks/Exploration/res/res_treasure_box_click.png")
 	# 困28滚动到最后 
@@ -131,9 +129,11 @@ class ExplorationAssets:
 	I_EXP_ARROW_LEFT = RuleImage(roi_front=(1244,115,18,26), roi_back=(1178,78,100,100), threshold=0.8, method="Template matching", file="./tasks/Exploration/res/res_exp_arrow_left.png")
 	# 战斗中的队友标识 
 	I_TEAM_EMOJI_FIGHT = RuleImage(roi_front=(38,405,37,37), roi_back=(18,386,74,75), threshold=0.8, method="Template matching", file="./tasks/Exploration/res/res_team_emoji_fight.png")
-	# 探索大地图 · 主线 tab 标题锚点（"章"字，仅主线 tab 命中，玩法 tab 不命中） 
+	# 探索章节切换文件夹图标(移植自mine) 
+	I_E_OPEN_FOLDER = RuleImage(roi_front=(1241,114,22,28), roi_back=(1212,88,68,123), threshold=0.8, method="Template matching", file="./tasks/Exploration/res/res_e_open_folder.png")
+	# 探索大地图主线tab标题锚点(章字) 
 	I_CHECK_MAIN_TITLE = RuleImage(roi_front=(1150,457,32,32), roi_back=(1069,222,113,336), threshold=0.85, method="Template matching", file="./tasks/Exploration/res/res_check_main_title.png")
-	# 探索大地图 · 玩法 tab 标题锚点（"御魂"标题，仅玩法 tab 命中，主线 tab 不命中） 
+	# 探索大地图玩法tab标题锚点(御魂) 
 	I_CHECK_PLAY_TITLE = RuleImage(roi_front=(1073,214,40,32), roi_back=(1065,210,190,316), threshold=0.85, method="Template matching", file="./tasks/Exploration/res/res_check_play_title.png")
 
 
