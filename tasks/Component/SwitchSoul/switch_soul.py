@@ -154,19 +154,19 @@ class SwitchSoul(BaseTask, SwitchSoulAssets):
         for i in range(3):
             sleep(0.8)
             self.screenshot()
-            if self.appear(self.I_SOU_SWITCH_SURE):
+            if self.appear(self.I_UI_CONFIRM):
                 while 1:
-                    self.click(self.I_SOU_SWITCH_SURE, 3)
+                    self.click(self.I_UI_CONFIRM, 3)
                     self.screenshot()
                     if self.appear_then_click(self.I_CHECK_BLOCK, 3):
                         continue
-                    if not self.appear(self.I_SOU_SWITCH_SURE):
+                    if not self.appear(self.I_UI_CONFIRM):
                         break
                 continue
             if not self.appear_then_click(target_team, interval=3):
                 logger.warning(f'Click team {team} failed in group {group}')
         # 兜底若还出现确认按钮则点击
-        self.ui_click_until_disappear(self.I_SOU_SWITCH_SURE)
+        self.ui_click_until_disappear(self.I_UI_CONFIRM)
         logger.info(f'Switch soul_one group {group} team {team}')
 
     def switch_souls(self, target: tuple or list[tuple]) -> None:
@@ -275,7 +275,7 @@ class SwitchSoul(BaseTask, SwitchSoulAssets):
             self.screenshot()
             if cnt_click >= 4:
                 break
-            if self.appear_then_click(self.I_SOU_SWITCH_SURE, interval=0.8):
+            if self.appear_then_click(self.I_UI_CONFIRM, interval=0.8):
                 continue
             if self.ocr_appear_click_by_rule(self.O_SS_TEAM_NAME, self.I_SOU_CLICK_PRESENT, interval=1.5):
                 cnt_click += 1

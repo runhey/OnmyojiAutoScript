@@ -21,7 +21,6 @@ from tasks.GameUi.page import page_main, page_kekkai_toppa, page_shikigami_recor
 from tasks.RealmRaid.assets import RealmRaidAssets
 
 from module.logger import logger
-from tasks.GlobalGame.assets import GlobalGameAssets
 from module.exception import TaskEnd
 from module.atom.image_grid import ImageGrid
 from module.base.utils import point2str
@@ -548,13 +547,13 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AbyssShadowsAssets):
             self.screenshot()
             if self.appear_then_click(self.I_EXIT, interval=2):
                 continue
-            if self.appear_then_click(GlobalGameAssets.I_UI_CONFIRM, interval=2):
+            if self.appear_then_click(self.I_UI_CONFIRM, interval=2):
                 continue
             if self.appear_then_click(self.I_WIN, interval=2):
                 continue
             if self.appear(self.I_ABYSS_NAVIGATION):
                 break
-        logger.info(f"Click {GlobalGameAssets.I_UI_CONFIRM.name}")
+        logger.info(f"Click {self.I_UI_CONFIRM.name}")
 
         return True
 

@@ -63,15 +63,6 @@
     "description": "第四组切换"
   },
   {
-    "itemName": "sou_switch_sure_8",
-    "imageName": "sk8_sou_switch_sure_8.png",
-    "roiFront": "668,401,180,61",
-    "roiBack": "668,401,180,61",
-    "method": "Template matching",
-    "threshold": 0.8,
-    "description": "确认切换"
-  },
-  {
     "itemName": "sou_check_in_8",
     "imageName": "sk8_sou_check_in_8.png",
     "roiFront": "265,71,34,36",

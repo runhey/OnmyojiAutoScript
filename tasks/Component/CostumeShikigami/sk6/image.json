@@ -63,15 +63,6 @@
     "description": "description"
   },
   {
-    "itemName": "sou_switch_sure_6",
-    "imageName": "sk6_sou_switch_sure_6.png",
-    "roiFront": "668,401,180,61",
-    "roiBack": "668,401,180,61",
-    "method": "Template matching",
-    "threshold": 0.8,
-    "description": "description"
-  },
-  {
     "itemName": "sou_check_in_6",
     "imageName": "sk6_sou_check_in_6.png",
     "roiFront": "269,69,50,49",
