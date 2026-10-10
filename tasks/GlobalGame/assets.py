@@ -44,11 +44,13 @@ class GlobalGameAssets:
 	# 长一点的取消 
 	I_UI_CANCEL = RuleImage(roi_front=(432,403,177,62), roi_back=(432,403,177,62), threshold=0.8, method="Template matching", file="./tasks/GlobalGame/ui/ui_ui_cancel.png")
 	# '获得奖励' 四个大字 
-	I_UI_REWARD = RuleImage(roi_front=(481,185,317,42), roi_back=(464,142,350,145), threshold=0.73, method="Template matching", file="./tasks/GlobalGame/ui/ui_ui_reward.png")
+	I_UI_REWARD = RuleImage(roi_front=(530,126,211,66), roi_back=(464,69,352,303), threshold=0.73, method="Template matching", file="./tasks/GlobalGame/ui/ui_ui_reward.png")
 	# description 
 	I_UI_BACK_RED = RuleImage(roi_front=(1041,111,34,38), roi_back=(877,15,383,254), threshold=0.8, method="Template matching", file="./tasks/GlobalGame/ui/ui_ui_back_red.png")
 	# description 
 	I_UI_BACK_YELLOW = RuleImage(roi_front=(26,17,47,46), roi_back=(0,0,100,100), threshold=0.8, method="Template matching", file="./tasks/GlobalGame/ui/ui_ui_back_yellow.png")
+	# description 
+	I_UI_BACK_CIRCLE = RuleImage(roi_front=(24,21,36,39), roi_back=(0,0,95,101), threshold=0.8, method="Template matching", file="./tasks/GlobalGame/ui/ui_ui_back_circle.png")
 	# description 
 	I_UI_BACK_BLUE = RuleImage(roi_front=(32,37,51,45), roi_back=(2,1,133,119), threshold=0.8, method="Template matching", file="./tasks/GlobalGame/ui/ui_ui_back_blue.png")
 	# description 
