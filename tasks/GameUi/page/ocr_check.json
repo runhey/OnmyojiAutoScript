@@ -1,0 +1,29 @@
+[
+  {
+    "itemName": "check_main_lantern_night",
+    "roiFront": "750,60,200,160",
+    "roiBack": "750,60,200,160",
+    "mode": "Full",
+    "method": "Default",
+    "keyword": "探索",
+    "description": "庭院夜间探索灯笼"
+  },
+  {
+    "itemName": "check_main_lantern_dawn",
+    "roiFront": "980,60,150,150",
+    "roiBack": "980,60,150,150",
+    "mode": "Full",
+    "method": "Default",
+    "keyword": "探索",
+    "description": "庭院清晨探索灯笼"
+  },
+  {
+    "itemName": "check_town_plaque",
+    "roiFront": "830,200,200,160",
+    "roiBack": "830,200,200,160",
+    "mode": "Full",
+    "method": "Default",
+    "keyword": "町中",
+    "description": "町中木牌"
+  }
+]

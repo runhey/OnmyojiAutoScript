@@ -224,3 +224,12 @@ class GameUiAssets:
 					 array=["版本"])
 
 
+	# Ocr Rule Assets
+	# 庭院夜间探索灯笼 
+	O_CHECK_MAIN_LANTERN_NIGHT = RuleOcr(roi=(750,60,200,160), area=(750,60,200,160), mode="Full", method="Default", keyword="探索", name="check_main_lantern_night")
+	# 庭院清晨探索灯笼 
+	O_CHECK_MAIN_LANTERN_DAWN = RuleOcr(roi=(980,60,150,150), area=(980,60,150,150), mode="Full", method="Default", keyword="探索", name="check_main_lantern_dawn")
+	# 町中木牌 
+	O_CHECK_TOWN_PLAQUE = RuleOcr(roi=(830,200,200,160), area=(830,200,200,160), mode="Full", method="Default", keyword="町中", name="check_town_plaque")
+
+

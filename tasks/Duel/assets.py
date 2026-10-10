@@ -36,6 +36,8 @@ class DuelAssets:
 	I_D_VICTORY = RuleImage(roi_front=(433,76,100,100), roi_back=(433,76,100,100), threshold=0.8, method="Template matching", file="./tasks/Duel/duel/duel_d_victory.png")
 	# 失败 
 	I_D_FAIL = RuleImage(roi_front=(422,66,100,100), roi_back=(422,66,100,100), threshold=0.8, method="Template matching", file="./tasks/Duel/duel/duel_d_fail.png")
+	# 协同斗技失败破鼓 
+	I_D_FAIL_COOP = RuleImage(roi_front=(400,40,170,180), roi_back=(350,0,300,260), threshold=0.8, method="Template matching", file="./tasks/Duel/duel/duel_d_fail_coop.png")
 	# 战 
 	I_D_WORD_BATTLE = RuleImage(roi_front=(613,41,54,54), roi_back=(600,24,84,85), threshold=0.8, method="Template matching", file="./tasks/Duel/duel/duel_d_word_battle.png")
 	# 名士的星星 
@@ -75,5 +77,7 @@ class DuelAssets:
 	O_D_AUTO = RuleOcr(roi=(30,640,65,44), area=(30,640,65,44), mode="Single", method="Default", keyword="自动", name="d_auto")
 	# 被办式神名称 
 	O_D_BAN_NAME = RuleOcr(roi=(92,97,82,25), area=(92,97,82,25), mode="Single", method="Default", keyword="", name="d_ban_name")
+	# 斗技胜利MVP分享页 
+	O_D_VICTORY_SHARE = RuleOcr(roi=(0,540,360,180), area=(0,540,360,180), mode="Full", method="Default", keyword="我的阵容", name="d_victory_share")
 
 

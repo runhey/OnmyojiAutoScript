@@ -302,11 +302,39 @@ class ScriptTask(GameUi, GeneralBattle, SwitchSoul, DuelAssets, SwitchOnmyoji):
             self.appear(self.I_D_WORD_BATTLE) or \
             self.appear(self.I_D_CHECK_BAN)
 
+    def _ocr_hit(self, rule) -> bool:
+        """Full 模式关键词命中(整盒子串匹配)。
+
+        不用 appear() + 内置 filter(): filter() 在整词匹配失败后会回退到逐字匹配
+        (疑似为竖排文本准备的), 关键词里任一单字出现在任一盒子里就算命中。
+        实测 "失败" 误命中了聊天频道的"败犬"表情包, "我的阵容"同理会被"的"字带偏。
+        这里要求至少有一个盒子的文本完整包含关键词。
+        """
+        try:
+            boxes = rule.detect_and_ocr(self.device.image, logDisplay=False)
+        except Exception:
+            return False
+        if not boxes:
+            return False
+        return any(rule.keyword in (box.ocr_text or '') for box in boxes)
+
     def is_battle_win(self) -> bool:
-        return self.appear(self.I_WIN) or self.appear(self.I_D_VICTORY)
+        if self.appear(self.I_WIN) or self.appear(self.I_D_VICTORY):
+            return True
+        # 战斗进行中不可能出现分享页, 直接跳过 OCR, 否则每轮循环都会跑一次全图检测刷屏
+        if self.is_in_real_battle(is_screenshot=False):
+            return False
+        # 斗技胜利后的 MVP 分享页(标题"拔得头筹", 左下"我的阵容", 右下"分享")没有常规的
+        # 胜利标识, 模板匹配认不出, 会导致 wait_battle 一直等到超时再人工接管。
+        # 分享页的标题是书法体 OCR 认不出, 用标准字体的"我的阵容"横幅来识别。
+        return self._ocr_hit(self.O_D_VICTORY_SHARE)
 
     def is_battle_lose(self) -> bool:
-        return self.appear(self.I_FALSE) or self.appear(self.I_D_FAIL)
+        # 协同斗技的失败结算页与常规失败页版式不同(协战横幅+破裂战鼓), 常规失败模板对不上,
+        # 曾导致 wait_battle 空转到超时再人工接管。破鼓是失败页独有元素(胜利页的鼓完好),
+        # 模板匹配不受书法体 OCR 波动影响。
+        return self.appear(self.I_FALSE) or self.appear(self.I_D_FAIL) or \
+            self.appear(self.I_D_FAIL_COOP)
 
     def is_battle_end(self) -> bool:
         return self.is_battle_win() or self.is_battle_lose() or \
