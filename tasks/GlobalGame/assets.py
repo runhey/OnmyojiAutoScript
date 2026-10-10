@@ -70,6 +70,6 @@ class GlobalGameAssets:
 	# 知道了 
 	I_UI_GOTIT_SMALL = RuleImage(roi_front=(678,396,127,60), roi_back=(622,371,242,100), threshold=0.8, method="Template matching", file="./tasks/GlobalGame/ui/ui_ui_gotit_small.png")
 	# 圆形返回按钮(移植自mine) 
-	I_UI_BACK_CIRCLE = RuleImage(roi_front=(24,21,36,39), roi_back=(0,0,95,101), threshold=0.8, method="Template matching", file="./tasks/GlobalGame/ui/ui_ui_back_circle.png")
+	# I_UI_BACK_CIRCLE = RuleImage(roi_front=(24,21,36,39), roi_back=(0,0,95,101), threshold=0.8, method="Template matching", file="./tasks/GlobalGame/ui/ui_ui_back_circle.png")
 
 

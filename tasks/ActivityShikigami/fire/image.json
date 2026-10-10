@@ -2,8 +2,8 @@
   {
     "itemName": "pass_1",
     "imageName": "fire_pass_1.png",
-    "roiFront": "359,295,100,53",
-    "roiBack": "68,203,1138,369",
+    "roiFront": "594,330,37,58",
+    "roiBack": "462,310,337,91",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"
@@ -11,8 +11,8 @@
   {
     "itemName": "pass_2",
     "imageName": "fire_pass_2.png",
-    "roiFront": "645,224,92,57",
-    "roiBack": "98,205,1076,366",
+    "roiFront": "625,335,31,44",
+    "roiBack": "562,326,182,66",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"
@@ -20,8 +20,8 @@
   {
     "itemName": "pass_3",
     "imageName": "fire_pass_3.png",
-    "roiFront": "648,227,91,55",
-    "roiBack": "103,162,1077,416",
+    "roiFront": "1178,620,71,61",
+    "roiBack": "1149,606,111,92",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"
@@ -29,8 +29,8 @@
   {
     "itemName": "pass_4",
     "imageName": "fire_pass_4.png",
-    "roiFront": "586,424,100,58",
-    "roiBack": "99,194,1080,398",
+    "roiFront": "482,499,58,54",
+    "roiBack": "448,439,126,137",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"
@@ -38,17 +38,17 @@
   {
     "itemName": "pass_5",
     "imageName": "fire_pass_5.png",
-    "roiFront": "946,415,65,48",
-    "roiBack": "97,194,1036,398",
+    "roiFront": "421,286,65,48",
+    "roiBack": "419,287,69,51",
     "method": "Template matching",
     "threshold": 0.8,
-    "description": "箱子"
+    "description": "第一个"
   },
   {
     "itemName": "pass_6",
     "imageName": "fire_pass_6.png",
-    "roiFront": "668,221,54,50",
-    "roiBack": "107,159,1012,394",
+    "roiFront": "548,333,54,50",
+    "roiBack": "547,335,58,52",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "印记"
@@ -56,8 +56,8 @@
   {
     "itemName": "pass_7",
     "imageName": "fire_pass_7.png",
-    "roiFront": "329,233,51,51",
-    "roiBack": "95,180,1056,394",
+    "roiFront": "672,381,51,51",
+    "roiBack": "668,377,59,60",
     "method": "Template matching",
     "threshold": 0.65,
     "description": "description"
@@ -65,8 +65,8 @@
   {
     "itemName": "pass_8",
     "imageName": "fire_pass_8.png",
-    "roiFront": "579,276,100,100",
-    "roiBack": "577,296,100,100",
+    "roiFront": "794,333,62,63",
+    "roiBack": "791,334,70,67",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "印记选中间的"
@@ -74,11 +74,11 @@
   {
     "itemName": "pass_9",
     "imageName": "fire_pass_9.png",
-    "roiFront": "558,643,160,44",
-    "roiBack": "480,601,306,100",
+    "roiFront": "929,285,50,40",
+    "roiBack": "921,278,70,56",
     "method": "Template matching",
     "threshold": 0.8,
-    "description": "description"
+    "description": "第五个"
   },
   {
     "itemName": "pass_10",

@@ -38,8 +38,8 @@
   {
     "itemName": "to_battle_main",
     "imageName": "as_to_battle_main.png",
-    "roiFront": "302,178,98,111",
-    "roiBack": "223,110,238,269",
+    "roiFront": "220,247,97,44",
+    "roiBack": "172,122,238,269",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "进入主要的战斗界面"
@@ -83,8 +83,8 @@
   {
     "itemName": "to_battle_main_2",
     "imageName": "as_to_battle_main_2.png",
-    "roiFront": "15,94,247,38",
-    "roiBack": "2,68,311,100",
+    "roiFront": "819,458,103,33",
+    "roiBack": "799,431,142,87",
     "method": "Template matching",
     "threshold": 0.65,
     "description": "description"
