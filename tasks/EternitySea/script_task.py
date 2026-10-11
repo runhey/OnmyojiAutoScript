@@ -165,7 +165,7 @@ class ScriptTask(
             self.screenshot()
             if self.match_page_once(page_soul_zones):
                 return
-            if self.appear_then_click(self.I_GI_SURE, interval=1):
+            if self.appear_then_click(self.I_UI_CONFIRM, interval=1):
                 continue
             if self.appear_then_click(self.I_BACK_YELLOW, interval=1):
                 continue

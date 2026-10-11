@@ -74,7 +74,7 @@ class GeneralInvite(BaseTask, BondlingFairylandAssets, GeneralInviteAssets):
                 logger.warning('Timeout, now is no room')
                 return False
 
-            if self.appear(self.I_INVITE_ENSURE) or self.appear(self.I_GI_CANCEL):
+            if self.appear(self.I_INVITE_ENSURE) or self.appear(self.I_UI_CANCEL):
                 logger.warning('Invite page is still open, close it before checking room status')
                 self.close_invite_page()
                 continue
@@ -114,9 +114,9 @@ class GeneralInvite(BaseTask, BondlingFairylandAssets, GeneralInviteAssets):
         closed = False
         while not timer.reached():
             self.screenshot()
-            if not self.appear(self.I_INVITE_ENSURE) and not self.appear(self.I_GI_CANCEL):
+            if not self.appear(self.I_INVITE_ENSURE) and not self.appear(self.I_UI_CANCEL):
                 return closed
-            if self.appear_then_click(self.I_GI_CANCEL, interval=0.8):
+            if self.appear_then_click(self.I_UI_CANCEL, interval=0.8):
                 closed = True
                 continue
             if self.appear_then_click(self.I_INVITE_ENSURE, interval=0.8):
@@ -174,13 +174,13 @@ class GeneralInvite(BaseTask, BondlingFairylandAssets, GeneralInviteAssets):
         while 1:
             self.screenshot()
             if not self.is_in_room() and \
-                    not self.appear_then_click(self.I_GI_SURE, interval=0.8) and \
+                    not self.appear_then_click(self.I_UI_CONFIRM, interval=0.8) and \
                     not self.appear(self.I_BACK_YELLOW):
                 break
-            if self.appear_then_click(self.I_GI_SURE, interval=0.5):
+            if self.appear_then_click(self.I_UI_CONFIRM, interval=0.5):
                 continue
-            if not self.appear(self.I_GI_SURE) and self.appear_then_click(self.I_BACK_YELLOW, interval=0.8):
-                self.wait_until_appear(self.I_GI_SURE, wait_time=0.8)
+            if not self.appear(self.I_UI_CONFIRM) and self.appear_then_click(self.I_BACK_YELLOW, interval=0.8):
+                self.wait_until_appear(self.I_UI_CONFIRM, wait_time=0.8)
                 continue
         return True
 
@@ -461,25 +461,25 @@ class GeneralInvite(BaseTask, BondlingFairylandAssets, GeneralInviteAssets):
         :param default_invite:
         :return:
         """
-        if not self.appear(self.I_GI_SURE, interval=1.5):
+        if not self.appear(self.I_UI_CONFIRM, interval=1.5):
             return False
 
         if default_invite:
             # 有可能是挑战失败的
-            if self.appear(self.I_I_DEFAULT) or self.appear(self.I_I_NO_DEFAULT):
+            if self.appear(self.I_UI_CHECK) or self.appear(self.I_UI_UNCHECK):
                 logger.info('Click default invite')
                 while 1:
                     self.screenshot()
-                    if self.appear(self.I_I_DEFAULT):
+                    if self.appear(self.I_UI_CHECK):
                         break
-                    if self.appear_then_click(self.I_I_NO_DEFAULT, interval=1):
+                    if self.appear_then_click(self.I_UI_UNCHECK, interval=1):
                         continue
         # 点击确认
         while 1:
             self.screenshot()
-            if not self.appear(self.I_GI_SURE):
+            if not self.appear(self.I_UI_CONFIRM):
                 break
-            if self.appear_then_click(self.I_GI_SURE, interval=1):
+            if self.appear_then_click(self.I_UI_CONFIRM, interval=1):
                 continue
 
         return True

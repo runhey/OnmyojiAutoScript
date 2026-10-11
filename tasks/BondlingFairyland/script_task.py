@@ -350,7 +350,7 @@ class ScriptTask(GameUi, GeneralInvite, GeneralRoom, BondlingBattle, SwitchSoul,
             for i in range(3):
                 if self.appear_then_click(self.I_BUY_PLUS, interval=1):
                     sleep(0.5)
-            if self.appear_then_click(self.I_GI_SURE, interval=1):
+            if self.appear_then_click(self.I_UI_CONFIRM, interval=1):
                 continue
             if self.appear_then_click(self.I_STONE_SURE, interval=2):
                 continue
@@ -769,9 +769,9 @@ class ScriptTask(GameUi, GeneralInvite, GeneralRoom, BondlingBattle, SwitchSoul,
             if self.appear(GeneralBattleAssets.I_EXIT):
                 logger.info("已经在战斗场景中")
                 return False
-            if self.appear_then_click(self.I_I_NO_DEFAULT, interval=1):
+            if self.appear_then_click(self.I_UI_UNCHECK, interval=1):
                 continue
-            if self.appear_then_click(self.I_GI_SURE, interval=1):
+            if self.appear_then_click(self.I_UI_CONFIRM, interval=1):
                 continue
             if self.appear_then_click(self.I_I_ACCEPT_DEFAULT, interval=1):
                 continue
