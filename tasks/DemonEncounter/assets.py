@@ -60,7 +60,7 @@ class DemonEncounterAssets:
 
 
 	# Click Rule Assets
-	# 从下开始数第一个(点击区已收缩, 仅包住内部图形)
+	# 从下开始数第一个 
 	C_DE_1 = RuleClick(roi_front=(1222,497,39,25), roi_back=(1222,497,39,25), name="de_1")
 	# 2 
 	C_DE_2 = RuleClick(roi_front=(1204,424,39,31), roi_back=(1204,424,39,31), name="de_2")
@@ -68,13 +68,13 @@ class DemonEncounterAssets:
 	C_DE_3 = RuleClick(roi_front=(1234,364,32,22), roi_back=(1234,364,32,22), name="de_3")
 	# 第四个 
 	C_DE_4 = RuleClick(roi_front=(1214,297,34,27), roi_back=(1214,297,34,27), name="de_4")
-	# 灯笼1类型识别搜索区(须容纳完整灯笼图案, 仅供check_lantern匹配, 不用于点击)
+	# 灯笼1类型识别搜索区(须容纳完整灯笼图案, 仅供check_lantern匹配, 不用于点击) 
 	C_DE_MATCH_1 = RuleClick(roi_front=(1211,478,61,58), roi_back=(1211,478,61,58), name="de_match_1")
-	# 灯笼2类型识别搜索区
+	# 灯笼2类型识别搜索区 
 	C_DE_MATCH_2 = RuleClick(roi_front=(1196,409,55,56), roi_back=(1196,409,55,56), name="de_match_2")
-	# 灯笼3类型识别搜索区
+	# 灯笼3类型识别搜索区 
 	C_DE_MATCH_3 = RuleClick(roi_front=(1225,344,53,55), roi_back=(1225,344,53,55), name="de_match_3")
-	# 灯笼4类型识别搜索区
+	# 灯笼4类型识别搜索区 
 	C_DE_MATCH_4 = RuleClick(roi_front=(1200,282,56,53), roi_back=(1200,282,56,53), name="de_match_4")
 
 
@@ -97,6 +97,8 @@ class DemonEncounterAssets:
 	I_SUSHI = RuleImage(roi_front=(602,318,72,54), roi_back=(581,294,115,116), threshold=0.8, method="Template matching", file="./tasks/DemonEncounter/demon/demon_sushi.png")
 	# 50勾玉购买 
 	I_JADE_50 = RuleImage(roi_front=(593,425,84,46), roi_back=(548,405,182,83), threshold=0.8, method="Template matching", file="./tasks/DemonEncounter/demon/demon_jade_50.png")
+	# 地图中央未购买的宝箱展示 
+	I_DE_BOX_CENTER = RuleImage(roi_front=(618,325,45,34), roi_back=(547,264,190,157), threshold=0.8, method="Template matching", file="./tasks/DemonEncounter/demon/demon_de_box_center.png")
 
 
 	# Image Rule Assets
@@ -104,8 +106,6 @@ class DemonEncounterAssets:
 	I_DE_BALLOON = RuleImage(roi_front=(1214,295,28,27), roi_back=(1198,269,81,266), threshold=0.8, method="Template matching", file="./tasks/DemonEncounter/demon/demon_de_balloon.png")
 	# 右侧的宝箱 
 	I_DE_BOX = RuleImage(roi_front=(1210,295,34,33), roi_back=(1183,278,96,277), threshold=0.8, method="Template matching", file="./tasks/DemonEncounter/demon/demon_de_box.png")
-	# 地图中央未购买的宝箱展示 
-	I_DE_BOX_CENTER = RuleImage(roi_front=(618,325,45,34), roi_back=(547,264,190,157), threshold=0.8, method="Template matching", file="./tasks/DemonEncounter/demon/demon_de_box_center.png")
 	# 挑战某一个后的封印图片 
 	I_DE_DEFEAT_2 = RuleImage(roi_front=(1211,422,28,35), roi_back=(1211,422,28,35), threshold=0.7, method="Template matching", file="./tasks/DemonEncounter/demon/demon_de_defeat_2.png")
 	# description 

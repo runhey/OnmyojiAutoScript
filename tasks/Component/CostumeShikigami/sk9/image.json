@@ -63,15 +63,6 @@
     "description": "第四组切换"
   },
   {
-    "itemName": "sou_switch_sure_9",
-    "imageName": "sk9_sou_switch_sure_9.png",
-    "roiFront": "669,401,190,61",
-    "roiBack": "669,401,190,61",
-    "method": "Template matching",
-    "threshold": 0.8,
-    "description": "确认切换"
-  },
-  {
     "itemName": "sou_check_in_9",
     "imageName": "sk9_sou_check_in_9.png",
     "roiFront": "277,79,34,36",
