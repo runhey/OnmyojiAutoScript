@@ -469,6 +469,31 @@ class Script:
             self.run("Restart")
             return True
 
+        # 时段闸门: 只在 [night_start, night_end) 内才关游戏。
+        # 白天/晚上把游戏留在原地, 方便用户在挂机的同一台设备上随时手动接手。
+        # start == end 视为不限制 (维持旧行为)。
+        night_start = self._time_to_timedelta(
+            self.config.script.optimization.close_game_night_start)
+        night_end = self._time_to_timedelta(
+            self.config.script.optimization.close_game_night_end)
+        if night_start != night_end and not self._in_close_game_window(night_start, night_end):
+            # 分段等待: 不能一次 wait_until(next_run) 睡过凌晨边界, 否则醒来时
+            # 判断点已过, 整夜都不会关游戏。改为等到 min(下个任务, 下个凌晨边界),
+            # 到点返回让调度器重新进来, 那时已落在允许窗口内。
+            now = datetime.now()
+            boundary = (datetime.combine(now.date(), (datetime.min + night_start).time())
+                        if night_start else now.replace(hour=0, minute=0, second=0, microsecond=0))
+            while boundary <= now:
+                boundary += timedelta(days=1)
+            segment_end = min(next_run, boundary)
+            logger.info(f"Close game is disabled outside "
+                        f"{night_start} - {night_end}, keep game running "
+                        f"(re-evaluate at {segment_end})")
+            self.device.release_during_wait()
+            if not self.wait_until(segment_end):
+                return False
+            return True
+
         if close_game_wait <= timedelta(0):
             logger.info("Close game during wait")
             self.device.app_stop()
@@ -515,6 +540,25 @@ class Script:
         self.run("GotoMain")
         self.device.release_during_wait()
         return self.wait_until(next_run)
+
+    @staticmethod
+    def _in_close_game_window(night_start: timedelta, night_end: timedelta) -> bool:
+        """
+        当前是否处于允许关闭游戏的时段。
+
+        Args:
+            night_start: 窗口起点 (距离 0 点的偏移)
+            night_end:   窗口终点 (不含)
+
+        Returns:
+            bool
+        """
+        now = datetime.now()
+        cur = timedelta(hours=now.hour, minutes=now.minute, seconds=now.second)
+        if night_start < night_end:
+            return night_start <= cur < night_end
+        # 跨 0 点的窗口, 例如 23:00 - 07:00
+        return cur >= night_start or cur < night_end
 
     def _wait_stay_there(self, next_run: datetime) -> bool:
         if self._emulator_down:

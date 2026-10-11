@@ -10,6 +10,10 @@ from tasks.Component.config_base import Time
 class WhenTaskQueueEmpty(str, Enum):
     GOTO_MAIN = 'goto_main'
     CLOSE_GAME = 'close_game'
+    # GUI(argument.yaml) 早已提供 stay_there 选项, 但枚举缺少该值,
+    # 导致用户选中后被 pydantic 拒绝 / 或走过 _wait_stay_there 的 fallback 分支。
+    # 补上后 _wait_stay_there() 才可达。
+    STAY_THERE = 'stay_there'
 
 class ScheduleRule(str, Enum):
     FILTER = 'Filter'  # 默认的基于过滤器，（按照开发者设定的调度规则进行调度）
@@ -27,6 +31,13 @@ class Optimization(BaseModel):
                                                       description='when_task_queue_empty_help')
     close_game_wait_duration: Time = Field(default=Time(minute=0),
                                           description='close_game_wait_duration_help')
+    # 仅在 [night_start, night_end) 这个时段内才允许「关闭游戏」。
+    # 默认 00:00 - 07:00: 白天/晚上把游戏留在原地, 方便同一台设备随时手动接手玩;
+    # 若 start == end 表示不做时段限制 (维持旧行为)。
+    close_game_night_start: Time = Field(default=Time(hour=0, minute=0),
+                                         description='close_game_night_start_help')
+    close_game_night_end: Time = Field(default=Time(hour=7, minute=0),
+                                       description='close_game_night_end_help')
     close_emulator_wait_duration: Time = Field(default=Time(minute=0),
                                               description='close_emulator_wait_duration_help')
     emulator_startup_lead_time: Time = Field(default=Time(minute=2),
