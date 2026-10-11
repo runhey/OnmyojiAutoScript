@@ -407,6 +407,7 @@ class Script:
         strategy_map = {
             "close_game": self._wait_close_game,
             "goto_main": self._wait_goto_main,
+            "stay_there": self._wait_stay_there,
         }
         func = strategy_map.get(method)
         if func is None:
