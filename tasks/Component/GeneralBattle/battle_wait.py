@@ -1180,6 +1180,10 @@ class BattleWait(BaseTask, GeneralBattleAssets):
         while 1:
             self.screenshot()
 
+            # 结算的时候御魂溢出提示，点击【知道了】
+            if self.appear(self.I_OVER_GHOST):
+                self.click(self.I_OVER_GHOST)
+
             # 不小心点到了具体的奖励，他会弹出这个物品的详细描述 里面必定包含有“获取途径”
             if self.appear(self.I_END_FIX_1) or self.appear(self.I_END_FIX_2):
                 self.click(self.C_REWARD_2, interval=1.5)
