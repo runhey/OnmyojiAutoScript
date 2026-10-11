@@ -60,6 +60,8 @@ class DuelAssets:
 	I_DUEL_HONOR = RuleImage(roi_front=(211,636,20,20), roi_back=(200,601,130,100), threshold=0.8, method="Template matching", file="./tasks/Duel/duel/duel_duel_honor.png")
 	# 队伍试用 
 	I_D_TRY = RuleImage(roi_front=(667,356,111,30), roi_back=(667,356,111,30), threshold=0.8, method="Template matching", file="./tasks/Duel/duel/duel_d_try.png")
+	# 斗技胜利MVP分享页右下分享按钮 
+	I_D_VICTORY_SHARE = RuleImage(roi_front=(1100,580,90,120), roi_back=(1080,560,130,160), threshold=0.8, method="Masked template matching", file="./tasks/Duel/duel/duel_d_victory_share.png")
 
 
 	# Ocr Rule Assets
