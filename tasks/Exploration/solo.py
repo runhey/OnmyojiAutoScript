@@ -60,6 +60,44 @@ class SoloExploration(BaseExploration):
         self.quit_explore()
         return True
 
+    def _reset_search_state(self, search_fail_timer: Timer) -> int:
+        search_fail_timer.clear()
+        self._match_end.refresh()
+        return 0
+
+    def _search_next_area(self, search_fail_timer: Timer, unchanged_swipe_cnt: int) -> int:
+        if not search_fail_timer.started():
+            search_fail_timer.start()
+            return unchanged_swipe_cnt
+        if not search_fail_timer.reached():
+            return unchanged_swipe_cnt
+
+        before_image = self.device.image
+        self.swipe(self.S_SWIPE_BACKGROUND_RIGHT)
+        sleep(0.3)
+        self.screenshot()
+        if self.is_swipe_unchanged(before_image, self.device.image):
+            sleep(0.3)
+            self.screenshot()
+        if (self.get_current_scene() != Scene.MAIN
+                or self.appear(self.I_UI_CONFIRM)
+                or self.appear(self.I_UI_CONFIRM_SAMLL)):
+            search_fail_timer.reset()
+            return 0
+
+        if self.is_swipe_unchanged(before_image, self.device.image):
+            unchanged_swipe_cnt += 1
+            if unchanged_swipe_cnt >= 2:
+                search_fail_timer.clear()
+                self.quit_explore()
+                return 0
+        else:
+            unchanged_swipe_cnt = 0
+            self.device.click_record_remove(self.S_SWIPE_BACKGROUND_RIGHT.name)
+
+        search_fail_timer.reset()
+        return unchanged_swipe_cnt
+
     def run_solo(self):
         logger.hr('solo')
         search_fail_timer = Timer(1.0)
@@ -71,9 +109,7 @@ class SoloExploration(BaseExploration):
             logger.info(f'[run_solo] Current scene: {scene.name}')  # TODO 2026.06.22 之后删掉这个刷屏的
             #
             if scene == Scene.WORLD:
-                search_fail_timer.clear()
-                unchanged_swipe_cnt = 0
-                self._match_end.refresh()
+                unchanged_swipe_cnt = self._reset_search_state(search_fail_timer)
                 self.device.click_record_remove(self.S_SWIPE_BACKGROUND_RIGHT.name)
                 # 打开右边箭头
                 if not self.wait_world_stable():
@@ -84,9 +120,7 @@ class SoloExploration(BaseExploration):
                 continue
             #
             elif scene == Scene.ENTRANCE:
-                search_fail_timer.clear()
-                unchanged_swipe_cnt = 0
-                self._match_end.refresh()
+                unchanged_swipe_cnt = self._reset_search_state(search_fail_timer)
                 self.device.click_record_remove(self.S_SWIPE_BACKGROUND_RIGHT.name)
                 if self.check_exit():
                     break
@@ -99,33 +133,23 @@ class SoloExploration(BaseExploration):
                         self.enter_settings_and_do_operations()
                     self.ui_click(self.I_E_AUTO_ROTATE_OFF, stop=self.I_E_AUTO_ROTATE_ON, timeout=5)
                     self.explore_init = True
-                    search_fail_timer.clear()
-                    unchanged_swipe_cnt = 0
-                    self._match_end.refresh()
+                    unchanged_swipe_cnt = self._reset_search_state(search_fail_timer)
                     continue
                 if self._handle_treasure_box():
-                    search_fail_timer.clear()
-                    unchanged_swipe_cnt = 0
-                    self._match_end.refresh()
+                    unchanged_swipe_cnt = self._reset_search_state(search_fail_timer)
                     continue
                 if (self.appear_then_click(self.I_UI_CONFIRM, interval=1)
                         or self.appear_then_click(self.I_UI_CONFIRM_SAMLL, interval=1)):
-                    search_fail_timer.clear()
-                    unchanged_swipe_cnt = 0
-                    self._match_end.refresh()
+                    unchanged_swipe_cnt = self._reset_search_state(search_fail_timer)
                     continue
                 # 小纸人
                 if self.appear(self.I_BATTLE_REWARD):
                     if self.ui_get_reward(self.I_BATTLE_REWARD):
-                        search_fail_timer.clear()
-                        unchanged_swipe_cnt = 0
-                        self._match_end.refresh()
+                        unchanged_swipe_cnt = self._reset_search_state(search_fail_timer)
                         continue
                 # boss
                 if self.appear(self.I_BOSS_BATTLE_BUTTON):
-                    search_fail_timer.clear()
-                    unchanged_swipe_cnt = 0
-                    self._match_end.refresh()
+                    unchanged_swipe_cnt = self._reset_search_state(search_fail_timer)
                     self.device.click_record_remove(self.S_SWIPE_BACKGROUND_RIGHT.name)
                     if self.fire(self.I_BOSS_BATTLE_BUTTON):
                         logger.info(f'Boss battle, minions cnt {self.minions_cnt}')
@@ -133,43 +157,14 @@ class SoloExploration(BaseExploration):
                 # 小怪
                 fight_button = self.search_up_fight()
                 if fight_button is not None:
-                    search_fail_timer.clear()
-                    unchanged_swipe_cnt = 0
-                    self._match_end.refresh()
+                    unchanged_swipe_cnt = self._reset_search_state(search_fail_timer)
                     self.device.click_record_remove(self.S_SWIPE_BACKGROUND_RIGHT.name)
                     if self.fire(fight_button):
                         logger.info(f'Fight, minions cnt {self.minions_cnt}')
                     continue
                 # 向后拉,寻找怪
-                if not search_fail_timer.started():
-                    search_fail_timer.start()
-                    continue
-                if search_fail_timer.reached():
-                    before_image = self.device.image
-                    self.swipe(self.S_SWIPE_BACKGROUND_RIGHT)
-                    sleep(0.3)
-                    self.screenshot()
-                    if self.is_swipe_unchanged(before_image, self.device.image):
-                        sleep(0.3)
-                        self.screenshot()
-                    if (self.get_current_scene() != Scene.MAIN
-                            or self.appear(self.I_UI_CONFIRM)
-                            or self.appear(self.I_UI_CONFIRM_SAMLL)):
-                        unchanged_swipe_cnt = 0
-                        search_fail_timer.reset()
-                        continue
-                    if self.is_swipe_unchanged(before_image, self.device.image):
-                        unchanged_swipe_cnt += 1
-                        if unchanged_swipe_cnt >= 2:
-                            unchanged_swipe_cnt = 0
-                            search_fail_timer.clear()
-                            self.quit_explore()
-                            continue
-                    else:
-                        unchanged_swipe_cnt = 0
-                        self.device.click_record_remove(self.S_SWIPE_BACKGROUND_RIGHT.name)
-                    search_fail_timer.reset()
-                    continue
+                unchanged_swipe_cnt = self._search_next_area(search_fail_timer, unchanged_swipe_cnt)
+                continue
             #
             elif scene == Scene.BATTLE_PREPARE or scene == Scene.BATTLE_FIGHTING:
                 self.check_take_over_battle(is_screenshot=False, config=self._config.general_battle_config)
@@ -187,9 +182,7 @@ class SoloExploration(BaseExploration):
             scene = self.get_current_scene()
             # 探索大世界
             if scene == Scene.WORLD:
-                search_fail_timer.clear()
-                unchanged_swipe_cnt = 0
-                self._match_end.refresh()
+                unchanged_swipe_cnt = self._reset_search_state(search_fail_timer)
                 self.device.click_record_remove(self.S_SWIPE_BACKGROUND_RIGHT.name)
                 # 打开右边箭头
                 if not self.wait_world_stable():
@@ -209,9 +202,7 @@ class SoloExploration(BaseExploration):
 
             # 邀请好友, 非常有可能是后面邀请好友，然后直接跳到组队了
             elif scene == Scene.ENTRANCE:
-                search_fail_timer.clear()
-                unchanged_swipe_cnt = 0
-                self._match_end.refresh()
+                unchanged_swipe_cnt = self._reset_search_state(search_fail_timer)
                 self.device.click_record_remove(self.S_SWIPE_BACKGROUND_RIGHT.name)
                 while 1:
                     self.screenshot()
@@ -228,9 +219,7 @@ class SoloExploration(BaseExploration):
                         continue
             #
             elif scene == Scene.TEAM:
-                search_fail_timer.clear()
-                unchanged_swipe_cnt = 0
-                self._match_end.refresh()
+                unchanged_swipe_cnt = self._reset_search_state(search_fail_timer)
                 self.wait_until_stable(self.I_ADD_2, timer=Timer(0.8, 1))
                 if self.appear(self.I_FIRE, threshold=0.8) and not self.appear(self.I_ADD_2):
                     self.ui_click_until_disappear(self.I_FIRE, interval=1)
@@ -257,39 +246,27 @@ class SoloExploration(BaseExploration):
                         self.enter_settings_and_do_operations()
                     self.ui_click(self.I_E_AUTO_ROTATE_OFF, stop=self.I_E_AUTO_ROTATE_ON)
                     self.explore_init = True
-                    search_fail_timer.clear()
-                    unchanged_swipe_cnt = 0
-                    self._match_end.refresh()
+                    unchanged_swipe_cnt = self._reset_search_state(search_fail_timer)
                     continue
                 if self._handle_treasure_box():
-                    search_fail_timer.clear()
-                    unchanged_swipe_cnt = 0
-                    self._match_end.refresh()
+                    unchanged_swipe_cnt = self._reset_search_state(search_fail_timer)
                     continue
                 if (self.appear_then_click(self.I_UI_CONFIRM, interval=1)
                         or self.appear_then_click(self.I_UI_CONFIRM_SAMLL, interval=1)):
-                    search_fail_timer.clear()
-                    unchanged_swipe_cnt = 0
-                    self._match_end.refresh()
+                    unchanged_swipe_cnt = self._reset_search_state(search_fail_timer)
                     continue
                 # 小纸人
                 if self.appear(self.I_BATTLE_REWARD):
                     if self.ui_get_reward(self.I_BATTLE_REWARD):
-                        search_fail_timer.clear()
-                        unchanged_swipe_cnt = 0
-                        self._match_end.refresh()
+                        unchanged_swipe_cnt = self._reset_search_state(search_fail_timer)
                         continue
                 # 中途有人跑路
                 if self._check_mate_leave(friend_leave_timer):
-                    search_fail_timer.clear()
-                    unchanged_swipe_cnt = 0
-                    self._match_end.refresh()
+                    unchanged_swipe_cnt = self._reset_search_state(search_fail_timer)
                     continue
                 # boss
                 if self.appear(self.I_BOSS_BATTLE_BUTTON):
-                    search_fail_timer.clear()
-                    unchanged_swipe_cnt = 0
-                    self._match_end.refresh()
+                    unchanged_swipe_cnt = self._reset_search_state(search_fail_timer)
                     self.device.click_record_remove(self.S_SWIPE_BACKGROUND_RIGHT.name)
                     if self.fire(self.I_BOSS_BATTLE_BUTTON):
                         logger.info(f'Boss battle, minions cnt {self.minions_cnt}')
@@ -297,43 +274,14 @@ class SoloExploration(BaseExploration):
                 # 小怪
                 fight_button = self.search_up_fight()
                 if fight_button is not None:
-                    search_fail_timer.clear()
-                    unchanged_swipe_cnt = 0
-                    self._match_end.refresh()
+                    unchanged_swipe_cnt = self._reset_search_state(search_fail_timer)
                     self.device.click_record_remove(self.S_SWIPE_BACKGROUND_RIGHT.name)
                     if self.fire(fight_button):
                         logger.info(f'Fight, minions cnt {self.minions_cnt}')
                     continue
                 # 向后拉,寻找怪
-                if not search_fail_timer.started():
-                    search_fail_timer.start()
-                    continue
-                if search_fail_timer.reached():
-                    before_image = self.device.image
-                    self.swipe(self.S_SWIPE_BACKGROUND_RIGHT)
-                    sleep(0.3)
-                    self.screenshot()
-                    if self.is_swipe_unchanged(before_image, self.device.image):
-                        sleep(0.3)
-                        self.screenshot()
-                    if (self.get_current_scene() != Scene.MAIN
-                            or self.appear(self.I_UI_CONFIRM)
-                            or self.appear(self.I_UI_CONFIRM_SAMLL)):
-                        unchanged_swipe_cnt = 0
-                        search_fail_timer.reset()
-                        continue
-                    if self.is_swipe_unchanged(before_image, self.device.image):
-                        unchanged_swipe_cnt += 1
-                        if unchanged_swipe_cnt >= 2:
-                            unchanged_swipe_cnt = 0
-                            search_fail_timer.clear()
-                            self.quit_explore()
-                            continue
-                    else:
-                        unchanged_swipe_cnt = 0
-                        self.device.click_record_remove(self.S_SWIPE_BACKGROUND_RIGHT.name)
-                    search_fail_timer.reset()
-                    continue
+                unchanged_swipe_cnt = self._search_next_area(search_fail_timer, unchanged_swipe_cnt)
+                continue
             #
             elif scene == Scene.BATTLE_PREPARE or scene == Scene.BATTLE_FIGHTING:
                 self.check_take_over_battle(is_screenshot=False, config=self._config.general_battle_config)
