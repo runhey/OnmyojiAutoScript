@@ -572,7 +572,7 @@ class GeneralInvite(BaseTask, GeneralInviteAssets):
                 return False
             if self.appear_then_click(self.I_I_NO_DEFAULT, interval=1):
                 continue
-            if self.appear_then_click(self.I_GI_SURE, interval=3):
+            if self.appear_then_click(self.I_GI_SURE, interval=1):
                 continue
             if self.appear_then_click(self.I_I_ACCEPT_DEFAULT, interval=1):
                 continue
