@@ -79,14 +79,6 @@ class GeneralInviteAssets:
 	I_I_ACCEPT = RuleImage(roi_front=(113,225,63,72), roi_back=(113,225,63,280), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralInvite/gi/gi_i_accept.png")
 	# 队员默认接受邀请 
 	I_I_ACCEPT_DEFAULT = RuleImage(roi_front=(205,223,61,68), roi_back=(205,223,61,297), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralInvite/gi/gi_i_accept_default.png")
-	# 不勾选 默认邀请 
-	I_I_NO_DEFAULT = RuleImage(roi_front=(542,343,36,35), roi_back=(542,343,36,35), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralInvite/gi/gi_i_no_default.png")
-	# 勾选 默认邀请 
-	I_I_DEFAULT = RuleImage(roi_front=(541,342,41,39), roi_back=(541,342,41,39), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralInvite/gi/gi_i_default.png")
-	# description 
-	I_GI_CANCEL = RuleImage(roi_front=(438,407,171,55), roi_back=(438,407,171,55), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralInvite/gi/gi_cancel.png")
-	# 队长邀请 确定 
-	I_GI_SURE = RuleImage(roi_front=(670,402,175,60), roi_back=(670,402,175,60), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralInvite/gi/gi_gi_sure.png")
 	# 所有的组队界面都有加成 
 	I_GI_BUFF = RuleImage(roi_front=(794,38,46,42), roi_back=(794,38,46,42), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralInvite/gi/gi_gi_buff.png")
 	# 三人御魂组队左上角的协站队伍 

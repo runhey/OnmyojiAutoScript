@@ -142,14 +142,6 @@ class OptionSetupDefault:
 
 
 @dataclass
-class OptionCompletionDefault:
-    # 这里是为了， 确认结束战斗后退回到 “fire” 的界面
-    check_imgs: list[RuleImage] = None
-    # 兜底：check_imgs 都检测不到时，间隔点击的排除位
-    excludes: list[str] = field(default_factory=list)
-
-
-@dataclass
 class OptionInterruptDefault:
     pass
 
@@ -169,6 +161,18 @@ class OptionSuccessDefault:
         'C_END_1_5', 'C_END_1_6',
     ])
 
+
+@dataclass
+class OptionCompletionDefault:
+    # 这里是为了， 确认结束战斗后退回到 “fire” 的界面
+    check_imgs: list[RuleImage] | None = None
+    # 兜底：check_imgs 都检测不到时，间隔点击的排除位
+    excludes: list[str] = field(default_factory=lambda:
+    [
+        'C_END_MESSAGE_RIGHT_TOP', 'C_END_BUFF_AREA_1',
+        'C_END_BUFF_AREA_2', 'C_END_SOUL_RECORD', 'C_END_SOUL_DETAILS',
+        'C_END_MASTER',
+    ])
 
 @dataclass
 class OptionFailureDefault:
@@ -367,8 +371,9 @@ class PerBattleSetup:
 @dataclass
 class PerBattleCompletion:
     click_stage_2: RuleClickExclude | None = None
-    # 兜底点击节拍器：进入 completion 起算，满 8s 才首次点击，之后每 8s 一次
+    # 兜底点击节拍器：进入 completion 起算，满 3s 才首次点击，之后每 3s 一次
     fallback_timer: Timer | None = None
+    fallback_cnt: int = 0
 
 
 @dataclass
@@ -948,8 +953,8 @@ def randomclick_gate(func: Callable) -> Callable:
     @wraps(func)
     def wrapper(self, pub: PublicContext, pri: PrivateContext) -> HookSignal:
         options = pub.options.get('randomclick')
-        state_battle = pri.per_battle
-        state_task = pri.per_task
+        state_battle: PerBattleRandomclick = pri.per_battle
+        state_task: PerTaskRandomclick = pri.per_task
         if not isinstance(options, OptionRandomclickDefault):
             raise TypeError(f"randomclick options must be OptionRandomclickDefault, got {type(options)!r}")
         if not isinstance(state_battle, PerBattleRandomclick):
@@ -1109,8 +1114,8 @@ class BattleWait(BaseTask, GeneralBattleAssets):
 
     def _bw_completion_default(self, pub: PublicContext, pri: PrivateContext) -> HookSignal:
         logger.info('Battle completion process')
-        state = pri.per_battle
-        options = pri.options
+        state: PerBattleCompletion = pri.per_battle
+        options: OptionCompletionDefault = pri.options
         if not isinstance(state, PerBattleCompletion) or not isinstance(options, OptionCompletionDefault):
             raise
         if options.check_imgs is None:
@@ -1125,9 +1130,13 @@ class BattleWait(BaseTask, GeneralBattleAssets):
             pub.per_task.count += 1
             # self.current_count += 1  # 兼容旧的计数
             return HookSignal.DONE
-        # check_imgs 全没出现 → 兜底点击回退界面：进入 completion 满 8s 才首次点击，之后每 8s 一次
+        # check_imgs 全没出现 → 兜底点击回退界面：进入 completion 满 3s 才首次点击，之后每 3s 一次
         if state.fallback_timer is None:
-            state.fallback_timer = Timer(8).start()
+            state.fallback_timer = Timer(3).start()
+        if state.fallback_cnt >= 5:
+            pub.per_task.count += 1
+            logger.info('Fallback timer expired')
+            return HookSignal.DONE
         if not isinstance(state.fallback_timer, Timer):
             raise
         if not state.fallback_timer.reached():
@@ -1135,8 +1144,10 @@ class BattleWait(BaseTask, GeneralBattleAssets):
         state.fallback_timer.reset()
         if state.click_stage_2 is None:
             state.click_stage_2 = PerBattleSuccess.reward_exclude_click(self, options.excludes, name='completion_exclude_click')
-        x, y = state.click_stage_2.coord()
-        self.device.click(x=x, y=y, control_name='completion_exclude_click')
+        if self.click(state.click_stage_2, interval=1.5):
+            state.fallback_cnt += 1
+        # x, y = state.click_stage_2.coord()
+        # self.device.click(x=x, y=y, control_name='completion_exclude_click')
         return HookSignal.CONTINUE
 
     def _bw_interrupt_default(self, pub: PublicContext, pri: PrivateContext) -> HookSignal:
@@ -1144,8 +1155,8 @@ class BattleWait(BaseTask, GeneralBattleAssets):
         return HookSignal.CONTINUE
 
     def _bw_success_default(self, pub: PublicContext, pri: PrivateContext) -> HookSignal:
-        state = pri.per_battle
-        options = pri.options
+        state: PerBattleSuccess = pri.per_battle
+        options: OptionSuccessDefault = pri.options
         if not isinstance(state, PerBattleSuccess) or not isinstance(options, OptionSuccessDefault):
             raise
         if state.click_stage_1 is None:

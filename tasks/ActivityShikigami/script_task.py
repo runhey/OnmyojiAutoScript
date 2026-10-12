@@ -190,10 +190,13 @@ class ScriptTask(StateMachine, GameUi, Battle, BaseActivity, SwitchSoul, Activit
         # self.ui_clicks([self.I_TO_BATTLE_MAIN_2],
         #                stop=self.I_CHECK_BATTLE_MAIN, interval=1)
         #
+        center_click_cnt = 0
         while 1:
             self.screenshot()
 
             if self.appear(self.I_UI_BACK_RED) and self.appear(self.I_PASS_4):
+                break
+            if self.appear(self.I_CHECK_BATTLE_MAIN):
                 break
             if self.appear_then_click(self.I_UI_CONFIRM, interval=0.5):
                 continue
@@ -206,6 +209,10 @@ class ScriptTask(StateMachine, GameUi, Battle, BaseActivity, SwitchSoul, Activit
             if self.appear_then_click(self.I_PASS_1, interval=1.5):
                 continue
             if self.appear_then_click(self.I_PASS_2, interval=1.5):
+                continue
+            center = RuleClick(roi_front=(630,360,10,10), roi_back=(630,360,10,10), name="random_all")
+            if center_click_cnt <= 5 and self.click(center, interval=3.5):
+                center_click_cnt += 1
                 continue
         logger.info('Enter occupation reward screen')  # 进入到占领奖励
         index = 0
@@ -355,6 +362,7 @@ class ScriptTask(StateMachine, GameUi, Battle, BaseActivity, SwitchSoul, Activit
         # 运行战斗
         strategies, options = self.loadout_from_config(self.get_general_battle_conf())
         # strategies['success'] = 'activity'
+        options['completion'].check_imgs = [self.I_CHECK_BATTLE_MAIN]
         self.loadout_show((strategies, options))
         self.state_show()
         with battle_wait_strategy(**strategies), battle_wait_options(**options):

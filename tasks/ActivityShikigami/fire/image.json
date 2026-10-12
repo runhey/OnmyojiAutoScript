@@ -30,7 +30,7 @@
     "itemName": "pass_4",
     "imageName": "fire_pass_4.png",
     "roiFront": "482,499,58,54",
-    "roiBack": "448,439,126,137",
+    "roiBack": "346,431,575,146",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"

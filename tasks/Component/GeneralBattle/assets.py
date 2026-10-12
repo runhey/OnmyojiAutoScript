@@ -250,6 +250,8 @@ class GeneralBattleAssets:
 	C_END_3_6 = RuleClick(roi_front=(0,0,100,100), roi_back=(0,0,100,100), name="end_3_6")
 	# 其实贪吃鬼这个点了也是没事儿 
 	C_END_GREED = RuleClick(roi_front=(138,16,512,93), roi_back=(138,16,512,93), name="end_greed")
+	# 中间的一堆奖励直接忽略。上面的end_1_1到end_3_6会容易UI变化失效 
+	C_END_MASTER = RuleClick(roi_front=(251,145,811,530), roi_back=(248,143,815,535), name="end_master")
 
 
 	# Click Rule Assets
