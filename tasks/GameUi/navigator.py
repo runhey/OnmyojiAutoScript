@@ -50,6 +50,7 @@ class GameUi(BaseTask, GameUiAssets):
         GlobalGameAssets.I_UI_BACK_YELLOW,
         SixRealmsAssets.I_EXIT_SIXREALMS,
         GlobalGameAssets.I_UI_BACK_BLUE,
+        GlobalGameAssets.I_UI_BACK_CIRCLE,
     ]
 
     def __init__(self, config, device):
