@@ -472,14 +472,14 @@ class GeneralInvite(BaseTask, BondlingFairylandAssets, GeneralInviteAssets):
                     self.screenshot()
                     if self.appear(self.I_UI_CHECK):
                         break
-                    if self.appear_then_click(self.I_UI_UNCHECK, interval=1):
+                    if self.appear_then_click(self.I_UI_UNCHECK, interval=3):
                         continue
         # 点击确认
         while 1:
             self.screenshot()
             if not self.appear(self.I_UI_CONFIRM):
                 break
-            if self.appear_then_click(self.I_UI_CONFIRM, interval=1):
+            if self.appear_then_click(self.I_UI_CONFIRM, interval=3):
                 continue
 
         return True
