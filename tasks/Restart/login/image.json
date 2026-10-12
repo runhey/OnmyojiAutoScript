@@ -54,15 +54,6 @@
     "description": "用于判断是否出现登录选区的"
   },
   {
-    "itemName": "watch_video_cancel",
-    "imageName": "login_watch_video_cancel.png",
-    "roiFront": "466,396,130,61",
-    "roiBack": "466,396,130,61",
-    "method": "Template matching",
-    "threshold": 0.8,
-    "description": "登录时候不观看CG视频"
-  },
-  {
     "itemName": "login_specific_serve",
     "imageName": "login_login_specific_serve.png",
     "roiFront": "0,0,120,120",
@@ -97,15 +88,6 @@
     "method": "Template matching",
     "threshold": 0.8,
     "description": "登录界面 弹出框 确定绑定手机"
-  },
-  {
-    "itemName": "login_login_cancel_bind_phone",
-    "imageName": "login_login_cancel_bind_phone.png",
-    "roiFront": "450,460,160,100",
-    "roiBack": "450,460,160,100",
-    "method": "Template matching",
-    "threshold": 0.8,
-    "description": "登录界面 弹出框 取消绑定手机"
   },
   {
     "itemName": "login_login_onmyoji_genie",
@@ -151,15 +133,6 @@
     "method": "Template matching",
     "threshold": 0.8,
     "description": "取消体验服切换弹窗"
-  },
-  {
-    "itemName": "cancel_battle",
-    "imageName": "login_cancel_battle.png",
-    "roiFront": "471,395,129,55",
-    "roiBack": "367,227,545,296",
-    "method": "Template matching",
-    "threshold": 0.8,
-    "description": "取消继续战斗"
   },
   {
     "itemName": "login_courtyard",
