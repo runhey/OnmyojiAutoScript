@@ -191,7 +191,22 @@ class ScriptTask(GameUi, GeneralBattle, SwitchSoul, DuelAssets, SwitchOnmyoji):
                 self.duel_exit_battle()
                 continue
             if ret is None and not battle_operated:  # 进行战斗前的操作
-                self.ui_click(self.O_D_HAND, self.O_D_AUTO, interval=0.8)
+                # 有超时、有点击上限的等待:战斗若提前结束就回顶部走结算,
+                # 开场动画点不动时停手等动画过去(连点10次会触发同键guard)
+                op_timer = Timer(45).start()
+                click_cnt = 0
+                while not op_timer.reached():
+                    self.screenshot()
+                    if self.appear(self.O_D_AUTO):
+                        break
+                    if self.is_battle_end():
+                        logger.info('battle ended during setup, go settlement')
+                        break
+                    if click_cnt < 6 and self.ocr_appear_click(
+                            self.O_D_HAND, interval=2.0):
+                        click_cnt += 1
+                    else:
+                        sleep(2)
                 self.green_mark(self.conf.duel_config.green_enable, self.conf.duel_config.green_mark)
                 battle_operated = True
                 self.reset_device('BATTLE_STATUS_S')
