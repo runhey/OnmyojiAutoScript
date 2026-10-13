@@ -42,11 +42,11 @@ class GlobalGameAssets:
 	# 长一点的确认（旧） 
 	I_UI_CONFIRM_OLD = RuleImage(roi_front=(685,376,179,66), roi_back=(663,334,232,193), threshold=0.8, method="Template matching", file="./tasks/GlobalGame/ui/ui_ui_confirm_old.png")
 	# 长一点的确认 
-	I_UI_CONFIRM = RuleImage(roi_front=(664,407,179,66), roi_back=(643,389,214,95), threshold=0.8, method="Template matching", file="./tasks/GlobalGame/ui/ui_ui_confirm.png")
+	I_UI_CONFIRM = RuleImage(roi_front=(664,407,179,66), roi_back=(643,345,231,320), threshold=0.8, method="Template matching", file="./tasks/GlobalGame/ui/ui_ui_confirm.png")
 	# 长一点的取消（旧） 
 	I_UI_CANCEL_OLD = RuleImage(roi_front=(417,368,177,62), roi_back=(366,349,261,173), threshold=0.8, method="Template matching", file="./tasks/GlobalGame/ui/ui_ui_cancel_old.png")
 	# 长一点的取消 
-	I_UI_CANCEL = RuleImage(roi_front=(438,407,177,62), roi_back=(356,384,276,125), threshold=0.8, method="Template matching", file="./tasks/GlobalGame/ui/ui_ui_cancel.png")
+	I_UI_CANCEL = RuleImage(roi_front=(438,407,177,62), roi_back=(356,384,275,256), threshold=0.8, method="Template matching", file="./tasks/GlobalGame/ui/ui_ui_cancel.png")
 	# '获得奖励' 四个大字 
 	I_UI_REWARD = RuleImage(roi_front=(530,126,211,66), roi_back=(464,69,352,303), threshold=0.73, method="Template matching", file="./tasks/GlobalGame/ui/ui_ui_reward.png")
 	# description 
@@ -64,12 +64,12 @@ class GlobalGameAssets:
 	# 短一点的取消 
 	I_UI_CANCEL_SAMLL = RuleImage(roi_front=(472,389,128,62), roi_back=(360,377,272,185), threshold=0.8, method="Template matching", file="./tasks/GlobalGame/ui/ui_ui_cancel_samll.png")
 	# description 
-	I_UI_UNCHECK = RuleImage(roi_front=(567,343,33,36), roi_back=(497,303,216,100), threshold=0.8, method="Template matching", file="./tasks/GlobalGame/ui/ui_ui_uncheck.png")
+	I_UI_UNCHECK = RuleImage(roi_front=(545,343,33,36), roi_back=(497,303,216,100), threshold=0.8, method="Template matching", file="./tasks/GlobalGame/ui/ui_ui_uncheck.png")
 	# 勾选 
 	I_UI_CHECK = RuleImage(roi_front=(564,341,40,38), roi_back=(512,329,164,78), threshold=0.8, method="Template matching", file="./tasks/GlobalGame/ui/ui_ui_check.png")
 	# 知道了 
 	I_UI_GOTIT_SMALL = RuleImage(roi_front=(678,396,127,60), roi_back=(622,371,242,100), threshold=0.8, method="Template matching", file="./tasks/GlobalGame/ui/ui_ui_gotit_small.png")
 	# 圆形返回按钮(移植自mine) 
-	# I_UI_BACK_CIRCLE = RuleImage(roi_front=(24,21,36,39), roi_back=(0,0,95,101), threshold=0.8, method="Template matching", file="./tasks/GlobalGame/ui/ui_ui_back_circle.png")
+	I_UI_BACK_CIRCLE = RuleImage(roi_front=(24,21,36,39), roi_back=(0,0,95,101), threshold=0.8, method="Template matching", file="./tasks/GlobalGame/ui/ui_ui_back_circle.png")
 
 

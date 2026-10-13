@@ -187,5 +187,14 @@
     "method": "Template matching",
     "threshold": 0.8,
     "description": "队伍试用"
+  },
+  {
+    "itemName": "d_victory_share",
+    "imageName": "duel_d_victory_share.png",
+    "roiFront": "1100,580,90,120",
+    "roiBack": "1080,560,130,160",
+    "method": "Masked template matching",
+    "threshold": 0.8,
+    "description": "斗技胜利MVP分享页右下分享按钮"
   }
 ]

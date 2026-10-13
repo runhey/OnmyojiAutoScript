@@ -131,25 +131,33 @@ class ScriptTask(GameUi, MemoryScrollsAssets):
     def contribute_memoryscrolls(self):
         """
         捐献碎片
+        最多捐献 10 轮，避免素材识别异常时无限循环（一轮捐一次，剩余碎片留到下次运行）
         :return: None
         """
-        while 1:
+        max_rounds = 10
+        for i in range(1, max_rounds + 1):
             self.screenshot()
             if self.appear(self.I_MS_ZERO_S) and self.appear(self.I_MS_ZERO_M) and self.appear(self.I_MS_ZERO_L):
                 logger.info('Memory Scrolls contribution is already completed')
                 return
-            self.swipe(self.S_MS_SWIPE_S, interval=1)
-            self.swipe(self.S_MS_SWIPE_M, interval=1)
-            self.swipe(self.S_MS_SWIPE_L, interval=1)
+            # 用每行的“最大”按钮代替滑动：小/中/大各点两次，等价于把数量条拉满
+            for max_button in (self.C_MS_MAX_S, self.C_MS_MAX_M, self.C_MS_MAX_L):
+                for _ in range(2):
+                    self.click(max_button)
+                    sleep(0.3)
             if self.appear_then_click(self.I_MS_CONTRIBUTE, interval=3):
-                logger.info('Contributed Memory Scrolls')
+                logger.info(f'Contributed Memory Scrolls ({i}/{max_rounds})')
                 # 等待捐献动画结束
-                while 1:
+                for _ in range(max_rounds):
                     self.screenshot()
                     if self.wait_until_appear(self.I_MS_CONTRIBUTED, wait_time=5):
                         self.click(self.C_MS_CONTRIBUTED, interval=1)
                     else:
                         break
+                else:
+                    logger.warning('Wait for MS_MS_CONTRIBUTED too many times')
+        logger.warning(f'Memory Scrolls contribution reached the round limit ({max_rounds}), '
+                       f'give up this run to avoid getting stuck')
     
 
 

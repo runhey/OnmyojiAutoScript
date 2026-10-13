@@ -63,15 +63,6 @@
     "description": "有些邮件需要点击一次"
   },
   {
-    "itemName": "harvest_mail_confirm",
-    "imageName": "harvest_harvest_mail_confirm.png",
-    "roiFront": "687,543,168,64",
-    "roiBack": "687,543,168,64",
-    "method": "Template matching",
-    "threshold": 0.8,
-    "description": "确认收取邮件"
-  },
-  {
     "itemName": "harvest_soul",
     "imageName": "harvest_harvest_soul.png",
     "roiFront": "241,497,38,36",
