@@ -1,10 +1,14 @@
 from collections.abc import Callable
 from typing import Any
 
-from pydantic import Field
+from pydantic import BaseModel, Field
 from pydantic.fields import FieldInfo
 
 UNSET = object()
+
+
+class ConfigBase(BaseModel):
+    """Base class for all OAS configuration models."""
 
 
 def temporal_field(
@@ -82,6 +86,5 @@ def build_field_schema_extra(
     del alias
     extra.update(json_schema_extra or {})
     return extra
-
 
 

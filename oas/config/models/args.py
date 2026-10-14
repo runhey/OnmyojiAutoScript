@@ -1408,7 +1408,7 @@ class OptionItem:
     def __repr__(self) -> str:
         return f"OptionItem({self.value!r})"
 
-    def __eq__(self, other: Any) -> bool:
+    def __eq__(self, other: object) -> bool:
         if isinstance(other, OptionItem):
             return self.value == other.value
         return self.value == other
@@ -1417,23 +1417,23 @@ class OptionItem:
         return hash(self.value)
 
     @classmethod
-    def str(cls, value: str, **kwargs: Any) -> "OptionItem":
+    def str(cls, value: str, **kwargs: Any) -> OptionItem:
         return cls._make(str, value, **kwargs)
 
     @classmethod
-    def int(cls, value: int, **kwargs: Any) -> "OptionItem":
+    def int(cls, value: int, **kwargs: Any) -> OptionItem:
         return cls._make(int, value, **kwargs)
 
     @classmethod
-    def float(cls, value: float, **kwargs: Any) -> "OptionItem":
+    def float(cls, value: float, **kwargs: Any) -> OptionItem:
         return cls._make(float, value, **kwargs)
 
     @classmethod
-    def bool(cls, value: bool, **kwargs: Any) -> "OptionItem":
+    def bool(cls, value: bool, **kwargs: Any) -> OptionItem:
         return cls._make(bool, value, **kwargs)
 
     @classmethod
-    def _make(cls, core_type: type, value: Any, **kwargs: Any) -> "OptionItem":
+    def _make(cls, core_type: type, value: Any, **kwargs: Any) -> OptionItem:
         if type(value) is not core_type:
             raise TypeError(
                 f"OptionItem.{core_type.__name__}() requires a "
@@ -1671,7 +1671,7 @@ class Option(metaclass=OptionMeta):
         ```
     """
 
-    __members__: ClassVar[dict[str, "Option"]]
+    __members__: ClassVar[dict[str, Option]]
 
     def __repr__(self) -> str:
         return f"{type(self).__name__}.{self.name}"
@@ -1679,7 +1679,7 @@ class Option(metaclass=OptionMeta):
     def __str__(self) -> str:
         return str(self.value)
 
-    def __eq__(self, other: Any) -> bool:
+    def __eq__(self, other: object) -> bool:
         if isinstance(other, Option):
             return type(self) is type(other) and self.value == other.value
         return self.value == other
@@ -1764,7 +1764,7 @@ class Option(metaclass=OptionMeta):
         return value
 
     @classmethod
-    def _validate(cls, value: Any) -> "Option":
+    def _validate(cls, value: Any) -> Option:
         return cls(value)
 
     @classmethod
@@ -1779,7 +1779,7 @@ class Option(metaclass=OptionMeta):
         return schema
 
     @classmethod
-    def _member_schema(cls, member: "Option") -> dict[str, Any]:
+    def _member_schema(cls, member: Option) -> dict[str, Any]:
         item = member.option_item
         schema = TypeAdapter(
             Annotated[Literal[member.value], item.field_info]
@@ -1921,7 +1921,7 @@ class Options(Option):
         ]
 
     @classmethod
-    def _validate(cls, value: Any) -> list["Options"]:
+    def _validate(cls, value: Any) -> list[Options]:
         # TODO: decide and implement duplicate removal and member ordering.
         return [cls(item) for item in value]
 
