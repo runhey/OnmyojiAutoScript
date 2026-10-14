@@ -16,7 +16,12 @@ from pydantic.fields import FieldInfo
 from pydantic.json_schema import JsonSchemaValue
 from pydantic_core import CoreSchema, core_schema
 
-from oas.config.models.base import UNSET, build_field_schema_extra, temporal_field
+from oas.config.models.base import (
+    UNSET,
+    boolean_component_field,
+    build_field_schema_extra,
+    temporal_field,
+)
 from oas.ext.inflection import underscore
 
 
@@ -1310,30 +1315,110 @@ class Switch:
         json_schema_extra: dict[str, Any] | None = None,
         **kwargs: Any,
     ) -> FieldInfo:
-        if default is UNSET and default_factory is None:
-            raise TypeError("Switch field requires default or default_factory")
-        if default is not UNSET and default_factory is not None:
-            raise TypeError("Switch field cannot set both default and default_factory")
-
-        field_kwargs = dict(kwargs)
-        if default_factory is not None:
-            field_kwargs["default_factory"] = default_factory
-        else:
-            field_kwargs["default"] = default
-        field_kwargs["validate_default"] = True
-        field_kwargs["json_schema_extra"] = build_field_schema_extra(
+        return boolean_component_field(
+            "Switch",
+            default=default,
+            default_factory=default_factory,
             hide=hide,
+            description=description,
             icon=icon,
+            title=title,
             alias=alias,
             depends=depends,
             json_schema_extra=json_schema_extra,
-            type="Switch",
+            kwargs=kwargs,
         )
-        if description is not None:
-            field_kwargs["description"] = description
-        if title is not None:
-            field_kwargs["title"] = title
-        return Field(**field_kwargs)
+
+
+class Button:
+    """Create stateful boolean fields rendered as button controls.
+
+    ``Button.field`` returns a Pydantic :class:`FieldInfo`; the Python field
+    annotation remains ``bool``. Pydantic validates and serializes the current
+    state, while the generated JSON Schema uses ``type="Button"`` as the
+    frontend component marker.
+
+    This component represents a stateful button. Its state is part of the
+    configuration model and is persisted like any other boolean value. It is
+    therefore suitable for a button whose active/inactive state must survive
+    model updates or configuration reloads. A one-shot command button would
+    need an action or event API instead of a boolean field.
+
+    Args:
+        default (Any): Required initial state. Explicit ``False`` is valid;
+            omit this argument only when ``default_factory`` is provided.
+            The value is validated against the field annotation by Pydantic.
+        default_factory (Callable): Callable used to create the initial state.
+            Its result is validated by Pydantic and is not emitted into JSON
+            Schema. ``default`` and ``default_factory`` are mutually
+            exclusive.
+        hide (bool | None): UI visibility metadata. Defaults to ``False``;
+            passing ``None`` omits the ``hide`` key from the schema.
+        description (str | None): Standard Pydantic field description.
+        icon (str | None): UI icon metadata.
+        title (str | None): Standard Pydantic field title.
+        alias (str | None): Reserved for future alias support. It currently
+            has no effect unless supplied through ``json_schema_extra``.
+        depends (str | None): UI dependency metadata.
+        json_schema_extra (dict[str, Any] | None): Additional JSON Schema
+            metadata. It has the highest precedence and can override generated
+            keys such as ``type``, ``hide``, or ``icon``.
+        **kwargs (Any): Other keyword arguments accepted by
+            :func:`pydantic.Field`.
+
+    Raises:
+        TypeError: If neither or both of ``default`` and ``default_factory``
+            are provided, or if ``json_schema_extra`` is not a dictionary.
+
+    Example:
+        ```python
+        class Config(BaseModel):
+            selected: bool = Button.field(
+                default=False,
+                title="选择模式",
+                description="切换按钮状态",
+                icon="hand-pointer",
+            )
+        ```
+
+    The field remains a native ``bool`` at runtime, while the schema selects
+    the button renderer:
+
+    ```python
+    config = Config.model_validate({"selected": True})
+    assert config.selected is True
+    assert Config.model_json_schema()["properties"]["selected"]["type"] == "Button"
+    ```
+    """
+
+    @classmethod
+    def field(
+        cls,
+        *,
+        default: Any = UNSET,
+        default_factory: Callable[[], Any] | None = None,
+        hide: bool | None = False,
+        description: str | None = None,
+        icon: str | None = None,
+        title: str | None = None,
+        alias: str | None = None,
+        depends: str | None = None,
+        json_schema_extra: dict[str, Any] | None = None,
+        **kwargs: Any,
+    ) -> FieldInfo:
+        return boolean_component_field(
+            "Button",
+            default=default,
+            default_factory=default_factory,
+            hide=hide,
+            description=description,
+            icon=icon,
+            title=title,
+            alias=alias,
+            depends=depends,
+            json_schema_extra=json_schema_extra,
+            kwargs=kwargs,
+        )
 
 
 class OptionItem:

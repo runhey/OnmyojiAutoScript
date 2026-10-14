@@ -12,6 +12,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[3]))
 from oas.config.models.args import (
     Cron,
     DateTime,
+    Button,
     Input,
     InputArea,
     Option,
@@ -106,6 +107,11 @@ class DebugGroup(GroupBase):
         default=True,
         description="开关",
         icon="toggle",
+    )
+    button: bool = Button.field(
+        default=False,
+        description="按钮状态",
+        icon="hand-pointer",
     )
     slider_int: int = Slider.int(
         default=5,
