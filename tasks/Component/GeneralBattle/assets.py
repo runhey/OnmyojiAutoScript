@@ -209,6 +209,8 @@ class GeneralBattleAssets:
 	C_END_FRIENDS_32 = RuleClick(roi_front=(0,0,100,100), roi_back=(0,0,100,100), name="end_friends_32")
 	# description 
 	C_END_FRIENDS_23 = RuleClick(roi_front=(0,0,100,100), roi_back=(0,0,100,100), name="end_friends_23")
+	# 御魂过多的【去清理】按钮
+	C_OVERFLOW_GHOST = RuleClick(roi_front=(456, 381, 160, 82), roi_back=(456, 381, 160, 82), name="overflow_ghost")
 
 
 	# Click Rule Assets
