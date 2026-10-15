@@ -303,10 +303,7 @@ class ScriptTask(GeneralBattle, GeneralInvite, GeneralBuff, GeneralRoom, GameUi,
                     pass
 
                 if not self.appear(self.I_EVOZONE_FIRE):
-                    from tasks.Component.GeneralBuff.config_buff import BuffClass
-                    self.run_general_battle(config=self.config.evo_zone.general_battle_config,
-                                            buff=BuffClass.EXP_50
-                                            )
+                    self.run_general_battle(config=self.config.evo_zone.general_battle_config)
                     break
 
         # 回去
