@@ -433,6 +433,10 @@ class ScriptTask(GeneralBattle, GeneralInvite, GeneralBuff, GeneralRoom, GameUi,
                     continue
                 while 1:
                     self.screenshot()
+                    # 处理御魂溢出
+                    if self.appear_then_click(self.I_OVER_GHOST):
+                        continue
+
                     action_click = random.choice([self.C_REWARD_1, self.C_REWARD_2, self.C_REWARD_3])
                     if not self.appear(self.I_GREED_GHOST):
                         break
@@ -445,6 +449,10 @@ class ScriptTask(GeneralBattle, GeneralInvite, GeneralBuff, GeneralRoom, GameUi,
                 appear_greed_ghost = self.appear(self.I_GREED_GHOST)
                 while 1:
                     self.screenshot()
+                    # 处理御魂溢出
+                    if self.appear_then_click(self.I_OVER_GHOST):
+                        continue
+
                     action_click = random.choice([self.C_REWARD_1, self.C_REWARD_2, self.C_REWARD_3])
                     if self.appear_then_click(self.I_REWARD, action=action_click, interval=1.5):
                         continue

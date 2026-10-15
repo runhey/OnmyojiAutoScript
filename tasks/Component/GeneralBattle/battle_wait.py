@@ -158,7 +158,7 @@ class OptionSuccessDefault:
         'C_END_MESSAGE_RIGHT_TOP', 'C_END_BUFF_AREA_1',
         'C_END_BUFF_AREA_2', 'C_END_SOUL_RECORD', 'C_END_SOUL_DETAILS',
         'C_END_1_1', 'C_END_1_2', 'C_END_1_3', 'C_END_1_4',
-        'C_END_1_5', 'C_END_1_6',
+        'C_END_1_5', 'C_END_1_6', "C_OVERFLOW_GHOST",
     ])
 
 
@@ -1152,6 +1152,10 @@ class BattleWait(BaseTask, GeneralBattleAssets):
 
     def _bw_interrupt_default(self, pub: PublicContext, pri: PrivateContext) -> HookSignal:
         # 比如 御魂溢出
+
+        # 结算的时候御魂溢出提示，点击【知道了】
+        self.appear_then_click(self.I_OVER_GHOST)
+
         return HookSignal.CONTINUE
 
     def _bw_success_default(self, pub: PublicContext, pri: PrivateContext) -> HookSignal:
@@ -1179,6 +1183,14 @@ class BattleWait(BaseTask, GeneralBattleAssets):
         timer = Timer(20).start()
         while 1:
             self.screenshot()
+
+            # 发现御魂溢出，直接跳出，在interupt里面处理
+            if self.appear(self.I_OVER_GHOST):
+                return HookSignal.CONTINUE
+
+            # 结算的时候御魂溢出提示，点击【知道了】
+            if self.appear(self.I_OVER_GHOST):
+                self.click(self.I_OVER_GHOST)
 
             # 不小心点到了具体的奖励，他会弹出这个物品的详细描述 里面必定包含有“获取途径”
             if self.appear(self.I_END_FIX_1) or self.appear(self.I_END_FIX_2):
