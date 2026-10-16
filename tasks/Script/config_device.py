@@ -25,12 +25,16 @@ class ScreenshotMethod(str, Enum):
     SCRCPY = 'scrcpy'
     WINDOW_BACKGROUND = 'window_background'
     NEMU_IPC = 'nemu_ipc'
+    MacBGR = 'MacBGR'
+    RGBA = 'RGBA'
+    MacSCK = 'MacSCK'
 
 class ControlMethod(str, Enum):
     ADB = 'adb'
     UIAUTOMATOR2 = 'uiautomator2'
     MINITOUCH = 'minitouch'
     WINDOW_MESSAGE = 'window_message'
+    MacPlayTools = 'MacPlayTools'
 
 class EmulatorInfoType(str, Enum):
     # module.device.platform2.emulator_base.EmulatorBase

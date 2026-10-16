@@ -13,6 +13,7 @@ from module.config.utils import deep_iter
 from module.exception import RequestHumanTakeover
 from module.logger import logger
 
+
 class ConnectionAttr:
     config: Config
     serial: str
@@ -33,6 +34,12 @@ class ConnectionAttr:
             self.config = Config(config, task=None)
         else:
             self.config = config
+
+        self.serial = str(self.config.script.device.serial)
+        self.is_playcover = self.config.script.device.control_method == 'MacPlayTools'
+        if self.is_playcover:
+            logger.attr('PlayCover', self.serial)
+            return
 
         # Init adb client
         logger.attr('AdbBinary', self.adb_binary)
@@ -65,7 +72,6 @@ class ConnectionAttr:
 
         # Parse custom serial
         # self.serial = str(self.config.Emulator_Serial)
-        self.serial = str(self.config.script.device.serial)
         self.serial_check()
         self.config.DEVICE_OVER_HTTP = self.is_over_http
 
@@ -282,5 +288,3 @@ class ConnectionAttr:
 
         logger.attr('u2.Device', f'Device(atx_agent_url={device._get_atx_agent_url()})')
         return device
-
-

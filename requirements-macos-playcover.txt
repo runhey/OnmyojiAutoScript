@@ -1,0 +1,61 @@
+# macOS PlayCover / MaaTools manual installation (Python 3.10)
+# macOS PlayCover / MaaTools 手动安装（Python 3.10）
+#
+# Run these commands in a macOS terminal, outside the Flutter app:
+# 请在 macOS 终端中、Flutter app 外执行以下命令：
+#   python3.10 -m venv .venv
+#   source .venv/bin/activate
+#   python -m pip install --upgrade pip
+#   python -m pip install -r requirements-macos-playcover.txt
+#
+# This is a pip package list only. It does not include the Python interpreter
+# or OCR model files. The Flutter app is UI-only and does not bundle Python,
+# OCR, the OAS service, or its runtime dependencies.
+# 这只是 pip 包清单，不包含 Python 解释器或 OCR 模型文件。Flutter app 仅是
+# 界面，不内置 Python、OCR、本地 OAS 服务或服务依赖。
+#
+# Unrelated Windows, instrumentation, and check-in packages are intentionally
+# not part of this PlayCover PR.
+# 本 PlayCover PR 有意不包含 Windows、注入及签到相关的无关依赖。
+
+# Image processing and OCR / 图像处理与 OCR
+numpy==1.24.3
+opencv-python==4.7.0.72
+Pillow==10.2.0
+ppocr-onnx==0.0.3.9
+
+# OAS service and OASX communication / 本地 OAS 服务与 OASX 通信
+pydantic==2.10.0
+fastapi==0.104.1
+uvicorn==0.38.0
+websockets==13.1
+zerorpc==0.6.3
+paho-mqtt==1.6.1
+requests==2.31.0
+
+# Cross-platform import-time compatibility / 跨平台 import-time 兼容
+# Existing OAS modules import these at module load time, including the
+# ADB/uiautomator2/minitouch code paths. PlayCover transport itself does not
+# use ADB; keep these packages only so the existing modules can be imported.
+# OAS 现有模块加载时仍会导入这些包，包括 ADB/uiautomator2/minitouch 代码路径。
+# PlayCover 传输本身不使用 ADB；保留它们只是为了现有模块能够完成导入。
+adbutils==0.11.0
+uiautomator2==2.16.17
+uiautomator2cache==0.3.0.1
+wrapt==1.15.0
+lxml==5.0.0
+
+# OAS runtime utilities / OAS 运行时工具
+psutil==6.1.1
+rich==13.3.5
+PyYAML==6.0
+tqdm==4.65.0
+anytree==2.8.0
+cn2an==0.5.23
+inflection==0.5.1
+onepush==1.3.0
+cryptography>=42.0.7
+
+# Transitive dependencies (for example onnxruntime and pyzmq) are resolved
+# by pip and are intentionally not expanded into this manual list.
+# onnxruntime、pyzmq 等传递依赖由 pip 解析，本手动清单不逐项展开。
