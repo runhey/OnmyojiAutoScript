@@ -2,8 +2,8 @@ name: Auto Merge Sync PR
 
 on:
   schedule:
-    # 每周五北京时间12点触发（UTC时间4点）
-    - cron: '0 4 * * 5'
+    # 每周五北京时间2点07分触发（UTC时间周四18点07分）
+    - cron: '7 18 * * 4'
   workflow_dispatch:
 
 permissions:

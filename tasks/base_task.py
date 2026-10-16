@@ -80,10 +80,10 @@ class BaseTask(GlobalGameAssets, CostumeBase):
             uppercase_first_letter=True,
         )
 
-        if model_task_name and model_task_name != path_task_name:
-            raise ScriptError(
-                f'Task name mismatch: model={model_task_name}, path={path_task_name}'
-            )
+        # if model_task_name and model_task_name != path_task_name:
+        #     raise ScriptError(
+        #         f'Task name mismatch: model={model_task_name}, path={path_task_name}'
+        #     )
         return model_task_name or path_task_name
 
     def _burst(self) -> bool:

@@ -481,6 +481,8 @@ class GeneralInvite(BaseTask, GeneralInviteAssets):
             logger.warning('Invite friend 1 failed')
         # 如果是邀请第二个人
         if config.invite_number == InviteNumber.TWO:
+            # 确定邀请前等待一段时间，避免游戏弹出邀请过快
+            sleep(3)
             success = self.invite_friend(config.friend_2, config.find_mode)
             if not success:
                 logger.warning('Invite friend 2 failed')

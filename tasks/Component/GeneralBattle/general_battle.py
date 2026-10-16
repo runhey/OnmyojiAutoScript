@@ -635,6 +635,7 @@ class GeneralBattle(BattleWait, GeneralBuff):
                 break
             if self.appear_then_click(self.I_BUFF, interval=1):
                 continue
+        self.ui_click_until_disappear(self.I_PREPARE_HIGHLIGHT, interval=0.8)
 
     def boss_mark(self, enable=True) -> bool:
         if not enable or self._boss_mark_flag:
