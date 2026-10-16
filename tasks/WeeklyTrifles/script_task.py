@@ -79,16 +79,17 @@ class ScriptTask(GameUi, WeeklyTriflesAssets):
         self.goto_page(page_guild)
         # 防止入口被折叠
         while 1:
-            # 等个折叠窗口展开动画
-            sleep(1)
             self.screenshot()
-            if self.appear_then_click(self.I_WT_OPEN_FOLD_WINDOW):
+            if self.appear_then_click(self.I_WT_OPEN_FOLD_WINDOW, interval=1):
                 continue
-            if self.appear(self.I_WT_FOLD_WINDOW):
+            if self.appear(self.I_WT_FOLD_WINDOW, interval=1):
                 break
         # 保存次数，后续做了也会邮件返还福运御守
         self.goto_page(page_touch_fish)
-        self.screenshot()
+        self.ui_click_until_smt_disappear(
+            random_click(ltrb=(True, False, False, False)), self.I_WT_LAST_SAVE
+        )
+        sleep(0.5)  # 等待动画
         if self.appear(self.I_WT_SAVE_ALL):
             cu_tickts, _, _ = self.O_WT_LUCKY_TICKETS.ocr(self.device.image)
             logger.info(f"当前的福运御守数量：{cu_tickts}")
@@ -98,20 +99,14 @@ class ScriptTask(GameUi, WeeklyTriflesAssets):
             get_timer = Timer(7)
             get_timer.start()
             while 1:
-                sleep(0.5)
                 self.screenshot()
-                if self.appear(self.I_WT_LAST_SAVE):
-                    self.click(
-                        random_click(ltrb=(True, False, False, False)), interval=1.5
-                    )
-                    continue
-                if self.appear_then_click(self.I_WT_HAPPY_GET):
+                if self.appear_then_click(self.I_WT_HAPPY_GET, interval=1):
                     continue
                 if cu_tickts >= cost_tickts and not_save_flag:
-                    self.appear_then_click(self.I_WT_SAVE_ALL)
+                    self.appear_then_click(self.I_WT_SAVE_ALL, interval=1)
                     not_save_flag = False
                     continue
-                if self.appear_then_click(self.I_WT_TF_CONFIRM):
+                if self.appear_then_click(self.I_WT_TF_CONFIRM, interval=1):
                     continue
                 if self.appear(self.I_WT_TF_SAVE_SUCCESS) and not self.appear(
                     self.I_WT_SAVE_ALL
