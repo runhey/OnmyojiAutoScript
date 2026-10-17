@@ -95,6 +95,8 @@ class Window(Handle):
         与资产 1:1，客户区 DC 原点即画面左上角、不含标题栏，故无偏移、无缩放。
         """
         self.desktop_window_restore_if_minimized()
+        # 多开摆位重断言：客户端启动后会自行挪回屏幕中央，只在启动时摆一次压不住
+        self._desktop_assert_window_pos(self.root_handle_num)
         with dpi_awareness():
             client_rect = GetClientRect(self.screenshot_handle_num)
             widthScreen = client_rect[2] - client_rect[0]

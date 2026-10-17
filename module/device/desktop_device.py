@@ -1,9 +1,11 @@
 # This Python file uses the following encoding: utf-8
-"""桌面客户端（serial='desktop'）在 Device 层的生命周期策略。
+"""桌面客户端（script.desktop.enable）在 Device 层的生命周期策略。
 
 窗口/进程的实现细节在 module/device/method/desktop_impl.py 的 DesktopWindow，
 这里只管「什么时候把客户端拉起来、什么时候算它在运行」。
 """
+from module.device.method.desktop_impl import (
+    desktop_pid_alive, desktop_window_titles, find_desktop_window_by_pid)
 from module.logger import logger
 
 
@@ -16,15 +18,28 @@ class DesktopDevice:
         """确保客户端可用：进程已死才拉起，进程活着只等窗口就绪。
 
         判定顺序是关键——先看进程再看窗口。把「窗口不在」当成「客户端没在运行」
-        会拉起多余实例，并把配置里的 handle 覆盖成新实例的 PID，从此再也绑不回
-        原来那个。窗口被最小化不算没运行，截图方法会先还原再取帧。
+        会拉起多余实例，从此再也绑不回原来那个。窗口被最小化不算没运行，
+        截图方法会先还原再取帧。
+
+        本会话没有存活 PID 时（刚启动、或上一个客户端已退出），先按「档案状态
+        文件 → 唯一窗口枚举」认领已在运行的实例——按钮手动启动的实例就是这样
+        被接上的；认领不到才拉起新的。
         """
         pid = self.desktop_pid()
-        if pid is None or not self._desktop_pid_alive(pid):
-            return self.launch_desktop_client()
-        if self.desktop_window_exists():
+        if pid is not None and desktop_pid_alive(pid):
+            if self.desktop_window_exists():
+                return True
+            return self._desktop_wait_window_ready(pid)
+        located_pid, hwnd = self._desktop_locate_window()
+        if located_pid:
+            if not hwnd and not self._desktop_wait_window_ready(located_pid):
+                return False
+            if not hwnd:
+                hwnd = find_desktop_window_by_pid(
+                    located_pid, desktop_window_titles(self.config))
+            self.desktop_bind_pid(located_pid, hwnd)
             return True
-        return self._desktop_wait_window_ready(pid)
+        return self.launch_desktop_client()
 
     def app_lost_login(self) -> bool:
         """客户端是否掉回了未登录态。
@@ -50,6 +65,13 @@ class DesktopDevice:
         """桌面客户端模式初始化：跳过模拟器健康检查/full_recovery。"""
         logger.info('Desktop client mode: skip emulator health check and full recovery')
         if self.config.script.device.screenshot_method == 'auto':
+            # auto 是「自动选择」的语义，桌面模式自动落到后台截图，无需告警
+            self.config.script.device.screenshot_method = 'window_background'
+        elif self.config.script.device.screenshot_method != 'window_background':
+            logger.warning(
+                f'Desktop mode requires screenshot_method=window_background, '
+                f'current={self.config.script.device.screenshot_method}, overriding'
+            )
             self.config.script.device.screenshot_method = 'window_background'
         if self.config.script.device.control_method != 'window_message':
             logger.warning(

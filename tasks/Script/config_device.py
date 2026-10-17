@@ -50,14 +50,12 @@ class EmulatorInfoType(str, Enum):
     MEmuPlayer = 'MEmuPlayer'
 
 class Device(BaseModel):
+    # adb 序列号；桌面客户端模式（见 desktop 组）下本字段退场
     serial: str = Field(default="auto",
                         description='serial_help')
+    # 模拟器模式：窗口标题或句柄编号；桌面客户端模式：客户端窗口标题（留空自动识别）
     handle: str = Field(default='',
                         description='handle_help')
-    # 桌面客户端自动启动用：游戏安装目录（含 bin\onmyoji.exe 或 Launch.exe 的根目录），
-    # 留空时按 %ProgramFiles%\Onmyoji 与注册表 InstallLocation 自动发现；仅桌面模式使用
-    desktop_game_path: str = Field(default='',
-                                   description='desktop_game_path_help')
     package_name: PackageName = Field(title='Package Name',
                                       default=PackageName.AUTO,
                                       description='package_name_help')

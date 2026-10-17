@@ -18,7 +18,9 @@ from win32con import (SRCCOPY, DESKTOPHORZRES, DESKTOPVERTRES, WM_LBUTTONUP,
                       WM_LBUTTONDOWN, WM_ACTIVATE, WA_ACTIVE, MK_LBUTTON,
                       WM_NCHITTEST, WM_SETCURSOR, HTCLIENT, WM_MOUSEMOVE)
 from module.config.config import Config
-from module.device.method.desktop_impl import DesktopWindow, DESKTOP_WINDOW_TITLES
+from module.config.utils import desktop_mode_enabled
+from module.device.method.desktop_impl import DesktopWindow
+from module.exception import EmulatorNotRunningError
 from module.logger import logger
 
 
@@ -159,7 +161,7 @@ class Handle(DesktopWindow):
     }
     config: Config = None
     is_desktop_window: bool = False
-    """是否为桌面客户端模式（serial='desktop'），桌面分支统一用此标志隔离"""
+    """是否为桌面客户端模式（script.desktop.enable），桌面分支统一用此标志隔离"""
 
     def __init__(self, config) -> None:
         """
@@ -172,20 +174,23 @@ class Handle(DesktopWindow):
                 self.config = Config(config, task=None)
             else:
                 self.config = config
-        if not self.config.script.device.handle or self.config.script.device.handle == '':
-            logger.info('Handle is empty, oas not use handle')
-            return
-
-        # 桌面客户端模式：按 PID 定位窗口，跳过模拟器窗口树逻辑
-        if self.config.script.device.serial == 'desktop':
+        # 桌面模式：PID 只在运行时存在（不落配置），按「档案状态文件 → 窗口枚举」定位，
+        # 找不到抛错交给 Device.__init__ 自动拉起。须排在 handle 空判之前（桌面模式留空是常态）
+        if desktop_mode_enabled(self.config):
             self.root_handle_title = ''
             self.root_handle_num = 0
-            self.root_handle = self.config.script.device.handle
-            logger.info(f'Desktop handle PID is {self.root_handle}')
-            self.root_handle_num = self.find_desktop_window_by_pid(self.root_handle)
-            self.root_handle_title = DESKTOP_WINDOW_TITLES[0]
-            self.is_desktop_window = True
-            logger.info(f'Desktop client window found: title={self.root_handle_title}, hwnd={self.root_handle_num}')
+            self.root_handle = ''
+            pid, hwnd = self._desktop_locate_window()
+            if pid and hwnd:
+                self.desktop_bind_pid(pid, hwnd)
+                logger.info(f'Desktop client window bound: PID={pid}, hwnd={hwnd}')
+                return
+            if pid:
+                logger.info(f'Desktop client process alive (PID={pid}) but window not ready yet')
+            raise EmulatorNotRunningError('Desktop client window not found')
+
+        if not self.config.script.device.handle or self.config.script.device.handle == '':
+            logger.info('Handle is empty, oas not use handle')
             return
 
         # 获取根的句柄

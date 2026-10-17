@@ -250,7 +250,7 @@ class Device(DesktopDevice, Platform, Screenshot, Control, AppControl):
         if self.is_desktop:
             if not self._desktop_ensure_launched():
                 logger.error('Desktop client not running and auto-launch failed, '
-                             'please start the game manually or check desktop_game_path')
+                             'please start the game manually or check game_path')
                 raise GameNotRunningError('Desktop client auto-launch failed')
             # 这里必然早于 app_handle_login，且是拉起客户端的唯一入口：客户区没校准到
             # 1280x720 的话登录 OCR 与点击坐标全错。运行期重拉时 Device 对象是复用的，

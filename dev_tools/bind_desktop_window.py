@@ -1,117 +1,67 @@
 # -*- coding: utf-8 -*-
-"""
-桌面客户端窗口 PID 绑定工具
+"""桌面客户端模式配置工具
 ============================
-把"阴阳师-网易游戏"桌面客户端窗口的 PID 写入指定 OAS 配置，并切到桌面模式
-（serial='desktop'、handle=PID、screenshot_method='window_background'、control_method='window_message'）。
+把指定 OAS 配置切到桌面客户端模式（script.desktop.enable=True、
+screenshot_method='window_background'、control_method='window_message'），
+并可顺带启动一个实例验证安装目录与档案配置是否可用。
+
+PID 不再写进配置：客户端进程 PID 每次重启都会变，OAS 启动/认领时自动绑定，
+档案目录内会写 oas_instance.json 运行时状态供下次认领（多开账号隔离）。
 
 用法:
-    ./toolkit/python.exe -m dev_tools.bind_desktop_window --config oas1 --pick
-    ./toolkit/python.exe -m dev_tools.bind_desktop_window --config oas1 --list
-    ./toolkit/python.exe -m dev_tools.bind_desktop_window --config oas1 --pid 4242
+    ./toolkit/python.exe -m dev_tools.bind_desktop_window --config oas1
+    ./toolkit/python.exe -m dev_tools.bind_desktop_window --config oas1 --path D:\\yys
+    ./toolkit/python.exe -m dev_tools.bind_desktop_window --config oas1 --profile D:\\yys-profiles\\p1 --launch
 """
 import argparse
-import ctypes
-import sys
-from ctypes import wintypes
-
-import win32gui
-import win32process
 
 from module.config.config import Config
 from module.logger import logger
 
-DESKTOP_WINDOW_TITLES = ('阴阳师-网易游戏', '阴阳师-MuMu模拟器专版')
 
-
-def list_desktop_windows() -> list:
-    """枚举所有桌面客户端窗口，返回 [(title, hwnd, pid)]。"""
-    def enum_cb(hwnd, param):
-        param.append(hwnd)
-        return True
-
-    windows = []
-    win32gui.EnumWindows(enum_cb, windows)
-    result = []
-    for hwnd in windows:
-        title = win32gui.GetWindowText(hwnd)
-        if title in DESKTOP_WINDOW_TITLES:
-            pid = win32process.GetWindowThreadProcessId(hwnd)[1]
-            result.append((title, hwnd, pid))
-    return result
-
-
-def pick_window_under_cursor() -> int:
-    """返回鼠标光标所指窗口的句柄；无窗口返回 0。"""
-    user32 = ctypes.WinDLL('user32', use_last_error=True)
-
-    class POINT(ctypes.Structure):
-        _fields_ = [('x', ctypes.c_long), ('y', ctypes.c_long)]
-
-    point = POINT()
-    user32.GetCursorPos.argtypes = [ctypes.POINTER(POINT)]
-    user32.GetCursorPos.restype = wintypes.BOOL
-    if not user32.GetCursorPos(ctypes.byref(point)):
-        return 0
-    user32.WindowFromPoint.argtypes = [POINT]
-    user32.WindowFromPoint.restype = wintypes.HWND
-    return int(user32.WindowFromPoint(point)) or 0
-
-
-def bind_pid_to_config(config_name: str, pid: int) -> None:
-    """把 PID 写入指定配置，并切到桌面模式。"""
+def bind_desktop_mode(config_name: str, game_path: str = '', profile_dir: str = '') -> None:
+    """把配置切到桌面客户端模式（幂等，可重复执行）。"""
     config = Config(config_name)
-    config.script.device.serial = 'desktop'
-    config.script.device.handle = str(pid)
+    config.script.desktop.enable = True
+    if game_path:
+        config.script.desktop.game_path = game_path
+    if profile_dir:
+        config.script.desktop.profile_dir = profile_dir
     # PrintWindow 对客户端的 DirectX 渲染窗口返回纯黑，桌面模式统一用 BitBlt
     config.script.device.screenshot_method = 'window_background'
     config.script.device.control_method = 'window_message'
     config.save()
-    logger.info(f'Config [{config_name}] bound to desktop client PID={pid}')
-    # 绑定后检测并调整窗口客户区到 1280x720，保证识别 1:1
-    from module.device.handle import Handle
-    h = Handle(config)
-    h.desktop_window_set_size()
+    logger.info(f'Config [{config_name}] switched to desktop client mode '
+                f'(game_path={config.script.desktop.game_path or "auto"}, '
+                f'profile_dir={config.script.desktop.profile_dir or "-"})')
+
+
+def launch_and_check(config_name: str) -> None:
+    """按当前 desktop 配置启动一个实例并校准窗口尺寸，验证配置可用。"""
+    from module.device.device import Device
+    from module.device.method.desktop_impl import desktop_launch_instance
+
+    config = Config(config_name)
+    if not desktop_launch_instance(config):
+        logger.error('启动失败，请检查 游戏安装目录 / 档案目录 配置')
+        return
+    device = Device(config)
+    device.desktop_window_set_size()
+    logger.info('桌面客户端已启动并完成窗口校准，可以启动脚本了')
 
 
 def main():
-    parser = argparse.ArgumentParser(description='绑定桌面客户端窗口 PID 到 OAS 配置')
+    parser = argparse.ArgumentParser(description='把 OAS 配置切换到桌面客户端模式')
     parser.add_argument('--config', required=True, help='配置实例名，如 oas1')
-    group = parser.add_mutually_exclusive_group(required=True)
-    group.add_argument('--pick', action='store_true', help='鼠标点选窗口（光标所指）')
-    group.add_argument('--list', action='store_true', help='从窗口列表按序号选择')
-    group.add_argument('--pid', type=int, help='直接指定 PID')
+    parser.add_argument('--path', default='', help='游戏安装目录（含 bin\\onmyoji.exe 的根目录）')
+    parser.add_argument('--profile', default='', help='多开档案目录（每个配置一个，实现账号隔离）')
+    parser.add_argument('--launch', action='store_true',
+                        help='切换后立即启动一个客户端实例并校准窗口尺寸')
     args = parser.parse_args()
 
-    if args.pid:
-        bind_pid_to_config(args.config, args.pid)
-        return
-
-    if args.pick:
-        input('请把鼠标移到目标游戏窗口上，然后按回车…')
-        hwnd = pick_window_under_cursor()
-        if not hwnd:
-            logger.error('未获取到光标下的窗口')
-            sys.exit(1)
-        title = win32gui.GetWindowText(hwnd)
-        if title not in DESKTOP_WINDOW_TITLES:
-            logger.error(f'光标下的窗口不是桌面客户端（标题: "{title}"），'
-                         f'请把鼠标移到游戏画面实体区域上重试')
-            sys.exit(1)
-        pid = win32process.GetWindowThreadProcessId(hwnd)[1]
-        bind_pid_to_config(args.config, pid)
-        return
-
-    windows = list_desktop_windows()
-    if not windows:
-        logger.error('未找到桌面客户端窗口，请先启动游戏')
-        sys.exit(1)
-    for i, (title, hwnd, pid) in enumerate(windows):
-        print(f'[{i}] {title}  PID={pid}  HWND=0x{hwnd:X}')
-    choice = input('请输入方括号内的序号: ')
-    idx = int(choice)
-    _, _, pid = windows[idx]
-    bind_pid_to_config(args.config, pid)
+    bind_desktop_mode(args.config, args.path, args.profile)
+    if args.launch:
+        launch_and_check(args.config)
 
 
 if __name__ == '__main__':

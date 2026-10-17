@@ -15,6 +15,14 @@
       "emulator_window_minimize": false,
       "run_background_only": false
     },
+    "desktop": {
+      "enable": false,
+      "game_path": "",
+      "profile_dir": "",
+      "window_pos": "",
+      "window_title": "",
+      "launch_instance": false
+    },
     "error": {
       "handle_error": true,
       "error_repeated": false,

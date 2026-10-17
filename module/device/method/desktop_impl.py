@@ -10,13 +10,19 @@
 - ``DesktopWindow`` 不定义 ``__init__``，全部实例状态由 ``Handle.__init__`` 的
   桌面分支设置；类内方法名与 Handle 模拟器方法无重名，MRO 无歧义；
 - 本模块不反向依赖 handle.py，是叶子模块，无循环导入；
-- 模块级常量与 helper（``list_desktop_windows`` / ``desktop_window_option`` /
-  ``desktop_option2pid`` / ``dpi_awareness`` 等）一并住在这里，外部调用方直接
+- 模块级常量与 helper（``list_desktop_windows`` / ``desktop_prepare_profile`` /
+  ``desktop_launch_instance`` / ``dpi_awareness`` 等）一并住在这里，外部调用方直接
   从本模块导入，不经 handle.py 转出——避免"补丁打在转出别名上静默失效"。
+
+PID 生命周期约定：客户端进程 PID 每次重启都会变，因此它**不写配置**，只活在
+运行时（实例 root_handle）；配了档案目录时另在档案内写 oas_instance.json 状态
+文件，供下次启动精确认领（多开必需，枚举无法区分多个同标题窗口的归属）。
 """
 
 import os
 import re
+import json
+import shutil
 import subprocess
 import time
 import ctypes
@@ -29,9 +35,11 @@ from win32api import SendMessage
 from win32process import GetWindowThreadProcessId
 from win32gui import (GetWindowText, EnumWindows, GetWindowRect, IsWindow,
                       GetClientRect, ClientToScreen, GetWindowLong,
-                      SetWindowPos, GetClassName, IsIconic, ShowWindow)
+                      SetWindowPos, GetClassName, IsIconic, ShowWindow,
+                      SetWindowText)
 from win32con import (WM_KEYDOWN, WM_KEYUP, VK_RETURN, GWL_STYLE, GWL_EXSTYLE,
-                      HWND_TOP, SWP_NOMOVE, SWP_SHOWWINDOW, SW_RESTORE)
+                      HWND_TOP, SWP_NOMOVE, SWP_NOSIZE, SWP_NOZORDER, SWP_NOACTIVATE,
+                      SWP_SHOWWINDOW, SW_RESTORE)
 
 from module.base.decorator import del_cached_property
 from module.exception import EmulatorNotRunningError
@@ -40,6 +48,56 @@ from module.logger import logger
 
 # 桌面客户端窗口标题（官方桌面版，多开共用同一标题）
 DESKTOP_WINDOW_TITLES = ('阴阳师-网易游戏', '阴阳师-MuMu模拟器专版')
+
+
+def desktop_window_titles(config=None) -> tuple:
+    """本配置认可的窗口标题白名单：内置官方标题 + 自定义窗口标题。
+
+    自定义标题（script.desktop.window_title）非空时，OAS 绑定客户端时会把窗口
+    改名成它；此后**所有按标题找窗口的路径**都必须放行这个标题，否则改名后的
+    实例会被当成「窗口不存在」——desktop_window_exists 判掉线触发重拉、
+    _desktop_locate_window 认领不到，多开直接乱套。
+    """
+    custom = ''
+    if config is not None:
+        try:
+            custom = str(config.script.desktop.window_title or '').strip()
+        except AttributeError:
+            custom = ''
+    return DESKTOP_WINDOW_TITLES + ((custom,) if custom else ())
+
+
+def desktop_rename_window(hwnd, config) -> bool:
+    """把客户端窗口标题改成配置的自定义标题，返回是否实际改了名。
+
+    仅用于多开时在任务栏区分实例。客户端会在首次登录流程中自行重设一次标题，
+    故除绑定时的改名外，检测到 MPay 登录弹窗时补改一次；失败只记 warning，
+    标题不参与识别与点击。
+    """
+    if not hwnd:
+        return False
+    try:
+        custom = str(config.script.desktop.window_title or '').strip()
+    except AttributeError:
+        return False
+    if not custom:
+        return False
+    try:
+        if GetWindowText(hwnd) == custom:
+            return False
+        SetWindowText(hwnd, custom)
+        # 回读确认：win32gui.SetWindowText 对无效句柄不抛异常，不回读会把
+        # 「没改成」记成「已改名」，排查时会被日志带偏
+        if GetWindowText(hwnd) != custom:
+            logger.warning(f'重命名桌面客户端窗口未生效（目标标题 {custom}，不影响控制）')
+            return False
+        logger.info(f'Desktop window title renamed to: {custom}')
+        return True
+    except Exception as e:
+        logger.warning(f'重命名桌面客户端窗口失败（不影响控制）: {e}')
+        return False
+
+
 # 「进程活着但窗口还没就绪」时的等待上限（秒）与轮询间隔。空窗期有两种：客户端
 # 启动期还没出窗口、确认 MPay 弹窗后销毁登录界面重建主窗口的那几秒。这段等待只
 # 轮询窗口，绝不重新启动进程——把「窗口暂时不在」当成「客户端没在运行」会拉起
@@ -61,6 +119,24 @@ DESKTOP_RESIZE_RETRY_INTERVAL = 1.0
 # 没死就再杀一轮，而不是发完指令就当成功
 DESKTOP_KILL_ATTEMPTS = 3
 DESKTOP_KILL_POLL_INTERVAL = 0.5
+
+# ---- 多开档案（profile）隔离 ----
+# 档案内的只读大目录：junction 共享真实安装目录，不占空间、不重下资源
+DESKTOP_PROFILE_SHARED_DIRS = ('bin', 'bin_patch', 'res', 'thd', 'thdext1', 'zipres', '_check_preload_')
+# 档案内每实例独立的真实目录（Documents 内的子目录随后按 junction 共享）
+DESKTOP_PROFILE_ISOLATED_DIRS = ('Documents', 'cefLocalStorage')
+# 档案内「假用户主目录」子树。SDK 用 SHGetFolderPathW / SHGetSpecialFolderLocation 解析
+# %APPDATA%，这些 API 拿【进程环境的 USERPROFILE】展开注册表里的 REG_EXPAND_SZ
+# （"%USERPROFILE%\AppData\Roaming"），且目标目录必须真实存在，否则 API 直接失败
+DESKTOP_PROFILE_HOME_DIRS = (
+    'home/AppData/Roaming',
+    'home/AppData/Local',
+    'home/AppData/Local/Temp',
+    'home/AppData/LocalLow',
+    'home/Documents',
+)
+# QueryInformationJobObject 的 JobObjectBasicProcessIdList 信息类
+_JOB_OBJECT_BASIC_PROCESS_ID_LIST = 3
 
 # DPI_AWARENESS_CONTEXT_PER_MONITOR_AWARE_V2，SetThreadDpiAwarenessContext 的入参
 _PER_MONITOR_AWARE_V2 = ctypes.c_void_p(-4)
@@ -183,132 +259,584 @@ def _desktop_pid_under_root(pid, root) -> bool:
     return exe.startswith(root + os.sep)
 
 
-def list_desktop_windows() -> list:
+def list_desktop_windows(titles=None) -> list:
     """枚举当前所有桌面客户端窗口。
 
-    返回 [{'pid': int, 'title': str, 'x': int, 'y': int}]，按屏幕位置排序。
-    桌面客户端多开时窗口标题完全相同，只能靠 PID 区分，附带左上角坐标是为了
-    让用户在界面上按"窗口摆在哪"对号入座。按坐标排序保证同一组窗口每次枚举
-    顺序稳定（EnumWindows 的返回顺序随 Z 序变化）。
+    返回 [{'pid': int, 'title': str, 'hwnd': int, 'x': int, 'y': int}]，按屏幕位置
+    排序。桌面客户端多开时窗口标题完全相同，只能靠 PID 区分，附带左上角坐标是为了
+    按"窗口摆在哪"对号入座。按坐标排序保证同一组窗口每次枚举顺序稳定
+    （EnumWindows 的返回顺序随 Z 序变化）。
+
+    titles 为 None 时用 DESKTOP_WINDOW_TITLES；调用方按配置里的窗口标题
+    （device.handle）过滤候选时传入自定义标题组。坐标在 DPI 感知上下文内读取，
+    是物理像素，与 desktop_window_pos 配置同一空间（OAS 进程自身未声明 DPI 感知，
+    上下文外读到的是虚拟化坐标）。
     """
     def enum_cb(hwnd, param):
         param.append(hwnd)
         return True
 
+    wanted = tuple(titles) if titles else DESKTOP_WINDOW_TITLES
     handles = []
     EnumWindows(enum_cb, handles)
     result = []
-    for hwnd in handles:
-        if GetWindowText(hwnd) not in DESKTOP_WINDOW_TITLES:
-            continue
-        try:
-            rect = GetWindowRect(hwnd)
-        except Exception:
-            # 窗口在枚举与取矩形之间被关闭，跳过即可
-            continue
-        result.append({
-            'pid': GetWindowThreadProcessId(hwnd)[1],
-            'title': GetWindowText(hwnd),
-            'hwnd': hwnd,
-            'x': rect[0],
-            'y': rect[1],
-        })
+    with dpi_awareness():
+        for hwnd in handles:
+            title = GetWindowText(hwnd)
+            if title not in wanted:
+                continue
+            try:
+                rect = GetWindowRect(hwnd)
+            except Exception:
+                # 窗口在枚举与取矩形之间被关闭，跳过即可
+                continue
+            result.append({
+                'pid': GetWindowThreadProcessId(hwnd)[1],
+                'title': title,
+                'hwnd': hwnd,
+                'x': rect[0],
+                'y': rect[1],
+            })
     result.sort(key=lambda w: (w['x'], w['y'], w['pid']))
     return result
 
 
-def desktop_window_option(window: dict) -> str:
-    """把窗口信息格式化成界面下拉项文本，形如 `27272 (154,38)`。
+# ---------------------------------------------------------------------- 多开档案隔离
 
-    不显示窗口标题：桌面客户端多开时标题完全相同，且中文字样在英文界面里冗余。
-    PID 放在最前，desktop_option2pid 只认第一段数字，坐标纯属给用户辨识用，
-    改动展示格式不会影响解析。
+def desktop_make_junction(link: Path, target: Path) -> bool:
+    """创建目录联接（junction 不需要管理员权限）；已链接/目标缺失返回 False。
+
+    junction 是 NTFS 重解析点，对程序透明且不占空间，用来让每个档案共享真实安装
+    目录里的只读大目录（bin/res/zipres 等），避免多开复制数个 GB。
     """
-    return f"{window['pid']} ({window['x']},{window['y']})"
+    if link.is_dir():
+        # 真实目录或已建好的 junction 都命中（is_dir 会穿透到目标）
+        return False
+    if os.path.lexists(link):
+        # 断裂的 junction：目标被删掉后 is_dir 为 False 但链接本身还在，摘掉重建
+        try:
+            os.rmdir(link)
+        except OSError:
+            return False
+    if not target.is_dir():
+        logger.warning(f'junction 目标不存在，跳过共享: {target}')
+        return False
+    link.parent.mkdir(parents=True, exist_ok=True)
+    # 不走 text=True：mklink 的输出是中文 GBK，按 UTF-8 解码会在管道读取线程里
+    # 炸 UnicodeDecodeError；bytes 接收，只在失败时容错解码后记日志
+    result = subprocess.run(['cmd', '/c', 'mklink', '/J', str(link), str(target)],
+                            capture_output=True,
+                            creationflags=getattr(subprocess, 'CREATE_NO_WINDOW', 0))
+    if result.returncode != 0:
+        stdout = result.stdout.decode('utf-8', errors='replace')
+        stderr = result.stderr.decode('utf-8', errors='replace')
+        logger.warning(f'mklink 失败: {link} <- {target}\\n{stdout}{stderr}')
+        return False
+    return True
 
 
-def desktop_option2pid(option: str) -> str:
-    """从下拉项文本中取回纯 PID；取不到时返回空串。
+def desktop_prepare_profile(profile: Path, root: Path) -> None:
+    """搭建多开实例档案目录（幂等，可重复执行）。
 
-    界面回传的是展示文本，但落盘的 handle 必须是纯 PID（Handle 按数字消费），
-    因此写入配置前统一在这里剥掉标题与坐标。用户手工填的纯数字原样通过。
+    隔离结构：
+    - 安装根与 Documents 下的大量子目录：junction 共享，0 额外占用；
+    - Documents 根配置文件（clientconfig 等，实测合计仅几 MB）：复制成独立文件；
+    - home/：假用户主目录，SDK 账号库（Netease\\Mpay）按档案落盘。
     """
-    if not option:
-        return ''
-    matched = re.match(r'\s*(\d+)', str(option))
-    return matched.group(1) if matched else ''
+    profile.mkdir(parents=True, exist_ok=True)
+    for name in DESKTOP_PROFILE_SHARED_DIRS:
+        desktop_make_junction(profile / name, root / name)
+    for name in DESKTOP_PROFILE_ISOLATED_DIRS:
+        (profile / name).mkdir(exist_ok=True)
+    for name in DESKTOP_PROFILE_HOME_DIRS:
+        (profile / name).mkdir(parents=True, exist_ok=True)
+    # 安装根小文件（neox.xml / client.ini / pkginfo.json 等，KB 级）。引擎在 cwd 下
+    # 找 neox.xml，缺了起不来；cwd 即档案目录，所以这些文件必须各档案一份
+    for item in root.iterdir():
+        if item.is_dir():
+            continue
+        destination = profile / item.name
+        if not destination.exists():
+            shutil.copy2(item, destination)
+    # Documents：根文件独立复制（账号记忆所在），子目录 junction 共享（8G 资源不复制）
+    real_docs = root / 'Documents'
+    if real_docs.is_dir():
+        for sub in real_docs.iterdir():
+            destination = profile / 'Documents' / sub.name
+            if sub.is_dir():
+                desktop_make_junction(destination, sub)
+            elif not destination.exists():
+                shutil.copy2(sub, destination)
+
+
+def desktop_profile_env(profile: Path) -> dict:
+    """构造档案隔离的启动环境：USERPROFILE 指向档案内的假主目录。
+
+    SDK 并不读 APPDATA 环境变量（走 Shell 已知文件夹 API + 注册表），真正起隔离
+    作用的是 USERPROFILE；APPDATA/LOCALAPPDATA/TEMP 一并设上，避免个别组件走
+    环境变量时写到全局用户目录。
+    """
+    home = profile / 'home'
+    env = dict(os.environ)
+    env['USERPROFILE'] = str(home)
+    env['HOMEDRIVE'] = home.drive
+    env['HOMEPATH'] = str(home)[len(home.drive):]
+    env['APPDATA'] = str(home / 'AppData' / 'Roaming')
+    env['LOCALAPPDATA'] = str(home / 'AppData' / 'Local')
+    env['TEMP'] = str(home / 'AppData' / 'Local' / 'Temp')
+    env['TMP'] = env['TEMP']
+    return env
+
+
+def desktop_profile_path(configured: str):
+    """把配置里的档案目录归一化成 Path；未配置返回 None（原行为，不隔离）。"""
+    configured = (configured or '').strip()
+    if not configured:
+        return None
+    path = Path(configured).expanduser()
+    if not path.is_absolute():
+        path = Path.cwd() / path
+    return path
+
+
+def desktop_root_from_path(value: str):
+    """把用户填的路径归一化成安装目录；无效返回 None。"""
+    path = Path(value).expanduser()
+    if path.is_file():
+        # 允许直接填 bin\onmyoji.exe 或 Launch.exe 的完整路径
+        if path.name.lower() == 'onmyoji.exe' and path.parent.name.lower() == 'bin':
+            path = path.parent.parent
+        elif path.name.lower() == 'launch.exe':
+            path = path.parent
+        else:
+            path = path.parent
+    candidate = path / 'bin' / 'onmyoji.exe'
+    if candidate.is_file():
+        return path.resolve()
+    return None
+
+
+def desktop_discover_install_root():
+    """按 %ProgramFiles%\Onmyoji 与注册表 Uninstall 的 InstallLocation 自动发现安装目录。"""
+    for env in ('ProgramFiles', 'ProgramFiles(x86)'):
+        raw = os.environ.get(env)
+        if raw and (Path(raw) / 'Onmyoji' / 'bin' / 'onmyoji.exe').is_file():
+            return (Path(raw) / 'Onmyoji').resolve()
+    try:
+        import winreg
+        roots = (
+            (winreg.HKEY_LOCAL_MACHINE, r'SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall'),
+            (winreg.HKEY_LOCAL_MACHINE, r'SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall'),
+            (winreg.HKEY_CURRENT_USER, r'SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall'),
+        )
+        for hive, key_path in roots:
+            try:
+                with winreg.OpenKey(hive, key_path) as parent:
+                    for index in range(winreg.QueryInfoKey(parent)[0]):
+                        try:
+                            with winreg.OpenKey(parent, winreg.EnumKey(parent, index)) as child:
+                                display, _ = winreg.QueryValueEx(child, 'DisplayName')
+                                if '阴阳师' not in str(display) and 'Onmyoji' not in str(display):
+                                    continue
+                                location, _ = winreg.QueryValueEx(child, 'InstallLocation')
+                                if location and (Path(location) / 'bin' / 'onmyoji.exe').is_file():
+                                    return Path(location).resolve()
+                        except OSError:
+                            continue
+            except OSError:
+                continue
+    except Exception:
+        pass
+    return None
+
+
+def desktop_install_root(game_path: str) -> str:
+    """解析桌面客户端安装目录：优先配置的 game_path，其次自动发现。
+
+    只认含 bin\onmyoji.exe（或根目录 Launch.exe）的安装目录，找不到返回空串。
+    """
+    configured = (game_path or '').strip()
+    if configured:
+        root = desktop_root_from_path(configured)
+        if root is not None:
+            return str(root)
+        logger.warning(f'游戏安装目录配置无效: {configured}，尝试自动发现')
+    root = desktop_discover_install_root()
+    return str(root) if root else ''
+
+
+def desktop_instance_state_path(profile):
+    """档案内运行时状态文件路径；未配档案返回 None。
+
+    PID 不写配置（每次重启都会变），改记在档案里：OAS 下次启动凭它精确认领
+    "这个档案的实例是哪个 PID"，多开时枚举同标题窗口无法区分归属。
+    """
+    if profile is None:
+        return None
+    return Path(profile) / 'oas_instance.json'
+
+
+def desktop_read_instance_state(profile) -> dict:
+    """读档案状态文件；不存在/损坏/未配档案返回空 dict。"""
+    path = desktop_instance_state_path(profile)
+    if path is None or not path.is_file():
+        return {}
+    try:
+        data = json.loads(path.read_text(encoding='utf-8'))
+        return data if isinstance(data, dict) else {}
+    except Exception as e:
+        logger.warning(f'读取桌面实例状态文件失败: {path}: {e}')
+        return {}
+
+
+def desktop_write_instance_state(profile, pid) -> None:
+    """把当前实例 PID 写进档案状态文件（tmp + replace 原子替换，防读写半截）。"""
+    path = desktop_instance_state_path(profile)
+    if path is None:
+        return
+    try:
+        path.parent.mkdir(parents=True, exist_ok=True)
+        tmp = path.with_suffix('.json.tmp')
+        tmp.write_text(json.dumps({'pid': int(pid)}, ensure_ascii=False), encoding='utf-8')
+        os.replace(tmp, path)
+    except Exception as e:
+        logger.warning(f'写入桌面实例状态文件失败: {path}: {e}')
+
+
+def desktop_clear_instance_state(profile) -> None:
+    """清除档案状态文件（客户端已关闭/状态失效时）。"""
+    path = desktop_instance_state_path(profile)
+    if path is None:
+        return
+    try:
+        path.unlink(missing_ok=True)
+    except Exception as e:
+        logger.warning(f'清除桌面实例状态文件失败: {path}: {e}')
+
+
+def desktop_prepare_profile_if_needed(profile: Path, root: str) -> None:
+    """档案未就绪时搭建隔离目录；已就绪（含历史登录态）直接用。
+
+    以 home/AppData/Roaming 存在作为「已就绪」判据：prepare 的任何一步失败都
+    不允许带着半成品启动——那会悄悄退回全局账号库，登录到错误的账号。
+    """
+    if (profile / 'home' / 'AppData' / 'Roaming').is_dir():
+        return
+    logger.info(f'首次使用多开档案，正在准备隔离目录: {profile}')
+    desktop_prepare_profile(profile, Path(root))
+    logger.info(f'多开档案就绪: {profile}')
+
+
+def _desktop_job_api_ready() -> None:
+    """给 kernel32 的 Job 相关导出声明指针尺寸的 argtypes/restype。
+
+    ctypes 默认按 32 位 int 收发返回值，x64 上句柄高位会被截断。这几个导出只在
+    本模块的多开归属判定里使用，声明不影响文件内其他 kernel32 调用。
+    """
+    kernel32 = ctypes.windll.kernel32
+    if kernel32.CreateJobObjectW.restype is wintypes.HANDLE:
+        return
+    kernel32.CreateJobObjectW.restype = wintypes.HANDLE
+    kernel32.CreateJobObjectW.argtypes = [wintypes.LPVOID, wintypes.LPWSTR]
+    kernel32.AssignProcessToJobObject.restype = wintypes.BOOL
+    kernel32.AssignProcessToJobObject.argtypes = [wintypes.HANDLE, wintypes.HANDLE]
+    kernel32.QueryInformationJobObject.restype = wintypes.BOOL
+    kernel32.QueryInformationJobObject.argtypes = [
+        wintypes.HANDLE, wintypes.INT, wintypes.LPVOID, wintypes.DWORD, wintypes.PDWORD]
+
+
+def _desktop_job_member_pids(job) -> set:
+    """查询 Job 当前成员进程 PID 集合；查询失败返回空集（调用方退回宽松匹配）。"""
+    kernel32 = ctypes.windll.kernel32
+    capacity = 2048
+    pointer_size = ctypes.sizeof(ctypes.c_void_p)
+    buffer = ctypes.create_string_buffer(8 + capacity * pointer_size)
+    returned = wintypes.DWORD()
+    if not kernel32.QueryInformationJobObject(
+            wintypes.HANDLE(job), _JOB_OBJECT_BASIC_PROCESS_ID_LIST,
+            buffer, len(buffer), ctypes.byref(returned)):
+        return set()
+    count = int.from_bytes(buffer.raw[4:8], 'little')
+    pids = set()
+    for index in range(min(count, capacity)):
+        offset = 8 + index * pointer_size
+        pids.add(int.from_bytes(buffer.raw[offset:offset + pointer_size], 'little'))
+    return pids
+
+
+def _desktop_attach_job(pid) -> int:
+    """把本轮 Popen 的启动器进程挂进新建的匿名 Job，返回 Job 句柄；失败返回 0。
+
+    多开时各实例同标题同 exe，并发启动会把别人刚出现的窗口当成自己的绑走；
+    窗口进程由启动器派生、自动加入同一 Job，成员名单即「本轮拉起的全部进程」。
+    刻意不设 JOB_OBJECT_LIMIT_KILL_ON_JOB_CLOSE：OAS 退出不影响客户端继续运行，
+    句柄关闭也不会杀成员。
+    """
+    kernel32 = ctypes.windll.kernel32
+    try:
+        _desktop_job_api_ready()
+        job = kernel32.CreateJobObjectW(None, None)
+        if not job:
+            logger.warning('CreateJobObjectW 失败，多开窗口归属退回宽松匹配')
+            return 0
+        # PROCESS_SET_QUOTA(0x0100) | PROCESS_TERMINATE(0x0001)
+        handle = kernel32.OpenProcess(0x0101, False, int(pid))
+        if not handle:
+            kernel32.CloseHandle(job)
+            logger.warning(f'OpenProcess 失败（PID={pid}），多开窗口归属退回宽松匹配')
+            return 0
+        try:
+            if not kernel32.AssignProcessToJobObject(wintypes.HANDLE(job), wintypes.HANDLE(handle)):
+                kernel32.CloseHandle(job)
+                logger.warning('AssignProcessToJobObject 失败，多开窗口归属退回宽松匹配')
+                return 0
+        finally:
+            kernel32.CloseHandle(handle)
+        return int(job)
+    except Exception as e:
+        logger.warning(f'Job 归属初始化异常，退回宽松匹配: {e}')
+        return 0
+
+
+def desktop_pid_alive(pid) -> bool:
+    """进程是否还活着。无法判定时按「还活着」返回，宁可多等一轮也不误报已关闭。
+
+    不能只看 OpenProcess 是否成功：进程已退出但仍有内核对象引用时 OpenProcess
+    照样返回句柄，必须再用 GetExitCodeProcess 看退出码是否还是 STILL_ACTIVE(259)。
+    窗口枚举不能替代这里——强杀被拒时窗口可能已销毁而进程还在，只验窗口会误判。
+    """
+    try:
+        pid_int = int(str(pid))
+    except (TypeError, ValueError):
+        return False
+    kernel32 = ctypes.windll.kernel32
+    # PROCESS_QUERY_LIMITED_INFORMATION(0x1000)，比 QUERY_INFORMATION 权限要求更低
+    handle = kernel32.OpenProcess(0x1000, False, pid_int)
+    if not handle:
+        # 打不开通常就是进程已退出；权限不足时也走这里，交给窗口检查兜底
+        return False
+    try:
+        code = ctypes.c_ulong()
+        if not kernel32.GetExitCodeProcess(handle, ctypes.byref(code)):
+            return True
+        return code.value == 259  # STILL_ACTIVE
+    finally:
+        kernel32.CloseHandle(handle)
+
+
+def desktop_game_exe(root) -> str:
+    """返回游戏可执行文件路径；找不到返回空串。
+
+    顺序即优先级：必须优先游戏本体 bin/onmyoji.exe。
+    Launch.exe 是登录器，它会再拉起 bin/onmyoji.exe，
+    导致双开且 OAS 绑定到登录器 PID 上找不到游戏窗口。
+    """
+    root = Path(root)
+    for name in ('bin/onmyoji.exe', 'Launch.exe'):
+        exe = root / name
+        if exe.is_file():
+            return str(exe)
+    return ''
+
+
+def desktop_spawn_client(exe: str, root: str, profile=None, timeout: int = 90,
+                         attempt: int = 1, on_bound=None):
+    """启动客户端并等其窗口就绪；返回 (bound_pid, spawned_pids)，Popen 失败返回 None。
+
+    profile 非空时按档案隔离启动：cwd=档案目录（游戏数据 <cwd>\Documents 独立），
+    env 的 USERPROFILE 指向档案内假主目录（SDK 账号库 Netease\\Mpay 独立）。
+    on_bound(pid, hwnd) 在窗口就绪时回调，供调用方绑定自己的实例状态。
+
+    多开窗口归属靠匿名 Job（见 _desktop_attach_job）：没有它，并发启动的实例会把
+    别人刚出现的窗口绑走——实测 4/4 复现。Job 不可用时退回旧宽松匹配（新出现 +
+    exe 归属），单开场景不受影响。
+    """
+    before_pids = {w['pid'] for w in list_desktop_windows()}
+    logger.info(f'启动桌面客户端（第 {attempt} 轮）: {exe}')
+    spawned = set()
+    # 档案隔离：cwd 决定游戏数据根，env 决定 SDK 账号库落点
+    cwd = str(profile) if profile is not None else root
+    env = desktop_profile_env(Path(profile)) if profile is not None else None
+    if profile is not None:
+        logger.info(f'多开档案隔离启动: cwd={cwd}, USERPROFILE={env["USERPROFILE"]}')
+    try:
+        proc = subprocess.Popen([exe], cwd=cwd, env=env,
+                                creationflags=getattr(subprocess, 'CREATE_NEW_PROCESS_GROUP', 0))
+        spawned.add(proc.pid)
+    except Exception as e:
+        logger.error(f'启动桌面客户端失败: {e}')
+        return None
+
+    job = _desktop_attach_job(proc.pid)
+    try:
+        deadline = time.time() + timeout
+        stable_hwnd = 0
+        stable_count = 0
+        while time.time() < deadline:
+            # 候选必须落在安装目录下的进程：客户端新旧版本窗口标题不同
+            # （"阴阳师-网易游戏" / "阴阳师-MuMu模拟器专版"），启动等待期内任何
+            # 匹配标题的新窗口都会成为候选，按 exe 归属收口，避免绑到别的进程。
+            # Job 可用时再按「本轮启动的进程树」精确收口（多开必需）
+            job_pids = _desktop_job_member_pids(job) if job else set()
+            candidates = [w for w in list_desktop_windows()
+                          if _desktop_pid_under_root(w['pid'], root)
+                          and (w['pid'] in job_pids if job_pids
+                               else w['pid'] not in before_pids)]
+            if candidates:
+                candidate = candidates[0]
+                if candidate['hwnd'] == stable_hwnd:
+                    stable_count += 1
+                else:
+                    stable_hwnd = candidate['hwnd']
+                    stable_count = 1
+                if stable_count >= 2:
+                    # 同一 PID 可能还带着启动器残留窗口（客户区极小），句柄统一取
+                    # 客户区最大者，否则截图会绑到残壳上（BitBlt 取不到画面）
+                    hwnd = _desktop_best_window(candidate['pid'], candidate['hwnd'])
+                    if on_bound is not None:
+                        on_bound(candidate['pid'], hwnd)
+                    spawned.add(candidate['pid'])
+                    logger.info(f'桌面客户端已启动并就绪 PID={candidate["pid"]}')
+                    # 到这里启动就完成了：进程在跑、窗口句柄已绑定。
+                    # MPay 登录弹窗与进游戏属于登录流程，由 Restart 的 app_handle_login
+                    # 负责（登录循环每轮都复查弹窗，中途冒出来也能接住）。
+                    return candidate['pid'], spawned
+            time.sleep(1)
+        logger.warning(f'桌面客户端进程已启动，但 {timeout} 秒内未识别到游戏窗口')
+        return 0, spawned
+    finally:
+        # Job 只用于启动期的归属判定；关闭句柄不影响已加入的成员进程继续运行
+        if job:
+            ctypes.windll.kernel32.CloseHandle(wintypes.HANDLE(job))
+
+
+def desktop_launch_instance(config) -> bool:
+    """「启动实例」按钮的落地动作：按 config.script.desktop 参数拉起一个客户端实例。
+
+    在 GUI/主进程里执行（script_set_arg 的副作用），不依赖 worker 的 Device 实例：
+    启动、Job 归属、档案状态文件都是模块级能力，worker 下次需要窗口时按状态文件
+    认领。已在运行（状态文件里的 PID 还活着）则跳过，避免多开出一个。
+    """
+    desktop = getattr(config.script, 'desktop', None)
+    if desktop is None or not desktop.enable:
+        logger.error('未启用桌面客户端模式（script.desktop.enable），已忽略启动请求')
+        return False
+    root = desktop_install_root(desktop.game_path)
+    if not root:
+        logger.error('未找到阴阳师桌面客户端安装目录，'
+                     '请在 设置-Script-桌面客户端 中填写 游戏安装目录')
+        return False
+    exe = desktop_game_exe(root)
+    if not exe:
+        logger.error(f'未找到游戏程序（bin\\onmyoji.exe 或 Launch.exe）：{root}')
+        return False
+    profile = desktop_profile_path(desktop.profile_dir)
+    if profile is not None:
+        try:
+            desktop_prepare_profile_if_needed(profile, root)
+        except Exception as e:
+            logger.error(f'准备多开档案失败，拒绝启动（避免登录到错误账号）: {e}')
+            return False
+    state = desktop_read_instance_state(profile)
+    state_pid = state.get('pid')
+    if state_pid and desktop_pid_alive(state_pid):
+        logger.info(f'客户端实例已在运行（PID={state_pid}），跳过启动')
+        return True
+    # 按钮路径不经过 Device.desktop_bind_pid，窗口标题改名在这里补上：
+    # 绑定瞬间（on_bound）就改，与 Device 流程同一时机
+    result = desktop_spawn_client(
+        exe, root, profile,
+        on_bound=lambda pid, hwnd: desktop_rename_window(hwnd, config))
+    if result is None:
+        return False
+    bound_pid, spawned = result
+    if not bound_pid:
+        logger.error('客户端已启动但未识别到游戏窗口')
+        return False
+    # 状态文件供 worker 认领；PID 不写配置，只活在这里与运行时
+    desktop_write_instance_state(profile, bound_pid)
+    logger.info(f'已按按钮请求启动客户端实例 PID={bound_pid}')
+    return True
+
+
+def find_desktop_window_by_pid(pid, titles=None) -> int:
+    """按 PID 查找桌面客户端窗口，返回窗口句柄；未找到抛 EmulatorNotRunningError。
+
+    「找不到窗口」记 warning 而非 error：本方法的调用方多为探测存在性
+    （desktop_window_exists 判断是否需要重拉、_desktop_wait_closed 确认已关闭），
+    找不到是正常答案。真正的故障由上层在拿到 EmulatorNotRunningError 后判定，
+    这样真故障不会被淹没在每轮任务收尾都出现的噪音里。
+
+    同一 PID 下可能同时存在多个标题命中的顶层窗口（客户端多开共用同一标题；
+    新版 MuMu 内核客户端启动期还带着启动器残留窗口），取客户区最大者即可。
+
+    这里刻意**不设客户区面积下限**：窗口被最小化时客户区是 0x0，但客户端仍在
+    运行，还原交给 desktop_window_restore_if_minimized。用面积下限去宣布「未运行」
+    会把这个正常挂着的客户端判成掉线 → 触发误重拉（真机实测的循环就是这么起来的），
+    而 BitBlt 截图前本来就会先把窗口还原。
+
+    titles 为 None 时用 DESKTOP_WINDOW_TITLES；配置了自定义窗口标题
+    （script.desktop.window_title）时必须传 desktop_window_titles(config)，
+    否则改名后的实例会被当成「窗口不存在」。
+    """
+    try:
+        pid_int = int(str(pid))
+    except (TypeError, ValueError):
+        logger.error(f'Invalid desktop PID: {pid}')
+        raise EmulatorNotRunningError(f'Invalid desktop client PID: {pid}')
+
+    wanted = tuple(titles) if titles else DESKTOP_WINDOW_TITLES
+
+    def enum_cb(hwnd, param):
+        param.append(hwnd)
+        return True
+
+    windows = []
+    EnumWindows(enum_cb, windows)
+    matches = []
+    for hwnd in windows:
+        if GetWindowText(hwnd) in wanted:
+            _, win_pid = GetWindowThreadProcessId(hwnd)
+            if win_pid == pid_int:
+                matches.append(hwnd)
+    # 同 PID 的多个候选里取客户区最大者：正常渲染窗口面积最大，启动器残留/
+    # 最小化窗口（客户区 0x0）会排在后面。读不到客户区的（枚举与取值之间被销毁）
+    # 直接跳过，全部读不到才算未找到
+    best, best_area = 0, -1
+    for hwnd in matches:
+        try:
+            cl, ct, cr, cb = GetClientRect(hwnd)
+            area = (cr - cl) * (cb - ct)
+        except Exception:
+            continue
+        if area > best_area:
+            best, best_area = hwnd, area
+    if best:
+        return best
+    logger.warning(f'Desktop client window not found, PID={pid}')
+    raise EmulatorNotRunningError(f'Desktop client window not found, PID={pid}')
+
+
+def _desktop_best_window(pid, fallback: int = 0, titles=None) -> int:
+    """取指定 PID 下客户区最大的候选窗口；查不到时回退 fallback。
+
+    用于自动启动完成时的句柄确定：同一 PID 可能既带启动器残留窗口又带真渲染窗口，
+    取客户区最大者才不会把截图绑到残壳上。titles 语义同 find_desktop_window_by_pid。
+    """
+    try:
+        return find_desktop_window_by_pid(pid, titles)
+    except EmulatorNotRunningError:
+        return fallback
 
 
 class DesktopWindow:
-    def find_desktop_window_by_pid(self, pid) -> int:
-        """按 PID 查找桌面客户端窗口，返回窗口句柄；未找到抛 EmulatorNotRunningError。
-
-        「找不到窗口」记 warning 而非 error：本方法的调用方多为探测存在性
-        （desktop_window_exists 判断是否需要重拉、_desktop_wait_closed 确认已关闭），
-        找不到是正常答案。真正的故障由上层在拿到 EmulatorNotRunningError 后判定，
-        这样真故障不会被淹没在每轮任务收尾都出现的噪音里。
-
-        同一 PID 下可能同时存在多个标题命中的顶层窗口（客户端多开共用同一标题；
-        新版 MuMu 内核客户端启动期还带着启动器残留窗口），取客户区最大者即可。
-
-        这里刻意**不设客户区面积下限**：窗口被最小化时客户区是 0x0，但客户端仍在
-        运行，还原交给 desktop_window_restore_if_minimized。用面积下限去宣布「未运行」
-        会把这个正常挂着的客户端判成掉线 → 触发误重拉并把配置 handle 覆盖成新实例
-        （真机实测的循环就是这么起来的），而 BitBlt 截图前本来就会先把窗口还原。
-        """
-        try:
-            pid_int = int(str(pid))
-        except (TypeError, ValueError):
-            logger.error(f'Invalid desktop PID: {pid}')
-            raise EmulatorNotRunningError(f'Invalid desktop client PID: {pid}')
-
-        def enum_cb(hwnd, param):
-            param.append(hwnd)
-            return True
-
-        windows = []
-        EnumWindows(enum_cb, windows)
-        matches = []
-        for hwnd in windows:
-            if GetWindowText(hwnd) in DESKTOP_WINDOW_TITLES:
-                _, win_pid = GetWindowThreadProcessId(hwnd)
-                if win_pid == pid_int:
-                    matches.append(hwnd)
-        # 同 PID 的多个候选里取客户区最大者：正常渲染窗口面积最大，启动器残留/
-        # 最小化窗口（客户区 0x0）会排在后面。读不到客户区的（枚举与取值之间被销毁）
-        # 直接跳过，全部读不到才算未找到
-        best, best_area = 0, -1
-        for hwnd in matches:
-            try:
-                cl, ct, cr, cb = GetClientRect(hwnd)
-                area = (cr - cl) * (cb - ct)
-            except Exception:
-                continue
-            if area > best_area:
-                best, best_area = hwnd, area
-        if best:
-            return best
-        logger.warning(f'Desktop client window not found, PID={pid}')
-        raise EmulatorNotRunningError(f'Desktop client window not found, PID={pid}')
-
-    def _desktop_best_window(self, pid, fallback: int = 0) -> int:
-        """取指定 PID 下客户区最大的候选窗口；查不到时回退 fallback。
-
-        用于自动启动完成时的句柄确定：同一 PID 可能既带启动器残留窗口又带真渲染窗口，
-        取客户区最大者才不会把截图绑到残壳上。
-        """
-        try:
-            return self.find_desktop_window_by_pid(pid)
-        except EmulatorNotRunningError:
-            return fallback
-
     def desktop_pid(self):
         """返回当前桌面客户端 PID（int）；取不到返回 None。
 
-        优先用实例 root_handle（运行时自动启动绑定后的新 PID），未设置时回退配置里的
-        handle。本会话的 PID 判断必须以实例状态为准，否则重新拉起后会误判。
+        只用实例 root_handle：PID 每次重启都会变、不写配置，本会话的 PID 判断
+        必须以实例状态为准。为空的唯一场景是还没绑定过（尚未启动/认领）。
         """
-        pid = getattr(self, 'root_handle', None) or self.config.script.device.handle
+        pid = getattr(self, 'root_handle', None)
         try:
             return int(str(pid))
         except (TypeError, ValueError):
@@ -361,6 +889,9 @@ class DesktopWindow:
         if not self.find_desktop_login_popup():
             return False
         logger.info('Desktop MPay login popup found, press Enter to enter game')
+        # 客户端在首次登录流程中会自行重设一次标题（绑定时的改名因此被覆盖），
+        # 检测到弹窗时补改一次；标题已正确时仅是字符串比较
+        desktop_rename_window(self.root_handle_num, self.config)
         deadline = time.time() + wait
         while time.time() < deadline:
             hwnd = self.find_desktop_login_popup()
@@ -378,12 +909,14 @@ class DesktopWindow:
         只判「标题命中的顶层窗口在不在」，不看客户区尺寸——窗口被最小化或被遮挡时
         客户端仍在运行，截图方法会先把窗口还原回来再取帧。
 
-        优先用实例 root_handle（运行时自动启动绑定后的新 PID），未设置时回退配置里的
-        handle。本会话的窗口存在性判断必须以实例状态为准，否则重新拉起后会误判为未运行。
+        只用实例 root_handle：PID 不写配置，本会话的窗口存在性判断必须以实例状态
+        为准。root_handle 为空说明还没绑定过（未启动/未认领），按未运行处理。
         """
-        pid = getattr(self, 'root_handle', None) or self.config.script.device.handle
+        pid = getattr(self, 'root_handle', None)
+        if not pid:
+            return False
         try:
-            self.find_desktop_window_by_pid(pid)
+            find_desktop_window_by_pid(pid, self._desktop_titles())
             return True
         except EmulatorNotRunningError:
             return False
@@ -392,13 +925,12 @@ class DesktopWindow:
         """在 wait 秒内等待指定 PID 的客户端窗口出现；超时返回 False。
 
         用于「进程还活着、窗口暂时不可见」的空窗期。这段时间只能等，不能重新启动
-        客户端：真正在跑的那个实例会变成多开或被顶掉，配置里的 handle 也会被新实例
-        覆盖，从此再也绑不回原来的客户端。
+        客户端：真正在跑的那个实例会变成多开或被顶掉，从此再也绑不回原来那个。
         """
         deadline = time.time() + wait
         while True:
             try:
-                self.find_desktop_window_by_pid(pid)
+                find_desktop_window_by_pid(pid, self._desktop_titles())
                 return True
             except EmulatorNotRunningError:
                 pass
@@ -463,7 +995,7 @@ class DesktopWindow:
         下换到客户区更大的那个候选窗口。进程还活着，不需要重拉客户端。
         """
         try:
-            hwnd = self.find_desktop_window_by_pid(self.root_handle)
+            hwnd = find_desktop_window_by_pid(self.root_handle, self._desktop_titles())
         except EmulatorNotRunningError:
             return False
         if hwnd != self.root_handle_num:
@@ -517,6 +1049,9 @@ class DesktopWindow:
                 return None
             client_w, client_h = size
             logger.info(f'Desktop client size: {client_w}x{client_h} (physical), target {width}x{height}')
+            # 多开摆位与尺寸校准解耦：客户端启动后会自行把窗口挪回屏幕中央，
+            # 摆位只挂在「尺寸不对」的分支上会被尺寸已正确的窗口整份跳过
+            self._desktop_assert_window_pos(hwnd)
             if client_w == width and client_h == height:
                 logger.info('Desktop client size already matches target')
                 return False
@@ -555,86 +1090,26 @@ class DesktopWindow:
 
     # ------------------------------------------------------------------ 桌面客户端自动生命周期
 
+    def desktop_profile_dir(self):
+        """返回多开档案目录（Path）；未配置 script.desktop.profile_dir 时返回 None。"""
+        return desktop_profile_path(getattr(self.config.script.desktop, 'profile_dir', ''))
+
+    def desktop_window_pos(self):
+        """返回配置的窗口摆位 (x, y)；未配置返回 None。"""
+        return self.desktop_window_pos_parsed(
+            getattr(self.config.script.desktop, 'window_pos', ''))
+
+    @staticmethod
+    def desktop_window_pos_parsed(value: str):
+        """解析窗口摆位配置（"x,y"）；非法或留空返回 None。"""
+        matched = re.fullmatch(r'\s*(-?\d+)\s*[,，]\s*(-?\d+)\s*', str(value or ''))
+        if not matched:
+            return None
+        return int(matched.group(1)), int(matched.group(2))
+
     def desktop_resolve_install_root(self) -> str:
-        """解析桌面客户端安装目录：优先 desktop_game_path 配置，其次自动发现。
-
-        只认含 bin\\onmyoji.exe（或根目录 Launch.exe）的安装目录，找不到返回空串。
-        仅桌面模式调用，不影响模拟器流程。
-        """
-        configured = getattr(self.config.script.device, 'desktop_game_path', '') or ''
-        if configured:
-            root = self._desktop_root_from_path(configured)
-            if root is not None:
-                return str(root)
-            logger.warning(f'desktop_game_path 配置无效: {configured}，尝试自动发现')
-        root = self._desktop_discover_install_root()
-        return str(root) if root else ''
-
-    @staticmethod
-    def _desktop_root_from_path(value: str):
-        """把用户填的路径归一化成安装目录；无效返回 None。"""
-        path = Path(value).expanduser()
-        if path.is_file():
-            # 允许直接填 bin\\onmyoji.exe 或 Launch.exe 的完整路径
-            if path.name.lower() == 'onmyoji.exe' and path.parent.name.lower() == 'bin':
-                path = path.parent.parent
-            elif path.name.lower() == 'launch.exe':
-                path = path.parent
-            else:
-                path = path.parent
-        candidate = path / 'bin' / 'onmyoji.exe'
-        if candidate.is_file():
-            return path.resolve()
-        return None
-
-    @staticmethod
-    def _desktop_discover_install_root():
-        """按 %ProgramFiles%\\Onmyoji 与注册表 Uninstall 的 InstallLocation 自动发现安装目录。"""
-        for env in ('ProgramFiles', 'ProgramFiles(x86)'):
-            raw = os.environ.get(env)
-            if raw and (Path(raw) / 'Onmyoji' / 'bin' / 'onmyoji.exe').is_file():
-                return (Path(raw) / 'Onmyoji').resolve()
-        try:
-            import winreg
-            roots = (
-                (winreg.HKEY_LOCAL_MACHINE, r'SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall'),
-                (winreg.HKEY_LOCAL_MACHINE, r'SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall'),
-                (winreg.HKEY_CURRENT_USER, r'SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall'),
-            )
-            for hive, key_path in roots:
-                try:
-                    with winreg.OpenKey(hive, key_path) as parent:
-                        for index in range(winreg.QueryInfoKey(parent)[0]):
-                            try:
-                                with winreg.OpenKey(parent, winreg.EnumKey(parent, index)) as child:
-                                    display, _ = winreg.QueryValueEx(child, 'DisplayName')
-                                    if '阴阳师' not in str(display) and 'Onmyoji' not in str(display):
-                                        continue
-                                    location, _ = winreg.QueryValueEx(child, 'InstallLocation')
-                                    if location and (Path(location) / 'bin' / 'onmyoji.exe').is_file():
-                                        return Path(location).resolve()
-                            except OSError:
-                                continue
-                except OSError:
-                    continue
-        except Exception:
-            pass
-        return None
-
-    @staticmethod
-    def desktop_game_exe(root) -> str:
-        """返回游戏可执行文件路径；找不到返回空串。
-
-        顺序即优先级：必须优先游戏本体 bin/onmyoji.exe。
-        Launch.exe 是登录器，它会再拉起 bin/onmyoji.exe，
-        导致双开且 OAS 绑定到登录器 PID 上找不到游戏窗口。
-        """
-        root = Path(root)
-        for name in ('bin/onmyoji.exe', 'Launch.exe'):
-            exe = root / name
-            if exe.is_file():
-                return str(exe)
-        return ''
+        """解析桌面客户端安装目录：优先 script.desktop.game_path 配置，其次自动发现。"""
+        return desktop_install_root(getattr(self.config.script.desktop, 'game_path', ''))
 
     def launch_desktop_client(self, timeout: int = 90) -> bool:
         """自动启动桌面客户端并绑定新窗口的 PID/HWND，成功返回 True。
@@ -644,18 +1119,31 @@ class DesktopWindow:
         timeout 内没等到窗口说明客户端起歪了（卡加载、崩在启动期等），强杀本轮进程后
         整轮重跑一次；第二轮仍失败则记 error 返回 False，由上层停下等人工，不无限重试。
         安装目录/exe 找不到属配置问题，重试无意义，直接返回 False。
+
+        配置了档案目录（script.desktop.profile_dir）时按档案隔离启动：cwd 与
+        USERPROFILE 都落在档案内，每个档案拥有独立的 Documents 与 SDK 账号库
+        （多开账号隔离）；未配置时行为不变。
         """
         root = self.desktop_resolve_install_root()
         if not root:
-            logger.error('未找到阴阳师桌面客户端安装目录，请在 设置-Script-设备 中填写 desktop_game_path')
+            logger.error('未找到阴阳师桌面客户端安装目录，'
+                         '请在 设置-Script-桌面客户端 中填写 游戏安装目录')
             return False
-        exe = self.desktop_game_exe(root)
+        exe = desktop_game_exe(root)
         if not exe:
             logger.error(f'未找到游戏程序（bin\\onmyoji.exe 或 Launch.exe）：{root}')
             return False
+        profile = self.desktop_profile_dir()
+        if profile is not None:
+            try:
+                desktop_prepare_profile_if_needed(profile, root)
+            except Exception as e:
+                logger.error(f'准备多开档案失败，拒绝启动（避免登录到错误账号）: {e}')
+                return False
 
         for attempt in (1, 2):
-            pids = self._desktop_launch_attempt(exe, root, timeout, attempt)
+            pids = desktop_spawn_client(exe, root, profile, timeout, attempt,
+                                        on_bound=self.desktop_bind_pid)
             if pids is None:
                 # Popen 本身失败，重试也起不来
                 return False
@@ -666,8 +1154,6 @@ class DesktopWindow:
                 # 89 线程 42s CPU 却无窗口）。OAS 靠枚举窗口只绑到窗口进程，关闭时若只杀
                 # 它，启动器就成了无主残留。这里留档，交给 desktop_stop_client 一并清理
                 self._desktop_spawned_pids = set(spawned_pid)
-                # 客户端已拉起，强制保持显示器常亮，防止电源超时关屏导致截图黑帧卡死
-                desktop_keep_screen_on(True)
                 return True
             if attempt == 1:
                 # 只杀本轮确切启动的进程：绑定阶段就失败时 root_handle 仍是上一次的陈旧
@@ -677,54 +1163,27 @@ class DesktopWindow:
         logger.error('桌面客户端连续 2 轮启动均未就绪，请检查客户端状态与机器负载')
         return False
 
-    def _desktop_launch_attempt(self, exe: str, root: str, timeout: int, attempt: int):
-        """启动客户端并绑定其窗口的单轮尝试。
+    def _desktop_assert_window_pos(self, hwnd) -> None:
+        """按 script.desktop.window_pos 摆放窗口；未配置或已在位则什么都不做。
 
-        返回 (bound_pid, spawned_pid)：bound_pid 非 0 表示本轮成功；spawned_pid 是本轮
-        Popen 出的进程与绑定到的窗口 PID 集合，供失败清理精确定位。Popen 失败返回 None。
+        客户端启动后会自行把窗口挪回屏幕中央，只在绑定时摆一次压不住，故在尺寸
+        校准与截图路径上持续重断言。SWP_NOZORDER|SWP_NOACTIVATE：不抢焦点也不改
+        层级——多开窗口互相遮挡是允许的（后台截图不受遮挡影响）。
         """
-        before_pids = {w['pid'] for w in list_desktop_windows()}
-        logger.info(f'自动启动桌面客户端（第 {attempt} 轮）: {exe}')
-        spawned = set()
+        position = self.desktop_window_pos()
+        if not position or not hwnd:
+            return
+        x, y = position
         try:
-            proc = subprocess.Popen([exe], cwd=root,
-                                    creationflags=getattr(subprocess, 'CREATE_NEW_PROCESS_GROUP', 0))
-            spawned.add(proc.pid)
+            with dpi_awareness():
+                rect = GetWindowRect(hwnd)
+                if (rect[0], rect[1]) == (x, y):
+                    return
+                SetWindowPos(hwnd, HWND_TOP, x, y, 0, 0,
+                             SWP_NOSIZE | SWP_NOZORDER | SWP_NOACTIVATE)
+            logger.info(f'多开窗口已摆放到 ({x},{y}): hwnd={hwnd}')
         except Exception as e:
-            logger.error(f'启动桌面客户端失败: {e}')
-            return None
-
-        deadline = time.time() + timeout
-        stable_hwnd = 0
-        stable_count = 0
-        while time.time() < deadline:
-            # 候选必须落在安装目录下的进程：客户端新旧版本窗口标题不同
-            # （"阴阳师-网易游戏" / "阴阳师-MuMu模拟器专版"），启动等待期内任何
-            # 匹配标题的新窗口都会成为候选，按 exe 归属收口，避免绑到别的进程
-            candidates = [w for w in list_desktop_windows()
-                          if w['pid'] not in before_pids
-                          and _desktop_pid_under_root(w['pid'], root)]
-            if candidates:
-                candidate = candidates[0]
-                if candidate['hwnd'] == stable_hwnd:
-                    stable_count += 1
-                else:
-                    stable_hwnd = candidate['hwnd']
-                    stable_count = 1
-                if stable_count >= 2:
-                    # 同一 PID 可能还带着启动器残留窗口（客户区极小），句柄统一取
-                    # 客户区最大者，否则截图会绑到残壳上（BitBlt 取不到画面）
-                    hwnd = self._desktop_best_window(candidate['pid'], candidate['hwnd'])
-                    self.desktop_bind_pid(candidate['pid'], hwnd)
-                    spawned.add(candidate['pid'])
-                    logger.info(f'桌面客户端已自动启动并绑定 PID={candidate["pid"]}')
-                    # 到这里启动就完成了：进程在跑、窗口句柄已绑定。
-                    # MPay 登录弹窗与进游戏属于登录流程，由 Restart 的 app_handle_login
-                    # 负责（登录循环每轮都复查弹窗，中途冒出来也能接住）。
-                    return candidate['pid'], spawned
-            time.sleep(1)
-        logger.warning(f'桌面客户端进程已启动，但 {timeout} 秒内未识别到游戏窗口')
-        return 0, spawned
+            logger.warning(f'摆放多开窗口失败 (hwnd={hwnd}): {e}')
 
     def _desktop_kill_pids(self, pids) -> None:
         """强杀指定 PID 集合（本轮启动失败的清理），逐个容错并验证真的退出。"""
@@ -760,29 +1219,103 @@ class DesktopWindow:
         """在 wait 秒内等待指定进程退出，返回是否已退出。"""
         deadline = time.time() + wait
         while True:
-            if not self._desktop_pid_alive(pid):
+            if not desktop_pid_alive(pid):
                 return True
             if time.time() >= deadline:
                 return False
             time.sleep(DESKTOP_KILL_POLL_INTERVAL)
 
+    def _desktop_titles(self) -> tuple:
+        """本配置认可的窗口标题白名单（内置官方标题 + 自定义窗口标题）。"""
+        return desktop_window_titles(getattr(self, 'config', None))
+
+    def _desktop_locate_window(self):
+        """定位本配置对应的已在运行的客户端窗口，返回 (pid, hwnd)。
+
+        pid 非空而 hwnd 为 0 表示进程活着但窗口还没就绪（启动期/登录后重建），
+        由调用方等待；两者都空表示没有可归属的实例，应走启动流程。
+
+        归属优先级：
+        1. 档案内的运行时状态文件（oas_instance.json）——OAS 自己拉起的实例都记了
+           PID，多开重开后凭它精确认领，绝不会绑到别的账号实例上；
+        2. 窗口枚举——仅未配档案的单实例场景用：按 device.handle（窗口标题）过滤，
+           只剩一个候选时才认领。多开时各实例标题相同，枚举无法区分归属，
+           宁可重拉一个自己的，也不能控制别人的客户端。
+        """
+        profile = self.desktop_profile_dir()
+        state = desktop_read_instance_state(profile)
+        state_pid = state.get('pid')
+        if state_pid:
+            if desktop_pid_alive(state_pid):
+                try:
+                    return int(state_pid), find_desktop_window_by_pid(
+                        state_pid, self._desktop_titles())
+                except EmulatorNotRunningError:
+                    # 进程活着、窗口还没就绪：交调用方等，不能重拉（会多开）
+                    return int(state_pid), 0
+            # PID 已死：状态失效，清掉免得下次误判
+            desktop_clear_instance_state(profile)
+        if profile is not None:
+            # 档案模式只认状态文件：枚举分不清多个同标题实例属于哪个账号
+            return None, 0
+        # 候选标题 = device.handle（原标题过滤）+ 自定义窗口标题（改名后的标题），
+        # 两个都可能命中正在跑的实例
+        title = str(getattr(self.config.script.device, 'handle', '') or '').strip()
+        custom = str(getattr(self.config.script.desktop, 'window_title', '') or '').strip()
+        wanted = tuple(t for t in (title, custom) if t)
+        candidates = list_desktop_windows(wanted or None)
+        if not candidates:
+            # 按标题没命中：窗口可能被自定义标题改过名，或客户端换了新标题，
+            # 退回内置官方标题再找一次，只剩一个候选时才认领（单实例场景）
+            fallback = list_desktop_windows()
+            if len(fallback) == 1:
+                candidates = fallback
+            elif len(fallback) > 1:
+                logger.warning(f'按标题过滤未命中，且检测到 {len(fallback)} 个桌面客户端窗口，'
+                               f'无法区分归属，将重新拉起一个实例')
+        if len(candidates) == 1:
+            candidate = candidates[0]
+            return candidate['pid'], _desktop_best_window(
+                candidate['pid'], candidate['hwnd'], self._desktop_titles())
+        if len(candidates) > 1:
+            logger.warning(f'检测到 {len(candidates)} 个桌面客户端窗口且未配置档案目录，'
+                           f'无法区分归属，将重新拉起一个实例')
+        return None, 0
+
     def desktop_bind_pid(self, pid, hwnd=0) -> None:
-        """把新 PID/HWND 绑定到实例，并尽量持久化到配置。"""
+        """把运行时 PID/HWND 绑定到实例；PID 不写配置，只进档案状态文件。
+
+        PID 每次重启都会变，落配置只会认领一个死进程；配了档案目录时写
+        oas_instance.json 供下次认领。同时强制显示器常亮，防止电源超时关屏导致
+        BitBlt 截图返回黑帧卡死登录循环。
+        """
         self.root_handle = str(pid)
         if hwnd:
             self.root_handle_num = hwnd
-        self.root_handle_title = DESKTOP_WINDOW_TITLES[0]
+        if hwnd:
+            try:
+                title = GetWindowText(hwnd) or DESKTOP_WINDOW_TITLES[0]
+            except Exception:
+                title = DESKTOP_WINDOW_TITLES[0]
+            # 自定义窗口标题：绑定即改名，便于多开时在任务栏区分实例
+            desktop_rename_window(hwnd, self.config)
+            try:
+                title = GetWindowText(hwnd) or title
+            except Exception:
+                pass
+        else:
+            title = DESKTOP_WINDOW_TITLES[0]
+        self.root_handle_title = title
         self.is_desktop_window = True
         # 换了新 hwnd，截图句柄缓存必须同步失效，否则截图仍走上一个客户端的废句柄
         self._desktop_clear_handle_cache()
         # 新绑定的客户端刚启动，必然未登录，需先走 restart 登录流程
         self._desktop_login_done = False
+        # 客户端已拉起，强制保持显示器常亮（线程级状态，随客户端关闭解除）
+        desktop_keep_screen_on(True)
+        # 档案状态文件：下次启动凭它认领「这个档案的实例是哪个 PID」
+        desktop_write_instance_state(self.desktop_profile_dir(), pid)
         logger.info(f'Desktop client bound: PID={pid}, hwnd={hwnd}')
-        try:
-            self.config.script.device.handle = str(pid)
-            self.config.save()
-        except Exception as e:
-            logger.warning(f'持久化桌面 PID 到配置失败: {e}')
 
     def _desktop_send_enter(self, hwnd) -> None:
         """向窗口发送回车键，用于确认 MPay 账号登录弹窗的默认按钮"进入游戏"。
@@ -794,31 +1327,6 @@ class DesktopWindow:
             SendMessage(hwnd, WM_KEYUP, VK_RETURN, 0)
         except Exception as e:
             logger.info(f'Send Enter to window {hwnd} failed (window may be closed): {e}')
-
-    def _desktop_pid_alive(self, pid) -> bool:
-        """进程是否还活着。无法判定时按「还活着」返回，宁可多等一轮也不误报已关闭。
-
-        不能只看 OpenProcess 是否成功：进程已退出但仍有内核对象引用时 OpenProcess
-        照样返回句柄，必须再用 GetExitCodeProcess 看退出码是否还是 STILL_ACTIVE(259)。
-        窗口枚举不能替代这里——强杀被拒时窗口可能已销毁而进程还在，只验窗口会误判。
-        """
-        try:
-            pid_int = int(str(pid))
-        except (TypeError, ValueError):
-            return False
-        kernel32 = ctypes.windll.kernel32
-        # PROCESS_QUERY_LIMITED_INFORMATION(0x1000)，比 QUERY_INFORMATION 权限要求更低
-        handle = kernel32.OpenProcess(0x1000, False, pid_int)
-        if not handle:
-            # 打不开通常就是进程已退出；权限不足时也走这里，交给窗口检查兜底
-            return False
-        try:
-            code = ctypes.c_ulong()
-            if not kernel32.GetExitCodeProcess(handle, ctypes.byref(code)):
-                return True
-            return code.value == 259  # STILL_ACTIVE
-        finally:
-            kernel32.CloseHandle(handle)
 
     def _desktop_wait_closed(self, wait: float) -> bool:
         """在 wait 秒内轮询等待桌面客户端窗口消失，返回是否已关闭。"""
@@ -839,7 +1347,7 @@ class DesktopWindow:
         """
         deadline = time.time() + wait
         while True:
-            if not self.desktop_window_exists() and not self._desktop_pid_alive(pid):
+            if not self.desktop_window_exists() and not desktop_pid_alive(pid):
                 return True
             if time.time() >= deadline:
                 return False
@@ -857,19 +1365,20 @@ class DesktopWindow:
         就再杀一轮，全部轮次用尽仍在则返回 False——调用方据此决定是重建还是交人工，
         绝不能发完 kill 指令就当成功返回。
 
-        关闭后保留原 PID 在配置里；下次检测到该 PID 无效（客户端未运行）时，
-        由启动/重拉链路重启客户端并把配置更新为重启后的新 PID。
+        PID 只活在运行时：关闭后清除档案状态文件，下次启动由启动/重拉链路重新拉起
+        并绑定新 PID（不写配置）。
         """
         # 客户端关闭后必然未登录，下次启动需重新走登录流程
         self._desktop_login_done = False
         # PID 要在清理句柄前取，后面的验证全靠它
-        pid = getattr(self, 'root_handle', None) or self.config.script.device.handle
+        pid = getattr(self, 'root_handle', None)
         hwnd = self.root_handle_num
-        if (not hwnd or not IsWindow(hwnd)) and not self._desktop_pid_alive(pid):
+        if (not hwnd or not IsWindow(hwnd)) and not desktop_pid_alive(pid):
             logger.info('Desktop client not running, skip stop')
             # 客户端已不在，解除强制亮屏，允许系统恢复正常的显示器电源管理
             desktop_keep_screen_on(False)
             self._reset_desktop_handle_state()
+            desktop_clear_instance_state(self.desktop_profile_dir())
             # 窗口进程已没了也要收启动器：它无窗口，只看窗口永远发现不了
             self._desktop_kill_spawned_leftovers(pid)
             return True
@@ -892,6 +1401,8 @@ class DesktopWindow:
             logger.error(f'Desktop client PID={pid} not released after '
                          f'{DESKTOP_KILL_ATTEMPTS} force kill attempts, manual cleanup needed')
         self._reset_desktop_handle_state()
+        # 实例已终结（或杀而不死），档案状态文件不能再指着一个死 PID
+        desktop_clear_instance_state(self.desktop_profile_dir())
         # 无论窗口进程是否关掉，本轮自己拉起的启动器都要一并收掉
         leftovers_cleared = self._desktop_kill_spawned_leftovers(pid)
         return released and leftovers_cleared
@@ -913,13 +1424,13 @@ class DesktopWindow:
         except (TypeError, ValueError):
             bound = None
         # 已绑定的那个由主流程负责，这里只收剩下的
-        leftovers = {p for p in spawned if p != bound and self._desktop_pid_alive(p)}
+        leftovers = {p for p in spawned if p != bound and desktop_pid_alive(p)}
         self._desktop_spawned_pids = set()
         if not leftovers:
             return True
         logger.info(f'清理本次启动残留的客户端进程（启动器）: {sorted(leftovers)}')
         self._desktop_kill_pids(leftovers)
-        still = {p for p in leftovers if self._desktop_pid_alive(p)}
+        still = {p for p in leftovers if desktop_pid_alive(p)}
         if still:
             logger.error(f'客户端启动器进程无法清理: {sorted(still)}，可能需要手动结束')
             return False
@@ -946,7 +1457,7 @@ class DesktopWindow:
 
     def desktop_force_kill(self) -> None:
         """强杀桌面客户端进程（WM_CLOSE 超时未退出的兜底）。"""
-        pid = getattr(self, 'root_handle', None) or self.config.script.device.handle
+        pid = getattr(self, 'root_handle', None)
         try:
             pid_int = int(str(pid))
         except (TypeError, ValueError):
