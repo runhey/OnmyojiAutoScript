@@ -476,8 +476,11 @@ class GameUi(BaseTask, GameUiAssets):
             context="goto_page",
         )
 
-    def _wait_for_destination(self, destination: Page, timeout: float = 4.0) -> bool:
+    def _wait_for_destination(self, destination: Page, timeout: float = 15.0) -> bool:
         """等待下一页面稳定出现。
+
+        过图加载期间任何已知页面都识别不到，此时继续等而不是直接判失败；
+        只有确认落到了别的已知页才提前返回失败，避免加载慢被误判成跳转失败。
 
         Args:
             destination: 目标页面。
@@ -488,10 +491,20 @@ class GameUi(BaseTask, GameUiAssets):
         """
 
         timer = Timer(timeout).start()
+        last_probe = 0.0
         while not timer.reached():
             if self.confirm_page(destination, skip_first_screenshot=False):
                 self.navigator.current_page = destination
                 return True
+            now = time.time()
+            if now - last_probe >= 3.0:
+                last_probe = now
+                landed = self._detect_current_page(
+                    skip_first_screenshot=True,
+                    categories=self._navigation_detect_categories(destination),
+                )
+                if landed is not None and landed.key != destination.key:
+                    return False
         return False
 
     def _execute_transition(self, transition: Transition) -> bool:
@@ -700,6 +713,19 @@ class GameUi(BaseTask, GameUiAssets):
 
         return GameUi._detect_pages(self, pages, skip_first_screenshot=True)
 
+    def _wait_for_any_page(self, timeout: float = 15.0) -> bool:
+        """未知页（多半是过图加载）时静等可识别页面出现，期间不点任何关闭按钮。"""
+
+        timer = Timer(timeout).start()
+        while not timer.reached():
+            page = self._detect_current_page(
+                skip_first_screenshot=False,
+                categories=self._default_detect_categories(),
+            )
+            if page is not None:
+                return True
+        return False
+
     def close_unknown_pages(self, skip_first_screenshot: bool = True) -> bool:
         """尝试关闭未知页面。
 
@@ -712,6 +738,9 @@ class GameUi(BaseTask, GameUiAssets):
 
         self.maybe_screenshot(skip_first_screenshot)
         logger.warning("Try switch to a supported page")
+        if self._wait_for_any_page(timeout=15.0):
+            # 等待期间出现了可识别页面，无需关闭动作，交给外层重识别。
+            return False
         for action in [*self.navigator.local_unknown_closers, *self.DEFAULT_UNKNOWN_CLOSERS]:
             action_name = self._action_name(action)
             # 若最后3次执行的都是该动作，则跳过该动作尝试其他动作
