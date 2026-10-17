@@ -273,6 +273,11 @@ def parse_tomorrow_server(server_update: time, delay_date: int = 1, float_second
     
     return next_run
 
+def desktop_mode_enabled(config) -> bool:
+    """是否启用桌面客户端模式（script.desktop.enable）。"""
+    return bool(config.script.desktop.enable)
+
+
 def deep_get(d, keys, default=None):
     """
     Get values in dictionary safely.
