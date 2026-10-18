@@ -192,6 +192,9 @@ class Adb(Connection):
 
     @retry
     def swipe_adb(self, p1, p2, duration=0.1):
+        # 桌面客户端模式没有 adb 设备，滑动改走窗口消息路径（不影响模拟器流程）
+        if getattr(self, 'is_desktop', False):
+            return self.swipe_window_message(p1, p2)
         duration = int(duration * 1000)
         self.adb_shell(['input', 'swipe', *p1, *p2, duration])
 

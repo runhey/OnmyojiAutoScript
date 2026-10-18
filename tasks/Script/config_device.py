@@ -50,8 +50,10 @@ class EmulatorInfoType(str, Enum):
     MEmuPlayer = 'MEmuPlayer'
 
 class Device(BaseModel):
+    # adb 序列号；桌面客户端模式（见 desktop 组）下本字段退场
     serial: str = Field(default="auto",
                         description='serial_help')
+    # 模拟器模式：窗口标题或句柄编号；桌面客户端模式：客户端窗口标题（留空自动识别）
     handle: str = Field(default='',
                         description='handle_help')
     package_name: PackageName = Field(title='Package Name',
