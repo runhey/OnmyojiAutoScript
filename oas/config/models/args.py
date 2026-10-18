@@ -1379,27 +1379,39 @@ class Switch:
     """Create boolean fields rendered as switch or checkbox controls.
 
     ``Switch.field`` returns a Pydantic :class:`FieldInfo`; the Python field
-    annotation remains ``bool``.  Pydantic performs validation and
-    serialization, while the generated schema uses ``type="Switch"`` for the
-    frontend component marker.  A default value or ``default_factory`` is
-    required for every switch field.
+    annotation remains ``bool``. Pydantic validates and serializes the value,
+    while the generated JSON Schema uses ``type="Switch"`` as the frontend
+    component marker.
+
+    The switch state is a regular configuration value. Updating it through
+    the configuration model changes the boolean value, and model
+    serialization writes that value as JSON ``true`` or ``false``.
 
     Args:
-        default (bool | None): Required default value.  Explicit ``None`` is
-            accepted by the factory and then validated against the annotated
-            field type by Pydantic.
-        default_factory (Callable): Callable used to create a default value;
-            it is not emitted into JSON Schema.
-        hide (bool | None): UI visibility metadata.  Defaults to ``False``;
-            ``None`` omits the key.
+        default (Any): Required default value. Explicit ``False`` is valid;
+            omit this argument only when ``default_factory`` is provided.
+            The value is validated against the field annotation by Pydantic.
+        default_factory (Callable): Callable used to create a default value.
+            Its result is validated by Pydantic and is not emitted into JSON
+            Schema. ``default`` and ``default_factory`` are mutually
+            exclusive.
+        hide (bool | None): UI visibility metadata. Defaults to ``False``;
+            passing ``None`` omits the ``hide`` key from the schema.
         description (str | None): Standard Pydantic field description.
         icon (str | None): UI icon metadata.
         title (str | None): Standard Pydantic field title.
-        alias (str | None): Reserved for future alias support and currently
-            has no effect.
+        alias (str | None): Reserved for future alias support. It currently
+            has no effect unless supplied through ``json_schema_extra``.
         depends (str | None): UI dependency metadata.
-        json_schema_extra (dict[str, Any] | None): Extra schema metadata with
-            highest precedence; it may override the generated ``type`` key.
+        json_schema_extra (dict[str, Any] | None): Additional JSON Schema
+            metadata. It has the highest precedence and can override generated
+            keys such as ``type``, ``hide``, or ``icon``.
+        **kwargs (Any): Other keyword arguments accepted by
+            :func:`pydantic.Field`.
+
+    Raises:
+        TypeError: If neither or both of ``default`` and ``default_factory``
+            are provided, or if ``json_schema_extra`` is not a dictionary.
 
     Example:
         ```python
@@ -1407,8 +1419,17 @@ class Switch:
             enabled: bool = Switch.field(
                 default=False,
                 description="是否启用",
+                icon="power",
             )
         ```
+
+    The field remains a native ``bool`` at runtime:
+
+    ```python
+    config = Config.model_validate({"enabled": True})
+    assert config.enabled is True
+    assert config.model_dump() == {"enabled": True}
+    ```
     """
 
     @classmethod

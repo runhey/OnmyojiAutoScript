@@ -176,6 +176,10 @@ coverage.xml
 local_settings.py
 db.sqlite3
 
+# Test-generated databases and data
+tests/**/test_data/
+tests/**/*.db
+
 # Flask stuff:
 instance/
 .webassets-cache

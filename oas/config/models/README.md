@@ -293,45 +293,52 @@ schema 节点；如果只是补充或修改少数属性，应优先使用 `set` 
 | 输出 | 原始 schema 不被污染，最终结果是当前 Task 的独立 schema |
 
 
-### 动态 Group 的 OAS 与 Alasio 方案
+### 动态 Group 的 JSON 导出
 
-动态 Group 允许 Task 在运行时增加或删除任意数量的 Group 实例。由于数量在
-运行时才确定，不能把每一个实例预先定义成 Pydantic 模型字段。OAS 采用
-**容器作为内存模型、边界处扁平化**的方式：内存中使用 `list[Group]` 或带有
-顺序信息的字典；写入数据库、导出给 UI 时，再转换成
-`group_me_1.field`、`group_me_2.field` 这样的扁平键。
+#### 已确定的模型
 
-这样既可以在运行时自由增删 Group，也可以保持数据库和 UI 的扁平格式。转换
-只发生在边界，不改变内存中的业务模型。
+Task 使用 `groups: list[GroupMe]` 保存运行时数量不固定的 Group。列表是 Task
+内存中的实际数据结构，不为每个实例声明单独的 Pydantic 字段：
 
-| 对比维度 | OAS：容器模型，边界扁平化 | Alasio：生成时扁平化 | 主要差异 |
-| --- | --- | --- | --- |
-| **配置定义** | Python/Pydantic 定义 Group 类型；Task 持有一个动态容器 | YAML 定义动态 Group；构建器生成固定的扁平字段 | OAS 以 Python 为唯一源；Alasio 以 YAML 和生成器为中心 |
-| **运行时内存** | `list[GroupMe]` 或有序字典；可随时新增、删除、排序 | msgspec Struct 的扁平字段，例如 `group_me_count`、`group_me_1`、`group_me_2` | OAS 适合运行时动态数量；Alasio 模型本身没有列表 |
-| **运行时增加 Group** | 直接向内存容器追加一个 Group 实例，数量不受模型字段数量限制 | 可以在预生成的 `group_me_1` 到 `group_me_N` 槽位内增加 Group；超过 `N` 时无法新增。增加上限必须回到构建期重新运行 `config_dev` 生成模型 | Alasio 可以运行时增行，但上限由构建期固定的槽位数决定；重新生成不是运行时操作 |
-| **运行时删除 Group** | 从容器删除实例，剩余实例可重新编号 | 通常清空或重写对应扁平字段，并维护 count | OAS 操作列表更自然 |
-| **业务逻辑访问** | 直接遍历 `list[GroupMe]`；不需要转换 | 调用 `dynamic.to_list(...)` 临时聚合 | OAS 的列表是本体；Alasio 的列表是视图 |
-| **内存中的校验** | 每个容器元素都是 Pydantic Group，创建和修改时校验 | 每个扁平字段由 msgspec Struct 校验 | 校验对象不同，但都可以保持类型约束 |
-| **数据库保存** | 保存前调用 `to_flat_dict()`，写成 `group_me_count`、`group_me_1.field` 等键值 | UI/业务先把编辑中的 list 视图交给 `dynamic.to_dict(list, prefix="...")` 展平成 `group_me_count`、`group_me_1.field` 等键值，再和 Group 的其他字段一起写入 SQLite | 两者最终都保存扁平键值；Alasio 的 list 视图落库前同样必须经过展开 |
-| **数据库读取** | 读取扁平键后调用 `from_flat_dict()`，恢复成内存容器 | 直接解码成扁平 Struct | OAS 多一次边界转换 |
-| **UI Schema** | 从 Group 的 schema 生成动态组模板，再展开成当前实例的扁平字段 | 使用构建器生成的扁平字段 schema | OAS 需要明确动态字段命名规则和展开器 |
-| **UI 配置值** | 导出为 `group_me_1.name`、`group_me_2.name` 等扁平键 | 直接导出 Struct 的同名扁平字段 | UI 接收的数据格式可以保持一致 |
-| **Group 数量** | 容器长度是真实数量；导出时生成 count 或从键集合计算 | 由生成字段和 `*_count` 管理 | OAS 不需要预先知道最大数量 |
-| **schema 稳定性** | Group item schema 稳定，实例字段数量可以随当前容器展开 | 字段数量和 schema 在构建期确定，运行时不可改变；最大行数 `N` 由生成器预生成的 `*_1.*` 到 `*_N.*` 决定 | OAS 的动态 schema 可按当前配置生成或使用模板；Alasio 的槽位上限和字段 schema 固定 |
-| **序号处理** | 展平时按容器顺序生成 `_1`、`_2`；从 list 删除后，剩余元素自然前移并重新编号 | `_1`、`_2` 是固定槽位号；删除一行通常清空该槽位，不把后面的槽位前移，由 `*_count` 标记有效行数 | OAS 的序号是容器顺序；Alasio 的序号是槽位编号 |
-| **序列化职责** | `to_flat_dict()` / `from_flat_dict()` 是明确的边界适配器 | Struct 的编码器直接处理扁平字段 | OAS 不应依赖 Pydantic serializer 改变内存模型 |
-| **优点** | 支持真正的运行时增删；业务代码自然；Group 类型可复用 | 运行时结构和持久化结构完全一致；无需额外展开 | OAS 灵活，Alasio 扁平链路简单 |
-| **代价** | 需要维护容器与扁平字段之间的双向转换 | 动态数量受生成字段限制；模型不适合运行时加字段 | 两者是在灵活性和边界转换之间取舍 |
-
-#### OAS 采用的最终方向
-
-```text
-内存：list[GroupMe] 或有序容器
-    ↓ to_flat_dict()
-数据库 / UI：group_me_1.field、group_me_2.field、...
-    ↓ from_flat_dict()
-内存：list[GroupMe] 或有序容器
+```python
+class Task(TaskBase):
+    groups: list[GroupMe] = Field(default_factory=list)
 ```
 
-OAS 不再尝试让 Pydantic 模型本身动态增加字段，也不把动态 Group 预先生成成
-固定数量的字段。扁平格式只属于数据库和 UI 边界，容器格式属于运行时业务模型。
+每个列表元素都是一个经过 Pydantic 校验的 `GroupMe` 实例。新增时向列表追加
+实例；删除时移除对应元素。列表保留用户排列顺序，因此删除中间项后，后面的
+元素自然前移，不需要留下空位、维护 count 或给实例重新分配业务 ID。
+
+#### 当前阶段：JSON
+
+当前只实现 JSON 导出，直接使用 `model_dump(mode="json")` 的嵌套数组结构：
+
+```json
+{
+  "groups": [
+    {"name": "第一组", "enabled": true},
+    {"name": "第二组", "enabled": false}
+  ]
+}
+```
+
+导出的数组顺序与 Task 中列表顺序一致。JSON 结果不展开成
+`group_1.name`、`group_2.name` 这样的键，也不额外输出 Group 数量字段；数组本身
+就能表达数量和顺序。空列表导出为 `"groups": []`。
+
+#### 后续阶段：数据库
+
+数据库实现完成后，每个 `GroupMe` 实例对应数据库中的一条 Group 记录。读取时按
+数据库定义的顺序取回记录并组装成 `groups` 列表；保存和删除记录的细节由后续
+数据库适配层负责。数据库尚未实现，因此当前 JSON 导出不调用数据库，也不定义
+数据库表结构、主键或序号字段。
+
+数据库适配应保持 Task 的 `groups: list[GroupMe]` 运行时接口。若数据库需要稳定
+主键或显式排序字段，应在记录层处理，不把数据库标识混入当前 JSON Group 字段。
+
+#### JSON Schema
+
+Task 的 JSON Schema 应将 `groups` 描述为数组，并把 `GroupMe` 的模型 schema
+作为数组元素 schema（`items`）。Schema 描述允许的 Group 结构，不应把当前列表
+长度固化为固定字段数量或固定 `maxItems`。具体前端如何增加、删除或排序数组项，
+由 UI 层消费该数组 schema 时实现。
