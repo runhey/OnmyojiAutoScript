@@ -108,6 +108,12 @@ def test_slider_rejects_string_factories(factory):
         factory(default="", step=1)
 
 
+@pytest.mark.parametrize("factory", [Slider.file, Slider.path])
+def test_slider_rejects_file_and_path_factories(factory):
+    with pytest.raises(TypeError, match="does not support"):
+        factory(default="value")
+
+
 def test_slider_requires_default_or_default_factory():
     with pytest.raises(TypeError, match="requires default or default_factory"):
         Slider.int(step=1)

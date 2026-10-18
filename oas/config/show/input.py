@@ -35,6 +35,16 @@ class InputConfig(BaseModel):
         description="姓名",
         default="Alice",
     )
+    file: str = Input.file(
+        default="config/settings.json",
+        description="文件",
+        icon="file",
+    )
+    path: str = Input.path(
+        default="config",
+        description="路径",
+        icon="folder",
+    )
     password: str = Input.secret_str(
         min_length=8,
         description="密码",

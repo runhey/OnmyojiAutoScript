@@ -206,6 +206,12 @@ def test_input_area_rejects_numeric_factories(factory):
         factory(default=1)
 
 
+@pytest.mark.parametrize("factory", [InputArea.file, InputArea.path])
+def test_input_area_rejects_file_and_path_factories(factory):
+    with pytest.raises(TypeError, match="does not support"):
+        factory(default="value")
+
+
 def test_input_area_does_not_provide_numeric_schema_inputs():
     assert InputArea._type_name == "InputArea"
     assert not hasattr(InputArea, "_make_int")

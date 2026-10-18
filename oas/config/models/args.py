@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import builtins
 import math
 import re
 from collections.abc import Callable
@@ -38,6 +39,8 @@ class Input:
         ``Input.int`` creates an integer input.
         ``Input.float`` creates a floating-point input.
         ``Input.str`` creates a normal string input.
+        ``Input.file`` creates a string input rendered as a file selector.
+        ``Input.path`` creates a string input rendered as a path selector.
         ``Input.secret_str`` creates a string input with ``writeOnly=True``.
 
     Args:
@@ -93,7 +96,7 @@ class Input:
         alias: str | None = None,
         depends: str | None = None,
         readOnly: bool | None = None,
-        json_schema_extra: dict[str, Any] | None = None,
+        json_schema_extra: dict[builtins.str, Any] | None = None,
         **kwargs: Any,
     ) -> FieldInfo:
         return cls._make(
@@ -137,7 +140,7 @@ class Input:
         alias: str | None = None,
         depends: str | None = None,
         readOnly: bool | None = None,
-        json_schema_extra: dict[str, Any] | None = None,
+        json_schema_extra: dict[builtins.str, Any] | None = None,
         **kwargs: Any,
     ) -> FieldInfo:
         return cls._make(
@@ -179,7 +182,7 @@ class Input:
         alias: str | None = None,
         depends: str | None = None,
         readOnly: bool | None = None,
-        json_schema_extra: dict[str, Any] | None = None,
+        json_schema_extra: dict[builtins.str, Any] | None = None,
         **kwargs: Any,
     ) -> FieldInfo:
         return cls._make(
@@ -219,7 +222,7 @@ class Input:
         alias: str | None = None,
         depends: str | None = None,
         readOnly: bool | None = None,
-        json_schema_extra: dict[str, Any] | None = None,
+        json_schema_extra: dict[builtins.str, Any] | None = None,
         **kwargs: Any,
     ) -> FieldInfo:
         return cls._make(
@@ -245,6 +248,98 @@ class Input:
         )
 
     @classmethod
+    def file(
+        cls,
+        *,
+        default: Any = UNSET,
+        default_factory: Callable[[], Any] | None = None,
+        min_length: int | None = None,
+        max_length: int | None = None,
+        pattern: str | None = None,
+        hide: bool | None = False,
+        description: str | None = None,
+        icon: str | None = None,
+        title: str | None = None,
+        alias: str | None = None,
+        depends: str | None = None,
+        readOnly: bool | None = None,
+        json_schema_extra: dict[builtins.str, Any] | None = None,
+        **kwargs: Any,
+    ) -> FieldInfo:
+        """Create a string field rendered by the UI as a file selector.
+
+        The value remains a plain ``str``.  This factory does not check that
+        the selected file exists; existence checks belong to application code.
+        """
+
+        return cls._make(
+            str,
+            "file",
+            default=default,
+            default_factory=default_factory,
+            constraints={
+                "min_length": min_length,
+                "max_length": max_length,
+                "pattern": pattern,
+            },
+            hide=hide,
+            description=description,
+            icon=icon,
+            title=title,
+            alias=alias,
+            depends=depends,
+            read_only=readOnly,
+            json_schema_extra=json_schema_extra,
+            kwargs=kwargs,
+        )
+
+    @classmethod
+    def path(
+        cls,
+        *,
+        default: Any = UNSET,
+        default_factory: Callable[[], Any] | None = None,
+        min_length: int | None = None,
+        max_length: int | None = None,
+        pattern: str | None = None,
+        hide: bool | None = False,
+        description: str | None = None,
+        icon: str | None = None,
+        title: str | None = None,
+        alias: str | None = None,
+        depends: str | None = None,
+        readOnly: bool | None = None,
+        json_schema_extra: dict[builtins.str, Any] | None = None,
+        **kwargs: Any,
+    ) -> FieldInfo:
+        """Create a string field rendered by the UI as a path selector.
+
+        The value remains a plain ``str``.  This factory does not check that
+        the path exists or whether it is a file or directory.
+        """
+
+        return cls._make(
+            str,
+            "path",
+            default=default,
+            default_factory=default_factory,
+            constraints={
+                "min_length": min_length,
+                "max_length": max_length,
+                "pattern": pattern,
+            },
+            hide=hide,
+            description=description,
+            icon=icon,
+            title=title,
+            alias=alias,
+            depends=depends,
+            read_only=readOnly,
+            json_schema_extra=json_schema_extra,
+            kwargs=kwargs,
+        )
+
+    @classmethod
     def _make(
         cls,
         core_type: type,
@@ -252,7 +347,7 @@ class Input:
         *,
         default: Any,
         default_factory: Callable[[], Any] | None,
-        constraints: dict[str, Any],
+        constraints: dict[builtins.str, Any],
         hide: bool | None,
         description: str | None,
         icon: str | None,
@@ -260,8 +355,8 @@ class Input:
         alias: str | None,
         depends: str | None,
         read_only: bool | None,
-        json_schema_extra: dict[str, Any] | None,
-        kwargs: dict[str, Any],
+        json_schema_extra: dict[builtins.str, Any] | None,
+        kwargs: dict[builtins.str, Any],
         write_only: bool = False,
     ) -> FieldInfo:
         if default is UNSET and default_factory is None:
@@ -319,6 +414,14 @@ class InputArea(Input):
     @classmethod
     def float(cls, **kwargs: Any) -> FieldInfo:
         raise TypeError("InputArea does not support float input")
+
+    @classmethod
+    def file(cls, **kwargs: Any) -> FieldInfo:
+        raise TypeError("InputArea does not support file input")
+
+    @classmethod
+    def path(cls, **kwargs: Any) -> FieldInfo:
+        raise TypeError("InputArea does not support path input")
 
 
 class Slider(Input):
@@ -391,6 +494,14 @@ class Slider(Input):
     """
 
     _type_name = "Slider"
+
+    @classmethod
+    def file(cls, **kwargs: Any) -> FieldInfo:
+        raise TypeError("Slider does not support file input")
+
+    @classmethod
+    def path(cls, **kwargs: Any) -> FieldInfo:
+        raise TypeError("Slider does not support path input")
 
     @staticmethod
     def _validate_step(step: Any, *, integer: bool) -> int | float:

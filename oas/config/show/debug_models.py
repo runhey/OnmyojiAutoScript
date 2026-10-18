@@ -88,6 +88,16 @@ class DebugGroup(GroupBase):
         description="单行文本",
         icon="text",
     )
+    input_file: str = Input.file(
+        default="config/settings.json",
+        description="文件选择",
+        icon="file",
+    )
+    input_path: str = Input.path(
+        default="config",
+        description="路径选择",
+        icon="folder",
+    )
     input_secret: str = Input.secret_str(
         default="secret",
         description="密码输入",

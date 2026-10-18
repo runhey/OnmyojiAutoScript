@@ -525,3 +525,81 @@ def test_invalid_defaults_raise_when_model_is_instantiated(
 
     with pytest.raises(ValidationError):
         Model()
+
+
+def test_file_and_path_are_native_strings_with_distinct_schema_inputs():
+    class Model(BaseModel):
+        file: str = Input.file(default="docs/readme.md", description="文件")
+        path: str = Input.path(default="docs", description="路径")
+
+    model = Model()
+    assert model.model_dump() == {"file": "docs/readme.md", "path": "docs"}
+    assert model.model_dump_json() == '{"file":"docs/readme.md","path":"docs"}'
+    properties = Model.model_json_schema()["properties"]
+    assert properties["file"]["type"] == "Input"
+    assert properties["file"]["input"] == "file"
+    assert properties["path"]["type"] == "Input"
+    assert properties["path"]["input"] == "path"
+
+
+@pytest.mark.parametrize("factory", [Input.file, Input.path])
+def test_file_and_path_require_a_default(factory):
+    with pytest.raises(TypeError, match="requires default or default_factory"):
+        factory()
+
+
+@pytest.mark.parametrize("factory", [Input.file, Input.path])
+def test_file_and_path_reject_both_default_forms(factory):
+    with pytest.raises(TypeError, match="both default and default_factory"):
+        factory(default="value", default_factory=lambda: "other")
+
+
+def test_file_and_path_reuse_string_constraints_and_metadata():
+    class Model(BaseModel):
+        file: str = Input.file(
+            default="a.txt",
+            min_length=2,
+            max_length=10,
+            pattern=r"^.+\\.txt$",
+            hide=True,
+            icon="file",
+            title="文件",
+            depends="mode=file",
+            readOnly=True,
+            json_schema_extra={"input": "custom-file", "x-ui": "picker"},
+        )
+        path: str = Input.path(default="abc", hide=None)
+
+    properties = Model.model_json_schema()["properties"]
+    file_schema = properties["file"]
+    assert file_schema["input"] == "custom-file"
+    assert file_schema["minLength"] == 2
+    assert file_schema["maxLength"] == 10
+    assert file_schema["pattern"] == r"^.+\\.txt$"
+    assert file_schema["hide"] is True
+    assert file_schema["icon"] == "file"
+    assert file_schema["title"] == "文件"
+    assert file_schema["depends"] == "mode=file"
+    assert file_schema["readOnly"] is True
+    assert file_schema["x-ui"] == "picker"
+    assert "hide" not in properties["path"]
+
+
+@pytest.mark.parametrize("factory", [Input.file, Input.path])
+def test_file_and_path_reject_non_string_runtime_values(factory):
+    class Model(BaseModel):
+        value: str = factory(default="value")
+
+    with pytest.raises(ValidationError):
+        Model.model_validate({"value": 123})
+
+
+def test_file_and_path_default_factory_is_validated_and_not_exported():
+    class Model(BaseModel):
+        file: str = Input.file(default_factory=lambda: "file.txt")
+        path: str = Input.path(default_factory=lambda: "folder")
+
+    assert Model().model_dump() == {"file": "file.txt", "path": "folder"}
+    properties = Model.model_json_schema()["properties"]
+    assert "default" not in properties["file"]
+    assert "default" not in properties["path"]
