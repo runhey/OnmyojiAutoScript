@@ -47,6 +47,17 @@ _NO_WINDOW = subprocess.CREATE_NO_WINDOW if sys.platform == 'win32' else 0
 class ScriptTask(BaseTask):
 
     def run(self):
+        self._adb_connected = False
+        self._restore_game_after_checkin = False
+        try:
+            self._run_checkin()
+        finally:
+            self._cleanup(restore_game=self._restore_game_after_checkin)
+            session = getattr(self, 'session', None)
+            if session is not None:
+                session.close()
+
+    def _run_checkin(self):
         self.gl_uid = ""
         self.gl_token = ""
         self.gl_deviceid = ""
@@ -71,6 +82,7 @@ class ScriptTask(BaseTask):
             self.set_next_run('AutoCheckinBigGod', success=False, finish=True)
             raise TaskEnd('AutoCheckinBigGod')
         logger.info('ADB已连接')
+        self._adb_connected = True
 
         if not self._ensure_frida_server_running():
             logger.error('Frida Server启动失败，请检查模拟器环境')
@@ -80,6 +92,7 @@ class ScriptTask(BaseTask):
 
         # [2/5] 启动大神APP
         logger.info('[2/5] 启动大神APP...')
+        self._restore_game_after_checkin = True
         pid = self._launch_app()
         if not pid:
             logger.error('无法启动大神APP，请确保模拟器中已安装大神APP')
@@ -141,7 +154,6 @@ class ScriptTask(BaseTask):
 
         if not rewards:
             logger.info('没有可领取的礼包')
-            self._cleanup(restore_game=True)
             self.set_next_run('AutoCheckinBigGod', success=True, finish=True)
             raise TaskEnd('AutoCheckinBigGod')
 
@@ -154,21 +166,56 @@ class ScriptTask(BaseTask):
             time.sleep(0.5)
 
         logger.info(f'完成! 成功领取 {success_count}/{len(rewards)} 个礼包')
-        self._cleanup(restore_game=True)
         self.set_next_run('AutoCheckinBigGod', success=True, finish=True)
         raise TaskEnd('AutoCheckinBigGod')
 
     # ======================== 清理 ========================
 
-    def _cleanup(self, restore_game=False):
-        logger.info('清理：关闭大神APP和Frida Server...')
+    @staticmethod
+    def _stop_frida_process(proc):
+        if proc is None:
+            return
         try:
-            if self._frida_session is not None:
-                self._frida_session.kill()
-        except Exception:
-            pass
+            if proc.poll() is None:
+                if sys.platform == 'win32' and isinstance(proc.pid, int):
+                    # The Windows CLI launcher may have a Python child process.
+                    # Target only this task's Popen PID and its descendants.
+                    subprocess.run(
+                        ['taskkill', '/PID', str(proc.pid), '/T', '/F'],
+                        capture_output=True, timeout=5, creationflags=_NO_WINDOW)
+                if proc.poll() is None:
+                    proc.terminate()
+            try:
+                proc.wait(timeout=3)
+            except subprocess.TimeoutExpired:
+                proc.kill()
+                proc.wait(timeout=3)
+        except Exception as e:
+            logger.warning(f'关闭Frida进程失败: {e}')
+            try:
+                proc.kill()
+                proc.wait(timeout=3)
+            except Exception:
+                pass
+        finally:
+            for pipe in (proc.stdin, proc.stdout, proc.stderr):
+                if pipe is not None:
+                    try:
+                        pipe.close()
+                    except Exception:
+                        pass
+
+    def _close_frida_repl(self):
+        self._stop_frida_process(getattr(self, '_frida_session', None))
         self._frida_session = None
         self._frida_attached_pid = None
+
+    def _cleanup(self, restore_game=False):
+        logger.info('清理：关闭大神APP和Frida Server...')
+        self._close_frida_repl()
+        self.frida_pid = None
+        if not getattr(self, '_adb_connected', False):
+            return
         try:
             self._adb_shell(['am', 'force-stop', GL_PACKAGE])
         except Exception:
@@ -444,14 +491,9 @@ class ScriptTask(BaseTask):
                     return self._frida_session
                 # PID 变了，需要重新 attach
                 logger.info(f'目标PID变更 ({self._frida_attached_pid} -> {pid})，重新attach...')
-                try:
-                    self._frida_session.kill()
-                except Exception:
-                    pass
             else:
                 logger.warning('Frida REPL 进程已退出，重新启动...')
-            self._frida_session = None
-            self._frida_attached_pid = None
+            self._close_frida_repl()
 
         frida_exe = self._get_frida_exe()
         if hasattr(self, '_adb_serial') and self._adb_serial:
@@ -476,7 +518,7 @@ class ScriptTask(BaseTask):
                 if proc.poll() is not None:
                     out = proc.stdout.read().decode('utf-8', errors='ignore')
                     logger.warning(f'Frida REPL 进程提前退出: {out[:300]}')
-                    self._frida_session = None
+                    self._close_frida_repl()
                     return None
 
                 # 直接向 stdin 写 ping，不走 _run_frida_script 避免副作用
@@ -488,15 +530,11 @@ class ScriptTask(BaseTask):
 
             # 所有重试都失败
             logger.warning('Frida REPL 启动超时')
-            try:
-                proc.kill()
-            except Exception:
-                pass
-            self._frida_session = None
+            self._close_frida_repl()
             return None
         except Exception as e:
             logger.warning(f'启动Frida REPL失败: {e}')
-            self._frida_session = None
+            self._close_frida_repl()
             return None
 
     def _ping_frida_repl(self, proc, timeout=8):
@@ -560,7 +598,7 @@ class ScriptTask(BaseTask):
             proc.stdin.flush()
         except (BrokenPipeError, OSError) as e:
             logger.warning(f'Frida REPL stdin写入失败: {e}')
-            self._frida_session = None
+            self._close_frida_repl()
             return self._run_frida_script_oneshot(pid, script_content, timeout)
 
         # 从 stdout 读取直到看到 __DONE__ 标记或超时
@@ -593,6 +631,8 @@ class ScriptTask(BaseTask):
         if reader.is_alive():
             timed_out.set()
             logger.warning(f'Frida REPL 读取超时 ({timeout}s)')
+            self._close_frida_repl()
+            reader.join(timeout=1)
 
         return '\n'.join(output_lines) if output_lines else ''
 
@@ -601,6 +641,7 @@ class ScriptTask(BaseTask):
         with tempfile.NamedTemporaryFile(mode='w', suffix='.js', delete=False, encoding='utf-8') as f:
             f.write(script_content)
             script_path = f.name
+        process = None
         try:
             frida_exe = self._get_frida_exe()
 
@@ -619,11 +660,12 @@ class ScriptTask(BaseTask):
             time.sleep(2)
 
             process.stdin.close()
+            process.stdin = None
             try:
                 stdout_bytes, stderr_bytes = process.communicate(timeout=timeout)
             except subprocess.TimeoutExpired:
-                process.kill()
-                stdout_bytes, stderr_bytes = process.communicate()
+                logger.warning(f'Frida单次执行超时 ({timeout}s)')
+                return None  # finally closes the launcher and its Python child together.
 
             stdout = stdout_bytes.decode('utf-8', errors='ignore') if stdout_bytes else ''
             stderr = stderr_bytes.decode('utf-8', errors='ignore') if stderr_bytes else ''
@@ -632,6 +674,7 @@ class ScriptTask(BaseTask):
             logger.warning(f'Frida脚本执行失败: {e}')
             return None
         finally:
+            self._stop_frida_process(process)
             try:
                 os.unlink(script_path)
             except:
