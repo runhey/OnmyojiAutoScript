@@ -418,8 +418,18 @@ class BaseExploration(GameUi, GeneralBattle, GeneralRoom, GeneralInvite, Replace
 
             if self.appear_then_click(self.I_E_EXIT_CONFIRM, interval=0.8):
                 continue
-            if self.appear_then_click(self.I_BACK_YOLLOW, interval=3.5):
-                continue
+            if self.appear(self.I_BACK_YOLLOW):
+                self.screenshot()
+                # https://github.com/runhey/OnmyojiAutoScript/issues/1935
+                if not self.appear(self.I_BACK_YOLLOW) or self.appear(self.I_E_EXPLORATION_CLICK):
+                    continue
+                is_main = (
+                        self.appear(self.I_E_SETTINGS_BUTTON)
+                        or self.appear(self.I_E_AUTO_ROTATE_ON)
+                        or self.appear(self.I_E_AUTO_ROTATE_OFF)
+                )
+                if is_main and self.click(self.I_BACK_YOLLOW, interval=3.5):
+                    continue
             
             if self.appear(self.I_EXPLORATION_TITLE) or self.appear(self.I_CHECK_EXPLORATION):
                 continue
