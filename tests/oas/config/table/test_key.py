@@ -46,8 +46,8 @@ def test_key_table_mod_invalid_bytes_returns_empty(config_table):
 def test_jwt_secret_is_binary_and_persisted(config_table):
     table = KeyTable(":memory:")
     table.create_table()
-    first = table.jwt_secret()
-    second = table.jwt_secret()
+    first = table.jwt_secret
+    second = table.jwt_secret
     assert isinstance(first, bytes)
     assert len(first) == 32
     assert second == first

@@ -10,6 +10,8 @@ from typing import TypeVar as TypingTypeVar
 import msgspec
 
 from oas.config.table.base import ConfigDB
+from oas.ext.cache import cached_property
+from oas.logger import logger
 
 T_model = TypingTypeVar("T_model", bound=msgspec.Struct)
 
@@ -84,13 +86,30 @@ class KeyTable(ConfigDB):
             raise TypeError("mod value must be str")
         self.set_value("Mod", value.encode("utf-8"))
 
+    @cached_property
     def jwt_secret(self) -> bytes:
         """Get or create a host-bound secret for this configuration database."""
 
         value = self.get("JwtSecret", JwtSecret)
+        length = 32
+        if not value.secret:
+            logger.info("New JWT secret (new secret)")
+            value.secret = secrets.token_bytes(length)
+            value.macsha1 = JwtSecret.host_macsha1()
+            self.set("JwtSecret", value)
+            return value.secret
+        if len(value.secret) != length:
+            logger.info("New JWT secret (length not match)")
+            value.secret = secrets.token_bytes(length)
+            value.macsha1 = JwtSecret.host_macsha1()
+            self.set("JwtSecret", value)
+            return value.secret
+
         macsha1 = JwtSecret.host_macsha1()
-        if len(value.secret) != 32 or value.macsha1 != macsha1:
-            value = JwtSecret(secrets.token_bytes(32), macsha1)
+        if value.macsha1 != macsha1:
+            logger.info("New JWT secret (MAC changed)")
+            value.secret = secrets.token_bytes(length)
+            value.macsha1 = macsha1
             self.set("JwtSecret", value)
         return value.secret
 

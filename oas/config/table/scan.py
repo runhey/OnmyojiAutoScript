@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import os
-import shutil
 from copy import deepcopy
 from typing import Union
 
@@ -11,13 +10,16 @@ import msgspec
 
 from oas.config.table.base import ConfigDB, GuiDB
 from oas.config.table.key import KeyTable
+from oas.backend.reactive.event import RpcValueError
 from oas.ext import env
+from oas.ext.path.atomic import atomic_read_bytes, atomic_write
 from oas.ext.path.validate import validate_filename
+from oas.logger import logger
 
 
 class ConfigFile(msgspec.Struct):
     name: str
-    mod: str = ""
+    mod: str
 
     def read_mod_name(self) -> str:
         self.mod = KeyTable(self.name).mod_get()
@@ -38,16 +40,14 @@ def validate_config_name(config_name: str) -> str:
     return ""
 
 
-def iter_local_files() -> list[ConfigFile]:
+def iter_local_files():
     folder = env.PROJECT_ROOT / "config"
     if not folder.exists():
         return []
-    result = []
     for path in folder.iter_files(ext=".db"):
         name = path.stem
         if not validate_config_name(name):
-            result.append(ConfigFile(name=name))
-    return result
+            yield ConfigFile(name=name, mod="")
 
 
 class DndRequest(msgspec.Struct):
@@ -122,7 +122,7 @@ class ScanTable(GuiDB):
 
             new_record = deepcopy(record)
             self.resort_configs(new_record)
-            self._update_positions(record, new_record, cursor)
+            self.update_with_conflict_resolution(record, new_record, cursor)
             record = new_record
 
             gid = max((row.gid for row in record.values()), default=0)
@@ -138,16 +138,16 @@ class ScanTable(GuiDB):
             cursor.commit()
         return record
 
-    def _update_positions(
+    def update_with_conflict_resolution(
         self,
         old_configs: dict[str, ConfigInfo],
         new_configs: dict[str, ConfigInfo],
         cursor,
     ) -> None:
-        """Apply position changes without violating the unique position key."""
+        """Update positions using Alasio's temporary-slot conflict resolution."""
 
-        pending = []
-        positions = {(row.gid, row.iid) for row in old_configs.values()}
+        pending_updates = []
+        current_positions = {(row.gid, row.iid) for row in old_configs.values()}
         for name, new_row in new_configs.items():
             old_row = old_configs.get(name)
             if old_row is None:
@@ -155,118 +155,158 @@ class ScanTable(GuiDB):
             old_pos = (old_row.gid, old_row.iid)
             new_pos = (new_row.gid, new_row.iid)
             if old_pos != new_pos:
-                pending.append({"row": new_row, "old_pos": old_pos, "new_pos": new_pos})
+                pending_updates.append({
+                    "row": new_row,
+                    "old_pos": old_pos,
+                    "new_pos": new_pos,
+                })
 
-        if not pending:
+        if not pending_updates:
             return
 
-        temporary_gid = max(
-            max((position[0] for position in positions), default=0),
-            len(old_configs),
-        ) + 1
+        max_gid = max((position[0] for position in current_positions), default=0)
+        temporary_gid = max(max_gid, len(old_configs)) + 1
+        no_progress = 0
 
-        while pending:
-            remaining = []
-            progress = False
-            for update in pending:
-                target = update["new_pos"]
-                if target in positions:
-                    remaining.append(update)
+        while True:
+            while True:
+                remaining_updates = []
+                for update in pending_updates:
+                    target_pos = update["new_pos"]
+                    if target_pos not in current_positions:
+                        row = update["row"]
+                        old_pos = update["old_pos"]
+                        row.gid, row.iid = target_pos
+                        self.update_row(row, updates=("gid", "iid"), _cursor_=cursor)
+                        current_positions.remove(old_pos)
+                        current_positions.add(target_pos)
+                        logger.info(
+                            f'config_dnd: Resolved and updated "{row.name}" '
+                            f"from {old_pos} to {target_pos}"
+                        )
+                    else:
+                        remaining_updates.append(update)
+
+                if not remaining_updates:
+                    return
+                if len(remaining_updates) < len(pending_updates):
+                    pending_updates = remaining_updates
+                    no_progress = 0
                     continue
-                row = update["row"]
-                self.update_row(row, updates=("gid", "iid"), _cursor_=cursor)
-                positions.remove(update["old_pos"])
-                positions.add(target)
-                progress = True
+                pending_updates = remaining_updates
+                no_progress += 1
+                break
 
-            if not remaining:
-                return
-            if progress:
-                pending = remaining
-                continue
+            if no_progress >= 2:
+                break
 
-            update = remaining[0]
-            temporary = deepcopy(update["row"])
-            temporary.gid = temporary_gid
-            temporary.iid = 1
+            update = pending_updates[0]
+            row = update["row"]
+            old_pos = update["old_pos"]
+            temporary = deepcopy(row)
+            temporary_pos = (temporary_gid, 1)
+            temporary.gid, temporary.iid = temporary_pos
             self.update_row(temporary, updates=("gid", "iid"), _cursor_=cursor)
-            positions.remove(update["old_pos"])
-            positions.add((temporary_gid, 1))
-            update["old_pos"] = (temporary_gid, 1)
             temporary_gid += 1
-            pending = remaining
+            current_positions.remove(old_pos)
+            current_positions.add(temporary_pos)
+            update["old_pos"] = temporary_pos
+            logger.info(
+                f'config_dnd: Moved "{row.name}" from {old_pos} '
+                f"to temporary position {temporary_pos}"
+            )
+
+        unresolved = ", ".join(
+            f'"{update["row"].name}" from {update["old_pos"]} '
+            f'to {update["new_pos"]}'
+            for update in pending_updates
+        )
+        message = f"config_dnd: Unable to resolve conflicts. Unresolved: {unresolved}"
+        logger.error(message)
+        raise RuntimeError(message)
 
     def config_add(self, name: str, mod: str) -> None:
         error = validate_config_name(name)
         if error:
-            raise ValueError(error)
+            raise RpcValueError(error)
         file = ConfigDB.config_file(name)
         if file.exists():
-            raise FileExistsError(file)
+            raise RpcValueError(f"Config file to add already exists {file}")
         KeyTable(name).mod_set(mod)
 
     def config_del(self, name: str) -> None:
         error = validate_config_name(name)
         if error:
-            raise ValueError(error)
+            raise RpcValueError(error)
         from oas.db.conn import SQLITE_POOL
 
         SQLITE_POOL.delete_file(ConfigDB.config_file(name))
-        row = self.select_one(name=name)
-        if row is not None:
-            self.delete_row(row)
 
     def config_rename(self, old_name: str, new_name: str) -> None:
         for name in (old_name, new_name):
             error = validate_config_name(name)
             if error:
-                raise ValueError(error)
+                raise RpcValueError(error)
         if old_name == new_name:
-            raise ValueError("new_name is the same as old_name")
+            raise RpcValueError(f'new_name is the same as old_name: "{new_name}"')
         old_file = ConfigDB.config_file(old_name)
         new_file = ConfigDB.config_file(new_name)
         if not old_file.exists():
-            raise FileNotFoundError(old_file)
+            raise RpcValueError(f"Config file to rename does not exist: {old_file}")
         if new_file.exists():
             try:
                 same_file = os.path.samefile(old_file, new_file)
             except FileNotFoundError:
                 same_file = False
             if not same_file:
-                raise FileExistsError(new_file)
+                raise RpcValueError(f"Config file with new name already exists: {new_file}")
         from oas.db.conn import SQLITE_POOL
 
-        SQLITE_POOL.rename_file(old_file, new_file)
-        row = self.select_one(name=old_name)
-        if row is not None:
-            row.name = new_name
-            self.update_row(row, updates="name")
+        try:
+            SQLITE_POOL.rename_file(old_file, new_file)
+        except FileNotFoundError:
+            raise RpcValueError(f"Config file to rename does not exist: {old_file}") from None
+        except FileExistsError:
+            raise RpcValueError(f"Config file with new name already exists: {new_file}") from None
+        with self.cursor() as cursor:
+            row = self.select_one(name=old_name, _cursor_=cursor)
+            if row is not None:
+                row.name = new_name
+                self.upsert_row(row, updates="name", _cursor_=cursor)
 
     def config_copy(self, source: str, target: str) -> None:
         for name in (source, target):
             error = validate_config_name(name)
             if error:
-                raise ValueError(error)
+                raise RpcValueError(error)
+        if source == target:
+            raise RpcValueError(f'Target is the same as source: "{target}"')
         source_file = ConfigDB.config_file(source)
         target_file = ConfigDB.config_file(target)
         if not source_file.exists():
-            raise FileNotFoundError(source_file)
+            raise RpcValueError(f"Source file to copy not found: {source_file}")
         if target_file.exists():
-            raise FileExistsError(target_file)
-        target_file.uppath().makedirs(exist_ok=True)
-        shutil.copy2(source_file, target_file)
+            raise RpcValueError(f"Target file to copy already exists: {target_file}")
+        atomic_write(target_file, atomic_read_bytes(source_file))
 
     def config_dnd(self, configs: list[DndRequest]) -> None:
+        for request in configs:
+            error = validate_config_name(request.name)
+            if error:
+                raise RpcValueError(error)
+
         record = self.select_rows()
         new_record = deepcopy(record)
         for request in configs:
             if request.name not in record:
-                raise KeyError(f'config name does not exist: {request.name}')
+                raise RpcValueError(
+                    f'Config name "{request.name}" does not exist, cannot perform DND'
+                )
             new_record[request.name].gid = request.gid
             new_record[request.name].iid = request.iid
         self.resort_configs(new_record)
-        with self.cursor(lazy=True) as cursor:
-            self._update_positions(record, new_record, cursor)
+        with self.cursor() as cursor:
+            self.update_with_conflict_resolution(record, new_record, cursor)
             cursor.commit()
 
 

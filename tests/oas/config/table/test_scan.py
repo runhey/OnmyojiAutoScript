@@ -2,6 +2,8 @@ from pathlib import Path
 
 import pytest
 
+from oas.backend.reactive.event import RpcValueError
+from oas.config.table.key import KeyTable
 from oas.config.table.scan import (
     ConfigExtra,
     DndRequest,
@@ -9,7 +11,6 @@ from oas.config.table.scan import (
     iter_local_files,
     validate_config_name,
 )
-from oas.config.table.key import KeyTable
 from oas.ext import env
 
 
@@ -87,6 +88,33 @@ def test_scan_table_dnd_can_swap_groups_without_unique_conflict(scan_table):
     rows = scan_table.select_rows()
     assert (rows["a"].gid, rows["a"].iid) == (2, 1)
     assert (rows["b"].gid, rows["b"].iid) == (1, 1)
+
+
+def test_scan_table_dnd_rejects_invalid_config_name(scan_table):
+    with pytest.raises(RpcValueError):
+        scan_table.config_dnd([DndRequest("gui", 1, 1)])
+
+
+def test_scan_table_dnd_rejects_missing_config(scan_table):
+    with pytest.raises(RpcValueError, match="does not exist"):
+        scan_table.config_dnd([DndRequest("missing", 1, 1)])
+
+
+def test_scan_table_copy_rejects_same_source_and_target(scan_table, tmp_path):
+    scan_table.config_add("one", "mod-a")
+    with pytest.raises(RpcValueError, match="same as source"):
+        scan_table.config_copy("one", "one")
+
+
+def test_scan_table_delete_leaves_stale_row_until_scan(scan_table, tmp_path):
+    name = "delete_later"
+    KeyTable.singleton_remove(name)
+    scan_table.config_add(name, "mod-a")
+    scan_table.scan()
+    assert name in scan_table.select_rows()
+    scan_table.config_del(name)
+    assert name in scan_table.select_rows()
+    assert name not in scan_table.scan()
 
 
 def test_scan_models_are_binary_metadata_models():
