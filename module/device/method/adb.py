@@ -157,10 +157,95 @@ class Adb(Connection):
             logger.warning(f'Unexpected screenshot: {screenshot}')
         raise OSError(f'cannot load screenshot')
 
+    # MuMu 6.0 (Android 15 engine) runs every app on its own virtual display
+    # (mumuscreenNNN), while `screencap` and `input` default to display 0 (the
+    # desktop). Detect the display the game is running on and target it.
+    _mumu_display_ids_cache = None
+    _mumu_display_ids_retry_at = 0.0
+    _MUMU_DISPLAY_RETRY_SEC = 20
+
+    def _reset_mumu_display_ids(self):
+        self._mumu_display_ids_cache = None
+        self._mumu_display_ids_retry_at = 0.0
+
+    def _mumu_display_ids(self):
+        """
+        Returns:
+            tuple[int, str] | None:
+                (display id for `input -d`, long display id for `screencap -d`)
+                or None if not applicable (single-display devices, or the game
+                is not running yet).
+        """
+        if self._mumu_display_ids_cache is not None:
+            return self._mumu_display_ids_cache
+        # Negative results are cached for a short window: on a single-display
+        # device every screenshot and click would otherwise pay an extra
+        # `dumpsys window displays` call.
+        now = time.monotonic()
+        if now < self._mumu_display_ids_retry_at:
+            return None
+        self._mumu_display_ids_retry_at = now + self._MUMU_DISPLAY_RETRY_SEC
+        try:
+            # 1) Which display is the game running on? (skip display 0, the desktop)
+            out = self.adb_shell(['dumpsys', 'window', 'displays'])
+            display_id = None
+            current = None
+            for line in out.splitlines():
+                m = re.search(r'Display: mDisplayId=(\d+)', line)
+                if m:
+                    current = int(m.group(1))
+                    continue
+                if current and 'mFocusedApp=ActivityRecord' in line and 'launcher' not in line.lower():
+                    display_id = current
+                    break
+            if display_id is None:
+                return None
+            # 2) Display name, e.g. "mumuscreen002"
+            name = None
+            out = self.adb_shell(['dumpsys', 'display'])
+            idx = out.find('mDisplayId=%d' % display_id)
+            if idx >= 0:
+                m = re.search(r'name=(mumuscreen\d+)', out[idx:idx + 6000])
+                name = m.group(1) if m else None
+            if name is None:
+                return None
+            # 3) SurfaceFlinger long display id for `screencap -d`
+            long_id = None
+            out = self.adb_shell(['dumpsys', 'SurfaceFlinger', '--display-id'])
+            for line in out.splitlines():
+                if 'displayName="%s"' % name in line:
+                    m = re.search(r'Display (\d+)', line)
+                    if m:
+                        long_id = m.group(1)
+                        break
+            if long_id is None:
+                return None
+            logger.info(f'MuMu multi-display: game on display {display_id} ({name}), screencap id {long_id}')
+            self._mumu_display_ids_cache = (display_id, long_id)
+            return self._mumu_display_ids_cache
+        except Exception as e:
+            logger.warning(f'Failed to detect MuMu multi-display setup: {e}')
+            return None
+
+    def _input_prefix(self):
+        """
+        Returns:
+            list: `['input']` or `['input', '-d', '<display>']` for the game display.
+        """
+        cmd = ['input']
+        ids = self._mumu_display_ids()
+        if ids:
+            cmd += ['-d', str(ids[0])]
+        return cmd
+
     @retry
     @Config.when(DEVICE_OVER_HTTP=False)
     def screenshot_adb(self):
-        data = self.adb_shell(['screencap', '-p'], stream=True)
+        cmd = ['screencap', '-p']
+        ids = self._mumu_display_ids()
+        if ids:
+            cmd += ['-d', ids[1]]
+        data = self.adb_shell(cmd, stream=True)
         if len(data) < 500:
             logger.warning(f'Unexpected screenshot: {data}')
 
@@ -169,7 +254,11 @@ class Adb(Connection):
     @retry
     @Config.when(DEVICE_OVER_HTTP=True)
     def screenshot_adb(self):
-        data = self.adb_shell(['screencap'], stream=True)
+        cmd = ['screencap']
+        ids = self._mumu_display_ids()
+        if ids:
+            cmd += ['-d', ids[1]]
+        data = self.adb_shell(cmd, stream=True)
         if len(data) < 500:
             logger.warning(f'Unexpected screenshot: {data}')
 
@@ -177,7 +266,11 @@ class Adb(Connection):
 
     @retry
     def screenshot_adb_nc(self):
-        data = self.adb_shell_nc(['screencap'])
+        cmd = ['screencap']
+        ids = self._mumu_display_ids()
+        if ids:
+            cmd += ['-d', ids[1]]
+        data = self.adb_shell_nc(cmd)
         if len(data) < 500:
             logger.warning(f'Unexpected screenshot: {data}')
 
@@ -186,7 +279,7 @@ class Adb(Connection):
     @retry
     def click_adb(self, x, y):
         start = time.time()
-        self.adb_shell(['input', 'tap', x, y])
+        self.adb_shell(self._input_prefix() + ['tap', x, y])
         if time.time() - start <= 0.05:
             self.sleep(0.05)
 
@@ -196,7 +289,7 @@ class Adb(Connection):
         if getattr(self, 'is_desktop', False):
             return self.swipe_window_message(p1, p2)
         duration = int(duration * 1000)
-        self.adb_shell(['input', 'swipe', *p1, *p2, duration])
+        self.adb_shell(self._input_prefix() + ['swipe', *p1, *p2, duration])
 
     def long_click_adb(self, x: float, y: float, duration: float):
         """
@@ -208,7 +301,7 @@ class Adb(Connection):
         """
         if not 0 < duration < 3:
             duration = duration / 1000
-        self.adb_shell(['input', 'swipe', x, y, x, y, int(duration*1000)])
+        self.adb_shell(self._input_prefix() + ['swipe', x, y, x, y, int(duration*1000)])
 
     @retry
     def app_current_adb(self):
@@ -264,6 +357,8 @@ class Adb(Connection):
         """
         if not package_name:
             package_name = self.package
+        # MuMu 6.0 assigns the app a new virtual display on every launch
+        self._reset_mumu_display_ids()
         result = self.adb_shell([
             'monkey', '-p', package_name, '-c',
             'android.intent.category.LAUNCHER', '--pct-syskeys', '0', '1'
@@ -313,6 +408,8 @@ class Adb(Connection):
         if not package_name:
             package_name = self.package
         self.adb_shell(['am', 'force-stop', package_name])
+        # MuMu 6.0 destroys the app's virtual display on stop; force re-detection
+        self._reset_mumu_display_ids()
 
     @retry
     def dump_hierarchy_adb(self, temp: str = '/data/local/tmp/hierarchy.xml') -> etree._Element:
@@ -369,17 +466,17 @@ class Adb(Connection):
         start_point = smooth_points[0]
 
         # 按下起始点
-        self.adb_shell(['input', 'motionevent', 'DOWN', str(start_point[0]), str(start_point[1])])
+        self.adb_shell(self._input_prefix() + ['motionevent', 'DOWN', str(start_point[0]), str(start_point[1])])
 
         # 移动到后续点
         for i, point in enumerate(smooth_points[1:], start=1):
             # 给点间隔
             time.sleep(interval)
-            self.adb_shell(['input', 'motionevent', 'MOVE', str(point[0]), str(point[1])])
+            self.adb_shell(self._input_prefix() + ['motionevent', 'MOVE', str(point[0]), str(point[1])])
 
         # 抬起手指
         final_point = smooth_points[-1]
-        self.adb_shell(['input', 'motionevent', 'UP', str(final_point[0]), str(final_point[1])])
+        self.adb_shell(self._input_prefix() + ['motionevent', 'UP', str(final_point[0]), str(final_point[1])])
 
 
 if __name__ == "__main__":
