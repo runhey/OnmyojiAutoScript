@@ -162,11 +162,14 @@ class Adb(Connection):
     # desktop). Detect the display the game is running on and target it.
     _mumu_display_ids_cache = None
     _mumu_display_ids_retry_at = 0.0
+    _mumu_display_ids_generation = 0
     _MUMU_DISPLAY_RETRY_SEC = 20
+    _MUMU_DISPLAY_TIMEOUT = 3
 
     def _reset_mumu_display_ids(self):
         self._mumu_display_ids_cache = None
         self._mumu_display_ids_retry_at = 0.0
+        self._mumu_display_ids_generation += 1
 
     def _mumu_display_ids(self):
         """
@@ -178,31 +181,48 @@ class Adb(Connection):
         """
         if self._mumu_display_ids_cache is not None:
             return self._mumu_display_ids_cache
-        # Negative results are cached for a short window: on a single-display
-        # device every screenshot and click would otherwise pay an extra
-        # `dumpsys window displays` call.
+        # A provisional miss (dumpsys broken, or the game display not up yet) is
+        # retried on the next call; only the definitive "no virtual display at
+        # all" result is remembered, and only for a short window, so a plain
+        # single-display device does not pay a `dumpsys` call per click.
         now = time.monotonic()
         if now < self._mumu_display_ids_retry_at:
             return None
-        self._mumu_display_ids_retry_at = now + self._MUMU_DISPLAY_RETRY_SEC
+        generation = self._mumu_display_ids_generation
         try:
-            # 1) Which display is the game running on? (skip display 0, the desktop)
-            out = self.adb_shell(['dumpsys', 'window', 'displays'])
+            # 1) Which display is the game on? Skip display 0, the desktop. The
+            #    game's display is the one holding a window of our package; a
+            #    system dialog on top of it takes the focus away from the
+            #    package, so a non-launcher focus is the fallback.
+            out = self.adb_shell(['dumpsys', 'window', 'displays'], timeout=self._MUMU_DISPLAY_TIMEOUT)
             display_id = None
+            fallback = None
+            virtual_display = False
             current = None
             for line in out.splitlines():
                 m = re.search(r'Display: mDisplayId=(\d+)', line)
                 if m:
                     current = int(m.group(1))
+                    virtual_display = virtual_display or current != 0
                     continue
-                if current and 'mFocusedApp=ActivityRecord' in line and 'launcher' not in line.lower():
+                if not current:
+                    continue
+                if self.package and self.package in line:
                     display_id = current
                     break
+                if fallback is None and 'mFocusedApp=ActivityRecord' in line and 'launcher' not in line.lower():
+                    fallback = current
             if display_id is None:
+                display_id = fallback
+            if display_id is None:
+                if not virtual_display:
+                    # Plain single-display device: do not probe on every call.
+                    self._mumu_display_ids_retry_at = now + self._MUMU_DISPLAY_RETRY_SEC
+                # Otherwise the game display is not up yet - retry next call.
                 return None
             # 2) Display name, e.g. "mumuscreen002"
             name = None
-            out = self.adb_shell(['dumpsys', 'display'])
+            out = self.adb_shell(['dumpsys', 'display'], timeout=self._MUMU_DISPLAY_TIMEOUT)
             idx = out.find('mDisplayId=%d' % display_id)
             if idx >= 0:
                 m = re.search(r'name=(mumuscreen\d+)', out[idx:idx + 6000])
@@ -211,7 +231,7 @@ class Adb(Connection):
                 return None
             # 3) SurfaceFlinger long display id for `screencap -d`
             long_id = None
-            out = self.adb_shell(['dumpsys', 'SurfaceFlinger', '--display-id'])
+            out = self.adb_shell(['dumpsys', 'SurfaceFlinger', '--display-id'], timeout=self._MUMU_DISPLAY_TIMEOUT)
             for line in out.splitlines():
                 if 'displayName="%s"' % name in line:
                     m = re.search(r'Display (\d+)', line)
@@ -219,6 +239,9 @@ class Adb(Connection):
                         long_id = m.group(1)
                         break
             if long_id is None:
+                return None
+            if generation != self._mumu_display_ids_generation:
+                # The app was restarted while the display was being probed.
                 return None
             logger.info(f'MuMu multi-display: game on display {display_id} ({name}), screencap id {long_id}')
             self._mumu_display_ids_cache = (display_id, long_id)
@@ -357,8 +380,6 @@ class Adb(Connection):
         """
         if not package_name:
             package_name = self.package
-        # MuMu 6.0 assigns the app a new virtual display on every launch
-        self._reset_mumu_display_ids()
         result = self.adb_shell([
             'monkey', '-p', package_name, '-c',
             'android.intent.category.LAUNCHER', '--pct-syskeys', '0', '1'
@@ -408,8 +429,6 @@ class Adb(Connection):
         if not package_name:
             package_name = self.package
         self.adb_shell(['am', 'force-stop', package_name])
-        # MuMu 6.0 destroys the app's virtual display on stop; force re-detection
-        self._reset_mumu_display_ids()
 
     @retry
     def dump_hierarchy_adb(self, temp: str = '/data/local/tmp/hierarchy.xml') -> etree._Element:
