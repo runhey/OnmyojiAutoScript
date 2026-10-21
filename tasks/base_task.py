@@ -612,12 +612,14 @@ class BaseTask(GlobalGameAssets, CostumeBase):
             self.device.click(x=x, y=y, control_name=target.name)
         return True
 
-    def list_find(self, target: RuleList, name: str | list[str], max_swipe: int = 10) -> bool | tuple:
+    def list_find(self, target: RuleList, name: str | list[str], max_swipe: int = 10,
+                  swipe_number: int = 1) -> bool | tuple:
         """
         会一致在列表寻找目标，找到了就退出。
         如果是图片列表会一直往下找
         如果是纯文字的，会自动识别自己的位置，根据位置选择向前还是向后翻
         :param max_swipe: 最大滑动次数
+        :param swipe_number: 纯文字列表每次滑动经过的列表项数量，列表项太矮导致目标只露出一半时可以调大
         :param target:
         :param name:
         :return:
@@ -636,7 +638,7 @@ class BaseTask(GlobalGameAssets, CostumeBase):
             elif target.is_ocr:
                 result = target.ocr_appear(self.device.image, name=name)
                 swipe_down = result is not None and isinstance(result, int) and result > 0
-                swipe_distance_ratio = 1
+                swipe_distance_ratio = swipe_number
             # 结果是坐标证明找到了, 非坐标都是没找到
             if result is not None and isinstance(result, tuple):
                 appear = True

@@ -120,7 +120,9 @@ class GeneralRoom(BaseTask, GeneralRoomAssets):
         :param name:
         :return:
         """
-        pos = self.list_find(self.L_TEAM_LIST, name)
+        # 列表项高度只有 61px，每次只滑一项时目标(石距/愤怒的石距)在列表末尾只露出一半无法识别，
+        # 这里一次滑 3 项 = 183px，保证滑到的列表项能完整显示出来
+        pos = self.list_find(self.L_TEAM_LIST, name, swipe_number=3)
         if not pos:
             return False
         if name == '愤怒的石距' or name == '喷怒的石距':
