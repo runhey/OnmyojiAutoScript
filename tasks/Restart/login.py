@@ -339,7 +339,7 @@ class LoginHandler(BaseTask, RestartAssets, GameUiAssets, GeneralBuffAssets):
                 continue
             if self.appear_then_click(self.I_HARVEST_MAIL_COPY, interval=1.5):
                 continue
-        timeout_timer = Timer(3).start()
+        timeout_timer = Timer(6).start()
         logger.info('Exec harvest mail')
         while 1:
             self.screenshot()
