@@ -366,7 +366,7 @@ class ScriptTask(StateMachine, GameUi, Battle, BaseActivity, SwitchSoul, Activit
         # 运行战斗
         strategies, options = self.loadout_from_config(self.get_general_battle_conf())
         # strategies['success'] = 'activity'
-        options['completion'].check_imgs = [self.I_CHECK_BATTLE_MAIN]
+        options['completion'].check_imgs = [self.I_CHECK_BATTLE_MAIN, self.I_CHECK_BATTLE_BOSS]
         self.loadout_show((strategies, options))
         self.state_show()
         with battle_wait_strategy(**strategies), battle_wait_options(**options):

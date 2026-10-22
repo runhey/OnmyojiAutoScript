@@ -95,6 +95,11 @@ class Connection(ConnectionAttr):
             config (AzurLaneConfig, str): Name of the user config under ./config
         """
         super().__init__(config)
+        # 桌面客户端模式：不经过 adb 设备/包检测，包名直接用配置值
+        if self.is_desktop:
+            self.package = self.config.script.device.package_name.value
+            logger.attr('PackageName', self.package)
+            return
         if not self.is_over_http:
             self.detect_device()
 
@@ -691,6 +696,10 @@ class Connection(ConnectionAttr):
                 2: 'HOME key on the top'
                 3: 'HOME key on the left'
         """
+        # 桌面模式：窗口即横屏，方向恒为 0（Normal），不经过 adb dumpsys
+        if self.is_desktop:
+            self.orientation = 0
+            return 0
         _DISPLAY_RE = re.compile(
             r'.*DisplayViewport{.*valid=true, .*orientation=(?P<orientation>\d+), .*deviceWidth=(?P<width>\d+), deviceHeight=(?P<height>\d+).*'
         )
