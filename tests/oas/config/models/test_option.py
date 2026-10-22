@@ -1,4 +1,3 @@
-from typing import Optional
 
 import pytest
 from pydantic import BaseModel, TypeAdapter, ValidationError
@@ -170,7 +169,7 @@ def test_option_serializes_in_lists_and_dictionaries():
 
 def test_optional_option_serializes_none():
     class OptionalConfig(BaseModel):
-        mode: Optional[TextOption] = None
+        mode: TextOption | None = None
 
     assert OptionalConfig().model_dump() == {"mode": None}
 

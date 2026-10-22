@@ -12,51 +12,47 @@ from oas.config.table.base import ConfigDB
 class ConfigRow(msgspec.Struct):
     """One serialized Group belonging to one Task instance."""
 
-    taskclass: str
     task: str
-    groupclass: str
     group: str
+    taskclass: str
+    groupclass: str
     value: bytes
-    id: int = 0
 
 
 class ConfigTable(ConfigDB):
-    """Store one binary value for each Task/Group instance."""
+    """Store one binary value for each Task/Group instance pair.
+
+    ``task`` and ``group`` are the instance-name primary key.  The associated
+    ``taskclass`` and ``groupclass`` are returned with the value and are not
+    part of the row identity.
+    """
 
     TABLE_NAME = "config"
     CREATE_TABLE = """
         CREATE TABLE "{TABLE_NAME}" (
-        "id" INTEGER NOT NULL,
-        "taskclass" TEXT NOT NULL,
         "task" TEXT NOT NULL,
-        "groupclass" TEXT NOT NULL,
         "group" TEXT NOT NULL,
+        "taskclass" TEXT NOT NULL,
+        "groupclass" TEXT NOT NULL,
         "value" BLOB NOT NULL,
-        PRIMARY KEY ("id"),
-        UNIQUE ("taskclass", "task", "groupclass", "group")
+        PRIMARY KEY ("task", "group")
     );
     """
     MODEL = ConfigRow
 
     @staticmethod
     def _identity(
-        taskclass: str,
         task: str,
-        groupclass: str,
         group: str,
     ) -> dict[str, str]:
         return {
-            "taskclass": taskclass,
             "task": task,
-            "groupclass": groupclass,
             "group": group,
         }
 
     def get_group(
         self,
-        taskclass: str,
         task: str,
-        groupclass: str,
         group: str,
         *,
         _cursor_=None,
@@ -65,12 +61,11 @@ class ConfigTable(ConfigDB):
 
         return self.select_one(
             _cursor_=_cursor_,
-            **self._identity(taskclass, task, groupclass, group),
+            **self._identity(task, group),
         )
 
     def list_groups(
         self,
-        taskclass: str,
         task: str,
         *,
         groupclass: str | None = None,
@@ -78,21 +73,20 @@ class ConfigTable(ConfigDB):
     ) -> list[ConfigRow]:
         """List all Groups for a Task instance."""
 
-        conditions = {"taskclass": taskclass, "task": task}
+        conditions = {"task": task}
         if groupclass is not None:
             conditions["groupclass"] = groupclass
         return self.select(_cursor_=_cursor_, **conditions)
 
     def list_task_rows(
         self,
-        taskclass: str,
         task: str,
         *,
         _cursor_=None,
     ) -> list[ConfigRow]:
         """List every serialized Group belonging to a Task instance."""
 
-        return self.list_groups(taskclass, task, _cursor_=_cursor_)
+        return self.list_groups(task, _cursor_=_cursor_)
 
     def upsert_group(
         self,
@@ -117,18 +111,16 @@ class ConfigTable(ConfigDB):
         )
         self.upsert_row(
             row,
-            conflicts=("taskclass", "task", "groupclass", "group"),
+            conflicts=("task", "group"),
             _cursor_=_cursor_,
         )
         if _cursor_ is not None:
             return row
-        return self.get_group(taskclass, task, groupclass, group)
+        return self.get_group(task, group)
 
     def delete_group(
         self,
-        taskclass: str,
         task: str,
-        groupclass: str,
         group: str,
         *,
         _cursor_=None,
@@ -137,27 +129,27 @@ class ConfigTable(ConfigDB):
 
         self.delete(
             _cursor_=_cursor_,
-            **self._identity(taskclass, task, groupclass, group),
+            **self._identity(task, group),
         )
 
-    def delete_task(self, taskclass: str, task: str, *, _cursor_=None) -> None:
+    def delete_task(self, task: str, *, _cursor_=None) -> None:
         """Delete all Group rows belonging to one Task instance."""
 
-        self.delete(_cursor_=_cursor_, taskclass=taskclass, task=task)
+        self.delete(_cursor_=_cursor_, task=task)
 
     def read_task_rows(
         self,
         tasks: Sequence[str] | None = None,
-        groups: Iterable[tuple[str, str, str, str]] = (),
+        groups: Iterable[tuple[str, str]] = (),
         *,
         taskclasses: Sequence[str] | None = None,
         _cursor_=None,
     ) -> list[ConfigRow]:
         """Read selected Task classes/instances and exact Group identities.
 
-        ``groups`` contains ``(taskclass, task, groupclass, group)`` tuples.
-        ``tasks`` remains a convenience filter for task instance names; when
-        ``taskclasses`` is supplied, both filters are applied together.
+        ``groups`` contains ``(task, group)`` primary-key tuples. ``tasks``
+        remains a convenience filter for task instance names. ``taskclasses``
+        can additionally restrict the class metadata stored in the rows.
         """
 
         conditions: list[str] = []
@@ -174,10 +166,10 @@ class ConfigTable(ConfigDB):
         if task_filters:
             conditions.append("(" + " AND ".join(task_filters) + ")")
         for identity in groups:
-            if len(identity) != 4:
-                raise ValueError("group identity must contain four values")
+            if len(identity) != 2:
+                raise ValueError("group identity must contain task and group")
             conditions.append(
-                '("taskclass"=? AND "task"=? AND "groupclass"=? AND "group"=?)'
+                '("task"=? AND "group"=?)'
             )
             params.extend(identity)
         if not conditions:
@@ -186,15 +178,13 @@ class ConfigTable(ConfigDB):
         return self.select_by_sql(sql, params, _cursor_=_cursor_)
 
     def read_rows(self, events: Iterable[object], *, _cursor_=None) -> list[ConfigRow]:
-        """Read rows from objects with four identity attributes."""
+        """Read rows from objects with ``task`` and ``group`` attributes."""
 
         groups = []
         for event in events:
             groups.append(
                 (
-                    event.taskclass,
                     event.task,
-                    event.groupclass,
                     event.group,
                 )
             )
@@ -204,5 +194,3 @@ class ConfigTable(ConfigDB):
 
 
 AlasioConfigTable = ConfigTable
-
-__all__ = ["AlasioConfigTable", "ConfigRow", "ConfigTable"]

@@ -1,5 +1,5 @@
 from collections.abc import Callable
-from typing import Any
+from typing import Any, ClassVar
 
 from pydantic import BaseModel, Field
 from pydantic.fields import FieldInfo
@@ -9,6 +9,35 @@ UNSET = object()
 
 class ConfigBase(BaseModel):
     """Base class for all OAS configuration models."""
+
+    __config_abstract__: ClassVar[bool] = True
+
+    @classmethod
+    def __pydantic_init_subclass__(cls, **kwargs: Any) -> None:
+        """Register completed Task and Group subclasses.
+
+        Pydantic calls this hook while creating a model class, after the
+        model fields are available.  It is never called when a model instance
+        is constructed.
+        """
+
+        super().__pydantic_init_subclass__(**kwargs)
+        if cls.__dict__.get("__config_abstract__", False):
+            return
+
+        from oas.config.models.registry import config_model_registry
+        try:
+            from oas.config.models.groups import GroupBase
+            from oas.config.models.tasks import TaskBase
+        except ImportError:
+            # The base classes themselves can be created while their module is
+            # still importing.  They are abstract and must not be registered.
+            return
+
+        if issubclass(cls, TaskBase):
+            config_model_registry.register_task(cls)
+        elif issubclass(cls, GroupBase):
+            config_model_registry.register_group(cls)
 
 
 def temporal_field(
@@ -127,5 +156,3 @@ def boolean_component_field(
     if title is not None:
         field_kwargs["title"] = title
     return Field(**field_kwargs)
-
-

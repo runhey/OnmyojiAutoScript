@@ -9,6 +9,7 @@ config/*.json
 config/tmp*
 !config/template*.json
 config/*.crt
+config/*.db
 *.pyw
 dev_tools/debug_tools
 .idea

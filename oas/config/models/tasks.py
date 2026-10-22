@@ -2,11 +2,12 @@
 
 from __future__ import annotations
 
+from collections.abc import Callable, Mapping, Sequence
 from dataclasses import dataclass
-from typing import Any, Callable, ClassVar, Literal, Mapping, Sequence
+from typing import Any, ClassVar, Literal, Self
 
 from oas.config.models.base import ConfigBase
-
+from oas.config.models.groups import GroupBase
 
 Operation = Literal["set", "merge", "delete", "replace"]
 
@@ -19,7 +20,7 @@ class SchemaRule:
     property: str | None = None
     operation: Operation = "set"
     value: Any = None
-    when: Callable[["SchemaContext"], bool] | None = None
+    when: Callable[[SchemaContext], bool] | None = None
 
     def __post_init__(self) -> None:
         if not isinstance(self.target, str) or not self.target.strip():
@@ -38,9 +39,9 @@ class SchemaRule:
 class SchemaContext:
     """Context passed to a conditional rule's ``when`` callback."""
 
-    task_type: type["TaskBase"]
+    task_type: type[TaskBase]
     schema: dict[str, Any]
-    task_instance: "TaskBase | None" = None
+    task_instance: TaskBase | None = None
     target: str | None = None
     property: str | None = None
 
@@ -180,12 +181,33 @@ class schema:
 class TaskBase(ConfigBase):
     """Base class for Tasks with declarative schema override rules."""
 
+    __config_abstract__: ClassVar[bool] = True
     _pending_schema_rules: ClassVar[list[SchemaRule]] = []
 
     def __init_subclass__(cls, **kwargs: Any) -> None:
         super().__init_subclass__(**kwargs)
         # Each Task subclass gets an independent temporary rule buffer.
         cls._pending_schema_rules = []
+
+    def to_dict(self) -> dict[str, dict[str, Any]]:
+        """Return the Group configuration of this Task as a plain dict.
+
+        Only single Group fields are exported.  Dynamically managed Group
+        lists are not supported yet and are intentionally omitted.
+        """
+
+        data: dict[str, dict[str, Any]] = {}
+        for field_name in type(self).model_fields:
+            value = getattr(self, field_name)
+            if isinstance(value, GroupBase):
+                data[field_name] = value.to_dict()
+        return data
+
+    @classmethod
+    def from_dict(cls, data: Mapping[str, Any]) -> Self:
+        """Build a validated Task from a Group configuration dict."""
+
+        return cls.model_validate(data)
 
     @classmethod
     def schema_overrides(cls, rules: list[SchemaRule]) -> None:
@@ -301,17 +323,20 @@ class TaskBase(ConfigBase):
         schema_data: dict[str, Any],
         rules: Sequence[SchemaRule],
         *,
-        task_instance: "TaskBase | None" = None,
+        task_instance: TaskBase | None = None,
         resolve_ref_schema: Callable[[dict[str, Any]], dict[str, Any]] | None = None,
     ) -> dict[str, Any]:
         for rule in rules:
             if rule.property == "hide" and not isinstance(rule.value, bool):
                 raise TypeError("schema.hide value must be bool")
-            if rule.property in {"icon", "title", "description", "depends", "alias"}:
-                if rule.value is not None and not isinstance(rule.value, str):
-                    raise TypeError(
-                        f"schema.{rule.property} value must be str or None"
-                    )
+            if (
+                rule.property in {"icon", "title", "description", "depends", "alias"}
+                and rule.value is not None
+                and not isinstance(rule.value, str)
+            ):
+                raise TypeError(
+                    f"schema.{rule.property} value must be str or None"
+                )
 
             context = SchemaContext(
                 task_type=cls,

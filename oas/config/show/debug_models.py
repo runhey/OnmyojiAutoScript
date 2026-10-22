@@ -10,9 +10,9 @@ from pydantic import BaseModel, Field
 sys.path.insert(0, str(Path(__file__).resolve().parents[3]))
 
 from oas.config.models.args import (
+    Button,
     Cron,
     DateTime,
-    Button,
     Input,
     InputArea,
     Option,
@@ -171,12 +171,39 @@ class DebugGroup(GroupBase):
     )
 
 
+class DebugExtraGroup(GroupBase):
+    """Second Group so the example Task has two different Group classes."""
+
+    enabled: bool = Switch.field(
+        default=False,
+        description="是否启用",
+        icon="toggle",
+    )
+    limit: int = Slider.int(
+        default=3,
+        ge=1,
+        le=9,
+        step=1,
+        description="数量",
+        icon="sliders",
+    )
+    label: str = Input.str(
+        default="extra",
+        description="标签",
+        icon="tag",
+    )
+
+
 class DebugTask(TaskBase):
-    """Example Task containing the complete demonstration Group."""
+    """Example Task containing two different Group classes."""
 
     group: DebugGroup = Field(
         default_factory=DebugGroup,
         description="包含全部参数类型的示例组",
+    )
+    extra: DebugExtraGroup = Field(
+        default_factory=DebugExtraGroup,
+        description="第二个 Group，演示一个 Task 使用两个不同的 Group 类",
     )
 
     @classmethod
@@ -188,3 +215,15 @@ class DebugTask(TaskBase):
 
         cls._pending_schema_rules.extend(rules)
 
+
+class DebugSecondTask(TaskBase):
+    """Second example Task with exactly two different Group classes."""
+
+    settings: DebugGroup = Field(
+        default_factory=DebugGroup,
+        description="复用 DebugGroup",
+    )
+    extra: DebugExtraGroup = Field(
+        default_factory=DebugExtraGroup,
+        description="复用 DebugExtraGroup",
+    )

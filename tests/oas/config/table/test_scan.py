@@ -7,11 +7,8 @@ from oas.config.table.key import KeyTable
 from oas.config.table.scan import (
     ConfigExtra,
     DndRequest,
-    ScanTable,
-    iter_local_files,
     validate_config_name,
 )
-from oas.ext import env
 
 
 @pytest.mark.parametrize("name", ["", ".", "..", "gui", "webapp", ":memory:", "template1"])
@@ -120,3 +117,66 @@ def test_scan_table_delete_leaves_stale_row_until_scan(scan_table, tmp_path):
 def test_scan_models_are_binary_metadata_models():
     assert ConfigExtra() == ConfigExtra(startup=False)
     assert DndRequest("name", 1, 1).name == "name"
+
+
+def test_config_add_rejects_protected_name(scan_table):
+    with pytest.raises(RpcValueError, match="protected"):
+        scan_table.config_add("gui", "mod")
+
+
+def test_config_add_rejects_existing_config(scan_table):
+    scan_table.config_add("scan_add_dup", "mod")
+
+    with pytest.raises(RpcValueError, match="already exists"):
+        scan_table.config_add("scan_add_dup", "mod")
+
+
+def test_config_rename_rejects_same_name(scan_table):
+    scan_table.config_add("scan_rename_same", "mod")
+
+    with pytest.raises(RpcValueError, match="same as old"):
+        scan_table.config_rename("scan_rename_same", "scan_rename_same")
+
+
+def test_config_rename_rejects_missing_source(scan_table):
+    with pytest.raises(RpcValueError, match="does not exist"):
+        scan_table.config_rename("scan_rename_missing", "scan_rename_target")
+
+
+def test_config_rename_rejects_existing_target(scan_table):
+    scan_table.config_add("scan_rename_a", "mod")
+    scan_table.config_add("scan_rename_b", "mod")
+
+    with pytest.raises(RpcValueError, match="already exists"):
+        scan_table.config_rename("scan_rename_a", "scan_rename_b")
+
+
+def test_config_copy_rejects_missing_source(scan_table):
+    with pytest.raises(RpcValueError, match="not found"):
+        scan_table.config_copy("scan_copy_missing", "scan_copy_target")
+
+
+def test_config_copy_rejects_existing_target(scan_table):
+    scan_table.config_add("scan_copy_a", "mod")
+    scan_table.config_add("scan_copy_b", "mod")
+
+    with pytest.raises(RpcValueError, match="already exists"):
+        scan_table.config_copy("scan_copy_a", "scan_copy_b")
+
+
+def test_config_delete_rejects_protected_name(scan_table):
+    with pytest.raises(RpcValueError, match="protected"):
+        scan_table.config_del("template-x")
+
+
+def test_config_dnd_with_empty_requests_is_noop(scan_table):
+    scan_table.config_dnd([])
+
+    assert scan_table.select_rows() == {}
+
+
+def test_config_dnd_rejects_duplicate_missing_names(scan_table):
+    with pytest.raises(RpcValueError, match="does not exist"):
+        scan_table.config_dnd(
+            [DndRequest("scan_dnd_missing", 1, 1), DndRequest("scan_dnd_missing", 1, 2)]
+        )

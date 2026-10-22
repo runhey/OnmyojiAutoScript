@@ -1,5 +1,5 @@
-from pydantic import Field
 import pytest
+from pydantic import Field, ValidationError
 
 from oas.config.models.args import Input, Switch
 from oas.config.models.groups import GroupBase
@@ -624,7 +624,7 @@ def test_schema_rules_do_not_change_runtime_validation() -> None:
 
     ValidationTask.schema_overrides([SchemaRule("group.first", operation="replace", value={"type": "integer"})])
     ValidationTask.model_json_schema()
-    with pytest.raises(Exception):
+    with pytest.raises(ValidationError):
         ValidationTask(group={"first": 1, "second": "ok", "enabled": True})
 
 
@@ -1117,3 +1117,142 @@ def test_multiple_rules_can_target_the_same_node() -> None:
     assert first["hide"] is True
     assert first["icon"] == "star"
     assert first["title"] == "First"
+
+
+class TaskIoMainGroup(GroupBase):
+    count: int = Input.int(default=1, ge=0)
+
+
+class TaskIoExtraGroup(GroupBase):
+    value: str = Input.str(default="extra")
+
+
+class TaskIoTask(TaskBase):
+    main: TaskIoMainGroup = Field(default_factory=TaskIoMainGroup)
+    extra: TaskIoExtraGroup = Field(default_factory=TaskIoExtraGroup)
+    label: str = Input.str(default="task")
+    dynamic: list[TaskIoExtraGroup] = Field(default_factory=list)
+
+
+class TaskIoDefaultedTask(TaskBase):
+    main: TaskIoMainGroup = Field(
+        default_factory=lambda: TaskIoMainGroup(count=8)
+    )
+
+
+class TaskIoRequiredTask(TaskBase):
+    main: TaskIoMainGroup
+
+
+def test_to_dict_only_exports_single_group_fields():
+    task = TaskIoTask()
+
+    data = task.to_dict()
+
+    assert list(data) == ["main", "extra"]
+    assert data["main"] == task.main.to_dict()
+    assert data["extra"] == task.extra.to_dict()
+    assert "label" not in data
+    assert "dynamic" not in data
+
+
+def test_to_dict_omits_non_empty_dynamic_group_lists():
+    task = TaskIoTask(dynamic=[TaskIoExtraGroup(value="one")])
+
+    data = task.to_dict()
+
+    assert list(data) == ["main", "extra"]
+
+
+def test_from_dict_roundtrip():
+    task = TaskIoTask(
+        main=TaskIoMainGroup(count=6),
+        extra=TaskIoExtraGroup(value="kept"),
+    )
+
+    assert TaskIoTask.from_dict(task.to_dict()) == task
+
+
+def test_from_dict_uses_task_default_factory_for_missing_group():
+    task = TaskIoDefaultedTask.from_dict({})
+
+    assert task.main.count == 8
+
+
+def test_from_dict_builds_required_group_from_empty_payload():
+    task = TaskIoRequiredTask.from_dict({"main": {}})
+
+    assert task.main == TaskIoMainGroup()
+
+
+def test_from_dict_ignores_unknown_groups():
+    data = dict(TaskIoTask().to_dict())
+    data["removed_group"] = {"value": "x"}
+
+    assert TaskIoTask.from_dict(data) == TaskIoTask()
+
+
+def test_from_dict_rejects_invalid_group_payload():
+    with pytest.raises(ValidationError):
+        TaskIoTask.from_dict({"main": {"count": -1}})
+
+
+def test_from_dict_rejects_non_mapping_group_payload():
+    with pytest.raises(ValidationError):
+        TaskIoTask.from_dict({"main": ["not", "a", "mapping"]})
+
+
+def test_from_dict_rejects_missing_required_group():
+    # ``from_dict`` adds no fallback: only Pydantic defaults fill missing
+    # fields, and a Group without a default has none.
+    with pytest.raises(ValidationError):
+        TaskIoRequiredTask.from_dict({})
+
+
+
+class TaskErrGroup(GroupBase):
+    count: int = Input.int(default=1, ge=0)
+
+
+class TaskErrTask(TaskBase):
+    main: TaskErrGroup = Field(default_factory=TaskErrGroup)
+    dynamic: list[TaskErrGroup] = Field(default_factory=list)
+    label: int = Input.int(default=0)
+
+
+@pytest.mark.parametrize("payload", [None, [], 1, "text"])
+def test_from_dict_rejects_non_mappings(payload):
+    with pytest.raises(ValidationError):
+        TaskErrTask.from_dict(payload)
+
+
+@pytest.mark.parametrize(
+    "payload",
+    [
+        {"main": "not-a-group"},
+        {"main": {"count": -1}},
+        {"dynamic": "not-a-list"},
+        {"label": "not-an-int"},
+    ],
+)
+def test_from_dict_rejects_invalid_fields(payload):
+    with pytest.raises(ValidationError):
+        TaskErrTask.from_dict(payload)
+
+
+def test_from_dict_ignores_unknown_groups_on_task_with_dynamic():
+    assert TaskErrTask.from_dict({"removed": {"count": 2}}) == TaskErrTask()
+
+
+def test_from_dict_accepts_dynamic_group_dicts():
+    task = TaskErrTask.from_dict({"dynamic": [{"count": 3}]})
+
+    assert len(task.dynamic) == 1
+    assert task.dynamic[0].count == 3
+
+
+def test_to_dict_still_omits_dynamic_groups():
+    task = TaskErrTask.from_dict({"dynamic": [{"count": 3}]})
+
+    assert "dynamic" not in task.to_dict()
+    assert list(task.to_dict()) == ["main"]

@@ -1,6 +1,7 @@
 import msgspec
+import pytest
 
-from oas.config.table.key import JwtSecret, KeyTable
+from oas.config.table.key import JwtSecret, KeyTable, KeyValue
 
 
 class Metadata(msgspec.Struct):
@@ -52,3 +53,66 @@ def test_jwt_secret_is_binary_and_persisted(config_table):
     assert len(first) == 32
     assert second == first
     assert isinstance(table.get("JwtSecret", JwtSecret), JwtSecret)
+
+
+def test_set_value_requires_bytes(config_table):
+    table = KeyTable(":memory:")
+
+    with pytest.raises(TypeError, match="must be bytes"):
+        table.set_value("k", "text")
+
+
+def test_mod_set_requires_text(config_table):
+    table = KeyTable(":memory:")
+
+    with pytest.raises(TypeError, match="must be str"):
+        table.mod_set(b"bytes")
+
+
+def test_get_value_missing_returns_default(config_table):
+    table = KeyTable(":memory:")
+
+    assert table.get_value("missing") is None
+    assert table.get_value("missing", b"fallback") == b"fallback"
+
+
+def test_get_missing_model_uses_struct_defaults(config_table):
+    table = KeyTable(":memory:")
+
+    assert table.get("missing", JwtSecret) == JwtSecret()
+
+
+def test_corrupt_msgpack_value_raises(config_table):
+    table = KeyTable(":memory:")
+    table.set_value("bad", b"\xc1")
+
+    with pytest.raises(msgspec.DecodeError):
+        table.get("bad", KeyValue)
+
+
+def test_set_and_get_model_roundtrip(config_table):
+    table = KeyTable(":memory:")
+    value = KeyValue(key="k", value=b"v")
+
+    table.set("k", value)
+
+    assert table.get("k", KeyValue) == value
+
+
+def test_mod_roundtrip_and_empty_default(config_table):
+    table = KeyTable(":memory:")
+    assert table.mod_get() == ""
+
+    table.mod_set("demo")
+    assert table.mod_get() == "demo"
+
+
+def test_jwt_secret_is_stable_and_32_bytes(config_table):
+    table = KeyTable(":memory:")
+
+    first = table.jwt_secret
+    second = table.jwt_secret
+
+    assert first == second
+    assert len(first) == 32
+    assert JwtSecret().secret == b""
