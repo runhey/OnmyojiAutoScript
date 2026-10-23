@@ -42,7 +42,7 @@ class MenuTaskRow(msgspec.Struct):
 class MenuSchemeTable(ConfigDB):
     """Store the available UI menu schemes."""
 
-    TABLE_NAME = "ui_menu_scheme"
+    TABLE_NAME = 'ui_menu_scheme'
     CREATE_TABLE = """
         CREATE TABLE "{TABLE_NAME}" (
         "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
@@ -57,7 +57,7 @@ class MenuSchemeTable(ConfigDB):
         return self.select_one(_cursor_=_cursor_, name=name)
 
     def list_schemes(self, *, _cursor_=None) -> list[MenuSchemeRow]:
-        return self.select(_cursor_=_cursor_, _orderby_="scheme_order")
+        return self.select(_cursor_=_cursor_, _orderby_='scheme_order')
 
     def upsert_scheme(
         self,
@@ -65,7 +65,7 @@ class MenuSchemeTable(ConfigDB):
         *,
         _cursor_=None,
     ) -> MenuSchemeRow:
-        self.upsert_row(row, conflicts="name", _cursor_=_cursor_)
+        self.upsert_row(row, conflicts='name', _cursor_=_cursor_)
         if _cursor_ is not None:
             return row
         return self.get_scheme(row.name)
@@ -74,7 +74,7 @@ class MenuSchemeTable(ConfigDB):
 class MenuGroupTable(ConfigDB):
     """Store groups, including groups that currently contain no Tasks."""
 
-    TABLE_NAME = "ui_menu_group"
+    TABLE_NAME = 'ui_menu_group'
     CREATE_TABLE = """
         CREATE TABLE "{TABLE_NAME}" (
         "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
@@ -104,7 +104,7 @@ class MenuGroupTable(ConfigDB):
         return self.select(
             _cursor_=_cursor_,
             scheme_id=scheme_id,
-            _orderby_="group_order",
+            _orderby_='group_order',
         )
 
     def delete_scheme(self, scheme_id: int, *, _cursor_=None) -> None:
@@ -114,7 +114,7 @@ class MenuGroupTable(ConfigDB):
 class MenuTaskTable(ConfigDB):
     """Store ordered Task instances belonging to menu groups."""
 
-    TABLE_NAME = "ui_menu_task"
+    TABLE_NAME = 'ui_menu_task'
     CREATE_TABLE = """
         CREATE TABLE "{TABLE_NAME}" (
         "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
@@ -132,7 +132,7 @@ class MenuTaskTable(ConfigDB):
         return self.select(
             _cursor_=_cursor_,
             group_id=group_id,
-            _orderby_="task_order",
+            _orderby_='task_order',
         )
 
     def delete_group(self, group_id: int, *, _cursor_=None) -> None:

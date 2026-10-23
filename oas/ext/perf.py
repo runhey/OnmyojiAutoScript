@@ -36,14 +36,16 @@ class PerformanceTest:
         # Store parameter information for display
         param_info = self._format_parameters(args, kwargs)
 
-        self.functions.append({
-            'func': local_func,
-            'name': func.__name__,
-            'params': param_info,
-            'args': args,
-            'kwargs': kwargs
-        })
-        print(f"Registered function: {func.__name__}{param_info}")
+        self.functions.append(
+            {
+                'func': local_func,
+                'name': func.__name__,
+                'params': param_info,
+                'args': args,
+                'kwargs': kwargs,
+            }
+        )
+        print(f'Registered function: {func.__name__}{param_info}')
 
     def _format_parameters(self, args, kwargs, max_length=120):
         """
@@ -63,28 +65,28 @@ class PerformanceTest:
         for arg in args:
             if hasattr(arg, 'shape') and 'numpy' in str(type(arg)):
                 # Handle numpy arrays without importing numpy
-                parts.append(f"array{getattr(arg, 'shape', '(?)')}")
+                parts.append(f'array{getattr(arg, "shape", "(?)")}')
             else:
                 parts.append(str(arg))
 
         # Format keyword arguments
         for key, value in kwargs.items():
             if hasattr(value, 'shape') and 'numpy' in str(type(value)):
-                parts.append(f"{key}=array{getattr(value, 'shape', '(?)')}")
+                parts.append(f'{key}=array{getattr(value, "shape", "(?)")}')
             else:
-                parts.append(f"{key}={value}")
+                parts.append(f'{key}={value}')
 
-        param_str = "(" + ", ".join(parts) + ")" if parts else "()"
+        param_str = '(' + ', '.join(parts) + ')' if parts else '()'
 
         # Final truncation if the entire parameter string is too long
         if len(param_str) > max_length:
-            truncated = param_str[:max_length] + "..."
+            truncated = param_str[:max_length] + '...'
             # Ensure we don't break in the middle of a quote
             if truncated.count("'") % 2 == 1:
                 # Find the last complete quote
                 last_quote = truncated.rfind("'", 0, -3)
                 if last_quote > 0:
-                    truncated = param_str[:last_quote] + "..."
+                    truncated = param_str[:last_quote] + '...'
             param_str = truncated
 
         return param_str
@@ -112,29 +114,31 @@ class PerformanceTest:
             if hasattr(output, 'size') and getattr(output, 'size', 0) <= 10:
                 try:
                     # Convert to list for display
-                    values = output.tolist() if hasattr(output, 'tolist') else str(output)
-                    return f"array{shape}({values})"
+                    values = (
+                        output.tolist() if hasattr(output, 'tolist') else str(output)
+                    )
+                    return f'array{shape}({values})'
                 except Exception:
-                    return f"array{shape}[{dtype}]"
+                    return f'array{shape}[{dtype}]'
             else:
-                return f"array{shape}[{dtype}]"
+                return f'array{shape}[{dtype}]'
 
         elif isinstance(output, (list, tuple)):
             # No sorting - preserve original order
             if len(output) < 100:
                 return str(output)
             else:
-                return f"Sequence length: {len(output)}"
+                return f'Sequence length: {len(output)}'
         elif isinstance(output, dict):
             # No sorting - preserve original order (Python 3.7+ maintains insertion order)
             if len(output) < 20:
                 return str(output)
             else:
-                return f"Dict length: {len(output)}"
+                return f'Dict length: {len(output)}'
         elif isinstance(output, (int, float, str, bool)):
             return str(output)
         else:
-            return f"<{type(output).__name__} object>"
+            return f'<{type(output).__name__} object>'
 
     def verify_outputs(self):
         """
@@ -143,16 +147,16 @@ class PerformanceTest:
         Returns:
             bool: True if outputs are consistent
         """
-        print("\n" + "=" * 60)
-        print("Step 1: Verify function output consistency")
-        print("=" * 60)
+        print('\n' + '=' * 60)
+        print('Step 1: Verify function output consistency')
+        print('=' * 60)
 
         outputs = []
         formatted_outputs = []
 
         for func_info in self.functions:
             try:
-                print(f"Running function: {func_info['name']}{func_info['params']}")
+                print(f'Running function: {func_info["name"]}{func_info["params"]}')
                 start_time = time.time()
                 result = func_info['func']()
                 end_time = time.time()
@@ -161,17 +165,17 @@ class PerformanceTest:
                 formatted_output = self._format_output(result)
                 formatted_outputs.append(formatted_output)
 
-                print(f"   Execution time: {pretty_time(end_time - start_time)}")
-                print(f"   Output: {formatted_output}")
+                print(f'   Execution time: {pretty_time(end_time - start_time)}')
+                print(f'   Output: {formatted_output}')
                 print()
 
             except Exception as e:
-                print(f"   Execution failed: {str(e)}")
+                print(f'   Execution failed: {str(e)}')
                 self.outputs_consistent = False
                 return False
 
         if len(self.functions) < 2:
-            print("Only one function, skipping output consistency check")
+            print('Only one function, skipping output consistency check')
             return True
 
         # Check output consistency
@@ -179,13 +183,13 @@ class PerformanceTest:
         all_consistent = all(output == first_output for output in formatted_outputs)
 
         if all_consistent:
-            print("All function outputs are consistent!")
+            print('All function outputs are consistent!')
             self.outputs_consistent = True
             return True
         else:
-            print("Function outputs are inconsistent!")
+            print('Function outputs are inconsistent!')
             for func_info, output in zip(self.functions, formatted_outputs):
-                print(f"   {func_info['name']}{func_info['params']}: {output}")
+                print(f'   {func_info["name"]}{func_info["params"]}: {output}')
             self.outputs_consistent = False
             return False
 
@@ -196,15 +200,15 @@ class PerformanceTest:
         Returns:
             dict: Mapping of function identifier to required iterations
         """
-        print("\n" + "=" * 60)
-        print("Step 2: Estimate performance test parameters")
-        print("=" * 60)
+        print('\n' + '=' * 60)
+        print('Step 2: Estimate performance test parameters')
+        print('=' * 60)
 
         iterations_map = {}
 
         for i, func_info in enumerate(self.functions):
-            func_id = f"{func_info['name']}{func_info['params']}"
-            print(f"Analyzing function: {func_id}")
+            func_id = f'{func_info["name"]}{func_info["params"]}'
+            print(f'Analyzing function: {func_id}')
 
             # Progressive estimation to get accurate timing
             func = func_info['func']
@@ -227,7 +231,7 @@ class PerformanceTest:
                         single_duration = total_time / test_iterations
                         break
 
-            print(f"   Single execution time: {pretty_time(single_duration)}")
+            print(f'   Single execution time: {pretty_time(single_duration)}')
 
             # Calculate required iterations
             time_based_iterations = max(1, int(self.min_duration / single_duration))
@@ -236,8 +240,8 @@ class PerformanceTest:
             iterations_map[i] = required_iterations  # Use index as key
             estimated_total_time = required_iterations * single_duration
 
-            print(f"   Planned iterations: {required_iterations}")
-            print(f"   Estimated total time: {estimated_total_time:.2f}s")
+            print(f'   Planned iterations: {required_iterations}')
+            print(f'   Estimated total time: {estimated_total_time:.2f}s')
             print()
 
         return iterations_map
@@ -252,9 +256,9 @@ class PerformanceTest:
         Returns:
             list: Performance test results
         """
-        print("\n" + "=" * 60)
-        print("Step 3: Execute performance test")
-        print("=" * 60)
+        print('\n' + '=' * 60)
+        print('Step 3: Execute performance test')
+        print('=' * 60)
 
         results = []
 
@@ -263,8 +267,8 @@ class PerformanceTest:
             func_params = func_info['params']
             iterations = iterations_map[i]
 
-            print(f"Testing function: {func_name}{func_params}")
-            print(f"   Iterations: {iterations}")
+            print(f'Testing function: {func_name}{func_params}')
+            print(f'   Iterations: {iterations}')
 
             # Extract function to avoid dictionary lookup overhead
             func = func_info['func']
@@ -285,11 +289,11 @@ class PerformanceTest:
                 'name': func_name,
                 'params': func_params,
                 'iterations': iterations,
-                'avg_time': avg_time
+                'avg_time': avg_time,
             }
             results.append(result)
 
-            print(f"   Completed!")
+            print(f'   Completed!')
             print()
 
         return results
@@ -332,37 +336,39 @@ class PerformanceTest:
         fastest_time = sorted_results[0]['avg_time']
 
         # Calculate total width for main data columns (excluding parameters)
-        main_data_width = name_width + 12 + 12 + 10 + 2  # name + iterations + average + slower + padding
+        main_data_width = (
+            name_width + 12 + 12 + 10 + 2
+        )  # name + iterations + average + slower + padding
 
-        print("\n" + "=" * main_data_width)
-        print("Performance Test Results")
-        print("=" * main_data_width)
+        print('\n' + '=' * main_data_width)
+        print('Performance Test Results')
+        print('=' * main_data_width)
 
         # Table header
-        header = f"{'Function':<{name_width}} {'Iterations':<12} {'Average':<12} {'Slower':<10}"
+        header = f'{"Function":<{name_width}} {"Iterations":<12} {"Average":<12} {"Slower":<10}'
         if show_params:
-            header += " Parameters"
+            header += ' Parameters'
         print(header)
 
         # Separator line - only for main data columns
-        separator = "-" * main_data_width
+        separator = '-' * main_data_width
         print(separator)
 
         # Data rows
         for i, result in enumerate(sorted_results):
-            row = f"{result['name']:<{name_width}} {result['iterations']:<12} {pretty_time(result['avg_time']):<12}"
+            row = f'{result["name"]:<{name_width}} {result["iterations"]:<12} {pretty_time(result["avg_time"]):<12}'
 
             if i == 0:
                 # Fastest function - no slower ratio
-                row += f" {'(fastest)':<10}"
+                row += f' {"(fastest)":<10}'
             else:
                 # Calculate slower ratio
                 slower_ratio = result['avg_time'] / fastest_time
-                row += f" {slower_ratio:.2f}x{'':<{10 - len(f'{slower_ratio:.2f}x')}}"
+                row += f' {slower_ratio:.2f}x{"":<{10 - len(f"{slower_ratio:.2f}x")}}'
 
             if show_params:
                 # Parameters can extend beyond the main table width
-                row += f" {result['params']}"
+                row += f' {result["params"]}'
 
             print(row)
 
@@ -370,16 +376,18 @@ class PerformanceTest:
 
         # Warning if outputs were inconsistent
         if not self.outputs_consistent:
-            print("\nWARNING: Function outputs are inconsistent!")
-            print("Performance test results may not be meaningful.")
+            print('\nWARNING: Function outputs are inconsistent!')
+            print('Performance test results may not be meaningful.')
 
     def run_all_tests(self):
         """Run complete test process"""
         if not self.functions:
-            print("No functions registered!")
+            print('No functions registered!')
             return
 
-        print(f"Starting performance test with {len(self.functions)} registered functions")
+        print(
+            f'Starting performance test with {len(self.functions)} registered functions'
+        )
 
         # Step 1: Verify output consistency
         self.verify_outputs()
@@ -395,7 +403,7 @@ class PerformanceTest:
 
 
 # Usage example
-if __name__ == "__main__":
+if __name__ == '__main__':
     # Example functions
     def bubble_sort(arr):
         """Bubble sort algorithm"""

@@ -30,7 +30,7 @@ def match_lz77(data, index, window=0, min_length=3, max_length=0):
 
     # 1. quick failure, no match
     obj: bytes = data.obj
-    target = data[index: index + min_length]
+    target = data[index : index + min_length]
     # actually iis rfind(end=index - min_length + 1)
     idx = obj.rfind(target, start, index)
     if idx == -1:
@@ -48,7 +48,7 @@ def match_lz77(data, index, window=0, min_length=3, max_length=0):
 
     curr_len = min_length * 2
     while curr_len <= limit_len:
-        target = data[index: index + curr_len]
+        target = data[index : index + curr_len]
         idx_new = obj.rfind(target, start, best_idx + curr_len)
         if idx_new != -1:
             best_len = curr_len
@@ -72,7 +72,7 @@ def match_lz77(data, index, window=0, min_length=3, max_length=0):
 
     while low <= high:
         mid = (low + high) // 2
-        target = data[index: index + mid]
+        target = data[index : index + mid]
         idx_new = obj.rfind(target, start, best_idx + mid)
         if idx_new != -1:
             best_len = mid
@@ -121,12 +121,12 @@ def match_run(data, index, min_length=1, max_length=0):
     start = data[index]
     length = 1
     if max_length > 0:
-        for byte in data[index + 1:]:
+        for byte in data[index + 1 :]:
             if byte != start or length >= max_length:
                 break
             length += 1
     else:
-        for byte in data[index + 1:]:
+        for byte in data[index + 1 :]:
             if byte != start:
                 break
             length += 1

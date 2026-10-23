@@ -16,7 +16,7 @@ class suppress_keyboard_interrupt:
             trio.run(func)
     """
 
-    def __init__(self, callback: "Optional[Callable]" = None):
+    def __init__(self, callback: 'Optional[Callable]' = None):
         self.callback = callback
 
     def __enter__(self):

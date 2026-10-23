@@ -88,6 +88,7 @@ Not supported (documented limitations):
 - do not combine the fixture with pytest tmp_path / tmpdir, the fake
   os.makedirs would create the tmp dirs in the fake filesystem
 """
+
 import pytest
 
 from .base import FakeDir, FakeFile, FakeSymlink

@@ -11,6 +11,7 @@ class ReactiveContext:
     """
     Global context for tracking dependencies during computation.
     """
+
     _local = threading.local()
 
     @classmethod
@@ -37,7 +38,9 @@ class reactive(Generic[T]):
         self.cache_attr = f'_reactive_cache_{self.name}'
 
         # Track observers: {weak_ref_to_object, set(property_name)}
-        self.observers: "weakref.WeakKeyDictionary[object, set[str]]" = weakref.WeakKeyDictionary()
+        self.observers: 'weakref.WeakKeyDictionary[object, set[str]]' = (
+            weakref.WeakKeyDictionary()
+        )
         # Lock computation and observer changes
         self.lock = threading.RLock()
 
@@ -69,8 +72,10 @@ class reactive(Generic[T]):
             return self.compute(obj)
 
     def __set__(self, obj, value):
-        raise ValueError('You should not set value to a reactive object, that would break the observation chain. '
-                         'Set value to reactive_source object instead')
+        raise ValueError(
+            'You should not set value to a reactive object, that would break the observation chain. '
+            'Set value to reactive_source object instead'
+        )
 
     def compute(self, obj):
         """

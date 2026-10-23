@@ -20,7 +20,7 @@ class BaseTopic:
     TOPIC_NAME = ''
     # A collection of RPC methods
     # Note that this is auto generated and should be static, don't modify it at runtime
-    rpc_methods: "dict[str, RPCMethod]" = {}
+    rpc_methods: 'dict[str, RPCMethod]' = {}
 
     def __init_subclass__(cls, **kwargs):
         """

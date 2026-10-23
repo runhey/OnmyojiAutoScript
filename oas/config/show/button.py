@@ -17,22 +17,22 @@ class ButtonConfig(BaseModel):
 
     selected: bool = Button.field(
         default=False,
-        description="是否选中",
-        icon="check",
+        description='是否选中',
+        icon='check',
     )
     active: bool = Button.field(
         default=True,
-        description="是否激活",
-        icon="power",
+        description='是否激活',
+        icon='power',
     )
 
 
 console = Console(legacy_windows=False)
-OUTPUT_DIRECTORY = Path(__file__).resolve().parents[1] / "show-tmp"
+OUTPUT_DIRECTORY = Path(__file__).resolve().parents[1] / 'show-tmp'
 
 
 def export_button_json() -> dict:
-    return ButtonConfig().model_dump(mode="json")
+    return ButtonConfig().model_dump(mode='json')
 
 
 def export_button_schema() -> dict:
@@ -40,26 +40,26 @@ def export_button_schema() -> dict:
 
 
 def main() -> None:
-    if hasattr(sys.stdout, "reconfigure"):
-        sys.stdout.reconfigure(encoding="utf-8")
+    if hasattr(sys.stdout, 'reconfigure'):
+        sys.stdout.reconfigure(encoding='utf-8')
 
     json_data = export_button_json()
     schema_data = export_button_schema()
     OUTPUT_DIRECTORY.mkdir(parents=True, exist_ok=True)
-    (OUTPUT_DIRECTORY / "button_json.json").write_text(
-        json.dumps(json_data, ensure_ascii=False, indent=2) + "\n",
-        encoding="utf-8",
+    (OUTPUT_DIRECTORY / 'button_json.json').write_text(
+        json.dumps(json_data, ensure_ascii=False, indent=2) + '\n',
+        encoding='utf-8',
     )
-    (OUTPUT_DIRECTORY / "button_schema.json").write_text(
-        json.dumps(schema_data, ensure_ascii=False, indent=2) + "\n",
-        encoding="utf-8",
+    (OUTPUT_DIRECTORY / 'button_schema.json').write_text(
+        json.dumps(schema_data, ensure_ascii=False, indent=2) + '\n',
+        encoding='utf-8',
     )
 
-    console.rule("Button JSON")
+    console.rule('Button JSON')
     console.print_json(data=json_data)
-    console.rule("Button JSON Schema")
+    console.rule('Button JSON Schema')
     console.print_json(data=schema_data)
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     main()

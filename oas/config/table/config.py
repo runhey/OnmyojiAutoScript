@@ -27,7 +27,7 @@ class ConfigTable(ConfigDB):
     part of the row identity.
     """
 
-    TABLE_NAME = "config"
+    TABLE_NAME = 'config'
     CREATE_TABLE = """
         CREATE TABLE "{TABLE_NAME}" (
         "task" TEXT NOT NULL,
@@ -46,8 +46,8 @@ class ConfigTable(ConfigDB):
         group: str,
     ) -> dict[str, str]:
         return {
-            "task": task,
-            "group": group,
+            'task': task,
+            'group': group,
         }
 
     def get_group(
@@ -73,9 +73,9 @@ class ConfigTable(ConfigDB):
     ) -> list[ConfigRow]:
         """List all Groups for a Task instance."""
 
-        conditions = {"task": task}
+        conditions = {'task': task}
         if groupclass is not None:
-            conditions["groupclass"] = groupclass
+            conditions['groupclass'] = groupclass
         return self.select(_cursor_=_cursor_, **conditions)
 
     def list_task_rows(
@@ -101,7 +101,7 @@ class ConfigTable(ConfigDB):
         """Insert or update one Group's raw binary value."""
 
         if not isinstance(value, bytes):
-            raise TypeError("ConfigTable value must be bytes")
+            raise TypeError('ConfigTable value must be bytes')
         row = ConfigRow(
             taskclass=taskclass,
             task=task,
@@ -111,7 +111,7 @@ class ConfigTable(ConfigDB):
         )
         self.upsert_row(
             row,
-            conflicts=("task", "group"),
+            conflicts=('task', 'group'),
             _cursor_=_cursor_,
         )
         if _cursor_ is not None:
@@ -156,25 +156,23 @@ class ConfigTable(ConfigDB):
         params: list[str] = []
         task_filters: list[str] = []
         if taskclasses:
-            marks = ",".join("?" for _ in taskclasses)
+            marks = ','.join('?' for _ in taskclasses)
             task_filters.append(f'"taskclass" IN ({marks})')
             params.extend(taskclasses)
         if tasks:
-            marks = ",".join("?" for _ in tasks)
+            marks = ','.join('?' for _ in tasks)
             task_filters.append(f'"task" IN ({marks})')
             params.extend(tasks)
         if task_filters:
-            conditions.append("(" + " AND ".join(task_filters) + ")")
+            conditions.append('(' + ' AND '.join(task_filters) + ')')
         for identity in groups:
             if len(identity) != 2:
-                raise ValueError("group identity must contain task and group")
-            conditions.append(
-                '("task"=? AND "group"=?)'
-            )
+                raise ValueError('group identity must contain task and group')
+            conditions.append('("task"=? AND "group"=?)')
             params.extend(identity)
         if not conditions:
             return self.select(_cursor_=_cursor_)
-        sql = f'SELECT * FROM "{self.TABLE_NAME}" WHERE ' + " OR ".join(conditions)
+        sql = f'SELECT * FROM "{self.TABLE_NAME}" WHERE ' + ' OR '.join(conditions)
         return self.select_by_sql(sql, params, _cursor_=_cursor_)
 
     def read_rows(self, events: Iterable[object], *, _cursor_=None) -> list[ConfigRow]:

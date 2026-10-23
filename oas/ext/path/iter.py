@@ -22,7 +22,7 @@ def iter_files(root, ext='', recursive=False, follow_symlinks=False):
     """
     try:
         entries = os.scandir(root)
-    except (FileNotFoundError, NotADirectoryError):
+    except FileNotFoundError, NotADirectoryError:
         return
     if ext:
         # Iter all files with given extension (directory not included)
@@ -99,7 +99,7 @@ def iter_filenames(root, ext='', follow_symlinks=False):
     """
     try:
         entries = os.scandir(root)
-    except (FileNotFoundError, NotADirectoryError):
+    except FileNotFoundError, NotADirectoryError:
         return
     if ext:
         # Iter all files with given extension
@@ -146,7 +146,7 @@ def iter_folders(root, recursive=False, follow_symlinks=False):
     """
     try:
         entries = os.scandir(root)
-    except (FileNotFoundError, NotADirectoryError):
+    except FileNotFoundError, NotADirectoryError:
         return
     # Iter all directories
     # iter_folders(folder)
@@ -185,7 +185,7 @@ def iter_foldernames(root, recursive=False, follow_symlinks=False):
     """
     try:
         entries = os.scandir(root)
-    except (FileNotFoundError, NotADirectoryError):
+    except FileNotFoundError, NotADirectoryError:
         return
     # Iter all directories
     # iter_folders(folder)
@@ -229,7 +229,7 @@ def iter_entry(root, recursive=False, follow_symlinks=False):
     """
     try:
         entries = os.scandir(root)
-    except (FileNotFoundError, NotADirectoryError):
+    except FileNotFoundError, NotADirectoryError:
         return
     if recursive:
         for entry in entries:
@@ -252,7 +252,7 @@ _NO_CACHE = object()
 
 class CachePathExists:
     def __init__(self):
-        self._file_exist: "dict[str, bool]" = {}
+        self._file_exist: 'dict[str, bool]' = {}
 
     def path_exists(self, path: str):
         """

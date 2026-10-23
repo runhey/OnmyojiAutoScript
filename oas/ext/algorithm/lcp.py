@@ -91,7 +91,7 @@ def get_lcs(s1, s2):
         return s1[-i:]
     else:
         # slice end to return empty thingy with the same type
-        return s1[len(s1):]
+        return s1[len(s1) :]
 
 
 @overload

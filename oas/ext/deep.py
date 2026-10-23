@@ -299,7 +299,8 @@ def deep_set_no_replace(d, keys, value):
         if key_d is None:
             # `d` is `raw_d`, the root is not a dict
             raise TypeError(
-                f'deep_set_no_replace() expected dict, got {type(d).__name__}: {value_repr}') from e
+                f'deep_set_no_replace() expected dict, got {type(d).__name__}: {value_repr}'
+            ) from e
         raise TypeError(
             f'deep_set_no_replace() expected dict at key {key_d!r}, got {type(d).__name__}: {value_repr}'
         ) from e
@@ -355,7 +356,8 @@ def deep_set_with_error(d, keys, value):
         # Write ops assume dict only, do not set into list
         if type(d) is not dict:
             raise TypeError(
-                f'deep_set_with_error() expected dict at key {prev_k!r}, got {type(d).__name__}')
+                f'deep_set_with_error() expected dict at key {prev_k!r}, got {type(d).__name__}'
+            )
         # The last key must already exist, like deep_pop()
         if prev_k not in d:
             raise KeyError(prev_k)
@@ -456,7 +458,7 @@ def deep_default(d, keys, value):
         d.setdefault(prev_k, value)
         return raw_d
     # Last value `d` is not dict, or `prev_k` is not hashable
-    except (AttributeError, TypeError):
+    except AttributeError, TypeError:
         try:
             prev_d[prev_k2] = {prev_k: value}
             return raw_d
@@ -763,7 +765,8 @@ def deep_iter(data, min_depth=None, depth=None, max_recursion=1000):
         # `q` is not empty means there is still a level to iterate
         if depth is None and current > max_recursion and q:
             raise RecursionError(
-                f'deep_iter() iterated deeper than max_recursion={max_recursion}, maybe a circular reference')
+                f'deep_iter() iterated deeper than max_recursion={max_recursion}, maybe a circular reference'
+            )
 
 
 def deep_keys(data, min_depth=None, depth=None, max_recursion=1000):
@@ -847,7 +850,8 @@ def deep_keys(data, min_depth=None, depth=None, max_recursion=1000):
         # `q` is not empty means there is still a level to iterate
         if depth is None and current > max_recursion and q:
             raise RecursionError(
-                f'deep_keys() iterated deeper than max_recursion={max_recursion}, maybe a circular reference')
+                f'deep_keys() iterated deeper than max_recursion={max_recursion}, maybe a circular reference'
+            )
 
 
 def deep_values(data, min_depth=None, depth=None, max_recursion=1000):
@@ -927,7 +931,8 @@ def deep_values(data, min_depth=None, depth=None, max_recursion=1000):
         # `q` is not empty means there is still a level to iterate
         if depth is None and current > max_recursion and q:
             raise RecursionError(
-                f'deep_values() iterated deeper than max_recursion={max_recursion}, maybe a circular reference')
+                f'deep_values() iterated deeper than max_recursion={max_recursion}, maybe a circular reference'
+            )
 
 
 def deep_iter_diff(before, after):

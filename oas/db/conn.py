@@ -15,7 +15,7 @@ class SqlitePoolCursor(sqlite3.Cursor):
         """
         super().__init__(conn)
         # value will be set in SqlitePool.cursor()
-        self.pool: "ConnectionPool | None" = None
+        self.pool: 'ConnectionPool | None' = None
         self.TABLE_NAME = ''
         self.CREATE_TABLE = ''
 
@@ -32,7 +32,8 @@ class SqlitePoolCursor(sqlite3.Cursor):
             if conn.in_transaction:
                 logger.error(
                     f'DEV ERROR: A transaction was not explicitly committed or rolled back, '
-                    f'please check your code. Auto rolling back anyway.')
+                    f'please check your code. Auto rolling back anyway.'
+                )
             # rollback to prevent connection pollution
             try:
                 conn.rollback()
@@ -128,7 +129,7 @@ class ExclusiveTransaction:
         self.cursor = cursor
 
     def __enter__(self):
-        self.cursor.execute("BEGIN EXCLUSIVE;")
+        self.cursor.execute('BEGIN EXCLUSIVE;')
         return self.cursor
 
     def __exit__(self, exc_type, exc_value, traceback):
@@ -150,11 +151,11 @@ class ConnectionPool:
         """
         self.file = file
         self.pool_size = pool_size
-        self.last_use: "dict[sqlite3.Connection, float]" = {}
+        self.last_use: 'dict[sqlite3.Connection, float]' = {}
 
         # Same as WorkerPool, let's just keep the name 'worker'
-        self.idle_workers: "dict[sqlite3.Connection, None]" = {}
-        self.all_workers: "dict[sqlite3.Connection, None]" = {}
+        self.idle_workers: 'dict[sqlite3.Connection, None]' = {}
+        self.all_workers: 'dict[sqlite3.Connection, None]' = {}
 
         self.notify_worker = Lock()
         self.notify_worker.acquire()
@@ -415,7 +416,7 @@ class SqlitePool:
         """
         self.pool_size = pool_size
 
-        self.all_pool: "dict[str, ConnectionPool]" = {}
+        self.all_pool: 'dict[str, ConnectionPool]' = {}
         self.create_lock = Lock()
 
     def get_pool(self, file):
@@ -541,9 +542,13 @@ class SqlitePool:
         if not new_file:
             raise ValueError(f'Old name cannot be empty, got "{new_file}"')
         if old_file == ':memory:':
-            raise ValueError(f'Cannot rename memory database "{old_file}" to "{new_file}"')
+            raise ValueError(
+                f'Cannot rename memory database "{old_file}" to "{new_file}"'
+            )
         if new_file == ':memory:':
-            raise ValueError(f'Cannot rename "{old_file}" to memory database "{new_file}"')
+            raise ValueError(
+                f'Cannot rename "{old_file}" to memory database "{new_file}"'
+            )
 
         with self.create_lock:
             try:

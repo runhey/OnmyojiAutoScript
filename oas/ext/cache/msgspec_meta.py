@@ -9,7 +9,7 @@ class FieldMetadata(msgspec.Struct):
     extra_json_schema: dict = {}
 
 
-def get_field_metadata(cls: type) -> "dict[str, FieldMetadata]":
+def get_field_metadata(cls: type) -> 'dict[str, FieldMetadata]':
     """Return {field_name: FieldMetadata} for all fields with msgspec.Meta.
 
     Extracts ``extra`` and ``extra_json_schema`` from all ``msgspec.Meta``
@@ -30,7 +30,7 @@ def get_field_metadata(cls: type) -> "dict[str, FieldMetadata]":
         extra = {}
         extra_json_schema = {}
 
-        if hasattr(hint, "__metadata__"):
+        if hasattr(hint, '__metadata__'):
             for m in hint.__metadata__:
                 if not isinstance(m, msgspec.Meta):
                     continue

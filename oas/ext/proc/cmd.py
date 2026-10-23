@@ -9,7 +9,7 @@ if psutil.LINUX:
 
     def cmdline(pid):
         procfs_path = get_procfs_path()
-        with open_text("%s/%s/cmdline" % (procfs_path, pid)) as f:
+        with open_text('%s/%s/cmdline' % (procfs_path, pid)) as f:
             data = f.read()
         if not data:
             # [MODIFIED] No raises for zombie process because error processes will be ignored
@@ -101,7 +101,7 @@ def get_cmdline(pid):
         # This would be fast on psutil<=5.9.8 taking overall time 0.027s
         # but taking 0.39s on psutil>=6.0.0
         return cmdline(pid)
-    except (psutil.AccessDenied, psutil.NoSuchProcess, IndexError, OSError):
+    except psutil.AccessDenied, psutil.NoSuchProcess, IndexError, OSError:
         # psutil.AccessDenied
         # NoSuchProcess: process no longer exists (pid=xxx)
         # ProcessLookupError: [Errno 3] assume no such process (originated from psutil_pid_is_running -> 0)

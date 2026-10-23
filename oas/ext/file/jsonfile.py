@@ -180,8 +180,13 @@ def json_dumps_custom_indent(obj):
         # b'{\n  "area": [100, 100, 200, 200],\n  "color": [255,255,255]\n}'
     """
     data = dumps(
-        obj, cls=CustomIndentEncoder,
-        indent=2, ensure_ascii=False, sort_keys=False, default=str)
+        obj,
+        cls=CustomIndentEncoder,
+        indent=2,
+        ensure_ascii=False,
+        sort_keys=False,
+        default=str,
+    )
     data = data.encode('utf-8')
     return data
 

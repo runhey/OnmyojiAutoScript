@@ -28,7 +28,7 @@ def extract_last_task(src, target_fd, block_size=262144):
         rb'^\+=====[^\r\n]*\r?\n'
         rb'\| [^\r\n]*\r?\n'
         rb'\+=====',
-        re.MULTILINE
+        re.MULTILINE,
     )
     alignment = 4096
     overlap_size = 4096
@@ -109,13 +109,18 @@ class ErrorZipWriter:
     @cached_property_threadsafe
     def zipfile(self):
         import zipfile
+
         try:
-            return zipfile.ZipFile(self.file, mode='w', compression=zipfile.ZIP_LZMA, compresslevel=6)
+            return zipfile.ZipFile(
+                self.file, mode='w', compression=zipfile.ZIP_LZMA, compresslevel=6
+            )
         except FileNotFoundError:
             pass
         folder = os.path.dirname(self.file)
         os.makedirs(folder, exist_ok=True)
-        return zipfile.ZipFile(self.file, mode='w', compression=zipfile.ZIP_LZMA, compresslevel=6)
+        return zipfile.ZipFile(
+            self.file, mode='w', compression=zipfile.ZIP_LZMA, compresslevel=6
+        )
 
     def add_log(self, file, arcname='log.txt'):
         with self.zipfile.open(arcname, mode='w') as target_fd:
@@ -123,6 +128,7 @@ class ErrorZipWriter:
 
     def add_image(self, image, arcname):
         import zipfile
+
         self.zipfile.writestr(arcname, image, compress_type=zipfile.ZIP_STORED)
 
     def __enter__(self):

@@ -59,6 +59,7 @@ class AccessDenied(Exception):
     to the frontend through send_error when the client subscribed the
     error topic.
     """
+
     pass
 
 
@@ -68,6 +69,7 @@ class ElectronOnlyError(AccessDenied):
     not carry a valid electron token (or it was evicted by rotation).
     The frontend recognizes this error by name to trigger a renewal.
     """
+
     pass
 
 
@@ -76,4 +78,5 @@ class RpcValueError(Exception):
     Internal error that raises when RPC input value is incorrect.
     This error won't be exposed to frontend.
     """
+
     pass

@@ -57,14 +57,16 @@ def lzma_compress(data, max_dict_size=None):
     dictsize = _lzma_dictsize(len(data), max_dict_size=max_dict_size)
     my_filters = [
         {
-            "id": lzma.FILTER_LZMA2,
-            "dict_size": dictsize,  # 根据文件大小动态计算的字典
-            "preset": 9,  # 基础底子设为 9
-            "nice_len": 273,  # 压榨最后一点空间，寻找最长匹配
-            "mf": lzma.MF_BT4,  # 确保使用二叉树匹配
+            'id': lzma.FILTER_LZMA2,
+            'dict_size': dictsize,  # 根据文件大小动态计算的字典
+            'preset': 9,  # 基础底子设为 9
+            'nice_len': 273,  # 压榨最后一点空间，寻找最长匹配
+            'mf': lzma.MF_BT4,  # 确保使用二叉树匹配
         }
     ]
-    compressed = lzma.compress(data, format=lzma.FORMAT_RAW, filters=my_filters, check=lzma.CHECK_NONE)
+    compressed = lzma.compress(
+        data, format=lzma.FORMAT_RAW, filters=my_filters, check=lzma.CHECK_NONE
+    )
     return compressed
 
 
@@ -80,4 +82,6 @@ def lzma_decompress(data):
     """
     # LZMA2 raw stream contains the dictionary size in its header
     # so only the filter id is required for decompression
-    return lzma.decompress(data, format=lzma.FORMAT_RAW, filters=[{"id": lzma.FILTER_LZMA2}])
+    return lzma.decompress(
+        data, format=lzma.FORMAT_RAW, filters=[{'id': lzma.FILTER_LZMA2}]
+    )

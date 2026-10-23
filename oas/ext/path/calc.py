@@ -181,7 +181,7 @@ def subpath_to(path, root):
         str:
     """
     if path.startswith(root):
-        path = path[len(root):]
+        path = path[len(root) :]
         if WINDOWS_SEP:
             return path.lstrip('\\/')
         else:

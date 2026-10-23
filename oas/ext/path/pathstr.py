@@ -15,6 +15,7 @@ class PathStr(str):
         os path  os.path.join(root, path) 2.55us
         pathlib  root.joinpath(path)      2.94us
     """
+
     __slots__ = ()
 
     @classmethod
@@ -419,7 +420,9 @@ class PathStr(str):
         """
         return atomic_read_text(self, encoding=encoding, errors=errors)
 
-    def atomic_read_text_stream(self, encoding='utf-8', errors='strict', chunk_size=8192):
+    def atomic_read_text_stream(
+        self, encoding='utf-8', errors='strict', chunk_size=8192
+    ):
         """
         Read text file content as stream
 
@@ -432,7 +435,9 @@ class PathStr(str):
         Returns:
             Iterable[str]: Generator yielding file content chunks
         """
-        return atomic_read_text_stream(self, encoding=encoding, errors=errors, chunk_size=chunk_size)
+        return atomic_read_text_stream(
+            self, encoding=encoding, errors=errors, chunk_size=chunk_size
+        )
 
     def atomic_read_bytes(self):
         """
@@ -598,7 +603,9 @@ class PathStr(str):
         Yields:
             PathStr: Full path
         """
-        for path in iter_files(self, ext=ext, recursive=recursive, follow_symlinks=follow_symlinks):
+        for path in iter_files(
+            self, ext=ext, recursive=recursive, follow_symlinks=follow_symlinks
+        ):
             yield self.__class__(normpath(path))
 
     def iter_filenames(self, ext='', follow_symlinks=False):
@@ -626,7 +633,9 @@ class PathStr(str):
         Yields:
             PathStr: Full path
         """
-        for path in iter_folders(self, recursive=recursive, follow_symlinks=follow_symlinks):
+        for path in iter_folders(
+            self, recursive=recursive, follow_symlinks=follow_symlinks
+        ):
             yield self.__class__(normpath(path))
 
     def iter_foldernames(self, recursive=False, follow_symlinks=False):
@@ -640,7 +649,9 @@ class PathStr(str):
         Yields:
             str: Folder name
         """
-        yield from iter_foldernames(self, recursive=recursive, follow_symlinks=follow_symlinks)
+        yield from iter_foldernames(
+            self, recursive=recursive, follow_symlinks=follow_symlinks
+        )
 
     def iter_entry(self, recursive=False, follow_symlinks=False):
         """
@@ -658,7 +669,9 @@ class PathStr(str):
         Yields:
             os.DirEntry: Directory entry object with cached filesystem info
         """
-        yield from iter_entry(self, recursive=recursive, follow_symlinks=follow_symlinks)
+        yield from iter_entry(
+            self, recursive=recursive, follow_symlinks=follow_symlinks
+        )
 
     """
     Wrap os module, imitating Pathlib

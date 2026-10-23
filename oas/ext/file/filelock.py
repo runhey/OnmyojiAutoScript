@@ -14,6 +14,7 @@ Notes:
       exits, because the operating system releases the underlying file locks
       and SQLite rolls back unfinished transactions.
 """
+
 import os
 import sqlite3
 import threading
@@ -30,7 +31,7 @@ class FilelockTimeout(Exception):
 
     def __init__(self, lock_file):
         self.lock_file = lock_file
-        super().__init__(f"Timeout occurred trying to acquire lock for: {lock_file}")
+        super().__init__(f'Timeout occurred trying to acquire lock for: {lock_file}')
 
 
 class SQLiteFileLock:
@@ -94,7 +95,9 @@ class SQLiteFileLock:
         """
         lock_file = str(lock_file)
         if lock_file == ':memory:':
-            raise ValueError('Cannot lock an in-memory database, the lock must be on a file')
+            raise ValueError(
+                'Cannot lock an in-memory database, the lock must be on a file'
+            )
 
         # Absolute path without symlink resolution (os.path.abspath does no IO),
         # so instances in different working directories still lock the same file
@@ -182,7 +185,7 @@ class SQLiteFileLock:
                 conn = self.__begin_exclusive(sql_timeout)
                 break
             except sqlite3.OperationalError as e:
-                if attempt == 0 and str(e).lower() == "unable to open database file":
+                if attempt == 0 and str(e).lower() == 'unable to open database file':
                     # Create the missing parent directory and retry once
                     parent_dir = os.path.dirname(self._lock_file)
                     if parent_dir:
@@ -224,7 +227,7 @@ class SQLiteFileLock:
             )
 
             # Start an exclusive transaction, which takes an OS-level exclusive file lock
-            conn.execute("BEGIN EXCLUSIVE")
+            conn.execute('BEGIN EXCLUSIVE')
             return conn
 
         except sqlite3.OperationalError as e:
@@ -237,7 +240,7 @@ class SQLiteFileLock:
 
             # Convert the "database is locked" error to FilelockTimeout
             err_msg = str(e).lower()
-            if "locked" in err_msg or "busy" in err_msg:
+            if 'locked' in err_msg or 'busy' in err_msg:
                 raise FilelockTimeout(self._lock_file) from e
             raise
 

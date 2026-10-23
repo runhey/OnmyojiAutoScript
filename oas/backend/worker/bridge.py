@@ -35,5 +35,7 @@ class BackendBridge(metaclass=Singleton):
     def send_log(self, value):
         return _Job()
 
-    def send_worker_state(self, value: Literal['running', 'scheduler-waiting', 'error']):
+    def send_worker_state(
+        self, value: Literal['running', 'scheduler-waiting', 'error']
+    ):
         return _Job()

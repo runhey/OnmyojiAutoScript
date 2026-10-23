@@ -16,6 +16,7 @@ class ModelConfigRef(Struct):
     {"task": list[str], "group": list[tuple[str, str]]}
     indicates to read task and taskgroups in user config
     """
+
     task: list[str]
     group: list[tuple[str, str]]
 
@@ -29,6 +30,7 @@ class ModelNavRef(Struct):
             # indicates to read task and taskgroups in user config
     }
     """
+
     file: str
     i18n: list[str]
     config: ModelConfigRef
@@ -48,6 +50,7 @@ class ModelGroupRef(Struct):
     - {group_name} for normal group
     - {task_name}_{group_name} that inherits from class {group_name}, for override task group
     """
+
     file: str
     cls: str
     task: str
@@ -57,6 +60,7 @@ class ModelTaskRef(Struct):
     """
     {"group": dict[str, dict], "config": dict}
     """
+
     group: dict[str, ModelGroupRef]
     config: ModelConfigRef
 
@@ -131,7 +135,9 @@ class TaskItem(Struct):
 
 
 class ModJsonCacheTTL(JsonCacheTTL):
-    def load_resource(self, file: str, decoder: JsonDecoder = None, default_factory=dict):
+    def load_resource(
+        self, file: str, decoder: JsonDecoder = None, default_factory=dict
+    ):
         try:
             return super().load_resource(file, decoder=decoder)
         except (FileNotFoundError, DecodeError) as e:

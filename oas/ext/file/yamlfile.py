@@ -23,7 +23,7 @@ def yaml_loads(data):
         Any:
     """
     # Use the C extension if available
-    loader = getattr(yaml, "CSafeLoader", yaml.SafeLoader)
+    loader = getattr(yaml, 'CSafeLoader', yaml.SafeLoader)
     return yaml.load(data, loader)
 
 
@@ -36,11 +36,17 @@ def yaml_dumps(obj):
         bytes:
     """
     # Use the C extension if available
-    dumper = getattr(yaml, "CSafeDumper", yaml.SafeDumper)
+    dumper = getattr(yaml, 'CSafeDumper', yaml.SafeDumper)
     if not isinstance(obj, list):
         obj = [obj]
     return yaml.dump_all(
-        obj, Dumper=dumper, default_flow_style=False, encoding='utf-8', allow_unicode=True, sort_keys=False)
+        obj,
+        Dumper=dumper,
+        default_flow_style=False,
+        encoding='utf-8',
+        allow_unicode=True,
+        sort_keys=False,
+    )
 
 
 def read_yaml(file, default_factory=dict):

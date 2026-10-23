@@ -11,20 +11,22 @@
 ```python
 class OptionItem(xxx):
     ...
-    
+
     @classmethod
     def str(cls, xxx) -> Field:
-        """ 这个是一个工厂函数(后面需要有同时支持int,float这些基础的)， 可以是类方法或者是纯函数, 输入是自定义的schema，"""
+        """这个是一个工厂函数(后面需要有同时支持int,float这些基础的)， 可以是类方法或者是纯函数, 输入是自定义的schema，"""
         ...
         return Field(xxx)
-    
+
 
 class Option(xxx):
-    HIGH: OptionItem = OptionItem.str(default='xx',title="高优先级", description="最紧急")
-    LOW: OptionItem = OptionItem.str(default='xx',title="低优先级", description="xxx")
-    
+    HIGH: OptionItem = OptionItem.str(
+        default='xx', title='高优先级', description='最紧急'
+    )
+    LOW: OptionItem = OptionItem.str(default='xx', title='低优先级', description='xxx')
+
     ...
-    
+
     @classmethod
     def field(cls, xxx):
         """
@@ -32,11 +34,10 @@ class Option(xxx):
         也是把额外的schema注入到Field里面去
         """
         return Field(xxx)
-    
-    
-class Config(BaseModel):
-    priority: Option = Option.new(description="选个优先级")
 
+
+class Config(BaseModel):
+    priority: Option = Option.new(description='选个优先级')
 ```
 1. Option用法类似enum, 比如常见的相等，
 2. 最终OptionItem 的 schema 每个选项独立，且 type、title、default 这些标准键都在。
@@ -158,16 +159,16 @@ Task 类的临时导出缓冲区
 from dataclasses import dataclass
 from typing import Any, Callable, Literal
 
-Operation = Literal["set", "merge", "delete", "replace"]
+Operation = Literal['set', 'merge', 'delete', 'replace']
 
 
 @dataclass(frozen=True, slots=True)
 class SchemaRule:
     target: str
     property: str | None = None
-    operation: Operation = "set"
+    operation: Operation = 'set'
     value: Any = None
-    when: Callable[["SchemaContext"], bool] | None = None
+    when: Callable[['SchemaContext'], bool] | None = None
 ```
 
 | 字段 | 含义 |
@@ -189,9 +190,9 @@ class Task(TaskBase):
     __schema_rules__: tuple[SchemaRule, ...]
 
     @classmethod
-    @schema.hide("scheduler.server_update")
-    @schema.title("scheduler.server_update", value="服务器更新")
-    @schema.icon("scheduler.server_update", value="refresh")
+    @schema.hide('scheduler.server_update')
+    @schema.title('scheduler.server_update', value='服务器更新')
+    @schema.icon('scheduler.server_update', value='refresh')
     def schema_overrides(cls, rules: list[SchemaRule]):
         # 用户显式调用 schema_overrides(rules) 时登记传入规则
         for rule in rules:
@@ -202,8 +203,8 @@ class Task(TaskBase):
 Task.schema_overrides(
     [
         SchemaRule(
-            target="scheduler.server_update",
-            property="hide",
+            target='scheduler.server_update',
+            property='hide',
             value=True,
         )
     ]
@@ -238,22 +239,21 @@ Task._pending_schema_rules（导出前手动登记的临时规则）
 修改单个属性时使用对应的专用装饰器：
 
 ```python
-@schema.hide("scheduler.server_update", value=True)
-@schema.icon("scheduler.server_update", value="refresh")
-def schema_overrides(cls, rules: list[SchemaRule]):
-    ...
+@schema.hide('scheduler.server_update', value=True)
+@schema.icon('scheduler.server_update', value='refresh')
+def schema_overrides(cls, rules: list[SchemaRule]): ...
 ```
 
 一次修改一个 Arg 的多个属性时，可以使用 `merge`：
 
 ```python
 SchemaRule(
-    target="scheduler.server_update",
-    operation="merge",
+    target='scheduler.server_update',
+    operation='merge',
     value={
-        "hide": True,
-        "icon": "refresh",
-        "title": "服务器更新",
+        'hide': True,
+        'icon': 'refresh',
+        'title': '服务器更新',
     },
 )
 ```
@@ -263,13 +263,13 @@ SchemaRule(
 
 ```python
 SchemaRule(
-    target="scheduler.server_update",
-    operation="replace",
+    target='scheduler.server_update',
+    operation='replace',
     value={
-        "type": "Switch",
-        "default": False,
-        "hide": True,
-        "icon": "refresh",
+        'type': 'Switch',
+        'default': False,
+        'hide': True,
+        'icon': 'refresh',
     },
 )
 ```

@@ -8,7 +8,7 @@ class PathLookbackLCSV3:
 
     def __init__(self):
         self.index = 0
-        self.paths: "list[str]" = []
+        self.paths: 'list[str]' = []
 
     def get_lcs(self, path, min_length=1, max_length=None):
         """

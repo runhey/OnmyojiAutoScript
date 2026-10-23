@@ -13,7 +13,7 @@ class GroupBase(ConfigBase):
 
     def to_dict(self) -> dict[str, Any]:
         """Return this Group as a plain Python dict."""
-        return self.model_dump(mode="python")
+        return self.model_dump(mode='python')
 
     @classmethod
     def from_dict(cls, data: Mapping[str, Any]) -> Self:

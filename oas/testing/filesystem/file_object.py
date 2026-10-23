@@ -7,6 +7,7 @@ file keeps its old content for already open handles. The record is a
 shared state: the operations that touch the content take the state lock
 of the filesystem (the same lock as every filesystem operation).
 """
+
 import io
 import os
 
@@ -24,14 +25,39 @@ class FakeFileObject:
     through other handles of the same file are visible, and multi-byte
     encodings and newline translation work.
     """
+
     __slots__ = (
-        '_fs', '_entry', '_mode_str', '_binary', '_readable', '_writable',
-        '_append', '_encoding', '_errors', '_newline', '_fd', '_closed',
-        '_pos', '_lock',
+        '_fs',
+        '_entry',
+        '_mode_str',
+        '_binary',
+        '_readable',
+        '_writable',
+        '_append',
+        '_encoding',
+        '_errors',
+        '_newline',
+        '_fd',
+        '_closed',
+        '_pos',
+        '_lock',
     )
 
-    def __init__(self, fs, entry, mode, binary, readable, writable, append,
-                 position, encoding, errors, newline, fd):
+    def __init__(
+        self,
+        fs,
+        entry,
+        mode,
+        binary,
+        readable,
+        writable,
+        append,
+        position,
+        encoding,
+        errors,
+        newline,
+        fd,
+    ):
         """
         Args:
             fs (FakeFilesystem): Owner filesystem, for fd registration
@@ -192,9 +218,9 @@ class FakeFileObject:
                     # read all from the start, return the content as-is
                     data = content
                 else:
-                    data = content[self._pos:]
+                    data = content[self._pos :]
             else:
-                data = content[self._pos:self._pos + size]
+                data = content[self._pos : self._pos + size]
             self._pos += len(data)
             return data
         else:
@@ -203,9 +229,9 @@ class FakeFileObject:
                 if self._pos == 0:
                     data = view
                 else:
-                    data = view[self._pos:]
+                    data = view[self._pos :]
             else:
-                data = view[self._pos:self._pos + size]
+                data = view[self._pos : self._pos + size]
             self._pos += len(data)
             return data
 
@@ -226,7 +252,7 @@ class FakeFileObject:
             raise io.UnsupportedOperation('not readable')
         if self._binary:
             content = self._entry.content
-            data = content[self._pos:]
+            data = content[self._pos :]
             if size is not None and size >= 0:
                 data = data[:size]
             index = data.find(b'\n')
@@ -235,10 +261,10 @@ class FakeFileObject:
                 return data
             else:
                 self._pos += index + 1
-                return data[:index + 1]
+                return data[: index + 1]
         else:
             view = self._get_view()
-            data = view[self._pos:]
+            data = view[self._pos :]
             if size is not None and size >= 0:
                 data = data[:size]
             index = data.find('\n')
@@ -247,7 +273,7 @@ class FakeFileObject:
                 return data
             else:
                 self._pos += index + 1
-                return data[:index + 1]
+                return data[: index + 1]
 
     @synchronized
     def readlines(self, hint=-1):
@@ -290,7 +316,7 @@ class FakeFileObject:
         if not self._binary:
             raise io.UnsupportedOperation('readinto() not supported in text mode')
         data = self.read(len(buffer))
-        buffer[:len(data)] = data
+        buffer[: len(data)] = data
         return len(data)
 
     """
@@ -313,7 +339,9 @@ class FakeFileObject:
             raise io.UnsupportedOperation('not writable')
         if self._binary:
             if isinstance(data, str):
-                raise TypeError(f'a bytes-like object is required, not {type(data).__name__!r}')
+                raise TypeError(
+                    f'a bytes-like object is required, not {type(data).__name__!r}'
+                )
             data = bytes(data)
             content = self._entry.content
             if self._append:
@@ -323,12 +351,14 @@ class FakeFileObject:
                 if pos > len(content):
                     # writing beyond the end pads with zeros
                     content = content + b'\x00' * (pos - len(content))
-                self._entry.content = content[:pos] + data + content[pos + len(data):]
+                self._entry.content = content[:pos] + data + content[pos + len(data) :]
                 self._pos = pos + len(data)
             return len(data)
         else:
             if not isinstance(data, str):
-                raise TypeError(f'write() argument must be str, not {type(data).__name__}')
+                raise TypeError(
+                    f'write() argument must be str, not {type(data).__name__}'
+                )
             if self._newline is None:
                 # translate "\n" to the platform line separator
                 written = data.replace('\n', os.linesep)
@@ -340,7 +370,7 @@ class FakeFileObject:
             else:
                 pos = self._pos
             # overwrite len(data) characters at the position
-            view = view[:pos] + written + view[pos + len(data):]
+            view = view[:pos] + written + view[pos + len(data) :]
             self._flush_view(view)
             self._pos = pos + len(data)
             return len(data)
@@ -431,11 +461,15 @@ class FakeFileObject:
                 pos = offset
             elif whence == 1:
                 if offset:
-                    raise ValueError('seek() not available in text mode, only the start can be sought')
+                    raise ValueError(
+                        'seek() not available in text mode, only the start can be sought'
+                    )
                 pos = self._pos
             elif whence == 2:
                 if offset:
-                    raise ValueError('seek() not available in text mode, only the start can be sought')
+                    raise ValueError(
+                        'seek() not available in text mode, only the start can be sought'
+                    )
                 pos = len(self._get_view())
             else:
                 raise ValueError(f'invalid whence ({whence}, should be 0, 1 or 2)')

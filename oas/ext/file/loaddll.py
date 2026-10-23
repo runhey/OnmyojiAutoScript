@@ -37,7 +37,7 @@ def loaddll(file, use_windll=False):
         raise ImportError(f'Could not load library "{file}": {str(e)}')
 
 
-class LoaddllCache(ResourceCache["ctypes.CDLL"]):
+class LoaddllCache(ResourceCache['ctypes.CDLL']):
     def load_resource(self, file, **kwargs):
         """
         Load library directly.

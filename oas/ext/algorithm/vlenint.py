@@ -20,9 +20,9 @@ def vlenint_value_check(data):
     min_val = min(data)
     max_val = max(data)
     if min_val < 0:
-        raise ValueError(f"[encode_vlenint] Value must be >= 0, got {min_val}")
+        raise ValueError(f'[encode_vlenint] Value must be >= 0, got {min_val}')
     if max_val > MAX_UINT32:
-        raise ValueError(f"[encode_vlenint] Value must be < 2**32, got {max_val}")
+        raise ValueError(f'[encode_vlenint] Value must be < 2**32, got {max_val}')
 
 
 def encode_vlenint(data):

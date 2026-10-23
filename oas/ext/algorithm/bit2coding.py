@@ -76,9 +76,41 @@ def encode_bit2_opcode_iter(data):
     # 4. DP 最优解转移
     # ==========================================
     LITERAL_COSTS = (
-        0, 1, 1, 2, 2, 3, 3, 3, 3, 4, 4, 4, 4, 5, 5, 5, 5,
-        6, 6, 6, 6, 7, 7, 7, 7, 8, 8, 8, 8, 9, 9, 9, 9,
-        10, 10
+        0,
+        1,
+        1,
+        2,
+        2,
+        3,
+        3,
+        3,
+        3,
+        4,
+        4,
+        4,
+        4,
+        5,
+        5,
+        5,
+        5,
+        6,
+        6,
+        6,
+        6,
+        7,
+        7,
+        7,
+        7,
+        8,
+        8,
+        8,
+        8,
+        9,
+        9,
+        9,
+        9,
+        10,
+        10,
     )
     LIT_TRANSITIONS = tuple(range(35))
 
@@ -120,7 +152,9 @@ def encode_bit2_opcode_iter(data):
             cost = current_dp + LITERAL_COSTS[k]
             next_idx = i + k
             new_lit = current_lit_count + k
-            if cost < dp[next_idx] or (cost == dp[next_idx] and new_lit < p_lit_count[next_idx]):
+            if cost < dp[next_idx] or (
+                cost == dp[next_idx] and new_lit < p_lit_count[next_idx]
+            ):
                 dp[next_idx] = cost
                 p_lit_count[next_idx] = new_lit
                 p_prev[next_idx], p_op[next_idx] = i, 0
@@ -140,7 +174,9 @@ def encode_bit2_opcode_iter(data):
                 l = r_len
                 cost = current_dp + RUN_COST_TABLE[l]
                 next_idx = i + l
-                if cost < dp[next_idx] or (cost == dp[next_idx] and current_lit_count < p_lit_count[next_idx]):
+                if cost < dp[next_idx] or (
+                    cost == dp[next_idx] and current_lit_count < p_lit_count[next_idx]
+                ):
                     dp[next_idx] = cost
                     p_lit_count[next_idx] = current_lit_count
                     p_prev[next_idx], p_op[next_idx] = i, 1
@@ -149,7 +185,10 @@ def encode_bit2_opcode_iter(data):
                 for l in range(start_l, r_len + 1):
                     cost = current_dp + RUN_COST_TABLE[l]
                     next_idx = i + l
-                    if cost < dp[next_idx] or (cost == dp[next_idx] and current_lit_count < p_lit_count[next_idx]):
+                    if cost < dp[next_idx] or (
+                        cost == dp[next_idx]
+                        and current_lit_count < p_lit_count[next_idx]
+                    ):
                         dp[next_idx] = cost
                         p_lit_count[next_idx] = current_lit_count
                         p_prev[next_idx], p_op[next_idx] = i, 1
@@ -163,7 +202,7 @@ def encode_bit2_opcode_iter(data):
             # cost; later entries with same or worse cost and <= LCP cannot
             # improve any dp position, so we skip them entirely.
             best_l_short = 0  # offset <= 256  (cost 2/3 + L_D_TABLE)
-            best_l_long = 0   # offset > 256   (cost 3+fd + L_D_TABLE)
+            best_l_long = 0  # offset > 256   (cost 3+fd + L_D_TABLE)
             while idx != -1 and step_chain < LIMIT_CHAIN_STEPS:
                 # 极速 C 级切片比较 + 指数增长 + 二分收窄求 LCP
                 max_len = n - i
@@ -175,7 +214,7 @@ def encode_bit2_opcode_iter(data):
                     if test_len > max_len:
                         test_len = max_len
 
-                    if mv[idx: idx + test_len] == mv[i: i + test_len]:
+                    if mv[idx : idx + test_len] == mv[i : i + test_len]:
                         low_l = test_len
                         if test_len == max_len:
                             break
@@ -191,7 +230,7 @@ def encode_bit2_opcode_iter(data):
                 binary_low = low_l + 1
                 while binary_low <= high_l:
                     mid = (binary_low + high_l) // 2
-                    if mv[idx: idx + mid] == mv[i: i + mid]:
+                    if mv[idx : idx + mid] == mv[i : i + mid]:
                         l = mid
                         binary_low = mid + 1
                     else:
@@ -224,10 +263,15 @@ def encode_bit2_opcode_iter(data):
                     if limit32 >= 3:
                         ca = current_dp + 2
                         end32 = i + limit32
-                        if ca < dp[end32] or (ca == dp[end32] and current_lit_count < p_lit_count[end32]):
+                        if ca < dp[end32] or (
+                            ca == dp[end32] and current_lit_count < p_lit_count[end32]
+                        ):
                             for curr_l in range(3, limit32 + 1):
                                 next_idx = i + curr_l
-                                if ca < dp[next_idx] or (ca == dp[next_idx] and current_lit_count < p_lit_count[next_idx]):
+                                if ca < dp[next_idx] or (
+                                    ca == dp[next_idx]
+                                    and current_lit_count < p_lit_count[next_idx]
+                                ):
                                     dp[next_idx] = ca
                                     p_lit_count[next_idx] = current_lit_count
                                     p_prev[next_idx] = i
@@ -238,10 +282,15 @@ def encode_bit2_opcode_iter(data):
                         limit256 = l if l < 257 else 256
                         cb = current_dp + 3
                         end256 = i + limit256
-                        if cb < dp[end256] or (cb == dp[end256] and current_lit_count < p_lit_count[end256]):
+                        if cb < dp[end256] or (
+                            cb == dp[end256] and current_lit_count < p_lit_count[end256]
+                        ):
                             for curr_l in range(33, limit256 + 1):
                                 next_idx = i + curr_l
-                                if cb < dp[next_idx] or (cb == dp[next_idx] and current_lit_count < p_lit_count[next_idx]):
+                                if cb < dp[next_idx] or (
+                                    cb == dp[next_idx]
+                                    and current_lit_count < p_lit_count[next_idx]
+                                ):
                                     dp[next_idx] = cb
                                     p_lit_count[next_idx] = current_lit_count
                                     p_prev[next_idx] = i
@@ -253,11 +302,17 @@ def encode_bit2_opcode_iter(data):
                     if l > 256:
                         start_cost = current_dp + 3 + L_D_TABLE[256]
                         start_idx = i + 257
-                        if start_cost < dp[start_idx] or (start_cost == dp[start_idx] and current_lit_count < p_lit_count[start_idx]):
+                        if start_cost < dp[start_idx] or (
+                            start_cost == dp[start_idx]
+                            and current_lit_count < p_lit_count[start_idx]
+                        ):
                             for curr_l in range(257, l + 1):
                                 next_idx = i + curr_l
                                 cost = current_dp + 3 + L_D_TABLE[curr_l - 1]
-                                if cost < dp[next_idx] or (cost == dp[next_idx] and current_lit_count < p_lit_count[next_idx]):
+                                if cost < dp[next_idx] or (
+                                    cost == dp[next_idx]
+                                    and current_lit_count < p_lit_count[next_idx]
+                                ):
                                     dp[next_idx] = cost
                                     p_lit_count[next_idx] = current_lit_count
                                     p_prev[next_idx] = i
@@ -270,10 +325,16 @@ def encode_bit2_opcode_iter(data):
                     if limit256 >= 3:
                         ca = current_dp + base_cost
                         end_l256 = i + limit256
-                        if ca < dp[end_l256] or (ca == dp[end_l256] and current_lit_count < p_lit_count[end_l256]):
+                        if ca < dp[end_l256] or (
+                            ca == dp[end_l256]
+                            and current_lit_count < p_lit_count[end_l256]
+                        ):
                             for curr_l in range(3, limit256 + 1):
                                 next_idx = i + curr_l
-                                if ca < dp[next_idx] or (ca == dp[next_idx] and current_lit_count < p_lit_count[next_idx]):
+                                if ca < dp[next_idx] or (
+                                    ca == dp[next_idx]
+                                    and current_lit_count < p_lit_count[next_idx]
+                                ):
                                     dp[next_idx] = ca
                                     p_lit_count[next_idx] = current_lit_count
                                     p_prev[next_idx] = i
@@ -284,11 +345,17 @@ def encode_bit2_opcode_iter(data):
                     if l > 256:
                         start_cost = current_dp + base_cost + L_D_TABLE[256]
                         start_idx = i + 257
-                        if start_cost < dp[start_idx] or (start_cost == dp[start_idx] and current_lit_count < p_lit_count[start_idx]):
+                        if start_cost < dp[start_idx] or (
+                            start_cost == dp[start_idx]
+                            and current_lit_count < p_lit_count[start_idx]
+                        ):
                             for curr_l in range(257, l + 1):
                                 next_idx = i + curr_l
                                 cost = current_dp + base_cost + L_D_TABLE[curr_l - 1]
-                                if cost < dp[next_idx] or (cost == dp[next_idx] and current_lit_count < p_lit_count[next_idx]):
+                                if cost < dp[next_idx] or (
+                                    cost == dp[next_idx]
+                                    and current_lit_count < p_lit_count[next_idx]
+                                ):
                                     dp[next_idx] = cost
                                     p_lit_count[next_idx] = current_lit_count
                                     p_prev[next_idx] = i
@@ -364,11 +431,11 @@ def decode_bit2_opcode(opcodes):
 
             if length <= offset:
                 # 普通复制，直接切片
-                res.extend(res[start: start + length])
+                res.extend(res[start : start + length])
             else:
                 # 滚动复制 (Rolling Copy)，例如 offset=1, length=5
                 # 利用切片乘法避免 Python 层的 for 循环
-                pattern = res[start: start + offset]
+                pattern = res[start : start + offset]
                 repeats = length // offset
                 remainder = length % offset
                 res.extend(pattern * repeats + pattern[:remainder])
@@ -403,7 +470,7 @@ def encode_length_int(length):
         second = first // 256
         return d, length % 256, first % 256, second % 256, second // 256
     else:
-        raise ValueError(f"[encode_bit2] Length is too large: {length}")
+        raise ValueError(f'[encode_bit2] Length is too large: {length}')
 
 
 def _encode_literal_iter(items):
@@ -442,7 +509,7 @@ def _encode_literal_iter(items):
         # trailing 00 to fill up to a full byte, e.g. AABB0000
         if stack_count > 0:
             trailing = (4 - stack_count) * 2
-            trailing = 2 ** trailing
+            trailing = 2**trailing
             yield stack_val * trailing
 
 
@@ -537,7 +604,7 @@ def encode_bit2_stream_iter(opcodes, ext8=False):
 
         # this shouldn't happen
         else:
-            raise ValueError(f"[encode_bit2] Invalid opcode: {opcode}")
+            raise ValueError(f'[encode_bit2] Invalid opcode: {opcode}')
 
 
 def decode_bit2_stream_iter(data, total, ext8=False):
@@ -566,7 +633,9 @@ def decode_bit2_stream_iter(data, total, ext8=False):
         try:
             byte = data[read]
         except IndexError:
-            raise ValueError(f"[decode_bit2] Data truncated, expected {total} numbers, got {count}")
+            raise ValueError(
+                f'[decode_bit2] Data truncated, expected {total} numbers, got {count}'
+            )
         read += 1
         # 1XXNNNNN: run XX for N+3 times, N (0~31)
         if byte >= 128:
@@ -602,7 +671,9 @@ def decode_bit2_stream_iter(data, total, ext8=False):
             try:
                 offset = data[read] + 1
             except IndexError:
-                raise ValueError(f"[decode_bit2] Data truncated, expected {total} numbers, got {count}")
+                raise ValueError(
+                    f'[decode_bit2] Data truncated, expected {total} numbers, got {count}'
+                )
             read += 1
             opcodes.append((2, offset, length))
             count += length
@@ -613,7 +684,9 @@ def decode_bit2_stream_iter(data, total, ext8=False):
             # every packed byte carries 4 items, a stream that ends
             # before them is truncated, check once instead of per byte
             if read + packed_count > len(data):
-                raise ValueError(f"[decode_bit2] Data truncated, expected {total} numbers, got {count}")
+                raise ValueError(
+                    f'[decode_bit2] Data truncated, expected {total} numbers, got {count}'
+                )
             remain_n = n
             items = []
             for _ in range(packed_count):
@@ -659,7 +732,7 @@ def decode_bit2_stream_iter(data, total, ext8=False):
                 count += 1
             # invalid: byte>=000000XX
             else:
-                raise ValueError(f"[decode_bit2] Invalid opcode: {byte}")
+                raise ValueError(f'[decode_bit2] Invalid opcode: {byte}')
         # 000000XX: 1 item
         elif byte >= 0:
             opcodes.append((0, [byte]))
@@ -688,13 +761,17 @@ def _encode_value_check(data, ext8=False):
     min_val = min(data)
     max_val = max(data)
     if min_val < 0:
-        raise ValueError(f"[encode_bit2] Invalid value: {min_val}, value must be >= 0")
+        raise ValueError(f'[encode_bit2] Invalid value: {min_val}, value must be >= 0')
     if ext8:
         if max_val > 7:
-            raise ValueError(f"[encode_bit2] Invalid value: {max_val}, value must be <= 7 if ext8 is enabled")
+            raise ValueError(
+                f'[encode_bit2] Invalid value: {max_val}, value must be <= 7 if ext8 is enabled'
+            )
     else:
         if max_val > 3:
-            raise ValueError(f"[encode_bit2] Invalid value: {max_val}, value must be <= 3 if ext8 is disabled")
+            raise ValueError(
+                f'[encode_bit2] Invalid value: {max_val}, value must be <= 3 if ext8 is disabled'
+            )
 
 
 def encode_bit2(data, ext8=False):
@@ -749,5 +826,6 @@ def decode_bit2(data, ext8=False):
     # because the input was truncated, raise instead of truncating silently.
     if len(values) != total:
         raise ValueError(
-            f'[decode_bit2] Value count mismatch: decoded {len(values)} values, prefix declares {total}')
+            f'[decode_bit2] Value count mismatch: decoded {len(values)} values, prefix declares {total}'
+        )
     return values, read

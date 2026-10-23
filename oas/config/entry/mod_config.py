@@ -36,7 +36,7 @@ from oas.config.table.config import ConfigTable
 from oas.logger import logger
 from oas.mod.adapter import ModAdapter
 
-F = TypeVar("F", bound=Callable[..., Any])
+F = TypeVar('F', bound=Callable[..., Any])
 
 # Stored value of a reset Group.  Reading it yields the model defaults, and a
 # later default change keeps applying (Alasio semantics).
@@ -81,30 +81,29 @@ class modconfig(ModAdapter):
     class name and the instance name separately and build that string.
     """
 
-    _entry_info_attribute = "__entry_info__"
-    _adapter_attribute = "__mod_adapter__"
+    _entry_info_attribute = '__entry_info__'
+    _adapter_attribute = '__mod_adapter__'
 
     @classmethod
     def _shared_adapter(cls, target: Any) -> ModAdapter:
         """获取或创建挂在目标实例上的共享 ModAdapter。"""
-
         adapter = getattr(target, cls._adapter_attribute, None)
         if adapter is not None:
             if not isinstance(adapter, ModAdapter):
-                raise TypeError(f"{cls._adapter_attribute} must contain ModAdapter")
+                raise TypeError(f'{cls._adapter_attribute} must contain ModAdapter')
             if adapter.config_name != target.config_name:
                 raise ValueError(
-                    f"{cls._adapter_attribute} is bound to a different config_name"
+                    f'{cls._adapter_attribute} is bound to a different config_name'
                 )
             return adapter
 
         entry_info = getattr(type(target), cls._entry_info_attribute, None)
         if entry_info is None:
             raise AttributeError(
-                f"{type(target).__name__} must define {cls._entry_info_attribute}"
+                f'{type(target).__name__} must define {cls._entry_info_attribute}'
             )
-        if not hasattr(target, "config_name"):
-            raise AttributeError(f"{type(target).__name__} must define config_name")
+        if not hasattr(target, 'config_name'):
+            raise AttributeError(f'{type(target).__name__} must define config_name')
 
         adapter = ModAdapter(entry_info, target.config_name)
         setattr(target, cls._adapter_attribute, adapter)
@@ -126,7 +125,7 @@ class modconfig(ModAdapter):
         """
 
         if not callable(function):
-            raise TypeError("modconfig decorators must decorate a callable")
+            raise TypeError('modconfig decorators must decorate a callable')
 
         @wraps(function)
         def wrapper(target: Any, *args: Any, **kwargs: Any) -> Any:
@@ -139,14 +138,14 @@ class modconfig(ModAdapter):
             parameters=[
                 parameter
                 for name, parameter in signature.parameters.items()
-                if name != "result"
+                if name != 'result'
             ]
         )
         # Keep the annotation view consistent with the public signature.
         wrapper.__annotations__ = {
             name: annotation
             for name, annotation in function.__annotations__.items()
-            if name != "result"
+            if name != 'result'
         }
         return wrapper  # type: ignore[return-value]
 
@@ -249,9 +248,7 @@ class modconfig(ModAdapter):
 
                 version = access._config_data_version("default")
         """
-        return lambda function: cls._decorate(
-            function, cls._config_data_version
-        )
+        return lambda function: cls._decorate(function, cls._config_data_version)
 
     @classmethod
     def config_batch_set(cls) -> Callable[[F], F]:
@@ -366,9 +363,7 @@ class modconfig(ModAdapter):
 
                 events = config.config_batch_reset("default", [event])
         """
-        return lambda function: cls._decorate(
-            function, cls._config_batch_reset
-        )
+        return lambda function: cls._decorate(function, cls._config_batch_reset)
 
     @classmethod
     def config_reset(cls) -> Callable[[F], F]:
@@ -426,9 +421,7 @@ class modconfig(ModAdapter):
 
                 events = config.config_group_batch_reset("default", [event])
         """
-        return lambda function: cls._decorate(
-            function, cls._config_group_batch_reset
-        )
+        return lambda function: cls._decorate(function, cls._config_group_batch_reset)
 
     @classmethod
     def config_group_reset(cls) -> Callable[[F], F]:
@@ -454,9 +447,7 @@ class modconfig(ModAdapter):
 
                 events = config.config_group_reset("default", event)
         """
-        return lambda function: cls._decorate(
-            function, cls._config_group_reset
-        )
+        return lambda function: cls._decorate(function, cls._config_group_reset)
 
     @classmethod
     def cfg_task_add(cls) -> Callable[[F], F]:
@@ -858,9 +849,7 @@ class modconfig(ModAdapter):
 
                 result = config.cfg_arg_batch_set("default", [event_a, event_b])
         """
-        return lambda function: cls._decorate(
-            function, cls._cfg_arg_batch_set
-        )
+        return lambda function: cls._decorate(function, cls._cfg_arg_batch_set)
 
     @classmethod
     def cfg_arg_reset(cls) -> Callable[[F], F]:
@@ -926,10 +915,7 @@ class modconfig(ModAdapter):
 
                 result = config.cfg_arg_batch_reset("default", [event_a, event_b])
         """
-        return lambda function: cls._decorate(
-            function, cls._cfg_arg_batch_reset
-        )
-
+        return lambda function: cls._decorate(function, cls._cfg_arg_batch_reset)
 
     # ------------------------------------------------------------------
     # config_* implementations (Alasio compatible)
@@ -941,7 +927,6 @@ class modconfig(ModAdapter):
         config_name: str,
     ) -> tuple[list[Any], tuple[int, int]]:
         """Read the config rows and SQLite version in one cursor scope."""
-
         table = ConfigTable(config_name)
         with table.cursor() as cursor:
             version = (id(cursor.connection), table.get_data_version(_cursor_=cursor))
@@ -954,7 +939,6 @@ class modconfig(ModAdapter):
         config_name: str,
     ) -> tuple[int, int]:
         """Read the SQLite version through the configuration entry layer."""
-
         table = ConfigTable(config_name)
         with table.cursor() as cursor:
             return (id(cursor.connection), table.get_data_version(_cursor_=cursor))
@@ -985,11 +969,7 @@ class modconfig(ModAdapter):
             _task_class, task_obj = loaded
             data = task_obj.to_dict()
             if groups is not None:
-                data = {
-                    name: value
-                    for name, value in data.items()
-                    if name in groups
-                }
+                data = {name: value for name, value in data.items() if name in groups}
             out[task] = data
         return out
 
@@ -1015,17 +995,13 @@ class modconfig(ModAdapter):
             task_class = _resolve_task_class(task)
             if task_class is None:
                 has_error = True
-                rollback.extend(
-                    _fail_events(group_events, f'No such task: "{task}"')
-                )
+                rollback.extend(_fail_events(group_events, f'No such task: "{task}"'))
                 continue
             group_class = _resolve_group_class(task_class, group)
             if group_class is None:
                 has_error = True
                 rollback.extend(
-                    _fail_events(
-                        group_events, f'No such group: "{task}.{group}"'
-                    )
+                    _fail_events(group_events, f'No such group: "{task}.{group}"')
                 )
                 continue
             group_obj = _read_group(config_name, task, group, group_class)
@@ -1071,9 +1047,7 @@ class modconfig(ModAdapter):
                 )
                 if error is not None:
                     rollback.extend(
-                        _rollback_group(
-                            group_events, task, group, group_obj, error
-                        )
+                        _rollback_group(group_events, task, group, group_obj, error)
                     )
                     has_error = True
                     continue
@@ -1095,7 +1069,7 @@ class modconfig(ModAdapter):
                 _write_group(table, task, task_class, group, group_obj, cursor)
         logger.info(
             f'config_set "{config_name}": '
-            + ", ".join(f"{e.task}.{e.group}.{e.arg}" for e in success)
+            + ', '.join(f'{e.task}.{e.group}.{e.arg}' for e in success)
         )
         return True, success
 
@@ -1106,9 +1080,7 @@ class modconfig(ModAdapter):
         event: ConfigSetEvent,
         post_edit: bool = False,
     ) -> tuple[bool, list[ConfigSetEvent]]:
-        return modconfig._config_batch_set(
-            target, config_name, [event], post_edit
-        )
+        return modconfig._config_batch_set(target, config_name, [event], post_edit)
 
     @staticmethod
     def _config_batch_reset(
@@ -1144,8 +1116,7 @@ class modconfig(ModAdapter):
             for event in group_events:
                 if event.arg not in group_class.model_fields:
                     logger.warning(
-                        f'Cannot reset non-exist field '
-                        f'"{task}.{group}.{event.arg}"'
+                        f'Cannot reset non-exist field "{task}.{group}.{event.arg}"'
                     )
                     continue
                 data.pop(event.arg, None)
@@ -1155,8 +1126,7 @@ class modconfig(ModAdapter):
                 new_group = group_class.model_validate(data)
             except ValidationError as exc:
                 logger.warning(
-                    f'Failed to convert after reset for '
-                    f'"{task}.{group}": {exc}'
+                    f'Failed to convert after reset for "{task}.{group}": {exc}'
                 )
                 return []
 
@@ -1172,7 +1142,7 @@ class modconfig(ModAdapter):
                 _write_group(table, task, task_class, group, group_obj, cursor)
         logger.info(
             f'config_reset "{config_name}": '
-            + ", ".join(f"{e.task}.{e.group}.{e.arg}" for e in success)
+            + ', '.join(f'{e.task}.{e.group}.{e.arg}' for e in success)
         )
         return success
 
@@ -1182,9 +1152,7 @@ class modconfig(ModAdapter):
         config_name: str,
         event: ConfigSetEvent,
     ) -> ConfigSetEvent | None:
-        events = modconfig._config_batch_reset(
-            target, config_name, [event]
-        )
+        events = modconfig._config_batch_reset(target, config_name, [event])
         return events[0] if events else None
 
     @staticmethod
@@ -1226,12 +1194,10 @@ class modconfig(ModAdapter):
             return success
         with table.exclusive_transaction() as cursor:
             for task, group, task_class, group_class in writes:
-                _reset_group(
-                    table, task, task_class, group, group_class, cursor
-                )
+                _reset_group(table, task, task_class, group, group_class, cursor)
         logger.info(
             f'config_group_reset "{config_name}": '
-            + ", ".join(sorted({f"{e.task}.{e.group}" for e in success}))
+            + ', '.join(sorted({f'{e.task}.{e.group}' for e in success}))
         )
         return success
 
@@ -1241,9 +1207,7 @@ class modconfig(ModAdapter):
         config_name: str,
         event: ConfigSetEvent,
     ) -> list[ConfigSetEvent]:
-        return modconfig._config_group_batch_reset(
-            target, config_name, [event]
-        )
+        return modconfig._config_group_batch_reset(target, config_name, [event])
 
     # ------------------------------------------------------------------
     # cfg_* implementations (OAS native, unified ConfigResult)
@@ -1254,7 +1218,7 @@ class modconfig(ModAdapter):
         target: Any,
         config_name: str,
         taskclass: str,
-        name: str = "default",
+        name: str = 'default',
     ) -> ConfigResult:
         task_class = _registered_task(taskclass)
         if task_class is None:
@@ -1270,9 +1234,7 @@ class modconfig(ModAdapter):
         try:
             task_obj = task_class()
         except Exception as exc:  # noqa: BLE001
-            return _failure(
-                f'Cannot construct default Task "{taskclass}": {exc}'
-            )
+            return _failure(f'Cannot construct default Task "{taskclass}": {exc}')
 
         TaskStore.save(config_name, task_obj, task_name)
         return ConfigResult(
@@ -1297,7 +1259,7 @@ class modconfig(ModAdapter):
         target: Any,
         config_name: str,
         task: str,
-        new_name: str = "default",
+        new_name: str = 'default',
     ) -> ConfigResult:
         loaded = _load_task(config_name, task)
         if loaded is None:
@@ -1353,7 +1315,7 @@ class modconfig(ModAdapter):
             return _failure(f'No such task: "{task}"')
         group_class = _resolve_group_class(task_class, group)
         if group_class is None:
-            return _failure("dynamic Group operations are not supported yet")
+            return _failure('dynamic Group operations are not supported yet')
         if groupclass != group_class.__name__:
             return _failure(
                 f'GroupClass mismatch: expected "{group_class.__name__}", '
@@ -1383,7 +1345,7 @@ class modconfig(ModAdapter):
             return _failure(f'No such task: "{task}"')
         group_class = _resolve_group_class(task_class, group)
         if group_class is None:
-            return _failure("dynamic Group operations are not supported yet")
+            return _failure('dynamic Group operations are not supported yet')
 
         table = ConfigTable(config_name)
         if table.get_group(task, group) is None:
@@ -1407,36 +1369,28 @@ class modconfig(ModAdapter):
 
         same_target = new_task is None or new_task == task
         if same_target and new_group == group:
-            return _failure("Target is the same as source")
+            return _failure('Target is the same as source')
 
         target_task = task if new_task is None else new_task
         target_task_class = (
-            source_task_class
-            if same_target
-            else _resolve_task_class(target_task)
+            source_task_class if same_target else _resolve_task_class(target_task)
         )
         if target_task_class is None:
             return _failure(f'No such task: "{target_task}"')
 
-        target_group_class = _resolve_group_class(
-            target_task_class, new_group
-        )
+        target_group_class = _resolve_group_class(target_task_class, new_group)
         if target_group_class is None:
-            return _failure("dynamic Group operations are not supported yet")
+            return _failure('dynamic Group operations are not supported yet')
         try:
             copied = target_group_class.model_validate(source.to_dict())
         except ValidationError as exc:
             return _failure(
-                ConfigError.from_pydantic(
-                    exc, task=target_task, group=new_group
-                )
+                ConfigError.from_pydantic(exc, task=target_task, group=new_group)
             )
 
         table = ConfigTable(config_name)
         if table.get_group(target_task, new_group) is not None:
-            return _failure(
-                f'Group already exists: "{target_task}.{new_group}"'
-            )
+            return _failure(f'Group already exists: "{target_task}.{new_group}"')
 
         _write_group(table, target_task, target_task_class, new_group, copied)
         return ConfigResult(
@@ -1480,18 +1434,12 @@ class modconfig(ModAdapter):
             return _failure(f'No such task: "{task}"', value=default)
         group_class = _resolve_group_class(task_class, group)
         if group_class is None:
-            return _failure(
-                f'No such group: "{task}.{group}"', value=default
-            )
+            return _failure(f'No such group: "{task}.{group}"', value=default)
         group_obj = _read_group(config_name, task, group, group_class)
         if group_obj is None:
-            return _failure(
-                f'Cannot load group: "{task}.{group}"', value=default
-            )
+            return _failure(f'Cannot load group: "{task}.{group}"', value=default)
         if arg not in group_class.model_fields:
-            return _failure(
-                f'No such field: "{task}.{group}.{arg}"', value=default
-            )
+            return _failure(f'No such field: "{task}.{group}.{arg}"', value=default)
         return ConfigResult(success=True, value=getattr(group_obj, arg))
 
     @staticmethod
@@ -1555,7 +1503,7 @@ class modconfig(ModAdapter):
             return ConfigResult(success=True)
         results = modconfig._config_batch_reset(target, config_name, events)
         if not results:
-            return _failure("Failed to reset arguments")
+            return _failure('Failed to reset arguments')
         return ConfigResult(success=True, events=results)
 
 
@@ -1567,20 +1515,20 @@ class modconfig(ModAdapter):
 def _split_task_name(task: str) -> tuple[str, str]:
     """Split ``TaskClass@name``; plain legacy names return ``("", task)``."""
 
-    taskclass, separator, name = task.partition("@")
+    taskclass, separator, name = task.partition('@')
     if separator and taskclass and name:
         return taskclass, name
-    return "", task
+    return '', task
 
 
 def _make_task_name(taskclass: str, name: str) -> str:
     if not isinstance(taskclass, str) or not taskclass.strip():
-        raise ValueError("taskclass must be a non-empty string")
+        raise ValueError('taskclass must be a non-empty string')
     if not isinstance(name, str) or not name.strip():
-        raise ValueError("task name must be a non-empty string")
-    if "@" in taskclass or "@" in name:
+        raise ValueError('task name must be a non-empty string')
+    if '@' in taskclass or '@' in name:
         raise ValueError('taskclass and task name must not contain "@"')
-    return f"{taskclass}@{name}"
+    return f'{taskclass}@{name}'
 
 
 def _registered_task(name: str) -> type[TaskBase] | None:
@@ -1742,8 +1690,7 @@ def _events_from_group(
     group_obj: GroupBase,
 ) -> list[ConfigSetEvent]:
     return [
-        _event(task, group, arg, value)
-        for arg, value in group_obj.to_dict().items()
+        _event(task, group, arg, value) for arg, value in group_obj.to_dict().items()
     ]
 
 
@@ -1776,7 +1723,7 @@ def _run_post_edit(
 ) -> tuple[ConfigError | None, list[ConfigSetEvent]]:
     """Run ``post_edit()`` and return ``(error, side_effect_events)``."""
 
-    hook = getattr(after, "post_edit", None)
+    hook = getattr(after, 'post_edit', None)
     if not callable(hook):
         return None, []
     try:
@@ -1787,7 +1734,7 @@ def _run_post_edit(
         logger.exception(exc)
         return (
             ConfigError(
-                msg=f"post_edit failed: {exc}",
+                msg=f'post_edit failed: {exc}',
                 task=task,
                 group=group,
             ),
@@ -1816,9 +1763,7 @@ def _validate_group_args(
             return (
                 new_values,
                 accepted,
-                _failed_event(
-                    event, f'No such field: "{task}.{group}.{event.arg}"'
-                ),
+                _failed_event(event, f'No such field: "{task}.{group}.{event.arg}"'),
             )
         try:
             validated = group_class.model_validate({event.arg: event.value})
@@ -1926,7 +1871,5 @@ def _post_edit_events(
             continue
         if arg in requested and requested[arg] == value:
             continue
-        events.append(
-            ConfigSetEvent(task=task, group=group, arg=arg, value=value)
-        )
+        events.append(ConfigSetEvent(task=task, group=group, arg=arg, value=value))
     return events

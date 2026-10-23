@@ -24,13 +24,14 @@ from typing import Any, Callable, Generic, TypeVar
 # def result(self):
 #     return await self.calculate_result()
 
-T = TypeVar("T")
+T = TypeVar('T')
 
 
 class CacheOperation:
     """
     Common base for all cached property operations
     """
+
     pass
 
 
@@ -54,7 +55,7 @@ class InstanceCacheOperation(CacheOperation):
             if attrname in d:
                 return d.pop(attrname, default)
             return default
-        except (AttributeError, TypeError):
+        except AttributeError, TypeError:
             # No __dict__
             return default
 
@@ -105,13 +106,13 @@ class InstanceCacheOperation(CacheOperation):
             # not all objects have __dict__ (e.g. class defines slots)
             msg = (
                 f"No '__dict__' attribute on {type(instance).__name__!r} "
-                f"instance to cache {attrname!r} property."
+                f'instance to cache {attrname!r} property.'
             )
             raise TypeError(msg) from None
         except TypeError:
             msg = (
                 f"The '__dict__' attribute on {type(instance).__name__!r} instance "
-                f"does not support item assignment for caching {attrname!r} property."
+                f'does not support item assignment for caching {attrname!r} property.'
             )
             raise TypeError(msg) from None
 
@@ -188,13 +189,13 @@ class ClassCacheOperation(CacheOperation):
                 # It is a cached value or a normal attribute
                 type.__delattr__(cls, attrname)
                 # Restore the descriptor if it was backed up by cached_class_property
-                desc_name = f"_cached_class_property_desc_for_{attrname}"
+                desc_name = f'_cached_class_property_desc_for_{attrname}'
                 desc = d.get(desc_name, None)
                 if desc is not None:
                     type.__setattr__(cls, attrname, desc)
                 return val
             return default
-        except (AttributeError, TypeError):
+        except AttributeError, TypeError:
             # No __dict__
             return default
 
@@ -251,10 +252,10 @@ class ClassCacheOperation(CacheOperation):
         try:
             # Class mappingproxy is read-only, use type.__setattr__
             type.__setattr__(cls, attrname, value)
-        except (AttributeError, TypeError):
+        except AttributeError, TypeError:
             msg = (
                 f"The class {cls.__name__!r} doesn't support "
-                f"caching {attrname!r} property."
+                f'caching {attrname!r} property.'
             )
             raise TypeError(msg) from None
 
@@ -324,7 +325,7 @@ class cached_property(Generic[T], InstanceCacheOperation):
             # not all objects have __dict__ (e.g. class defines slots)
             msg = (
                 f"No '__dict__' attribute on {type(instance).__name__!r} "
-                f"instance to cache {attrname!r} property."
+                f'instance to cache {attrname!r} property.'
             )
             raise TypeError(msg) from None
 
@@ -335,7 +336,7 @@ class cached_property(Generic[T], InstanceCacheOperation):
         except TypeError:
             msg = (
                 f"The '__dict__' attribute on {type(instance).__name__!r} instance "
-                f"does not support item assignment for caching {attrname!r} property."
+                f'does not support item assignment for caching {attrname!r} property.'
             )
             raise TypeError(msg) from None
         return value
@@ -363,12 +364,12 @@ class cached_property_threadsafe(Generic[T], InstanceCacheOperation):
             # not all objects have __dict__ (e.g. class defines slots)
             msg = (
                 f"No '__dict__' attribute on {type(instance).__name__!r} "
-                f"instance to cache {attrname!r} property."
+                f'instance to cache {attrname!r} property.'
             )
             raise TypeError(msg) from None
 
         # create pre-instance-property lock
-        lock_name = f"_cached_property_lock_for_{attrname}"
+        lock_name = f'_cached_property_lock_for_{attrname}'
         with self.create_lock:
             # double-checked locking
             # check if in cache first to bypass except KeyError for faster because it's not in cache at happy path
@@ -380,7 +381,7 @@ class cached_property_threadsafe(Generic[T], InstanceCacheOperation):
                 except TypeError:
                     msg = (
                         f"The '__dict__' attribute on {type(instance).__name__!r} instance "
-                        f"does not support item assignment for caching {lock_name!r} property."
+                        f'does not support item assignment for caching {lock_name!r} property.'
                     )
                     raise TypeError(msg) from None
 
@@ -410,7 +411,7 @@ class cached_property_threadsafe(Generic[T], InstanceCacheOperation):
             except TypeError:
                 msg = (
                     f"The '__dict__' attribute on {type(instance).__name__!r} instance "
-                    f"does not support item assignment for caching {attrname!r} property."
+                    f'does not support item assignment for caching {attrname!r} property.'
                 )
                 raise TypeError(msg) from None
 
@@ -449,7 +450,7 @@ class cached_class_property(Generic[T], ClassCacheOperation):
         else:
             value = self.func(cls)
         # Back up the descriptor so it can be restored by CacheOperation.pop
-        type.__setattr__(cls, f"_cached_class_property_desc_for_{attrname}", self)
+        type.__setattr__(cls, f'_cached_class_property_desc_for_{attrname}', self)
         # Use type.__setattr__ to bypass metaclass __setattr__
         # and to work even if cls.__dict__ is mappingproxy
         type.__setattr__(cls, attrname, value)
@@ -478,7 +479,7 @@ class cached_class_property_threadsafe(Generic[T], ClassCacheOperation):
             cls (type): The class that the property is accessed from.
         """
         attrname = self.__name__
-        lock_name = f"_cached_class_property_lock_for_{attrname}"
+        lock_name = f'_cached_class_property_lock_for_{attrname}'
 
         with self.create_lock:
             # Use cls.__dict__ to bypass descriptors and __getattr__
@@ -490,7 +491,7 @@ class cached_class_property_threadsafe(Generic[T], ClassCacheOperation):
                 except TypeError:
                     msg = (
                         f"The class {cls.__name__!r} doesn't support "
-                        f"caching {lock_name!r} property."
+                        f'caching {lock_name!r} property.'
                     )
                     raise TypeError(msg) from None
 
@@ -515,12 +516,14 @@ class cached_class_property_threadsafe(Generic[T], ClassCacheOperation):
                 value = self.func(cls)
             try:
                 # Back up the descriptor so it can be restored by CacheOperation.pop
-                type.__setattr__(cls, f"_cached_class_property_desc_for_{attrname}", self)
+                type.__setattr__(
+                    cls, f'_cached_class_property_desc_for_{attrname}', self
+                )
                 type.__setattr__(cls, attrname, value)
             except TypeError:
                 msg = (
                     f"The class {cls.__name__!r} doesn't support "
-                    f"caching {attrname!r} property."
+                    f'caching {attrname!r} property.'
                 )
                 raise TypeError(msg) from None
 

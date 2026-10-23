@@ -51,7 +51,7 @@ def fromisoformat(text) -> datetime.datetime:
     return _parse(text)
 
 
-def to_local_naive(time_input: "Union[str, datetime.datetime]") -> datetime.datetime:
+def to_local_naive(time_input: 'Union[str, datetime.datetime]') -> datetime.datetime:
     """
     Converts a time input (string or datetime object) to a naive datetime
     object representing the local time.
@@ -95,7 +95,7 @@ def to_local_naive(time_input: "Union[str, datetime.datetime]") -> datetime.date
         return dt_obj
 
 
-def to_local_aware(time_input: "Union[str, datetime.datetime]") -> datetime.datetime:
+def to_local_aware(time_input: 'Union[str, datetime.datetime]') -> datetime.datetime:
     """
     Converts a time input (string or datetime object) to an aware datetime
     object representing the local time with local timezone information.

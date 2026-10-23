@@ -89,7 +89,7 @@ def windows_attempt_delay(attempt):
         attempt = 10
     if attempt < 0:
         attempt = 0
-    delay = 2 ** attempt * WINDOWS_RETRY_DELAY
+    delay = 2**attempt * WINDOWS_RETRY_DELAY
     # wait 1s at max
     if delay > 1:
         delay = 1
@@ -217,7 +217,7 @@ def atomic_rename(path_from, path_to):
                 delay = windows_attempt_delay(attempt)
                 time.sleep(delay)
                 continue
-            except (FileNotFoundError, FileExistsError):
+            except FileNotFoundError, FileExistsError:
                 raise
             except Exception as e:
                 last_error = e
@@ -453,7 +453,9 @@ def file_read_text(file, encoding='utf-8', errors='strict'):
         return f.read()
 
 
-def file_read_text_stream(file, encoding='utf-8', errors='strict', chunk_size=CHUNK_SIZE):
+def file_read_text_stream(
+    file, encoding='utf-8', errors='strict', chunk_size=CHUNK_SIZE
+):
     """
     Read text file content as stream
 
@@ -560,7 +562,9 @@ def atomic_read_text(file, encoding='utf-8', errors='strict'):
         return file_read_text(file, encoding=encoding, errors=errors)
 
 
-def atomic_read_text_stream(file, encoding='utf-8', errors='strict', chunk_size=CHUNK_SIZE):
+def atomic_read_text_stream(
+    file, encoding='utf-8', errors='strict', chunk_size=CHUNK_SIZE
+):
     """
     Atomic file read with streaming support
 
@@ -579,7 +583,9 @@ def atomic_read_text_stream(file, encoding='utf-8', errors='strict', chunk_size=
         last_error = None
         for attempt in range(WINDOWS_MAX_ATTEMPT):
             try:
-                yield from file_read_text_stream(file, encoding=encoding, errors=errors, chunk_size=chunk_size)
+                yield from file_read_text_stream(
+                    file, encoding=encoding, errors=errors, chunk_size=chunk_size
+                )
                 return
             except PermissionError as e:
                 last_error = e
@@ -590,7 +596,9 @@ def atomic_read_text_stream(file, encoding='utf-8', errors='strict', chunk_size=
             raise last_error from None
     else:
         # Linux and Mac allow reading while replacing
-        yield from file_read_text_stream(file, encoding=encoding, errors=errors, chunk_size=chunk_size)
+        yield from file_read_text_stream(
+            file, encoding=encoding, errors=errors, chunk_size=chunk_size
+        )
         return
 
 
@@ -974,7 +982,7 @@ def is_empty_folder(folder, ignore_pycache=False):
                     # having any entry
                     return False
         return True
-    except (FileNotFoundError, NotADirectoryError):
+    except FileNotFoundError, NotADirectoryError:
         return False
 
 

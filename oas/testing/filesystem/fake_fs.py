@@ -2,6 +2,7 @@
 The FakeFilesystem class: an in-memory filesystem and the mock of the
 os / builtins file functions.
 """
+
 import builtins
 import contextlib
 import errno
@@ -73,17 +74,22 @@ class FakeFilesystem:
         self._ino = 0
         now = time.time()
         self.root_dir = FakeDir(
-            path=root, mode=0o777, ino=self._next_ino(), nlink=2,
-            atime=now, mtime=now, ctime=now,
+            path=root,
+            mode=0o777,
+            ino=self._next_ino(),
+            nlink=2,
+            atime=now,
+            mtime=now,
+            ctime=now,
         )
         # normalized absolute path -> FakeFile
-        self._files: "dict[str, FakeFile]" = {}
+        self._files: 'dict[str, FakeFile]' = {}
         # normalized absolute path -> FakeDir
-        self._dirs: "dict[str, FakeDir]" = {root: self.root_dir}
+        self._dirs: 'dict[str, FakeDir]' = {root: self.root_dir}
         # normalized absolute path -> FakeSymlink
-        self._symlinks: "dict[str, FakeSymlink]" = {}
+        self._symlinks: 'dict[str, FakeSymlink]' = {}
         # fd -> FakeFileObject
-        self._fds: "dict[int, FakeFileObject]" = {}
+        self._fds: 'dict[int, FakeFileObject]' = {}
         self._next_fd = 3
         # saved originals of activate() without monkeypatch
         self._saved = []
@@ -92,8 +98,13 @@ class FakeFilesystem:
             self._create_parents(self._cwd)
             now = time.time()
             self._dirs[self._cwd] = FakeDir(
-                path=self._cwd, mode=0o777, ino=self._next_ino(), nlink=2,
-                atime=now, mtime=now, ctime=now,
+                path=self._cwd,
+                mode=0o777,
+                ino=self._next_ino(),
+                nlink=2,
+                atime=now,
+                mtime=now,
+                ctime=now,
             )
 
     def __repr__(self):
@@ -188,8 +199,13 @@ class FakeFilesystem:
         now = time.time()
         for folder in reversed(missing):
             self._dirs[folder] = FakeDir(
-                path=folder, mode=0o777, ino=self._next_ino(), nlink=2,
-                atime=now, mtime=now, ctime=now,
+                path=folder,
+                mode=0o777,
+                ino=self._next_ino(),
+                nlink=2,
+                atime=now,
+                mtime=now,
+                ctime=now,
             )
 
     def _get_entry(self, path):
@@ -273,12 +289,20 @@ class FakeFilesystem:
         if isinstance(contents, str):
             contents = contents.encode(encoding or 'utf-8', errors or 'strict')
         elif not isinstance(contents, bytes):
-            raise TypeError(f'contents must be str or bytes, not {type(contents).__name__}')
+            raise TypeError(
+                f'contents must be str or bytes, not {type(contents).__name__}'
+            )
         mode = 0o666 if st_mode is None else st_mode & 0o7777
         now = time.time()
         file = FakeFile(
-            path=path, content=contents, mode=mode, ino=self._next_ino(), nlink=1,
-            atime=now, mtime=now, ctime=now,
+            path=path,
+            content=contents,
+            mode=mode,
+            ino=self._next_ino(),
+            nlink=1,
+            atime=now,
+            mtime=now,
+            ctime=now,
         )
         self._files[path] = file
         return file
@@ -307,8 +331,13 @@ class FakeFilesystem:
         mode = 0o777 if st_mode is None else st_mode & 0o7777
         now = time.time()
         folder = FakeDir(
-            path=path, mode=mode, ino=self._next_ino(), nlink=2,
-            atime=now, mtime=now, ctime=now,
+            path=path,
+            mode=mode,
+            ino=self._next_ino(),
+            nlink=2,
+            atime=now,
+            mtime=now,
+            ctime=now,
         )
         self._dirs[path] = folder
         return folder
@@ -336,8 +365,14 @@ class FakeFilesystem:
         self._create_parents(path)
         now = time.time()
         link = FakeSymlink(
-            path=path, target=target, mode=0o777, ino=self._next_ino(), nlink=1,
-            atime=now, mtime=now, ctime=now,
+            path=path,
+            target=target,
+            mode=0o777,
+            ino=self._next_ino(),
+            nlink=1,
+            atime=now,
+            mtime=now,
+            ctime=now,
         )
         self._symlinks[path] = link
         return link
@@ -463,8 +498,17 @@ class FakeFilesystem:
     """
 
     @synchronized
-    def open(self, file, mode='r', buffering=-1, encoding=None, errors=None,
-             newline=None, closefd=True, opener=None):
+    def open(
+        self,
+        file,
+        mode='r',
+        buffering=-1,
+        encoding=None,
+        errors=None,
+        newline=None,
+        closefd=True,
+        opener=None,
+    ):
         """
         Mock of the builtin open().
 
@@ -537,9 +581,18 @@ class FakeFilesystem:
         else:
             position = 0
         fobj = FakeFileObject(
-            self, entry, mode, binary=binary, readable=readable, writable=writable,
-            append=(action == 'a'), position=position, encoding=encoding,
-            errors=errors, newline=newline, fd=self._take_fd(),
+            self,
+            entry,
+            mode,
+            binary=binary,
+            readable=readable,
+            writable=writable,
+            append=(action == 'a'),
+            position=position,
+            encoding=encoding,
+            errors=errors,
+            newline=newline,
+            fd=self._take_fd(),
         )
         self._fds[fobj._fd] = fobj
         return fobj
@@ -612,7 +665,10 @@ class FakeFilesystem:
             bool: Whether the path exists or is a dangling symlink
         """
         path = self._normpath(path)
-        return path in self._symlinks or self._get_entry(self._follow_links(path)) is not None
+        return (
+            path in self._symlinks
+            or self._get_entry(self._follow_links(path)) is not None
+        )
 
     @synchronized
     def readlink(self, path):
@@ -663,8 +719,14 @@ class FakeFilesystem:
             raise FileNotFoundError(errno.ENOENT, 'No such file or directory', dst)
         now = time.time()
         link = FakeSymlink(
-            path=dst, target=src, mode=0o777, ino=self._next_ino(), nlink=1,
-            atime=now, mtime=now, ctime=now,
+            path=dst,
+            target=src,
+            mode=0o777,
+            ino=self._next_ino(),
+            nlink=1,
+            atime=now,
+            mtime=now,
+            ctime=now,
         )
         self._symlinks[dst] = link
 
@@ -815,7 +877,9 @@ class FakeFilesystem:
                 i += 1
                 continue
             if candidate in seen:
-                raise OSError(errno.ELOOP, 'Too many levels of symbolic links', candidate)
+                raise OSError(
+                    errno.ELOOP, 'Too many levels of symbolic links', candidate
+                )
             seen.add(candidate)
             target = link.target
             if os.path.isabs(target):
@@ -828,7 +892,7 @@ class FakeFilesystem:
             else:
                 # relative target, components are joined to the resolved prefix
                 tbits = target.split('/')
-            bits = tbits + bits[i + 1:]
+            bits = tbits + bits[i + 1 :]
             i = 0
         return self._normpath(resolved)
 
@@ -862,8 +926,13 @@ class FakeFilesystem:
         self._create_parents(path)
         now = time.time()
         self._dirs[path] = FakeDir(
-            path=path, mode=mode & 0o7777, ino=self._next_ino(), nlink=2,
-            atime=now, mtime=now, ctime=now,
+            path=path,
+            mode=mode & 0o7777,
+            ino=self._next_ino(),
+            nlink=2,
+            atime=now,
+            mtime=now,
+            ctime=now,
         )
 
     @synchronized
@@ -889,8 +958,13 @@ class FakeFilesystem:
             raise FileNotFoundError(errno.ENOENT, 'No such file or directory', path)
         now = time.time()
         self._dirs[path] = FakeDir(
-            path=path, mode=mode & 0o7777, ino=self._next_ino(), nlink=2,
-            atime=now, mtime=now, ctime=now,
+            path=path,
+            mode=mode & 0o7777,
+            ino=self._next_ino(),
+            nlink=2,
+            atime=now,
+            mtime=now,
+            ctime=now,
         )
 
     @synchronized
@@ -1024,11 +1098,11 @@ class FakeFilesystem:
             # move the descendants, keys are snapshotted first
             prefix = self._child_prefix(src)
             for key in [key for key in self._files if key.startswith(prefix)]:
-                new_key = dst + key[len(src):]
+                new_key = dst + key[len(src) :]
                 self._files[new_key] = self._files.pop(key)
                 self._files[new_key].path = new_key
             for key in [key for key in self._dirs if key.startswith(prefix)]:
-                new_key = dst + key[len(src):]
+                new_key = dst + key[len(src) :]
                 self._dirs[new_key] = self._dirs.pop(key)
                 self._dirs[new_key].path = new_key
             return
@@ -1058,17 +1132,21 @@ class FakeFilesystem:
         entries = []
         for key in self._files:
             if key.startswith(prefix):
-                name = key[len(prefix):]
+                name = key[len(prefix) :]
                 if '/' not in name:
-                    entries.append(FakeDirEntry(name, key, False, self._files[key].stat()))
+                    entries.append(
+                        FakeDirEntry(name, key, False, self._files[key].stat())
+                    )
         for key in self._dirs:
             if key.startswith(prefix):
-                name = key[len(prefix):]
+                name = key[len(prefix) :]
                 if '/' not in name:
-                    entries.append(FakeDirEntry(name, key, True, self._dirs[key].stat()))
+                    entries.append(
+                        FakeDirEntry(name, key, True, self._dirs[key].stat())
+                    )
         for key, link in self._symlinks.items():
             if key.startswith(prefix):
-                name = key[len(prefix):]
+                name = key[len(prefix) :]
                 if '/' not in name:
                     follow_stat = None
                     try:
@@ -1078,9 +1156,16 @@ class FakeFilesystem:
                     entry = self._get_entry(target) if target is not None else None
                     if entry is not None:
                         follow_stat = entry.stat()
-                    entries.append(FakeDirEntry(
-                        name, key, False, link.stat(),
-                        is_symlink=True, follow_stat=follow_stat))
+                    entries.append(
+                        FakeDirEntry(
+                            name,
+                            key,
+                            False,
+                            link.stat(),
+                            is_symlink=True,
+                            follow_stat=follow_stat,
+                        )
+                    )
         return FakeScandirIterator(entries)
 
     @synchronized
@@ -1107,17 +1192,17 @@ class FakeFilesystem:
         names = []
         for key in self._files:
             if key.startswith(prefix):
-                name = key[len(prefix):]
+                name = key[len(prefix) :]
                 if '/' not in name:
                     names.append(name)
         for key in self._dirs:
             if key.startswith(prefix):
-                name = key[len(prefix):]
+                name = key[len(prefix) :]
                 if '/' not in name:
                     names.append(name)
         for key in self._symlinks:
             if key.startswith(prefix):
-                name = key[len(prefix):]
+                name = key[len(prefix) :]
                 if '/' not in name:
                     names.append(name)
         return sorted(names)
@@ -1163,9 +1248,18 @@ class FakeFilesystem:
             entry = self.create_file(path, st_mode=mode & 0o7777)
         append = bool(flags & os.O_APPEND)
         fobj = FakeFileObject(
-            self, entry, '', binary=True, readable=readable, writable=writable,
-            append=append, position=len(entry.content) if append else 0,
-            encoding=None, errors=None, newline=None, fd=self._take_fd(),
+            self,
+            entry,
+            '',
+            binary=True,
+            readable=readable,
+            writable=writable,
+            append=append,
+            position=len(entry.content) if append else 0,
+            encoding=None,
+            errors=None,
+            newline=None,
+            fd=self._take_fd(),
         )
         self._fds[fobj._fd] = fobj
         return fobj._fd

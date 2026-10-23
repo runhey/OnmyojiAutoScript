@@ -129,7 +129,7 @@ def iter_yaml_rows(text):
     regex_multiline_string = re.compile(r'^[|>][+-]?(?:\s+#.*)?$')
 
     # Stack of (indent, key) of parent mappings
-    stack: "deque[tuple[int, str]]" = deque()
+    stack: 'deque[tuple[int, str]]' = deque()
     # Indent of the current block scalar, None when not inside a block scalar
     block_indent = None
     for line in text.splitlines():
@@ -161,7 +161,7 @@ def iter_yaml_rows(text):
         path = tuple([k for _, k in stack] + [key])
         stack.append((indent, key))
         # Check if this line starts a block scalar, e.g. 'desc: |-'
-        rest = stripped[len(result.group(0)):].strip()
+        rest = stripped[len(result.group(0)) :].strip()
         if regex_multiline_string.match(rest):
             block_indent = indent
         yield path, line
@@ -184,7 +184,7 @@ def insert_comments_iter(rows, help_map):
             help_text = help_map[key]
             # _split_help returns a list of lines for multiline help, str for single line
             comments = [help_text] if isinstance(help_text, str) else help_text
-            indent = row[:len(row) - len(row.lstrip())]
+            indent = row[: len(row) - len(row.lstrip())]
             for comment in comments:
                 yield f'{indent}# {comment}'
         yield row
@@ -238,10 +238,12 @@ class YamlConfig(Generic[T_model]):
     def __init__(self, file, model: Type[T_model]):
         self.file = file
         self.model: Type[T_model] = model
-        self.errors: "List[Union[ErrorInfo, Exception]]" = []
+        self.errors: 'List[Union[ErrorInfo, Exception]]' = []
         # Model must be a msgspec struct
         if not isinstance(model, type) or not issubclass(model, Struct):
-            raise TypeError(f'Model must be a subclass of msgspec.Struct, got {model!r}')
+            raise TypeError(
+                f'Model must be a subclass of msgspec.Struct, got {model!r}'
+            )
         # Model must be default constructible, all fields need default values
         try:
             model()
@@ -358,7 +360,7 @@ class YamlConfig(Generic[T_model]):
         data = msgspec.to_builtins(self.data)
         try:
             deep_set_with_error(data, key, value)
-        except (KeyError, TypeError, IndexError):
+        except KeyError, TypeError, IndexError:
             error = KeyError(f'Key path {key!r} does not exist in data')
             self.errors = [error]
             self._log_errors(self.errors)
@@ -393,7 +395,7 @@ class YamlConfig(Generic[T_model]):
         if skip_same:
             try:
                 old = atomic_read_text(self.file)
-            except (FileNotFoundError, UnicodeDecodeError):
+            except FileNotFoundError, UnicodeDecodeError:
                 old = None
             if text == old:
                 return False

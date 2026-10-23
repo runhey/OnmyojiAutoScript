@@ -2,7 +2,6 @@ from collections.abc import Callable
 from typing import Any, ClassVar
 
 from pydantic import BaseModel, Field
-from pydantic.fields import FieldInfo
 
 UNSET = object()
 
@@ -20,12 +19,12 @@ class ConfigBase(BaseModel):
         model fields are available.  It is never called when a model instance
         is constructed.
         """
-
         super().__pydantic_init_subclass__(**kwargs)
-        if cls.__dict__.get("__config_abstract__", False):
+        if cls.__dict__.get('__config_abstract__', False):
             return
 
         from oas.config.models.registry import config_model_registry
+
         try:
             from oas.config.models.groups import GroupBase
             from oas.config.models.tasks import TaskBase
@@ -54,27 +53,25 @@ def temporal_field(
     read_only: bool | None,
     json_schema_extra: dict[str, Any] | None,
     kwargs: dict[str, Any],
-) -> FieldInfo:
+) -> Any:
     """Build shared field metadata for temporal component types."""
     if default is UNSET and default_factory is None:
-        raise TypeError(
-            f"{component_type}.field requires default or default_factory"
-        )
+        raise TypeError(f'{component_type}.field requires default or default_factory')
     if default is not UNSET and default_factory is not None:
         raise TypeError(
-            f"{component_type}.field cannot set both default and default_factory"
+            f'{component_type}.field cannot set both default and default_factory'
         )
 
     field_kwargs = dict(kwargs)
-    field_kwargs["validate_default"] = True
+    field_kwargs['validate_default'] = True
     if default_factory is not None:
-        field_kwargs["default_factory"] = default_factory
+        field_kwargs['default_factory'] = default_factory
     else:
-        field_kwargs["default"] = default
-    generated = {"type": component_type}
+        field_kwargs['default'] = default
+    generated = {'type': component_type}
     if read_only is not None:
-        generated["readOnly"] = read_only
-    field_kwargs["json_schema_extra"] = build_field_schema_extra(
+        generated['readOnly'] = read_only
+    field_kwargs['json_schema_extra'] = build_field_schema_extra(
         hide=hide,
         icon=icon,
         alias=alias,
@@ -83,9 +80,9 @@ def temporal_field(
         **generated,
     )
     if description is not None:
-        field_kwargs["description"] = description
+        field_kwargs['description'] = description
     if title is not None:
-        field_kwargs["title"] = title
+        field_kwargs['title'] = title
     return Field(**field_kwargs)
 
 
@@ -99,17 +96,16 @@ def build_field_schema_extra(
     **generated: Any,
 ) -> dict[str, Any]:
     """Build shared UI metadata for Option and Input fields."""
-
     if json_schema_extra is not None and not isinstance(json_schema_extra, dict):
-        raise TypeError("json_schema_extra must be a dictionary")
+        raise TypeError('json_schema_extra must be a dictionary')
 
     extra = dict(generated)
     if hide is not None:
-        extra["hide"] = hide
+        extra['hide'] = hide
     if icon is not None:
-        extra["icon"] = icon
+        extra['icon'] = icon
     if depends is not None:
-        extra["depends"] = depends
+        extra['depends'] = depends
     # ``alias`` remains reserved for future Pydantic alias support.  It is
     # intentionally not emitted unless supplied through json_schema_extra.
     del alias
@@ -130,20 +126,22 @@ def boolean_component_field(
     depends: str | None,
     json_schema_extra: dict[str, Any] | None,
     kwargs: dict[str, Any],
-) -> FieldInfo:
+) -> Any:
     """Build shared field metadata for boolean UI components."""
     if default is UNSET and default_factory is None:
-        raise TypeError(f"{component_type}.field requires default or default_factory")
+        raise TypeError(f'{component_type}.field requires default or default_factory')
     if default is not UNSET and default_factory is not None:
-        raise TypeError(f"{component_type}.field cannot set both default and default_factory")
+        raise TypeError(
+            f'{component_type}.field cannot set both default and default_factory'
+        )
 
     field_kwargs = dict(kwargs)
     if default_factory is not None:
-        field_kwargs["default_factory"] = default_factory
+        field_kwargs['default_factory'] = default_factory
     else:
-        field_kwargs["default"] = default
-    field_kwargs["validate_default"] = True
-    field_kwargs["json_schema_extra"] = build_field_schema_extra(
+        field_kwargs['default'] = default
+    field_kwargs['validate_default'] = True
+    field_kwargs['json_schema_extra'] = build_field_schema_extra(
         hide=hide,
         icon=icon,
         alias=alias,
@@ -152,7 +150,7 @@ def boolean_component_field(
         type=component_type,
     )
     if description is not None:
-        field_kwargs["description"] = description
+        field_kwargs['description'] = description
     if title is not None:
-        field_kwargs["title"] = title
+        field_kwargs['title'] = title
     return Field(**field_kwargs)

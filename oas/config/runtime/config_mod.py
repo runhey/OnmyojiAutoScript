@@ -140,7 +140,7 @@ class ConfigMod(ConfigAccessState):
         result: ConfigResult,
         config_name: str,
         taskclass: str,
-        name: str = "default",
+        name: str = 'default',
     ) -> ConfigResult:
         """新增 Task 实例，数据库中的名字为 ``taskclass@name``。"""
         return result
@@ -161,7 +161,7 @@ class ConfigMod(ConfigAccessState):
         result: ConfigResult,
         config_name: str,
         task: str,
-        new_name: str = "default",
+        new_name: str = 'default',
     ) -> ConfigResult:
         """复制 Task 实例，保留当前值，目标名为 ``TaskClass@new_name``。"""
         return result

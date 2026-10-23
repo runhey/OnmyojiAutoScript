@@ -17,17 +17,17 @@ class TimeConfig(BaseModel):
 
     run_time: Time = Time.field(
         default=Time(19, 0),
-        description="每天运行时间",
-        icon="clock",
+        description='每天运行时间',
+        icon='clock',
     )
 
 
 console = Console(legacy_windows=False)
-OUTPUT_DIRECTORY = Path(__file__).resolve().parents[1] / "show-tmp"
+OUTPUT_DIRECTORY = Path(__file__).resolve().parents[1] / 'show-tmp'
 
 
 def export_time_json() -> dict:
-    return TimeConfig().model_dump(mode="json")
+    return TimeConfig().model_dump(mode='json')
 
 
 def export_time_schema() -> dict:
@@ -35,26 +35,26 @@ def export_time_schema() -> dict:
 
 
 def main() -> None:
-    if hasattr(sys.stdout, "reconfigure"):
-        sys.stdout.reconfigure(encoding="utf-8")
+    if hasattr(sys.stdout, 'reconfigure'):
+        sys.stdout.reconfigure(encoding='utf-8')
 
     json_data = export_time_json()
     schema_data = export_time_schema()
     OUTPUT_DIRECTORY.mkdir(parents=True, exist_ok=True)
-    (OUTPUT_DIRECTORY / "time_json.json").write_text(
-        json.dumps(json_data, ensure_ascii=False, indent=2) + "\n",
-        encoding="utf-8",
+    (OUTPUT_DIRECTORY / 'time_json.json').write_text(
+        json.dumps(json_data, ensure_ascii=False, indent=2) + '\n',
+        encoding='utf-8',
     )
-    (OUTPUT_DIRECTORY / "time_schema.json").write_text(
-        json.dumps(schema_data, ensure_ascii=False, indent=2) + "\n",
-        encoding="utf-8",
+    (OUTPUT_DIRECTORY / 'time_schema.json').write_text(
+        json.dumps(schema_data, ensure_ascii=False, indent=2) + '\n',
+        encoding='utf-8',
     )
 
-    console.rule("Time JSON")
+    console.rule('Time JSON')
     console.print_json(data=json_data)
-    console.rule("Time JSON Schema")
+    console.rule('Time JSON Schema')
     console.print_json(data=schema_data)
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     main()

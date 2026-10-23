@@ -21,7 +21,7 @@ class Codec:
         """Encode one configuration dict as MsgPack bytes."""
 
         if not isinstance(data, dict):
-            raise TypeError("Codec.encode requires a dict")
+            raise TypeError('Codec.encode requires a dict')
         return msgspec.msgpack.encode(data)
 
     @staticmethod
@@ -29,14 +29,14 @@ class Codec:
         """Decode MsgPack bytes into one configuration dict."""
 
         if not isinstance(blob, (bytes, bytearray, memoryview)):
-            raise TypeError("Codec.decode requires bytes")
+            raise TypeError('Codec.decode requires bytes')
         try:
             data = msgspec.msgpack.decode(bytes(blob))
         except msgspec.DecodeError as exc:
-            raise ValueError(f"invalid MsgPack payload: {exc}") from exc
+            raise ValueError(f'invalid MsgPack payload: {exc}') from exc
         if not isinstance(data, dict):
             # The payload is stored data, not a caller type error.
             raise ValueError(  # noqa: TRY004
-                f"MsgPack payload must be a map, got {type(data).__name__}"
+                f'MsgPack payload must be a map, got {type(data).__name__}'
             )
         return data

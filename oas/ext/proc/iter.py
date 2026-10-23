@@ -6,8 +6,9 @@ from .cmd import get_cmdline
 # proc.py is an alternative of psutil.
 # It's 10+ times faster by directly access psutil's C bindings
 
+
 # psutil.pids()
-def pids() -> "list[int]":
+def pids() -> 'list[int]':
     # [MODIFIED] No global variable _LOWEST_PID
     return sorted(psplatform.pids())
 

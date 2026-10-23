@@ -8,13 +8,14 @@ if psutil.POSIX:
 
     def _send_signal(pid, sig):
         if pid < 0:
-            raise ValueError("pid must be a positive integer")
+            raise ValueError('pid must be a positive integer')
         if pid == 0:
             # see "man 2 kill"
             raise ValueError(
-                "preventing sending signal to process with PID 0 as it "
-                "would affect every process in the process group of the "
-                "calling process (os.getpid()) instead of PID 0")
+                'preventing sending signal to process with PID 0 as it '
+                'would affect every process in the process group of the '
+                'calling process (os.getpid()) instead of PID 0'
+            )
         os.kill(pid, sig)
 
     def terminate(pid):

@@ -8,9 +8,9 @@ T = TypeVar('T')
 class ResourceCacheTTL(Generic[T]):
     def __init__(self):
         self._create_lock = Lock()
-        self._cache: "dict[str, T]" = {}
-        self._lock: "dict[str, Lock]" = {}
-        self._last_use: "dict[str, float]" = {}
+        self._cache: 'dict[str, T]' = {}
+        self._lock: 'dict[str, Lock]' = {}
+        self._last_use: 'dict[str, float]' = {}
 
     def load_resource(self, file: str, **kwargs) -> T:
         """
@@ -119,8 +119,8 @@ class ResourceCacheTTL(Generic[T]):
 class ResourceCache(Generic[T]):
     def __init__(self):
         self._create_lock = Lock()
-        self._cache: "dict[str, T]" = {}
-        self._lock: "dict[str, Lock]" = {}
+        self._cache: 'dict[str, T]' = {}
+        self._lock: 'dict[str, Lock]' = {}
 
     def load_resource(self, file: str, **kwargs) -> T:
         """

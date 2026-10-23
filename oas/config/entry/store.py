@@ -37,7 +37,7 @@ class TaskStore:
         """
 
         if not task_name:
-            raise ValueError("task_name must not be empty")
+            raise ValueError('task_name must not be empty')
 
         table = ConfigTable(config_name)
         data = task.to_dict()
@@ -76,7 +76,7 @@ class TaskStore:
         """Read one Task instance, using Pydantic defaults for missing fields."""
 
         if not task_name:
-            raise ValueError("task_name must not be empty")
+            raise ValueError('task_name must not be empty')
 
         data = {
             row.group: Codec.decode(row.value)

@@ -54,7 +54,7 @@ def zstd_decompress(data, source=None):
 
     # Auto-detect format: if data starts with zstd magic header, use default format,
     # otherwise treat as magicless (FORMAT_ZSTD1_MAGICLESS).
-    if data[:len(zstd.FRAME_HEADER)] == zstd.FRAME_HEADER:
+    if data[: len(zstd.FRAME_HEADER)] == zstd.FRAME_HEADER:
         fmt = zstd.FORMAT_ZSTD1
     else:
         fmt = zstd.FORMAT_ZSTD1_MAGICLESS

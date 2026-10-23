@@ -16,6 +16,7 @@ def function_drop(drop_rate, default=..., log=True):
     Returns:
         callable: Decorated function.
     """
+
     def decorator(func):
         # Unwrap classmethod/staticmethod to work with the underlying function
         is_classmethod = isinstance(func, classmethod)
@@ -64,4 +65,5 @@ def function_drop(drop_rate, default=..., log=True):
         elif is_staticmethod:
             return staticmethod(wrapper)
         return wrapper
+
     return decorator

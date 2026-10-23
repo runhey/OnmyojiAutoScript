@@ -65,7 +65,8 @@ def loadpy(file):
         if 'no known parent package' in msg:
             # ImportError: attempted relative import with no known parent package
             raise ImportError(
-                f'loadpy() cannot load files that has relative import syntax like "from . import xxx", {e}') from e
+                f'loadpy() cannot load files that has relative import syntax like "from . import xxx", {e}'
+            ) from e
         else:
             raise
     except Exception as e:

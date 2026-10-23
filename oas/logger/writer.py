@@ -16,15 +16,16 @@ if TYPE_CHECKING:
 # But we don't want to open multiple files
 class LogWriter(metaclass=Singleton):
     def __init__(self):
-        self.create_date: "date | None" = None
+        self.create_date: 'date | None' = None
         # OAS has no Electron shell, so the "file only, no stdout" branch in
         # AlasioLogger._emit() never applies. Kept as an instance attribute so
         # a future desktop wrapper can flip it in one place.
         self.is_electron = False
 
     @cached_property_threadsafe
-    def backend(self) -> "BackendBridge | PseudoBackendBridge":
+    def backend(self) -> 'BackendBridge | PseudoBackendBridge':
         from oas.backend.worker.bridge import BackendBridge
+
         backend = BackendBridge()
         if backend.inited:
             return backend
@@ -127,7 +128,7 @@ class LogWriter(metaclass=Singleton):
 
 class PseudoBackendBridge:
     inited = False
-    config_name = "mock"
+    config_name = 'mock'
 
     def send_log(self, event):
         return CaptureJob()
@@ -147,7 +148,7 @@ class CaptureStream:
         Args:
             parent (CaptureStream): Parent stream to also write to. Defaults to None.
         """
-        self.logs: "list[str]" = []
+        self.logs: 'list[str]' = []
         self.parent = parent
 
     def write(self, text):
@@ -185,6 +186,7 @@ class CaptureStream:
             bool: True if text is found in any log
         """
         import re
+
         for log in self.logs:
             if re.search(pattern, log):
                 return True
@@ -202,9 +204,9 @@ class CaptureBackend:
         Args:
             parent (CaptureBackend): Parent backend to also send to. Defaults to None.
         """
-        self.logs: "list[dict]" = []
+        self.logs: 'list[dict]' = []
         self.inited = True
-        self.config_name = "mock"
+        self.config_name = 'mock'
         self.parent = parent
 
     def send_log(self, event):
@@ -240,6 +242,7 @@ class CaptureBackend:
             bool: True if text is found in any log entry value
         """
         import re
+
         for log in self.logs:
             for value in log.values():
                 if isinstance(value, str) and re.search(pattern, value):

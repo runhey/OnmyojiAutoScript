@@ -32,9 +32,9 @@ class _BatchSetContext:
         self.config = config
 
     def __enter__(self) -> Self:
-        self.config._local.batch_depth = getattr(
-            self.config._local, "batch_depth", 0
-        ) + 1
+        self.config._local.batch_depth = (
+            getattr(self.config._local, 'batch_depth', 0) + 1
+        )
         return self
 
     def __exit__(
@@ -43,7 +43,7 @@ class _BatchSetContext:
         exc_val: BaseException | None,
         exc_tb: TracebackType | None,
     ) -> None:
-        depth = max(getattr(self.config._local, "batch_depth", 0) - 1, 0)
+        depth = max(getattr(self.config._local, 'batch_depth', 0) - 1, 0)
         self.config._local.batch_depth = depth
         # Alasio saves when leaving the outermost context, including when the
         # wrapped code raised. The database operation itself remains atomic.
@@ -63,9 +63,7 @@ class _TemporaryContext:
         self.previous_const: dict[str, Any] = {}
 
     def __enter__(self) -> Self:
-        self.previous_config, self.previous_const = self.config.override(
-            **self.kwargs
-        )
+        self.previous_config, self.previous_const = self.config.override(**self.kwargs)
         return self
 
     def __exit__(
@@ -89,7 +87,7 @@ class GroupProxy:
         config.Group.Arg = value
     """
 
-    __slots__ = ("_config", "_group", "_obj", "_task")
+    __slots__ = ('_config', '_group', '_obj', '_task')
 
     def __init__(
         self,
@@ -98,10 +96,10 @@ class GroupProxy:
         task: str,
         group: str,
     ) -> None:
-        object.__setattr__(self, "_obj", obj)
-        object.__setattr__(self, "_config", config)
-        object.__setattr__(self, "_task", task)
-        object.__setattr__(self, "_group", group)
+        object.__setattr__(self, '_obj', obj)
+        object.__setattr__(self, '_config', config)
+        object.__setattr__(self, '_task', task)
+        object.__setattr__(self, '_group', group)
 
     def __getattr__(self, name: str) -> Any:
         """
@@ -116,8 +114,8 @@ class GroupProxy:
             return attr
         function = attr.__func__
         if not (
-            getattr(function, "_alasio_batch_set", False)
-            or getattr(function, "_oas_batch_set", False)
+            getattr(function, '_alasio_batch_set', False)
+            or getattr(function, '_oas_batch_set', False)
         ):
             return attr
 
@@ -135,8 +133,8 @@ class GroupProxy:
             value: New argument value
         """
 
-        if name.startswith("_"):
-            raise AttributeError(f"cannot assign private proxy attribute: {name}")
+        if name.startswith('_'):
+            raise AttributeError(f'cannot assign private proxy attribute: {name}')
         self._config._set_group_arg(self._task, self._group, name, value)
 
     def __repr__(self) -> str:
@@ -151,7 +149,7 @@ class ConfigAccess(ConfigMod):
     Config access and Group runtime state.
     """
 
-    def __init__(self, config_name: str, task: str = "") -> None:
+    def __init__(self, config_name: str, task: str = '') -> None:
         super().__init__(config_name, task)
         self.init_task()
 
@@ -220,14 +218,14 @@ class ConfigAccess(ConfigMod):
         with self._lock:
             if self._modified:
                 logger.error(
-                    "Trying to release config cache but having unsaved config "
-                    "modifications, this could lead to data inconsistency"
+                    'Trying to release config cache but having unsaved config '
+                    'modifications, this could lead to data inconsistency'
                 )
-            depth = getattr(self._local, "batch_depth", 0)
+            depth = getattr(self._local, 'batch_depth', 0)
             if depth > 0:
                 logger.error(
-                    "Trying to release config cache but batch_depth > 0, "
-                    "this could lead to data inconsistency"
+                    'Trying to release config cache but batch_depth > 0, '
+                    'this could lead to data inconsistency'
                 )
             self._dict_row.clear()
             self._dict_group.clear()
@@ -237,7 +235,7 @@ class ConfigAccess(ConfigMod):
 
     @staticmethod
     def _task_class(task: str) -> type[TaskBase] | None:
-        taskclass, separator, _name = task.partition("@")
+        taskclass, separator, _name = task.partition('@')
         name = taskclass if separator else task
         try:
             candidate = config_model_registry.get_task_class(name)
@@ -246,9 +244,7 @@ class ConfigAccess(ConfigMod):
         return candidate if issubclass(candidate, TaskBase) else None
 
     @staticmethod
-    def _group_class(
-        task_class: type[TaskBase], group: str
-    ) -> type[GroupBase] | None:
+    def _group_class(task_class: type[TaskBase], group: str) -> type[GroupBase] | None:
         field = task_class.model_fields.get(group)
         if field is None:
             return None
@@ -304,7 +300,7 @@ class ConfigAccess(ConfigMod):
                 if payload is None
                 else group_class.from_dict(Codec.decode(payload))
             )
-        except (TypeError, ValueError, ValidationError):
+        except TypeError, ValueError, ValidationError:
             return None
         self._dict_group[key] = obj
         return obj
@@ -331,11 +327,11 @@ class ConfigAccess(ConfigMod):
 
         obj = self._load_group(task, group)
         if obj is None:
-            raise AttributeError(f"no such group: {task}.{group}")
+            raise AttributeError(f'no such group: {task}.{group}')
         if arg not in type(obj).model_fields:
-            raise AttributeError(f"no such field: {task}.{group}.{arg}")
+            raise AttributeError(f'no such field: {task}.{group}.{arg}')
 
-        data = obj.model_dump(mode="python")
+        data = obj.model_dump(mode='python')
         data[arg] = value
         validated = type(obj).model_validate(data)
         new_value = getattr(validated, arg)
@@ -367,14 +363,14 @@ class ConfigAccess(ConfigMod):
         A fallback to access bound Groups.
         """
 
-        if name.startswith("_") or not self.task:
+        if name.startswith('_') or not self.task:
             raise AttributeError(name)
         task_class = self._task_class(self.task)
         if task_class is None or name not in task_class.model_fields:
             raise AttributeError(name)
         group = self._load_group(self.task, name)
         if group is None:
-            raise AttributeError(f"no such static group: {self.task}.{name}")
+            raise AttributeError(f'no such static group: {self.task}.{name}')
         return GroupProxy(group, self, self.task, name)
 
     # ------------------------------------------------------------------
@@ -409,9 +405,7 @@ class ConfigAccess(ConfigMod):
         obj = self._load_group(self.task, group)
         return default if obj is None else getattr(obj, arg, default)
 
-    def cross_get(
-        self, task: str, group: str, arg: str, default: Any = None
-    ) -> Any:
+    def cross_get(self, task: str, group: str, arg: str, default: Any = None) -> Any:
         """
         Get config from another Task.
 
@@ -446,7 +440,7 @@ class ConfigAccess(ConfigMod):
             if current == new_value:
                 return
             setattr(obj, arg, new_value)
-        except (TypeError, ValueError, ValidationError):
+        except TypeError, ValueError, ValidationError:
             return
         self.register_modify(task, group, arg, new_value)
 
@@ -468,7 +462,7 @@ class ConfigAccess(ConfigMod):
         event = ConfigSetEvent(task=task, group=group, arg=arg, value=value)
         with self._lock:
             self._modified[(task, group, arg)] = event
-            if self.auto_save and getattr(self._local, "batch_depth", 0) == 0:
+            if self.auto_save and getattr(self._local, 'batch_depth', 0) == 0:
                 self.save()
 
     def save(self) -> bool:
@@ -498,8 +492,8 @@ class ConfigAccess(ConfigMod):
             if response.error:
                 logger.info(
                     f'Failed to save config "{self.config_name}", '
-                    f"key={response.task}.{response.group}.{response.arg}, "
-                    f"error={response.error}"
+                    f'key={response.task}.{response.group}.{response.arg}, '
+                    f'error={response.error}'
                 )
         if not success:
             with self._lock:
@@ -517,9 +511,7 @@ class ConfigAccess(ConfigMod):
 
         return _BatchSetContext(self)
 
-    def _apply_override_config(
-        self, group: str, arg: str, value: Any
-    ) -> Any:
+    def _apply_override_config(self, group: str, arg: str, value: Any) -> Any:
         obj = self._load_group(self.task, group)
         if obj is None or arg not in type(obj).model_fields:
             return None
@@ -527,7 +519,7 @@ class ConfigAccess(ConfigMod):
         try:
             validated = type(obj).model_validate({arg: value})
             setattr(obj, arg, getattr(validated, arg))
-        except (TypeError, ValueError, ValidationError):
+        except TypeError, ValueError, ValidationError:
             return _MISSING
         return previous
 
@@ -536,7 +528,9 @@ class ConfigAccess(ConfigMod):
         setattr(self, key, value)
         return previous
 
-    def override(self, **kwargs: Any) -> tuple[dict[str, dict[str, Any]], dict[str, Any]]:
+    def override(
+        self, **kwargs: Any
+    ) -> tuple[dict[str, dict[str, Any]], dict[str, Any]]:
         """
         Permanently override config values in memory.
 
@@ -556,7 +550,7 @@ class ConfigAccess(ConfigMod):
                     previous_const[key] = previous
                     self._override_const[key] = value
                     continue
-                group, separator, arg = key.partition("_")
+                group, separator, arg = key.partition('_')
                 if not separator:
                     continue
                 previous = self._apply_override_config(group, arg, value)

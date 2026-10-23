@@ -16,6 +16,6 @@ def str_center(text, width, char=' '):
     if width <= length:
         return text
     pad = width - length
-    left = pad // 2       # floor
+    left = pad // 2  # floor
     right = pad - left
     return ''.join([char * left, text, char * right])

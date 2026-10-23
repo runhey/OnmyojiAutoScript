@@ -33,21 +33,21 @@ def validate_config_name(config_name: str) -> str:
         validate_filename(config_name)
     except ValueError as exc:
         return str(exc)
-    if config_name.lower() in {"gui", "webapp", ":memory:"}:
+    if config_name.lower() in {'gui', 'webapp', ':memory:'}:
         return f'Config name is protected: "{config_name}"'
-    if config_name.lower().startswith("template"):
+    if config_name.lower().startswith('template'):
         return f'Config name is protected: "{config_name}"'
-    return ""
+    return ''
 
 
 def iter_local_files():
-    folder = env.PROJECT_ROOT / "config"
+    folder = env.PROJECT_ROOT / 'config'
     if not folder.exists():
         return []
-    for path in folder.iter_files(ext=".db"):
+    for path in folder.iter_files(ext='.db'):
         name = path.stem
         if not validate_config_name(name):
-            yield ConfigFile(name=name, mod="")
+            yield ConfigFile(name=name, mod='')
 
 
 class DndRequest(msgspec.Struct):
@@ -61,7 +61,7 @@ class ConfigInfo(msgspec.Struct):
     mod: str
     gid: int
     iid: int
-    extra: bytes = b"\x80"
+    extra: bytes = b'\x80'
     id: int = 0
 
 
@@ -72,7 +72,7 @@ class ConfigExtra(msgspec.Struct):
 class ScanTable(GuiDB):
     """Maintain GUI ordering and metadata for local config databases."""
 
-    TABLE_NAME = "scan"
+    TABLE_NAME = 'scan'
     CREATE_TABLE = """
         CREATE TABLE "{TABLE_NAME}" (
         "id" INTEGER NOT NULL,
@@ -89,7 +89,7 @@ class ScanTable(GuiDB):
     MODEL = ConfigInfo
 
     def select_rows(self, *, _cursor_=None) -> dict[str, ConfigInfo]:
-        rows = self.select(_cursor_=_cursor_, _orderby_=("gid", "iid"))
+        rows = self.select(_cursor_=_cursor_, _orderby_=('gid', 'iid'))
         return {row.name: row for row in rows}
 
     @staticmethod
@@ -130,7 +130,7 @@ class ScanTable(GuiDB):
                 if name in record:
                     if record[name].mod != local_row.mod:
                         record[name].mod = local_row.mod
-                        self.update_row(record[name], updates="mod", _cursor_=cursor)
+                        self.update_row(record[name], updates='mod', _cursor_=cursor)
                     continue
                 gid += 1
                 record[name] = ConfigInfo(name, local_row.mod, gid, 1)
@@ -155,11 +155,13 @@ class ScanTable(GuiDB):
             old_pos = (old_row.gid, old_row.iid)
             new_pos = (new_row.gid, new_row.iid)
             if old_pos != new_pos:
-                pending_updates.append({
-                    "row": new_row,
-                    "old_pos": old_pos,
-                    "new_pos": new_pos,
-                })
+                pending_updates.append(
+                    {
+                        'row': new_row,
+                        'old_pos': old_pos,
+                        'new_pos': new_pos,
+                    }
+                )
 
         if not pending_updates:
             return
@@ -172,17 +174,17 @@ class ScanTable(GuiDB):
             while True:
                 remaining_updates = []
                 for update in pending_updates:
-                    target_pos = update["new_pos"]
+                    target_pos = update['new_pos']
                     if target_pos not in current_positions:
-                        row = update["row"]
-                        old_pos = update["old_pos"]
+                        row = update['row']
+                        old_pos = update['old_pos']
                         row.gid, row.iid = target_pos
-                        self.update_row(row, updates=("gid", "iid"), _cursor_=cursor)
+                        self.update_row(row, updates=('gid', 'iid'), _cursor_=cursor)
                         current_positions.remove(old_pos)
                         current_positions.add(target_pos)
                         logger.info(
                             f'config_dnd: Resolved and updated "{row.name}" '
-                            f"from {old_pos} to {target_pos}"
+                            f'from {old_pos} to {target_pos}'
                         )
                     else:
                         remaining_updates.append(update)
@@ -201,27 +203,26 @@ class ScanTable(GuiDB):
                 break
 
             update = pending_updates[0]
-            row = update["row"]
-            old_pos = update["old_pos"]
+            row = update['row']
+            old_pos = update['old_pos']
             temporary = deepcopy(row)
             temporary_pos = (temporary_gid, 1)
             temporary.gid, temporary.iid = temporary_pos
-            self.update_row(temporary, updates=("gid", "iid"), _cursor_=cursor)
+            self.update_row(temporary, updates=('gid', 'iid'), _cursor_=cursor)
             temporary_gid += 1
             current_positions.remove(old_pos)
             current_positions.add(temporary_pos)
-            update["old_pos"] = temporary_pos
+            update['old_pos'] = temporary_pos
             logger.info(
                 f'config_dnd: Moved "{row.name}" from {old_pos} '
-                f"to temporary position {temporary_pos}"
+                f'to temporary position {temporary_pos}'
             )
 
-        unresolved = ", ".join(
-            f'"{update["row"].name}" from {update["old_pos"]} '
-            f'to {update["new_pos"]}'
+        unresolved = ', '.join(
+            f'"{update["row"].name}" from {update["old_pos"]} to {update["new_pos"]}'
             for update in pending_updates
         )
-        message = f"config_dnd: Unable to resolve conflicts. Unresolved: {unresolved}"
+        message = f'config_dnd: Unable to resolve conflicts. Unresolved: {unresolved}'
         logger.error(message)
         raise RuntimeError(message)
 
@@ -231,7 +232,7 @@ class ScanTable(GuiDB):
             raise RpcValueError(error)
         file = ConfigDB.config_file(name)
         if file.exists():
-            raise RpcValueError(f"Config file to add already exists {file}")
+            raise RpcValueError(f'Config file to add already exists {file}')
         KeyTable(name).mod_set(mod)
 
     def config_del(self, name: str) -> None:
@@ -252,27 +253,33 @@ class ScanTable(GuiDB):
         old_file = ConfigDB.config_file(old_name)
         new_file = ConfigDB.config_file(new_name)
         if not old_file.exists():
-            raise RpcValueError(f"Config file to rename does not exist: {old_file}")
+            raise RpcValueError(f'Config file to rename does not exist: {old_file}')
         if new_file.exists():
             try:
                 same_file = os.path.samefile(old_file, new_file)
             except FileNotFoundError:
                 same_file = False
             if not same_file:
-                raise RpcValueError(f"Config file with new name already exists: {new_file}")
+                raise RpcValueError(
+                    f'Config file with new name already exists: {new_file}'
+                )
         from oas.db.conn import SQLITE_POOL
 
         try:
             SQLITE_POOL.rename_file(old_file, new_file)
         except FileNotFoundError:
-            raise RpcValueError(f"Config file to rename does not exist: {old_file}") from None
+            raise RpcValueError(
+                f'Config file to rename does not exist: {old_file}'
+            ) from None
         except FileExistsError:
-            raise RpcValueError(f"Config file with new name already exists: {new_file}") from None
+            raise RpcValueError(
+                f'Config file with new name already exists: {new_file}'
+            ) from None
         with self.cursor() as cursor:
             row = self.select_one(name=old_name, _cursor_=cursor)
             if row is not None:
                 row.name = new_name
-                self.upsert_row(row, updates="name", _cursor_=cursor)
+                self.upsert_row(row, updates='name', _cursor_=cursor)
 
     def config_copy(self, source: str, target: str) -> None:
         for name in (source, target):
@@ -284,9 +291,9 @@ class ScanTable(GuiDB):
         source_file = ConfigDB.config_file(source)
         target_file = ConfigDB.config_file(target)
         if not source_file.exists():
-            raise RpcValueError(f"Source file to copy not found: {source_file}")
+            raise RpcValueError(f'Source file to copy not found: {source_file}')
         if target_file.exists():
-            raise RpcValueError(f"Target file to copy already exists: {target_file}")
+            raise RpcValueError(f'Target file to copy already exists: {target_file}')
         atomic_write(target_file, atomic_read_bytes(source_file))
 
     def config_dnd(self, configs: list[DndRequest]) -> None:
@@ -311,11 +318,11 @@ class ScanTable(GuiDB):
 
 
 __all__ = [
-    "ConfigExtra",
-    "ConfigFile",
-    "ConfigInfo",
-    "DndRequest",
-    "ScanTable",
-    "iter_local_files",
-    "validate_config_name",
+    'ConfigExtra',
+    'ConfigFile',
+    'ConfigInfo',
+    'DndRequest',
+    'ScanTable',
+    'iter_local_files',
+    'validate_config_name',
 ]

@@ -17,8 +17,8 @@ from rich.table import Table
 from rich.tree import Tree
 
 console = Console(legacy_windows=False)
-OUTPUT_DIRECTORY = Path(__file__).resolve().parents[1] / "show-tmp"
-OUTPUT_FILE = OUTPUT_DIRECTORY / "registry.json"
+OUTPUT_DIRECTORY = Path(__file__).resolve().parents[1] / 'show-tmp'
+OUTPUT_FILE = OUTPUT_DIRECTORY / 'registry.json'
 
 
 def print_registry(registry) -> None:
@@ -27,58 +27,58 @@ def print_registry(registry) -> None:
     data = dict(registry.data)
     console.print(
         Panel(
-            f"[bold cyan]{len(registry.task_classes)}[/bold cyan] TaskClass  ·  "
-            f"[bold green]{len(registry.group_classes)}[/bold green] GroupClass",
-            title="Configuration Model Registry",
-            border_style="bright_blue",
+            f'[bold cyan]{len(registry.task_classes)}[/bold cyan] TaskClass  ·  '
+            f'[bold green]{len(registry.group_classes)}[/bold green] GroupClass',
+            title='Configuration Model Registry',
+            border_style='bright_blue',
             expand=False,
         )
     )
 
-    console.print("\n[bold]Task → Group relationships[/bold]")
+    console.print('\n[bold]Task → Group relationships[/bold]')
     tasks = sorted(registry.task_classes.items())
     if not tasks:
-        console.print("(none)")
+        console.print('(none)')
     else:
-        tree = Tree("[bold cyan]TaskClass[/bold cyan]")
+        tree = Tree('[bold cyan]TaskClass[/bold cyan]')
         for task_name, task_type in tasks:
             task_branch = tree.add(
-                f"[bold cyan]{task_name}[/bold cyan] "
-                f"[dim]({task_type.__module__}.{task_type.__qualname__})[/dim]"
+                f'[bold cyan]{task_name}[/bold cyan] '
+                f'[dim]({task_type.__module__}.{task_type.__qualname__})[/dim]'
             )
             group_names = data.get(task_name, [])
             if not group_names:
-                task_branch.add("[dim](no GroupClass fields)[/dim]")
+                task_branch.add('[dim](no GroupClass fields)[/dim]')
                 continue
             for group_name in group_names:
                 group_type = registry.group_index[(task_name, group_name)]
                 task_branch.add(
-                    f"[green]{group_name}[/green] "
-                    f"[dim]({group_type.__module__}.{group_type.__qualname__})[/dim]"
+                    f'[green]{group_name}[/green] '
+                    f'[dim]({group_type.__module__}.{group_type.__qualname__})[/dim]'
                 )
         console.print(tree)
 
-    console.print("\n[bold]GroupClass index[/bold]")
+    console.print('\n[bold]GroupClass index[/bold]')
     groups = sorted(registry.group_classes.items())
     if not groups:
-        console.print("(none)")
+        console.print('(none)')
     else:
         group_table = Table(
             show_header=True,
-            header_style="bold green",
+            header_style='bold green',
             box=None,
             padding=(0, 2),
         )
-        group_table.add_column("GroupClass", style="green")
-        group_table.add_column("Python class", style="dim")
+        group_table.add_column('GroupClass', style='green')
+        group_table.add_column('Python class', style='dim')
         for group_name, group_type in groups:
             group_table.add_row(
                 group_name,
-                f"{group_type.__module__}.{group_type.__qualname__}",
+                f'{group_type.__module__}.{group_type.__qualname__}',
             )
         console.print(group_table)
 
-    console.print("\n[bold]Serialized registry data[/bold]")
+    console.print('\n[bold]Serialized registry data[/bold]')
     console.print_json(data=data)
 
 
@@ -90,15 +90,16 @@ def main() -> None:
     from oas.config.models.registry import config_model_registry
     from oas.config.show.debug_models import DebugGroup, DebugTask  # noqa: F401
 
-    if hasattr(sys.stdout, "reconfigure"):
-        sys.stdout.reconfigure(encoding="utf-8")
+    if hasattr(sys.stdout, 'reconfigure'):
+        sys.stdout.reconfigure(encoding='utf-8')
     OUTPUT_DIRECTORY.mkdir(parents=True, exist_ok=True)
     OUTPUT_FILE.write_text(
-        json.dumps(dict(config_model_registry.data), ensure_ascii=False, indent=2) + "\n",
-        encoding="utf-8",
+        json.dumps(dict(config_model_registry.data), ensure_ascii=False, indent=2)
+        + '\n',
+        encoding='utf-8',
     )
     print_registry(config_model_registry)
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     main()

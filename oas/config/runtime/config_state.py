@@ -16,7 +16,7 @@ class ConfigAccessState:
     access layer.
     """
 
-    def __init__(self, config_name: str, task: str = "") -> None:
+    def __init__(self, config_name: str, task: str = '') -> None:
         self.config_name = config_name
         self.task = task
 
@@ -42,6 +42,6 @@ class ConfigAccessState:
         self._local = threading.local()
         self._local.batch_depth = 0
 
-        self.is_template_config = config_name.startswith("template")
+        self.is_template_config = config_name.startswith('template')
         if self.is_template_config:
             self.auto_save = False

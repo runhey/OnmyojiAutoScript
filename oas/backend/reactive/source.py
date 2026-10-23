@@ -22,7 +22,7 @@ ENCODER = Encoder()
 # __init_subclass__: a class joins the list only when it declares GC=True
 # with a numeric TTL -- the GC switch is static, decided once at class
 # creation, never at runtime.
-_GC_CLASSES: "set[type]" = set()
+_GC_CLASSES: 'set[type]' = set()
 
 # Framework layers of the source hierarchy (known, fixed set): never
 # instantiated on their own, they leave TOPIC_NAME to the concrete
@@ -31,17 +31,19 @@ _GC_CLASSES: "set[type]" = set()
 # layer here (a missing entry surfaces as a class-definition warning).
 # GuiConfigSource (topic/_gui_config.py) is the application-level shared
 # base of the config view sources and is exempt the same way.
-_FRAMEWORK_LAYERS = frozenset((
-    'EventSource',
-    'ResidentCache',
-    'DiskCache',
-    'DiskCachePush',
-    'GlobalSource',
-    'ConfigSource',
-    'KeyedSource',
-    'NoCachePush',
-    'GuiConfigSource',
-))
+_FRAMEWORK_LAYERS = frozenset(
+    (
+        'EventSource',
+        'ResidentCache',
+        'DiskCache',
+        'DiskCachePush',
+        'GlobalSource',
+        'ConfigSource',
+        'KeyedSource',
+        'NoCachePush',
+        'GuiConfigSource',
+    )
+)
 
 
 class BaseSource:
@@ -144,16 +146,16 @@ class BaseSource:
         # subscriber set is only touched from the Trio thread; the lock
         # just keeps it atomic with the snapshot.
         self._lock = threading.Lock()
-        self._subscribers: "set[BaseTopic]" = set()
+        self._subscribers: 'set[BaseTopic]' = set()
         # Cross-thread entry buffer written by on_event (any thread) and
         # reinit (Trio), drained by _sync_to_trio in one batch.
-        self._inbox: "deque[ResponseEvent]" = deque(maxlen=self.INBOX_MAXLEN)
+        self._inbox: 'deque[ResponseEvent]' = deque(maxlen=self.INBOX_MAXLEN)
         # Set on the first subscribe (Trio thread); _ring relies on it.
-        self._trio_token: "Optional[TrioToken]" = None
+        self._trio_token: 'Optional[TrioToken]' = None
 
     # ---------------- subscribe / unsubscribe ----------------
 
-    async def subscribe(self, sub) -> "Optional[bytes]":
+    async def subscribe(self, sub) -> 'Optional[bytes]':
         """
         [Trio] Register a subscriber and return the encoded full snapshot.
 
@@ -183,7 +185,9 @@ class BaseSource:
             else:
                 # Encode under the lock: the payload references data, and
                 # data cannot be modified while the lock is held.
-                payload = ENCODER.encode(ResponseEvent(t=self.TOPIC_NAME, o='full', v=data))
+                payload = ENCODER.encode(
+                    ResponseEvent(t=self.TOPIC_NAME, o='full', v=data)
+                )
         self._reconcile()
         return payload
 
@@ -646,6 +650,7 @@ class DiskCache(EventSource):
       and whose TTL only throttles re-reads;
     - subscribe = one full snapshot, then no communication.
     """
+
     GC = True
     # Default data freshness / recycle window of the cache model: most
     # DiskCache topics inherit it without declaring TTL.
@@ -674,6 +679,7 @@ class DiskCachePush(EventSource):
       subscribers and keep the instance alive / warm the cache for the
       next subscription.
     """
+
     GC = True
     GC_NEEDS_NO_SUBSCRIBER = True
     # Default data freshness / recycle window of the cache model: most
@@ -738,6 +744,7 @@ class KeyedSource(BaseSource, metaclass=SingletonKeyed):
     dimension-B model and inherit it, e.g.
     class ConfigNavSource(KeyedSource, DiskCache).
     """
+
     # The composite key of this instance. Assigned by the SingletonKeyed
     # metaclass when the instance is created (never set in __init__);
     # declared here so type checkers resolve the attribute.
@@ -802,6 +809,7 @@ class NoCachePush(BaseSource):
     subscriber leaves (unsubscribe): nothing is cached, so a departed
     viewer leaves no value behind; the next get() rebuilds it.
     """
+
     # Sentinel: no reusable build payload
     _NO_PAYLOAD = object()
     # Sentinel: the build failed. Waiters translate it to None (registered,
@@ -899,12 +907,15 @@ class NoCachePush(BaseSource):
         # no build running: build ourselves and publish to the waiters
         self._building = True
         event = trio.Event()
-        self._build_event = event  # fresh event per build: stale signals never wake new waiters
+        self._build_event = (
+            event  # fresh event per build: stale signals never wake new waiters
+        )
         try:
             view = await self._build_full()
             payload = (
                 ENCODER.encode(ResponseEvent(t=self.TOPIC_NAME, o='full', v=view))
-                if view else None
+                if view
+                else None
             )
             if self._build_waiters:
                 self._build_payload = payload

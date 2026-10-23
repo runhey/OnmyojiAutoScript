@@ -14,16 +14,16 @@ from oas.config.models.args import (
 )
 
 __all__ = [
-    "Cron",
-    "DateTime",
-    "Button",
-    "Input",
-    "InputArea",
-    "Option",
-    "OptionItem",
-    "Options",
-    "Slider",
-    "Switch",
-    "Time",
-    "TimeDelta",
+    'Cron',
+    'DateTime',
+    'Button',
+    'Input',
+    'InputArea',
+    'Option',
+    'OptionItem',
+    'Options',
+    'Slider',
+    'Switch',
+    'Time',
+    'TimeDelta',
 ]

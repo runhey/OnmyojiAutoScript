@@ -28,10 +28,10 @@ class ConfigError(msgspec.Struct, omit_defaults=True):
     """
 
     msg: str
-    type: str = "INPUT_REJECTED"
-    task: str = ""
-    group: str = ""
-    arg: str = ""
+    type: str = 'INPUT_REJECTED'
+    task: str = ''
+    group: str = ''
+    arg: str = ''
     loc: tuple[int | str, ...] = ()
 
     @classmethod
@@ -39,20 +39,20 @@ class ConfigError(msgspec.Struct, omit_defaults=True):
         cls,
         exc: ValidationError,
         *,
-        task: str = "",
-        group: str = "",
-        arg: str = "",
+        task: str = '',
+        group: str = '',
+        arg: str = '',
     ) -> ConfigError:
         """Build a :class:`ConfigError` from a Pydantic validation error."""
 
         errors = exc.errors()
         first = errors[0] if errors else {}
-        loc = tuple(first.get("loc", ()))
+        loc = tuple(first.get('loc', ()))
         if arg and not loc:
             loc = (arg,)
         return cls(
-            msg=str(first.get("msg", exc)),
-            type=str(first.get("type", "INPUT_REJECTED")),
+            msg=str(first.get('msg', exc)),
+            type=str(first.get('type', 'INPUT_REJECTED')),
             task=task,
             group=group,
             arg=arg,

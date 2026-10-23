@@ -13,6 +13,7 @@ class ReactiveContext:
     """
     Global context for tracking dependencies during computation.
     """
+
     _local = contextvars.ContextVar('observer', default=None)
 
     @classmethod
@@ -33,7 +34,7 @@ class ReactiveContext:
 
 
 class AwaitableProperty(Generic[T]):
-    def __init__(self, reactive_deco: "async_reactive[T]", obj):
+    def __init__(self, reactive_deco: 'async_reactive[T]', obj):
         """
         A meaning less wrapper to make `await` happy,
         so you can use:
@@ -65,7 +66,9 @@ class async_reactive(Generic[T]):
         self.cache_attr = f'_reactive_cache_{self.name}'
 
         # Track observers: {weak_ref_to_object, set(property_name)}
-        self.observers: "weakref.WeakKeyDictionary[object, set[str]]" = weakref.WeakKeyDictionary()
+        self.observers: 'weakref.WeakKeyDictionary[object, set[str]]' = (
+            weakref.WeakKeyDictionary()
+        )
         # Lock computation and observer changes
         self.lock = trio.Lock()
 
@@ -107,8 +110,10 @@ class async_reactive(Generic[T]):
             return value
 
     def __set__(self, obj, value):
-        raise ValueError('You should not set value to a reactive object, that would break the observation chain. '
-                         'Set value to reactive_source object instead')
+        raise ValueError(
+            'You should not set value to a reactive object, that would break the observation chain. '
+            'Set value to reactive_source object instead'
+        )
 
     async def compute(self, obj):
         """

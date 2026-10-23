@@ -182,7 +182,9 @@ class Table(Generic[T_model]):
             sqlite3.OperationalError
         """
         if not self.CREATE_TABLE:
-            raise TableError(f'Table {self.__class__.__name__} has no CREATE_TABLE defined')
+            raise TableError(
+                f'Table {self.__class__.__name__} has no CREATE_TABLE defined'
+            )
         with self.cursor() as c:
             return c.create_table()
 
@@ -191,7 +193,9 @@ class Table(Generic[T_model]):
         Drop current table
         """
         if not self.TABLE_NAME:
-            raise TableError(f'Table {self.__class__.__name__} has no TABLE_NAME defined')
+            raise TableError(
+                f'Table {self.__class__.__name__} has no TABLE_NAME defined'
+            )
         with self.cursor() as c:
             c.execute(f'DROP TABLE IF EXISTS "{self.TABLE_NAME}"')
 
@@ -243,7 +247,15 @@ class Table(Generic[T_model]):
         else:
             return f' ORDER BY {sql} DESC'
 
-    def sql_select_expr(self, sql='', _groupby_='', _orderby_='', _orderby_desc_='', _limit_=0, _offset_=0):
+    def sql_select_expr(
+        self,
+        sql='',
+        _groupby_='',
+        _orderby_='',
+        _orderby_desc_='',
+        _limit_=0,
+        _offset_=0,
+    ):
         """
         Args:
             sql (str): Prev SQL
@@ -271,14 +283,14 @@ class Table(Generic[T_model]):
         return sql
 
     def select(
-            self,
-            _cursor_=None,
-            _groupby_='',
-            _orderby_='',
-            _orderby_desc_='',
-            _limit_=0,
-            _offset_=0,
-            **kwargs
+        self,
+        _cursor_=None,
+        _groupby_='',
+        _orderby_='',
+        _orderby_desc_='',
+        _limit_=0,
+        _offset_=0,
+        **kwargs,
     ) -> list[T_model]:
         """
         Query table in a pythonic way
@@ -302,13 +314,23 @@ class Table(Generic[T_model]):
             conditions = self.sql_select_kwargs_to_condition(kwargs)
             sql = f'SELECT * FROM "{self.TABLE_NAME}" WHERE {conditions}'
             sql = self.sql_select_expr(
-                sql, _groupby_=_groupby_, _orderby_=_orderby_, _orderby_desc_=_orderby_desc_,
-                _limit_=_limit_, _offset_=_offset_)
+                sql,
+                _groupby_=_groupby_,
+                _orderby_=_orderby_,
+                _orderby_desc_=_orderby_desc_,
+                _limit_=_limit_,
+                _offset_=_offset_,
+            )
         else:
             sql = f'SELECT * FROM "{self.TABLE_NAME}"'
             sql = self.sql_select_expr(
-                sql, _groupby_=_groupby_, _orderby_=_orderby_, _orderby_desc_=_orderby_desc_,
-                _limit_=_limit_, _offset_=_offset_)
+                sql,
+                _groupby_=_groupby_,
+                _orderby_=_orderby_,
+                _orderby_desc_=_orderby_desc_,
+                _limit_=_limit_,
+                _offset_=_offset_,
+            )
 
         # query
         if _cursor_ is None:
@@ -328,13 +350,13 @@ class Table(Generic[T_model]):
         return result
 
     def select_one(
-            self,
-            _cursor_=None,
-            _groupby_='',
-            _orderby_='',
-            _orderby_desc_='',
-            _offset_=0,
-            **kwargs
+        self,
+        _cursor_=None,
+        _groupby_='',
+        _orderby_='',
+        _orderby_desc_='',
+        _offset_=0,
+        **kwargs,
     ) -> T_model | None:
         """
         Query table in a pythonic way
@@ -359,13 +381,23 @@ class Table(Generic[T_model]):
             conditions = self.sql_select_kwargs_to_condition(kwargs)
             sql = f'SELECT * FROM "{self.TABLE_NAME}" WHERE {conditions}'
             sql = self.sql_select_expr(
-                sql, _groupby_=_groupby_, _orderby_=_orderby_, _orderby_desc_=_orderby_desc_,
-                _limit_=1, _offset_=_offset_)
+                sql,
+                _groupby_=_groupby_,
+                _orderby_=_orderby_,
+                _orderby_desc_=_orderby_desc_,
+                _limit_=1,
+                _offset_=_offset_,
+            )
         else:
             sql = f'SELECT * FROM "{self.TABLE_NAME}"'
             sql = self.sql_select_expr(
-                sql, _groupby_=_groupby_, _orderby_=_orderby_, _orderby_desc_=_orderby_desc_,
-                _limit_=1, _offset_=_offset_)
+                sql,
+                _groupby_=_groupby_,
+                _orderby_=_orderby_,
+                _orderby_desc_=_orderby_desc_,
+                _limit_=1,
+                _offset_=_offset_,
+            )
 
         # query
         if _cursor_ is None:
@@ -381,7 +413,9 @@ class Table(Generic[T_model]):
             try:
                 model = self.MODEL
             except AttributeError:
-                raise TableError(f'Table {self.__class__.__name__} has no MODEL defined')
+                raise TableError(
+                    f'Table {self.__class__.__name__} has no MODEL defined'
+                )
             result = model(**result)
         return result
 
@@ -444,7 +478,9 @@ class Table(Generic[T_model]):
             try:
                 model = self.MODEL
             except AttributeError:
-                raise TableError(f'Table {self.__class__.__name__} has no MODEL defined')
+                raise TableError(
+                    f'Table {self.__class__.__name__} has no MODEL defined'
+                )
             result = model(**result)
         return result
 
@@ -476,13 +512,13 @@ class Table(Generic[T_model]):
         # :task,:group,...
         placeholders = ','.join([f':{k}' for k in columns])
         # "task","group",...
-        columns = ",".join([f'"{k}"' for k in columns])
+        columns = ','.join([f'"{k}"' for k in columns])
         return columns, placeholders
 
     def insert_row(
-            self,
-            rows: T_model | list[T_model],
-            _cursor_: SqlitePoolCursor | None = None,
+        self,
+        rows: T_model | list[T_model],
+        _cursor_: SqlitePoolCursor | None = None,
     ):
         """
         Insert one row of data or a list of data, with auto commit
@@ -502,12 +538,12 @@ class Table(Generic[T_model]):
         self.execute_one_or_many(sql, rows, _cursor_=_cursor_)
 
     def execute_one_or_many(
-            self,
-            sql: str,
-            rows: T_model | list[T_model],
-            _cursor_: SqlitePoolCursor | None = None,
-            drop_no_pk=False,
-            drop_zero_pk=False,
+        self,
+        sql: str,
+        rows: T_model | list[T_model],
+        _cursor_: SqlitePoolCursor | None = None,
+        drop_no_pk=False,
+        drop_zero_pk=False,
     ):
         """
         Args:
@@ -520,7 +556,9 @@ class Table(Generic[T_model]):
         if isinstance(rows, list):
             if drop_no_pk:
                 if drop_zero_pk:
-                    rows = [row_drop_zero_pk(asdict(row)) for row in rows if row_has_pk(row)]
+                    rows = [
+                        row_drop_zero_pk(asdict(row)) for row in rows if row_has_pk(row)
+                    ]
                 else:
                     rows = [asdict(row) for row in rows if row_has_pk(row)]
             else:
@@ -564,10 +602,10 @@ class Table(Generic[T_model]):
                 _cursor_.execute(sql, rows)
 
     def update_row(
-            self,
-            rows: T_model | list[T_model],
-            updates: str | list[str] | tuple[str,...] = '',
-            _cursor_: SqlitePoolCursor | None = None,
+        self,
+        rows: T_model | list[T_model],
+        updates: str | list[str] | tuple[str, ...] = '',
+        _cursor_: SqlitePoolCursor | None = None,
     ):
         """
         Update rows by PRIMARY_KEY.
@@ -588,7 +626,9 @@ class Table(Generic[T_model]):
             updates = [name for name in updates if name != 'id']
         if not updates:
             # no update fields?
-            raise TableError(f'Trying to do update_row() but no update fields, updates={updates}')
+            raise TableError(
+                f'Trying to do update_row() but no update fields, updates={updates}'
+            )
 
         # "task"=:task,"group"=:group,...
         set_clause = ','.join([f'"{field}"=:{field}' for field in updates])
@@ -597,11 +637,11 @@ class Table(Generic[T_model]):
         self.execute_one_or_many(sql, rows, _cursor_=_cursor_, drop_no_pk=True)
 
     def upsert_row(
-            self,
-            rows: T_model | list[T_model],
-            conflicts: str | list[str] | tuple[str,...] = '',
-            updates: str | list[str] | tuple[str,...] = '',
-            _cursor_: SqlitePoolCursor | None = None,
+        self,
+        rows: T_model | list[T_model],
+        conflicts: str | list[str] | tuple[str, ...] = '',
+        updates: str | list[str] | tuple[str, ...] = '',
+        _cursor_: SqlitePoolCursor | None = None,
     ):
         """
         Upsert rows.
@@ -626,36 +666,50 @@ class Table(Generic[T_model]):
                 conflicts = list(conflicts)
         if not conflicts:
             # no conflict fields?
-            raise TableError(f'Trying to do upsert_row() but no conflict fields, '
-                                   f'conflicts={conflicts}, updates={updates}')
+            raise TableError(
+                f'Trying to do upsert_row() but no conflict fields, '
+                f'conflicts={conflicts}, updates={updates}'
+            )
 
         # format updates
         if not updates:
-            updates = [name for name in self.field_names if name != 'id' and name not in conflicts]
+            updates = [
+                name
+                for name in self.field_names
+                if name != 'id' and name not in conflicts
+            ]
         elif isinstance(updates, str):
             if updates in conflicts:
                 # update the conflicted field?
-                raise TableError(f'Trying to do upsert_row() but updates==conflicts'
-                                       f'conflicts={conflicts}, updates={updates}')
+                raise TableError(
+                    f'Trying to do upsert_row() but updates==conflicts'
+                    f'conflicts={conflicts}, updates={updates}'
+                )
             updates = [updates] if updates != 'id' else []
         else:
-            updates = [name for name in updates if name != 'id' and name not in conflicts]
+            updates = [
+                name for name in updates if name != 'id' and name not in conflicts
+            ]
         if not updates:
             # no update fields?
-            raise TableError(f'Trying to do upsert_row() but no update fields, '
-                                   f'conflicts={conflicts}, updates={updates}')
+            raise TableError(
+                f'Trying to do upsert_row() but no update fields, '
+                f'conflicts={conflicts}, updates={updates}'
+            )
 
         # build sql
         # insert all columns including PRIMARY KEY but PK=None to have an auto increment PK
         fields = self.field_names
-        columns = ",".join([f'"{k}"' for k in fields])
+        columns = ','.join([f'"{k}"' for k in fields])
         placeholders = ','.join([f':{k}' for k in fields])
         # "task","group",...
         conflict_clause = ','.join([f'"{field}"' for field in conflicts])
         # "task"=excluded."task","group"=excluded."group",...
         update_clause = ','.join([f'"{field}"=excluded."{field}"' for field in updates])
-        sql = f'INSERT INTO "{self.TABLE_NAME}" ({columns}) VALUES ({placeholders}) ' \
-              f'ON CONFLICT ({conflict_clause}) DO UPDATE SET {update_clause}'
+        sql = (
+            f'INSERT INTO "{self.TABLE_NAME}" ({columns}) VALUES ({placeholders}) '
+            f'ON CONFLICT ({conflict_clause}) DO UPDATE SET {update_clause}'
+        )
 
         self.execute_one_or_many(sql, rows, _cursor_=_cursor_, drop_zero_pk=True)
 
@@ -688,9 +742,9 @@ class Table(Generic[T_model]):
             _cursor_.execute(sql, kwargs)
 
     def delete_row(
-            self,
-            rows: T_model | list[T_model],
-            _cursor_: SqlitePoolCursor | None = None,
+        self,
+        rows: T_model | list[T_model],
+        _cursor_: SqlitePoolCursor | None = None,
     ):
         """
         Delete rows by PRIMARY_KEY.
@@ -724,11 +778,3 @@ class Table(Generic[T_model]):
             int:
         """
         return self.execute_fetchone('PRAGMA data_version;', _cursor_=_cursor_)[0]
-
-
-
-
-
-
-
-

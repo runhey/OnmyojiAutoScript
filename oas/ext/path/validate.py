@@ -3,17 +3,49 @@ import os
 from .calc import get_rootstem
 
 # Reserved names of NTFS metadata files, e.g. `$MFT` or `$LOGFILE`.
-NTFS_METADATA_NAMES = frozenset({
-    "$MFT", "$MFTMIRR", "$LOGFILE", "$VOLUME", "$ATTRDEF", "$BITMAP",
-    "$BOOT", "$BADCLUS", "$SECURE", "$UPCASE", "$EXTEND",
-})
+NTFS_METADATA_NAMES = frozenset(
+    {
+        '$MFT',
+        '$MFTMIRR',
+        '$LOGFILE',
+        '$VOLUME',
+        '$ATTRDEF',
+        '$BITMAP',
+        '$BOOT',
+        '$BADCLUS',
+        '$SECURE',
+        '$UPCASE',
+        '$EXTEND',
+    }
+)
 
 # Reserved system names on Windows, e.g. `CON` or `LPT1`.
-RESERVED_SYSTEM_NAMES = frozenset({
-    "CON", "PRN", "AUX", "NUL",
-    "COM1", "COM2", "COM3", "COM4", "COM5", "COM6", "COM7", "COM8", "COM9",
-    "LPT1", "LPT2", "LPT3", "LPT4", "LPT5", "LPT6", "LPT7", "LPT8", "LPT9",
-})
+RESERVED_SYSTEM_NAMES = frozenset(
+    {
+        'CON',
+        'PRN',
+        'AUX',
+        'NUL',
+        'COM1',
+        'COM2',
+        'COM3',
+        'COM4',
+        'COM5',
+        'COM6',
+        'COM7',
+        'COM8',
+        'COM9',
+        'LPT1',
+        'LPT2',
+        'LPT3',
+        'LPT4',
+        'LPT5',
+        'LPT6',
+        'LPT7',
+        'LPT8',
+        'LPT9',
+    }
+)
 
 
 def validate_filename(filename):
@@ -49,7 +81,9 @@ def validate_filename(filename):
     for char in filename:
         char_ord = ord(char)
         if char_ord < 32 or char_ord == 127:
-            raise ValueError(f'Filename should not contain control character (ASCII: {char_ord})')
+            raise ValueError(
+                f'Filename should not contain control character (ASCII: {char_ord})'
+            )
 
     # --- Check 4: Directory Pointers ---
     # Checked before the end-with-dot restriction, so that `.` and `..` are
@@ -85,7 +119,9 @@ def validate_filename(filename):
         byte_length = len(filename.encode('utf-8'))
     except UnicodeEncodeError as e:
         # This case is rare but possible with malformed strings.
-        raise ValueError(f'Filename contains invalid characters that cannot be UTF-8 encoded: {e}')
+        raise ValueError(
+            f'Filename contains invalid characters that cannot be UTF-8 encoded: {e}'
+        )
 
     if byte_length > 255:
         raise ValueError(f'Filename is too long, byte_length should <= 255')
@@ -117,7 +153,9 @@ def _validate_path_component(component: str):
     for char in component:
         char_ord = ord(char)
         if char_ord < 32 or char_ord == 127:  # Control chars & DEL
-            raise ValueError(f'Path component should not contain control character (ASCII: {char_ord})')
+            raise ValueError(
+                f'Path component should not contain control character (ASCII: {char_ord})'
+            )
 
     # --- Check 4: Directory Pointers ---
     # Checked before the end-with-dot restriction, so that `.` and `..` are
@@ -150,7 +188,9 @@ def _validate_path_component(component: str):
     try:
         byte_length = len(component.encode('utf-8'))
     except UnicodeEncodeError as e:
-        raise ValueError(f'Path component contains invalid characters that cannot be UTF-8 encoded: {e}')
+        raise ValueError(
+            f'Path component contains invalid characters that cannot be UTF-8 encoded: {e}'
+        )
 
     if byte_length > 255:
         raise ValueError(f'Path component is too long, byte_length should <= 255')
@@ -259,7 +299,9 @@ def validate_resolve_filepath(root, path):
     # was given, and on Windows the file names are compared without case
     common_path = os.path.commonpath([root, combined_path])
     if os.path.normcase(common_path) != os.path.normcase(root):
-        raise ValueError('Path traversal detected: The path resolves to a location outside the allowed directory.')
+        raise ValueError(
+            'Path traversal detected: The path resolves to a location outside the allowed directory.'
+        )
 
     # If all checks pass, return the safe, absolute, canonical path.
     return combined_path

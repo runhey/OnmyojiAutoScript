@@ -57,7 +57,9 @@ def patch_rich_traceback_links():
                 # Traceback frame header normally contains " in " or at least a colon
                 if ':' in plain:
                     try:
-                        path, line_num, function_name = parse_rich_traceback_header(plain)
+                        path, line_num, function_name = parse_rich_traceback_header(
+                            plain
+                        )
                         if not path or not line_num:
                             continue
 

@@ -6,7 +6,9 @@ import pytest
 
 
 class PatchTime:
-    def __init__(self, target_time: Optional[Union[datetime.datetime, int, float]] = None):
+    def __init__(
+        self, target_time: Optional[Union[datetime.datetime, int, float]] = None
+    ):
         """
         Initialize PatchTime.
 
@@ -34,7 +36,9 @@ class PatchTime:
                 target_time = target_time.replace(tzinfo=datetime.timezone.utc)
             self._timestamp = target_time.timestamp()
         else:
-            raise TypeError("Unsupported time type. Must be datetime, int, float, or None.")
+            raise TypeError(
+                'Unsupported time type. Must be datetime, int, float, or None.'
+            )
 
     def shift(self, delta: Union[int, float, datetime.timedelta]):
         """Shift the time forward or backward."""
@@ -43,7 +47,7 @@ class PatchTime:
         elif isinstance(delta, (int, float)):
             self._timestamp += float(delta)
         else:
-            raise TypeError("Delta must be int, float (seconds), or timedelta.")
+            raise TypeError('Delta must be int, float (seconds), or timedelta.')
 
     def __enter__(self):
         """Apply monkey patches when entering the context manager."""
@@ -68,7 +72,9 @@ class PatchTime:
             @classmethod
             def utcnow(cls):
                 # Return UTC naive datetime
-                return datetime.datetime.fromtimestamp(get_ts(), tz=datetime.timezone.utc).replace(tzinfo=None)
+                return datetime.datetime.fromtimestamp(
+                    get_ts(), tz=datetime.timezone.utc
+                ).replace(tzinfo=None)
 
             @classmethod
             def today(cls):
@@ -112,17 +118,17 @@ class PatchTime:
         original_date_cls = datetime.date
 
         # Apply patches to the datetime module (these affect future imports)
-        self._monkeypatch.setattr(datetime, "datetime", MockDatetime)
-        self._monkeypatch.setattr(datetime, "date", MockDate)
+        self._monkeypatch.setattr(datetime, 'datetime', MockDatetime)
+        self._monkeypatch.setattr(datetime, 'date', MockDate)
 
         # Apply patches to the time module
-        self._monkeypatch.setattr(time, "time", mock_time)
-        self._monkeypatch.setattr(time, "time_ns", mock_time_ns)
-        self._monkeypatch.setattr(time, "monotonic", mock_monotonic)
-        self._monkeypatch.setattr(time, "monotonic_ns", mock_monotonic_ns)
-        self._monkeypatch.setattr(time, "perf_counter", mock_perf_counter)
-        self._monkeypatch.setattr(time, "perf_counter_ns", mock_perf_counter_ns)
-        self._monkeypatch.setattr(time, "sleep", mock_sleep)
+        self._monkeypatch.setattr(time, 'time', mock_time)
+        self._monkeypatch.setattr(time, 'time_ns', mock_time_ns)
+        self._monkeypatch.setattr(time, 'monotonic', mock_monotonic)
+        self._monkeypatch.setattr(time, 'monotonic_ns', mock_monotonic_ns)
+        self._monkeypatch.setattr(time, 'perf_counter', mock_perf_counter)
+        self._monkeypatch.setattr(time, 'perf_counter_ns', mock_perf_counter_ns)
+        self._monkeypatch.setattr(time, 'sleep', mock_sleep)
 
         # Also redirect modules that already imported datetime/date via
         # `from datetime import datetime` / `from datetime import date`.

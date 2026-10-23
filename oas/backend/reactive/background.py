@@ -21,7 +21,7 @@ class BackgroundTask:
 
     def __init__(self):
         # 触发后每隔X秒重新执行一次，或者None表示不重新执行
-        self._recurrence: "Union[int, float, None]" = 2
+        self._recurrence: 'Union[int, float, None]' = 2
         self._drop_threshold = 0.01
         self._event = Event()
         self._shutdown_scope = None  # 整个后台循环的生命周期
@@ -115,7 +115,7 @@ class BackgroundTask:
             # 重新初始化通道，清除旧信号
             self._event = Event()
             # 占位防止 start_soon 尚未调度时多次启动
-            self._shutdown_scope = "STARTING"
+            self._shutdown_scope = 'STARTING'
             nursery.start_soon(self._task_loop)
 
         # 发送触发信号
@@ -131,7 +131,7 @@ class BackgroundTask:
         """关闭逻辑：完全销毁后台任务"""
         if fully:
             self._permanently_disabled = True
-        if self._shutdown_scope and self._shutdown_scope != "STARTING":
+        if self._shutdown_scope and self._shutdown_scope != 'STARTING':
             self._shutdown_scope.cancel()
         self._last_finish_time = -10000
         self._event = Event()

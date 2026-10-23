@@ -50,8 +50,8 @@ def pretty_time(second):
     if second >= 1:
         return f'{second:.3f}s'
     if second >= 0.001:
-        return f"{second * 1000:.3f}ms"
-    return f"{second * 1000000:.3f}us"
+        return f'{second * 1000:.3f}ms'
+    return f'{second * 1000000:.3f}us'
 
 
 def pretty_size(size):
@@ -66,11 +66,11 @@ def pretty_size(size):
     """
     # Handle zero or negative cases
     if size <= 0:
-        return "0.00B"
+        return '0.00B'
 
     units = ['B', 'KB', 'MB', 'GB']
     for unit in units:
         if size < 1024.0:
-            return f"{size:.2f}{unit}"
+            return f'{size:.2f}{unit}'
         size /= 1024.0
-    return f"{size:.2f}TB"
+    return f'{size:.2f}TB'

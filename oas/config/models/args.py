@@ -4,7 +4,7 @@ import builtins
 import math
 import re
 from collections.abc import Callable
-from datetime import datetime as datetime_datetime
+from datetime import datetime as datetime_datetime, datetime
 from datetime import time as datetime_time
 from datetime import timedelta as datetime_timedelta
 from types import MappingProxyType
@@ -76,7 +76,7 @@ class Input:
         ```
     """
 
-    _type_name = "Input"
+    _type_name = 'Input'
 
     @classmethod
     def int(
@@ -98,18 +98,18 @@ class Input:
         readOnly: bool | None = None,
         json_schema_extra: dict[builtins.str, Any] | None = None,
         **kwargs: Any,
-    ) -> FieldInfo:
+    ) -> Any:
         return cls._make(
             int,
-            "int",
+            'int',
             default=default,
             default_factory=default_factory,
             constraints={
-                "gt": gt,
-                "ge": ge,
-                "lt": lt,
-                "le": le,
-                "multiple_of": multiple_of,
+                'gt': gt,
+                'ge': ge,
+                'lt': lt,
+                'le': le,
+                'multiple_of': multiple_of,
             },
             hide=hide,
             description=description,
@@ -142,18 +142,18 @@ class Input:
         readOnly: bool | None = None,
         json_schema_extra: dict[builtins.str, Any] | None = None,
         **kwargs: Any,
-    ) -> FieldInfo:
+    ) -> Any:
         return cls._make(
             float,
-            "float",
+            'float',
             default=default,
             default_factory=default_factory,
             constraints={
-                "gt": gt,
-                "ge": ge,
-                "lt": lt,
-                "le": le,
-                "multiple_of": multiple_of,
+                'gt': gt,
+                'ge': ge,
+                'lt': lt,
+                'le': le,
+                'multiple_of': multiple_of,
             },
             hide=hide,
             description=description,
@@ -184,16 +184,16 @@ class Input:
         readOnly: bool | None = None,
         json_schema_extra: dict[builtins.str, Any] | None = None,
         **kwargs: Any,
-    ) -> FieldInfo:
+    ) -> Any:
         return cls._make(
             str,
-            "str",
+            'str',
             default=default,
             default_factory=default_factory,
             constraints={
-                "min_length": min_length,
-                "max_length": max_length,
-                "pattern": pattern,
+                'min_length': min_length,
+                'max_length': max_length,
+                'pattern': pattern,
             },
             hide=hide,
             description=description,
@@ -224,16 +224,16 @@ class Input:
         readOnly: bool | None = None,
         json_schema_extra: dict[builtins.str, Any] | None = None,
         **kwargs: Any,
-    ) -> FieldInfo:
+    ) -> Any:
         return cls._make(
             str,
-            "secret_str",
+            'secret_str',
             default=default,
             default_factory=default_factory,
             constraints={
-                "min_length": min_length,
-                "max_length": max_length,
-                "pattern": pattern,
+                'min_length': min_length,
+                'max_length': max_length,
+                'pattern': pattern,
             },
             hide=hide,
             description=description,
@@ -265,7 +265,7 @@ class Input:
         readOnly: bool | None = None,
         json_schema_extra: dict[builtins.str, Any] | None = None,
         **kwargs: Any,
-    ) -> FieldInfo:
+    ) -> Any:
         """Create a string field rendered by the UI as a file selector.
 
         The value remains a plain ``str``.  This factory does not check that
@@ -274,13 +274,13 @@ class Input:
 
         return cls._make(
             str,
-            "file",
+            'file',
             default=default,
             default_factory=default_factory,
             constraints={
-                "min_length": min_length,
-                "max_length": max_length,
-                "pattern": pattern,
+                'min_length': min_length,
+                'max_length': max_length,
+                'pattern': pattern,
             },
             hide=hide,
             description=description,
@@ -311,7 +311,7 @@ class Input:
         readOnly: bool | None = None,
         json_schema_extra: dict[builtins.str, Any] | None = None,
         **kwargs: Any,
-    ) -> FieldInfo:
+    ) -> Any:
         """Create a string field rendered by the UI as a path selector.
 
         The value remains a plain ``str``.  This factory does not check that
@@ -320,13 +320,13 @@ class Input:
 
         return cls._make(
             str,
-            "path",
+            'path',
             default=default,
             default_factory=default_factory,
             constraints={
-                "min_length": min_length,
-                "max_length": max_length,
-                "pattern": pattern,
+                'min_length': min_length,
+                'max_length': max_length,
+                'pattern': pattern,
             },
             hide=hide,
             description=description,
@@ -358,29 +358,29 @@ class Input:
         json_schema_extra: dict[builtins.str, Any] | None,
         kwargs: dict[builtins.str, Any],
         write_only: bool = False,
-    ) -> FieldInfo:
+    ) -> Any:
         if default is UNSET and default_factory is None:
-            raise TypeError("Input field requires default or default_factory")
+            raise TypeError('Input field requires default or default_factory')
         if default is not UNSET and default_factory is not None:
-            raise TypeError("Input field cannot set both default and default_factory")
+            raise TypeError('Input field cannot set both default and default_factory')
 
         field_kwargs = dict(kwargs)
         field_kwargs.update(
             {key: value for key, value in constraints.items() if value is not None}
         )
         if default_factory is not None:
-            field_kwargs["default_factory"] = default_factory
+            field_kwargs['default_factory'] = default_factory
         elif default is not UNSET:
-            field_kwargs["default"] = default
-        field_kwargs["validate_default"] = True
+            field_kwargs['default'] = default
+        field_kwargs['validate_default'] = True
         generated = {
-            "type": cls._type_name,
-            "input": input_type,
+            'type': cls._type_name,
+            'input': input_type,
         }
         if write_only:
-            generated["writeOnly"] = True
+            generated['writeOnly'] = True
         if read_only is not None:
-            generated["readOnly"] = read_only
+            generated['readOnly'] = read_only
         extra = build_field_schema_extra(
             hide=hide,
             icon=icon,
@@ -389,11 +389,11 @@ class Input:
             json_schema_extra=json_schema_extra,
             **generated,
         )
-        field_kwargs["json_schema_extra"] = extra
+        field_kwargs['json_schema_extra'] = extra
         if description is not None:
-            field_kwargs["description"] = description
+            field_kwargs['description'] = description
         if title is not None:
-            field_kwargs["title"] = title
+            field_kwargs['title'] = title
         return Field(**field_kwargs)
 
 
@@ -405,23 +405,23 @@ class InputArea(Input):
     integer and floating-point factories are intentionally unsupported.
     """
 
-    _type_name = "InputArea"
+    _type_name = 'InputArea'
 
     @classmethod
-    def int(cls, **kwargs: Any) -> FieldInfo:
-        raise TypeError("InputArea does not support int input")
+    def int(cls, **kwargs: Any) -> Any:
+        raise TypeError('InputArea does not support int input')
 
     @classmethod
-    def float(cls, **kwargs: Any) -> FieldInfo:
-        raise TypeError("InputArea does not support float input")
+    def float(cls, **kwargs: Any) -> Any:
+        raise TypeError('InputArea does not support float input')
 
     @classmethod
-    def file(cls, **kwargs: Any) -> FieldInfo:
-        raise TypeError("InputArea does not support file input")
+    def file(cls, **kwargs: Any) -> Any:
+        raise TypeError('InputArea does not support file input')
 
     @classmethod
-    def path(cls, **kwargs: Any) -> FieldInfo:
-        raise TypeError("InputArea does not support path input")
+    def path(cls, **kwargs: Any) -> Any:
+        raise TypeError('InputArea does not support path input')
 
 
 class Slider(Input):
@@ -493,27 +493,27 @@ class Slider(Input):
         string sliders are also not supported.
     """
 
-    _type_name = "Slider"
+    _type_name = 'Slider'
 
     @classmethod
-    def file(cls, **kwargs: Any) -> FieldInfo:
-        raise TypeError("Slider does not support file input")
+    def file(cls, **kwargs: Any) -> Any:
+        raise TypeError('Slider does not support file input')
 
     @classmethod
-    def path(cls, **kwargs: Any) -> FieldInfo:
-        raise TypeError("Slider does not support path input")
+    def path(cls, **kwargs: Any) -> Any:
+        raise TypeError('Slider does not support path input')
 
     @staticmethod
     def _validate_step(step: Any, *, integer: bool) -> int | float:
         if integer:
             if type(step) is not int:
-                raise TypeError("Slider.int step must be an int")
+                raise TypeError('Slider.int step must be an int')
         elif type(step) not in (int, float):
-            raise TypeError("Slider.float step must be an int or float")
+            raise TypeError('Slider.float step must be an int or float')
         if not math.isfinite(step):
-            raise ValueError("Slider step must be finite")
+            raise ValueError('Slider step must be finite')
         if step <= 0:
-            raise ValueError("Slider step must be greater than zero")
+            raise ValueError('Slider step must be greater than zero')
         return step
 
     @classmethod
@@ -536,11 +536,11 @@ class Slider(Input):
         readOnly: bool | None = None,
         json_schema_extra: dict[str, Any] | None = None,
         **kwargs: Any,
-    ) -> FieldInfo:
+    ) -> Any:
         if step is UNSET:
-            raise TypeError("Slider.int requires step")
-        if "multiple_of" in kwargs:
-            raise TypeError("Slider.int uses step instead of multiple_of")
+            raise TypeError('Slider.int requires step')
+        if 'multiple_of' in kwargs:
+            raise TypeError('Slider.int uses step instead of multiple_of')
         step = cls._validate_step(step, integer=True)
         return super().int(
             default=default,
@@ -581,11 +581,11 @@ class Slider(Input):
         readOnly: bool | None = None,
         json_schema_extra: dict[str, Any] | None = None,
         **kwargs: Any,
-    ) -> FieldInfo:
+    ) -> Any:
         if step is UNSET:
-            raise TypeError("Slider.float requires step")
-        if "multiple_of" in kwargs:
-            raise TypeError("Slider.float uses step instead of multiple_of")
+            raise TypeError('Slider.float requires step')
+        if 'multiple_of' in kwargs:
+            raise TypeError('Slider.float uses step instead of multiple_of')
         step = cls._validate_step(step, integer=False)
         return super().float(
             default=default,
@@ -607,12 +607,12 @@ class Slider(Input):
         )
 
     @classmethod
-    def str(cls, **kwargs: Any) -> FieldInfo:
-        raise TypeError("Slider does not support str input")
+    def str(cls, **kwargs: Any) -> Any:
+        raise TypeError('Slider does not support str input')
 
     @classmethod
-    def secret_str(cls, **kwargs: Any) -> FieldInfo:
-        raise TypeError("Slider does not support secret_str input")
+    def secret_str(cls, **kwargs: Any) -> Any:
+        raise TypeError('Slider does not support secret_str input')
 
 
 class Time(datetime_time):
@@ -672,7 +672,7 @@ class Time(datetime_time):
         multi-value component is provided.
     """
 
-    _type_name = "Time"
+    _type_name = 'Time'
 
     def __new__(
         cls,
@@ -685,9 +685,9 @@ class Time(datetime_time):
         fold: int = 0,
     ) -> Self:
         if microsecond != 0:
-            raise ValueError("Time microsecond must be 0")
+            raise ValueError('Time microsecond must be 0')
         if tzinfo is not None:
-            raise ValueError("Time does not support timezone information")
+            raise ValueError('Time does not support timezone information')
         return super().__new__(
             cls,
             hour,
@@ -713,12 +713,12 @@ class Time(datetime_time):
             )
         if isinstance(value, str):
             if re.fullmatch(
-                r"(?:[01]\d|2[0-3]):[0-5]\d(?::[0-5]\d)?\.\d+",
+                r'(?:[01]\d|2[0-3]):[0-5]\d(?::[0-5]\d)?\.\d+',
                 value,
             ):
-                raise ValueError("Time microsecond must be 0")
-            if not re.fullmatch(r"(?:[01]\d|2[0-3]):[0-5]\d(?::[0-5]\d)?", value):
-                raise ValueError("Invalid time value. Expected HH:MM or HH:MM:SS")
+                raise ValueError('Time microsecond must be 0')
+            if not re.fullmatch(r'(?:[01]\d|2[0-3]):[0-5]\d(?::[0-5]\d)?', value):
+                raise ValueError('Invalid time value. Expected HH:MM or HH:MM:SS')
             try:
                 parsed = datetime_time.fromisoformat(value)
                 return cls(
@@ -730,13 +730,13 @@ class Time(datetime_time):
                     fold=parsed.fold,
                 )
             except (TypeError, ValueError) as exc:
-                if "microsecond" in str(exc) or "timezone" in str(exc):
+                if 'microsecond' in str(exc) or 'timezone' in str(exc):
                     raise
                 raise ValueError(
-                    "Invalid time value. Expected HH:MM or HH:MM:SS"
+                    'Invalid time value. Expected HH:MM or HH:MM:SS'
                 ) from exc
         raise ValueError(
-            f"Time requires a string or datetime.time, got {type(value).__name__}"
+            f'Time requires a string or datetime.time, got {type(value).__name__}'
         )
 
     @classmethod
@@ -745,7 +745,7 @@ class Time(datetime_time):
 
     @staticmethod
     def _serialize(value: Self) -> str:
-        return value.strftime("%H:%M:%S")
+        return value.strftime('%H:%M:%S')
 
     @classmethod
     def field(
@@ -762,7 +762,7 @@ class Time(datetime_time):
         readOnly: bool | None = None,
         json_schema_extra: dict[str, Any] | None = None,
         **kwargs: Any,
-    ) -> FieldInfo:
+    ) -> Any:
         return temporal_field(
             cls._type_name,
             default=default,
@@ -795,7 +795,7 @@ class Time(datetime_time):
     ) -> JsonSchemaValue:
         schema = handler.resolve_ref_schema(handler(core_schema))
         schema.clear()
-        schema["type"] = cls._type_name
+        schema['type'] = cls._type_name
         return schema
 
 
@@ -844,7 +844,7 @@ class TimeDelta(datetime_timedelta):
         ```
     """
 
-    _type_name = "TimeDelta"
+    _type_name = 'TimeDelta'
 
     def __new__(
         cls,
@@ -867,7 +867,7 @@ class TimeDelta(datetime_timedelta):
             weeks,
         )
         if value.microseconds != 0:
-            raise ValueError("TimeDelta microsecond must be 0")
+            raise ValueError('TimeDelta microsecond must be 0')
         return value
 
     @classmethod
@@ -882,19 +882,19 @@ class TimeDelta(datetime_timedelta):
             )
         if isinstance(value, str):
             match = re.fullmatch(
-                r"(?P<sign>-)?(?P<days>\d+)\s+"
-                r"(?P<hours>\d{1,2}):(?P<minutes>\d{1,2}):(?P<seconds>\d{1,2})",
+                r'(?P<sign>-)?(?P<days>\d+)\s+'
+                r'(?P<hours>\d{1,2}):(?P<minutes>\d{1,2}):(?P<seconds>\d{1,2})',
                 value,
             )
             if not match:
-                raise ValueError("Invalid interval value. Expected DD HH:MM:SS")
-            days = int(match["days"])
-            hours = int(match["hours"])
-            minutes = int(match["minutes"])
-            seconds = int(match["seconds"])
+                raise ValueError('Invalid interval value. Expected DD HH:MM:SS')
+            days = int(match['days'])
+            hours = int(match['hours'])
+            minutes = int(match['minutes'])
+            seconds = int(match['seconds'])
             if hours > 23 or minutes > 59 or seconds > 59:
-                raise ValueError("Invalid interval value. Expected DD HH:MM:SS")
-            sign = -1 if match["sign"] else 1
+                raise ValueError('Invalid interval value. Expected DD HH:MM:SS')
+            sign = -1 if match['sign'] else 1
             return cls(
                 days=sign * days,
                 hours=sign * hours,
@@ -902,8 +902,8 @@ class TimeDelta(datetime_timedelta):
                 seconds=sign * seconds,
             )
         raise ValueError(
-            "TimeDelta requires a string or datetime.timedelta, "
-            f"got {type(value).__name__}"
+            'TimeDelta requires a string or datetime.timedelta, '
+            f'got {type(value).__name__}'
         )
 
     @classmethod
@@ -913,12 +913,12 @@ class TimeDelta(datetime_timedelta):
     @staticmethod
     def _serialize(value: Self) -> str:
         total_seconds = int(value.total_seconds())
-        sign = "-" if total_seconds < 0 else ""
+        sign = '-' if total_seconds < 0 else ''
         total_seconds = abs(total_seconds)
         days, remainder = divmod(total_seconds, 86400)
         hours, remainder = divmod(remainder, 3600)
         minutes, seconds = divmod(remainder, 60)
-        return f"{sign}{days:02d} {hours:02d}:{minutes:02d}:{seconds:02d}"
+        return f'{sign}{days:02d} {hours:02d}:{minutes:02d}:{seconds:02d}'
 
     @classmethod
     def field(
@@ -935,7 +935,7 @@ class TimeDelta(datetime_timedelta):
         readOnly: bool | None = None,
         json_schema_extra: dict[str, Any] | None = None,
         **kwargs: Any,
-    ) -> FieldInfo:
+    ) -> Any:
         return temporal_field(
             cls._type_name,
             default=default,
@@ -968,7 +968,7 @@ class TimeDelta(datetime_timedelta):
     ) -> JsonSchemaValue:
         schema = handler.resolve_ref_schema(handler(core_schema))
         schema.clear()
-        schema["type"] = cls._type_name
+        schema['type'] = cls._type_name
         return schema
 
 
@@ -1017,7 +1017,7 @@ class DateTime(datetime_datetime):
         ```
     """
 
-    _type_name = "DateTime"
+    _type_name = 'DateTime'
 
     def __new__(
         cls,
@@ -1031,11 +1031,11 @@ class DateTime(datetime_datetime):
         tzinfo: Any = None,
         *,
         fold: int = 0,
-    ) -> Self:
+    ) -> datetime:
         if microsecond != 0:
-            raise ValueError("DateTime microsecond must be 0")
+            raise ValueError('DateTime microsecond must be 0')
         if tzinfo is not None:
-            raise ValueError("DateTime does not support timezone information")
+            raise ValueError('DateTime does not support timezone information')
         return super().__new__(
             cls,
             year,
@@ -1067,15 +1067,15 @@ class DateTime(datetime_datetime):
             )
         if isinstance(value, str):
             if re.fullmatch(
-                r"\d{4}-\d{2}-\d{2}[T ]\d{2}:\d{2}:\d{2}\.\d+",
+                r'\d{4}-\d{2}-\d{2}[T ]\d{2}:\d{2}:\d{2}\.\d+',
                 value,
             ):
-                raise ValueError("DateTime microsecond must be 0")
+                raise ValueError('DateTime microsecond must be 0')
             if not re.fullmatch(
-                r"\d{4}-\d{2}-\d{2}[T ]\d{2}:\d{2}:\d{2}",
+                r'\d{4}-\d{2}-\d{2}[T ]\d{2}:\d{2}:\d{2}',
                 value,
             ):
-                raise ValueError("Invalid datetime value. Expected ISO date-time")
+                raise ValueError('Invalid datetime value. Expected ISO date-time')
             try:
                 parsed = datetime_datetime.fromisoformat(value)
                 return cls(
@@ -1090,14 +1090,14 @@ class DateTime(datetime_datetime):
                     fold=parsed.fold,
                 )
             except (TypeError, ValueError) as exc:
-                if "microsecond" in str(exc) or "timezone" in str(exc):
+                if 'microsecond' in str(exc) or 'timezone' in str(exc):
                     raise
                 raise ValueError(
-                    "Invalid datetime value. Expected ISO date-time"
+                    'Invalid datetime value. Expected ISO date-time'
                 ) from exc
         raise ValueError(
-            "DateTime requires a string or datetime.datetime, "
-            f"got {type(value).__name__}"
+            'DateTime requires a string or datetime.datetime, '
+            f'got {type(value).__name__}'
         )
 
     @classmethod
@@ -1106,7 +1106,7 @@ class DateTime(datetime_datetime):
 
     @staticmethod
     def _serialize(value: Self) -> str:
-        return value.strftime("%Y-%m-%d %H:%M:%S")
+        return value.strftime('%Y-%m-%d %H:%M:%S')
 
     @classmethod
     def field(
@@ -1123,7 +1123,7 @@ class DateTime(datetime_datetime):
         readOnly: bool | None = None,
         json_schema_extra: dict[str, Any] | None = None,
         **kwargs: Any,
-    ) -> FieldInfo:
+    ) -> Any:
         return temporal_field(
             cls._type_name,
             default=default,
@@ -1156,7 +1156,7 @@ class DateTime(datetime_datetime):
     ) -> JsonSchemaValue:
         schema = handler.resolve_ref_schema(handler(core_schema))
         schema.clear()
-        schema["type"] = cls._type_name
+        schema['type'] = cls._type_name
         return schema
 
 
@@ -1210,13 +1210,13 @@ class Cron(str):
         Seconds fields and ``@daily``-style cron macros are not supported.
     """
 
-    _type_name = "Cron"
+    _type_name = 'Cron'
     _component_names = (
-        "minute",
-        "hour",
-        "day_of_the_month",
-        "month",
-        "day_of_the_week",
+        'minute',
+        'hour',
+        'day_of_the_month',
+        'month',
+        'day_of_the_week',
     )
 
     minute: str
@@ -1261,27 +1261,25 @@ class Cron(str):
     def _parse(cls, value: Any) -> tuple[str, CronConverter]:
         if not isinstance(value, str):
             raise ValueError(  # noqa: TRY004
-                "Cron requires a string value, "
-                f"got {type(value).__name__}"
+                f'Cron requires a string value, got {type(value).__name__}'
             )
 
         expression = value.strip()
         if not expression:
-            raise ValueError("Cron expression must not be empty")
+            raise ValueError('Cron expression must not be empty')
 
         parts = expression.split()
         if len(parts) != len(cls._component_names):
-            names = ", ".join(cls._component_names)
+            names = ', '.join(cls._component_names)
             raise ValueError(
-                "Cron expression must contain 5 space separated components: "
-                f"{names}"
+                f'Cron expression must contain 5 space separated components: {names}'
             )
 
         try:
             cron_obj = CronConverter(expression)
             return cron_obj.to_string(), cron_obj
         except (TypeError, ValueError) as exc:
-            raise ValueError(f"Invalid cron expression: {exc}") from exc
+            raise ValueError(f'Invalid cron expression: {exc}') from exc
 
     @classmethod
     def _validate(cls, value: Any) -> Self:
@@ -1302,7 +1300,7 @@ class Cron(str):
         readOnly: bool | None = None,
         json_schema_extra: dict[str, Any] | None = None,
         **kwargs: Any,
-    ) -> FieldInfo:
+    ) -> Any:
         return temporal_field(
             cls._type_name,
             default=default,
@@ -1335,7 +1333,7 @@ class Cron(str):
     ) -> JsonSchemaValue:
         schema = handler.resolve_ref_schema(handler(core_schema))
         schema.clear()
-        schema["type"] = cls._type_name
+        schema['type'] = cls._type_name
         return schema
 
     def schedule(
@@ -1446,9 +1444,9 @@ class Switch:
         depends: str | None = None,
         json_schema_extra: dict[str, Any] | None = None,
         **kwargs: Any,
-    ) -> FieldInfo:
+    ) -> Any:
         return boolean_component_field(
-            "Switch",
+            'Switch',
             default=default,
             default_factory=default_factory,
             hide=hide,
@@ -1537,9 +1535,9 @@ class Button:
         depends: str | None = None,
         json_schema_extra: dict[str, Any] | None = None,
         **kwargs: Any,
-    ) -> FieldInfo:
+    ) -> Any:
         return boolean_component_field(
-            "Button",
+            'Button',
             default=default,
             default_factory=default_factory,
             hide=hide,
@@ -1623,7 +1621,7 @@ class OptionItem:
         self._description_provided = False
 
     def __repr__(self) -> str:
-        return f"OptionItem({self.value!r})"
+        return f'OptionItem({self.value!r})'
 
     def __eq__(self, other: object) -> bool:
         if isinstance(other, OptionItem):
@@ -1653,42 +1651,42 @@ class OptionItem:
     def _make(cls, core_type: type, value: Any, **kwargs: Any) -> OptionItem:
         if type(value) is not core_type:
             raise TypeError(
-                f"OptionItem.{core_type.__name__}() requires a "
-                f"{core_type.__name__} value, got {type(value).__name__}"
+                f'OptionItem.{core_type.__name__}() requires a '
+                f'{core_type.__name__} value, got {type(value).__name__}'
             )
 
-        hide = kwargs.pop("hide", False)
+        hide = kwargs.pop('hide', False)
         # ``description`` is the only human-readable explanation field.
         # Ignore the old ``help`` argument so it cannot reappear in the schema.
-        kwargs.pop("help", None)
-        icon = kwargs.pop("icon", None)
-        alias = kwargs.pop("alias", None)
-        if "default" in kwargs:
-            raise TypeError("OptionItem does not accept a default argument")
-        title_provided = "title" in kwargs
-        description_provided = "description" in kwargs
+        kwargs.pop('help', None)
+        icon = kwargs.pop('icon', None)
+        alias = kwargs.pop('alias', None)
+        if 'default' in kwargs:
+            raise TypeError('OptionItem does not accept a default argument')
+        title_provided = 'title' in kwargs
+        description_provided = 'description' in kwargs
 
-        kwargs.pop("examples", None)
-        kwargs.pop("deprecated", None)
-        field_keys = {"title", "description"}
-        user_extra = kwargs.pop("json_schema_extra", {}) or {}
+        kwargs.pop('examples', None)
+        kwargs.pop('deprecated', None)
+        field_keys = {'title', 'description'}
+        user_extra = kwargs.pop('json_schema_extra', {}) or {}
         if not isinstance(user_extra, dict):
-            raise TypeError("json_schema_extra must be a dictionary")
+            raise TypeError('json_schema_extra must be a dictionary')
 
         extra: dict[str, Any] = {}
         if hide is not None:
-            extra["hide"] = hide
+            extra['hide'] = hide
         if icon is not None:
-            extra["icon"] = icon
+            extra['icon'] = icon
         if alias is not None:
-            extra["alias"] = alias
+            extra['alias'] = alias
 
         for key in list(kwargs):
             if key not in field_keys:
                 extra[key] = kwargs.pop(key)
 
         extra.update(user_extra)
-        extra["readOnly"] = True  # 这里前端就只能看不能改。
+        extra['readOnly'] = True  # 这里前端就只能看不能改。
 
         item = cls(value, Field(default=value, **kwargs, json_schema_extra=extra))
         item._core_type = core_type
@@ -1697,11 +1695,11 @@ class OptionItem:
         return item
 
     def apply_default_metadata(self, option_name: str, member_name: str) -> None:
-        prefix = f"${underscore(option_name)}.{underscore(member_name)}"
+        prefix = f'${underscore(option_name)}.{underscore(member_name)}'
         if not self._title_provided:
-            self.field_info.title = f"{prefix}.title"
+            self.field_info.title = f'{prefix}.title'
         if not self._description_provided:
-            self.field_info.description = f"{prefix}.description"
+            self.field_info.description = f'{prefix}.description'
 
 
 class OptionMeta(type):
@@ -1732,28 +1730,29 @@ class OptionMeta(type):
         6. 默认输出 anyOf，不是 oneOf。想改成 oneOf 还要再写一层 __get_pydantic_json_schema__，代码没有减少，反而增加。自定义类方案直接输出 oneOf。
         7. 顶层使用要额外包 RootModel。自定义类方案本身就是类型，可以直接作为字段类型使用。
     """
+
     def __new__(mcs, name, bases, namespace):
         definitions = {
-            key: value for key, value in namespace.items() if isinstance(value, OptionItem)
+            key: value
+            for key, value in namespace.items()
+            if isinstance(value, OptionItem)
         }
 
         inherited_members = [
-            base.__name__
-            for base in bases
-            if getattr(base, "__members__", {})
+            base.__name__ for base in bases if getattr(base, '__members__', {})
         ]
         if inherited_members:
             raise TypeError(
-                f"{name} cannot inherit Option members from "
-                f"{', '.join(inherited_members)}"
+                f'{name} cannot inherit Option members from '
+                f'{", ".join(inherited_members)}'
             )
         # ``Option`` itself and the abstract ``Options`` base are allowed to
         # have no members.  Every user-defined concrete subtype must declare
         # at least one member, so an empty subtype cannot silently become an
         # unusable option type.
-        allow_empty = bool(namespace.get("__option_allow_empty__", False))
+        allow_empty = bool(namespace.get('__option_allow_empty__', False))
         if bases and not definitions and not allow_empty:
-            raise TypeError(f"{name} must define at least one OptionItem")
+            raise TypeError(f'{name} must define at least one OptionItem')
 
         cls = super().__new__(mcs, name, bases, namespace)
 
@@ -1763,8 +1762,8 @@ class OptionMeta(type):
             if item.value in values:
                 previous = values[item.value]
                 raise ValueError(
-                    f"{name} has duplicate option value {item.value!r} "
-                    f"for {previous!r} and {member_name!r}"
+                    f'{name} has duplicate option value {item.value!r} '
+                    f'for {previous!r} and {member_name!r}'
                 )
 
             member = object.__new__(cls)
@@ -1778,13 +1777,13 @@ class OptionMeta(type):
 
         types = {item._core_type for item in definitions.values()}
         if len(types) > 1:
-            type_names = ", ".join(sorted(t.__name__ for t in types))
-            raise TypeError(f"{name} option values must use one core type, got: {type_names}")
+            type_names = ', '.join(sorted(t.__name__ for t in types))
+            raise TypeError(
+                f'{name} option values must use one core type, got: {type_names}'
+            )
 
         cls.__members__ = MappingProxyType(members)
-        cls._value2member_map_ = {
-            member.value: member for member in members.values()
-        }
+        cls._value2member_map_ = {member.value: member for member in members.values()}
         return cls
 
     def __call__(cls, value: Any):
@@ -1792,9 +1791,9 @@ class OptionMeta(type):
             return value
         try:
             return cls._value2member_map_[value]
-        except (KeyError, TypeError):
+        except KeyError, TypeError:
             valid = set(cls._value2member_map_)
-            raise ValueError(f"{value!r} 不是合法选项，合法值: {valid}") from None
+            raise ValueError(f'{value!r} 不是合法选项，合法值: {valid}') from None
 
     def __iter__(cls):
         return iter(cls.__members__.values())
@@ -1891,7 +1890,7 @@ class Option(metaclass=OptionMeta):
     __members__: ClassVar[dict[str, Option]]
 
     def __repr__(self) -> str:
-        return f"{type(self).__name__}.{self.name}"
+        return f'{type(self).__name__}.{self.name}'
 
     def __str__(self) -> str:
         return str(self.value)
@@ -1914,7 +1913,7 @@ class Option(metaclass=OptionMeta):
         depends: str | None = None,
         json_schema_extra: dict[str, Any] | None = None,
         **kwargs: Any,
-    ) -> FieldInfo:
+    ) -> Any:
         extra = build_field_schema_extra(
             hide=hide,
             icon=icon,
@@ -1922,10 +1921,10 @@ class Option(metaclass=OptionMeta):
             depends=depends,
             json_schema_extra=json_schema_extra,
         )
-        kwargs["validate_default"] = True
-        is_multi = bool(getattr(cls, "__option_is_multi__", False))
-        if "default" in kwargs:
-            default = kwargs["default"]
+        kwargs['validate_default'] = True
+        is_multi = bool(getattr(cls, '__option_is_multi__', False))
+        if 'default' in kwargs:
+            default = kwargs['default']
             if is_multi:
                 valid_default = isinstance(default, list) and all(
                     isinstance(item, cls) for item in default
@@ -1934,14 +1933,14 @@ class Option(metaclass=OptionMeta):
                 valid_default = isinstance(default, cls)
             if not valid_default:
                 raise TypeError(
-                    "Options.field default must be a list of members"
+                    'Options.field default must be a list of members'
                     if is_multi
-                    else "Option.field default must be an Option member"
+                    else 'Option.field default must be an Option member'
                 )
             if not is_multi:
-                kwargs["default"] = default.value
+                kwargs['default'] = default.value
             else:
-                kwargs["default"] = [item.value for item in default]
+                kwargs['default'] = [item.value for item in default]
         return Field(**kwargs, json_schema_extra=extra)
 
     @classmethod
@@ -1989,10 +1988,10 @@ class Option(metaclass=OptionMeta):
         cls, core_schema: CoreSchema, handler: GetJsonSchemaHandler
     ) -> JsonSchemaValue:
         schema = handler.resolve_ref_schema(handler(core_schema))
-        schema.pop("enum", None)
-        schema.pop("type", None)
-        schema["type"] = "Option"
-        schema["oneOf"] = [cls._member_schema(member) for member in cls]
+        schema.pop('enum', None)
+        schema.pop('type', None)
+        schema['type'] = 'Option'
+        schema['oneOf'] = [cls._member_schema(member) for member in cls]
         return schema
 
     @classmethod
@@ -2147,9 +2146,9 @@ class Options(Option):
         cls, core_schema: CoreSchema, handler: GetJsonSchemaHandler
     ) -> JsonSchemaValue:
         schema = handler.resolve_ref_schema(handler(core_schema))
-        schema["type"] = "Options"
-        schema["items"] = {
-            "type": "Option",
-            "oneOf": [cls._member_schema(member) for member in cls],
+        schema['type'] = 'Options'
+        schema['items'] = {
+            'type': 'Option',
+            'oneOf': [cls._member_schema(member) for member in cls],
         }
         return schema

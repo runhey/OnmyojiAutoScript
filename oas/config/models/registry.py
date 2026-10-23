@@ -24,7 +24,6 @@ def _is_group_type(annotation: Any) -> bool:
 
 def _group_types(annotation: Any) -> tuple[type[Any], ...]:
     """Find GroupBase-derived annotations, including generic containers."""
-
     if _is_group_type(annotation):
         return (annotation,)
 
@@ -62,7 +61,7 @@ class ConfigModelRegistry(metaclass=Singleton):
     def qualified_name(model_type: type[Any]) -> str:
         """Return a stable class identifier for diagnostics and persistence."""
 
-        return f"{model_type.__module__}.{model_type.__qualname__}"
+        return f'{model_type.__module__}.{model_type.__qualname__}'
 
     def register_group(self, group_type: type[Any]) -> None:
         """Register one concrete Group model class."""
@@ -94,7 +93,9 @@ class ConfigModelRegistry(metaclass=Singleton):
 
     @property
     def data(self) -> Mapping[str, list[str]]:
-        return MappingProxyType({name: list(groups) for name, groups in self._task_groups.items()})
+        return MappingProxyType(
+            {name: list(groups) for name, groups in self._task_groups.items()}
+        )
 
     @property
     def task_classes(self) -> Mapping[str, type[Any]]:
@@ -118,7 +119,7 @@ class ConfigModelRegistry(metaclass=Singleton):
         try:
             return self._task_classes[taskclass]
         except KeyError as exc:
-            raise KeyError(f"unregistered TaskClass: {taskclass!r}") from exc
+            raise KeyError(f'unregistered TaskClass: {taskclass!r}') from exc
 
     def get_group_class(self, taskclass: str, groupclass: str) -> type[Any]:
         """Return a Group class by its owning Task and class names."""
@@ -127,7 +128,7 @@ class ConfigModelRegistry(metaclass=Singleton):
             return self._group_index[(taskclass, groupclass)]
         except KeyError as exc:
             raise KeyError(
-                f"unregistered GroupClass {groupclass!r} for TaskClass {taskclass!r}"
+                f'unregistered GroupClass {groupclass!r} for TaskClass {taskclass!r}'
             ) from exc
 
     def groups_for_task(self, taskclass: str) -> tuple[type[Any], ...]:
@@ -143,10 +144,15 @@ class ConfigModelRegistry(metaclass=Singleton):
     def task_groups(self) -> Mapping[type[Any], tuple[type[Any], ...]]:
         """Read-only snapshot of ``TaskClass -> GroupClass tuple``."""
 
-        return MappingProxyType({
-            task_type: tuple(self._group_index[(name, group)] for group in self._task_groups.get(name, ()))
-            for name, task_type in self._task_classes.items()
-        })
+        return MappingProxyType(
+            {
+                task_type: tuple(
+                    self._group_index[(name, group)]
+                    for group in self._task_groups.get(name, ())
+                )
+                for name, task_type in self._task_classes.items()
+            }
+        )
 
     @property
     def task_fields(self) -> Mapping[type[Any], Mapping[str, type[Any]]]:
@@ -158,7 +164,9 @@ class ConfigModelRegistry(metaclass=Singleton):
     def groups(self) -> Mapping[str, tuple[type[Any], ...]]:
         """Read-only Group classes indexed by their short class name."""
 
-        return MappingProxyType({name: (model,) for name, model in self._group_classes.items()})
+        return MappingProxyType(
+            {name: (model,) for name, model in self._group_classes.items()}
+        )
 
     def find_tasks(self, name: str) -> tuple[type[Any], ...]:
         """Return registered Task classes with the given class name."""
@@ -187,7 +195,7 @@ class ConfigModelRegistry(metaclass=Singleton):
             tasks = [
                 name
                 for name in task_names
-                if self.is_task_registered(name.partition("@")[0])
+                if self.is_task_registered(name.partition('@')[0])
             ]
             if tasks:
                 filtered[category] = tasks
@@ -203,9 +211,14 @@ class ConfigModelRegistry(metaclass=Singleton):
         """Return the Group classes declared by ``task_type``."""
 
         name = task_type if isinstance(task_type, str) else task_type.__name__
-        return tuple(self._group_index[(name, group)] for group in self._task_groups.get(name, ()))
+        return tuple(
+            self._group_index[(name, group)]
+            for group in self._task_groups.get(name, ())
+        )
 
-    def group_for_field(self, task_type: type[Any], field_name: str) -> type[Any] | None:
+    def group_for_field(
+        self, task_type: type[Any], field_name: str
+    ) -> type[Any] | None:
         """Return the Group class declared by one Task field."""
 
         return self._task_fields.get(task_type, {}).get(field_name)

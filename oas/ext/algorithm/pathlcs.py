@@ -7,7 +7,7 @@ class PathLookbackLCS:
     def __init__(self):
         self.index = 0
         # key: (file_suffix, last_char_of_stem, second_to_the_last, fullpath), value: index
-        self.dict_suffix: "dict[str, dict[str, dict[str, dict[str, int]]]]" = (
+        self.dict_suffix: 'dict[str, dict[str, dict[str, dict[str, int]]]]' = (
             defaultdict(lambda: defaultdict(lambda: defaultdict(dict)))
         )
 
@@ -94,7 +94,10 @@ class PathLookbackLCS:
                     if not dict_path:
                         continue
                     prev_index = next(reversed(dict_path.values()))
-                    if max_lookback is not None and current_index - prev_index > max_lookback:
+                    if (
+                        max_lookback is not None
+                        and current_index - prev_index > max_lookback
+                    ):
                         continue
                     if prev_index > best_index:
                         best_index = prev_index
@@ -123,9 +126,9 @@ class PathLookbackLCS:
                 # Note: check ``paths`` dict non-empty, not ``any(paths.values())``,
                 # because the first file in a bucket has index 0 (falsy).
                 if not any(
-                        paths
-                        for _last_dict in dict_suffix.values()
-                        for paths in _last_dict.values()
+                    paths
+                    for _last_dict in dict_suffix.values()
+                    for paths in _last_dict.values()
                 ):
                     continue
                 best_dict_suffix = dict_suffix
@@ -138,7 +141,10 @@ class PathLookbackLCS:
                     if not dict_path:
                         continue
                     prev_index = next(reversed(dict_path.values()))
-                    if max_lookback is not None and current_index - prev_index > max_lookback:
+                    if (
+                        max_lookback is not None
+                        and current_index - prev_index > max_lookback
+                    ):
                         continue
                     if prev_index > best_index:
                         best_index = prev_index

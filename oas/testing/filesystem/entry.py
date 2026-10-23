@@ -4,6 +4,7 @@ Mocks of os.DirEntry and the iterator returned by os.scandir().
 The entry information (is_dir / is_file / stat) is resolved once when
 the directory is scanned, like the real os.DirEntry caches it.
 """
+
 import errno
 import stat
 
@@ -16,9 +17,12 @@ class FakeDirEntry:
     time too: `_follow_stat` is the stat of the link target, None when
     the link is dangling.
     """
+
     __slots__ = ('name', 'path', '_is_dir', '_is_symlink', '_stat', '_follow_stat')
 
-    def __init__(self, name, path, is_dir, stat_result, is_symlink=False, follow_stat=None):
+    def __init__(
+        self, name, path, is_dir, stat_result, is_symlink=False, follow_stat=None
+    ):
         """
         Args:
             name (str): Name of the entry
@@ -93,7 +97,9 @@ class FakeDirEntry:
         """
         if self._is_symlink and follow_symlinks:
             if self._follow_stat is None:
-                raise FileNotFoundError(errno.ENOENT, 'No such file or directory', self.path)
+                raise FileNotFoundError(
+                    errno.ENOENT, 'No such file or directory', self.path
+                )
             return self._follow_stat
         return self._stat
 
@@ -107,6 +113,7 @@ class FakeScandirIterator:
 
     Supports both iteration and context manager usage.
     """
+
     def __init__(self, entries):
         """
         Args:

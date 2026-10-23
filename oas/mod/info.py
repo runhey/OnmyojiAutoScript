@@ -11,6 +11,7 @@ class ModEntryInfo(Struct):
     """
     ModEntryInfo
     """
+
     # mod name
     name: str
     # absolute path to mod root folder, or relative path from running folder to mod root folder
@@ -25,15 +26,23 @@ class ModEntryInfo(Struct):
     path_assets: str = 'assets'
     # valid file extension of assets
     # png is commonly used because jpg is a lossy compression
-    asset_ext: dict[str, None] = field(default_factory=lambda: dict.fromkeys(['.png', '.gif']))
+    asset_ext: dict[str, None] = field(
+        default_factory=lambda: dict.fromkeys(['.png', '.gif'])
+    )
     # valid lang (or server) of assets
     # ASSETS_LANG must not in ASSETS_EXT, must not be empty string, must not be a digit
-    asset_lang: dict[str, None] = field(default_factory=lambda: dict.fromkeys(['cn', 'en']))
+    asset_lang: dict[str, None] = field(
+        default_factory=lambda: dict.fromkeys(['cn', 'en'])
+    )
     # valid languages on GUI
-    gui_language: dict[str, None] = field(default_factory=lambda: dict.fromkeys(['zh-CN', 'en-US']))
+    gui_language: dict[str, None] = field(
+        default_factory=lambda: dict.fromkeys(['zh-CN', 'en-US'])
+    )
     # folders to scan for task entry functions, relative to mod root
     # default to scan "module" and "tasks" folders
-    task_entry_folders: dict[str, None] = field(default_factory=lambda: dict.fromkeys(['module', 'tasks']))
+    task_entry_folders: dict[str, None] = field(
+        default_factory=lambda: dict.fromkeys(['module', 'tasks'])
+    )
 
     def copy(self):
         """

@@ -1,6 +1,7 @@
 """
 Combined encoding for path-based data: prefix (diff+zigzag) and suffix (nibble).
 """
+
 from oas.ext.algorithm.diffcooding import decode_diff, encode_diff
 from oas.ext.algorithm.zigzag import decode_zigzag, encode_zigzag
 
@@ -89,7 +90,9 @@ def suffix_comb_value_check(list_suffix_reuse, list_suffix_lookback):
     if min_lb < 0:
         raise ValueError(f'suffix_lookback must be >= 0, got {min_lb}')
     if max_lb > MAX_SUFFIX_LOOKBACK:
-        raise ValueError(f'suffix_lookback must be <= {MAX_SUFFIX_LOOKBACK}, got {max_lb}')
+        raise ValueError(
+            f'suffix_lookback must be <= {MAX_SUFFIX_LOOKBACK}, got {max_lb}'
+        )
 
 
 def _encode_prefix_comb_iter(list_prefix_reuse, list_path_length):

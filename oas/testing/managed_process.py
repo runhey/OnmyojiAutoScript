@@ -67,10 +67,10 @@ class ManagedProcess:
         # package is pip-installed. Inject the project root into PYTHONPATH
         # so child processes can always ``import alasio``.
         env = os.environ.copy()
-        existing = env.get("PYTHONPATH")
-        env["PYTHONPATH"] = OAS_ROOT + (os.pathsep + existing if existing else "")
+        existing = env.get('PYTHONPATH')
+        env['PYTHONPATH'] = OAS_ROOT + (os.pathsep + existing if existing else '')
 
-        if sys.platform == "win32":
+        if sys.platform == 'win32':
             # Windows: 创建新的进程组
             self.process = subprocess.Popen(
                 cmd,
@@ -80,7 +80,7 @@ class ManagedProcess:
                 text=True,
                 bufsize=1,  # 行缓冲
                 creationflags=subprocess.CREATE_NEW_PROCESS_GROUP,
-                env=env
+                env=env,
             )
         else:
             # Unix/Linux: 使用preexec_fn创建新的进程组
@@ -92,7 +92,7 @@ class ManagedProcess:
                 text=True,
                 bufsize=1,  # 行缓冲
                 preexec_fn=os.setpgrp,
-                env=env
+                env=env,
             )
 
     def _start_collector(self):
@@ -100,7 +100,7 @@ class ManagedProcess:
         self.collector_thread = threading.Thread(
             target=self._collect_output,
             daemon=True,
-            name=f"OutputCollector-{self.process.pid}"
+            name=f'OutputCollector-{self.process.pid}',
         )
         self.collector_thread.start()
 
@@ -123,7 +123,7 @@ class ManagedProcess:
         except Exception as e:
             # 收集过程中出错（例如进程被强制终止）
             with self.output_lock:
-                self.output_buffer.append(f"[OutputCollector Error: {e}]\n")
+                self.output_buffer.append(f'[OutputCollector Error: {e}]\n')
 
     def get_output(self) -> str:
         """
@@ -155,12 +155,12 @@ class ManagedProcess:
         return text in output
 
     def wait_for_output(
-            self,
-            text: str,
-            timeout: float = 10.0,
-            case_sensitive: bool = True,
-            interval: float = 0.01,
-            count: int = 1
+        self,
+        text: str,
+        timeout: float = 10.0,
+        case_sensitive: bool = True,
+        interval: float = 0.01,
+        count: int = 1,
     ) -> bool:
         """
         等待特定文本在输出中出现至少 count 次
@@ -184,8 +184,9 @@ class ManagedProcess:
                 if not case_sensitive:
                     output = output.lower()
                     text = text.lower()
-                assert output.count(text) >= count, \
+                assert output.count(text) >= count, (
                     f"Timeout waiting for '{text}' x{count} in output"
+                )
 
         return True
 
@@ -227,7 +228,7 @@ class ManagedProcess:
             returncode = self.process.wait(timeout=timeout)
             return returncode
         except subprocess.TimeoutExpired:
-            raise TimeoutError(f"Process did not exit within {timeout} seconds")
+            raise TimeoutError(f'Process did not exit within {timeout} seconds')
 
     def is_alive(self) -> bool:
         """
@@ -243,7 +244,7 @@ class ManagedProcess:
         if not self.is_alive():
             return
 
-        if sys.platform == "win32":
+        if sys.platform == 'win32':
             self.process.send_signal(signal.CTRL_BREAK_EVENT)
         else:
             # Unix/Linux: 使用SIGINT
@@ -297,6 +298,6 @@ class ManagedProcess:
         return False
 
     def __repr__(self):
-        status = "alive" if self.is_alive() else "dead"
-        pid = self.process.pid if self.process else "N/A"
-        return f"<ManagedProcess pid={pid} status={status} script={self.script_path}>"
+        status = 'alive' if self.is_alive() else 'dead'
+        pid = self.process.pid if self.process else 'N/A'
+        return f'<ManagedProcess pid={pid} status={status} script={self.script_path}>'

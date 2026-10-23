@@ -12,20 +12,25 @@ index section of a pack).  For each input path it yields:
 The decoder (``decode_base._decode_paths``) replays these values as
 ``prev[:prefix_reuse] + path + lookback_path[-suffix_reuse:]``.
 """
+
 from typing import Iterable, Iterator, Tuple
 
 from oas.ext.algorithm.lcp import get_lcp
 from oas.ext.algorithm.pathlcs import PathLookbackLCS
-from oas.ext.algorithm.pathlen_coding import MAX_PREFIX_REUSE, MAX_SUFFIX_LOOKBACK, MAX_SUFFIX_REUSE
+from oas.ext.algorithm.pathlen_coding import (
+    MAX_PREFIX_REUSE,
+    MAX_SUFFIX_LOOKBACK,
+    MAX_SUFFIX_REUSE,
+)
 
 
 def iter_path_comb(
-        paths: "Iterable[str]",
-        max_prefix_reuse=MAX_PREFIX_REUSE,
-        min_suffix_reuse=3,
-        max_suffix_reuse=MAX_SUFFIX_REUSE,
-        max_suffix_lookback=MAX_SUFFIX_LOOKBACK,
-) -> "Iterator[Tuple[int, str, int, int]]":
+    paths: 'Iterable[str]',
+    max_prefix_reuse=MAX_PREFIX_REUSE,
+    min_suffix_reuse=3,
+    max_suffix_reuse=MAX_SUFFIX_REUSE,
+    max_suffix_lookback=MAX_SUFFIX_LOOKBACK,
+) -> 'Iterator[Tuple[int, str, int, int]]':
     """
     Encode an ordered path list into prefix/suffix combination values.
 
@@ -60,7 +65,10 @@ def iter_path_comb(
         # a prefix-stripped path may lose its extension dot (e.g. "png")
         # and can never match the ('.png', ...) buckets of stored paths
         suffix_lookback, suffix_reuse = lcs_lookback.get_lcs(
-            path, min_length=min_suffix_reuse, max_length=max_suffix_reuse, max_lookback=max_suffix_lookback,
+            path,
+            min_length=min_suffix_reuse,
+            max_length=max_suffix_reuse,
+            max_lookback=max_suffix_lookback,
         )
         # the LCS of full paths may extend beyond the prefix-stripped path
         # (e.g. ".png" vs stripped "png"); cap it so the suffix always fits

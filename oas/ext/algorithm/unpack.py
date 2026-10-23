@@ -1,6 +1,12 @@
 import struct
 
-from oas.ext.algorithm.const import MAX_INT64, MAX_UINT8, MAX_UINT16, MAX_UINT24, MAX_UINT32
+from oas.ext.algorithm.const import (
+    MAX_INT64,
+    MAX_UINT8,
+    MAX_UINT16,
+    MAX_UINT24,
+    MAX_UINT32,
+)
 
 UINT8_unpacker = struct.Struct('<B').unpack_from
 UINT16_unpacker = struct.Struct('<H').unpack_from
@@ -36,7 +42,7 @@ def unpack_little_int(data, index, length):
             try:
                 # Fast path: read 4 bytes as uint32, mask to 24 bits
                 return UINT32_unpacker(data, index)[0] & MAX_UINT24
-            except (IndexError, struct.error):
+            except IndexError, struct.error:
                 pass
             # Fallback: only 3 bytes available, use 2+1 method
             head = UINT16_unpacker(data, index)[0]
@@ -47,15 +53,16 @@ def unpack_little_int(data, index, length):
         elif length == 8:
             return UINT64_unpacker(data, index)[0]
         else:
-            raise ValueError(f"Invalid length: {length}")
-    except (IndexError, struct.error):
+            raise ValueError(f'Invalid length: {length}')
+    except IndexError, struct.error:
         raise ValueError(
-            f"Data truncated, expected {length} bytes of little-endian integer, got {len(data) - index} bytes")
+            f'Data truncated, expected {length} bytes of little-endian integer, got {len(data) - index} bytes'
+        )
 
 
 def pack_little_int(data):
     if data < 0:
-        raise ValueError(f"Value is negative: {data}")
+        raise ValueError(f'Value is negative: {data}')
     if data <= MAX_UINT8:
         return UINT8_packer(data)
     elif data <= MAX_UINT16:
@@ -67,4 +74,4 @@ def pack_little_int(data):
     elif data <= MAX_INT64:
         return UINT64_packer(data)
     else:
-        raise ValueError(f"Value is too large: {data}")
+        raise ValueError(f'Value is too large: {data}')

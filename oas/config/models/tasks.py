@@ -9,7 +9,7 @@ from typing import Any, ClassVar, Literal, Self
 from oas.config.models.base import ConfigBase
 from oas.config.models.groups import GroupBase
 
-Operation = Literal["set", "merge", "delete", "replace"]
+Operation = Literal['set', 'merge', 'delete', 'replace']
 
 
 @dataclass(frozen=True, slots=True)
@@ -18,21 +18,21 @@ class SchemaRule:
 
     target: str
     property: str | None = None
-    operation: Operation = "set"
+    operation: Operation = 'set'
     value: Any = None
     when: Callable[[SchemaContext], bool] | None = None
 
     def __post_init__(self) -> None:
         if not isinstance(self.target, str) or not self.target.strip():
-            raise TypeError("SchemaRule.target must be a non-empty string")
+            raise TypeError('SchemaRule.target must be a non-empty string')
         if self.property is not None and (
             not isinstance(self.property, str) or not self.property.strip()
         ):
-            raise TypeError("SchemaRule.property must be a non-empty string or None")
-        if self.operation not in {"set", "merge", "delete", "replace"}:
-            raise ValueError(f"unsupported schema rule operation: {self.operation!r}")
+            raise TypeError('SchemaRule.property must be a non-empty string or None')
+        if self.operation not in {'set', 'merge', 'delete', 'replace'}:
+            raise ValueError(f'unsupported schema rule operation: {self.operation!r}')
         if self.when is not None and not callable(self.when):
-            raise TypeError("SchemaRule.when must be callable or None")
+            raise TypeError('SchemaRule.when must be callable or None')
 
 
 @dataclass(frozen=True, slots=True)
@@ -53,7 +53,7 @@ class schema:
     ``@schema.hide(...)`` without creating a stateful ``schema`` object.
     """
 
-    _rules_attribute = "__oas_schema_rules__"
+    _rules_attribute = '__oas_schema_rules__'
 
     @classmethod
     def _attach(cls, function: Any, rules: Sequence[SchemaRule]) -> Any:
@@ -75,7 +75,7 @@ class schema:
         else:
             callable_function = function
         if not callable(callable_function):
-            raise TypeError("schema decorators must decorate a method")
+            raise TypeError('schema decorators must decorate a method')
         previous = tuple(getattr(callable_function, cls._rules_attribute, ()))
         setattr(callable_function, cls._rules_attribute, previous + tuple(rules))
         return function
@@ -83,10 +83,10 @@ class schema:
     @staticmethod
     def _paths(paths: Sequence[str]) -> tuple[str, ...]:
         if not paths:
-            raise TypeError("at least one schema path is required")
+            raise TypeError('at least one schema path is required')
         result = tuple(paths)
         if any(not isinstance(path, str) or not path.strip() for path in result):
-            raise TypeError("schema paths must be non-empty strings")
+            raise TypeError('schema paths must be non-empty strings')
         return result
 
     @classmethod
@@ -98,7 +98,7 @@ class schema:
     ) -> Callable[[Any], Any]:
         if len(args) == 1 and isinstance(args[0], Mapping):
             if value is not None:
-                raise TypeError("mapping form cannot also provide value")
+                raise TypeError('mapping form cannot also provide value')
             mapping = args[0]
             cls._paths(tuple(mapping))
             rules = tuple(
@@ -108,7 +108,7 @@ class schema:
         else:
             if value is None:
                 if len(args) < 2:
-                    raise TypeError("schema decorator requires path and value")
+                    raise TypeError('schema decorator requires path and value')
                 paths, value = args[:-1], args[-1]
             else:
                 paths = args
@@ -139,43 +139,43 @@ class schema:
 
     @staticmethod
     def hide(*paths: str, value: bool = True) -> Callable[[Any], Any]:
-        return schema._property("hide", paths, value)
+        return schema._property('hide', paths, value)
 
     @staticmethod
     def icon(*args: Any, value: str | None = None) -> Callable[[Any], Any]:
-        return schema._property("icon", args, value)
+        return schema._property('icon', args, value)
 
     @staticmethod
     def title(*args: Any, value: str | None = None) -> Callable[[Any], Any]:
-        return schema._property("title", args, value)
+        return schema._property('title', args, value)
 
     @staticmethod
     def description(*args: Any, value: str | None = None) -> Callable[[Any], Any]:
-        return schema._property("description", args, value)
+        return schema._property('description', args, value)
 
     @staticmethod
     def depends(*args: Any, value: str | None = None) -> Callable[[Any], Any]:
-        return schema._property("depends", args, value)
+        return schema._property('depends', args, value)
 
     @staticmethod
     def alias(*args: Any, value: str | None = None) -> Callable[[Any], Any]:
-        return schema._property("alias", args, value)
+        return schema._property('alias', args, value)
 
     @staticmethod
     def set(target: str, property: str, value: Any = None) -> Callable[[Any], Any]:
-        return schema._operation("set", target, property, value)
+        return schema._operation('set', target, property, value)
 
     @staticmethod
     def merge(target: str, value: Mapping[str, Any]) -> Callable[[Any], Any]:
-        return schema._operation("merge", target, value=dict(value))
+        return schema._operation('merge', target, value=dict(value))
 
     @staticmethod
     def delete(target: str, property: str | None = None) -> Callable[[Any], Any]:
-        return schema._operation("delete", target, property)
+        return schema._operation('delete', target, property)
 
     @staticmethod
     def replace(target: str, value: Mapping[str, Any]) -> Callable[[Any], Any]:
-        return schema._operation("replace", target, value=dict(value))
+        return schema._operation('replace', target, value=dict(value))
 
 
 class TaskBase(ConfigBase):
@@ -267,25 +267,25 @@ class TaskBase(ConfigBase):
         """Materialize and locate one dotted schema path."""
 
         def resolve_ref(reference: str) -> dict[str, Any]:
-            if reference.startswith("#/$defs/"):
-                definitions = schema_data.get("$defs", {})
-                name = reference[len("#/$defs/") :]
-            elif reference.startswith("#/definitions/"):
-                definitions = schema_data.get("definitions", {})
-                name = reference[len("#/definitions/") :]
+            if reference.startswith('#/$defs/'):
+                definitions = schema_data.get('$defs', {})
+                name = reference[len('#/$defs/') :]
+            elif reference.startswith('#/definitions/'):
+                definitions = schema_data.get('definitions', {})
+                name = reference[len('#/definitions/') :]
             else:
-                raise ValueError(f"unsupported schema reference: {reference!r}")
+                raise ValueError(f'unsupported schema reference: {reference!r}')
             try:
                 return definitions[name]
             except KeyError as exc:
                 raise ValueError(
-                    f"schema reference does not exist: {reference!r}"
+                    f'schema reference does not exist: {reference!r}'
                 ) from exc
 
         def materialize(child: Any) -> dict[str, Any]:
             if not isinstance(child, dict):
-                raise TypeError("schema node must be an object")
-            reference = child.get("$ref")
+                raise TypeError('schema node must be an object')
+            reference = child.get('$ref')
             if not reference:
                 return child
             if resolve_ref_schema is None:
@@ -293,24 +293,20 @@ class TaskBase(ConfigBase):
             else:
                 resolved = dict(resolve_ref_schema(child))
             resolved.update(
-                {
-                    key: value
-                    for key, value in child.items()
-                    if key != "$ref"
-                }
+                {key: value for key, value in child.items() if key != '$ref'}
             )
-            if isinstance(resolved.get("properties"), dict):
-                resolved["properties"] = dict(resolved["properties"])
+            if isinstance(resolved.get('properties'), dict):
+                resolved['properties'] = dict(resolved['properties'])
             return resolved
 
         node: dict[str, Any] = schema_data
         parent: dict[str, Any] = schema_data
-        key = ""
-        for part in path.split("."):
+        key = ''
+        for part in path.split('.'):
             node = materialize(node)
-            properties = node.get("properties")
+            properties = node.get('properties')
             if not isinstance(properties, dict) or part not in properties:
-                raise KeyError(f"schema override path does not exist: {path!r}")
+                raise KeyError(f'schema override path does not exist: {path!r}')
             parent, key = properties, part
             child = materialize(properties[part])
             properties[part] = child
@@ -327,16 +323,14 @@ class TaskBase(ConfigBase):
         resolve_ref_schema: Callable[[dict[str, Any]], dict[str, Any]] | None = None,
     ) -> dict[str, Any]:
         for rule in rules:
-            if rule.property == "hide" and not isinstance(rule.value, bool):
-                raise TypeError("schema.hide value must be bool")
+            if rule.property == 'hide' and not isinstance(rule.value, bool):
+                raise TypeError('schema.hide value must be bool')
             if (
-                rule.property in {"icon", "title", "description", "depends", "alias"}
+                rule.property in {'icon', 'title', 'description', 'depends', 'alias'}
                 and rule.value is not None
                 and not isinstance(rule.value, str)
             ):
-                raise TypeError(
-                    f"schema.{rule.property} value must be str or None"
-                )
+                raise TypeError(f'schema.{rule.property} value must be str or None')
 
             context = SchemaContext(
                 task_type=cls,
@@ -353,28 +347,32 @@ class TaskBase(ConfigBase):
                 rule.target,
                 resolve_ref_schema=resolve_ref_schema,
             )
-            if rule.operation == "replace":
+            if rule.operation == 'replace':
                 if not isinstance(rule.value, Mapping):
-                    raise TypeError("replace rule value must be a mapping")
+                    raise TypeError('replace rule value must be a mapping')
                 if rule.property is None:
                     parent[key] = dict(rule.value)
                 else:
                     node[rule.property] = rule.value
-            elif rule.operation == "delete":
+            elif rule.operation == 'delete':
                 if rule.property is None:
                     del parent[key]
                 else:
                     node.pop(rule.property, None)
-            elif rule.operation == "merge":
+            elif rule.operation == 'merge':
                 if not isinstance(rule.value, Mapping):
-                    raise TypeError("merge rule value must be a mapping")
-                target = node if rule.property is None else node.setdefault(rule.property, {})
+                    raise TypeError('merge rule value must be a mapping')
+                target = (
+                    node
+                    if rule.property is None
+                    else node.setdefault(rule.property, {})
+                )
                 if not isinstance(target, dict):
-                    raise TypeError("merge rule target must be an object")
+                    raise TypeError('merge rule target must be an object')
                 target.update(dict(rule.value))
             else:
                 if rule.property is None:
-                    raise ValueError("set rule requires property or use replace")
+                    raise ValueError('set rule requires property or use replace')
                 node[rule.property] = rule.value
         return schema_data
 
@@ -390,15 +388,13 @@ class TaskBase(ConfigBase):
             schema_data = handler(core_schema)
             rules: list[SchemaRule] = []
             for base in reversed(cls.__mro__):
-                descriptor = base.__dict__.get("schema_overrides")
+                descriptor = base.__dict__.get('schema_overrides')
                 if isinstance(descriptor, (classmethod, staticmethod)):
                     function = descriptor.__func__
                 else:
                     function = descriptor
                 if callable(function):
-                    rules.extend(
-                        getattr(function, schema._rules_attribute, ())
-                    )
+                    rules.extend(getattr(function, schema._rules_attribute, ()))
             rules.extend(cls._pending_schema_rules)
             return cls.apply_rules(
                 schema_data,

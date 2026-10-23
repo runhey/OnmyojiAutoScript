@@ -45,7 +45,7 @@ class SafeDict(dict):
         # If key is not a valid identifier (e.g. from a set literal "{'a'}"),
         # return the key with braces to preserve it.
         if isinstance(key, str) and not key.isidentifier():
-            return f"{{{key}}}"
+            return f'{{{key}}}'
         return f'<key "{key}" missing>'
 
 
@@ -137,7 +137,7 @@ def gen_exception_tree(exc: BaseException):
     while stack:
         current_exc, depth = stack.pop()
 
-        prefix = "  " * depth
+        prefix = '  ' * depth
         yield f'{prefix}- {type(current_exc).__name__}: {current_exc}'
 
         if BaseExceptionGroup and isinstance(current_exc, BaseExceptionGroup):
@@ -194,17 +194,47 @@ def replace_unicode_table(output):
         str:
     """
     mapping = {
-        "┌": "+", "┐": "+", "└": "+", "┘": "+",
-        "├": "+", "┤": "+", "┬": "+", "┴": "+",
-        "┼": "+", "─": "-", "│": "|", "═": "=",
-        "║": "|", "╒": "+", "╓": "+", "╔": "+",
-        "╕": "+", "╖": "+", "╗": "+", "╘": "+",
-        "╙": "+", "╚": "+", "╛": "+", "╜": "+",
-        "╝": "+", "╞": "+", "╟": "+", "╠": "+",
-        "╡": "+", "╢": "+", "╣": "+", "╤": "+",
-        "╥": "+", "╦": "+", "╧": "+", "╨": "+",
-        "╩": "+", "╪": "+", "╫": "+", "╬": "+",
-        "…": "~",
+        '┌': '+',
+        '┐': '+',
+        '└': '+',
+        '┘': '+',
+        '├': '+',
+        '┤': '+',
+        '┬': '+',
+        '┴': '+',
+        '┼': '+',
+        '─': '-',
+        '│': '|',
+        '═': '=',
+        '║': '|',
+        '╒': '+',
+        '╓': '+',
+        '╔': '+',
+        '╕': '+',
+        '╖': '+',
+        '╗': '+',
+        '╘': '+',
+        '╙': '+',
+        '╚': '+',
+        '╛': '+',
+        '╜': '+',
+        '╝': '+',
+        '╞': '+',
+        '╟': '+',
+        '╠': '+',
+        '╡': '+',
+        '╢': '+',
+        '╣': '+',
+        '╤': '+',
+        '╥': '+',
+        '╦': '+',
+        '╧': '+',
+        '╨': '+',
+        '╩': '+',
+        '╪': '+',
+        '╫': '+',
+        '╬': '+',
+        '…': '~',
     }
     for unicode_char, ascii_char in mapping.items():
         output = output.replace(unicode_char, ascii_char)

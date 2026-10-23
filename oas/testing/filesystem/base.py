@@ -4,6 +4,7 @@ Base types of the in-memory fake filesystem.
 Path normalization, the file/directory records (dataclass with slots) and the state
 lock helper.
 """
+
 import os
 import stat
 from dataclasses import dataclass
@@ -29,10 +30,12 @@ def synchronized(method):
     Returns:
         callable: The method, guarded by ``self._lock``
     """
+
     @wraps(method)
     def wrapper(self, *args, **kwargs):
         with self._lock:
             return method(self, *args, **kwargs)
+
     return wrapper
 
 
@@ -110,7 +113,9 @@ def _build_stat(st_mode, ino, dev, nlink, uid, gid, size, atime, mtime, ctime):
     Returns:
         os.stat_result:
     """
-    return os.stat_result((st_mode, ino, dev, nlink, uid, gid, size, atime, mtime, ctime))
+    return os.stat_result(
+        (st_mode, ino, dev, nlink, uid, gid, size, atime, mtime, ctime)
+    )
 
 
 @dataclass(slots=True)
@@ -131,6 +136,7 @@ class FakeFile:
         mtime (float): Last modification time
         ctime (float): Creation time
     """
+
     path: str
     content: bytes = b''
     mode: int = 0o666
@@ -151,8 +157,16 @@ class FakeFile:
             os.stat_result:
         """
         return _build_stat(
-            stat.S_IFREG | self.mode, self.ino, self.dev, self.nlink,
-            self.uid, self.gid, len(self.content), self.atime, self.mtime, self.ctime,
+            stat.S_IFREG | self.mode,
+            self.ino,
+            self.dev,
+            self.nlink,
+            self.uid,
+            self.gid,
+            len(self.content),
+            self.atime,
+            self.mtime,
+            self.ctime,
         )
 
 
@@ -173,6 +187,7 @@ class FakeDir:
         mtime (float): Last modification time
         ctime (float): Creation time
     """
+
     path: str
     mode: int = 0o777
     ino: int = 0
@@ -192,8 +207,16 @@ class FakeDir:
             os.stat_result:
         """
         return _build_stat(
-            stat.S_IFDIR | self.mode, self.ino, self.dev, self.nlink,
-            self.uid, self.gid, 0, self.atime, self.mtime, self.ctime,
+            stat.S_IFDIR | self.mode,
+            self.ino,
+            self.dev,
+            self.nlink,
+            self.uid,
+            self.gid,
+            0,
+            self.atime,
+            self.mtime,
+            self.ctime,
         )
 
 
@@ -215,6 +238,7 @@ class FakeSymlink:
         mtime (float): Last modification time
         ctime (float): Creation time
     """
+
     path: str
     target: str
     mode: int = 0o777
@@ -235,6 +259,14 @@ class FakeSymlink:
             os.stat_result:
         """
         return _build_stat(
-            stat.S_IFLNK | self.mode, self.ino, self.dev, self.nlink,
-            self.uid, self.gid, len(self.target), self.atime, self.mtime, self.ctime,
+            stat.S_IFLNK | self.mode,
+            self.ino,
+            self.dev,
+            self.nlink,
+            self.uid,
+            self.gid,
+            len(self.target),
+            self.atime,
+            self.mtime,
+            self.ctime,
         )
