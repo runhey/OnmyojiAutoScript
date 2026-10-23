@@ -10,74 +10,74 @@ class TestRemovePrefix:
     # OAS 3.14: 直接用原生 str.removeprefix / bytes.removeprefix
     def test_removeprefix(self):
         # Normal case
-        assert "prefix_text".removeprefix("prefix_") == "text"
+        assert 'prefix_text'.removeprefix('prefix_') == 'text'
         # No match
-        assert "text".removeprefix("prefix_") == "text"
+        assert 'text'.removeprefix('prefix_') == 'text'
         # Empty prefix
-        assert "prefix_text".removeprefix("") == "prefix_text"
+        assert 'prefix_text'.removeprefix('') == 'prefix_text'
         # Partial match at start
-        assert "aaa".removeprefix("aa") == "a"
+        assert 'aaa'.removeprefix('aa') == 'a'
         # Prefix longer than string
-        assert "aaa".removeprefix("aaaa") == "aaa"
+        assert 'aaa'.removeprefix('aaaa') == 'aaa'
         # Match but not at start
-        assert "text_prefix".removeprefix("prefix") == "text_prefix"
+        assert 'text_prefix'.removeprefix('prefix') == 'text_prefix'
         # Empty input string
-        assert "".removeprefix("prefix") == ""
-        assert "".removeprefix("") == ""
+        assert ''.removeprefix('prefix') == ''
+        assert ''.removeprefix('') == ''
 
     def test_removeprefix_bytes(self):
         # Normal case
-        assert b"prefix_text".removeprefix(b"prefix_") == b"text"
+        assert b'prefix_text'.removeprefix(b'prefix_') == b'text'
         # No match
-        assert b"text".removeprefix(b"prefix_") == b"text"
+        assert b'text'.removeprefix(b'prefix_') == b'text'
         # Empty prefix
-        assert b"prefix_text".removeprefix(b"") == b"prefix_text"
+        assert b'prefix_text'.removeprefix(b'') == b'prefix_text'
         # Partial match at start
-        assert b"aaa".removeprefix(b"aa") == b"a"
+        assert b'aaa'.removeprefix(b'aa') == b'a'
         # Prefix longer than string
-        assert b"aaa".removeprefix(b"aaaa") == b"aaa"
+        assert b'aaa'.removeprefix(b'aaaa') == b'aaa'
         # Match but not at start
-        assert b"text_prefix".removeprefix(b"prefix") == b"text_prefix"
+        assert b'text_prefix'.removeprefix(b'prefix') == b'text_prefix'
         # Empty input string
-        assert b"".removeprefix(b"prefix") == b""
-        assert b"".removeprefix(b"") == b""
+        assert b''.removeprefix(b'prefix') == b''
+        assert b''.removeprefix(b'') == b''
 
 
 class TestRemoveSuffix:
     # OAS 3.14: 直接用原生 str.removesuffix / bytes.removesuffix
     def test_removesuffix(self):
         # Normal case
-        assert "text_suffix".removesuffix("_suffix") == "text"
+        assert 'text_suffix'.removesuffix('_suffix') == 'text'
         # No match
-        assert "text".removesuffix("_suffix") == "text"
+        assert 'text'.removesuffix('_suffix') == 'text'
         # Empty suffix
-        assert "text_suffix".removesuffix("") == "text_suffix"
+        assert 'text_suffix'.removesuffix('') == 'text_suffix'
         # Partial match at end
-        assert "aaa".removesuffix("aa") == "a"
+        assert 'aaa'.removesuffix('aa') == 'a'
         # Suffix longer than string
-        assert "aaa".removesuffix("aaaa") == "aaa"
+        assert 'aaa'.removesuffix('aaaa') == 'aaa'
         # Match but not at end
-        assert "suffix_text".removesuffix("suffix") == "suffix_text"
+        assert 'suffix_text'.removesuffix('suffix') == 'suffix_text'
         # Empty input string
-        assert "".removesuffix("suffix") == ""
-        assert "".removesuffix("") == ""
+        assert ''.removesuffix('suffix') == ''
+        assert ''.removesuffix('') == ''
 
     def test_removesuffix_bytes(self):
         # Normal case
-        assert b"text_suffix".removesuffix(b"_suffix") == b"text"
+        assert b'text_suffix'.removesuffix(b'_suffix') == b'text'
         # No match
-        assert b"text".removesuffix(b"_suffix") == b"text"
+        assert b'text'.removesuffix(b'_suffix') == b'text'
         # Empty suffix
-        assert b"text_suffix".removesuffix(b"") == b"text_suffix"
+        assert b'text_suffix'.removesuffix(b'') == b'text_suffix'
         # Partial match at end
-        assert b"aaa".removesuffix(b"aa") == b"a"
+        assert b'aaa'.removesuffix(b'aa') == b'a'
         # Suffix longer than string
-        assert b"aaa".removesuffix(b"aaaa") == b"aaa"
+        assert b'aaa'.removesuffix(b'aaaa') == b'aaa'
         # Match but not at end
-        assert b"suffix_text".removesuffix(b"suffix") == b"suffix_text"
+        assert b'suffix_text'.removesuffix(b'suffix') == b'suffix_text'
         # Empty input string
-        assert b"".removesuffix(b"suffix") == b""
-        assert b"".removesuffix(b"") == b""
+        assert b''.removesuffix(b'suffix') == b''
+        assert b''.removesuffix(b'') == b''
 
 
 class TestToLiteral:
@@ -86,16 +86,16 @@ class TestToLiteral:
         """
         Test if the resulting Literal can be traversed for correct content
         """
-        items = ["zh", "en", "ja", "kr"]
+        items = ['zh', 'en', 'ja', 'kr']
         lang_t = Literal[*items]
         # Use get_args to verify the content of the Literal type
-        assert get_args(lang_t) == ("zh", "en", "ja", "kr")
+        assert get_args(lang_t) == ('zh', 'en', 'ja', 'kr')
 
     def test_to_literal_msgspec(self):
         """
         Test if the resulting Literal can be used as a msgspec struct field annotation
         """
-        items = ["zh", "en"]
+        items = ['zh', 'en']
         lang_t = Literal[*items]
 
         class UserConfig(msgspec.Struct):
@@ -103,9 +103,9 @@ class TestToLiteral:
 
         # Test valid input
         data_zh = msgspec.json.decode(b'{"lang": "zh"}', type=UserConfig)
-        assert data_zh.lang == "zh"
+        assert data_zh.lang == 'zh'
         data_en = msgspec.json.decode(b'{"lang": "en"}', type=UserConfig)
-        assert data_en.lang == "en"
+        assert data_en.lang == 'en'
 
         # Test invalid input
         with pytest.raises(msgspec.ValidationError):
@@ -130,23 +130,26 @@ class TestProcessCpuCount:
 class TestStrCenter:
     """Tests for str_center — extra char goes to right when padding is odd."""
 
-    @pytest.mark.parametrize("text, width, char, expected", [
-        # even padding — same as str.center()
-        ("ab", 6, ' ', "  ab  "),
-        ("a", 5, ' ', "  a  "),
-        ("", 4, ' ', "    "),
-        # odd padding — extra char on RIGHT
-        ("ab", 5, ' ', " ab  "),
-        ("abc", 7, ' ', "  abc  "),
-        ("a", 4, ' ', " a  "),
-        # width <= len(text) — return as-is
-        ("hello", 3, ' ', "hello"),
-        ("hello", 5, ' ', "hello"),
-        # custom padding char
-        ("ab", 6, '-', "--ab--"),
-        ("ab", 5, '-', "-ab--"),
-        ("a", 4, '.', ".a.."),
-        ("a", 3, '.', ".a."),
-    ])
+    @pytest.mark.parametrize(
+        'text, width, char, expected',
+        [
+            # even padding — same as str.center()
+            ('ab', 6, ' ', '  ab  '),
+            ('a', 5, ' ', '  a  '),
+            ('', 4, ' ', '    '),
+            # odd padding — extra char on RIGHT
+            ('ab', 5, ' ', ' ab  '),
+            ('abc', 7, ' ', '  abc  '),
+            ('a', 4, ' ', ' a  '),
+            # width <= len(text) — return as-is
+            ('hello', 3, ' ', 'hello'),
+            ('hello', 5, ' ', 'hello'),
+            # custom padding char
+            ('ab', 6, '-', '--ab--'),
+            ('ab', 5, '-', '-ab--'),
+            ('a', 4, '.', '.a..'),
+            ('a', 3, '.', '.a.'),
+        ],
+    )
     def test_str_center(self, text, width, char, expected):
         assert str_center(text, width, char) == expected

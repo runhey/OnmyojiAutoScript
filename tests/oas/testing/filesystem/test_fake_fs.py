@@ -3,6 +3,7 @@ Tests for alasio/testing/filesystem/fake_fs.py.
 
 The FakeFilesystem class and the mocked os / builtins functions.
 """
+
 import builtins
 import errno
 import io
@@ -897,6 +898,7 @@ class TestActivate:
     def test_in_test_import_works(self, fs):
         """Python imports inside a test should keep working."""
         import oas.backport.cjk as module
+
         assert module.__name__ == 'oas.backport.cjk'
 
 

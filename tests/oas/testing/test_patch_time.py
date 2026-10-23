@@ -44,8 +44,8 @@ class TestInit:
         assert pt._timestamp == expected_utc_ts
 
     def test_invalid_type(self):
-        with pytest.raises(TypeError, match="Unsupported time type"):
-            PatchTime("invalid")  # type: ignore[arg-type]
+        with pytest.raises(TypeError, match='Unsupported time type'):
+            PatchTime('invalid')  # type: ignore[arg-type]
 
 
 class TestSet:
@@ -77,8 +77,8 @@ class TestSet:
 
     def test_set_invalid_type(self):
         pt = PatchTime(0)
-        with pytest.raises(TypeError, match="Unsupported time type"):
-            pt.set("invalid")  # type: ignore[arg-type]
+        with pytest.raises(TypeError, match='Unsupported time type'):
+            pt.set('invalid')  # type: ignore[arg-type]
 
 
 class TestShift:
@@ -111,8 +111,8 @@ class TestShift:
 
     def test_shift_invalid_type(self):
         pt = PatchTime(0)
-        with pytest.raises(TypeError, match="Delta must be int, float"):
-            pt.shift("invalid")  # type: ignore[arg-type]
+        with pytest.raises(TypeError, match='Delta must be int, float'):
+            pt.shift('invalid')  # type: ignore[arg-type]
 
 
 class TestEnterExit:
@@ -141,7 +141,9 @@ class TestEnterExit:
             utcnow = datetime.datetime.utcnow()
             assert utcnow.hour == 0  # 1970-01-01 00:00:42
         # After exit, should be restored
-        real_utcnow = datetime.datetime.now(tz=datetime.timezone.utc).replace(tzinfo=None)
+        real_utcnow = datetime.datetime.now(tz=datetime.timezone.utc).replace(
+            tzinfo=None
+        )
         # utcnow() returns a naive datetime (no tzinfo).
         # Use real_utcnow directly (comparison with time.time() in local timezone is unreliable).
         # Instead verify that the result is close to the expected real time by constructing a timezone-aware UTC
@@ -212,7 +214,9 @@ class TestMockedTimeBehavior:
         now = datetime.datetime.now(tz=tz)
         assert now.tzinfo is not None
         # The returned time should be in the given timezone
-        expected = datetime.datetime.fromtimestamp(1234567890.0, tz=datetime.timezone.utc).astimezone(tz)
+        expected = datetime.datetime.fromtimestamp(
+            1234567890.0, tz=datetime.timezone.utc
+        ).astimezone(tz)
         assert now == expected
 
     def test_datetime_utcnow(self, patch):
@@ -330,7 +334,9 @@ class TestEdgeCases:
 class TestTimestampConversionConsistency:
     """Test that round-trip conversions (timestamp → datetime → timestamp) are consistent."""
 
-    @pytest.mark.parametrize("ts", [0, 1, 1000, 1234567890, 4102444800, -3600, 0.5, 1234.567])
+    @pytest.mark.parametrize(
+        'ts', [0, 1, 1000, 1234567890, 4102444800, -3600, 0.5, 1234.567]
+    )
     def test_datetime_now_consistency(self, ts):
         pt = PatchTime(ts)
         with pt:
@@ -338,7 +344,9 @@ class TestTimestampConversionConsistency:
             now = datetime.datetime.now(tz=datetime.timezone.utc)
             assert abs(now.timestamp() - ts) < 0.001
 
-    @pytest.mark.parametrize("ts", [0, 1, 1000, 1234567890, 4102444800, -3600, 0.5, 1234.567])
+    @pytest.mark.parametrize(
+        'ts', [0, 1, 1000, 1234567890, 4102444800, -3600, 0.5, 1234.567]
+    )
     def test_datetime_utcnow_consistency(self, ts):
         pt = PatchTime(ts)
         with pt:
@@ -347,7 +355,9 @@ class TestTimestampConversionConsistency:
             delta = (utcnow - epoch).total_seconds()
             assert abs(delta - ts) < 0.001
 
-    @pytest.mark.parametrize("ts", [0, 1, 1000, 1234567890, 4102444800, -3600, 0.5, 1234.567])
+    @pytest.mark.parametrize(
+        'ts', [0, 1, 1000, 1234567890, 4102444800, -3600, 0.5, 1234.567]
+    )
     def test_time_ns_consistency(self, ts):
         pt = PatchTime(ts)
         with pt:

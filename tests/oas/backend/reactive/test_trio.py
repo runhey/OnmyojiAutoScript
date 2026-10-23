@@ -4,7 +4,11 @@ from unittest.mock import MagicMock
 import pytest
 import trio
 
-from oas.backend.reactive.rx_trio import AsyncReactiveCallback, async_reactive, async_reactive_source
+from oas.backend.reactive.rx_trio import (
+    AsyncReactiveCallback,
+    async_reactive,
+    async_reactive_source,
+)
 from oas.ext.singleton import Singleton
 
 # ---- Test Helper Classes (Now as Singletons) ----
@@ -27,8 +31,8 @@ class Calculator(AsyncReactiveCallback, metaclass=Singleton):
 
     def _clear_reactive_caches(self):
         # Helper to manually clear caches if needed, though singleton destruction is cleaner.
-        for name in ["a", "b", "sum", "product", "complex_expr"]:
-            cache_attr = f"_reactive_cache_{name}"
+        for name in ['a', 'b', 'sum', 'product', 'complex_expr']:
+            cache_attr = f'_reactive_cache_{name}'
             if hasattr(self, cache_attr):
                 delattr(self, cache_attr)
 
@@ -63,8 +67,8 @@ class DeepDataProcessor(AsyncReactiveCallback, metaclass=Singleton):
 
     def __init__(self):
         self._data = {
-            "user": {"profile": {"name": "Alice", "email": "alice@example.com"}},
-            "version": 1,
+            'user': {'profile': {'name': 'Alice', 'email': 'alice@example.com'}},
+            'version': 1,
         }
         self.greeting_compute_mock = MagicMock()
 
@@ -75,13 +79,13 @@ class DeepDataProcessor(AsyncReactiveCallback, metaclass=Singleton):
     @async_reactive
     async def username(self):
         data = await self.raw_data
-        return data["user"]["profile"]["name"]
+        return data['user']['profile']['name']
 
     @async_reactive
     async def greeting_message(self):
         self.greeting_compute_mock()
         name = await self.username
-        return f"Welcome, {name}!"
+        return f'Welcome, {name}!'
 
 
 # ---- Pytest Fixtures ----
@@ -195,24 +199,24 @@ async def test_deep_dictionary_dependency(processor):
     Tests dependency tracking on nested data, ensuring updates only happen
     when the relevant slice of data's value changes.
     """
-    assert await processor.username == "Alice"
-    assert await processor.greeting_message == "Welcome, Alice!"
+    assert await processor.username == 'Alice'
+    assert await processor.greeting_message == 'Welcome, Alice!'
     processor.greeting_compute_mock.assert_called_once()
 
     # Irrelevant change
     new_data_irrelevant = (await processor.raw_data).copy()
-    new_data_irrelevant["version"] = 2
+    new_data_irrelevant['version'] = 2
     await processor.raw_data.mutate()
-    assert await processor.username == "Alice"
-    assert await processor.greeting_message == "Welcome, Alice!"
+    assert await processor.username == 'Alice'
+    assert await processor.greeting_message == 'Welcome, Alice!'
     processor.greeting_compute_mock.assert_called_once()  # No new call
 
     # Relevant change
     new_data_relevant = (await processor.raw_data).copy()
-    new_data_relevant["user"]["profile"]["name"] = "Bob"
+    new_data_relevant['user']['profile']['name'] = 'Bob'
     await processor.raw_data.mutate()
-    assert await processor.username == "Bob"
-    assert await processor.greeting_message == "Welcome, Bob!"
+    assert await processor.username == 'Bob'
+    assert await processor.greeting_message == 'Welcome, Bob!'
     assert processor.greeting_compute_mock.call_count == 2
 
 
@@ -305,13 +309,13 @@ async def test_reactive_callback_invocation():
         await trio.testing.wait_all_tasks_blocked()
         assert len(tracker.callback_log) == 2
         # Check x callback - old is _NOT_FOUND in async version
-        x_callbacks = [log for log in tracker.callback_log if log[0] == "x"]
+        x_callbacks = [log for log in tracker.callback_log if log[0] == 'x']
         assert len(x_callbacks) == 1
-        assert x_callbacks[0] == ("x", _NOT_FOUND, 15)
+        assert x_callbacks[0] == ('x', _NOT_FOUND, 15)
         # Check sum_xy callback - old value is available for computed properties
-        sum_callbacks = [log for log in tracker.callback_log if log[0] == "sum_xy"]
+        sum_callbacks = [log for log in tracker.callback_log if log[0] == 'sum_xy']
         assert len(sum_callbacks) == 1
-        assert sum_callbacks[0] == ("sum_xy", 30, 35)
+        assert sum_callbacks[0] == ('sum_xy', 30, 35)
 
         # Clear log and change y
         tracker.callback_log.clear()
@@ -319,13 +323,13 @@ async def test_reactive_callback_invocation():
         await trio.testing.wait_all_tasks_blocked()
         assert len(tracker.callback_log) == 2
         # Check y callback
-        y_callbacks = [log for log in tracker.callback_log if log[0] == "y"]
+        y_callbacks = [log for log in tracker.callback_log if log[0] == 'y']
         assert len(y_callbacks) == 1
-        assert y_callbacks[0] == ("y", _NOT_FOUND, 25)
+        assert y_callbacks[0] == ('y', _NOT_FOUND, 25)
         # Check sum_xy callback
-        sum_callbacks = [log for log in tracker.callback_log if log[0] == "sum_xy"]
+        sum_callbacks = [log for log in tracker.callback_log if log[0] == 'sum_xy']
         assert len(sum_callbacks) == 1
-        assert sum_callbacks[0] == ("sum_xy", 35, 40)
+        assert sum_callbacks[0] == ('sum_xy', 35, 40)
 
     finally:
         CallbackTracker.singleton_clear()
@@ -448,15 +452,17 @@ async def test_chain_dependencies_no_propagate_if_value_unchanged():
         assert await obj.b == 10  # (15//10)*10 = 10, unchanged
         assert await obj.c == 20  # Should still be 20
         assert obj.b_compute_count == 2  # B recomputed
-        assert obj.c_compute_count == 1  # C should NOT recompute because B value unchanged
+        assert (
+            obj.c_compute_count == 1
+        )  # C should NOT recompute because B value unchanged
 
         # Check callbacks: only 'a' should have changed, not 'b' or 'c'
         callback_names = [name for name, old, new in obj.callback_log]
-        assert "a" in callback_names
-        assert "b" not in callback_names  # B didn't change value
-        assert "c" not in callback_names  # C didn't change value
+        assert 'a' in callback_names
+        assert 'b' not in callback_names  # B didn't change value
+        assert 'c' not in callback_names  # C didn't change value
         # Verify 'a' callback has _NOT_FOUND as old (due to mutate behavior)
-        a_callbacks = [log for log in obj.callback_log if log[0] == "a"]
+        a_callbacks = [log for log in obj.callback_log if log[0] == 'a']
         assert len(a_callbacks) == 1
         assert a_callbacks[0][1] == _NOT_FOUND  # old value is _NOT_FOUND
 
@@ -472,9 +478,9 @@ async def test_chain_dependencies_no_propagate_if_value_unchanged():
 
         # Check callbacks: all three should have changed
         callback_names = [name for name, old, new in obj.callback_log]
-        assert "a" in callback_names
-        assert "b" in callback_names
-        assert "c" in callback_names
+        assert 'a' in callback_names
+        assert 'b' in callback_names
+        assert 'c' in callback_names
 
     finally:
         ChainDeps.singleton_clear()
@@ -622,8 +628,8 @@ async def test_cannot_set_reactive_property():
         with pytest.raises(ValueError) as exc_info:
             obj.doubled = 30
 
-        assert "You should not set value to a reactive object" in str(exc_info.value)
-        assert "break the observation chain" in str(exc_info.value)
+        assert 'You should not set value to a reactive object' in str(exc_info.value)
+        assert 'break the observation chain' in str(exc_info.value)
 
     finally:
         Sample.singleton_clear()
@@ -653,8 +659,8 @@ async def test_cannot_set_async_reactive_source_synchronously():
             obj.value = 20
 
         error_msg = str(exc_info.value)
-        assert "should not set an async reactive source synchronously" in error_msg
-        assert "mutate" in error_msg
+        assert 'should not set an async reactive source synchronously' in error_msg
+        assert 'mutate' in error_msg
 
         # Verify the correct way still works
         await obj.value.mutate(20)

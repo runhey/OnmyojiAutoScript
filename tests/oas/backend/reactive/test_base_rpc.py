@@ -88,13 +88,16 @@ class TestRPCMethod:
         with pytest.raises(ValidationError, match='Missing arg: "x"'):
             RPCMethod(func).convert({})
 
-    @pytest.mark.parametrize('value', [
-        [1, 2],
-        'string',
-        5,
-        1.5,
-        None,
-    ])
+    @pytest.mark.parametrize(
+        'value',
+        [
+            [1, 2],
+            'string',
+            5,
+            1.5,
+            None,
+        ],
+    )
     def test_convert_input_not_dict(self, value):
         """non-dict input raises ValidationError"""
 
@@ -104,14 +107,17 @@ class TestRPCMethod:
         with pytest.raises(ValidationError, match='Input is not a dict'):
             RPCMethod(func).convert(value)
 
-    @pytest.mark.parametrize('annotation, raw, expected', [
-        (int, 42, 42),
-        (str, '42', '42'),
-        (float, 1.5, 1.5),
-        (bool, True, True),
-        (list, (1, 2), [1, 2]),
-        (dict, {'a': 1}, {'a': 1}),
-    ])
+    @pytest.mark.parametrize(
+        'annotation, raw, expected',
+        [
+            (int, 42, 42),
+            (str, '42', '42'),
+            (float, 1.5, 1.5),
+            (bool, True, True),
+            (list, (1, 2), [1, 2]),
+            (dict, {'a': 1}, {'a': 1}),
+        ],
+    )
     def test_convert_type_conversion(self, annotation, raw, expected):
         """values are converted to the annotated type (strict, no coercion)"""
 
@@ -120,17 +126,21 @@ class TestRPCMethod:
 
         assert RPCMethod(func).convert({'x': raw}) == {'x': expected}
 
-    @pytest.mark.parametrize('annotation, raw', [
-        (int, '42'),
-        (int, 1.5),
-        (int, True),
-        (str, 42),
-        (float, '1.5'),
-        (bool, 1),
-        (dict, '{"a": 1}'),
-    ])
+    @pytest.mark.parametrize(
+        'annotation, raw',
+        [
+            (int, '42'),
+            (int, 1.5),
+            (int, True),
+            (str, 42),
+            (float, '1.5'),
+            (bool, 1),
+            (dict, '{"a": 1}'),
+        ],
+    )
     def test_convert_invalid_type(self, annotation, raw):
         """wrong-typed values raise ValidationError naming the argument"""
+
         def func(self, x: annotation):
             pass
 
@@ -191,7 +201,9 @@ class TestRpcMethodsCollection:
                 pass
 
         assert set(Topic.rpc_methods) == {'alpha', 'beta'}
-        assert all(isinstance(method, RPCMethod) for method in Topic.rpc_methods.values())
+        assert all(
+            isinstance(method, RPCMethod) for method in Topic.rpc_methods.values()
+        )
 
     def test_child_inherits_without_polluting_parent(self):
         """child classes inherit parent rpc methods, parent registry is untouched"""

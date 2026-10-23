@@ -15,21 +15,21 @@ from oas.ext.file.filelock import FilelockTimeout, SQLiteFileLock
 from oas.ext.path import PathStr
 
 CHILD_HOLD = (
-    "import os, sys, time\n"
-    "from oas.ext.file.filelock import SQLiteFileLock\n"
-    "lock = SQLiteFileLock(sys.argv[1], timeout=0)\n"
-    "lock.acquire()\n"
+    'import os, sys, time\n'
+    'from oas.ext.file.filelock import SQLiteFileLock\n'
+    'lock = SQLiteFileLock(sys.argv[1], timeout=0)\n'
+    'lock.acquire()\n'
     "print('HELD', flush=True)\n"
-    "flag = sys.argv[2]\n"
-    "for _ in range(500):\n"
-    "    if os.path.exists(flag):\n"
-    "        break\n"
-    "    time.sleep(0.02)\n"
-    "lock.release()\n"
+    'flag = sys.argv[2]\n'
+    'for _ in range(500):\n'
+    '    if os.path.exists(flag):\n'
+    '        break\n'
+    '    time.sleep(0.02)\n'
+    'lock.release()\n'
 )
 
 
-@pytest.fixture(scope="module")
+@pytest.fixture(scope='module')
 def lock_dir():
     """
     Real filesystem directory for the SQLite lock tests.
@@ -51,8 +51,10 @@ class TestFilelockTimeout:
 
     def test_exception_message_and_lock_file(self, lock_dir):
         """FilelockTimeout should carry the lock file path in its message and attribute"""
-        lock_file = os.path.abspath(lock_dir / "a.lock")
-        with pytest.raises(FilelockTimeout, match="Timeout occurred trying to acquire lock") as excinfo:
+        lock_file = os.path.abspath(lock_dir / 'a.lock')
+        with pytest.raises(
+            FilelockTimeout, match='Timeout occurred trying to acquire lock'
+        ) as excinfo:
             raise FilelockTimeout(lock_file)
         assert excinfo.value.lock_file == lock_file
 
@@ -62,28 +64,28 @@ class TestProperties:
 
     def test_lock_file_is_absolute(self, lock_dir):
         """lock_file should be the absolute path"""
-        lock = SQLiteFileLock(lock_dir / "sub" / "a.lock")
-        assert lock.lock_file == os.path.abspath(str(lock_dir / "sub" / "a.lock"))
+        lock = SQLiteFileLock(lock_dir / 'sub' / 'a.lock')
+        assert lock.lock_file == os.path.abspath(str(lock_dir / 'sub' / 'a.lock'))
 
     def test_default_timeout_get_and_set(self, lock_dir):
         """timeout should store the constructor value and be mutable"""
-        lock = SQLiteFileLock(lock_dir / "a.lock", timeout=0.5)
+        lock = SQLiteFileLock(lock_dir / 'a.lock', timeout=0.5)
         assert lock.timeout == 0.5
         lock.timeout = 1.5
         assert lock.timeout == 1.5
 
-    @pytest.mark.parametrize("lock_file", ["a.lock", Path("a.lock")])
+    @pytest.mark.parametrize('lock_file', ['a.lock', Path('a.lock')])
     def test_accepts_str_and_path(self, lock_dir, lock_file):
         """Constructor should accept both str and Path lock files"""
         lock = SQLiteFileLock(os.path.join(lock_dir, lock_file), timeout=0)
-        assert lock.lock_file == os.path.abspath(str(lock_dir / "a.lock"))
+        assert lock.lock_file == os.path.abspath(str(lock_dir / 'a.lock'))
 
     def test_initial_state(self, lock_dir):
         """A new lock should not be locked"""
-        lock = SQLiteFileLock(lock_dir / "a.lock", timeout=0)
+        lock = SQLiteFileLock(lock_dir / 'a.lock', timeout=0)
         assert not lock.is_locked
 
-    @pytest.mark.parametrize("lock_file", [":memory:", Path(":memory:")])
+    @pytest.mark.parametrize('lock_file', [':memory:', Path(':memory:')])
     def test_rejects_memory_database(self, lock_file):
         """Constructor should reject the in-memory database, the lock is on a file"""
         with pytest.raises(ValueError):
@@ -95,13 +97,13 @@ class TestAcquireRelease:
 
     def test_acquire_returns_self(self, lock_dir):
         """acquire() should return self, matching the filelock interface"""
-        lock = SQLiteFileLock(lock_dir / "a.lock", timeout=0)
+        lock = SQLiteFileLock(lock_dir / 'a.lock', timeout=0)
         assert lock.acquire() is lock
         lock.release()
 
     def test_acquire_and_release(self, lock_dir):
         """is_locked should be True after acquire and False after release"""
-        lock = SQLiteFileLock(lock_dir / "a.lock", timeout=0)
+        lock = SQLiteFileLock(lock_dir / 'a.lock', timeout=0)
         lock.acquire()
         assert lock.is_locked
         lock.release()
@@ -109,14 +111,14 @@ class TestAcquireRelease:
 
     def test_acquire_creates_parent_directory(self, lock_dir):
         """Parent directories of the lock file should be created automatically"""
-        lock = SQLiteFileLock(lock_dir / "nested" / "dir" / "a.lock", timeout=0)
+        lock = SQLiteFileLock(lock_dir / 'nested' / 'dir' / 'a.lock', timeout=0)
         lock.acquire()
         assert lock.is_locked
         lock.release()
 
     def test_release_without_acquire_is_noop(self, lock_dir):
         """release() should do nothing when the lock is not held"""
-        lock = SQLiteFileLock(lock_dir / "a.lock", timeout=0)
+        lock = SQLiteFileLock(lock_dir / 'a.lock', timeout=0)
         lock.release()
         assert not lock.is_locked
         lock.release(force=True)
@@ -124,7 +126,7 @@ class TestAcquireRelease:
 
     def test_acquire_accepts_poll_interval(self, lock_dir):
         """poll_interval should be accepted for filelock interface compatibility"""
-        lock = SQLiteFileLock(lock_dir / "a.lock", timeout=0)
+        lock = SQLiteFileLock(lock_dir / 'a.lock', timeout=0)
         assert lock.acquire(poll_interval=0.1) is lock
         lock.release()
 
@@ -134,7 +136,7 @@ class TestReentrant:
 
     def test_multiple_acquire_counts(self, lock_dir):
         """Each acquire() should increase the counter and each release() decrease it"""
-        lock = SQLiteFileLock(lock_dir / "a.lock", timeout=0)
+        lock = SQLiteFileLock(lock_dir / 'a.lock', timeout=0)
         lock.acquire()
         lock.acquire()
         lock.acquire()
@@ -148,7 +150,7 @@ class TestReentrant:
 
     def test_reentrant_acquire_does_not_block(self, lock_dir):
         """A second acquire() on the same instance should succeed even with timeout=0"""
-        lock = SQLiteFileLock(lock_dir / "a.lock", timeout=0)
+        lock = SQLiteFileLock(lock_dir / 'a.lock', timeout=0)
         lock.acquire()
         assert lock.acquire() is lock
         lock.release()
@@ -156,7 +158,7 @@ class TestReentrant:
 
     def test_force_release(self, lock_dir):
         """release(force=True) should release the lock immediately, ignoring the counter"""
-        lock = SQLiteFileLock(lock_dir / "a.lock", timeout=0)
+        lock = SQLiteFileLock(lock_dir / 'a.lock', timeout=0)
         lock.acquire()
         lock.acquire()
         lock.release(force=True)
@@ -168,7 +170,7 @@ class TestExclusion:
 
     def test_timeout_zero_is_non_blocking(self, lock_dir):
         """acquire() with timeout=0 should fail fast with FilelockTimeout when the lock is busy"""
-        lock_file = lock_dir / "a.lock"
+        lock_file = lock_dir / 'a.lock'
         lock1 = SQLiteFileLock(lock_file, timeout=0)
         lock2 = SQLiteFileLock(lock_file, timeout=0)
         lock1.acquire()
@@ -184,7 +186,7 @@ class TestExclusion:
 
     def test_positive_timeout_waits_then_raises(self, lock_dir):
         """acquire() with a positive timeout should wait and then raise FilelockTimeout"""
-        lock_file = lock_dir / "a.lock"
+        lock_file = lock_dir / 'a.lock'
         lock1 = SQLiteFileLock(lock_file, timeout=0)
         lock2 = SQLiteFileLock(lock_file, timeout=0.2)
         lock1.acquire()
@@ -199,7 +201,7 @@ class TestExclusion:
 
     def test_acquire_after_release(self, lock_dir):
         """Another instance should acquire the lock once the holder releases it"""
-        lock_file = lock_dir / "a.lock"
+        lock_file = lock_dir / 'a.lock'
         lock1 = SQLiteFileLock(lock_file, timeout=0)
         lock2 = SQLiteFileLock(lock_file, timeout=0)
         lock1.acquire()
@@ -210,8 +212,8 @@ class TestExclusion:
 
     def test_different_files_do_not_conflict(self, lock_dir):
         """Locks on different files should not block each other"""
-        lock1 = SQLiteFileLock(lock_dir / "a.lock", timeout=0)
-        lock2 = SQLiteFileLock(lock_dir / "b.lock", timeout=0)
+        lock1 = SQLiteFileLock(lock_dir / 'a.lock', timeout=0)
+        lock2 = SQLiteFileLock(lock_dir / 'b.lock', timeout=0)
         lock1.acquire()
         lock2.acquire()
         assert lock1.is_locked
@@ -221,7 +223,7 @@ class TestExclusion:
 
     def test_unrelated_operational_error_is_reraisied(self, lock_dir):
         """OperationalError not related to locking should be propagated as is"""
-        dir_path = lock_dir / "adir"
+        dir_path = lock_dir / 'adir'
         os.mkdir(dir_path)
         lock = SQLiteFileLock(dir_path, timeout=0)
         with pytest.raises(sqlite3.OperationalError):
@@ -233,7 +235,7 @@ class TestDefaultTimeout:
 
     def test_constructor_timeout_is_used(self, lock_dir):
         """acquire() without a timeout should use the constructor timeout"""
-        lock_file = lock_dir / "a.lock"
+        lock_file = lock_dir / 'a.lock'
         lock1 = SQLiteFileLock(lock_file, timeout=0)
         lock2 = SQLiteFileLock(lock_file, timeout=0.2)
         lock1.acquire()
@@ -247,7 +249,7 @@ class TestDefaultTimeout:
 
     def test_acquire_timeout_overrides_constructor(self, lock_dir):
         """acquire(timeout=...) should override the constructor timeout"""
-        lock_file = lock_dir / "a.lock"
+        lock_file = lock_dir / 'a.lock'
         lock1 = SQLiteFileLock(lock_file, timeout=0)
         # Constructor timeout is 0, but the override should make acquire() wait
         lock2 = SQLiteFileLock(lock_file, timeout=0)
@@ -266,7 +268,7 @@ class TestContextManager:
 
     def test_context_manager(self, lock_dir):
         """The lock should be acquired on enter and released on exit"""
-        lock = SQLiteFileLock(lock_dir / "a.lock", timeout=0)
+        lock = SQLiteFileLock(lock_dir / 'a.lock', timeout=0)
         with lock as acquired:
             assert acquired is lock
             assert lock.is_locked
@@ -274,9 +276,9 @@ class TestContextManager:
 
     def test_release_on_exception(self, lock_dir):
         """The lock should be released even when the block raises"""
-        lock_file = lock_dir / "a.lock"
+        lock_file = lock_dir / 'a.lock'
         with pytest.raises(RuntimeError), SQLiteFileLock(lock_file, timeout=0):
-            raise RuntimeError("boom")
+            raise RuntimeError('boom')
         lock2 = SQLiteFileLock(lock_file, timeout=0)
         lock2.acquire()
         lock2.release()
@@ -287,7 +289,7 @@ class TestThreads:
 
     def test_exclusion_between_threads(self, lock_dir):
         """A thread should not acquire a lock held by another thread"""
-        lock_file = lock_dir / "a.lock"
+        lock_file = lock_dir / 'a.lock'
         holder = SQLiteFileLock(lock_file, timeout=0)
         contender = SQLiteFileLock(lock_file, timeout=0)
         holder.acquire()
@@ -297,20 +299,20 @@ class TestThreads:
             try:
                 contender.acquire()
             except FilelockTimeout:
-                results.append("timeout")
+                results.append('timeout')
             else:
-                results.append("acquired")
+                results.append('acquired')
 
         thread = threading.Thread(target=try_acquire)
         thread.start()
         thread.join(timeout=10)
         holder.release()
         assert not thread.is_alive()
-        assert results == ["timeout"]
+        assert results == ['timeout']
 
     def test_thread_waits_until_release(self, lock_dir):
         """A thread should acquire the lock once the holder releases it"""
-        lock_file = lock_dir / "a.lock"
+        lock_file = lock_dir / 'a.lock'
         holder = SQLiteFileLock(lock_file, timeout=0)
         contender = SQLiteFileLock(lock_file, timeout=5)
         holder.acquire()
@@ -320,7 +322,7 @@ class TestThreads:
         def try_acquire():
             started.set()
             with contender:
-                results.append("acquired")
+                results.append('acquired')
 
         thread = threading.Thread(target=try_acquire)
         thread.start()
@@ -329,12 +331,12 @@ class TestThreads:
         holder.release()
         thread.join(timeout=10)
         assert not thread.is_alive()
-        assert results == ["acquired"]
+        assert results == ['acquired']
 
     def test_concurrent_acquire_on_same_instance(self, lock_dir):
         """Concurrent acquires on the same instance must race on the SQLite lock,
         each thread failing on its own timeout budget without waiting for others"""
-        lock_file = lock_dir / "a.lock"
+        lock_file = lock_dir / 'a.lock'
         holder = SQLiteFileLock(lock_file, timeout=0)
         shared = SQLiteFileLock(lock_file, timeout=0)
         holder.acquire()
@@ -348,7 +350,7 @@ class TestThreads:
             try:
                 shared.acquire(timeout=0.5)
             except FilelockTimeout:
-                results.append("b:timeout")
+                results.append('b:timeout')
 
         def thread_c():
             # Non-blocking, must fail fast even though thread B is also waiting
@@ -357,7 +359,7 @@ class TestThreads:
                 shared.acquire(timeout=0)
             except FilelockTimeout:
                 c_elapsed.append(time.monotonic() - start)
-                results.append("c:timeout")
+                results.append('c:timeout')
 
         b = threading.Thread(target=thread_b)
         c = threading.Thread(target=thread_c)
@@ -370,14 +372,14 @@ class TestThreads:
         holder.release()
         assert not c.is_alive()
         assert not b.is_alive()
-        assert results == ["c:timeout", "b:timeout"]
+        assert results == ['c:timeout', 'b:timeout']
         # Thread C must not wait for thread B's SQLite wait to finish
         assert c_elapsed[0] < 0.3
 
     def test_concurrent_acquire_has_single_winner(self, lock_dir):
         """Concurrent acquires on the same instance must yield exactly one winner,
         the loser timing out on its own budget"""
-        lock_file = lock_dir / "a.lock"
+        lock_file = lock_dir / 'a.lock'
         holder = SQLiteFileLock(lock_file, timeout=0)
         # Loser budget 0.2s must be shorter than the winner's hold time of 0.5s
         shared = SQLiteFileLock(lock_file, timeout=0.01)
@@ -390,14 +392,14 @@ class TestThreads:
             started.set()
             try:
                 with shared:
-                    results.append(f"{tag}:acquired")
+                    results.append(f'{tag}:acquired')
                     # Hold the lock long enough to force the loser to time out
                     time.sleep(0.5)
             except FilelockTimeout:
-                results.append(f"{tag}:timeout")
+                results.append(f'{tag}:timeout')
 
-        b = threading.Thread(target=try_acquire, args=("b", b_started))
-        c = threading.Thread(target=try_acquire, args=("c", c_started))
+        b = threading.Thread(target=try_acquire, args=('b', b_started))
+        c = threading.Thread(target=try_acquire, args=('c', c_started))
         b.start()
         c.start()
         # Wait until both threads have started their acquire, then release
@@ -408,8 +410,8 @@ class TestThreads:
         c.join(timeout=10)
         assert not b.is_alive()
         assert not c.is_alive()
-        winners = [r for r in results if r.endswith(":acquired")]
-        losers = [r for r in results if r.endswith(":timeout")]
+        winners = [r for r in results if r.endswith(':acquired')]
+        losers = [r for r in results if r.endswith(':timeout')]
         assert len(winners) == 1
         assert len(losers) == 1
 
@@ -419,20 +421,20 @@ class TestCrossProcess:
 
     def test_exclusion_between_processes(self, lock_dir):
         """A child process should not acquire a lock held by the parent"""
-        lock_file = lock_dir / "a.lock"
+        lock_file = lock_dir / 'a.lock'
         lock = SQLiteFileLock(lock_file, timeout=0)
         lock.acquire()
         code = (
-            "import sys\n"
-            "from oas.ext.file.filelock import SQLiteFileLock, FilelockTimeout\n"
-            "try:\n"
-            "    with SQLiteFileLock(sys.argv[1], timeout=0.5):\n"
+            'import sys\n'
+            'from oas.ext.file.filelock import SQLiteFileLock, FilelockTimeout\n'
+            'try:\n'
+            '    with SQLiteFileLock(sys.argv[1], timeout=0.5):\n'
             "        print('ACQUIRED')\n"
-            "except FilelockTimeout:\n"
+            'except FilelockTimeout:\n'
             "    print('TIMEOUT')\n"
         )
         result = subprocess.run(
-            [sys.executable, "-c", code, str(lock_file)],
+            [sys.executable, '-c', code, str(lock_file)],
             capture_output=True,
             text=True,
             timeout=10,
@@ -441,20 +443,20 @@ class TestCrossProcess:
         )
         lock.release()
         assert result.returncode == 0
-        assert "TIMEOUT" in result.stdout
+        assert 'TIMEOUT' in result.stdout
 
     def test_parent_acquires_after_child_release(self, lock_dir):
         """The parent should acquire the lock after the child process releases it"""
-        lock_file = lock_dir / "a.lock"
-        flag_file = lock_dir / "release.flag"
+        lock_file = lock_dir / 'a.lock'
+        flag_file = lock_dir / 'release.flag'
         proc = subprocess.Popen(
-            [sys.executable, "-c", CHILD_HOLD, str(lock_file), str(flag_file)],
+            [sys.executable, '-c', CHILD_HOLD, str(lock_file), str(flag_file)],
             stdout=subprocess.PIPE,
             text=True,
             cwd=OAS_ROOT,
         )
         try:
-            assert proc.stdout.readline().strip() == "HELD"
+            assert proc.stdout.readline().strip() == 'HELD'
             flag_file.touch()
             lock = SQLiteFileLock(lock_file, timeout=10)
             lock.acquire()
@@ -470,7 +472,7 @@ class TestDestructor:
 
     def test_del_releases_lock(self, lock_dir):
         """Destroying the lock object should release the underlying lock"""
-        lock_file = lock_dir / "a.lock"
+        lock_file = lock_dir / 'a.lock'
         lock = SQLiteFileLock(lock_file, timeout=0)
         lock.acquire()
         del lock

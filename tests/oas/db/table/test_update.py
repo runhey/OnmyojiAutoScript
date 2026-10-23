@@ -1,6 +1,7 @@
 """
 Test UPDATE operations: update_row with various configurations
 """
+
 import pytest
 from conftest import Product, User
 
@@ -31,8 +32,7 @@ def test_update_multiple_rows(user_table, sample_users):
     # Get all users and update their ages
     users = user_table.select()
     updated_users = [
-        User(id=u.id, name=u.name, age=u.age + 5, email=u.email)
-        for u in users
+        User(id=u.id, name=u.name, age=u.age + 5, email=u.email) for u in users
     ]
 
     user_table.update_row(updated_users)
@@ -51,7 +51,9 @@ def test_update_specific_fields(user_table, sample_users):
     original_email = user.email
 
     # Update only age
-    updated_user = User(id=user.id, name='Alice Updated', age=30, email='newemail@example.com')
+    updated_user = User(
+        id=user.id, name='Alice Updated', age=30, email='newemail@example.com'
+    )
     user_table.update_row(updated_user, updates='age')
 
     # Verify only age was updated
@@ -69,7 +71,9 @@ def test_update_multiple_fields(user_table, sample_users):
     original_email = user.email
 
     # Update name and age
-    updated_user = User(id=user.id, name='Alice Updated', age=30, email='newemail@example.com')
+    updated_user = User(
+        id=user.id, name='Alice Updated', age=30, email='newemail@example.com'
+    )
     user_table.update_row(updated_user, updates=['name', 'age'])
 
     # Verify
@@ -85,8 +89,7 @@ def test_update_with_cursor(user_table, sample_users):
 
     users = user_table.select()
     updated_users = [
-        User(id=u.id, name=f"{u.name} Updated", age=u.age, email=u.email)
-        for u in users
+        User(id=u.id, name=f'{u.name} Updated', age=u.age, email=u.email) for u in users
     ]
 
     with user_table.cursor() as c:
@@ -163,7 +166,9 @@ def test_update_all_fields_except_pk(user_table, sample_users):
     user = user_table.select_one(name='Alice')
 
     # Update all fields (default behavior)
-    updated = User(id=user.id, name='Alice Updated', age=99, email='updated@example.com')
+    updated = User(
+        id=user.id, name='Alice Updated', age=99, email='updated@example.com'
+    )
     user_table.update_row(updated)
 
     result = user_table.select_by_pk(user.id)
@@ -259,7 +264,9 @@ def test_update_float_values(product_table, sample_products):
 
     product = product_table.select_one(sku='SKU001')
 
-    updated = Product(id=product.id, sku='SKU001', name='Laptop', price=1099.99, stock=5)
+    updated = Product(
+        id=product.id, sku='SKU001', name='Laptop', price=1099.99, stock=5
+    )
     product_table.update_row(updated)
 
     result = product_table.select_by_pk(product.id)
@@ -289,7 +296,9 @@ def test_update_in_transaction(user_table, sample_users):
 
     with user_table.cursor() as c:
         for user in users:
-            updated = User(id=user.id, name=f"{user.name} TX", age=user.age, email=user.email)
+            updated = User(
+                id=user.id, name=f'{user.name} TX', age=user.age, email=user.email
+            )
             user_table.update_row(updated, _cursor_=c)
         c.commit()
 
@@ -308,8 +317,7 @@ def test_update_large_batch(user_table):
 
     all_users = user_table.select()
     updated_users = [
-        User(id=u.id, name=u.name, age=30, email=u.email)
-        for u in all_users
+        User(id=u.id, name=u.name, age=30, email=u.email) for u in all_users
     ]
 
     user_table.update_row(updated_users)
@@ -351,4 +359,3 @@ def test_update_respects_field_list_order(user_table, sample_users):
     assert result.name == 'Updated'
     assert result.email == 'new@example.com'
     assert result.age == user.age  # Should not change
-

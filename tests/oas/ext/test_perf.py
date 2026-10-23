@@ -7,6 +7,7 @@ formatting. The benchmark run itself (estimate_iterations, run_performance_test)
 is deliberately not exercised, since its assertions would have to be calibrated
 against local timings.
 """
+
 import pytest
 
 from oas.ext.perf import PerformanceTest
@@ -17,7 +18,7 @@ class TestFormatParameters:
         assert PerformanceTest()._format_parameters((), {}) == '()'
 
     def test_positional_only(self):
-        assert PerformanceTest()._format_parameters((1, 'a'), {}) == "(1, a)"
+        assert PerformanceTest()._format_parameters((1, 'a'), {}) == '(1, a)'
 
     def test_keyword_only(self):
         assert PerformanceTest()._format_parameters((), {'k': 2}) == '(k=2)'

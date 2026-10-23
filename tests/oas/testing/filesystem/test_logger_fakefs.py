@@ -10,6 +10,7 @@ losing them. The fs fixture closes the cached fd around the fake
 filesystem, these tests verify the interaction and the combination
 with logger.mock_capture_writer().
 """
+
 import pytest
 
 pytest.importorskip('oas.logger')

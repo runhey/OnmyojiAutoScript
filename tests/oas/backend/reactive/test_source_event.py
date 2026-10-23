@@ -11,7 +11,14 @@ import pytest
 import trio
 
 from oas.backend.reactive.event import ResponseEvent
-from oas.backend.reactive.source import BaseSource, ConfigSource, DiskCache, EventSource, GlobalSource, ResidentCache
+from oas.backend.reactive.source import (
+    BaseSource,
+    ConfigSource,
+    DiskCache,
+    EventSource,
+    GlobalSource,
+    ResidentCache,
+)
 from tests.oas.backend.reactive.test_source_base import MockTopic, decode
 
 
@@ -24,6 +31,7 @@ class FakeSource(EventSource):
       replaced in place);
     - TTL = 5 for fetch freshness tests.
     """
+
     TOPIC_NAME = 'Fake'
     TTL = 5
 
@@ -54,6 +62,7 @@ class NoWriterSource(EventSource):
     A source without an event stream: data is only refreshed by reinit.
     Full events are encoded under the lock, no freeze contract applies.
     """
+
     TOPIC_NAME = 'NoWriter'
     TTL = None
 
@@ -369,6 +378,7 @@ class TestReinit:
 class TestGlobalConfigSingleton:
     def test_global_singleton(self):
         """GlobalSource subclasses share one global instance"""
+
         class GlobalFake(GlobalSource, ResidentCache):
             TOPIC_NAME = 'GlobalFake'
 
@@ -381,6 +391,7 @@ class TestGlobalConfigSingleton:
 
     def test_config_named_singleton(self):
         """ConfigSource instances are keyed by config name"""
+
         class ConfigFake(ConfigSource, ResidentCache):
             TOPIC_NAME = 'ConfigFake'
 
@@ -433,8 +444,8 @@ class TestOneShotGc:
         try:
             instance = FreshFake()
             # never loaded: _lastrun is the creation moment (fresh)
-            monkeypatch.setattr(time, 'monotonic', lambda: 100.)
-            instance._lastrun = 95.
+            monkeypatch.setattr(time, 'monotonic', lambda: 100.0)
+            instance._lastrun = 95.0
             FreshFake.gc_idle()
             assert FreshFake.singleton_instance() is instance
         finally:

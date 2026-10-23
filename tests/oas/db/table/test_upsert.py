@@ -1,6 +1,7 @@
 """
 Test UPSERT operations: insert or update on conflict
 """
+
 import pytest
 from conftest import Product, User
 
@@ -25,7 +26,9 @@ def test_upsert_update_existing_row(user_table, sample_users):
     existing = user_table.select_one(name='Alice')
 
     # Upsert with same PK
-    updated = User(id=existing.id, name='Alice Updated', age=30, email='updated@example.com')
+    updated = User(
+        id=existing.id, name='Alice Updated', age=30, email='updated@example.com'
+    )
     user_table.upsert_row(updated)
 
     # Should have updated, not inserted
@@ -66,7 +69,9 @@ def test_upsert_multiple_rows(user_table, sample_users):
 
     # Prepare upsert batch: update existing + insert new
     upsert_data = [
-        User(id=existing[0].id, name='Alice Updated', age=26, email='alice2@example.com'),
+        User(
+            id=existing[0].id, name='Alice Updated', age=26, email='alice2@example.com'
+        ),
         User(id=existing[1].id, name='Bob Updated', age=31, email='bob2@example.com'),
         User(id=0, name='Charlie', age=35, email='charlie@example.com'),
     ]
@@ -88,7 +93,9 @@ def test_upsert_with_specific_updates(product_table):
     product_table.insert_row(product)
 
     # Upsert with conflict on SKU, update only price
-    updated = Product(id=0, sku='SKU001', name='Should Not Change', price=20.0, stock=999)
+    updated = Product(
+        id=0, sku='SKU001', name='Should Not Change', price=20.0, stock=999
+    )
     product_table.upsert_row(updated, conflicts='sku', updates='price')
 
     result = product_table.select_one(sku='SKU001')
@@ -122,7 +129,9 @@ def test_upsert_with_multiple_update_fields(user_table, sample_users):
     original_email = existing.email
 
     # Upsert updating only name and age
-    updated = User(id=existing.id, name='Alice Updated', age=30, email='new@example.com')
+    updated = User(
+        id=existing.id, name='Alice Updated', age=30, email='new@example.com'
+    )
     user_table.upsert_row(updated, updates=['name', 'age'])
 
     result = user_table.select_by_pk(existing.id)
@@ -138,7 +147,9 @@ def test_upsert_default_conflicts_to_pk(user_table, sample_users):
     existing = user_table.select_one(name='Alice')
 
     # Upsert without specifying conflicts (should use PK)
-    updated = User(id=existing.id, name='Alice Updated', age=30, email='updated@example.com')
+    updated = User(
+        id=existing.id, name='Alice Updated', age=30, email='updated@example.com'
+    )
     user_table.upsert_row(updated)
 
     count = user_table.select_count()
@@ -204,8 +215,7 @@ def test_upsert_insert_multiple_then_update(user_table):
 
     # Update all via upsert
     updates = [
-        User(id=u.id, name=u.name, age=u.age + 10, email=u.email)
-        for u in inserted
+        User(id=u.id, name=u.name, age=u.age + 10, email=u.email) for u in inserted
     ]
     user_table.upsert_row(updates)
 
@@ -326,7 +336,9 @@ def test_upsert_in_transaction(user_table, sample_users):
 
         # Update one of them
         existing = user_table.select(_cursor_=c)
-        updated = User(id=existing[0].id, name='Updated', age=99, email=existing[0].email)
+        updated = User(
+            id=existing[0].id, name='Updated', age=99, email=existing[0].email
+        )
         user_table.upsert_row(updated, _cursor_=c)
 
         c.commit()
@@ -350,4 +362,3 @@ def test_upsert_all_fields_except_conflicts(product_table):
     assert result.name == 'Updated'
     assert result.price == 20.0
     assert result.stock == 10
-

@@ -1,4 +1,4 @@
-﻿"""
+"""
 Tests for ``deep_pop`` in ``oas.ext.deep``.
 
 ``deep_pop`` removes and returns a value from a nested dict/list by key path.
@@ -102,5 +102,3 @@ class TestDeepPop:
         d = {'a': {'b': 1}}
         assert deep_pop(d, deque(['a', 'b'])) == 1
         assert d == {'a': {}}
-
-

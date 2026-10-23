@@ -43,7 +43,12 @@ def test_loadpy_relative_import(fs):
     """
     fs.create_file('/relative.py', contents='from . import something')
 
-    with fs.patch_open_code(), pytest.raises(ImportError, match='cannot load files that has relative import syntax'):
+    with (
+        fs.patch_open_code(),
+        pytest.raises(
+            ImportError, match='cannot load files that has relative import syntax'
+        ),
+    ):
         loadpy('/relative.py')
 
 
@@ -116,7 +121,9 @@ def test_loadpy_permission_error_directory(fs, monkeypatch):
     monkeypatch.setattr(
         _io,
         'open_code',
-        lambda path: (_ for _ in ()).throw(PermissionError(13, 'Permission denied', path))
+        lambda path: (_ for _ in ()).throw(
+            PermissionError(13, 'Permission denied', path)
+        ),
     )
 
     with pytest.raises(ImportError, match='Filepath to load is not a file'):
@@ -131,7 +138,9 @@ def test_loadpy_permission_error_file(fs, monkeypatch):
     monkeypatch.setattr(
         _io,
         'open_code',
-        lambda path: (_ for _ in ()).throw(PermissionError(13, 'Permission denied', path))
+        lambda path: (_ for _ in ()).throw(
+            PermissionError(13, 'Permission denied', path)
+        ),
     )
 
     with pytest.raises(ImportError, match='Permission denied'):
@@ -144,7 +153,10 @@ def test_loadpy_import_error_reraises(fs):
     """
     fs.create_file('/bad_import.py', contents='import definitely_missing_module_xyz')
 
-    with fs.patch_open_code(), pytest.raises(ModuleNotFoundError, match='definitely_missing_module_xyz'):
+    with (
+        fs.patch_open_code(),
+        pytest.raises(ModuleNotFoundError, match='definitely_missing_module_xyz'),
+    ):
         loadpy('/bad_import.py')
 
 

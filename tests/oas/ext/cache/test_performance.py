@@ -71,32 +71,32 @@ def test_normal_class_second_access_skips_get():
         @cached_property
         def value(self):
             Normal.calc_count += 1
-            return "computed"
+            return 'computed'
 
-    tracker = _patch_cached_property(Normal, "value")
+    tracker = _patch_cached_property(Normal, 'value')
     obj = Normal()
 
     # First access - should go through __get__
     result1 = obj.value
-    assert result1 == "computed"
+    assert result1 == 'computed'
     assert Normal.calc_count == 1
     assert tracker.call_count == 1
 
     # Second access - should NOT go through __get__ (hits instance __dict__)
     result2 = obj.value
-    assert result2 == "computed"
+    assert result2 == 'computed'
     assert Normal.calc_count == 1  # calc function NOT called again
     assert tracker.call_count == 1  # __get__ NOT called again
 
     # Third access - still no __get__
     result3 = obj.value
-    assert result3 == "computed"
+    assert result3 == 'computed'
     assert Normal.calc_count == 1
     assert tracker.call_count == 1
 
     # Verify the value lives in instance __dict__
-    assert "value" in obj.__dict__
-    assert obj.__dict__["value"] == "computed"
+    assert 'value' in obj.__dict__
+    assert obj.__dict__['value'] == 'computed'
 
 
 def test_normal_class_multiple_instances():
@@ -108,29 +108,29 @@ def test_normal_class_multiple_instances():
         @cached_property
         def value(self):
             Normal.calc_count += 1
-            return f"computed_{Normal.calc_count}"
+            return f'computed_{Normal.calc_count}'
 
-    tracker = _patch_cached_property(Normal, "value")
+    tracker = _patch_cached_property(Normal, 'value')
     obj1 = Normal()
     obj2 = Normal()
 
     # obj1 first access
-    assert obj1.value == "computed_1"
+    assert obj1.value == 'computed_1'
     assert tracker.call_count == 1
     assert Normal.calc_count == 1
 
     # obj1 second access - no __get__
-    assert obj1.value == "computed_1"
+    assert obj1.value == 'computed_1'
     assert tracker.call_count == 1
     assert Normal.calc_count == 1
 
     # obj2 first access - new __get__
-    assert obj2.value == "computed_2"
+    assert obj2.value == 'computed_2'
     assert tracker.call_count == 2
     assert Normal.calc_count == 2
 
     # obj2 second access - no __get__
-    assert obj2.value == "computed_2"
+    assert obj2.value == 'computed_2'
     assert tracker.call_count == 2
     assert Normal.calc_count == 2
 
@@ -154,27 +154,27 @@ def test_msgspec_struct_with_dict_true():
         @cached_property
         def value(self):
             self.calc_count += 1
-            return "computed"
+            return 'computed'
 
-    tracker = _patch_cached_property(MsgStruct, "value")
+    tracker = _patch_cached_property(MsgStruct, 'value')
     obj = MsgStruct()
 
     # Verify the instance has __dict__ (dict=True enables it)
-    assert hasattr(obj, "__dict__")
+    assert hasattr(obj, '__dict__')
 
     # First access
-    assert obj.value == "computed"
+    assert obj.value == 'computed'
     assert obj.calc_count == 1
     assert tracker.call_count == 1
 
     # Second access - should NOT call __get__, should NOT recompute
-    assert obj.value == "computed"
+    assert obj.value == 'computed'
     assert obj.calc_count == 1
     assert tracker.call_count == 1
 
     # Verify cached in __dict__
-    assert "value" in obj.__dict__
-    assert obj.__dict__["value"] == "computed"
+    assert 'value' in obj.__dict__
+    assert obj.__dict__['value'] == 'computed'
 
 
 def test_msgspec_struct_multiple_instances():
@@ -186,25 +186,25 @@ def test_msgspec_struct_multiple_instances():
         @cached_property
         def value(self):
             self.calc_count += 1
-            return f"computed_{self.calc_count}"
+            return f'computed_{self.calc_count}'
 
-    tracker = _patch_cached_property(MsgStruct, "value")
+    tracker = _patch_cached_property(MsgStruct, 'value')
     obj1 = MsgStruct()
     obj2 = MsgStruct()
 
-    assert obj1.value == "computed_1"
+    assert obj1.value == 'computed_1'
     assert tracker.call_count == 1
     assert obj1.calc_count == 1
 
-    assert obj1.value == "computed_1"
+    assert obj1.value == 'computed_1'
     assert tracker.call_count == 1
     assert obj1.calc_count == 1
 
-    assert obj2.value == "computed_1"
+    assert obj2.value == 'computed_1'
     assert tracker.call_count == 2
     assert obj2.calc_count == 1
 
-    assert obj2.value == "computed_1"
+    assert obj2.value == 'computed_1'
     assert tracker.call_count == 2
     assert obj2.calc_count == 1
 
@@ -220,7 +220,7 @@ def test_msgspec_struct_without_dict_raises():
 
         @cached_property
         def value(self):
-            return "computed"
+            return 'computed'
 
     obj = MsgNoDict()
 
@@ -246,32 +246,32 @@ def test_dataclass_second_access_skips_get():
         @cached_property
         def value(self):
             self.calc_count += 1
-            return "computed"
+            return 'computed'
 
-    tracker = _patch_cached_property(Data, "value")
+    tracker = _patch_cached_property(Data, 'value')
     obj = Data()
 
     # Verify the instance has __dict__
-    assert hasattr(obj, "__dict__")
+    assert hasattr(obj, '__dict__')
 
     # First access
-    assert obj.value == "computed"
+    assert obj.value == 'computed'
     assert obj.calc_count == 1
     assert tracker.call_count == 1
 
     # Second access - should NOT call __get__, should NOT recompute
-    assert obj.value == "computed"
+    assert obj.value == 'computed'
     assert obj.calc_count == 1
     assert tracker.call_count == 1
 
     # Third access - still no __get__
-    assert obj.value == "computed"
+    assert obj.value == 'computed'
     assert obj.calc_count == 1
     assert tracker.call_count == 1
 
     # Verify cached in __dict__
-    assert "value" in obj.__dict__
-    assert obj.__dict__["value"] == "computed"
+    assert 'value' in obj.__dict__
+    assert obj.__dict__['value'] == 'computed'
 
 
 def test_dataclass_multiple_instances():
@@ -284,32 +284,32 @@ def test_dataclass_multiple_instances():
         @cached_property
         def value(self):
             self.calc_count += 1
-            return f"computed_{self.calc_count}"
+            return f'computed_{self.calc_count}'
 
-    tracker = _patch_cached_property(Data, "value")
+    tracker = _patch_cached_property(Data, 'value')
     obj1 = Data()
     obj2 = Data()
 
-    assert obj1.value == "computed_1"
+    assert obj1.value == 'computed_1'
     assert tracker.call_count == 1
     assert obj1.calc_count == 1
 
-    assert obj1.value == "computed_1"
+    assert obj1.value == 'computed_1'
     assert tracker.call_count == 1
     assert obj1.calc_count == 1
 
-    assert obj2.value == "computed_1"
+    assert obj2.value == 'computed_1'
     assert tracker.call_count == 2
     assert obj2.calc_count == 1
 
-    assert obj2.value == "computed_1"
+    assert obj2.value == 'computed_1'
     assert tracker.call_count == 2
     assert obj2.calc_count == 1
 
 
 @pytest.mark.skipif(
-    not hasattr(dc, "SLOTS"),
-    reason="slots=True in dataclass requires Python 3.10+",
+    not hasattr(dc, 'SLOTS'),
+    reason='slots=True in dataclass requires Python 3.10+',
 )
 def test_dataclass_with_slots_raises():
     """
@@ -323,7 +323,7 @@ def test_dataclass_with_slots_raises():
 
         @cached_property
         def value(self):
-            return "computed"
+            return 'computed'
 
     obj = DataSlots()
 
@@ -365,9 +365,9 @@ def test_all_three_types_consistent():
             self.count += 1
             return self.count
 
-    normal_tracker = _patch_cached_property(Normal, "val")
-    msg_tracker = _patch_cached_property(Msg, "val")
-    data_tracker = _patch_cached_property(Data, "val")
+    normal_tracker = _patch_cached_property(Normal, 'val')
+    msg_tracker = _patch_cached_property(Msg, 'val')
+    data_tracker = _patch_cached_property(Data, 'val')
 
     n = Normal()
     m = Msg()
@@ -390,87 +390,88 @@ def test_all_three_types_consistent():
     assert data_tracker.call_count == 1
 
     # All should have value in __dict__
-    assert "val" in n.__dict__
-    assert "val" in m.__dict__
-    assert "val" in d.__dict__
+    assert 'val' in n.__dict__
+    assert 'val' in m.__dict__
+    assert 'val' in d.__dict__
 
 
 # =============================================================================
 # Test: pydantic BaseModel
 # =============================================================================
 
+
 def test_pydantic_model_second_access_skips_get():
     """
     On a pydantic BaseModel, cached_property replaces itself in __dict__ after
     first access, so the second and later accesses do NOT invoke __get__.
     """
-    pydantic = pytest.importorskip("pydantic", reason="pydantic not installed")
+    pydantic = pytest.importorskip('pydantic', reason='pydantic not installed')
 
     class PydModel(pydantic.BaseModel):
-        model_config = {"ignored_types": (cached_property,)}
+        model_config = {'ignored_types': (cached_property,)}
         calc_count: int = 0
 
         @cached_property
         def value(self):
             self.calc_count += 1
-            return "computed"
+            return 'computed'
 
-    tracker = _patch_cached_property(PydModel, "value")
+    tracker = _patch_cached_property(PydModel, 'value')
     obj = PydModel()
 
     # Verify the instance has __dict__
-    assert hasattr(obj, "__dict__")
+    assert hasattr(obj, '__dict__')
 
     # First access
-    assert obj.value == "computed"
+    assert obj.value == 'computed'
     assert obj.calc_count == 1
     assert tracker.call_count == 1
 
     # Second access - should NOT call __get__, should NOT recompute
-    assert obj.value == "computed"
+    assert obj.value == 'computed'
     assert obj.calc_count == 1
     assert tracker.call_count == 1
 
     # Third access - still no __get__
-    assert obj.value == "computed"
+    assert obj.value == 'computed'
     assert obj.calc_count == 1
     assert tracker.call_count == 1
 
     # Verify cached in __dict__
-    assert "value" in obj.__dict__
-    assert obj.__dict__["value"] == "computed"
+    assert 'value' in obj.__dict__
+    assert obj.__dict__['value'] == 'computed'
 
 
 def test_pydantic_model_multiple_instances():
     """Each pydantic instance caches independently."""
-    pydantic = pytest.importorskip("pydantic", reason="pydantic not installed")
+    pydantic = pytest.importorskip('pydantic', reason='pydantic not installed')
 
     class PydModel(pydantic.BaseModel):
-        model_config = {"ignored_types": (cached_property,)}
+        model_config = {'ignored_types': (cached_property,)}
         calc_count: int = 0
 
         @cached_property
         def value(self):
             self.calc_count += 1
-            return f"computed_{self.calc_count}"
+            return f'computed_{self.calc_count}'
 
-    tracker = _patch_cached_property(PydModel, "value")
+    tracker = _patch_cached_property(PydModel, 'value')
     obj1 = PydModel()
     obj2 = PydModel()
 
-    assert obj1.value == "computed_1"
+    assert obj1.value == 'computed_1'
     assert tracker.call_count == 1
     assert obj1.calc_count == 1
 
-    assert obj1.value == "computed_1"
+    assert obj1.value == 'computed_1'
     assert tracker.call_count == 1
     assert obj1.calc_count == 1
 
-    assert obj2.value == "computed_1"
+    assert obj2.value == 'computed_1'
     assert tracker.call_count == 2
     assert obj2.calc_count == 1
 
-    assert obj2.value == "computed_1"
+    assert obj2.value == 'computed_1'
     assert tracker.call_count == 2
     assert obj2.calc_count == 1
 
@@ -478,7 +479,7 @@ def test_pydantic_model_multiple_instances():
 def test_all_four_types_consistent():
     """Verify normal class, msgspec with dict=True, dataclass, and pydantic
     model all behave identically with cached_property."""
-    pydantic = pytest.importorskip("pydantic", reason="pydantic not installed")
+    pydantic = pytest.importorskip('pydantic', reason='pydantic not installed')
 
     class Normal:
         count = 0
@@ -506,7 +507,7 @@ def test_all_four_types_consistent():
             return self.count
 
     class Pyd(pydantic.BaseModel):
-        model_config = {"ignored_types": (cached_property,)}
+        model_config = {'ignored_types': (cached_property,)}
         count: int = 0
 
         @cached_property
@@ -514,10 +515,10 @@ def test_all_four_types_consistent():
             self.count += 1
             return self.count
 
-    normal_tracker = _patch_cached_property(Normal, "val")
-    msg_tracker = _patch_cached_property(Msg, "val")
-    data_tracker = _patch_cached_property(Data, "val")
-    pyd_tracker = _patch_cached_property(Pyd, "val")
+    normal_tracker = _patch_cached_property(Normal, 'val')
+    msg_tracker = _patch_cached_property(Msg, 'val')
+    data_tracker = _patch_cached_property(Data, 'val')
+    pyd_tracker = _patch_cached_property(Pyd, 'val')
 
     n = Normal()
     m = Msg()
@@ -545,7 +546,7 @@ def test_all_four_types_consistent():
     assert pyd_tracker.call_count == 1
 
     # All should have value in __dict__
-    assert "val" in n.__dict__
-    assert "val" in m.__dict__
-    assert "val" in d.__dict__
-    assert "val" in p.__dict__
+    assert 'val' in n.__dict__
+    assert 'val' in m.__dict__
+    assert 'val' in d.__dict__
+    assert 'val' in p.__dict__

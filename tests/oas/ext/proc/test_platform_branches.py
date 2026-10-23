@@ -129,7 +129,10 @@ class TestCmdLinuxBranch:
         """Bytes are decoded by open_text, and unicode args pass through."""
         module, state = linux_cmd
         state['data'] = 'python\x00--name=\u4e2d\u6587 \u53c2\u6570\x00'
-        assert module.get_cmdline(1234) == ['python', '--name=\u4e2d\u6587 \u53c2\u6570']
+        assert module.get_cmdline(1234) == [
+            'python',
+            '--name=\u4e2d\u6587 \u53c2\u6570',
+        ]
 
     def test_missing_file_returns_empty_list(self, linux_cmd):
         """A vanished process (open_text raises) is swallowed into []."""
@@ -189,7 +192,9 @@ class TestCmdMacosBranch:
         module = load_fake_proc(
             {'MACOS', 'POSIX'},
             modules={
-                'psutil._psutil_osx': stub_cext('psutil._psutil_osx', proc_cmdline=recorder)
+                'psutil._psutil_osx': stub_cext(
+                    'psutil._psutil_osx', proc_cmdline=recorder
+                )
             },
             module='cmd',
         )
@@ -207,7 +212,9 @@ class TestCmdBsdBranch:
             module = load_fake_proc(
                 {'BSD', 'POSIX', *flags},
                 modules={
-                    'psutil._psutil_bsd': stub_cext('psutil._psutil_bsd', proc_cmdline=recorder)
+                    'psutil._psutil_bsd': stub_cext(
+                        'psutil._psutil_bsd', proc_cmdline=recorder
+                    )
                 },
                 module='cmd',
             )
@@ -293,7 +300,11 @@ class TestCmdAixBranch:
         recorder = CallRecorder(result=['/usr/bin/app'])
         module = load_fake_proc(
             {'AIX', 'POSIX'},
-            modules={'psutil._psutil_aix': stub_cext('psutil._psutil_aix', proc_args=recorder)},
+            modules={
+                'psutil._psutil_aix': stub_cext(
+                    'psutil._psutil_aix', proc_args=recorder
+                )
+            },
             module='cmd',
         )
         assert module.get_cmdline(11) == ['/usr/bin/app']
@@ -638,7 +649,10 @@ class TestIterWindowsBranch:
     def test_conhost_prefix_is_skipped(self, windows_iter):
         """\\??\\ paths are the console host's internal form."""
         module, state = windows_iter
-        state['cmdlines'] = {8: [r'\??\C:\Windows\system32\conhost.exe'], 9: ['C:/ok.exe']}
+        state['cmdlines'] = {
+            8: [r'\??\C:\Windows\system32\conhost.exe'],
+            9: ['C:/ok.exe'],
+        }
         assert list(module.process_iter()) == [(9, ['C:/ok.exe'])]
 
     def test_empty_first_element_is_yielded(self, windows_iter):
@@ -651,8 +665,11 @@ class TestIterWindowsBranch:
         """The unique-token child survives every filter."""
         module, state = windows_iter
         state['cmdlines'] = {
-            0: ['System Idle'], 4: ['System'], 8: [],
-            9: ['C:/win.exe'], 10: ['python.exe', '--token'],
+            0: ['System Idle'],
+            4: ['System'],
+            8: [],
+            9: ['C:/win.exe'],
+            10: ['python.exe', '--token'],
         }
         assert list(module.process_iter()) == [
             (9, ['C:/win.exe']),

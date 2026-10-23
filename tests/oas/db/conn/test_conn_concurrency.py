@@ -2,6 +2,7 @@
 Concurrency safety tests for SqlitePool connection pool
 Tests thread-safe operations, blocking behavior, and concurrent access
 """
+
 import time
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from threading import Barrier, Thread
@@ -22,9 +23,12 @@ class TestConcurrency:
         def worker(worker_id):
             try:
                 with pool.cursor() as cursor:
-                    cursor.execute("CREATE TABLE IF NOT EXISTS test (id INTEGER, worker_id INTEGER)")
-                    cursor.execute("INSERT INTO test VALUES (?, ?)",
-                                   (worker_id, worker_id))
+                    cursor.execute(
+                        'CREATE TABLE IF NOT EXISTS test (id INTEGER, worker_id INTEGER)'
+                    )
+                    cursor.execute(
+                        'INSERT INTO test VALUES (?, ?)', (worker_id, worker_id)
+                    )
                     cursor.commit()
                 return True
             except Exception as e:
@@ -40,7 +44,7 @@ class TestConcurrency:
 
         # Verify data
         with pool.cursor() as cursor:
-            cursor.execute("SELECT COUNT(*) as cnt FROM test")
+            cursor.execute('SELECT COUNT(*) as cnt FROM test')
             assert cursor.fetchone()['cnt'] == 20
 
     def test_pool_blocks_when_full(self, temp_db):
@@ -54,7 +58,7 @@ class TestConcurrency:
             barrier.wait()  # Wait for all threads ready
             start = time.time()
             with pool.cursor() as cursor:
-                cursor.execute("SELECT 1")
+                cursor.execute('SELECT 1')
                 time.sleep(hold_time)
             elapsed = time.time() - start
             results.append(elapsed)
@@ -89,7 +93,7 @@ class TestConcurrency:
             """Create connection and hold it"""
             barrier.wait()  # Wait for all threads to be ready
             cursor = pool.cursor()
-            cursor.execute("SELECT 1")
+            cursor.execute('SELECT 1')
             cursors.append(cursor)  # Hold the cursor to prevent connection reuse
 
         # Multiple threads creating connections simultaneously
@@ -106,4 +110,3 @@ class TestConcurrency:
         for cursor in cursors:
             cursor.close()
         pool.release_all()
-

@@ -89,9 +89,7 @@ class TestPublicApi:
 
     def test_star_import_does_not_shadow_builtins(self):
         """A star import must not hand out anything surprising."""
-        exported = {
-            name for name in dir(proc) if not name.startswith('_')
-        }
+        exported = {name for name in dir(proc) if not name.startswith('_')}
         assert {'open', 'list', 'dict', 'type'} & exported == set()
 
     def test_importing_is_idempotent(self):
@@ -109,7 +107,9 @@ class TestPublicApi:
 class TestMigrationGuards:
     """The package was copied from another project and must stay self-contained."""
 
-    @pytest.mark.parametrize('source', ['__init__.py', 'cmd.py', 'iter.py', 'nice.py', 'sig.py'])
+    @pytest.mark.parametrize(
+        'source', ['__init__.py', 'cmd.py', 'iter.py', 'nice.py', 'sig.py']
+    )
     def test_source_has_no_alasios_reference(self, source):
         """A leftover ``alasio`` import would only fail on the path that uses it."""
         text = (PROC_DIR / source).read_text(encoding='utf-8')
@@ -131,7 +131,11 @@ class TestMigrationGuards:
     def test_only_expected_sources_exist(self):
         """No stray module was dropped into the package."""
         assert sorted(p.name for p in PROC_DIR.glob('*.py')) == [
-            '__init__.py', 'cmd.py', 'iter.py', 'nice.py', 'sig.py'
+            '__init__.py',
+            'cmd.py',
+            'iter.py',
+            'nice.py',
+            'sig.py',
         ]
 
     def test_the_seven_public_names_are_all_that_is_reexported(self):

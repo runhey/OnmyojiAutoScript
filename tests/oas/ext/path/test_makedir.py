@@ -5,7 +5,12 @@ import pytest
 
 from oas.ext.env import OAS_ROOT
 from oas.ext.path.calc import joinpath, normpath
-from oas.ext.path.makedir import _convert_path, _get_parent_folder, _iter_parent_folder, batch_makedirs
+from oas.ext.path.makedir import (
+    _convert_path,
+    _get_parent_folder,
+    _iter_parent_folder,
+    batch_makedirs,
+)
 
 
 @pytest.fixture(scope='module')
@@ -36,14 +41,19 @@ class TestConvertPath:
         """Relative and absolute filepaths should both be converted."""
         cwd = normpath(os.getcwd())
         abs_path = 'C:/a/b.txt' if os.sep == '\\' else '/a/b.txt'
-        assert list(_convert_path(['a/b/c.txt', abs_path])) == [joinpath(cwd, 'a/b/c.txt'), abs_path]
+        assert list(_convert_path(['a/b/c.txt', abs_path])) == [
+            joinpath(cwd, 'a/b/c.txt'),
+            abs_path,
+        ]
 
     def test_absolute_unchanged(self):
         """Absolute filepath should stay unchanged."""
         abs_path = 'C:/a/b.txt' if os.sep == '\\' else '/a/b.txt'
         assert list(_convert_path([abs_path])) == [abs_path]
 
-    @pytest.mark.skipif(os.sep != '\\', reason='backslash is a path separator on Windows only')
+    @pytest.mark.skipif(
+        os.sep != '\\', reason='backslash is a path separator on Windows only'
+    )
     def test_normalize_backslash(self):
         """Windows-style backslash paths should be normalized."""
         cwd = normpath(os.getcwd())
@@ -103,7 +113,11 @@ class TestGetParentFolder:
 
     def test_multiple_folders(self):
         """Filepaths in different folders should all be returned."""
-        assert set(_get_parent_folder(['a/b/x.txt', 'c/d.txt', 'a/b/y.txt'])) == {'a/b', 'a', 'c'}
+        assert set(_get_parent_folder(['a/b/x.txt', 'c/d.txt', 'a/b/y.txt'])) == {
+            'a/b',
+            'a',
+            'c',
+        }
 
     def test_sorted_shallow_to_deep(self):
         """Folders should be sorted from shallow to deep."""
@@ -138,11 +152,13 @@ class TestBatchMakedirs:
 
     def test_create_multiple(self, temp_dir):
         """Parents of multiple filepaths should be created."""
-        batch_makedirs([
-            joinpath(temp_dir, 'test_create_multiple/a/b/x.txt'),
-            joinpath(temp_dir, 'test_create_multiple/a/b/y.txt'),
-            joinpath(temp_dir, 'test_create_multiple/c/d/e.txt'),
-        ])
+        batch_makedirs(
+            [
+                joinpath(temp_dir, 'test_create_multiple/a/b/x.txt'),
+                joinpath(temp_dir, 'test_create_multiple/a/b/y.txt'),
+                joinpath(temp_dir, 'test_create_multiple/c/d/e.txt'),
+            ]
+        )
         assert os.path.isdir(joinpath(temp_dir, 'test_create_multiple/a/b'))
         assert os.path.isdir(joinpath(temp_dir, 'test_create_multiple/c/d'))
         assert not os.path.exists(joinpath(temp_dir, 'test_create_multiple/c/d/e.txt'))

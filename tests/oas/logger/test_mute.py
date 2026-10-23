@@ -1,4 +1,4 @@
-﻿from oas.logger import logger
+from oas.logger import logger
 from oas.logger.writer import LogWriter, PseudoBackendBridge, PseudoStream
 from tests.oas.logger.test_logger import BaseLoggerTest
 
@@ -63,7 +63,10 @@ class TestMute(BaseLoggerTest):
         # Clear mute
         logger.mute_clear()
         # Should return to original backend state (inited=False in tests as BackendBridge is not initialized)
-        assert not isinstance(writer.backend, PseudoBackendBridge) or writer.backend is not None
+        assert (
+            not isinstance(writer.backend, PseudoBackendBridge)
+            or writer.backend is not None
+        )
 
     def test_mute_all(self):
         """

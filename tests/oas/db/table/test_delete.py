@@ -1,6 +1,7 @@
 """
 Test DELETE operations: delete, delete_row
 """
+
 import pytest
 from conftest import User
 
@@ -370,4 +371,3 @@ def test_delete_row_then_insert_same_data(user_table):
     second = user_table.select_one(name='Test')
     assert second.id > first_id
     assert second.name == first.name
-

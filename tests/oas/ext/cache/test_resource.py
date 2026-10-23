@@ -30,7 +30,7 @@ def clock():
     time.monotonic() returns the timestamp of the PatchTime and shift()
     advances it.
     """
-    with PatchTime(1000.) as patch:
+    with PatchTime(1000.0) as patch:
         yield patch
 
 
@@ -70,7 +70,7 @@ class LoadRecorder:
     widen the race window of the concurrent tests
     """
 
-    def __init__(self, delay=0.):
+    def __init__(self, delay=0.0):
         super().__init__()
         self.delay = delay
         self.calls = {}
@@ -138,6 +138,7 @@ class TestGet:
         entry is still keyed by the file only (a load resource may need more
         than the file to be built, the file is what identifies it)
         """
+
         class KwargCache(cache_cls):
             def load_resource(self, file, **kwargs):
                 self.count_load(file)
@@ -157,6 +158,7 @@ class TestGet:
         again (the cache is not allowed to use the truthiness of a value to
         tell a hit from a miss)
         """
+
         class ValueCache(cache_cls):
             def load_resource(self, file, **kwargs):
                 self.count_load(file)
@@ -167,7 +169,9 @@ class TestGet:
         assert cache.get('a') is value
         assert cache.calls == {'a': 1}
 
-    @pytest.mark.parametrize('base_cls', [ResourceCacheTTL, ResourceCache], ids=['ttl', 'plain'])
+    @pytest.mark.parametrize(
+        'base_cls', [ResourceCacheTTL, ResourceCache], ids=['ttl', 'plain']
+    )
     def test_load_resource_must_be_implemented(self, base_cls):
         """
         The base classes do not load anything, get() propagates the
@@ -184,6 +188,7 @@ class TestGet:
         The caller of a failed get() sees the exception of load_resource() and
         the next get() tries again (a failed resource is not cached)
         """
+
         class AlwaysFailCache(cache_cls):
             def load_resource(self, file, **kwargs):
                 self.count_load(file)
@@ -212,6 +217,7 @@ class TestGet:
         lock table would grow once per file that failed once. The next get()
         is free to retry.
         """
+
         class FailOnceCache(cache_cls):
             def __init__(self):
                 super().__init__()
@@ -242,13 +248,13 @@ class TestResourceCacheTTLGet:
         """
         cache = RecordingCacheTTL()
         cache.get('a')
-        assert cache._last_use == {'a': 1000.}
+        assert cache._last_use == {'a': 1000.0}
         clock.shift(30)
         cache.get('a')
-        assert cache._last_use == {'a': 1030.}
+        assert cache._last_use == {'a': 1030.0}
         clock.shift(30)
         cache.get('b')
-        assert cache._last_use == {'a': 1030., 'b': 1060.}
+        assert cache._last_use == {'a': 1030.0, 'b': 1060.0}
         assert cache.calls == {'a': 1, 'b': 1}
 
 
@@ -278,7 +284,7 @@ class TestResourceCacheTTLGc:
         clock.shift(59)
         cache.gc()
         assert cache._cache == {'a': 'value:a'}
-        assert cache._last_use == {'a': 1000.}
+        assert cache._last_use == {'a': 1000.0}
         assert cache.calls == {'a': 1}
 
     def test_immune_to_a_wall_clock_jump(self, monkeypatch):
@@ -296,12 +302,15 @@ class TestResourceCacheTTLGc:
         assert cache._cache == {'a': 'value:a'}
         assert cache.calls == {'a': 1}
 
-    @pytest.mark.parametrize('advance, released', [
-        # the idle window is exclusive: used exactly `idle` seconds ago is idle
-        (59, False),
-        (60, True),
-        (61, True),
-    ])
+    @pytest.mark.parametrize(
+        'advance, released',
+        [
+            # the idle window is exclusive: used exactly `idle` seconds ago is idle
+            (59, False),
+            (60, True),
+            (61, True),
+        ],
+    )
     def test_idle_boundary(self, clock, advance, released):
         """
         gc() releases the entries that were not used for more than 60s
@@ -315,7 +324,7 @@ class TestResourceCacheTTLGc:
             assert cache._last_use == {}
         else:
             assert cache._cache == {'a': 'value:a'}
-            assert cache._last_use == {'a': 1000.}
+            assert cache._last_use == {'a': 1000.0}
         assert cache.calls == {'a': 1}
 
     def test_releases_only_the_idle_entries(self, clock):
@@ -329,7 +338,7 @@ class TestResourceCacheTTLGc:
         clock.shift(20)
         cache.gc(idle=60)
         assert cache._cache == {'fresh': 'value:fresh'}
-        assert cache._last_use == {'fresh': 1050.}
+        assert cache._last_use == {'fresh': 1050.0}
         assert cache.calls == {'old': 1, 'fresh': 1}
 
     def test_get_refreshes_the_idle_deadline(self, clock):
@@ -345,7 +354,7 @@ class TestResourceCacheTTLGc:
         # 100s after the load, but only 50s after the last use
         cache.gc(idle=60)
         assert cache._cache == {'a': 'value:a'}
-        assert cache._last_use == {'a': 1050.}
+        assert cache._last_use == {'a': 1050.0}
         assert cache.calls == {'a': 1}
 
     def test_gc_on_empty_cache(self, clock):
@@ -397,7 +406,7 @@ class TestResourceCacheTTLGc:
         cache._cache = UnstableDict(cache._cache)
         cache.gc(idle=0)
         assert dict(cache._cache) == {'a': 'value:a'}
-        assert cache._last_use == {'a': 1000.}
+        assert cache._last_use == {'a': 1000.0}
 
 
 class TestResourceCacheGc:
@@ -442,7 +451,9 @@ class TestResourceCacheGc:
 
         cache = GatedCache()
         results = []
-        loader = threading.Thread(target=lambda: results.append(cache.get('a')), daemon=True)
+        loader = threading.Thread(
+            target=lambda: results.append(cache.get('a')), daemon=True
+        )
         loader.start()
         assert cache.entered.wait(timeout=5)
         # nothing is cached yet, clear the cache while the load is in flight
@@ -498,7 +509,11 @@ class TestConcurrentGet:
             with results_lock:
                 results.setdefault(file, []).append(value)
 
-        threads = [threading.Thread(target=worker, args=(file,), daemon=True) for file in files for _ in range(2)]
+        threads = [
+            threading.Thread(target=worker, args=(file,), daemon=True)
+            for file in files
+            for _ in range(2)
+        ]
         for thread in threads:
             thread.start()
         for thread in threads:
@@ -529,10 +544,14 @@ class TestConcurrentGet:
 
         cache = GatedCache()
         results = []
-        loader = threading.Thread(target=lambda: results.append(cache.get('a')), daemon=True)
+        loader = threading.Thread(
+            target=lambda: results.append(cache.get('a')), daemon=True
+        )
         loader.start()
         assert cache.entered.wait(timeout=5)
-        other = threading.Thread(target=lambda: results.append(cache.get('b')), daemon=True)
+        other = threading.Thread(
+            target=lambda: results.append(cache.get('b')), daemon=True
+        )
         other.start()
         other.join(timeout=5)
         assert not other.is_alive(), 'loading a file must not wait for another file'

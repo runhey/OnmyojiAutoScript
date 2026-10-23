@@ -7,6 +7,7 @@ on the records would make the tests of that code flaky and hide real bugs. Every
 operation of the filesystem takes the state lock of its filesystem; these tests
 hammer it from several threads and check the result of such a run.
 """
+
 import os
 import threading
 
@@ -56,6 +57,7 @@ class TestThreadSafety:
         Four threads share every directory of the tree, so the checks of
         ``makedirs(exist_ok=True)`` run against each other.
         """
+
         def write_nested(index):
             directory = join(fs, 'root', 'sub%d' % (index % 4))
             os.makedirs(directory, exist_ok=True)
@@ -66,7 +68,12 @@ class TestThreadSafety:
                 pool.start_thread_soon(write_nested, index)
         assert sorted(os.listdir(join(fs, 'root'))) == ['sub0', 'sub1', 'sub2', 'sub3']
         for index in range(24):
-            assert file_read_bytes(f'{join(fs, "root", "sub%d" % (index % 4))}/f{index}.bin') == b'data %d' % index
+            assert (
+                file_read_bytes(
+                    f'{join(fs, "root", "sub%d" % (index % 4))}/f{index}.bin'
+                )
+                == b'data %d' % index
+            )
 
     def test_a_listing_is_not_disturbed_by_a_write(self, fs):
         """Listing a directory while other threads write into it is safe.
@@ -93,7 +100,9 @@ class TestThreadSafety:
 
         with THREAD_POOL.wait_jobs() as pool:
             lister = pool.start_thread_soon(list_until_stopped)
-            writers = [pool.start_thread_soon(write_many, writer) for writer in range(3)]
+            writers = [
+                pool.start_thread_soon(write_many, writer) for writer in range(3)
+            ]
             for job in writers:
                 job.get()
             stop.set()

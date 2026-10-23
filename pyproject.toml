@@ -97,10 +97,35 @@ addopts = [
 
 
 
+[tool.ruff]
+src = ["."]
+target-version = "py314"
 
+[tool.ruff.lint]
+select = ["D"]
+ignore = [
+    "D100",  # 模块缺 docstring
+    "D101",  # 公共类缺 docstring
+    "D102",  # 公共方法缺 docstring
+    "D103",  # 公共函数缺 docstring
+    "D104",  # 包（__init__.py）缺 docstring
+    "D105",  # 魔法方法缺 docstring
+    "D106",  # 嵌套类缺 docstring
+    "D107",  # __init__ 缺 docstring
+    "D212",  # 摘要不必跟在 """ 同一行（保留仓库现有的换行写法）
+    "D200",  # 没有必要在一个行里面
+    "D205",
+    "D415",  # 摘要末尾必须是 . / ? / !（中文按自己的习惯写，不强制）
+]
 
+[tool.ruff.lint.pydocstyle]
+convention = "google"
 
+[tool.ruff.lint.isort]
+known-first-party = ["oas"]
 
+[tool.ruff.format]
+quote-style = "single"
 
 
 

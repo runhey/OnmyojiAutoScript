@@ -14,7 +14,7 @@ except ImportError:
     UnionType = Union  # Fallback for older Python versions
 
 
-def _generate_value_for_type(type_hint, memo: "dict[Type, Any]"):
+def _generate_value_for_type(type_hint, memo: 'dict[Type, Any]'):
     """
     Recursively generates a sample value based on a type hint.
     This is the core worker function for generate_example.
@@ -26,7 +26,7 @@ def _generate_value_for_type(type_hint, memo: "dict[Type, Any]"):
     # 2. Handle basic and common types first for efficiency and clarity.
     # These types do not have an 'origin' and are the most frequent cases.
     if type_hint is str:
-        return "string_example"
+        return 'string_example'
     if type_hint is int:
         return 123
     if type_hint is float:
@@ -34,13 +34,13 @@ def _generate_value_for_type(type_hint, memo: "dict[Type, Any]"):
     if type_hint is bool:
         return True
     if type_hint is bytes:
-        return b"bytes_example"
+        return b'bytes_example'
     if type_hint is uuid.UUID:
         return uuid.uuid4()
     if type_hint is datetime.datetime:
         return datetime.datetime.now(datetime.timezone.utc).replace(microsecond=0)
     if type_hint is Any:
-        return "any_value"
+        return 'any_value'
 
     # 3. Handle nested msgspec models.
     # This must be checked before `get_origin` as classes don't have an origin.
@@ -56,7 +56,12 @@ def _generate_value_for_type(type_hint, memo: "dict[Type, Any]"):
     if isinstance(type_hint, str):
         # A simple resolver for built-in types represented as strings.
         builtin_map = {
-            "str": str, "int": int, "float": float, "bool": bool, "bytes": bytes, "Any": Any,
+            'str': str,
+            'int': int,
+            'float': float,
+            'bool': bool,
+            'bytes': bytes,
+            'Any': Any,
         }
         resolved_type = builtin_map.get(type_hint)
         if resolved_type:
@@ -64,7 +69,7 @@ def _generate_value_for_type(type_hint, memo: "dict[Type, Any]"):
             return _generate_value_for_type(resolved_type, memo)
         else:
             # Cannot resolve unknown custom class strings without more context.
-            return f"unresolved_forward_ref_{type_hint}"
+            return f'unresolved_forward_ref_{type_hint}'
 
     # 5. Handle generic types from the `typing` module.
     origin = get_origin(type_hint)
@@ -100,19 +105,23 @@ def _generate_value_for_type(type_hint, memo: "dict[Type, Any]"):
         key_type = args[0] if args else Any
         value_type = args[1] if len(args) > 1 else Any
         return {
-            _generate_value_for_type(key_type, memo): _generate_value_for_type(value_type, memo)
+            _generate_value_for_type(key_type, memo): _generate_value_for_type(
+                value_type, memo
+            )
         }
 
     # 6. Fallback for any other unhandled types.
     try:
         # Attempt to call a zero-argument constructor.
         return type_hint()
-    except (TypeError, AttributeError):
+    except TypeError, AttributeError:
         # If it fails, we cannot generate a value.
         return None
 
 
-def _generate_model_instance(cls: "Type[msgspec.Struct]", memo: "dict[Type, Any]") -> "msgspec.Struct":
+def _generate_model_instance(
+    cls: 'Type[msgspec.Struct]', memo: 'dict[Type, Any]'
+) -> 'msgspec.Struct':
     """
     Constructs an instance of a specific msgspec model class.
     """
@@ -121,7 +130,10 @@ def _generate_model_instance(cls: "Type[msgspec.Struct]", memo: "dict[Type, Any]
     for field in msgspec.structs.fields(cls):
         # Per the requirement, skip any field that has a default value or factory.
         # The model's __init__ will handle these automatically.
-        if field.default is not msgspec.NODEFAULT or field.default_factory is not msgspec.NODEFAULT:
+        if (
+            field.default is not msgspec.NODEFAULT
+            or field.default_factory is not msgspec.NODEFAULT
+        ):
             continue
 
         # Generate a value for the required field.
@@ -130,7 +142,7 @@ def _generate_model_instance(cls: "Type[msgspec.Struct]", memo: "dict[Type, Any]
     return cls(**kwargs)
 
 
-def generate_example(model_class: "Type[msgspec.Struct]") -> "msgspec.Struct":
+def generate_example(model_class: 'Type[msgspec.Struct]') -> 'msgspec.Struct':
     """
     Generates a sample data instance for any given msgspec model.
 
@@ -169,5 +181,3 @@ def validate_table(table_cls: Type[Table]):
     table.delete_row(row)
     # test TABLE_NAME
     table.drop_table()
-
-

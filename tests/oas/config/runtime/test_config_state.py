@@ -4,10 +4,10 @@ from oas.config.runtime.config_state import ConfigAccessState
 
 
 def test_state_defaults():
-    state = ConfigAccessState("default")
+    state = ConfigAccessState('default')
 
-    assert state.config_name == "default"
-    assert state.task == ""
+    assert state.config_name == 'default'
+    assert state.task == ''
     assert state.auto_save is True
     assert state.is_template_config is False
     assert state._config_cached is False
@@ -22,20 +22,20 @@ def test_state_defaults():
 
 
 def test_state_keeps_task_name():
-    state = ConfigAccessState("default", "Task@one")
+    state = ConfigAccessState('default', 'Task@one')
 
-    assert state.task == "Task@one"
+    assert state.task == 'Task@one'
 
 
 def test_template_config_disables_auto_save():
-    state = ConfigAccessState("template-default")
+    state = ConfigAccessState('template-default')
 
     assert state.is_template_config is True
     assert state.auto_save is False
 
 
 def test_non_template_prefix_still_enables_auto_save():
-    state = ConfigAccessState("my-template")
+    state = ConfigAccessState('my-template')
 
     assert state.is_template_config is False
     assert state.auto_save is True

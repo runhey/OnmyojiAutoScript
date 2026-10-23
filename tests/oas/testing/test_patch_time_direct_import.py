@@ -3,6 +3,7 @@ Test that PatchTime correctly mocks datetime when using
 ``from datetime import datetime`` at module level — the same import
 style used by ``alasio/base/servertime.py`` and other project modules.
 """
+
 from datetime import date, datetime, timedelta, timezone
 
 from oas.testing.patch_time import PatchTime
@@ -28,7 +29,9 @@ class TestDirectImportMocked:
         with PatchTime(1234567890.0):
             now = datetime.now(tz=tz)
             assert now.tzinfo is not None
-            expected = datetime.fromtimestamp(1234567890.0, tz=timezone.utc).astimezone(tz)
+            expected = datetime.fromtimestamp(1234567890.0, tz=timezone.utc).astimezone(
+                tz
+            )
             assert now == expected
 
     def test_utcnow(self):
@@ -57,6 +60,7 @@ class TestDirectImportRestore:
         with PatchTime(1234567890.0):
             assert datetime.now(tz=timezone.utc).timestamp() == 1234567890.0
         import time
+
         real = datetime.now(tz=timezone.utc).timestamp()
         assert abs(real - time.time()) < 1.0
 
@@ -65,4 +69,5 @@ class TestDirectImportRestore:
             assert datetime.utcnow().hour == 23  # 2009-02-13 23:31:30
         real = datetime.now(tz=timezone.utc).replace(tzinfo=None)
         import time
+
         assert abs((real - datetime(1970, 1, 1)).total_seconds() - time.time()) < 1.0

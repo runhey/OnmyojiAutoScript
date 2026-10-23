@@ -1,6 +1,7 @@
 """
 Shared pytest fixtures and test models for Table testing
 """
+
 import msgspec
 import pytest
 
@@ -11,8 +12,10 @@ from oas.db.table import Table
 # Test Models
 # ============================================================================
 
+
 class User(msgspec.Struct):
     """Simple user model for testing"""
+
     id: int = 0
     name: str = ''
     age: int = 0
@@ -21,6 +24,7 @@ class User(msgspec.Struct):
 
 class Product(msgspec.Struct):
     """Product model with unique constraint for testing"""
+
     id: int = 0
     sku: str = ''
     name: str = ''
@@ -32,19 +36,21 @@ class Product(msgspec.Struct):
 # Test Table Classes
 # ============================================================================
 
+
 class UserTable(Table):
     """User table for testing"""
+
     TABLE_NAME = 'users'
     PRIMARY_KEY = 'id'
     AUTO_INCREMENT = 'id'
-    CREATE_TABLE = '''
+    CREATE_TABLE = """
         CREATE TABLE "{TABLE_NAME}" (
             "id" INTEGER PRIMARY KEY AUTOINCREMENT,
             "name" TEXT NOT NULL,
             "age" INTEGER NOT NULL,
             "email" TEXT NOT NULL
         )
-    '''
+    """
     MODEL = User
 
     def select_count(self, **kwargs):
@@ -58,10 +64,11 @@ class UserTable(Table):
 
 class ProductTable(Table):
     """Product table with unique constraint for testing"""
+
     TABLE_NAME = 'products'
     PRIMARY_KEY = 'id'
     AUTO_INCREMENT = 'id'
-    CREATE_TABLE = '''
+    CREATE_TABLE = """
         CREATE TABLE "{TABLE_NAME}" (
             "id" INTEGER PRIMARY KEY AUTOINCREMENT,
             "sku" TEXT NOT NULL UNIQUE,
@@ -70,7 +77,7 @@ class ProductTable(Table):
             "stock" INTEGER NOT NULL,
             UNIQUE ("sku", "name")
         )
-    '''
+    """
     MODEL = Product
 
     def select_count(self, **kwargs):
@@ -85,6 +92,7 @@ class ProductTable(Table):
 # ============================================================================
 # Shared Fixtures
 # ============================================================================
+
 
 @pytest.fixture
 def temp_db():
@@ -144,4 +152,3 @@ def sample_products():
         Product(id=0, sku='SKU003', name='Keyboard', price=79.99, stock=30),
         Product(id=0, sku='SKU004', name='Monitor', price=299.99, stock=15),
     ]
-

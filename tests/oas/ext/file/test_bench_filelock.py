@@ -47,23 +47,23 @@ from oas.ext.env import OAS_ROOT
 from oas.ext.file.filelock import FilelockTimeout, SQLiteFileLock
 from oas.ext.path import PathStr
 
-msvcrt = pytest.importorskip("msvcrt")
+msvcrt = pytest.importorskip('msvcrt')
 
 pytestmark = [
     pytest.mark.skipif(
-        sys.platform != "win32",
-        reason="msvcrt.locking is Windows-only; no native counterpart on this platform",
+        sys.platform != 'win32',
+        reason='msvcrt.locking is Windows-only; no native counterpart on this platform',
     ),
 ]
 
-IMPLS = ["sqlite", "msvcrt"]
+IMPLS = ['sqlite', 'msvcrt']
 
 # =============================================================================
 # Fixture: real-filesystem lock directory
 # =============================================================================
 
 
-@pytest.fixture(scope="module")
+@pytest.fixture(scope='module')
 def lock_dir():
     """
     Real filesystem directory for the lock benchmarks.
@@ -72,7 +72,7 @@ def lock_dir():
     C layer, and msvcrt.locking is a raw Windows syscall — neither can be
     intercepted by the in-memory fake filesystem.
     """
-    path = PathStr.new(OAS_ROOT).joinpath("temp/bench_filelock")
+    path = PathStr.new(OAS_ROOT).joinpath('temp/bench_filelock')
     shutil.rmtree(path, ignore_errors=True)
     os.makedirs(path, exist_ok=True)
     yield path
@@ -100,7 +100,7 @@ def _acquire_release_msvcrt(path):
 
 
 def _acquire_release(impl, path):
-    if impl == "sqlite":
+    if impl == 'sqlite':
         _acquire_release_sqlite(path)
     else:
         _acquire_release_msvcrt(path)
@@ -112,7 +112,7 @@ def _acquire_release(impl, path):
 
 
 def _bench_uncontended(benchmark, impl, lock_dir, rounds):
-    path = lock_dir / f"t1_{impl}.lock"
+    path = lock_dir / f't1_{impl}.lock'
 
     def loop():
         for _ in range(rounds):
@@ -122,7 +122,7 @@ def _bench_uncontended(benchmark, impl, lock_dir, rounds):
     benchmark(loop)
 
 
-@pytest.mark.parametrize("impl", IMPLS)
+@pytest.mark.parametrize('impl', IMPLS)
 def test_t1_uncontended_cost(benchmark, impl, lock_dir):
     """Full acquire+release cycle, no concurrency at all."""
     _bench_uncontended(benchmark, impl, lock_dir, rounds=25)
@@ -149,7 +149,7 @@ def _thread_contest(impl, path, rounds):
     def worker():
         barrier.wait()
         fail = 0
-        if impl == "sqlite":
+        if impl == 'sqlite':
             lock = SQLiteFileLock(str(path), timeout=0)
             for _ in range(rounds):
                 try:
@@ -182,7 +182,7 @@ def _thread_contest(impl, path, rounds):
 
 
 def _bench_thread_contention(benchmark, impl, lock_dir, rounds):
-    path = lock_dir / f"t2_{impl}.lock"
+    path = lock_dir / f't2_{impl}.lock'
 
     def loop():
         elapsed, fails = _thread_contest(impl, str(path), rounds)
@@ -191,7 +191,7 @@ def _bench_thread_contention(benchmark, impl, lock_dir, rounds):
     benchmark(loop)
 
 
-@pytest.mark.parametrize("impl", IMPLS)
+@pytest.mark.parametrize('impl', IMPLS)
 def test_t2_thread_contention(benchmark, impl, lock_dir):
     """Two threads racing the same lock file: wall-clock for 2xN attempts."""
     _bench_thread_contention(benchmark, impl, lock_dir, rounds=50)
@@ -205,29 +205,29 @@ CHILD_ROUNDS = 1000
 
 
 def _child_program(impl):
-    if impl == "sqlite":
-        imports = "from oas.ext.file.filelock import SQLiteFileLock\n"
-        setup = "lock = SQLiteFileLock(path, timeout=5)\n"
-        body = "    with lock:\n        pass\n"
+    if impl == 'sqlite':
+        imports = 'from oas.ext.file.filelock import SQLiteFileLock\n'
+        setup = 'lock = SQLiteFileLock(path, timeout=5)\n'
+        body = '    with lock:\n        pass\n'
     else:
-        imports = "import msvcrt\n"
-        setup = "fd = os.open(path, os.O_RDWR | os.O_CREAT)\n"
+        imports = 'import msvcrt\n'
+        setup = 'fd = os.open(path, os.O_RDWR | os.O_CREAT)\n'
         body = (
-            "    while True:\n"
-            "        try:\n"
-            "            msvcrt.locking(fd, msvcrt.LK_NBLCK, 1)\n"
-            "            break\n"
-            "        except OSError:\n"
-            "            pass\n"
-            "    msvcrt.locking(fd, msvcrt.LK_UNLCK, 1)\n"
+            '    while True:\n'
+            '        try:\n'
+            '            msvcrt.locking(fd, msvcrt.LK_NBLCK, 1)\n'
+            '            break\n'
+            '        except OSError:\n'
+            '            pass\n'
+            '    msvcrt.locking(fd, msvcrt.LK_UNLCK, 1)\n'
         )
     return (
-        "import os, sys, time\n"
+        'import os, sys, time\n'
         + imports
-        + "path, n = sys.argv[1], int(sys.argv[2])\n"
+        + 'path, n = sys.argv[1], int(sys.argv[2])\n'
         + setup
-        + "t0 = time.perf_counter()\n"
-        + "for _ in range(n):\n"
+        + 't0 = time.perf_counter()\n'
+        + 'for _ in range(n):\n'
         + body
         + "print(f'{time.perf_counter() - t0:.6f}')\n"
     )
@@ -243,7 +243,7 @@ def _process_contest(impl, path, rounds):
     code = _child_program(impl)
     procs = [
         subprocess.Popen(
-            [sys.executable, "-X", "utf8", "-c", code, str(path), str(rounds)],
+            [sys.executable, '-X', 'utf8', '-c', code, str(path), str(rounds)],
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
             text=True,
@@ -255,13 +255,13 @@ def _process_contest(impl, path, rounds):
     for p in procs:
         out, err = p.communicate(timeout=120)
         if p.returncode != 0:
-            raise RuntimeError(f"child failed ({p.returncode}): {err.strip()}")
+            raise RuntimeError(f'child failed ({p.returncode}): {err.strip()}')
         elapsed.append(float(out.strip()))
     return max(elapsed)
 
 
 def _bench_process_contention(benchmark, impl, lock_dir, rounds):
-    path = lock_dir / f"t3_{impl}.lock"
+    path = lock_dir / f't3_{impl}.lock'
 
     def loop():
         return _process_contest(impl, str(path), rounds)
@@ -269,7 +269,7 @@ def _bench_process_contention(benchmark, impl, lock_dir, rounds):
     benchmark(loop)
 
 
-@pytest.mark.parametrize("impl", IMPLS)
+@pytest.mark.parametrize('impl', IMPLS)
 def test_t3_process_contention(benchmark, impl, lock_dir):
     """Two subprocesses racing the same lock file (end-to-end, incl. startup)."""
     _bench_process_contention(benchmark, impl, lock_dir, rounds=CHILD_ROUNDS)
@@ -280,12 +280,12 @@ def test_t3_process_contention(benchmark, impl, lock_dir):
 # =============================================================================
 
 
-@pytest.mark.parametrize("impl", IMPLS)
+@pytest.mark.parametrize('impl', IMPLS)
 def test_t4_timeout_path(benchmark, impl, lock_dir):
     """Cost of a rejected acquire when someone already holds the lock."""
-    path = lock_dir / f"t4_{impl}.lock"
+    path = lock_dir / f't4_{impl}.lock'
 
-    if impl == "sqlite":
+    if impl == 'sqlite':
         holder = SQLiteFileLock(str(path), timeout=0)
         holder.acquire()
         loser = SQLiteFileLock(str(path), timeout=0)
@@ -318,7 +318,7 @@ def test_t4_timeout_path(benchmark, impl, lock_dir):
     benchmark(loop)
 
     # teardown: release the holder so the module-scoped clean-up can delete the dir
-    if impl == "sqlite":
+    if impl == 'sqlite':
         holder.release()
     else:
         try:
@@ -333,7 +333,7 @@ def test_t4_timeout_path(benchmark, impl, lock_dir):
 # =============================================================================
 
 
-@pytest.mark.parametrize("impl", IMPLS)
+@pytest.mark.parametrize('impl', IMPLS)
 def test_contended_counter_is_exact(impl, lock_dir):
     """
     N threads each bump a shared counter ITERS times, guarded by the lock.
@@ -342,14 +342,14 @@ def test_contended_counter_is_exact(impl, lock_dir):
     increments. Every implementation must finish at exactly N*ITERS even
     though the threads are fighting for the same file.
     """
-    path = lock_dir / f"correct_{impl}.lock"
+    path = lock_dir / f'correct_{impl}.lock'
     n_threads, iters = 4, 200
 
     counter = [0]
     thread_fails = []
 
     def worker():
-        if impl == "sqlite":
+        if impl == 'sqlite':
             lock = SQLiteFileLock(str(path), timeout=10)
             for _ in range(iters):
                 with lock:
@@ -377,5 +377,5 @@ def test_contended_counter_is_exact(impl, lock_dir):
         t.join(timeout=120)
 
     assert counter[0] == n_threads * iters, (
-        f"{impl}: counter={counter[0]}, expected {n_threads * iters}"
+        f'{impl}: counter={counter[0]}, expected {n_threads * iters}'
     )

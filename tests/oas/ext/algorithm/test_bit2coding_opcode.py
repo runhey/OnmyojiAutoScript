@@ -24,7 +24,7 @@ class TestEncodeEmptyAndSingleton:
         """Empty input yields no opcodes."""
         assert list(encode_bit2_opcode_iter([])) == []
 
-    @pytest.mark.parametrize("val", [0, 1, 2, 3])
+    @pytest.mark.parametrize('val', [0, 1, 2, 3])
     def test_single_element(self, val):
         """Single element always yields a literal opcode."""
         result = list(encode_bit2_opcode_iter([val]))
@@ -95,15 +95,15 @@ class TestEncodeRun:
         """Run lengths at the short/long format boundary (34, 35, 36)."""
         # 34: short format (cost=1)
         result = list(encode_bit2_opcode_iter([0] * 34))
-        assert result == [(1, 0, 34)], f"Expected single run of 34, got {result}"
+        assert result == [(1, 0, 34)], f'Expected single run of 34, got {result}'
 
         # 35: long format boundary (cost=2 + 0)
         result = list(encode_bit2_opcode_iter([0] * 35))
-        assert result == [(1, 0, 35)], f"Expected single run of 35, got {result}"
+        assert result == [(1, 0, 35)], f'Expected single run of 35, got {result}'
 
         # 36: long format (cost=2 + 0)
         result = list(encode_bit2_opcode_iter([0] * 36))
-        assert result == [(1, 0, 36)], f"Expected single run of 36, got {result}"
+        assert result == [(1, 0, 36)], f'Expected single run of 36, got {result}'
 
 
 # ==============================================================================
@@ -151,11 +151,46 @@ class TestEncodeCopy:
         """Tests long copy with length > 32 but offset <= 256 (0111LLFF format)."""
         # 设计一个 40 字节的“无自我重复模式” (利用 ext8 扩展属性 0~7 轻松构造)
         pattern = [
-            0, 1, 2, 3, 4, 5, 6, 7,
-            0, 2, 4, 6, 1, 3, 5, 7,
-            0, 3, 6, 1, 4, 7, 2, 5,
-            0, 4, 1, 5, 2, 6, 3, 7,
-            0, 5, 1, 6, 2, 7, 3, 4
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            0,
+            2,
+            4,
+            6,
+            1,
+            3,
+            5,
+            7,
+            0,
+            3,
+            6,
+            1,
+            4,
+            7,
+            2,
+            5,
+            0,
+            4,
+            1,
+            5,
+            2,
+            6,
+            3,
+            7,
+            0,
+            5,
+            1,
+            6,
+            2,
+            7,
+            3,
+            4,
         ]  # 长度 40
         data = pattern + pattern  # 总长 80
 
@@ -181,7 +216,7 @@ class TestEncodeCopy:
         """Copy with both offset > 256 and length > 32 (0111LLFF long format)."""
         # 36-element pattern with long run separator to push second occurrence past offset 256
         pattern = [0, 1, 2, 3] * 9  # 36 elements
-        run = [2] * 260            # pushes pattern to offset 296
+        run = [2] * 260  # pushes pattern to offset 296
         data = pattern + run + pattern
         result = list(encode_bit2_opcode_iter(data))
 
@@ -199,22 +234,16 @@ class TestEncodeCopy:
 
         rolling_copy = result[1]
         assert rolling_copy == (2, 4, 32), (
-            f"Expected rolling copy (2, 4, 32) for first pattern, got {rolling_copy}"
+            f'Expected rolling copy (2, 4, 32) for first pattern, got {rolling_copy}'
         )
 
         run_sep = result[2]
-        assert run_sep == (1, 2, 260), (
-            f"Expected run (1, 2, 260), got {run_sep}"
-        )
+        assert run_sep == (1, 2, 260), f'Expected run (1, 2, 260), got {run_sep}'
 
         long_copy = result[3]
-        assert long_copy[0] == 2, f"Expected copy opcode, got {long_copy}"
-        assert long_copy[1] > 256, (
-            f"Expected copy offset > 256, got {long_copy[1]}"
-        )
-        assert long_copy[2] > 32, (
-            f"Expected copy length > 32, got {long_copy[2]}"
-        )
+        assert long_copy[0] == 2, f'Expected copy opcode, got {long_copy}'
+        assert long_copy[1] > 256, f'Expected copy offset > 256, got {long_copy[1]}'
+        assert long_copy[2] > 32, f'Expected copy length > 32, got {long_copy[2]}'
 
 
 # ==============================================================================
@@ -298,13 +327,16 @@ class TestDecodeEmpty:
 class TestDecodeLiteral:
     """Decoding literal opcodes."""
 
-    @pytest.mark.parametrize("values", [
-        (0,),
-        (1,),
-        (3, 2, 1, 0),
-        (0, 0, 0, 0),
-        (1, 0, 2, 3, 2),
-    ])
+    @pytest.mark.parametrize(
+        'values',
+        [
+            (0,),
+            (1,),
+            (3, 2, 1, 0),
+            (0, 0, 0, 0),
+            (1, 0, 2, 3, 2),
+        ],
+    )
     def test_literal_values(self, values):
         """Literal values are appended as-is."""
         expected = list(values)
@@ -320,12 +352,15 @@ class TestDecodeLiteral:
 class TestDecodeRun:
     """Decoding run opcodes."""
 
-    @pytest.mark.parametrize("val, length", [
-        (0, 1),
-        (1, 5),
-        (2, 10),
-        (3, 100),
-    ])
+    @pytest.mark.parametrize(
+        'val, length',
+        [
+            (0, 1),
+            (1, 5),
+            (2, 10),
+            (3, 100),
+        ],
+    )
     def test_run(self, val, length):
         """Run opcode produces ``[val] * length``."""
         result = decode_bit2_opcode([(1, val, length)])
@@ -478,7 +513,7 @@ class TestRoundtrip:
         [3, 2, 1, 0, 3, 2, 1, 0],
     ]
 
-    @pytest.mark.parametrize("data", ROUNDTRIP_CASES)
+    @pytest.mark.parametrize('data', ROUNDTRIP_CASES)
     def test_roundtrip(self, data):
         """decode(encode(data)) == data for a variety of inputs."""
         encoded = list(encode_bit2_opcode_iter(data))
@@ -500,7 +535,9 @@ class TestRoundtrip:
     def test_deterministic(self):
         """Encoding the same input twice produces identical output."""
         data = [0, 1, 2, 3, 0, 1, 2, 3, 0, 0, 0, 0, 1, 1, 1, 1]
-        assert list(encode_bit2_opcode_iter(data)) == list(encode_bit2_opcode_iter(data))
+        assert list(encode_bit2_opcode_iter(data)) == list(
+            encode_bit2_opcode_iter(data)
+        )
 
 
 # ==============================================================================
@@ -512,14 +549,14 @@ class TestLargeData:
     """Correctness with large inputs."""
 
     LARGE_CASES = [
-        ([0] * 200, "all zeros"),
-        ([1, 2, 3] * 200, "repeating pattern"),
-        ([i % 4 for i in range(200)], "cycling values"),
+        ([0] * 200, 'all zeros'),
+        ([1, 2, 3] * 200, 'repeating pattern'),
+        ([i % 4 for i in range(200)], 'cycling values'),
         # Enough data to trigger 64+ LZ77 hash chain entries for many positions
-        ([0, 1, 2, 3] * 80, "many chain entries"),
+        ([0, 1, 2, 3] * 80, 'many chain entries'),
     ]
 
-    @pytest.mark.parametrize("data, name", LARGE_CASES)
+    @pytest.mark.parametrize('data, name', LARGE_CASES)
     def test_large_roundtrip(self, data, name):
         """Large data round-trips without error and produces correct output."""
         encoded = list(encode_bit2_opcode_iter(data))
@@ -536,7 +573,7 @@ class TestLargeData:
             data = [val] * 5
             opcodes = list(encode_bit2_opcode_iter(data))
             assert not any(op[0] == 1 for op in opcodes), (
-                f"Value {val} should not produce a run opcode; got {opcodes}"
+                f'Value {val} should not produce a run opcode; got {opcodes}'
             )
 
     def test_compression_ratio_non_trivial(self):
@@ -552,8 +589,8 @@ class TestLargeData:
             else:  # op[0] == 2
                 total_output += 2
         assert total_output < len(data), (
-            f"Encoded size ({total_output}) should be less than "
-            f"input size ({len(data)}) for repetitive data"
+            f'Encoded size ({total_output}) should be less than '
+            f'input size ({len(data)}) for repetitive data'
         )
 
     def test_copy_chain_limit_safety(self):
@@ -566,12 +603,12 @@ class TestLargeData:
         data = [0, 1, 2, 3] * 80
         encoded = list(encode_bit2_opcode_iter(data))
         decoded = decode_bit2_opcode(encoded)
-        assert decoded == data, "Round-trip should succeed with many chain entries"
+        assert decoded == data, 'Round-trip should succeed with many chain entries'
 
         # Determinism: same input → same output even at the chain limit boundary
         encoded2 = list(encode_bit2_opcode_iter(data))
         assert encoded == encoded2, (
-            "Output should be deterministic regardless of chain limit"
+            'Output should be deterministic regardless of chain limit'
         )
 
     @staticmethod
@@ -597,20 +634,21 @@ class TestLargeData:
                     db(t + 1, t)
 
         db(1, 1)
-        return seq + seq[:n - 1]
+        return seq + seq[: n - 1]
 
     def test_no_repeated_four_tuples(self):
         """De Bruijn B(4,4) sequence (259 elements): all 256 four-tuples unique,
         so no LZ77 copy match exists.  Round-trip verifies the encoder handles
         purely literal-dominated data without error."""
         data = self._de_bruijn(4, 4)
-        assert len(data) == 4 ** 4 + 3  # 259
+        assert len(data) == 4**4 + 3  # 259
 
         # Verify completeness
-        tuples = {tuple(data[i:i + 4]) for i in range(len(data) - 3)}
-        assert len(tuples) == 4 ** 4, \
-            f"De Bruijn B(4,4) must have all {4 ** 4} distinct 4-tuples"
+        tuples = {tuple(data[i : i + 4]) for i in range(len(data) - 3)}
+        assert len(tuples) == 4**4, (
+            f'De Bruijn B(4,4) must have all {4**4} distinct 4-tuples'
+        )
 
         encoded = list(encode_bit2_opcode_iter(data))
         decoded = decode_bit2_opcode(encoded)
-        assert decoded == data, "Round-trip should succeed for De Bruijn data"
+        assert decoded == data, 'Round-trip should succeed for De Bruijn data'

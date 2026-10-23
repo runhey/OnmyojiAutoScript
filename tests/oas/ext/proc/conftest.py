@@ -38,7 +38,17 @@ import oas.ext.proc as _real_proc
 PROC_DIR = os.path.dirname(os.path.abspath(_real_proc.__file__))
 
 #: Every psutil platform flag the modules branch on, plus the BSD sub-flags.
-PSUTIL_FLAGS = ('LINUX', 'WINDOWS', 'MACOS', 'BSD', 'SUNOS', 'AIX', 'POSIX', 'OPENBSD', 'NETBSD')
+PSUTIL_FLAGS = (
+    'LINUX',
+    'WINDOWS',
+    'MACOS',
+    'BSD',
+    'SUNOS',
+    'AIX',
+    'POSIX',
+    'OPENBSD',
+    'NETBSD',
+)
 
 _FAKE_ALIAS_ROOT = '_oas_fake_proc'
 
@@ -128,6 +138,7 @@ def argv_child(child_factory, unique_token):
             The argv is ``python -c SLEEP_CODE <unique_token> <extra...>``,
             which makes ``get_cmdline(child.pid) == argv`` a valid assertion.
     """
+
     def make(extra=()):
         argv = python_argv(extra=(unique_token, *extra))
         return child_factory(argv), argv
@@ -143,6 +154,7 @@ def poll_until():
     Returns:
         callable: poll_until(predicate, timeout=5.0, interval=0.01) -> bool
     """
+
     def poll(predicate, timeout=5.0, interval=0.01):
         deadline = time.monotonic() + timeout
         while True:

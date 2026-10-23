@@ -1,4 +1,4 @@
-﻿"""
+"""
 Tests for the read functions in ``oas.ext.deep``:
 
 - ``deep_get``: get a value from nested dict/list, return default on failure
@@ -168,5 +168,3 @@ class TestDeepExist:
         # A key exists with value None, should still be True
         d = {'a': None}
         assert deep_exist(d, 'a') is True
-
-

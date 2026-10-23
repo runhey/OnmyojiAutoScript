@@ -1,4 +1,4 @@
-﻿import re
+import re
 import time
 from datetime import date
 from unittest.mock import MagicMock
@@ -172,7 +172,9 @@ class TestBackendLogging(BaseLoggerTest):
         Test that formatted messages are correctly processed before being sent to backend
         """
         # Log with formatting
-        self.logger.info('User {name} logged in from {location}', name='Alice', location='Singapore')
+        self.logger.info(
+            'User {name} logged in from {location}', name='Alice', location='Singapore'
+        )
 
         # Get the event
         event = self._get_last_event()

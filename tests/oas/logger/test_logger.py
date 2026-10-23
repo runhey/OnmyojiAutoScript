@@ -1,4 +1,4 @@
-﻿import re
+import re
 
 import pytest
 
@@ -80,7 +80,9 @@ class TestLogger(BaseLoggerTest):
         assert 'INFO' in content
 
         # Verify log format: YYYY-MM-DD HH:MM:SS.mmm | LEVEL | message
-        pattern = r'\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}\.\d{3} \| INFO \| Test info message'
+        pattern = (
+            r'\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}\.\d{3} \| INFO \| Test info message'
+        )
         assert re.search(pattern, content) is not None
 
     def test_basic_logging_levels(self):
@@ -219,7 +221,9 @@ class TestLoggerFormatting(BaseLoggerTest):
         """
         Test that parametrized logging (the elegant way) still works correctly
         """
-        logger.info('User {name} logged in from {location}', name='Alice', location='Singapore')
+        logger.info(
+            'User {name} logged in from {location}', name='Alice', location='Singapore'
+        )
 
         content = self._read_log_file()
 
@@ -304,16 +308,16 @@ class TestLoggerError(BaseLoggerTest):
         Test logger.error(e) prints exception name and message
         """
         try:
-            raise ValueError("Invalid value")
+            raise ValueError('Invalid value')
         except ValueError as e:
             logger.error(e)
 
         content = self._read_log_file()
 
         # Should contain exception type and message
-        assert "ValueError: Invalid value" in content
+        assert 'ValueError: Invalid value' in content
         # Should be ERROR level
-        assert "ERROR" in content
+        assert 'ERROR' in content
 
     def test_error_with_exception_group(self):
         """
@@ -330,17 +334,13 @@ class TestLoggerError(BaseLoggerTest):
         #    - IndexError: index_err
 
         exc = ExceptionGroupType(
-            "Top error",
+            'Top error',
             [
-                ValueError("val_err"),
+                ValueError('val_err'),
                 ExceptionGroupType(
-                    "Nested group",
-                    [
-                        TypeError("type_err"),
-                        IndexError("index_err")
-                    ]
-                )
-            ]
+                    'Nested group', [TypeError('type_err'), IndexError('index_err')]
+                ),
+            ],
         )
 
         logger.error(exc)
@@ -354,7 +354,7 @@ class TestLoggerError(BaseLoggerTest):
         error_lines = []
         capture = False
         for line in lines:
-            if "ExceptionGroup: Top error" in line:
+            if 'ExceptionGroup: Top error' in line:
                 capture = True
             if capture:
                 error_lines.append(line)
@@ -370,20 +370,20 @@ class TestLoggerError(BaseLoggerTest):
         # Join relevant lines to check for substrings with indentation
         full_text = '\n'.join(error_lines)
 
-        assert "- ExceptionGroup: Top error" in full_text
-        assert "  - ValueError: val_err" in full_text
-        assert "  - ExceptionGroup: Nested group" in full_text
-        assert "    - TypeError: type_err" in full_text
-        assert "    - IndexError: index_err" in full_text
+        assert '- ExceptionGroup: Top error' in full_text
+        assert '  - ValueError: val_err' in full_text
+        assert '  - ExceptionGroup: Nested group' in full_text
+        assert '    - TypeError: type_err' in full_text
+        assert '    - IndexError: index_err' in full_text
 
         # Verify order: val_err comes before Nested group
-        pos_val = full_text.find("ValueError: val_err")
-        pos_nested = full_text.find("ExceptionGroup: Nested group")
+        pos_val = full_text.find('ValueError: val_err')
+        pos_nested = full_text.find('ExceptionGroup: Nested group')
         assert pos_val < pos_nested
 
         # Verify order within nested group
-        pos_type = full_text.find("TypeError: type_err")
-        pos_index = full_text.find("IndexError: index_err")
+        pos_type = full_text.find('TypeError: type_err')
+        pos_index = full_text.find('IndexError: index_err')
         assert pos_type < pos_index
         assert pos_type < pos_index
         assert pos_nested < pos_type
@@ -503,17 +503,12 @@ class TestLoggerException(BaseLoggerTest):
 
         try:
             raise ExceptionGroupType(
-                "multiple errors",
+                'multiple errors',
                 [
-                    ValueError("error 1"),
-                    TypeError("error 2"),
-                    ExceptionGroupType(
-                        "nested errors",
-                        [
-                            ValueError("nested error 1")
-                        ]
-                    )
-                ]
+                    ValueError('error 1'),
+                    TypeError('error 2'),
+                    ExceptionGroupType('nested errors', [ValueError('nested error 1')]),
+                ],
             )
         except ExceptionGroupType as e:
             logger.exception(e)
@@ -521,12 +516,12 @@ class TestLoggerException(BaseLoggerTest):
         content = self._read_log_file()
 
         # Verify main group message
-        assert "ExceptionGroup: multiple errors" in content
+        assert 'ExceptionGroup: multiple errors' in content
 
         # Verify nested exceptions
-        assert "ValueError: error 1" in content
-        assert "TypeError: error 2" in content
+        assert 'ValueError: error 1' in content
+        assert 'TypeError: error 2' in content
 
         # Verify nested group
-        assert "nested errors" in content
-        assert "nested error 1" in content
+        assert 'nested errors' in content
+        assert 'nested error 1' in content

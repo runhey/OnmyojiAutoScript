@@ -5,6 +5,7 @@ These tests verify that PathStr, the atomic read/write functions,
 batch_makedirs and folder iteration work against the in-memory fake
 filesystem without changes.
 """
+
 import os
 
 import pytest
@@ -14,11 +15,33 @@ pytest.importorskip('oas.ext.path')
 
 from oas.ext.path import PathStr
 from oas.ext.path.atomic import (
-    atomic_copy, atomic_open, atomic_read_bytes, atomic_read_bytes_into, atomic_read_bytes_stream, atomic_read_text,
-    atomic_read_text_stream, atomic_remove, atomic_rename, atomic_replace, atomic_rmtree, atomic_rmtree_empty,
-    atomic_write, atomic_write_stream, file_copy, file_ensure_exist, file_read_bytes, file_read_bytes_into,
-    file_read_bytes_stream, file_read_text, file_read_text_stream, file_remove, file_touch, file_write,
-    file_write_stream, folder_rmtree, is_empty_folder
+    atomic_copy,
+    atomic_open,
+    atomic_read_bytes,
+    atomic_read_bytes_into,
+    atomic_read_bytes_stream,
+    atomic_read_text,
+    atomic_read_text_stream,
+    atomic_remove,
+    atomic_rename,
+    atomic_replace,
+    atomic_rmtree,
+    atomic_rmtree_empty,
+    atomic_write,
+    atomic_write_stream,
+    file_copy,
+    file_ensure_exist,
+    file_read_bytes,
+    file_read_bytes_into,
+    file_read_bytes_stream,
+    file_read_text,
+    file_read_text_stream,
+    file_remove,
+    file_touch,
+    file_write,
+    file_write_stream,
+    folder_rmtree,
+    is_empty_folder,
 )
 from oas.ext.path.makedir import batch_makedirs
 from oas.testing.filesystem import fs  # noqa: F401
@@ -280,7 +303,8 @@ class TestPathStr:
         file_write(root.joinpath('a.txt'), 'x')
         file_write(root.joinpath('b/c.txt'), 'x')
         assert sorted(str(p) for p in root.iter_files(recursive=True)) == [
-            root.joinpath('a.txt'), root.joinpath('b/c.txt'),
+            root.joinpath('a.txt'),
+            root.joinpath('b/c.txt'),
         ]
         assert [p for p in root.iter_files(ext='.txt')] == [root.joinpath('a.txt')]
 

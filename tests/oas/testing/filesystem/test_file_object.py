@@ -3,6 +3,7 @@ Tests for alasio/testing/filesystem/file_object.py.
 
 The file object returned by open(), text and binary modes.
 """
+
 import io
 import os
 import stat as statmod

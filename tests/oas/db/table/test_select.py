@@ -1,6 +1,7 @@
 """
 Test SELECT operations: select, select_one, select_by_sql, select_one_by_sql
 """
+
 from conftest import User
 
 
@@ -193,11 +194,7 @@ def test_select_with_limit_orderby_offset_combined(user_table, sample_users):
     user_table.insert_row(sample_users)
 
     # Get 2nd and 3rd oldest users
-    results = user_table.select(
-        _orderby_='age',
-        _limit_=2,
-        _offset_=1
-    )
+    results = user_table.select(_orderby_='age', _limit_=2, _offset_=1)
     assert len(results) == 2
     # Should get ages: 28, 30 (skipping 25)
     assert results[0].age == 28
@@ -257,11 +254,11 @@ def test_select_by_sql_complex_query(user_table, sample_users):
     """Test select_by_sql with complex query"""
     user_table.insert_row(sample_users)
 
-    sql = '''
+    sql = """
         SELECT * FROM users
         WHERE age >= :min_age AND age <= :max_age
         ORDER BY age
-    '''
+    """
     results = user_table.select_by_sql(sql, {'min_age': 28, 'max_age': 32})
     assert len(results) == 3
     assert results[0].age == 28
@@ -383,4 +380,3 @@ def test_select_by_primary_key_using_sql(user_table, sample_users):
     result = user_table.select_one_by_sql(sql, [first_id])
     assert result is not None
     assert result.id == first_id
-

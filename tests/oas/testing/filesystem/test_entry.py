@@ -3,6 +3,7 @@ Tests for alasio/testing/filesystem/entry.py.
 
 The mocks of os.DirEntry and the iterator returned by os.scandir().
 """
+
 import os
 import stat as statmod
 
@@ -73,7 +74,14 @@ class TestFakeDirEntrySymlink:
             FakeDirEntry:
         """
         link_stat = make_stat(0o120777, size=8)
-        return FakeDirEntry('link', '/dir/link', False, link_stat, is_symlink=True, follow_stat=target_stat)
+        return FakeDirEntry(
+            'link',
+            '/dir/link',
+            False,
+            link_stat,
+            is_symlink=True,
+            follow_stat=target_stat,
+        )
 
     def test_is_symlink(self):
         """A symlink entry should report is_symlink()."""
@@ -100,7 +108,14 @@ class TestFakeDirEntrySymlink:
         """A link to a directory should report is_dir() when followed."""
         link_stat = make_stat(0o120777, size=4)
         target_stat = make_stat(0o40755)
-        entry = FakeDirEntry('link', '/dir/link', False, link_stat, is_symlink=True, follow_stat=target_stat)
+        entry = FakeDirEntry(
+            'link',
+            '/dir/link',
+            False,
+            link_stat,
+            is_symlink=True,
+            follow_stat=target_stat,
+        )
         assert entry.is_dir()
         assert not entry.is_file()
 
@@ -120,7 +135,10 @@ class TestFakeScandirIterator:
     def test_iteration(self):
         """Iterating should yield the entries in order."""
         st = make_stat(0o100644)
-        entries = [FakeDirEntry('a', '/x/a', False, st), FakeDirEntry('b', '/x/b', False, st)]
+        entries = [
+            FakeDirEntry('a', '/x/a', False, st),
+            FakeDirEntry('b', '/x/b', False, st),
+        ]
         iterator = FakeScandirIterator(entries)
         assert list(iterator) == entries
 

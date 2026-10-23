@@ -65,7 +65,10 @@ def psutil_sweep_with_attrs():
     ``psutil.process_iter(['pid', 'cmdline'])`` -- the slow call the module's
     docstring names as the thing being replaced.
     """
-    return {proc.info['pid']: proc.info['cmdline'] for proc in psutil.process_iter(['pid', 'cmdline'])}
+    return {
+        proc.info['pid']: proc.info['cmdline']
+        for proc in psutil.process_iter(['pid', 'cmdline'])
+    }
 
 
 def psutil_sweep_lazy():
@@ -80,7 +83,7 @@ def psutil_sweep_lazy():
     for proc in psutil.process_iter():
         try:
             result[proc.pid] = proc.cmdline()
-        except (psutil.Error, OSError):
+        except psutil.Error, OSError:
             continue
     return result
 
@@ -89,7 +92,7 @@ def psutil_kill_dead(pid):
     """``psutil``'s way of killing a pid that is already gone."""
     try:
         psutil.Process(pid).kill()
-    except (psutil.Error, OSError):
+    except psutil.Error, OSError:
         return False
     return True
 
@@ -130,7 +133,7 @@ def _pids_psutil_can_describe():
             continue
         try:
             cmd = psutil.Process(pid).cmdline()
-        except (psutil.Error, OSError):
+        except psutil.Error, OSError:
             continue
         if cmd and not cmd[0].startswith(r'\??'):
             readable.add(pid)

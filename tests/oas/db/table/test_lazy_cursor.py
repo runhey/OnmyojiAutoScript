@@ -1,6 +1,7 @@
 """
 Test LazyCursor: lazy execution of SQL statements
 """
+
 import pytest
 
 from oas.db.table import LazyCursor
@@ -191,16 +192,22 @@ def test_lazy_cursor_can_commit_multiple_times(user_table, sample_users):
 
     # First batch
     sql = 'INSERT INTO users (name, age, email) VALUES (:name, :age, :email)'
-    params = {'name': sample_users[0].name, 'age': sample_users[0].age,
-              'email': sample_users[0].email}
+    params = {
+        'name': sample_users[0].name,
+        'age': sample_users[0].age,
+        'email': sample_users[0].email,
+    }
     lazy.execute(sql, params)
     lazy.commit()
 
     assert user_table.select_count() == 1
 
     # Second batch
-    params = {'name': sample_users[1].name, 'age': sample_users[1].age,
-              'email': sample_users[1].email}
+    params = {
+        'name': sample_users[1].name,
+        'age': sample_users[1].age,
+        'email': sample_users[1].email,
+    }
     lazy.execute(sql, params)
     lazy.commit()
 
@@ -276,20 +283,16 @@ def test_lazy_cursor_mixed_operations(user_table, sample_users):
     # Insert
     lazy.execute(
         'INSERT INTO users (name, age, email) VALUES (:name, :age, :email)',
-        {'name': 'Bob', 'age': 30, 'email': 'bob@example.com'}
+        {'name': 'Bob', 'age': 30, 'email': 'bob@example.com'},
     )
 
     # Update
     lazy.execute(
-        'UPDATE users SET age = :age WHERE id = :id',
-        {'age': 26, 'id': user.id}
+        'UPDATE users SET age = :age WHERE id = :id', {'age': 26, 'id': user.id}
     )
 
     # Delete (will delete what we just inserted after commit)
-    lazy.execute(
-        'DELETE FROM users WHERE name = :name',
-        {'name': 'Bob'}
-    )
+    lazy.execute('DELETE FROM users WHERE name = :name', {'name': 'Bob'})
 
     # Commit all
     lazy.commit()
@@ -342,7 +345,7 @@ def test_lazy_cursor_reusable(user_table):
     # First cycle
     lazy.execute(
         'INSERT INTO users (name, age, email) VALUES (:name, :age, :email)',
-        {'name': 'User1', 'age': 25, 'email': 'user1@example.com'}
+        {'name': 'User1', 'age': 25, 'email': 'user1@example.com'},
     )
     lazy.commit()
     assert user_table.select_count() == 1
@@ -353,7 +356,7 @@ def test_lazy_cursor_reusable(user_table):
     # Second cycle
     lazy.execute(
         'INSERT INTO users (name, age, email) VALUES (:name, :age, :email)',
-        {'name': 'User2', 'age': 30, 'email': 'user2@example.com'}
+        {'name': 'User2', 'age': 30, 'email': 'user2@example.com'},
     )
     lazy.commit()
     assert user_table.select_count() == 2
@@ -367,11 +370,10 @@ def test_lazy_cursor_performance_batch_insert(user_table):
     for i in range(100):
         lazy.execute(
             'INSERT INTO users (name, age, email) VALUES (:name, :age, :email)',
-            {'name': f'User{i}', 'age': 20 + i, 'email': f'user{i}@example.com'}
+            {'name': f'User{i}', 'age': 20 + i, 'email': f'user{i}@example.com'},
         )
 
     # Commit all at once
     lazy.commit()
 
     assert user_table.select_count() == 100
-

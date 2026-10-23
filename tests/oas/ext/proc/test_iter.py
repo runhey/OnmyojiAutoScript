@@ -252,7 +252,9 @@ class TestProcessIterIsConcurrencySafe:
 
         def churn():
             while not stop.is_set():
-                proc = subprocess.Popen(python_argv(code='import time; time.sleep(0.02)'))
+                proc = subprocess.Popen(
+                    python_argv(code='import time; time.sleep(0.02)')
+                )
                 proc.wait()
 
         thread = threading.Thread(target=churn, daemon=True)

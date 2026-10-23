@@ -33,7 +33,7 @@ def test_eventual_success():
             with _:
                 count += 1
                 if count < target:
-                    assert False, "Not yet"
+                    assert False, 'Not yet'
                 assert True
 
         end = time.perf_counter()
@@ -51,10 +51,10 @@ def test_timeout_failure():
     with PatchTime(100.0):
         start = time.perf_counter()
 
-        with pytest.raises(AssertionError, match="Always fail"):
+        with pytest.raises(AssertionError, match='Always fail'):
             for _ in AssertTimeout(timeout=timeout, interval=0.01):
                 with _:
-                    assert False, "Always fail"
+                    assert False, 'Always fail'
 
         end = time.perf_counter()
 
@@ -68,11 +68,11 @@ def test_other_exception_propagation():
         start = time.perf_counter()
         count = 0
 
-        with pytest.raises(ValueError, match="Something wrong"):
+        with pytest.raises(ValueError, match='Something wrong'):
             for _ in AssertTimeout(timeout=1.0, interval=0.01):
                 with _:
                     count += 1
-                    raise ValueError("Something wrong")
+                    raise ValueError('Something wrong')
 
         end = time.perf_counter()
 

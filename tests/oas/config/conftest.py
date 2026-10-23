@@ -11,8 +11,8 @@ from oas.db.conn import SQLITE_POOL
 def memory_config():
     """Prepare the named ``:memory:`` config database and clean it up."""
 
-    ConfigTable(":memory:").create_table()
+    ConfigTable(':memory:').create_table()
     yield
-    ConfigTable.singleton_remove(":memory:")
-    KeyTable.singleton_remove(":memory:")
-    SQLITE_POOL.delete_file(":memory:")
+    ConfigTable.singleton_remove(':memory:')
+    KeyTable.singleton_remove(':memory:')
+    SQLITE_POOL.delete_file(':memory:')

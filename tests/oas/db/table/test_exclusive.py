@@ -1,6 +1,7 @@
 """
 Test ExclusiveTransaction: EXCLUSIVE transaction support
 """
+
 from conftest import User
 
 
@@ -45,7 +46,7 @@ def test_exclusive_transaction_rollback_on_exception(user_table):
             user_table.insert_row(user, _cursor_=c)
 
             # Raise an exception
-            raise ValueError("Test exception")
+            raise ValueError('Test exception')
     except ValueError:
         pass
 
@@ -193,7 +194,7 @@ def test_exclusive_transaction_prevents_partial_commit(user_table, sample_users)
             user_table.insert_row(sample_users[2:4], _cursor_=c)
 
             # Force an error
-            raise RuntimeError("Abort transaction")
+            raise RuntimeError('Abort transaction')
     except RuntimeError:
         pass
 
@@ -283,7 +284,7 @@ def test_exclusive_transaction_with_large_batch(user_table):
     with user_table.exclusive_transaction() as c:
         # Insert in batches
         for i in range(0, 1000, 100):
-            user_table.insert_row(users[i:i + 100], _cursor_=c)
+            user_table.insert_row(users[i : i + 100], _cursor_=c)
 
     count = user_table.select_count()
     assert count == 1000
@@ -305,7 +306,7 @@ def test_exclusive_transaction_guarantees_consistency(user_table, sample_users):
             user_table.insert_row(new_user, _cursor_=c)
 
             # Raise error before commit
-            raise ValueError("Test rollback")
+            raise ValueError('Test rollback')
     except ValueError:
         pass
 
@@ -397,4 +398,3 @@ def test_exclusive_transaction_with_upsert_batch(user_table, sample_users):
 
     alice = user_table.select_one(name='Alice Updated')
     assert alice is not None
-

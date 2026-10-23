@@ -1,4 +1,4 @@
-﻿"""
+"""
 Tests for the iteration functions in ``oas.ext.deep``:
 
 - Fixed-depth helpers: ``deep_iter_depth1``/``deep_keys_depth1``/
@@ -16,25 +16,28 @@ instead of looping forever on a circular reference.
 import pytest
 
 from oas.ext.deep import (
-    OP_ADD, OP_DEL, OP_SET, deep_iter, deep_iter_depth1, deep_iter_depth2, deep_iter_diff, deep_iter_patch, deep_keys,
-    deep_keys_depth1, deep_keys_depth2, deep_values, deep_values_depth1, deep_values_depth2
+    OP_ADD,
+    OP_DEL,
+    OP_SET,
+    deep_iter,
+    deep_iter_depth1,
+    deep_iter_depth2,
+    deep_iter_diff,
+    deep_iter_patch,
+    deep_keys,
+    deep_keys_depth1,
+    deep_keys_depth2,
+    deep_values,
+    deep_values_depth1,
+    deep_values_depth2,
 )
 
 COMPLEX_DICT = {
     'a': 1,
-    'b': {
-        'c': 2,
-        'd': {
-            'e': 3,
-            'f': {'f1': 4}
-        },
-        'g': 5
-    },
-    'h': {
-        'i': 6
-    },
+    'b': {'c': 2, 'd': {'e': 3, 'f': {'f1': 4}}, 'g': 5},
+    'h': {'i': 6},
     'j': 7,
-    'k': [8, 9]
+    'k': [8, 9],
 }
 
 
@@ -147,7 +150,7 @@ class TestDeepIter:
             (('b', 'g'), 5),
             (('h', 'i'), 6),
             (('j',), 7),
-            (('k',), [8, 9])
+            (('k',), [8, 9]),
         ]
 
         for path, val in expected_paths:
@@ -253,7 +256,10 @@ class TestDeepIterUnlimited:
         assert list(deep_iter(d)) == [(('a', 'x'), 1), (('b', 'x'), 1)]
         assert list(deep_keys(d)) == [('a', 'x'), ('b', 'x')]
         assert list(deep_values(d)) == [1, 1]
-        assert list(deep_iter(d, min_depth=2, depth=2)) == [(('a', 'x'), 1), (('b', 'x'), 1)]
+        assert list(deep_iter(d, min_depth=2, depth=2)) == [
+            (('a', 'x'), 1),
+            (('b', 'x'), 1),
+        ]
 
     def test_deep_iter_unlimited_circular_raises(self):
         # A circular reference raises instead of looping forever
@@ -414,5 +420,3 @@ class TestDeepIterPatch:
         cur1['v'] = 1
         cur2['v'] = 1
         assert list(deep_iter_patch(d1, d2)) == []
-
-

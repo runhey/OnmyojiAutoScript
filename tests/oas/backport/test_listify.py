@@ -3,6 +3,7 @@ Tests for oas.backport.listify
 
 listify flattens potentially nested structures into a flat list.
 """
+
 from collections import deque
 
 import pytest
@@ -13,28 +14,31 @@ from oas.backport.listify import _iter_item, listify
 class TestListifyAtomic:
     """Tests for atomic (non-iterable or non-flattened) inputs"""
 
-    @pytest.mark.parametrize("item, expected", [
-        (42, [42]),
-        (0, [0]),
-        (-1, [-1]),
-        (3.14, [3.14]),
-        (True, [True]),
-        (False, [False]),
-        (None, [None]),
-        ("hello", ["hello"]),
-        ("", [""]),
-        (b"bytes", [b"bytes"]),
-        (b"", [b""]),
-        ({"a": 1}, [{"a": 1}]),
-        ({}, [{}]),
-    ])
+    @pytest.mark.parametrize(
+        'item, expected',
+        [
+            (42, [42]),
+            (0, [0]),
+            (-1, [-1]),
+            (3.14, [3.14]),
+            (True, [True]),
+            (False, [False]),
+            (None, [None]),
+            ('hello', ['hello']),
+            ('', ['']),
+            (b'bytes', [b'bytes']),
+            (b'', [b'']),
+            ({'a': 1}, [{'a': 1}]),
+            ({}, [{}]),
+        ],
+    )
     def test_atomic_items(self, item, expected):
         """Atomic items should be wrapped in a single-element list"""
         assert listify(item) == expected
 
     def test_dict_is_atomic_regardless_of_content(self):
         """Dict is treated as atomic, not flattened into key-value pairs"""
-        d = {"a": [1, 2], "b": 3}
+        d = {'a': [1, 2], 'b': 3}
         result = listify(d)
         assert result == [d]
 
@@ -75,7 +79,7 @@ class TestListifyListLike:
 
     def test_mixed_types_nested(self):
         """Nested structures with mixed atomic types should flatten correctly"""
-        assert listify([1, "abc", [2, "def"]]) == [1, "abc", 2, "def"]
+        assert listify([1, 'abc', [2, 'def']]) == [1, 'abc', 2, 'def']
 
     def test_nested_tuple_in_list(self):
         """Nested tuple in list should be flattened"""
@@ -89,11 +93,14 @@ class TestListifyListLike:
         assert sorted(result[1:3]) == [2, 3]
         assert result[3] == 4
 
-    @pytest.mark.parametrize("nested, expected", [
-        ([[[1]]], [1]),
-        ([[1, [2]], [3]], [1, 2, 3]),
-        ([(), [(), [()]]], []),
-    ])
+    @pytest.mark.parametrize(
+        'nested, expected',
+        [
+            ([[[1]]], [1]),
+            ([[1, [2]], [3]], [1, 2, 3]),
+            ([(), [(), [()]]], []),
+        ],
+    )
     def test_various_nesting_patterns(self, nested, expected):
         """Various nesting patterns should all flatten completely"""
         assert listify(nested) == expected
@@ -112,16 +119,16 @@ class TestListifyListLike:
 
     def test_dict_inside_list(self):
         """Dict inside a list should be treated as atomic"""
-        d = {"key": "value"}
+        d = {'key': 'value'}
         assert listify([1, d, 2]) == [1, d, 2]
 
     def test_str_inside_list(self):
         """String inside a list should be treated as atomic"""
-        assert listify(["hello", "world"]) == ["hello", "world"]
+        assert listify(['hello', 'world']) == ['hello', 'world']
 
     def test_bytes_inside_list(self):
         """Bytes inside a list should be treated as atomic"""
-        assert listify([b"hello", b"world"]) == [b"hello", b"world"]
+        assert listify([b'hello', b'world']) == [b'hello', b'world']
 
 
 class TestListifyOtherIterable:
@@ -139,7 +146,7 @@ class TestListifyOtherIterable:
     def test_map_object(self):
         """Map object should be flattened"""
         result = listify(map(str, [1, 2, 3]))
-        assert result == ["1", "2", "3"]
+        assert result == ['1', '2', '3']
 
     def test_filter_object(self):
         """Filter object should be flattened"""
@@ -148,9 +155,11 @@ class TestListifyOtherIterable:
 
     def test_nested_generator_in_list(self):
         """Generator nested inside a list should be flattened"""
+
         def gen():
             yield 2
             yield 3
+
         assert listify([1, gen(), 4]) == [1, 2, 3, 4]
 
     def test_reversed(self):
@@ -175,10 +184,10 @@ class TestListifyEdgeCases:
 
     def test_mixed_nested_structure(self):
         """Mixed deeply nested structure with various types"""
-        result = listify([[1, "a"], {"b": 2}, (3, [4, {5}])])
+        result = listify([[1, 'a'], {'b': 2}, (3, [4, {5}])])
         # first element: 1, second: "a", third: the dict (atomic), fourth: 3, fifth: 4, sixth: 5
         assert result[0] == 1
-        assert result[1] == "a"
+        assert result[1] == 'a'
         assert isinstance(result[2], dict)
         assert result[3] == 3
         assert result[4] == 4
@@ -189,13 +198,16 @@ class TestListifyEdgeCases:
 class TestListifyIdempotent:
     """Tests that listify is idempotent"""
 
-    @pytest.mark.parametrize("item", [
-        [1, 2, 3],
-        [1, [2, 3]],
-        [1, "abc", [2, "def"]],
-        [],
-        [{"a": 1}],
-    ])
+    @pytest.mark.parametrize(
+        'item',
+        [
+            [1, 2, 3],
+            [1, [2, 3]],
+            [1, 'abc', [2, 'def']],
+            [],
+            [{'a': 1}],
+        ],
+    )
     def test_listify_of_listify(self, item):
         """listify(listify(x)) should equal listify(x)"""
         once = listify(item)

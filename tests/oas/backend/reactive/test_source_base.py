@@ -16,7 +16,13 @@ import pytest
 import trio
 
 from oas.backend.reactive.event import ResponseEvent
-from oas.backend.reactive.source import _GC_CLASSES, BaseSource, DiskCache, EventSource, KeyedSource
+from oas.backend.reactive.source import (
+    _GC_CLASSES,
+    BaseSource,
+    DiskCache,
+    EventSource,
+    KeyedSource,
+)
 
 
 class MockServer:
@@ -89,6 +95,7 @@ class FakeSource(EventSource):
     {'x': 0}, on_event({'x': n}) replaces the x value, `_apply` returns
     whether the value changed.
     """
+
     TOPIC_NAME = 'Fake'
 
     def __init__(self):
@@ -113,6 +120,7 @@ class KeyedFakeSource(KeyedSource, DiskCache):
     A keyed disk-cache source to verify per-class registries and the
     data-expiry GC of keyed instances (GC=True, TTL=8).
     """
+
     TOPIC_NAME = 'KeyedFake'
     TTL = 8
 
@@ -192,11 +200,11 @@ class TestUnsubscribe:
     @pytest.mark.trio
     async def test_creation_time_guards_fresh_instance(self, monkeypatch):
         """a fresh source is never recycled before its TTL (creation base)"""
-        monkeypatch.setattr(time, 'monotonic', lambda: 100.)
+        monkeypatch.setattr(time, 'monotonic', lambda: 100.0)
         source = FakeSource()
         # EventSource records the creation moment as _lastrun: the data-
         # expiry GC freshness base of a brand-new instance
-        assert source._lastrun == 100.
+        assert source._lastrun == 100.0
         # never loaded: the first reinit must read (TTL window not applied)
         assert source._loaded is False
         await source.reinit()
@@ -222,8 +230,8 @@ class TestGcIdle:
         """an expired keyed disk-cache instance is removed from its registry"""
         instance = KeyedFakeSource.get('a')
         assert ('a',) in KeyedFakeSource.singleton_instances()
-        monkeypatch.setattr(time, 'monotonic', lambda: 100.)
-        instance._lastrun = 80.  # data 20s old > TTL 8
+        monkeypatch.setattr(time, 'monotonic', lambda: 100.0)
+        instance._lastrun = 80.0  # data 20s old > TTL 8
         KeyedFakeSource.gc_idle()
         assert KeyedFakeSource.singleton_instances() == {}
 
@@ -235,8 +243,8 @@ class TestGcIdle:
         instance (see design doc 11.5).
         """
         instance = KeyedFakeSource.get('a')
-        monkeypatch.setattr(time, 'monotonic', lambda: 100.)
-        instance._lastrun = 80.  # data 20s old > TTL 8
+        monkeypatch.setattr(time, 'monotonic', lambda: 100.0)
+        instance._lastrun = 80.0  # data 20s old > TTL 8
         lock_held = []
         original_remove = instance._remove
 
@@ -252,29 +260,29 @@ class TestGcIdle:
     def test_keyed_source_gc_keeps_fresh_instance(self, monkeypatch):
         """instances inside the TTL window are kept"""
         instance = KeyedFakeSource.get('a')
-        monkeypatch.setattr(time, 'monotonic', lambda: 100.)
-        instance._lastrun = 95.  # data 5s old < TTL 8
+        monkeypatch.setattr(time, 'monotonic', lambda: 100.0)
+        instance._lastrun = 95.0  # data 5s old < TTL 8
         KeyedFakeSource.gc_idle()
         assert KeyedFakeSource.singleton_instances() != {}
 
     def test_keyed_source_gc_never_loaded_uses_creation_base(self, monkeypatch):
         """a never-loaded instance is protected from its creation moment"""
         instance = KeyedFakeSource.get('a')
-        monkeypatch.setattr(time, 'monotonic', lambda: 100.)
+        monkeypatch.setattr(time, 'monotonic', lambda: 100.0)
         # _lastrun starts at the creation moment: fresh within TTL
-        instance._lastrun = 95.
+        instance._lastrun = 95.0
         KeyedFakeSource.gc_idle()
         assert KeyedFakeSource.singleton_instances() != {}
         # older than TTL from creation -> collected
-        instance._lastrun = 80.
+        instance._lastrun = 80.0
         KeyedFakeSource.gc_idle()
         assert KeyedFakeSource.singleton_instances() == {}
 
     def test_disk_cache_recycles_subscribed_expired_instance(self, monkeypatch):
         """DiskCache recycles on TTL expiry regardless of subscribers"""
         instance = KeyedFakeSource.get('a')
-        monkeypatch.setattr(time, 'monotonic', lambda: 100.)
-        instance._lastrun = 80.
+        monkeypatch.setattr(time, 'monotonic', lambda: 100.0)
+        instance._lastrun = 80.0
         topic = MagicMock()
         instance._subscribers.add(topic)
         KeyedFakeSource.gc_idle()
@@ -282,6 +290,7 @@ class TestGcIdle:
 
     def test_keyed_source_get_isolation(self):
         """each keyed subclass owns its own registry table"""
+
         class OtherKeyedSource(KeyedSource, DiskCache):
             TOPIC_NAME = 'Other'
             TTL = 8
@@ -293,7 +302,10 @@ class TestGcIdle:
         try:
             a = KeyedFakeSource.get('a')
             b = OtherKeyedSource.get('b')
-            assert KeyedFakeSource.singleton_instances() is not OtherKeyedSource.singleton_instances()
+            assert (
+                KeyedFakeSource.singleton_instances()
+                is not OtherKeyedSource.singleton_instances()
+            )
             assert KeyedFakeSource.singleton_instances() == {('a',): a}
             assert OtherKeyedSource.singleton_instances() == {('b',): b}
         finally:
@@ -309,6 +321,7 @@ class TestGcIdle:
 
     def test_keyed_source_get_none_on_keyerror(self):
         """get returns None when the constructor raises KeyError"""
+
         class BrokenKeyedSource(KeyedSource, DiskCache):
             TOPIC_NAME = 'Broken'
             TTL = 8

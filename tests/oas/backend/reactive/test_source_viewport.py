@@ -27,6 +27,7 @@ class FakeViewport(KeyedSource, NoCachePush):
     key = (config_name, view_name); (task, group, arg) -> (card, group,
     arg) with keys 'T1.a.b' style.
     """
+
     TOPIC_NAME = 'FakeView'
     VIEW = {'card1': {'value': 1}}
 
@@ -83,6 +84,7 @@ class OtherViewport(FakeViewport):
     A second view subclass with its own registry (per-class keyed
     registry) to verify sibling isolation and dispatch coverage.
     """
+
     TOPIC_NAME = 'OtherView'
 
 
@@ -155,7 +157,9 @@ class TestDispatch:
         await a.subscribe(topic_a)
         await b.subscribe(topic_b)
 
-        FakeViewport.dispatch('config_a', {'task': 'T1', 'group': 'g1', 'arg': 'a1', 'value': 5})
+        FakeViewport.dispatch(
+            'config_a', {'task': 'T1', 'group': 'g1', 'arg': 'a1', 'value': 5}
+        )
         await trio.testing.wait_all_tasks_blocked()
         assert len(topic_a.sent) == 1
         assert topic_b.sent == []
@@ -170,7 +174,9 @@ class TestDispatch:
         await a.subscribe(topic_a)
         await b.subscribe(topic_b)
 
-        FakeViewport.dispatch('config_a', {'task': 'T1', 'group': 'g1', 'arg': 'a1', 'value': 5})
+        FakeViewport.dispatch(
+            'config_a', {'task': 'T1', 'group': 'g1', 'arg': 'a1', 'value': 5}
+        )
         await trio.testing.wait_all_tasks_blocked()
         assert len(topic_a.sent) == 1
         assert len(topic_b.sent) == 1
@@ -206,7 +212,9 @@ class TestDispatch:
             n = 0
             while not stop.is_set():
                 n += 1
-                FakeViewport.dispatch('config_a', {'task': 'T1', 'group': 'g1', 'arg': 'a1', 'value': n})
+                FakeViewport.dispatch(
+                    'config_a', {'task': 'T1', 'group': 'g1', 'arg': 'a1', 'value': n}
+                )
 
         def registrar():
             n = 0
@@ -218,11 +226,14 @@ class TestDispatch:
                 except Exception as e:
                     errors.append(e)
 
-        threads = [threading.Thread(target=dispatcher, daemon=True),
-                   threading.Thread(target=registrar, daemon=True)]
+        threads = [
+            threading.Thread(target=dispatcher, daemon=True),
+            threading.Thread(target=registrar, daemon=True),
+        ]
         for t in threads:
             t.start()
         import time
+
         time.sleep(0.05)
         stop.set()
         for t in threads:

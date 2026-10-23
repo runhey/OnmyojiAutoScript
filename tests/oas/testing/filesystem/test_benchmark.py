@@ -12,6 +12,7 @@ Run with:  pytest tests/oas/testing/filesystem/test_benchmark.py -s
 No external project is imported. No performance assertions are made;
 numbers are printed for inspection.
 """
+
 import os
 import stat as statmod
 import timeit
@@ -26,12 +27,15 @@ from oas.testing.filesystem import FakeFilesystem as OasFFS  # dataclass version
 
 def _build_stat(st_mode, ino, dev, nlink, uid, gid, size, atime, mtime, ctime):
     """Same shape as oas/testing/filesystem/base.py::_build_stat."""
-    return os.stat_result((st_mode, ino, dev, nlink, uid, gid, size, atime, mtime, ctime))
+    return os.stat_result(
+        (st_mode, ino, dev, nlink, uid, gid, size, atime, mtime, ctime)
+    )
 
 
 # ---------------------------------------------------------------------------
 # same-shape records (fields/defaults/stat copied verbatim from base.py)
 # ---------------------------------------------------------------------------
+
 
 class MsgsFile(msgspec.Struct):
     path: str
@@ -48,8 +52,16 @@ class MsgsFile(msgspec.Struct):
 
     def stat(self):
         return _build_stat(
-            statmod.S_IFREG | self.mode, self.ino, self.dev, self.nlink,
-            self.uid, self.gid, len(self.content), self.atime, self.mtime, self.ctime,
+            statmod.S_IFREG | self.mode,
+            self.ino,
+            self.dev,
+            self.nlink,
+            self.uid,
+            self.gid,
+            len(self.content),
+            self.atime,
+            self.mtime,
+            self.ctime,
         )
 
 
@@ -69,14 +81,23 @@ class DataclassFile:
 
     def stat(self):
         return _build_stat(
-            statmod.S_IFREG | self.mode, self.ino, self.dev, self.nlink,
-            self.uid, self.gid, len(self.content), self.atime, self.mtime, self.ctime,
+            statmod.S_IFREG | self.mode,
+            self.ino,
+            self.dev,
+            self.nlink,
+            self.uid,
+            self.gid,
+            len(self.content),
+            self.atime,
+            self.mtime,
+            self.ctime,
         )
 
 
 # ---------------------------------------------------------------------------
 # micro: run() executes `total` operations on the record class `C`
 # ---------------------------------------------------------------------------
+
 
 def run_construct(C, total):
     for _ in range(total):
@@ -118,7 +139,7 @@ def test_micro_report():
         ('attr write', run_attr_write),
         ('stat()', run_stat),
     ]
-    header = f"{'operation':<12} {'msgspec':>9} {'dataclass':>10} {'dc/ms':>7}"
+    header = f'{"operation":<12} {"msgspec":>9} {"dataclass":>10} {"dc/ms":>7}'
     print()
     print('=== micro: record layer, ns/op (smaller is better) ===')
     print(header)
@@ -126,12 +147,13 @@ def test_micro_report():
         ms = _time(run, MsgsFile, total)
         dc = _time(run, DataclassFile, total)
         ratio = dc / ms * 100
-        print(f"{label:<12} {ms:>9.1f} {dc:>10.1f} {ratio:>6.1f}%")
+        print(f'{label:<12} {ms:>9.1f} {dc:>10.1f} {ratio:>6.1f}%')
 
 
 # ---------------------------------------------------------------------------
 # macro: single-sided absolute timing of the OAS fake filesystem
 # ---------------------------------------------------------------------------
+
 
 def _macro_mixed():
     """Mixed everyday use: build tree, touch files, stat, move, delete."""
@@ -205,9 +227,9 @@ def test_macro_report():
     ]
     print()
     print('=== macro: full fake-fs workloads on OAS (dataclass), ms ===')
-    print(f"{'workload':<18} {'best':>8} {'median':>8} {'runs':>5}")
+    print(f'{"workload":<18} {"best":>8} {"median":>8} {"runs":>5}')
     for label, fn, repeat in scenarios:
         times = sorted(timeit.repeat(fn, number=1, repeat=repeat))
         best = times[0] * 1000
         median = times[len(times) // 2] * 1000
-        print(f"{label:<18} {best:>8.2f} {median:>8.2f} {len(times):>5}")
+        print(f'{label:<18} {best:>8.2f} {median:>8.2f} {len(times):>5}')

@@ -7,6 +7,7 @@ This file shows how to:
 3. Add performance tests
 4. Test special edge cases
 """
+
 import os
 import time
 from concurrent.futures import ThreadPoolExecutor
@@ -36,7 +37,7 @@ def safe_remove_db(db_path, pool=None):
     time.sleep(0.05)  # Wait for file locks to release on Windows
     try:
         os.unlink(db_path)
-    except (FileNotFoundError, PermissionError, OSError):
+    except FileNotFoundError, PermissionError, OSError:
         # File doesn't exist or is locked (common on Windows), that's ok
         pass
 
@@ -44,6 +45,7 @@ def safe_remove_db(db_path, pool=None):
 # ============================================================================
 # Example 1: Test specific business scenario - User session management
 # ============================================================================
+
 
 class TestUserSessionManagement:
     """Test user session management scenario"""
@@ -65,7 +67,7 @@ class TestUserSessionManagement:
         pool = SqlitePool()
         with pool.cursor(db_path) as cursor:
             # Drop table if exists from previous failed test
-            cursor.execute("DROP TABLE IF EXISTS sessions")
+            cursor.execute('DROP TABLE IF EXISTS sessions')
             cursor.execute("""
                 CREATE TABLE sessions (
                     session_id TEXT PRIMARY KEY,
@@ -86,10 +88,13 @@ class TestUserSessionManagement:
 
         def create_session(user_id):
             with session_pool.cursor(session_db) as cursor:
-                cursor.execute("""
+                cursor.execute(
+                    """
                     INSERT INTO sessions (session_id, user_id, created_at, last_access)
                     VALUES (?, ?, ?, ?)
-                """, (f'session_{user_id}', user_id, time.time(), time.time()))
+                """,
+                    (f'session_{user_id}', user_id, time.time(), time.time()),
+                )
                 cursor.commit()
             return True
 
@@ -102,7 +107,7 @@ class TestUserSessionManagement:
 
         # Verify all sessions are created
         with session_pool.cursor(session_db) as cursor:
-            cursor.execute("SELECT COUNT(*) as cnt FROM sessions")
+            cursor.execute('SELECT COUNT(*) as cnt FROM sessions')
             assert cursor.fetchone()['cnt'] == 100
 
     def test_session_cleanup(self, session_pool, session_db):
@@ -112,26 +117,25 @@ class TestUserSessionManagement:
         with session_pool.cursor(session_db) as cursor:
             # New session
             cursor.execute(
-                "INSERT INTO sessions VALUES (?, ?, ?, ?)",
-                ('new_session', 1, now, now)
+                'INSERT INTO sessions VALUES (?, ?, ?, ?)', ('new_session', 1, now, now)
             )
             # Expired session (1 hour ago)
             cursor.execute(
-                "INSERT INTO sessions VALUES (?, ?, ?, ?)",
-                ('old_session', 2, now - 3600, now - 3600)
+                'INSERT INTO sessions VALUES (?, ?, ?, ?)',
+                ('old_session', 2, now - 3600, now - 3600),
             )
             cursor.commit()
 
         # Cleanup expired sessions (30 minutes)
         with session_pool.exclusive_transaction(session_db) as cursor:
             cursor.execute(
-                "DELETE FROM sessions WHERE ? - last_access > ?",
-                (now, 1800)  # 30 minutes = 1800 seconds
+                'DELETE FROM sessions WHERE ? - last_access > ?',
+                (now, 1800),  # 30 minutes = 1800 seconds
             )
 
         # Verify only new session remains
         with session_pool.cursor(session_db) as cursor:
-            cursor.execute("SELECT session_id FROM sessions")
+            cursor.execute('SELECT session_id FROM sessions')
             sessions = [row['session_id'] for row in cursor.fetchall()]
             assert sessions == ['new_session']
 
@@ -139,6 +143,7 @@ class TestUserSessionManagement:
 # ============================================================================
 # Example 2: Performance tests
 # ============================================================================
+
 
 class TestPerformance:
     """Performance test examples"""
@@ -154,15 +159,15 @@ class TestPerformance:
             # Warmup
             with pool.cursor(db_path) as cursor:
                 # Drop table if exists from previous failed test
-                cursor.execute("DROP TABLE IF EXISTS test")
-                cursor.execute("CREATE TABLE test (id INTEGER)")
+                cursor.execute('DROP TABLE IF EXISTS test')
+                cursor.execute('CREATE TABLE test (id INTEGER)')
                 cursor.commit()
 
             # Test connection reuse performance
             start = time.perf_counter()
             for _ in range(1000):
                 with pool.cursor(db_path) as cursor:
-                    cursor.execute("SELECT 1")
+                    cursor.execute('SELECT 1')
             reuse_time = time.perf_counter() - start
 
             # Clear pool
@@ -172,14 +177,14 @@ class TestPerformance:
             start = time.perf_counter()
             for _ in range(1000):
                 with pool.cursor(db_path) as cursor:
-                    cursor.execute("SELECT 1")
+                    cursor.execute('SELECT 1')
                 pool.release_all()  # Force new connection each time
             create_time = time.perf_counter() - start
 
             # Connection reuse should be significantly faster
-            print(f"\nConnection reuse: {reuse_time:.6f}s")
-            print(f"Create connection: {create_time:.6f}s")
-            print(f"Performance gain: {create_time / reuse_time:.1f}x")
+            print(f'\nConnection reuse: {reuse_time:.6f}s')
+            print(f'Create connection: {create_time:.6f}s')
+            print(f'Performance gain: {create_time / reuse_time:.1f}x')
 
             assert reuse_time < create_time
         finally:
@@ -195,32 +200,32 @@ class TestPerformance:
         try:
             with pool.cursor(db_path) as cursor:
                 # Drop table if exists from previous failed test
-                cursor.execute("DROP TABLE IF EXISTS items")
-                cursor.execute("CREATE TABLE items (id INTEGER, value TEXT)")
+                cursor.execute('DROP TABLE IF EXISTS items')
+                cursor.execute('CREATE TABLE items (id INTEGER, value TEXT)')
                 cursor.commit()
 
             # Test single insert
             start = time.perf_counter()
             with pool.exclusive_transaction(db_path) as cursor:
                 for i in range(1000):
-                    cursor.execute("INSERT INTO items VALUES (?, ?)", (i, f'value_{i}'))
+                    cursor.execute('INSERT INTO items VALUES (?, ?)', (i, f'value_{i}'))
             single_time = time.perf_counter() - start
 
             # Clear table
             with pool.cursor(db_path) as cursor:
-                cursor.execute("DELETE FROM items")
+                cursor.execute('DELETE FROM items')
                 cursor.commit()
 
             # Test batch insert
             start = time.perf_counter()
             with pool.exclusive_transaction(db_path) as cursor:
                 data = [(i, f'value_{i}') for i in range(1000)]
-                cursor.executemany("INSERT INTO items VALUES (?, ?)", data)
+                cursor.executemany('INSERT INTO items VALUES (?, ?)', data)
             batch_time = time.perf_counter() - start
 
-            print(f"\nSingle insert: {single_time:.6f}s")
-            print(f"Batch insert: {batch_time:.6f}s")
-            print(f"Performance gain: {single_time / batch_time:.3f}x")
+            print(f'\nSingle insert: {single_time:.6f}s')
+            print(f'Batch insert: {batch_time:.6f}s')
+            print(f'Performance gain: {single_time / batch_time:.3f}x')
         finally:
             safe_remove_db(db_path, pool)
 
@@ -228,6 +233,7 @@ class TestPerformance:
 # ============================================================================
 # Example 3: Test complex transaction scenarios
 # ============================================================================
+
 
 class TestComplexTransactions:
     """Test complex transaction scenarios"""
@@ -242,31 +248,33 @@ class TestComplexTransactions:
             # Initialize accounts
             with pool.cursor(db_path) as cursor:
                 # Drop table if exists from previous failed test
-                cursor.execute("DROP TABLE IF EXISTS accounts")
+                cursor.execute('DROP TABLE IF EXISTS accounts')
                 cursor.execute("""
                     CREATE TABLE accounts (
                         account_id INTEGER PRIMARY KEY,
                         balance REAL
                     )
                 """)
-                cursor.execute("INSERT INTO accounts VALUES (1, 1000.0)")
-                cursor.execute("INSERT INTO accounts VALUES (2, 500.0)")
+                cursor.execute('INSERT INTO accounts VALUES (1, 1000.0)')
+                cursor.execute('INSERT INTO accounts VALUES (2, 500.0)')
                 cursor.commit()
 
             # Transfer function
             def transfer(from_id, to_id, amount):
                 with pool.exclusive_transaction(db_path) as cursor:
                     # Check balance
-                    cursor.execute("SELECT balance FROM accounts WHERE account_id = ?", (from_id,))
+                    cursor.execute(
+                        'SELECT balance FROM accounts WHERE account_id = ?', (from_id,)
+                    )
                     from_balance = cursor.fetchone()['balance']
 
                     if from_balance < amount:
-                        raise ValueError("Insufficient balance")
+                        raise ValueError('Insufficient balance')
 
                     # Deduct
                     cursor.execute(
-                        "UPDATE accounts SET balance = balance - ? WHERE account_id = ?",
-                        (amount, from_id)
+                        'UPDATE accounts SET balance = balance - ? WHERE account_id = ?',
+                        (amount, from_id),
                     )
 
                     # Simulate processing delay
@@ -274,17 +282,14 @@ class TestComplexTransactions:
 
                     # Credit
                     cursor.execute(
-                        "UPDATE accounts SET balance = balance + ? WHERE account_id = ?",
-                        (amount, to_id)
+                        'UPDATE accounts SET balance = balance + ? WHERE account_id = ?',
+                        (amount, to_id),
                     )
 
             # Concurrent transfers
             with ThreadPoolExecutor(max_workers=5) as executor:
                 # Transfer from account 1 to account 2, 10 times, 100 each
-                futures = [
-                    executor.submit(transfer, 1, 2, 100.0)
-                    for _ in range(10)
-                ]
+                futures = [executor.submit(transfer, 1, 2, 100.0) for _ in range(10)]
 
                 # Wait for all transfers to complete
                 for f in futures:
@@ -292,9 +297,9 @@ class TestComplexTransactions:
 
             # Verify final balance
             with pool.cursor(db_path) as cursor:
-                cursor.execute("SELECT balance FROM accounts WHERE account_id = 1")
+                cursor.execute('SELECT balance FROM accounts WHERE account_id = 1')
                 balance1 = cursor.fetchone()['balance']
-                cursor.execute("SELECT balance FROM accounts WHERE account_id = 2")
+                cursor.execute('SELECT balance FROM accounts WHERE account_id = 2')
                 balance2 = cursor.fetchone()['balance']
 
             # Account 1 should decrease by 1000, account 2 should increase by 1000
@@ -311,6 +316,7 @@ class TestComplexTransactions:
 # Example 4: Test edge cases and error recovery
 # ============================================================================
 
+
 class TestEdgeCasesAndRecovery:
     """Test edge cases and error recovery"""
 
@@ -324,7 +330,7 @@ class TestEdgeCasesAndRecovery:
             # Create table (with unique constraint)
             with pool.cursor(db_path) as cursor:
                 # Drop table if exists from previous failed test
-                cursor.execute("DROP TABLE IF EXISTS users")
+                cursor.execute('DROP TABLE IF EXISTS users')
                 cursor.execute("""
                     CREATE TABLE users (
                         id INTEGER PRIMARY KEY,
@@ -336,16 +342,19 @@ class TestEdgeCasesAndRecovery:
 
             # Try to insert duplicate email (should rollback)
             import sqlite3
+
             try:
                 with pool.exclusive_transaction(db_path) as cursor:
                     cursor.execute("INSERT INTO users VALUES (2, 'new@example.com')")
-                    cursor.execute("INSERT INTO users VALUES (3, 'test@example.com')")  # Duplicate!
+                    cursor.execute(
+                        "INSERT INTO users VALUES (3, 'test@example.com')"
+                    )  # Duplicate!
             except sqlite3.IntegrityError:
                 pass
 
             # Verify partial data is not committed
             with pool.cursor(db_path) as cursor:
-                cursor.execute("SELECT COUNT(*) as cnt FROM users")
+                cursor.execute('SELECT COUNT(*) as cnt FROM users')
                 assert cursor.fetchone()['cnt'] == 1  # Only first record
         finally:
             safe_remove_db(db_path, pool)
@@ -360,8 +369,8 @@ class TestEdgeCasesAndRecovery:
             # Use database
             with pool.cursor(db_path) as cursor:
                 # Drop table if exists from previous failed test
-                cursor.execute("DROP TABLE IF EXISTS test")
-                cursor.execute("CREATE TABLE test (id INTEGER)")
+                cursor.execute('DROP TABLE IF EXISTS test')
+                cursor.execute('CREATE TABLE test (id INTEGER)')
                 cursor.commit()
 
             # Delete database file
@@ -371,7 +380,7 @@ class TestEdgeCasesAndRecovery:
 
             # Use again should create new database
             with pool.cursor(db_path) as cursor:
-                cursor.execute("CREATE TABLE test2 (id INTEGER)")
+                cursor.execute('CREATE TABLE test2 (id INTEGER)')
                 cursor.commit()
 
             assert os.path.exists(db_path)
@@ -382,6 +391,7 @@ class TestEdgeCasesAndRecovery:
 # ============================================================================
 # Example 5: Stress test
 # ============================================================================
+
 
 class TestStress:
     """Stress test"""
@@ -397,15 +407,17 @@ class TestStress:
             # Initialize
             with pool.cursor(db_path) as cursor:
                 # Drop table if exists from previous failed test
-                cursor.execute("DROP TABLE IF EXISTS counter")
-                cursor.execute("CREATE TABLE counter (id INTEGER PRIMARY KEY, value INTEGER)")
-                cursor.execute("INSERT INTO counter VALUES (1, 0)")
+                cursor.execute('DROP TABLE IF EXISTS counter')
+                cursor.execute(
+                    'CREATE TABLE counter (id INTEGER PRIMARY KEY, value INTEGER)'
+                )
+                cursor.execute('INSERT INTO counter VALUES (1, 0)')
                 cursor.commit()
 
             def increment_counter():
                 """Atomically increment counter"""
                 with pool.exclusive_transaction(db_path) as cursor:
-                    cursor.execute("UPDATE counter SET value = value + 1 WHERE id = 1")
+                    cursor.execute('UPDATE counter SET value = value + 1 WHERE id = 1')
 
             # 1000 concurrent increments
             with ThreadPoolExecutor(max_workers=25) as executor:
@@ -415,10 +427,9 @@ class TestStress:
 
             # Verify counter value
             with pool.cursor(db_path) as cursor:
-                cursor.execute("SELECT value FROM counter WHERE id = 1")
+                cursor.execute('SELECT value FROM counter WHERE id = 1')
                 final_value = cursor.fetchone()['value']
 
             assert final_value == 100
         finally:
             safe_remove_db(db_path, pool)
-

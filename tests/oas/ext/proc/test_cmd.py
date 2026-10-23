@@ -74,7 +74,9 @@ def cmd_cext(monkeypatch):
             every call raise, and inspect ``.calls`` to see how it was called.
     """
     recorder = CallRecorder(result=['/usr/bin/app'])
-    monkeypatch.setattr(cmd_module, 'cext', stub_cext('cmd_cext', proc_cmdline=recorder))
+    monkeypatch.setattr(
+        cmd_module, 'cext', stub_cext('cmd_cext', proc_cmdline=recorder)
+    )
     return recorder
 
 
@@ -222,7 +224,9 @@ class TestGetCmdlineBoundaryPids:
     def test_negative_pid_returns_empty(self, pid):
         assert get_cmdline(pid) == []
 
-    @pytest.mark.skipif(not psutil.WINDOWS, reason='pid 0 and 4 are Windows-only placeholders')
+    @pytest.mark.skipif(
+        not psutil.WINDOWS, reason='pid 0 and 4 are Windows-only placeholders'
+    )
     @pytest.mark.parametrize('pid', WINDOWS_RESERVED_PIDS)
     def test_windows_reserved_pid_returns_empty(self, pid):
         assert get_cmdline(pid) == []

@@ -3,6 +3,7 @@ Basic functionality tests for SqlitePool connection pool
 Coverage: connection creation, cursor operations, auto-create table, pool management,
           exclusive transactions, SqlitePool operations, error handling, edge cases
 """
+
 import os
 import sqlite3
 import time
@@ -46,19 +47,20 @@ class TestConnectionCreation:
 # Test SqlitePoolCursor basic functionality
 # ============================================================================
 
+
 class TestSqlitePoolCursor:
     """Test cursor basic functionality"""
 
     def test_cursor_execute(self, pool):
         """Test executing SQL"""
         with pool.cursor() as cursor:
-            cursor.execute("CREATE TABLE test (id INTEGER, name TEXT)")
+            cursor.execute('CREATE TABLE test (id INTEGER, name TEXT)')
             cursor.execute("INSERT INTO test VALUES (1, 'Alice')")
             cursor.commit()
 
         # Verify data
         with pool.cursor() as cursor:
-            cursor.execute("SELECT * FROM test")
+            cursor.execute('SELECT * FROM test')
             rows = cursor.fetchall()
             assert len(rows) == 1
             assert rows[0]['id'] == 1
@@ -67,7 +69,7 @@ class TestSqlitePoolCursor:
     def test_cursor_with_statement(self, pool):
         """Test cursor auto-closing with 'with' statement"""
         with pool.cursor() as cursor:
-            cursor.execute("CREATE TABLE test (id INTEGER)")
+            cursor.execute('CREATE TABLE test (id INTEGER)')
             cursor.commit()
 
         # Cursor should be closed, connection should be returned to pool
@@ -76,18 +78,19 @@ class TestSqlitePoolCursor:
     def test_cursor_commit_method(self, pool):
         """Test cursor's commit method"""
         with pool.cursor() as cursor:
-            cursor.execute("CREATE TABLE test (id INTEGER)")
-            cursor.execute("INSERT INTO test VALUES (1)")
+            cursor.execute('CREATE TABLE test (id INTEGER)')
+            cursor.execute('INSERT INTO test VALUES (1)')
             cursor.commit()
 
         with pool.cursor() as cursor:
-            cursor.execute("SELECT COUNT(*) as cnt FROM test")
+            cursor.execute('SELECT COUNT(*) as cnt FROM test')
             assert cursor.fetchone()['cnt'] == 1
 
 
 # ============================================================================
 # Test auto-create table functionality
 # ============================================================================
+
 
 class TestAutoCreateTable:
     """Test auto-create table"""
@@ -96,60 +99,62 @@ class TestAutoCreateTable:
         """Test creating table with TABLE_NAME placeholder"""
         with pool.cursor() as cursor:
             cursor.TABLE_NAME = 'users'
-            cursor.CREATE_TABLE = "CREATE TABLE {TABLE_NAME} (id INTEGER, name TEXT)"
+            cursor.CREATE_TABLE = 'CREATE TABLE {TABLE_NAME} (id INTEGER, name TEXT)'
             cursor.execute("INSERT INTO users VALUES (1, 'Bob')")
             cursor.commit()
 
         with pool.cursor() as cursor:
-            cursor.execute("SELECT * FROM users")
+            cursor.execute('SELECT * FROM users')
             assert len(cursor.fetchall()) == 1
 
     def test_create_table_without_placeholder(self, pool):
         """Test creating table without placeholder"""
         with pool.cursor() as cursor:
-            cursor.CREATE_TABLE = "CREATE TABLE products (id INTEGER, price REAL)"
-            cursor.execute("INSERT INTO products VALUES (1, 9.99)")
+            cursor.CREATE_TABLE = 'CREATE TABLE products (id INTEGER, price REAL)'
+            cursor.execute('INSERT INTO products VALUES (1, 9.99)')
             cursor.commit()
 
         with pool.cursor() as cursor:
-            cursor.execute("SELECT * FROM products")
+            cursor.execute('SELECT * FROM products')
             assert len(cursor.fetchall()) == 1
 
     def test_create_table_already_exists(self, pool):
         """Test no error when table already exists"""
         # First creation
         with pool.cursor() as cursor:
-            cursor.CREATE_TABLE = "CREATE TABLE test (id INTEGER)"
-            cursor.execute("INSERT INTO test VALUES (1)")
+            cursor.CREATE_TABLE = 'CREATE TABLE test (id INTEGER)'
+            cursor.execute('INSERT INTO test VALUES (1)')
             cursor.commit()
 
         # Second attempt should not error
         with pool.cursor() as cursor:
-            cursor.CREATE_TABLE = "CREATE TABLE test (id INTEGER)"
-            cursor.execute("INSERT INTO test VALUES (2)")
+            cursor.CREATE_TABLE = 'CREATE TABLE test (id INTEGER)'
+            cursor.execute('INSERT INTO test VALUES (2)')
             cursor.commit()
 
         # Verify both records exist
         with pool.cursor() as cursor:
-            cursor.execute("SELECT COUNT(*) as cnt FROM test")
+            cursor.execute('SELECT COUNT(*) as cnt FROM test')
             assert cursor.fetchone()['cnt'] == 2
 
     def test_executemany_auto_create_table(self, pool):
         """Test executemany can also auto-create table"""
         with pool.cursor() as cursor:
-            cursor.CREATE_TABLE = "CREATE TABLE items (id INTEGER, value TEXT)"
-            cursor.executemany("INSERT INTO items VALUES (?, ?)",
-                               [(1, 'a'), (2, 'b'), (3, 'c')])
+            cursor.CREATE_TABLE = 'CREATE TABLE items (id INTEGER, value TEXT)'
+            cursor.executemany(
+                'INSERT INTO items VALUES (?, ?)', [(1, 'a'), (2, 'b'), (3, 'c')]
+            )
             cursor.commit()
 
         with pool.cursor() as cursor:
-            cursor.execute("SELECT COUNT(*) as cnt FROM items")
+            cursor.execute('SELECT COUNT(*) as cnt FROM items')
             assert cursor.fetchone()['cnt'] == 3
 
 
 # ============================================================================
 # Test connection pool management
 # ============================================================================
+
 
 class TestConnectionPoolManagement:
     """Test connection pool management"""
@@ -158,13 +163,13 @@ class TestConnectionPoolManagement:
         """Test connection reuse"""
         # First use
         with pool.cursor() as cursor:
-            cursor.execute("CREATE TABLE test (id INTEGER)")
+            cursor.execute('CREATE TABLE test (id INTEGER)')
             cursor.commit()
             conn1 = cursor.connection
 
         # Second use should reuse same connection
         with pool.cursor() as cursor:
-            cursor.execute("SELECT * FROM test")
+            cursor.execute('SELECT * FROM test')
             conn2 = cursor.connection
 
         assert conn1 is conn2
@@ -177,7 +182,7 @@ class TestConnectionPoolManagement:
         # Occupy all connections
         for _ in range(2):
             cursor = pool.cursor()
-            cursor.execute("SELECT 1")
+            cursor.execute('SELECT 1')
             cursors.append(cursor)
 
         assert len(pool.all_workers) == 2
@@ -193,7 +198,7 @@ class TestConnectionPoolManagement:
         before_time = time.time()
 
         with pool.cursor() as cursor:
-            cursor.execute("SELECT 1")
+            cursor.execute('SELECT 1')
             conn = cursor.connection
 
         after_time = time.time()
@@ -207,38 +212,39 @@ class TestConnectionPoolManagement:
 # Test ExclusiveTransaction
 # ============================================================================
 
+
 class TestExclusiveTransaction:
     """Test exclusive transaction"""
 
     def test_exclusive_transaction_commit(self, pool):
         """Test exclusive transaction successful commit"""
         with pool.exclusive_transaction() as cursor:
-            cursor.execute("CREATE TABLE test (id INTEGER)")
-            cursor.execute("INSERT INTO test VALUES (1)")
+            cursor.execute('CREATE TABLE test (id INTEGER)')
+            cursor.execute('INSERT INTO test VALUES (1)')
 
         # Verify data is committed
         with pool.cursor() as cursor:
-            cursor.execute("SELECT * FROM test")
+            cursor.execute('SELECT * FROM test')
             assert len(cursor.fetchall()) == 1
 
     def test_exclusive_transaction_rollback(self, pool):
         """Test exclusive transaction rollback on exception"""
         # First create table
         with pool.cursor() as cursor:
-            cursor.execute("CREATE TABLE test (id INTEGER)")
+            cursor.execute('CREATE TABLE test (id INTEGER)')
             cursor.commit()
 
         # Exception in transaction
         try:
             with pool.exclusive_transaction() as cursor:
-                cursor.execute("INSERT INTO test VALUES (1)")
-                raise ValueError("Test error")
+                cursor.execute('INSERT INTO test VALUES (1)')
+                raise ValueError('Test error')
         except ValueError:
             pass
 
         # Verify data is not committed
         with pool.cursor() as cursor:
-            cursor.execute("SELECT COUNT(*) as cnt FROM test")
+            cursor.execute('SELECT COUNT(*) as cnt FROM test')
             assert cursor.fetchone()['cnt'] == 0
 
     def test_exclusive_transaction_is_exclusive(self, pool):
@@ -247,7 +253,7 @@ class TestExclusiveTransaction:
 
         # Create table
         with pool.cursor() as cursor:
-            cursor.execute("CREATE TABLE test (id INTEGER)")
+            cursor.execute('CREATE TABLE test (id INTEGER)')
             cursor.commit()
 
         results = []
@@ -258,7 +264,7 @@ class TestExclusiveTransaction:
             barrier.wait()
             start = time.time()
             with pool.exclusive_transaction() as cursor:
-                cursor.execute("INSERT INTO test VALUES (1)")
+                cursor.execute('INSERT INTO test VALUES (1)')
                 time.sleep(0.2)  # Hold lock for some time
             elapsed = time.time() - start
             results.append(('exclusive', elapsed))
@@ -267,9 +273,11 @@ class TestExclusiveTransaction:
             """Write using normal cursor"""
             barrier.wait()
             start = time.time()
-            time.sleep(0.05)  # Slight delay to let exclusive transaction acquire lock first
+            time.sleep(
+                0.05
+            )  # Slight delay to let exclusive transaction acquire lock first
             with pool.cursor() as cursor:
-                cursor.execute("INSERT INTO test VALUES (2)")
+                cursor.execute('INSERT INTO test VALUES (2)')
                 cursor.commit()
             elapsed = time.time() - start
             results.append(('normal', elapsed))
@@ -284,7 +292,7 @@ class TestExclusiveTransaction:
 
         # Verify both records are written
         with pool.cursor() as cursor:
-            cursor.execute("SELECT COUNT(*) as cnt FROM test")
+            cursor.execute('SELECT COUNT(*) as cnt FROM test')
             assert cursor.fetchone()['cnt'] == 2
 
         # Normal write should wait for exclusive transaction to complete
@@ -295,6 +303,7 @@ class TestExclusiveTransaction:
 # ============================================================================
 # Test SqlitePool
 # ============================================================================
+
 
 class TestSqlitePool:
     """Test SqlitePool"""
@@ -314,23 +323,23 @@ class TestSqlitePool:
     def test_cursor_method(self, sqlite_pool, temp_db):
         """Test cursor method"""
         with sqlite_pool.cursor(temp_db) as cursor:
-            cursor.execute("CREATE TABLE test (id INTEGER)")
+            cursor.execute('CREATE TABLE test (id INTEGER)')
             cursor.commit()
 
         with sqlite_pool.cursor(temp_db) as cursor:
-            cursor.execute("SELECT * FROM test")
+            cursor.execute('SELECT * FROM test')
             cursor.fetchall()
 
     def test_exclusive_transaction_method(self, sqlite_pool, temp_db):
         """Test exclusive_transaction method"""
         with sqlite_pool.exclusive_transaction(temp_db) as cursor:
             # Drop table if exists from previous failed test
-            cursor.execute("DROP TABLE IF EXISTS test")
-            cursor.execute("CREATE TABLE test (id INTEGER)")
-            cursor.execute("INSERT INTO test VALUES (1)")
+            cursor.execute('DROP TABLE IF EXISTS test')
+            cursor.execute('CREATE TABLE test (id INTEGER)')
+            cursor.execute('INSERT INTO test VALUES (1)')
 
         with sqlite_pool.cursor(temp_db) as cursor:
-            cursor.execute("SELECT COUNT(*) as cnt FROM test")
+            cursor.execute('SELECT COUNT(*) as cnt FROM test')
             assert cursor.fetchone()['cnt'] == 1
 
     def test_multiple_databases(self, sqlite_pool):
@@ -342,25 +351,25 @@ class TestSqlitePool:
             # Access two different databases
             with sqlite_pool.cursor(db1) as cursor:
                 # Drop table if exists from previous failed test
-                cursor.execute("DROP TABLE IF EXISTS test")
-                cursor.execute("CREATE TABLE test (id INTEGER)")
-                cursor.execute("INSERT INTO test VALUES (1)")
+                cursor.execute('DROP TABLE IF EXISTS test')
+                cursor.execute('CREATE TABLE test (id INTEGER)')
+                cursor.execute('INSERT INTO test VALUES (1)')
                 cursor.commit()
 
             with sqlite_pool.cursor(db2) as cursor:
                 # Drop table if exists from previous failed test
-                cursor.execute("DROP TABLE IF EXISTS test")
-                cursor.execute("CREATE TABLE test (id INTEGER)")
-                cursor.execute("INSERT INTO test VALUES (2)")
+                cursor.execute('DROP TABLE IF EXISTS test')
+                cursor.execute('CREATE TABLE test (id INTEGER)')
+                cursor.execute('INSERT INTO test VALUES (2)')
                 cursor.commit()
 
             # Verify two databases are independent
             with sqlite_pool.cursor(db1) as cursor:
-                cursor.execute("SELECT id FROM test")
+                cursor.execute('SELECT id FROM test')
                 assert cursor.fetchone()['id'] == 1
 
             with sqlite_pool.cursor(db2) as cursor:
-                cursor.execute("SELECT id FROM test")
+                cursor.execute('SELECT id FROM test')
                 assert cursor.fetchone()['id'] == 2
         finally:
             # Cleanup - wait for Windows file locks
@@ -369,7 +378,7 @@ class TestSqlitePool:
             for db_path in [db1, db2]:
                 try:
                     os.unlink(db_path)
-                except (FileNotFoundError, PermissionError, OSError):
+                except FileNotFoundError, PermissionError, OSError:
                     pass
 
 
@@ -377,16 +386,17 @@ class TestSqlitePool:
 # Test error handling
 # ============================================================================
 
+
 class TestErrorHandling:
     """Test error handling"""
 
     def test_uncommitted_transaction_warning(self, pool, caplog):
         """Test warning for uncommitted transaction"""
         with pool.cursor() as cursor:
-            cursor.execute("DROP TABLE IF EXISTS test")
-            cursor.execute("CREATE TABLE test (id INTEGER)")
-            cursor.execute("BEGIN")
-            cursor.execute("INSERT INTO test VALUES (1)")
+            cursor.execute('DROP TABLE IF EXISTS test')
+            cursor.execute('CREATE TABLE test (id INTEGER)')
+            cursor.execute('BEGIN')
+            cursor.execute('INSERT INTO test VALUES (1)')
             # Don't commit, just close
 
         # Should have error log (requires actual logging system)
@@ -396,12 +406,13 @@ class TestErrorHandling:
         """Test SQL error is properly propagated"""
         with pytest.raises(sqlite3.OperationalError):
             with pool.cursor() as cursor:
-                cursor.execute("SELECT * FROM non_existent_table")
+                cursor.execute('SELECT * FROM non_existent_table')
 
 
 # ============================================================================
 # Test global singleton
 # ============================================================================
+
 
 class TestGlobalSingleton:
     """Test global SQLITE_POOL"""
@@ -418,13 +429,13 @@ class TestGlobalSingleton:
         try:
             with SQLITE_POOL.cursor(db_path) as cursor:
                 # Drop table if exists from previous failed test
-                cursor.execute("DROP TABLE IF EXISTS test")
-                cursor.execute("CREATE TABLE test (id INTEGER)")
-                cursor.execute("INSERT INTO test VALUES (1)")
+                cursor.execute('DROP TABLE IF EXISTS test')
+                cursor.execute('CREATE TABLE test (id INTEGER)')
+                cursor.execute('INSERT INTO test VALUES (1)')
                 cursor.commit()
 
             with SQLITE_POOL.cursor(db_path) as cursor:
-                cursor.execute("SELECT * FROM test")
+                cursor.execute('SELECT * FROM test')
                 rows = cursor.fetchall()
                 assert len(rows) == 1
         finally:
@@ -432,13 +443,14 @@ class TestGlobalSingleton:
             time.sleep(0.05)
             try:
                 os.unlink(db_path)
-            except (FileNotFoundError, PermissionError, OSError):
+            except FileNotFoundError, PermissionError, OSError:
                 pass
 
 
 # ============================================================================
 # Test edge cases
 # ============================================================================
+
 
 class TestEdgeCases:
     """Test edge cases"""
@@ -454,48 +466,49 @@ class TestEdgeCases:
     def test_multiple_commits(self, pool):
         """Test multiple commits"""
         with pool.cursor() as cursor:
-            cursor.execute("CREATE TABLE test (id INTEGER)")
+            cursor.execute('CREATE TABLE test (id INTEGER)')
             cursor.commit()
-            cursor.execute("INSERT INTO test VALUES (1)")
+            cursor.execute('INSERT INTO test VALUES (1)')
             cursor.commit()
-            cursor.execute("INSERT INTO test VALUES (2)")
+            cursor.execute('INSERT INTO test VALUES (2)')
             cursor.commit()
 
         with pool.cursor() as cursor:
-            cursor.execute("SELECT COUNT(*) as cnt FROM test")
+            cursor.execute('SELECT COUNT(*) as cnt FROM test')
             assert cursor.fetchone()['cnt'] == 2
 
     def test_nested_cursors(self, pool):
         """Test nested cursors (not recommended but should work)"""
         with pool.cursor() as cursor1:
-            cursor1.execute("CREATE TABLE test (id INTEGER)")
+            cursor1.execute('CREATE TABLE test (id INTEGER)')
             cursor1.commit()
 
             with pool.cursor() as cursor2:
-                cursor2.execute("INSERT INTO test VALUES (1)")
+                cursor2.execute('INSERT INTO test VALUES (1)')
                 cursor2.commit()
 
         with pool.cursor() as cursor:
-            cursor.execute("SELECT COUNT(*) as cnt FROM test")
+            cursor.execute('SELECT COUNT(*) as cnt FROM test')
             assert cursor.fetchone()['cnt'] == 1
 
     def test_very_long_query(self, pool):
         """Test long-running query"""
         with pool.cursor() as cursor:
-            cursor.execute("CREATE TABLE test (id INTEGER)")
+            cursor.execute('CREATE TABLE test (id INTEGER)')
             # Insert large amount of data
             values = [(i,) for i in range(1000)]
-            cursor.executemany("INSERT INTO test VALUES (?)", values)
+            cursor.executemany('INSERT INTO test VALUES (?)', values)
             cursor.commit()
 
         with pool.cursor() as cursor:
-            cursor.execute("SELECT COUNT(*) as cnt FROM test")
+            cursor.execute('SELECT COUNT(*) as cnt FROM test')
             assert cursor.fetchone()['cnt'] == 1000
 
 
 # ============================================================================
 # Integration test
 # ============================================================================
+
 
 class TestIntegration:
     """Integration test"""
@@ -507,7 +520,7 @@ class TestIntegration:
         try:
             # 0. Drop table if exists from previous failed test
             with sqlite_pool.cursor(db_path) as cursor:
-                cursor.execute("DROP TABLE IF EXISTS users")
+                cursor.execute('DROP TABLE IF EXISTS users')
                 cursor.commit()
 
             # 1. Create table
@@ -519,38 +532,42 @@ class TestIntegration:
                         email TEXT UNIQUE
                     )
                 """
-                cursor.execute("INSERT INTO users (name, email) VALUES (?, ?)",
-                               ('Alice', 'alice@example.com'))
+                cursor.execute(
+                    'INSERT INTO users (name, email) VALUES (?, ?)',
+                    ('Alice', 'alice@example.com'),
+                )
                 cursor.commit()
 
             # 2. Concurrent insert data
             def insert_user(user_id, name):
                 with sqlite_pool.cursor(db_path) as cursor:
-                    cursor.execute("INSERT INTO users (id, name, email) VALUES (?, ?, ?)",
-                                   (user_id, name, f'{name.lower()}@example.com'))
+                    cursor.execute(
+                        'INSERT INTO users (id, name, email) VALUES (?, ?, ?)',
+                        (user_id, name, f'{name.lower()}@example.com'),
+                    )
                     cursor.commit()
 
             with ThreadPoolExecutor(max_workers=5) as executor:
                 futures = [
-                    executor.submit(insert_user, i, f'User{i}')
-                    for i in range(2, 12)
+                    executor.submit(insert_user, i, f'User{i}') for i in range(2, 12)
                 ]
                 for f in as_completed(futures):
                     f.result()
 
             # 3. Query data
             with sqlite_pool.cursor(db_path) as cursor:
-                cursor.execute("SELECT COUNT(*) as cnt FROM users")
+                cursor.execute('SELECT COUNT(*) as cnt FROM users')
                 assert cursor.fetchone()['cnt'] == 11
 
             # 4. Use exclusive transaction to update
             with sqlite_pool.exclusive_transaction(db_path) as cursor:
-                cursor.execute("UPDATE users SET name = ? WHERE id = ?",
-                               ('Alice Updated', 1))
+                cursor.execute(
+                    'UPDATE users SET name = ? WHERE id = ?', ('Alice Updated', 1)
+                )
 
             # 5. Verify update
             with sqlite_pool.cursor(db_path) as cursor:
-                cursor.execute("SELECT name FROM users WHERE id = 1")
+                cursor.execute('SELECT name FROM users WHERE id = 1')
                 assert cursor.fetchone()['name'] == 'Alice Updated'
 
             # 6. Cleanup
@@ -561,6 +578,5 @@ class TestIntegration:
             time.sleep(0.05)
             try:
                 os.unlink(db_path)
-            except (FileNotFoundError, PermissionError, OSError):
+            except FileNotFoundError, PermissionError, OSError:
                 pass
-

@@ -5,6 +5,7 @@ Alasio has no tests/ext/test_env.py, so this module is written from scratch.
 Scope is limited to the deterministic surface: OS flags, OAS_ROOT and
 set_project_root. Nothing here measures host state beyond os/sys.
 """
+
 import os
 import sys
 
@@ -89,7 +90,10 @@ class TestOasRoot:
 
     def test_joinpath_takes_one_segment(self):
         # PathStr.joinpath is not varargs like pathlib.Path.joinpath
-        assert str(OAS_ROOT.joinpath('oas')) == os.path.normpath(str(OAS_ROOT)).replace('\\', '/') + '/oas'
+        assert (
+            str(OAS_ROOT.joinpath('oas'))
+            == os.path.normpath(str(OAS_ROOT)).replace('\\', '/') + '/oas'
+        )
 
 
 class TestSetProjectRoot:
@@ -104,17 +108,23 @@ class TestSetProjectRoot:
 
     def test_set_plain_path(self, tmp_path):
         set_project_root(str(tmp_path))
-        assert os.path.normpath(str(env.PROJECT_ROOT)) == os.path.normpath(str(tmp_path))
+        assert os.path.normpath(str(env.PROJECT_ROOT)) == os.path.normpath(
+            str(tmp_path)
+        )
 
     def test_set_with_up(self, tmp_path):
         nested = tmp_path / 'a' / 'b' / 'c'
         nested.mkdir(parents=True)
         set_project_root(str(nested), up=2)
-        assert os.path.normpath(str(env.PROJECT_ROOT)) == os.path.normpath(str(tmp_path / 'a'))
+        assert os.path.normpath(str(env.PROJECT_ROOT)) == os.path.normpath(
+            str(tmp_path / 'a')
+        )
 
     def test_up_zero_is_same_as_omitting_up(self, tmp_path):
         set_project_root(str(tmp_path), up=0)
-        assert os.path.normpath(str(env.PROJECT_ROOT)) == os.path.normpath(str(tmp_path))
+        assert os.path.normpath(str(env.PROJECT_ROOT)) == os.path.normpath(
+            str(tmp_path)
+        )
 
     def test_set_returns_none(self, tmp_path):
         assert set_project_root(str(tmp_path)) is None

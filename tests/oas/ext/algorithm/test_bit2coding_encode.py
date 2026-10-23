@@ -12,7 +12,11 @@ elsewhere; this file verifies the wrappers behave correctly end-to-end.
 
 import pytest
 
-from oas.ext.algorithm.bit2coding import decode_bit2, encode_bit2, encode_bit2_stream_iter
+from oas.ext.algorithm.bit2coding import (
+    decode_bit2,
+    encode_bit2,
+    encode_bit2_stream_iter,
+)
 
 # ==============================================================================
 # encode_bit2 — return type and basic structure
@@ -24,7 +28,7 @@ class TestEncodeBit2:
 
     def test_empty_encodes_count_zero(self):
         """Empty input produces the vint count prefix alone (count=0)."""
-        assert encode_bit2([]) == b"\x00"
+        assert encode_bit2([]) == b'\x00'
 
     def test_returns_bytes(self):
         """Result is always bytes, not list[int] or generator."""
@@ -59,12 +63,12 @@ class TestDecodeBit2:
 
     def test_empty_input_raises(self):
         """Empty data is not a valid encoding, the vint count prefix is missing."""
-        with pytest.raises(ValueError, match="Data truncated"):
-            decode_bit2(b"")
+        with pytest.raises(ValueError, match='Data truncated'):
+            decode_bit2(b'')
 
     def test_decode_empty_list_encoding(self):
         """b'\\x00' encodes an empty list and decodes to it consuming 1 byte."""
-        data, read = decode_bit2(b"\x00")
+        data, read = decode_bit2(b'\x00')
         assert data == []
         assert read == 1
 
@@ -93,23 +97,23 @@ class TestDecodeBit2:
     def test_read_bytes_with_extra_trailing_data(self):
         """When buffer has extra bytes after the encoded payload, read count equals payload length."""
         encoded = encode_bit2([0, 1, 2, 3])
-        padded = encoded + b"\xff\xff\xff"
+        padded = encoded + b'\xff\xff\xff'
         _, read = decode_bit2(padded)
         assert read == len(encoded)
 
     def test_truncated_data_raises(self):
         """Not enough bytes for the count in the prefix raises ValueError."""
-        with pytest.raises(ValueError, match="Data truncated"):
-            decode_bit2(b"\x03")
+        with pytest.raises(ValueError, match='Data truncated'):
+            decode_bit2(b'\x03')
 
     def test_truncated_vint_prefix_raises(self):
         """A truncated vint count prefix surfaces as a decode error."""
-        with pytest.raises(ValueError, match="Data truncated|Invalid opcode"):
-            decode_bit2(b"\x80")
+        with pytest.raises(ValueError, match='Data truncated|Invalid opcode'):
+            decode_bit2(b'\x80')
 
     def test_invalid_opcode_raises(self):
         """Byte with value 4-15 (invalid) raises ValueError."""
-        with pytest.raises(ValueError, match="Invalid opcode"):
+        with pytest.raises(ValueError, match='Invalid opcode'):
             decode_bit2(bytes([1, 5]))
 
     def test_stream_exceeding_declared_count_raises(self):
@@ -120,8 +124,8 @@ class TestDecodeBit2:
         stream does not match the count prefix (truncated or corrupted input).
         """
         # stream encodes a run of 5 zeros, prefix declares only 3
-        with pytest.raises(ValueError, match="Value count mismatch"):
-            decode_bit2(b"\x03\x82")
+        with pytest.raises(ValueError, match='Value count mismatch'):
+            decode_bit2(b'\x03\x82')
 
     def test_copy_crossing_declared_count_raises(self):
         """A copy opcode crossing the declared count raises ValueError.
@@ -131,8 +135,8 @@ class TestDecodeBit2:
         values than the prefix declares (corrupted or truncated input).
         """
         # count=2, literal [1], then copy offset=1 length=4 -> 5 values total
-        with pytest.raises(ValueError, match="Value count mismatch"):
-            decode_bit2(b"\x02\x01\x43\x00")
+        with pytest.raises(ValueError, match='Value count mismatch'):
+            decode_bit2(b'\x02\x01\x43\x00')
 
     def test_pack_padding_slots_do_not_add_values(self):
         """Corrupting the padding slots of a pack byte never changes the count.
@@ -160,7 +164,7 @@ class TestDecodeBit2:
         stream = bytes(encode_bit2_stream_iter([(0, items)]))
         # declare 20 items instead of 18
         corrupted = bytes([len(items)]) + bytes([29 + 20]) + stream[1:]
-        with pytest.raises(ValueError, match="Value count mismatch"):
+        with pytest.raises(ValueError, match='Value count mismatch'):
             decode_bit2(corrupted)
 
 
@@ -172,21 +176,24 @@ class TestDecodeBit2:
 class TestSelfDescribing:
     """The vint count prefix makes the payload decodable without external input."""
 
-    @pytest.mark.parametrize("count", [1, 2, 3, 63, 127])
+    @pytest.mark.parametrize('count', [1, 2, 3, 63, 127])
     def test_count_prefix_single_byte(self, count):
         """Counts below 128 encode to a single vint byte equal to the count."""
         encoded = encode_bit2([0] * count)
         assert encoded[0] == count
 
-    @pytest.mark.parametrize("count, prefix", [
-        (128, b"\x80\x00"),
-        (200, b"\x80\x48"),
-        (300, b"\x81\x2c"),
-    ])
+    @pytest.mark.parametrize(
+        'count, prefix',
+        [
+            (128, b'\x80\x00'),
+            (200, b'\x80\x48'),
+            (300, b'\x81\x2c'),
+        ],
+    )
     def test_count_prefix_multi_byte(self, count, prefix):
         """Counts >= 128 encode to a multi-byte vint prefix."""
         encoded = encode_bit2([0] * count)
-        assert encoded[:len(prefix)] == prefix
+        assert encoded[: len(prefix)] == prefix
 
     def test_concatenated_payloads_decode_sequentially(self):
         """Self-describing payloads can be concatenated and decoded in order."""
@@ -200,7 +207,7 @@ class TestSelfDescribing:
         values2, read2 = decode_bit2(data[read1:])
         assert values2 == [2] * 20
         assert read2 == len(payload2)
-        values3, read3 = decode_bit2(data[read1 + read2:])
+        values3, read3 = decode_bit2(data[read1 + read2 :])
         assert values3 == []
         assert read3 == len(payload3)
 
@@ -251,7 +258,7 @@ class TestRoundtrip:
         [3, 2, 1, 0, 3, 2, 1, 0],
     ]
 
-    @pytest.mark.parametrize("data", ROUNDTRIP_CASES)
+    @pytest.mark.parametrize('data', ROUNDTRIP_CASES)
     def test_roundtrip(self, data):
         """``decode_bit2(encode_bit2(data))[0] == data``."""
         encoded = encode_bit2(data)
@@ -266,7 +273,7 @@ class TestRoundtrip:
             if i % 7 == 0:
                 data.extend([i % 4] * 5)  # run
             else:
-                data.append(i % 4)         # literal
+                data.append(i % 4)  # literal
         encoded = encode_bit2(data)
         decoded, read = decode_bit2(encoded)
         assert decoded == data

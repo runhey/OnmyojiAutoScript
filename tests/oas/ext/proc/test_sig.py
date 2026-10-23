@@ -176,11 +176,11 @@ class TestTerminateFailurePaths:
         assert isinstance(err, Exception)
 
     @pytest.mark.parametrize('func, _backend', SIG_FUNCTIONS)
-    def test_killing_an_already_exited_process_fails(self, child_factory, func, _backend):
+    def test_killing_an_already_exited_process_fails(
+        self, child_factory, func, _backend
+    ):
         """A child that exited on its own is not killable."""
-        child = child_factory(
-            [sys.executable, '-c', 'pass']
-        )
+        child = child_factory([sys.executable, '-c', 'pass'])
         child.wait(timeout=15)
         ok, err = func(child.pid)
         assert ok is False

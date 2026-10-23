@@ -1,6 +1,7 @@
 """
 Shared test configuration and fixtures for SQLite pool tests
 """
+
 import os
 import time
 
@@ -37,6 +38,7 @@ def cleanup_test_dir():
 # Shared Fixtures
 # ============================================================================
 
+
 @pytest.fixture(scope='session', autouse=True)
 def test_environment():
     """Setup and teardown test environment"""
@@ -54,7 +56,7 @@ def temp_db():
     time.sleep(0.05)
     try:
         os.unlink(db_path)
-    except (FileNotFoundError, PermissionError, OSError):
+    except FileNotFoundError, PermissionError, OSError:
         # On Windows, file may still be locked, it's ok
         pass
 
@@ -69,11 +71,11 @@ def temp_db_in_subdir():
     time.sleep(0.05)
     try:
         os.unlink(db_path)
-    except (FileNotFoundError, PermissionError, OSError):
+    except FileNotFoundError, PermissionError, OSError:
         pass
     try:
         os.rmdir(subdir)
-    except (FileNotFoundError, OSError):
+    except FileNotFoundError, OSError:
         pass
 
 
@@ -91,4 +93,3 @@ def sqlite_pool():
     pool = SqlitePool(pool_size=4)
     yield pool
     pool.release_all()
-

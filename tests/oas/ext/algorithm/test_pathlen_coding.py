@@ -1,11 +1,16 @@
 """
 Tests for pathlen_coding: encode_prefix_comb / decode_prefix_comb.
 """
+
 import pytest
 
 from oas.ext.algorithm.pathlen_coding import (
-    decode_prefix_comb, decode_suffix_comb, encode_prefix_comb, encode_suffix_comb, prefix_comb_value_check,
-    suffix_comb_value_check
+    decode_prefix_comb,
+    decode_suffix_comb,
+    encode_prefix_comb,
+    encode_suffix_comb,
+    prefix_comb_value_check,
+    suffix_comb_value_check,
 )
 from oas.ext.algorithm.vlenint import encode_vlenint
 
@@ -72,15 +77,18 @@ class TestEncodePrefixCombValueCheck:
 class TestEncodePrefixCombRoundtrip:
     """Roundtrip encode/decode tests."""
 
-    @pytest.mark.parametrize('pr, pl', [
-        ([0], [0]),
-        ([0, 0, 0], [0, 0, 0]),
-        ([0, 5, 10], [0, 1, 2]),
-        ([31], [7]),
-        ([32639], [65535]),
-        ([0, 1, 2, 3, 4, 5], [0, 0, 0, 0, 0, 0]),
-        ([0, 0, 0, 0, 0, 0], [0, 1, 2, 3, 4, 5]),
-    ])
+    @pytest.mark.parametrize(
+        'pr, pl',
+        [
+            ([0], [0]),
+            ([0, 0, 0], [0, 0, 0]),
+            ([0, 5, 10], [0, 1, 2]),
+            ([31], [7]),
+            ([32639], [65535]),
+            ([0, 1, 2, 3, 4, 5], [0, 0, 0, 0, 0, 0]),
+            ([0, 0, 0, 0, 0, 0], [0, 1, 2, 3, 4, 5]),
+        ],
+    )
     def test_roundtrip_basic(self, pr, pl):
         """Basic roundtrip should recover original values."""
         enc = encode_prefix_comb(pr, pl)
@@ -312,7 +320,7 @@ class TestPrefixCombMargins:
         pl = [0, 65535]
         enc = encode_prefix_comb(pr, pl)
         assert enc[1] == 16777216 + 65278 * 65536 + 65535
-        assert enc[1] < 2 ** 32
+        assert enc[1] < 2**32
         pr2, pl2 = decode_prefix_comb(enc)
         assert pr2 == pr
         assert pl2 == pl
@@ -348,7 +356,7 @@ class TestPrefixCombMargins:
         pr = [0, 32639, 0, 32639]
         pl = [0, 65535, 0, 65535]
         enc = encode_prefix_comb(pr, pl)
-        assert all(v < 2 ** 32 for v in enc)
+        assert all(v < 2**32 for v in enc)
         pr2, pl2 = decode_prefix_comb(enc)
         assert pr2 == pr
         assert pl2 == pl

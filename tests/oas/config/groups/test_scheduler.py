@@ -23,19 +23,19 @@ def test_defaults():
 def test_to_dict_uses_component_serializers():
     data = SchedulerGroup().to_dict()
 
-    assert data["next_run"] == "2023-01-01 00:00:00"
-    assert data["success_interval"] == "01 00:00:00"
-    assert data["server_update"] == "09:00:00"
-    assert data["float_time"] == "00:00:00"
+    assert data['next_run'] == '2023-01-01 00:00:00'
+    assert data['success_interval'] == '01 00:00:00'
+    assert data['server_update'] == '09:00:00'
+    assert data['float_time'] == '00:00:00'
 
 
 def test_from_dict_roundtrip():
     group = SchedulerGroup.from_dict(
         {
-            "enable": True,
-            "priority": 9,
-            "server_update": "06:30:00",
-            "success_interval": "02 03:04:05",
+            'enable': True,
+            'priority': 9,
+            'server_update': '06:30:00',
+            'success_interval': '02 03:04:05',
         }
     )
 
@@ -48,23 +48,23 @@ def test_from_dict_roundtrip():
 def test_schema_covers_every_field():
     schema = SchedulerGroup.model_json_schema()
 
-    assert set(schema["properties"]) == set(SchedulerGroup.model_fields)
-    assert schema["properties"]["server_update"]["type"] == "Time"
-    assert schema["properties"]["success_interval"]["type"] == "TimeDelta"
+    assert set(schema['properties']) == set(SchedulerGroup.model_fields)
+    assert schema['properties']['server_update']['type'] == 'Time'
+    assert schema['properties']['success_interval']['type'] == 'TimeDelta'
 
 
 @pytest.mark.parametrize(
-    "payload",
+    'payload',
     [
-        {"priority": "not-an-int"},
-        {"server_update": "25:00:00"},
-        {"server_update": "09:60:00"},
-        {"success_interval": "not-an-interval"},
-        {"failure_interval": "1 24:00:00"},
-        {"delay_date": 0},
-        {"delay_date": 32},
-        {"next_run": "not-a-date"},
-        {"float_time": "9"},
+        {'priority': 'not-an-int'},
+        {'server_update': '25:00:00'},
+        {'server_update': '09:60:00'},
+        {'success_interval': 'not-an-interval'},
+        {'failure_interval': '1 24:00:00'},
+        {'delay_date': 0},
+        {'delay_date': 32},
+        {'next_run': 'not-a-date'},
+        {'float_time': '9'},
     ],
 )
 def test_from_dict_rejects_invalid_values(payload):
@@ -72,14 +72,14 @@ def test_from_dict_rejects_invalid_values(payload):
         SchedulerGroup.from_dict(payload)
 
 
-@pytest.mark.parametrize("payload", [None, [], 1, "text"])
+@pytest.mark.parametrize('payload', [None, [], 1, 'text'])
 def test_from_dict_rejects_non_mappings(payload):
     with pytest.raises(ValidationError):
         SchedulerGroup.from_dict(payload)
 
 
 def test_from_dict_ignores_unknown_fields():
-    group = SchedulerGroup.from_dict({"unknown": 1})
+    group = SchedulerGroup.from_dict({'unknown': 1})
 
     assert group == SchedulerGroup()
 

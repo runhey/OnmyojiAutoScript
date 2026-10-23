@@ -12,13 +12,12 @@ from oas.config.show.debug_models import (
 )
 
 
-@pytest.mark.parametrize("task_class", [DebugTask, DebugSecondTask])
+@pytest.mark.parametrize('task_class', [DebugTask, DebugSecondTask])
 def test_each_demo_task_has_exactly_two_distinct_group_classes(task_class):
     task = task_class()
 
     classes = {
-        type(getattr(task, field_name))
-        for field_name in task_class.model_fields
+        type(getattr(task, field_name)) for field_name in task_class.model_fields
     }
 
     assert len(classes) == 2
@@ -30,12 +29,12 @@ def test_debug_task_contains_the_two_demo_groups():
 
     assert isinstance(task.group, DebugGroup)
     assert isinstance(task.extra, DebugExtraGroup)
-    assert list(task.to_dict()) == ["group", "extra"]
+    assert list(task.to_dict()) == ['group', 'extra']
 
 
 def test_debug_task_store_roundtrip(memory_config):
     task = DebugTask()
 
-    TaskStore.save(":memory:", task, "DebugTask@debug")
+    TaskStore.save(':memory:', task, 'DebugTask@debug')
 
-    assert TaskStore.load(":memory:", DebugTask, "DebugTask@debug") == task
+    assert TaskStore.load(':memory:', DebugTask, 'DebugTask@debug') == task

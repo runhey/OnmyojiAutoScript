@@ -15,8 +15,10 @@ def test_create_table(user_table, temp_db):
 
     # Verify table exists by querying
     with user_table.cursor() as c:
-        c.execute("SELECT name FROM sqlite_master WHERE type='table' AND name=?",
-                  (user_table.TABLE_NAME,))
+        c.execute(
+            "SELECT name FROM sqlite_master WHERE type='table' AND name=?",
+            (user_table.TABLE_NAME,),
+        )
         result = c.fetchone()
         assert result is not None
         assert result['name'] == 'users'
@@ -26,8 +28,10 @@ def test_drop_table(user_table):
     """Test dropping a table"""
     # Verify table exists
     with user_table.cursor() as c:
-        c.execute("SELECT name FROM sqlite_master WHERE type='table' AND name=?",
-                  (user_table.TABLE_NAME,))
+        c.execute(
+            "SELECT name FROM sqlite_master WHERE type='table' AND name=?",
+            (user_table.TABLE_NAME,),
+        )
         assert c.fetchone() is not None
 
     # Drop table
@@ -35,8 +39,10 @@ def test_drop_table(user_table):
 
     # Verify table no longer exists
     with user_table.cursor() as c:
-        c.execute("SELECT name FROM sqlite_master WHERE type='table' AND name=?",
-                  (user_table.TABLE_NAME,))
+        c.execute(
+            "SELECT name FROM sqlite_master WHERE type='table' AND name=?",
+            (user_table.TABLE_NAME,),
+        )
         assert c.fetchone() is None
 
 
@@ -151,8 +157,10 @@ def test_auto_create_table_on_execute(temp_db):
 
     # Verify table exists
     with table.cursor() as c:
-        c.execute("SELECT name FROM sqlite_master WHERE type='table' AND name=?",
-                  (table.TABLE_NAME,))
+        c.execute(
+            "SELECT name FROM sqlite_master WHERE type='table' AND name=?",
+            (table.TABLE_NAME,),
+        )
         assert c.fetchone() is not None
 
 
@@ -228,13 +236,9 @@ def test_sql_select_expr_with_offset(user_table):
 def test_sql_select_expr_combined(user_table):
     """Test SQL select expression with multiple options"""
     sql = user_table.sql_select_expr(
-        _groupby_='status',
-        _orderby_='priority',
-        _limit_=20,
-        _offset_=10
+        _groupby_='status', _orderby_='priority', _limit_=20, _offset_=10
     )
     assert 'GROUP BY "status"' in sql
     assert 'ORDER BY "priority"' in sql
     assert 'LIMIT 20' in sql
     assert 'OFFSET 10' in sql
-

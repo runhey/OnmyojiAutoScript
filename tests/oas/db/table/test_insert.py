@@ -1,6 +1,7 @@
 """
 Test INSERT operations: insert_row with single and multiple rows
 """
+
 import pytest
 from conftest import Product, User, UserTable
 
@@ -94,12 +95,7 @@ def test_insert_preserves_data_types(user_table):
 
 def test_insert_special_characters(user_table):
     """Test inserting data with special characters"""
-    user = User(
-        id=0,
-        name="O'Brien",
-        age=30,
-        email='o"brien@example.com'
-    )
+    user = User(id=0, name="O'Brien", age=30, email='o"brien@example.com')
     user_table.insert_row(user)
 
     result = user_table.select_one(name="O'Brien")
@@ -225,16 +221,10 @@ def test_insert_in_new_table(temp_db):
 def test_insert_respects_column_order(user_table):
     """Test that insert works regardless of field order in struct"""
     # This tests that the SQL generation correctly maps fields
-    user = User(
-        email='test@example.com',
-        name='Test User',
-        age=25,
-        id=0
-    )
+    user = User(email='test@example.com', name='Test User', age=25, id=0)
     user_table.insert_row(user)
 
     result = user_table.select_one(name='Test User')
     assert result is not None
     assert result.email == 'test@example.com'
     assert result.age == 25
-

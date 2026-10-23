@@ -4,6 +4,7 @@ Tests for oas.base.pretty
 Alasio has no tests/base/test_pretty.py. Only pretty_time is covered here, moved
 from tests/oas/ext/test_perf.py now that it lives in oas.base.pretty.
 """
+
 import pytest
 
 from oas.base.pretty import pretty_time

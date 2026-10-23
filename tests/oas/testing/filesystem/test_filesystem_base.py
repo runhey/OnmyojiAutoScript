@@ -3,6 +3,7 @@ Tests for alasio/testing/filesystem/base.py.
 
 Path normalization and the FakeFile / FakeDir records (dataclass with slots).
 """
+
 import dataclasses
 import os
 import stat as statmod
@@ -55,7 +56,9 @@ class TestNormpath:
         assert _normpath('..', root) == root
         assert _normpath('a/../..', root) == root
 
-    @pytest.mark.skipif(not IS_WINDOWS, reason='backslash is a separator on Windows only')
+    @pytest.mark.skipif(
+        not IS_WINDOWS, reason='backslash is a separator on Windows only'
+    )
     def test_backslash(self):
         """Windows style backslash paths should be normalized."""
         assert _normpath(r'a\b\c.txt', 'C:/work') == 'C:/work/a/b/c.txt'

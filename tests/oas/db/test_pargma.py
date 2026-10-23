@@ -1,6 +1,7 @@
 """
 Tests for Table.get_data_version()
 """
+
 import os
 import shutil
 
@@ -18,19 +19,21 @@ from oas.ext.env import OAS_ROOT
 
 class VersionRow(msgspec.Struct):
     """Simple model for testing data_version"""
+
     id: int = 0
     value: str = ''
 
 
 class DataVersionTable(Table):
     """Simple table for testing data_version PRAGMA"""
+
     TABLE_NAME = 'test_data_version'
-    CREATE_TABLE = '''
+    CREATE_TABLE = """
         CREATE TABLE "{TABLE_NAME}" (
             "id" INTEGER PRIMARY KEY AUTOINCREMENT,
             "value" TEXT NOT NULL
         )
-    '''
+    """
     MODEL = VersionRow
 
 
@@ -38,7 +41,8 @@ class DataVersionTable(Table):
 # Fixtures
 # ============================================================================
 
-@pytest.fixture(scope="module")
+
+@pytest.fixture(scope='module')
 def db_dir():
     """
     Real filesystem directory for the file-based database tests.
@@ -70,6 +74,7 @@ def table():
 # ============================================================================
 # Tests
 # ============================================================================
+
 
 class TestGetDataVersion:
     """Tests for Table.get_data_version()"""
@@ -125,4 +130,3 @@ class TestGetDataVersion:
         v2 = t2.get_data_version()
         assert isinstance(v1, int)
         assert isinstance(v2, int)
-

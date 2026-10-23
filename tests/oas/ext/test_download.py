@@ -5,6 +5,7 @@ Alasio has no tests/ext/test_download.py, so this module is written from
 scratch. Scope is limited to the deterministic surface: session construction.
 The three download methods all hit the network and are not exercised here.
 """
+
 import pytest
 from requests.adapters import HTTPAdapter
 
@@ -45,7 +46,10 @@ class TestNewSession:
     def test_no_user_agent_header_is_set(self):
         # The UA line is commented out in new_session()
         session = Downloader().new_session()
-        assert 'User-Agent' not in session.headers or session.headers['User-Agent'] != 'Alasio'
+        assert (
+            'User-Agent' not in session.headers
+            or session.headers['User-Agent'] != 'Alasio'
+        )
 
 
 class TestApiSurface:

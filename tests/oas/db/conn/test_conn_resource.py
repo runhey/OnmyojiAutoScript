@@ -2,6 +2,7 @@
 Resource management tests for SqlitePool connection pool
 Tests garbage collection, connection release, and resource cleanup
 """
+
 import os
 import time
 from threading import Barrier, Thread
@@ -26,7 +27,7 @@ class TestResourceManagement:
         def create_and_hold():
             barrier.wait()  # Wait for all threads ready
             cursor = pool.cursor()
-            cursor.execute("SELECT 1")
+            cursor.execute('SELECT 1')
             cursors.append(cursor)
 
         threads = [Thread(target=create_and_hold) for _ in range(3)]
@@ -60,7 +61,7 @@ class TestResourceManagement:
         """Test GC keeps active connections"""
         # Create a connection
         with pool.cursor() as cursor:
-            cursor.execute("SELECT 1")
+            cursor.execute('SELECT 1')
 
         # Execute GC immediately (idle time set to 60 seconds)
         pool.gc(idle=60)
@@ -77,7 +78,7 @@ class TestResourceManagement:
         def create_and_hold():
             barrier.wait()  # Wait for all threads ready
             cursor = pool.cursor()
-            cursor.execute("SELECT 1")
+            cursor.execute('SELECT 1')
             cursors.append(cursor)
 
         threads = [Thread(target=create_and_hold) for _ in range(3)]
@@ -103,6 +104,7 @@ class TestResourceManagement:
 # Test SqlitePool Resource Management
 # ============================================================================
 
+
 class TestSqlitePoolResourceManagement:
     """Test SqlitePool resource management"""
 
@@ -110,7 +112,7 @@ class TestSqlitePoolResourceManagement:
         """Test GC removes empty pools"""
         # Use connection pool
         with sqlite_pool.cursor(temp_db) as cursor:
-            cursor.execute("SELECT 1")
+            cursor.execute('SELECT 1')
 
         assert temp_db in sqlite_pool.all_pool
 
@@ -128,8 +130,8 @@ class TestSqlitePoolResourceManagement:
         # Create and use database
         with sqlite_pool.cursor(db_path) as cursor:
             # Drop table if exists from previous failed test
-            cursor.execute("DROP TABLE IF EXISTS test")
-            cursor.execute("CREATE TABLE test (id INTEGER)")
+            cursor.execute('DROP TABLE IF EXISTS test')
+            cursor.execute('CREATE TABLE test (id INTEGER)')
             cursor.commit()
 
         assert os.path.exists(db_path)
@@ -141,4 +143,3 @@ class TestSqlitePoolResourceManagement:
         assert result is True
         assert not os.path.exists(db_path)
         assert db_path not in sqlite_pool.all_pool
-

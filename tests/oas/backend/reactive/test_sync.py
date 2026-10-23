@@ -63,7 +63,7 @@ class DeepDataProcessor(ReactiveCallback, metaclass=Singleton):
     def __init__(self):
         self._data = {
             'user': {'profile': {'name': 'Alice', 'email': 'alice@example.com'}},
-            'version': 1
+            'version': 1,
         }
         self.greeting_compute_mock = MagicMock()
 
@@ -78,10 +78,11 @@ class DeepDataProcessor(ReactiveCallback, metaclass=Singleton):
     @reactive
     def greeting_message(self):
         self.greeting_compute_mock()
-        return f"Welcome, {self.username}!"
+        return f'Welcome, {self.username}!'
 
 
 # ---- Pytest Fixtures ----
+
 
 @pytest.fixture(autouse=True)
 def cleanup_singletons():
@@ -114,6 +115,7 @@ def processor():
 
 
 # ---- Test Cases ----
+
 
 def test_initial_computation(calc):
     """Tests if initial values are computed correctly on first access."""
@@ -216,14 +218,17 @@ def test_weakref_observer_cleanup_with_singleton_source():
     # The source is a singleton, representing a long-lived state object.
     class Source(metaclass=Singleton):
         @reactive_source
-        def value(self): return 0
+        def value(self):
+            return 0
 
     # The observer is a regular class, representing an ephemeral UI component, for example.
     class EphemeralObserver:
-        def __init__(self, source): self.source = source
+        def __init__(self, source):
+            self.source = source
 
         @reactive
-        def observed_value(self): return self.source.value
+        def observed_value(self):
+            return self.source.value
 
     try:
         source_obj = Source()
@@ -404,7 +409,9 @@ def test_chain_dependencies_no_propagate_if_value_unchanged():
         assert obj.b == 10  # (15//10)*10 = 10, unchanged
         assert obj.c == 20  # Should still be 20
         assert obj.b_compute_count == 2  # B recomputed
-        assert obj.c_compute_count == 1  # C should NOT recompute because B value unchanged
+        assert (
+            obj.c_compute_count == 1
+        )  # C should NOT recompute because B value unchanged
 
         # Check callbacks: only 'a' should have changed, not 'b' or 'c'
         callback_names = [name for name, old, new in obj.callback_log]
@@ -528,8 +535,8 @@ def test_cannot_set_reactive_property():
         with pytest.raises(ValueError) as exc_info:
             obj.doubled = 30
 
-        assert "You should not set value to a reactive object" in str(exc_info.value)
-        assert "break the observation chain" in str(exc_info.value)
+        assert 'You should not set value to a reactive object' in str(exc_info.value)
+        assert 'break the observation chain' in str(exc_info.value)
 
     finally:
         Sample.singleton_clear()

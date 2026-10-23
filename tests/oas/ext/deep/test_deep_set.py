@@ -1,4 +1,4 @@
-﻿"""
+"""
 Tests for the write functions in ``oas.ext.deep``:
 
 - ``deep_set``: set a value into a nested dict, creating missing levels
@@ -19,7 +19,14 @@ from collections import deque
 
 import pytest
 
-from oas.ext.deep import deep_default, deep_set, deep_set_no_replace, deep_set_with_error, dict_copy, dict_update
+from oas.ext.deep import (
+    deep_default,
+    deep_set,
+    deep_set_no_replace,
+    deep_set_with_error,
+    dict_copy,
+    dict_update,
+)
 
 # Non-dict value types used to exercise the override correction of deep_set()
 NON_DICT_VALUES = [
@@ -277,7 +284,9 @@ class TestDeepSetOverrideNonDict:
         # set depth 2
         assert deep_set(non_dict_value, ['k1', 'k2'], VALUE) == {'k1': {'k2': VALUE}}
         # set depth 3
-        assert deep_set(non_dict_value, ['k1', 'k2', 'k3'], VALUE) == {'k1': {'k2': {'k3': VALUE}}}
+        assert deep_set(non_dict_value, ['k1', 'k2', 'k3'], VALUE) == {
+            'k1': {'k2': {'k3': VALUE}}
+        }
         # set depth 4
         assert deep_set(non_dict_value, ['k1', 'k2', 'k3', 'k4'], VALUE) == {
             'k1': {'k2': {'k3': {'k4': VALUE}}}
@@ -348,7 +357,9 @@ class TestDeepSetOverrideNonDict:
         # Depth 4 is non dict
         # set depth 4, override the non dict itself
         d = {'k1': {'k2': {'k3': {'k4': non_dict_value}}}}
-        assert deep_set(d, ['k1', 'k2', 'k3', 'k4'], VALUE) == {'k1': {'k2': {'k3': {'k4': VALUE}}}}
+        assert deep_set(d, ['k1', 'k2', 'k3', 'k4'], VALUE) == {
+            'k1': {'k2': {'k3': {'k4': VALUE}}}
+        }
         # override depth 4, set depth 5
         d = {'k1': {'k2': {'k3': {'k4': non_dict_value}}}}
         assert deep_set(d, ['k1', 'k2', 'k3', 'k4', 'k5'], VALUE) == {
@@ -560,13 +571,22 @@ class TestDeepSetNoReplace:
             deep_set_no_replace(d, [], 2)
         assert d == {'a': 1}
 
-    @pytest.mark.parametrize('non_dict_value, expected', [
-        (1, "deep_set_no_replace() expected dict at key 'a', got int: 1"),
-        (1.5, "deep_set_no_replace() expected dict at key 'a', got float: 1.5"),
-        ('text', "deep_set_no_replace() expected dict at key 'a', got str: 'text'"),
-        ([1, 2], "deep_set_no_replace() expected dict at key 'a', got list: [1, 2]"),
-        (None, "deep_set_no_replace() expected dict at key 'a', got NoneType: None"),
-    ])
+    @pytest.mark.parametrize(
+        'non_dict_value, expected',
+        [
+            (1, "deep_set_no_replace() expected dict at key 'a', got int: 1"),
+            (1.5, "deep_set_no_replace() expected dict at key 'a', got float: 1.5"),
+            ('text', "deep_set_no_replace() expected dict at key 'a', got str: 'text'"),
+            (
+                [1, 2],
+                "deep_set_no_replace() expected dict at key 'a', got list: [1, 2]",
+            ),
+            (
+                None,
+                "deep_set_no_replace() expected dict at key 'a', got NoneType: None",
+            ),
+        ],
+    )
     def test_deep_set_no_replace_error_message(self, non_dict_value, expected):
         # The message tells which key is not a dict and the value at it
         d = {'a': non_dict_value}
@@ -582,7 +602,9 @@ class TestDeepSetNoReplace:
         d = {'a': 1}
         with pytest.raises(TypeError) as e:
             deep_set_no_replace(d, 'a.b.c', 2)
-        assert str(e.value) == "deep_set_no_replace() expected dict at key 'a', got int: 1"
+        assert (
+            str(e.value) == "deep_set_no_replace() expected dict at key 'a', got int: 1"
+        )
         assert d == {'a': 1}
 
     def test_deep_set_no_replace_error_message_deep(self):
@@ -590,7 +612,9 @@ class TestDeepSetNoReplace:
         d = {'a': {'b': 1}}
         with pytest.raises(TypeError) as e:
             deep_set_no_replace(d, 'a.b.c', 2)
-        assert str(e.value) == "deep_set_no_replace() expected dict at key 'b', got int: 1"
+        assert (
+            str(e.value) == "deep_set_no_replace() expected dict at key 'b', got int: 1"
+        )
         assert d == {'a': {'b': 1}}
 
     def test_deep_set_no_replace_error_message_root(self):
@@ -606,15 +630,21 @@ class TestDeepSetNoReplace:
         with pytest.raises(TypeError) as e:
             deep_set_no_replace(d, 'a.b', 2)
         assert str(e.value) == (
-            f"deep_set_no_replace() expected dict at key 'a', got list: {repr(value)[:200]}...")
+            f"deep_set_no_replace() expected dict at key 'a', got list: {repr(value)[:200]}..."
+        )
         assert d == {'a': value}
 
-    @pytest.mark.parametrize('length, truncated', [
-        # repr of 'x' * length is `length + 2` characters long
-        (198, False),
-        (199, True),
-    ])
-    def test_deep_set_no_replace_error_message_truncate_boundary(self, length, truncated):
+    @pytest.mark.parametrize(
+        'length, truncated',
+        [
+            # repr of 'x' * length is `length + 2` characters long
+            (198, False),
+            (199, True),
+        ],
+    )
+    def test_deep_set_no_replace_error_message_truncate_boundary(
+        self, length, truncated
+    ):
         # A value at the limit is kept as is, only a longer one is truncated
         value = 'x' * length
         d = {'a': value}
@@ -623,7 +653,7 @@ class TestDeepSetNoReplace:
         head = "deep_set_no_replace() expected dict at key 'a', got str: "
         expected = f'{head}{value!r}'
         if truncated:
-            expected = f'{expected[:len(head) + 200]}...'
+            expected = f'{expected[: len(head) + 200]}...'
         assert str(e.value) == expected
 
     def test_deep_set_no_replace_unhashable_key_message(self):
@@ -645,5 +675,3 @@ class TestDeepSetNoReplace:
         with pytest.raises(TypeError):
             deep_set_no_replace(d, 'a.b', 2)
         assert d == {'a': 1}
-
-
