@@ -88,7 +88,7 @@ class ScriptTask(FriendshipPoints, MysteryShopAssets, GeneralInvite):
         """
         if shop_config.mystery_amulet:
             while self.buy_mall_one(buy_button=self.I_MS_BLUE, buy_check=self.I_MS_CHECK_BLUE,
-                                    money_ocr=self.O_MALL_RESOURCE_5, buy_money=85):
+                                    money_ocr=self.O_MALL_RESOURCE_5, buy_money=85, more_window=True):
                 pass
         if shop_config.black_daruma_scrap:
             while self.buy_mall_one(buy_button=self.I_MS_BLACK, buy_check=self.I_MS_CHECK_BLACK,

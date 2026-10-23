@@ -164,6 +164,40 @@ class Buy(BaseTask, BuyAssets):
                 continue
         return True
 
+    def buy_one_or_more(self, start_click: Union[RuleImage, RuleOcr, RuleClick],
+                        check_image: RuleImage, number: int = None) -> bool:
+        """
+        购买弹窗可能是单个购买窗口, 也可能是带数量选择(加号)的多数量购买窗口
+        先点开弹窗, 出现加号走 buy_more, 出现单个购买窗口走 buy_one
+        :param start_click: 开始点击
+        :param check_image: 单个购买窗口确认时候的图片
+        :param number: 多数量窗口的购买数量, 不指定就是拉满
+        :return: 超时没等到任何购买弹窗返回 False
+        """
+        timeout = Timer(10).start()
+        while 1:
+            self.screenshot()
+
+            if self.appear(self.I_BUY_PLUS):
+                logger.info('Buy window with number selector, use buy_more')
+                return self.buy_more(start_click, number)
+            if self.appear(check_image):
+                logger.info('Single buy window, use buy_one')
+                return self.buy_one(start_click, check_image)
+            if timeout.reached():
+                logger.warning('Wait buy window timeout')
+                return False
+
+            if isinstance(start_click, RuleImage):
+                if self.appear_then_click(start_click, interval=1):
+                    continue
+            elif isinstance(start_click, RuleOcr):
+                if self.ocr_appear_click(start_click, interval=1):
+                    continue
+            elif isinstance(start_click, RuleClick):
+                if self.click(start_click, interval=1):
+                    continue
+
     def buy_check_money(self, target: RuleOcr, minimum: int):
         """
         检查钱是否足够

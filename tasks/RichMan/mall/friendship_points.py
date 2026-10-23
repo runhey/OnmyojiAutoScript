@@ -32,13 +32,15 @@ class FriendshipPoints(Special):
             self.buy_mall_more(buy_button=self.I_FS_BROKEN, remain_number=False, money_ocr=self.I_MALL_RESOURCE_FRIENDS.build_mall_resource_ocr(self.device.image),
                                buy_number=con.broken_amulet, buy_max=99, buy_money=100)
 
-    def buy_mall_one(self, buy_button: RuleImage, buy_check: RuleImage, money_ocr: RuleOcr, buy_money: int):
+    def buy_mall_one(self, buy_button: RuleImage, buy_check: RuleImage, money_ocr: RuleOcr, buy_money: int,
+                     more_window: bool = False):
         """
         针对只能买一个的
         :param buy_button:
         :param buy_check:
         :param money_ocr:
         :param buy_money: 买这一个花多少
+        :param more_window: 购买弹窗可能是多数量窗口(剩余次数大于1时), 为 True 时按弹窗类型选 buy_more 或 buy_one
         :return:
         """
         logger.hr(buy_button.name, 3)
@@ -62,6 +64,10 @@ class FriendshipPoints(Special):
             logger.warning(f'No enough money {current_money}')
             return False
         # 点击购买
+        if more_window:
+            # 钱不够买满剩余数量时, 只买得起的数量
+            number = None if current_money >= buy_money * _remain else current_money // buy_money
+            return self.buy_one_or_more(buy_button, buy_check, number)
         return self.buy_one(buy_button, buy_check)
 
     def buy_mall_more(self, buy_button: RuleImage, remain_number: bool, money_ocr: RuleOcr,
