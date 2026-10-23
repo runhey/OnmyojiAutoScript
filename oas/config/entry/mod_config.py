@@ -27,8 +27,8 @@ from pydantic import ValidationError
 
 from oas.config.entry.codec import Codec
 from oas.config.entry.error import ConfigError
-from oas.config.entry.mod_store import TaskStore
 from oas.config.entry.model import ConfigResult, ConfigSetEvent, ModelConfigRef
+from oas.config.entry.store import TaskStore
 from oas.config.models.groups import GroupBase
 from oas.config.models.registry import config_model_registry
 from oas.config.models.tasks import TaskBase
@@ -1274,7 +1274,7 @@ class modconfig(ModAdapter):
                 f'Cannot construct default Task "{taskclass}": {exc}'
             )
 
-        TaskStore(config_name).save(task_obj, task_name)
+        TaskStore.save(config_name, task_obj, task_name)
         return ConfigResult(
             success=True,
             events=_events_from_task(task_name, task_obj),
@@ -1314,7 +1314,7 @@ class modconfig(ModAdapter):
         if table.list_task_rows(target_task):
             return _failure(f'Task already exists: "{target_task}"')
 
-        TaskStore(config_name).save(task_obj, target_task)
+        TaskStore.save(config_name, task_obj, target_task)
         return ConfigResult(
             success=True,
             events=_events_from_task(target_task, task_obj),
@@ -1334,7 +1334,7 @@ class modconfig(ModAdapter):
             return _failure(f'No such task: "{task}"')
 
         default_obj = task_class()
-        TaskStore(config_name).save(default_obj, task)
+        TaskStore.save(config_name, default_obj, task)
         return ConfigResult(
             success=True,
             events=_events_from_task(task, default_obj),
@@ -1682,7 +1682,7 @@ def _load_task(
         logger.warning(f'No such task class for task "{task}"')
         return None
     try:
-        task_obj = TaskStore(config_name).load(task_class, task)
+        task_obj = TaskStore.load(config_name, task_class, task)
     except (KeyError, ValueError, ValidationError) as exc:
         logger.warning(f'Cannot load task "{task}": {exc}')
         return None

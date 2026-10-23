@@ -21,12 +21,15 @@ from oas.config.table.config import ConfigTable
 
 
 class TaskStore:
-    """Store Task instances in one named configuration database."""
+    """Read and write Task instances in a named configuration database.
 
-    def __init__(self, config_name: str):
-        self._table = ConfigTable(config_name)
+    Every operation is a class method and takes ``config_name`` as its first
+    argument, so the class holds no state and each call creates the
+    :class:`ConfigTable` it needs.
+    """
 
-    def save(self, task: TaskBase, task_name: str) -> None:
+    @classmethod
+    def save(cls, config_name: str, task: TaskBase, task_name: str) -> None:
         """Write one Task instance, replacing its stored Group set.
 
         Rows of this Task instance that no longer correspond to a Group field
@@ -36,20 +39,21 @@ class TaskStore:
         if not task_name:
             raise ValueError("task_name must not be empty")
 
+        table = ConfigTable(config_name)
         data = task.to_dict()
         taskclass = type(task).__name__
 
-        with self._table.cursor() as cursor:
+        with table.cursor() as cursor:
             try:
-                for row in self._table.list_task_rows(task_name, _cursor_=cursor):
+                for row in table.list_task_rows(task_name, _cursor_=cursor):
                     if row.group not in data:
-                        self._table.delete_group(
+                        table.delete_group(
                             row.task,
                             row.group,
                             _cursor_=cursor,
                         )
                 for group_name, payload in data.items():
-                    self._table.upsert_group(
+                    table.upsert_group(
                         taskclass=taskclass,
                         task=task_name,
                         groupclass=type(getattr(task, group_name)).__name__,
@@ -62,7 +66,13 @@ class TaskStore:
                 cursor.rollback()
                 raise
 
-    def load(self, task_class: type[TaskBase], task_name: str) -> TaskBase:
+    @classmethod
+    def load(
+        cls,
+        config_name: str,
+        task_class: type[TaskBase],
+        task_name: str,
+    ) -> TaskBase:
         """Read one Task instance, using Pydantic defaults for missing fields."""
 
         if not task_name:
@@ -70,6 +80,6 @@ class TaskStore:
 
         data = {
             row.group: Codec.decode(row.value)
-            for row in self._table.list_task_rows(task_name)
+            for row in ConfigTable(config_name).list_task_rows(task_name)
         }
         return task_class.from_dict(data)

@@ -3,8 +3,8 @@
 import pytest
 from pydantic import Field, ValidationError
 
-from oas.config.entry.mod_store import TaskStore
 from oas.config.entry.model import ConfigSetEvent
+from oas.config.entry.store import TaskStore
 from oas.config.models.args import Input, Switch
 from oas.config.models.groups import GroupBase
 from oas.config.models.tasks import TaskBase
@@ -35,12 +35,12 @@ class AccessTask(TaskBase):
 
 @pytest.fixture
 def access(memory_config):
-    TaskStore(":memory:").save(AccessTask(), "AccessTask@default")
+    TaskStore.save(":memory:", AccessTask(), "AccessTask@default")
     return ConfigAccess(":memory:", "AccessTask@default")
 
 
 def _stored():
-    return TaskStore(":memory:").load(AccessTask, "AccessTask@default")
+    return TaskStore.load(":memory:", AccessTask, "AccessTask@default")
 
 
 def test_cache_loads_rows_and_is_idempotent(access):
@@ -70,8 +70,8 @@ def test_cache_is_skipped_for_template_config(memory_config):
 
 
 def test_config_changed_and_refresh(access):
-    TaskStore(":memory:").save(
-        AccessTask(main=AccessGroup(count=9)), "AccessTask@default"
+    TaskStore.save(
+        ":memory:", AccessTask(main=AccessGroup(count=9)), "AccessTask@default"
     )
     # The pool may reuse the same SQLite connection, so force a stale
     # data-version token to exercise the change-detection branch.
@@ -329,12 +329,12 @@ class AccessErrListTask(TaskBase):
 
 @pytest.fixture
 def access_errors(memory_config):
-    TaskStore(":memory:").save(AccessErrTask(), "AccessErrTask@default")
+    TaskStore.save(":memory:", AccessErrTask(), "AccessErrTask@default")
     return ConfigAccess(":memory:", "AccessErrTask@default")
 
 
 def _stored_errors():
-    return TaskStore(":memory:").load(AccessErrTask, "AccessErrTask@default")
+    return TaskStore.load(":memory:", AccessErrTask, "AccessErrTask@default")
 
 
 def test_set_group_arg_rejects_missing_group_and_field(access_errors):

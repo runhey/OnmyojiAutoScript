@@ -130,12 +130,14 @@ ConfigTable
 示例：
 
 ```python
-from oas.config.entry.mod_store import TaskStore
+from oas.config.entry.store import TaskStore
 
-store = TaskStore("default")
-store.save(task, "FindJade")
-task = store.load(FindJadeTask, "FindJade")
+TaskStore.save("default", task, "FindJade")
+task = TaskStore.load("default", FindJadeTask, "FindJade")
 ```
+
+`TaskStore` 不保存任何实例状态：两个方法都是类方法，配置库名按参数传入，
+需要时在方法内部创建 `ConfigTable`。
 
 ### `state`
 

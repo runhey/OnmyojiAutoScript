@@ -4,7 +4,7 @@ import pytest
 from pydantic import Field
 
 from oas.config.entry.codec import Codec
-from oas.config.entry.mod_store import TaskStore
+from oas.config.entry.store import TaskStore
 from oas.config.models.args import Input
 from oas.config.models.groups import GroupBase
 from oas.config.models.tasks import TaskBase
@@ -27,7 +27,7 @@ class StoreTask(TaskBase):
 
 @pytest.fixture
 def store(memory_config):
-    return TaskStore(":memory:")
+    return ":memory:"
 
 
 def _rows(task: str):
@@ -39,7 +39,7 @@ def _rows(task: str):
 def test_save_writes_one_row_per_group(store):
     task = StoreTask(main=StoreGroup(count=4), extra=StoreExtraGroup(value="x"))
 
-    store.save(task, "StoreTask@first")
+    TaskStore.save(store, task, "StoreTask@first")
 
     rows = _rows("StoreTask@first")
     assert set(rows) == {"main", "extra"}
@@ -52,17 +52,17 @@ def test_save_writes_one_row_per_group(store):
 def test_save_and_load_roundtrip(store):
     task = StoreTask(main=StoreGroup(count=7, name="saved"))
 
-    store.save(task, "StoreTask@first")
+    TaskStore.save(store, task, "StoreTask@first")
 
-    assert store.load(StoreTask, "StoreTask@first") == task
+    assert TaskStore.load(store, StoreTask, "StoreTask@first") == task
 
 
 def test_save_updates_in_place_without_duplicating_rows(store):
-    store.save(StoreTask(), "StoreTask@first")
-    store.save(StoreTask(main=StoreGroup(count=9)), "StoreTask@first")
+    TaskStore.save(store, StoreTask(), "StoreTask@first")
+    TaskStore.save(store, StoreTask(main=StoreGroup(count=9)), "StoreTask@first")
 
     assert len(_rows("StoreTask@first")) == 2
-    assert store.load(StoreTask, "StoreTask@first").main.count == 9
+    assert TaskStore.load(store, StoreTask, "StoreTask@first").main.count == 9
 
 
 def test_save_deletes_groups_that_are_no_longer_declared(store):
@@ -74,21 +74,21 @@ def test_save_deletes_groups_that_are_no_longer_declared(store):
         Codec.encode(StoreGroup().to_dict()),
     )
 
-    store.save(StoreTask(), "StoreTask@first")
+    TaskStore.save(store, StoreTask(), "StoreTask@first")
 
     assert "removed" not in _rows("StoreTask@first")
 
 
 def test_save_only_touches_its_own_task_instance(store):
-    store.save(StoreTask(), "StoreTask@first")
-    store.save(StoreTask(main=StoreGroup(count=5)), "StoreTask@second")
+    TaskStore.save(store, StoreTask(), "StoreTask@first")
+    TaskStore.save(store, StoreTask(main=StoreGroup(count=5)), "StoreTask@second")
 
-    assert store.load(StoreTask, "StoreTask@first").main.count == 1
-    assert store.load(StoreTask, "StoreTask@second").main.count == 5
+    assert TaskStore.load(store, StoreTask, "StoreTask@first").main.count == 1
+    assert TaskStore.load(store, StoreTask, "StoreTask@second").main.count == 5
 
 
 def test_load_uses_defaults_for_missing_groups(store):
-    task = store.load(StoreTask, "StoreTask@missing")
+    task = TaskStore.load(store, StoreTask, "StoreTask@missing")
 
     assert task == StoreTask()
 
@@ -102,7 +102,7 @@ def test_load_ignores_unknown_group_rows(store):
         Codec.encode(StoreGroup(count=99).to_dict()),
     )
 
-    assert store.load(StoreTask, "StoreTask@first") == StoreTask()
+    assert TaskStore.load(store, StoreTask, "StoreTask@first") == StoreTask()
 
 
 def test_load_ignores_a_stale_taskclass_column(store):
@@ -114,16 +114,16 @@ def test_load_ignores_a_stale_taskclass_column(store):
         Codec.encode(StoreGroup(count=6).to_dict()),
     )
 
-    assert store.load(StoreTask, "StoreTask@first").main.count == 6
+    assert TaskStore.load(store, StoreTask, "StoreTask@first").main.count == 6
 
 
 @pytest.mark.parametrize("method", ["save", "load"])
 def test_empty_task_name_is_rejected(store, method):
     with pytest.raises(ValueError, match="must not be empty"):
         if method == "save":
-            store.save(StoreTask(), "")
+            TaskStore.save(store, StoreTask(), "")
         else:
-            store.load(StoreTask, "")
+            TaskStore.load(store, StoreTask, "")
 
 
 def test_save_rolls_back_all_rows_when_encoding_fails(
@@ -141,7 +141,7 @@ def test_save_rolls_back_all_rows_when_encoding_fails(
     monkeypatch.setattr(Codec, "encode", staticmethod(flaky))
 
     with pytest.raises(RuntimeError, match="encode failed"):
-        store.save(StoreTask(), "StoreTask@first")
+        TaskStore.save(store, StoreTask(), "StoreTask@first")
 
     assert _rows("StoreTask@first") == {}
 
@@ -156,7 +156,7 @@ def test_load_rejects_a_corrupt_row(store):
     )
 
     with pytest.raises(ValueError, match="invalid MsgPack"):
-        store.load(StoreTask, "StoreTask@first")
+        TaskStore.load(store, StoreTask, "StoreTask@first")
 
 
 class StoreMoreGroup(GroupBase):
@@ -169,15 +169,15 @@ class StoreMoreTask(TaskBase):
 
 
 def test_dynamic_groups_are_not_persisted(memory_config):
-    store = TaskStore(":memory:")
+    store = ":memory:"
     task = StoreMoreTask(dynamic=[StoreMoreGroup(count=9)])
 
-    store.save(task, "StoreMoreTask@one")
+    TaskStore.save(store, task, "StoreMoreTask@one")
 
     rows = ConfigTable(":memory:").list_task_rows("StoreMoreTask@one")
 
     assert [row.group for row in rows] == ["main"]
-    assert store.load(StoreMoreTask, "StoreMoreTask@one").dynamic == []
+    assert TaskStore.load(store, StoreMoreTask, "StoreMoreTask@one").dynamic == []
 
 
 def test_payload_unknown_fields_are_ignored(memory_config):
@@ -189,7 +189,7 @@ def test_payload_unknown_fields_are_ignored(memory_config):
         Codec.encode({"count": 2, "removed": 1}),
     )
 
-    assert TaskStore(":memory:").load(StoreMoreTask, "StoreMoreTask@one").main.count == 2
+    assert TaskStore.load(":memory:", StoreMoreTask, "StoreMoreTask@one").main.count == 2
 
 
 def test_empty_payload_uses_group_defaults(memory_config):
@@ -202,7 +202,7 @@ def test_empty_payload_uses_group_defaults(memory_config):
     )
 
     assert (
-        TaskStore(":memory:").load(StoreMoreTask, "StoreMoreTask@one").main.count
+        TaskStore.load(":memory:", StoreMoreTask, "StoreMoreTask@one").main.count
         == 1
     )
 
@@ -211,6 +211,6 @@ def test_save_auto_creates_the_table(memory_config):
     table = ConfigTable(":memory:")
     table.drop_table()
 
-    TaskStore(":memory:").save(StoreMoreTask(), "StoreMoreTask@one")
+    TaskStore.save(":memory:", StoreMoreTask(), "StoreMoreTask@one")
 
     assert len(table.list_task_rows("StoreMoreTask@one")) == 1

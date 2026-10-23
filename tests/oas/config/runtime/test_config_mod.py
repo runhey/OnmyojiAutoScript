@@ -7,8 +7,8 @@ import pytest
 from pydantic import Field
 
 from oas.config.entry.error import ConfigError
-from oas.config.entry.mod_store import TaskStore
 from oas.config.entry.model import ConfigResult, ConfigSetEvent, ModelConfigRef
+from oas.config.entry.store import TaskStore
 from oas.config.models.args import Input
 from oas.config.models.groups import GroupBase
 from oas.config.models.tasks import TaskBase
@@ -98,7 +98,7 @@ def test_config_read_filters_requested_groups(config_mod):
 
 
 def test_config_read_resolves_stored_instance_name(config_mod):
-    TaskStore(":memory:").save(RuntimeTestTask(), "RuntimeTestTask@daily")
+    TaskStore.save(":memory:", RuntimeTestTask(), "RuntimeTestTask@daily")
 
     data = config_mod.config_read(
         ":memory:", ModelConfigRef(task=["RuntimeTestTask@daily"], group=[])
@@ -470,9 +470,9 @@ def test_group_operations_do_not_load_the_whole_task(config_mod, monkeypatch):
     calls = []
     original = TaskStore.load
 
-    def counted(self, *args, **kwargs):
-        calls.append(args)
-        return original(self, *args, **kwargs)
+    def counted(config_name, *args, **kwargs):
+        calls.append((config_name, *args))
+        return original(config_name, *args, **kwargs)
 
     monkeypatch.setattr(TaskStore, "load", counted)
 
