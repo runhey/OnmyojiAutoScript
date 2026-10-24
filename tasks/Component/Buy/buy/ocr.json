@@ -7,5 +7,14 @@
     "method": "Default",
     "keyword": "",
     "description": "Ocr-description"
+  },
+  {
+    "itemName": "buy_price",
+    "roiFront": "646,537,60,52",
+    "roiBack": "646,537,60,52",
+    "mode": "Digit",
+    "method": "Default",
+    "keyword": "",
+    "description": "确认按钮上的单价, roi 运行时按勾玉图标位置设置"
   }
 ]

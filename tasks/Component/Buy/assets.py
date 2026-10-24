@@ -30,10 +30,14 @@ class BuyAssets:
 	I_BUY_RMB = RuleImage(roi_front=(610,532,35,32), roi_back=(548,483,178,119), threshold=0.8, method="Template matching", file="./tasks/Component/Buy/buy/buy_buy_rmb.png")
 	# 购买成功 
 	I_BUY_SUCCESS = RuleImage(roi_front=(512,53,261,44), roi_back=(449,0,405,167), threshold=0.8, method="Template matching", file="./tasks/Component/Buy/buy/buy_buy_success.png")
+	# 确认按钮上的勾玉 
+	I_BUY_JADE = RuleImage(roi_front=(604,537,42,52), roi_back=(540,480,200,120), threshold=0.8, method="Template matching", file="./tasks/Component/Buy/buy/buy_buy_jade.png")
 
 
 	# Ocr Rule Assets
 	# Ocr-description 
 	O_BUY_NUMBER = RuleOcr(roi=(578,416,52,71), area=(578,416,52,71), mode="Digit", method="Default", keyword="", name="buy_number")
+	# 确认按钮上的单价, roi 运行时按勾玉图标位置设置 
+	O_BUY_PRICE = RuleOcr(roi=(646,537,60,52), area=(646,537,60,52), mode="Digit", method="Default", keyword="", name="buy_price")
 
 

@@ -33,7 +33,7 @@ class FriendshipPoints(Special):
                                buy_number=con.broken_amulet, buy_max=99, buy_money=100)
 
     def buy_mall_one(self, buy_button: RuleImage, buy_check: RuleImage, money_ocr: RuleOcr, buy_money: int,
-                     more_window: bool = False):
+                     more_window: bool = False, max_price: int = None):
         """
         针对只能买一个的
         :param buy_button:
@@ -41,6 +41,7 @@ class FriendshipPoints(Special):
         :param money_ocr:
         :param buy_money: 买这一个花多少
         :param more_window: 购买弹窗可能是多数量窗口(剩余次数大于1时), 为 True 时按弹窗类型选 buy_more 或 buy_one
+        :param max_price: 单价上限, 不为 None 时从购买弹窗读单价, 超过上限或读不到就不买, 数量按剩余次数和余额算
         :return:
         """
         logger.hr(buy_button.name, 3)
@@ -64,10 +65,14 @@ class FriendshipPoints(Special):
             logger.warning(f'No enough money {current_money}')
             return False
         # 点击购买
+        if max_price is not None:
+            # buy_money 只是余额门槛, 不是单价. 单价从购买弹窗上读, 由 buy_one_or_more 按单价算数量
+            logger.info(f'Money {current_money}, remain {_remain}, max price {max_price}')
+            return self.buy_one_or_more(buy_button, buy_check, max_price=max_price,
+                                        money=current_money, remain=_remain)
         if more_window:
-            # 钱不够买满剩余数量时, 只买得起的数量
-            number = None if current_money >= buy_money * _remain else current_money // buy_money
-            return self.buy_one_or_more(buy_button, buy_check, number)
+            # 不读单价时只买 1 个, 由调用方循环重新检查剩余次数和余额再买
+            return self.buy_one_or_more(buy_button, buy_check, 1)
         return self.buy_one(buy_button, buy_check)
 
     def buy_mall_more(self, buy_button: RuleImage, remain_number: bool, money_ocr: RuleOcr,
