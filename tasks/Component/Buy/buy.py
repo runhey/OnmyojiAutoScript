@@ -238,7 +238,10 @@ class Buy(BaseTask, BuyAssets):
             return self._buy_more_default(start_click)
         if number == remain:
             return self.buy_more(start_click, None)
-        return self.buy_more(start_click, number)
+        # buy_more(start_click, number) 点加号后才读数量, 可能超过 number.
+        # 余额不够买满时每次只买 1 个, 调用方循环会重新读余额和剩余次数再买下一个
+        logger.info(f'Money is not enough to buy all {remain}, buy one by one')
+        return self._buy_more_default(start_click)
 
     def _buy_read_price(self, min_price: int = 40) -> Union[int, None]:
         """
