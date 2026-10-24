@@ -1187,10 +1187,6 @@ class BattleWait(BaseTask, GeneralBattleAssets):
         while 1:
             self.screenshot()
 
-            # 发现御魂溢出，直接跳出，在interupt里面处理
-            if self.appear(self.I_OVER_GHOST):
-                return HookSignal.CONTINUE
-
             # 结算的时候御魂溢出提示，点击【知道了】
             if self.appear(self.I_OVER_GHOST):
                 self.click(self.I_OVER_GHOST)
