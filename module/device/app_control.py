@@ -30,6 +30,9 @@ class AppControl(Adb, Uiautomator2):
     def app_start(self):
         method = self.config.script.device.screenshot_method
         logger.info(f'App start: {self.package}')
+        # MuMu 6.0 assigns the app a new virtual display on every launch,
+        # whichever start method this config uses
+        self._reset_mumu_display_ids()
         # if self.config.Emulator_Serial == 'wsa-0':
         #     self.app_start_wsa(display=0)
         if method in AppControl._app_u2_family:
@@ -40,6 +43,8 @@ class AppControl(Adb, Uiautomator2):
     def app_stop(self):
         method = self.config.script.device.screenshot_method
         logger.info(f'App stop: {self.package}')
+        # MuMu 6.0 destroys the app's virtual display on stop; force re-detection
+        self._reset_mumu_display_ids()
         if method in AppControl._app_u2_family:
             self.app_stop_uiautomator2()
         else:
