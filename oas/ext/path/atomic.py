@@ -34,9 +34,8 @@ def is_tmp_file(file):
     # Check suffix first to reduce regex calls
     if not file.endswith('.tmp'):
         return False
-    # Check temp file format
-    dot = file[-11:-10]
-    if not dot:
+    # Check temp file format: filename.RID.tmp
+    if file[-11:-10] != '.':
         return False
     rid = file[-10:-4]
     return rid.isalnum()
@@ -89,7 +88,7 @@ def windows_attempt_delay(attempt):
         attempt = 10
     if attempt < 0:
         attempt = 0
-    delay = 2**attempt * WINDOWS_RETRY_DELAY
+    delay = 2 ** attempt * WINDOWS_RETRY_DELAY
     # wait 1s at max
     if delay > 1:
         delay = 1
@@ -217,7 +216,7 @@ def atomic_rename(path_from, path_to):
                 delay = windows_attempt_delay(attempt)
                 time.sleep(delay)
                 continue
-            except FileNotFoundError, FileExistsError:
+            except (FileNotFoundError, FileExistsError):
                 raise
             except Exception as e:
                 last_error = e
@@ -287,7 +286,8 @@ def file_write(file, data):
 
 def file_write_stream(file, data_generator):
     """
-    Only creates a file if the generator yields at least one data chunk.
+    Creates the file even if the generator yields no data chunk,
+    an empty generator writes an empty file, replacing the content of the target.
     Auto determines write mode based on the type of first chunk.
 
     Args:
@@ -301,8 +301,10 @@ def file_write_stream(file, data_generator):
     try:
         first_chunk = next(data_iter)
     except StopIteration:
-        # Generator is empty, no file will be created
-        return
+        # Generator is empty, an empty file is still written:
+        # no chunk to tell text from bytes, and an empty file has no content
+        # to encode, so an empty bytes chunk goes through the binary mode
+        first_chunk = b''
 
     # Determine mode, encoding and newline from first chunk
     if isinstance(first_chunk, str):
@@ -347,7 +349,8 @@ def file_write_stream(file, data_generator):
 
 async def afile_write_stream(file, data_iter):
     """
-    Only creates a file if the generator yields at least one data chunk.
+    Creates the file even if the generator yields no data chunk,
+    an empty generator writes an empty file, replacing the content of the target.
     Auto determines write mode based on the type of first chunk.
 
     Args:
@@ -358,8 +361,10 @@ async def afile_write_stream(file, data_iter):
     try:
         first_chunk = await data_iter.__anext__()
     except StopAsyncIteration:
-        # Generator is empty, no file will be created
-        return
+        # Generator is empty, an empty file is still written:
+        # no chunk to tell text from bytes, and an empty file has no content
+        # to encode, so an empty bytes chunk goes through the binary mode
+        first_chunk = b''
 
     # Determine mode, encoding and newline from first chunk
     if isinstance(first_chunk, str):
@@ -402,10 +407,27 @@ async def afile_write_stream(file, data_iter):
         os.fsync(f.fileno())
 
 
+def _remove_tmp_on_failure(tmp):
+    """
+    Remove the tmp file of an atomic write that failed.
+
+    The error of the removal is dropped: the error of the write is the one
+    the caller has to handle, the tmp file is the lesser problem.
+
+    Args:
+        tmp (str): Temporary file path
+    """
+    try:
+        os.unlink(tmp)
+    except OSError:
+        pass
+
+
 def atomic_write(file, data):
     """
     Atomic file write with minimal IO operation
     and handles cases where file might be read by another process.
+    A failed write leaves the target untouched and no tmp file behind.
 
     os.replace() is an atomic operation among all OS,
     we write to temp file then do os.replace()
@@ -415,14 +437,19 @@ def atomic_write(file, data):
         data (Union[str, bytes]): Data to write
     """
     tmp = to_tmp_file(file)
-    file_write(tmp, data)
+    try:
+        file_write(tmp, data)
+    except BaseException:
+        _remove_tmp_on_failure(tmp)
+        raise
     replace_tmp(tmp, file)
 
 
-def atomic_write_stream(file, data_generator):
+def atomic_write_stream(file, data_generator, mode=None):
     """
     Atomic file write with streaming data support.
     Handles cases where file might be read by another process.
+    A failed write leaves the target untouched and no tmp file behind.
 
     os.replace() is an atomic operation among all OS,
     we write to temp file then do os.replace()
@@ -430,9 +457,18 @@ def atomic_write_stream(file, data_generator):
     Args:
         file (str): Target file path
         data_generator (Iterable): An iterable that yields data chunks (str or bytes)
+        mode (int): POSIX mode of the target file, set on the tmp file before it
+            replaces the target, so the mode of the target is never observable
+            in between. None to keep the default mode
     """
     tmp = to_tmp_file(file)
-    file_write_stream(tmp, data_generator)
+    try:
+        file_write_stream(tmp, data_generator)
+        if mode is not None:
+            os.chmod(tmp, mode)
+    except BaseException:
+        _remove_tmp_on_failure(tmp)
+        raise
     replace_tmp(tmp, file)
 
 
@@ -453,9 +489,7 @@ def file_read_text(file, encoding='utf-8', errors='strict'):
         return f.read()
 
 
-def file_read_text_stream(
-    file, encoding='utf-8', errors='strict', chunk_size=CHUNK_SIZE
-):
+def file_read_text_stream(file, encoding='utf-8', errors='strict', chunk_size=CHUNK_SIZE):
     """
     Read text file content as stream
 
@@ -562,9 +596,7 @@ def atomic_read_text(file, encoding='utf-8', errors='strict'):
         return file_read_text(file, encoding=encoding, errors=errors)
 
 
-def atomic_read_text_stream(
-    file, encoding='utf-8', errors='strict', chunk_size=CHUNK_SIZE
-):
+def atomic_read_text_stream(file, encoding='utf-8', errors='strict', chunk_size=CHUNK_SIZE):
     """
     Atomic file read with streaming support
 
@@ -583,9 +615,7 @@ def atomic_read_text_stream(
         last_error = None
         for attempt in range(WINDOWS_MAX_ATTEMPT):
             try:
-                yield from file_read_text_stream(
-                    file, encoding=encoding, errors=errors, chunk_size=chunk_size
-                )
+                yield from file_read_text_stream(file, encoding=encoding, errors=errors, chunk_size=chunk_size)
                 return
             except PermissionError as e:
                 last_error = e
@@ -596,9 +626,7 @@ def atomic_read_text_stream(
             raise last_error from None
     else:
         # Linux and Mac allow reading while replacing
-        yield from file_read_text_stream(
-            file, encoding=encoding, errors=errors, chunk_size=chunk_size
-        )
+        yield from file_read_text_stream(file, encoding=encoding, errors=errors, chunk_size=chunk_size)
         return
 
 
@@ -770,6 +798,7 @@ def file_copy(source, target, chunk_size=CHUNK_SIZE):
 def atomic_copy(source, target, chunk_size=CHUNK_SIZE):
     """
     Atomic file write with minimal IO operation and memory usage
+    A failed copy leaves the target untouched and no tmp file behind.
 
     Args:
         source (str):
@@ -777,7 +806,11 @@ def atomic_copy(source, target, chunk_size=CHUNK_SIZE):
         chunk_size (int):
     """
     tmp = to_tmp_file(source)
-    file_copy(source, tmp, chunk_size=chunk_size)
+    try:
+        file_copy(source, tmp, chunk_size=chunk_size)
+    except BaseException:
+        _remove_tmp_on_failure(tmp)
+        raise
     replace_tmp(tmp, target)
 
 
@@ -982,7 +1015,7 @@ def is_empty_folder(folder, ignore_pycache=False):
                     # having any entry
                     return False
         return True
-    except FileNotFoundError, NotADirectoryError:
+    except (FileNotFoundError, NotADirectoryError):
         return False
 
 
@@ -1019,11 +1052,14 @@ def atomic_rmtree_empty(folder):
     Returns:
         bool: If success
     """
+    if not is_empty_folder(folder):
+        # Folder not exist, or not empty, no need to rmtree
+        return False
     tmp = to_tmp_file(folder)
     try:
         atomic_replace(folder, tmp)
     except FileNotFoundError:
-        # Folder not exist, no need to rmtree
+        # Folder removed by another process after the empty check
         return False
     return folder_rmtree_empty(tmp)
 

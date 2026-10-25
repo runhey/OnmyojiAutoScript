@@ -10,11 +10,14 @@ def normpath(path: str) -> str:
     if WINDOWS_SEP:
         # In most cases just normpath('xxx.png') check '/' first to be faster
         if '\\' in path:
-            return path.rstrip('\\/').replace('\\', '/')
+            normalized = path.rstrip('\\/').replace('\\', '/')
         else:
-            return path.rstrip('\\/')
+            normalized = path.rstrip('\\/')
     else:
-        return path.rstrip('/')
+        normalized = path.rstrip('/')
+    # A bare root ("/" / "\\") is kept as "/" instead of becoming an empty
+    # string, an empty input stays empty
+    return normalized or ('/' if path else '')
 
 
 def joinpath(root: str, path: str) -> str:
@@ -65,7 +68,11 @@ def joinnormpath(root: str, path: str) -> str:
 
     if root:
         if path:
-            return f'{root}/{path}'
+            if root == '/':
+                # linux root, don't create '//path'
+                return f'/{path}'
+            else:
+                return f'{root}/{path}'
         else:
             return root
     else:
@@ -127,7 +134,7 @@ def abspath(path: str) -> str:
     """
     if is_abspath(path):
         return path
-    root = os.getcwd()
+    root = normpath(os.getcwd())
     return joinpath(root, path)
 
 
@@ -170,24 +177,51 @@ def to_python_import(path):
 
 def subpath_to(path, root):
     """
-    Calculate sub-path to `root`.
-    If `path` is not sub-path to `root`, return `path`
+    Calculate sub-path to `root`
+    If `path` is not a sub-path to `root`, return None
 
     Args:
         path (str): Normalized path
         root (str): Normalized path
 
     Returns:
-        str:
+        str | None: Sub-path to `root`, None if `path` is not a sub-path
     """
-    if path.startswith(root):
-        path = path[len(root) :]
-        if WINDOWS_SEP:
-            return path.lstrip('\\/')
-        else:
-            return path.lstrip('/')
-    else:
-        return path
+    if not path.startswith(root):
+        return None
+    rest = path[len(root):]
+    # path == root, the empty path is the sub-path of an empty root
+    if not rest:
+        return rest
+    # An empty root is the prefix of no non-empty path
+    if not root:
+        return None
+    # Both paths are normalized (separator "/"), a plain string prefix is not
+    # enough, the rest of the path must continue at a separator boundary,
+    # otherwise "/a/bc" would be treated as a sub-path to "/a/b"
+    if rest[0] == '/' or root.endswith('/'):
+        return rest.lstrip('/')
+    return None
+
+
+def subpath(path, root):
+    """
+    Calculate sub-path to `root`, `path` must be a sub-path of `root`
+
+    Args:
+        path (str): Normalized path
+        root (str): Normalized path
+
+    Raises:
+        ValueError: If `path` is not a sub-path of `root`
+
+    Returns:
+        str: Sub-path to `root`
+    """
+    result = subpath_to(path, root)
+    if result is None:
+        raise ValueError(f'Not a sub-path: path="{path}", root="{root}"')
+    return result
 
 
 def get_name(path: str) -> str:
@@ -333,7 +367,7 @@ def with_suffix(path: str, suffix: str) -> str:
         if dot:
             return f'{stem}{suffix}'
         else:
-            return suffix
+            return f'{name}{suffix}'
 
 
 def with_multisuffix(path: str, suffix: str) -> str:
@@ -353,4 +387,4 @@ def with_multisuffix(path: str, suffix: str) -> str:
         if dot:
             return f'{stem}{suffix}'
         else:
-            return suffix
+            return f'{name}{suffix}'

@@ -16,7 +16,7 @@ from oas.ext.path.makedir import (
 @pytest.fixture(scope='module')
 def temp_dir():
     """
-    Create a temporary test folder under ALASIO_ROOT,
+    Create a temporary test folder under OAS_ROOT,
     removed after all tests in this module finish
 
     Yields:
