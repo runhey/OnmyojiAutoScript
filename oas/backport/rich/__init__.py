@@ -1,7 +1,7 @@
 # Trimmed from alasio/backport/rich/__init__.py for OAS (Python 3.14)
 # Kept: patch_rich_traceback_links (IDE-clickable tracebacks, version-independent)
 # Dropped: patch_rich_traceback_extract (only needed for python<3.11 + rich<14.3 exceptiongroup)
-from oas.backport.once import patch_once
+from oas.backport.once import init_once
 
 
 def parse_rich_traceback_header(line):
@@ -31,7 +31,7 @@ def parse_rich_traceback_header(line):
     return path, line_num, function_name
 
 
-@patch_once
+@init_once
 def patch_rich_traceback_links():
     """
     Patch rich.traceback to format header like python builtin traceback,

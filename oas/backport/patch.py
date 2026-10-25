@@ -3,10 +3,10 @@
 # Dropped: patch_mimetype / patch_threadpool_executor_maxworker / fix_py37_subprocess_communicate
 import sys
 
-from oas.backport.once import patch_once
+from oas.backport.once import init_once
 
 
-@patch_once
+@init_once
 def patch_std():
     """
     Force use utf-8 in stdin, stdout, stderr, ignoring any user env.
@@ -20,13 +20,13 @@ def patch_std():
         sys.stdout.reconfigure(encoding='utf-8', errors='replace')
         sys.stderr.reconfigure(encoding='utf-8', errors='replace')
         return True
-    except AttributeError, TypeError:
+    except (AttributeError, TypeError):
         # std may get replaced by user's TextIO
         # which does not have reconfigure()
         return False
 
 
-@patch_once
+@init_once
 def patch_environ():
     """
     Remove all python related environs, updated to python 3.15

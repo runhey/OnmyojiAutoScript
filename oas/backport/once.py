@@ -2,17 +2,17 @@ from functools import wraps
 from threading import Lock
 
 
-def patch_once(f):
+def init_once(f):
     """
     Run a function only once, no matter how many times it has been called.
-    This decorator is thread-safe.
+    This decorator is thread-safe, see run_once for more info.
     """
     lock = Lock()
     has_run = False
 
     @wraps(f)
     def wrapper(*args, **kwargs):
-        nonlocal has_run, lock
+        nonlocal has_run
         if has_run:
             return
         with lock:
@@ -20,7 +20,8 @@ def patch_once(f):
                 return
             f(*args, **kwargs)
             has_run = True
-        lock = None
+        # Keep the lock referenced, a thread that already passed the check
+        # above may still be about to acquire it.
 
     return wrapper
 
@@ -28,7 +29,9 @@ def patch_once(f):
 def run_once(f):
     """
     Run a function only once, no matter how many times it has been called.
-    This decorator is thread-safe, see run_once for more info
+    run_once() can be reset and return cached result on later calls.
+    init_once() cannot be reset and has no return, usually to be used in initialization.
+    This decorator is thread-safe.
 
     Examples:
         @run_once
@@ -68,8 +71,8 @@ def run_once(f):
             if wrapper.has_run:
                 return wrapper.result
             result = f(*args, **kwargs)
-            wrapper.has_run = True
             wrapper.result = result
+            wrapper.has_run = True
         return result
 
     wrapper.has_run = False
