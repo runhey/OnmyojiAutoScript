@@ -1,0 +1,456 @@
+{
+  "$defs": {
+    "AdbGroup": {
+      "description": "ADB executable and emulator connection behaviour.",
+      "properties": {
+        "adb_executable": {
+          "default": "./toolkit/Lib/site-packages/adbutils/binaries/adb.exe",
+          "description": "adb_executable_help",
+          "hide": false,
+          "input": "path",
+          "title": "Adb Executable",
+          "type": "Input"
+        },
+        "replace_adb": {
+          "default": true,
+          "description": "replace_adb_help",
+          "hide": false,
+          "title": "Replace Adb",
+          "type": "Switch"
+        },
+        "auto_connect": {
+          "default": true,
+          "description": "auto_connect_help",
+          "hide": false,
+          "title": "Auto Connect",
+          "type": "Switch"
+        },
+        "install_uiautomator2": {
+          "default": true,
+          "description": "install_uiautomator2_help",
+          "hide": false,
+          "title": "Install Uiautomator2",
+          "type": "Switch"
+        }
+      },
+      "title": "AdbGroup",
+      "type": "object"
+    },
+    "GitGroup": {
+      "description": "Git repository and update policy.",
+      "properties": {
+        "repository": {
+          "default": "https://gitcode.com/OnmyojiAutoScript/OnmyojiAutoScript.git",
+          "description": "repository_help",
+          "hide": false,
+          "input": "str",
+          "title": "Repository",
+          "type": "Input"
+        },
+        "branch": {
+          "default": "master",
+          "description": "branch_help",
+          "hide": false,
+          "input": "str",
+          "title": "Branch",
+          "type": "Input"
+        },
+        "git_executable": {
+          "default": "./toolkit/Git/mingw64/bin/git.exe",
+          "description": "git_executable_help",
+          "hide": false,
+          "input": "path",
+          "title": "Git Executable",
+          "type": "Input"
+        },
+        "git_proxy": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "git_proxy_help",
+          "hide": false,
+          "input": "str",
+          "title": "Git Proxy",
+          "type": "Input"
+        },
+        "ssl_verify": {
+          "default": false,
+          "description": "ssl_verify_help",
+          "hide": false,
+          "title": "Ssl Verify",
+          "type": "Switch"
+        },
+        "auto_update": {
+          "default": true,
+          "description": "auto_update_help",
+          "hide": false,
+          "title": "Auto Update",
+          "type": "Switch"
+        },
+        "keep_local_changes": {
+          "default": false,
+          "description": "keep_local_changes_help",
+          "hide": false,
+          "title": "Keep Local Changes",
+          "type": "Switch"
+        }
+      },
+      "title": "GitGroup",
+      "type": "object"
+    },
+    "OcrGroup": {
+      "description": "OCR server mode and address.",
+      "properties": {
+        "use_ocr_server": {
+          "default": false,
+          "description": "use_ocr_server_help",
+          "hide": false,
+          "title": "Use Ocr Server",
+          "type": "Switch"
+        },
+        "start_ocr_server": {
+          "default": false,
+          "description": "start_ocr_server_help",
+          "hide": false,
+          "title": "Start Ocr Server",
+          "type": "Switch"
+        },
+        "ocr_server_port": {
+          "default": 22268,
+          "description": "ocr_server_port_help",
+          "hide": false,
+          "input": "int",
+          "maximum": 65535,
+          "minimum": 1,
+          "title": "Ocr Server Port",
+          "type": "Input"
+        },
+        "ocr_client_address": {
+          "default": "127.0.0.1:22268",
+          "description": "ocr_client_address_help",
+          "hide": false,
+          "input": "str",
+          "title": "Ocr Client Address",
+          "type": "Input"
+        }
+      },
+      "title": "OcrGroup",
+      "type": "object"
+    },
+    "PythonGroup": {
+      "description": "Python dependency download source.",
+      "properties": {
+        "pypi_mirror": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "pypi_mirror_help",
+          "hide": false,
+          "input": "str",
+          "title": "Pypi Mirror",
+          "type": "Input"
+        }
+      },
+      "title": "PythonGroup",
+      "type": "object"
+    },
+    "RemoteAccessGroup": {
+      "description": "SSH reverse tunnel remote access.",
+      "properties": {
+        "enable_remote_access": {
+          "default": false,
+          "description": "enable_remote_access_help",
+          "hide": false,
+          "title": "Enable Remote Access",
+          "type": "Switch"
+        },
+        "ssh_user": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "ssh_user_help",
+          "hide": false,
+          "input": "str",
+          "title": "Ssh User",
+          "type": "Input"
+        },
+        "ssh_server": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "ssh_server_help",
+          "hide": false,
+          "input": "str",
+          "title": "Ssh Server",
+          "type": "Input"
+        },
+        "ssh_executable": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": "ssh",
+          "description": "ssh_executable_help",
+          "hide": false,
+          "input": "str",
+          "title": "Ssh Executable",
+          "type": "Input"
+        }
+      },
+      "title": "RemoteAccessGroup",
+      "type": "object"
+    },
+    "UpdateGroup": {
+      "description": "Self update and scheduled restart.",
+      "properties": {
+        "enable_reload": {
+          "default": true,
+          "description": "enable_reload_help",
+          "hide": false,
+          "title": "Enable Reload",
+          "type": "Switch"
+        },
+        "check_update_interval": {
+          "default": 5,
+          "description": "check_update_interval_help",
+          "hide": false,
+          "input": "int",
+          "minimum": 0,
+          "title": "Check Update Interval",
+          "type": "Input"
+        },
+        "auto_restart_time": {
+          "anyOf": [
+            {
+              "type": "Time"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": "03:50:00",
+          "description": "auto_restart_time_help",
+          "hide": false,
+          "title": "Auto Restart Time",
+          "type": "Time"
+        }
+      },
+      "title": "UpdateGroup",
+      "type": "object"
+    },
+    "WebuiGroup": {
+      "description": "Local server, web UI presentation and startup behaviour.",
+      "properties": {
+        "host": {
+          "default": "0.0.0.0",
+          "description": "host_help",
+          "hide": false,
+          "input": "str",
+          "title": "Host",
+          "type": "Input"
+        },
+        "port": {
+          "default": 22288,
+          "description": "port_help",
+          "hide": false,
+          "input": "int",
+          "maximum": 65535,
+          "minimum": 1,
+          "title": "Port",
+          "type": "Input"
+        },
+        "language": {
+          "default": "zh-CN",
+          "description": "language_help",
+          "hide": false,
+          "oneOf": [
+            {
+              "const": "zh-CN",
+              "default": "zh-CN",
+              "description": "$language.zh_cn.description",
+              "hide": false,
+              "readOnly": true,
+              "title": "简体中文",
+              "type": "string"
+            },
+            {
+              "const": "en-US",
+              "default": "en-US",
+              "description": "$language.en_us.description",
+              "hide": false,
+              "readOnly": true,
+              "title": "English",
+              "type": "string"
+            },
+            {
+              "const": "ja-JP",
+              "default": "ja-JP",
+              "description": "$language.ja_jp.description",
+              "hide": false,
+              "readOnly": true,
+              "title": "日本語",
+              "type": "string"
+            },
+            {
+              "const": "zh-TW",
+              "default": "zh-TW",
+              "description": "$language.zh_tw.description",
+              "hide": false,
+              "readOnly": true,
+              "title": "繁體中文",
+              "type": "string"
+            }
+          ],
+          "title": "Language",
+          "type": "Option"
+        },
+        "theme": {
+          "default": "default",
+          "description": "theme_help",
+          "hide": false,
+          "oneOf": [
+            {
+              "const": "default",
+              "default": "default",
+              "description": "$theme.default.description",
+              "hide": false,
+              "readOnly": true,
+              "title": "浅色",
+              "type": "string"
+            },
+            {
+              "const": "dark",
+              "default": "dark",
+              "description": "$theme.dark.description",
+              "hide": false,
+              "readOnly": true,
+              "title": "深色",
+              "type": "string"
+            }
+          ],
+          "title": "Theme",
+          "type": "Option"
+        },
+        "dpi_scaling": {
+          "default": true,
+          "description": "dpi_scaling_help",
+          "hide": false,
+          "title": "Dpi Scaling",
+          "type": "Switch"
+        },
+        "password": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "password_help",
+          "hide": false,
+          "input": "secret_str",
+          "title": "Password",
+          "type": "Input",
+          "writeOnly": true
+        },
+        "cdn": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "boolean"
+            }
+          ],
+          "default": false,
+          "description": "cdn_help",
+          "hide": false,
+          "input": "str",
+          "title": "Cdn",
+          "type": "Input"
+        },
+        "run": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "run_help",
+          "hide": false,
+          "input": "str",
+          "title": "Run",
+          "type": "Input"
+        }
+      },
+      "title": "WebuiGroup",
+      "type": "object"
+    }
+  },
+  "description": "Deploy settings, formerly the flat ``ConfigModel`` of deploy.yaml.",
+  "properties": {
+    "git": {
+      "$ref": "#/$defs/GitGroup",
+      "description": "git_group_help"
+    },
+    "python": {
+      "$ref": "#/$defs/PythonGroup",
+      "description": "python_group_help"
+    },
+    "adb": {
+      "$ref": "#/$defs/AdbGroup",
+      "description": "adb_group_help"
+    },
+    "ocr": {
+      "$ref": "#/$defs/OcrGroup",
+      "description": "ocr_group_help"
+    },
+    "update": {
+      "$ref": "#/$defs/UpdateGroup",
+      "description": "update_group_help"
+    },
+    "remote_access": {
+      "$ref": "#/$defs/RemoteAccessGroup",
+      "description": "remote_access_group_help"
+    },
+    "webui": {
+      "$ref": "#/$defs/WebuiGroup",
+      "description": "webui_group_help"
+    }
+  },
+  "title": "Settings",
+  "type": "object"
+}
