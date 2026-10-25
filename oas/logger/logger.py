@@ -7,13 +7,8 @@ from oas.backport import str_center
 from oas.backport.patch import patch_startup
 from oas.backport.rich import patch_rich_traceback_links
 from oas.logger.utils import (
-    empty_function,
-    event_args_format,
-    event_format,
-    figure_out_exc_info,
-    join_event_dict,
-    replace_unicode_table,
-    stringify_event,
+    empty_function, event_args_format, event_format, figure_out_exc_info, join_event_dict, replace_unicode_table,
+    stringify_event
 )
 from oas.logger.writer import CaptureWriter, LogWriter
 
@@ -37,30 +32,25 @@ def rich_formatter(exc_info):
 
     tb = Traceback.from_exception(
         # see structlog.dev.RichTracebackFormatter()
-        *exc_info,
-        show_locals=True,
-        word_wrap=True,
-        max_frames=100,
+        *exc_info, show_locals=True, word_wrap=True, max_frames=100,
     )
-    if hasattr(tb, 'code_width'):
+    if hasattr(tb, "code_width"):
         # `code_width` requires `rich>=13.8.0`
         tb.code_width = 120
 
     # Rich (for terminal)
     sio_rich = StringIO()
     console_rich = Console(
-        file=sio_rich,
-        color_system='auto',
-        force_terminal=True,
-        width=120,
-        legacy_windows=False,
+        file=sio_rich, color_system='auto', force_terminal=True, width=120, legacy_windows=False
     )
     console_rich.print(tb)
     exception_rich = sio_rich.getvalue()
 
     # Plain (for file)
     sio_plain = StringIO()
-    console_plain = Console(file=sio_plain, color_system=None, width=120)
+    console_plain = Console(
+        file=sio_plain, color_system=None, width=120
+    )
     console_plain.print(tb)
     exception_plain = sio_plain.getvalue()
     exception_plain = replace_unicode_table(exception_plain)
@@ -201,7 +191,7 @@ class AlasioLogger(LoggingLevel):
         self.set_level(self._level)
 
     def mock_capture_writer(self):
-        """
+        r'''
         Mock writer for testing purpose
 
         Examples:
@@ -210,8 +200,11 @@ class AlasioLogger(LoggingLevel):
                 assert capture.fd.any_contains("Hello Info")
                 assert capture.stdout.any_contains("Hello Info")
                 assert any(log['l'] == 'INFO' and log['m'] == 'Hello Info' for log in capture.backend.logs)
+                assert capture.concat() == """\
+INFO | Hello Info
+"""
                 capture.clear()
-        """
+        '''
         return CaptureWriterContext(self)
 
     def mute(self, stdout=False, fd=False, backend=False, all=False):
@@ -255,11 +248,11 @@ class AlasioLogger(LoggingLevel):
         """
         # from structlog.__log_levels.add_log_level()
         # warn is just a deprecated alias in the stdlib.
-        if level == 'WARN':
-            level = 'WARNING'
+        if level == "WARN":
+            level = "WARNING"
         # Calling exception("") is the same as error("", exc_info=True)
-        if level == 'EXCEPTION':
-            level = 'ERROR'
+        if level == "EXCEPTION":
+            level = "ERROR"
 
         # from structlog _process_event
         if self._context:
@@ -313,9 +306,7 @@ class AlasioLogger(LoggingLevel):
 
         # inject time
         timestamp = time.time()
-        now = datetime.fromtimestamp(timestamp).isoformat(
-            sep=' ', timespec='milliseconds'
-        )
+        now = datetime.fromtimestamp(timestamp).isoformat(sep=' ', timespec='milliseconds')
 
         # build log text
         if raw:
@@ -379,14 +370,14 @@ class AlasioLogger(LoggingLevel):
                     writer.fd.write(text_plain)
                     try:
                         writer.stdout.write(text_rich)
-                    except OSError, ValueError:
+                    except (OSError, ValueError):
                         # stdout pipe may be broken while the host process is
                         # shutting down; logging must never raise into the caller
                         pass
                     writer.fd.flush()
                     try:
                         writer.stdout.flush()
-                    except OSError, ValueError:
+                    except (OSError, ValueError):
                         # stdout pipe may be broken while the host process is
                         # shutting down; logging must never raise into the caller
                         pass
@@ -654,7 +645,7 @@ class AlasioLogger(LoggingLevel):
         name = str(name).rjust(align)
         front = str(front)
         if front:
-            name = front + name[len(front) :]
+            name = front + name[len(front):]
         self.info(f'{name}: {text}')
 
 

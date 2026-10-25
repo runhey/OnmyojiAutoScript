@@ -16,16 +16,15 @@ if TYPE_CHECKING:
 # But we don't want to open multiple files
 class LogWriter(metaclass=Singleton):
     def __init__(self):
-        self.create_date: 'date | None' = None
+        self.create_date: "date | None" = None
         # OAS has no Electron shell, so the "file only, no stdout" branch in
         # AlasioLogger._emit() never applies. Kept as an instance attribute so
         # a future desktop wrapper can flip it in one place.
         self.is_electron = False
 
     @cached_property_threadsafe
-    def backend(self) -> 'BackendBridge | PseudoBackendBridge':
+    def backend(self) -> "BackendBridge | PseudoBackendBridge":
         from oas.backend.worker.bridge import BackendBridge
-
         backend = BackendBridge()
         if backend.inited:
             return backend
@@ -66,16 +65,32 @@ class LogWriter(metaclass=Singleton):
         if self.create_date and self.create_date != date.today():
             self.close()
 
-    def close(self):
-        cached_property_threadsafe.pop(self, 'backend')
-        cached_property_threadsafe.pop(self, 'file')
-        cached_property_threadsafe.pop(self, 'stdout')
-        fd = cached_property_threadsafe.pop(self, 'fd')
+    @staticmethod
+    def _close_fd_value(fd):
+        """
+        Close a log file fd, if any.
+
+        The fd may be a PseudoStream while file output is muted; it has no
+        close(), the exception is ignored.
+        """
         if fd is not None:
             try:
                 fd.close()
             except Exception:
                 pass
+
+    def _close_fd(self):
+        """
+        Close and drop the cached log file fd, if any.
+        """
+        fd = cached_property_threadsafe.pop(self, 'fd', None)
+        self._close_fd_value(fd)
+
+    def close(self):
+        cached_property_threadsafe.pop(self, 'backend')
+        cached_property_threadsafe.pop(self, 'file')
+        cached_property_threadsafe.pop(self, 'stdout')
+        self._close_fd()
 
     def close_fd(self):
         """
@@ -88,12 +103,7 @@ class LogWriter(metaclass=Singleton):
         path and fd caches are dropped, stdout and backend stay intact.
         """
         cached_property_threadsafe.pop(self, 'file', None)
-        fd = cached_property_threadsafe.pop(self, 'fd', None)
-        if fd is not None:
-            try:
-                fd.close()
-            except Exception:
-                pass
+        self._close_fd()
 
     def mute(self, stdout=False, fd=False, backend=False, all=False):
         """
@@ -110,7 +120,14 @@ class LogWriter(metaclass=Singleton):
         if stdout:
             cached_property_threadsafe.set(self, 'stdout', PseudoStream())
         if fd:
-            cached_property_threadsafe.set(self, 'fd', PseudoStream())
+            # Replace under the cache lock, then close the previous handle:
+            # replacing without closing it leaks the handle, and Windows keeps
+            # the log file locked (it cannot be removed or rotated).
+            old_fd = cached_property_threadsafe.replace(self, 'fd', PseudoStream())
+            self._close_fd_value(old_fd)
+            # Drop the cached path too, so a later unmute follows a changed
+            # PROJECT_ROOT instead of reopening the old path.
+            cached_property_threadsafe.pop(self, 'file', None)
         if backend:
             cached_property_threadsafe.set(self, 'backend', PseudoBackendBridge())
 
@@ -119,7 +136,9 @@ class LogWriter(metaclass=Singleton):
         Clear all mutes.
         """
         cached_property_threadsafe.pop(self, 'stdout')
-        cached_property_threadsafe.pop(self, 'fd')
+        # A real fd may be cached when mute_clear() is called without a
+        # preceding mute(fd=True): close it instead of dropping the handle.
+        self.close_fd()
         cached_property_threadsafe.pop(self, 'backend')
 
     def __del__(self):
@@ -128,7 +147,7 @@ class LogWriter(metaclass=Singleton):
 
 class PseudoBackendBridge:
     inited = False
-    config_name = 'mock'
+    config_name = "mock"
 
     def send_log(self, event):
         return CaptureJob()
@@ -148,7 +167,7 @@ class CaptureStream:
         Args:
             parent (CaptureStream): Parent stream to also write to. Defaults to None.
         """
-        self.logs: 'list[str]' = []
+        self.logs: "list[str]" = []
         self.parent = parent
 
     def write(self, text):
@@ -183,10 +202,9 @@ class CaptureStream:
             pattern (str): Regex pattern to search for
 
         Returns:
-            bool: True if text is found in any log
+            bool: True if pattern matches any log
         """
         import re
-
         for log in self.logs:
             if re.search(pattern, log):
                 return True
@@ -204,9 +222,9 @@ class CaptureBackend:
         Args:
             parent (CaptureBackend): Parent backend to also send to. Defaults to None.
         """
-        self.logs: 'list[dict]' = []
+        self.logs: "list[dict]" = []
         self.inited = True
-        self.config_name = 'mock'
+        self.config_name = "mock"
         self.parent = parent
 
     def send_log(self, event):
@@ -239,15 +257,56 @@ class CaptureBackend:
             pattern (str): Regex pattern to search for
 
         Returns:
-            bool: True if text is found in any log entry value
+            bool: True if pattern matches any log entry value
         """
         import re
-
         for log in self.logs:
             for value in log.values():
                 if isinstance(value, str) and re.search(pattern, value):
                     return True
         return False
+
+    def concat(self):
+        """
+        Concatenate captured logs into a multi-line string, for test assertions
+
+        The text is formatted like the printed log, but the timestamp is dropped
+        because it's different on every run.
+            INFO | message
+            raw message
+
+        Returns:
+            str: Log text, one log per line, e.g.
+                INFO | message
+                WARNING | message
+                raw message
+        """
+        return ''.join(self._event_text(event) for event in self.logs)
+
+    @staticmethod
+    def _event_text(event):
+        """
+        Build log text from a captured log event, like the printed log but without timestamp
+
+        Args:
+            event (dict): Log event, keys are
+                'l' (str): Log level
+                'm' (str): Log message
+                'e' (str): Exception traceback, printed after the log message. Defaults to None.
+                'r' (int): Raw tag, the log message is pre-formatted. Defaults to None.
+
+        Returns:
+            str: Log text, ends with a newline
+        """
+        if event.get('r'):
+            # raw log, the message is pre-formatted, no level prefix
+            text = f"{event['m']}\n"
+        else:
+            text = f"{event['l']} | {event['m']}\n"
+        exception = event.get('e')
+        if exception:
+            text = f'{text}{exception}\n'
+        return text
 
 
 class CaptureWriter:
@@ -265,6 +324,21 @@ class CaptureWriter:
             self.stdout = CaptureStream()
             self.fd = CaptureStream()
             self.backend = CaptureBackend()
+
+    def concat(self):
+        """
+        Captured logs as a multi-line string, without timestamp, for test assertions
+
+        The text looks like the printed log, but the timestamp is dropped because
+        it's different on every run, for example
+            INFO | message
+            WARNING | message
+            raw message
+
+        Returns:
+            str: Log text, see `CaptureBackend.concat()`
+        """
+        return self.backend.concat()
 
     def clear(self):
         self.stdout.logs.clear()

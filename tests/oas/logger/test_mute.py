@@ -31,8 +31,15 @@ class TestMute(BaseLoggerTest):
         """
         writer = LogWriter()
 
+        # The base fixture opened the log file: muting has to close that fd
+        # instead of leaking it (a leaked handle keeps the file locked on
+        # Windows and blocks cleanup).
+        old_fd = writer.fd
+        assert not old_fd.closed
+
         # Mute fd
         logger.mute(fd=True)
+        assert old_fd.closed, 'mute(fd=True) leaked the open log file'
         assert isinstance(writer.fd, PseudoStream)
 
         # Log something while muted
@@ -43,11 +50,26 @@ class TestMute(BaseLoggerTest):
         # Clear mute
         logger.mute_clear()
         assert not isinstance(writer.fd, PseudoStream)
+        assert not writer.fd.closed
 
         # Log something after clearing mute
         logger.info('Unmuted file message')
         content = self._read_log_file()
         assert 'Unmuted file message' in content
+
+    def test_mute_clear_closes_a_real_fd(self):
+        """
+        mute_clear() without a preceding mute must close the cached real fd
+        instead of dropping it
+        """
+        writer = LogWriter()
+        old_fd = writer.fd
+        assert not old_fd.closed
+
+        logger.mute_clear()
+
+        assert old_fd.closed, 'mute_clear() dropped an open log file without closing it'
+        assert not writer.fd.closed
 
     def test_mute_backend(self):
         """
@@ -63,10 +85,7 @@ class TestMute(BaseLoggerTest):
         # Clear mute
         logger.mute_clear()
         # Should return to original backend state (inited=False in tests as BackendBridge is not initialized)
-        assert (
-            not isinstance(writer.backend, PseudoBackendBridge)
-            or writer.backend is not None
-        )
+        assert not isinstance(writer.backend, PseudoBackendBridge) or writer.backend is not None
 
     def test_mute_all(self):
         """
