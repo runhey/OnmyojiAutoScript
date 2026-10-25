@@ -12,8 +12,9 @@ import pytest
 from conftest import join
 from pathlib import Path
 
+from oas.ext.path.calc import joinpath
 from oas.testing.filesystem import FakeDir, FakeFile, FakeSymlink, fs  # noqa: F401
-from oas.testing.filesystem.base import IS_WINDOWS, _normpath
+from oas.testing.filesystem.base import IS_WINDOWS, _normpath, _parent_path, _split_abspath
 
 
 class TestNormpath:
@@ -24,22 +25,22 @@ class TestNormpath:
         Returns:
             list[tuple[str, str]]: (path, expected) pairs of one platform
         """
-        root = 'C:' if IS_WINDOWS else ''
-        cwd = f'{root}/work'
+        root = 'C:' if IS_WINDOWS else '/'
+        cwd = joinpath(root, 'work')
         return [
             # absolute paths
-            ('/a/b', f'{root}/a/b'),
-            ('/a/../b', f'{root}/b'),
-            ('/a/./b', f'{root}/a/b'),
-            ('//a//b', f'{root}/a/b'),
+            ('/a/b', joinpath(root, 'a/b')),
+            ('/a/../b', joinpath(root, 'b')),
+            ('/a/./b', joinpath(root, 'a/b')),
+            ('//a//b', joinpath(root, 'a/b')),
             ('/a/../..', root),
-            ('/data.txt', f'{root}/data.txt'),
+            ('/data.txt', joinpath(root, 'data.txt')),
             # relative paths
-            ('a.txt', f'{cwd}/a.txt'),
-            ('a/b/../c', f'{cwd}/a/c'),
-            ('a/../../b', f'{root}/b'),
+            ('a.txt', joinpath(cwd, 'a.txt')),
+            ('a/b/../c', joinpath(cwd, 'a/c')),
+            ('a/../../b', joinpath(root, 'b')),
             ('a/../..', root),
-            ('./a', f'{cwd}/a'),
+            ('./a', joinpath(cwd, 'a')),
             ('', cwd),
         ]
 
@@ -52,7 +53,7 @@ class TestNormpath:
     def test_root_cwd(self):
         """Relative paths against the root cwd should work."""
         root = 'C:' if IS_WINDOWS else '/'
-        assert _normpath('a/b', root) == f'{root}/a/b'
+        assert _normpath('a/b', root) == joinpath(root, 'a/b')
         assert _normpath('..', root) == root
         assert _normpath('a/../..', root) == root
 
@@ -84,6 +85,33 @@ class TestNormpath:
         """PathLike inputs should be accepted."""
         cwd = 'C:/work' if IS_WINDOWS else '/work'
         assert _normpath(Path('/a/b'), cwd) == _normpath('/a/b', cwd)
+
+
+class TestSplitAbspath:
+    def test_dot_segments_are_kept(self):
+        assert _split_abspath('/a/./b/../c', '/work') == ('/', ['a', '.', 'b', '..', 'c'])
+
+    def test_empty_components_are_dropped(self):
+        assert _split_abspath('//a//b', '/') == ('/', ['a', 'b'])
+
+    def test_relative_path(self):
+        cwd = 'C:/work' if IS_WINDOWS else '/work'
+        root = 'C:' if IS_WINDOWS else '/'
+        assert _split_abspath('a/../b', cwd) == (root, ['work', 'a', '..', 'b'])
+
+    @pytest.mark.skipif(not IS_WINDOWS, reason='drive letters are Windows only')
+    def test_windows_drive(self):
+        assert _split_abspath('C:/a', 'C:/work') == ('C:', ['a'])
+        assert _split_abspath('C:a', 'C:/work') == ('C:', ['a'])
+        assert _split_abspath('C:', 'C:/work') == ('C:', [])
+        assert _split_abspath('/a', 'C:/work') == ('C:', ['a'])
+
+
+class TestParentPath:
+    def test_parent(self):
+        root = 'C:' if IS_WINDOWS else '/'
+        assert _parent_path(joinpath(root, 'a/b.txt')) == joinpath(root, 'a')
+        assert _parent_path(root) == root
 
 
 class TestFakeFileRecord:

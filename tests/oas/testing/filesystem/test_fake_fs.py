@@ -149,11 +149,17 @@ class TestOpenModes:
             open(join(fs, 'missing.txt'))
 
     def test_write_creates(self, fs):
-        """Write mode should create the file and the parents."""
+        """Write mode should create the file in an existing directory."""
+        fs.create_dir(join(fs, 'a'))
         with open(join(fs, 'a', 'b.txt'), 'w') as f:
             f.write('data')
         with open(join(fs, 'a', 'b.txt'), 'rb') as f:
             assert f.read() == b'data'
+
+    def test_write_missing_parent(self, fs):
+        """Write mode without a parent directory should raise."""
+        with pytest.raises(FileNotFoundError):
+            open(join(fs, 'a', 'b.txt'), 'w')
 
     def test_write_truncates(self, fs):
         """Write mode should truncate the existing file at open."""
@@ -430,6 +436,12 @@ class TestSymlink:
         fs.create_file(join(fs, 'a.txt'), contents='data')
         os.symlink('a.txt', join(fs, 'link'))
         assert os.path.realpath(join(fs, 'link')) == join(fs, 'a.txt')
+
+    def test_realpath_relative_dotdot_target(self, fs):
+        fs.create_dir(join(fs, 'dir'))
+        fs.create_file(join(fs, 'a.txt'), contents='data')
+        os.symlink('../a.txt', join(fs, 'dir', 'link'))
+        assert os.path.realpath(join(fs, 'dir', 'link')) == join(fs, 'a.txt')
 
     def test_realpath_dotdot(self, fs):
         """'..' should collapse on the resolved prefix, after the link."""

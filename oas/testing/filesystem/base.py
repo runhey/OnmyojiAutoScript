@@ -4,13 +4,20 @@ Base types of the in-memory fake filesystem.
 Path normalization, the file/directory records (dataclass with slots) and the state
 lock helper.
 """
-
 import os
 import stat
-from dataclasses import dataclass
 from functools import wraps
 
+from dataclasses import dataclass
+
+from oas.ext.path.calc import joinpath
+
 IS_WINDOWS = os.name == 'nt'
+# The collapsing of "." and ".." is the one of the running platform. The fake
+# filesystem patches os / os.path, but normpath is not one of the patched
+# functions (see FakeFilesystem._iter_patches) and the filesystem itself must
+# not follow a patch of it: the name is bound before any patch can be made.
+_platform_normpath = os.path.normpath
 
 
 def synchronized(method):
@@ -30,13 +37,74 @@ def synchronized(method):
     Returns:
         callable: The method, guarded by ``self._lock``
     """
-
     @wraps(method)
     def wrapper(self, *args, **kwargs):
         with self._lock:
             return method(self, *args, **kwargs)
-
     return wrapper
+
+
+def _split_abspath(path, cwd):
+    """
+    Split a path into its root and the components below it.
+
+    Relative paths are resolved against cwd and the separators are normalized
+    to "/". The "." and ".." components are kept: the caller decides how to
+    collapse them, a symbolic link has to be resolved before the ".." that
+    follows it.
+
+    Args:
+        path (str): Path to split
+        cwd (str): Normalized absolute current working directory, only used
+            to resolve a relative path and to pick the drive of an absolute
+            path that has none. An empty cwd keeps such a path on the POSIX
+            root
+
+    Returns:
+        tuple[str, list[str]]: Root, "/" or the drive root "C:", and the
+            non-empty path components below it
+    """
+    path = str(path)
+    if IS_WINDOWS:
+        path = path.replace('\\', '/')
+    drive = ''
+    if IS_WINDOWS and len(path) > 1 and path[1] == ':':
+        # explicit drive letter, e.g. "C:/a" or "C:"
+        drive, path = path[:2], path[2:]
+    if not path.startswith('/'):
+        if drive:
+            # drive-relative path "C:foo", resolved on the drive root
+            path = f'/{path}'
+        else:
+            # relative path, resolve against cwd
+            path = f'{cwd}/{path}'
+            if IS_WINDOWS and len(path) > 1 and path[1] == ':':
+                # the joined path starts with the cwd drive
+                drive, path = path[:2], path[2:]
+    elif IS_WINDOWS and not drive and cwd[1:2] == ':':
+        # absolute path without a drive letter, e.g. "/data.txt",
+        # use the drive of cwd like the real os. A cwd without a drive
+        # (the POSIX root of a fake filesystem) keeps the path as it is
+        drive = cwd[:2]
+    root = drive or '/'
+    return root, [bit for bit in path.split('/') if bit]
+
+
+def _parent_path(path):
+    """
+    Parent of a normalized absolute path, a root is its own parent.
+
+    Args:
+        path (str): Normalized absolute path, e.g. "/a/a.txt"
+
+    Returns:
+        str: Parent path, "/" for a child of the POSIX root and "C:" for a
+            child of the drive root
+    """
+    parent = path.rpartition('/')[0]
+    if parent:
+        return parent
+    return '/' if path.startswith('/') else path
 
 
 def _normpath(path, cwd):
@@ -57,40 +125,14 @@ def _normpath(path, cwd):
     Returns:
         str: Normalized absolute path
     """
-    path = str(path)
-    if IS_WINDOWS:
-        path = path.replace('\\', '/')
-    drive = ''
-    if IS_WINDOWS and len(path) > 1 and path[1] == ':':
-        # explicit drive letter, e.g. "C:/a" or "C:"
-        drive, path = path[:2], path[2:]
-    if not path.startswith('/'):
-        if drive:
-            # drive-relative path "C:foo", resolved on the drive root
-            path = f'/{path}'
-        else:
-            # relative path, resolve against cwd
-            path = f'{cwd}/{path}'
-            if IS_WINDOWS and len(path) > 1 and path[1] == ':':
-                # the joined path starts with the cwd drive
-                drive, path = path[:2], path[2:]
-    elif IS_WINDOWS and not drive:
-        # absolute path without a drive letter, e.g. "/data.txt",
-        # use the drive of cwd like the real os
-        drive = cwd[:2]
-    if drive:
-        # "C:" is the drive root, "C:/a" is a path on the drive
-        path = drive if path == '/' else f'{drive}/{path}'
+    root, bits = _split_abspath(path, cwd)
     # collapse ".", ".." and duplicate separators
-    path = os.path.normpath(path)
+    path = _platform_normpath(joinpath(root, '/'.join(bits)))
     if IS_WINDOWS:
         path = path.replace('\\', '/')
-        if drive and path == f'{drive}/':
-            # normpath() returns "C:/" for the drive root
-            path = drive
-    elif path.startswith('//'):
-        # normpath() keeps a leading "//" on POSIX, the root is "/"
-        path = path[1:]
+        if path != '/' and path.endswith('/'):
+            # normpath() returns "C:/" for the drive root, "C:" is the root
+            path = path[:-1]
     return path
 
 
@@ -113,9 +155,7 @@ def _build_stat(st_mode, ino, dev, nlink, uid, gid, size, atime, mtime, ctime):
     Returns:
         os.stat_result:
     """
-    return os.stat_result(
-        (st_mode, ino, dev, nlink, uid, gid, size, atime, mtime, ctime)
-    )
+    return os.stat_result((st_mode, ino, dev, nlink, uid, gid, size, atime, mtime, ctime))
 
 
 @dataclass(slots=True)
@@ -136,7 +176,6 @@ class FakeFile:
         mtime (float): Last modification time
         ctime (float): Creation time
     """
-
     path: str
     content: bytes = b''
     mode: int = 0o666
@@ -157,16 +196,8 @@ class FakeFile:
             os.stat_result:
         """
         return _build_stat(
-            stat.S_IFREG | self.mode,
-            self.ino,
-            self.dev,
-            self.nlink,
-            self.uid,
-            self.gid,
-            len(self.content),
-            self.atime,
-            self.mtime,
-            self.ctime,
+            stat.S_IFREG | self.mode, self.ino, self.dev, self.nlink,
+            self.uid, self.gid, len(self.content), self.atime, self.mtime, self.ctime,
         )
 
 
@@ -187,7 +218,6 @@ class FakeDir:
         mtime (float): Last modification time
         ctime (float): Creation time
     """
-
     path: str
     mode: int = 0o777
     ino: int = 0
@@ -207,16 +237,8 @@ class FakeDir:
             os.stat_result:
         """
         return _build_stat(
-            stat.S_IFDIR | self.mode,
-            self.ino,
-            self.dev,
-            self.nlink,
-            self.uid,
-            self.gid,
-            0,
-            self.atime,
-            self.mtime,
-            self.ctime,
+            stat.S_IFDIR | self.mode, self.ino, self.dev, self.nlink,
+            self.uid, self.gid, 0, self.atime, self.mtime, self.ctime,
         )
 
 
@@ -238,7 +260,6 @@ class FakeSymlink:
         mtime (float): Last modification time
         ctime (float): Creation time
     """
-
     path: str
     target: str
     mode: int = 0o777
@@ -259,14 +280,6 @@ class FakeSymlink:
             os.stat_result:
         """
         return _build_stat(
-            stat.S_IFLNK | self.mode,
-            self.ino,
-            self.dev,
-            self.nlink,
-            self.uid,
-            self.gid,
-            len(self.target),
-            self.atime,
-            self.mtime,
-            self.ctime,
+            stat.S_IFLNK | self.mode, self.ino, self.dev, self.nlink,
+            self.uid, self.gid, len(self.target), self.atime, self.mtime, self.ctime,
         )

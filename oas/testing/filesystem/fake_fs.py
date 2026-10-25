@@ -2,7 +2,6 @@
 The FakeFilesystem class: an in-memory filesystem and the mock of the
 os / builtins file functions.
 """
-
 import builtins
 import contextlib
 import errno
@@ -13,7 +12,9 @@ from threading import RLock
 
 import _io
 
-from .base import IS_WINDOWS, FakeDir, FakeFile, FakeSymlink, _normpath, synchronized
+from oas.ext.path.calc import joinpath
+
+from .base import IS_WINDOWS, FakeDir, FakeFile, FakeSymlink, _normpath, _parent_path, _split_abspath, synchronized
 from .entry import FakeDirEntry, FakeScandirIterator
 from .file_object import FakeFileObject
 
@@ -23,6 +24,17 @@ try:
     O_ACCMODE = os.O_ACCMODE
 except AttributeError:
     O_ACCMODE = 3
+
+# File descriptors of the fake filesystem start above the descriptors of the
+# process: a descriptor the filesystem did not hand out belongs to the
+# process, open(), os.close() and os.write() serve it for real (POSIX
+# subprocess.Popen() wraps, writes and closes its pipes with all three), and
+# a fake number is never mistaken for a real one
+FD_BASE = 1000
+# The real open / os.close / os.write, the fake filesystem patches them
+_platform_open = builtins.open
+_platform_close = os.close
+_platform_write = os.write
 
 
 class FakeFilesystem:
@@ -46,6 +58,12 @@ class FakeFilesystem:
 
     Everything is served from memory, the real disk is never touched.
 
+    open() and os.open() follow the real os: a file is only created when
+    its parent directory exists, a missing parent raises FileNotFoundError
+    instead of creating the directory tree. The create_file() /
+    create_dir() / create_symlink() test helpers do create the missing
+    parents, so test data stays short.
+
     The filesystem is thread safe: every public operation takes the state lock
     of the filesystem (the file objects of it take the same lock), so the code
     under test may use the filesystem from several threads, a thread pool for
@@ -61,36 +79,39 @@ class FakeFilesystem:
     def __init__(self, cwd=None):
         """
         Args:
-            cwd (str, optional): Initial working directory.
-                Defaults to None, use the real current directory.
+            cwd (str, optional): Initial working directory. Defaults to
+                None, use the root of the drive of the real working
+                directory: a fresh filesystem holds the root only, the
+                directories of the working directory are not created
         """
         # the state lock, taken by every public operation
         self._lock = RLock()
         if cwd is None:
+            # A blank filesystem keeps the drive of the real working directory
+            # so absolute paths land on the drive the platform expects, but not
+            # the directories of it: the workspace of a CI runner is
+            # "D:/a/Alasio/Alasio", its "a" collides with the "/a" of a test
             cwd = os.getcwd()
+            cwd = cwd[:2] if IS_WINDOWS and cwd[1:2] == ':' else '/'
         self._cwd = _normpath(cwd, cwd)
-        # the drive root on Windows, "/" on POSIX
-        root = self._cwd[:2] if IS_WINDOWS else '/'
+        # the drive root on Windows, "/" on POSIX and for a cwd that has no
+        # drive (a POSIX style cwd of the fake filesystem)
+        root = self._cwd[:2] if IS_WINDOWS and self._cwd[1:2] == ':' else '/'
         self._ino = 0
         now = time.time()
         self.root_dir = FakeDir(
-            path=root,
-            mode=0o777,
-            ino=self._next_ino(),
-            nlink=2,
-            atime=now,
-            mtime=now,
-            ctime=now,
+            path=root, mode=0o777, ino=self._next_ino(), nlink=2,
+            atime=now, mtime=now, ctime=now,
         )
         # normalized absolute path -> FakeFile
-        self._files: 'dict[str, FakeFile]' = {}
+        self._files: "dict[str, FakeFile]" = {}
         # normalized absolute path -> FakeDir
-        self._dirs: 'dict[str, FakeDir]' = {root: self.root_dir}
+        self._dirs: "dict[str, FakeDir]" = {root: self.root_dir}
         # normalized absolute path -> FakeSymlink
-        self._symlinks: 'dict[str, FakeSymlink]' = {}
+        self._symlinks: "dict[str, FakeSymlink]" = {}
         # fd -> FakeFileObject
-        self._fds: 'dict[int, FakeFileObject]' = {}
-        self._next_fd = 3
+        self._fds: "dict[int, FakeFileObject]" = {}
+        self._next_fd = FD_BASE
         # saved originals of activate() without monkeypatch
         self._saved = []
         # create the cwd chain, so os.getcwd() exists in the fake fs
@@ -98,13 +119,8 @@ class FakeFilesystem:
             self._create_parents(self._cwd)
             now = time.time()
             self._dirs[self._cwd] = FakeDir(
-                path=self._cwd,
-                mode=0o777,
-                ino=self._next_ino(),
-                nlink=2,
-                atime=now,
-                mtime=now,
-                ctime=now,
+                path=self._cwd, mode=0o777, ino=self._next_ino(), nlink=2,
+                atime=now, mtime=now, ctime=now,
             )
 
     def __repr__(self):
@@ -156,7 +172,9 @@ class FakeFilesystem:
             dirpath (str): Normalized directory path
 
         Returns:
-            str: Key prefix, "/" for the POSIX root
+            str: Key prefix, "/" for the POSIX root. The root is its own
+                prefix match, so callers must skip the directory itself:
+                a directory is not its own child.
         """
         return '/' if dirpath == '/' else f'{dirpath}/'
 
@@ -171,9 +189,59 @@ class FakeFilesystem:
         prefix = self._child_prefix(dirpath)
         return (
             any(key.startswith(prefix) for key in self._files)
-            or any(key.startswith(prefix) for key in self._dirs)
+            # the root is its own prefix match, a directory is not its own child
+            or any(key.startswith(prefix) and key != dirpath for key in self._dirs)
             or any(key.startswith(prefix) for key in self._symlinks)
         )
+
+    def _missing_parents(self, path):
+        """
+        Walk up the parent chain of a path and collect the missing directories.
+
+        Args:
+            path (str): Normalized absolute path
+
+        Returns:
+            tuple[list[str], str | None]: Missing parent paths from the
+                deepest to the shallowest, and the first parent path that
+                is a file or a symlink (None when the chain has no such path)
+        """
+        parent = _parent_path(path)
+        missing = []
+        conflict = None
+        while parent not in self._dirs:
+            if parent in self._files or parent in self._symlinks:
+                conflict = parent
+                break
+            missing.append(parent)
+            root, sep, _ = parent.rpartition('/')
+            if not sep:
+                break
+            parent = root or '/'
+        return missing, conflict
+
+    def _require_parent_dir(self, path):
+        """
+        Check that the parents of a file to create exist.
+
+        The real os raises instead of creating the parents for open() and
+        os.open(), so a write only creates the file itself, never the
+        directory tree above it.
+
+        Args:
+            path (str): Normalized absolute path of the file to create
+
+        Raises:
+            FileNotFoundError: If a parent directory does not exist, and on
+                Windows also if a parent path is a file (Windows reports a
+                path through a file as a missing path)
+            NotADirectoryError: (POSIX) If a parent path is a file or a symlink
+        """
+        missing, conflict = self._missing_parents(path)
+        if conflict is not None and not IS_WINDOWS:
+            raise NotADirectoryError(errno.ENOTDIR, 'Not a directory', path)
+        if missing or conflict is not None:
+            raise FileNotFoundError(errno.ENOENT, 'No such file or directory', path)
 
     def _create_parents(self, path):
         """
@@ -185,27 +253,14 @@ class FakeFilesystem:
         Raises:
             NotADirectoryError: If a parent path is a file or a symlink
         """
-        parent, sep, _ = path.rpartition('/')
-        if not sep:
-            return
-        missing = []
-        while parent not in self._dirs:
-            if parent in self._files or parent in self._symlinks:
-                raise NotADirectoryError(errno.ENOTDIR, 'Not a directory', parent)
-            missing.append(parent)
-            parent, sep, _ = parent.rpartition('/')
-            if not sep:
-                break
+        missing, conflict = self._missing_parents(path)
+        if conflict is not None:
+            raise NotADirectoryError(errno.ENOTDIR, 'Not a directory', conflict)
         now = time.time()
         for folder in reversed(missing):
             self._dirs[folder] = FakeDir(
-                path=folder,
-                mode=0o777,
-                ino=self._next_ino(),
-                nlink=2,
-                atime=now,
-                mtime=now,
-                ctime=now,
+                path=folder, mode=0o777, ino=self._next_ino(), nlink=2,
+                atime=now, mtime=now, ctime=now,
             )
 
     def _get_entry(self, path):
@@ -289,20 +344,12 @@ class FakeFilesystem:
         if isinstance(contents, str):
             contents = contents.encode(encoding or 'utf-8', errors or 'strict')
         elif not isinstance(contents, bytes):
-            raise TypeError(
-                f'contents must be str or bytes, not {type(contents).__name__}'
-            )
+            raise TypeError(f'contents must be str or bytes, not {type(contents).__name__}')
         mode = 0o666 if st_mode is None else st_mode & 0o7777
         now = time.time()
         file = FakeFile(
-            path=path,
-            content=contents,
-            mode=mode,
-            ino=self._next_ino(),
-            nlink=1,
-            atime=now,
-            mtime=now,
-            ctime=now,
+            path=path, content=contents, mode=mode, ino=self._next_ino(), nlink=1,
+            atime=now, mtime=now, ctime=now,
         )
         self._files[path] = file
         return file
@@ -331,13 +378,8 @@ class FakeFilesystem:
         mode = 0o777 if st_mode is None else st_mode & 0o7777
         now = time.time()
         folder = FakeDir(
-            path=path,
-            mode=mode,
-            ino=self._next_ino(),
-            nlink=2,
-            atime=now,
-            mtime=now,
-            ctime=now,
+            path=path, mode=mode, ino=self._next_ino(), nlink=2,
+            atime=now, mtime=now, ctime=now,
         )
         self._dirs[path] = folder
         return folder
@@ -365,14 +407,8 @@ class FakeFilesystem:
         self._create_parents(path)
         now = time.time()
         link = FakeSymlink(
-            path=path,
-            target=target,
-            mode=0o777,
-            ino=self._next_ino(),
-            nlink=1,
-            atime=now,
-            mtime=now,
-            ctime=now,
+            path=path, target=target, mode=0o777, ino=self._next_ino(), nlink=1,
+            atime=now, mtime=now, ctime=now,
         )
         self._symlinks[path] = link
         return link
@@ -457,6 +493,8 @@ class FakeFilesystem:
             del self._symlinks[path]
             return
         if path in self._dirs:
+            if path == self.root_dir.path:
+                raise OSError(errno.EBUSY, 'Cannot remove the root directory', path)
             if self._has_children(path):
                 raise OSError(errno.ENOTEMPTY, 'Directory not empty', path)
             del self._dirs[path]
@@ -498,22 +536,16 @@ class FakeFilesystem:
     """
 
     @synchronized
-    def open(
-        self,
-        file,
-        mode='r',
-        buffering=-1,
-        encoding=None,
-        errors=None,
-        newline=None,
-        closefd=True,
-        opener=None,
-    ):
+    def open(self, file, mode='r', buffering=-1, encoding=None, errors=None,
+             newline=None, closefd=True, opener=None):
         """
         Mock of the builtin open().
 
+        A descriptor the fake filesystem did not hand out belongs to the
+        process, e.g. a pipe of subprocess.Popen(), it is wrapped for real.
+
         Args:
-            file (str): Path of the file
+            file (str | int): Path of the file, or a descriptor of the process
             mode (str): Open mode, any of r / w / a / x with optional
                 b / t / +. Defaults to 'r'.
             buffering (int): Accepted for compatibility, ignored.
@@ -529,11 +561,20 @@ class FakeFilesystem:
             FakeFileObject: The opened file object
 
         Raises:
-            FileNotFoundError: If the file does not exist
+            FileNotFoundError: If the file does not exist, or the parent
+                directory of a file to create does not exist
             FileExistsError: If mode x is used on an existing file
             IsADirectoryError: If the path is a directory
+            NotADirectoryError: (POSIX) If a parent path is a file
             ValueError: If the mode is invalid
+            OSError: If the descriptor of the process is not open
         """
+        if isinstance(file, int):
+            # A descriptor of the fake filesystem can not be wrapped, only the
+            # descriptors of the process are served
+            if file >= FD_BASE:
+                raise OSError(errno.EBADF, 'Bad file descriptor')
+            return _platform_open(file, mode, buffering, encoding, errors, newline, closefd, opener)
         file = self._normpath(file)
         file = self._follow_links(file)
         mode = str(mode)
@@ -563,15 +604,18 @@ class FakeFilesystem:
                 raise FileNotFoundError(errno.ENOENT, 'No such file or directory', file)
         elif action == 'w':
             if entry is None:
+                self._require_parent_dir(file)
                 entry = self.create_file(file, st_mode=0o666)
             else:
                 entry.content = b''
         elif action == 'a':
             if entry is None:
+                self._require_parent_dir(file)
                 entry = self.create_file(file, st_mode=0o666)
         elif action == 'x':
             if entry is not None:
                 raise FileExistsError(errno.EEXIST, 'File exists', file)
+            self._require_parent_dir(file)
             entry = self.create_file(file, st_mode=0o666)
 
         readable = action == 'r' or plus
@@ -581,18 +625,9 @@ class FakeFilesystem:
         else:
             position = 0
         fobj = FakeFileObject(
-            self,
-            entry,
-            mode,
-            binary=binary,
-            readable=readable,
-            writable=writable,
-            append=(action == 'a'),
-            position=position,
-            encoding=encoding,
-            errors=errors,
-            newline=newline,
-            fd=self._take_fd(),
+            self, entry, mode, binary=binary, readable=readable, writable=writable,
+            append=(action == 'a'), position=position, encoding=encoding,
+            errors=errors, newline=newline, fd=self._take_fd(),
         )
         self._fds[fobj._fd] = fobj
         return fobj
@@ -665,10 +700,7 @@ class FakeFilesystem:
             bool: Whether the path exists or is a dangling symlink
         """
         path = self._normpath(path)
-        return (
-            path in self._symlinks
-            or self._get_entry(self._follow_links(path)) is not None
-        )
+        return path in self._symlinks or self._get_entry(self._follow_links(path)) is not None
 
     @synchronized
     def readlink(self, path):
@@ -708,25 +740,16 @@ class FakeFilesystem:
         Raises:
             FileExistsError: If dst already exists
             FileNotFoundError: If the parent directory of dst does not exist
+            NotADirectoryError: (POSIX) If a parent path of dst is a file
         """
         dst = self._normpath(dst)
         if dst in self._files or dst in self._dirs or dst in self._symlinks:
             raise FileExistsError(errno.EEXIST, 'File exists', dst)
-        parent, sep, _ = dst.rpartition('/')
-        if not sep:
-            parent = '/'
-        if parent not in self._dirs:
-            raise FileNotFoundError(errno.ENOENT, 'No such file or directory', dst)
+        self._require_parent_dir(dst)
         now = time.time()
         link = FakeSymlink(
-            path=dst,
-            target=src,
-            mode=0o777,
-            ino=self._next_ino(),
-            nlink=1,
-            atime=now,
-            mtime=now,
-            ctime=now,
+            path=dst, target=src, mode=0o777, ino=self._next_ino(), nlink=1,
+            atime=now, mtime=now, ctime=now,
         )
         self._symlinks[dst] = link
 
@@ -822,26 +845,8 @@ class FakeFilesystem:
             OSError: If a symlink loop is detected (errno.ELOOP)
         """
         path = str(path)
-        if IS_WINDOWS:
-            path = path.replace('\\', '/')
-        drive = ''
-        if IS_WINDOWS and len(path) > 1 and path[1] == ':':
-            # explicit drive letter, e.g. "C:/a" or "C:a"
-            drive, path = path[:2], path[2:]
-        if drive:
-            if path.startswith('/'):
-                bits = [f'{drive}/'] + path.split('/')[1:]
-            else:
-                # drive-relative path "C:foo", resolve on the drive root
-                bits = [f'{drive}/'] + path.split('/')
-        elif path.startswith('/'):
-            bits = ['/'] + path.split('/')[1:]
-        else:
-            # relative path, resolve against the fake cwd
-            bits = self._cwd.split('/') + path.split('/')
-        if not bits[0]:
-            bits = ['/'] + bits
-        return self._join_realpath(bits[0], bits[1:])
+        root, bits = _split_abspath(path, self._cwd)
+        return self._join_realpath(root, bits)
 
     def _join_realpath(self, resolved, bits):
         """
@@ -865,34 +870,31 @@ class FakeFilesystem:
                 i += 1
                 continue
             if bit == '..':
-                # collapse on the resolved prefix, like the real os
-                parent = resolved.rpartition('/')[0]
-                resolved = parent if parent else resolved
+                # collapse on the resolved prefix, like the real os, the root
+                # is the parent of its own children
+                resolved = _parent_path(resolved)
                 i += 1
                 continue
-            candidate = self._normpath(f'{resolved}/{bit}')
+            candidate = joinpath(resolved, bit)
             link = self._symlinks.get(candidate)
             if link is None:
                 resolved = candidate
                 i += 1
                 continue
             if candidate in seen:
-                raise OSError(
-                    errno.ELOOP, 'Too many levels of symbolic links', candidate
-                )
+                raise OSError(errno.ELOOP, 'Too many levels of symbolic links', candidate)
             seen.add(candidate)
             target = link.target
+            if IS_WINDOWS:
+                target = target.replace('\\', '/')
             if os.path.isabs(target):
-                if IS_WINDOWS and len(target) > 1 and target[1] == ':':
-                    resolved = f'{target[:2]}/'
-                    tbits = target[2:].split('/')
-                else:
-                    resolved = '/'
-                    tbits = target.split('/')[1:]
+                # an absolute target replaces the resolved prefix, its own
+                # root decides where it lands, no cwd is involved
+                resolved, tbits = _split_abspath(target, '')
             else:
-                # relative target, components are joined to the resolved prefix
+                # a relative target continues below the resolved prefix
                 tbits = target.split('/')
-            bits = tbits + bits[i + 1 :]
+            bits = tbits + bits[i + 1:]
             i = 0
         return self._normpath(resolved)
 
@@ -914,7 +916,9 @@ class FakeFilesystem:
 
         Raises:
             FileExistsError: If the path exists and exist_ok is False
-            NotADirectoryError: If a parent path is a file
+            FileNotFoundError: If a parent directory does not exist, and on
+                Windows also if a parent path is a file
+            NotADirectoryError: (POSIX) If a parent path is a file
         """
         path = self._normpath(path)
         if path in self._dirs:
@@ -923,16 +927,18 @@ class FakeFilesystem:
             raise FileExistsError(errno.EEXIST, 'File exists', path)
         if path in self._files or path in self._symlinks:
             raise FileExistsError(errno.EEXIST, 'File exists', path)
-        self._create_parents(path)
+        try:
+            self._create_parents(path)
+        except NotADirectoryError:
+            if not IS_WINDOWS:
+                raise
+            # The mkdir of Windows reports a path through a file as a
+            # missing path (ERROR_PATH_NOT_FOUND), like os.makedirs does
+            raise FileNotFoundError(errno.ENOENT, 'No such file or directory', path) from None
         now = time.time()
         self._dirs[path] = FakeDir(
-            path=path,
-            mode=mode & 0o7777,
-            ino=self._next_ino(),
-            nlink=2,
-            atime=now,
-            mtime=now,
-            ctime=now,
+            path=path, mode=mode & 0o7777, ino=self._next_ino(), nlink=2,
+            atime=now, mtime=now, ctime=now,
         )
 
     @synchronized
@@ -947,24 +953,16 @@ class FakeFilesystem:
         Raises:
             FileExistsError: If the path exists
             FileNotFoundError: If the parent directory does not exist
+            NotADirectoryError: (POSIX) If a parent path is a file
         """
         path = self._normpath(path)
         if path in self._dirs or path in self._files or path in self._symlinks:
             raise FileExistsError(errno.EEXIST, 'File exists', path)
-        parent, sep, _ = path.rpartition('/')
-        if not sep:
-            parent = '/'
-        if parent not in self._dirs:
-            raise FileNotFoundError(errno.ENOENT, 'No such file or directory', path)
+        self._require_parent_dir(path)
         now = time.time()
         self._dirs[path] = FakeDir(
-            path=path,
-            mode=mode & 0o7777,
-            ino=self._next_ino(),
-            nlink=2,
-            atime=now,
-            mtime=now,
-            ctime=now,
+            path=path, mode=mode & 0o7777, ino=self._next_ino(), nlink=2,
+            atime=now, mtime=now, ctime=now,
         )
 
     @synchronized
@@ -985,6 +983,8 @@ class FakeFilesystem:
             raise NotADirectoryError(errno.ENOTDIR, 'Not a directory', path)
         if path not in self._dirs:
             raise FileNotFoundError(errno.ENOENT, 'No such file or directory', path)
+        if path == self.root_dir.path:
+            raise OSError(errno.EBUSY, 'Cannot remove the root directory', path)
         if self._has_children(path):
             raise OSError(errno.ENOTEMPTY, 'Directory not empty', path)
         del self._dirs[path]
@@ -1098,11 +1098,11 @@ class FakeFilesystem:
             # move the descendants, keys are snapshotted first
             prefix = self._child_prefix(src)
             for key in [key for key in self._files if key.startswith(prefix)]:
-                new_key = dst + key[len(src) :]
+                new_key = dst + key[len(src):]
                 self._files[new_key] = self._files.pop(key)
                 self._files[new_key].path = new_key
             for key in [key for key in self._dirs if key.startswith(prefix)]:
-                new_key = dst + key[len(src) :]
+                new_key = dst + key[len(src):]
                 self._dirs[new_key] = self._dirs.pop(key)
                 self._dirs[new_key].path = new_key
             return
@@ -1131,22 +1131,18 @@ class FakeFilesystem:
         prefix = self._child_prefix(path)
         entries = []
         for key in self._files:
-            if key.startswith(prefix):
-                name = key[len(prefix) :]
+            if key.startswith(prefix) and key != path:
+                name = key[len(prefix):]
                 if '/' not in name:
-                    entries.append(
-                        FakeDirEntry(name, key, False, self._files[key].stat())
-                    )
+                    entries.append(FakeDirEntry(name, key, False, self._files[key].stat()))
         for key in self._dirs:
-            if key.startswith(prefix):
-                name = key[len(prefix) :]
+            if key.startswith(prefix) and key != path:
+                name = key[len(prefix):]
                 if '/' not in name:
-                    entries.append(
-                        FakeDirEntry(name, key, True, self._dirs[key].stat())
-                    )
+                    entries.append(FakeDirEntry(name, key, True, self._dirs[key].stat()))
         for key, link in self._symlinks.items():
-            if key.startswith(prefix):
-                name = key[len(prefix) :]
+            if key.startswith(prefix) and key != path:
+                name = key[len(prefix):]
                 if '/' not in name:
                     follow_stat = None
                     try:
@@ -1156,16 +1152,9 @@ class FakeFilesystem:
                     entry = self._get_entry(target) if target is not None else None
                     if entry is not None:
                         follow_stat = entry.stat()
-                    entries.append(
-                        FakeDirEntry(
-                            name,
-                            key,
-                            False,
-                            link.stat(),
-                            is_symlink=True,
-                            follow_stat=follow_stat,
-                        )
-                    )
+                    entries.append(FakeDirEntry(
+                        name, key, False, link.stat(),
+                        is_symlink=True, follow_stat=follow_stat))
         return FakeScandirIterator(entries)
 
     @synchronized
@@ -1191,18 +1180,18 @@ class FakeFilesystem:
         prefix = self._child_prefix(path)
         names = []
         for key in self._files:
-            if key.startswith(prefix):
-                name = key[len(prefix) :]
+            if key.startswith(prefix) and key != path:
+                name = key[len(prefix):]
                 if '/' not in name:
                     names.append(name)
         for key in self._dirs:
-            if key.startswith(prefix):
-                name = key[len(prefix) :]
+            if key.startswith(prefix) and key != path:
+                name = key[len(prefix):]
                 if '/' not in name:
                     names.append(name)
         for key in self._symlinks:
-            if key.startswith(prefix):
-                name = key[len(prefix) :]
+            if key.startswith(prefix) and key != path:
+                name = key[len(prefix):]
                 if '/' not in name:
                     names.append(name)
         return sorted(names)
@@ -1225,9 +1214,11 @@ class FakeFilesystem:
             int: Fake file descriptor
 
         Raises:
-            FileNotFoundError: If the file does not exist and O_CREAT is not set
+            FileNotFoundError: If the file does not exist and O_CREAT is not
+                set, or the parent directory of a file to create does not exist
             FileExistsError: If O_CREAT | O_EXCL is used on an existing file
             IsADirectoryError: If the path is a directory
+            NotADirectoryError: (POSIX) If a parent path is a file
         """
         path = self._normpath(path)
         path = self._follow_links(path)
@@ -1245,21 +1236,13 @@ class FakeFilesystem:
         else:
             if not flags & os.O_CREAT:
                 raise FileNotFoundError(errno.ENOENT, 'No such file or directory', path)
+            self._require_parent_dir(path)
             entry = self.create_file(path, st_mode=mode & 0o7777)
         append = bool(flags & os.O_APPEND)
         fobj = FakeFileObject(
-            self,
-            entry,
-            '',
-            binary=True,
-            readable=readable,
-            writable=writable,
-            append=append,
-            position=len(entry.content) if append else 0,
-            encoding=None,
-            errors=None,
-            newline=None,
-            fd=self._take_fd(),
+            self, entry, '', binary=True, readable=readable, writable=writable,
+            append=append, position=len(entry.content) if append else 0,
+            encoding=None, errors=None, newline=None, fd=self._take_fd(),
         )
         self._fds[fobj._fd] = fobj
         return fobj._fd
@@ -1269,8 +1252,12 @@ class FakeFilesystem:
         """
         Mock of os.write().
 
+        A descriptor the fake filesystem did not hand out belongs to the
+        process, e.g. the stdin pipe of subprocess.Popen() on POSIX, it is
+        written for real.
+
         Args:
-            fd (int): Fake file descriptor
+            fd (int): Fake file descriptor, or a descriptor of the process
             data (bytes): Data to write
 
         Returns:
@@ -1280,25 +1267,36 @@ class FakeFilesystem:
             OSError: If the fd is not open
         """
         fobj = self._fds.get(fd)
-        if fobj is None:
+        if fobj is not None:
+            return fobj.write(data)
+        if isinstance(fd, int) and fd >= FD_BASE:
+            # A descriptor of the fake filesystem that is already closed
             raise OSError(errno.EBADF, 'Bad file descriptor')
-        return fobj.write(data)
+        return _platform_write(fd, data)
 
     @synchronized
     def os_close(self, fd):
         """
         Mock of os.close().
 
+        A descriptor the fake filesystem did not hand out belongs to the
+        process, e.g. a pipe of subprocess.Popen() on POSIX, it is closed for
+        real.
+
         Args:
-            fd (int): Fake file descriptor
+            fd (int): Fake file descriptor, or a descriptor of the process
 
         Raises:
             OSError: If the fd is not open
         """
         fobj = self._fds.get(fd)
-        if fobj is None:
+        if fobj is not None:
+            fobj.close()
+            return
+        if isinstance(fd, int) and fd >= FD_BASE:
+            # A descriptor of the fake filesystem that is already closed
             raise OSError(errno.EBADF, 'Bad file descriptor')
-        fobj.close()
+        _platform_close(fd)
 
     @synchronized
     def os_fsync(self, fd):

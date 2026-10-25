@@ -6,9 +6,9 @@
 
 | 文件 / File | 改动 / Changes |
 |-------------|----------------|
-| `base.py` | `msgspec.Struct` → `@dataclass(slots=True)`，逻辑不变 / records converted |
+| `base.py` | `msgspec.Struct` → `@dataclass(slots=True)`；同步 POSIX 根路径修复，新增 `_split_abspath` / `_parent_path` / `joinpath` 规范化 / records + root path fixes |
 | `__init__.py` | `alasio.` → `oas.`；`LogWriter` try/except（缺失自动忽略） / prefix + try/except |
-| `fake_fs.py` | docstring 前缀 / comment only |
+| `fake_fs.py` | 同步 POSIX 根路径、符号链接 `..` 解析、文件描述符与父目录处理 / root path, symlink and parent handling |
 | `entry.py` | 原样 / unchanged |
 | `file_object.py` | 原样 / unchanged |
 
@@ -17,8 +17,8 @@
 | 文件 / File | 改动 / Changes |
 |-------------|----------------|
 | `conftest.py` / `test_entry.py` / `test_file_object.py` | 仅前缀 / prefix only |
-| `test_filesystem_base.py` | msgspec 断言 → `dataclasses.is_dataclass`；`PathStr` → `pathlib.Path` |
-| `test_fake_fs.py` | `file_read_bytes` → 原生 open/read；`PathStr` → `pathlib.Path`；`deploy.pack.job_reset` → `oas.backport.cjk` |
+| `test_filesystem_base.py` | msgspec 断言 → `dataclasses.is_dataclass`；补充 POSIX 根路径、分段解析、父路径测试 / dataclass + root path cases |
+| `test_fake_fs.py` | 同步父目录必须已存在、相对符号链接 `..` 解析测试 / parent and symlink cases |
 | `test_integration.py` | `importorskip('oas.ext.path')` 挂起 / parked |
 | `test_thread_safety.py` | `importorskip('oas.ext.concurrent.threadpool')` 挂起 / parked |
 | `test_logger_fakefs.py` | `importorskip('oas.logger')` 挂起 / parked |

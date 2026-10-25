@@ -34,6 +34,13 @@ served by the fake filesystem, nothing touches the real disk. Python
 imports inside a test keep working because the import machinery reads
 sources with io.open_code(), which is not patched.
 
+The filesystem of a test starts blank: it holds only the root (and the
+root of the drive on Windows). The directories of the working directory
+are not created, so test paths cannot collide with the runner workspace.
+The fake filesystem follows the real os rule that open() and os.open()
+require an existing parent directory; create_file(), create_dir() and
+create_symlink() are the helpers that create missing parents.
+
 Mocked functions:
 
 - builtins.open() and io.open(), text and binary modes
