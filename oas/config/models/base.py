@@ -1,13 +1,18 @@
 from collections.abc import Callable
 from typing import Any, ClassVar
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, ConfigDict, Field
 
 UNSET = object()
 
 
 class ConfigBase(BaseModel):
     """Base class for all OAS configuration models."""
+
+    # Validate on assignment so that every mutation path (post_edit hooks,
+    # overrides, cross-task setters) rejects an invalid value instead of
+    # silently storing it.
+    model_config = ConfigDict(validate_assignment=True)
 
     __config_abstract__: ClassVar[bool] = True
 

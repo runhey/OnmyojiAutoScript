@@ -20,43 +20,20 @@ class ConfigError(msgspec.Struct, omit_defaults=True):
         msg: Human readable message.
         type: Stable error kind.  User input failures default to
             ``"INPUT_REJECTED"``; Pydantic validation failures carry the
-            Pydantic error type such as ``"greater_than"``.
-        task: Task instance the failure belongs to, when known.
-        group: Group instance the failure belongs to, when known.
-        arg: Argument the failure belongs to, when known.
-        loc: Error location inside the Group payload.
+            Pydantic error type such as ``"greater_than_equal"``.
     """
 
     msg: str
     type: str = 'INPUT_REJECTED'
-    task: str = ''
-    group: str = ''
-    arg: str = ''
-    loc: tuple[int | str, ...] = ()
 
     @classmethod
-    def from_pydantic(
-        cls,
-        exc: ValidationError,
-        *,
-        task: str = '',
-        group: str = '',
-        arg: str = '',
-    ) -> ConfigError:
+    def from_pydantic(cls, exc: ValidationError) -> ConfigError:
         """Build a :class:`ConfigError` from a Pydantic validation error."""
-
         errors = exc.errors()
         first = errors[0] if errors else {}
-        loc = tuple(first.get('loc', ()))
-        if arg and not loc:
-            loc = (arg,)
         return cls(
             msg=str(first.get('msg', exc)),
             type=str(first.get('type', 'INPUT_REJECTED')),
-            task=task,
-            group=group,
-            arg=arg,
-            loc=loc,
         )
 
     def __str__(self) -> str:

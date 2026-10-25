@@ -166,7 +166,7 @@ def test_add_group_order_is_clamped(entry):
     entry.add_group('S', 'C', order=-10)
     entry.add_group('S', 'D', order=100)
 
-    assert list(entry.get_scheme('S')) == ['C', 'A', 'B', 'D']
+    assert list(entry.menu_scheme_get('S')['groups'].keys()) == ['C', 'A', 'B', 'D']
 
 
 def test_update_group_rejects_missing_conflicts_and_invalid_names(entry):
@@ -188,7 +188,7 @@ def test_delete_group_rejects_missing_and_resequences(entry):
 
     entry.delete_group('S', 'B')
 
-    assert list(entry.get_scheme('S')) == ['A', 'C']
+    assert list(entry.menu_scheme_get('S')['groups'].keys()) == ['A', 'C']
     assert [item['group_order'] for item in entry.view('S')['groups'].values()] == [
         0,
         1,
@@ -211,10 +211,10 @@ def test_move_group_rejects_missing_and_reorders(entry):
         entry.move_group('S', 'missing')
 
     entry.move_group('S', 'C', order=0)
-    assert list(entry.get_scheme('S')) == ['C', 'A', 'B']
+    assert list(entry.menu_scheme_get('S')['groups'].keys()) == ['C', 'A', 'B']
 
     entry.move_group('S', 'C')
-    assert list(entry.get_scheme('S')) == ['A', 'B', 'C']
+    assert list(entry.menu_scheme_get('S')['groups'].keys()) == ['A', 'B', 'C']
 
 
 def test_add_task_rejects_missing_duplicate_and_invalid_names(entry):
@@ -236,7 +236,7 @@ def test_add_task_order_is_clamped(entry):
     entry.add_task('S', 'G', 'T@3', order=-10)
     entry.add_task('S', 'G', 'T@4', order=100)
 
-    assert entry.get_scheme('S')['G'] == [
+    assert entry.menu_scheme_get('S')['groups']['G']['tasks'] == [
         'T@3',
         'T@1',
         'T@2',
@@ -252,7 +252,7 @@ def test_delete_task_rejects_missing_and_resequences(entry):
 
     entry.delete_task('S', 'G', 'T@2')
 
-    assert entry.get_scheme('S')['G'] == ['T@1', 'T@3']
+    assert entry.menu_scheme_get('S')['groups']['G']['tasks'] == ['T@1', 'T@3']
     group_row = entry.group('S', 'G')
     assert [row.task_order for row in entry.tasks.list_tasks(group_row.id)] == [
         0,
@@ -277,7 +277,7 @@ def test_copy_task_can_rename(entry):
     copied = entry.copy_task('S', 'A', 'T@1', 'S', 'B', new_task='T@2')
 
     assert copied['task'] == 'T@2'
-    assert entry.get_scheme('S')['B'] == ['T@2']
+    assert entry.menu_scheme_get('S')['groups']['B']['tasks'] == ['T@2']
 
 
 def test_move_task_rejects_missing_and_cross_group_duplicates(entry):
@@ -296,11 +296,11 @@ def test_move_task_reorders_within_and_across_groups(entry):
     entry.add('S', {'A': ['T@1', 'T@2'], 'B': []})
 
     entry.move_task('S', 'A', 'T@2', order=0)
-    assert entry.get_scheme('S')['A'] == ['T@2', 'T@1']
+    assert entry.menu_scheme_get('S')['groups']['A']['tasks'] == ['T@2', 'T@1']
 
     entry.move_task('S', 'A', 'T@2', target_group='B')
-    assert entry.get_scheme('S')['A'] == ['T@1']
-    assert entry.get_scheme('S')['B'] == ['T@2']
+    assert entry.menu_scheme_get('S')['groups']['A']['tasks'] == ['T@1']
+    assert entry.menu_scheme_get('S')['groups']['B']['tasks'] == ['T@2']
 
 
 def test_group_and_task_views_reject_missing(entry):
@@ -322,7 +322,7 @@ def menu_entry():
 
 
 def test_add_scheme_preserves_group_and_task_order(menu_entry):
-    menu_entry.add_scheme(
+    menu_entry.menu_scheme_add(
         'DEFAULT_MENU',
         OrderedDict(
             [
@@ -332,16 +332,17 @@ def test_add_scheme_preserves_group_and_task_order(menu_entry):
         ),
     )
 
-    assert menu_entry.get_scheme('DEFAULT_MENU') == {
+    v = menu_entry.menu_scheme_get('DEFAULT_MENU')
+    assert {k: val['tasks'] for k, val in v['groups'].items()} == {
         'Script': ['Script@default'],
         'Soul Zones': ['Orochi@魂十', 'Orochi@魂王'],
     }
-    rows = menu_entry.list_schemes()
-    assert [row.name for row in rows] == ['DEFAULT_MENU']
+    rows = menu_entry.menu_scheme_list()
+    assert [row['name'] for row in rows] == ['DEFAULT_MENU']
 
 
 def test_empty_group_is_persisted_with_metadata(menu_entry):
-    menu_entry.add_scheme(
+    menu_entry.menu_scheme_add(
         'EMPTY',
         {'Empty': []},
         group_metadata={
@@ -358,60 +359,64 @@ def test_empty_group_is_persisted_with_metadata(menu_entry):
     assert len(groups) == 1
     assert groups[0].name == 'Empty'
     assert groups[0].title == '空分组'
-    assert menu_entry.get_scheme('EMPTY') == {'Empty': []}
+    v = menu_entry.menu_scheme_get('EMPTY')
+    assert {k: val['tasks'] for k, val in v['groups'].items()} == {'Empty': []}
 
 
 def test_multiple_schemes_are_independent(menu_entry):
-    menu_entry.add_scheme('ONE', {'A': ['Task@one']}, scheme_order=1)
-    menu_entry.add_scheme('TWO', {'B': ['Task@two']}, scheme_order=0)
+    menu_entry.menu_scheme_add('ONE', {'A': ['Task@one']}, order=1)
+    menu_entry.menu_scheme_add('TWO', {'B': ['Task@two']}, order=0)
 
-    assert [row.name for row in menu_entry.list_schemes()] == ['TWO', 'ONE']
-    assert menu_entry.get_scheme('ONE') == {'A': ['Task@one']}
-    assert menu_entry.get_scheme('TWO') == {'B': ['Task@two']}
+    assert [row['name'] for row in menu_entry.menu_scheme_list()] == ['TWO', 'ONE']
+    v = menu_entry.menu_scheme_get('ONE')
+    assert {k: val['tasks'] for k, val in v['groups'].items()} == {'A': ['Task@one']}
+    v2 = menu_entry.menu_scheme_get('TWO')
+    assert {k: val['tasks'] for k, val in v2['groups'].items()} == {'B': ['Task@two']}
 
 
 def test_replace_scheme_removes_old_groups_and_tasks(menu_entry):
-    menu_entry.add_scheme('LAYOUT', {'Old': ['Task@old']})
-    menu_entry.replace_scheme('LAYOUT', {'New': []})
+    menu_entry.menu_scheme_add('LAYOUT', {'Old': ['Task@old']})
+    menu_entry.menu_scheme_replace('LAYOUT', {'New': []})
 
-    assert menu_entry.get_scheme('LAYOUT') == {'New': []}
+    v = menu_entry.menu_scheme_get('LAYOUT')
+    assert {k: val['tasks'] for k, val in v['groups'].items()} == {'New': []}
     scheme = menu_entry.schemes.get_scheme('LAYOUT')
     assert menu_entry.groups.list_groups(scheme.id)[0].name == 'New'
 
 
 def test_delete_scheme_removes_groups_and_tasks(menu_entry):
-    menu_entry.add_scheme('LAYOUT', {'Group': ['Task@one']})
+    menu_entry.menu_scheme_add('LAYOUT', {'Group': ['Task@one']})
     scheme = menu_entry.schemes.get_scheme('LAYOUT')
     group = menu_entry.groups.list_groups(scheme.id)[0]
 
-    assert menu_entry.delete_scheme('LAYOUT') is True
+    assert menu_entry.menu_scheme_delete('LAYOUT') is True
     with pytest.raises(KeyError):
-        menu_entry.get_scheme('LAYOUT')
+        menu_entry.menu_scheme_get('LAYOUT')
     assert menu_entry.tasks.list_tasks(group.id) == []
     with pytest.raises(KeyError):
-        menu_entry.delete_scheme('LAYOUT')
+        menu_entry.menu_scheme_delete('LAYOUT')
 
 
 def test_duplicate_task_is_rejected(menu_entry):
     with pytest.raises(ValueError, match='appears more than once'):
-        menu_entry.add_scheme(
+        menu_entry.menu_scheme_add(
             'DUPLICATE',
             {'A': ['Task@one'], 'B': ['Task@one']},
         )
 
     with pytest.raises(KeyError):
-        menu_entry.get_scheme('DUPLICATE')
+        menu_entry.menu_scheme_get('DUPLICATE')
 
 
 def test_invalid_scheme_and_group_inputs_are_rejected(menu_entry):
     with pytest.raises(ValueError, match='scheme name'):
-        menu_entry.add_scheme('', {})
+        menu_entry.menu_scheme_add('', {})
     with pytest.raises(ValueError, match='group name'):
-        menu_entry.add_scheme('BAD', {'': []})
+        menu_entry.menu_scheme_add('BAD', {'': []})
     with pytest.raises(TypeError, match='non-empty string'):
-        menu_entry.add_scheme('BAD', {'Group': [None]})
+        menu_entry.menu_scheme_add('BAD', {'Group': [None]})
     with pytest.raises(ValueError, match='unknown group metadata'):
-        menu_entry.add_scheme(
+        menu_entry.menu_scheme_add(
             'BAD',
             {'Group': []},
             group_metadata={'Group': {'unknown': 'value'}},
@@ -430,4 +435,5 @@ def test_seed_defaults_filters_unregistered_task_classes(menu_entry, monkeypatch
         {'DEFAULT_MENU': {'Visible': ['Known'], 'Hidden': ['Missing']}}
     )
 
-    assert menu_entry.get_scheme('DEFAULT_MENU') == {'Visible': ['Known@default']}
+    view = menu_entry.menu_scheme_get('DEFAULT_MENU')
+    assert {k: v['tasks'] for k, v in view['groups'].items()} == {'Visible': ['Known@default']}

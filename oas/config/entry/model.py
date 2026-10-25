@@ -1,10 +1,13 @@
+from collections import defaultdict
 from datetime import datetime
 from typing import Any
 
-from msgspec import DecodeError, Struct, field
+from msgspec import DecodeError, Struct
 from msgspec.json import Decoder as JsonDecoder
 
 from oas.config.entry.error import ConfigError
+from oas.config.models.groups import GroupBase
+from oas.config.models.tasks import TaskBase
 from oas.ext.cache import cached_property
 from oas.ext.file.msgspecfile import JsonCacheTTL
 from oas.ext.singleton import Singleton
@@ -109,18 +112,111 @@ class ConfigSetEvent(Struct):
     error: ConfigError | Exception | None = None
 
 
-class ConfigResult(Struct):
-    """Unified result object for the OAS native ``cfg_*`` API.
+class ConfigEvents:
+    """Builders for the :class:`ConfigSetEvent` reply protocol."""
 
-    ``success`` is the only branch selector.  On success ``events`` carries
-    the per-arg values that changed (and ``value`` is used by getters); on
-    failure ``error`` always contains a :class:`ConfigError`.
-    """
+    @staticmethod
+    def event(task: str, group: str, arg: str, value: Any) -> ConfigSetEvent:
+        """Return one event for a single argument."""
+        return ConfigSetEvent(task=task, group=group, arg=arg, value=value)
 
-    success: bool
-    events: list[ConfigSetEvent] = field(default_factory=list)
-    value: Any = None
-    error: ConfigError | None = None
+    @staticmethod
+    def events_from_task(task: str, task_obj: TaskBase) -> list[ConfigSetEvent]:
+        """Return the events of every argument of a Task."""
+        return [
+            ConfigEvents.event(task, group, arg, value)
+            for group, values in task_obj.to_dict().items()
+            for arg, value in values.items()
+        ]
+
+    @staticmethod
+    def events_from_group(
+        task: str,
+        group: str,
+        group_obj: GroupBase,
+    ) -> list[ConfigSetEvent]:
+        """Return the events of every argument of one Group."""
+        return [
+            ConfigEvents.event(task, group, arg, value)
+            for arg, value in group_obj.to_dict().items()
+        ]
+
+    @staticmethod
+    def group_events(
+        events: list[ConfigSetEvent],
+    ) -> dict[tuple[str, str], list[ConfigSetEvent]]:
+        """Group events by ``(task, group)``."""
+        grouped: dict[tuple[str, str], list[ConfigSetEvent]] = defaultdict(list)
+        for event in events:
+            grouped[(event.task, event.group)].append(event)
+        return grouped
+
+    @staticmethod
+    def fail_events(
+        events: list[ConfigSetEvent],
+        message: str,
+    ) -> list[ConfigSetEvent]:
+        """Return copies of ``events`` marked as failed with ``message``."""
+        return [ConfigEvents.failed_event(event, message) for event in events]
+
+    @staticmethod
+    def failed_event(
+        event: ConfigSetEvent,
+        error: str | ConfigError | Exception,
+        value: Any = None,
+    ) -> ConfigSetEvent:
+        """Return ``event`` marked as failed with ``error``."""
+        if isinstance(error, (str, Exception)):
+            error = ConfigError(msg=str(error))
+        return ConfigSetEvent(
+            task=event.task,
+            group=event.group,
+            arg=event.arg,
+            value=value,
+            error=error,
+        )
+
+    @staticmethod
+    def rollback_group(
+        events: list[ConfigSetEvent],
+        task: str,
+        group: str,
+        current: GroupBase,
+        error: ConfigError,
+    ) -> list[ConfigSetEvent]:
+        """Return rollback events restoring every requested argument."""
+        result: list[ConfigSetEvent] = []
+        for index, event in enumerate(events):
+            result.append(
+                ConfigSetEvent(
+                    task=task,
+                    group=group,
+                    arg=event.arg,
+                    value=getattr(current, event.arg, None),
+                    error=error if index == 0 else None,
+                )
+            )
+        return result
+
+    @staticmethod
+    def post_edit_events(
+        task: str,
+        group: str,
+        before: GroupBase,
+        after: GroupBase,
+        requested: dict[str, Any],
+    ) -> list[ConfigSetEvent]:
+        """Return the extra events caused by ``post_edit()``."""
+        before_values = before.to_dict()
+        after_values = after.to_dict()
+        events: list[ConfigSetEvent] = []
+        for arg, value in after_values.items():
+            if before_values.get(arg) == value:
+                continue
+            if arg in requested and requested[arg] == value:
+                continue
+            events.append(ConfigSetEvent(task=task, group=group, arg=arg, value=value))
+        return events
 
 
 class TaskItem(Struct):

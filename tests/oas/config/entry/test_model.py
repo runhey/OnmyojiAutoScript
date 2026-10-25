@@ -5,9 +5,10 @@ from datetime import UTC, datetime
 
 import msgspec
 
+from oas.config.entry.error import ConfigError
 from oas.config.entry.model import (
     MOD_JSON_CACHE,
-    ConfigResult,
+    ConfigEvents,
     ConfigSetEvent,
     DecoderCache,
     ModelConfigRef,
@@ -19,15 +20,26 @@ from oas.config.entry.model import (
 )
 
 
-def test_config_result_defaults_are_independent():
-    first = ConfigResult(success=True)
-    second = ConfigResult(success=False)
+def test_config_events_event_builds_a_config_set_event():
+    assert ConfigEvents.event('t', 'g', 'a', 1) == ConfigSetEvent(
+        task='t', group='g', arg='a', value=1
+    )
 
-    first.events.append(ConfigSetEvent('t', 'g', 'a', 1))
 
-    assert second.events == []
-    assert first.value is None
-    assert first.error is None
+def test_config_events_failed_event_replaces_value_and_carries_the_error():
+    event = ConfigSetEvent(task='t', group='g', arg='a', value=1)
+
+    failed = ConfigEvents.failed_event(event, 'boom')
+
+    assert (failed.task, failed.group, failed.arg) == ('t', 'g', 'a')
+    assert failed.value is None
+    assert isinstance(failed.error, ConfigError)
+    assert failed.error.msg == 'boom'
+
+    error = ConfigError('boom')
+    reused = ConfigEvents.failed_event(event, error)
+
+    assert reused.error is error
 
 
 def test_config_set_event_error_defaults_to_none():

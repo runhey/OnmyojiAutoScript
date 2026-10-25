@@ -1,6 +1,7 @@
 """Tests for ConfigBase registration and shared field helpers."""
 
 import pytest
+from pydantic import ValidationError
 
 from oas.config.models.args import Input
 from oas.config.models.base import (
@@ -21,6 +22,10 @@ class BaseTestAbstractGroup(GroupBase):
     __config_abstract__ = True
 
 
+class BaseTestAssignGroup(GroupBase):
+    count: int = Input.int(default=1, ge=0)
+
+
 def test_concrete_group_is_registered():
     assert config_model_registry.find_groups('BaseTestGroup') == (BaseTestGroup,)
 
@@ -34,6 +39,26 @@ def test_unknown_arguments_are_ignored_and_not_dumped():
 
     assert group.value == 'x'
     assert group.to_dict() == {'value': 'x'}
+
+
+def test_assignment_is_validated_and_keeps_the_old_value():
+    group = BaseTestAssignGroup()
+
+    group.count = 5
+    assert group.count == 5
+
+    with pytest.raises(ValidationError):
+        group.count = -1
+    assert group.count == 5
+
+
+def test_model_copy_update_is_not_a_validated_patch():
+    """``model_copy(update=...)`` skips validation - use ``validate_patch``."""
+    group = BaseTestAssignGroup()
+
+    assert group.model_copy(update={'count': -1}).count == -1
+    with pytest.raises(ValidationError):
+        BaseTestAssignGroup.validate_patch({'count': -1})
 
 
 def test_build_field_schema_extra_merges_ui_metadata():

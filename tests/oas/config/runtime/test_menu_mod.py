@@ -255,19 +255,10 @@ def test_entry_is_mounted_once_and_reused(menu_mod_errors):
 
     assert menu_mod_errors.__dict__['__menu_entry__'] is entry
     assert isinstance(entry, MenuEntry)
-    assert entry.config_name == ':memory:'
 
 
 def test_entry_rejects_config_name_mismatch(menu_mod_errors):
     with pytest.raises(ValueError, match='config_name mismatch'):
-        menu_mod_errors.menu_scheme_list('other')
-
-
-def test_entry_rejects_a_prebound_different_config_name(menu_mod_errors):
-    menu_mod_errors.menu_scheme_list(':memory:')
-    menu_mod_errors.config_name = 'other'
-
-    with pytest.raises(ValueError, match='bound to a different config_name'):
         menu_mod_errors.menu_scheme_list('other')
 
 

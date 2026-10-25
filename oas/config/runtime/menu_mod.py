@@ -39,7 +39,6 @@ class MenuMod:
         config_name: str,
     ) -> list[dict[str, Any]]:
         """List every menu scheme with its groups and tasks."""
-
         return result
 
     @modmenu.menu_scheme_get()
@@ -50,7 +49,6 @@ class MenuMod:
         name: str,
     ) -> dict[str, Any]:
         """Read one scheme; a missing scheme raises ``KeyError``."""
-
         return result
 
     @modmenu.menu_scheme_add()
@@ -65,7 +63,6 @@ class MenuMod:
         is_default: bool = False,
     ) -> dict[str, Any]:
         """Create a scheme and its groups in one transaction."""
-
         return result
 
     @modmenu.menu_scheme_update()
@@ -80,7 +77,6 @@ class MenuMod:
         is_default: bool | None = None,
     ) -> dict[str, Any]:
         """Rename, reorder, or change the default flag of a scheme."""
-
         return result
 
     @modmenu.menu_scheme_delete()
@@ -91,7 +87,6 @@ class MenuMod:
         name: str,
     ) -> bool:
         """Delete a scheme; a missing scheme raises ``KeyError``."""
-
         return result
 
     @modmenu.menu_scheme_copy()
@@ -103,7 +98,6 @@ class MenuMod:
         target: str,
     ) -> dict[str, Any]:
         """Copy a scheme to the end of the scheme list."""
-
         return result
 
     @modmenu.menu_scheme_replace()
@@ -115,7 +109,6 @@ class MenuMod:
         groups: Mapping[str, Sequence[str]],
     ) -> dict[str, Any]:
         """Replace the groups of an existing scheme."""
-
         return result
 
     @modmenu.menu_scheme_seed()
@@ -126,7 +119,6 @@ class MenuMod:
         menus: Mapping[str, Mapping[str, Sequence[str]]] | None = None,
     ) -> list[dict[str, Any]]:
         """Create the default menu schemes that do not exist yet."""
-
         return result
 
     # ------------------------------------------------------------------
@@ -142,7 +134,6 @@ class MenuMod:
         group: str,
     ) -> dict[str, Any]:
         """Read one group inside a scheme."""
-
         return result
 
     @modmenu.menu_group_add()
@@ -160,7 +151,6 @@ class MenuMod:
         icon: str | None = None,
     ) -> dict[str, Any]:
         """Create a group and its tasks in one transaction."""
-
         return result
 
     @modmenu.menu_group_update()
@@ -178,7 +168,6 @@ class MenuMod:
         icon: str | None = None,
     ) -> dict[str, Any]:
         """Rename, reorder, or edit the metadata of a group."""
-
         return result
 
     @modmenu.menu_group_delete()
@@ -190,7 +179,6 @@ class MenuMod:
         group: str,
     ) -> bool:
         """Delete a group and its tasks."""
-
         return result
 
     @modmenu.menu_group_copy()
@@ -204,7 +192,6 @@ class MenuMod:
         target_group: str,
     ) -> dict[str, Any]:
         """Copy a group, including its metadata, to the end of a scheme."""
-
         return result
 
     @modmenu.menu_group_move()
@@ -217,7 +204,6 @@ class MenuMod:
         order: int | None = None,
     ) -> dict[str, Any]:
         """Move a group to another position inside the same scheme."""
-
         return result
 
     # ------------------------------------------------------------------
@@ -234,7 +220,6 @@ class MenuMod:
         task: str,
     ) -> dict[str, Any]:
         """Read one task inside a group."""
-
         return result
 
     @modmenu.menu_task_add()
@@ -249,7 +234,6 @@ class MenuMod:
         order: int | None = None,
     ) -> dict[str, Any]:
         """Append or insert a task in a group."""
-
         return result
 
     @modmenu.menu_task_delete()
@@ -262,7 +246,6 @@ class MenuMod:
         task: str,
     ) -> bool:
         """Delete a task from a group."""
-
         return result
 
     @modmenu.menu_task_copy()
@@ -280,7 +263,6 @@ class MenuMod:
         order: int | None = None,
     ) -> dict[str, Any]:
         """Copy a task to another group."""
-
         return result
 
     @modmenu.menu_task_move()
@@ -296,5 +278,4 @@ class MenuMod:
         order: int | None = None,
     ) -> dict[str, Any]:
         """Move a task within its group, or to another group."""
-
         return result

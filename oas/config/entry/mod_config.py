@@ -17,7 +17,6 @@ column stores.
 from __future__ import annotations
 
 import inspect
-from collections import defaultdict
 from collections.abc import Callable
 from functools import wraps
 from typing import Any, TypeVar, get_args, get_origin
@@ -27,10 +26,10 @@ from pydantic import ValidationError
 
 from oas.config.entry.codec import Codec
 from oas.config.entry.error import ConfigError
-from oas.config.entry.model import ConfigResult, ConfigSetEvent, ModelConfigRef
+from oas.config.entry.model import ConfigEvents, ConfigSetEvent, ModelConfigRef
 from oas.config.entry.store import TaskStore
 from oas.config.models.groups import GroupBase
-from oas.config.models.registry import config_model_registry
+from oas.config.models.registry import TaskNameResolver, config_model_registry
 from oas.config.models.tasks import TaskBase
 from oas.config.table.config import ConfigTable
 from oas.logger import logger
@@ -67,9 +66,9 @@ class modconfig(ModAdapter):
     * ``config_*`` mirror Alasio.  They return tuples/lists of
       :class:`ConfigSetEvent` and carry per-argument failures in
       ``event.error`` instead of raising.
-    * ``cfg_*`` return :class:`ConfigResult`.  ``success`` selects the branch,
-      ``events`` carries changed values, ``value`` carries getter/reset
-      results, and ``error`` carries a :class:`ConfigError`.
+    * ``cfg_*`` return ``(success, events)``.  ``success`` selects the branch,
+      ``events`` carries the changed values, the failure reason in
+      ``events[0].error``, and the getter result in ``events[0].value``.
 
     A :class:`ConfigSetEvent` always has ``task``, ``group``, ``arg``, and
     ``value`` fields.  ``error`` is ``None`` for an accepted value and a
@@ -123,7 +122,6 @@ class modconfig(ModAdapter):
         public signature so ``inspect`` and IDEs only show the caller-facing
         parameters.
         """
-
         if not callable(function):
             raise TypeError('modconfig decorators must decorate a callable')
 
@@ -469,12 +467,13 @@ class modconfig(ModAdapter):
 
         Returns:
             Callable[[F], F]: The decorator.  The decorated method receives
-            ``result`` as a :class:`ConfigResult` and must return it unchanged.
+            ``result`` as ``tuple[bool, list[ConfigSetEvent]]`` and must return
+            it unchanged.
             Success carries one event per default Group argument.
 
         Notes:
-            Failures are returned as ``ConfigResult(success=False)`` with a
-            :class:`ConfigError`; they do not raise.  Failure cases include an
+            Failures are returned as ``(False, events)`` with the reason in
+            ``events[0].error``; they do not raise.  Failure cases include an
             unregistered Task class, an empty name, ``"@"`` in either part, a
             duplicate Task, and a failing default constructor.
 
@@ -504,7 +503,8 @@ class modconfig(ModAdapter):
 
         Returns:
             Callable[[F], F]: The decorator.  The decorated method receives
-            ``result`` as a :class:`ConfigResult` and must return it unchanged.
+            ``result`` as ``tuple[bool, list[ConfigSetEvent]]`` and must return
+            it unchanged.
             Success has no events.
 
         Notes:
@@ -540,11 +540,12 @@ class modconfig(ModAdapter):
 
         Returns:
             Callable[[F], F]: The decorator.  The decorated method receives
-            ``result`` as a :class:`ConfigResult` and must return it unchanged.
+            ``result`` as ``tuple[bool, list[ConfigSetEvent]]`` and must return
+            it unchanged.
             Success carries one event per copied Group argument.
 
         Notes:
-            Failures are returned through ``ConfigResult`` and do not raise.
+            Failures are returned through ``events[0].error`` and do not raise.
             They include a missing source Task, an invalid target name, a
             target equal to the source, and an existing target Task.
 
@@ -572,7 +573,8 @@ class modconfig(ModAdapter):
 
         Returns:
             Callable[[F], F]: The decorator.  The decorated method receives
-            ``result`` as a :class:`ConfigResult` and must return it unchanged.
+            ``result`` as ``tuple[bool, list[ConfigSetEvent]]`` and must return
+            it unchanged.
             Success carries one event per default Group argument.
 
         Notes:
@@ -609,7 +611,8 @@ class modconfig(ModAdapter):
 
         Returns:
             Callable[[F], F]: The decorator.  The decorated method receives
-            ``result`` as a :class:`ConfigResult` and must return it unchanged.
+            ``result`` as ``tuple[bool, list[ConfigSetEvent]]`` and must return
+            it unchanged.
             Success carries one event per default Group argument.
 
         Notes:
@@ -642,7 +645,8 @@ class modconfig(ModAdapter):
 
         Returns:
             Callable[[F], F]: The decorator.  The decorated method receives
-            ``result`` as a :class:`ConfigResult` and must return it unchanged.
+            ``result`` as ``tuple[bool, list[ConfigSetEvent]]`` and must return
+            it unchanged.
             Success has no events.
 
         Notes:
@@ -681,14 +685,15 @@ class modconfig(ModAdapter):
 
         Returns:
             Callable[[F], F]: The decorator.  The decorated method receives
-            ``result`` as a :class:`ConfigResult` and must return it unchanged.
+            ``result`` as ``tuple[bool, list[ConfigSetEvent]]`` and must return
+            it unchanged.
             Success carries one event per copied Group argument.
 
         Notes:
             The source and target must differ.  Failures include a missing
             source Group, a missing target Task, an unknown or dynamic target
             Group, validation failure under the target class, and an existing
-            target Group.  They are returned in ``ConfigResult.error`` and do
+            target Group.  They are returned in ``events[0].error`` and do
             not raise.
 
         Example:
@@ -717,13 +722,14 @@ class modconfig(ModAdapter):
 
         Returns:
             Callable[[F], F]: The decorator.  The decorated method receives
-            ``result`` as a :class:`ConfigResult` and must return it unchanged.
+            ``result`` as ``tuple[bool, list[ConfigSetEvent]]`` and must return
+            it unchanged.
             Success carries one event per default Group argument.
 
         Notes:
             The Group must be declared by the Task class; dynamic Group fields
             are not supported.  A missing row is created with default values.
-            Failures are returned through ``ConfigResult`` and do not raise.
+            Failures are returned through ``events[0].error`` and do not raise.
 
         Example:
             .. code-block:: python
@@ -754,14 +760,15 @@ class modconfig(ModAdapter):
 
         Returns:
             Callable[[F], F]: The decorator.  The decorated method receives
-            ``result`` as a :class:`ConfigResult` and must return it unchanged.
+            ``result`` as ``tuple[bool, list[ConfigSetEvent]]`` and must return
+            it unchanged.
             On success ``value`` is the current argument value and ``events`` is
             empty; on failure ``value`` is ``default`` and ``error`` describes
             the problem.
 
         Notes:
             Missing Task/Group/field and unreadable Group rows are reported
-            through ``ConfigResult`` instead of raising.
+            through ``events[0].error`` instead of raising.
 
         Example:
             .. code-block:: python
@@ -797,7 +804,8 @@ class modconfig(ModAdapter):
 
         Returns:
             Callable[[F], F]: The decorator.  The decorated method receives
-            ``result`` as a :class:`ConfigResult` and must return it unchanged.
+            ``result`` as ``tuple[bool, list[ConfigSetEvent]]`` and must return
+            it unchanged.
             On success ``value`` is the validated value and ``events`` contains
             the accepted change (plus any ``post_edit`` side effects); on
             failure ``events`` contains restore events and ``error`` explains
@@ -835,7 +843,8 @@ class modconfig(ModAdapter):
 
         Returns:
             Callable[[F], F]: The decorator.  The decorated method receives
-            ``result`` as a :class:`ConfigResult` and must return it unchanged.
+            ``result`` as ``tuple[bool, list[ConfigSetEvent]]`` and must return
+            it unchanged.
             On success ``events`` contains all accepted changes and ``value``
             is ``None``; on failure ``events`` contains restore events and
             ``error`` is the first :class:`ConfigError`.
@@ -868,7 +877,8 @@ class modconfig(ModAdapter):
 
         Returns:
             Callable[[F], F]: The decorator.  The decorated method receives
-            ``result`` as a :class:`ConfigResult` and must return it unchanged.
+            ``result`` as ``tuple[bool, list[ConfigSetEvent]]`` and must return
+            it unchanged.
             On success ``value`` is the default value and ``events`` holds the
             reset event; on failure ``error`` explains why.
 
@@ -901,7 +911,8 @@ class modconfig(ModAdapter):
 
         Returns:
             Callable[[F], F]: The decorator.  The decorated method receives
-            ``result`` as a :class:`ConfigResult` and must return it unchanged.
+            ``result`` as ``tuple[bool, list[ConfigSetEvent]]`` and must return
+            it unchanged.
             Empty input succeeds with no events; otherwise success carries the
             reset events and ``value`` is ``None``.
 
@@ -984,7 +995,7 @@ class modconfig(ModAdapter):
             return True, []
 
         table = ConfigTable(config_name)
-        grouped = _group_events(events)
+        grouped = ConfigEvents.group_events(events)
 
         success: list[ConfigSetEvent] = []
         rollback: list[ConfigSetEvent] = []
@@ -992,23 +1003,27 @@ class modconfig(ModAdapter):
         has_error = False
 
         for (task, group), group_events in grouped.items():
-            task_class = _resolve_task_class(task)
+            task_class = TaskNameResolver.resolve(task)
             if task_class is None:
                 has_error = True
-                rollback.extend(_fail_events(group_events, f'No such task: "{task}"'))
+                rollback.extend(
+                    ConfigEvents.fail_events(group_events, f'No such task: "{task}"')
+                )
                 continue
             group_class = _resolve_group_class(task_class, group)
             if group_class is None:
                 has_error = True
                 rollback.extend(
-                    _fail_events(group_events, f'No such group: "{task}.{group}"')
+                    ConfigEvents.fail_events(
+                        group_events, f'No such group: "{task}.{group}"'
+                    )
                 )
                 continue
             group_obj = _read_group(config_name, task, group, group_class)
             if group_obj is None:
                 has_error = True
                 rollback.extend(
-                    _fail_events(
+                    ConfigEvents.fail_events(
                         group_events,
                         f'Failed to load group: "{task}.{group}"',
                     )
@@ -1027,15 +1042,17 @@ class modconfig(ModAdapter):
             data = group_obj.to_dict()
             data.update(new_values)
             try:
+                # Full state validation: unlike the per-argument patch check
+                # above, the stored arguments are part of this payload.
                 new_group = group_class.model_validate(data)
             except ValidationError as exc:
                 rollback.extend(
-                    _rollback_group(
+                    ConfigEvents.rollback_group(
                         group_events,
                         task,
                         group,
                         group_obj,
-                        ConfigError.from_pydantic(exc, task=task, group=group),
+                        ConfigError.from_pydantic(exc),
                     )
                 )
                 has_error = True
@@ -1047,7 +1064,9 @@ class modconfig(ModAdapter):
                 )
                 if error is not None:
                     rollback.extend(
-                        _rollback_group(group_events, task, group, group_obj, error)
+                        ConfigEvents.rollback_group(
+                            group_events, task, group, group_obj, error
+                        )
                     )
                     has_error = True
                     continue
@@ -1092,13 +1111,13 @@ class modconfig(ModAdapter):
             return []
 
         table = ConfigTable(config_name)
-        grouped = _group_events(events)
+        grouped = ConfigEvents.group_events(events)
 
         success: list[ConfigSetEvent] = []
         writes: list[tuple[str, str, type[TaskBase], GroupBase]] = []
 
         for (task, group), group_events in grouped.items():
-            task_class = _resolve_task_class(task)
+            task_class = TaskNameResolver.resolve(task)
             if task_class is None:
                 logger.warning(f'Cannot reset non-exist task "{task}"')
                 continue
@@ -1132,7 +1151,9 @@ class modconfig(ModAdapter):
 
             default = group_class()
             for arg in args:
-                success.append(_event(task, group, arg, getattr(default, arg)))
+                success.append(
+                    ConfigEvents.event(task, group, arg, getattr(default, arg))
+                )
             writes.append((task, group, task_class, new_group))
 
         if not writes:
@@ -1176,7 +1197,7 @@ class modconfig(ModAdapter):
                 continue
             seen.add(key)
 
-            task_class = _resolve_task_class(task)
+            task_class = TaskNameResolver.resolve(task)
             if task_class is None:
                 logger.warning(f'Cannot reset non-exist task "{task}"')
                 continue
@@ -1187,7 +1208,7 @@ class modconfig(ModAdapter):
 
             default = group_class()
             for arg, value in default.to_dict().items():
-                success.append(_event(task, group, arg, value))
+                success.append(ConfigEvents.event(task, group, arg, value))
             writes.append((task, group, task_class, group_class))
 
         if not writes:
@@ -1210,7 +1231,7 @@ class modconfig(ModAdapter):
         return modconfig._config_group_batch_reset(target, config_name, [event])
 
     # ------------------------------------------------------------------
-    # cfg_* implementations (OAS native, unified ConfigResult)
+    # cfg_* implementations (OAS native, unified (success, events))
     # ------------------------------------------------------------------
 
     @staticmethod
@@ -1219,12 +1240,12 @@ class modconfig(ModAdapter):
         config_name: str,
         taskclass: str,
         name: str = 'default',
-    ) -> ConfigResult:
-        task_class = _registered_task(taskclass)
+    ) -> tuple[bool, list[ConfigSetEvent]]:
+        task_class = TaskNameResolver.registered(taskclass)
         if task_class is None:
             return _failure(f'Unregistered TaskClass: "{taskclass}"')
         try:
-            task_name = _make_task_name(taskclass, name)
+            task_name = TaskNameResolver.make(taskclass, name)
         except ValueError as exc:
             return _failure(str(exc))
 
@@ -1237,22 +1258,19 @@ class modconfig(ModAdapter):
             return _failure(f'Cannot construct default Task "{taskclass}": {exc}')
 
         TaskStore.save(config_name, task_obj, task_name)
-        return ConfigResult(
-            success=True,
-            events=_events_from_task(task_name, task_obj),
-        )
+        return True, ConfigEvents.events_from_task(task_name, task_obj)
 
     @staticmethod
     def _cfg_task_del(
         target: Any,
         config_name: str,
         task: str,
-    ) -> ConfigResult:
+    ) -> tuple[bool, list[ConfigSetEvent]]:
         table = ConfigTable(config_name)
         if not table.list_task_rows(task):
             return _failure(f'No such task: "{task}"')
         table.delete_task(task)
-        return ConfigResult(success=True)
+        return True, []
 
     @staticmethod
     def _cfg_task_copy(
@@ -1260,13 +1278,13 @@ class modconfig(ModAdapter):
         config_name: str,
         task: str,
         new_name: str = 'default',
-    ) -> ConfigResult:
+    ) -> tuple[bool, list[ConfigSetEvent]]:
         loaded = _load_task(config_name, task)
         if loaded is None:
             return _failure(f'No such task: "{task}"')
         task_class, task_obj = loaded
         try:
-            target_task = _make_task_name(task_class.__name__, new_name)
+            target_task = TaskNameResolver.make(task_class.__name__, new_name)
         except ValueError as exc:
             return _failure(str(exc))
         if target_task == task:
@@ -1277,18 +1295,15 @@ class modconfig(ModAdapter):
             return _failure(f'Task already exists: "{target_task}"')
 
         TaskStore.save(config_name, task_obj, target_task)
-        return ConfigResult(
-            success=True,
-            events=_events_from_task(target_task, task_obj),
-        )
+        return True, ConfigEvents.events_from_task(target_task, task_obj)
 
     @staticmethod
     def _cfg_task_reset(
         target: Any,
         config_name: str,
         task: str,
-    ) -> ConfigResult:
-        task_class = _resolve_task_class(task)
+    ) -> tuple[bool, list[ConfigSetEvent]]:
+        task_class = TaskNameResolver.resolve(task)
         if task_class is None:
             return _failure(f'No such task: "{task}"')
         table = ConfigTable(config_name)
@@ -1297,10 +1312,7 @@ class modconfig(ModAdapter):
 
         default_obj = task_class()
         TaskStore.save(config_name, default_obj, task)
-        return ConfigResult(
-            success=True,
-            events=_events_from_task(task, default_obj),
-        )
+        return True, ConfigEvents.events_from_task(task, default_obj)
 
     @staticmethod
     def _cfg_group_add(
@@ -1309,8 +1321,8 @@ class modconfig(ModAdapter):
         task: str,
         group: str,
         groupclass: str,
-    ) -> ConfigResult:
-        task_class = _resolve_task_class(task)
+    ) -> tuple[bool, list[ConfigSetEvent]]:
+        task_class = TaskNameResolver.resolve(task)
         if task_class is None:
             return _failure(f'No such task: "{task}"')
         group_class = _resolve_group_class(task_class, group)
@@ -1328,10 +1340,7 @@ class modconfig(ModAdapter):
 
         default_obj = group_class()
         _write_group(table, task, task_class, group, default_obj)
-        return ConfigResult(
-            success=True,
-            events=_events_from_group(task, group, default_obj),
-        )
+        return True, ConfigEvents.events_from_group(task, group, default_obj)
 
     @staticmethod
     def _cfg_group_del(
@@ -1339,8 +1348,8 @@ class modconfig(ModAdapter):
         config_name: str,
         task: str,
         group: str,
-    ) -> ConfigResult:
-        task_class = _resolve_task_class(task)
+    ) -> tuple[bool, list[ConfigSetEvent]]:
+        task_class = TaskNameResolver.resolve(task)
         if task_class is None:
             return _failure(f'No such task: "{task}"')
         group_class = _resolve_group_class(task_class, group)
@@ -1351,7 +1360,7 @@ class modconfig(ModAdapter):
         if table.get_group(task, group) is None:
             return _failure(f'No such group: "{task}.{group}"')
         table.delete_group(task, group)
-        return ConfigResult(success=True)
+        return True, []
 
     @staticmethod
     def _cfg_group_copy(
@@ -1361,7 +1370,7 @@ class modconfig(ModAdapter):
         group: str,
         new_group: str,
         new_task: str | None = None,
-    ) -> ConfigResult:
+    ) -> tuple[bool, list[ConfigSetEvent]]:
         source_loaded = _load_group(config_name, task, group)
         if source_loaded is None:
             return _failure(f'No such group: "{task}.{group}"')
@@ -1373,7 +1382,7 @@ class modconfig(ModAdapter):
 
         target_task = task if new_task is None else new_task
         target_task_class = (
-            source_task_class if same_target else _resolve_task_class(target_task)
+            source_task_class if same_target else TaskNameResolver.resolve(target_task)
         )
         if target_task_class is None:
             return _failure(f'No such task: "{target_task}"')
@@ -1384,19 +1393,14 @@ class modconfig(ModAdapter):
         try:
             copied = target_group_class.model_validate(source.to_dict())
         except ValidationError as exc:
-            return _failure(
-                ConfigError.from_pydantic(exc, task=target_task, group=new_group)
-            )
+            return _failure(ConfigError.from_pydantic(exc))
 
         table = ConfigTable(config_name)
         if table.get_group(target_task, new_group) is not None:
             return _failure(f'Group already exists: "{target_task}.{new_group}"')
 
         _write_group(table, target_task, target_task_class, new_group, copied)
-        return ConfigResult(
-            success=True,
-            events=_events_from_group(target_task, new_group, copied),
-        )
+        return True, ConfigEvents.events_from_group(target_task, new_group, copied)
 
     @staticmethod
     def _cfg_group_reset(
@@ -1404,8 +1408,8 @@ class modconfig(ModAdapter):
         config_name: str,
         task: str,
         group: str,
-    ) -> ConfigResult:
-        task_class = _resolve_task_class(task)
+    ) -> tuple[bool, list[ConfigSetEvent]]:
+        task_class = TaskNameResolver.resolve(task)
         if task_class is None:
             return _failure(f'No such task: "{task}"')
         group_class = _resolve_group_class(task_class, group)
@@ -1415,10 +1419,7 @@ class modconfig(ModAdapter):
         table = ConfigTable(config_name)
         _reset_group(table, task, task_class, group, group_class)
         default = group_class()
-        return ConfigResult(
-            success=True,
-            events=_events_from_group(task, group, default),
-        )
+        return True, ConfigEvents.events_from_group(task, group, default)
 
     @staticmethod
     def _cfg_arg_get(
@@ -1428,8 +1429,8 @@ class modconfig(ModAdapter):
         group: str,
         arg: str,
         default: Any = None,
-    ) -> ConfigResult:
-        task_class = _resolve_task_class(task)
+    ) -> tuple[bool, list[ConfigSetEvent]]:
+        task_class = TaskNameResolver.resolve(task)
         if task_class is None:
             return _failure(f'No such task: "{task}"', value=default)
         group_class = _resolve_group_class(task_class, group)
@@ -1440,7 +1441,7 @@ class modconfig(ModAdapter):
             return _failure(f'Cannot load group: "{task}.{group}"', value=default)
         if arg not in group_class.model_fields:
             return _failure(f'No such field: "{task}.{group}.{arg}"', value=default)
-        return ConfigResult(success=True, value=getattr(group_obj, arg))
+        return True, [ConfigEvents.event(task, group, arg, getattr(group_obj, arg))]
 
     @staticmethod
     def _cfg_arg_set(
@@ -1451,14 +1452,14 @@ class modconfig(ModAdapter):
         arg: str,
         value: Any,
         post_edit: bool = False,
-    ) -> ConfigResult:
+    ) -> tuple[bool, list[ConfigSetEvent]]:
         ok, events = modconfig._config_batch_set(
             target,
             config_name,
-            [_event(task, group, arg, value)],
+            [ConfigEvents.event(task, group, arg, value)],
             post_edit,
         )
-        return _result_from_events(ok, events)
+        return ok, events
 
     @staticmethod
     def _cfg_arg_batch_set(
@@ -1466,11 +1467,11 @@ class modconfig(ModAdapter):
         config_name: str,
         events: list[ConfigSetEvent],
         post_edit: bool = False,
-    ) -> ConfigResult:
+    ) -> tuple[bool, list[ConfigSetEvent]]:
         ok, results = modconfig._config_batch_set(
             target, config_name, events, post_edit
         )
-        return _result_from_events(ok, results)
+        return ok, results
 
     @staticmethod
     def _cfg_arg_reset(
@@ -1479,32 +1480,28 @@ class modconfig(ModAdapter):
         task: str,
         group: str,
         arg: str,
-    ) -> ConfigResult:
+    ) -> tuple[bool, list[ConfigSetEvent]]:
         events = modconfig._config_batch_reset(
             target,
             config_name,
-            [_event(task, group, arg, None)],
+            [ConfigEvents.event(task, group, arg, None)],
         )
         if not events:
             return _failure(f'No such field: "{task}.{group}.{arg}"')
-        return ConfigResult(
-            success=True,
-            events=events,
-            value=events[0].value,
-        )
+        return True, events
 
     @staticmethod
     def _cfg_arg_batch_reset(
         target: Any,
         config_name: str,
         events: list[ConfigSetEvent],
-    ) -> ConfigResult:
+    ) -> tuple[bool, list[ConfigSetEvent]]:
         if not events:
-            return ConfigResult(success=True)
+            return True, []
         results = modconfig._config_batch_reset(target, config_name, events)
         if not results:
             return _failure('Failed to reset arguments')
-        return ConfigResult(success=True, events=results)
+        return True, results
 
 
 # ----------------------------------------------------------------------
@@ -1512,48 +1509,8 @@ class modconfig(ModAdapter):
 # ----------------------------------------------------------------------
 
 
-def _split_task_name(task: str) -> tuple[str, str]:
-    """Split ``TaskClass@name``; plain legacy names return ``("", task)``."""
-
-    taskclass, separator, name = task.partition('@')
-    if separator and taskclass and name:
-        return taskclass, name
-    return '', task
-
-
-def _make_task_name(taskclass: str, name: str) -> str:
-    if not isinstance(taskclass, str) or not taskclass.strip():
-        raise ValueError('taskclass must be a non-empty string')
-    if not isinstance(name, str) or not name.strip():
-        raise ValueError('task name must be a non-empty string')
-    if '@' in taskclass or '@' in name:
-        raise ValueError('taskclass and task name must not contain "@"')
-    return f'{taskclass}@{name}'
-
-
-def _registered_task(name: str) -> type[TaskBase] | None:
-    try:
-        task_class = config_model_registry.get_task_class(name)
-    except KeyError:
-        return None
-    return task_class if issubclass(task_class, TaskBase) else None
-
-
-def _resolve_task_class(task: str) -> type[TaskBase] | None:
-    """Resolve ``TaskClass@name`` to a registered Task class.
-
-    Only the name is used, so this helper never touches the database.  An
-    operation that reads one Group row therefore performs exactly one table
-    read.
-    """
-
-    taskclass, _name = _split_task_name(task)
-    return _registered_task(taskclass or task)
-
-
 def _is_dynamic_annotation(annotation: Any) -> bool:
     """Return whether an annotation is, or contains, a dynamic Group list."""
-
     origin = get_origin(annotation)
     if origin in (list, tuple, set, frozenset):
         return True
@@ -1569,7 +1526,6 @@ def _resolve_group_class(
     ``None`` means "unknown group" or "dynamic Group field"; neither can be
     read or written as a single row.
     """
-
     field = task_class.model_fields.get(group)
     if field is None:
         return None
@@ -1588,7 +1544,6 @@ def _read_group(
     group_class: type[GroupBase],
 ) -> GroupBase | None:
     """Read one Group row; a missing row yields the model defaults."""
-
     row = ConfigTable(config_name).get_group(task, group)
     if row is None:
         return group_class()
@@ -1605,8 +1560,7 @@ def _load_group(
     group: str,
 ) -> tuple[type[TaskBase], type[GroupBase], GroupBase] | None:
     """Load one Group without reading the other Groups of the Task."""
-
-    task_class = _resolve_task_class(task)
+    task_class = TaskNameResolver.resolve(task)
     if task_class is None:
         logger.warning(f'No such task class for task "{task}"')
         return None
@@ -1624,8 +1578,7 @@ def _load_task(
     task: str,
 ) -> tuple[type[TaskBase], TaskBase] | None:
     """Load a whole Task; only used by operations that need every Group."""
-
-    task_class = _resolve_task_class(task)
+    task_class = TaskNameResolver.resolve(task)
     if task_class is None:
         logger.warning(f'No such task class for task "{task}"')
         return None
@@ -1673,47 +1626,6 @@ def _reset_group(
     )
 
 
-def _events_from_task(
-    task: str,
-    task_obj: TaskBase,
-) -> list[ConfigSetEvent]:
-    return [
-        _event(task, group, arg, value)
-        for group, values in task_obj.to_dict().items()
-        for arg, value in values.items()
-    ]
-
-
-def _events_from_group(
-    task: str,
-    group: str,
-    group_obj: GroupBase,
-) -> list[ConfigSetEvent]:
-    return [
-        _event(task, group, arg, value) for arg, value in group_obj.to_dict().items()
-    ]
-
-
-def _event(task: str, group: str, arg: str, value: Any) -> ConfigSetEvent:
-    return ConfigSetEvent(task=task, group=group, arg=arg, value=value)
-
-
-def _group_events(
-    events: list[ConfigSetEvent],
-) -> dict[tuple[str, str], list[ConfigSetEvent]]:
-    grouped: dict[tuple[str, str], list[ConfigSetEvent]] = defaultdict(list)
-    for event in events:
-        grouped[(event.task, event.group)].append(event)
-    return grouped
-
-
-def _fail_events(
-    events: list[ConfigSetEvent],
-    message: str,
-) -> list[ConfigSetEvent]:
-    return [_failed_event(event, message) for event in events]
-
-
 def _run_post_edit(
     task: str,
     group: str,
@@ -1722,25 +1634,14 @@ def _run_post_edit(
     requested: dict[str, Any],
 ) -> tuple[ConfigError | None, list[ConfigSetEvent]]:
     """Run ``post_edit()`` and return ``(error, side_effect_events)``."""
-
-    hook = getattr(after, 'post_edit', None)
-    if not callable(hook):
-        return None, []
     try:
-        hook(before, requested)
+        after.post_edit(before, requested)
     except ValidationError as exc:
-        return ConfigError.from_pydantic(exc, task=task, group=group), []
+        return ConfigError.from_pydantic(exc), []
     except Exception as exc:  # noqa: BLE001
         logger.exception(exc)
-        return (
-            ConfigError(
-                msg=f'post_edit failed: {exc}',
-                task=task,
-                group=group,
-            ),
-            [],
-        )
-    return None, _post_edit_events(task, group, before, after, requested)
+        return ConfigError(msg=f'post_edit failed: {exc}'), []
+    return None, ConfigEvents.post_edit_events(task, group, before, after, requested)
 
 
 def _validate_group_args(
@@ -1755,7 +1656,6 @@ def _validate_group_args(
     Returns ``(new_values, accepted_events, error_event)``.  On failure the
     accepted events are returned too, so the caller can roll them back.
     """
-
     new_values: dict[str, Any] = {}
     accepted: list[ConfigSetEvent] = []
     for event in events:
@@ -1763,113 +1663,39 @@ def _validate_group_args(
             return (
                 new_values,
                 accepted,
-                _failed_event(event, f'No such field: "{task}.{group}.{event.arg}"'),
+                ConfigEvents.failed_event(
+                    event, f'No such field: "{task}.{group}.{event.arg}"'
+                ),
             )
         try:
-            validated = group_class.model_validate({event.arg: event.value})
+            validated = group_class.validate_patch({event.arg: event.value})
         except ValidationError as exc:
             return (
                 new_values,
                 accepted,
-                _failed_event(
+                ConfigEvents.failed_event(
                     event,
-                    ConfigError.from_pydantic(
-                        exc, task=task, group=group, arg=event.arg
-                    ),
+                    ConfigError.from_pydantic(exc),
                     value=getattr(group_obj, event.arg, None),
                 ),
             )
         value = getattr(validated, event.arg)
         new_values[event.arg] = value
-        accepted.append(_event(task, group, event.arg, value))
+        accepted.append(ConfigEvents.event(task, group, event.arg, value))
     return new_values, accepted, None
 
 
-def _failure(msg: str, *, value: Any = None) -> ConfigResult:
-    return ConfigResult(
-        success=False,
-        value=value,
-        error=ConfigError(msg=msg),
-    )
-
-
-def _result_from_events(
-    success: bool,
-    events: list[ConfigSetEvent],
-) -> ConfigResult:
-    error = None
-    for event in events:
-        if isinstance(event.error, ConfigError):
-            error = event.error
-            break
-        if isinstance(event.error, Exception):
-            error = ConfigError(msg=str(event.error))
-            break
-    value = events[0].value if success and len(events) == 1 else None
-    return ConfigResult(
-        success=success,
-        events=events,
-        value=value,
-        error=error,
-    )
-
-
-def _failed_event(
-    event: ConfigSetEvent,
-    error: str | ConfigError | Exception,
+def _failure(
+    msg: str | ConfigError,
+    *,
     value: Any = None,
-) -> ConfigSetEvent:
-    if isinstance(error, (str, Exception)):
-        error = ConfigError(
-            msg=str(error),
-            task=event.task,
-            group=event.group,
-            arg=event.arg,
-        )
-    return ConfigSetEvent(
-        task=event.task,
-        group=event.group,
-        arg=event.arg,
-        value=value,
-        error=error,
-    )
+) -> tuple[bool, list[ConfigSetEvent]]:
+    """Return an operation level failure.
 
-
-def _rollback_group(
-    events: list[ConfigSetEvent],
-    task: str,
-    group: str,
-    current: GroupBase,
-    error: ConfigError,
-) -> list[ConfigSetEvent]:
-    result: list[ConfigSetEvent] = []
-    for index, event in enumerate(events):
-        result.append(
-            ConfigSetEvent(
-                task=task,
-                group=group,
-                arg=event.arg,
-                value=getattr(current, event.arg, None),
-                error=error if index == 0 else None,
-            )
-        )
-    return result
-
-
-def _post_edit_events(
-    task: str,
-    group: str,
-    before: GroupBase,
-    after: GroupBase,
-    requested: dict[str, Any],
-) -> list[ConfigSetEvent]:
-    before_values = before.to_dict()
-    after_values = after.to_dict()
-    events: list[ConfigSetEvent] = []
-    for arg, value in after_values.items():
-        if before_values.get(arg) == value:
-            continue
-        if arg in requested and requested[arg] == value:
-            continue
-        events.append(ConfigSetEvent(task=task, group=group, arg=arg, value=value))
-    return events
+    The reason travels in an event whose task, group and arg are empty:
+    operations that are not tied to one config argument (add, delete, copy)
+    have no argument to attribute the error to.  ``value`` is returned in that
+    event, which is how a getter hands back its default.
+    """
+    error = msg if isinstance(msg, ConfigError) else ConfigError(msg=msg)
+    return False, [ConfigSetEvent(task='', group='', arg='', value=value, error=error)]

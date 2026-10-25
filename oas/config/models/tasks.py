@@ -195,7 +195,6 @@ class TaskBase(ConfigBase):
         Only single Group fields are exported.  Dynamically managed Group
         lists are not supported yet and are intentionally omitted.
         """
-
         data: dict[str, dict[str, Any]] = {}
         for field_name in type(self).model_fields:
             value = getattr(self, field_name)
@@ -206,7 +205,6 @@ class TaskBase(ConfigBase):
     @classmethod
     def from_dict(cls, data: Mapping[str, Any]) -> Self:
         """Build a validated Task from a Group configuration dict."""
-
         return cls.model_validate(data)
 
     @classmethod
@@ -254,7 +252,6 @@ class TaskBase(ConfigBase):
         抛出异常，``_pending_schema_rules`` 都会被清空；下一次导出不会重复
         使用本次登记的临时规则。
         """
-
         cls._pending_schema_rules.extend(rules)
 
     @classmethod
@@ -383,7 +380,6 @@ class TaskBase(ConfigBase):
         handler: Callable[[Any], dict[str, Any]],
     ) -> dict[str, Any]:
         """Apply Task rules to the schema produced by Pydantic."""
-
         try:
             schema_data = handler(core_schema)
             rules: list[SchemaRule] = []

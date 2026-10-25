@@ -155,3 +155,28 @@ def test_from_dict_accepts_valid_option_value():
     group = GroupErrGroup.from_dict({'mode': 'b'})
 
     assert group.mode == GroupErrOption.B
+
+
+def test_post_edit_defaults_to_a_noop_hook():
+    group = GroupIoAll()
+    before = GroupIoAll(name='before')
+
+    assert group.post_edit(before, {'count': 5}) is None
+    assert group == GroupIoAll()
+
+
+def test_validate_patch_fills_unpatched_arguments_with_defaults():
+    patched = GroupIoAll.validate_patch({'count': 7})
+
+    assert type(patched) is GroupIoAll
+    assert patched.count == 7
+    assert patched.name == 'group'
+
+
+def test_validate_patch_ignores_unknown_arguments():
+    assert GroupIoAll.validate_patch({'count': 7, 'unknown': 1}) == GroupIoAll(count=7)
+
+
+def test_validate_patch_rejects_invalid_argument_value():
+    with pytest.raises(ValidationError):
+        GroupIoAll.validate_patch({'count': -1})

@@ -19,7 +19,6 @@ class Codec:
     @staticmethod
     def encode(data: dict[str, Any]) -> bytes:
         """Encode one configuration dict as MsgPack bytes."""
-
         if not isinstance(data, dict):
             raise TypeError('Codec.encode requires a dict')
         return msgspec.msgpack.encode(data)
@@ -27,7 +26,6 @@ class Codec:
     @staticmethod
     def decode(blob: bytes) -> dict[str, Any]:
         """Decode MsgPack bytes into one configuration dict."""
-
         if not isinstance(blob, (bytes, bytearray, memoryview)):
             raise TypeError('Codec.decode requires bytes')
         try:

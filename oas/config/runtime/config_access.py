@@ -108,7 +108,6 @@ class GroupProxy:
         Methods marked with ``_alasio_batch_set`` are called inside a batch
         context, matching Alasio's GroupProxy behavior.
         """
-
         attr = getattr(self._obj, name)
         if not isinstance(attr, MethodType):
             return attr
@@ -132,7 +131,6 @@ class GroupProxy:
             name (str): Group argument name
             value: New argument value
         """
-
         if name.startswith('_'):
             raise AttributeError(f'cannot assign private proxy attribute: {name}')
         self._config._set_group_arg(self._task, self._group, name, value)
@@ -164,14 +162,12 @@ class ConfigAccess(ConfigMod):
         Returns:
             tuple[int, int]: Connection identity and SQLite data version
         """
-
         return self._config_data_version(self.config_name)
 
     def config_cache(self) -> None:
         """
         Cache configuration rows.
         """
-
         with self._lock:
             if self.is_template_config or self._config_cached:
                 return
@@ -189,7 +185,6 @@ class ConfigAccess(ConfigMod):
             bool: Whether the current SQLite data version differs from the
                 cached version
         """
-
         with self._lock:
             if not self._config_cached or self.is_template_config:
                 return False
@@ -202,7 +197,6 @@ class ConfigAccess(ConfigMod):
         Returns:
             bool: Whether the cache was reloaded
         """
-
         with self._lock:
             if not self.config_changed():
                 return False
@@ -214,7 +208,6 @@ class ConfigAccess(ConfigMod):
         """
         Release configuration cache.
         """
-
         with self._lock:
             if self._modified:
                 logger.error(
@@ -281,7 +274,6 @@ class ConfigAccess(ConfigMod):
         Returns:
             GroupBase | None: Validated Group, or ``None`` on failure
         """
-
         self.config_cache()
         key = (task, group)
         cached = self._dict_group.get(key)
@@ -324,7 +316,6 @@ class ConfigAccess(ConfigMod):
         Returns:
             Any: Validated argument value
         """
-
         obj = self._load_group(task, group)
         if obj is None:
             raise AttributeError(f'no such group: {task}.{group}')
@@ -345,7 +336,6 @@ class ConfigAccess(ConfigMod):
         """
         Initialize Groups declared by the selected Task instance.
         """
-
         if not self.task or self.is_template_config:
             return
         with self._lock:
@@ -362,7 +352,6 @@ class ConfigAccess(ConfigMod):
         """
         A fallback to access bound Groups.
         """
-
         if name.startswith('_') or not self.task:
             raise AttributeError(name)
         task_class = self._task_class(self.task)
@@ -380,7 +369,6 @@ class ConfigAccess(ConfigMod):
     @property
     def bound(self) -> dict[tuple[str, str], None]:
         """Return ``(group, arg)`` pairs loaded for the selected Task."""
-
         with self._lock:
             return {
                 (group, arg): None
@@ -401,7 +389,6 @@ class ConfigAccess(ConfigMod):
         Returns:
             Any: Current argument value or ``default``
         """
-
         obj = self._load_group(self.task, group)
         return default if obj is None else getattr(obj, arg, default)
 
@@ -418,7 +405,6 @@ class ConfigAccess(ConfigMod):
         Returns:
             Any: Current argument value or ``default``
         """
-
         obj = self._load_group(task, group)
         return default if obj is None else getattr(obj, arg, default)
 
@@ -429,13 +415,12 @@ class ConfigAccess(ConfigMod):
         Invalid values and missing fields are ignored, matching the existing
         cross-task API behavior.
         """
-
         obj = self._load_group(task, group)
         if obj is None or arg not in type(obj).model_fields:
             return
         try:
             current = getattr(obj, arg)
-            validated = type(obj).model_validate({arg: value})
+            validated = type(obj).validate_patch({arg: value})
             new_value = getattr(validated, arg)
             if current == new_value:
                 return
@@ -458,7 +443,6 @@ class ConfigAccess(ConfigMod):
             arg (str): Argument name
             value: New argument value
         """
-
         event = ConfigSetEvent(task=task, group=group, arg=arg, value=value)
         with self._lock:
             self._modified[(task, group, arg)] = event
@@ -472,7 +456,6 @@ class ConfigAccess(ConfigMod):
         Returns:
             bool: Whether there were pending changes and the save succeeded
         """
-
         with self._lock:
             if not self._modified:
                 return False
@@ -508,7 +491,6 @@ class ConfigAccess(ConfigMod):
         Returns:
             _BatchSetContext: Batch context
         """
-
         return _BatchSetContext(self)
 
     def _apply_override_config(self, group: str, arg: str, value: Any) -> Any:
@@ -517,7 +499,7 @@ class ConfigAccess(ConfigMod):
             return None
         previous = getattr(obj, arg)
         try:
-            validated = type(obj).model_validate({arg: value})
+            validated = type(obj).validate_patch({arg: value})
             setattr(obj, arg, getattr(validated, arg))
         except TypeError, ValueError, ValidationError:
             return _MISSING
@@ -540,7 +522,6 @@ class ConfigAccess(ConfigMod):
         Returns:
             tuple[dict[str, dict[str, Any]], dict[str, Any]]: Previous values
         """
-
         previous_config: dict[str, dict[str, Any]] = defaultdict(dict)
         previous_const: dict[str, Any] = {}
         with self._lock:
@@ -565,7 +546,6 @@ class ConfigAccess(ConfigMod):
         """
         Clear all memory overrides and restore original values.
         """
-
         with self._lock:
             for group, values in self._override_prev_config.items():
                 for arg, value in values.items():
@@ -584,5 +564,4 @@ class ConfigAccess(ConfigMod):
         Returns:
             _TemporaryContext: Context that restores values on exit
         """
-
         return _TemporaryContext(self, kwargs)

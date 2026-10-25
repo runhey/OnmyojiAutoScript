@@ -26,48 +26,27 @@ MenuMetadata = Mapping[str, Mapping[str, str | None]]
 
 def _default_task_name(task: str) -> str:
     """Return the default Task instance name for a menu entry."""
-
     return task if '@' in task else f'{task}@default'
 
 
-class MenuEntry:
-    """Menu store and operations used by ``modmenu`` implementations.
-
-    The object is bound to one configuration database.  Every multi-row write
-    runs in a single ``EXCLUSIVE`` transaction, so a failed menu edit never
-    leaves a half-created scheme or group behind.
-    """
-
+class MenuEntryValidator:
     _METADATA_FIELDS = frozenset({'title', 'description', 'icon'})
 
-    def __init__(self, config_name: str):
-        self.config_name = config_name
-        self.schemes = MenuSchemeTable(config_name)
-        self.groups = MenuGroupTable(config_name)
-        self.tasks = MenuTaskTable(config_name)
-        self.schemes.create_table()
-        self.groups.create_table()
-        self.tasks.create_table()
-
-    # ------------------------------------------------------------------
-    # Validation helpers
-    # ------------------------------------------------------------------
-
-    @staticmethod
-    def _require_name(value: Any, label: str) -> str:
+    @classmethod
+    def require_name(cls, value: Any, label: str) -> str:
         if not isinstance(value, str):
             raise TypeError(f'{label} must be a non-empty string')
         if not value.strip():
             raise ValueError(f'{label} name must be a non-empty string')
         return value
 
-    @staticmethod
-    def _check_groups(groups: MenuGroups) -> None:
+    @classmethod
+    def check_groups(cls, groups: MenuGroups) -> None:
         if not isinstance(groups, Mapping):
             raise TypeError('groups must be a mapping')
 
     @classmethod
-    def _check_metadata(cls, metadata: MenuMetadata | None) -> None:
+    def check_metadata(cls, metadata: MenuMetadata | None) -> None:
         if metadata is None:
             return
         if not isinstance(metadata, Mapping):
@@ -80,21 +59,43 @@ class MenuEntry:
                 raise ValueError(f'unknown group metadata: {sorted(unknown)!r}')
 
     @classmethod
-    def _check_tasks(cls, tasks: Sequence[str]) -> None:
+    def check_tasks(cls, tasks: Sequence[str]) -> None:
         if isinstance(tasks, (str, bytes)) or not isinstance(tasks, Sequence):
             raise TypeError('tasks must be a sequence of task names')
         seen: set[str] = set()
         for task in tasks:
-            cls._require_name(task, 'task')
+            cls.require_name(task, 'task')
             if task in seen:
                 raise ValueError(f'task appears more than once: {task!r}')
             seen.add(task)
 
-    @staticmethod
-    def _check_order(order: int | None) -> int | None:
+    @classmethod
+    def check_order(cls, order: int | None) -> int | None:
         if order is not None and not isinstance(order, int):
             raise TypeError('order must be an integer')
         return order
+
+
+class MenuEntry:
+    """Menu store and operations used by ``modmenu`` implementations.
+
+    Every multi-row write runs in a single ``EXCLUSIVE`` transaction, so a failed
+    menu edit never leaves a half-created scheme or group behind.
+    """
+
+    def __init__(self, config_name: str):
+        self.schemes = MenuSchemeTable(config_name)
+        self.groups = MenuGroupTable(config_name)
+        self.tasks = MenuTaskTable(config_name)
+        self.schemes.create_table()
+        self.groups.create_table()
+        self.tasks.create_table()
+
+    _require_name = MenuEntryValidator.require_name
+    _check_groups = MenuEntryValidator.check_groups
+    _check_metadata = MenuEntryValidator.check_metadata
+    _check_tasks = MenuEntryValidator.check_tasks
+    _check_order = MenuEntryValidator.check_order
 
     # ------------------------------------------------------------------
     # Row lookups
@@ -102,7 +103,6 @@ class MenuEntry:
 
     def scheme(self, name: str, *, _cursor_=None) -> MenuSchemeRow:
         """Return one scheme row; a missing scheme raises ``KeyError``."""
-
         self._require_name(name, 'scheme')
         row = self.schemes.get_scheme(name, _cursor_=_cursor_)
         if row is None:
@@ -111,7 +111,6 @@ class MenuEntry:
 
     def group(self, scheme: str, name: str, *, _cursor_=None) -> MenuGroupRow:
         """Return one group row; missing scheme or group raises ``KeyError``."""
-
         scheme_row = self.scheme(scheme, _cursor_=_cursor_)
         self._require_name(name, 'group')
         row = self.groups.get_group(scheme_row.id, name, _cursor_=_cursor_)
@@ -121,7 +120,6 @@ class MenuEntry:
 
     def task(self, scheme: str, group: str, name: str, *, _cursor_=None) -> MenuTaskRow:
         """Return one task row; missing scheme, group, or task raises ``KeyError``."""
-
         group_row = self.group(scheme, group, _cursor_=_cursor_)
         self._require_name(name, 'task')
         row = self.tasks.select_one(group_id=group_row.id, task=name, _cursor_=_cursor_)
@@ -135,7 +133,6 @@ class MenuEntry:
 
     def view(self, name: str, *, _cursor_=None) -> dict[str, Any]:
         """Return the full view of one scheme."""
-
         scheme = self.scheme(name, _cursor_=_cursor_)
         groups = self.groups.list_groups(scheme.id, _cursor_=_cursor_)
         return {
@@ -159,7 +156,6 @@ class MenuEntry:
 
     def group_view(self, scheme: str, group: str, *, _cursor_=None) -> dict[str, Any]:
         """Return the view of one group inside a scheme."""
-
         self.group(scheme, group, _cursor_=_cursor_)
         return self.view(scheme, _cursor_=_cursor_)['groups'][group]
 
@@ -167,13 +163,11 @@ class MenuEntry:
         self, scheme: str, group: str, name: str, *, _cursor_=None
     ) -> dict[str, Any]:
         """Return the view of one task inside a group."""
-
         row = self.task(scheme, group, name, _cursor_=_cursor_)
         return {'group': group, 'task': row.task, 'task_order': row.task_order}
 
     def list(self) -> list[dict[str, Any]]:
         """Return every scheme view ordered by ``scheme_order``."""
-
         return [self.view(row.name) for row in self.schemes.list_schemes()]
 
     # ------------------------------------------------------------------
@@ -314,7 +308,6 @@ class MenuEntry:
         group_metadata: MenuMetadata | None = None,
     ) -> dict[str, Any]:
         """Create a scheme and its groups in one transaction."""
-
         self._require_name(name, 'scheme')
         groups = {} if groups is None else groups
         self._check_groups(groups)
@@ -348,7 +341,6 @@ class MenuEntry:
         group_metadata: MenuMetadata | None = None,
     ) -> dict[str, Any]:
         """Replace the groups of an existing scheme in one transaction."""
-
         self._require_name(name, 'scheme')
         self._check_groups(groups)
         self._check_metadata(group_metadata)
@@ -366,7 +358,6 @@ class MenuEntry:
         is_default: bool | None = None,
     ) -> dict[str, Any]:
         """Rename, reorder, or change the default flag of a scheme."""
-
         self._require_name(name, 'scheme')
         order = self._check_order(order)
         with self.schemes.exclusive_transaction() as cursor:
@@ -392,7 +383,6 @@ class MenuEntry:
 
     def delete(self, name: str) -> bool:
         """Delete a scheme, its groups, and its tasks; missing raises ``KeyError``."""
-
         self._require_name(name, 'scheme')
         with self.schemes.exclusive_transaction() as cursor:
             scheme = self.scheme(name, _cursor_=cursor)
@@ -404,7 +394,6 @@ class MenuEntry:
 
     def copy_scheme(self, source: str, target: str) -> dict[str, Any]:
         """Copy a scheme to the end of the scheme list."""
-
         source_view = self.view(source)
         if self.schemes.get_scheme(target) is not None:
             raise ValueError(f'Scheme already exists: "{target}"')
@@ -460,7 +449,6 @@ class MenuEntry:
 
     def seed_defaults(self, menus: Mapping[str, MenuGroups] | None = None) -> None:
         """Create the default schemes that do not exist yet."""
-
         if menus is not None and not isinstance(menus, Mapping):
             raise TypeError('menus must be a mapping')
         source = {'DEFAULT_MENU': DEFAULT_MENU} if menus is None else menus
@@ -503,7 +491,6 @@ class MenuEntry:
         icon: str | None = None,
     ) -> dict[str, Any]:
         """Create a group and its tasks in one transaction."""
-
         scheme_row = self.scheme(scheme)
         self._require_name(name, 'group')
         self._check_tasks(tasks)
@@ -539,7 +526,6 @@ class MenuEntry:
         icon: str | None = None,
     ) -> dict[str, Any]:
         """Rename, reorder, or edit the metadata of a group."""
-
         scheme_row = self.scheme(scheme)
         order = self._check_order(order)
         with self.schemes.exclusive_transaction() as cursor:
@@ -576,7 +562,6 @@ class MenuEntry:
 
     def delete_group(self, scheme: str, name: str) -> bool:
         """Delete a group and its tasks, then close the order gap."""
-
         scheme_row = self.scheme(scheme)
         with self.schemes.exclusive_transaction() as cursor:
             row = self.group(scheme, name, _cursor_=cursor)
@@ -593,7 +578,6 @@ class MenuEntry:
         target_group: str,
     ) -> dict[str, Any]:
         """Copy a group, including metadata, to the end of a scheme."""
-
         source = self.group_view(source_scheme, source_group)
         return self.add_group(
             target_scheme,
@@ -608,7 +592,6 @@ class MenuEntry:
         self, scheme: str, name: str, order: int | None = None
     ) -> dict[str, Any]:
         """Move a group to another position inside the same scheme."""
-
         scheme_row = self.scheme(scheme)
         order = self._check_order(order)
         with self.schemes.exclusive_transaction() as cursor:
@@ -629,7 +612,6 @@ class MenuEntry:
         order: int | None = None,
     ) -> dict[str, Any]:
         """Append or insert a task in a group."""
-
         group_row = self.group(scheme, group)
         self._require_name(task, 'task')
         order = self._check_order(order)
@@ -649,7 +631,6 @@ class MenuEntry:
 
     def delete_task(self, scheme: str, group: str, task: str) -> bool:
         """Delete a task, then close the order gap."""
-
         group_row = self.group(scheme, group)
         with self.schemes.exclusive_transaction() as cursor:
             row = self.task(scheme, group, task, _cursor_=cursor)
@@ -669,7 +650,6 @@ class MenuEntry:
         order: int | None = None,
     ) -> dict[str, Any]:
         """Copy a task to another group."""
-
         self.task(source_scheme, source_group, task)
         target = task if new_task is None else new_task
         return self.add_task(target_scheme, target_group, target, order=order)
@@ -684,7 +664,6 @@ class MenuEntry:
         order: int | None = None,
     ) -> dict[str, Any]:
         """Move a task within its group or to another group."""
-
         order = self._check_order(order)
         with self.schemes.exclusive_transaction() as cursor:
             scheme_name, group_name = self._move_task(
@@ -693,57 +672,180 @@ class MenuEntry:
         return self.task_view(scheme_name, group_name, task)
 
     # ------------------------------------------------------------------
-    # Legacy direct-entry aliases.  New callers should use the decorated
-    # ``modmenu`` API or the canonical add/replace/delete methods above.
+    # Menu API (menu_<obj>_<verb>)
     # ------------------------------------------------------------------
 
-    def list_schemes(self) -> list[MenuSchemeRow]:
-        """Legacy alias returning raw scheme rows."""
+    def menu_scheme_list(self) -> list[dict[str, Any]]:
+        return self.list()
 
-        return self.schemes.list_schemes()
+    def menu_scheme_get(self, name: str) -> dict[str, Any]:
+        return self.view(name)
 
-    def get_scheme(self, name: str) -> dict[str, list[str]]:
-        """Legacy mapping of group name to task names."""
-
-        view = self.view(name)
-        return {group: data['tasks'] for group, data in view['groups'].items()}
-
-    def add_scheme(
+    def menu_scheme_add(
         self,
         name: str,
         groups: MenuGroups | None = None,
         *,
-        scheme_order: int | None = None,
+        order: int | None = None,
         is_default: bool = False,
         group_metadata: MenuMetadata | None = None,
-    ) -> dict[str, list[str]]:
-        """Legacy add wrapper returning the group-to-task mapping."""
-
-        self.add(
+    ) -> dict[str, Any]:
+        return self.add(
             name,
             groups,
-            scheme_order=scheme_order,
+            scheme_order=order,
             is_default=is_default,
             group_metadata=group_metadata,
         )
-        return self.get_scheme(name)
 
-    def replace_scheme(
+    def menu_scheme_update(
+        self,
+        name: str,
+        *,
+        new_name: str | None = None,
+        order: int | None = None,
+        is_default: bool | None = None,
+    ) -> dict[str, Any]:
+        return self.update_scheme(
+            name,
+            new_name=new_name,
+            order=order,
+            is_default=is_default,
+        )
+
+    def menu_scheme_delete(self, name: str) -> bool:
+        return self.delete(name)
+
+    def menu_scheme_copy(self, source: str, target: str) -> dict[str, Any]:
+        return self.copy_scheme(source, target)
+
+    def menu_scheme_replace(
         self,
         name: str,
         groups: MenuGroups,
         *,
         group_metadata: MenuMetadata | None = None,
-    ) -> dict[str, list[str]]:
-        """Legacy replace wrapper returning the group-to-task mapping."""
+    ) -> dict[str, Any]:
+        return self.replace(name, groups, group_metadata=group_metadata)
 
-        self.replace(name, groups, group_metadata=group_metadata)
-        return self.get_scheme(name)
+    def menu_scheme_seed(
+        self, menus: Mapping[str, MenuGroups] | None = None
+    ) -> list[dict[str, Any]]:
+        self.seed_defaults(menus)
+        return self.list()
 
-    def delete_scheme(self, name: str) -> bool:
-        """Legacy alias for :meth:`delete`."""
+    def menu_group_get(self, scheme: str, group: str) -> dict[str, Any]:
+        return self.group_view(scheme, group)
 
-        return self.delete(name)
+    def menu_group_add(
+        self,
+        scheme: str,
+        group: str,
+        tasks: Sequence[str] = (),
+        *,
+        order: int | None = None,
+        title: str | None = None,
+        description: str | None = None,
+        icon: str | None = None,
+    ) -> dict[str, Any]:
+        return self.add_group(
+            scheme,
+            group,
+            tasks,
+            order=order,
+            title=title,
+            description=description,
+            icon=icon,
+        )
+
+    def menu_group_update(
+        self,
+        scheme: str,
+        group: str,
+        *,
+        new_group: str | None = None,
+        order: int | None = None,
+        title: str | None = None,
+        description: str | None = None,
+        icon: str | None = None,
+    ) -> dict[str, Any]:
+        return self.update_group(
+            scheme,
+            group,
+            new_name=new_group,
+            order=order,
+            title=title,
+            description=description,
+            icon=icon,
+        )
+
+    def menu_group_delete(self, scheme: str, group: str) -> bool:
+        return self.delete_group(scheme, group)
+
+    def menu_group_copy(
+        self,
+        source_scheme: str,
+        source_group: str,
+        target_scheme: str,
+        target_group: str,
+    ) -> dict[str, Any]:
+        return self.copy_group(
+            source_scheme,
+            source_group,
+            target_scheme,
+            target_group,
+        )
+
+    def menu_group_move(self, scheme: str, group: str, order: int | None = None) -> dict[str, Any]:
+        return self.move_group(scheme, group, order)
+
+    def menu_task_get(self, scheme: str, group: str, task: str) -> dict[str, Any]:
+        return self.task_view(scheme, group, task)
+
+    def menu_task_add(
+        self,
+        scheme: str,
+        group: str,
+        task: str,
+        *,
+        order: int | None = None,
+    ) -> dict[str, Any]:
+        return self.add_task(scheme, group, task, order=order)
+
+    def menu_task_delete(self, scheme: str, group: str, task: str) -> bool:
+        return self.delete_task(scheme, group, task)
+
+    def menu_task_copy(
+        self,
+        source_scheme: str,
+        source_group: str,
+        task: str,
+        target_scheme: str,
+        target_group: str,
+        *,
+        new_task: str | None = None,
+        order: int | None = None,
+    ) -> dict[str, Any]:
+        return self.copy_task(
+            source_scheme,
+            source_group,
+            task,
+            target_scheme,
+            target_group,
+            new_task=new_task,
+            order=order,
+        )
+
+    def menu_task_move(
+        self,
+        scheme: str,
+        group: str,
+        task: str,
+        *,
+        target_group: str | None = None,
+        order: int | None = None,
+    ) -> dict[str, Any]:
+        return self.move_task(scheme, group, task, target_group=target_group, order=order)
 
 
 class modmenu(ModAdapter):
@@ -788,10 +890,6 @@ class modmenu(ModAdapter):
             )
         entry = getattr(target, cls._entry_attribute, None)
         if entry is not None:
-            if entry.config_name != config_name:
-                raise ValueError(
-                    f'{cls._entry_attribute} is bound to a different config_name'
-                )
             return entry
         entry = MenuEntry(config_name)
         setattr(target, cls._entry_attribute, entry)

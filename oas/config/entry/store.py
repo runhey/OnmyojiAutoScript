@@ -35,7 +35,6 @@ class TaskStore:
         Rows of this Task instance that no longer correspond to a Group field
         are deleted in the same transaction.
         """
-
         if not task_name:
             raise ValueError('task_name must not be empty')
 
@@ -74,7 +73,6 @@ class TaskStore:
         task_name: str,
     ) -> TaskBase:
         """Read one Task instance, using Pydantic defaults for missing fields."""
-
         if not task_name:
             raise ValueError('task_name must not be empty')
 

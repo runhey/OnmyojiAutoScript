@@ -60,18 +60,15 @@ class ConfigModelRegistry(metaclass=Singleton):
     @staticmethod
     def qualified_name(model_type: type[Any]) -> str:
         """Return a stable class identifier for diagnostics and persistence."""
-
         return f'{model_type.__module__}.{model_type.__qualname__}'
 
     def register_group(self, group_type: type[Any]) -> None:
         """Register one concrete Group model class."""
-
         name = group_type.__name__
         self._group_classes[name] = group_type
 
     def register_task(self, task_type: type[Any]) -> None:
         """Register one concrete Task model and its Group fields."""
-
         task_name = task_type.__name__
         self._task_classes[task_name] = task_type
         field_groups: dict[str, type[Any]] = {}
@@ -115,7 +112,6 @@ class ConfigModelRegistry(metaclass=Singleton):
         ``taskclass`` is a model class name such as ``"DebugTask"``.  It is
         deliberately not a runtime task instance name.
         """
-
         try:
             return self._task_classes[taskclass]
         except KeyError as exc:
@@ -123,7 +119,6 @@ class ConfigModelRegistry(metaclass=Singleton):
 
     def get_group_class(self, taskclass: str, groupclass: str) -> type[Any]:
         """Return a Group class by its owning Task and class names."""
-
         try:
             return self._group_index[(taskclass, groupclass)]
         except KeyError as exc:
@@ -133,7 +128,6 @@ class ConfigModelRegistry(metaclass=Singleton):
 
     def groups_for_task(self, taskclass: str) -> tuple[type[Any], ...]:
         """Return all Group classes declared by a Task class name."""
-
         self.get_task_class(taskclass)
         return tuple(
             self._group_index[(taskclass, group_name)]
@@ -143,7 +137,6 @@ class ConfigModelRegistry(metaclass=Singleton):
     @property
     def task_groups(self) -> Mapping[type[Any], tuple[type[Any], ...]]:
         """Read-only snapshot of ``TaskClass -> GroupClass tuple``."""
-
         return MappingProxyType(
             {
                 task_type: tuple(
@@ -157,26 +150,22 @@ class ConfigModelRegistry(metaclass=Singleton):
     @property
     def task_fields(self) -> Mapping[type[Any], Mapping[str, type[Any]]]:
         """Read-only mapping of Task field names to Group classes."""
-
         return MappingProxyType(dict(self._task_fields))
 
     @property
     def groups(self) -> Mapping[str, tuple[type[Any], ...]]:
         """Read-only Group classes indexed by their short class name."""
-
         return MappingProxyType(
             {name: (model,) for name, model in self._group_classes.items()}
         )
 
     def find_tasks(self, name: str) -> tuple[type[Any], ...]:
         """Return registered Task classes with the given class name."""
-
         model = self._task_classes.get(name)
         return () if model is None else (model,)
 
     def is_task_registered(self, name: str) -> bool:
         """Return whether a Task class with ``name`` has been registered."""
-
         return name in self._task_classes
 
     def filter_menu(
@@ -189,7 +178,6 @@ class ConfigModelRegistry(metaclass=Singleton):
         Tasks are ignored, and categories with no registered Tasks are omitted.
         The registry does not add Tasks that are absent from ``menu``.
         """
-
         filtered: dict[str, list[str]] = {}
         for category, task_names in menu.items():
             tasks = [
@@ -203,13 +191,11 @@ class ConfigModelRegistry(metaclass=Singleton):
 
     def find_groups(self, name: str) -> tuple[type[Any], ...]:
         """Return registered Group classes with the given class name."""
-
         model = self._group_classes.get(name)
         return () if model is None else (model,)
 
     def groups_for(self, task_type: type[Any]) -> tuple[type[Any], ...]:
         """Return the Group classes declared by ``task_type``."""
-
         name = task_type if isinstance(task_type, str) else task_type.__name__
         return tuple(
             self._group_index[(name, group)]
@@ -220,17 +206,71 @@ class ConfigModelRegistry(metaclass=Singleton):
         self, task_type: type[Any], field_name: str
     ) -> type[Any] | None:
         """Return the Group class declared by one Task field."""
-
         return self._task_fields.get(task_type, {}).get(field_name)
 
     def clear(self) -> None:
         """Clear registrations, primarily for isolated tests."""
-
         self._task_classes.clear()
         self._task_fields.clear()
         self._group_classes.clear()
         self._task_groups.clear()
         self._group_index.clear()
+
+
+class TaskNameResolver:
+    """Translate ``TaskClass@name`` strings to registered Task classes."""
+
+    @classmethod
+    def split(cls, task: str) -> tuple[str, str]:
+        """Split ``TaskClass@name``; plain legacy names return ``("", task)``."""
+        taskclass, separator, name = task.partition('@')
+        if separator and taskclass and name:
+            return taskclass, name
+        return '', task
+
+    @classmethod
+    def make(cls, taskclass: str, name: str) -> str:
+        """Build the stored ``TaskClass@name`` string.
+
+        Args:
+            taskclass: Registered Task class name.
+            name: Instance name.
+
+        Returns:
+            The ``TaskClass@name`` string stored in the ``task`` column.
+
+        Raises:
+            ValueError: If either part is empty or contains ``"@"``.
+        """
+        if not isinstance(taskclass, str) or not taskclass.strip():
+            raise ValueError('taskclass must be a non-empty string')
+        if not isinstance(name, str) or not name.strip():
+            raise ValueError('task name must be a non-empty string')
+        if '@' in taskclass or '@' in name:
+            raise ValueError('taskclass and task name must not contain "@"')
+        return f'{taskclass}@{name}'
+
+    @classmethod
+    def registered(cls, taskclass: str) -> type[Any] | None:
+        """Return the registered Task class with this class name, if any."""
+        from oas.config.models.tasks import TaskBase
+
+        try:
+            task_class = config_model_registry.get_task_class(taskclass)
+        except KeyError:
+            return None
+        return task_class if issubclass(task_class, TaskBase) else None
+
+    @classmethod
+    def resolve(cls, task: str) -> type[Any] | None:
+        """Resolve ``TaskClass@name`` to a registered Task class.
+
+        Only the name is used, so this never touches the database.  An
+        operation that reads one Group row therefore performs exactly one
+        table read.
+        """
+        taskclass, _name = cls.split(task)
+        return cls.registered(taskclass or task)
 
 
 config_model_registry = ConfigModelRegistry()

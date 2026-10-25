@@ -6,8 +6,9 @@ from typing import get_type_hints
 import pytest
 from pydantic import Field
 
+from oas.config.entry import mod_config
 from oas.config.entry.error import ConfigError
-from oas.config.entry.model import ConfigResult, ConfigSetEvent, ModelConfigRef
+from oas.config.entry.model import ConfigSetEvent, ModelConfigRef
 from oas.config.entry.store import TaskStore
 from oas.config.models.args import Input
 from oas.config.models.groups import GroupBase
@@ -206,6 +207,26 @@ def test_config_set_runs_post_edit(config_mod):
     }
 
 
+def test_config_set_post_edit_without_a_hook(config_mod):
+    ok, events = config_mod.config_set(
+        ':memory:',
+        _event(TASK, 'main', 'count', 4),
+        post_edit=True,
+    )
+
+    assert ok is True
+    assert [(event.arg, event.value) for event in events] == [('count', 4)]
+
+
+def test_operation_failure_carries_a_config_error():
+    ok, events = mod_config._failure(ConfigError('nope'))
+
+    assert ok is False
+    assert isinstance(events[0].error, ConfigError)
+    assert events[0].error.msg == 'nope'
+    assert events[0].task == ''
+
+
 # --------------------------------------------------------------------------
 # config_reset / config_batch_reset
 # --------------------------------------------------------------------------
@@ -292,51 +313,53 @@ def test_config_group_batch_reset_deduplicates_groups(config_mod):
 def test_cfg_task_add_creates_taskclass_at_default(config_mod):
     result = config_mod.cfg_task_add(':memory:', 'RuntimeTestTask')
 
-    assert isinstance(result, ConfigResult)
-    assert result.success is True
-    assert result.error is None
-    assert {event.task for event in result.events} == {TASK}
+    assert isinstance(result, tuple)
+    ok, events = result
+    assert isinstance(events, list)
+    assert ok is True
+    assert events[0].error is None
+    assert {event.task for event in events} == {TASK}
     rows = ConfigTable(':memory:').list_task_rows(TASK)
     assert {row.group for row in rows} == {'main', 'extra'}
     assert {row.taskclass for row in rows} == {'RuntimeTestTask'}
 
 
 def test_cfg_task_add_honours_custom_name(config_mod):
-    result = config_mod.cfg_task_add(':memory:', 'RuntimeTestTask', 'second')
+    ok, _events = config_mod.cfg_task_add(':memory:', 'RuntimeTestTask', 'second')
 
-    assert result.success is True
+    assert ok is True
     assert ConfigTable(':memory:').get_group(TASK_SECOND, 'main') is not None
 
 
 def test_cfg_task_add_rejects_duplicate_and_unknown_class(config_mod):
     config_mod.cfg_task_add(':memory:', 'RuntimeTestTask')
 
-    duplicate = config_mod.cfg_task_add(':memory:', 'RuntimeTestTask')
-    assert duplicate.success is False
-    assert 'already exists' in duplicate.error.msg
+    ok, events = config_mod.cfg_task_add(':memory:', 'RuntimeTestTask')
+    assert ok is False
+    assert 'already exists' in events[0].error.msg
 
-    unknown = config_mod.cfg_task_add(':memory:', 'NoSuchTask')
-    assert unknown.success is False
-    assert 'Unregistered' in unknown.error.msg
+    ok, events = config_mod.cfg_task_add(':memory:', 'NoSuchTask')
+    assert ok is False
+    assert 'Unregistered' in events[0].error.msg
 
 
 def test_cfg_task_del_removes_all_rows(config_mod):
     config_mod.cfg_task_add(':memory:', 'RuntimeTestTask')
 
-    result = config_mod.cfg_task_del(':memory:', TASK)
+    ok, _events = config_mod.cfg_task_del(':memory:', TASK)
 
-    assert result.success is True
+    assert ok is True
     assert ConfigTable(':memory:').list_task_rows(TASK) == []
-    assert config_mod.cfg_task_del(':memory:', TASK).success is False
+    assert config_mod.cfg_task_del(':memory:', TASK)[0] is False
 
 
 def test_cfg_task_copy_keeps_current_values(config_mod):
     config_mod.cfg_task_add(':memory:', 'RuntimeTestTask')
     config_mod.cfg_arg_set(':memory:', TASK, 'main', 'count', 7)
 
-    result = config_mod.cfg_task_copy(':memory:', TASK, 'copy')
+    ok, _events = config_mod.cfg_task_copy(':memory:', TASK, 'copy')
 
-    assert result.success is True
+    assert ok is True
     data = config_mod.config_read(
         ':memory:', ModelConfigRef(task=['RuntimeTestTask@copy'], group=[])
     )
@@ -347,9 +370,9 @@ def test_cfg_task_reset_restores_defaults(config_mod):
     config_mod.cfg_task_add(':memory:', 'RuntimeTestTask')
     config_mod.cfg_arg_set(':memory:', TASK, 'main', 'count', 7)
 
-    result = config_mod.cfg_task_reset(':memory:', TASK)
+    ok, _events = config_mod.cfg_task_reset(':memory:', TASK)
 
-    assert result.success is True
+    assert ok is True
     data = config_mod.config_read(':memory:', ModelConfigRef(task=[TASK], group=[]))
     assert data[TASK]['main']['count'] == 3
 
@@ -362,24 +385,26 @@ def test_cfg_task_reset_restores_defaults(config_mod):
 def test_cfg_group_del_and_add_roundtrip(config_mod):
     config_mod.cfg_task_add(':memory:', 'RuntimeTestTask')
 
-    assert config_mod.cfg_group_del(':memory:', TASK, 'main').success is True
+    assert config_mod.cfg_group_del(':memory:', TASK, 'main')[0] is True
     assert ConfigTable(':memory:').get_group(TASK, 'main') is None
 
-    result = config_mod.cfg_group_add(':memory:', TASK, 'main', 'RuntimeTestGroup')
-    assert result.success is True
+    ok, _events = config_mod.cfg_group_add(':memory:', TASK, 'main', 'RuntimeTestGroup')
+    assert ok is True
     assert ConfigTable(':memory:').get_group(TASK, 'main') is not None
 
 
 def test_cfg_group_add_rejects_unknown_group_and_duplicate(config_mod):
     config_mod.cfg_task_add(':memory:', 'RuntimeTestTask')
 
-    duplicate = config_mod.cfg_group_add(':memory:', TASK, 'main', 'RuntimeTestGroup')
-    assert duplicate.success is False
-    assert 'already exists' in duplicate.error.msg
+    ok, events = config_mod.cfg_group_add(':memory:', TASK, 'main', 'RuntimeTestGroup')
+    assert ok is False
+    assert 'already exists' in events[0].error.msg
 
-    unknown = config_mod.cfg_group_add(':memory:', TASK, 'missing', 'RuntimeTestGroup')
-    assert unknown.success is False
-    assert 'dynamic Group' in unknown.error.msg
+    ok, events = config_mod.cfg_group_add(
+        ':memory:', TASK, 'missing', 'RuntimeTestGroup'
+    )
+    assert ok is False
+    assert 'dynamic Group' in events[0].error.msg
 
 
 def test_cfg_group_copy_between_fields(config_mod):
@@ -387,11 +412,11 @@ def test_cfg_group_copy_between_fields(config_mod):
     config_mod.cfg_arg_set(':memory:', 'RuntimeCopyTask@default', 'main', 'count', 7)
     config_mod.cfg_group_del(':memory:', 'RuntimeCopyTask@default', 'backup')
 
-    result = config_mod.cfg_group_copy(
+    ok, _events = config_mod.cfg_group_copy(
         ':memory:', 'RuntimeCopyTask@default', 'main', 'backup'
     )
 
-    assert result.success is True
+    assert ok is True
     data = config_mod.config_read(
         ':memory:', ModelConfigRef(task=['RuntimeCopyTask@default'], group=[])
     )
@@ -402,9 +427,9 @@ def test_cfg_group_reset_restores_defaults(config_mod):
     config_mod.cfg_task_add(':memory:', 'RuntimeTestTask')
     config_mod.cfg_arg_set(':memory:', TASK, 'main', 'count', 7)
 
-    result = config_mod.cfg_group_reset(':memory:', TASK, 'main')
+    ok, _events = config_mod.cfg_group_reset(':memory:', TASK, 'main')
 
-    assert result.success is True
+    assert ok is True
     data = config_mod.config_read(':memory:', ModelConfigRef(task=[TASK], group=[]))
     assert data[TASK]['main']['count'] == 3
 
@@ -412,15 +437,15 @@ def test_cfg_group_reset_restores_defaults(config_mod):
 def test_cfg_group_add_rejects_dynamic_field(config_mod):
     config_mod.cfg_task_add(':memory:', 'RuntimeDynamicTask')
 
-    result = config_mod.cfg_group_add(
+    ok, events = config_mod.cfg_group_add(
         ':memory:',
         'RuntimeDynamicTask@default',
         'groups',
         'RuntimeTestExtraGroup',
     )
 
-    assert result.success is False
-    assert 'dynamic Group' in result.error.msg
+    assert ok is False
+    assert 'dynamic Group' in events[0].error.msg
 
 
 def test_group_operations_do_not_load_the_whole_task(config_mod, monkeypatch):
@@ -434,9 +459,10 @@ def test_group_operations_do_not_load_the_whole_task(config_mod, monkeypatch):
 
     monkeypatch.setattr(TaskStore, 'load', counted)
 
-    assert config_mod.cfg_arg_set(':memory:', TASK, 'main', 'count', 4).success
-    assert config_mod.cfg_arg_get(':memory:', TASK, 'main', 'count').value == 4
-    assert config_mod.cfg_group_reset(':memory:', TASK, 'main').success
+    assert config_mod.cfg_arg_set(':memory:', TASK, 'main', 'count', 4)[0]
+    ok, events = config_mod.cfg_arg_get(':memory:', TASK, 'main', 'count')
+    assert events[0].value == 4
+    assert config_mod.cfg_group_reset(':memory:', TASK, 'main')[0]
     assert config_mod.config_set(':memory:', _event(TASK, 'main', 'count', 5))[0]
 
     assert calls == []
@@ -450,55 +476,55 @@ def test_group_operations_do_not_load_the_whole_task(config_mod, monkeypatch):
 def test_cfg_arg_get_set_reset(config_mod):
     config_mod.cfg_task_add(':memory:', 'RuntimeTestTask')
 
-    read = config_mod.cfg_arg_get(':memory:', TASK, 'main', 'count')
-    assert read.success is True
-    assert read.value == 3
+    ok, events = config_mod.cfg_arg_get(':memory:', TASK, 'main', 'count')
+    assert ok is True
+    assert events[0].value == 3
 
-    written = config_mod.cfg_arg_set(':memory:', TASK, 'main', 'count', 7)
-    assert written.success is True
-    assert written.value == 7
+    ok, events = config_mod.cfg_arg_set(':memory:', TASK, 'main', 'count', 7)
+    assert ok is True
+    assert events[0].value == 7
 
-    reset = config_mod.cfg_arg_reset(':memory:', TASK, 'main', 'count')
-    assert reset.success is True
-    assert reset.value == 3
+    ok, events = config_mod.cfg_arg_reset(':memory:', TASK, 'main', 'count')
+    assert ok is True
+    assert events[0].value == 3
 
 
 def test_cfg_arg_get_returns_default_on_missing(config_mod):
     config_mod.cfg_task_add(':memory:', 'RuntimeTestTask')
 
-    result = config_mod.cfg_arg_get(
+    ok, events = config_mod.cfg_arg_get(
         ':memory:', TASK, 'main', 'missing', default='fallback'
     )
 
-    assert result.success is False
-    assert result.value == 'fallback'
-    assert result.error is not None
+    assert ok is False
+    assert events[0].value == 'fallback'
+    assert events[0].error is not None
 
 
 def test_cfg_arg_batch_set_and_reset(config_mod):
     config_mod.cfg_task_add(':memory:', 'RuntimeTestTask')
 
-    written = config_mod.cfg_arg_batch_set(
+    ok, events = config_mod.cfg_arg_batch_set(
         ':memory:',
         [
             _event(TASK, 'main', 'count', 7),
             _event(TASK, 'extra', 'value', 'changed'),
         ],
     )
-    assert written.success is True
-    assert {(event.group, event.arg, event.value) for event in written.events} == {
+    assert ok is True
+    assert {(event.group, event.arg, event.value) for event in events} == {
         ('main', 'count', 7),
         ('extra', 'value', 'changed'),
     }
 
-    reset = config_mod.cfg_arg_batch_reset(
+    ok, _events = config_mod.cfg_arg_batch_reset(
         ':memory:',
         [
             _event(TASK, 'main', 'count', 0),
             _event(TASK, 'extra', 'value', ''),
         ],
     )
-    assert reset.success is True
+    assert ok is True
     data = config_mod.config_read(':memory:', ModelConfigRef(task=[TASK], group=[]))
     assert data[TASK]['main']['count'] == 3
     assert data[TASK]['extra']['value'] == 'extra'
@@ -507,11 +533,11 @@ def test_cfg_arg_batch_set_and_reset(config_mod):
 def test_cfg_arg_set_reports_validation_error(config_mod):
     config_mod.cfg_task_add(':memory:', 'RuntimeTestTask')
 
-    result = config_mod.cfg_arg_set(':memory:', TASK, 'main', 'count', -1)
+    ok, events = config_mod.cfg_arg_set(':memory:', TASK, 'main', 'count', -1)
 
-    assert result.success is False
-    assert isinstance(result.error, ConfigError)
-    assert result.events[0].value == 3
+    assert ok is False
+    assert isinstance(events[0].error, ConfigError)
+    assert events[0].value == 3
 
 
 # --------------------------------------------------------------------------
@@ -544,10 +570,17 @@ def test_cfg_api_is_typed_and_uses_unified_result():
     names = {name for name in dir(ConfigMod) if name.startswith('cfg_')}
     assert names == expected
 
+    expected_return = tuple[bool, list[ConfigSetEvent]]
+    expected_raw_return = 'tuple[bool, list[ConfigSetEvent]]'
+
     for name in names:
         method = getattr(ConfigMod, name)
         hints = get_type_hints(method)
-        assert hints['return'] is ConfigResult, name
+        # The source uses deferred annotations, so the public signature keeps
+        # the raw annotation text while ``get_type_hints`` resolves it.
+        assert hints['return'] == expected_return, name
+        raw_return = inspect.signature(method).return_annotation
+        assert raw_return in (expected_return, expected_raw_return), name
         parameters = list(inspect.signature(method).parameters)
         assert 'result' not in parameters, name
         assert parameters[1] == 'config_name', name
@@ -608,7 +641,8 @@ def test_batch_set_duplicate_arg_uses_last_value(edge_mod):
     )
 
     assert ok is True
-    assert edge_mod.cfg_arg_get(':memory:', 'EdgeTask@one', 'main', 'count').value == 3
+    _ok, events = edge_mod.cfg_arg_get(':memory:', 'EdgeTask@one', 'main', 'count')
+    assert events[0].value == 3
 
 
 def test_batch_set_rolls_back_all_groups_on_error(edge_mod):
@@ -623,16 +657,16 @@ def test_batch_set_rolls_back_all_groups_on_error(edge_mod):
     )
 
     assert ok is False
-    assert edge_mod.cfg_arg_get(':memory:', 'EdgeTask@one', 'main', 'count').value == 1
-    assert (
-        edge_mod.cfg_arg_get(':memory:', 'EdgeTask@one', 'extra', 'value').value == 'v'
-    )
+    _ok, events = edge_mod.cfg_arg_get(':memory:', 'EdgeTask@one', 'main', 'count')
+    assert events[0].value == 1
+    _ok, events = edge_mod.cfg_arg_get(':memory:', 'EdgeTask@one', 'extra', 'value')
+    assert events[0].value == 'v'
 
 
 def test_post_edit_failure_does_not_write(edge_mod):
     edge_mod.cfg_task_add(':memory:', 'EdgeFailPostTask', 'one')
 
-    result = edge_mod.cfg_arg_set(
+    ok, events = edge_mod.cfg_arg_set(
         ':memory:',
         'EdgeFailPostTask@one',
         'main',
@@ -641,32 +675,34 @@ def test_post_edit_failure_does_not_write(edge_mod):
         post_edit=True,
     )
 
-    assert result.success is False
-    assert 'post_edit failed' in result.error.msg
-    assert (
-        edge_mod.cfg_arg_get(':memory:', 'EdgeFailPostTask@one', 'main', 'count').value
-        == 1
+    assert ok is False
+    assert 'post_edit failed' in events[0].error.msg
+    _ok, events = edge_mod.cfg_arg_get(
+        ':memory:', 'EdgeFailPostTask@one', 'main', 'count'
     )
+    assert events[0].value == 1
 
 
 def test_task_add_rejects_invalid_instance_names(edge_mod):
-    empty = edge_mod.cfg_task_add(':memory:', 'EdgeTask', '')
-    with_at = edge_mod.cfg_task_add(':memory:', 'EdgeTask', 'a@b')
+    ok, events = edge_mod.cfg_task_add(':memory:', 'EdgeTask', '')
 
-    assert empty.success is False
-    assert 'task name' in empty.error.msg
-    assert with_at.success is False
-    assert '@' in with_at.error.msg
+    assert ok is False
+    assert 'task name' in events[0].error.msg
+
+    ok, events = edge_mod.cfg_task_add(':memory:', 'EdgeTask', 'a@b')
+
+    assert ok is False
+    assert '@' in events[0].error.msg
 
 
 def test_task_copy_rejects_existing_target(edge_mod):
     edge_mod.cfg_task_add(':memory:', 'EdgeTask', 'one')
     edge_mod.cfg_task_add(':memory:', 'EdgeTask', 'two')
 
-    result = edge_mod.cfg_task_copy(':memory:', 'EdgeTask@one', 'two')
+    ok, events = edge_mod.cfg_task_copy(':memory:', 'EdgeTask@one', 'two')
 
-    assert result.success is False
-    assert 'already exists' in result.error.msg
+    assert ok is False
+    assert 'already exists' in events[0].error.msg
 
 
 def test_group_copy_across_tasks(edge_mod):
@@ -674,9 +710,9 @@ def test_group_copy_across_tasks(edge_mod):
     edge_mod.cfg_task_add(':memory:', 'EdgeTask', 'two')
     edge_mod.cfg_arg_set(':memory:', 'EdgeTask@one', 'main', 'value', 'copied')
     # ``cfg_task_add`` seeds every group, so make the target row absent first.
-    assert edge_mod.cfg_group_del(':memory:', 'EdgeTask@two', 'extra').success is True
+    assert edge_mod.cfg_group_del(':memory:', 'EdgeTask@two', 'extra')[0] is True
 
-    result = edge_mod.cfg_group_copy(
+    ok, _events = edge_mod.cfg_group_copy(
         ':memory:',
         'EdgeTask@one',
         'main',
@@ -684,23 +720,16 @@ def test_group_copy_across_tasks(edge_mod):
         'EdgeTask@two',
     )
 
-    assert result.success is True
-    assert (
-        edge_mod.cfg_arg_get(':memory:', 'EdgeTask@two', 'extra', 'value').value
-        == 'copied'
-    )
+    assert ok is True
+    _ok, events = edge_mod.cfg_arg_get(':memory:', 'EdgeTask@two', 'extra', 'value')
+    assert events[0].value == 'copied'
 
 
 def test_unknown_task_and_group_operations_fail(edge_mod):
-    assert edge_mod.cfg_task_del(':memory:', 'EdgeTask@missing').success is False
-    assert edge_mod.cfg_task_reset(':memory:', 'EdgeTask@missing').success is False
-    assert (
-        edge_mod.cfg_group_del(':memory:', 'EdgeTask@missing', 'main').success is False
-    )
-    assert (
-        edge_mod.cfg_group_reset(':memory:', 'EdgeTask@missing', 'nope').success
-        is False
-    )
+    assert edge_mod.cfg_task_del(':memory:', 'EdgeTask@missing')[0] is False
+    assert edge_mod.cfg_task_reset(':memory:', 'EdgeTask@missing')[0] is False
+    assert edge_mod.cfg_group_del(':memory:', 'EdgeTask@missing', 'main')[0] is False
+    assert edge_mod.cfg_group_reset(':memory:', 'EdgeTask@missing', 'nope')[0] is False
 
 
 class MoreErrGroup(GroupBase):
@@ -781,23 +810,17 @@ def test_config_group_reset_unknown_group_returns_empty(more_mod):
 
 def test_cfg_arg_set_unknown_task_group_and_field(more_mod):
     assert (
-        more_mod.cfg_arg_set(
-            ':memory:', 'NoSuchTask@missing', 'main', 'count', 2
-        ).success
+        more_mod.cfg_arg_set(':memory:', 'NoSuchTask@missing', 'main', 'count', 2)[0]
         is False
     )
 
     more_mod.cfg_task_add(':memory:', 'MoreErrTask', 'one')
     assert (
-        more_mod.cfg_arg_set(
-            ':memory:', 'MoreErrTask@one', 'missing', 'count', 2
-        ).success
+        more_mod.cfg_arg_set(':memory:', 'MoreErrTask@one', 'missing', 'count', 2)[0]
         is False
     )
     assert (
-        more_mod.cfg_arg_set(
-            ':memory:', 'MoreErrTask@one', 'main', 'missing', 2
-        ).success
+        more_mod.cfg_arg_set(':memory:', 'MoreErrTask@one', 'main', 'missing', 2)[0]
         is False
     )
 
@@ -805,33 +828,32 @@ def test_cfg_arg_set_unknown_task_group_and_field(more_mod):
 def test_cfg_arg_set_invalid_value_leaves_default(more_mod):
     more_mod.cfg_task_add(':memory:', 'MoreErrTask', 'one')
 
-    result = more_mod.cfg_arg_set(':memory:', 'MoreErrTask@one', 'main', 'count', -1)
-
-    assert result.success is False
-    assert (
-        more_mod.cfg_arg_get(':memory:', 'MoreErrTask@one', 'main', 'count').value == 1
+    ok, _events = more_mod.cfg_arg_set(
+        ':memory:', 'MoreErrTask@one', 'main', 'count', -1
     )
+
+    assert ok is False
+    _ok, events = more_mod.cfg_arg_get(':memory:', 'MoreErrTask@one', 'main', 'count')
+    assert events[0].value == 1
 
 
 def test_cfg_group_add_rejects_missing_task_mismatch_and_dynamic(more_mod):
     assert (
         more_mod.cfg_group_add(
             ':memory:', 'NoSuchTask@missing', 'main', 'MoreErrGroup'
-        ).success
+        )[0]
         is False
     )
 
     more_mod.cfg_task_add(':memory:', 'MoreErrTask', 'one')
     assert (
-        more_mod.cfg_group_add(
-            ':memory:', 'MoreErrTask@one', 'main', 'WrongGroup'
-        ).success
+        more_mod.cfg_group_add(':memory:', 'MoreErrTask@one', 'main', 'WrongGroup')[0]
         is False
     )
     assert (
         more_mod.cfg_group_add(
             ':memory:', 'MoreErrTask@one', 'dynamic', 'MoreErrGroup'
-        ).success
+        )[0]
         is False
     )
 
@@ -842,7 +864,7 @@ def test_cfg_group_copy_rejects_same_source_and_missing_targets(more_mod):
     more_mod.cfg_group_del(':memory:', 'MoreErrTask@two', 'extra')
 
     assert (
-        more_mod.cfg_group_copy(':memory:', 'MoreErrTask@one', 'main', 'main').success
+        more_mod.cfg_group_copy(':memory:', 'MoreErrTask@one', 'main', 'main')[0]
         is False
     )
     assert (
@@ -852,13 +874,13 @@ def test_cfg_group_copy_rejects_same_source_and_missing_targets(more_mod):
             'main',
             'extra',
             'NoSuchTask@missing',
-        ).success
+        )[0]
         is False
     )
     assert (
         more_mod.cfg_group_copy(
             ':memory:', 'MoreErrTask@one', 'main', 'missing', 'MoreErrTask@two'
-        ).success
+        )[0]
         is False
     )
 
@@ -866,31 +888,26 @@ def test_cfg_group_copy_rejects_same_source_and_missing_targets(more_mod):
 def test_cfg_task_copy_rejects_missing_source_self_and_invalid_name(more_mod):
     more_mod.cfg_task_add(':memory:', 'MoreErrTask', 'one')
 
-    assert (
-        more_mod.cfg_task_copy(':memory:', 'NoSuchTask@missing', 'two').success is False
-    )
-    assert more_mod.cfg_task_copy(':memory:', 'MoreErrTask@one', 'one').success is False
-    assert more_mod.cfg_task_copy(':memory:', 'MoreErrTask@one', 'a@b').success is False
+    assert more_mod.cfg_task_copy(':memory:', 'NoSuchTask@missing', 'two')[0] is False
+    assert more_mod.cfg_task_copy(':memory:', 'MoreErrTask@one', 'one')[0] is False
+    assert more_mod.cfg_task_copy(':memory:', 'MoreErrTask@one', 'a@b')[0] is False
 
 
 def test_cfg_task_and_group_missing_operations(more_mod):
-    assert more_mod.cfg_task_del(':memory:', 'NoSuchTask@missing').success is False
-    assert more_mod.cfg_task_reset(':memory:', 'NoSuchTask@missing').success is False
+    assert more_mod.cfg_task_del(':memory:', 'NoSuchTask@missing')[0] is False
+    assert more_mod.cfg_task_reset(':memory:', 'NoSuchTask@missing')[0] is False
+    assert more_mod.cfg_group_del(':memory:', 'NoSuchTask@missing', 'main')[0] is False
     assert (
-        more_mod.cfg_group_del(':memory:', 'NoSuchTask@missing', 'main').success
-        is False
-    )
-    assert (
-        more_mod.cfg_group_reset(':memory:', 'NoSuchTask@missing', 'missing').success
+        more_mod.cfg_group_reset(':memory:', 'NoSuchTask@missing', 'missing')[0]
         is False
     )
 
 
 def test_cfg_arg_batch_set_empty_and_invalid(more_mod):
-    assert more_mod.cfg_arg_batch_set(':memory:', []).success is True
+    assert more_mod.cfg_arg_batch_set(':memory:', [])[0] is True
 
     more_mod.cfg_task_add(':memory:', 'MoreErrTask', 'one')
-    result = more_mod.cfg_arg_batch_set(
+    ok, _events = more_mod.cfg_arg_batch_set(
         ':memory:',
         [
             _more_event('MoreErrTask@one', 'main', 'count', 2),
@@ -898,16 +915,14 @@ def test_cfg_arg_batch_set_empty_and_invalid(more_mod):
         ],
     )
 
-    assert result.success is False
-    assert (
-        more_mod.cfg_arg_get(':memory:', 'MoreErrTask@one', 'main', 'count').value == 1
-    )
+    assert ok is False
+    _ok, events = more_mod.cfg_arg_get(':memory:', 'MoreErrTask@one', 'main', 'count')
+    assert events[0].value == 1
 
 
 def test_cfg_arg_get_missing_returns_default(more_mod):
-    assert (
-        more_mod.cfg_arg_get(
-            ':memory:', 'NoSuchTask@missing', 'main', 'count', default=42
-        ).value
-        == 42
+    _ok, events = more_mod.cfg_arg_get(
+        ':memory:', 'NoSuchTask@missing', 'main', 'count', default=42
     )
+
+    assert events[0].value == 42
