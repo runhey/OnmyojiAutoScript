@@ -16,22 +16,19 @@ from typing import Any, Callable, Generic, TypeVar
 # We separate another function threaded_cached_property, use it if you do care thread safety.
 # On py3.8 every decorated function withs the same name share the lock resulting in bad performance.
 # On py3.12 cached_property may be calculated twice on race condition.
-# 3. **Drop async support**
-# It would be unclear if you decorate an async function and the decorator somehow awaited the future which you are
-# completely unaware. It's also weird to do `await obj.attr` while obj.attr is already a static value.
-# So we just drop it, you shouldn't use cached_property on async function, if you do need to cache an async result, do:
-# @cached_property
-# def result(self):
-#     return await self.calculate_result()
+# 3. **Async support**
+# Don't decorate an async function with cached_property, it's not aware of await and would cache the coroutine
+# object, which can only be awaited once. Use cached_property_async in cache_async.py instead, it calculates the
+# value on the first `await obj.attr`, then caches the value as an AwaitableResult, so later awaits return the
+# cached value without yielding to the event loop, working on any coroutine framework (asyncio, trio, ...).
 
-T = TypeVar('T')
+T = TypeVar("T")
 
 
 class CacheOperation:
     """
     Common base for all cached property operations
     """
-
     pass
 
 
@@ -39,6 +36,9 @@ class InstanceCacheOperation(CacheOperation):
     """
     Helper functions to manage INSTANCE cached property.
     """
+    # True if the value is calculated on await, so it can't be warmed up synchronously,
+    # set to True by AsyncCacheOperation, e.g. cached_property_async
+    calculated_on_await = False
 
     @staticmethod
     def pop(instance, attrname, default=None):
@@ -55,7 +55,7 @@ class InstanceCacheOperation(CacheOperation):
             if attrname in d:
                 return d.pop(attrname, default)
             return default
-        except AttributeError, TypeError:
+        except (AttributeError, TypeError):
             # No __dict__
             return default
 
@@ -106,15 +106,33 @@ class InstanceCacheOperation(CacheOperation):
             # not all objects have __dict__ (e.g. class defines slots)
             msg = (
                 f"No '__dict__' attribute on {type(instance).__name__!r} "
-                f'instance to cache {attrname!r} property.'
+                f"instance to cache {attrname!r} property."
             )
             raise TypeError(msg) from None
         except TypeError:
             msg = (
                 f"The '__dict__' attribute on {type(instance).__name__!r} instance "
-                f'does not support item assignment for caching {attrname!r} property.'
+                f"does not support item assignment for caching {attrname!r} property."
             )
             raise TypeError(msg) from None
+
+    @classmethod
+    def replace(cls, instance, attrname, value, old_default=None):
+        """
+        Replace a cached property on an INSTANCE and return the old value.
+
+        Args:
+            instance:
+            attrname (str):
+            value:
+            old_default: Default to return if property never cached
+
+        Returns:
+            The old cached value, or old_default when the property was not cached
+        """
+        old = cls.get(instance, attrname, old_default)
+        cls.set(instance, attrname, value)
+        return old
 
     @staticmethod
     def warm(instance, attrname):
@@ -127,7 +145,7 @@ class InstanceCacheOperation(CacheOperation):
 
         Returns:
             bool: True if warmup or already warmup
-                False if failed
+                False if failed, or if the property is calculated on await
         """
         try:
             if attrname in instance.__dict__:
@@ -150,6 +168,10 @@ class InstanceCacheOperation(CacheOperation):
             if descriptor is not None:
                 break
         if descriptor is None:
+            return False
+
+        # an async cached property can't be calculated synchronously
+        if getattr(descriptor, 'calculated_on_await', False):
             return False
 
         # call __get__ function
@@ -189,13 +211,13 @@ class ClassCacheOperation(CacheOperation):
                 # It is a cached value or a normal attribute
                 type.__delattr__(cls, attrname)
                 # Restore the descriptor if it was backed up by cached_class_property
-                desc_name = f'_cached_class_property_desc_for_{attrname}'
+                desc_name = f"_cached_class_property_desc_for_{attrname}"
                 desc = d.get(desc_name, None)
                 if desc is not None:
                     type.__setattr__(cls, attrname, desc)
                 return val
             return default
-        except AttributeError, TypeError:
+        except (AttributeError, TypeError):
             # No __dict__
             return default
 
@@ -252,12 +274,30 @@ class ClassCacheOperation(CacheOperation):
         try:
             # Class mappingproxy is read-only, use type.__setattr__
             type.__setattr__(cls, attrname, value)
-        except AttributeError, TypeError:
+        except (AttributeError, TypeError):
             msg = (
                 f"The class {cls.__name__!r} doesn't support "
-                f'caching {attrname!r} property.'
+                f"caching {attrname!r} property."
             )
             raise TypeError(msg) from None
+
+    @classmethod
+    def replace(cls, target_cls, attrname, value, old_default=None):
+        """
+        Replace a cached property on a CLASS and return the old value.
+
+        Args:
+            target_cls (type):
+            attrname (str):
+            value:
+            old_default: Default to return if property never cached
+
+        Returns:
+            The old cached value, or old_default when the property was not cached
+        """
+        old = cls.get(target_cls, attrname, old_default)
+        cls.set(target_cls, attrname, value)
+        return old
 
     @staticmethod
     def warm(cls, attrname):
@@ -325,7 +365,7 @@ class cached_property(Generic[T], InstanceCacheOperation):
             # not all objects have __dict__ (e.g. class defines slots)
             msg = (
                 f"No '__dict__' attribute on {type(instance).__name__!r} "
-                f'instance to cache {attrname!r} property.'
+                f"instance to cache {attrname!r} property."
             )
             raise TypeError(msg) from None
 
@@ -336,7 +376,7 @@ class cached_property(Generic[T], InstanceCacheOperation):
         except TypeError:
             msg = (
                 f"The '__dict__' attribute on {type(instance).__name__!r} instance "
-                f'does not support item assignment for caching {attrname!r} property.'
+                f"does not support item assignment for caching {attrname!r} property."
             )
             raise TypeError(msg) from None
         return value
@@ -353,6 +393,53 @@ class cached_property_threadsafe(Generic[T], InstanceCacheOperation):
         self.create_lock = Lock()
         wraps(func)(self)
 
+    @classmethod
+    def replace(cls, instance, attrname, value, old_default=None):
+        """
+        Replace a cached property atomically and return the old value.
+
+        The replacement runs under the same per-instance lock that __get__
+        uses, so it can't be lost to a concurrent calculation.
+
+        Args:
+            instance:
+            attrname (str):
+            value:
+            old_default: Default to return if property never cached
+
+        Returns:
+            The old cached value, or old_default when the property was not cached
+        """
+        descriptor = getattr(type(instance), attrname, None)
+        if not isinstance(descriptor, cls):
+            return InstanceCacheOperation.replace(instance, attrname, value, old_default)
+
+        try:
+            cache = instance.__dict__
+        except AttributeError:
+            return InstanceCacheOperation.replace(instance, attrname, value, old_default)
+
+        lock_name = f"_cached_property_lock_for_{attrname}"
+        with descriptor.create_lock:
+            lock = cache.get(lock_name, None)
+            if lock is None:
+                lock = Lock()
+                try:
+                    cache[lock_name] = lock
+                except TypeError:
+                    return InstanceCacheOperation.replace(instance, attrname, value, old_default)
+
+        with lock:
+            old = cache.get(attrname, old_default)
+            try:
+                cache[attrname] = value
+            finally:
+                try:
+                    del cache[lock_name]
+                except KeyError:
+                    pass
+            return old
+
     def __get__(self, instance, cls) -> T:
         if instance is None:
             return self
@@ -364,12 +451,12 @@ class cached_property_threadsafe(Generic[T], InstanceCacheOperation):
             # not all objects have __dict__ (e.g. class defines slots)
             msg = (
                 f"No '__dict__' attribute on {type(instance).__name__!r} "
-                f'instance to cache {attrname!r} property.'
+                f"instance to cache {attrname!r} property."
             )
             raise TypeError(msg) from None
 
         # create pre-instance-property lock
-        lock_name = f'_cached_property_lock_for_{attrname}'
+        lock_name = f"_cached_property_lock_for_{attrname}"
         with self.create_lock:
             # double-checked locking
             # check if in cache first to bypass except KeyError for faster because it's not in cache at happy path
@@ -381,7 +468,7 @@ class cached_property_threadsafe(Generic[T], InstanceCacheOperation):
                 except TypeError:
                     msg = (
                         f"The '__dict__' attribute on {type(instance).__name__!r} instance "
-                        f'does not support item assignment for caching {lock_name!r} property.'
+                        f"does not support item assignment for caching {lock_name!r} property."
                     )
                     raise TypeError(msg) from None
 
@@ -411,7 +498,7 @@ class cached_property_threadsafe(Generic[T], InstanceCacheOperation):
             except TypeError:
                 msg = (
                     f"The '__dict__' attribute on {type(instance).__name__!r} instance "
-                    f'does not support item assignment for caching {attrname!r} property.'
+                    f"does not support item assignment for caching {attrname!r} property."
                 )
                 raise TypeError(msg) from None
 
@@ -450,7 +537,7 @@ class cached_class_property(Generic[T], ClassCacheOperation):
         else:
             value = self.func(cls)
         # Back up the descriptor so it can be restored by CacheOperation.pop
-        type.__setattr__(cls, f'_cached_class_property_desc_for_{attrname}', self)
+        type.__setattr__(cls, f"_cached_class_property_desc_for_{attrname}", self)
         # Use type.__setattr__ to bypass metaclass __setattr__
         # and to work even if cls.__dict__ is mappingproxy
         type.__setattr__(cls, attrname, value)
@@ -471,6 +558,54 @@ class cached_class_property_threadsafe(Generic[T], ClassCacheOperation):
         else:
             wraps(func)(self)
 
+    @classmethod
+    def replace(cls, target_cls, attrname, value, old_default=None):
+        """
+        Replace a cached class property atomically and return the old value.
+
+        The replacement runs under the same per-class lock that __get__ uses,
+        so it can't be lost to a concurrent calculation.
+
+        Args:
+            target_cls (type):
+            attrname (str):
+            value:
+            old_default: Default to return if property never cached
+
+        Returns:
+            The old cached value, or old_default when the property was not cached
+        """
+        descriptor = target_cls.__dict__.get(attrname)
+        if not isinstance(descriptor, cls):
+            # A cached value replaced the descriptor, the descriptor is kept
+            # under a backup key by __get__
+            descriptor = target_cls.__dict__.get(f"_cached_class_property_desc_for_{attrname}")
+        if not isinstance(descriptor, cls):
+            return ClassCacheOperation.replace(target_cls, attrname, value, old_default)
+
+        lock_name = f"_cached_class_property_lock_for_{attrname}"
+        with descriptor.create_lock:
+            lock = target_cls.__dict__.get(lock_name, None)
+            if lock is None:
+                lock = Lock()
+                try:
+                    type.__setattr__(target_cls, lock_name, lock)
+                except TypeError:
+                    return ClassCacheOperation.replace(target_cls, attrname, value, old_default)
+
+        with lock:
+            old = ClassCacheOperation.get(target_cls, attrname, old_default)
+            # Preserve the descriptor so pop() can restore it after the replace
+            type.__setattr__(target_cls, f"_cached_class_property_desc_for_{attrname}", descriptor)
+            try:
+                ClassCacheOperation.set(target_cls, attrname, value)
+            finally:
+                try:
+                    type.__delattr__(target_cls, lock_name)
+                except AttributeError:
+                    pass
+            return old
+
     def __get__(self, instance, cls) -> T:
         """
         Args:
@@ -479,7 +614,7 @@ class cached_class_property_threadsafe(Generic[T], ClassCacheOperation):
             cls (type): The class that the property is accessed from.
         """
         attrname = self.__name__
-        lock_name = f'_cached_class_property_lock_for_{attrname}'
+        lock_name = f"_cached_class_property_lock_for_{attrname}"
 
         with self.create_lock:
             # Use cls.__dict__ to bypass descriptors and __getattr__
@@ -491,7 +626,7 @@ class cached_class_property_threadsafe(Generic[T], ClassCacheOperation):
                 except TypeError:
                     msg = (
                         f"The class {cls.__name__!r} doesn't support "
-                        f'caching {lock_name!r} property.'
+                        f"caching {lock_name!r} property."
                     )
                     raise TypeError(msg) from None
 
@@ -516,14 +651,12 @@ class cached_class_property_threadsafe(Generic[T], ClassCacheOperation):
                 value = self.func(cls)
             try:
                 # Back up the descriptor so it can be restored by CacheOperation.pop
-                type.__setattr__(
-                    cls, f'_cached_class_property_desc_for_{attrname}', self
-                )
+                type.__setattr__(cls, f"_cached_class_property_desc_for_{attrname}", self)
                 type.__setattr__(cls, attrname, value)
             except TypeError:
                 msg = (
                     f"The class {cls.__name__!r} doesn't support "
-                    f'caching {attrname!r} property.'
+                    f"caching {attrname!r} property."
                 )
                 raise TypeError(msg) from None
 
