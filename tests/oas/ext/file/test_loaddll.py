@@ -17,6 +17,65 @@ def test_loaddll_invalid_extension(fs):
         loaddll('/invalid.txt')
 
 
+class TestLoaddllLibraryName:
+    @pytest.mark.parametrize(
+        'path',
+        [
+            # Windows
+            'C:\\Windows\\System32\\kernel32.dll',
+            '/tmp/demo.dll',
+            '/tmp/demo.DLL',
+            # Linux, including versioned shared objects of system libraries
+            '/tmp/libdemo.so',
+            '/lib/x86_64-linux-gnu/libc.so.6',
+            '/lib/libz.so.1',
+            '/usr/lib/libpython3.8.so.1.0',
+            '/tmp/LIBC.SO.6',
+            # macOS, including versioned dylibs
+            '/usr/lib/libdemo.dylib',
+            '/usr/lib/libSystem.B.dylib',
+            '/usr/lib/libdemo.1.2.dylib',
+        ],
+    )
+    def test_accepted(self, monkeypatch, path):
+        """
+        Library names of all platforms pass the extension check
+        """
+        loaded = []
+
+        def fake_cdll(file):
+            loaded.append(file)
+            return 'library'
+
+        monkeypatch.setattr(ctypes, 'CDLL', fake_cdll)
+        assert loaddll(path) == 'library'
+        assert loaded == [path]
+
+    @pytest.mark.parametrize(
+        'path',
+        [
+            '/tmp/invalid.txt',
+            '/tmp/libdemo',
+            '/tmp/libdemo.so.debug',
+            '/tmp/libdemo.so.6.bak',
+            '/tmp/libdemo.so.',
+            '/tmp/libdemo.dll.txt',
+            '/tmp/libdemo.dylib.zip',
+        ],
+    )
+    def test_rejected(self, monkeypatch, path):
+        """
+        Non-library names are rejected before touching ctypes
+        """
+
+        def fake_cdll(file):
+            raise AssertionError(f'must not try to load {file}')
+
+        monkeypatch.setattr(ctypes, 'CDLL', fake_cdll)
+        with pytest.raises(ImportError, match='Not a library file'):
+            loaddll(path)
+
+
 def test_loaddll_non_existent(fs):
     """
     Test loaddll with a non-existent file
@@ -52,7 +111,10 @@ def test_loaddll_windows_kernel32():
 
     lib = loaddll(path)
     assert isinstance(lib, ctypes.CDLL)
-    # GetTickCount is a common function in kernel32.dll
+    # GetTickCount is a common function in kernel32.dll.
+    # It returns a DWORD (unsigned 32-bit), declare the prototype, or the value
+    # would be negative after 24.9 days of system uptime
+    lib.GetTickCount.restype = ctypes.c_uint32
     assert lib.GetTickCount() > 0
 
 
@@ -88,7 +150,10 @@ def test_loaddll_windows_user32_windll():
     # user32.dll uses stdcall, loading with WinDLL is appropriate
     lib = loaddll(path, use_windll=True)
     assert isinstance(lib, ctypes.WinDLL)
-    # MessageBoxA is a common function in user32.dll
+    # GetDesktopWindow is a common function in user32.dll.
+    # It returns a HWND (pointer), declare the prototype, or a handle with
+    # the high bit of the low 32 bits set would be negative
+    lib.GetDesktopWindow.restype = ctypes.c_void_p
     assert lib.GetDesktopWindow() > 0
 
 

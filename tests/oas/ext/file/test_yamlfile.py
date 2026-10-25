@@ -161,6 +161,22 @@ class TestYamlDumps:
     def test_multiline_round_trip(self, value):
         assert yaml_loads(yaml_dumps({'s': value})) == {'s': value}
 
+    def test_line_width_120_keeps_value_on_one_line(self):
+        """A value up to 120 characters stays on the line of its key, the pyyaml default 80 wraps it"""
+        value = ' '.join(['word'] * 24)
+        assert len(value) == 119
+        assert yaml_dumps({'k': value}) == f'k: {value}\n'.encode()
+
+    def test_line_width_120_wraps_longer_value(self):
+        """A value longer than 120 characters is folded at a word boundary"""
+        value = ' '.join(['word'] * 30)
+        assert len(value) == 149
+        assert (
+            yaml_dumps({'k': value})
+            == (f'k: {" ".join(["word"] * 24)}\n  {" ".join(["word"] * 6)}\n').encode()
+        )
+        assert yaml_loads(yaml_dumps({'k': value})) == {'k': value}
+
 
 class TestReadYaml:
     """Test cases for the read_yaml function"""

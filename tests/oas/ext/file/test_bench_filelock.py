@@ -136,10 +136,11 @@ def _thread_contest(impl, path, rounds):
     """
     Two threads race for ``rounds`` successful acquires each.
 
-    SQLiteFileLock: each thread builds its OWN instance (the correct usage per
-    the module docstring — instance-level ownership is reentrant); msvcrt:
-    each thread opens its own fd. Returns (elapsed_wallclock, fails) so the
-    caller can report the share of failed attempts.
+    SQLiteFileLock: each thread builds its OWN instance and owns the lock
+    under its own thread id, so the two threads contend on the state of the
+    same lock file; msvcrt: each thread opens its own fd. Returns
+    (elapsed_wallclock, fails) so the caller can report the share of failed
+    attempts.
     """
     barrier = threading.Barrier(2)
     fails = []
@@ -288,13 +289,19 @@ def test_t4_timeout_path(benchmark, impl, lock_dir):
         holder = SQLiteFileLock(str(path), timeout=0)
         holder.acquire()
         loser = SQLiteFileLock(str(path), timeout=0)
+        # The lock of a file is owned by thread id, so the loser claims another
+        # owner: a second acquire() of the holding thread is a reentrancy and
+        # raises RuntimeError at once instead of failing on the busy lock
+        other_owner = 'other-owner'
 
         def loop():
             try:
-                loser.acquire(timeout=0)
-                loser.release()
+                loser.acquire(timeout=0, owner=other_owner)
             except FilelockTimeout:
                 pass
+            else:
+                # Unreachable while the holder keeps the lock
+                loser.release(force=True)
             return path
 
     else:

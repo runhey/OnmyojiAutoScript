@@ -222,10 +222,14 @@ class YamlConfig(Generic[T_model]):
     Attributes:
         file (str): YAML file path
         model (type[T_model]): Subclass of msgspec.Struct
-        data (T_model): Validated data, use ``self.data.attr`` to access fields
-        errors (list[ErrorInfo | Exception]): Errors or exceptions of the last read or
-            validate, empty if none. Exceptions are read failures such as
-            FileNotFoundError, UnicodeDecodeError and yaml.YAMLError
+        data (T_model): Validated data, read from the file on the first access
+            and cached, use ``self.data.attr`` to access fields. A file that is
+            missing or cannot be read falls back to the model defaults and is
+            written back with the help comments, so the user has a file to fix
+        errors (list[ErrorInfo | Exception]): Errors or exceptions of the last
+            read or validate, empty before the data is read and if none.
+            Exceptions are read failures such as FileNotFoundError,
+            UnicodeDecodeError and yaml.YAMLError
         help_map (dict): {path: help_text} mapping of the model, path is a tuple of keys,
             cached as cached_property
 
@@ -252,9 +256,58 @@ class YamlConfig(Generic[T_model]):
                 f'Model {model.__name__} must be default constructible, '
                 f'all fields need default values: {e}'
             ) from e
-        self.data: T_model = self.read()
+
+    @cached_property
+    def data(self) -> T_model:
+        """
+        The validated data of the file, read on the first access and cached
+
+        The read is lazy so a config that is never used does not touch the
+        disk, and write(template=True) does not read the file at all. Fields
+        that fail the validation fall back to their defaults. A file that
+        does not exist or cannot be read falls back to the model defaults
+        too, the read errors are recorded in ``errors``, and the file is
+        written back with the read data and the help comments, so the user
+        sees the file and can fix it.
+
+        Returns:
+            T_model: Validated data
+        """
+        try:
+            text = atomic_read_bytes(self.file)
+        except (FileNotFoundError, UnicodeDecodeError) as e:
+            # File not found or not utf-8 encoded, use defaults
+            self.errors = [e]
+            self._log_errors(self.errors)
+            data = self.model()
+        else:
+            try:
+                content = yaml_loads(text)
+            except yaml.YAMLError as e:
+                # Invalid yaml, use defaults
+                self.errors = [e]
+                self._log_errors(self.errors)
+                data = self.model()
+            else:
+                if content is None:
+                    # Empty content or only comments, use defaults
+                    content = {}
+                data, errors = load_msgpack_with_default(
+                    msgpack_encode(content), self.model
+                )
+                if data is NODEFAULT:
+                    # Shouldn't happen, model is checked default constructible in __init__
+                    data = self.model()
+                self.errors = errors
+                if errors:
+                    self._log_errors(errors)
+
         if self.errors:
-            self.write()
+            # Auto fix: write the file back with the read data (the model
+            # defaults when the file is missing or cannot be read), the
+            # errors stay in self.errors for the caller to look at
+            self._write(data)
+        return data
 
     @cached_property
     def help_map(self):
@@ -274,48 +327,11 @@ class YamlConfig(Generic[T_model]):
         for error in errors:
             print(f'Invalid deploy config value: {error}')
 
-    def read(self) -> T_model:
-        """
-        Read yaml file and validate with model,
-        fields that fail validation fall back to defaults.
-        Read failures are recorded in self.errors and also fall back to defaults
-
-        Returns:
-            T_model: self.data
-        """
-        try:
-            text = atomic_read_bytes(self.file)
-        except (FileNotFoundError, UnicodeDecodeError) as e:
-            # File not found or not utf-8 encoded, use defaults
-            self.errors = [e]
-            self.data = self.model()
-            self._log_errors(self.errors)
-            return self.data
-        try:
-            data = yaml_loads(text)
-        except yaml.YAMLError as e:
-            # Invalid yaml, use defaults
-            self.errors = [e]
-            self.data = self.model()
-            self._log_errors(self.errors)
-            return self.data
-        if data is None:
-            # Empty content or only comments, use defaults
-            data = {}
-        obj, errors = load_msgpack_with_default(msgpack_encode(data), self.model)
-        if obj is NODEFAULT:
-            # Shouldn't happen, model is checked default constructible in __init__
-            obj = self.model()
-        self.errors = errors
-        if errors:
-            self._log_errors(errors)
-        self.data = obj
-        return self.data
-
     def validate(self):
         """
-        Validate current self.data with the model, reusing the same loading
-        logic as read(), fields that fail validation fall back to defaults
+        Validate current self.data with the model, reusing the same validation
+        logic as the data property, fields that fail validation fall back to
+        defaults
 
         Returns:
             bool: True if self.data is valid, False if errors were found
@@ -324,7 +340,7 @@ class YamlConfig(Generic[T_model]):
         if obj is NODEFAULT:
             # Shouldn't happen, model is checked default constructible in __init__
             obj = self.model()
-        self.data = obj
+        cached_property.set(self, 'data', obj)
         self.errors = errors
         if errors:
             self._log_errors(errors)
@@ -338,9 +354,10 @@ class YamlConfig(Generic[T_model]):
         The current data is converted to a builtin dict with
         ``msgspec.to_builtins``, value is set at the key path with
         ``deep_set_with_error``, then the dict is validated back into the
-        model with ``msgspec.convert``. On success self.data is replaced with
-        the validated model and True is returned, on failure the exception is
-        recorded in self.errors and logged, and self.data is left unchanged.
+        model with ``msgspec.convert``. On success the cached data is replaced
+        with the validated model and True is returned, on failure the
+        exception is recorded in self.errors and logged, and the cached data
+        is left unchanged.
 
         Args:
             key (tuple[str]): Key path in the yaml structure, keys are encode
@@ -371,25 +388,46 @@ class YamlConfig(Generic[T_model]):
             self.errors = [e]
             self._log_errors(self.errors)
             return False
-        self.data = obj
+        cached_property.set(self, 'data', obj)
         self.errors = []
         return True
 
-    def write(self, skip_same=True):
+    def write(self, template=False, skip_same=True):
         """
-        Write self.data into yaml file, comments are inserted above the line
-        of each key from ``Meta(extra={"help": ...})`` annotations, matched
-        by the full key path
+        Write the yaml file, comments are inserted above the line of each key
+        from ``Meta(extra={"help": ...})`` annotations, matched by the full
+        key path
 
         Args:
+            template (bool): True to build the content from the model
+                directly, the file is not read: the written file is the
+                default config of the model, whatever the file holds on the
+                disk. The file is still compared by skip_same. Defaults to
+                False, the current data is written, see data
             skip_same (bool): True to skip writing if existing content is the same
                 as content to write. This would reduce disk write but add disk read
 
         Returns:
             bool: if write
         """
+        data = self.model() if template else self.data
+        return self._write(data, skip_same=skip_same)
+
+    def _write(self, data, skip_same=True):
+        """
+        Write data into the yaml file, comments are inserted above the line of
+        each key from the help annotations of the model
+
+        Args:
+            data (T_model): Data to write
+            skip_same (bool): True to skip writing if existing content is the same
+                as content to write
+
+        Returns:
+            bool: if write
+        """
         # yaml_dumps from yamlfile returns utf-8 bytes, decode into str
-        data = msgspec.to_builtins(self.data)
+        data = msgspec.to_builtins(data)
         text = yaml_dumps(data).decode('utf-8')
         text = insert_comments(text, self.help_map)
         if skip_same:

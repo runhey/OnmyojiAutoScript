@@ -3,8 +3,11 @@ Cross-platform file lock based on SQLite exclusive transactions.
 
 The lock is implemented as a ``BEGIN EXCLUSIVE`` transaction on a SQLite
 database file, so it works across processes and threads on Windows, macOS and
-Linux. The public interface is compatible with the third-party
-filelock.FileLock library.
+Linux. The lock of one file is one lock in the process: every SQLiteFileLock
+of the same lock file shares the state, so the exclusion is left to SQLite,
+the connections of the threads and the processes all race on the same file
+lock. The lock is not reentrant: an acquire() of the thread that already
+holds it raises at once instead of waiting for itself.
 
 Notes:
     - The lock file is a SQLite database file and stays on disk after release.
@@ -13,11 +16,20 @@ Notes:
     - The lock is released automatically when the holding process crashes or
       exits, because the operating system releases the underlying file locks
       and SQLite rolls back unfinished transactions.
+    - The lock is held by the thread that acquired it, and the handles have no
+      destructor: a lock that is never released is held until the process
+      exits, the way a threading.Lock does.
 """
 
 import os
 import sqlite3
 import threading
+
+# Busy timeout of the SQLite C layer for an infinite wait, in seconds: the C
+# API takes an int of milliseconds, 2**31-1 ms is about 24.8 days, the largest
+# wait it accepts. A larger timeout overflows the int and disables the wait:
+# the connection fails with "database is locked" at once
+SQL_TIMEOUT_FOREVER = (2**31 - 1) / 1000
 
 
 class FilelockTimeout(Exception):
@@ -34,13 +46,74 @@ class FilelockTimeout(Exception):
         super().__init__(f'Timeout occurred trying to acquire lock for: {lock_file}')
 
 
+class _FileLockState:
+    """
+    The state of the lock of one file in this process.
+
+    Attributes:
+        conns (dict[int, sqlite3.Connection]): Connection of every thread
+            holding the lock, keyed by the identity of the thread (see
+            threading.get_ident)
+        guard (threading.Lock): Guards conns
+    """
+
+    __slots__ = ('conns', 'guard')
+
+    def __init__(self):
+        self.conns = {}
+        self.guard = threading.Lock()
+
+
+# The state of every lock file of the process, keyed by the normalized
+# absolute path of the file: the lock of a file is one lock, the instances are
+# handles of it
+_FILE_STATES = {}
+_FILE_STATES_GUARD = threading.Lock()
+
+
+def _file_state(lock_file):
+    """
+    State of the lock of a file, created on first use.
+
+    The path is made absolute, the symlinks of the existing directories are
+    resolved and the case is normalized (Windows), so the same lock file
+    reached by two spellings shares one lock.
+
+    Args:
+        lock_file (str): Path of the lock file
+
+    Returns:
+        _FileLockState: The state shared by the instances of the file
+    """
+    key = os.path.normcase(os.path.realpath(lock_file))
+    with _FILE_STATES_GUARD:
+        state = _FILE_STATES.get(key)
+        if state is None:
+            state = _FILE_STATES[key] = _FileLockState()
+        return state
+
+
 class SQLiteFileLock:
     """
-    Cross-platform file lock based on SQLite exclusive transactions
+    Exclusive lock of a lock file, based on a SQLite exclusive transaction
     (``BEGIN EXCLUSIVE``).
 
-    The interface is fully compatible with the third-party filelock.FileLock
-    library.
+    The lock of one file is one lock in the process: every instance of the
+    same lock file shares the state, an acquire() of one handle is seen by the
+    others (is_locked) and the exclusion is left to SQLite, the connections of
+    the threads and of the processes race on the same file lock.
+
+    The lock is not reentrant: SQLite can not tell the connection that holds
+    the file lock from another one, an acquire() of the thread that already
+    holds it would wait for itself until its timeout. The call raises
+    RuntimeError at once instead, a deadlock has to be found, not waited for.
+    It is the one interface difference from the third-party filelock.FileLock,
+    which counts a repeated acquire().
+
+    The owner of the lock is the calling thread, or the identity given to
+    acquire(owner=...): a caller that has to wait in another thread (an async
+    block that can not block the event loop) passes the identity of the
+    thread that will release the lock, the wait itself only runs on a worker.
 
     Examples:
         Use as a context manager, the lock is released automatically on exit:
@@ -57,7 +130,7 @@ class SQLiteFileLock:
             finally:
                 lock.release()
 
-        Handle the timeout when the lock is held by another process:
+        Handle the timeout when the lock is held by another thread or process:
 
             from oas.ext.file.filelock import SQLiteFileLock, FilelockTimeout
 
@@ -67,14 +140,14 @@ class SQLiteFileLock:
             except FilelockTimeout:
                 # the lock is held elsewhere
 
-        The lock is reentrant within one instance. For mutual exclusion across
-        threads, each thread should use its own instance:
+        Two handles of one lock file share the lock: another thread waits for
+        the holder (the thread that holds it raises, see above)
 
             # thread 1
             with SQLiteFileLock("app.lock", timeout=1.0):
                 # critical section
 
-            # thread 2
+            # thread 2, waits here until the first thread released it
             with SQLiteFileLock("app.lock", timeout=1.0):
                 # critical section
     """
@@ -100,14 +173,11 @@ class SQLiteFileLock:
             )
 
         # Absolute path without symlink resolution (os.path.abspath does no IO),
-        # so instances in different working directories still lock the same file
+        # the path of the lock file and of the error messages
         self._lock_file = os.path.abspath(lock_file)
         self._default_timeout = timeout
-
-        # Internal state, supports reentrant locking within the same instance
-        self._conn = None
-        self._lock_counter = 0
-        self._thread_lock = threading.Lock()
+        # The state of the lock file, shared by every instance of the file
+        self._state = _file_state(self._lock_file)
 
     @property
     def lock_file(self):
@@ -137,44 +207,51 @@ class SQLiteFileLock:
     def is_locked(self):
         """
         Returns:
-            bool: True if the current instance holds the lock
+            bool: True if a thread of this process holds the lock file
         """
-        with self._thread_lock:
-            return self._lock_counter > 0
+        with self._state.guard:
+            return bool(self._state.conns)
 
-    def acquire(self, timeout=None, poll_interval=0.05):
+    def acquire(self, timeout=None, poll_interval=0.05, owner=None):
         """
-        Acquire the lock.
+        Acquire the lock, wait for it while another thread or process holds it.
 
         Args:
             timeout (float): Overrides the constructor timeout. Defaults to None.
             poll_interval (float): Kept for compatibility with the filelock
                 interface, the SQLite C layer polls automatically.
                 Defaults to 0.05.
+            owner (int, optional): Identity of the owner of the lock, compared
+                by equality. Defaults to None, the identity of the calling
+                thread. A caller that has to wait in another thread passes the
+                identity of the thread that will release the lock, see
+                DeployJob.alocked().
 
         Returns:
             SQLiteFileLock: self
 
         Raises:
             FilelockTimeout: If the lock cannot be acquired within the timeout
+            RuntimeError: If the owner already holds the lock, the acquire is a
+                reentrancy that would wait for itself
         """
         if timeout is None:
             timeout = self._default_timeout
+        if owner is None:
+            owner = threading.get_ident()
+        with self._state.guard:
+            held = owner in self._state.conns
+        if held:
+            # SQLite can not tell the connection of this owner from another
+            # one, the acquire would block on the lock the owner holds itself
+            raise RuntimeError(
+                f'The lock "{self._lock_file}" is already held by this thread, '
+                f'a reentrant acquire would wait for itself'
+            )
 
-        with self._thread_lock:
-            # Reentrant lock: repeated acquire() on the same instance must not deadlock
-            if self._lock_counter > 0:
-                self._lock_counter += 1
-                return self
-
-        # The thread lock above only guards the shared state. The SQLite lock
-        # itself is acquired outside the thread lock, so a thread waiting on
-        # the SQLite lock never blocks other threads of the same instance,
-        # and every thread waits on its own timeout budget.
         # Convert to the SQLite C API timeout in seconds:
-        # < 0 waits forever, 0 is non-blocking.
-        # 315360000.0 is 10 years, effectively infinite for a blocking wait
-        sql_timeout = 315360000.0 if timeout < 0 else max(0.0, float(timeout))
+        # < 0 waits forever, 0 is non-blocking
+        sql_timeout = SQL_TIMEOUT_FOREVER if timeout < 0 else max(0.0, float(timeout))
 
         # Optimistically assume the parent directory exists to save IO.
         # Create it and retry once only if connect fails with
@@ -193,13 +270,8 @@ class SQLiteFileLock:
                     continue
                 raise
 
-        # Register the connection and the counter atomically. BEGIN EXCLUSIVE
-        # is globally exclusive, so while this connection holds the lock no
-        # other thread can have set the counter, and no other thread can
-        # succeed before this registration.
-        with self._thread_lock:
-            self._conn = conn
-            self._lock_counter = 1
+        with self._state.guard:
+            self._state.conns[owner] = conn
         return self
 
     def __begin_exclusive(self, sql_timeout):
@@ -246,36 +318,36 @@ class SQLiteFileLock:
 
     def release(self, force=False):
         """
-        Release the lock.
+        Release the lock of the calling thread, a thread that does not hold the
+        lock has nothing to release.
 
         Args:
-            force (bool): If True, ignore the reentrancy counter and release
-                the lock immediately. Defaults to False.
+            force (bool): If True, close every connection the process holds on
+                the lock file, whatever the threads. An escape hatch for a
+                thread that is not the holder, never used by the normal flow.
+                Defaults to False.
         """
-        with self._thread_lock:
-            if self._lock_counter == 0:
-                return
-
+        owner = threading.get_ident()
+        with self._state.guard:
             if force:
-                self._lock_counter = 1
+                conns = list(self._state.conns.values())
+                self._state.conns.clear()
+            else:
+                conn = self._state.conns.pop(owner, None)
+                conns = [] if conn is None else [conn]
 
-            self._lock_counter -= 1
-
-            # Only close the connection and release the file lock when the counter drops to zero
-            if self._lock_counter == 0:
-                if self._conn:
-                    try:
-                        # End the transaction
-                        self._conn.rollback()
-                    except Exception:
-                        pass
-                    finally:
-                        try:
-                            # Close the connection, the OS releases the exclusive lock
-                            self._conn.close()
-                        except Exception:
-                            pass
-                        self._conn = None
+        for conn in conns:
+            try:
+                # End the transaction
+                conn.rollback()
+            except Exception:
+                pass
+            finally:
+                try:
+                    # Close the connection, the OS releases the exclusive lock
+                    conn.close()
+                except Exception:
+                    pass
 
     def __enter__(self):
         """
@@ -292,10 +364,3 @@ class SQLiteFileLock:
         Release the lock when leaving the context.
         """
         self.release()
-
-    def __del__(self):
-        """Safe fallback to release the lock when the object is destroyed."""
-        # __del__ is also called on partially initialized objects when
-        # __init__ raises, so guard against missing attributes
-        if hasattr(self, '_thread_lock'):
-            self.release(force=True)

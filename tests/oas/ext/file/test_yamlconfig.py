@@ -1,3 +1,5 @@
+from typing import Dict, List
+
 import msgspec
 import pytest
 import yaml
@@ -40,6 +42,22 @@ class MultiLineConfig(Struct):
     """Model with multiline string used in tests."""
 
     desc: str = 'line1\nline2'
+
+
+class ListConfig(Struct):
+    """Model with a list of strings used in tests."""
+
+    items: Annotated[List[str], Meta(extra={'help': 'list items'})] = msgspec.field(
+        default_factory=list
+    )
+
+
+class DictConfig(Struct):
+    """Model with a dict of ints used in tests."""
+
+    mapping: Annotated[Dict[str, int], Meta(extra={'help': 'mapping'})] = msgspec.field(
+        default_factory=dict
+    )
 
 
 class SecretPasswordConfig(Struct):
@@ -234,10 +252,38 @@ desc: |-
         assert config.data.desc == 'hello\nworld'
 
 
-class TestYamlConfigAutoFix:
-    """Init writes back fixed values when read found validation errors."""
+class TestYamlConfigLazy:
+    """data is read on the first access, __init__ does not touch the disk."""
 
-    def test_init_auto_fix_invalid_value(self, fs):
+    def test_init_does_not_read(self, fs):
+        """Construction does not read or create the file."""
+        config = YamlConfig('/config.yaml', Config)
+        assert not fs.exists('/config.yaml')
+        assert config.errors == []
+        # The first access reads the file, the missing file is created
+        assert config.data == Config()
+        assert fs.exists('/config.yaml')
+
+    def test_init_does_not_fix(self, fs):
+        """An invalid file is not fixed before the first data access."""
+        fs.create_file('/config.yaml', contents='port: [unclosed\n')
+        YamlConfig('/config.yaml', Config)
+        assert open('/config.yaml', encoding='utf-8').read() == 'port: [unclosed\n'
+
+    def test_data_cached(self, fs):
+        """The file is read once, a later change of the file is not seen."""
+        fs.create_file('/config.yaml', contents='port: 9090\n')
+        config = YamlConfig('/config.yaml', Config)
+        assert config.data.port == 9090
+        with open('/config.yaml', 'w', encoding='utf-8') as f:
+            f.write('port: 7070\n')
+        assert config.data.port == 9090
+
+
+class TestYamlConfigAutoFix:
+    """The first data access writes back fixed values when the read found errors."""
+
+    def test_auto_fix_invalid_value(self, fs):
         fs.create_file(
             '/config.yaml',
             contents="""\
@@ -248,6 +294,7 @@ name: custom
         config = YamlConfig('/config.yaml', Config)
         # Invalid field falls back to default, valid fields are preserved
         assert config.data == Config(port=8080, name='custom')
+        assert config.errors
         # File is rewritten with the fixed values
         text = open('/config.yaml', encoding='utf-8').read()
         assert (
@@ -259,7 +306,7 @@ debug: false
 """
         )
 
-    def test_init_auto_fix_nested(self, fs):
+    def test_auto_fix_nested(self, fs):
         fs.create_file(
             '/config.yaml',
             contents="""\
@@ -268,25 +315,29 @@ inner:
 name: custom
 """,
         )
-        YamlConfig('/config.yaml', OuterConfig)
+        first = YamlConfig('/config.yaml', OuterConfig)
+        # The first access reads and fixes the file
+        assert first.data == OuterConfig(inner=InnerConfig(port=8080), name='custom')
+        assert first.errors
         # Second read has no errors, the file is now valid
         config2 = YamlConfig('/config.yaml', OuterConfig)
         assert config2.data == OuterConfig(inner=InnerConfig(port=8080), name='custom')
         assert config2.errors == []
 
-    def test_init_auto_fix_round_trip(self, fs):
+    def test_auto_fix_round_trip(self, fs):
         fs.create_file(
             '/config.yaml',
             contents="""\
 port: not-a-number
 """,
         )
-        YamlConfig('/config.yaml', Config)
+        first = YamlConfig('/config.yaml', Config)
+        _ = first.data
         config2 = YamlConfig('/config.yaml', Config)
         assert config2.data == Config()
         assert config2.errors == []
 
-    def test_init_auto_fix_keeps_errors(self, fs):
+    def test_auto_fix_keeps_errors(self, fs):
         # Errors of the read are still exposed after the auto fix
         fs.create_file(
             '/config.yaml',
@@ -295,26 +346,29 @@ port: not-a-number
 """,
         )
         config = YamlConfig('/config.yaml', Config)
+        _ = config.data
         assert config.errors
 
-    def test_init_no_write_on_valid(self, fs):
+    def test_no_write_on_valid(self, fs):
         text = """\
 port: 9090
 name: custom
 """
         fs.create_file('/config.yaml', contents=text)
-        YamlConfig('/config.yaml', Config)
+        config = YamlConfig('/config.yaml', Config)
+        _ = config.data
         # Valid file is not rewritten
         assert open('/config.yaml', encoding='utf-8').read() == text
 
-    def test_init_auto_fix_invalid_yaml(self, fs):
+    def test_auto_fix_invalid_yaml(self, fs):
         fs.create_file(
             '/config.yaml',
             contents="""\
 port: [unclosed
 """,
         )
-        YamlConfig('/config.yaml', Config)
+        config = YamlConfig('/config.yaml', Config)
+        _ = config.data
         # Invalid yaml is replaced with default values
         text = open('/config.yaml', encoding='utf-8').read()
         assert (
@@ -326,8 +380,9 @@ debug: false
 """
         )
 
-    def test_init_auto_fix_missing_file(self, fs):
-        YamlConfig('/config.yaml', Config)
+    def test_auto_fix_missing_file(self, fs):
+        config = YamlConfig('/config.yaml', Config)
+        _ = config.data
         # Missing file is created with default values
         assert fs.exists('/config.yaml')
         text = open('/config.yaml', encoding='utf-8').read()
@@ -340,9 +395,10 @@ debug: false
 """
         )
 
-    def test_init_auto_fix_non_utf8(self, fs):
+    def test_auto_fix_non_utf8(self, fs, capsys):
         fs.create_file('/config.yaml', contents=b'port: \xff\xfe\n')
-        YamlConfig('/config.yaml', Config)
+        config = YamlConfig('/config.yaml', Config)
+        _ = config.data
         # Non-utf8 file is replaced with default values
         text = open('/config.yaml', 'rb').read()
         assert text == 'port: 8080\nname: server\ndebug: false\n'.encode('utf-8')
@@ -358,7 +414,9 @@ class TestYamlConfigLogger:
 port: not-a-number
 """,
         )
-        YamlConfig('/config.yaml', Config)
+        config = YamlConfig('/config.yaml', Config)
+        capsys.readouterr()  # clear the output of the statements before the region
+        _ = config.data
         out = capsys.readouterr().out
         assert 'Invalid deploy config value' in out
 
@@ -369,9 +427,11 @@ port: not-a-number
 port: 9090
 """,
         )
-        YamlConfig('/config.yaml', Config)
+        config = YamlConfig('/config.yaml', Config)
+        capsys.readouterr()  # clear the output of the statements before the region
+        _ = config.data
         out = capsys.readouterr().out
-        assert not 'Invalid deploy config value' in out
+        assert 'Invalid deploy config value' not in out
 
     def test_validate_invalid_logs_warning(self, fs, capsys):
         fs.create_file(
@@ -382,6 +442,7 @@ port: 9090
         )
         config = YamlConfig('/config.yaml', Config)
         config.data.port = 'not-a-number'
+        capsys.readouterr()  # clear the output of the statements before the region
         assert config.validate() is False
         out = capsys.readouterr().out
         assert 'Invalid deploy config value' in out
@@ -394,13 +455,15 @@ port: 9090
 """,
         )
         config = YamlConfig('/config.yaml', Config)
+        capsys.readouterr()  # clear the output of the statements before the region
         assert config.validate() is True
         out = capsys.readouterr().out
-        assert not 'Invalid deploy config value' in out
+        assert 'Invalid deploy config value' not in out
 
     def test_write_logs_info(self, fs, capsys):
         config = YamlConfig('/config.yaml', Config)
         config.data.port = 9090
+        capsys.readouterr()  # clear the output of the statements before the region
         assert config.write() is True
         out = capsys.readouterr().out
         assert 'Write config' in out
@@ -408,10 +471,10 @@ port: 9090
     def test_write_skip_same_no_info(self, fs, capsys):
         config = YamlConfig('/config.yaml', Config)
         assert config.write(skip_same=False) is True
-        capsys.readouterr()  # clear previous output
+        capsys.readouterr()  # clear the output of the statements before the region
         assert config.write(skip_same=True) is False
         out = capsys.readouterr().out
-        assert not 'Write config' in out
+        assert 'Write config' not in out
 
     def test_auto_fix_logs_warning_then_info(self, fs, capsys):
         fs.create_file(
@@ -420,10 +483,11 @@ port: 9090
 port: not-a-number
 """,
         )
-        YamlConfig('/config.yaml', Config)
+        config = YamlConfig('/config.yaml', Config)
+        capsys.readouterr()  # clear the output of the statements before the region
+        _ = config.data
         out = capsys.readouterr().out
         # warning from read(), info from the auto-fix write()
-        assert 'Invalid deploy config value' in out
         assert 'Write config' in out
 
     def test_read_invalid_yaml_logs_warning_then_info(self, fs, capsys):
@@ -433,20 +497,26 @@ port: not-a-number
 port: [unclosed
 """,
         )
-        YamlConfig('/config.yaml', Config)
+        config = YamlConfig('/config.yaml', Config)
+        capsys.readouterr()  # clear the output of the statements before the region
+        _ = config.data
         out = capsys.readouterr().out
         assert 'Invalid deploy config value' in out
         assert 'Write config' in out
 
     def test_read_missing_file_logs_warning_then_info(self, fs, capsys):
-        YamlConfig('/config.yaml', Config)
+        config = YamlConfig('/config.yaml', Config)
+        capsys.readouterr()  # clear the output of the statements before the region
+        _ = config.data
         out = capsys.readouterr().out
         assert 'Invalid deploy config value' in out
         assert 'Write config' in out
 
     def test_read_non_utf8_logs_warning_then_info(self, fs, capsys):
         fs.create_file('/config.yaml', contents=b'port: \xff\xfe\n')
-        YamlConfig('/config.yaml', Config)
+        config = YamlConfig('/config.yaml', Config)
+        capsys.readouterr()  # clear the output of the statements before the region
+        _ = config.data
         out = capsys.readouterr().out
         assert 'Invalid deploy config value' in out
         assert 'Write config' in out
@@ -472,6 +542,74 @@ name: server
         config = YamlConfig('/config.yaml', Config)
         assert config.write(skip_same=False) is True
         assert fs.exists('/config.yaml')
+
+    def test_write_template(self, fs):
+        """template=True writes the model, the edited file on the disk is replaced."""
+        fs.create_file(
+            '/config.yaml',
+            contents="""\
+port: 9090
+name: custom
+""",
+        )
+        config = YamlConfig('/config.yaml', CommentedConfig)
+        assert config.write(template=True) is True
+        text = open('/config.yaml', encoding='utf-8').read()
+        assert (
+            text
+            == """\
+# line 1
+# line 2
+port: 8080
+# server name
+name: server
+"""
+        )
+
+    def test_write_template_does_not_read(self, fs, capsys):
+        """template=True does not read the file: an invalid file is replaced without a read warning."""
+        fs.create_file(
+            '/config.yaml',
+            contents="""\
+port: [unclosed
+""",
+        )
+        config = YamlConfig('/config.yaml', Config)
+        capsys.readouterr()  # clear the output of the statements before the region
+        assert config.write(template=True) is True
+        out = capsys.readouterr().out
+        assert 'Invalid deploy config value' not in out
+        text = open('/config.yaml', encoding='utf-8').read()
+        assert (
+            text
+            == """\
+port: 8080
+name: server
+debug: false
+"""
+        )
+
+    def test_write_template_skip_same(self, fs):
+        """A template that is already on the disk is not written again."""
+        config = YamlConfig('/config.yaml', Config)
+        assert config.write(template=True) is True
+        assert config.write(template=True) is False
+
+    def test_write_template_uses_model(self, fs):
+        """template=True writes the model defaults, not the current data."""
+        config = YamlConfig('/config.yaml', Config)
+        config.data.port = 9090
+        assert config.write() is True
+        assert config.write(template=True) is True
+        text = open('/config.yaml', encoding='utf-8').read()
+        assert (
+            text
+            == """\
+port: 8080
+name: server
+debug: false
+"""
+        )
 
     def test_write_round_trip(self, fs):
         config = YamlConfig('/config.yaml', Config)
@@ -611,6 +749,7 @@ port: not-a-number
 """,
         )
         config = YamlConfig('/config.yaml', Config)
+        _ = config.data
         assert config.errors
         config.data.port = 9090
         assert config.validate() is True
@@ -709,6 +848,7 @@ port: 9090
 
     def test_set_empty_key(self, fs):
         config = YamlConfig('/config.yaml', Config)
+        _ = config.data
         assert config.set((), 1) is False
         assert config.data == Config()
         assert len(config.errors) == 1
@@ -722,6 +862,7 @@ port: not-a-number
 """,
         )
         config = YamlConfig('/config.yaml', Config)
+        _ = config.data
         assert config.errors
         assert config.set(('port',), 9090) is True
         assert config.errors == []
@@ -729,13 +870,16 @@ port: not-a-number
 
     def test_set_valid_no_warning(self, fs, capsys):
         config = YamlConfig('/config.yaml', Config)
-        capsys.readouterr()  # clear read() output
+        _ = config.data
+        capsys.readouterr()  # clear the output of the statements before the region
         assert config.set(('port',), 9090) is True
         out = capsys.readouterr().out
-        assert not 'Invalid deploy config value' in out
+        assert 'Invalid deploy config value' not in out
 
     def test_set_invalid_logs_warning(self, fs, capsys):
         config = YamlConfig('/config.yaml', Config)
+        _ = config.data
+        capsys.readouterr()  # clear the output of the statements before the region
         assert config.set(('port',), 'bad') is False
         out = capsys.readouterr().out
         assert 'Invalid deploy config value' in out
@@ -755,12 +899,13 @@ class TestYamlConfigShow:
 
     def test_show_all_default(self, fs, capsys):
         config = YamlConfig('/config.yaml', Config)
+        capsys.readouterr()  # clear the output of the statements before the region
         config.show()
         out = capsys.readouterr().out
         assert 'Showing deploy config of /config.yaml' in out
         assert '(config is the same as default)' in out
-        assert not '(rest of the config is the same as default)' in out
-        assert not '  port =' in out
+        assert '(rest of the config is the same as default)' not in out
+        assert '  port =' not in out
 
     def test_show_flat_difference(self, fs, capsys):
         fs.create_file(
@@ -770,12 +915,13 @@ port: 9090
 """,
         )
         config = YamlConfig('/config.yaml', Config)
+        capsys.readouterr()  # clear the output of the statements before the region
         config.show()
         out = capsys.readouterr().out
         assert 'Showing deploy config of /config.yaml' in out
         assert '  port = 9090' in out
         assert '(rest of the config is the same as default)' in out
-        assert not '(config is the same as default)' in out
+        assert '(config is the same as default)' not in out
 
     def test_show_str_value_quoted(self, fs, capsys):
         fs.create_file(
@@ -785,6 +931,7 @@ name: custom
 """,
         )
         config = YamlConfig('/config.yaml', Config)
+        capsys.readouterr()  # clear the output of the statements before the region
         config.show()
         out = capsys.readouterr().out
         assert "  name = 'custom'" in out
@@ -798,6 +945,7 @@ inner:
 """,
         )
         config = YamlConfig('/config.yaml', OuterConfig)
+        capsys.readouterr()  # clear the output of the statements before the region
         config.show()
         out = capsys.readouterr().out
         assert '  inner.port = 9090' in out
@@ -812,6 +960,7 @@ name: custom
 """,
         )
         config = YamlConfig('/config.yaml', Config)
+        capsys.readouterr()  # clear the output of the statements before the region
         config.show()
         out = capsys.readouterr().out
         assert '  port = 9090' in out
@@ -825,11 +974,12 @@ port: 9090
 """,
         )
         config = YamlConfig('/config.yaml', Config)
+        capsys.readouterr()  # clear the output of the statements before the region
         config.show()
         out = capsys.readouterr().out
         # name keeps its default 'server', debug keeps its default False
-        assert not '  name =' in out
-        assert not '  debug =' in out
+        assert '  name =' not in out
+        assert '  debug =' not in out
 
     def test_show_logs_info_to_backend(self, fs, capsys):
         fs.create_file(
@@ -839,6 +989,7 @@ port: 9090
 """,
         )
         config = YamlConfig('/config.yaml', Config)
+        capsys.readouterr()  # clear the output of the statements before the region
         config.show()
         out = capsys.readouterr().out
         assert 'Showing deploy config of /config.yaml' in out
@@ -863,13 +1014,14 @@ password: hunter2
 """,
         )
         config = SecretPasswordYamlConfig('/config.yaml', SecretPasswordConfig)
+        capsys.readouterr()  # clear the output of the statements before the region
         config.show()
         out = capsys.readouterr().out
         # Override value is displayed instead of the real one
         assert "  password = '********'" in out
         assert '(rest of the config is the same as default)' in out
         # The real password value never appears in the log
-        assert not 'hunter2' in out
+        assert 'hunter2' not in out
 
     def test_show_hides_password_keeps_other_differences(self, fs, capsys):
         fs.create_file(
@@ -880,11 +1032,12 @@ name: custom
 """,
         )
         config = SecretPasswordYamlConfig('/config.yaml', SecretPasswordConfig)
+        capsys.readouterr()  # clear the output of the statements before the region
         config.show()
         out = capsys.readouterr().out
         assert "  password = '********'" in out
         assert "  name = 'custom'" in out
-        assert not 'hunter2' in out
+        assert 'hunter2' not in out
 
     def test_show_hides_nested_password(self, fs, capsys):
         class SecretInner(Struct):
@@ -904,12 +1057,13 @@ inner:
 """,
         )
         config = SecretPasswordYamlConfig('/config.yaml', SecretOuter)
+        capsys.readouterr()  # clear the output of the statements before the region
         config.show()
         out = capsys.readouterr().out
         # Path passed to _secrete_value is the full key path ('inner', 'password')
         assert "  inner.password = '********'" in out
         assert '  inner.port = 9090' in out
-        assert not 'hunter2' in out
+        assert 'hunter2' not in out
 
     def test_show_default_password_not_logged(self, fs, capsys):
         # Unchanged password is not a difference, show() logs nothing about it
@@ -920,7 +1074,404 @@ name: custom
 """,
         )
         config = SecretPasswordYamlConfig('/config.yaml', SecretPasswordConfig)
+        capsys.readouterr()  # clear the output of the statements before the region
         config.show()
         out = capsys.readouterr().out
         assert "  name = 'custom'" in out
-        assert not '  password =' in out
+        assert '  password =' not in out
+
+
+class TestYamlConfigList:
+    """Lists are read and written in the "- item" block style, not in the "[item]" flow style."""
+
+    def test_read_block_list(self, fs):
+        """A list written as "- item" is read."""
+        fs.create_file(
+            '/config.yaml',
+            contents="""\
+items:
+  - a
+  - b
+""",
+        )
+        config = YamlConfig('/config.yaml', ListConfig)
+        assert config.data == ListConfig(items=['a', 'b'])
+        assert config.errors == []
+
+    def test_read_flow_list(self, fs):
+        """A list written as "[item]" is read too."""
+        fs.create_file('/config.yaml', contents='items: [a, b]\n')
+        config = YamlConfig('/config.yaml', ListConfig)
+        assert config.data == ListConfig(items=['a', 'b'])
+        assert config.errors == []
+
+    def test_write_block_list(self, fs):
+        """A list is written as "- item", with the help comment of the key."""
+        config = YamlConfig('/config.yaml', ListConfig)
+        config.data.items = ['a', 'b']
+        config.write()
+        text = open('/config.yaml', encoding='utf-8').read()
+        assert (
+            text
+            == """\
+# list items
+items:
+- a
+- b
+"""
+        )
+
+    def test_write_list_round_trip(self, fs):
+        """A written list is read back into the same list."""
+        config = YamlConfig('/config.yaml', ListConfig)
+        config.data.items = ['a', 'b']
+        config.write()
+        config2 = YamlConfig('/config.yaml', ListConfig)
+        assert config2.data.items == ['a', 'b']
+        assert config2.errors == []
+
+    def test_set_list(self, fs):
+        """set() accepts a list value, the written list keeps the "- item" style."""
+        config = YamlConfig('/config.yaml', ListConfig)
+        assert config.set(('items',), ['a', 'b']) is True
+        assert config.errors == []
+        assert config.data.items == ['a', 'b']
+        config.write()
+        text = open('/config.yaml', encoding='utf-8').read()
+        assert (
+            text
+            == """\
+# list items
+items:
+- a
+- b
+"""
+        )
+
+    def test_write_empty_list(self, fs):
+        """An empty list is written as "[]"."""
+        config = YamlConfig('/config.yaml', ListConfig)
+        config.write()
+        text = open('/config.yaml', encoding='utf-8').read()
+        assert (
+            text
+            == """\
+# list items
+items: []
+"""
+        )
+
+    def test_write_list_of_structs(self, fs):
+        """A list of structs is written one item per line, the fields of an item are aligned."""
+
+        class Item(Struct):
+            Port: int = 8080
+            Name: str = 'x'
+
+        class StructListConfig(Struct):
+            structs: List[Item] = msgspec.field(default_factory=list)
+
+        config = YamlConfig('/config.yaml', StructListConfig)
+        config.data.structs = [Item(Port=1, Name='a'), Item(Port=2)]
+        config.write()
+        text = open('/config.yaml', encoding='utf-8').read()
+        assert (
+            text
+            == """\
+structs:
+- Port: 1
+  Name: a
+- Port: 2
+  Name: x
+"""
+        )
+
+    def test_write_nested_list(self, fs):
+        """A list of lists keeps the block style of the inner lists too."""
+
+        class MatrixConfig(Struct):
+            matrix: List[List[str]] = msgspec.field(default_factory=list)
+
+        config = YamlConfig('/config.yaml', MatrixConfig)
+        config.data.matrix = [['a', 'b'], ['c']]
+        config.write()
+        text = open('/config.yaml', encoding='utf-8').read()
+        assert (
+            text
+            == """\
+matrix:
+- - a
+  - b
+- - c
+"""
+        )
+
+    def test_write_items_needing_quotes(self, fs):
+        """Items that would change meaning as plain scalars are quoted, still one per line."""
+        config = YamlConfig('/config.yaml', ListConfig)
+        config.data.items = ['a: b', '123', 'yes', '- x']
+        config.write()
+        text = open('/config.yaml', encoding='utf-8').read()
+        assert (
+            text
+            == """\
+# list items
+items:
+- 'a: b'
+- '123'
+- 'yes'
+- '- x'
+"""
+        )
+        config2 = YamlConfig('/config.yaml', ListConfig)
+        assert config2.data.items == ['a: b', '123', 'yes', '- x']
+        assert config2.errors == []
+
+    def test_write_unicode_item(self, fs):
+        """A non-ascii item is written literally, not escaped."""
+        config = YamlConfig('/config.yaml', ListConfig)
+        config.data.items = ['碧蓝航线']
+        config.write()
+        text = open('/config.yaml', encoding='utf-8').read()
+        assert (
+            text
+            == """\
+# list items
+items:
+- 碧蓝航线
+"""
+        )
+
+    def test_read_invalid_item_dropped(self, fs):
+        """An item that fails the validation is dropped, the other items and the other fields are kept."""
+
+        class MixedListConfig(Struct):
+            port: int = 8080
+            items: List[str] = msgspec.field(default_factory=list)
+
+        fs.create_file(
+            '/config.yaml',
+            contents="""\
+port: 9090
+items:
+- a
+- 5
+- b
+""",
+        )
+        config = YamlConfig('/config.yaml', MixedListConfig)
+        assert config.data.port == 9090
+        assert config.data.items == ['a', 'b']
+        assert config.errors
+        text = open('/config.yaml', encoding='utf-8').read()
+        assert (
+            text
+            == """\
+port: 9090
+items:
+- a
+- b
+"""
+        )
+
+    def test_read_invalid_items_dropped(self, fs):
+        """Every invalid item is dropped, the valid items keep their order."""
+        fs.create_file(
+            '/config.yaml',
+            contents="""\
+items:
+- a
+- 5
+- b
+- 6
+""",
+        )
+        config = YamlConfig('/config.yaml', ListConfig)
+        assert config.data.items == ['a', 'b']
+        assert config.errors
+        text = open('/config.yaml', encoding='utf-8').read()
+        assert (
+            text
+            == """\
+# list items
+items:
+- a
+- b
+"""
+        )
+
+
+class TestYamlConfigDict:
+    """Dicts are read and written in the "key: value" block style, one pair per line."""
+
+    def test_read_block_dict(self, fs):
+        """A dict written as "key: value" lines is read, the order of the keys is kept."""
+        fs.create_file(
+            '/config.yaml',
+            contents="""\
+mapping:
+  b: 2
+  a: 1
+""",
+        )
+        config = YamlConfig('/config.yaml', DictConfig)
+        assert config.data.mapping == {'b': 2, 'a': 1}
+        # the keys are not sorted, the order of the file is kept
+        assert list(config.data.mapping) == ['b', 'a']
+        assert config.errors == []
+
+    def test_read_flow_dict(self, fs):
+        """A dict written as "{key: value}" is read too, and written back in the block style."""
+        fs.create_file('/config.yaml', contents='mapping: {b: 2, a: 1}\n')
+        config = YamlConfig('/config.yaml', DictConfig)
+        assert config.data.mapping == {'b': 2, 'a': 1}
+        assert config.errors == []
+        config.write()
+        text = open('/config.yaml', encoding='utf-8').read()
+        assert (
+            text
+            == """\
+# mapping
+mapping:
+  b: 2
+  a: 1
+"""
+        )
+
+    def test_write_block_dict(self, fs):
+        """A dict is written as "key: value" lines, one pair per line, with the help comment of the key."""
+        config = YamlConfig('/config.yaml', DictConfig)
+        config.data.mapping = {'b': 2, 'a': 1}
+        config.write()
+        text = open('/config.yaml', encoding='utf-8').read()
+        assert (
+            text
+            == """\
+# mapping
+mapping:
+  b: 2
+  a: 1
+"""
+        )
+
+    def test_write_empty_dict(self, fs):
+        """An empty dict is written as "{}"."""
+        config = YamlConfig('/config.yaml', DictConfig)
+        config.write()
+        text = open('/config.yaml', encoding='utf-8').read()
+        assert (
+            text
+            == """\
+# mapping
+mapping: {}
+"""
+        )
+
+    def test_write_quoted_keys(self, fs):
+        """Keys that would change meaning as plain scalars are quoted, still one pair per line."""
+        config = YamlConfig('/config.yaml', DictConfig)
+        config.data.mapping = {'on': 1, 'key: x': 2}
+        config.write()
+        text = open('/config.yaml', encoding='utf-8').read()
+        assert (
+            text
+            == """\
+# mapping
+mapping:
+  'on': 1
+  'key: x': 2
+"""
+        )
+        config2 = YamlConfig('/config.yaml', DictConfig)
+        assert config2.errors == []
+        assert config2.data.mapping == {'on': 1, 'key: x': 2}
+
+    def test_write_dict_round_trip(self, fs):
+        """A written dict is read back into the same dict, the second write is skipped."""
+        config = YamlConfig('/config.yaml', DictConfig)
+        config.data.mapping = {'b': 2, 'a': 1}
+        config.write()
+        config2 = YamlConfig('/config.yaml', DictConfig)
+        assert config2.data.mapping == {'b': 2, 'a': 1}
+        assert config2.errors == []
+        assert config2.write() is False
+
+    def test_write_dict_of_lists(self, fs):
+        """A dict of lists keeps the block style of the inner lists too."""
+
+        class DictListConfig(Struct):
+            mapping: Dict[str, List[str]] = msgspec.field(default_factory=dict)
+
+        config = YamlConfig('/config.yaml', DictListConfig)
+        config.data.mapping = {'b': ['x', 'y'], 'a': ['z']}
+        config.write()
+        text = open('/config.yaml', encoding='utf-8').read()
+        assert (
+            text
+            == """\
+mapping:
+  b:
+  - x
+  - y
+  a:
+  - z
+"""
+        )
+        config2 = YamlConfig('/config.yaml', DictListConfig)
+        assert config2.data.mapping == {'b': ['x', 'y'], 'a': ['z']}
+        assert config2.errors == []
+
+    def test_read_invalid_value_drops_entry(self, fs):
+        """An entry whose value fails the validation is dropped, the other entries and fields are kept."""
+
+        class MixedDictConfig(Struct):
+            port: int = 8080
+            mapping: Dict[str, int] = msgspec.field(default_factory=dict)
+
+        fs.create_file(
+            '/config.yaml',
+            contents="""\
+port: 9090
+mapping:
+  keep: 1
+  bad: abc
+  keep2: 2
+""",
+        )
+        config = YamlConfig('/config.yaml', MixedDictConfig)
+        assert config.data.port == 9090
+        assert config.data.mapping == {'keep': 1, 'keep2': 2}
+        assert config.errors
+        text = open('/config.yaml', encoding='utf-8').read()
+        assert (
+            text
+            == """\
+port: 9090
+mapping:
+  keep: 1
+  keep2: 2
+"""
+        )
+
+    def test_read_invalid_key_drops_entry(self, fs):
+        """An entry whose key fails the validation is dropped too."""
+        fs.create_file(
+            '/config.yaml',
+            contents="""\
+mapping:
+  keep: 1
+  yes: 2
+""",
+        )
+        config = YamlConfig('/config.yaml', DictConfig)
+        assert config.data.mapping == {'keep': 1}
+        assert config.errors
+        text = open('/config.yaml', encoding='utf-8').read()
+        assert (
+            text
+            == """\
+# mapping
+mapping:
+  keep: 1
+"""
+        )

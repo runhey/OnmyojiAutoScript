@@ -1,7 +1,14 @@
+import os
+import shutil
+import uuid
+from importlib.util import cache_from_source
+
 import _io
 import pytest
 
+from oas.ext import env
 from oas.ext.file.loadpy import LOADPY_CACHE, loadpy
+from oas.ext.path import PathStr
 from oas.testing.filesystem import fs  # noqa: F401
 
 
@@ -17,6 +24,41 @@ def test_loadpy_valid(fs):
     assert module.a == 1
     assert module.func() == 2
     assert module.__name__ == 'valid'
+
+
+def test_loadpy_str_subclass():
+    """
+    A path that is a str subclass loads and its bytecode cache is written
+
+    importlib hands the path to compile(), where a str subclass lands in
+    co_filename, and marshal refuses to write a code object carrying one into
+    the pyc cache. The fake filesystem cannot reproduce it: the loader stats
+    the source with the real os.stat and skips the cache when the stat fails,
+    so this test uses a real folder under env.OAS_TEMP.
+    """
+    folder = env.OAS_TEMP.joinpath(f'test_loadpy_{os.getpid()}_{uuid.uuid4().hex}')
+    folder.makedirs()
+    file = folder.joinpath('mod.py')
+    # The bytecode cache of python follows sys.pycache_prefix, e.g. Apple's
+    # python points it to ~/Library/Caches/com.apple.python, so the pyc of
+    # the file is not always a __pycache__ folder next to the source
+    pyc = cache_from_source(str(file))
+    try:
+        with open(file, 'w', encoding='utf-8') as f:
+            f.write('a = 1\n')
+
+        module = loadpy(PathStr.new(file))
+
+        assert module.a == 1
+        assert module.__name__ == 'mod'
+        # the pyc was written, so the code object was marshalable
+        assert os.path.isfile(pyc)
+    finally:
+        shutil.rmtree(folder, ignore_errors=True)
+        try:
+            os.unlink(pyc)
+        except OSError:
+            pass
 
 
 def test_loadpy_invalid_extension(fs):

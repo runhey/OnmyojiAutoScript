@@ -2,6 +2,10 @@ import yaml
 
 from oas.ext.path.atomic import atomic_read_bytes, atomic_write
 
+# pyyaml wraps plain scalars at this column, the pyyaml default is 80.
+# 120 keeps a long value such as a path or a sentence on the same line as its key
+LINE_WIDTH = 120
+
 
 # https://stackoverflow.com/questions/8640959/how-can-i-control-what-scalar-form-pyyaml-uses-for-my-data/15423007
 def str_presenter(dumper, data):
@@ -29,8 +33,13 @@ def yaml_loads(data):
 
 def yaml_dumps(obj):
     """
+    Encode obj into yaml bytes
+
+    A multiline string is emitted as a literal block scalar, a plain scalar is
+    wrapped at LINE_WIDTH (120) instead of the pyyaml default 80.
+
     Args:
-        obj (Any):
+        obj (Any): Object to encode, any object but a list is wrapped into a single document
 
     Returns:
         bytes:
@@ -46,6 +55,7 @@ def yaml_dumps(obj):
         encoding='utf-8',
         allow_unicode=True,
         sort_keys=False,
+        width=LINE_WIDTH,
     )
 
 
