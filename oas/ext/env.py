@@ -21,7 +21,7 @@ PROJECT_ROOT = PathStr.new('')
 OAS_ROOT = PathStr.new(__file__).uppath(3)
 
 
-def set_project_root(root, up=0):
+def set_project_root(root, up=0):  # noqa: D417
     """
     Args:
         root (str):
