@@ -15,7 +15,7 @@ class SqlitePoolCursor(sqlite3.Cursor):
         """
         super().__init__(conn)
         # value will be set in SqlitePool.cursor()
-        self.pool: 'ConnectionPool | None' = None
+        self.pool: "ConnectionPool | None" = None
         self.TABLE_NAME = ''
         self.CREATE_TABLE = ''
 
@@ -32,8 +32,7 @@ class SqlitePoolCursor(sqlite3.Cursor):
             if conn.in_transaction:
                 logger.error(
                     f'DEV ERROR: A transaction was not explicitly committed or rolled back, '
-                    f'please check your code. Auto rolling back anyway.'
-                )
+                    f'please check your code. Auto rolling back anyway.')
             # rollback to prevent connection pollution
             try:
                 conn.rollback()
@@ -129,7 +128,7 @@ class ExclusiveTransaction:
         self.cursor = cursor
 
     def __enter__(self):
-        self.cursor.execute('BEGIN EXCLUSIVE;')
+        self.cursor.execute("BEGIN EXCLUSIVE;")
         return self.cursor
 
     def __exit__(self, exc_type, exc_value, traceback):
@@ -151,14 +150,15 @@ class ConnectionPool:
         """
         self.file = file
         self.pool_size = pool_size
-        self.last_use: 'dict[sqlite3.Connection, float]' = {}
+        self.last_use: "dict[sqlite3.Connection, float]" = {}
 
         # Same as WorkerPool, let's just keep the name 'worker'
-        self.idle_workers: 'dict[sqlite3.Connection, None]' = {}
-        self.all_workers: 'dict[sqlite3.Connection, None]' = {}
+        self.idle_workers: "dict[sqlite3.Connection, None]" = {}
+        self.all_workers: "dict[sqlite3.Connection, None]" = {}
 
-        self.notify_worker = Lock()
-        self.notify_worker.acquire()
+        # One token: a connection that is returned to the pool offers its free
+        # slot to a caller that waits. See release_full_lock() and
+        # _get_thread_worker().
         self.notify_pool = Lock()
         self.notify_pool.acquire()
 
@@ -209,24 +209,24 @@ class ConnectionPool:
 
     def release_full_lock(self):
         """
-        Call this method if worker finished any job, or exited, or get killed.
+        Call this method if a connection was returned to the pool, or closed.
 
-        When pool full,
-        Pool tells all workers: any worker finishes his job notify me.
-        `self.notify_worker.release()`
-        Then the pool blocks himself.
-        `self.notify_pool.acquire()`
-        The fastest worker, and also the only worker, receives the message,
-        `if self.notify_worker.acquire(blocking=False):`
-        Worker tells the pool, new pool slot is ready, you are ready to go.
-        `self.notify_pool.release()`
+        A returned connection is free, so its slot is offered to a caller that
+        waits on the full pool: the waiting caller blocks on ``notify_pool``
+        and looks at the idle connections again as soon as it gets the lock.
+        ``notify_pool`` holds one token, and a release when the token is
+        already on offer would raise RuntimeError, so the lock is looked at
+        first -- an exception for every returned connection is not free either,
+        and a pool that nobody waits on pays for a query finish thousands of
+        times.
         """
-        if self.notify_worker.acquire(blocking=False):
+        if self.notify_pool.locked():
             try:
                 self.notify_pool.release()
             except RuntimeError:
-                # Race condition when multiple threads trying to get thread worker
-                # They released `notify_worker` but not yet acquire `notify_pool`
+                # Race condition: another connection offered its slot between
+                # locked() and release(). One token carries the news, it is
+                # already on offer, nothing to add.
                 pass
 
     def _get_thread_worker(self):
@@ -245,21 +245,13 @@ class ConnectionPool:
         # Check without `create_lock` first, otherwise will be 10x slower
         # if multiple thread trying to get `create_lock`
         if len(self.all_workers) >= self.pool_size:
-            # See release_full_lock()
-            try:
-                self.notify_worker.release()
-            except RuntimeError:
-                # Race condition when multiple threads trying to get thread worker
-                # It's ok to treat multiple release as one
-                pass
             while 1:
-                # If any worker finishes within timeout, we can get it
-                # Race condition when all workers just done `release_full_lock` and no one notifies
-                # To handle that, we acquire with timeout and check if there's idle worker
+                # A connection that was returned offers its free slot on
+                # `notify_pool`, see release_full_lock(), so this returns as
+                # soon as a slot is there. The timeout is the fallback for the
+                # race when another caller takes the slot first, then no
+                # notification arrives for the slower caller
                 self.notify_pool.acquire(timeout=0.01)
-                # Re-acquire `notify_worker` so other workers can
-                # call `release_full_lock` for next `_get_thread_worker`
-                self.notify_worker.acquire(blocking=False)
                 # A worker just idle
                 try:
                     worker, _ = self.idle_workers.popitem()
@@ -279,21 +271,11 @@ class ConnectionPool:
             # Check without `create_lock` first, otherwise will be 10x slower
             # if multiple thread trying to get `create_lock`
             if len(self.all_workers) >= self.pool_size:
-                # See release_full_lock()
-                try:
-                    self.notify_worker.release()
-                except RuntimeError:
-                    # Race condition when multiple threads trying to get thread worker
-                    # It's ok to treat multiple release as one
-                    pass
                 while 1:
-                    # If any worker finishes within timeout, we can get it
-                    # Race condition when all workers just done `release_full_lock` and no one notifies
-                    # To handle that, we acquire with timeout and check if there's idle worker
+                    # See the same loop above: a returned connection offers its
+                    # slot on `notify_pool`, the timeout is the fallback of the
+                    # race
                     self.notify_pool.acquire(timeout=0.01)
-                    # Re-acquire `notify_worker` so other workers can
-                    # call `release_full_lock` for next `_get_thread_worker`
-                    self.notify_worker.acquire(blocking=False)
                     # A worker just idle
                     try:
                         worker, _ = self.idle_workers.popitem()
@@ -416,7 +398,7 @@ class SqlitePool:
         """
         self.pool_size = pool_size
 
-        self.all_pool: 'dict[str, ConnectionPool]' = {}
+        self.all_pool: "dict[str, ConnectionPool]" = {}
         self.create_lock = Lock()
 
     def get_pool(self, file):
@@ -542,13 +524,9 @@ class SqlitePool:
         if not new_file:
             raise ValueError(f'Old name cannot be empty, got "{new_file}"')
         if old_file == ':memory:':
-            raise ValueError(
-                f'Cannot rename memory database "{old_file}" to "{new_file}"'
-            )
+            raise ValueError(f'Cannot rename memory database "{old_file}" to "{new_file}"')
         if new_file == ':memory:':
-            raise ValueError(
-                f'Cannot rename "{old_file}" to memory database "{new_file}"'
-            )
+            raise ValueError(f'Cannot rename "{old_file}" to memory database "{new_file}"')
 
         with self.create_lock:
             try:
