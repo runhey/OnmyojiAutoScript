@@ -1,6 +1,7 @@
 from datetime import datetime, timedelta, time
 import random  # type: ignore
 from typing import Callable
+from module.atom.click import RuleClick
 
 from module.logger import logger
 from module.exception import TaskEnd
@@ -35,7 +36,7 @@ class ScriptTask(GameUi, GeneralBattle, HeroTestAssets, SwitchSoul):
         self.open_exp_buff()
         self.switch_hero(self.conf.herotest.layer)
         self.init_pages()
-        self.ui_goto_page(self.page_hero_mode)
+        self.goto_page(self.page_hero_mode)
         self.check_and_lock_team()
         while True:
             if self.limit_time is not None and self.limit_time + self.start_time < datetime.now():
@@ -44,7 +45,7 @@ class ScriptTask(GameUi, GeneralBattle, HeroTestAssets, SwitchSoul):
             if self.current_count >= self.limit_count:
                 logger.info("Count out")
                 break
-            self.ui_goto_page(self.page_hero_mode)
+            self.goto_page(self.page_hero_mode)
             if not self.can_run(self.conf.herotest.layer):
                 break
             entered = self.enter_battle()
@@ -125,8 +126,9 @@ class ScriptTask(GameUi, GeneralBattle, HeroTestAssets, SwitchSoul):
                 # https://github.com/runhey/OnmyojiAutoScript/issues/1671
                 if timer.reached_and_reset():
                     if self.appear(self.I_BCMJ_SKILL_ADD_CONFIRM):
-                        logger.warning('No skill selected for 10s, panel still open, retrying')
-                        continue
+                        logger.warning('No skill selected for 10s, panel still open, click a random buff')
+                        self.click_random_buff()
+                        break
                     logger.warning('Skill selection panel closed unexpectedly, exit')
                     break
 
@@ -172,8 +174,9 @@ class ScriptTask(GameUi, GeneralBattle, HeroTestAssets, SwitchSoul):
             self.screenshot()
             if timer.reached_and_reset():
                 if self.appear(self.I_BCMJ_SKILL_ADD_CONFIRM):
-                    logger.warning('No skill selected for 10s, panel still open, retrying')
-                    continue
+                    logger.warning('No skill selected for 10s, panel still open, click a random buff')
+                    self.click_random_buff()
+                    break
                 logger.warning('Skill selection panel closed unexpectedly, exit')
                 break
             if any(self.appear_then_click(ts, interval=1) for ts in target_skills):
@@ -181,9 +184,16 @@ class ScriptTask(GameUi, GeneralBattle, HeroTestAssets, SwitchSoul):
         self.ui_click_until_disappear(self.I_BCMJ_SKILL_ADD_CONFIRM, interval=1.5)
         return True
 
+    def click_random_buff(self):
+        """兜底: 4个buff都未匹配到目标时, 随机点击一个槽位, 避免卡死"""
+        logger.warning('No target buff matched, click a random buff')
+        slot = random.choice([(60, 320, 200, 140), (380, 320, 200, 140),
+                              (700, 320, 200, 140), (1020, 320, 200, 140)])
+        self.click(RuleClick(roi_front=slot, roi_back=slot, name='buff_random'), interval=1)
+
     def switch_hero(self, layer: Layer):
         """切换英杰"""
-        self.ui_goto_page(pages.page_hero_test)
+        self.goto_page(pages.page_hero_test)
         switch_hero_dict: dict = {
             Layer.YANWU: (self.I_CHECK_HERO1, self.I_SWITCH_HERO1),  # 源赖光
             Layer.MIJING: (self.I_CHECK_HERO1, self.I_SWITCH_HERO1),  # 源赖光
@@ -240,10 +250,10 @@ class ScriptTask(GameUi, GeneralBattle, HeroTestAssets, SwitchSoul):
     def check_and_switch_soul(self):
         """检查并切换御魂"""
         if self.conf.switch_soul_config.enable:
-            self.ui_goto_page(pages.page_shikigami_records)
+            self.goto_page(pages.page_shikigami_records)
             self.run_switch_soul(self.conf.switch_soul_config.switch_group_team)
         if self.conf.switch_soul_config.enable_switch_by_name:
-            self.ui_goto_page(pages.page_shikigami_records)
+            self.goto_page(pages.page_shikigami_records)
             self.run_switch_soul_by_name(self.conf.switch_soul_config.group_name, self.conf.switch_soul_config.team_name)
 
     def open_exp_buff(self):
@@ -251,7 +261,7 @@ class ScriptTask(GameUi, GeneralBattle, HeroTestAssets, SwitchSoul):
         exp_50_buff_enable = self.conf.herotest.exp_50_buff_enable_help
         exp_100_buff_enable = self.conf.herotest.exp_100_buff_enable_help
         if exp_50_buff_enable or exp_100_buff_enable:
-            self.ui_goto_page(pages.page_main)
+            self.goto_page(pages.page_main)
             self.open_buff()
             self.exp_100(exp_100_buff_enable)
             self.exp_50(exp_50_buff_enable)
@@ -262,7 +272,7 @@ class ScriptTask(GameUi, GeneralBattle, HeroTestAssets, SwitchSoul):
         exp_50_buff_enable = self.conf.herotest.exp_50_buff_enable_help
         exp_100_buff_enable = self.conf.herotest.exp_100_buff_enable_help
         if exp_50_buff_enable or exp_100_buff_enable:
-            self.ui_goto_page(pages.page_main)
+            self.goto_page(pages.page_main)
             self.open_buff()
             self.exp_100(False)
             self.exp_50(False)
@@ -289,22 +299,35 @@ class ScriptTask(GameUi, GeneralBattle, HeroTestAssets, SwitchSoul):
 
     def init_pages(self):
         """初始化页面"""
+        # 运行时改链只能改 session 页面副本: navigator bootstrap 时已把全局页面深拷贝了一份,
+        # 之后对 pages.* 的修改 session 看不到, _build_path 会找不到边而返回 None
+        hero_test_page = self.navigator.resolve_page(pages.page_hero_test)
+        if hero_test_page is None:
+            raise RuntimeError(f'Resolve session page failed: {pages.page_hero_test.key}')
         match self.conf.herotest.layer:
             case Layer.YANWU:
-                self.page_hero_mode = pages.Page(self.I_CHECK_HERO1_EXP)
-                pages.page_hero_test.link(button=self.I_GBB, destination=self.page_hero_mode)
+                self.page_hero_mode = self.navigator.add_page(
+                    pages.Page(self.I_CHECK_HERO1_EXP, key="page_hero_mode", name="page_hero_mode", register=False)
+                )
+                hero_test_page.connect(self.page_hero_mode, self.I_GBB, key="page_hero_test->page_hero_mode")
             case Layer.MIJING:
-                self.page_hero_mode = pages.Page(self.I_CHECK_HERO1_SKILL)
-                pages.page_hero_test.link(button=self.I_BCMJ, destination=self.page_hero_mode)
+                self.page_hero_mode = self.navigator.add_page(
+                    pages.Page(self.I_CHECK_HERO1_SKILL, key="page_hero_mode", name="page_hero_mode", register=False)
+                )
+                hero_test_page.connect(self.page_hero_mode, self.I_BCMJ, key="page_hero_test->page_hero_mode")
             case Layer.CHUANCHENG:
-                self.page_hero_mode = pages.Page(self.I_CHECK_HERO2_EXP)
-                pages.page_hero_test.link(button=self.I_ENTER_CCSL, destination=self.page_hero_mode)
+                self.page_hero_mode = self.navigator.add_page(
+                    pages.Page(self.I_CHECK_HERO2_EXP, key="page_hero_mode", name="page_hero_mode", register=False)
+                )
+                hero_test_page.connect(self.page_hero_mode, self.I_ENTER_CCSL, key="page_hero_test->page_hero_mode")
             case Layer.MENGXU:
-                self.page_hero_mode = pages.Page(self.I_CHECK_HERO2_SKILL)
-                pages.page_hero_test.link(button=self.I_ENTER_MXMJ, destination=self.page_hero_mode)
+                self.page_hero_mode = self.navigator.add_page(
+                    pages.Page(self.I_CHECK_HERO2_SKILL, key="page_hero_mode", name="page_hero_mode", register=False)
+                )
+                hero_test_page.connect(self.page_hero_mode, self.I_ENTER_MXMJ, key="page_hero_test->page_hero_mode")
             case _:
                 raise ValueError(f'Unknown Layer {Layer}')
-        self.page_hero_mode.link(button=self.I_BACK_YOLLOW, destination=pages.page_hero_test)
+        self.page_hero_mode.connect(hero_test_page, self.I_BACK_YOLLOW, key="page_hero_mode->page_hero_test")
 
 
 if __name__ == "__main__":

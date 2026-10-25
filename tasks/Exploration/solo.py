@@ -1,4 +1,5 @@
 from time import sleep
+from copy import deepcopy
 from cached_property import cached_property
 
 from module.logger import logger
@@ -14,7 +15,11 @@ class SoloExploration(BaseExploration):
     INVITE_FLAG_ON = (227, 193, 153)
     INVITE_TIMEOUT = 20
     FRIEND_LEAVE_TIMEOUT = 3
+    SEARCH_SWIPE_INTERVAL = 1.5
+    MAX_SWIPE_COUNT = 2
     explore_init = False
+    swipe_cnt: int = 0
+    search_fail_timer: Timer = None
 
     @cached_property
     def _invite_config(self) -> InviteConfig:
@@ -56,9 +61,65 @@ class SoloExploration(BaseExploration):
         self.quit_explore()
         return True
 
+    def _reset_search_state(self, reset_swipe_cnt: bool = False) -> None:
+        if reset_swipe_cnt:
+            if self.swipe_cnt > 0:
+                logger.info(f"Exploration search reset (cleared count: {self.swipe_cnt})")
+            self.swipe_cnt = 0
+        self.search_fail_timer.clear()
+
+    def _search_next_area(self) -> None:
+        if not self.search_fail_timer.started():
+            self.search_fail_timer.start()
+            return
+        if not self.search_fail_timer.reached():
+            return
+
+        # 若选择特定 UP（如经验怪），达到最大滑屏次数（默认2次，覆盖前3屏高密度区）超时仍无目标直接早退重开；
+        # 若选择“全部”，则不限次数滑动直到最右边界，以保证清完全图小怪并击杀 BOSS。
+        is_specific_up = self._config.exploration_config.up_type != UpType.ALL
+        if is_specific_up and self.swipe_cnt >= self.MAX_SWIPE_COUNT:
+            logger.info(f"Max search swipe count ({self.MAX_SWIPE_COUNT}) reached for specific UP target. Quitting exploration early.")
+            self._reset_search_state(reset_swipe_cnt=True)
+            self.quit_explore()
+            return
+
+        before_image = self.device.image
+        self.swipe(self.S_SWIPE_BACKGROUND_RIGHT)
+        sleep(0.3)
+        self.screenshot()
+        unchanged = self.is_swipe_unchanged(before_image, self.device.image)
+        if unchanged:
+            sleep(0.3)
+            self.screenshot()
+            unchanged = self.is_swipe_unchanged(before_image, self.device.image)
+
+        if (self.get_current_scene() != Scene.MAIN
+                or self.appear(self.I_UI_CONFIRM)
+                or self.appear(self.I_UI_CONFIRM_SAMLL)):
+            self.search_fail_timer.reset()
+            return
+
+        # 若未产生位移，原地做快速二次复核保底
+        if unchanged:
+            sleep(0.3)
+            before_retry = self.device.image
+            self.swipe(self.S_SWIPE_BACKGROUND_RIGHT)
+            sleep(0.3)
+            self.screenshot()
+            if self.is_swipe_unchanged(before_retry, self.device.image):
+                logger.info("Reached rightmost boundary (confirmed twice). Quitting exploration.")
+                self._reset_search_state(reset_swipe_cnt=True)
+                self.quit_explore()
+                return
+
+        self.device.click_record_remove(self.S_SWIPE_BACKGROUND_RIGHT.name)
+        self.swipe_cnt += 1
+        self.search_fail_timer.reset()
+
     def run_solo(self):
         logger.hr('solo')
-        search_fail_timer = Timer(3.2)  # 这里设置的时间一定要大于S_SWIPE_BACKGROUND_RIGHT滑动的时间
+        self.search_fail_timer = Timer(self.SEARCH_SWIPE_INTERVAL)
 
         while 1:
             self.screenshot()
@@ -66,6 +127,9 @@ class SoloExploration(BaseExploration):
             logger.info(f'[run_solo] Current scene: {scene.name}')  # TODO 2026.06.22 之后删掉这个刷屏的
             #
             if scene == Scene.WORLD:
+                self.explore_init = False
+                self._reset_search_state(reset_swipe_cnt=True)
+                self.device.click_record_remove(self.S_SWIPE_BACKGROUND_RIGHT.name)
                 # 打开右边箭头
                 if not self.wait_world_stable():
                     continue
@@ -75,6 +139,9 @@ class SoloExploration(BaseExploration):
                 continue
             #
             elif scene == Scene.ENTRANCE:
+                self.explore_init = False
+                self._reset_search_state(reset_swipe_cnt=True)
+                self.device.click_record_remove(self.S_SWIPE_BACKGROUND_RIGHT.name)
                 if self.check_exit():
                     break
                 self.ui_click(self.I_E_EXPLORATION_CLICK, stop=self.I_E_SETTINGS_BUTTON)
@@ -86,37 +153,38 @@ class SoloExploration(BaseExploration):
                         self.enter_settings_and_do_operations()
                     self.ui_click(self.I_E_AUTO_ROTATE_OFF, stop=self.I_E_AUTO_ROTATE_ON, timeout=5)
                     self.explore_init = True
+                    self._reset_search_state(reset_swipe_cnt=True)
                     continue
                 if self._handle_treasure_box():
+                    self._reset_search_state()
                     continue
                 if (self.appear_then_click(self.I_UI_CONFIRM, interval=1)
                         or self.appear_then_click(self.I_UI_CONFIRM_SAMLL, interval=1)):
+                    self._reset_search_state()
                     continue
                 # 小纸人
                 if self.appear(self.I_BATTLE_REWARD):
                     if self.ui_get_reward(self.I_BATTLE_REWARD):
+                        self._reset_search_state()
                         continue
                 # boss
                 if self.appear(self.I_BOSS_BATTLE_BUTTON):
+                    self._reset_search_state()
+                    self.device.click_record_remove(self.S_SWIPE_BACKGROUND_RIGHT.name)
                     if self.fire(self.I_BOSS_BATTLE_BUTTON):
                         logger.info(f'Boss battle, minions cnt {self.minions_cnt}')
                     continue
                 # 小怪
                 fight_button = self.search_up_fight()
                 if fight_button is not None:
+                    self._reset_search_state()
+                    self.device.click_record_remove(self.S_SWIPE_BACKGROUND_RIGHT.name)
                     if self.fire(fight_button):
                         logger.info(f'Fight, minions cnt {self.minions_cnt}')
                     continue
                 # 向后拉,寻找怪
-                if search_fail_timer.reached():
-                    search_fail_timer.reset()
-                    if self._match_end.stable(self.device.image, refresh_after_stable=True):
-                        self.quit_explore()
-                        continue
-                    self.swipe(self.S_SWIPE_BACKGROUND_RIGHT, interval=3)
-                    continue
-                if not search_fail_timer.started():
-                    search_fail_timer.start()
+                self._search_next_area()
+                continue
             #
             elif scene == Scene.BATTLE_PREPARE or scene == Scene.BATTLE_FIGHTING:
                 self.check_take_over_battle(is_screenshot=False, config=self._config.general_battle_config)
@@ -125,15 +193,17 @@ class SoloExploration(BaseExploration):
 
     def run_leader(self):
         logger.hr('leader')
-        search_fail_timer = Timer(3.2)  # 这里设置的时间一定要大于S_SWIPE_BACKGROUND_RIGHT滑动的时间
+        self.search_fail_timer = Timer(self.SEARCH_SWIPE_INTERVAL)
         friend_leave_timer = Timer(self.FRIEND_LEAVE_TIMEOUT)
 
         while 1:
             self.screenshot()
             scene = self.get_current_scene()
-            logger.info(f'[run_leader] Current scene: {scene.name}')  # TODO 2026.06.22 之后删掉这个刷屏的
             # 探索大世界
             if scene == Scene.WORLD:
+                self.explore_init = False
+                self._reset_search_state(reset_swipe_cnt=True)
+                self.device.click_record_remove(self.S_SWIPE_BACKGROUND_RIGHT.name)
                 # 打开右边箭头
                 if not self.wait_world_stable():
                     continue
@@ -152,6 +222,9 @@ class SoloExploration(BaseExploration):
 
             # 邀请好友, 非常有可能是后面邀请好友，然后直接跳到组队了
             elif scene == Scene.ENTRANCE:
+                self.explore_init = False
+                self._reset_search_state(reset_swipe_cnt=True)
+                self.device.click_record_remove(self.S_SWIPE_BACKGROUND_RIGHT.name)
                 while 1:
                     self.screenshot()
                     if self.is_in_room():
@@ -167,6 +240,8 @@ class SoloExploration(BaseExploration):
                         continue
             #
             elif scene == Scene.TEAM:
+                self.explore_init = False
+                self._reset_search_state(reset_swipe_cnt=True)
                 self.wait_until_stable(self.I_ADD_2, timer=Timer(0.8, 1))
                 if self.appear(self.I_FIRE, threshold=0.8) and not self.appear(self.I_ADD_2):
                     self.ui_click_until_disappear(self.I_FIRE, interval=1)
@@ -193,37 +268,42 @@ class SoloExploration(BaseExploration):
                         self.enter_settings_and_do_operations()
                     self.ui_click(self.I_E_AUTO_ROTATE_OFF, stop=self.I_E_AUTO_ROTATE_ON)
                     self.explore_init = True
+                    self._reset_search_state(reset_swipe_cnt=True)
                     continue
                 if self._handle_treasure_box():
+                    self._reset_search_state()
+                    continue
+                if (self.appear_then_click(self.I_UI_CONFIRM, interval=1)
+                        or self.appear_then_click(self.I_UI_CONFIRM_SAMLL, interval=1)):
+                    self._reset_search_state()
                     continue
                 # 小纸人
                 if self.appear(self.I_BATTLE_REWARD):
                     if self.ui_get_reward(self.I_BATTLE_REWARD):
+                        self._reset_search_state()
                         continue
                 # 中途有人跑路
                 if self._check_mate_leave(friend_leave_timer):
+                    self._reset_search_state()
                     continue
                 # boss
                 if self.appear(self.I_BOSS_BATTLE_BUTTON):
+                    self._reset_search_state()
+                    self.device.click_record_remove(self.S_SWIPE_BACKGROUND_RIGHT.name)
                     if self.fire(self.I_BOSS_BATTLE_BUTTON):
                         logger.info(f'Boss battle, minions cnt {self.minions_cnt}')
                     continue
                 # 小怪
                 fight_button = self.search_up_fight()
                 if fight_button is not None:
+                    self._reset_search_state()
+                    self.device.click_record_remove(self.S_SWIPE_BACKGROUND_RIGHT.name)
                     if self.fire(fight_button):
                         logger.info(f'Fight, minions cnt {self.minions_cnt}')
                     continue
                 # 向后拉,寻找怪
-                if search_fail_timer.reached():
-                    search_fail_timer.reset()
-                    if self._match_end.stable(self.device.image, refresh_after_stable=True):
-                        self.quit_explore()
-                        continue
-                    self.swipe(self.S_SWIPE_BACKGROUND_RIGHT, interval=3)
-                    continue
-                if not search_fail_timer.started():
-                    search_fail_timer.start()
+                self._search_next_area()
+                continue
             #
             elif scene == Scene.BATTLE_PREPARE or scene == Scene.BATTLE_FIGHTING:
                 self.check_take_over_battle(is_screenshot=False, config=self._config.general_battle_config)
@@ -334,6 +414,15 @@ class SoloExploration(BaseExploration):
                 friend_class[i] = '跨区'
         logger.info(f'Friend class: {friend_class}')
 
+        # 76e2a874(#1509) 把 I_FLAG_2_ON 的 roi 改到了 tab 标签栏上方的空白区
+        # (472,82,32,11) / (454,74,56,26)，导致第 2 个 tab 的选中态永远匹配不上，
+        # while index == 1 死循环点满 10 次触发 GameTooManyClickError。
+        # 这里深拷贝一份并还原成 439be142(#1443) 的 roi，不改动原资源。
+        # https://github.com/runhey/OnmyojiAutoScript/issues/1844
+        flag_2_on = deepcopy(self.I_FLAG_2_ON)
+        flag_2_on.roi_front = [471, 128, 54, 18]
+        flag_2_on.roi_back = (471, 128, 54, 18)
+
         is_select: bool = False  # 是否选中了好友
         if find_mode == FindMode.RECENT_FRIEND:
             logger.info('Find recent friend')
@@ -344,7 +433,7 @@ class SoloExploration(BaseExploration):
             recent_index = friend_class.index('最近')
             while recent_index == 1:
                 self.screenshot()
-                if self.appear(self.I_FLAG_2_ON):
+                if self.appear(flag_2_on):
                     break
                 if self.appear_then_click(self.I_FLAG_2_OFF, interval=1):
                     continue
@@ -375,7 +464,7 @@ class SoloExploration(BaseExploration):
                     continue
             while index == 1:
                 self.screenshot()
-                if self.I_FLAG_2_ON.match_mean_color(self.device.image, self.INVITE_FLAG_ON, 10):
+                if flag_2_on.match_mean_color(self.device.image, self.INVITE_FLAG_ON, 10):
                     break
                 if self.click(self.I_FLAG_2_OFF, interval=1):
                     continue

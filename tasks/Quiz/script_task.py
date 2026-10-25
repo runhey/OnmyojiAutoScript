@@ -47,8 +47,7 @@ class ScriptTask(GameUi, QuizAssets, ActivityShikigamiAssets, Debugger):
         return self.config.model.quiz.quiz_config
 
     def run(self):
-        self.ui_get_current_page()
-        self.ui_goto(page_main)
+        self.goto_page(page_main)
         _config = self.config.model.quiz.quiz_config
         self.enter()
 

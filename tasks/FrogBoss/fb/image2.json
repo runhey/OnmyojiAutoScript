@@ -2,8 +2,8 @@
   {
     "itemName": "frog_boss_enter",
     "imageName": "fb_frog_boss_enter.png",
-    "roiFront": "1191,391,36,38",
-    "roiBack": "1174,135,78,320",
+    "roiFront": "1188,303,36,38",
+    "roiBack": "1169,203,78,320",
     "method": "Template matching",
     "threshold": 0.7,
     "description": "description"
@@ -11,10 +11,82 @@
   {
     "itemName": "frog_boss_rest",
     "imageName": "fb_frog_boss_rest.png",
-    "roiFront": "510,274,169,64",
-    "roiBack": "492,260,220,113",
+    "roiFront": "627,284,169,64",
+    "roiBack": "601,259,220,113",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "休息中"
+  },
+  {
+    "itemName": "frog_check",
+    "imageName": "fb_frog_check.png",
+    "roiFront": "664,31,148,65",
+    "roiBack": "551,4,371,145",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "竞猜主页面"
+  },
+  {
+    "itemName": "frog_log",
+    "imageName": "fb_frog_log.png",
+    "roiFront": "1171,624,43,41",
+    "roiBack": "1157,601,83,89",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "进入记录页面"
+  },
+  {
+    "itemName": "frog_log_check",
+    "imageName": "fb_frog_log_check.png",
+    "roiFront": "549,31,192,52",
+    "roiBack": "469,0,371,145",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": ""
+  },
+  {
+    "itemName": "frog_last_win",
+    "imageName": "fb_frog_last_win.png",
+    "roiFront": "178,210,61,49",
+    "roiBack": "148,147,114,123",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "上一局胜"
+  },
+  {
+    "itemName": "frog_last_lose",
+    "imageName": "fb_frog_last_lose.png",
+    "roiFront": "178,210,61,49",
+    "roiBack": "148,147,114,123",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "上一局败"
+  },
+  {
+    "itemName": "frog_log_close",
+    "imageName": "fb_frog_log_close.png",
+    "roiFront": "1188,99,43,41",
+    "roiBack": "1166,73,83,89",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "关闭记录"
+  },
+  {
+    "itemName": "frog_last_select_red",
+    "imageName": "fb_frog_last_select_red.png",
+    "roiFront": "342,149,36,38",
+    "roiBack": "327,120,70,77",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "上一局选择红色"
+  },
+  {
+    "itemName": "frog_last_select_blue",
+    "imageName": "fb_frog_last_select_blue.png",
+    "roiFront": "342,149,36,38",
+    "roiBack": "327,120,70,77",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "上一句选择蓝色"
   }
 ]

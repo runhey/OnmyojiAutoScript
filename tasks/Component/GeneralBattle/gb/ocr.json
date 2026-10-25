@@ -34,5 +34,14 @@
     "method": "Default",
     "keyword": "已标记",
     "description": "已标记"
+  },
+  {
+    "itemName": "green_mark_area",
+    "roiFront": "84,256,1116,308",
+    "roiBack": "84,256,1116,308",
+    "mode": "Full",
+    "method": "Default",
+    "keyword": "",
+    "description": "绿标区域"
   }
 ]

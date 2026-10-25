@@ -22,8 +22,7 @@ class ScriptTask(FriendshipPoints, MysteryShopAssets, GeneralInvite):
         if day_of_week != 2 and day_of_week != 5:
             logger.warning('Today is not MysteryShop day')
             self.next_time(False)
-        self.ui_get_current_page()
-        self.ui_goto(page_mall)
+        self.goto_page(page_mall)
         self.ui_click(self.I_ME_ENTER, self.I_MS_SHARE)
         logger.info('Enter MysteryShop')
         con = self.config.mystery_shop
@@ -86,7 +85,8 @@ class ScriptTask(FriendshipPoints, MysteryShopAssets, GeneralInvite):
         """
         if shop_config.mystery_amulet:
             while self.buy_mall_one(buy_button=self.I_MS_BLUE, buy_check=self.I_MS_CHECK_BLUE,
-                                    money_ocr=self.O_MALL_RESOURCE_5, buy_money=85):
+                                    money_ocr=self.O_MALL_RESOURCE_5, buy_money=85, more_window=True,
+                                    max_price=85):
                 pass
         if shop_config.black_daruma_scrap:
             while self.buy_mall_one(buy_button=self.I_MS_BLACK, buy_check=self.I_MS_CHECK_BLACK,

@@ -126,15 +126,6 @@
     "description": "description"
   },
   {
-    "itemName": "sou_switch_sure_12",
-    "imageName": "sk12_sou_switch_sure_12.png",
-    "roiFront": "702,401,116,55",
-    "roiBack": "690,399,148,64",
-    "method": "Template matching",
-    "threshold": 0.8,
-    "description": "description"
-  },
-  {
     "itemName": "soul_preset_12",
     "imageName": "sk12_soul_preset_12.png",
     "roiFront": "342,85,74,31",

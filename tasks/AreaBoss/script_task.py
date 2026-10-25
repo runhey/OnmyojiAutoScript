@@ -7,6 +7,8 @@ import re
 from module.atom.click import RuleClick
 from tasks.base_task import BaseTask
 from tasks.Component.GeneralBattle.general_battle import GeneralBattle
+from tasks.Component.GeneralBattle.battle import Battle
+from tasks.Component.GeneralBattle.battle_wait import battle_wait_strategy, battle_wait_options
 from tasks.GameUi.game_ui import GameUi
 from tasks.GameUi.page import page_area_boss, page_shikigami_records
 from tasks.Component.SwitchSoul.switch_soul import SwitchSoul
@@ -18,7 +20,7 @@ from module.atom.image import RuleImage
 from typing import List
 
 
-class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AreaBossAssets):
+class ScriptTask(Battle, GeneralBattle, GameUi, SwitchSoul, AreaBossAssets):
 
     def _get_dynamic_boss_count(self) -> int:
         """
@@ -45,18 +47,15 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AreaBossAssets):
         con = self.config.area_boss.boss
 
         if self.config.area_boss.switch_soul.enable:
-            self.ui_get_current_page()
-            self.ui_goto(page_shikigami_records)
+            self.goto_page(page_shikigami_records)
             self.run_switch_soul(self.config.area_boss.switch_soul.switch_group_team)
 
         if self.config.area_boss.switch_soul.enable_switch_by_name:
-            self.ui_get_current_page()
-            self.ui_goto(page_shikigami_records)
+            self.goto_page(page_shikigami_records)
             self.run_switch_soul_by_name(self.config.area_boss.switch_soul.group_name,
                                          self.config.area_boss.switch_soul.team_name)
 
-        self.ui_get_current_page()
-        self.ui_goto(page_area_boss)
+        self.goto_page(page_area_boss)
 
         # 已挑战鬼王数量
         boss_fought = 0
@@ -159,10 +158,10 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AreaBossAssets):
             return False
 
         # 如果已经打过该BOSS,直接跳过不打了
-        if self.is_group_ranked():
-            logger.warning("There is no boss could be challenged")
-            self.ui_click_until_disappear(self.I_AB_CLOSE_RED, interval=3)
-            return True
+        # if self.is_group_ranked():
+        #     logger.warning("There is no boss could be challenged")
+        #     self.ui_click_until_disappear(self.I_AB_CLOSE_RED, interval=3)
+        #     return True
 
         # 根据 reward_floor 决定模式
         if reward_floor in (AreaBossFloor.ONE, AreaBossFloor.TEN):
@@ -193,8 +192,12 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AreaBossAssets):
                 continue
             if not self.appear(self.I_AB_CLOSE_RED):  # 如果这个红色的关闭不见了才可以进行继续
                 break
-
-        return self.run_general_battle(self.config.area_boss.general_battle)
+        strategies, options = self.loadout_from_config(self.config.area_boss.general_battle)
+        options['completion'].check_imgs = [self.I_FIRE, self.I_FILTER]
+        self.loadout_show((strategies, options))  # 使用的是默认的策略： strategies
+        with battle_wait_options(**options):
+            win = self.battle_wait()
+            return win
 
     def setup_ultra(self, floor: AreaBossFloor = AreaBossFloor.ONE) -> bool:
         # 确定进入鬼王界面
@@ -493,6 +496,8 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AreaBossAssets):
             return 1
         else:
             return 0  # 如果交集的字符少于2个，可以根据需要返回其他值
+
+
 if __name__ == '__main__':
     from module.config.config import Config
     from module.device.device import Device

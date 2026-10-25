@@ -1,4 +1,5 @@
 import random
+from functools import wraps
 
 from module.logger import logger
 from module.atom.image import RuleImage
@@ -10,6 +11,16 @@ from tasks.Component.GeneralBattle.battle_wait import (
     runtime,
 )
 from tasks.Component.GeneralBattle.config_general_battle import GeneralBattleConfig, GreenMarkType
+
+
+
+def log_battle_start(func):
+    @wraps(func)
+    def wrapper(owner, *args, **kwargs):
+        logger.hr("General battle start", 2)
+        return func(owner, *args, **kwargs)
+
+    return wrapper
 
 
 class Battle(BattleWait):
@@ -47,6 +58,7 @@ class Battle(BattleWait):
                         continue
         return True
 
+    @log_battle_start
     @battle_wait_strategy()
     def battle_wait(self, *args, **kwargs):
         return self.battle_wait_with_strategy(*args, **kwargs)
@@ -90,7 +102,12 @@ class Battle(BattleWait):
                 preset_enable=True, preset_group=conf.preset_group, preset_team=conf.preset_team,
             )
         if conf.green_enable:
-            options['green'] = OptionGreenDefault(green_enable=True, green_mark=conf.green_mark)
+            options['green'] = OptionGreenDefault(
+                green_enable=True,
+                green_mark=conf.green_mark,
+                green_mark_type=conf.green_mark_type,
+                green_mark_name=conf.green_mark_name,
+            )
         if conf.random_click_swipt_enable:
             strategies['randomclick'] = 'default'
             options['randomclick'] = OptionRandomclickDefault()

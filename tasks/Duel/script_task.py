@@ -42,26 +42,26 @@ class ScriptTask(GameUi, GeneralBattle, SwitchSoul, DuelAssets, SwitchOnmyoji):
             self.screenshot()
             self.check_and_get_reward()
             if not self.duel_main():
-                self.ui_goto_page(page_duel)
+                self.goto_page(page_duel)
                 continue
             if not self.can_start_duel():
                 break
             self.start_duel()
         logger.info('Duel battle end')
         self.set_next_run(task='Duel', success=True, finish=True)
-        self.ui_goto_page(page_main)
+        self.goto_page(page_main)
         # 调起花合战
         self.set_next_run(task='TalismanPass', target=datetime.now())
         raise TaskEnd('Duel')
 
     def prepare_duel(self):
         """斗技准备工作(切换御魂or阴阳师...), 最后回到斗技主界面"""
-        self.ui_goto_page(page_main)
+        self.goto_page(page_main)
         self.switch_soul()
         if self.conf.duel_config.switch_enabled:
-            self.ui_goto_page(page_onmyodo)
+            self.goto_page(page_onmyodo)
             self.switch_onmyoji(self.conf.duel_config.switch_onmyoji)
-        self.ui_goto_page(page_duel)
+        self.goto_page(page_duel)
         self.switch_all_soul()
         self.current_score = self.conf.duel_celeb_config.initial_score
 
@@ -105,7 +105,7 @@ class ScriptTask(GameUi, GeneralBattle, SwitchSoul, DuelAssets, SwitchOnmyoji):
         logger.info(f'battle result: {battle_ret}')
         logger.info(f'battle count:{self.current_count} | win:{self.battle_win_count} failure:{self.battle_lose_count}')
         logger.info(f'battle time: {task_run_time_seconds} / {self.limit_time}')
-        self.ui_goto_page(page_duel)
+        self.goto_page(page_duel)
 
     def enter_battle(self):
         """点击开始战斗(一直到出现战斗准备界面)"""
@@ -171,7 +171,7 @@ class ScriptTask(GameUi, GeneralBattle, SwitchSoul, DuelAssets, SwitchOnmyoji):
                 ret_timer.reset()
                 continue
             if ret_timer.started() and ret_timer.reached():  # 兜底逻辑, 已经结算了但是还没有到斗技主界面
-                self.ui_goto_page(page_duel)
+                self.goto_page(page_duel)
                 break
             if self.is_battle_win():
                 ret = True
@@ -188,7 +188,8 @@ class ScriptTask(GameUi, GeneralBattle, SwitchSoul, DuelAssets, SwitchOnmyoji):
                 self.duel_exit_battle()
                 continue
             if ret is None and not battle_operated:  # 进行战斗前的操作
-                self.ui_click(self.O_D_HAND, self.O_D_AUTO, interval=0.8)
+                # https://github.com/runhey/OnmyojiAutoScript/pull/1934
+                self.ui_click(self.O_D_HAND, self.O_D_AUTO, interval=6, timeout=45)
                 self.green_mark(self.conf.duel_config.green_enable, self.conf.duel_config.green_mark)
                 battle_operated = True
                 self.reset_device('BATTLE_STATUS_S')
@@ -204,7 +205,7 @@ class ScriptTask(GameUi, GeneralBattle, SwitchSoul, DuelAssets, SwitchOnmyoji):
             self.screenshot()
             if self.appear(self.I_D_FAIL) or self.appear(self.I_FALSE):
                 return
-            if self.appear_then_click(self.I_EXIT_ENSURE):
+            if self.appear_then_click(self.I_UI_CONFIRM):
                 continue
             # 选式神界面退出或战斗内退出
             if self.appear_then_click(self.I_DUEL_EXIT, interval=1) or self.appear_then_click(self.I_EXIT, interval=1):
@@ -252,12 +253,10 @@ class ScriptTask(GameUi, GeneralBattle, SwitchSoul, DuelAssets, SwitchOnmyoji):
     def switch_soul(self):
         """从式神录界面切换御魂"""
         if self.conf.switch_soul.enable:
-            self.ui_get_current_page()
-            self.ui_goto(page_shikigami_records)
+            self.goto_page(page_shikigami_records)
             self.run_switch_soul(self.conf.switch_soul.switch_group_team)
         if self.conf.switch_soul.enable_switch_by_name:
-            self.ui_get_current_page()
-            self.ui_goto(page_shikigami_records)
+            self.goto_page(page_shikigami_records)
             self.run_switch_soul_by_name(self.conf.switch_soul.group_name, self.conf.switch_soul.team_name)
 
     def duel_main(self, screenshot=False) -> bool:
@@ -302,7 +301,8 @@ class ScriptTask(GameUi, GeneralBattle, SwitchSoul, DuelAssets, SwitchOnmyoji):
             self.appear(self.I_D_CHECK_BAN)
 
     def is_battle_win(self) -> bool:
-        return self.appear(self.I_WIN) or self.appear(self.I_D_VICTORY)
+        return self.appear(self.I_WIN) or self.appear(self.I_D_VICTORY) or \
+            self.appear(self.I_D_VICTORY_SHARE)
 
     def is_battle_lose(self) -> bool:
         return self.appear(self.I_FALSE) or self.appear(self.I_D_FAIL)

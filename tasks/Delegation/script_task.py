@@ -14,8 +14,7 @@ from tasks.Delegation.assets import DelegationAssets
 class ScriptTask(GameUi, DelegationAssets):
 
     def run(self):
-        self.ui_get_current_page()
-        self.ui_goto(page_delegation)
+        self.goto_page(page_delegation)
         self.check_reward()
         con: DelegationConfig = self.config.delegation.delegation_config
         if con.miyoshino_painting:
@@ -54,22 +53,44 @@ class ScriptTask(GameUi, DelegationAssets):
         if not self.ocr_appear(self.O_D_NAME):
             logger.warning(f'Delegation: {name} not found')
             return False
+        enter_timer = Timer(15).start()
         while 1:
             self.screenshot()
             if self.appear(self.I_D_START):
                 break
+            if enter_timer.reached():
+                logger.warning(f'Delegation: {name} enter timeout')
+                return False
+
+            # 检测到弹出的勾玉确认框，优先点击取消保护勾玉
+            if self.appear_then_click(self.I_UI_CANCEL, interval=1):
+                continue
+
             # 如果出现’召回‘ ’返回‘ 说明这个是现在委派中
             # 需要退出
             if self.appear(self.I_D_BACK):
                 logger.warning(f'Delegation: {name} is in delegation')
-                self.ui_click_until_disappear(self.I_D_BACK)
-                self.wait_until_appear(self.I_REWARDS_MIN)
+                back_timer = Timer(6).start()
+                while 1:
+                    self.screenshot()
+                    if not self.appear(self.I_D_BACK):
+                        break
+                    if back_timer.reached():
+                        logger.warning('Exit delegation detail timeout')
+                        break
+                    # 若此时被取消弹窗遮挡返回，优先点取消
+                    if self.appear_then_click(self.I_UI_CANCEL, interval=1):
+                        continue
+                    if self.appear_then_click(self.I_D_BACK, interval=1.2):
+                        continue
+                self.wait_until_appear(self.I_REWARDS_MIN, wait_time=3)
                 return False
             if self.appear_then_click(self.I_D_SKIP, interval=0.8):
                 continue
             if self.appear_then_click(self.I_D_CONFIRM, interval=0.8):
                 continue
-            if self.ocr_appear_click(self.O_D_NAME, interval=1):
+            # 点击委派任务名：防抖由 1s 提升至 3s，杜绝跨页面过渡时误触右上角"完成(30勾玉)"
+            if self.ocr_appear_click(self.O_D_NAME, interval=3):
                 continue
         # 进入委派  fefe e  fe
         logger.info(f'Enter Delegation: {name}')
@@ -79,9 +100,13 @@ class ScriptTask(GameUi, DelegationAssets):
         ui_click(self.C_D_4, self.I_D_SELECT_4)
         # 委派开始
         logger.info(f'Delegation: {name} start')
+        start_timer = Timer(10).start()
         while 1:
             self.screenshot()
             if not self.appear(self.I_D_START):
+                break
+            if start_timer.reached():
+                logger.warning(f'Delegation: {name} start timeout')
                 break
             if self.click(self.C_D_5, interval=0.8):
                 continue
@@ -119,7 +144,19 @@ class ScriptTask(GameUi, DelegationAssets):
                 continue
             if check_timer.reached():
                 break
-            if self.ocr_appear_click(self.O_D_DONE, interval=1):
+            # O_D_DONE 命中的是卡片上“完成”缎带，可点的领取位置在其正下方同样大小的一块
+            if self.ocr_appear(self.O_D_DONE, interval=1):
+                # 同一帧里可能有多张卡都显示“完成”，此时 Full 模式会把多个命中框合并成一个，
+                # 合并框正下方不一定是可点的领取位置；这里取单个命中框，点它正下方同样大小的一块
+                results = self.O_D_DONE.detect_and_ocr(self.device.image, logDisplay=False)
+                index_list = self.O_D_DONE.filter(results, self.O_D_DONE.keyword) if results else None
+                if index_list:
+                    box = results[index_list[0]].box
+                    x = box[0, 0] + self.O_D_DONE.roi[0]
+                    y = box[0, 1] + self.O_D_DONE.roi[1]
+                    w = box[1, 0] - box[0, 0]
+                    h = box[2, 1] - box[0, 1]
+                    self.device.click(x=x + w / 2, y=y + h + h / 2, control_name=self.O_D_DONE.name)
                 check_timer.reset()
                 continue
 

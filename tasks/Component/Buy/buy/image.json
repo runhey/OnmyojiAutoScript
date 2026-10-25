@@ -43,5 +43,14 @@
     "method": "Template matching",
     "threshold": 0.8,
     "description": "购买成功"
+  },
+  {
+    "itemName": "buy_jade",
+    "imageName": "buy_buy_jade.png",
+    "roiFront": "604,537,42,52",
+    "roiBack": "540,480,200,120",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "确认按钮上的勾玉"
   }
 ]

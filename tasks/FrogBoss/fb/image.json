@@ -2,8 +2,8 @@
   {
     "itemName": "bet_left",
     "imageName": "fb_bet_left.png",
-    "roiFront": "95,308,145,100",
-    "roiBack": "58,248,245,195",
+    "roiFront": "288,301,120,102",
+    "roiBack": "222,251,245,195",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "左边竞猜"
@@ -11,8 +11,8 @@
   {
     "itemName": "bet_right",
     "imageName": "fb_bet_right.png",
-    "roiFront": "1038,303,146,100",
-    "roiBack": "1012,268,187,208",
+    "roiFront": "1093,307,118,94",
+    "roiBack": "1048,248,187,208",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "右边竞猜"
@@ -20,8 +20,8 @@
   {
     "itemName": "bet_success_box",
     "imageName": "fb_bet_success_box.png",
-    "roiFront": "593,419,87,50",
-    "roiBack": "564,378,140,133",
+    "roiFront": "713,399,80,45",
+    "roiBack": "661,331,193,182",
     "method": "Template matching",
     "threshold": 0.75,
     "description": "description"
@@ -29,8 +29,8 @@
   {
     "itemName": "success_left",
     "imageName": "fb_success_left.png",
-    "roiFront": "123,316,100,100",
-    "roiBack": "91,254,202,221",
+    "roiFront": "292,306,100,100",
+    "roiBack": "238,243,202,221",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "左边赢了"
@@ -38,8 +38,8 @@
   {
     "itemName": "failure_right",
     "imageName": "fb_failure_right.png",
-    "roiFront": "1063,291,100,100",
-    "roiBack": "993,242,224,199",
+    "roiFront": "1097,303,100,100",
+    "roiBack": "1029,256,224,199",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "右边输了"
@@ -47,17 +47,17 @@
   {
     "itemName": "next_competition",
     "imageName": "fb_next_competition.png",
-    "roiFront": "673,510,42,36",
-    "roiBack": "658,488,91,98",
+    "roiFront": "783,492,28,22",
+    "roiBack": "692,437,157,147",
     "method": "Template matching",
     "threshold": 0.8,
-    "description": "description"
+    "description": "开始下一局"
   },
   {
     "itemName": "gold_30",
     "imageName": "fb_gold_30.png",
-    "roiFront": "858,494,78,76",
-    "roiBack": "809,427,147,187",
+    "roiFront": "862,499,78,76",
+    "roiBack": "831,441,147,187",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "30万金币"
@@ -66,7 +66,7 @@
     "itemName": "bet_sure",
     "imageName": "fb_bet_sure.png",
     "roiFront": "1025,402,100,100",
-    "roiBack": "1000,297,200,226",
+    "roiBack": "972,340,200,226",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "确认竞猜"
@@ -75,16 +75,16 @@
     "itemName": "gold_30_check",
     "imageName": "fb_gold_30_check.png",
     "roiFront": "513,196,58,53",
-    "roiBack": "402,141,459,489",
+    "roiBack": "495,195,104,111",
     "method": "Template matching",
     "threshold": 0.8,
-    "description": "description"
+    "description": "获胜奖励说明弹窗中的竞猜金币"
   },
   {
     "itemName": "betted",
     "imageName": "fb_betted.png",
-    "roiFront": "93,352,125,54",
-    "roiBack": "49,283,1192,161",
+    "roiFront": "1093,313,125,54",
+    "roiBack": "207,240,1058,312",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"
@@ -92,8 +92,8 @@
   {
     "itemName": "success_right",
     "imageName": "fb_success_right.png",
-    "roiFront": "1048,341,122,116",
-    "roiBack": "999,243,201,260",
+    "roiFront": "1098,289,122,116",
+    "roiBack": "1040,250,201,260",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"
@@ -101,8 +101,8 @@
   {
     "itemName": "failure_left",
     "imageName": "fb_failure_left.png",
-    "roiFront": "116,307,100,100",
-    "roiBack": "76,256,193,219",
+    "roiFront": "296,303,100,100",
+    "roiBack": "243,245,212,259",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"
@@ -110,8 +110,8 @@
   {
     "itemName": "bet_failure",
     "imageName": "fb_bet_failure.png",
-    "roiFront": "496,252,269,72",
-    "roiBack": "439,220,400,152",
+    "roiFront": "625,277,269,72",
+    "roiBack": "496,222,447,211",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"
@@ -119,8 +119,8 @@
   {
     "itemName": "bet_success",
     "imageName": "fb_bet_success.png",
-    "roiFront": "512,264,260,73",
-    "roiBack": "433,214,418,151",
+    "roiFront": "625,278,260,73",
+    "roiBack": "482,243,521,225",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"

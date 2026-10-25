@@ -41,6 +41,7 @@ from tasks.Sougenbi.config import Sougenbi
 from tasks.FallenSun.config import FallenSun
 from tasks.EternitySea.config import EternitySea
 from tasks.SixRealms.config import SixRealms
+from tasks.OtherWorldTwilight.config import OtherWorldTwilight
 from tasks.RealmRaid.config import RealmRaid
 from tasks.CollectiveMissions.config import CollectiveMissions
 from tasks.Hunt.config import Hunt
@@ -113,6 +114,7 @@ class ConfigModel(ConfigBase):
     fallen_sun: FallenSun = Field(default_factory=FallenSun)
     eternity_sea: EternitySea = Field(default_factory=EternitySea)
     six_realms: SixRealms = Field(default_factory=SixRealms)
+    other_world_twilight: OtherWorldTwilight = Field(default_factory=OtherWorldTwilight)
 
     # 这些是活动的
     activity_shikigami: ActivityShikigami = Field(default_factory=ActivityShikigami)
@@ -402,6 +404,14 @@ class ConfigModel(ConfigBase):
             date_time = self.restart.task_config.reset_task_datetime
             logger.info(f"reset_task_datetime={date_time}")
             self.reset_datetime_for_all_enabled_tasks(date_time)
+
+        # 桌面客户端「启动实例」按钮：点击置 True → 主进程直接拉起该配置的客户端
+        # 实例，完成后改写 False 再走通用保存
+        if (task == 'script' and group == 'desktop' and argument == 'launch_instance'
+                and value is True):
+            from module.device.method.desktop_impl import desktop_launch_instance
+            desktop_launch_instance(self)
+            value = False
 
         # 设置参数
         try:

@@ -1,19 +1,18 @@
 import time
 from time import sleep
-import re
 
 from enum import Enum
 from cached_property import cached_property
 from datetime import datetime, timedelta
 
 from module.logger import logger
-from module.exception import TaskEnd
+from module.exception import GameStuckError, TaskEnd
 from module.base.timer import Timer
 
 from tasks.Component.SwitchSoul.switch_soul import SwitchSoul
 from tasks.DemonEncounter.config import BossType, DemonEncounter, convert_to_general_battle_config
 from tasks.GameUi.game_ui import GameUi
-from tasks.GameUi.page import page_demon_encounter, page_demon_encounter_realworld, page_shikigami_records
+from tasks.GameUi.page import page_town, page_demon_encounter_realworld, page_shikigami_records
 from tasks.DemonEncounter.assets import DemonEncounterAssets
 from tasks.Component.GeneralBattle.general_battle import GeneralBattle
 from tasks.Component.GeneralBattle.config_general_battle import GeneralBattleConfig
@@ -38,14 +37,13 @@ class ScriptTask(GameUi, GeneralBattle, DemonEncounterAssets, SwitchSoul):
         if not self.check_time():
             logger.warning('Time is not right')
             raise TaskEnd('DemonEncounter')
-        self.ui_get_current_page()
         # 切换御魂
         soul_config = self.config.demon_encounter.demon_soul_config
         best_soul_config = self.config.demon_encounter.best_demon_soul_config
         if soul_config.enable or best_soul_config.enable:
-            self.ui_goto(page_shikigami_records)
+            self.goto_page(page_shikigami_records)
             self.checkout_soul()
-        self.ui_goto(page_demon_encounter_realworld)
+        self.goto_page(page_demon_encounter_realworld)
         # 顶部"今日挑战次数:X/1"检测, 0/1表示今日已打过, 直接结束
         if self.check_challenge_done():
             logger.info('Challenge count 0/1, already challenged today')
@@ -59,16 +57,16 @@ class ScriptTask(GameUi, GeneralBattle, DemonEncounterAssets, SwitchSoul):
 
     def check_challenge_done(self) -> bool:
         """
-        OCR识别现世逢魔顶部"今日挑战次数:X/1"
-        :return: True表示0/1今日已打过
+        OCR识别现世逢魔顶部"今日挑战次数:剩余/总", 支持老号X/1与新号X/2
+        DigitCounter 返回 (current, remain, total), current 即剩余次数
+        :return: True表示剩余=0, 今日已打过
         """
-        results = self.O_DE_CHALLENGE_COUNT.detect_and_ocr(self.device.image)
-        text = ''.join(r.ocr_text for r in results)
-        m = re.search(r'([01])\s*/\s*1', text)
-        if not m:
-            logger.warning(f'Challenge count not recognized: [{text}], continue by default')
-            return False
-        return m.group(1) == '0'
+        current, _remain, total = self.O_DE_CHALLENGE_COUNT.ocr(self.device.image)
+        if total > 0:
+            logger.info(f'Demon encounter challenge count: {current}/{total}')
+            return current == 0
+        logger.warning('Challenge count not recognized, assume attempts remain')
+        return False
 
     def checkout_soul(self):
         """
@@ -92,40 +90,77 @@ class ScriptTask(GameUi, GeneralBattle, DemonEncounterAssets, SwitchSoul):
         logger.hr('Start boss battle', 1)
 
         def find_boss():
-            find_btn_clicked = False
-            timer_find_boss = Timer(10 * 60)
-            timer_find_boss.start()
-            while 1:
+            search_button = self.I_DE_BOSS_BEST if self.best_demon_enable else self.I_DE_BOSS
+            boss_name = 'best boss' if self.best_demon_enable else 'normal boss'
+
+            # 每轮搜索前若中央有未购买的宝箱展示, 先点左下角定位(小指针)把它挪开;
+            # 一整轮(2次搜索)都没找到则重进逢魔之时清状态, 最多3轮。
+            for reenter_round in range(1, 4):
                 self.screenshot()
-                if self.appear(self.I_BOSS_FIRE) or self.appear(self.I_BEST_BOSS_FIRE):
-                    break
-                if timer_find_boss.reached():
-                    logger.warning('find boss timeout')
-                    self.set_next_run(task='DemonEncounter', success=False, finish=True, server=False)
-                    raise TaskEnd('DemonEncounter')
-                if self.appear(self.I_JADE_50):
-                    # 没找到boss但地图中央出现宝箱，导致点击宝箱出现50勾玉购买界面
-                    self.ui_click_until_smt_disappear(self.I_DE_FIND, self.I_JADE_50, interval=1)
-                    continue
-                if find_btn_clicked and self.click(self.C_DM_BOSS_CLICK, interval=5):
-                    find_btn_clicked = False
-                    continue
-                if self.best_demon_enable:
+                if self.appear(self.I_DE_BOX_CENTER):
+                    logger.info(
+                        f'Box display at map center, click location to reset view '
+                        f'(round {reenter_round}/3)'
+                    )
+                    self.appear_then_click(self.I_DE_LOCATION, interval=2)
+                    time.sleep(1)
+
+                # 最多重新执行三轮“逢魔/极逢魔 -> 地图中央首领”的完整流程。
+                for search_attempt in range(1, 4):
                     self.device.click_record_clear()
-                    if self.appear(self.I_DE_BOSS_BEST) and (not find_btn_clicked):
-                        self.device.click_record_remove(self.I_DE_BOSS_BEST)
-                        if self.click(self.I_DE_BOSS_BEST, interval=4):
-                            logger.info("Finding best boss...")
-                            find_btn_clicked = True
+                    self.screenshot()
+                    if self.appear(self.I_BOSS_FIRE) or self.appear(self.I_BEST_BOSS_FIRE):
+                        return True
+                    # 没找到boss但地图中央出现宝箱, 导致点击宝箱出现50勾玉购买界面(事后补救)
+                    if self.appear(self.I_JADE_50):
+                        self.ui_click_until_smt_disappear(self.I_DE_FIND, self.I_JADE_50, interval=1)
                         continue
-                else:
-                    if self.appear(self.I_DE_BOSS) and (not find_btn_clicked):
-                        self.device.click_record_remove(self.I_DE_BOSS)
-                        if self.click(self.I_DE_BOSS, interval=4):
-                            logger.info("Finding normal boss...")
-                            find_btn_clicked = True
-                        continue
-            return True
+                    if not self.appear_then_click(search_button, interval=2):
+                        raise GameStuckError(f'Cannot find {boss_name} search button')
+                    logger.info(
+                        f'Finding {boss_name}, attempt {search_attempt}/3 '
+                        f'(re-enter round {reenter_round}/3)...'
+                    )
+                    time.sleep(1)
+
+                    # 每轮点击地图中央框选的红色“集结”区域至多三次，
+                    # 每次等待集结挑战标志5秒。
+                    for center_attempt in range(1, 4):
+                        self.click(self.C_DM_BOSS_CLICK, interval=2)
+                        deadline = time.monotonic() + 5
+                        while time.monotonic() < deadline:
+                            self.screenshot()
+                            if self.appear(self.I_BOSS_FIRE) or self.appear(self.I_BEST_BOSS_FIRE):
+                                logger.info(
+                                    f'{boss_name} gather appeared after center click '
+                                    f'{center_attempt}/3'
+                                )
+                                return True
+                            time.sleep(0.2)
+                        logger.warning(
+                            f'{boss_name} gather did not appear after center click '
+                            f'{center_attempt}/3'
+                        )
+
+                    # 本轮失败，返回逢魔地图，重新点击逢魔/极逢魔进行下一轮搜寻。
+                    self.screenshot()
+                    if self.appear(self.I_UI_BACK_RED):
+                        self.appear_then_click(self.I_UI_BACK_RED, interval=2)
+                        deadline = time.monotonic() + 5
+                        while time.monotonic() < deadline:
+                            self.screenshot()
+                            if self.appear(search_button):
+                                break
+                            time.sleep(0.2)
+
+                # 3次搜索都没找到: 重进地图清状态, 最多3轮
+                logger.info(f'Boss not found, re-enter demon encounter map (round {reenter_round}/3)')
+                self.goto_page(page_town)
+                self.goto_page(page_demon_encounter_realworld)
+
+            raise GameStuckError(
+                f'Cannot enter {boss_name} after 3 re-enter rounds'
+            )
 
         def enter_boss():
             logger.info('trying to enter boss...')
@@ -291,11 +326,13 @@ class ScriptTask(GameUi, GeneralBattle, DemonEncounterAssets, SwitchSoul):
         :param index: 四个灯笼，从1开始
         :return:
         """
+        # 分类模板的搜索区(须容纳完整灯笼图案), 与点击区 C_DE_* 分离:
+        # 点击区只包住内部图形, 模板放不进搜索区会全部误判成 battle
         match_roi = {
-            1: self.C_DE_1.roi_front,
-            2: self.C_DE_2.roi_front,
-            3: self.C_DE_3.roi_front,
-            4: self.C_DE_4.roi_front,
+            1: self.C_DE_MATCH_1.roi_front,
+            2: self.C_DE_MATCH_2.roi_front,
+            3: self.C_DE_MATCH_3.roi_front,
+            4: self.C_DE_MATCH_4.roi_front,
         }
         match_empty = {
             1: self.I_DE_DEFEAT_1,
@@ -420,9 +457,10 @@ class ScriptTask(GameUi, GeneralBattle, DemonEncounterAssets, SwitchSoul):
                     break
                 # 如果没有出现红色关闭按钮，说明答题结束
                 if not self.appear(self.I_LETTER_CLOSE):
-                    time.sleep(1.8)
+                    time.sleep(2.5)
                     self.screenshot()
                     if not self.appear(self.I_LETTER_CLOSE):
+                        self.ui_reward_appear_click()
                         logger.warning('Answer finish')
                         return
 

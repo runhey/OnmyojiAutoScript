@@ -446,7 +446,7 @@
     "roiFront": "0,0,1280,720",
     "roiBack": "0,0,1280,720",
     "method": "Template matching",
-    "threshold": 0.8,
+    "threshold": 0.7,
     "description": "查找道馆时,中间信息卡片 馆主等级-修习"
   },
   {

@@ -64,6 +64,14 @@ class GeneralBattleAssets:
 	C_GREEN_MARK_AREA = RuleClick(roi_front=(0,0,1280,720), roi_back=(0,0,1280,720), name="green_mark_area")
 	# 战斗的时候有一定的概率随机点击 
 	C_RANDOM_CLICK = RuleClick(roi_front=(104,79,1050,507), roi_back=(255,65,100,100), name="random_click")
+	# 左边随机点击 
+	C_RANDOM_LEFT = RuleClick(roi_front=(17,104,55,370), roi_back=(17,104,55,370), name="random_left")
+	# 右边随机点击 
+	C_RANDOM_RIGHT = RuleClick(roi_front=(1185,115,79,388), roi_back=(1185,115,79,388), name="random_right")
+	# 上边随机点击 
+	C_RANDOM_TOP = RuleClick(roi_front=(250,58,868,68), roi_back=(250,58,868,68), name="random_top")
+	# 下边随机点击 
+	C_RANDOM_BOTTOM = RuleClick(roi_front=(462,599,492,78), roi_back=(462,599,492,78), name="random_bottom")
 
 
 	# Image Rule Assets
@@ -101,8 +109,6 @@ class GeneralBattleAssets:
 	I_STATISTICS = RuleImage(roi_front=(70,630,33,28), roi_back=(35,28,411,661), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralBattle/gb/gb_statistics.png")
 	# 左上角的退出 
 	I_EXIT = RuleImage(roi_front=(14,12,43,41), roi_back=(14,12,43,41), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralBattle/gb/gb_exit.png")
-	# 退出确认 
-	I_EXIT_ENSURE = RuleImage(roi_front=(674,388,135,63), roi_back=(674,388,135,63), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralBattle/gb/gb_exit_ensure.png")
 	# 左上角好友图标 
 	I_FRIENDS = RuleImage(roi_front=(89,14,36,36), roi_back=(89,14,36,36), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralBattle/gb/gb_friends.png")
 	# 结算时左下角统计图标 
@@ -135,6 +141,14 @@ class GeneralBattleAssets:
 	I_PRESET_WIT_NUMBER = RuleImage(roi_front=(40,655,37,37), roi_back=(9,636,100,74), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralBattle/gb/gb_preset_wit_number.png")
 	# 战斗信息标识 
 	I_BATTLE_INFO = RuleImage(roi_front=(230,12,37,39), roi_back=(210,1,147,72), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralBattle/gb/gb_battle_info.png")
+	# 战斗状态信息(移植自mine) 
+	I_BATTLE_STATE_INFO = RuleImage(roi_front=(725,51,67,31), roi_back=(483,18,337,102), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralBattle/gb/gb_battle_state_info.png")
+	# 皮肤确认弹窗(移植自mine) 
+	I_GB_SKIN_CONFIRM = RuleImage(roi_front=(594,447,90,55), roi_back=(594,447,90,55), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralBattle/gb/gb_gb_skin_confirm.png")
+	# 队伍退出确认弹窗(移植自mine) 
+	I_GB_CHECK_TEAM_EXIT = RuleImage(roi_front=(507,288,270,54), roi_back=(411,233,452,247), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralBattle/gb/gb_gb_check_team_exit.png")
+	# 契灵结算弹窗(移植自mine) 
+	I_OVER_GHOST = RuleImage(roi_front=(697,409,89,32), roi_back=(697,409,89,32), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralBattle/gb/gb_over_ghost.png")
 
 
 	# Image Rule Assets
@@ -157,6 +171,8 @@ class GeneralBattleAssets:
 	O_PRESET_FULL = RuleOcr(roi=(20,620,60,80), area=(20,620,60,80), mode="Single", method="Default", keyword="预设", name="preset_full")
 	# 已标记 
 	O_BOSS_MARK = RuleOcr(roi=(379,44,50,21), area=(379,44,50,21), mode="Single", method="Default", keyword="已标记", name="boss_mark")
+	# 绿标区域 
+	O_GREEN_MARK_AREA = RuleOcr(roi=(84,256,1116,308), area=(84,256,1116,308), mode="Full", method="Default", keyword="", name="green_mark_area")
 
 
 	# Swipe Rule Assets
@@ -193,6 +209,8 @@ class GeneralBattleAssets:
 	C_END_FRIENDS_32 = RuleClick(roi_front=(0,0,100,100), roi_back=(0,0,100,100), name="end_friends_32")
 	# description 
 	C_END_FRIENDS_23 = RuleClick(roi_front=(0,0,100,100), roi_back=(0,0,100,100), name="end_friends_23")
+	# 御魂过多的【去清理】按钮
+	C_OVERFLOW_GHOST = RuleClick(roi_front=(456, 381, 160, 82), roi_back=(456, 381, 160, 82), name="overflow_ghost")
 
 
 	# Click Rule Assets
@@ -234,6 +252,8 @@ class GeneralBattleAssets:
 	C_END_3_6 = RuleClick(roi_front=(0,0,100,100), roi_back=(0,0,100,100), name="end_3_6")
 	# 其实贪吃鬼这个点了也是没事儿 
 	C_END_GREED = RuleClick(roi_front=(138,16,512,93), roi_back=(138,16,512,93), name="end_greed")
+	# 中间的一堆奖励直接忽略。上面的end_1_1到end_3_6会容易UI变化失效 
+	C_END_MASTER = RuleClick(roi_front=(251,145,811,530), roi_back=(248,143,815,535), name="end_master")
 
 
 	# Click Rule Assets

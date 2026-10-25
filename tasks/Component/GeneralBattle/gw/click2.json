@@ -112,5 +112,11 @@
     "roiFront": "138,16,512,93",
     "roiBack": "138,16,512,93",
     "description": "其实贪吃鬼这个点了也是没事儿"
+  },
+  {
+    "itemName": "end_master",
+    "roiFront": "251,145,811,530",
+    "roiBack": "248,143,815,535",
+    "description": "中间的一堆奖励直接忽略。上面的end_1_1到end_3_6会容易UI变化失效"
   }
 ]

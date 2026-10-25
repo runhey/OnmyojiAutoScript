@@ -277,3 +277,6 @@ console.bat
 .vscode/*
 tasks/AutoCheckinBigGod/frida-server-17.6.2-android-x86_64
 oas.bat
+
+# Per-instance FrogBoss prediction and result history
+data/frog_oas/

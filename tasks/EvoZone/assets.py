@@ -16,9 +16,9 @@ class EvoZoneAssets:
 	# 组队 
 	I_FORM_TEAM = RuleImage(roi_front=(959,580,100,100), roi_back=(916,572,156,130), threshold=0.8, method="Template matching", file="./tasks/EvoZone/o/o_form_team.png")
 	# description 
-	I_EVOZONE_LOCK = RuleImage(roi_front=(700,655,31,32), roi_back=(690,648,53,54), threshold=0.8, method="Template matching", file="./tasks/EvoZone/o/o_evozone_lock.png")
+	I_EVOZONE_LOCK = RuleImage(roi_front=(700,655,31,32), roi_back=(613,614,155,91), threshold=0.8, method="Template matching", file="./tasks/EvoZone/o/o_evozone_lock.png")
 	# description 
-	I_EVOZONE_UNLOCK = RuleImage(roi_front=(701,657,26,29), roi_back=(695,650,43,45), threshold=0.8, method="Template matching", file="./tasks/EvoZone/o/o_evozone_unlock.png")
+	I_EVOZONE_UNLOCK = RuleImage(roi_front=(701,657,26,29), roi_back=(609,623,170,89), threshold=0.8, method="Template matching", file="./tasks/EvoZone/o/o_evozone_unlock.png")
 	# 点击挑战 
 	I_EVOZONE_FIRE = RuleImage(roi_front=(1127,568,131,124), roi_back=(1127,568,131,124), threshold=0.6, method="Template matching", file="./tasks/EvoZone/o/o_evozone_fire.png")
 	# 式神录 

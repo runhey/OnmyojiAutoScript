@@ -11,26 +11,26 @@
   {
     "itemName": "s_white_five",
     "imageName": "shrine_s_white_five.png",
-    "roiFront": "769,143,77,85",
-    "roiBack": "769,143,77,85",
+    "roiFront": "770,147,77,85",
+    "roiBack": "756,121,321,169",
     "method": "Template matching",
-    "threshold": 0.85,
+    "threshold": 0.9,
     "description": "description"
   },
   {
     "itemName": "s_white_four",
     "imageName": "shrine_s_white_four.png",
-    "roiFront": "951,144,73,82",
-    "roiBack": "951,144,73,82",
+    "roiFront": "953,149,73,82",
+    "roiBack": "209,109,847,422",
     "method": "Template matching",
-    "threshold": 0.85,
+    "threshold": 0.9,
     "description": "description"
   },
   {
     "itemName": "s_black",
     "imageName": "shrine_s_black.png",
-    "roiFront": "588,143,78,83",
-    "roiBack": "588,143,78,83",
+    "roiFront": "772,144,78,83",
+    "roiBack": "565,109,310,182",
     "method": "Template matching",
     "threshold": 0.9,
     "description": "黑蛋"

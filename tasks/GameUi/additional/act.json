@@ -11,10 +11,10 @@
   {
     "itemName": "act_list_expand",
     "imageName": "additional_act_list_expand.png",
-    "roiFront": "1191,508,30,25",
-    "roiBack": "1160,456,92,103",
+    "roiFront": "1186,141,40,41",
+    "roiBack": "1162,110,92,103",
     "method": "Template matching",
     "threshold": 0.8,
-    "description": "description"
+    "description": "庭院进入活动标志"
   }
 ]

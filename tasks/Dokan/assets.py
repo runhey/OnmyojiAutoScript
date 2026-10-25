@@ -139,7 +139,7 @@ class DokanAssets:
 	# 今日可挑战次数:2次 
 	I_RYOU_DOKAN_REMAIN_ATTACK_COUNT_TWO = RuleImage(roi_front=(650,610,110,80), roi_back=(650,610,110,80), threshold=0.9, method="Template matching", file="./tasks/Dokan/res/res_ryou_dokan_remain_attack_count_two.png")
 	# 查找道馆时,中间信息卡片 馆主等级-修习 
-	I_CENTER_GUANZHU_XIUXI = RuleImage(roi_front=(0,0,1280,720), roi_back=(0,0,1280,720), threshold=0.8, method="Template matching", file="./tasks/Dokan/res/res_ryou_dokan_center_guanzhu_xiuxi.png")
+	I_CENTER_GUANZHU_XIUXI = RuleImage(roi_front=(0,0,1280,720), roi_back=(0,0,1280,720), threshold=0.7, method="Template matching", file="./tasks/Dokan/res/res_ryou_dokan_center_guanzhu_xiuxi.png")
 	# 查找道馆时,中间防守人数字样,为了定位该图下方的 防守人数数字 
 	I_CENTER_POINT_PEOPLE_NUMBER = RuleImage(roi_front=(0,0,1280,720), roi_back=(0,0,1280,720), threshold=0.8, method="Template matching", file="./tasks/Dokan/res/res_ryou_dokan_center_point_people_number.png")
 	# 查找道馆时,挑战按钮 

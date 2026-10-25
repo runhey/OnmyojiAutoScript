@@ -77,6 +77,7 @@ import random
 import time
 import copy
 import math
+import difflib
 from copy import deepcopy
 
 
@@ -94,7 +95,7 @@ from module.base.utils import get_color, color_similar
 
 from tasks.base_task import BaseTask
 from tasks.Component.GeneralBattle.assets import GeneralBattleAssets
-from tasks.Component.GeneralBattle.config_general_battle import GreenMarkType
+from tasks.Component.GeneralBattle.config_general_battle import GreenMarkType, GreenMarkEnum
 
 
 P = ParamSpec('P')
@@ -141,14 +142,6 @@ class OptionSetupDefault:
 
 
 @dataclass
-class OptionCompletionDefault:
-    # 这里是为了， 确认结束战斗后退回到 “fire” 的界面
-    check_imgs: list[RuleImage] = None
-    # 兜底：check_imgs 都检测不到时，间隔点击的排除位
-    excludes: list[str] = field(default_factory=list)
-
-
-@dataclass
 class OptionInterruptDefault:
     pass
 
@@ -165,9 +158,21 @@ class OptionSuccessDefault:
         'C_END_MESSAGE_RIGHT_TOP', 'C_END_BUFF_AREA_1',
         'C_END_BUFF_AREA_2', 'C_END_SOUL_RECORD', 'C_END_SOUL_DETAILS',
         'C_END_1_1', 'C_END_1_2', 'C_END_1_3', 'C_END_1_4',
-        'C_END_1_5', 'C_END_1_6',
+        'C_END_1_5', 'C_END_1_6', "C_OVERFLOW_GHOST",
     ])
 
+
+@dataclass
+class OptionCompletionDefault:
+    # 这里是为了， 确认结束战斗后退回到 “fire” 的界面
+    check_imgs: list[RuleImage] | None = None
+    # 兜底：check_imgs 都检测不到时，间隔点击的排除位
+    excludes: list[str] = field(default_factory=lambda:
+    [
+        'C_END_MESSAGE_RIGHT_TOP', 'C_END_BUFF_AREA_1',
+        'C_END_BUFF_AREA_2', 'C_END_SOUL_RECORD', 'C_END_SOUL_DETAILS',
+        'C_END_MASTER',
+    ])
 
 @dataclass
 class OptionFailureDefault:
@@ -195,6 +200,8 @@ class OptionPresetDefault:
 class OptionGreenDefault:
     green_enable: bool = False
     green_mark: GreenMarkType = GreenMarkType.GREEN_LEFT1
+    green_mark_type: GreenMarkEnum = GreenMarkEnum.CHOOSE
+    green_mark_name: str = ''
 
 
 @dataclass
@@ -364,8 +371,9 @@ class PerBattleSetup:
 @dataclass
 class PerBattleCompletion:
     click_stage_2: RuleClickExclude | None = None
-    # 兜底点击节拍器：进入 completion 起算，满 8s 才首次点击，之后每 8s 一次
+    # 兜底点击节拍器：进入 completion 起算，满 3s 才首次点击，之后每 3s 一次
     fallback_timer: Timer | None = None
+    fallback_cnt: int = 0
 
 
 @dataclass
@@ -945,8 +953,8 @@ def randomclick_gate(func: Callable) -> Callable:
     @wraps(func)
     def wrapper(self, pub: PublicContext, pri: PrivateContext) -> HookSignal:
         options = pub.options.get('randomclick')
-        state_battle = pri.per_battle
-        state_task = pri.per_task
+        state_battle: PerBattleRandomclick = pri.per_battle
+        state_task: PerTaskRandomclick = pri.per_task
         if not isinstance(options, OptionRandomclickDefault):
             raise TypeError(f"randomclick options must be OptionRandomclickDefault, got {type(options)!r}")
         if not isinstance(state_battle, PerBattleRandomclick):
@@ -1092,6 +1100,10 @@ class BattleWait(BaseTask, GeneralBattleAssets):
         print('=' * 64)
         time.sleep(0.6)
 
+    def refresh_long_time(self) -> None:
+        self.device.stuck_record_add('BATTLE_STATUS_S')
+        self.device.click_record_clear()
+
     # ------------------------------------------------------------------------------------------------------------------
     # build in
     # ------------------------------------------------------------------------------------------------------------------
@@ -1099,15 +1111,14 @@ class BattleWait(BaseTask, GeneralBattleAssets):
         self.C_REWARD_1.name = 'C_REWARD'
         self.C_REWARD_2.name = 'C_REWARD'
         self.C_REWARD_3.name = 'C_REWARD'
-        self.device.stuck_record_add('BATTLE_STATUS_S')
-        self.device.click_record_clear()
+        self.refresh_long_time()
         logger.info('Start battle process')
         return HookSignal.DONE
 
     def _bw_completion_default(self, pub: PublicContext, pri: PrivateContext) -> HookSignal:
         logger.info('Battle completion process')
-        state = pri.per_battle
-        options = pri.options
+        state: PerBattleCompletion = pri.per_battle
+        options: OptionCompletionDefault = pri.options
         if not isinstance(state, PerBattleCompletion) or not isinstance(options, OptionCompletionDefault):
             raise
         if options.check_imgs is None:
@@ -1122,9 +1133,13 @@ class BattleWait(BaseTask, GeneralBattleAssets):
             pub.per_task.count += 1
             # self.current_count += 1  # 兼容旧的计数
             return HookSignal.DONE
-        # check_imgs 全没出现 → 兜底点击回退界面：进入 completion 满 8s 才首次点击，之后每 8s 一次
+        # check_imgs 全没出现 → 兜底点击回退界面：进入 completion 满 3s 才首次点击，之后每 3s 一次
         if state.fallback_timer is None:
-            state.fallback_timer = Timer(8).start()
+            state.fallback_timer = Timer(3).start()
+        if state.fallback_cnt >= 5:
+            pub.per_task.count += 1
+            logger.info('Fallback timer expired')
+            return HookSignal.DONE
         if not isinstance(state.fallback_timer, Timer):
             raise
         if not state.fallback_timer.reached():
@@ -1132,17 +1147,23 @@ class BattleWait(BaseTask, GeneralBattleAssets):
         state.fallback_timer.reset()
         if state.click_stage_2 is None:
             state.click_stage_2 = PerBattleSuccess.reward_exclude_click(self, options.excludes, name='completion_exclude_click')
-        x, y = state.click_stage_2.coord()
-        self.device.click(x=x, y=y, control_name='completion_exclude_click')
+        if self.click(state.click_stage_2, interval=1.5):
+            state.fallback_cnt += 1
+        # x, y = state.click_stage_2.coord()
+        # self.device.click(x=x, y=y, control_name='completion_exclude_click')
         return HookSignal.CONTINUE
 
     def _bw_interrupt_default(self, pub: PublicContext, pri: PrivateContext) -> HookSignal:
         # 比如 御魂溢出
+
+        # 结算的时候御魂溢出提示，点击【知道了】
+        self.appear_then_click(self.I_OVER_GHOST)
+
         return HookSignal.CONTINUE
 
     def _bw_success_default(self, pub: PublicContext, pri: PrivateContext) -> HookSignal:
-        state = pri.per_battle
-        options = pri.options
+        state: PerBattleSuccess = pri.per_battle
+        options: OptionSuccessDefault = pri.options
         if not isinstance(state, PerBattleSuccess) or not isinstance(options, OptionSuccessDefault):
             raise
         if state.click_stage_1 is None:
@@ -1165,6 +1186,10 @@ class BattleWait(BaseTask, GeneralBattleAssets):
         timer = Timer(20).start()
         while 1:
             self.screenshot()
+
+            # 结算的时候御魂溢出提示，点击【知道了】
+            if self.appear(self.I_OVER_GHOST):
+                self.click(self.I_OVER_GHOST)
 
             # 不小心点到了具体的奖励，他会弹出这个物品的详细描述 里面必定包含有“获取途径”
             if self.appear(self.I_END_FIX_1) or self.appear(self.I_END_FIX_2):
@@ -1222,6 +1247,7 @@ class BattleWait(BaseTask, GeneralBattleAssets):
         if pri_options.lock_team or self.is_in_real_battle(False):
             logger.info('Prepare stage finish')
             state.done = True
+            self.refresh_long_time()
             return runtime.hook_enabled_update(
                 enable=('green', 'red', 'echo'),
                 disable=('prepare', 'preset'),
@@ -1264,7 +1290,6 @@ class BattleWait(BaseTask, GeneralBattleAssets):
             return HookSignal.CONTINUE
         if not pri_options.preset_enable or state.done:
             return HookSignal.CONTINUE
-
         logger.info("Preset is enable")
         # 点击预设按钮
         while 1:
@@ -1372,40 +1397,87 @@ class BattleWait(BaseTask, GeneralBattleAssets):
                 disable=('green',),
             )
 
-        logger.info("Green is enable")
-        x, y = None, None
-        match pri_options.green_mark:
-            case GreenMarkType.GREEN_LEFT1:
-                x, y = self.C_GREEN_LEFT_1.coord()
-                logger.info("Green left 1")
-            case GreenMarkType.GREEN_LEFT2:
-                x, y = self.C_GREEN_LEFT_2.coord()
-                logger.info("Green left 2")
-            case GreenMarkType.GREEN_LEFT3:
-                x, y = self.C_GREEN_LEFT_3.coord()
-                logger.info("Green left 3")
-            case GreenMarkType.GREEN_LEFT4:
-                x, y = self.C_GREEN_LEFT_4.coord()
-                logger.info("Green left 4")
-            case GreenMarkType.GREEN_LEFT5:
-                x, y = self.C_GREEN_LEFT_5.coord()
-                logger.info("Green left 5")
-            case GreenMarkType.GREEN_MAIN:
-                x, y = self.C_GREEN_MAIN.coord()
-                logger.info("Green main")
-
         # 等待那个准备的消失
         while 1:
             self.screenshot()
             if not self.appear(self.I_PREPARE_HIGHLIGHT):
                 break
 
-        # 判断有无坐标的偏移
-        self.appear_then_click(self.I_LOCAL)
-        time.sleep(0.3)
-        # 点击绿标
-        self.device.click(x, y)
+        if pri_options.green_mark_type == GreenMarkEnum.NAME:
+            name = pri_options.green_mark_name
+            if not name:
+                logger.warning("Green mark name is empty")
+            else:
+                timeout_timer = Timer(6).start()
+                best = {
+                    'name': '',
+                    'x': -1,
+                    'y': -1,
+                    'similarity': 0.0,
+                }
+                while not timeout_timer.reached():
+                    self.screenshot()
+                    results = self.O_GREEN_MARK_AREA.detect_and_ocr(self.device.image)
+                    for ret in results:
+                        similarity = difflib.SequenceMatcher(
+                            None,
+                            ret.ocr_text,
+                            name,
+                        ).ratio()
+                        if similarity > best['similarity']:
+                            x = self.O_GREEN_MARK_AREA.roi[0] + ret.box[0, 0] + 5
+                            y = self.O_GREEN_MARK_AREA.roi[1] + ret.box[0, 1] + 30
+                            best = {
+                                'name': ret.ocr_text,
+                                'x': min(1279, x),
+                                'y': min(719, y),
+                                'similarity': similarity,
+                            }
+                    if best['similarity'] > 0.5:
+                        logger.info(
+                            f'Green name success, text: {best["name"]}'
+                            f'[{best["similarity"]:.2f}]'
+                        )
+                        self.device.click(
+                            best['x'],
+                            best['y'],
+                            control_name=best['name'],
+                        )
+                        break
+                else:
+                    logger.warning(
+                        f'Green name failed, best text: {best["name"]}'
+                        f'[{best["similarity"]:.2f}]'
+                    )
+        else:
+            x, y = None, None
+            match pri_options.green_mark:
+                case GreenMarkType.GREEN_LEFT1:
+                    x, y = self.C_GREEN_LEFT_1.coord()
+                    logger.info("Green left 1")
+                case GreenMarkType.GREEN_LEFT2:
+                    x, y = self.C_GREEN_LEFT_2.coord()
+                    logger.info("Green left 2")
+                case GreenMarkType.GREEN_LEFT3:
+                    x, y = self.C_GREEN_LEFT_3.coord()
+                    logger.info("Green left 3")
+                case GreenMarkType.GREEN_LEFT4:
+                    x, y = self.C_GREEN_LEFT_4.coord()
+                    logger.info("Green left 4")
+                case GreenMarkType.GREEN_LEFT5:
+                    x, y = self.C_GREEN_LEFT_5.coord()
+                    logger.info("Green left 5")
+                case GreenMarkType.GREEN_MAIN:
+                    x, y = self.C_GREEN_MAIN.coord()
+                    logger.info("Green main")
+
+            # 判断有无坐标的偏移
+            self.appear_then_click(self.I_LOCAL)
+            time.sleep(0.3)
+            # 点击绿标
+            self.device.click(x, y)
         state.done = True
+        self.refresh_long_time()
         return runtime.hook_enabled_update(
             enable=(),
             disable=('green',),
@@ -1449,8 +1521,8 @@ class BattleWait(BaseTask, GeneralBattleAssets):
     # custom
     # ------------------------------------------------------------------------------------------------------------------
     def _bw_success_soul(self, pub: PublicContext, pri: PrivateContext) -> HookSignal:
-        state = pri.per_battle
-        options = pri.options
+        state: PerBattleSuccess = pri.per_battle
+        options: OptionSuccessDefault = pri.options
         if not isinstance(state, PerBattleSuccess) or not isinstance(options, OptionSuccessDefault):
             raise TypeError("battle wait option 'success' must be an OptionSuccessDefault")
         if state.click_stage_1 is None:
@@ -1493,7 +1565,7 @@ class BattleWait(BaseTask, GeneralBattleAssets):
         return HookSignal.CONTINUE
 
     @cached_property
-    def exclude_click_activity(self, areas: list[str] = None) -> RuleClickExclude:
+    def exclude_click_activity(self) -> RuleClickExclude:
         inputs = []
         for area in ['C_END_MESSAGE_RIGHT_TOP', 'C_END_ACTIVITY_REWARD']:
             click = getattr(self, area, None)

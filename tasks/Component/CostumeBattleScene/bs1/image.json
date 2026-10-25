@@ -1,0 +1,11 @@
+[
+  {
+    "itemName": "reward_1",
+    "imageName": "bs1_reward_1.png",
+    "roiFront": "551,505,165,84",
+    "roiBack": "451,413,372,226",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": ""
+  }
+]

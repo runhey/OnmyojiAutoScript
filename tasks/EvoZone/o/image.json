@@ -21,7 +21,7 @@
     "itemName": "evozone_lock",
     "imageName": "o_evozone_lock.png",
     "roiFront": "700,655,31,32",
-    "roiBack": "690,648,53,54",
+    "roiBack": "613,614,155,91",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"
@@ -30,7 +30,7 @@
     "itemName": "evozone_unlock",
     "imageName": "o_evozone_unlock.png",
     "roiFront": "701,657,26,29",
-    "roiBack": "695,650,43,45",
+    "roiBack": "609,623,170,89",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"

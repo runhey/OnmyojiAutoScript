@@ -1,0 +1,174 @@
+[
+    {
+        "itemName": "check_town",
+        "imageName": "page_check_town.png",
+        "roiFront": "1026,106,68,82",
+        "roiBack": "765,98,402,96",
+        "method": "Template matching",
+        "threshold": 0.8,
+        "description": "description"
+    },
+    {
+        "itemName": "town_goto_main",
+        "imageName": "page_town_goto_main.png",
+        "roiFront": "1017,231,78,73",
+        "roiBack": "302,216,868,127",
+        "method": "Template matching",
+        "threshold": 0.8,
+        "description": "description"
+    },
+    {
+        "itemName": "town_goto_duel",
+        "imageName": "page_town_goto_duel.png",
+        "roiFront": "756,142,48,68",
+        "roiBack": "357,126,657,100",
+        "method": "Template matching",
+        "threshold": 0.8,
+        "description": "description"
+    },
+    {
+        "itemName": "town_goto_demon_encounter",
+        "imageName": "page_town_goto_demon_encounter.png",
+        "roiFront": "617,135,51,75",
+        "roiBack": "232,121,873,100",
+        "method": "Template matching",
+        "threshold": 0.7,
+        "description": "description"
+    },
+    {
+        "itemName": "town_goto_hunt",
+        "imageName": "page_town_goto_hunt.png",
+        "roiFront": "475,138,46,69",
+        "roiBack": "275,122,520,100",
+        "method": "Template matching",
+        "threshold": 0.7,
+        "description": "description"
+    },
+    {
+        "itemName": "town_goto_draft_duel",
+        "imageName": "page_town_goto_draft_duel.png",
+        "roiFront": "335,159,55,72",
+        "roiBack": "170,145,567,100",
+        "method": "Template matching",
+        "threshold": 0.8,
+        "description": "协同对弈"
+    },
+    {
+        "itemName": "town_goto_hyakkisen",
+        "imageName": "page_town_goto_hyakkisen.png",
+        "roiFront": "192,145,48,67",
+        "roiBack": "86,130,447,100",
+        "method": "Template matching",
+        "threshold": 0.8,
+        "description": "百鬼奕"
+    },
+    {
+        "itemName": "check_duel",
+        "imageName": "page_check_duel.png",
+        "roiFront": "149,16,64,38",
+        "roiBack": "133,0,110,74",
+        "method": "Template matching",
+        "threshold": 0.8,
+        "description": "斗技主界面左上角文字图像"
+    },
+    {
+        "itemName": "check_demon_encounter",
+        "imageName": "page_check_demon_encounter.png",
+        "roiFront": "26,658,42,43",
+        "roiBack": "2,619,100,100",
+        "method": "Template matching",
+        "threshold": 0.8,
+        "description": "现世逢魔页面标志"
+    },
+    {
+        "itemName": "check_hunt",
+        "imageName": "page_check_hunt.png",
+        "roiFront": "575,30,46,25",
+        "roiBack": "553,1,81,68",
+        "method": "Template matching",
+        "threshold": 0.7,
+        "description": "检查狩猎战界面"
+    },
+    {
+        "itemName": "check_hunt_kirin",
+        "imageName": "page_check_hunt_kirin.png",
+        "roiFront": "353,240,30,54",
+        "roiBack": "328,234,81,68",
+        "method": "Template matching",
+        "threshold": 0.7,
+        "description": "检查狩猎战麒麟界面"
+    },
+    {
+        "itemName": "check_draft_duel",
+        "imageName": "page_check_draft_duel.png",
+        "roiFront": "1051,612,56,58",
+        "roiBack": "1029,594,100,100",
+        "method": "Template matching",
+        "threshold": 0.8,
+        "description": "description"
+    },
+    {
+        "itemName": "town_goto_hyakkiyakou",
+        "imageName": "page_town_goto_hyakkiyakou.png",
+        "roiFront": "880,165,53,69",
+        "roiBack": "827,149,148,100",
+        "method": "Template matching",
+        "threshold": 0.8,
+        "description": "町中进入百鬼标志"
+    },
+    {
+        "itemName": "check_kyakkiyakou",
+        "imageName": "page_check_kyakkiyakou.png",
+        "roiFront": "1062,564,84,73",
+        "roiBack": "68,519,1185,141",
+        "method": "Template matching",
+        "threshold": 0.8,
+        "description": "百鬼夜行标志"
+    },
+    {
+        "itemName": "check_demon_encounter_2",
+        "imageName": "page_check_demon_encounter_2.png",
+        "roiFront": "501,441,53,122",
+        "roiBack": "358,326,370,288",
+        "method": "Template matching",
+        "threshold": 0.8,
+        "description": "逢魔之时新页面标志"
+    },
+    {
+        "itemName": "town_goto_entertainment",
+        "imageName": "page_town_goto_entertainment.png",
+        "roiFront": "201,144,35,26",
+        "roiBack": "201,144,35,26",
+        "method": "Template matching",
+        "threshold": 0.8,
+        "description": "町中前往娱乐区域"
+    },
+    {
+        "itemName": "check_entertainment",
+        "imageName": "page_check_entertainment.png",
+        "roiFront": "151,18,102,40",
+        "roiBack": "151,18,102,40",
+        "method": "Template matching",
+        "threshold": 0.8,
+        "description": "娱乐区域页面标志"
+    },
+    {
+        "itemName": "check_demon_encounter_realworld",
+        "imageName": "page_check_demon_encounter_realworld.png",
+        "roiFront": "26,658,42,43",
+        "roiBack": "2,619,100,100",
+        "method": "Template matching",
+        "threshold": 0.8,
+        "description": "检查逢魔之时现世逢魔界面(移植自mine)"
+    }
+,
+    {
+        "itemName": "demon_encounter_realworld_goto",
+        "imageName": "page_demon_encounter_realworld.png",
+        "roiFront": "994,485,106,30",
+        "roiBack": "994,485,106,30",
+        "method": "Template matching",
+        "threshold": 0.8,
+        "description": "进入现世逢魔(移植自mine)"
+    }
+]

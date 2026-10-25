@@ -61,5 +61,41 @@
     "method": "Template matching",
     "threshold": 0.8,
     "description": "小小宠物，发现宝藏"
+  },
+  {
+    "itemName": "orochi_check_10",
+    "imageName": "o_orochi_check_10.png",
+    "roiFront": "929,123,203,39",
+    "roiBack": "896,100,269,84",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "八岐大蛇标志"
+  },
+  {
+    "itemName": "orochi_check_11",
+    "imageName": "o_orochi_check_11.png",
+    "roiFront": "929,123,203,39",
+    "roiBack": "896,100,269,84",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "巫女大蛇标志"
+  },
+  {
+    "itemName": "orochi_check_12",
+    "imageName": "o_orochi_check_12.png",
+    "roiFront": "929,116,100,46",
+    "roiBack": "896,100,269,84",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "神罚标志"
+  },
+  {
+    "itemName": "orochi_check_13",
+    "imageName": "o_orochi_check_13.png",
+    "roiFront": "929,121,211,41",
+    "roiBack": "896,100,269,84",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "虚无大蛇标志"
   }
 ]

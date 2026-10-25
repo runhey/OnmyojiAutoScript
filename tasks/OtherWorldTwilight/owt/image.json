@@ -1,0 +1,47 @@
+[
+  {
+    "itemName": "de_to_other_world",
+    "imageName": "owt_de_to_other_world.png",
+    "roiFront": "485,130,84,94",
+    "roiBack": "416,82,228,225",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "逢魔之时前往彼世逢魔标志"
+  },
+  {
+    "itemName": "owt_fire",
+    "imageName": "owt_owt_fire.png",
+    "roiFront": "1142,603,82,74",
+    "roiBack": "1088,561,181,159",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "挑战标志"
+  },
+  {
+    "itemName": "owt_team",
+    "imageName": "owt_owt_team.png",
+    "roiFront": "959,605,82,74",
+    "roiBack": "905,561,181,159",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "组队标志"
+  },
+  {
+    "itemName": "owt_lock",
+    "imageName": "owt_owt_lock.png",
+    "roiFront": "679,650,20,30",
+    "roiBack": "593,633,228,87",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "锁定阵容标志"
+  },
+  {
+    "itemName": "owt_unlock",
+    "imageName": "owt_owt_unlock.png",
+    "roiFront": "679,650,20,30",
+    "roiBack": "593,633,228,87",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "解锁阵容标志"
+  }
+]

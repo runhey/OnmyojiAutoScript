@@ -124,5 +124,14 @@
     "method": "Template matching",
     "threshold": 0.8,
     "description": "头像框"
+  },
+  {
+    "itemName": "st_module",
+    "imageName": "st_module.png",
+    "roiFront": "1111,322,84,22",
+    "roiBack": "1068,210,191,313",
+    "method": "Template matching",
+    "threshold": 0.85,
+    "description": "玩法tab八岐大蛇模块，在场说明本周还有次数"
   }
 ]

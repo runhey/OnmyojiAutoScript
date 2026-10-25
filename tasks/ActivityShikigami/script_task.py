@@ -150,13 +150,21 @@ class ScriptTask(StateMachine, GameUi, Battle, BaseActivity, SwitchSoul, Activit
         #
         for climb_type in self.conf.general_climb.run_sequence_v:
             # 进入到活动的主页面，不是具体的战斗页面
-            self.ui_get_current_page()
-            self.ui_goto(game.page_climb_act)
+            self.goto_page(game.page_climb_act)
             try:
                 method_func = getattr(self, f'_run_{climb_type}')
                 method_func()
             except LimitCountOut as e:
-                self.ui_click(self.I_UI_BACK_YELLOW, stop=self.I_TO_BATTLE_MAIN, interval=2.8)
+                while 1:
+                    self.screenshot()
+                    if self.appear(self.I_TO_BATTLE_MAIN):
+                        break
+                    if self.appear_then_click(self.I_UI_BACK_CIRCLE, interval=1.5):
+                        continue
+                    if self.appear_then_click(self.I_UI_BACK_YELLOW, interval=2.5):
+                        continue
+                    if self.appear_then_click(self.I_UI_BACK_RED, interval=1.5):
+                        continue
             except LimitTimeOut as e:
                 break
             finally:
@@ -165,8 +173,7 @@ class ScriptTask(StateMachine, GameUi, Battle, BaseActivity, SwitchSoul, Activit
 
         # 返回庭院
         logger.hr("Exit Shikigami", 2)
-        self.ui_get_current_page(False)
-        self.ui_goto(game.page_main)
+        self.goto_page(game.page_main)
         if self.conf.general_climb.active_souls_clean:
             self.set_next_run(task='SoulsTidy', success=False, finish=False, target=datetime.now())
         self.set_next_run(task="ActivityShikigami", success=True)
@@ -177,10 +184,50 @@ class ScriptTask(StateMachine, GameUi, Battle, BaseActivity, SwitchSoul, Activit
             更新前请先看 ./README.md
         """
         logger.hr(f'Start run climb type PASS', 1)
-        self.ui_clicks([self.I_TO_BATTLE_MAIN, self.I_TO_BATTLE_MAIN_2],
-                       stop=self.I_CHECK_BATTLE_MAIN, interval=1)
+        # self.ui_clicks([self.I_TO_BATTLE_MAIN_2],
+        #                stop=self.I_CHECK_BATTLE_MAIN, interval=1)
+        #
+        center_click_cnt = 0
+        while 1:
+            self.screenshot()
+
+            if self.appear(self.I_UI_BACK_RED) and self.appear(self.I_PASS_4):
+                break
+            if self.appear(self.I_CHECK_BATTLE_MAIN):
+                break
+            if self.appear_then_click(self.I_UI_CONFIRM, interval=0.5):
+                continue
+            if self.appear_then_click(self.I_UI_CONFIRM_SAMLL, interval=0.5):
+                continue
+            if self.appear_then_click(self.I_TO_BATTLE_MAIN_2, interval=1.5):
+                continue
+            if not self.appear(self.I_PASS_3):
+                continue
+            if self.appear_then_click(self.I_PASS_1, interval=1.5):
+                continue
+            if self.appear_then_click(self.I_PASS_2, interval=1.5):
+                continue
+            center = RuleClick(roi_front=(630,360,10,10), roi_back=(630,360,10,10), name="random_all")
+            if center_click_cnt <= 5 and self.click(center, interval=3.5):
+                center_click_cnt += 1
+                continue
+        logger.info('Enter occupation reward screen')  # 进入到占领奖励
+        index = 0
+        clicks = [self.I_PASS_5, self.I_PASS_6, self.I_PASS_7, self.I_PASS_8, self.I_PASS_9]
+        while 1:
+            self.screenshot()
+            if self.appear(self.I_CHECK_BATTLE_MAIN):
+                break
+            if self.click(clicks[index], interval=1.5):
+                sleep(1)
+            index = (index + 1) % len(clicks)
+        logger.info('Enter challenge screen')  # 正式进入挑战界面
+
+
+
+
         self.switch_soul(self.I_BATTLE_MAIN_TO_RECORDS, self.I_CHECK_BATTLE_MAIN)
-        self.switch_climb_mode_in_game('pass')
+        # self.switch_climb_mode_in_game('pass')
 
         ocr_limit_timer = Timer(1).start()
         click_limit_timer = Timer(4).start()
@@ -208,17 +255,27 @@ class ScriptTask(StateMachine, GameUi, Battle, BaseActivity, SwitchSoul, Activit
             if self.start_battle():
                 continue
 
-        self.ui_click(self.I_UI_BACK_YELLOW, stop=self.I_TO_BATTLE_MAIN, interval=4.5)
+        # self.ui_click(self.I_UI_BACK_YELLOW, stop=self.I_TO_BATTLE_MAIN, interval=4.5)
+        while 1:
+            self.screenshot()
+            if self.appear(self.I_TO_BATTLE_MAIN):
+                break
+            if self.appear(self.I_CHECK_BATTLE_MAIN) and self.appear_then_click(self.I_UI_BACK_YELLOW, interval=2.5):
+                continue
+            if self.appear_then_click(self.I_UI_BACK_CIRCLE, interval=2.5):
+                continue
+            if self.appear_then_click(self.I_UI_BACK_RED, interval=1.5):
+                continue
 
     def _run_ap(self):
         """
             更新前请先看 ./README.md
         """
         logger.hr(f'Start run climb type AP')
-        self.ui_clicks([self.I_TO_BATTLE_MAIN, self.I_TO_BATTLE_MAIN_2],
+        self.ui_clicks([self.I_TO_BATTLE_MAIN],
                        stop=self.I_CHECK_BATTLE_MAIN, interval=1)
         self.switch_soul(self.I_BATTLE_MAIN_TO_RECORDS, self.I_CHECK_BATTLE_MAIN)
-        self.switch_climb_mode_in_game('ap')
+        # self.switch_climb_mode_in_game('ap')
 
         ocr_limit_timer = Timer(1).start()
         while 1:
@@ -241,7 +298,19 @@ class ScriptTask(StateMachine, GameUi, Battle, BaseActivity, SwitchSoul, Activit
             if self.start_battle():
                 continue
 
-        self.ui_click(self.I_UI_BACK_YELLOW, stop=self.I_TO_BATTLE_MAIN, interval=4.5)
+        # self.ui_click(self.I_UI_BACK_YELLOW, stop=self.I_TO_BATTLE_MAIN, interval=3.5, timeout=10)
+        while 1:
+            self.screenshot()
+
+            if self.appear(self.I_TO_BATTLE_MAIN):
+                break
+            if self.appear_then_click(self.I_UI_BACK_CIRCLE, interval=1.5):
+                continue
+            if self.appear_then_click(self.I_UI_BACK_YELLOW, interval=2.5):
+                continue
+            if self.appear_then_click(self.I_UI_BACK_RED, interval=1.5):
+                continue
+
 
     def _run_boss(self):
         """
@@ -293,7 +362,8 @@ class ScriptTask(StateMachine, GameUi, Battle, BaseActivity, SwitchSoul, Activit
                 continue
         # 运行战斗
         strategies, options = self.loadout_from_config(self.get_general_battle_conf())
-        strategies['success'] = 'activity'
+        # strategies['success'] = 'activity'
+        options['completion'].check_imgs = [self.I_CHECK_BATTLE_MAIN, self.I_CHECK_BATTLE_BOSS]
         self.loadout_show((strategies, options))
         self.state_show()
         with battle_wait_strategy(**strategies), battle_wait_options(**options):
@@ -304,9 +374,6 @@ class ScriptTask(StateMachine, GameUi, Battle, BaseActivity, SwitchSoul, Activit
             logger.info(f'Count {self.climb_type}: {self.count_map[self.climb_type]}')
         return win
 
-    # @battle_wait_strategy(success='activity')
-    # def battle_wait(self, *args, **kwargs):
-    #     return self.battle_wait_with_strategy(*args, **kwargs)
 
     def switch_soul(self, enter_button: RuleImage, cur_img: RuleImage):
         conf = self.conf.switch_soul_config

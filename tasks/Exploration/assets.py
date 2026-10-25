@@ -68,6 +68,10 @@ class ExplorationAssets:
 	C_CLICK_ROTATE_4 = RuleClick(roi_front=(921,590,21,21), roi_back=(921,590,21,21), name="click_rotate_4")
 	# 随机点 
 	C_SAFE_RANDOM = RuleClick(roi_front=(0,0,111,12), roi_back=(0,0,111,12), name="safe_random")
+	# 点击探索大地图主线tab标题 
+	C_CLICK_MAIN_TITLE = RuleClick(roi_front=(1070,174,77,28), roi_back=(1070,174,77,28), name="click_main_title")
+	# 点击探索大地图玩法tab标题 
+	C_CLICK_PALY_TITLE = RuleClick(roi_front=(1178,172,77,28), roi_back=(1178,172,77,28), name="click_paly_title")
 
 
 	# Image Rule Assets
@@ -104,8 +108,6 @@ class ExplorationAssets:
 	# description 
 	I_BATTLE_START = RuleImage(roi_front=(555,688,39,27.5), roi_back=(221,677,561,41), threshold=0.8, method="Template matching", file="./tasks/Exploration/res/res_battle_start.png")
 	# description 
-	I_GET_REWARD = RuleImage(roi_front=(464,231,339,44), roi_back=(464,231,339,44), threshold=0.8, method="Template matching", file="./tasks/Exploration/res/res_get_reward.png")
-	# description 
 	I_RED_CLOSE = RuleImage(roi_front=(1027,129,41,42), roi_back=(1021,121,54,55), threshold=0.6, method="Template matching", file="./tasks/Exploration/res/res_red_close.png")
 	# description 
 	I_E_EXIT_CONFIRM = RuleImage(roi_front=(694,380,163,49), roi_back=(694,380,163,49), threshold=0.8, method="Template matching", file="./tasks/Exploration/res/res_e_exit_confirm.png")
@@ -125,6 +127,12 @@ class ExplorationAssets:
 	I_EXP_ARROW_LEFT = RuleImage(roi_front=(1244,115,18,26), roi_back=(1178,78,100,100), threshold=0.8, method="Template matching", file="./tasks/Exploration/res/res_exp_arrow_left.png")
 	# 战斗中的队友标识 
 	I_TEAM_EMOJI_FIGHT = RuleImage(roi_front=(38,405,37,37), roi_back=(18,386,74,75), threshold=0.8, method="Template matching", file="./tasks/Exploration/res/res_team_emoji_fight.png")
+	# 探索章节切换文件夹图标(移植自mine) 
+	I_E_OPEN_FOLDER = RuleImage(roi_front=(1241,114,22,28), roi_back=(1212,88,68,123), threshold=0.8, method="Template matching", file="./tasks/Exploration/res/res_e_open_folder.png")
+	# 探索大地图主线tab标题锚点(章字) 
+	I_CHECK_MAIN_TITLE = RuleImage(roi_front=(1150,457,32,32), roi_back=(1069,222,113,336), threshold=0.85, method="Template matching", file="./tasks/Exploration/res/res_check_main_title.png")
+	# 探索大地图玩法tab标题锚点(御魂) 
+	I_CHECK_PLAY_TITLE = RuleImage(roi_front=(1073,214,40,32), roi_back=(1065,210,190,316), threshold=0.85, method="Template matching", file="./tasks/Exploration/res/res_check_play_title.png")
 
 
 	# Long Click Rule Assets
@@ -146,7 +154,7 @@ class ExplorationAssets:
 	# 探索右上角 突破卷的数量 
 	O_REALM_RAID_NUMBER = RuleOcr(roi=(739,11,78,37), area=(739,11,78,37), mode="DigitCounter", method="Default", keyword="", name="realm_raid_number")
 	# （点出困难28时候）探索右上角 突破卷的数量 
-	O_REALM_RAID_NUMBER1 = RuleOcr(roi=(936,10,82,36), area=(936,10,82,36), mode="DigitCounter", method="Default", keyword="", name="realm_raid_number1")
+	O_REALM_RAID_NUMBER1 = RuleOcr(roi=(920,12,78,30), area=(919,12,80,30), mode="DigitCounter", method="Default", keyword="", name="realm_raid_number1")
 
 
 	# Swipe Rule Assets
