@@ -118,13 +118,16 @@ ConfigTable
    `DateTime`、`Cron`、`Option`、`Options` 的 Pydantic 序列化器已经输出字符串或
    底层值，不需要额外的 `enc_hook`。`msgspec.Struct` 与 `dict` 的 MsgPack 表示
    都是 map，因此按 Struct 编码的旧数据可以直接解码。
-3. `TaskBase.to_dict()` 只包含单个 Group 字段；动态 Group（`groups:
-   list[GroupMe]`）暂不支持，不会出现在 dict 里。
+3. `TaskBase.to_dict()` 只包含 Group 字段。静态 Group 用字段名作键；动态 Group
+   （`groups: list[GroupMe]`）的每个实例用 `字段@序号` 作键，序号是它在列表中
+   的位置。`from_dict()` 按序号还原列表，并丢弃动态字段下遗留的单条 Group
+   记录。
 4. 导入以 Task 声明的 Group 类型为准，不依赖行里的 `groupclass`。类改名或字段
    类型演进后旧行仍然可读。
 5. 载荷中的未知参数由 Pydantic 忽略，缺失字段使用模型默认值。
 6. `TaskStore.save()` 在一个事务里替换该 Task 实例的 Group 行：不再存在的 Group
-   行会被删除。
+   行会被删除。插入、删除或重排动态 Group 会立即重写该字段的全部行，序号始终
+   保持 `0..n-1`。
 7. Task 级非 Group 参数暂不持久化；配置粒度仍然是 Group。
 
 示例：

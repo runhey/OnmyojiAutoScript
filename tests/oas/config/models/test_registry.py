@@ -1,9 +1,16 @@
+from typing import Annotated
+
 import pytest
 from pydantic import Field
 
 from oas.config.models.args import Input
 from oas.config.models.groups import DynamicGroupBase, GroupBase
-from oas.config.models.registry import ConfigModelRegistry, config_model_registry
+from oas.config.models.registry import (
+    ConfigModelRegistry,
+    GroupAddress,
+    config_model_registry,
+    is_dynamic_annotation,
+)
 from oas.config.models.tasks import TaskBase
 
 
@@ -183,3 +190,72 @@ def test_registered_task_lookup_returns_the_class():
     assert config_model_registry.find_tasks('RegMoreTask') == (RegMoreTask,)
     assert config_model_registry.is_task_registered('RegMoreTask') is True
     assert config_model_registry.is_task_registered('RegMoreEmptyTask') is True
+
+
+class RegDynGroup(GroupBase):
+    value: int = Input.int(default=1)
+
+
+class RegDynTask(TaskBase):
+    main: RegDynGroup = Field(default_factory=RegDynGroup)
+    many: list[RegDynGroup] = Field(default_factory=list)
+    maybe: list[RegDynGroup] | None = None
+    label: str = Input.str(default='task')
+
+
+def test_is_dynamic_annotation_accepts_group_lists_only():
+    assert is_dynamic_annotation(list[RegDynGroup]) is True
+    assert is_dynamic_annotation(list[RegDynGroup] | None) is True
+    assert is_dynamic_annotation(Annotated[list[RegDynGroup], 'x']) is True
+    assert is_dynamic_annotation(RegDynGroup) is False
+    assert is_dynamic_annotation(list[int]) is False
+    assert is_dynamic_annotation(list[str] | None) is False
+    assert is_dynamic_annotation(str) is False
+
+
+def test_dynamic_fields_lists_the_group_lists_of_a_task():
+    assert config_model_registry.dynamic_fields(RegDynTask) == {
+        'many': RegDynGroup,
+        'maybe': RegDynGroup,
+    }
+
+
+def test_dynamic_fields_of_a_task_without_group_lists_is_empty():
+    assert config_model_registry.dynamic_fields(RegMoreTask) == {}
+    assert config_model_registry.dynamic_fields(RegMoreEmptyTask) == {}
+
+
+def test_group_address_make_and_split_roundtrip():
+    assert GroupAddress.make('main') == 'main'
+    assert GroupAddress.make('many', 0) == 'many@0'
+    assert GroupAddress.make('many', 12) == 'many@12'
+
+    assert GroupAddress.split('main') == ('main', None)
+    assert GroupAddress.split('many@12') == ('many', 12)
+    assert GroupAddress.split('many@01') == ('many', 1)
+
+
+def test_group_address_split_is_lenient_for_broken_addresses():
+    # A row that is not ``field@<digits>`` reads back as a whole field name, so
+    # an old or a broken writer cannot make loading raise.
+    assert GroupAddress.split('many@') == ('many@', None)
+    assert GroupAddress.split('many@x') == ('many@x', None)
+    assert GroupAddress.split('@0') == ('@0', None)
+    assert GroupAddress.split('main@1@2') == ('main@1@2', None)
+
+
+def test_group_address_make_rejects_invalid_field_and_index():
+    with pytest.raises(ValueError):
+        GroupAddress.make('')
+    with pytest.raises(ValueError):
+        GroupAddress.make('   ')
+    with pytest.raises(ValueError):
+        GroupAddress.make('a@b')
+    with pytest.raises(ValueError):
+        GroupAddress.make('many', -1)
+    with pytest.raises(ValueError):
+        GroupAddress.make('many', True)
+    with pytest.raises(ValueError):
+        GroupAddress.make('many', '0')  # type: ignore[arg-type]
+    with pytest.raises(ValueError):
+        GroupAddress.make(1)  # type: ignore[arg-type]

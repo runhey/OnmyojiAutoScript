@@ -404,7 +404,7 @@ def test_cfg_group_add_rejects_unknown_group_and_duplicate(config_mod):
         ':memory:', TASK, 'missing', 'RuntimeTestGroup'
     )
     assert ok is False
-    assert 'dynamic Group' in events[0].error.msg
+    assert 'No such group' in events[0].error.msg
 
 
 def test_cfg_group_copy_between_fields(config_mod):
@@ -434,18 +434,164 @@ def test_cfg_group_reset_restores_defaults(config_mod):
     assert data[TASK]['main']['count'] == 3
 
 
-def test_cfg_group_add_rejects_dynamic_field(config_mod):
+DYNAMIC = 'RuntimeDynamicTask@default'
+
+
+def test_cfg_group_add_appends_a_dynamic_instance(config_mod):
     config_mod.cfg_task_add(':memory:', 'RuntimeDynamicTask')
 
     ok, events = config_mod.cfg_group_add(
+        ':memory:', DYNAMIC, 'groups', 'RuntimeTestExtraGroup'
+    )
+
+    assert ok is True
+    assert [event.group for event in events] == ['groups@0']
+    assert events[0].arg == 'value'
+    assert ConfigTable(':memory:').get_group(DYNAMIC, 'groups@0') is not None
+
+
+def test_cfg_group_add_inserts_a_dynamic_instance_at_index(config_mod):
+    config_mod.cfg_task_add(':memory:', 'RuntimeDynamicTask')
+    for _ in range(2):
+        config_mod.cfg_group_add(':memory:', DYNAMIC, 'groups', 'RuntimeTestExtraGroup')
+
+    ok, _events = config_mod.cfg_group_add(
+        ':memory:', DYNAMIC, 'groups', 'RuntimeTestExtraGroup', index=1
+    )
+
+    assert ok is True
+    assert sorted(
+        row.group for row in ConfigTable(':memory:').list_task_rows(DYNAMIC)
+    ) == ['groups@0', 'groups@1', 'groups@2']
+    assert len(TaskStore.load(':memory:', RuntimeDynamicTask, DYNAMIC).groups) == 3
+
+
+def test_cfg_group_add_rejects_out_of_range_and_conflicting_index(config_mod):
+    config_mod.cfg_task_add(':memory:', 'RuntimeDynamicTask')
+
+    ok, events = config_mod.cfg_group_add(
+        ':memory:', DYNAMIC, 'groups', 'RuntimeTestExtraGroup', index=1
+    )
+    assert ok is False
+    assert 'out of range' in events[0].error.msg
+
+    ok, events = config_mod.cfg_group_add(
+        ':memory:', DYNAMIC, 'groups@2', 'RuntimeTestExtraGroup', index=1
+    )
+    assert ok is False
+    assert 'Conflicting index' in events[0].error.msg
+
+
+def test_cfg_group_del_resequences_a_dynamic_instance(config_mod):
+    config_mod.cfg_task_add(':memory:', 'RuntimeDynamicTask')
+    for _value in ('a', 'b', 'c'):
+        config_mod.cfg_group_add(':memory:', DYNAMIC, 'groups', 'RuntimeTestExtraGroup')
+    config_mod.cfg_arg_batch_set(
         ':memory:',
-        'RuntimeDynamicTask@default',
-        'groups',
-        'RuntimeTestExtraGroup',
+        [
+            _event(DYNAMIC, 'groups@0', 'value', 'a'),
+            _event(DYNAMIC, 'groups@1', 'value', 'b'),
+            _event(DYNAMIC, 'groups@2', 'value', 'c'),
+        ],
+    )
+
+    ok, events = config_mod.cfg_group_del(':memory:', DYNAMIC, 'groups@1')
+
+    assert ok is True
+    assert [event.group for event in events] == ['groups@0', 'groups@1']
+    stored = TaskStore.load(':memory:', RuntimeDynamicTask, DYNAMIC)
+    assert [group.value for group in stored.groups] == ['a', 'c']
+
+
+def test_cfg_group_del_rejects_a_missing_dynamic_instance(config_mod):
+    config_mod.cfg_task_add(':memory:', 'RuntimeDynamicTask')
+
+    ok, events = config_mod.cfg_group_del(':memory:', DYNAMIC, 'groups@0')
+
+    assert ok is False
+    assert 'No such Group instance' in events[0].error.msg
+
+
+def test_cfg_group_reset_resets_one_dynamic_instance(config_mod):
+    config_mod.cfg_task_add(':memory:', 'RuntimeDynamicTask')
+    config_mod.cfg_group_add(':memory:', DYNAMIC, 'groups', 'RuntimeTestExtraGroup')
+    config_mod.cfg_arg_set(':memory:', DYNAMIC, 'groups@0', 'value', 'changed')
+
+    ok, events = config_mod.cfg_group_reset(':memory:', DYNAMIC, 'groups@0')
+
+    assert ok is True
+    assert events[0].value == 'extra'
+    stored = TaskStore.load(':memory:', RuntimeDynamicTask, DYNAMIC)
+    assert [group.value for group in stored.groups] == ['extra']
+
+
+def test_cfg_group_copy_appends_a_dynamic_instance(config_mod):
+    config_mod.cfg_task_add(':memory:', 'RuntimeDynamicTask')
+    config_mod.cfg_group_add(':memory:', DYNAMIC, 'groups', 'RuntimeTestExtraGroup')
+    config_mod.cfg_arg_set(':memory:', DYNAMIC, 'groups@0', 'value', 'copied')
+
+    ok, _events = config_mod.cfg_group_copy(':memory:', DYNAMIC, 'groups@0', 'groups')
+
+    assert ok is True
+    stored = TaskStore.load(':memory:', RuntimeDynamicTask, DYNAMIC)
+    assert [group.value for group in stored.groups] == ['copied', 'copied']
+
+
+def test_cfg_group_copy_rejects_mixing_static_and_dynamic(config_mod):
+    config_mod.cfg_task_add(':memory:', 'MoreErrTask', 'one')
+
+    ok, events = config_mod.cfg_group_copy(
+        ':memory:', 'MoreErrTask@one', 'main', 'dynamic'
     )
 
     assert ok is False
-    assert 'dynamic Group' in events[0].error.msg
+    assert 'static Group and a dynamic Group list' in events[0].error.msg
+
+
+def test_cfg_task_copy_copies_dynamic_instances(config_mod):
+    config_mod.cfg_task_add(':memory:', 'RuntimeDynamicTask')
+    config_mod.cfg_group_add(':memory:', DYNAMIC, 'groups', 'RuntimeTestExtraGroup')
+
+    ok, _events = config_mod.cfg_task_copy(':memory:', DYNAMIC, 'copy')
+
+    assert ok is True
+    stored = TaskStore.load(':memory:', RuntimeDynamicTask, 'RuntimeDynamicTask@copy')
+    assert len(stored.groups) == 1
+
+
+def test_dynamic_address_errors(config_mod):
+    config_mod.cfg_task_add(':memory:', 'RuntimeDynamicTask')
+
+    ok, events = config_mod.cfg_arg_set(':memory:', DYNAMIC, 'groups', 'value', 'x')
+    assert ok is False
+    assert 'Dynamic Group requires an index' in events[0].error.msg
+
+    ok, events = config_mod.cfg_arg_get(':memory:', DYNAMIC, 'groups@4', 'value')
+    assert ok is False
+    assert 'No such Group instance' in events[0].error.msg
+
+
+def test_static_group_rejects_an_index_address(config_mod):
+    config_mod.cfg_task_add(':memory:', 'RuntimeTestTask')
+
+    ok, events = config_mod.cfg_arg_set(':memory:', TASK, 'main@0', 'count', 4)
+
+    assert ok is False
+    assert 'Static Group does not take an index' in events[0].error.msg
+
+
+def test_config_set_addresses_a_dynamic_instance(config_mod):
+    config_mod.cfg_task_add(':memory:', 'RuntimeDynamicTask')
+    config_mod.cfg_group_add(':memory:', DYNAMIC, 'groups', 'RuntimeTestExtraGroup')
+
+    ok, events = config_mod.config_set(
+        ':memory:', _event(DYNAMIC, 'groups@0', 'value', 'set')
+    )
+
+    assert ok is True
+    assert events[0].group == 'groups@0'
+    stored = TaskStore.load(':memory:', RuntimeDynamicTask, DYNAMIC)
+    assert stored.groups[0].value == 'set'
 
 
 def test_group_operations_do_not_load_the_whole_task(config_mod, monkeypatch):
@@ -837,7 +983,7 @@ def test_cfg_arg_set_invalid_value_leaves_default(more_mod):
     assert events[0].value == 1
 
 
-def test_cfg_group_add_rejects_missing_task_mismatch_and_dynamic(more_mod):
+def test_cfg_group_add_rejects_missing_task_and_mismatch(more_mod):
     assert (
         more_mod.cfg_group_add(
             ':memory:', 'NoSuchTask@missing', 'main', 'MoreErrGroup'
@@ -850,12 +996,12 @@ def test_cfg_group_add_rejects_missing_task_mismatch_and_dynamic(more_mod):
         more_mod.cfg_group_add(':memory:', 'MoreErrTask@one', 'main', 'WrongGroup')[0]
         is False
     )
-    assert (
-        more_mod.cfg_group_add(
-            ':memory:', 'MoreErrTask@one', 'dynamic', 'MoreErrGroup'
-        )[0]
-        is False
+    ok, events = more_mod.cfg_group_add(
+        ':memory:', 'MoreErrTask@one', 'dynamic', 'MoreErrGroup'
     )
+    assert ok is True
+    assert {event.group for event in events} == {'dynamic@0'}
+    assert {event.arg for event in events} == {'count', 'value'}
 
 
 def test_cfg_group_copy_rejects_same_source_and_missing_targets(more_mod):

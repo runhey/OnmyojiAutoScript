@@ -182,8 +182,9 @@ class ConfigMod(ConfigAccessState):
         task: str,
         group: str,
         groupclass: str,
+        index: int | None = None,
     ) -> tuple[bool, list[ConfigSetEvent]]:
-        """新增 Group 实例；动态 Group 暂不支持。"""
+        """新增一个 Group；动态 Group 用 ``index`` 指定插入位置，缺省追加。"""
         return result
 
     @modconfig.cfg_group_del()
@@ -194,7 +195,7 @@ class ConfigMod(ConfigAccessState):
         task: str,
         group: str,
     ) -> tuple[bool, list[ConfigSetEvent]]:
-        """删除一个 Group 实例的配置行。"""
+        """删除一个 Group 的配置行；动态实例用 ``字段@序号`` 定位。"""
         return result
 
     @modconfig.cfg_group_copy()
@@ -207,7 +208,7 @@ class ConfigMod(ConfigAccessState):
         new_group: str,
         new_task: str | None = None,
     ) -> tuple[bool, list[ConfigSetEvent]]:
-        """复制 Group 实例；``new_task`` 为空时在同一 Task 内复制。"""
+        """复制 Group；``new_task`` 为空时在同一 Task 内复制。"""
         return result
 
     @modconfig.cfg_group_reset()
@@ -218,7 +219,7 @@ class ConfigMod(ConfigAccessState):
         task: str,
         group: str,
     ) -> tuple[bool, list[ConfigSetEvent]]:
-        """把一个 Group 恢复为模型默认值。"""
+        """把一个 Group 恢复为模型默认值；动态实例用 ``字段@序号`` 定位。"""
         return result
 
     @modconfig.cfg_arg_get()

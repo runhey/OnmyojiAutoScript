@@ -164,16 +164,52 @@ class StoreMoreTask(TaskBase):
     dynamic: list[StoreMoreGroup] = Field(default_factory=list)
 
 
-def test_dynamic_groups_are_not_persisted(memory_config):
+def test_dynamic_groups_are_persisted_by_index(memory_config):
     store = ':memory:'
-    task = StoreMoreTask(dynamic=[StoreMoreGroup(count=9)])
+    task = StoreMoreTask(dynamic=[StoreMoreGroup(count=9), StoreMoreGroup(count=8)])
 
     TaskStore.save(store, task, 'StoreMoreTask@one')
 
     rows = ConfigTable(':memory:').list_task_rows('StoreMoreTask@one')
 
-    assert [row.group for row in rows] == ['main']
-    assert TaskStore.load(store, StoreMoreTask, 'StoreMoreTask@one').dynamic == []
+    assert sorted(row.group for row in rows) == ['dynamic@0', 'dynamic@1', 'main']
+    loaded = TaskStore.load(store, StoreMoreTask, 'StoreMoreTask@one')
+    assert [group.count for group in loaded.dynamic] == [9, 8]
+
+
+def test_save_resequences_dynamic_groups_after_shrinking(memory_config):
+    store = ':memory:'
+    TaskStore.save(
+        store,
+        StoreMoreTask(dynamic=[StoreMoreGroup(count=1), StoreMoreGroup(count=2)]),
+        'StoreMoreTask@one',
+    )
+
+    TaskStore.save(
+        store,
+        StoreMoreTask(dynamic=[StoreMoreGroup(count=2)]),
+        'StoreMoreTask@one',
+    )
+
+    rows = ConfigTable(':memory:').list_task_rows('StoreMoreTask@one')
+
+    assert sorted(row.group for row in rows) == ['dynamic@0', 'main']
+    loaded = TaskStore.load(store, StoreMoreTask, 'StoreMoreTask@one')
+    assert [group.count for group in loaded.dynamic] == [2]
+
+
+def test_load_drops_a_row_left_over_from_a_single_group_declaration(memory_config):
+    ConfigTable(':memory:').upsert_group(
+        'StoreMoreTask',
+        'StoreMoreTask@one',
+        'StoreMoreGroup',
+        'dynamic',
+        Codec.encode({'count': 7}),
+    )
+
+    task = TaskStore.load(':memory:', StoreMoreTask, 'StoreMoreTask@one')
+
+    assert task.dynamic == []
 
 
 def test_payload_unknown_fields_are_ignored(memory_config):

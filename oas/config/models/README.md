@@ -293,7 +293,7 @@ schema 节点；如果只是补充或修改少数属性，应优先使用 `set` 
 | 输出 | 原始 schema 不被污染，最终结果是当前 Task 的独立 schema |
 
 
-### 动态 Group 的 JSON 导出
+### 动态 Group 的存储与导出
 
 #### 已确定的模型
 
@@ -309,36 +309,53 @@ class Task(TaskBase):
 实例；删除时移除对应元素。列表保留用户排列顺序，因此删除中间项后，后面的
 元素自然前移，不需要留下空位、维护 count 或给实例重新分配业务 ID。
 
-#### 当前阶段：JSON
+#### 数据库映射
 
-当前只实现 JSON 导出，直接使用 `model_dump(mode="json")` 的嵌套数组结构：
+数据库不新增列、不做迁移：每个 `GroupMe` 实例复用 Group 表的一行，`group`
+列保存地址 `字段@序号`，序号就是它在列表中的位置。
 
-```json
-{
-  "groups": [
-    {"name": "第一组", "enabled": true},
-    {"name": "第二组", "enabled": false}
-  ]
-}
-```
+| 层 | 表示 |
+|---|---|
+| 运行时内存 | `groups: list[GroupMe]` |
+| 数据库行 | `group` 列 = `字段@序号`，`value` 列 = 该实例的载荷 |
+| 导出到 UI | `字段@序号`，与内存列表一一对应 |
+| JSON / JSON Schema | 完整的嵌套数组，不展开为 `group_1.name` |
 
-导出的数组顺序与 Task 中列表顺序一致。JSON 结果不展开成
-`group_1.name`、`group_2.name` 这样的键，也不额外输出 Group 数量字段；数组本身
-就能表达数量和顺序。空列表导出为 `"groups": []`。
+序号是位置而不是身份：插入、删除或重排会把该字段的全部行立即重写成
+`字段@0 … 字段@n-1`，因此不会留下空洞或重复序号。地址由 `GroupAddress`
+生成和解析：`make()` 严格校验字段名与序号，`split()` 宽松解析，凡不是
+`字段@<数字>` 的值整体当作字段名，避免旧数据让加载失败。
 
-#### 后续阶段：数据库
+静态 Group 与动态 Group 列表共用同一套地址语法，但含义不同：静态 Group 只用
+字段名，带序号会被拒绝；动态 Group 实例必须带序号，只有新增实例的操作允许
+省略序号，省略时追加到末尾。
 
-数据库实现完成后，每个 `GroupMe` 实例对应数据库中的一条 Group 记录。读取时按
-数据库定义的顺序取回记录并组装成 `groups` 列表；保存和删除记录的细节由后续
-数据库适配层负责。数据库尚未实现，因此当前 JSON 导出不调用数据库，也不定义
-数据库表结构、主键或序号字段。
-
-数据库适配应保持 Task 的 `groups: list[GroupMe]` 运行时接口。若数据库需要稳定
-主键或显式排序字段，应在记录层处理，不把数据库标识混入当前 JSON Group 字段。
+`to_dict()` 为每个动态实例输出 `字段@序号` 键，`from_dict()` 按序号排序还原
+列表。动态字段下如果出现单条 Group 记录（旧格式残留），`from_dict()` 会丢弃
+并记录警告，而不是让整次加载失败。
 
 #### JSON Schema
 
 Task 的 JSON Schema 应将 `groups` 描述为数组，并把 `GroupMe` 的模型 schema
-作为数组元素 schema（`items`）。Schema 描述允许的 Group 结构，不应把当前列表
-长度固化为固定字段数量或固定 `maxItems`。具体前端如何增加、删除或排序数组项，
-由 UI 层消费该数组 schema 时实现。
+作为数组元素 schema（`items`）：
+
+```json
+{
+  "properties": {
+    "main": {"$ref": "#/$defs/GroupMe"},
+    "groups": {"type": "array", "items": {"$ref": "#/$defs/GroupMe"}}
+  }
+}
+```
+
+静态 Group 字段与动态 Group 列表共享同一个 `$defs` 定义，UI 只需要消费一份
+Group schema。Schema 规则（`SchemaRule`）可以作用到数组元素内部，例如
+`groups.name`：
+
+- 没有规则时，`items` 与静态 Group 字段都指向同一个 `$defs` 定义；
+- 有规则时，导出会把数组元素节点实例化为独立副本再应用规则，`$defs` 中的公共
+  定义和同一 Task 的其他 Group 字段不受影响。
+
+Schema 描述允许的 Group 结构，不应把当前列表长度固化为固定字段数量或固定
+`maxItems`。具体前端如何增加、删除或排序数组项，由 UI 层消费该数组 schema
+时实现。

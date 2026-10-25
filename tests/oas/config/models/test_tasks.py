@@ -1209,6 +1209,59 @@ def test_when_false_prevents_validation_of_the_rule_value() -> None:
     assert first['hide'] is False
 
 
+def test_plain_dynamic_group_schema_shares_the_group_definition() -> None:
+    class PlainListTask(TaskBase):
+        group: ExampleGroup = Field(default_factory=ExampleGroup)
+        many: list[ExampleGroup] = Field(default_factory=list)
+
+    schema_data = PlainListTask.model_json_schema()
+
+    # One Group class is described once: the static field and the list items
+    # both point at the same ``$defs`` entry, so the UI has a single schema to
+    # render for a Group whichever way the Task declares it.
+    assert schema_data['properties']['group'] == {'$ref': '#/$defs/ExampleGroup'}
+    assert schema_data['properties']['many']['items'] == {
+        '$ref': '#/$defs/ExampleGroup'
+    }
+    assert list(schema_data['$defs']) == ['ExampleGroup']
+
+
+def test_dynamic_group_schema_applies_overrides_to_the_list_items() -> None:
+    class ListRuleTask(TaskBase):
+        many: list[ExampleGroup] = Field(default_factory=list)
+
+        @classmethod
+        @schema.icon('many.first', 'dyn')
+        @schema.hide('many.second')
+        def schema_overrides(cls, rules: list[SchemaRule]) -> None:
+            cls._pending_schema_rules.extend(rules)
+
+    many = ListRuleTask.model_json_schema()['properties']['many']
+
+    assert many['type'] == 'array'
+    assert many['items']['properties']['first']['icon'] == 'dyn'
+    assert many['items']['properties']['second']['hide'] is True
+
+
+def test_dynamic_group_schema_override_does_not_mutate_the_definition() -> None:
+    class ListIsolationTask(TaskBase):
+        group: ExampleGroup = Field(default_factory=ExampleGroup)
+        many: list[ExampleGroup] = Field(default_factory=list)
+
+        @classmethod
+        @schema.icon('many.first', 'dyn')
+        def schema_overrides(cls, rules: list[SchemaRule]) -> None:
+            cls._pending_schema_rules.extend(rules)
+
+    schema_data = ListIsolationTask.model_json_schema()
+
+    definition = schema_data['$defs']['ExampleGroup']
+    assert 'icon' not in definition['properties']['first']
+    assert definition['properties']['second']['hide'] is False
+    # The sibling static field still shares that untouched definition.
+    assert schema_data['properties']['group']['$ref'] == '#/$defs/ExampleGroup'
+
+
 def test_multiple_rules_can_target_the_same_node() -> None:
     class MultiRuleTask(TaskBase):
         group: ExampleGroup = Field(default_factory=ExampleGroup)
@@ -1263,12 +1316,13 @@ def test_to_dict_only_exports_single_group_fields():
     assert 'dynamic' not in data
 
 
-def test_to_dict_omits_non_empty_dynamic_group_lists():
+def test_to_dict_addresses_each_dynamic_group_instance():
     task = TaskIoTask(dynamic=[TaskIoExtraGroup(value='one')])
 
     data = task.to_dict()
 
-    assert list(data) == ['main', 'extra']
+    assert list(data) == ['main', 'extra', 'dynamic@0']
+    assert data['dynamic@0'] == {'value': 'one'}
 
 
 def test_from_dict_roundtrip():
@@ -1357,8 +1411,106 @@ def test_from_dict_accepts_dynamic_group_dicts():
     assert task.dynamic[0].count == 3
 
 
-def test_to_dict_still_omits_dynamic_groups():
+def test_to_dict_addresses_dynamic_groups_without_a_plain_key():
     task = TaskErrTask.from_dict({'dynamic': [{'count': 3}]})
 
-    assert 'dynamic' not in task.to_dict()
-    assert list(task.to_dict()) == ['main']
+    data = task.to_dict()
+
+    assert list(data) == ['main', 'dynamic@0']
+    assert 'dynamic' not in data
+
+
+class TaskIoOptionalTask(TaskBase):
+    main: TaskIoMainGroup = Field(default_factory=TaskIoMainGroup)
+    many: list[TaskIoExtraGroup] | None = None
+
+
+def test_group_rows_addresses_static_and_dynamic_fields():
+    task = TaskIoTask(
+        main=TaskIoMainGroup(count=4),
+        extra=TaskIoExtraGroup(value='extra'),
+        dynamic=[
+            TaskIoExtraGroup(value='one'),
+            TaskIoExtraGroup(value='two'),
+        ],
+    )
+
+    rows = list(task.group_rows())
+
+    assert [(address, group_class) for address, group_class, _payload in rows] == [
+        ('main', TaskIoMainGroup),
+        ('extra', TaskIoExtraGroup),
+        ('dynamic@0', TaskIoExtraGroup),
+        ('dynamic@1', TaskIoExtraGroup),
+    ]
+    assert [payload for _address, _class, payload in rows] == [
+        {'count': 4},
+        {'value': 'extra'},
+        {'value': 'one'},
+        {'value': 'two'},
+    ]
+
+
+def test_group_rows_revalidates_a_raw_element_appended_to_a_dynamic_field():
+    task = TaskIoTask()
+    # ``validate_assignment`` cannot see a ``list.append``, so an element may
+    # still be the raw payload a caller handed in.
+    task.dynamic.append({'value': 'raw'})  # type: ignore[arg-type]
+
+    rows = list(task.group_rows())
+
+    assert [address for address, _class, _payload in rows] == [
+        'main',
+        'extra',
+        'dynamic@0',
+    ]
+    assert rows[-1][1] is TaskIoExtraGroup
+    assert rows[-1][2] == {'value': 'raw'}
+
+
+def test_group_rows_skips_a_none_dynamic_field():
+    assert [
+        address for address, _class, _payload in TaskIoOptionalTask().group_rows()
+    ] == ['main']
+
+    task = TaskIoOptionalTask(many=[TaskIoExtraGroup(value='one')])
+    assert [address for address, _class, _payload in task.group_rows()] == [
+        'main',
+        'many@0',
+    ]
+
+
+def test_from_dict_rebuilds_dynamic_instances_in_index_order():
+    task = TaskErrTask.from_dict(
+        {
+            'main': {'count': 5},
+            'dynamic@1': {'count': 9},
+            'dynamic@0': {'count': 3},
+        }
+    )
+
+    assert task.main.count == 5
+    # The stored index, not the payload order, is the list order.
+    assert [group.count for group in task.dynamic] == [3, 9]
+
+
+def test_from_dict_drops_an_indexed_key_for_a_static_group():
+    task = TaskErrTask.from_dict({'main@0': {'count': 7}})
+
+    assert task.main.count == 1
+
+
+def test_from_dict_drops_a_plain_payload_for_a_dynamic_field():
+    # A single Group payload under the bare field name is what an older writer
+    # left behind: the whole list is rebuilt from the addressed rows instead.
+    task = TaskErrTask.from_dict({'dynamic': {'count': 4}})
+
+    assert task.dynamic == []
+    assert task.main.count == 1
+
+
+def test_from_dict_ignores_an_unknown_indexed_address():
+    task = TaskErrTask.from_dict({'missing@0': {'count': 4}})
+
+    assert task.dynamic == []
+    assert task.main.count == 1

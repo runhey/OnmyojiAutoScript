@@ -5,7 +5,7 @@ Config access
 from __future__ import annotations
 
 from collections import defaultdict
-from collections.abc import Mapping
+from collections.abc import Iterator, Mapping
 from functools import wraps
 from types import MethodType, TracebackType
 from typing import Any, Self, get_args, get_origin
@@ -15,7 +15,11 @@ from pydantic import ValidationError
 from oas.config.entry.codec import Codec
 from oas.config.entry.model import ConfigSetEvent
 from oas.config.models.groups import GroupBase
-from oas.config.models.registry import config_model_registry
+from oas.config.models.registry import (
+    GroupAddress,
+    config_model_registry,
+    is_dynamic_annotation,
+)
 from oas.config.models.tasks import TaskBase
 from oas.config.runtime.config_mod import ConfigMod
 from oas.logger import logger
@@ -142,6 +146,45 @@ class GroupProxy:
         return str(self._obj)
 
 
+class DynamicGroupProxy:
+    """
+    A read-only, index-ordered view of a dynamic Group list.
+    Its elements are GroupProxy objects, so the usual argument assignment
+    still triggers auto save:
+        config.Targets[1].Count = value
+    Adding, removing or reordering an instance is a structural change and
+    goes through cfg_group_add / cfg_group_del / cfg_group_copy, which
+    resequence the stored ``field@index`` addresses.
+    """
+
+    __slots__ = ('_config', '_field', '_task')
+
+    def __init__(self, config: ConfigAccess, task: str, field: str) -> None:
+        self._config = config
+        self._task = task
+        self._field = field
+
+    def __len__(self) -> int:
+        return len(self._config._dynamic_addresses(self._field))
+
+    def __iter__(self) -> Iterator[GroupProxy]:
+        for address in self._config._dynamic_addresses(self._field):
+            group = self._config._load_group(self._task, address)
+            if group is not None:
+                yield GroupProxy(group, self._config, self._task, address)
+
+    def __getitem__(self, index: int) -> GroupProxy:
+        addresses = self._config._dynamic_addresses(self._field)
+        address = addresses[index]
+        group = self._config._load_group(self._task, address)
+        if group is None:
+            raise IndexError(index)
+        return GroupProxy(group, self._config, self._task, address)
+
+    def __repr__(self) -> str:
+        return f'<DynamicGroupProxy {self._task}.{self._field} x{len(self)}>'
+
+
 class ConfigAccess(ConfigMod):
     """
     Config access and Group runtime state.
@@ -237,25 +280,47 @@ class ConfigAccess(ConfigMod):
         return candidate if issubclass(candidate, TaskBase) else None
 
     @staticmethod
-    def _group_class(task_class: type[TaskBase], group: str) -> type[GroupBase] | None:
-        field = task_class.model_fields.get(group)
-        if field is None:
+    def _group_class(
+        task_class: type[TaskBase], address: str
+    ) -> type[GroupBase] | None:
+        """Return the Group class one address resolves to.
+
+        A static Group is named by its field, while one instance of a
+        dynamically managed Group list is named as ``field@index``.  A bare
+        dynamic field returns ``None`` here: its instances are read through the
+        list view of the field instead of as a single Group.
+        """
+        field, index = GroupAddress.split(address)
+        field_info = task_class.model_fields.get(field)
+        if field_info is None:
             return None
-        # Dynamic Group containers are intentionally outside this access layer
-        # until their flattened persistence format is implemented.
-        annotation = field.annotation
-        origin = get_origin(annotation)
-        if origin in (list, tuple, set, frozenset):
+        if is_dynamic_annotation(field_info.annotation) != (index is not None):
             return None
-        if any(
-            get_origin(argument) in (list, tuple, set, frozenset)
-            for argument in get_args(annotation)
-        ):
-            return None
-        group_class = config_model_registry.group_for_field(task_class, group)
+        group_class = config_model_registry.group_for_field(task_class, field)
         if group_class is None or not issubclass(group_class, GroupBase):
             return None
         return group_class
+
+    def _dynamic_addresses(self, field: str) -> list[str]:
+        """
+        List the stored addresses of one dynamic Group field, in index order.
+
+        Args:
+            field (str): Task field name that declares the Group list
+
+        Returns:
+            list[str]: Addresses such as ``field@0``, ordered by index
+        """
+        self.config_cache()
+        found: list[tuple[int, str]] = []
+        for task, address in self._dict_row:
+            if task != self.task:
+                continue
+            name, index = GroupAddress.split(address)
+            if name == field and index is not None:
+                found.append((index, address))
+        found.sort()
+        return [address for _index, address in found]
 
     def _load_group(
         self,
@@ -264,11 +329,11 @@ class ConfigAccess(ConfigMod):
         group_class: type[GroupBase] | None = None,
     ) -> GroupBase | None:
         """
-        Load one static Group from cache or database.
+        Load one Group from cache or database.
 
         Args:
             task (str): Task instance name
-            group (str): Group field name
+            group (str): Group address; ``field`` or ``field@index``
             group_class (type[GroupBase] | None): Optional Group class
 
         Returns:
@@ -343,10 +408,15 @@ class ConfigAccess(ConfigMod):
             task_class = self._task_class(self.task)
             if task_class is None:
                 return
-            for group in task_class.model_fields:
-                group_class = self._group_class(task_class, group)
+            dynamic = config_model_registry.dynamic_fields(task_class)
+            for field in task_class.model_fields:
+                if field in dynamic:
+                    for address in self._dynamic_addresses(field):
+                        self._load_group(self.task, address, dynamic[field])
+                    continue
+                group_class = self._group_class(task_class, field)
                 if group_class is not None:
-                    self._load_group(self.task, group, group_class)
+                    self._load_group(self.task, field, group_class)
 
     def __getattr__(self, name: str) -> Any:
         """
@@ -357,6 +427,8 @@ class ConfigAccess(ConfigMod):
         task_class = self._task_class(self.task)
         if task_class is None or name not in task_class.model_fields:
             raise AttributeError(name)
+        if name in config_model_registry.dynamic_fields(task_class):
+            return DynamicGroupProxy(self, self.task, name)
         group = self._load_group(self.task, name)
         if group is None:
             raise AttributeError(f'no such static group: {self.task}.{name}')

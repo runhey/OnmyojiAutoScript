@@ -99,8 +99,7 @@ def test_dynamic_and_non_group_fields_are_not_static_groups(access):
     assert access._load_group('AccessTask@default', 'dynamic') is None
     assert access._load_group('AccessTask@default', 'label') is None
 
-    with pytest.raises(AttributeError):
-        _ = access.dynamic
+    assert len(access.dynamic) == 0
     with pytest.raises(AttributeError):
         _ = access.label
 
@@ -383,8 +382,9 @@ def test_load_group_returns_none_for_unknown_task_and_group(access_errors):
     assert access_errors._load_group('AccessErrTask@default', 'missing') is None
 
 
-def test_group_class_rejects_union_of_group_lists():
+def test_group_class_rejects_a_bare_dynamic_field():
     assert ConfigAccess._group_class(AccessErrListTask, 'groups') is None
+    assert ConfigAccess._group_class(AccessErrListTask, 'groups@0') is AccessErrGroup
 
 
 def test_cross_set_ignores_unknown_group_field_and_invalid_value(access_errors):
@@ -497,3 +497,78 @@ def test_release_with_pending_changes_does_not_raise(access_errors):
 
     assert access_errors._modified == {}
     assert access_errors._local.batch_depth == 0
+
+
+class AccessDynGroup(GroupBase):
+    count: int = Input.int(default=1, ge=0)
+    name: str = Input.str(default='dyn')
+
+
+class AccessDynTask(TaskBase):
+    main: AccessGroup = Field(default_factory=AccessGroup)
+    targets: list[AccessDynGroup] = Field(default_factory=list)
+
+
+@pytest.fixture
+def access_dynamic(memory_config):
+    task = AccessDynTask(targets=[AccessDynGroup(count=7), AccessDynGroup(count=8)])
+    TaskStore.save(':memory:', task, 'AccessDynTask@default')
+    return ConfigAccess(':memory:', 'AccessDynTask@default')
+
+
+def test_init_task_caches_every_dynamic_instance(access_dynamic):
+    assert set(access_dynamic._dict_group) == {
+        ('AccessDynTask@default', 'main'),
+        ('AccessDynTask@default', 'targets@0'),
+        ('AccessDynTask@default', 'targets@1'),
+    }
+    assert ('targets@1', 'count') in access_dynamic.bound
+
+
+def test_dynamic_view_reads_instances_in_index_order(access_dynamic):
+    assert len(access_dynamic.targets) == 2
+    assert [proxy.count for proxy in access_dynamic.targets] == [7, 8]
+    assert access_dynamic.targets[1].count == 8
+    assert repr(access_dynamic.targets) == (
+        '<DynamicGroupProxy AccessDynTask@default.targets x2>'
+    )
+
+
+def test_dynamic_view_assignment_saves_one_instance(access_dynamic):
+    access_dynamic.targets[1].count = 5
+
+    stored = TaskStore.load(':memory:', AccessDynTask, 'AccessDynTask@default')
+    assert [group.count for group in stored.targets] == [7, 5]
+
+
+def test_dynamic_view_is_read_only(access_dynamic):
+    assert not hasattr(access_dynamic.targets, 'append')
+    with pytest.raises(AttributeError):
+        access_dynamic.targets.append(AccessDynGroup())
+    with pytest.raises(TypeError):
+        access_dynamic.targets[0] = AccessDynGroup()
+
+
+def test_dynamic_view_rejects_out_of_range_index(access_dynamic):
+    with pytest.raises(IndexError):
+        _ = access_dynamic.targets[2]
+
+
+def test_dynamic_view_follows_a_resequenced_field(memory_config):
+    TaskStore.save(
+        ':memory:',
+        AccessDynTask(targets=[AccessDynGroup(count=1), AccessDynGroup(count=2)]),
+        'AccessDynTask@default',
+    )
+    access = ConfigAccess(':memory:', 'AccessDynTask@default')
+
+    assert [proxy.count for proxy in access.targets] == [1, 2]
+
+    TaskStore.save(':memory:', AccessDynTask(), 'AccessDynTask@default')
+    # The pool may reuse the same SQLite connection, so force a stale
+    # data-version token to exercise the reload branch.
+    connection_id, _version = access._data_version
+    access._data_version = (connection_id, -1)
+
+    assert access.refresh() is True
+    assert len(access.targets) == 0

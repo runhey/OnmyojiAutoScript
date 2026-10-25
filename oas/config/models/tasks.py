@@ -2,12 +2,18 @@
 
 from __future__ import annotations
 
-from collections.abc import Callable, Mapping, Sequence
+import copy
+from collections.abc import Callable, Iterator, Mapping, Sequence
 from dataclasses import dataclass
 from typing import Any, ClassVar, Literal, Self
 
 from oas.config.models.base import ConfigBase
 from oas.config.models.groups import GroupBase
+from oas.config.models.registry import (
+    GroupAddress,
+    config_model_registry,
+)
+from oas.logger import logger
 
 Operation = Literal['set', 'merge', 'delete', 'replace']
 
@@ -189,23 +195,95 @@ class TaskBase(ConfigBase):
         # Each Task subclass gets an independent temporary rule buffer.
         cls._pending_schema_rules = []
 
+    def group_rows(self) -> Iterator[tuple[str, type[GroupBase], dict[str, Any]]]:
+        """Yield ``(address, Group class, payload)`` for every stored Group.
+
+        A statically declared Group field yields its field name.  A
+        dynamically managed Group list yields one row per instance, addressed
+        as ``field@index`` in list order, which is exactly what the database
+        row and the reply event carry.
+
+        Elements are revalidated here, because assigning a value to a list
+        never runs the field validator: a plain mapping can therefore sit
+        inside the list even though the field declares a Group class.
+        """
+        dynamic = config_model_registry.dynamic_fields(type(self))
+        for field_name in type(self).model_fields:
+            value = getattr(self, field_name)
+            if field_name in dynamic:
+                if value is None:
+                    continue
+                for index, item in enumerate(value):
+                    obj = (
+                        item
+                        if isinstance(item, GroupBase)
+                        else dynamic[field_name].model_validate(item)
+                    )
+                    yield GroupAddress.make(field_name, index), type(obj), obj.to_dict()
+            elif isinstance(value, GroupBase):
+                yield field_name, type(value), value.to_dict()
+
     def to_dict(self) -> dict[str, dict[str, Any]]:
         """Return the Group configuration of this Task as a plain dict.
 
-        Only single Group fields are exported.  Dynamically managed Group
-        lists are not supported yet and are intentionally omitted.
+        Statically declared Group fields keep their field name; each instance
+        of a dynamically managed Group list is addressed as ``field@index``,
+        so the dict maps one to one onto the stored rows.
         """
-        data: dict[str, dict[str, Any]] = {}
-        for field_name in type(self).model_fields:
-            value = getattr(self, field_name)
-            if isinstance(value, GroupBase):
-                data[field_name] = value.to_dict()
-        return data
+        return {
+            address: payload for address, _group_class, payload in self.group_rows()
+        }
 
     @classmethod
     def from_dict(cls, data: Mapping[str, Any]) -> Self:
-        """Build a validated Task from a Group configuration dict."""
-        return cls.model_validate(data)
+        """Build a validated Task from a Group configuration dict.
+
+        ``field@index`` keys are regrouped into the ordered instance list of
+        the dynamically managed Group field they address.  A field that the
+        model now declares as a dynamic list still accepts the nested list
+        form, and drops a plain single-Group payload instead of failing the
+        load: such a payload is a row left over from an earlier field
+        declaration.  The dropped value stays readable in the database until
+        the next save.
+        """
+        if not isinstance(data, Mapping):
+            # Keep Pydantic's own report for a payload that is not a mapping.
+            return cls.model_validate(data)
+
+        dynamic = config_model_registry.dynamic_fields(cls)
+        plain: dict[str, Any] = {}
+        instances: dict[str, dict[int, Any]] = {}
+        for key, value in data.items():
+            field, index = GroupAddress.split(key)
+            if index is None:
+                plain[field] = value
+            else:
+                instances.setdefault(field, {})[index] = value
+
+        merged: dict[str, Any] = {}
+        for field in plain.keys() | instances.keys():
+            if field in dynamic:
+                if field in plain and isinstance(plain[field], Mapping):
+                    logger.warning(
+                        f'Dropping stored "{field}" of {cls.__name__}: the field '
+                        f'now holds dynamic Group instances addressed by index'
+                    )
+                elif field in plain:
+                    merged[field] = plain[field]
+                    continue
+                merged[field] = [
+                    instances[field][index]
+                    for index in sorted(instances.get(field, {}))
+                ]
+                continue
+            if field in instances:
+                logger.warning(
+                    f'Dropping stored "{field}@..." of {cls.__name__}: the field '
+                    f'does not declare a dynamic Group list'
+                )
+            if field in plain:
+                merged[field] = plain[field]
+        return cls.model_validate(merged)
 
     @classmethod
     def schema_overrides(cls, rules: list[SchemaRule]) -> None:
@@ -285,21 +363,23 @@ class TaskBase(ConfigBase):
             reference = child.get('$ref')
             if not reference:
                 return child
+            # The resolved model schema is copied in depth: a rule then edits
+            # this Task's node only, and the shared "$defs" entry keeps serving
+            # every other field and Task that references the same Group.
             if resolve_ref_schema is None:
-                resolved = dict(resolve_ref(reference))
+                resolved = copy.deepcopy(resolve_ref(reference))
             else:
-                resolved = dict(resolve_ref_schema(child))
+                resolved = copy.deepcopy(resolve_ref_schema(child))
             resolved.update(
                 {key: value for key, value in child.items() if key != '$ref'}
             )
-            if isinstance(resolved.get('properties'), dict):
-                resolved['properties'] = dict(resolved['properties'])
             return resolved
 
         node: dict[str, Any] = schema_data
         parent: dict[str, Any] = schema_data
         key = ''
-        for part in path.split('.'):
+        parts = path.split('.')
+        for position, part in enumerate(parts):
             node = materialize(node)
             properties = node.get('properties')
             if not isinstance(properties, dict) or part not in properties:
@@ -308,6 +388,16 @@ class TaskBase(ConfigBase):
             child = materialize(properties[part])
             properties[part] = child
             node = child
+            if position + 1 < len(parts):
+                # A path may continue through an array field, which is how
+                # ``groups.name`` addresses the name of every instance of a
+                # dynamic Group list.  The element reference is inlined so the
+                # rule changes this Task's node and not the shared "$defs"
+                # entry that other Tasks read.
+                items = node.get('items')
+                if isinstance(items, dict):
+                    node['items'] = materialize(items)
+                    node = node['items']
         return parent, key, materialize(node)
 
     @classmethod

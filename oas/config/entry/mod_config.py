@@ -18,6 +18,7 @@ from __future__ import annotations
 
 import inspect
 from collections.abc import Callable
+from dataclasses import dataclass
 from functools import wraps
 from typing import Any, TypeVar, get_args, get_origin
 
@@ -29,7 +30,12 @@ from oas.config.entry.error import ConfigError
 from oas.config.entry.model import ConfigEvents, ConfigSetEvent, ModelConfigRef
 from oas.config.entry.store import TaskStore
 from oas.config.models.groups import GroupBase
-from oas.config.models.registry import TaskNameResolver, config_model_registry
+from oas.config.models.registry import (
+    GroupAddress,
+    TaskNameResolver,
+    config_model_registry,
+    is_dynamic_annotation,
+)
 from oas.config.models.tasks import TaskBase
 from oas.config.table.config import ConfigTable
 from oas.logger import logger
@@ -74,6 +80,11 @@ class modconfig(ModAdapter):
     ``value`` fields.  ``error`` is ``None`` for an accepted value and a
     :class:`ConfigError` for a rejected one, which is how ``config_*`` reports
     per-argument failures without raising.
+
+    ``group`` is the Task field name for a statically declared Group, and
+    ``field@index`` for one instance of a dynamically managed Group list
+    (``list[Group]``).  The index is the position in the list, so removing or
+    inserting an instance shifts the addresses after it.
 
     Task instance names in the database are ``TaskClass@name``, for example
     ``FindJadeTask@default``.  ``cfg_task_add`` / ``cfg_task_copy`` take the
@@ -593,12 +604,12 @@ class modconfig(ModAdapter):
 
     @classmethod
     def cfg_group_add(cls) -> Callable[[F], F]:
-        """Decorate a method that creates a static Group from its defaults.
+        """Decorate a method that creates a Group from its defaults.
 
         The decorated method signature is::
 
             def cfg_group_add(
-                self, result, config_name, task, group, groupclass,
+                self, result, config_name, task, group, groupclass, index=None,
             ):
                 return result
 
@@ -608,17 +619,24 @@ class modconfig(ModAdapter):
             group: Group field name declared by the Task class.
             groupclass: Expected Group class name.  It must match the class
                 registered for ``group``.
+            index: Insert position for a new instance of a dynamically managed
+                Group list.  ``None`` appends, which is also the only option
+                for a static Group.
 
         Returns:
             Callable[[F], F]: The decorator.  The decorated method receives
             ``result`` as ``tuple[bool, list[ConfigSetEvent]]`` and must return
             it unchanged.
-            Success carries one event per default Group argument.
+            Success carries one event per default Group argument for a static
+            Group, and one event per argument of every instance of the field
+            for a dynamic Group list, because the stored addresses shift.
 
         Notes:
-            Dynamic Group fields (``list[Group]``) are not supported.  Missing
-            Task/Group, a class-name mismatch, or an existing Group returns
-            ``success=False`` instead of raising.
+            A dynamic Group list takes the field name here and creates exactly
+            one instance; an index in ``group`` is only accepted when ``index``
+            is left unset, and a conflicting pair is rejected.  Missing
+            Task/Group, a class-name mismatch, an out-of-range index, or an
+            existing static Group returns ``success=False`` instead of raising.
 
         Example:
             .. code-block:: python
@@ -626,12 +644,16 @@ class modconfig(ModAdapter):
                 result = config.cfg_group_add(
                     "default", "FindJadeTask@default", "soul", "SoulGroup",
                 )
+                result = config.cfg_group_add(
+                    "default", "FindJadeTask@default", "targets", "TargetGroup",
+                    index=0,
+                )
         """
         return lambda function: cls._decorate(function, cls._cfg_group_add)
 
     @classmethod
     def cfg_group_del(cls) -> Callable[[F], F]:
-        """Decorate a method that deletes one static Group row.
+        """Decorate a method that deletes one Group row.
 
         The decorated method signature is::
 
@@ -641,16 +663,20 @@ class modconfig(ModAdapter):
         Args:
             config_name: Configuration database name.
             task: Full Task instance name.
-            group: Group field name.
+            group: Group address: the field name for a static Group, or
+                ``field@index`` for one instance of a dynamic Group list.
 
         Returns:
             Callable[[F], F]: The decorator.  The decorated method receives
             ``result`` as ``tuple[bool, list[ConfigSetEvent]]`` and must return
             it unchanged.
-            Success has no events.
+            A static Group succeeds with no events.  Removing an instance
+            reports every remaining instance of that field, because the
+            addresses after the removed one shift down.
 
         Notes:
-            Missing Task/Group and dynamic Group fields return
+            Missing Task/Group, a static Group given an index, a dynamic field
+            given without an index, and an index that names no instance return
             ``success=False`` instead of raising.
 
         Example:
@@ -658,6 +684,9 @@ class modconfig(ModAdapter):
 
                 result = config.cfg_group_del(
                     "default", "FindJadeTask@default", "soul",
+                )
+                result = config.cfg_group_del(
+                    "default", "FindJadeTask@default", "targets@1",
                 )
         """
         return lambda function: cls._decorate(function, cls._cfg_group_del)
@@ -677,9 +706,11 @@ class modconfig(ModAdapter):
         Args:
             config_name: Configuration database name.
             task: Source Task instance name.
-            group: Source Group field name.
-            new_group: Target Group field name.  It must be declared by the
-                target Task class.
+            group: Source Group address: the field name, or ``field@index`` for
+                one instance of a dynamic Group list.
+            new_group: Target Group address.  It must be declared by the target
+                Task class.  A dynamic list without an index appends the copy,
+                one with an index inserts it there.
             new_task: Target Task instance name.  ``None`` keeps the copy in
                 the source Task.
 
@@ -687,14 +718,15 @@ class modconfig(ModAdapter):
             Callable[[F], F]: The decorator.  The decorated method receives
             ``result`` as ``tuple[bool, list[ConfigSetEvent]]`` and must return
             it unchanged.
-            Success carries one event per copied Group argument.
+            Success carries one event per copied Group argument, or every
+            instance of the field when the target is a dynamic Group list.
 
         Notes:
-            The source and target must differ.  Failures include a missing
-            source Group, a missing target Task, an unknown or dynamic target
-            Group, validation failure under the target class, and an existing
-            target Group.  They are returned in ``events[0].error`` and do
-            not raise.
+            The source and target must differ.  A static Group and a dynamic
+            Group list cannot be mixed.  Failures include a missing source
+            Group, a missing target Task, an unknown target Group, validation
+            failure under the target class, and an existing static target
+            Group.  They are returned in ``events[0].error`` and do not raise.
 
         Example:
             .. code-block:: python
@@ -703,12 +735,16 @@ class modconfig(ModAdapter):
                     "default", "FindJadeTask@default", "soul",
                     "backup", "FindJadeTask@backup",
                 )
+                result = config.cfg_group_copy(
+                    "default", "FindJadeTask@default", "targets@0",
+                    "targets",
+                )
         """
         return lambda function: cls._decorate(function, cls._cfg_group_copy)
 
     @classmethod
     def cfg_group_reset(cls) -> Callable[[F], F]:
-        """Decorate a method that resets a static Group to model defaults.
+        """Decorate a method that resets a Group to model defaults.
 
         The decorated method signature is::
 
@@ -718,7 +754,8 @@ class modconfig(ModAdapter):
         Args:
             config_name: Configuration database name.
             task: Full Task instance name.
-            group: Group field name.
+            group: Group address: the field name for a static Group, or
+                ``field@index`` for one instance of a dynamic Group list.
 
         Returns:
             Callable[[F], F]: The decorator.  The decorated method receives
@@ -727,8 +764,9 @@ class modconfig(ModAdapter):
             Success carries one event per default Group argument.
 
         Notes:
-            The Group must be declared by the Task class; dynamic Group fields
-            are not supported.  A missing row is created with default values.
+            The Group must be declared by the Task class.  A missing static row
+            is created with default values, while an instance of a dynamic
+            Group list must already exist, so a reset can never add one.
             Failures are returned through ``events[0].error`` and do not raise.
 
         Example:
@@ -995,6 +1033,7 @@ class modconfig(ModAdapter):
             return True, []
 
         table = ConfigTable(config_name)
+        events = _GroupTarget.normalize_events(events)
         grouped = ConfigEvents.group_events(events)
 
         success: list[ConfigSetEvent] = []
@@ -1010,28 +1049,19 @@ class modconfig(ModAdapter):
                     ConfigEvents.fail_events(group_events, f'No such task: "{task}"')
                 )
                 continue
-            group_class = _resolve_group_class(task_class, group)
-            if group_class is None:
+            target, error = _GroupTarget.resolve(task, task_class, group)
+            if target is None:
                 has_error = True
-                rollback.extend(
-                    ConfigEvents.fail_events(
-                        group_events, f'No such group: "{task}.{group}"'
-                    )
-                )
+                rollback.extend(ConfigEvents.fail_events(group_events, error))
                 continue
-            group_obj = _read_group(config_name, task, group, group_class)
+            group_obj, error = _read_target_group(config_name, task, target)
             if group_obj is None:
                 has_error = True
-                rollback.extend(
-                    ConfigEvents.fail_events(
-                        group_events,
-                        f'Failed to load group: "{task}.{group}"',
-                    )
-                )
+                rollback.extend(ConfigEvents.fail_events(group_events, error))
                 continue
 
             new_values, group_success, error = _validate_group_args(
-                task, group, group_class, group_obj, group_events
+                task, target, group_obj, group_events
             )
             if error is not None:
                 rollback.extend(group_success)
@@ -1044,13 +1074,13 @@ class modconfig(ModAdapter):
             try:
                 # Full state validation: unlike the per-argument patch check
                 # above, the stored arguments are part of this payload.
-                new_group = group_class.model_validate(data)
+                new_group = target.group_class.model_validate(data)
             except ValidationError as exc:
                 rollback.extend(
                     ConfigEvents.rollback_group(
                         group_events,
                         task,
-                        group,
+                        target.address,
                         group_obj,
                         ConfigError.from_pydantic(exc),
                     )
@@ -1060,12 +1090,12 @@ class modconfig(ModAdapter):
 
             if post_edit:
                 error, extra = _run_post_edit(
-                    task, group, group_obj, new_group, new_values
+                    task, target.address, group_obj, new_group, new_values
                 )
                 if error is not None:
                     rollback.extend(
                         ConfigEvents.rollback_group(
-                            group_events, task, group, group_obj, error
+                            group_events, task, target.address, group_obj, error
                         )
                     )
                     has_error = True
@@ -1073,7 +1103,7 @@ class modconfig(ModAdapter):
                 group_success.extend(extra)
 
             success.extend(group_success)
-            writes.append((task, group, task_class, new_group))
+            writes.append((task, target.address, task_class, new_group))
 
         if has_error:
             # Valid Groups are included too: nothing was written, so every
@@ -1111,6 +1141,7 @@ class modconfig(ModAdapter):
             return []
 
         table = ConfigTable(config_name)
+        events = _GroupTarget.normalize_events(events)
         grouped = ConfigEvents.group_events(events)
 
         success: list[ConfigSetEvent] = []
@@ -1121,40 +1152,42 @@ class modconfig(ModAdapter):
             if task_class is None:
                 logger.warning(f'Cannot reset non-exist task "{task}"')
                 continue
-            group_class = _resolve_group_class(task_class, group)
-            if group_class is None:
-                logger.warning(f'Cannot reset non-exist group "{task}.{group}"')
+            target, error = _GroupTarget.resolve(task, task_class, group)
+            if target is None:
+                logger.warning(f'Cannot reset group: {error}')
                 continue
-            group_obj = _read_group(config_name, task, group, group_class)
+            group_obj, error = _read_target_group(config_name, task, target)
             if group_obj is None:
-                logger.warning(f'Cannot reset group "{task}.{group}"')
+                logger.warning(f'Cannot reset group: {error}')
                 continue
 
             data = group_obj.to_dict()
             args: list[str] = []
             for event in group_events:
-                if event.arg not in group_class.model_fields:
+                if event.arg not in target.group_class.model_fields:
                     logger.warning(
-                        f'Cannot reset non-exist field "{task}.{group}.{event.arg}"'
+                        f'Cannot reset non-exist field '
+                        f'"{task}.{target.address}.{event.arg}"'
                     )
                     continue
                 data.pop(event.arg, None)
                 args.append(event.arg)
 
             try:
-                new_group = group_class.model_validate(data)
+                new_group = target.group_class.model_validate(data)
             except ValidationError as exc:
                 logger.warning(
-                    f'Failed to convert after reset for "{task}.{group}": {exc}'
+                    f'Failed to convert after reset for '
+                    f'"{task}.{target.address}": {exc}'
                 )
                 return []
 
-            default = group_class()
+            default = target.group_class()
             for arg in args:
                 success.append(
-                    ConfigEvents.event(task, group, arg, getattr(default, arg))
+                    ConfigEvents.event(task, target.address, arg, getattr(default, arg))
                 )
-            writes.append((task, group, task_class, new_group))
+            writes.append((task, target.address, task_class, new_group))
 
         if not writes:
             return success
@@ -1186,6 +1219,7 @@ class modconfig(ModAdapter):
             return []
 
         table = ConfigTable(config_name)
+        events = _GroupTarget.normalize_events(events)
         seen: set[tuple[str, str]] = set()
         success: list[ConfigSetEvent] = []
         writes: list[tuple[str, str, type[TaskBase], type[GroupBase]]] = []
@@ -1201,15 +1235,21 @@ class modconfig(ModAdapter):
             if task_class is None:
                 logger.warning(f'Cannot reset non-exist task "{task}"')
                 continue
-            group_class = _resolve_group_class(task_class, group)
-            if group_class is None:
-                logger.warning(f'Cannot reset non-exist group "{task}.{group}"')
+            target, error = _GroupTarget.resolve(task, task_class, group)
+            if target is None:
+                logger.warning(f'Cannot reset group: {error}')
+                continue
+            # A static Group is reset by writing its default row, while an
+            # instance that does not exist must not be created: that would
+            # leave a hole in the stored index sequence.
+            if target.dynamic and table.get_group(task, target.address) is None:
+                logger.warning(f'Cannot reset non-exist group instance "{group}"')
                 continue
 
-            default = group_class()
+            default = target.group_class()
             for arg, value in default.to_dict().items():
-                success.append(ConfigEvents.event(task, group, arg, value))
-            writes.append((task, group, task_class, group_class))
+                success.append(ConfigEvents.event(task, target.address, arg, value))
+            writes.append((task, target.address, task_class, target.group_class))
 
         if not writes:
             return success
@@ -1321,26 +1361,59 @@ class modconfig(ModAdapter):
         task: str,
         group: str,
         groupclass: str,
+        index: int | None = None,
     ) -> tuple[bool, list[ConfigSetEvent]]:
+        """Add one Group, or one instance of a dynamic Group list.
+
+        ``group`` is the Task field name; a dynamically managed Group list also
+        accepts an index in the address, but the ``index`` argument takes
+        precedence and is what the caller normally uses to insert an instance.
+        """
         task_class = TaskNameResolver.resolve(task)
         if task_class is None:
             return _failure(f'No such task: "{task}"')
-        group_class = _resolve_group_class(task_class, group)
-        if group_class is None:
-            return _failure('dynamic Group operations are not supported yet')
-        if groupclass != group_class.__name__:
+        resolved, error = _GroupTarget.resolve(
+            task, task_class, group, bare_dynamic=True
+        )
+        if resolved is None:
+            return _failure(error)
+        if groupclass != resolved.group_class.__name__:
             return _failure(
-                f'GroupClass mismatch: expected "{group_class.__name__}", '
+                f'GroupClass mismatch: expected "{resolved.group_class.__name__}", '
                 f'got "{groupclass}"'
             )
 
         table = ConfigTable(config_name)
-        if table.get_group(task, group) is not None:
-            return _failure(f'Group already exists: "{task}.{group}"')
+        if not resolved.dynamic:
+            if table.get_group(task, resolved.field) is not None:
+                return _failure(f'Group already exists: "{task}.{resolved.field}"')
+            default_obj = resolved.group_class()
+            _write_group(table, task, task_class, resolved.field, default_obj)
+            return True, ConfigEvents.events_from_group(
+                task, resolved.field, default_obj
+            )
 
-        default_obj = group_class()
-        _write_group(table, task, task_class, group, default_obj)
-        return True, ConfigEvents.events_from_group(task, group, default_obj)
+        if resolved.index is not None:
+            if index is None:
+                index = resolved.index
+            elif index != resolved.index:
+                return _failure(f'Conflicting index: "{group}" and index={index}')
+
+        instances = _read_dynamic_field(config_name, task, resolved)
+        if index is None:
+            position = len(instances)
+        elif 0 <= index <= len(instances):
+            position = index
+        else:
+            return _failure(
+                f'Group index out of range for "{task}.{resolved.field}": '
+                f'{index} (0..{len(instances)})'
+            )
+
+        instances.insert(position, resolved.group_class())
+        return True, _write_dynamic_field(
+            config_name, task, task_class, resolved, instances
+        )
 
     @staticmethod
     def _cfg_group_del(
@@ -1349,18 +1422,32 @@ class modconfig(ModAdapter):
         task: str,
         group: str,
     ) -> tuple[bool, list[ConfigSetEvent]]:
+        """Delete one Group, or one instance of a dynamic Group list.
+
+        Removing an instance resequences the stored addresses, so the reply
+        reports every remaining instance of that field instead of one row.
+        """
         task_class = TaskNameResolver.resolve(task)
         if task_class is None:
             return _failure(f'No such task: "{task}"')
-        group_class = _resolve_group_class(task_class, group)
-        if group_class is None:
-            return _failure('dynamic Group operations are not supported yet')
+        resolved, error = _GroupTarget.resolve(task, task_class, group)
+        if resolved is None:
+            return _failure(error)
 
         table = ConfigTable(config_name)
-        if table.get_group(task, group) is None:
-            return _failure(f'No such group: "{task}.{group}"')
-        table.delete_group(task, group)
-        return True, []
+        if not resolved.dynamic:
+            if table.get_group(task, resolved.field) is None:
+                return _failure(f'No such group: "{task}.{resolved.field}"')
+            table.delete_group(task, resolved.field)
+            return True, []
+
+        instances = _read_dynamic_field(config_name, task, resolved)
+        if resolved.index >= len(instances):
+            return _failure(f'No such Group instance: "{task}.{resolved.address}"')
+        del instances[resolved.index]
+        return True, _write_dynamic_field(
+            config_name, task, task_class, resolved, instances
+        )
 
     @staticmethod
     def _cfg_group_copy(
@@ -1371,15 +1458,23 @@ class modconfig(ModAdapter):
         new_group: str,
         new_task: str | None = None,
     ) -> tuple[bool, list[ConfigSetEvent]]:
-        source_loaded = _load_group(config_name, task, group)
-        if source_loaded is None:
-            return _failure(f'No such group: "{task}.{group}"')
-        source_task_class, _source_class, source = source_loaded
+        """Copy one Group, or one instance of a dynamic Group list.
+
+        ``group`` and ``new_group`` are addresses; a dynamic destination
+        without an index appends a new instance, and one with an index inserts
+        there.  A static Group and a dynamic Group list cannot be mixed.
+        """
+        source_task_class = TaskNameResolver.resolve(task)
+        if source_task_class is None:
+            return _failure(f'No such task: "{task}"')
+        source, error = _GroupTarget.resolve(task, source_task_class, group)
+        if source is None:
+            return _failure(error)
+        source_obj, error = _read_target_group(config_name, task, source)
+        if source_obj is None:
+            return _failure(error)
 
         same_target = new_task is None or new_task == task
-        if same_target and new_group == group:
-            return _failure('Target is the same as source')
-
         target_task = task if new_task is None else new_task
         target_task_class = (
             source_task_class if same_target else TaskNameResolver.resolve(target_task)
@@ -1387,20 +1482,56 @@ class modconfig(ModAdapter):
         if target_task_class is None:
             return _failure(f'No such task: "{target_task}"')
 
-        target_group_class = _resolve_group_class(target_task_class, new_group)
-        if target_group_class is None:
-            return _failure('dynamic Group operations are not supported yet')
+        destination, error = _GroupTarget.resolve(
+            target_task, target_task_class, new_group, bare_dynamic=True
+        )
+        if destination is None:
+            return _failure(error)
+        if same_target and destination.address == source.address:
+            return _failure('Target is the same as source')
+        if destination.dynamic != source.dynamic:
+            return _failure(
+                'Cannot copy between a static Group and a dynamic Group list: '
+                f'"{group}" -> "{new_group}"'
+            )
+
         try:
-            copied = target_group_class.model_validate(source.to_dict())
+            copied = destination.group_class.model_validate(source_obj.to_dict())
         except ValidationError as exc:
             return _failure(ConfigError.from_pydantic(exc))
 
         table = ConfigTable(config_name)
-        if table.get_group(target_task, new_group) is not None:
-            return _failure(f'Group already exists: "{target_task}.{new_group}"')
+        if not destination.dynamic:
+            if table.get_group(target_task, destination.field) is not None:
+                return _failure(
+                    f'Group already exists: "{target_task}.{destination.field}"'
+                )
+            _write_group(
+                table,
+                target_task,
+                target_task_class,
+                destination.field,
+                copied,
+            )
+            return True, ConfigEvents.events_from_group(
+                target_task, destination.field, copied
+            )
 
-        _write_group(table, target_task, target_task_class, new_group, copied)
-        return True, ConfigEvents.events_from_group(target_task, new_group, copied)
+        instances = _read_dynamic_field(config_name, target_task, destination)
+        if destination.index is None:
+            position = len(instances)
+        elif 0 <= destination.index <= len(instances):
+            position = destination.index
+        else:
+            return _failure(
+                f'Group index out of range for "{target_task}.{destination.field}": '
+                f'{destination.index} (0..{len(instances)})'
+            )
+
+        instances.insert(position, copied)
+        return True, _write_dynamic_field(
+            config_name, target_task, target_task_class, destination, instances
+        )
 
     @staticmethod
     def _cfg_group_reset(
@@ -1409,17 +1540,23 @@ class modconfig(ModAdapter):
         task: str,
         group: str,
     ) -> tuple[bool, list[ConfigSetEvent]]:
+        """Reset one Group, or one instance of a dynamic Group list."""
         task_class = TaskNameResolver.resolve(task)
         if task_class is None:
             return _failure(f'No such task: "{task}"')
-        group_class = _resolve_group_class(task_class, group)
-        if group_class is None:
-            return _failure(f'No such group: "{task}.{group}"')
+        resolved, error = _GroupTarget.resolve(task, task_class, group)
+        if resolved is None:
+            return _failure(error)
 
         table = ConfigTable(config_name)
-        _reset_group(table, task, task_class, group, group_class)
-        default = group_class()
-        return True, ConfigEvents.events_from_group(task, group, default)
+        # An instance that does not exist must not be created by a reset: that
+        # would leave a hole in the stored index sequence.
+        if resolved.dynamic and table.get_group(task, resolved.address) is None:
+            return _failure(f'No such Group instance: "{task}.{resolved.address}"')
+
+        _reset_group(table, task, task_class, resolved.address, resolved.group_class)
+        default = resolved.group_class()
+        return True, ConfigEvents.events_from_group(task, resolved.address, default)
 
     @staticmethod
     def _cfg_arg_get(
@@ -1433,15 +1570,19 @@ class modconfig(ModAdapter):
         task_class = TaskNameResolver.resolve(task)
         if task_class is None:
             return _failure(f'No such task: "{task}"', value=default)
-        group_class = _resolve_group_class(task_class, group)
-        if group_class is None:
-            return _failure(f'No such group: "{task}.{group}"', value=default)
-        group_obj = _read_group(config_name, task, group, group_class)
+        resolved, error = _GroupTarget.resolve(task, task_class, group)
+        if resolved is None:
+            return _failure(error, value=default)
+        group_obj, error = _read_target_group(config_name, task, resolved)
         if group_obj is None:
-            return _failure(f'Cannot load group: "{task}.{group}"', value=default)
-        if arg not in group_class.model_fields:
-            return _failure(f'No such field: "{task}.{group}.{arg}"', value=default)
-        return True, [ConfigEvents.event(task, group, arg, getattr(group_obj, arg))]
+            return _failure(error, value=default)
+        if arg not in resolved.group_class.model_fields:
+            return _failure(
+                f'No such field: "{task}.{resolved.address}.{arg}"', value=default
+            )
+        return True, [
+            ConfigEvents.event(task, resolved.address, arg, getattr(group_obj, arg))
+        ]
 
     @staticmethod
     def _cfg_arg_set(
@@ -1509,32 +1650,95 @@ class modconfig(ModAdapter):
 # ----------------------------------------------------------------------
 
 
-def _is_dynamic_annotation(annotation: Any) -> bool:
-    """Return whether an annotation is, or contains, a dynamic Group list."""
-    origin = get_origin(annotation)
-    if origin in (list, tuple, set, frozenset):
-        return True
-    return any(_is_dynamic_annotation(arg) for arg in get_args(annotation))
+@dataclass(frozen=True, slots=True)
+class _GroupTarget:
+    """One Group address resolved against a Task class.
 
-
-def _resolve_group_class(
-    task_class: type[TaskBase],
-    group: str,
-) -> type[GroupBase] | None:
-    """Return the static Group class of one Task field.
-
-    ``None`` means "unknown group" or "dynamic Group field"; neither can be
-    read or written as a single row.
+    A static Group is addressed by its field name.  One instance of a
+    dynamically managed Group list is addressed as ``field@index``, and a bare
+    field name is rejected so the caller always names the instance it edits.
     """
-    field = task_class.model_fields.get(group)
-    if field is None:
-        return None
-    if _is_dynamic_annotation(field.annotation):
-        return None
-    group_class = config_model_registry.group_for_field(task_class, group)
-    if group_class is None or not issubclass(group_class, GroupBase):
-        return None
-    return group_class
+
+    field: str
+    group_class: type[GroupBase]
+    dynamic: bool = False
+    index: int | None = None
+
+    @property
+    def address(self) -> str:
+        """Return the canonical ``field`` or ``field@index`` address."""
+        return GroupAddress.make(self.field, self.index)
+
+    @staticmethod
+    def normalize_events(events: list[ConfigSetEvent]) -> list[ConfigSetEvent]:
+        """Rewrite event addresses into their canonical form.
+
+        Only ``field@index`` is stored, so a client that sends ``groups@01``
+        must not read back an address that does not exist.
+        """
+        normalized: list[ConfigSetEvent] = []
+        for event in events:
+            field, index = GroupAddress.split(event.group)
+            try:
+                address = GroupAddress.make(field, index)
+            except ValueError:
+                address = event.group
+            if address == event.group:
+                normalized.append(event)
+                continue
+            normalized.append(
+                ConfigSetEvent(
+                    task=event.task,
+                    group=address,
+                    arg=event.arg,
+                    value=event.value,
+                    error=event.error,
+                )
+            )
+        return normalized
+
+    @classmethod
+    def resolve(
+        cls,
+        task: str,
+        task_class: type[TaskBase],
+        address: str,
+        *,
+        bare_dynamic: bool = False,
+    ) -> tuple[_GroupTarget | None, str | None]:
+        """Resolve one Group address against a Task class.
+
+        Args:
+            task: Full Task instance name, used in the failure reasons.
+            task_class: Task class that declares the Group field.
+            address: Group address; ``field`` or ``field@index``.
+            bare_dynamic: Accept a dynamic field without an index, for the
+                operation that creates an instance.
+
+        Returns:
+            ``(target, None)`` on success, otherwise ``(None, reason)``.
+        """
+        field, index = GroupAddress.split(address)
+        field_info = task_class.model_fields.get(field)
+        if field_info is None:
+            return None, f'No such group: "{task}.{field}"'
+        dynamic = is_dynamic_annotation(field_info.annotation)
+        if not dynamic and index is not None:
+            return None, f'Static Group does not take an index: "{task}.{address}"'
+        if dynamic and index is None and not bare_dynamic:
+            return None, (
+                f'Dynamic Group requires an index: "{task}.{address}", '
+                f'use "{task}.{GroupAddress.make(field, 0)}"'
+            )
+        group_class = config_model_registry.group_for_field(task_class, field)
+        if group_class is None or not issubclass(group_class, GroupBase):
+            return None, f'No such group: "{task}.{field}"'
+        return cls(
+            field=field,
+            group_class=group_class,
+            dynamic=dynamic,
+            index=index,
+        ), None
 
 
 def _read_group(
@@ -1554,23 +1758,77 @@ def _read_group(
         return None
 
 
-def _load_group(
+def _read_target_group(
     config_name: str,
     task: str,
-    group: str,
-) -> tuple[type[TaskBase], type[GroupBase], GroupBase] | None:
-    """Load one Group without reading the other Groups of the Task."""
-    task_class = TaskNameResolver.resolve(task)
-    if task_class is None:
-        logger.warning(f'No such task class for task "{task}"')
-        return None
-    group_class = _resolve_group_class(task_class, group)
-    if group_class is None:
-        return None
-    group_obj = _read_group(config_name, task, group, group_class)
+    target: _GroupTarget,
+) -> tuple[GroupBase | None, str | None]:
+    """Read the Group of one resolved address.
+
+    A static Group falls back to the model defaults when it has no row.  An
+    instance of a dynamic Group list must have a row: a wrong index must not
+    silently create an instance that was never added.
+    """
+    table = ConfigTable(config_name)
+    if target.dynamic and table.get_group(task, target.address) is None:
+        return None, f'No such Group instance: "{task}.{target.address}"'
+    group_obj = _read_group(config_name, task, target.address, target.group_class)
     if group_obj is None:
-        return None
-    return task_class, group_class, group_obj
+        return None, f'Failed to load group: "{task}.{target.address}"'
+    return group_obj, None
+
+
+def _read_dynamic_field(
+    config_name: str,
+    task: str,
+    target: _GroupTarget,
+) -> list[GroupBase]:
+    """Return every instance of a dynamic Group list, in stored index order.
+
+    The stored index is the list position, so ordering by it is what restores
+    the arrangement the user made.
+    """
+    instances: list[tuple[int, GroupBase]] = []
+    for row in ConfigTable(config_name).list_task_rows(task):
+        field, index = GroupAddress.split(row.group)
+        if field != target.field or index is None:
+            continue
+        try:
+            instances.append(
+                (index, target.group_class.from_dict(Codec.decode(row.value)))
+            )
+        except (ValueError, ValidationError) as exc:
+            logger.warning(f'Cannot load group "{task}.{row.group}": {exc}')
+    instances.sort(key=lambda item: item[0])
+    return [group_obj for _index, group_obj in instances]
+
+
+def _write_dynamic_field(
+    config_name: str,
+    task: str,
+    task_class: type[TaskBase],
+    target: _GroupTarget,
+    instances: list[GroupBase],
+) -> list[ConfigSetEvent]:
+    """Store a whole dynamic Group list, resequencing its addresses.
+
+    Every row of the field is replaced by ``field@0`` ... ``field@n-1`` in one
+    transaction, so the stored order always equals the list order and no stale
+    index survives an insert, a removal or a reorder.  The reply reports every
+    instance, because a structural change moves the addresses a client holds.
+    """
+    table = ConfigTable(config_name)
+    events: list[ConfigSetEvent] = []
+    with table.exclusive_transaction() as cursor:
+        for row in table.list_task_rows(task, _cursor_=cursor):
+            field, index = GroupAddress.split(row.group)
+            if field == target.field and index is not None:
+                table.delete_group(task, row.group, _cursor_=cursor)
+        for index, group_obj in enumerate(instances):
+            address = GroupAddress.make(target.field, index)
+            _write_group(table, task, task_class, address, group_obj, cursor)
+            events.extend(ConfigEvents.events_from_group(task, address, group_obj))
+    return events
 
 
 def _load_task(
@@ -1646,8 +1904,7 @@ def _run_post_edit(
 
 def _validate_group_args(
     task: str,
-    group: str,
-    group_class: type[GroupBase],
+    target: _GroupTarget,
     group_obj: GroupBase,
     events: list[ConfigSetEvent],
 ) -> tuple[dict[str, Any], list[ConfigSetEvent], ConfigSetEvent | None]:
@@ -1659,16 +1916,17 @@ def _validate_group_args(
     new_values: dict[str, Any] = {}
     accepted: list[ConfigSetEvent] = []
     for event in events:
-        if event.arg not in group_class.model_fields:
+        if event.arg not in target.group_class.model_fields:
             return (
                 new_values,
                 accepted,
                 ConfigEvents.failed_event(
-                    event, f'No such field: "{task}.{group}.{event.arg}"'
+                    event,
+                    f'No such field: "{task}.{target.address}.{event.arg}"',
                 ),
             )
         try:
-            validated = group_class.validate_patch({event.arg: event.value})
+            validated = target.group_class.validate_patch({event.arg: event.value})
         except ValidationError as exc:
             return (
                 new_values,
@@ -1681,7 +1939,7 @@ def _validate_group_args(
             )
         value = getattr(validated, event.arg)
         new_values[event.arg] = value
-        accepted.append(ConfigEvents.event(task, group, event.arg, value))
+        accepted.append(ConfigEvents.event(task, target.address, event.arg, value))
     return new_values, accepted, None
 
 

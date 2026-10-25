@@ -9,7 +9,7 @@ from __future__ import annotations
 
 from collections.abc import Iterable, Mapping
 from types import MappingProxyType
-from typing import Any, get_args
+from typing import Any, get_args, get_origin
 
 from oas.ext.singleton import Singleton
 
@@ -33,6 +33,19 @@ def _group_types(annotation: Any) -> tuple[type[Any], ...]:
             if group_type not in result:
                 result.append(group_type)
     return tuple(result)
+
+
+def is_dynamic_annotation(annotation: Any) -> bool:
+    """Return whether an annotation declares a dynamically managed Group list.
+
+    Only a ``list`` holding a concrete ``GroupBase`` subclass counts.  Other
+    containers and Group-free lists carry Arg values, so they keep their
+    existing treatment and must not be read as Group instances.  The check
+    recurses, so ``list[GroupType] | None`` is recognized too.
+    """
+    if get_origin(annotation) is list and _group_types(annotation):
+        return True
+    return any(is_dynamic_annotation(argument) for argument in get_args(annotation))
 
 
 class ConfigModelRegistry(metaclass=Singleton):
@@ -208,6 +221,23 @@ class ConfigModelRegistry(metaclass=Singleton):
         """Return the Group class declared by one Task field."""
         return self._task_fields.get(task_type, {}).get(field_name)
 
+    def dynamic_fields(self, task_type: type[Any]) -> Mapping[str, type[Any]]:
+        """Return ``{field name: element Group class}`` of one Task class.
+
+        Only dynamically managed Group lists are listed, so a caller can tell
+        a list of instances apart from a single Group field; the latter is
+        reported by :meth:`group_for_field` instead.  One instance of a listed
+        field is addressed as ``field@index`` in the database and in events.
+        """
+        result: dict[str, type[Any]] = {}
+        for field_name, field in getattr(task_type, 'model_fields', {}).items():
+            if not is_dynamic_annotation(field.annotation):
+                continue
+            candidates = _group_types(field.annotation)
+            if candidates:
+                result[field_name] = candidates[0]
+        return MappingProxyType(result)
+
     def clear(self) -> None:
         """Clear registrations, primarily for isolated tests."""
         self._task_classes.clear()
@@ -271,6 +301,61 @@ class TaskNameResolver:
         """
         taskclass, _name = cls.split(task)
         return cls.registered(taskclass or task)
+
+
+class GroupAddress:
+    """Address of one Group inside a Task.
+
+    A static Group field is addressed by its field name alone.  One instance
+    of a dynamically managed Group list is addressed as ``field@index``, where
+    ``index`` is the zero-based position in the list.  The whole address is a
+    single string, so it fits the ``group`` column and the ``group`` field of
+    :class:`~oas.config.entry.model.ConfigSetEvent` unchanged.
+    """
+
+    @classmethod
+    def make(cls, field: str, index: int | None = None) -> str:
+        """Build the address of one Group or Group instance.
+
+        Args:
+            field: Task field name that declares the Group.
+            index: Instance position; ``None`` addresses a static Group.
+
+        Returns:
+            ``field`` for a static Group, ``field@index`` for one instance.
+
+        Raises:
+            ValueError: If the field name or the index is not usable.
+        """
+        if not isinstance(field, str) or not field.strip():
+            raise ValueError('group field must be a non-empty string')
+        if '@' in field:
+            raise ValueError('group field must not contain "@"')
+        if index is None:
+            return field
+        if isinstance(index, bool) or not isinstance(index, int) or index < 0:
+            raise ValueError('group index must be a non-negative integer')
+        return f'{field}@{index}'
+
+    @classmethod
+    def split(cls, address: str) -> tuple[str, int | None]:
+        """Split an address into its field name and instance index.
+
+        Parsing is deliberately lenient: a value that is not
+        ``field@<digits>`` is returned as a whole field name.  A row written
+        by an older or a broken writer must not make loading raise; the field
+        name then fails the model lookup on its own.
+
+        Args:
+            address: Stored group address.
+
+        Returns:
+            ``(field, index)``; ``index`` is ``None`` for a static Group.
+        """
+        field, separator, suffix = address.partition('@')
+        if separator and field and suffix.isdigit():
+            return field, int(suffix)
+        return address, None
 
 
 config_model_registry = ConfigModelRegistry()
