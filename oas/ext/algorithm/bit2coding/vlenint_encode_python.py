@@ -1,8 +1,12 @@
+"""
+The pure Python encoder of the vlenint format, the reference of the C
+encoder of vlenint_encode_c.py.
+"""
 from collections import deque
 
-from oas.ext.algorithm.bit2coding import decode_bit2, encode_bit2
+from oas.ext.algorithm.bit2coding.bit2coding_encode_python import encode_bit2
 from oas.ext.algorithm.const import MAX_UINT32
-from oas.ext.algorithm.unpack import pack_little_int, unpack_little_int
+from oas.ext.algorithm.unpack import pack_little_int
 
 
 def vlenint_value_check(data):
@@ -20,9 +24,9 @@ def vlenint_value_check(data):
     min_val = min(data)
     max_val = max(data)
     if min_val < 0:
-        raise ValueError(f'[encode_vlenint] Value must be >= 0, got {min_val}')
+        raise ValueError(f"[encode_vlenint] Value must be >= 0, got {min_val}")
     if max_val > MAX_UINT32:
-        raise ValueError(f'[encode_vlenint] Value must be < 2**32, got {max_val}')
+        raise ValueError(f"[encode_vlenint] Value must be < 2**32, got {max_val}")
 
 
 def encode_vlenint(data):
@@ -62,34 +66,3 @@ def encode_vlenint(data):
     section_lengths = encode_bit2(lengths, ext8=True)
     section_values = b''.join(value_bytes)
     return b''.join([section_lengths, section_values])
-
-
-def decode_vlenint(data):
-    """
-    Decode vlenint encoded data to a list of integers.
-    The number of values is read from the vint count prefix of the bit2
-    section (see decode_bit2), the caller does not need to pass it in.
-
-    Args:
-        data (memoryview | bytes): vlenint encoded data
-
-    Returns:
-        tuple[list[int], int]: (decoded integers, bytes consumed)
-
-    Raises:
-        ValueError: If data is truncated or contains invalid opcodes
-    """
-    if isinstance(data, bytes):
-        data = memoryview(data)
-    byte_lengths, read = decode_bit2(data, ext8=True)
-    values = []
-    values_append = values.append
-    for length in byte_lengths:
-        if length == 0:
-            values_append(0)
-        else:
-            # raises ValueError if the values section is truncated
-            value = unpack_little_int(data, read, length)
-            values_append(value)
-            read += length
-    return values, read

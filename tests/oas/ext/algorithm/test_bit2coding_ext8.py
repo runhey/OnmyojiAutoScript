@@ -29,14 +29,9 @@ Notes on error behaviour:
 
 import pytest
 
-from oas.ext.algorithm.bit2coding import (
-    decode_bit2,
-    decode_bit2_opcode,
-    decode_bit2_stream_iter,
-    encode_bit2,
-    encode_bit2_opcode_iter,
-    encode_bit2_stream_iter,
-)
+from oas.ext.algorithm.bit2coding.bit2coding_decode import decode_bit2, decode_bit2_opcode, decode_bit2_stream_iter
+from oas.ext.algorithm.bit2coding.bit2coding_encode_c import encode_bit2
+from oas.ext.algorithm.bit2coding.bit2coding_encode_python import encode_bit2_opcode_iter, encode_bit2_stream_iter
 
 # ==============================================================================
 # encode_bit2_stream_iter — ext8 literal encoding
@@ -189,7 +184,7 @@ class TestEncodeStreamExt8NonLiteral:
 class TestDecodeStreamExt8Literal:
     """Decoding ext8 literal values (bytes 4-7 → opcode (0, [val]))."""
 
-    @pytest.mark.parametrize('val', [4, 5, 6, 7])
+    @pytest.mark.parametrize("val", [4, 5, 6, 7])
     def test_ext8_byte_decoded_with_ext8_true(self, val):
         """With ext8=True, byte 4-7 decodes to single-item literal."""
         data = memoryview(bytes([val]))
@@ -197,14 +192,14 @@ class TestDecodeStreamExt8Literal:
         assert opcodes == [(0, [val])]
         assert read == 1
 
-    @pytest.mark.parametrize('byte', [4, 5, 6, 7])
+    @pytest.mark.parametrize("byte", [4, 5, 6, 7])
     def test_ext8_byte_raises_with_ext8_false(self, byte):
         """Without ext8, byte 4-7 raises ValueError."""
         data = memoryview(bytes([byte]))
-        with pytest.raises(ValueError, match='Invalid opcode'):
+        with pytest.raises(ValueError, match="Invalid opcode"):
             decode_bit2_stream_iter(data, 1, ext8=False)
 
-    @pytest.mark.parametrize('byte', [0, 1, 2, 3])
+    @pytest.mark.parametrize("byte", [0, 1, 2, 3])
     def test_normal_bytes_still_work_with_ext8_true(self, byte):
         """With ext8=True, normal byte 0-3 still decodes correctly."""
         data = memoryview(bytes([byte]))
@@ -253,7 +248,7 @@ class TestDecodeStreamExt8Literal:
         """With ext8=True, bytes 8-15 remain invalid (outside ext8 range)."""
         for byte in [8, 9, 10, 11, 12, 13, 14, 15]:
             data = memoryview(bytes([byte]))
-            with pytest.raises(ValueError, match='Invalid opcode'):
+            with pytest.raises(ValueError, match="Invalid opcode"):
                 decode_bit2_stream_iter(data, 1, ext8=True)
 
 
@@ -310,9 +305,12 @@ class TestRoundtripStreamExt8:
     @staticmethod
     def _total(opcodes):
         """Total count of values encoded in opcodes."""
-        return sum(op[2] if op[0] != 0 else len(op[1]) for op in opcodes)
+        return sum(
+            op[2] if op[0] != 0 else len(op[1])
+            for op in opcodes
+        )
 
-    @pytest.mark.parametrize('opcodes', ROUNDTRIP_CASES)
+    @pytest.mark.parametrize("opcodes", ROUNDTRIP_CASES)
     def test_roundtrip(self, opcodes):
         """Encode then decode with ext8=True — data values are preserved."""
         encoded = list(encode_bit2_stream_iter(opcodes, ext8=True))
@@ -322,7 +320,7 @@ class TestRoundtripStreamExt8:
         )
         expected_data = self._flatten(opcodes)
         decoded_data = self._flatten(decoded_opcodes)
-        assert decoded_data == expected_data, f'Failed for {opcodes}'
+        assert decoded_data == expected_data, f"Failed for {opcodes}"
         assert read == len(encoded)
 
     def test_roundtrip_large_alternating(self):
@@ -330,7 +328,7 @@ class TestRoundtripStreamExt8:
         items = []
         for i in range(500):
             if i % 2 == 0:
-                items.append(i % 4)  # normal 0-3
+                items.append(i % 4)      # normal 0-3
             else:
                 items.append(4 + i % 4)  # ext8 4-7
         opcodes = [(0, items)]
@@ -357,7 +355,7 @@ class TestRoundtripStreamExt8:
         """Decoding ext8 bytes without ext8 flag raises ValueError (decoder
         validation, not encoder)."""
         encoded = list(encode_bit2_stream_iter([(0, [4])], ext8=True))
-        with pytest.raises(ValueError, match='Invalid opcode'):
+        with pytest.raises(ValueError, match="Invalid opcode"):
             decode_bit2_stream_iter(memoryview(bytes(encoded)), 1, ext8=False)
 
     def test_encode_without_flag_then_decode_without_flag_fails(self):
@@ -366,7 +364,7 @@ class TestRoundtripStreamExt8:
         encoded = list(encode_bit2_stream_iter([(0, [4])], ext8=False))
         # encoded = [4], which is a valid ext8 byte when ext8=True,
         # but invalid when ext8=False
-        with pytest.raises(ValueError, match='Invalid opcode'):
+        with pytest.raises(ValueError, match="Invalid opcode"):
             decode_bit2_stream_iter(memoryview(bytes(encoded)), 1, ext8=False)
 
 
@@ -394,7 +392,7 @@ class TestEncodeBit2Ext8:
 
     def test_ext8_empty(self):
         """Empty input with ext8=True encodes the count prefix alone."""
-        assert encode_bit2([], ext8=True) == b'\x00'
+        assert encode_bit2([], ext8=True) == b"\x00"
 
     def test_ext8_normal_values_unchanged(self):
         """Normal 0-3 data is encoded identically with ext8=True."""
@@ -425,7 +423,7 @@ class TestDecodeBit2Ext8:
     def test_decode_without_flag_fails_for_ext8_data(self):
         """Decoding ext8-encoded data without ext8 flag raises."""
         encoded = encode_bit2([4], ext8=True)
-        with pytest.raises(ValueError, match='Invalid opcode'):
+        with pytest.raises(ValueError, match="Invalid opcode"):
             decode_bit2(encoded, ext8=False)
 
 
@@ -465,12 +463,12 @@ class TestRoundtripExt8:
         [i % 8 for i in range(100)],
     ]
 
-    @pytest.mark.parametrize('data', ROUNDTRIP_CASES)
+    @pytest.mark.parametrize("data", ROUNDTRIP_CASES)
     def test_roundtrip(self, data):
         """Round-trip with ext8=True."""
         encoded = encode_bit2(data, ext8=True)
         decoded, read = decode_bit2(encoded, ext8=True)
-        assert decoded == data, f'Failed for {data}'
+        assert decoded == data, f"Failed for {data}"
         assert read == len(encoded)
 
     def test_roundtrip_large_mixed(self):
@@ -559,26 +557,26 @@ class TestExt8ErrorHandling:
         opcodes = [(0, [8])]
         encoded = list(encode_bit2_stream_iter(opcodes, ext8=True))
         # encoded = [8], which is in the invalid range 8-15
-        with pytest.raises(ValueError, match='Invalid opcode'):
+        with pytest.raises(ValueError, match="Invalid opcode"):
             decode_bit2_stream_iter(memoryview(bytes(encoded)), 1, ext8=True)
 
     def test_decode_byte_8_plus_still_invalid_with_ext8(self):
         """Byte value 8+ with ext8=True still raises ValueError."""
         data = memoryview(bytes([8]))
-        with pytest.raises(ValueError, match='Invalid opcode'):
+        with pytest.raises(ValueError, match="Invalid opcode"):
             decode_bit2_stream_iter(data, 1, ext8=True)
 
     def test_truncated_data_with_ext8(self):
         """Not enough data for the count in the prefix still raises with ext8=True."""
-        with pytest.raises(ValueError, match='Data truncated'):
-            decode_bit2(b'\x04', ext8=True)
+        with pytest.raises(ValueError, match="Data truncated"):
+            decode_bit2(b"\x04", ext8=True)
 
     def test_encode_then_decode_without_ext8_fails(self):
         """Encoding value 4 (even without ext8 flag) produces a byte that
         the decoder rejects when ext8=False."""
         encoded = list(encode_bit2_stream_iter([(0, [4])], ext8=False))
         assert encoded == [4]
-        with pytest.raises(ValueError, match='Invalid opcode'):
+        with pytest.raises(ValueError, match="Invalid opcode"):
             decode_bit2_stream_iter(memoryview(bytes(encoded)), 1, ext8=False)
 
 
@@ -607,7 +605,7 @@ class TestFullPipelineExt8:
         [i % 8 for i in range(100)],
     ]
 
-    @pytest.mark.parametrize('data', PIPELINE_CASES)
+    @pytest.mark.parametrize("data", PIPELINE_CASES)
     def test_full_pipeline(self, data):
         """Full pipeline with ext8=True."""
         opcodes = list(encode_bit2_opcode_iter(data))
@@ -617,7 +615,8 @@ class TestFullPipelineExt8:
         )
         decoded_data = decode_bit2_opcode(decoded_opcodes)
         assert decoded_data == data, (
-            f'Pipeline failed for data={data[:30]}... got {decoded_data[:30]}...'
+            f"Pipeline failed for data={data[:30]}... "
+            f"got {decoded_data[:30]}..."
         )
 
 
@@ -633,7 +632,8 @@ class TestCopyWithExt8Values:
         data = [4, 5, 6, 7, 4, 5, 6, 7, 4, 5, 6, 7]
         opcodes = list(encode_bit2_opcode_iter(data))
         assert any(op[0] == 2 for op in opcodes), (
-            'encode_bit2_opcode_iter should detect a copy for repeating 4-7 pattern'
+            "encode_bit2_opcode_iter should detect a copy for "
+            "repeating 4-7 pattern"
         )
 
     def test_copy_repeating_4_item_pattern_roundtrip(self):
@@ -649,8 +649,8 @@ class TestCopyWithExt8Values:
         opcodes = list(encode_bit2_opcode_iter(data))
         has_copy = any(op[0] == 2 for op in opcodes)
         assert has_copy, (
-            'encode_bit2_opcode_iter should detect a copy for '
-            'repeating pattern with ext8 values'
+            "encode_bit2_opcode_iter should detect a copy for "
+            "repeating pattern with ext8 values"
         )
         encoded = encode_bit2(data, ext8=True)
         decoded, _ = decode_bit2(encoded, ext8=True)
@@ -677,7 +677,7 @@ class TestCopyWithExt8Values:
             data = [val] * 5
             opcodes = list(encode_bit2_opcode_iter(data))
             assert not any(op[0] == 1 for op in opcodes), (
-                f'Run opcode should not be produced for value {val}'
+                f"Run opcode should not be produced for value {val}"
             )
 
     def test_pipeline_with_runs_of_ext8_values(self):
@@ -694,7 +694,6 @@ class TestCopyWithExt8Values:
     def test_pipeline_large_randomized(self):
         """Large randomized pipeline — now works with runs of 4-7 values."""
         import random
-
         random.seed(42)
         data = []
         for _ in range(2000):

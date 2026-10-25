@@ -43,9 +43,8 @@ import time
 
 import pytest
 
-from oas.ext.env import OAS_ROOT
+from oas.ext import env
 from oas.ext.file.filelock import FilelockTimeout, SQLiteFileLock
-from oas.ext.path import PathStr
 
 msvcrt = pytest.importorskip('msvcrt')
 
@@ -72,7 +71,7 @@ def lock_dir():
     C layer, and msvcrt.locking is a raw Windows syscall — neither can be
     intercepted by the in-memory fake filesystem.
     """
-    path = PathStr.new(OAS_ROOT).joinpath('temp/bench_filelock')
+    path = env.OAS_TEMP.joinpath('bench_filelock')
     shutil.rmtree(path, ignore_errors=True)
     os.makedirs(path, exist_ok=True)
     yield path
@@ -247,7 +246,7 @@ def _process_contest(impl, path, rounds):
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
             text=True,
-            cwd=OAS_ROOT,
+            cwd=env.OAS_ROOT,
         )
         for _ in range(2)
     ]

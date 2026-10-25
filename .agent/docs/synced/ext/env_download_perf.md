@@ -12,6 +12,7 @@
 
 - 去掉 `ELECTRON` / `CHINAC_CLOUDPHONE`（OAS 无 electron、无云手机）
 - `OAS_ROOT` 从 `os.path.dirname` ×3 改回 `PathStr.new(__file__).uppath(3)`，与 Alasio 一致
+- 新增 `OAS_TEMP = OAS_ROOT.joinpath('temp')`，测试临时目录统一放在仓库 `temp/` 下
 - **无回归**：现有 3 处用法 `OAS_ROOT + os.pathsep`、`PathStr.new(OAS_ROOT)`、`os.path.normpath(OAS_ROOT)` 实测均仍可用
 - 注意 `PathStr` 保留正斜杠，测试里比较路径要过 `os.path.normpath`
 - `set_project_root()` 只接受 str，传 `pathlib.Path` 会在 `normpath` 的 `'\\' in path` 上抛 `TypeError`（已断言为契约）

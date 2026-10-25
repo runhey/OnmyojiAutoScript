@@ -10,11 +10,8 @@ import struct
 
 import pytest
 
-from oas.ext.algorithm.bit2coding import (
-    decode_bit2_stream_iter,
-    encode_bit2_stream_iter,
-    encode_length_int,
-)
+from oas.ext.algorithm.bit2coding.bit2coding_decode import decode_bit2_stream_iter
+from oas.ext.algorithm.bit2coding.bit2coding_encode_python import encode_bit2_stream_iter, encode_length_int
 
 # ==============================================================================
 # encode_bit2_stream_iter — literal opcodes
@@ -38,13 +35,13 @@ class TestEncodeStreamLiteral:
     def test_two_items(self):
         """2 literal items → byte = 16 + first*4 + second (range 16-31)."""
         result = list(encode_bit2_stream_iter([(0, [0, 0])]))
-        assert result == [16]  # 16 + 0*4+0 = 16
+        assert result == [16]   # 16 + 0*4+0 = 16
 
         result = list(encode_bit2_stream_iter([(0, [1, 2])]))
-        assert result == [22]  # 16 + 1*4+2 = 22
+        assert result == [22]   # 16 + 1*4+2 = 22
 
         result = list(encode_bit2_stream_iter([(0, [3, 3])]))
-        assert result == [31]  # 16 + 3*4+3 = 31
+        assert result == [31]   # 16 + 3*4+3 = 31
 
     def test_three_items_literal(self):
         """3 literal items → header 32-63 + packed bytes."""
@@ -77,12 +74,7 @@ class TestEncodeStreamLiteral:
         assert len(result) == 1 + 8
         for i in range(8):
             base = i * 4
-            expected = (
-                items[base] * 64
-                + items[base + 1] * 16
-                + items[base + 2] * 4
-                + items[base + 3]
-            )
+            expected = items[base] * 64 + items[base + 1] * 16 + items[base + 2] * 4 + items[base + 3]
             assert result[1 + i] == expected
 
     def test_fifty_items_literal(self):
@@ -149,21 +141,18 @@ class TestEncodeStreamRun:
 
     # -- Short run: 1XXNNNNN, run length 3..34 --------------------------------
 
-    @pytest.mark.parametrize(
-        'val, run, expected',
-        [
-            (0, 3, 128),  # 128 + 0*32 + 0
-            (0, 10, 135),  # 128 + 0*32 + 7
-            (0, 34, 159),  # 128 + 0*32 + 31
-            (1, 3, 160),  # 128 + 1*32 + 0
-            (1, 34, 191),  # 128 + 1*32 + 31
-            (2, 3, 192),  # 128 + 2*32 + 0
-            (2, 20, 209),  # 128 + 2*32 + 17
-            (2, 34, 223),  # 128 + 2*32 + 31
-            (3, 3, 224),  # 128 + 3*32 + 0
-            (3, 34, 255),  # 128 + 3*32 + 31
-        ],
-    )
+    @pytest.mark.parametrize("val, run, expected", [
+        (0, 3, 128),     # 128 + 0*32 + 0
+        (0, 10, 135),    # 128 + 0*32 + 7
+        (0, 34, 159),    # 128 + 0*32 + 31
+        (1, 3, 160),     # 128 + 1*32 + 0
+        (1, 34, 191),    # 128 + 1*32 + 31
+        (2, 3, 192),     # 128 + 2*32 + 0
+        (2, 20, 209),    # 128 + 2*32 + 17
+        (2, 34, 223),    # 128 + 2*32 + 31
+        (3, 3, 224),     # 128 + 3*32 + 0
+        (3, 34, 255),    # 128 + 3*32 + 31
+    ])
     def test_short_run_values(self, val, run, expected):
         """Short run encoding: 128 + val*32 + (run-3)."""
         result = list(encode_bit2_stream_iter([(1, val, run)]))
@@ -229,7 +218,7 @@ class TestEncodeStreamRun:
             result = list(encode_bit2_stream_iter([(1, val, 35)]))
             # header: 96 + val*4 + 0, all in range 96-111
             expected_header = 96 + val * 4
-            assert expected_header < 112, f'val={val} header should be <112'
+            assert expected_header < 112, f"val={val} header should be <112"
             assert result[0] == expected_header
             assert result[1] == 0  # N=0
 
@@ -244,16 +233,13 @@ class TestEncodeStreamCopy:
 
     # -- Short copy: 010LLLLL + offset byte, length 1..32, offset 1..256 -----
 
-    @pytest.mark.parametrize(
-        'offset, length, expected',
-        [
-            (1, 1, [64, 0]),  # 63+1=64, offset-1=0
-            (1, 32, [95, 0]),  # 63+32=95, offset-1=0
-            (256, 1, [64, 255]),  # 63+1=64, offset-1=255
-            (256, 32, [95, 255]),  # 63+32=95, offset-1=255
-            (100, 15, [78, 99]),  # 63+15=78, offset-1=99
-        ],
-    )
+    @pytest.mark.parametrize("offset, length, expected", [
+        (1, 1, [64, 0]),       # 63+1=64, offset-1=0
+        (1, 32, [95, 0]),      # 63+32=95, offset-1=0
+        (256, 1, [64, 255]),   # 63+1=64, offset-1=255
+        (256, 32, [95, 255]),  # 63+32=95, offset-1=255
+        (100, 15, [78, 99]),   # 63+15=78, offset-1=99
+    ])
     def test_short_copy_values(self, offset, length, expected):
         """Various short copy encodings."""
         result = list(encode_bit2_stream_iter([(2, offset, length)]))
@@ -338,24 +324,22 @@ class TestEncodeStreamMixed:
     def test_mixed_sequence(self):
         """Sequence with all three opcode types."""
         opcodes = [
-            (0, [0]),  # 1-item literal → [0]
-            (1, 2, 5),  # short run → 128 + 2*32 + 2 = 194
-            (2, 10, 3),  # short copy → [63+3=66, 10-1=9]
+            (0, [0]),        # 1-item literal → [0]
+            (1, 2, 5),       # short run → 128 + 2*32 + 2 = 194
+            (2, 10, 3),      # short copy → [63+3=66, 10-1=9]
         ]
         result = list(encode_bit2_stream_iter(opcodes))
         assert result == [0, 194, 66, 9]
 
     def test_invalid_opcode_type(self):
         """Invalid opcode type raises ValueError."""
-        with pytest.raises(ValueError, match='Invalid opcode'):
+        with pytest.raises(ValueError, match="Invalid opcode"):
             list(encode_bit2_stream_iter([(99, None)]))
 
     def test_deterministic(self):
         """Same input produces identical output."""
         opcodes = [(0, [1, 2, 3]), (1, 0, 7), (2, 5, 2)]
-        assert list(encode_bit2_stream_iter(opcodes)) == list(
-            encode_bit2_stream_iter(opcodes)
-        )
+        assert list(encode_bit2_stream_iter(opcodes)) == list(encode_bit2_stream_iter(opcodes))
 
 
 # ==============================================================================
@@ -366,7 +350,7 @@ class TestEncodeStreamMixed:
 class TestDecodeStreamOneItemLiteral:
     """Decoding 1-item literal (byte 0-15 → opcode (0, [val]))."""
 
-    @pytest.mark.parametrize('val', range(4))
+    @pytest.mark.parametrize("val", range(4))
     def test_one_item(self, val):
         """Bytes 0-3 decode as 1-item literal."""
         data = memoryview(bytes([val]))
@@ -378,24 +362,21 @@ class TestDecodeStreamOneItemLiteral:
         """Bytes 4-15 are outside valid 2-bit value range → ValueError."""
         for byte in [4, 7, 15]:
             data = memoryview(bytes([byte]))
-            with pytest.raises(ValueError, match='Invalid opcode'):
+            with pytest.raises(ValueError, match="Invalid opcode"):
                 decode_bit2_stream_iter(data, 1)
 
 
 class TestDecodeStreamTwoItemLiteral:
     """Decoding 2-item literal (byte 16-31 → opcode (0, [first, second]))."""
 
-    @pytest.mark.parametrize(
-        'byte, expected',
-        [
-            (16, [0, 0]),  # 00010000 → first=0, second=0
-            (17, [0, 1]),  # 00010001 → first=0, second=1
-            (19, [0, 3]),  # 00010011 → first=0, second=3
-            (20, [1, 0]),  # 00010100 → first=1, second=0
-            (22, [1, 2]),  # 00010110 → first=1, second=2
-            (31, [3, 3]),  # 00011111 → first=3, second=3
-        ],
-    )
+    @pytest.mark.parametrize("byte, expected", [
+        (16, [0, 0]),   # 00010000 → first=0, second=0
+        (17, [0, 1]),   # 00010001 → first=0, second=1
+        (19, [0, 3]),   # 00010011 → first=0, second=3
+        (20, [1, 0]),   # 00010100 → first=1, second=0
+        (22, [1, 2]),   # 00010110 → first=1, second=2
+        (31, [3, 3]),   # 00011111 → first=3, second=3
+    ])
     def test_two_item_literal(self, byte, expected):
         """Byte 16-31 decodes to two literal values."""
         data = memoryview(bytes([byte]))
@@ -433,12 +414,7 @@ class TestDecodeStreamBatchLiteral:
         expected_items = [i % 4 for i in range(32)]
         packed = bytearray()
         for i in range(0, 32, 4):
-            packed.append(
-                expected_items[i] * 64
-                + expected_items[i + 1] * 16
-                + expected_items[i + 2] * 4
-                + expected_items[i + 3]
-            )
+            packed.append(expected_items[i] * 64 + expected_items[i + 1] * 16 + expected_items[i + 2] * 4 + expected_items[i + 3])
         data = memoryview(bytes([61]) + packed)
         opcodes, read = decode_bit2_stream_iter(data, 32)
         assert opcodes == [(0, expected_items)]
@@ -457,20 +433,17 @@ class TestDecodeStreamBatchLiteral:
 class TestDecodeStreamShortRun:
     """Decoding short run (byte 128-255 → run)."""
 
-    @pytest.mark.parametrize(
-        'byte, expected_val, expected_run',
-        [
-            (128, 0, 3),
-            (129, 0, 4),
-            (159, 0, 34),
-            (160, 1, 3),
-            (191, 1, 34),
-            (192, 2, 3),
-            (208, 2, 19),
-            (224, 3, 3),
-            (255, 3, 34),
-        ],
-    )
+    @pytest.mark.parametrize("byte, expected_val, expected_run", [
+        (128, 0, 3),
+        (129, 0, 4),
+        (159, 0, 34),
+        (160, 1, 3),
+        (191, 1, 34),
+        (192, 2, 3),
+        (208, 2, 19),
+        (224, 3, 3),
+        (255, 3, 34),
+    ])
     def test_short_run(self, byte, expected_val, expected_run):
         """Short run decoding."""
         data = memoryview(bytes([byte]))
@@ -548,16 +521,13 @@ class TestDecodeStreamLongRun:
 class TestDecodeStreamShortCopy:
     """Decoding short copy (byte 64-95 → copy with offset byte)."""
 
-    @pytest.mark.parametrize(
-        'byte, off_byte, expected_offset, expected_len',
-        [
-            (64, 0, 1, 1),
-            (64, 255, 256, 1),
-            (95, 0, 1, 32),
-            (95, 255, 256, 32),
-            (78, 99, 100, 15),
-        ],
-    )
+    @pytest.mark.parametrize("byte, off_byte, expected_offset, expected_len", [
+        (64, 0, 1, 1),
+        (64, 255, 256, 1),
+        (95, 0, 1, 32),
+        (95, 255, 256, 32),
+        (78, 99, 100, 15),
+    ])
     def test_short_copy(self, byte, off_byte, expected_offset, expected_len):
         """Short copy decoding."""
         data = memoryview(bytes([byte, off_byte]))
@@ -621,7 +591,7 @@ class TestDecodeStreamLongCopy:
                 f_bytes = bytes([0]) * f_bytes_needed
                 data = memoryview(bytes([byte]) + l_bytes + f_bytes)
                 opcodes, read = decode_bit2_stream_iter(data, 1)
-                assert opcodes == [(2, 1, 1)], f'Failed l_d={l_d}, f_d={f_d}'
+                assert opcodes == [(2, 1, 1)], f"Failed l_d={l_d}, f_d={f_d}"
                 assert read == 1 + l_bytes_needed + f_bytes_needed
 
 
@@ -631,27 +601,27 @@ class TestDecodeStreamInvalid:
     def test_truncated_data(self):
         """Empty data raises ValueError."""
         data = memoryview(bytes([]))
-        with pytest.raises(ValueError, match='Data truncated'):
+        with pytest.raises(ValueError, match="Data truncated"):
             decode_bit2_stream_iter(data, 1)
 
     def test_truncated_short_copy_missing_offset(self):
         """Short copy missing offset raises ValueError."""
         data = memoryview(bytes([64]))
-        with pytest.raises(ValueError, match='Data truncated'):
+        with pytest.raises(ValueError, match="Data truncated"):
             decode_bit2_stream_iter(data, 1)
 
     def test_truncated_batch_missing_items(self):
         """Batch literal missing its packed bytes raises ValueError."""
         # byte 32 declares a batch of 3 items, carried by 1 packed byte
         data = memoryview(bytes([32]))
-        with pytest.raises(ValueError, match='Data truncated'):
+        with pytest.raises(ValueError, match="Data truncated"):
             decode_bit2_stream_iter(data, 3)
 
     def test_truncated_batch_partial_items(self):
         """Batch literal with fewer packed bytes than it declares raises ValueError."""
         # byte 63 declares a batch of 34 items, carried by 9 packed bytes
         data = memoryview(bytes([63, 1, 2]))
-        with pytest.raises(ValueError, match='Data truncated'):
+        with pytest.raises(ValueError, match="Data truncated"):
             decode_bit2_stream_iter(data, 34)
 
     def test_truncated_long_copy_missing_bytes(self):
@@ -664,16 +634,13 @@ class TestDecodeStreamInvalid:
         with pytest.raises(ValueError):
             decode_bit2_stream_iter(data, 1)
 
-    @pytest.mark.parametrize(
-        'opcodes, total',
-        [
-            ([(0, [i % 4 for i in range(34)])], 34),  # batch literal
-            ([(1, 2, 100)], 100),  # long run
-            ([(2, 10, 3)], 3),  # short copy
-            ([(2, 300, 40)], 40),  # long copy
-            ([(0, [0]), (1, 2, 5), (2, 10, 3)], 9),  # mixed
-        ],
-    )
+    @pytest.mark.parametrize("opcodes, total", [
+        ([(0, [i % 4 for i in range(34)])], 34),  # batch literal
+        ([(1, 2, 100)], 100),                   # long run
+        ([(2, 10, 3)], 3),                      # short copy
+        ([(2, 300, 40)], 40),                   # long copy
+        ([(0, [0]), (1, 2, 5), (2, 10, 3)], 9),  # mixed
+    ])
     def test_any_truncation_raises_value_error(self, opcodes, total):
         """A truncated stream must raise ValueError, never another exception.
 
@@ -684,22 +651,15 @@ class TestDecodeStreamInvalid:
         assert len(encoded) > 1
         for end in range(len(encoded)):
             try:
-                decoded, read = decode_bit2_stream_iter(
-                    memoryview(encoded[:end]), total
-                )
+                decoded, read = decode_bit2_stream_iter(memoryview(encoded[:end]), total)
             except ValueError:
                 continue
             except Exception as e:
                 raise AssertionError(
-                    f'truncate at {end}: raised {type(e).__name__}: {e}'
-                ) from e
+                    f"truncate at {end}: raised {type(e).__name__}: {e}") from e
             # a truncated stream that decodes must have carried enough values
-            count = sum(
-                len(opcode[1]) if opcode[0] == 0 else opcode[2] for opcode in decoded
-            )
-            assert count >= total, (
-                f'truncate at {end}: decoded {count} values, total {total}'
-            )
+            count = sum(len(opcode[1]) if opcode[0] == 0 else opcode[2] for opcode in decoded)
+            assert count >= total, f"truncate at {end}: decoded {count} values, total {total}"
             assert read <= end
 
 
@@ -762,14 +722,13 @@ class TestDecodeStreamTotal:
     def test_total_exceeds_available(self):
         """If total > available data, decoder raises ValueError."""
         data = memoryview(bytes([128]))
-        with pytest.raises(ValueError, match='Data truncated'):
+        with pytest.raises(ValueError, match="Data truncated"):
             decode_bit2_stream_iter(data, 10)
 
 
 # ==============================================================================
 # Round-trip tests — encode_bit2_stream_iter then decode_bit2_stream_iter
 # ==============================================================================
-
 
 # Build a comprehensive set of roundtrippable opcodes
 def _build_roundtrip_cases():
@@ -838,23 +797,24 @@ class TestRoundtripStream:
                 merged.append(op)
         return merged
 
-    @pytest.mark.parametrize('opcodes', ROUNDTRIP_OPCODES)
+    @pytest.mark.parametrize("opcodes", ROUNDTRIP_OPCODES)
     def test_roundtrip(self, opcodes):
         """decode(encode(opcodes)) == opcodes (consecutive literals merged)."""
         encoded = list(encode_bit2_stream_iter(opcodes))
-        total = sum(op[2] if op[0] != 0 else len(op[1]) for op in opcodes)
+        total = sum(
+            op[2] if op[0] != 0 else len(op[1])
+            for op in opcodes
+        )
         decoded, read = decode_bit2_stream_iter(memoryview(bytes(encoded)), total)
         # Merge consecutive literals since the stream encoder may split them
         merged_decoded = self._merge_consecutive_literals(decoded)
-        assert merged_decoded == opcodes, f'Failed for {opcodes}'
+        assert merged_decoded == opcodes, f"Failed for {opcodes}"
         assert read == len(encoded)
 
     def test_deterministic(self):
         """Same input produces identical output."""
         opcodes = [(0, [0]), (1, 2, 10), (2, 50, 5)]
-        assert list(encode_bit2_stream_iter(opcodes)) == list(
-            encode_bit2_stream_iter(opcodes)
-        )
+        assert list(encode_bit2_stream_iter(opcodes)) == list(encode_bit2_stream_iter(opcodes))
 
     def test_roundtrip_large_sequence(self):
         """Large mixed sequence round-trips correctly."""
@@ -934,13 +894,11 @@ class TestFullPipeline:
         [i % 4 for i in range(500)],
     ]
 
-    @pytest.mark.parametrize('data', PIPELINE_CASES)
+    @pytest.mark.parametrize("data", PIPELINE_CASES)
     def test_full_pipeline(self, data):
         """Full encode → stream encode → stream decode → opcode decode."""
-        from oas.ext.algorithm.bit2coding import (
-            decode_bit2_opcode,
-            encode_bit2_opcode_iter,
-        )
+        from oas.ext.algorithm.bit2coding.bit2coding_decode import decode_bit2_opcode
+        from oas.ext.algorithm.bit2coding.bit2coding_encode_python import encode_bit2_opcode_iter
 
         opcodes = list(encode_bit2_opcode_iter(data))
         stream_bytes = list(encode_bit2_stream_iter(opcodes))
@@ -949,5 +907,6 @@ class TestFullPipeline:
         )
         decoded_data = decode_bit2_opcode(decoded_opcodes)
         assert decoded_data == data, (
-            f'Pipeline failed for data={data[:30]}... got {decoded_data[:30]}...'
+            f"Pipeline failed for data={data[:30]}... "
+            f"got {decoded_data[:30]}..."
         )

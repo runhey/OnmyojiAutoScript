@@ -1,9 +1,29 @@
 """
-Combined encoding for path-based data: prefix (diff+zigzag) and suffix (nibble).
-"""
+The reference of the filepath section of a pack index, in Python: the search
+of ``iter_path_comb()`` and the two combined encoders of the values it
+yields.
 
-from oas.ext.algorithm.diffcooding import decode_diff, encode_diff
-from oas.ext.algorithm.zigzag import decode_zigzag, encode_zigzag
+``iter_path_comb()`` is the shared encoder for ordered path lists (e.g. the
+index section of a pack).  For each input path it yields:
+
+- ``prefix_reuse``: length of the longest common prefix with the previous path
+- ``path``: the remaining path after stripping the reused prefix and suffix
+- ``suffix_reuse``: length of the suffix reused from a lookback path
+- ``suffix_lookback``: 1-based distance to the reused suffix's path
+
+The decoder (``decode_base._decode_paths``) replays these values as
+``prev[:prefix_reuse] + path + lookback_path[-suffix_reuse:]``.
+
+The accelerator of this module is oas_speedup.pathcomb, wrapped by
+pathcomb_encode_c.py, which emits exactly what this reference emits.
+"""
+from typing import Iterable, Iterator, Tuple
+
+from oas.ext.algorithm.diffcooding import encode_diff
+from oas.ext.algorithm.lcp import get_lcp
+from oas.ext.algorithm.pathcomb.pathcomb_decode import _1B1B_BIAS, _2B2B_BIAS
+from oas.ext.algorithm.pathlcs import PathLookbackLCS
+from oas.ext.algorithm.zigzag import encode_zigzag
 
 # MAX_PREFIX_REUSE is bounded by the combined-int encoding, not by the field
 # width itself. prefix_reuse is diff-encoded then zigzagged, so a single value
@@ -19,8 +39,10 @@ MAX_PATH_LEN = 65535
 MAX_SUFFIX_REUSE = 65535
 MAX_SUFFIX_LOOKBACK = 255
 
-_1B1B_BIAS = 256
-_2B2B_BIAS = 16777216  # 2 ** 24
+# the shortest LCS that is worth a suffix reuse: a shorter one costs as much
+# as it saves. The C encoder of pathcomb_encode_c.py freezes the same value,
+# it is part of the pack format and not a knob of the call
+MIN_SUFFIX_REUSE = 3
 
 
 def prefix_comb_value_check(list_prefix_reuse, list_path_length):
@@ -90,9 +112,7 @@ def suffix_comb_value_check(list_suffix_reuse, list_suffix_lookback):
     if min_lb < 0:
         raise ValueError(f'suffix_lookback must be >= 0, got {min_lb}')
     if max_lb > MAX_SUFFIX_LOOKBACK:
-        raise ValueError(
-            f'suffix_lookback must be <= {MAX_SUFFIX_LOOKBACK}, got {max_lb}'
-        )
+        raise ValueError(f'suffix_lookback must be <= {MAX_SUFFIX_LOOKBACK}, got {max_lb}')
 
 
 def _encode_prefix_comb_iter(list_prefix_reuse, list_path_length):
@@ -161,45 +181,6 @@ def encode_prefix_comb(list_prefix_reuse, list_path_length):
     return list(_encode_prefix_comb_iter(list_prefix_reuse, list_path_length))
 
 
-def decode_prefix_comb(encoded):
-    """
-    Decode prefix_comb encoded data.
-
-    Decoding ranges:
-        v < 256:              5b+3b: zz = v // 8,  pl = v % 8
-        256 <= v < 2^24:      1B/2B zz + 1B pl:   raw = v - _1B1B_BIAS,
-                                                    zz = raw // 256, pl = raw % 256
-        v >= 2^24:            2B zz + 2B pl:       raw = v - _2B2B_BIAS,
-                                                    zz = raw // 65536, pl = raw % 65536
-
-    Args:
-        encoded (list[int]): Encoded integers from encode_prefix_comb.
-
-    Returns:
-        tuple[list[int], list[int]]: (prefix_reuse, path_len).
-    """
-    zz_list = []
-    pl_list = []
-    for v in encoded:
-        if v < 256:
-            zz = v // 8
-            pl = v % 8
-        elif v < _2B2B_BIAS:
-            raw = v - _1B1B_BIAS
-            zz = raw // 256
-            pl = raw % 256
-        else:
-            raw = v - _2B2B_BIAS
-            zz = raw // 65536
-            pl = raw % 65536
-        zz_list.append(zz)
-        pl_list.append(pl)
-
-    diff_list = decode_zigzag(zz_list)
-    prefix_reuse = decode_diff(diff_list)
-    return prefix_reuse, pl_list
-
-
 def _encode_suffix_comb_iter(list_suffix_reuse, list_suffix_lookback):
     """
     Encode suffix_reuse and suffix_lookback into combined ints.
@@ -244,36 +225,64 @@ def encode_suffix_comb(list_suffix_reuse, list_suffix_lookback):
     return list(_encode_suffix_comb_iter(list_suffix_reuse, list_suffix_lookback))
 
 
-def decode_suffix_comb(encoded):
+def iter_path_comb(
+        paths: "Iterable[str]",
+        max_prefix_reuse=MAX_PREFIX_REUSE,
+        min_suffix_reuse=MIN_SUFFIX_REUSE,
+        max_suffix_reuse=MAX_SUFFIX_REUSE,
+        max_suffix_lookback=MAX_SUFFIX_LOOKBACK,
+) -> "Iterator[Tuple[int, str, int, int]]":
     """
-    Decode suffix_comb encoded data.
-
-    Decoding ranges:
-        v == 0:                  (0, 0) = no match
-        v < 256:                 reuse = v // 16, lb = v % 16
-        v >= 256:                raw = v - _1B1B_BIAS,
-                                 reuse = raw // 256, lb = raw % 256
+    Encode an ordered path list into prefix/suffix combination values.
 
     Args:
-        encoded (list[int]): Encoded integers from encode_suffix_comb.
+        paths (Iterable[str]): Full paths in encoded order
+        max_prefix_reuse (int): Maximum prefix length reused from the
+            previous path. Defaults to MAX_PREFIX_REUSE.
+        min_suffix_reuse (int): Minimum LCS length for a suffix candidate.
+            Defaults to MIN_SUFFIX_REUSE.
+        max_suffix_reuse (int): Maximum LCS length for a suffix candidate.
+            Defaults to MAX_SUFFIX_REUSE.
+        max_suffix_lookback (int): Maximum lookback distance for a suffix
+            candidate. Defaults to MAX_SUFFIX_LOOKBACK.
 
-    Returns:
-        tuple[list[int], list[int]]: (suffix_reuse, suffix_lookback).
+    Yields:
+        tuple[int, str, int, int]: prefix_reuse, remaining path, suffix_reuse,
+            suffix_lookback
     """
-    reuse_list = []
-    lb_list = []
-    for v in encoded:
-        if v == 0:
-            reuse = 0
-            lb = 0
-        elif v < 256:
-            reuse = v // 16
-            lb = v % 16
-        else:
-            raw = v - _1B1B_BIAS
-            reuse = raw // 256
-            lb = raw % 256
-        reuse_list.append(reuse)
-        lb_list.append(lb)
+    prev = ''
+    lcs_lookback = PathLookbackLCS()
+    for path in paths:
+        # prefix
+        prefix_reuse = get_lcp(prev, path)
+        # prefix_reuse must <= max_prefix_reuse
+        # otherwise the zigzag diff may overflow the combined-int encoding
+        if len(prefix_reuse) > max_prefix_reuse:
+            prefix_reuse = prefix_reuse[:max_prefix_reuse]
+        remaining = path.removeprefix(prefix_reuse)
 
-    return reuse_list, lb_list
+        # suffix, query with the full path consistent with add_path() below and
+        # with the decoder, which takes suffixes from full lookback paths;
+        # a prefix-stripped path may lose its extension dot (e.g. "png")
+        # and can never match the ('.png', ...) buckets of stored paths
+        suffix_lookback, suffix_reuse = lcs_lookback.get_lcs(
+            path, min_length=min_suffix_reuse, max_length=max_suffix_reuse, max_lookback=max_suffix_lookback,
+        )
+        # the LCS of full paths may extend beyond the prefix-stripped path
+        # (e.g. ".png" vs stripped "png"); cap it so the suffix always fits
+        # the remaining path, keeping prefix and suffix non-overlapping.
+        # On a crossing, keep the full prefix (up to max_prefix_reuse) and
+        # shrink the suffix to fill the remaining space.
+        if suffix_reuse > len(remaining):
+            suffix_reuse = len(remaining)
+            # a zero-length reuse must not keep a lookback: the decoder
+            # takes ``paths[i-lookback][-suffix_reuse:]`` and ``[-0:]``
+            # would yield the whole referenced path instead of nothing
+            if not suffix_reuse:
+                suffix_lookback = 0
+        if suffix_reuse:
+            remaining = remaining[:-suffix_reuse]
+        lcs_lookback.add_path(path)
+        prev = path
+
+        yield len(prefix_reuse), remaining, suffix_reuse, suffix_lookback

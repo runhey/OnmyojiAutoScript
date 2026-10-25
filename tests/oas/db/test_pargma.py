@@ -10,7 +10,7 @@ import pytest
 
 from oas.db.conn import SQLITE_POOL
 from oas.db.table import Table
-from oas.ext.env import OAS_ROOT
+from oas.ext import env
 
 # ============================================================================
 # Test Models and Tables
@@ -52,7 +52,7 @@ def db_dir():
     The directory lives under the repo's temp/ folder and is removed after
     the module finishes.
     """
-    path = OAS_ROOT.joinpath('temp/db_pargma')
+    path = env.OAS_TEMP.joinpath('db_pargma')
     shutil.rmtree(path, ignore_errors=True)
     os.makedirs(path, exist_ok=True)
     yield path

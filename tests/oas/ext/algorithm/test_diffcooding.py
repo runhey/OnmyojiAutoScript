@@ -135,7 +135,7 @@ class TestDiffCodingRoundtrip:
         [1, 3, 6, 10, 15],
         [15, 10, 6, 3, 1],
         [2**31 - 1, -(2**31), 0, 2**31 - 1],
-        [-(2**63), 0, 2**63 - 1],
+        [-2**63, 0, 2**63 - 1],
         [1],
         [1, 2],
         [1000000, 1000005, 999990, 1000010],
@@ -145,7 +145,7 @@ class TestDiffCodingRoundtrip:
         [10, 9, 8, 7, 6],
     ]
 
-    @pytest.mark.parametrize('data', ROUNDTRIP_CASES)
+    @pytest.mark.parametrize("data", ROUNDTRIP_CASES)
     def test_roundtrip(self, data):
         """decode_diff(encode_diff(data)) should return the original data."""
         encoded = encode_diff(data)

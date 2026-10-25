@@ -1,12 +1,5 @@
-ext/algorithm 已同步 14 源码 + 19 测试(2257 passed / 2 skipped),零第三方依赖。
+# `oas/ext/algorithm` 与 Alasio 的当前差异
 
-| 文件 | 测试 | 迁移改动 |
-|---|---|---|
-| const / zigzag / diffcooding / lcp / lz77 / checksum | 各自 test_* | 无,字节一致 |
-| unpack / vint / vlenint / pathlen_coding / pathlcs / pathlcs_v3 | 各自 test_* | import 前缀 |
-| bit2coding | test_bit2coding_* (6) | import 前缀;`backport.batch.batched` → `itertools.batched` |
-| pathcomb | test_pathcomb | import 前缀;`backport.removeprefix` → `str.removeprefix`,调用点改写 |
-
-— 10 个文件仅改 import 行,零逻辑差异;补空 `__init__.py`(Alasio 侧为命名空间包)。
-
-未迁 `pathlcs_compare.py`:非 pytest 收集目标,依赖 `alasio.git`(OAS 无 `oas/git`)。
+- `oas` 当前没有 `oas.speedup` 模块。`bit2coding_encode_c.py`、`vlenint_encode_c.py`、`pathcomb_encode_c.py` 对该模块使用可选导入；不可用时直接回退到 Python 实现。
+- `bit2coding_encode_python.py` 使用标准库 `itertools.batched`，没有依赖 Alasio 的 `backport.batch`。
+- `pathcomb_encode_python.py` 使用 `str.removeprefix()`，没有依赖 Alasio 的 `backport.removeprefix`。

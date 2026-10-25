@@ -18,7 +18,7 @@ from oas.ext.path.atomic import atomic_read_bytes
 from oas.ext.singleton import Singleton
 
 
-DEPLOY_CONFIG = env.OAS_ROOT / 'oas' /'config' / 'deploy.json'
+DEPLOY_CONFIG = env.OAS_ROOT /'config' / 'deploy.json'
 
 
 class SettingsRuntime(metaclass=Singleton):

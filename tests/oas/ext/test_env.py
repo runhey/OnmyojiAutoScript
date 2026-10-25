@@ -12,7 +12,7 @@ import sys
 import pytest
 
 from oas.ext import env
-from oas.ext.env import OAS_ROOT, PROJECT_ROOT, set_project_root
+from oas.ext.env import OAS_ROOT, OAS_TEMP, PROJECT_ROOT, set_project_root
 
 
 class TestOsFlags:
@@ -94,6 +94,9 @@ class TestOasRoot:
             str(OAS_ROOT.joinpath('oas'))
             == os.path.normpath(str(OAS_ROOT)).replace('\\', '/') + '/oas'
         )
+
+    def test_oas_temp_is_under_oas_root(self):
+        assert OAS_TEMP == OAS_ROOT.joinpath('temp')
 
 
 class TestSetProjectRoot:

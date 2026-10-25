@@ -10,9 +10,8 @@ from pathlib import Path
 
 import pytest
 
-from oas.ext.env import OAS_ROOT
+from oas.ext import env
 from oas.ext.file.filelock import FilelockTimeout, SQLiteFileLock
-from oas.ext.path import PathStr
 
 CHILD_HOLD = (
     'import os, sys, time\n'
@@ -39,7 +38,7 @@ def lock_dir():
     The directory lives under the repo's temp/ folder and is removed after
     the module finishes.
     """
-    path = PathStr.new(OAS_ROOT).joinpath('temp/filelock')
+    path = env.OAS_TEMP.joinpath('filelock')
     shutil.rmtree(path, ignore_errors=True)
     os.makedirs(path, exist_ok=True)
     yield path
@@ -439,7 +438,7 @@ class TestCrossProcess:
             text=True,
             timeout=10,
             check=False,
-            cwd=OAS_ROOT,
+            cwd=env.OAS_ROOT,
         )
         lock.release()
         assert result.returncode == 0
@@ -453,7 +452,7 @@ class TestCrossProcess:
             [sys.executable, '-c', CHILD_HOLD, str(lock_file), str(flag_file)],
             stdout=subprocess.PIPE,
             text=True,
-            cwd=OAS_ROOT,
+            cwd=env.OAS_ROOT,
         )
         try:
             assert proc.stdout.readline().strip() == 'HELD'
