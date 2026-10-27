@@ -15,6 +15,8 @@ class DuelAssets:
 	C_D_BATTLE_DATA = RuleClick(roi_front=(584,279,100,100), roi_back=(584,279,100,100), name="d_battle_data")
 	# 点击第五手上式神位置，获得式神名称 
 	C_DUEL_CLICK_5 = RuleClick(roi_front=(105,23,52,47), roi_back=(105,23,52,47), name="duel_click_5")
+	# 名仕 BP 阵容确认页右下角的「确定」按钮（确认上阵、进入战斗）
+	C_DUEL_CONFIRM = RuleClick(roi_front=(1120,560,120,85), roi_back=(1120,560,120,85), name="duel_confirm")
 
 
 	# Image Rule Assets

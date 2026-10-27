@@ -143,14 +143,22 @@ class ScriptTask(GameUi, GeneralBattle, SwitchSoul, DuelAssets, SwitchOnmyoji):
             # 名仕不开启自动上阵, 根据最后一个式神的名字是否改变来检查自己式神是否被ban
             if not self.appear(self.I_D_CHECK_BAN, interval=0.8) and self.is_celeb:
                 ocr_name = self.O_D_BAN_NAME.ocr(self.device.image)
-                shikigami_banned = ocr_name != '' and not any(
+                if ocr_name == '':
+                    # 还没显示名字, 点一下第 5 手位置把名字读出来
+                    self.click(self.C_DUEL_CLICK_5, interval=random.uniform(0.7, 1.4))
+                    sleep(random.uniform(1.5, 3))  # 降低点击频率和ocr识别频率
+                    continue
+                shikigami_banned = not any(
                     char in ocr_name for char in self.conf.duel_celeb_config.ban_name)
-                logger.info(f'Check self shikigami is banned:{shikigami_banned}')
+                logger.info(f'Check self shikigami is banned:{shikigami_banned}, name: {ocr_name}')
                 if shikigami_banned:
                     self.duel_exit_battle()
                     continue
-                self.click(self.C_DUEL_CLICK_5, interval=random.uniform(0.7, 1.4))
-                sleep(random.uniform(1.5, 3))  # 降低点击频率和ocr识别频率
+                # 没有被 ban: 点「确定」确认上阵并开始战斗
+                # 不点「确定」的话会一直停留在选人界面, 反复点第 5 手头像直到触发同键连点保护
+                self.click(self.C_DUEL_CONFIRM, interval=random.uniform(0.9, 1.4))
+                self.reset_device('PREPARE_BEFORE_BATTLE')
+                sleep(random.uniform(1.5, 3))
                 continue
             # 点击自动上阵或准备
             if self.appear_then_click(self.I_D_AUTO_ENTRY, interval=1.2) or \
