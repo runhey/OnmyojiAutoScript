@@ -125,6 +125,8 @@ class ScriptTask(GameUi, GeneralBattle, SwitchSoul, DuelAssets, SwitchOnmyoji):
         """选式神准备斗技阶段"""
         logger.hr('duel battle preparing')
         not_in_prepare_cnt, max_retry = 0, 3
+        ban_click_cnt = 0
+        ban_wait_cnt, max_ban_wait = 0, 40  # 禁选页长时间没有进度(约 40 次循环)就退出本场, 避免静默卡死
         while True:
             if not_in_prepare_cnt >= max_retry:  # max_retry次识别不到任何阶段元素(准备,战斗,结算), 退出
                 break
@@ -136,10 +138,16 @@ class ScriptTask(GameUi, GeneralBattle, SwitchSoul, DuelAssets, SwitchOnmyoji):
                 sleep(random.uniform(1.2, 2.4))
                 continue
             not_in_prepare_cnt = 0
-            # 再次检查是否是名仕(若斗技主界面识别名仕失效的话)
-            if self.appear_then_click(self.I_BAN, interval=1.2):
-                self.is_celeb = True
+            # 名仕禁选阶段(若斗技主界面识别名仕失效的话, 靠禁选页再次确认)
+            in_ban_page, ban_click_cnt = self._ban_shikigami_once(ban_click_cnt)
+            if in_ban_page:
+                ban_wait_cnt += 1
+                if ban_wait_cnt >= max_ban_wait:
+                    logger.warning('Duel ban page makes no progress for a long time, exit battle')
+                    self.duel_exit_battle()
+                    ban_wait_cnt = 0
                 continue
+            ban_wait_cnt = 0
             # 名仕不开启自动上阵, 根据最后一个式神的名字是否改变来检查自己式神是否被ban
             if not self.appear(self.I_D_CHECK_BAN, interval=0.8) and self.is_celeb:
                 ocr_name = self.O_D_BAN_NAME.ocr(self.device.image)
@@ -164,6 +172,30 @@ class ScriptTask(GameUi, GeneralBattle, SwitchSoul, DuelAssets, SwitchOnmyoji):
             if self.appear_then_click(self.I_D_AUTO_ENTRY, interval=1.2) or \
                     self.appear_then_click(self.I_D_PREPARE, interval=1.2):
                 self.reset_device('PREPARE_BEFORE_BATTLE')
+
+    def _ban_shikigami_once(self, ban_click_cnt: int) -> tuple:
+        """
+        名仕禁选阶段尝试禁选一次。
+
+        名仕斗技双方各禁选一名式神。我方禁选完成后「禁用」按钮会变成「已禁选」且不可点击,
+        继续点击会触发同键连点保护(GameTooManyClickError), 游戏据此判定卡死并重启。
+
+        :param ban_click_cnt: 本场战斗已点击禁选的次数
+        :return: (当前是否处于禁选页面, 最新的已点击次数)
+        """
+        if not self.appear(self.I_BAN):
+            return False, ban_click_cnt
+        self.is_celeb = True
+        if self.appear(self.I_BAN_ALREADY):
+            sleep(random.uniform(0.8, 1.5))  # 等对方禁选, 避免空转
+            return True, ban_click_cnt
+        # 兜底: 防御「已禁选」识别失败。同键连点保护阈值为 10 次, 这里最多点 5 次, 留足余量。
+        if ban_click_cnt >= 5:
+            sleep(1)
+            return True, ban_click_cnt
+        if self.appear_then_click(self.I_BAN, interval=1.2):
+            ban_click_cnt += 1
+        return True, ban_click_cnt
 
     def wait_battle(self) -> bool:
         """等待战斗结束, 返回战斗结果, 最后会退出到斗技主界面"""
