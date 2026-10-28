@@ -125,6 +125,8 @@ class CostumeBase:
             asset_before_object.roi_back = asset_after.roi_back
         asset_before_object.threshold = asset_after.threshold
         asset_before_object.file = asset_after.file
+        # https://github.com/runhey/OnmyojiAutoScript/issues/1972
+        asset_before_object.refresh()
 
     def check_costume_main(self, main_type: MainType):
         if main_type == MainType.COSTUME_MAIN:
