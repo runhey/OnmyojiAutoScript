@@ -36,6 +36,13 @@ class ScriptTask(
             self.goto_page(page_shikigami_records)
             self.run_switch_soul_by_name(config.group_name, config.team_name)
 
+    def _prepare_eternity_sea(self):
+        self.goto_page(page_soul_zones)
+        self._enter_eternity_sea()
+        layer = self._task_config.eternity_sea_config.layer
+        self.check_layer(layer)
+        self.check_lock(self._task_config.general_battle_config.lock_team_enable)
+
     def run(self) -> None:
         self._two_teams_switch_sous(self._task_config.switch_soul_config_1)
         self._two_teams_switch_sous(self._task_config.switch_soul_config_2)
@@ -55,11 +62,7 @@ class ScriptTask(
 
     def run_leader(self):
         logger.info('Start run leader')
-        self.goto_page(page_soul_zones)
-        self._enter_eternity_sea()
-        layer = self._task_config.eternity_sea_config.layer
-        self.check_layer(layer)
-        self.check_lock(self._task_config.general_battle_config.lock_team_enable)
+        self._prepare_eternity_sea()
         # 创建队伍
         logger.info('Create team')
         while 1:
@@ -177,9 +180,7 @@ class ScriptTask(
 
     def run_member(self):
         logger.info('Start run member')
-        # self.ui_goto(page_soul_zones)
-        # self.orochi_enter()
-        # self.check_lock(self.config.orochi.general_battle_config.lock_team_enable)
+        self._prepare_eternity_sea()
 
         # 进入战斗流程
         self.device.stuck_record_add('BATTLE_STATUS_S')
