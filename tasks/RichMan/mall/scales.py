@@ -314,6 +314,19 @@ class Scales(Buy, MallNavbar):
         if remain_number == 0:
             logger.warning(f'The remaining purchase quantity of xx is {remain_number}')
             return
+        # 游戏内开启自动选择御魂时，一次可以买完
+        if self.config.rich_man.scales.enable_book_auto:
+            # 检查钱是否够买一个
+            current_money = self.O_SCA_RES_SEA.ocr(self.device.image)
+            if not isinstance(current_money, int):
+                logger.warning('OCR error')
+                return
+            if current_money < 400:
+                logger.warning('Scales sea money is not enough')
+                return
+            self._scales_buy_more(self.I_SCA_PICTURE_BOOK)
+            time.sleep(0.5)
+            return
         if remain_number < buy_number:
             buy_number = remain_number
             logger.warning(f'Remaining purchase quantity is {remain_number}, buy_number is {buy_number}')
@@ -340,16 +353,10 @@ class Scales(Buy, MallNavbar):
             buy_res_number = buy_number
         if buy_cycles_number:
             for i in range(buy_cycles_number):
-                if self.config.rich_man.scales.enable_book_auto:
-                    self._scales_buy_more(self.I_SCA_PICTURE_BOOK)
-                else:
-                    self._scales_buy_sea_more(self.I_SCA_PICTURE_BOOK)
+                self._scales_buy_sea_more(self.I_SCA_PICTURE_BOOK)
                 time.sleep(0.5)
         if buy_res_number and buy_res_number >= 2:
-            if self.config.rich_man.scales.enable_book_auto:
-                self._scales_buy_more(self.I_SCA_PICTURE_BOOK, buy_res_number)
-            else:
-                self._scales_buy_sea_more(self.I_SCA_PICTURE_BOOK, buy_res_number)
+            self._scales_buy_sea_more(self.I_SCA_PICTURE_BOOK, buy_res_number)
             time.sleep(0.5)
 
 
