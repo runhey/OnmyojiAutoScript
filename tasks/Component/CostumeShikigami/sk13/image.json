@@ -1,0 +1,173 @@
+[
+  {
+    "itemName": "check_records_13",
+    "imageName": "sk13_check_records_13.png",
+    "roiFront": "279,87,30,35",
+    "roiBack": "274,82,40,45",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "用于判断在式神录"
+  },
+  {
+    "itemName": "record_soul_back_13",
+    "imageName": "sk13_record_soul_back_13.png",
+    "roiFront": "21,10,38,36",
+    "roiBack": "14,4,52,54",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "退出式神录"
+  },
+  {
+    "itemName": "sou_check_in_13",
+    "imageName": "sk13_sou_check_in_13.png",
+    "roiFront": "277,84,34,36",
+    "roiBack": "277,84,34,36",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "用于判断是否在式神录里面"
+  },
+  {
+    "itemName": "soul_preset_13",
+    "imageName": "sk13_soul_preset_13.png",
+    "roiFront": "350,87,56,25",
+    "roiBack": "344,82,70,36",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "预设"
+  },
+  {
+    "itemName": "sou_team_present_13",
+    "imageName": "sk13_sou_team_present_13.png",
+    "roiFront": "730,82,103,30",
+    "roiBack": "724,76,115,42",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "队伍预设标题"
+  },
+  {
+    "itemName": "sou_switch_1_13",
+    "imageName": "sk13_sou_switch_1_13.png",
+    "roiFront": "975,137,35,34",
+    "roiBack": "970,132,45,44",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "第一队切换"
+  },
+  {
+    "itemName": "sou_switch_2_13",
+    "imageName": "sk13_sou_switch_2_13.png",
+    "roiFront": "975,291,35,34",
+    "roiBack": "970,286,45,44",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "第二队切换"
+  },
+  {
+    "itemName": "sou_switch_3_13",
+    "imageName": "sk13_sou_switch_3_13.png",
+    "roiFront": "975,445,35,34",
+    "roiBack": "970,440,45,44",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "第三队切换"
+  },
+  {
+    "itemName": "sou_switch_4_13",
+    "imageName": "sk13_sou_switch_4_13.png",
+    "roiFront": "975,599,35,34",
+    "roiBack": "970,594,45,44",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "第四队切换"
+  },
+  {
+    "itemName": "sou_click_present_13",
+    "imageName": "sk13_sou_click_present_13.png",
+    "roiFront": "975,291,35,34",
+    "roiBack": "971,134,42,530",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "点击预设队伍"
+  },
+  {
+    "itemName": "sou_check_group_1_13",
+    "imageName": "sk13_sou_check_group_1_13.png",
+    "roiFront": "1088,79,18,55",
+    "roiBack": "1088,79,18,55",
+    "method": "Template matching",
+    "threshold": 0.9,
+    "description": "第一组选中态"
+  },
+  {
+    "itemName": "sou_check_group_2_13",
+    "imageName": "sk13_sou_check_group_2_13.png",
+    "roiFront": "1088,149,18,55",
+    "roiBack": "1088,149,18,55",
+    "method": "Template matching",
+    "threshold": 0.9,
+    "description": "第二组选中态"
+  },
+  {
+    "itemName": "sou_check_group_3_13",
+    "imageName": "sk13_sou_check_group_3_13.png",
+    "roiFront": "1088,219,18,55",
+    "roiBack": "1088,219,18,55",
+    "method": "Template matching",
+    "threshold": 0.9,
+    "description": "第三组选中态"
+  },
+  {
+    "itemName": "sou_check_group_4_13",
+    "imageName": "sk13_sou_check_group_4_13.png",
+    "roiFront": "1088,289,18,55",
+    "roiBack": "1088,289,18,55",
+    "method": "Template matching",
+    "threshold": 0.9,
+    "description": "第四组选中态"
+  },
+  {
+    "itemName": "sou_check_group_5_13",
+    "imageName": "sk13_sou_check_group_5_13.png",
+    "roiFront": "1088,359,18,55",
+    "roiBack": "1088,359,18,55",
+    "method": "Template matching",
+    "threshold": 0.9,
+    "description": "第五组选中态"
+  },
+  {
+    "itemName": "sou_check_group_6_13",
+    "imageName": "sk13_sou_check_group_6_13.png",
+    "roiFront": "1088,429,18,55",
+    "roiBack": "1088,429,18,55",
+    "method": "Template matching",
+    "threshold": 0.9,
+    "description": "第六组选中态"
+  },
+  {
+    "itemName": "sou_check_group_7_13",
+    "imageName": "sk13_sou_check_group_7_13.png",
+    "roiFront": "1088,499,18,55",
+    "roiBack": "1088,499,18,55",
+    "method": "Template matching",
+    "threshold": 0.9,
+    "description": "第七组选中态"
+  },
+  {
+    "itemName": "st_souls_13",
+    "imageName": "sk13_st_souls_13.png",
+    "roiFront": "1195,228,37,85",
+    "roiBack": "1187,220,53,100",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "御魂按钮"
+  },
+  {
+    "itemName": "st_replace_13",
+    "imageName": "sk13_st_replace_13.png",
+    "roiFront": "863,141,94,125",
+    "roiBack": "853,131,114,145",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "更换按钮"
+  }
+]
