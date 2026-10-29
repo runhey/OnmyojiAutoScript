@@ -91,6 +91,15 @@ class ScriptTask(ExtendGreenMark, GameUi, SwitchSoul, DokanSceneDetector):
         if not in_dokan:
             out_dokan_timer.start()
             self.goto_dokan_scene()
+            in_dokan, current_scene = self.get_current_scene(True)
+
+        # 进入道馆寻找界面后，在主循环前仅尝试一次开启道馆
+        if (in_dokan and
+                current_scene == DokanScene.RYOU_DOKAN_SCENE_FINDING_DOKAN and
+                cfg.dokan_config.try_start_dokan):
+            count = self.update_remain_attack_count()
+            if count > 0:
+                self.creat_dokan()
 
         # 是否已击败馆主第一阵容
         first_master_killed = False
@@ -140,10 +149,6 @@ class ScriptTask(ExtendGreenMark, GameUi, SwitchSoul, DokanSceneDetector):
                 if not try_start_dokan:
                     is_dokan_activated = False
                     break
-                # NOTE 只在周一尝试建立道馆
-                if datetime.now().weekday() == 0:
-                    self.creat_dokan()
-
                 # 寻找合适道馆,找不到直接退出
                 if not self.find_dokan(self.config.dokan.dokan_config.find_dokan_score):
                     is_dokan_activated = False
@@ -950,7 +955,7 @@ class ScriptTask(ExtendGreenMark, GameUi, SwitchSoul, DokanSceneDetector):
             #   # 本来以为server为False(finish=True,success=False,server=False)就不会变成明天，谁知道还是变成明天
             #   # 逻辑太复杂,不如直接target，简单点
             if self.config.dokan.attack_count_config.remain_attack_count == 1 and self.config.dokan.attack_count_config.daily_attack_count == 2:
-                self.set_next_run(task="Dokan", target=now + self.config.dokan.scheduler.failure_interval)
+                self.set_next_run(task="Dokan", target=now + self.config.dokan.scheduler.failure_interval, server=False)
                 return
             # 其余情况当作成功
             self.set_next_run(task="Dokan", finish=False, success=True, server=True)

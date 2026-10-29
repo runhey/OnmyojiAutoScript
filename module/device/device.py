@@ -12,7 +12,11 @@ from module.base.timer import Timer
 from module.config.utils import get_server_next_update
 from module.device.app_control import AppControl
 from module.device.control import Control
-from module.device.desktop_device import DesktopDevice
+if IS_WINDOWS:
+    from module.device.desktop_device import DesktopDevice
+else:
+    class DesktopDevice:
+        pass
 from module.device.platform2 import Platform
 from module.device.screenshot import Screenshot
 from module.exception import (GameNotRunningError,

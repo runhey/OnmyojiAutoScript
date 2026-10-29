@@ -8,7 +8,7 @@ from numpy import float32, int32, uint8, fromfile
 from pathlib import Path
 
 from module.atom.RuleImageMallResourceMixin import RuleImageMallResourceMixin
-from module.base.decorator import cached_property
+from module.base.decorator import cached_property, del_cached_property
 from module.logger import logger
 from module.base.utils import is_approx_rectangle
 from module.base.utils.utils import random_normal_distribution_int
@@ -232,6 +232,17 @@ class RuleImage(RuleImageMallResourceMixin):
             return result
         logger.error("match result contains nan/inf (solid-color region), treated as not matched")
         return np.nan_to_num(result, nan=-1.0, posinf=-1.0, neginf=-1.0)
+
+    def refresh(self) -> None:
+        self._image = None
+        self._kp = None
+        self._des = None
+        self._mask = None
+        self._mask_loaded = False
+        self._match_init = False
+        for cached_name in ('name', 'kp', 'des'):
+            del_cached_property(self, cached_name)
+
 
     def corp(self, image: np.array, roi: list = None) -> np.array:
         """
