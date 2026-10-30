@@ -1,3 +1,6 @@
 {
-
+  "account_yield": "Other-device session handoff",
+  "pause_minutes": "Handoff duration (minutes)",
+  "account_yield_enable_help": "Disabled by default. Pause operations after detecting an other-device login dialog, then recover through the existing Restart task. Each profile is independent.",
+  "account_yield_pause_minutes_help": "1–240 minutes. Changes during a wait recalculate the deadline from the original detection time."
 }

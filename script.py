@@ -36,6 +36,7 @@ from module.device.env import IS_WINDOWS
 from module.base.utils import load_module
 from module.base.decorator import del_cached_property
 from module.logger import logger
+from module.account_yield.native import install_scheduler
 from module.exception import *
 from module.server.i18n import I18n
 from module.ocr.rpc import ensure_ocr_server_started
@@ -45,6 +46,7 @@ from module.ocr.rpc import ensure_ocr_server_started
 _log_switch_lock = threading.Lock()#线程锁
 
 
+@install_scheduler
 class Script:
     def __init__(self, config_name: str ='oas') -> None:
         logger.hr('Start', level=0)
@@ -747,7 +749,6 @@ class Script:
         if self.loop_thread is None:
             self.loop_thread = Thread(target=self.loop, name='Script_loop')
             self.loop_thread.start()
-
 
 if __name__ == "__main__":
     ensure_ocr_server_started()

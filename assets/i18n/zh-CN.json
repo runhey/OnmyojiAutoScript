@@ -162,5 +162,9 @@
   "green_mark_type": "绿标匹配方式",
   "green_mark_type_help": "按坐标点击指定绿标，或按式神名OCR 匹配后点击",
   "green_mark_name": "绿标式神名称",
-  "green_mark_name_help": "仅当绿标按式神名匹配时生效，填写目标式神名"
+  "green_mark_name_help": "仅当绿标按式神名匹配时生效，填写目标式神名",
+  "account_yield": "手机游玩礼让",
+  "pause_minutes": "礼让时长（分钟）",
+  "account_yield_enable_help": "默认关闭。识别到手机或其他设备登录提示后暂停操作，到期通过原有重启任务尝试恢复。各配置独立生效。",
+  "account_yield_pause_minutes_help": "允许1–240分钟。等待中修改会按最初检测时间重算截止时间，不重新开始计时。"
 }
