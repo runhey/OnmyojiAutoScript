@@ -189,8 +189,15 @@ class ScriptTask(Battle, GeneralBattle, GameUi, SwitchSoul, AreaBossAssets):
         return result
 
     def start_fight(self) -> bool:
+        # 点「挑战」进详情/准备界面时不能连点：I_FIRE 的搜索区域 (1075,463,150,158) 正好
+        # 覆盖准备界面的「准备」鼓，第二次点击会直接落在「准备」上提前开战，
+        # 让 battle_wait 的切预设阶段没有机会执行（地鬼准备界面本身只活 2~3 秒）。
+        # 所以：一旦看到准备界面或已经开战，立刻停手交给 battle_wait。
         while 1:
             self.screenshot()
+            if self.is_in_battle_soft() or self.appear(self.I_PREPARE_HIGHLIGHT):
+                logger.info('Prepare stage detected, stop clicking challenge')
+                break
             if self.appear_then_click(self.I_FIRE, interval=1):
                 continue
             if not self.appear(self.I_AB_CLOSE_RED):  # 如果这个红色的关闭不见了才可以进行继续

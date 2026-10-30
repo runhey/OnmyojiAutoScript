@@ -1104,6 +1104,26 @@ class BattleWait(BaseTask, GeneralBattleAssets):
         self.device.stuck_record_add('BATTLE_STATUS_S')
         self.device.click_record_clear()
 
+    # 正式战斗中 I_BATTLE_INFO 实测只能到 0.57~0.63（战斗特效、血条动画干扰），
+    # 资源自带的 0.8 阈值判不出来；准备界面/详情界面只有 0.31~0.41。
+    # 所以另给一个宽松阈值，只用于「大概率已经在打架」的保命判断，不参与 hook 正式判定。
+    BATTLE_SOFT_THRESHOLD = 0.52
+
+    def is_in_battle_soft(self) -> bool:
+        """宽松的战斗中判定，用于预设阶段逃生和续长等待记录。"""
+        return self.appear(self.I_BATTLE_INFO, threshold=self.BATTLE_SOFT_THRESHOLD)
+
+    def keep_battle_long_wait(self) -> None:
+        """战斗中把长等待记录续上。
+
+        任何一次点击都会走 device.handle_control_check() → stuck_record_clear()，
+        把 detect_record 和两个卡死计时器一起清掉。于是战斗里只要 60 秒没有点击
+        （地鬼一场 60~80 秒，中途还可能只剩纯等待），就会误报 GameStuckError。
+        每轮循环在战斗中补一次记录，被点击清掉后再补回来（已存在时不重复打日志）。
+        """
+        if 'BATTLE_STATUS_S' not in self.device.detect_record:
+            self.device.stuck_record_add('BATTLE_STATUS_S')
+
     # ------------------------------------------------------------------------------------------------------------------
     # build in
     # ------------------------------------------------------------------------------------------------------------------
@@ -1244,7 +1264,11 @@ class BattleWait(BaseTask, GeneralBattleAssets):
             return HookSignal.CONTINUE
         # 如果是锁队伍的，就直接跳过, 开启后面的 绿标，红标，应声虫
         # 如果确定进入正式战斗中了 也是同样的操作
-        if pri_options.lock_team or self.is_in_real_battle(False):
+        # 地鬼（极）这类界面会在准备界面停留 2~3 秒后自动开战（实测，不点准备也会开打），
+        # 用宽松阈值补一层「已经进战斗」的判定，否则会先去切预设、把开打时机拖过去。
+        # 同时要求看不到准备按钮，避免把别的任务的准备界面误判成战斗中。
+        if (pri_options.lock_team or self.is_in_real_battle(False)
+                or (self.is_in_battle_soft() and not self.appear(self.I_PREPARE_HIGHLIGHT))):
             logger.info('Prepare stage finish')
             state.done = True
             self.refresh_long_time()
@@ -1292,12 +1316,26 @@ class BattleWait(BaseTask, GeneralBattleAssets):
             return HookSignal.CONTINUE
         logger.info("Preset is enable")
         # 点击预设按钮
+        # 这个等待必须有出口：地鬼（极）的准备界面约 3 秒后会自动开战（实测不点准备也会开打），
+        # 开战后预设面板不会出现；旧代码这里是无上限 while，面板里所有资源都匹配不上，
+        # 就只剩 O_PRESET/O_PRESET_FULL 的 OCR 空转，直到触发 GameStuckError 重启任务。
+        # 所以：战斗中直接放弃切阵容；超时也放弃。保命优先于切预设。
+        preset_timer = Timer(6).start()
+        switched = True
         while 1:
             self.screenshot()
             if self.appear(self.I_PRESET_ENSURE):
                 break
             # 首个队伍没有满足5个式神，未出现预设按钮的情况下跳出循环
             if self.appear(self.I_PRESENT_LESS_THAN_5):
+                break
+            if self.is_in_battle_soft() and not self.appear(self.I_PREPARE_HIGHLIGHT):
+                logger.warning("Battle already started, give up switching preset")
+                switched = False
+                break
+            if preset_timer.reached():
+                logger.warning("Preset panel not found, give up switching preset")
+                switched = False
                 break
             if self.appear_then_click(self.I_PRESET, threshold=0.8, interval=1):
                 continue
@@ -1309,6 +1347,12 @@ class BattleWait(BaseTask, GeneralBattleAssets):
             if self.ocr_appear(self.O_PRESET_FULL):
                 self.click(self.O_PRESET_FULL, interval=1)
                 continue
+        if not switched:
+            state.done = True
+            return runtime.hook_enabled_update(
+                enable=(),
+                disable=('preset',),
+            )
         logger.info("Click preset button")
 
         def get_unselect_color(tmp1, tmp2, tmp3, size):
@@ -1370,12 +1414,13 @@ class BattleWait(BaseTask, GeneralBattleAssets):
         click_timer = Timer(4).start()
         while 1:
             self.screenshot()
+            if self.appear(self.I_PRESET_ENSURE):
+                if self.appear_then_click(self.I_PRESET_ENSURE, threshold=0.8, interval=1):
+                    continue
             if click_timer.reached():
+                # 原来这里只 warning 不退出，确认按钮一直点不掉时会无限循环
                 logger.warning("Switch preset failure")
-            if not self.appear(self.I_PRESET_ENSURE):
                 break
-            if self.appear_then_click(self.I_PRESET_ENSURE, threshold=0.8, interval=1):
-                continue
         logger.info("Click preset ensure")
         state.done = True
         return runtime.hook_enabled_update(
@@ -1661,6 +1706,10 @@ class BattleWait(BaseTask, GeneralBattleAssets):
 
         while True:
             self.screenshot()
+            # 战斗里任何一次点击都会清掉 stuck_record，导致战斗超过 60 秒没点击就误报卡死
+            # （地鬼一场 60~80 秒），所以战斗中每轮把长等待记录续上。
+            if self.is_in_battle_soft():
+                self.keep_battle_long_wait()
             hook_enabled = runtime.hook_enabled()
             # self.state_show()
             for handler in handlers:
