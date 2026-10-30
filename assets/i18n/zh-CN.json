@@ -166,5 +166,5 @@
   "costume_theme_1": "新语明霄",
   "costume_realm_yuehai_youxing": "月海游星",
   "wanted_after_invitation": "接受协作后安排悬赏",
-  "wanted_after_invitation_help": "确认接受协作邀请后，将悬赏封印的下次运行时间设为当前时间，不应用该次调度的强制运行时间或随机延迟。不打断当前任务，不修改任务优先级，也不自动启用已禁用的悬赏任务；当前任务结束后按原调度规则执行。关闭后只接受邀请，保留悬赏原计划。本开关不增加空闲截图监听。"
+  "wanted_after_invitation_help": "确认接受协作邀请后，将悬赏封印的下次运行时间设为当前时间"
 }
