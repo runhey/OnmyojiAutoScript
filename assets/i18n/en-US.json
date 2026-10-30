@@ -1,3 +1,4 @@
 {
-
+  "wanted_after_invitation": "Schedule wanted quests after accepting cooperation",
+  "wanted_after_invitation_help": "After an accept click and dialog closure, set WantedQuests next_run to now without forced scheduling time or random delay. Do not interrupt the current task, change priority, or enable a disabled task. Normal scheduling applies after the current task ends. Turn off to keep the existing schedule. This does not add idle monitoring."
 }
