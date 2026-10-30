@@ -29,11 +29,11 @@
   {
     "itemName": "g_cat_food",
     "imageName": "gg_g_cat_food.png",
-    "roiFront": "575,509,57,55",
+    "roiFront": "565,500,59,65",
     "roiBack": "565,500,76,75",
     "method": "Template matching",
     "threshold": 0.8,
-    "description": "协助悬赏的猫粮碎片奖励"
+    "description": "猫粮碗奖励（不使用通用问号碎片识别）"
   },
   {
     "itemName": "g_dog_food",

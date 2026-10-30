@@ -17,8 +17,8 @@ class GlobalGameAssets:
 	I_G_REJECT = RuleImage(roi_front=(848,562,46,42), roi_back=(831,547,85,80), threshold=0.8, method="Template matching", file="./tasks/GlobalGame/gg/gg_g_reject.png")
 	# 勾玉
 	I_G_JADE = RuleImage(roi_front=(661,466,43,46), roi_back=(654,500,80,80), threshold=0.8, method="Template matching", file="./tasks/GlobalGame/gg/gg_g_jade.png")
-	# 协助悬赏的猫粮碎片奖励
-	I_G_CAT_FOOD = RuleImage(roi_front=(575,509,57,55), roi_back=(565,500,76,75), threshold=0.8, method="Template matching", file="./tasks/GlobalGame/gg/gg_g_cat_food.png")
+	# 猫粮碗奖励（不使用通用问号碎片识别）
+	I_G_CAT_FOOD = RuleImage(roi_front=(565,500,59,65), roi_back=(565,500,76,75), threshold=0.8, method="Template matching", file="./tasks/GlobalGame/gg/gg_g_cat_food.png")
 	# 狗粮
 	I_G_DOG_FOOD = RuleImage(roi_front=(565,464,60,63), roi_back=(565,500,76,75), threshold=0.8, method="Template matching", file="./tasks/GlobalGame/gg/gg_g_dog_food.png")
 	# 关闭并忽略协助悬赏邀请
