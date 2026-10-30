@@ -28,6 +28,7 @@ class MainType(str, Enum):
 # 结界皮肤
 class RealmType(str, Enum):
     COSTUME_REALM_DEFAULT = 'costume_realm_default'  # 妖扇结界
+    COSTUME_REALM_YUEHAI_YOUXING = 'costume_realm_yuehai_youxing'  # 月海游星
 
 # 鲤鱼旗皮肤
 class CarpBannerType(str, Enum):
@@ -39,6 +40,7 @@ class CarpBannerType(str, Enum):
 # 主题，就是庭院最右下角的展开按钮
 class ThemeType(str, Enum):
     COSTUME_THEME_DEFAULT = 'costume_theme_default'  # 伊始之卷
+    COSTUME_THEME_1 = 'costume_theme_1'  # 新语明霄
 
 # 幕间，就是式神录这里
 class ShikigamiType(str, Enum):

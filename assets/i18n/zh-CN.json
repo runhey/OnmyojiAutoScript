@@ -162,5 +162,7 @@
   "green_mark_type": "绿标匹配方式",
   "green_mark_type_help": "按坐标点击指定绿标，或按式神名OCR 匹配后点击",
   "green_mark_name": "绿标式神名称",
-  "green_mark_name_help": "仅当绿标按式神名匹配时生效，填写目标式神名"
+  "green_mark_name_help": "仅当绿标按式神名匹配时生效，填写目标式神名",
+  "costume_theme_1": "新语明霄",
+  "costume_realm_yuehai_youxing": "月海游星"
 }

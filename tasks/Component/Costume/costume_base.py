@@ -13,6 +13,8 @@ from tasks.Component.Costume.config import (
     BattleType, BattleSceneType, CarpBannerType
 )
 from tasks.Component.Costume.assets import CostumeAssets
+from tasks.Component.CostumeRealm.realm import apply_realm
+from tasks.Component.CostumeTheme.theme import apply_theme
 from tasks.Component.CostumeBattle.assets import CostumeBattleAssets
 from tasks.Component.CostumeShikigami.assets import CostumeShikigamiAssets
 from tasks.Component.CostumeCarpBanner.assets import CostumeCarpBannerAssets
@@ -107,10 +109,18 @@ class CostumeBase:
         current_task = self.get_task_name()
         logger.info(f'Current task: {current_task}')
         self.check_costume_main(config.costume_main_type)
+        self.check_costume_realm(config.costume_realm_type)
         self.check_costume_carpbanner(config.costume_carpbanner_type)
         self.check_costume_battle(config.costume_battle_type)
         self.check_costume_battle_scene(config.costume_battle_scene_type)
         self.check_costume_shikigami(config.costume_shikigami_type)
+        self.check_costume_theme(config.costume_theme_type)
+
+    def check_costume_theme(self, theme_type: ThemeType):
+        # Mutate shared GameUi rules in place so existing navigation references update too.
+        apply_theme(theme_type)
+        if theme_type != ThemeType.COSTUME_THEME_DEFAULT:
+            logger.info(f'Switch menu theme {theme_type} ({I18n.trans_zh_cn(theme_type)})')
 
     def replace_img(self,
                     asset_before: str,
@@ -140,6 +150,11 @@ class CostumeBase:
             else:
                 assert_value: RuleImage = getattr(costume_assets, value)
                 self.replace_img(key, assert_value)
+
+    def check_costume_realm(self, realm_type: RealmType):
+        apply_realm(realm_type)
+        if realm_type != RealmType.COSTUME_REALM_DEFAULT:
+            logger.info(f'Switch realm skin {realm_type} ({I18n.trans_zh_cn(realm_type)})')
 
     def check_costume_carpbanner(self, carpbanner_type: CarpBannerType):
         if carpbanner_type == CarpBannerType.COSTUME_CARPBANNER_DEFAULT:

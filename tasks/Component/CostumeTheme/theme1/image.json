@@ -1,0 +1,92 @@
+[
+  {
+    "itemName": "main_scroll_close_1",
+    "imageName": "theme1_main_scroll_close_1.png",
+    "roiFront": "1190,632,48,58",
+    "roiBack": "1160,580,108,130",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "新语明霄：收起状态卷轴"
+  },
+  {
+    "itemName": "main_goto_collection_1",
+    "imageName": "theme1_main_goto_collection_1.png",
+    "roiFront": "89,614,45,43",
+    "roiBack": "59,580,105,130",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "新语明霄：图鉴"
+  },
+  {
+    "itemName": "main_goto_travel_1",
+    "imageName": "theme1_main_goto_travel_1.png",
+    "roiFront": "219,612,48,43",
+    "roiBack": "189,580,108,130",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "新语明霄：珍旅居"
+  },
+  {
+    "itemName": "main_goto_team_1",
+    "imageName": "theme1_main_goto_team_1.png",
+    "roiFront": "448,615,40,44",
+    "roiBack": "418,580,100,130",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "新语明霄：组队"
+  },
+  {
+    "itemName": "main_goto_guild_1",
+    "imageName": "theme1_main_goto_guild_1.png",
+    "roiFront": "552,616,48,42",
+    "roiBack": "522,580,108,130",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "新语明霄：阴阳寮"
+  },
+  {
+    "itemName": "main_goto_mall_1",
+    "imageName": "theme1_main_goto_mall_1.png",
+    "roiFront": "672,622,42,40",
+    "roiBack": "642,580,102,130",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "新语明霄：商店"
+  },
+  {
+    "itemName": "main_goto_daily_1",
+    "imageName": "theme1_main_goto_daily_1.png",
+    "roiFront": "787,614,40,45",
+    "roiBack": "757,580,100,130",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "新语明霄：花合战"
+  },
+  {
+    "itemName": "main_goto_friends_1",
+    "imageName": "theme1_main_goto_friends_1.png",
+    "roiFront": "893,615,48,44",
+    "roiBack": "863,580,108,130",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "新语明霄：好友"
+  },
+  {
+    "itemName": "main_goto_onmyodo_1",
+    "imageName": "theme1_main_goto_onmyodo_1.png",
+    "roiFront": "1007,621,48,42",
+    "roiBack": "977,580,108,130",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "新语明霄：阴阳术"
+  },
+  {
+    "itemName": "main_goto_shikigami_records_1",
+    "imageName": "theme1_main_goto_shikigami_records_1.png",
+    "roiFront": "1110,614,48,45",
+    "roiBack": "1080,580,108,130",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "新语明霄：式神录"
+  }
+]

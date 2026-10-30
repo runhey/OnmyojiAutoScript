@@ -1,0 +1,38 @@
+[
+  {
+    "itemName": "realm_shin_yuehai_youxing",
+    "imageName": "yuehai_youxing_realm_shin.png",
+    "roiFront": "213,418,51,53",
+    "roiBack": "175,390,115,110",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "月海游星：结界皮肤入口及结界页面标志"
+  },
+  {
+    "itemName": "card_exp_yuehai_youxing",
+    "imageName": "yuehai_youxing_card_exp.png",
+    "roiFront": "901,244,51,45",
+    "roiBack": "865,205,135,105",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "月海游星：结界卡收益宝箱"
+  },
+  {
+    "itemName": "box_ap_yuehai_youxing",
+    "imageName": "yuehai_youxing_box_ap.png",
+    "roiFront": "1005,447,42,44",
+    "roiBack": "975,415,90,105",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "月海游星：体力食盒"
+  },
+  {
+    "itemName": "box_exp_yuehai_youxing",
+    "imageName": "yuehai_youxing_box_exp.png",
+    "roiFront": "1057,455,37,42",
+    "roiBack": "1035,420,85,110",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "月海游星：经验酒壶普通状态"
+  }
+]

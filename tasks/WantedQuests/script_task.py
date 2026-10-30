@@ -2,6 +2,7 @@
 # @author runhey
 # github https://github.com/runhey
 from datetime import timedelta, time, datetime
+from copy import copy
 from time import sleep
 from typing import List
 
@@ -12,7 +13,7 @@ from cached_property import cached_property
 from module.atom.image import RuleImage
 from module.atom.ocr import RuleOcr
 from module.base.timer import Timer
-from module.exception import TaskEnd
+from module.exception import TaskEnd, ScriptError
 from module.logger import logger
 from tasks.Component.Costume.config import MainType
 from tasks.Component.GeneralBattle.config_general_battle import GeneralBattleConfig
@@ -119,114 +120,142 @@ class ScriptTask(WQExplore, SecretScriptTask, WantedQuestsAssets):
             next_run_datetime = next_run_datetime + time_delta
         self.set_next_run(task='WantedQuests', target=next_run_datetime)
 
-    def pre_work(self):
-        """
-        前置工作，
-        :return:
-        """
-        self.goto_page(page_main)
-        done_timer = Timer(5)
-        while 1:
+    def wanted_board_open(self):
+        # Template matching is brightness-invariant: exclude a detail/dialog overlay.
+        return (not self.appear(self.I_WQ_TRACE_ONE_CHECK_OPENED)
+                and not self.appear(self.I_WQ_INVITE_ENSURE)
+                and (self.appear(self.I_TRACE_ENABLE) or self.appear(self.I_TRACE_DISABLE)))
+
+    def open_wanted_board(self):
+        self.screenshot()
+        if self.wanted_board_open():
+            return True
+        if self.appear(self.I_WQ_TRACE_ONE_CHECK_OPENED):
+            self.close_wanted_detail()
+            if self.wanted_board_open():
+                return True
+        # Preserve the courtyard entrance, but allow starting on the exploration map.
+        if not self.appear(self.I_CHECK_EXPLORATION):
+            self.goto_page(page_main)
+        timer = Timer(20).start()
+        while not timer.reached():
             self.screenshot()
-            if self.appear(self.I_TRACE_DISABLE):
-                break
+            if self.wanted_board_open():
+                return True
+            if self.appear_then_click(self.I_WQ_LIST_ENTRY, interval=1):
+                continue
             if self.appear_then_click(self.I_WQ_SEAL, interval=1):
                 continue
-            if self.appear_then_click_multi_scale(self.I_WQ_DONE,scale_range=(0.8, 1.2) ,interval=1):
+            if self.appear_then_click_multi_scale(self.I_WQ_DONE, scale_range=(0.8, 1.2), interval=1):
                 continue
-            if self.appear_then_click(self.I_TRACE_ENABLE, interval=1):
-                continue
-            if self.special_main and self.click(self.C_SPECIAL_MAIN, interval=3):
-                logger.info('Click special main left to find wanted quests')
-                continue
-            if self.appear(self.I_UI_BACK_RED):
-                if not done_timer.started():
-                    done_timer.start()
-            if done_timer.started() and done_timer.reached():
-                self.ui_click_until_disappear(self.I_UI_BACK_RED)
-                return False
-        # 已追踪所有任务
-        logger.info('All wanted quests are traced')
+            if self.special_main:
+                self.click(self.C_SPECIAL_MAIN, interval=3)
+        logger.warning('Cannot open wanted quests board')
+        return False
 
-        # 存在协作任务则邀请
+    def goto_wanted_exploration(self):
+        """Use the new direct entrance, never close to courtyard as an intermediate step."""
+        timer = Timer(20).start()
+        while not timer.reached():
+            self.screenshot()
+            if self.appear(self.I_CHECK_EXPLORATION):
+                return True
+            if self.wanted_board_open():
+                self.appear_then_click(self.I_WQ_GOTO_EXPLORATION, interval=1)
+        raise ScriptError('Wanted quests: direct exploration entrance did not open exploration')
+
+    def pre_work(self):
+        if not self.open_wanted_board():
+            return False
+        timer = Timer(15).start()
+        while not timer.reached():
+            self.screenshot()
+            if self.wanted_board_open() and self.appear(self.I_TRACE_DISABLE):
+                break
+            self.appear_then_click(self.I_TRACE_ENABLE, interval=1)
+        else:
+            raise ScriptError('Wanted quests: cannot confirm all quests are tracked')
+        logger.info('All wanted quests are traced')
         self.screenshot()
-        if self.appear(self.I_WQ_INVITE_1) or self.appear(self.I_WQ_INVITE_2) or self.appear(self.I_WQ_INVITE_3):
+        if any(self.appear(btn) for btn in self.wanted_invite_buttons()):
             if self.need_invite_vip():
                 self.all_cooperation_invite()
             else:
                 self.invite_five()
-        self.ui_click_until_disappear(self.I_UI_BACK_RED)
-        self.goto_page(page_exploration)
-        return True
+        return self.goto_wanted_exploration()
 
     def pre_work_cooperation_only(self):
-        #
-        if self.get_current_page() != page_main:
-            self.goto_page(page_main)
-        # 打开悬赏封印 界面
-        done_timer = Timer(5)
-        while 1:
-            self.screenshot()
-            if self.appear(self.I_TRACE_ENABLE) or self.appear(self.I_TRACE_DISABLE):
-                break
-            if self.appear_then_click(self.I_WQ_SEAL, interval=1):
-                continue
-            if self.appear_then_click_multi_scale(self.I_WQ_DONE,scale_range=(0.8, 1.2), interval=1):
-                continue
-            if self.special_main and self.click(self.C_SPECIAL_MAIN, interval=3):
-                logger.info('Click special main left to find wanted quests')
-                continue
-            if self.appear(self.I_UI_BACK_RED):
-                if not done_timer.started():
-                    done_timer.start()
-            if done_timer.started() and done_timer.reached():
-                self.ui_click_until_disappear(self.I_UI_BACK_RED)
-                return False
-        #
-        if not (self.appear(self.I_WQ_INVITE_1) or self.appear(self.I_WQ_INVITE_2) or self.appear(self.I_WQ_INVITE_3)):
-            logger.info("there is no cooperation quest")
+        if not self.open_wanted_board():
             return False
+        if not any(self.appear(btn) for btn in self.wanted_invite_buttons()):
+            logger.info('There is no cooperation quest')
+            self.ui_click_until_disappear(self.I_WQ_CLOSE)
+            return False
+        result = self.all_cooperation_invite()
+        if not any(item.get('inviteResult') for item in result):
+            logger.warning('No cooperation invitation was sent')
+            self.ui_click_until_disappear(self.I_WQ_CLOSE)
+            return False
+        return self.goto_wanted_exploration()
 
-        # if self.appear(self.I_WQ_INVITE_1):
-        #     self.trace_one(self.I_WQ_INVITE_1)
-        # if self.appear(self.I_WQ_INVITE_2):
-        #     self.trace_one(self.I_WQ_INVITE_2)
-        # if self.appear(self.I_WQ_INVITE_3):
-        #     self.trace_one(self.I_WQ_INVITE_3)
-
-        # 追踪任务 并邀请
-        self.all_cooperation_invite()
-
-        self.ui_click_until_disappear(self.I_UI_BACK_RED)
-        self.goto_page(page_exploration)
-        return True
+    def close_wanted_detail(self):
+        timer = Timer(10).start()
+        while not timer.reached():
+            self.screenshot()
+            if not self.appear(self.I_WQ_TRACE_ONE_CHECK_OPENED):
+                return
+            self.appear_then_click(self.I_WQ_TRACE_ONE_CHECK_OPENED, interval=1)
+        raise ScriptError('Wanted quests: cannot close quest details')
 
     def trace_one(self, btn: RuleImage):
-        """
-            参数必须为邀请按钮(I_WQ_INVITE_n ),特定场景,就不做通用的函数了,怪麻烦的,若还有什么奇葩需求,再扩展吧
-        @param btn: 邀请按钮,
-        @type btn:
-        """
         self.screenshot()
         if not self.appear(btn):
-            return
-        while 1:
+            return False
+        # Click artwork above the invitation row, not the new person-plus control.
+        x, y = btn.roi_front[:2]
+        timer = Timer(15).start()
+        while not timer.reached():
             self.screenshot()
-            # 追踪成功  或  是现世任务 不需要追踪
-            if self.appear(self.I_WQ_TRACE_ONE_ENABLE) or self.appear(self.I_WQ_TRACE_ONE_REALWORLD):
-                break
-            if self.appear(self.I_WQ_TRACE_ONE_DISABLE):
-                self.click(self.I_WQ_TRACE_ONE_DISABLE, interval=1.5)
-                continue
-            # 根据邀请按钮位置生成 对应的点击位置 打开追踪界面
-            # NOTE magic Number
+            if self.appear(self.I_WQ_TRACE_ONE_CHECK_OPENED):
+                if self.appear(self.I_WQ_TRACE_ONE_ENABLE):
+                    self.close_wanted_detail()
+                    return True
+                if self.appear(self.I_WQ_TRACE_ONE_REALWORLD):
+                    self.close_wanted_detail()
+                    return False
+                self.appear_then_click(self.I_WQ_TRACE_ONE_DISABLE, interval=1)
+            else:
+                self.device.click(x + 60, y - 90, control_name='wanted quest card details')
+                sleep(0.5)
+        raise ScriptError('Wanted quests: cannot confirm individual quest tracking')
 
-            self.device.click(btn.roi_front[0], btn.roi_front[1] - 40, control_name=str(btn) + ' y-40')
-            # 防止点击后界面来不及刷新
-            sleep(1.5)
-        # 关闭单个任务的追踪界面
-        self.ui_click_until_smt_disappear(self.C_WQ_TRACE_ONE_CLOSE, stop=self.I_WQ_TRACE_ONE_CHECK_OPENED,
-                                          interval=1.5)
+    def untrack_current_wanted(self):
+        timer = Timer(10).start()
+        while not timer.reached():
+            self.screenshot()
+            if self.appear(self.I_TRACE_FALSE):
+                self.close_wanted_detail()
+                return
+            self.appear_then_click(self.I_TRACE_TRUE, interval=1)
+        raise ScriptError('Wanted quests: cannot untrack quest')
+
+    def wanted_invite_buttons(self):
+        return [getattr(self, 'I_WQ_INVITE_' + str(i)) for i in range(1, 5)]
+
+    def submit_wanted_invitation(self):
+        """A missing template is not proof of a successful send. Require a click and closure."""
+        timer = Timer(15).start()
+        clicked = False
+        while not timer.reached():
+            self.screenshot()
+            if not self.appear(self.I_WQ_INVITE_ENSURE):
+                if clicked and self.wanted_board_open():
+                    return True
+                # Do not silently succeed if the wrong button template was supplied.
+                continue
+            if self.appear_then_click(self.I_WQ_INVITE_ENSURE, interval=1):
+                clicked = True
+        raise ScriptError('Wanted quests: invitation submission was not confirmed')
 
     def execute_mission(self, ocr, num_want: int, num_challenge: int):
         """
@@ -268,17 +297,29 @@ class ScriptTask(WQExplore, SecretScriptTask, WantedQuestsAssets):
 
             # ,荒川之怒·壹，4，前往按钮，function
             result = [-1, '', -1, GOTO_BUTTON[index], self.challenge, '']
-            type_wq = OCR_WQ_TYPE[index].ocr(self.device.image)
-            info_wq_1 = OCR_WQ_INFO[index].ocr(self.device.image)
+            type_wq = OCR_WQ_TYPE[index].ocr(self.device.image).strip()
+            type_wq = next((kind for kind in ('式神', '探索', '秘闻')
+                            if type_wq.startswith(kind)), '')
+            if not type_wq:
+                return None
+            # Labels have variable widths: "式神碎片" is wider than "探索/秘闻".
+            # Excluding the colored label keeps it out of destination/quantity OCR.
+            info_rule = copy(OCR_WQ_INFO[index])
+            left = 757 if type_wq == '式神' else 713
+            info_rule.roi = (left, info_rule.roi[1], 1040 - left, info_rule.roi[3])
+            info_rule.area = info_rule.roi
+            info_wq_1 = info_rule.ocr(self.device.image)
             info_wq_1 = info_wq_1.replace('：', ':').replace('（', '(').replace('）', ')')
-            info_wq_1 = info_wq_1.replace('：', ':')
+            info_wq_1 = re.sub(r'^(?:式神碎片|式神|探索|秘闻)\s*', '', info_wq_1)
             match = re.match(r"^(.*?)[（(]?数量[：:]\s*(\d+)[)）]", info_wq_1)
             if not match:
                 return None
-            wq_destination = match.group(1)
+            wq_destination = match.group(1).strip(' []【】()（）')
             wq_number = int(match.group(2))
+            if not wq_destination or wq_number <= 0:
+                return None
             # 跳过高层秘闻
-            if wq_destination[-1] in layer_limit:
+            if type_wq == '秘闻' and any(wq_destination.endswith(layer) for layer in layer_limit):
                 logger.warning('This secret layer is too high')
                 return None
             result[1] = wq_destination
@@ -295,23 +336,26 @@ class ScriptTask(WQExplore, SecretScriptTask, WantedQuestsAssets):
             return tuple(result) if result[0] != -1 else None
 
         logger.hr('Start wanted quests')
-        while 1:
+        detail_timer = Timer(15).start()
+        while not detail_timer.reached():
             self.screenshot()
-            if self.appear(self.I_TRACE_TRUE):
+            if self.appear(self.I_WQ_TRACE_ONE_CHECK_OPENED):
                 break
-            if self.click(ocr, interval=1):
-                continue
+            self.click(ocr, interval=1)
+        else:
+            raise ScriptError('Wanted quests: quest details did not open')
         if not self.appear(self.I_GOTO_1):
             # 如果没有出现 '前往'按钮， 那就是这个可能是神秘任务但是没有解锁
             logger.warning('This is a secret mission but not unlock')
-            self.ui_click(self.I_TRACE_TRUE, self.I_TRACE_FALSE)
+            self.untrack_current_wanted()
             return False
         # 跳过不想打的
         monster_name = self.O_WQ_MONSTER_TYPE.detect_text(self.device.image)
+        monster_name = re.sub(r'^.*?击败', '', monster_name).strip()
         if monster_name in self.unwanted_boss_name_list:
             #
             logger.warning(f'unwanted {monster_name}')
-            self.ui_click(self.I_TRACE_TRUE, self.I_TRACE_FALSE)
+            self.untrack_current_wanted()
             return False
 
         info_wq_list = []
@@ -322,7 +366,7 @@ class ScriptTask(WQExplore, SecretScriptTask, WantedQuestsAssets):
         info_wq_list = [item for item in info_wq_list if item not in self.want_strategy_excluding]
         if not info_wq_list:
             logger.warning('No wanted quests can be challenged')
-            self.ui_click(self.I_TRACE_TRUE, self.I_TRACE_FALSE)
+            self.untrack_current_wanted()
             return False
         # sort
         info_wq_list.sort(key=lambda x: x[0])
@@ -407,9 +451,9 @@ class ScriptTask(WQExplore, SecretScriptTask, WantedQuestsAssets):
         self.screenshot()
         if not self.appear(self.I_WQ_INVITE_SELECTED):
             logger.warning('No friend selected')
+            self.ui_click_until_disappear(self.I_WQ_INVITE_CANCEL)
             return False
-        self.ui_click_until_disappear(self.I_INVITE_ENSURE)
-        sleep(0.5)
+        return self.submit_wanted_invitation()
 
     def invite_five(self):
         """
@@ -418,9 +462,8 @@ class ScriptTask(WQExplore, SecretScriptTask, WantedQuestsAssets):
         """
 
         logger.hr('Invite friends')
-        self.invite_random(self.I_WQ_INVITE_1)
-        self.invite_random(self.I_WQ_INVITE_2)
-        self.invite_random(self.I_WQ_INVITE_3)
+        for btn in self.wanted_invite_buttons():
+            self.invite_random(btn)
 
     def all_cooperation_invite(self, name_all: str = None):
         """
@@ -430,13 +473,10 @@ class ScriptTask(WQExplore, SecretScriptTask, WantedQuestsAssets):
 
         """
         self.screenshot()
-        if not self.appear(self.I_WQ_INVITE_1):
-            return False
-
         ret = self.get_cooperation_info()
         if len(ret) == 0:
             logger.info("no Cooperation found")
-            return False
+            return []
         typeMask = 15
         typeMask = CooperationSelectMask[(self.get_config()).cooperation_type.value]
         for item in ret:
@@ -446,7 +486,7 @@ class ScriptTask(WQExplore, SecretScriptTask, WantedQuestsAssets):
                 # 例如 按顺序存在 abc 3个协作任务,邀请完a,好友接受后,这三个任务在界面上的顺序变化,abc 还是bca
                 # 如果顺序不变 则应该没有问题
                 logger.info("cooperationType %s But needed Type %s ,Skipped", item['type'], typeMask)
-                break
+                continue
             '''
                尝试5次 如果邀请失败 等待20s 重新尝试
                阴阳师BUG: 好友明明在线 但邀请界面找不到该好友(好友未接受任何协作任务的情况下)
@@ -473,7 +513,8 @@ class ScriptTask(WQExplore, SecretScriptTask, WantedQuestsAssets):
                 self.invite_success_callback(item['type'], name)
                 if (self.get_config()).cooperation_only:
                     logger.info("start trace_one")
-                    self.trace_one(item['inviteBtn'])
+                    if not self.trace_one(item['inviteBtn']):
+                        item['inviteResult'] = False
         return ret
 
     def cooperation_invite(self, btn: RuleImage, name: str):
@@ -495,21 +536,24 @@ class ScriptTask(WQExplore, SecretScriptTask, WantedQuestsAssets):
             self.screenshot()
             in_col_1 = self.ocr_appear_click(self.O_WQ_INVITE_COLUMN_1)
             in_col_2 = self.ocr_appear_click(self.O_WQ_INVITE_COLUMN_2)
-            find = in_col_2 or in_col_1
-            if find:
+            if in_col_2 or in_col_1:
                 self.wait_until_appear(self.I_WQ_INVITE_SELECTED, wait_time=2)
                 self.screenshot()
                 if self.appear(self.I_WQ_INVITE_SELECTED):
                     logger.info("friend found and selected")
+                    find = True
                     break
                 # TODO OCR识别到文字 但是没有选中 尝试重新选择  (选择好友时,弹出协作邀请导致选择好友失败)
             # 检测跨服好友按钮是否高亮
-            while 1:
+            tab_timer = Timer(8).start()
+            while not tab_timer.reached():
                 self.screenshot()
                 if not self.appear_highlight(self.I_WQ_INVITE_DIFF_SVR_HIGHLIGHT):
                     self.click(self.I_WQ_INVITE_DIFF_SVR)
                     continue
                 break
+            else:
+                raise ScriptError('Wanted quests: cross-server tab was not confirmed')
             # 等待好友列表加载
             self.wait_until_appear(self.I_WQ_INVITE_DIFF_SVR_HIGHLIGHT, wait_time=4)
         # 没有找到需要邀请的人,点击取消 返回悬赏封印界面
@@ -518,8 +562,7 @@ class ScriptTask(WQExplore, SecretScriptTask, WantedQuestsAssets):
             self.ui_click_until_disappear(self.I_WQ_INVITE_CANCEL, interval=1.5)
             return False
         #
-        self.ui_click_until_disappear(self.I_WQ_INVITE_ENSURE, interval=1)
-        return True
+        return self.submit_wanted_invitation()
 
     def get_cooperation_info(self) -> List:
         """
@@ -529,10 +572,10 @@ class ScriptTask(WQExplore, SecretScriptTask, WantedQuestsAssets):
         self.screenshot()
         retList = []
         i = 0
-        for index in range(3):
+        for index in range(4):
             btn = self.__getattribute__("I_WQ_INVITE_" + str(index + 1))
             if not self.appear(btn):
-                break
+                continue
             if self.appear(self.__getattribute__("I_WQ_COOPERATION_TYPE_JADE_" + str(index + 1))):
                 retList.append({'type': CooperationType.Jade, 'inviteBtn': btn})
                 continue
