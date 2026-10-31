@@ -182,7 +182,9 @@ class Handle(DesktopWindow):
             self.root_handle = ''
             pid, hwnd = self._desktop_locate_window()
             if pid and hwnd:
-                self.desktop_bind_pid(pid, hwnd)
+                # 认领的是已存在的窗口，可能早已登录，
+                # 登录态由 find_desktop_login_popup 实测，不能假设未登录
+                self.desktop_bind_pid(pid, hwnd, just_launched=False)
                 logger.info(f'Desktop client window bound: PID={pid}, hwnd={hwnd}')
                 return
             if pid:
