@@ -559,7 +559,14 @@ class Script:
             return False
 
         try:
-            self.device.screenshot()
+            try:
+                self.device.screenshot()
+            except GameNotRunningError:
+                # 桌面版窗口不在时预截图必抛；Restart 的职责就是拉起客户端，
+                # 不能让它被这层拦住（实测恢复循环里 Restart 永远跑不到）
+                if command != 'Restart':
+                    raise
+                logger.info('Client window gone, skip pre-screenshot and let Restart recover it')
             module_name = 'script_task'
             module_path = str(Path.cwd() / 'tasks' / command / (module_name+'.py'))
             logger.info(f'module_path: {module_path}, module_name: {module_name}')
