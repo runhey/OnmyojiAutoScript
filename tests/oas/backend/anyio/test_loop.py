@@ -100,3 +100,21 @@ def test_call_soon_after_the_loop_closed_is_absorbed():
     anyio.run(main)
     # the loop of that run is gone; a late worker-thread push must not raise
     assert AnyIO.call_soon(lambda: None) is False
+
+
+def test_call_soon_reraises_any_other_runtime_error(monkeypatch):
+    """
+    Only the closed loop is absorbed: a RuntimeError that is not the
+    shutdown must surface instead of being mistaken for one.
+    """
+
+    class FakeLoop:
+        def is_closed(self):
+            return False
+
+        def call_soon_threadsafe(self, *args):
+            raise RuntimeError('loop is on fire')
+
+    monkeypatch.setattr(AnyIO, '_loop', FakeLoop())
+    with pytest.raises(RuntimeError, match='loop is on fire'):
+        AnyIO.call_soon(lambda: None)

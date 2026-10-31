@@ -90,12 +90,18 @@ class AnyIO:
         the increments queued before it).
 
         This is the single place that deals with a loop that is missing or
-        already closed; call sites schedule and forget.
+        already closed; call sites schedule and forget. Only "the loop is
+        closed" is absorbed here: any other RuntimeError is not a shutdown
+        and is re-raised.
 
         Returns:
             bool: True when the callback was scheduled, False when there is
                 no usable loop (never bound, or closed) -- the replacement
                 of Alasio's ``except trio.RunFinishedError: pass``.
+
+        Raises:
+            RuntimeError: A RuntimeError other than the closed loop itself
+                came out of the scheduling call.
         """
         try:
             loop = cls.loop()
@@ -106,7 +112,12 @@ class AnyIO:
             return False
         try:
             loop.call_soon_threadsafe(func, *args)
-        except RuntimeError:
-            # the loop closed between the check and the call
-            return False
+        except RuntimeError as exc:
+            # The is_closed() check above races the delivery, so the closed
+            # loop is recognized here as well -- and ONLY here, by the exact
+            # message asyncio raises: anything else must not be mistaken for
+            # a shutdown and has to surface.
+            if loop.is_closed() or exc.args == ('Event loop is closed',):
+                return False
+            raise
         return True
