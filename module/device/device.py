@@ -25,8 +25,10 @@ from module.exception import (GameNotRunningError,
                               RequestHumanTakeover,
                               EmulatorNotRunningError)
 from module.logger import logger
+from module.account_yield.native import install_device
 
 
+@install_device
 class Device(DesktopDevice, Platform, Screenshot, Control, AppControl):
     _screen_size_checked = False
     detect_record = set()
@@ -283,7 +285,6 @@ class Device(DesktopDevice, Platform, Screenshot, Control, AppControl):
         super().app_stop()
         self.stuck_record_clear()
         self.click_record_clear()
-
 
 if __name__ == "__main__":
     device = Device(config="oas1")
