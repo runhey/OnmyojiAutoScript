@@ -24,3 +24,6 @@ class Desktop(BaseModel):
     window_title: str = Field(default='', description='window_title_help')
     # 一次性按钮：点击后启动本配置对应的客户端实例；执行后自动弹回 false
     launch_instance: bool = Field(default=False, description='launch_instance_help')
+    # Restart 遇到桌面客户端时，窗口存在也强制重启（杀进程重拉）
+    restart_when_window_exists: bool = Field(
+        default=False, description='restart_when_window_exists_help')

@@ -21,7 +21,8 @@
       "profile_dir": "",
       "window_pos": "",
       "window_title": "",
-      "launch_instance": false
+      "launch_instance": false,
+      "restart_when_window_exists": false
     },
     "error": {
       "handle_error": true,

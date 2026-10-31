@@ -5,6 +5,8 @@
   "game_path_help": "游戏安装目录（如 D:\\yys），留空自动查找。",
   "launch_instance": "启动客户端实例",
   "launch_instance_help": "一次性按钮：点击后按上面的设置启动本配置对应的客户端，已在运行则跳过。\n它是按钮不是开关，点击后自动弹回，不会保存为开启。",
+  "restart_when_window_exists": "窗口存在时强制重启",
+  "restart_when_window_exists_help": "Restart 任务遇到桌面客户端时，若窗口还在，是否先杀掉再重新拉起（真正的重启），而不是只重走一次登录流程。\n开启后能救回卡在坏状态的客户端，但会中断正在手玩的客户端；默认关闭。",
   "profile_dir": "档案目录",
   "profile_dir_help": "多开账号隔离：每个配置填一个不同目录（如 D:/yys-profiles/p1），无需手动创建，OAS 会自动准备好。\n填了之后每个实例拥有独立的游戏数据和账号。\n留空 = 和直接双击打开的游戏共享账号。",
   "window_pos": "窗口位置",

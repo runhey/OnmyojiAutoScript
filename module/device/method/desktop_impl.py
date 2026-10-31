@@ -903,6 +903,17 @@ class DesktopWindow:
         logger.warning(f'Desktop MPay login popup still present after {wait}s, Enter had no effect')
         return False
 
+    def desktop_window_is_own_launch(self) -> bool:
+        """当前窗口是不是本轮由 launch_desktop_client() 拉起的实例（用来避免刚启动就强杀重拉）。"""
+        pid = self.desktop_pid()
+        spawned = getattr(self, '_desktop_spawned_pids', None)
+        if not spawned or pid is None:
+            return False
+        try:
+            return int(str(pid)) in spawned
+        except (TypeError, ValueError):
+            return False
+
     def desktop_window_exists(self) -> bool:
         """桌面模式：目标 PID 对应窗口仍存在即视为客户端运行中。
 
