@@ -8,6 +8,7 @@ from tasks.GameUi.page import page_main, page_daily
 from tasks.TalismanPass.assets import TalismanPassAssets
 from tasks.TalismanPass.config import TalismanConfig, LevelReward
 
+from module.atom.image import RuleImage
 from module.logger import logger
 from module.exception import TaskEnd
 from module.base.timer import Timer
@@ -17,6 +18,14 @@ class ScriptTask(GameUi, TalismanPassAssets):
 
     def run(self):
         self.goto_page(page_daily)
+        task_tab = RuleImage(
+            roi_front=(1198, 328, 30, 72),
+            roi_back=(1188, 318, 50, 92),
+            method="Template matching",
+            threshold=0.8,
+            file="./tasks/TalismanPass/tp/tp_task_tab.png",
+        )
+        self.appear_then_click(task_tab)
         con: TalismanConfig = self.config.talisman_pass.talisman
 
         # 收取全部奖励
