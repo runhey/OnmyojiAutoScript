@@ -7,8 +7,8 @@ semantics, payload freeze, singletons and idle GC of one-shot sources.
 import threading
 import time
 
+import anyio
 import pytest
-import trio
 
 from oas.backend.reactive.event import ResponseEvent
 from oas.backend.reactive.source import (
@@ -19,7 +19,11 @@ from oas.backend.reactive.source import (
     GlobalSource,
     ResidentCache,
 )
-from tests.oas.backend.reactive.test_source_base import MockTopic, decode
+from tests.oas.backend.reactive.test_source_base import (
+    MockTopic,
+    decode,
+    wait_all_tasks_blocked,
+)
 
 
 class FakeSource(EventSource):
@@ -71,7 +75,7 @@ class NoWriterSource(EventSource):
 
 
 class TestSubscribeSnapshot:
-    @pytest.mark.trio
+    @pytest.mark.anyio
     async def test_snapshot_contains_all_applied_events(self):
         """the full snapshot is the current data (all applied events included)"""
         source = FakeSource()
@@ -81,7 +85,7 @@ class TestSubscribeSnapshot:
         assert event.o == 'full'
         assert event.v == {'x': 1, 'y': 2}
 
-    @pytest.mark.trio
+    @pytest.mark.anyio
     async def test_snapshot_empty_data_returns_none(self):
         """empty data returns None, no full event"""
         source = FakeSource()
@@ -90,27 +94,27 @@ class TestSubscribeSnapshot:
 
 
 class TestOnEvent:
-    @pytest.mark.trio
+    @pytest.mark.anyio
     async def test_no_subscriber_applies_only(self):
         """without subscribers the event is only applied, nothing scheduled"""
         source = FakeSource()
         source.on_event(('x', 5))
         assert source.data['x'] == 5
 
-    @pytest.mark.trio
+    @pytest.mark.anyio
     async def test_with_subscriber_broadcasts_set(self):
         """with subscribers the event is applied and a set response broadcast"""
         source = FakeSource()
         topic = MockTopic()
         await source.subscribe(topic)
         source.on_event(('x', 5))
-        await trio.testing.wait_all_tasks_blocked()
+        await wait_all_tasks_blocked()
         event = decode(topic.sent[0])
         assert event.o == 'set'
         assert event.k == ('x',)
         assert event.v == 5
 
-    @pytest.mark.trio
+    @pytest.mark.anyio
     async def test_no_change_no_broadcast(self):
         """an event that does not change data is not broadcast"""
         source = FakeSource()
@@ -119,12 +123,12 @@ class TestOnEvent:
         await source.subscribe(topic)
         topic.sent.clear()
         source.on_event(('x', 1))  # same value
-        await trio.testing.wait_all_tasks_blocked()
+        await wait_all_tasks_blocked()
         assert topic.sent == []
 
 
 class TestConvertFreeze:
-    @pytest.mark.trio
+    @pytest.mark.anyio
     async def test_incremental_response_not_affected_by_later_apply(self):
         """
         Payload freeze: an incremental response queued by a worker thread
@@ -135,10 +139,10 @@ class TestConvertFreeze:
         topic = MockTopic()
         await source.subscribe(topic)
         topic.sent.clear()
-        # two changes queued before the trio thread drains them
+        # two changes queued before the loop thread drains them
         source.on_event(('x', 1))
         source.on_event(('x', 2))
-        await trio.testing.wait_all_tasks_blocked()
+        await wait_all_tasks_blocked()
         events = decode(topic.sent[0])
         # both queued payloads kept their frozen values
         if isinstance(events, list):
@@ -148,7 +152,7 @@ class TestConvertFreeze:
 
 
 class TestFetchInit:
-    @pytest.mark.trio
+    @pytest.mark.anyio
     async def test_fetch_within_ttl_returns_none(self):
         """a second fetch inside the TTL window returns None (no re-read)"""
         source = FakeSource()
@@ -158,7 +162,7 @@ class TestFetchInit:
         assert await source.fetch_init() is None
         assert source.fetch_count == 1
 
-    @pytest.mark.trio
+    @pytest.mark.anyio
     async def test_fetch_after_ttl_rereads(self, monkeypatch):
         """after the TTL expires the data is re-read"""
         source = FakeSource()
@@ -177,7 +181,7 @@ class TestFetchInit:
         assert new == {'x': 2, 'y': 2}
         assert source.fetch_count == 2
 
-    @pytest.mark.trio
+    @pytest.mark.anyio
     async def test_fetch_force_ignores_ttl(self):
         """force=True always re-reads"""
         source = FakeSource()
@@ -185,14 +189,14 @@ class TestFetchInit:
         assert await source.fetch_init(force=True) == {'x': 2, 'y': 2}
         assert source.fetch_count == 2
 
-    @pytest.mark.trio
+    @pytest.mark.anyio
     async def test_fetch_ttl_none_always_reads(self):
         """TTL=None reads every time"""
         source = NoWriterSource()
         assert await source.fetch_init() == {'a': 1}
         assert await source.fetch_init() == {'a': 1}
 
-    @pytest.mark.trio
+    @pytest.mark.anyio
     async def test_on_init_runs_in_thread(self):
         """on_init_async runs on_init in a worker thread"""
         source = FakeSource()
@@ -216,7 +220,7 @@ class TestMarkDirty:
     read keeps the mark.
     """
 
-    @pytest.mark.trio
+    @pytest.mark.anyio
     async def test_mark_dirty_bypasses_ttl_and_is_consumed(self):
         """a dirty mark makes the next fetch re-read inside the TTL window"""
         source = FakeSource()
@@ -231,7 +235,7 @@ class TestMarkDirty:
         assert await source.fetch_init() is None
         assert source.fetch_count == 2
 
-    @pytest.mark.trio
+    @pytest.mark.anyio
     async def test_marks_accumulate_consumed_together(self):
         """marks accumulate; one successful read consumes all of them"""
         source = FakeSource()
@@ -241,7 +245,7 @@ class TestMarkDirty:
         await source.fetch_init()
         assert source._dirty == 0
 
-    @pytest.mark.trio
+    @pytest.mark.anyio
     async def test_mark_during_read_survives(self):
         """
         a mark set while the read runs survives it (the result may
@@ -271,7 +275,7 @@ class TestMarkDirty:
         assert new == {'x': 2, 'y': 2}
         assert source._dirty == 0
 
-    @pytest.mark.trio
+    @pytest.mark.anyio
     async def test_failed_read_keeps_dirty(self):
         """a failing read keeps the mark: the next read retries"""
         source = FakeSource()
@@ -294,7 +298,7 @@ class TestMarkDirty:
         assert new == {'x': 1, 'y': 1}
         assert source._dirty == 0
 
-    @pytest.mark.trio
+    @pytest.mark.anyio
     async def test_ttl_none_unaffected_by_dirty(self):
         """TTL=None sources always read: a dirty mark changes nothing"""
         source = NoWriterSource()
@@ -304,7 +308,7 @@ class TestMarkDirty:
 
 
 class TestReinit:
-    @pytest.mark.trio
+    @pytest.mark.anyio
     async def test_reinit_broadcasts_full_to_subscribers(self):
         """reinit with new data broadcasts a full event to subscribers"""
         source = FakeSource()
@@ -312,12 +316,12 @@ class TestReinit:
         await source.subscribe(topic)
         topic.sent.clear()
         await source.reinit(force=True)
-        await trio.testing.wait_all_tasks_blocked()
+        await wait_all_tasks_blocked()
         event = decode(topic.sent[0])
         assert event.o == 'full'
         assert event.v == {'x': 1, 'y': 1}
 
-    @pytest.mark.trio
+    @pytest.mark.anyio
     async def test_reinit_full_queued_behind_earlier_increments(self):
         """
         A full event is queued behind increments applied before the
@@ -329,16 +333,16 @@ class TestReinit:
         await source.subscribe(topic)
         topic.sent.clear()
         # an increment is applied and its doorbell queued, then a reinit
-        # runs before the trio thread drains the inbox
+        # runs before the loop thread drains the inbox
         source.on_event(('x', 5))
         await source.reinit(force=True)
-        await trio.testing.wait_all_tasks_blocked()
+        await wait_all_tasks_blocked()
         events = [decode(p) for p in topic.sent]
         assert events[0].o == 'set'
         assert events[0].k == ('x',)
         assert events[1].o == 'full'
 
-    @pytest.mark.trio
+    @pytest.mark.anyio
     async def test_reinit_no_change_no_broadcast(self):
         """reinit with unchanged data does not broadcast"""
         source = NoWriterSource()
@@ -346,28 +350,28 @@ class TestReinit:
         await source.subscribe(topic)
         # data must equal the read result first
         await source.reinit(force=True)
-        await trio.testing.wait_all_tasks_blocked()
+        await wait_all_tasks_blocked()
         topic.sent.clear()
         await source.reinit(force=True)
-        await trio.testing.wait_all_tasks_blocked()
+        await wait_all_tasks_blocked()
         assert topic.sent == []
 
-    @pytest.mark.trio
+    @pytest.mark.anyio
     async def test_reinit_no_subscriber_refreshes_data_only(self):
         """reinit without subscribers refreshes data and broadcasts nothing"""
         source = FakeSource()
         await source.reinit(force=True)
         assert source.data == {'x': 1, 'y': 1}
 
-    @pytest.mark.trio
+    @pytest.mark.anyio
     async def test_concurrent_reinit_serialized(self):
         """concurrent reinits serialize on the fetch lock: one read only"""
         source = FakeSource()
 
         async def double_reinit():
-            async with trio.open_nursery() as nursery:
-                nursery.start_soon(source.reinit)
-                nursery.start_soon(source.reinit)
+            async with anyio.create_task_group() as task_group:
+                task_group.start_soon(source.reinit)
+                task_group.start_soon(source.reinit)
 
         await double_reinit()
         # both reinits ran (fetch_lock serializes); the second one found the
@@ -407,7 +411,7 @@ class TestGlobalConfigSingleton:
 
 
 class TestOneShotGc:
-    @pytest.mark.trio
+    @pytest.mark.anyio
     async def test_resident_source_not_collected(self):
         """resident sources (ResidentCache) are never data-expiry collected"""
         source = FakeSource()

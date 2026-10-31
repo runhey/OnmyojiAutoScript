@@ -2,7 +2,7 @@ import contextvars
 import weakref
 from typing import Any, Callable, Generator, Generic, TypeVar
 
-import trio
+import anyio
 
 from oas.backend.reactive.not_found import _NOT_FOUND
 
@@ -70,7 +70,7 @@ class async_reactive(Generic[T]):
             weakref.WeakKeyDictionary()
         )
         # Lock computation and observer changes
-        self.lock = trio.Lock()
+        self.lock = anyio.Lock()
 
     def __get__(self, obj, cls=None):
         """
@@ -166,10 +166,10 @@ class async_reactive(Generic[T]):
         observer_names.add(name)
 
     async def _broadcast_observer(self, obj, observer_items, old, new):
-        async with trio.open_nursery() as nursery:
+        async with anyio.create_task_group() as task_group:
             # Broadcast changes to external function
             if isinstance(obj, AsyncReactiveCallback):
-                nursery.start_soon(obj.reactive_callback, self.name, old, new)
+                await task_group.start_soon(obj.reactive_callback, self.name, old, new)
 
             # Notify observers outside the lock to prevent deadlocks
             for observer_obj, names in observer_items:
@@ -182,7 +182,7 @@ class async_reactive(Generic[T]):
                         except AttributeError:
                             # this shouldn't happen
                             continue
-                        nursery.start_soon(broadcast, observer_obj)
+                        await task_group.start_soon(broadcast, observer_obj)
 
     async def broadcast(self, obj, old=_NOT_FOUND, new=_NOT_FOUND):
         """

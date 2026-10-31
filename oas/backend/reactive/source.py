@@ -3,16 +3,15 @@ import time
 from collections import deque
 from typing import TYPE_CHECKING, Any, Optional
 
-import trio
+import anyio
 from msgspec.json import Encoder
 
+from oas.backend.anyio import AnyIO
 from oas.backend.reactive.event import ResponseEvent
 from oas.ext.singleton import Singleton, SingletonKeyed, SingletonNamed
 from oas.logger import logger
 
 if TYPE_CHECKING:
-    from trio._core import TrioToken
-
     from oas.backend.ws.ws_topic import BaseTopic
 
 ENCODER = Encoder()
@@ -52,11 +51,11 @@ class BaseSource:
 
     Thread model:
     - on_event()    can be called from any thread (worker recv thread /
-                    Trio thread / any backend thread), thread safe.
-    - subscribe()   can only be called in the Trio thread, async
+                    loop thread / any backend thread), thread safe.
+    - subscribe()   can only be called in the loop thread, async
                     (contains no blocking await).
-    - unsubscribe() can only be called in the Trio thread, sync.
-    - reinit() / fetch_init() are Trio-only, default empty.
+    - unsubscribe() can only be called in the loop thread, sync.
+    - reinit() / fetch_init() are loop-only, default empty.
 
     Iron rule: never await inside a lock. All critical sections are
     synchronous in-memory operations.
@@ -143,21 +142,21 @@ class BaseSource:
 
     def __init__(self):
         # One lock covers data (cache sources) and the inbox. The
-        # subscriber set is only touched from the Trio thread; the lock
+        # subscriber set is only touched from the loop thread; the lock
         # just keeps it atomic with the snapshot.
         self._lock = threading.Lock()
         self._subscribers: 'set[BaseTopic]' = set()
         # Cross-thread entry buffer written by on_event (any thread) and
-        # reinit (Trio), drained by _sync_to_trio in one batch.
+        # reinit (loop), drained by _sync_to_loop in one batch.
         self._inbox: 'deque[ResponseEvent]' = deque(maxlen=self.INBOX_MAXLEN)
-        # Set on the first subscribe (Trio thread); _ring relies on it.
-        self._trio_token: 'Optional[TrioToken]' = None
+        # The loop handle is shared by every source and lives in AnyIO;
+        # subscribe() makes sure it is captured (see the lazy capture there).
 
     # ---------------- subscribe / unsubscribe ----------------
 
     async def subscribe(self, sub) -> 'Optional[bytes]':
         """
-        [Trio] Register a subscriber and return the encoded full snapshot.
+        [loop] Register a subscriber and return the encoded full snapshot.
 
         - Cache sources: register first, then encode the current data
           under the lock (the payload may reference data, frozen while
@@ -176,8 +175,11 @@ class BaseSource:
         so the full event is enqueued before any later increment.
         """
         with self._lock:
-            if self._trio_token is None:
-                self._trio_token = trio.lowlevel.current_trio_token()
+            # Lazy loop capture: a backend started without a lifespan never
+            # calls AnyIO.bind_loop(), and the doorbell of a later
+            # cross-thread event still needs a loop to ring. Same fallback
+            # Alasio had with current_trio_token() on the first subscribe.
+            AnyIO.loop()
             self._subscribers.add(sub)
             data = self.data
             if not data:
@@ -193,14 +195,14 @@ class BaseSource:
 
     def unsubscribe(self, sub):
         """
-        [Trio] Unsubscribe. Idempotent.
+        [loop] Unsubscribe. Idempotent.
         """
         with self._lock:
             self._subscribers.discard(sub)
 
     def _reconcile(self):
         """
-        [Trio，锁外] Registry reconciliation after registration.
+        [loop, 锁外] Registry reconciliation after registration.
 
         Dimension A hook (default: no registry): a concurrent GC may have
         removed this instance while get_source() -> subscribe() was in
@@ -216,7 +218,7 @@ class BaseSource:
 
     async def reinit(self, force=False):
         """
-        [Trio] Refresh the full data and broadcast a full event.
+        [loop] Refresh the full data and broadcast a full event.
         Default empty implementation: sources without a full data source
         (Log / Worker / NoCachePush sources) never call it.
         """
@@ -224,7 +226,7 @@ class BaseSource:
 
     async def fetch_init(self, force=False):
         """
-        [Trio] Sub-class hook of reinit(): read the latest full data.
+        [loop] Sub-class hook of reinit(): read the latest full data.
         Default empty implementation. May carry a freshness check; returns
         the new data, or None when no update is needed.
         """
@@ -243,24 +245,19 @@ class BaseSource:
 
     def _ring(self):
         """
-        [任意线程，锁内调用] Wake up the batch delivery on the Trio thread.
+        [任意线程，锁内调用] Wake up the batch delivery on the loop thread.
 
         The doorbell rings on "inbox transitions from empty to non-empty",
-        so pushing several payloads in one critical section wakes Trio once.
+        so pushing several payloads in one critical section wakes the loop
+        once. AnyIO.call_soon() is the single place that absorbs "the loop
+        is gone" (shutdown, or a backend started without a lifespan); this
+        never raises.
         """
-        if self._trio_token is None:
-            # No subscriber yet: the token is only set by the first
-            # subscribe (Trio thread). Sources without subscribers only
-            # apply events, never schedule anything.
-            return
-        try:
-            self._trio_token.run_sync_soon(self._sync_to_trio)
-        except trio.RunFinishedError:
-            pass  # event loop already shut down
+        AnyIO.call_soon(self._sync_to_loop)
 
-    def _sync_to_trio(self):
+    def _sync_to_loop(self):
         """
-        [Trio 线程] run_sync_soon callback: drain the inbox in one batch,
+        [loop 线程] call_soon callback: drain the inbox in one batch,
         encode once, deliver to every subscriber. Not a coroutine.
         """
         with self._lock:
@@ -293,12 +290,12 @@ class BaseSource:
 
     def _deliver_all(self, payload):
         """
-        [Trio 线程] Deliver one encoded payload to every current
+        [loop 线程] Deliver one encoded payload to every current
         subscriber. No lock: the subscriber set is only touched from the
-        Trio thread, so it cannot change while this runs. Also the
-        run_sync_soon target of reinit full deliveries: the FIFO order of
-        the callback queue keeps a full event behind the increments
-        queued before it.
+        loop thread, so it cannot change while this runs. Also the
+        call_soon target of reinit full deliveries: the queue order of the
+        loop callbacks keeps a full event behind the increments queued
+        before it.
         """
         for sub in self._subscribers:
             sub.deliver(payload)
@@ -325,7 +322,7 @@ class BaseSource:
             try:
                 cls._gc_idle_class(src_cls)
             except RuntimeError:
-                # registry mutated concurrently by the Trio thread;
+                # registry mutated concurrently by the loop thread;
                 # skip this class and retry on the next round
                 continue
 
@@ -403,7 +400,7 @@ class EventSource(BaseSource):
     critical section (subscribe / reinit) -- data may be mutated in place
     by event threads as soon as the lock is released, so a full payload
     never outlives the lock unencoded. Incremental responses are queued as
-    objects and encoded later, outside the lock (batch, _sync_to_trio);
+    objects and encoded later, outside the lock (batch, _sync_to_loop);
     their values must therefore never be mutated after the response is
     built. Referencing the event payload itself is safe: worker events are
     decoded objects bound into data by replacement -- an apply must
@@ -413,7 +410,7 @@ class EventSource(BaseSource):
 
     def __init__(self):
         super().__init__()
-        self._fetch_lock = trio.Lock()
+        self._fetch_lock = anyio.Lock()
         self.data: Any = {}
         # Timestamp of the last data refresh (event or full read),
         # initialized to the creation moment: a brand-new instance is
@@ -451,7 +448,7 @@ class EventSource(BaseSource):
         Disk sources must keep their reads in a thread (file / import IO
         must not block the event loop).
         """
-        return await trio.to_thread.run_sync(self.on_init)
+        return await anyio.to_thread.run_sync(self.on_init)
 
     def _apply(self, event):
         """
@@ -494,7 +491,7 @@ class EventSource(BaseSource):
 
     async def fetch_init(self, force=False):
         """
-        [Trio] Read the latest full data.
+        [loop] Read the latest full data.
 
         - force: ignore the freshness window;
         - dirty (mark_dirty): ignore the freshness window, the disk may
@@ -530,7 +527,7 @@ class EventSource(BaseSource):
 
     async def reinit(self, force=False):
         """
-        [Trio] Refresh the full data and broadcast a full event when the
+        [loop] Refresh the full data and broadcast a full event when the
         data changed.
 
         - fetch_lock (double-checked with the freshness window of
@@ -539,9 +536,9 @@ class EventSource(BaseSource):
         - without subscribers only the data is refreshed (no broadcast);
         - the full event is encoded and its delivery queued under the
           lock (it references data, which event threads may mutate as
-          soon as the lock is released; the run_sync_soon queueing
-          shares the FIFO of the inbox doorbells, so the full event is
-          ordered against increments by the lock itself).
+          soon as the lock is released; the call_soon queueing shares
+          the loop's ready queue with the inbox doorbells, so the full
+          event is ordered against increments by the lock itself).
 
         Args:
             force (bool): Ignore the freshness window. RPC handlers that
@@ -565,19 +562,15 @@ class EventSource(BaseSource):
                     ResponseEvent(t=self.TOPIC_NAME, o='full', v=self.data)
                 )
                 # Queue the delivery under the lock, exactly like the
-                # doorbells of _ring: the run_sync_soon queue is the
-                # delivery order, and the lock serializes every queueing
-                # against the worker-thread on_event. A full event is
-                # therefore always queued before any increment whose event
-                # applied after its data snapshot -- never after (queueing
-                # outside the lock would race the doorbells and could let
-                # the full event trail a newer increment). Subscribers
-                # that leave in between are skipped (delivery reads the
-                # current set).
-                try:
-                    self._trio_token.run_sync_soon(self._deliver_all, payload)
-                except trio.RunFinishedError:
-                    pass
+                # doorbells of _ring: the call_soon queue is the delivery
+                # order, and the lock serializes every queueing against the
+                # worker-thread on_event. A full event is therefore always
+                # queued before any increment whose event applied after its
+                # data snapshot -- never after (queueing outside the lock
+                # would race the doorbells and could let the full event
+                # trail a newer increment). Subscribers that leave in
+                # between are skipped (delivery reads the current set).
+                AnyIO.call_soon(self._deliver_all, payload)
 
     # ---------------- event stream ----------------
 
@@ -753,7 +746,7 @@ class KeyedSource(BaseSource, metaclass=SingletonKeyed):
     @classmethod
     def get(cls, *key):
         """
-        [Trio] Get or create the instance of the composite key.
+        [loop] Get or create the instance of the composite key.
 
         The key is the whole positional argument tuple: cls(*key) calls
         the natural constructor signature. Registry lookup / creation and
@@ -819,7 +812,7 @@ class NoCachePush(BaseSource):
 
     def __init__(self):
         super().__init__()
-        # Single-flight full build (Trio thread only): plain flags + one
+        # Single-flight full build (loop thread only): plain flags + one
         # event, no lock needed.
         self._building = False
         self._build_event = None  # completion signal of the running build
@@ -830,7 +823,7 @@ class NoCachePush(BaseSource):
 
     async def subscribe(self, sub):
         """
-        [Trio] Register and return the encoded full payload.
+        [loop] Register and return the encoded full payload.
 
         The build happens BEFORE registration: the returned payload must
         be sent without any await in between, so the full event precedes
@@ -845,15 +838,15 @@ class NoCachePush(BaseSource):
         """
         payload = await self._get_payload()
         with self._lock:
-            if self._trio_token is None:
-                self._trio_token = trio.lowlevel.current_trio_token()
+            # lazy loop capture, same fallback as BaseSource.subscribe()
+            AnyIO.loop()
             self._subscribers.add(sub)
         self._reconcile()
         return payload
 
     def unsubscribe(self, sub):
         """
-        [Trio] Unsubscribe. Idempotent.
+        [loop] Unsubscribe. Idempotent.
 
         When the last subscriber leaves, the instance is removed from its
         registry: nothing is cached, the next subscription rebuilds it
@@ -867,7 +860,7 @@ class NoCachePush(BaseSource):
 
     async def _get_payload(self):
         """
-        [Trio] Single-flight full build shared by concurrent subscribers.
+        [loop] Single-flight full build shared by concurrent subscribers.
 
         While a build is running, subscribers wait for it and reuse its
         payload (same key -> same view). The payload is published only to
@@ -906,7 +899,7 @@ class NoCachePush(BaseSource):
             return payload
         # no build running: build ourselves and publish to the waiters
         self._building = True
-        event = trio.Event()
+        event = anyio.Event()
         self._build_event = (
             event  # fresh event per build: stale signals never wake new waiters
         )
@@ -951,13 +944,13 @@ class NoCachePush(BaseSource):
 
     async def reinit(self, force=False):
         """
-        [Trio] Rebuild the full view and broadcast it to every current
+        [loop] Rebuild the full view and broadcast it to every current
         subscriber. No-op without subscribers (nothing cached, nothing to
         refresh). Used by sources refreshed through RPC (e.g. DevAssets
         after a resource operation).
 
-        The payload is queued under the lock through the run_sync_soon
-        queue (same FIFO as the inbox doorbells), so a full event is
+        The payload is queued under the lock through the call_soon queue
+        (the same ready queue as the inbox doorbells), so a full event is
         ordered against the forwarding increments by the lock itself.
         """
         with self._lock:
@@ -969,10 +962,7 @@ class NoCachePush(BaseSource):
             return
         payload = ENCODER.encode(ResponseEvent(t=self.TOPIC_NAME, o='full', v=view))
         with self._lock:
-            try:
-                self._trio_token.run_sync_soon(self._deliver_all, payload)
-            except trio.RunFinishedError:
-                pass
+            AnyIO.call_soon(self._deliver_all, payload)
 
     # ---------------- on_event forwarding ----------------
 

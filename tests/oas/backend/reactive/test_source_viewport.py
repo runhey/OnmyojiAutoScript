@@ -7,12 +7,16 @@ single-flight full build shared by concurrent subscribers.
 
 import threading
 
+import anyio
 import pytest
-import trio
 
 from oas.backend.reactive.event import ResponseEvent
 from oas.backend.reactive.source import BaseSource, KeyedSource, NoCachePush
-from tests.oas.backend.reactive.test_source_base import MockTopic, decode
+from tests.oas.backend.reactive.test_source_base import (
+    MockTopic,
+    decode,
+    wait_all_tasks_blocked,
+)
 
 # Sibling view source classes of the test suite that take part in the
 # config-level dispatch (mirrors GuiConfigSource._CONFIG_GUI_CLASSES).
@@ -97,7 +101,7 @@ def cleanup_viewports():
 
 
 class TestRegistry:
-    @pytest.mark.trio
+    @pytest.mark.anyio
     async def test_get_creates_and_caches(self):
         """get creates and caches; same key returns the same instance"""
         a1 = FakeViewport.get('config_a', 'nav1')
@@ -106,7 +110,7 @@ class TestRegistry:
         assert a1.config_name == 'config_a'
         assert a1.view_name == 'nav1'
 
-    @pytest.mark.trio
+    @pytest.mark.anyio
     async def test_composite_key_isolation(self):
         """(config, view1) and (config, view2) are different instances"""
         a = FakeViewport.get('config_a', 'nav1')
@@ -116,7 +120,7 @@ class TestRegistry:
         c = FakeViewport.get('config_b', 'nav1')
         assert a is not c
 
-    @pytest.mark.trio
+    @pytest.mark.anyio
     async def test_get_returns_none_on_build_error(self):
         """a KeyError while constructing the source makes get return None"""
 
@@ -130,7 +134,7 @@ class TestRegistry:
         assert BrokenViewport.singleton_instances() == {}
         BrokenViewport.singleton_clear()
 
-    @pytest.mark.trio
+    @pytest.mark.anyio
     async def test_registry_isolated_per_subclass(self):
         """sibling subclasses own separate registries (no class in key)"""
         a = FakeViewport.get('config_a', 'nav1')
@@ -138,7 +142,7 @@ class TestRegistry:
         assert FakeViewport.singleton_instances() == {('config_a', 'nav1'): a}
         assert OtherViewport.singleton_instances() == {('config_a', 'nav2'): b}
 
-    @pytest.mark.trio
+    @pytest.mark.anyio
     async def test_sibling_keys_never_collide(self):
         """the same view name under two subclasses stays two instances"""
         a = FakeViewport.get('config_a', 'dashboard')
@@ -147,7 +151,7 @@ class TestRegistry:
 
 
 class TestDispatch:
-    @pytest.mark.trio
+    @pytest.mark.anyio
     async def test_dispatch_reaches_only_config_instances(self):
         """dispatch delivers only to the instances of the config"""
         a = FakeViewport.get('config_a', 'nav1')
@@ -160,11 +164,11 @@ class TestDispatch:
         FakeViewport.dispatch(
             'config_a', {'task': 'T1', 'group': 'g1', 'arg': 'a1', 'value': 5}
         )
-        await trio.testing.wait_all_tasks_blocked()
+        await wait_all_tasks_blocked()
         assert len(topic_a.sent) == 1
         assert topic_b.sent == []
 
-    @pytest.mark.trio
+    @pytest.mark.anyio
     async def test_dispatch_covers_all_view_subclasses(self):
         """one dispatch call covers ConfigArg-like and Dashboard-like sources"""
         a = FakeViewport.get('config_a', 'nav1')
@@ -177,11 +181,11 @@ class TestDispatch:
         FakeViewport.dispatch(
             'config_a', {'task': 'T1', 'group': 'g1', 'arg': 'a1', 'value': 5}
         )
-        await trio.testing.wait_all_tasks_blocked()
+        await wait_all_tasks_blocked()
         assert len(topic_a.sent) == 1
         assert len(topic_b.sent) == 1
 
-    @pytest.mark.trio
+    @pytest.mark.anyio
     async def test_dispatch_list_payload_expanded(self):
         """a list payload is expanded into single events and filtered"""
         a = FakeViewport.get('config_a', 'nav1')
@@ -193,7 +197,7 @@ class TestDispatch:
             {'task': 'T2', 'group': 'g1', 'arg': 'a1', 'value': 3},  # hit
         ]
         FakeViewport.dispatch('config_a', events)
-        await trio.testing.wait_all_tasks_blocked()
+        await wait_all_tasks_blocked()
         payload = topic.sent[0]
         decoded = decode(payload)
         if not isinstance(decoded, list):
@@ -242,31 +246,31 @@ class TestDispatch:
 
 
 class TestOnEventFilter:
-    @pytest.mark.trio
+    @pytest.mark.anyio
     async def test_hit_broadcasts_set(self):
         """a mapped event broadcasts a set response with the view key"""
         a = FakeViewport.get('config_a', 'nav1')
         topic = MockTopic()
         await a.subscribe(topic)
         a.on_event({'task': 'T1', 'group': 'g1', 'arg': 'a1', 'value': 5})
-        await trio.testing.wait_all_tasks_blocked()
+        await wait_all_tasks_blocked()
         event = decode(topic.sent[0])
         assert event.t == 'FakeView'
         assert event.o == 'set'
         assert event.k == ('card1', 'g1', 'a1', 'value')
         assert event.v == 5
 
-    @pytest.mark.trio
+    @pytest.mark.anyio
     async def test_miss_dropped(self):
         """an unmapped event is dropped: no send, no schedule"""
         a = FakeViewport.get('config_a', 'nav1')
         topic = MockTopic()
         await a.subscribe(topic)
         a.on_event({'task': 'T9', 'group': 'g9', 'arg': 'z9', 'value': 1})
-        await trio.testing.wait_all_tasks_blocked()
+        await wait_all_tasks_blocked()
         assert topic.sent == []
 
-    @pytest.mark.trio
+    @pytest.mark.anyio
     async def test_no_subscriber_dropped(self):
         """events reaching an instance without subscribers are dropped"""
         a = FakeViewport.get('config_a', 'nav1')
@@ -274,12 +278,12 @@ class TestOnEventFilter:
         await a.subscribe(topic)
         a.unsubscribe(topic)
         a.on_event({'task': 'T1', 'group': 'g1', 'arg': 'a1', 'value': 1})
-        await trio.testing.wait_all_tasks_blocked()
+        await wait_all_tasks_blocked()
         assert topic.sent == []
 
 
 class TestSubscribe:
-    @pytest.mark.trio
+    @pytest.mark.anyio
     async def test_subscribe_builds_and_returns_full_payload(self):
         """subscribe builds the full view and returns encoded bytes"""
         a = FakeViewport.get('config_a', 'nav1')
@@ -293,7 +297,7 @@ class TestSubscribe:
         assert topic in a._subscribers
         assert a.builds == 1
 
-    @pytest.mark.trio
+    @pytest.mark.anyio
     async def test_subscribe_empty_view_registers_no_full(self):
         """an empty view registers the subscriber but returns None"""
         a = FakeViewport.get('config_a', 'nav1')
@@ -302,14 +306,14 @@ class TestSubscribe:
         assert await a.subscribe(topic) is None
         assert topic in a._subscribers
 
-    @pytest.mark.trio
+    @pytest.mark.anyio
     async def test_increments_flow_after_subscribe(self):
         """after registration increments reach the topic"""
         a = FakeViewport.get('config_a', 'nav1')
         topic = MockTopic()
         await a.subscribe(topic)
         a.on_event({'task': 'T1', 'group': 'g1', 'arg': 'a2', 'value': 7})
-        await trio.testing.wait_all_tasks_blocked()
+        await wait_all_tasks_blocked()
         assert len(topic.sent) == 1
 
 
@@ -318,7 +322,7 @@ async def async_none():
 
 
 class TestSingleFlight:
-    @pytest.mark.trio
+    @pytest.mark.anyio
     async def test_concurrent_subscribers_share_one_build(self):
         """
         Two subscribers joining while a build is running share it: one
@@ -326,8 +330,8 @@ class TestSingleFlight:
         """
         a = FakeViewport.get('config_a', 'nav1')
         builds = [0]
-        started = trio.Event()
-        release = trio.Event()
+        started = anyio.Event()
+        release = anyio.Event()
 
         async def slow_build():
             builds[0] += 1
@@ -343,14 +347,14 @@ class TestSingleFlight:
         async def sub(topic, name):
             results[name] = await a.subscribe(topic)
 
-        async with trio.open_nursery() as nursery:
-            nursery.start_soon(sub, topic1, 't1')
+        async with anyio.create_task_group() as task_group:
+            task_group.start_soon(sub, topic1, 't1')
             await started.wait()
             # the second subscriber arrives while the build is running
-            nursery.start_soon(sub, topic2, 't2')
-            await trio.testing.wait_all_tasks_blocked()
+            task_group.start_soon(sub, topic2, 't2')
+            await wait_all_tasks_blocked()
             release.set()
-            await trio.testing.wait_all_tasks_blocked()
+            await wait_all_tasks_blocked()
 
         assert builds[0] == 1
         assert results['t1'] == results['t2']
@@ -358,15 +362,15 @@ class TestSingleFlight:
         assert topic1 in a._subscribers
         assert topic2 in a._subscribers
 
-    @pytest.mark.trio
+    @pytest.mark.anyio
     async def test_waiter_failure_publishes_none(self):
         """
         A failing build wakes its waiters with None (registered, no full);
         the builder re-raises.
         """
         a = FakeViewport.get('config_a', 'nav1')
-        started = trio.Event()
-        release = trio.Event()
+        started = anyio.Event()
+        release = anyio.Event()
 
         async def failing_build():
             started.set()
@@ -385,13 +389,13 @@ class TestSingleFlight:
             except KeyError as e:
                 errors.append(name)
 
-        async with trio.open_nursery() as nursery:
-            nursery.start_soon(sub, topic1, 't1')
+        async with anyio.create_task_group() as task_group:
+            task_group.start_soon(sub, topic1, 't1')
             await started.wait()
-            nursery.start_soon(sub, topic2, 't2')
-            await trio.testing.wait_all_tasks_blocked()
+            task_group.start_soon(sub, topic2, 't2')
+            await wait_all_tasks_blocked()
             release.set()
-            await trio.testing.wait_all_tasks_blocked()
+            await wait_all_tasks_blocked()
 
         # builder raised (never registered: the build happens before
         # registration); the waiter received None and IS registered
@@ -400,7 +404,7 @@ class TestSingleFlight:
         assert topic1 not in a._subscribers
         assert topic2 in a._subscribers
 
-    @pytest.mark.trio
+    @pytest.mark.anyio
     async def test_late_subscriber_after_failure_rebuilds(self):
         """
         A subscriber arriving after a failed build (failure sentinel still
@@ -425,7 +429,7 @@ class TestSingleFlight:
         # the sentinel is gone once the state is reused
         assert a._build_payload is NoCachePush._NO_PAYLOAD
 
-    @pytest.mark.trio
+    @pytest.mark.anyio
     async def test_non_overlapping_subscribers_rebuild(self):
         """
         Sequential (non-overlapping) subscribers each rebuild: the full
@@ -448,7 +452,7 @@ class TestSingleFlight:
 
 
 class TestLifecycle:
-    @pytest.mark.trio
+    @pytest.mark.anyio
     async def test_never_in_gc_loop(self):
         """
         NoCachePush classes never enter the data-expiry gc: there is no
@@ -462,7 +466,7 @@ class TestLifecycle:
         BaseSource.gc_idle()
         assert FakeViewport.singleton_instances() == {('config_a', 'nav1'): a}
 
-    @pytest.mark.trio
+    @pytest.mark.anyio
     async def test_last_unsubscribe_removes_instance(self):
         """
         The instance removes itself from the registry when its last
@@ -485,7 +489,7 @@ class TestLifecycle:
         assert b is not a
         assert b.builds == 0
 
-    @pytest.mark.trio
+    @pytest.mark.anyio
     async def test_subscribe_reconciles_removed_instance(self):
         """
         A subscribe arriving on an instance that was already removed

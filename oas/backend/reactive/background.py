@@ -1,6 +1,7 @@
 from typing import Union
 
-from trio import CancelScope, Event, Nursery, current_time, move_on_after
+from anyio import CancelScope, Event, current_time, move_on_after
+from anyio.abc import TaskGroup
 
 
 class BackgroundTask:
@@ -95,12 +96,16 @@ class BackgroundTask:
             self._last_finish_time = -10000
             self._event = Event()
 
-    def task_trigger(self, nursery: Nursery):
+    def task_trigger(self, task_group: TaskGroup):
         """
         触发任务，触发之后默认每隔 2 秒重新执行一次。
         调用触发不一定会执行一次任务，以下情况本次触发会被丢弃：
         - 处于 drop_threshold 内，调用触发不生效
         - 已经有一个任务正在运行或者即将运行，在它完成前调用触发不生效
+
+        注意：必须在事件循环线程内调用。AnyIO 的 Event 不是任意线程安全
+        的，如果将来要从普通线程触发，需要改成
+        `AnyIO.call_soon(self._event.set)`，不能直接调用。
         """
         if self._permanently_disabled:
             return
@@ -116,7 +121,7 @@ class BackgroundTask:
             self._event = Event()
             # 占位防止 start_soon 尚未调度时多次启动
             self._shutdown_scope = 'STARTING'
-            nursery.start_soon(self._task_loop)
+            task_group.start_soon(self._task_loop)
 
         # 发送触发信号
         self._event.set()
