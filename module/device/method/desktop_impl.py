@@ -1293,12 +1293,15 @@ class DesktopWindow:
                            f'无法区分归属，将重新拉起一个实例')
         return None, 0
 
-    def desktop_bind_pid(self, pid, hwnd=0) -> None:
+    def desktop_bind_pid(self, pid, hwnd=0, just_launched=True) -> None:
         """把运行时 PID/HWND 绑定到实例；PID 不写配置，只进档案状态文件。
 
         PID 每次重启都会变，落配置只会认领一个死进程；配了档案目录时写
         oas_instance.json 供下次认领。同时强制显示器常亮，防止电源超时关屏导致
         BitBlt 截图返回黑帧卡死登录循环。
+
+        just_launched=True 表示窗口是本轮新拉起的，必然未登录；
+        False 表示认领已存在的窗口，登录态由 find_desktop_login_popup() 实测判断。
         """
         self.root_handle = str(pid)
         if hwnd:
@@ -1320,8 +1323,13 @@ class DesktopWindow:
         self.is_desktop_window = True
         # 换了新 hwnd，截图句柄缓存必须同步失效，否则截图仍走上一个客户端的废句柄
         self._desktop_clear_handle_cache()
-        # 新绑定的客户端刚启动，必然未登录，需先走 restart 登录流程
-        self._desktop_login_done = False
+        if just_launched:
+            # 新拉起的客户端必然停在登录页
+            self._desktop_login_done = False
+        else:
+            # 认领已存在的窗口：可能早已登录。已登录的客户端全系统枚举不到
+            # MPAY_LOGIN 顶层窗口（见 find_desktop_login_popup），以此区分
+            self._desktop_login_done = not self.find_desktop_login_popup()
         # 客户端已拉起，强制保持显示器常亮（线程级状态，随客户端关闭解除）
         desktop_keep_screen_on(True)
         # 档案状态文件：下次启动凭它认领「这个档案的实例是哪个 PID」
