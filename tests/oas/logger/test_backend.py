@@ -59,8 +59,8 @@ class BaseLoggerTest:
         # Create temp directory for test logs
         self.test_dir = PathStr.new(__file__).uppath(1)
         env.PROJECT_ROOT = self.test_dir
-        # OAS has no Electron shell; LogWriter.is_electron is a plain False
-        # attribute, so there is no env.ELECTRON to reset here.
+        # OAS has no shell wrapper; LogWriter.is_local_flutter is a plain False
+        # attribute, so there is no env.FLUTTER flag to reset here.
 
         # Create mock backend
         self.mock_backend = MockBackendBridge()
@@ -354,22 +354,22 @@ class TestBackendLogging(BaseLoggerTest):
         assert log_files[0].name == expected_filename
 
 
-class TestBackendLoggingWithElectron(BaseLoggerTest):
+class TestBackendLoggingWithFlutter(BaseLoggerTest):
     """
-    Test backend logging behavior in Electron mode
+    Test backend logging behavior in local Flutter mode
     """
 
-    def test_electron_mode_logs_to_backend(self):
+    def test_flutter_mode_logs_to_backend(self):
         """
-        Test that logs are still sent to backend in Electron mode
+        Test that logs are still sent to backend in local Flutter mode
         """
         # Log a message
-        self.logger.info('Electron mode message')
+        self.logger.info('local Flutter mode message')
 
         # Get the event
         events = self.mock_backend.log_events
         assert len(events) == 1
-        assert events[0]['m'] == 'Electron mode message'
+        assert events[0]['m'] == 'local Flutter mode message'
         assert events[0]['l'] == 'INFO'
 
 

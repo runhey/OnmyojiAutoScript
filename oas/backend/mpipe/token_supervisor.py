@@ -4,7 +4,7 @@ import threading
 import time
 
 # Rotation interval in seconds (30min+). The rotation
-# thread only runs when the supervisor was started with --electron.
+# thread only runs when the supervisor was started with --flutter.
 ROTATION_INTERVAL = 1800
 # Seconds to wait for the backend ack before dropping the rotation round
 ACK_TIMEOUT = 2.0
@@ -14,15 +14,15 @@ class SupervisorTokenManager:
     """
     Supervisor-side token manager. One instance per supervisor, created
     by Supervisor.run() with the owning supervisor object. Only active
-    when the supervisor was started with --electron; otherwise it
+    when the supervisor was started with --flutter; otherwise it
     generates nothing and the backend token table stays empty (sensitive
     APIs locked).
 
     The supervisor is the single source of truth for tokens: it
     generates, holds, rotates, sends down the pipe and announces them;
-    Electron only listens to the announcements and never inputs a token.
+    the local Flutter app only listens to the announcements and never inputs a token.
     The memory window only ever contains tokens that were both announced
-    to Electron and confirmed (token_ack) by the backend (T1 is the
+    to the local Flutter app and confirmed (token_ack) by the backend (T1 is the
     exception: it is announced before the backend is born).
 
     All pipe writes are delegated to the supervisor's
@@ -49,11 +49,11 @@ class SupervisorTokenManager:
         Generate T1 and announce it (the backend is not born yet).
 
         The announcement must use print, not logger: the logger is muted
-        in Electron mode (ELECTRON=1) and would swallow the announcement.
+        in local Flutter mode (FLUTTER=1) and would swallow the announcement.
         """
         token = secrets.token_hex(32)
         self._window.append(token)
-        # flush: the announcement must reach Electron immediately even
+        # flush: the announcement must reach the local Flutter app immediately even
         # though python block-buffers stdout on a pipe
         print(f'[Supervisor] token_set:begin:{token}', flush=True)
 
@@ -68,7 +68,7 @@ class SupervisorTokenManager:
 
     def start_rotation(self):
         """
-        Start the daemon rotation thread. No-op without --electron.
+        Start the daemon rotation thread. No-op without --flutter.
         """
         if self._rotation_thread and self._rotation_thread.is_alive():
             return
@@ -88,7 +88,7 @@ class SupervisorTokenManager:
         announce. Never announce an unconfirmed token.
 
         On failure (backend not attached / pipe broken / ack timeout) the
-        round is dropped: the pending state is reset and Electron stays on
+        round is dropped: the pending state is reset and the local Flutter app stays on
         the old token. The next round or a backend restart (args carry the
         old window) converges naturally.
         """
@@ -113,11 +113,11 @@ class SupervisorTokenManager:
             # old = the previous announced token inside the window
             old = self._window[-1] if self._window else ''
             self._window.append(token)
-            # flush: the announcement must reach Electron immediately even
+            # flush: the announcement must reach the local Flutter app immediately even
             # though python block-buffers stdout on a pipe
             print(f'[Supervisor] token_set:{old}:{token}', flush=True)
         else:
-            # ack timeout: drop the token, Electron stays on the old one
+            # ack timeout: drop the token, the local Flutter app stays on the old one
             pass
         self._reset_pending()
 

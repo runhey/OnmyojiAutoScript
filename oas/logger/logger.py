@@ -352,7 +352,7 @@ INFO | Hello Info
         """
         writer = self._writer
         backend_inited = writer.backend.inited
-        is_electron = writer.is_electron
+        is_local_flutter = writer.is_local_flutter
         with self._lock:
             if backend_inited:
                 # backend + file
@@ -361,7 +361,7 @@ INFO | Hello Info
                 writer.fd.flush()
                 job.acquire()
             else:
-                if is_electron:
+                if is_local_flutter:
                     # file
                     writer.fd.write(text_plain)
                     writer.fd.flush()

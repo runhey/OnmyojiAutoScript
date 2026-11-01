@@ -22,6 +22,9 @@ OAS_ROOT = PathStr.new(__file__).uppath(3)
 # Disposable folder of the repository, tests put their temporary files here
 OAS_TEMP = OAS_ROOT.joinpath('temp')
 
+# Set to "1" by the supervisor when started with --flutter; silences structlog stdout
+FLUTTER = os.environ.get('FLUTTER', '')
+
 
 def set_project_root(root, up=0):  # noqa: D417
     """

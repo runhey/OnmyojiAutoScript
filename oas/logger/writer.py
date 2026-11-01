@@ -17,10 +17,10 @@ if TYPE_CHECKING:
 class LogWriter(metaclass=Singleton):
     def __init__(self):
         self.create_date: "date | None" = None
-        # OAS has no Electron shell, so the "file only, no stdout" branch in
+        # OAS has no shell wrapper, so the "file only, no stdout" branch in
         # AlasioLogger._emit() never applies. Kept as an instance attribute so
         # a future desktop wrapper can flip it in one place.
-        self.is_electron = False
+        self.is_local_flutter = False
 
     @cached_property_threadsafe
     def backend(self) -> "BackendBridge | PseudoBackendBridge":
@@ -315,7 +315,7 @@ class CaptureWriter:
         Args:
             parent (CaptureWriter | LogWriter | None): Parent writer to chain logs to. Defaults to None.
         """
-        self.is_electron = False
+        self.is_local_flutter = False
         if isinstance(parent, CaptureWriter):
             self.stdout = CaptureStream(parent=parent.stdout)
             self.fd = CaptureStream(parent=parent.fd)

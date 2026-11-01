@@ -24,8 +24,8 @@ class BaseLoggerTest:
         # Create temp directory for test logs
         self.test_dir = PathStr.new(__file__).uppath(1)
         env.PROJECT_ROOT = self.test_dir
-        # OAS has no Electron shell; LogWriter.is_electron is a plain False
-        # attribute, so there is no env.ELECTRON to reset here.
+        # OAS has no shell wrapper; LogWriter.is_local_flutter is a plain False
+        # attribute, so there is no env.FLUTTER flag to reset here.
 
         # init fd
         writer = LogWriter()
@@ -391,7 +391,7 @@ class TestLoggerError(BaseLoggerTest):
 
 class TestLoggerStdoutError(BaseLoggerTest):
     """
-    A broken stdout (e.g. the host electron process died) must never make
+    A broken stdout (e.g. the host process died) must never make
     the logger raise into the caller: teardown paths like the backend
     shutdown trigger would otherwise be aborted before the shutdown event
     is set, leaving the backend running as an orphan.

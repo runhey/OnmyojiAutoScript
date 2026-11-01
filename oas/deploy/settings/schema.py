@@ -2,7 +2,7 @@
 
 ``schema.json`` is a build artifact: it is exported verbatim from the Pydantic
 JSON Schema of ``Settings`` and committed, so consumers that cannot run Pydantic
-(the Electron main process, the web UI) read the static file instead of
+(the local Flutter app, the web UI) read the static file instead of
 importing the model.  The consuming side parses this file itself, nothing here
 reshapes the export.
 
