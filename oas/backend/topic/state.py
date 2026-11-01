@@ -1,14 +1,9 @@
 """
 The ConnState topic: the navigation state of one GUI connection.
 
-Ported from alasio/backend/topic/state.py, with two deviations (both
-recorded in oas/backend/README.md):
+Ported from alasio/backend/topic/state.py, with one deviation (recorded in
+oas/backend/README.md):
 
-- the three restart RPCs (``restart`` / ``cancel_restart`` /
-  ``force_restart``) are not ported: they drive
-  ``alasio/backend/app/restart/restart_manager.py``, which has no OAS
-  equivalent yet, and the Restart topic that reports their progress is not
-  ported either;
 - the language list of ``set_lang`` comes from the built-in mod entry
   (``ModEntryInfo.oas().gui_language``) instead of upstream's
   ``Const.GUI_LANGUAGE``: OAS has no ``config/const.py``, and the mod entry
@@ -95,6 +90,60 @@ class ConnState(BaseTopic):
         state: NavState = await self.nav_state
         state.lang = lang
         await self.nav_state.mutate()
+
+    @rpc
+    async def restart(self):
+        """
+        Gracefully restart the entire backend
+
+        Every running worker is asked to stop gracefully (scheduler-stopping:
+        the current task finishes first, a 10-minute wait escalates to a kill),
+        then the backend restarts and resumes the workers stopped by this
+        request. Returns as soon as the restart flow is accepted: the progress
+        flows through the Restart and Worker topics.
+        """
+        # local import (see set_config below): the restart package drives the
+        # worker manager, whose topic imports this module
+        from oas.backend.app.restart.restart_manager import RESTART_MANAGER, FlowRefused
+
+        try:
+            RESTART_MANAGER.restart()
+        except FlowRefused as e:
+            # the message carries the next step for the user (a restart is
+            # already in progress, an update restarts the backend by itself,
+            # the backend is still starting up)
+            raise RpcValueError(str(e)) from None
+
+    @rpc
+    async def cancel_restart(self):
+        """
+        Cancel the restart flow waiting for the workers to stop
+
+        Only the cancellable phase of the flow is interrupted: the workers it
+        stopped are resumed again and the check sequences it paused restart
+        (the wrap-up of the flow owns both). Past its point of no return (the
+        handover started) or after a daily upgrade the cancel is refused.
+        """
+        # local import (see restart above)
+        from oas.backend.app.restart.restart_manager import RESTART_MANAGER, FlowRefused
+
+        try:
+            await RESTART_MANAGER.cancel_restart()
+        except FlowRefused as e:
+            raise RpcValueError(str(e)) from None
+
+    @rpc
+    async def force_restart(self):
+        """
+        Restart the entire backend immediately
+
+        Unlike restart(), the workers are not waited for: every running worker
+        is ended right away and nothing is resumed after the backend restarted.
+        """
+        # local import (see restart above)
+        from oas.backend.app.restart.restart_manager import RESTART_MANAGER
+
+        await RESTART_MANAGER.force_restart()
 
     @rpc
     async def set_config(self, name: str):

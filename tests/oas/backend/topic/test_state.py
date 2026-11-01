@@ -64,12 +64,34 @@ def test_conn_state_topic_name():
 
 def test_conn_state_registers_exactly_the_ported_rpcs():
     """
-    The restart trio of upstream is deliberately missing: it drives the
-    restart manager, which has no OAS equivalent yet, and the Restart topic
-    that reports its progress is not ported either (see the module docstring
-    and oas/backend/README.md).
+    All six RPCs of upstream are registered. The restart trio drives the
+    restart manager, which is ported from now on
+    (``oas/backend/app/restart/``), and the Restart topic that reports its
+    progress is ported too, so none of the upstream surface is missing (see
+    the module docstring and oas/backend/README.md).
     """
-    assert set(ConnState.rpc_methods) == {'set_lang', 'set_config', 'set_nav'}
+    assert set(ConnState.rpc_methods) == {
+        'set_lang',
+        'set_config',
+        'set_nav',
+        'restart',
+        'cancel_restart',
+        'force_restart',
+    }
+
+
+async def test_restart_maps_a_refusal_to_the_rpc_error(topic):
+    """
+    A refused flow reaches the frontend as an RpcValueError carrying the
+    manager's message (the next step for the user).
+
+    A bare test backend has no supervisor and no flow claim, so
+    ``RESTART_MANAGER.restart()`` refuses; the RPC must translate that instead
+    of letting ``FlowRefused`` escape the reactive layer.
+    """
+    with pytest.raises(RpcValueError) as exc:
+        await topic.restart()
+    assert str(exc.value)
 
 
 async def test_set_lang_stores_an_available_language(topic):

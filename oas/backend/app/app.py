@@ -12,6 +12,9 @@ from starlette.responses import Response
 from starlette.routing import WebSocketRoute
 
 from oas.backend.anyio import AnyIO
+from oas.backend.app.restart.daily import DAILY
+from oas.backend.app.restart.restart_manager import RESTART_MANAGER
+from oas.backend.app.restart.update_check import UPDATE_CHECK
 from oas.backend.auth import auth
 from oas.backend.auth.errors import HTTPExceptionJson
 from oas.backend.middleware.gate import DeploymentGateMiddleware
@@ -136,6 +139,19 @@ async def lifespan(app: 'FastAPI'):
             # only finishes at shutdown)
             task_group.start_soon(task_listen_shutdown)
             task_group.start_soon(task_gc)
+
+            # the maintenance flows of the backend, in the upstream order:
+            # UPDATE_CHECK is started before RESTART_MANAGER because the startup
+            # flow the latter claims starts the check sequences, which need the
+            # check module's nursery already set (each task of one start_soon
+            # pass begins in the order it was queued). DAILY only watches the
+            # configured restart time. The three other tasks upstream starts
+            # here -- TASK_QUEUE_UPDATE_MANAGER.run (topic/que.py),
+            # SITE.warm_up (app/frontend.py) and
+            # ConfigScanSource.create_default_config -- are not ported yet.
+            task_group.start_soon(DAILY.run)
+            task_group.start_soon(UPDATE_CHECK.run)
+            task_group.start_soon(RESTART_MANAGER.run)
 
             # actual backend runs here
             yield
