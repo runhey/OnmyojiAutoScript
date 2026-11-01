@@ -1,10 +1,11 @@
 """
 Test doubles of the ws layer: a duck-typed source, one topic, one server.
 
-The real reactive integration (a topic bound to oas.backend.reactive
-.BaseSource, full/increment rebinding) is the next step. These tests pin the
-ws layer itself: handshake, subscribe, delivery, unsubscribe, rpc, heartbeat
-and shutdown.
+The real reactive integration is covered by its own tests:
+test_ws_config_scan.py binds ConfigScan to its real disk-cache source and
+test_ws_conn_state.py covers the ConnState default topic. These tests pin the
+ws layer itself with a duck-typed source: handshake, subscribe, delivery,
+unsubscribe, rpc, heartbeat and shutdown.
 """
 
 import time

@@ -6,19 +6,34 @@ the app mounts on /api/ws, and it owns the two registries of that server
 (ALL_TOPIC_CLASS: every topic the server can serve, DEFAULT_TOPIC_CLASS:
 the topics it registers on connect).
 
-Only the ported topics are registered here. The rest of the upstream
-registry -- ConnState, ModList, ModHistory, ConfigNav, ConfigArg,
-Worker, Restart, Update, Log, TaskQueue, TaskQueueI18n and Dashboard --
-lands with its own topic (see oas/backend/README.md, leftover 14). The
-second server of upstream (PreviewServer on /api/preview) has no topic
-here at all.
+Only the ported topics are registered here: ConnState, ModList, ModHistory,
+ConfigScan, Restart and Log. The rest of the upstream registry -- ConfigNav,
+ConfigArg, Worker, Update, TaskQueue, TaskQueueI18n and Dashboard -- lands
+with its own topic (see oas/backend/README.md, the topic checklist). The
+second server of upstream (PreviewServer on /api/preview) has no topic here
+at all.
+
+``init()`` also negotiates the GUI language of the connection, as upstream
+does: the language is stored in the ConnState default topic of this
+connection, where every language-dependent topic reads it as a reactive
+dependency.
 """
 
 from typing import Type
 
+from oas.backend.locale.accept_language import negotiate_accept_language
+from oas.backend.topic.log import Log
+from oas.backend.topic.mod import ModHistory, ModList
+from oas.backend.topic.restart import Restart
 from oas.backend.topic.scan import ConfigScan
+from oas.backend.topic.state import ConnState
 from oas.backend.ws.ws_server import WebsocketTopicServer
 from oas.backend.ws.ws_topic import BaseTopic
+from oas.mod.info import ModEntryInfo
+
+# The cookie the frontend stores the chosen GUI language in (upstream name
+# ``alasio_lang``). The frontend must keep sending this name.
+LANG_COOKIE = 'oas_lang'
 
 
 def create_topic_dict(
@@ -40,14 +55,68 @@ class WebsocketServer(WebsocketTopicServer):
     # RPC functions won't give response data, it will trigger internal data changes and push topic data updates.
     ALL_TOPIC_CLASS = create_topic_dict(
         [
+            # must contain ConnState
+            ConnState,
+            ModList,
+            ModHistory,
             ConfigScan,
+            Restart,
+            Log,
         ]
     )
     # List of default subscribed topics.
     # Without actively subscribing:
     # - Frontend can send and backend should accept RPC calls.
     # - Backend will send and frontend should accept data updates.
-    #
-    # Empty until ConnState is ported: upstream registers ConnState here
-    # as the one topic every connection takes on connect.
-    DEFAULT_TOPIC_CLASS = create_topic_dict([])
+    DEFAULT_TOPIC_CLASS = create_topic_dict(
+        [
+            # must contain ConnState
+            ConnState,
+        ]
+    )
+
+    async def init(self):
+        await super().init()
+        # set language
+        topic: 'ConnState | None' = self.subscribed.get(ConnState.TOPIC_NAME, None)
+        if topic is not None:
+            lang = self._negotiate_lang()
+            state = await topic.nav_state
+            state.lang = lang
+            await topic.nav_state.mutate()
+
+    def _negotiate_lang(self, default='en-US'):
+        """
+        Parse request into one available language
+
+        Returns:
+            str:
+        """
+        available = list(ModEntryInfo.oas().gui_language)
+        ws = self.ws
+        # try to match the lang in cookie
+        prefer = ws.cookies.get(LANG_COOKIE, '')
+        if prefer:
+            use = negotiate_accept_language(prefer, available)
+            if use:
+                return use
+        # try to match Accept-Language header
+        try:
+            prefer = ws.headers['Accept-Language']
+        except KeyError:
+            # this shouldn't happen, most browsers would post Accept-Language header
+            prefer = ''
+        if prefer:
+            use = negotiate_accept_language(prefer, available)
+            if use:
+                return use
+        # no luck, try to use default
+        if default in available:
+            return default
+        # ohno, default language is not available, use the first language
+        try:
+            return available[0]
+        except IndexError:
+            # empty available languages, there's nothing we can do
+            # return default anyway
+            return default

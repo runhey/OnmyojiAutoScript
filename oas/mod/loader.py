@@ -7,6 +7,7 @@ the module location.
 
 from typing import Any
 
+from oas.mod.const import DICT_MOD_ENTRY
 from oas.mod.info import ModEntryInfo
 from oas.ext.file.loadpy import LOADPY_CACHE
 
@@ -41,6 +42,27 @@ class ModLoader:
         except AttributeError as exc:
             raise ImportError(f'Module {file} must define ConfigGui') from exc
         return config_gui()
+
+    @property
+    def dict_mod(self) -> 'dict[str, ModEntryInfo]':
+        """Return the declared built-in Mod entries, keyed by Mod name.
+
+        Upstream builds this from Alasio's ``_index/*.json`` folders: a self
+        mod discovered at ``module/config/const.py`` plus every entry whose
+        folder looks like a mod. OAS declares its mods in ``oas/mod/const.py``
+        and resolves models through ``oas.config.models.registry`` instead of
+        index files, so the declared name is the key and the only check is
+        that the entry root exists.
+
+        Returns:
+            dict[str, ModEntryInfo]: Mod name to entry, empty when the root
+                is missing.
+        """
+        return {
+            name: entry
+            for name, entry in DICT_MOD_ENTRY.items()
+            if name and entry.root.exists()
+        }
 
     def get_mod(self, name: str = 'oas') -> Any:
         """Return the loaded facade for the named built-in Mod.
@@ -82,4 +104,3 @@ class ModLoader:
 
 
 MOD_LOADER = ModLoader()
-

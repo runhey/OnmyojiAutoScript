@@ -9,18 +9,12 @@ unsubscribe and disconnect cleanup.
 """
 
 import msgspec
-import pytest
 from starlette.testclient import TestClient
 
 from oas.backend.app.app import create_app
 from oas.backend.mpipe.token_backend import LOCAL_TOKEN_HEADER
-from oas.backend.topic.scan import ConfigScan, ConfigScanSource
-from oas.config.table.config import ConfigTable
+from oas.backend.topic.scan import ConfigScanSource
 from oas.config.table.key import KeyTable
-from oas.config.table.scan import ScanTable
-from oas.db.conn import SQLITE_POOL
-from oas.ext import env
-from oas.ext.path import PathStr
 from ws_helpers import TEST_TOKEN, wait_until
 
 # No password is configured, so rule A admits the connection only with a
@@ -39,36 +33,6 @@ def receive_event(ws):
         dict: The decoded event
     """
     return msgspec.json.decode(ws.receive_bytes())
-
-
-@pytest.fixture
-def config_dir(tmp_path, monkeypatch):
-    """
-    Isolate the repository config directory, as tests/oas/config does: the
-    scan reads and writes ``config/*.db`` under ``env.PROJECT_ROOT``.
-
-    Yields:
-        PathStr: The temporary project root
-    """
-    root = PathStr.new(str(tmp_path))
-    monkeypatch.setattr(env, 'PROJECT_ROOT', root)
-    (tmp_path / 'config').mkdir(parents=True, exist_ok=True)
-
-    ConfigScan.singleton_clear()
-    ConfigScanSource.singleton_clear()
-    ScanTable.singleton_clear()
-    # the table must exist before the source scans (see tests/oas/config)
-    ScanTable().create_table()
-
-    yield root
-
-    ConfigScan.singleton_clear()
-    ConfigScanSource.singleton_clear()
-    ScanTable.singleton_clear()
-    for name in ('gui', 'oas1', 'oas2'):
-        ConfigTable.singleton_remove(name)
-        KeyTable.singleton_remove(name)
-        SQLITE_POOL.delete_file(str(root / 'config' / f'{name}.db'))
 
 
 def test_config_scan_carries_a_local_config_over_the_real_route(
