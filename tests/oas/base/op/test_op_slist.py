@@ -1,13 +1,14 @@
 """
-Tests for script.misc.op.slist
+Tests for oas.base.op.slist
 
 Slist is a list proxy that can behave like a small in-memory table. Alasio only
 uses it in alasio/assets_dev/parse.py and OAS currently has no caller, so these
 tests exist only to pin the API. Alasio has no reference tests for it.
 """
+
 import pytest
 
-from script.misc.op import Slist
+from oas.base.op import Slist
 
 
 class Row:
@@ -70,7 +71,9 @@ class TestSelect:
         assert [r.route for r in selected] == ['A', 'B']
 
     def test_select_multiple_attributes(self, rows):
-        assert [r.route for r in Slist(rows).select(domain='Combat', route='B')] == ['B']
+        assert [r.route for r in Slist(rows).select(domain='Combat', route='B')] == [
+            'B'
+        ]
 
     def test_select_no_match(self, rows):
         assert len(Slist(rows).select(domain='Nope')) == 0
@@ -90,7 +93,10 @@ class TestIndex:
 
 class TestTransform:
     def test_filter(self, rows):
-        assert [r.route for r in Slist(rows).filter(lambda r: r.value >= 2)] == ['B', 'A']
+        assert [r.route for r in Slist(rows).filter(lambda r: r.value >= 2)] == [
+            'B',
+            'A',
+        ]
 
     def test_get(self, rows):
         assert Slist(rows).get('route') == ['A', 'B', 'A']

@@ -1,15 +1,16 @@
 """
-Tests for script.misc.op.rng
+Tests for oas.base.op.rng
 
 Alasio has no reference tests for alasio/base/op. The behaviour pinned here is
 Alasio's, which differs from the copy in oas/base/utils/utils.py: random.randint
 is a closed interval [a, b] and a/b are rounded before drawing.
 """
+
 import random
 
 import pytest
 
-from script.misc.op import (
+from oas.base.op import (
     random_friendly_id,
     random_id,
     random_normal_distribution_int,
@@ -30,7 +31,7 @@ class TestRandomNormalDistributionInt:
             seen.append((a, b))
             return a
 
-        monkeypatch.setattr(random, "randint", fake_randint)
+        monkeypatch.setattr(random, 'randint', fake_randint)
         random_normal_distribution_int(1.4, 5.6)
         assert seen == [(1, 6)] * 3
 
@@ -41,7 +42,7 @@ class TestRandomNormalDistributionInt:
             seen.append((a, b))
             return b
 
-        monkeypatch.setattr(random, "randint", fake_randint)
+        monkeypatch.setattr(random, 'randint', fake_randint)
         assert random_normal_distribution_int(1, 5) == 5
         assert seen == [(1, 5)] * 3
 
@@ -53,7 +54,7 @@ class TestRandomNormalDistributionInt:
 
     def test_n_controls_the_number_of_draws(self, monkeypatch):
         seen = []
-        monkeypatch.setattr(random, "randint", lambda a, b: seen.append(1) or b)
+        monkeypatch.setattr(random, 'randint', lambda a, b: seen.append(1) or b)
         random_normal_distribution_int(1, 9, n=7)
         assert len(seen) == 7
 
@@ -76,7 +77,7 @@ class TestRandomRectanglePoint:
 
     def test_uses_closed_bounds(self, monkeypatch):
         # every draw returns the bottom-right corner
-        monkeypatch.setattr(random, "randint", lambda a, b: b)
+        monkeypatch.setattr(random, 'randint', lambda a, b: b)
         assert random_rectangle_point((10, 20, 30, 40)) == (30, 40)
 
 

@@ -5,7 +5,7 @@ from typing import List, Optional, Union
 import msgspec
 from typing_extensions import Annotated
 
-from script.misc.op import random_normal_distribution_int
+from oas.base.op import random_normal_distribution_int
 
 
 class ServerUpdateCondition(msgspec.Struct):
@@ -20,7 +20,9 @@ class ServerUpdateCondition(msgspec.Struct):
 
 
 TYPE_TIMEZONE_INPUT = Union[str, int, timedelta, timezone]
-TYPE_SERVER_UPDATE_INPUT = Union[str, int, List[str], ServerUpdateCondition, List[ServerUpdateCondition]]
+TYPE_SERVER_UPDATE_INPUT = Union[
+    str, int, List[str], ServerUpdateCondition, List[ServerUpdateCondition]
+]
 
 
 def parse_timezone(tz: TYPE_TIMEZONE_INPUT) -> timezone:
@@ -51,8 +53,10 @@ def parse_timezone(tz: TYPE_TIMEZONE_INPUT) -> timezone:
             try:
                 h = int(h)
                 m = int(m)
-            except (ValueError, TypeError):
-                raise ValueError(f'Failed to parse timezone as HH:MM, got {tz}') from None
+            except ValueError, TypeError:
+                raise ValueError(
+                    f'Failed to parse timezone as HH:MM, got {tz}'
+                ) from None
             if not -23 <= h <= 23:
                 raise ValueError(f'Timezone hour must within -23~23, got {tz}')
             if not 0 <= m <= 59:
@@ -62,8 +66,10 @@ def parse_timezone(tz: TYPE_TIMEZONE_INPUT) -> timezone:
             # "8" for timedelta(hours=8)
             try:
                 h = int(tz)
-            except (ValueError, TypeError):
-                raise ValueError(f'Failed to parse timezone as hour, got {tz}') from None
+            except ValueError, TypeError:
+                raise ValueError(
+                    f'Failed to parse timezone as hour, got {tz}'
+                ) from None
             if not -23 <= h <= 23:
                 raise ValueError(f'Timezone hour must within -23~23, got {tz}')
             return timezone(timedelta(hours=h))
@@ -135,10 +141,16 @@ def parse_server_update(update):
         if weekday is not None and monthday is not None:
             raise ValueError(f'Cannot have both weekday and monthday, got {update}')
         if weekday is not None and (hour is None or minute is None):
-            raise ValueError(f'Hour and minute must be set when weekday is set, got {update}')
+            raise ValueError(
+                f'Hour and minute must be set when weekday is set, got {update}'
+            )
         if monthday is not None and (hour is None or minute is None):
-            raise ValueError(f'Hour and minute must be set when monthday is set, got {update}')
-        return ServerUpdateCondition(weekday=weekday, monthday=monthday, hour=hour, minute=minute)
+            raise ValueError(
+                f'Hour and minute must be set when monthday is set, got {update}'
+            )
+        return ServerUpdateCondition(
+            weekday=weekday, monthday=monthday, hour=hour, minute=minute
+        )
 
     if isinstance(update, ServerUpdateCondition):
         return update
@@ -170,7 +182,10 @@ def parse_server_update_list(updates):
             out.append(update)
         if not out:
             raise ValueError(f'Empty server_update input: {updates}')
-        return sorted(out, key=lambda x: (x.monthday or 0, x.weekday or 0, x.hour or 0, x.minute or 0))
+        return sorted(
+            out,
+            key=lambda x: (x.monthday or 0, x.weekday or 0, x.hour or 0, x.minute or 0),
+        )
 
     if isinstance(updates, ServerUpdateCondition):
         return [updates]
@@ -244,12 +259,12 @@ def parse_second(second):
             if '.' in second:
                 try:
                     second = float(second)
-                except (ValueError, TypeError):
+                except ValueError, TypeError:
                     raise ValueError(f'Expect second numeric, got "{second}"') from None
             else:
                 try:
                     second = int(second)
-                except (ValueError, TypeError):
+                except ValueError, TypeError:
                     raise ValueError(f'Expect second numeric, got "{second}"') from None
             if second < 0:
                 raise ValueError(f'Second must >=0 , got {second}')
@@ -265,24 +280,32 @@ def parse_second(second):
         if '.' in low:
             try:
                 low = float(low)
-            except (ValueError, TypeError):
-                raise ValueError(f'Low bound and high bound must be numeric, got {second}') from None
+            except ValueError, TypeError:
+                raise ValueError(
+                    f'Low bound and high bound must be numeric, got {second}'
+                ) from None
         else:
             try:
                 low = int(low)
-            except (ValueError, TypeError):
-                raise ValueError(f'Low bound and high bound must be numeric, got {second}') from None
+            except ValueError, TypeError:
+                raise ValueError(
+                    f'Low bound and high bound must be numeric, got {second}'
+                ) from None
     if isinstance(high, str):
         if '.' in high:
             try:
                 high = float(high)
-            except (ValueError, TypeError):
-                raise ValueError(f'Low bound and high bound must be numeric, got {second}') from None
+            except ValueError, TypeError:
+                raise ValueError(
+                    f'Low bound and high bound must be numeric, got {second}'
+                ) from None
         else:
             try:
                 high = int(high)
-            except (ValueError, TypeError):
-                raise ValueError(f'Low bound and high bound must be numeric, got {second}') from None
+            except ValueError, TypeError:
+                raise ValueError(
+                    f'Low bound and high bound must be numeric, got {second}'
+                ) from None
     if low > high:
         raise ValueError(f'High bound must >= lower bound, got {second}')
     if low < 0 or high < 0:
@@ -304,8 +327,11 @@ def random_time(second, n=3, precision=3):
     """
     low, high = parse_second(second)
     if low < high:
-        multiply = 10 ** precision
-        value = random_normal_distribution_int(low * multiply, high * multiply, n) / multiply
+        multiply = 10**precision
+        value = (
+            random_normal_distribution_int(low * multiply, high * multiply, n)
+            / multiply
+        )
         return round(value, precision)
     else:
         return round(float(low), precision)
@@ -377,7 +403,7 @@ class ServerTime:
                         return dt
                     if direction == -1 and dt < now:
                         return dt
-            raise ValueError(f"Invalid monthday setting: {cond.monthday}")
+            raise ValueError(f'Invalid monthday setting: {cond.monthday}')
 
         # 2. 每周更新
         if cond.weekday is not None:
@@ -387,7 +413,9 @@ class ServerTime:
                 days_diff = (cond.weekday - current_wkday) % 7
             else:
                 days_diff = -((current_wkday - cond.weekday) % 7)
-            dt = now.replace(hour=h, minute=m, second=0, microsecond=0) + timedelta(days=days_diff)
+            dt = now.replace(hour=h, minute=m, second=0, microsecond=0) + timedelta(
+                days=days_diff
+            )
             # Note that we use `dt > now` to find occurrence in the future, and `dt <= now` for the past
             # Since now() removed microseconds, the real time is likely to passed `now`
             # so `now` is included in the past, and not included in the future

@@ -1,7 +1,8 @@
 """
-Tests for the script.misc.op package surface.
+Tests for the oas.base.op package surface.
 """
-import script.misc.op as op
+
+import oas.base.op as op
 
 
 EXPECTED = {

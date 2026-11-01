@@ -1,5 +1,5 @@
 class RGB(tuple):
-    def as_int(self, round_value=True) -> "RGB":
+    def as_int(self, round_value=True) -> 'RGB':
         """
         Ensure value are integer
         """
@@ -9,7 +9,7 @@ class RGB(tuple):
         else:
             return RGB((int(r), int(g), int(b)))
 
-    def as_uint8(self, round_value=True) -> "RGB":
+    def as_uint8(self, round_value=True) -> 'RGB':
         r, g, b = self
         if r < 0:
             r = 0

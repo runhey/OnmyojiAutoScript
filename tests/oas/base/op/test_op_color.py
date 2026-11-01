@@ -1,12 +1,13 @@
 """
-Tests for script.misc.op.color
+Tests for oas.base.op.color
 
 RGB is a tuple subclass with only as_int()/as_uint8(). Alasio has no reference
 tests for it.
 """
+
 import pytest
 
-from script.misc.op import RGB
+from oas.base.op import RGB
 
 
 class TestRGBIsATuple:

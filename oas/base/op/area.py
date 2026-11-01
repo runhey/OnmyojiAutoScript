@@ -1,13 +1,13 @@
 class Point(tuple):
     @classmethod
-    def zero(cls) -> "Point":
+    def zero(cls) -> 'Point':
         return cls((0, 0))
 
     @classmethod
-    def one(cls) -> "Point":
+    def one(cls) -> 'Point':
         return cls((1, 1))
 
-    def as_int(self, round_value=True) -> "Point":
+    def as_int(self, round_value=True) -> 'Point':
         """
         Ensure X Y are integer
         """
@@ -25,31 +25,31 @@ class Point(tuple):
     def y(self) -> int:
         return self[1]
 
-    def with_x(self, x: int) -> "Point":
+    def with_x(self, x: int) -> 'Point':
         """
         Set x
         """
         return Point((x, self[1]))
 
-    def with_y(self, y: int) -> "Point":
+    def with_y(self, y: int) -> 'Point':
         """
         Set y
         """
         return Point((self[0], y))
 
-    def move(self, vector: "Point") -> "Point":
+    def move(self, vector: 'Point') -> 'Point':
         """
         Move point
         """
         return Point((self[0] + vector[0], self[1] + vector[1]))
 
-    def move_x(self, value) -> "Point":
+    def move_x(self, value) -> 'Point':
         """
         Move point along X axis
         """
         return Point((self[0] + value, self[1]))
 
-    def move_y(self, value) -> "Point":
+    def move_y(self, value) -> 'Point':
         """
         Move point along Y axis
         """
@@ -129,7 +129,7 @@ class Point(tuple):
         """
         return (self[0] ** 2 + self[1] ** 2) ** 0.5
 
-    def normalize(self) -> "Point":
+    def normalize(self) -> 'Point':
         """
         Return a normalized point (unit vector)
         """
@@ -138,19 +138,19 @@ class Point(tuple):
             return Point((0, 0))
         return Point((self[0] / mag, self[1] / mag))
 
-    def dot(self, other: "Point") -> float:
+    def dot(self, other: 'Point') -> float:
         """
         Dot product with another point
         """
         return self[0] * other[0] + self[1] * other[1]
 
-    def cross(self, other: "Point") -> float:
+    def cross(self, other: 'Point') -> float:
         """
         2D cross product (returns scalar z-component)
         """
         return self[0] * other[1] - self[1] * other[0]
 
-    def is_in_screen(self, res: "tuple[int, int]") -> bool:
+    def is_in_screen(self, res: 'tuple[int, int]') -> bool:
         """
         Check if the point is within (0, 0, resolution_x - 1, resolution_y - 1)
         """
@@ -158,7 +158,7 @@ class Point(tuple):
         rx, ry = res
         return 0 <= px <= rx and 0 <= py <= ry
 
-    def is_in_area(self, area: "Area") -> bool:
+    def is_in_area(self, area: 'Area') -> bool:
         """
         Check if the point is within the area
         """
@@ -166,7 +166,7 @@ class Point(tuple):
         x1, y1, x2, y2 = area
         return x1 <= px <= x2 and y1 <= py <= y2
 
-    def limit_in_screen(self, res: "tuple[int, int]") -> "Point":
+    def limit_in_screen(self, res: 'tuple[int, int]') -> 'Point':
         """
         Limit area within (0, 0, resolution_x, resolution_y)
         """
@@ -182,7 +182,7 @@ class Point(tuple):
             py = ry
         return Point((px, py))
 
-    def limit_in_area(self, area: "Area") -> "Point":
+    def limit_in_area(self, area: 'Area') -> 'Point':
         """
         Limit point within area
         """
@@ -198,7 +198,7 @@ class Point(tuple):
             py = y2
         return Point((px, py))
 
-    def distance_to(self, target: "Point | Area") -> float:
+    def distance_to(self, target: 'Point | Area') -> float:
         """
         Euclidean distance to target
         For Area target, calculates distance to the closest point on the area
@@ -227,7 +227,7 @@ class Point(tuple):
             dy = py - ty
             return (dx * dx + dy * dy) ** 0.5
 
-    def distance_x_to(self, target: "Point | Area") -> int:
+    def distance_x_to(self, target: 'Point | Area') -> int:
         """
         X-axis distance to target
         For Area target, calculates X distance to the closest edge
@@ -248,7 +248,7 @@ class Point(tuple):
                 dx = -dx
             return dx
 
-    def distance_y_to(self, target: "Point | Area") -> int:
+    def distance_y_to(self, target: 'Point | Area') -> int:
         """
         Y-axis distance to target
         For Area target, calculates Y distance to the closest edge
@@ -269,7 +269,7 @@ class Point(tuple):
                 dy = -dy
             return dy
 
-    def manhattan_to(self, target: "Point | Area") -> int:
+    def manhattan_to(self, target: 'Point | Area') -> int:
         """
         Manhattan distance to target
         For Area target, calculates Manhattan distance to the closest point on the area
@@ -309,7 +309,7 @@ class Point(tuple):
                 dy = -dy
             return dx + dy
 
-    def to_positive(self, res: "tuple[int, int]") -> "Point":
+    def to_positive(self, res: 'tuple[int, int]') -> 'Point':
         """
         Convert negative indices to positive indices based on resolution
         Similar to Python's negative indexing for arrays
@@ -338,32 +338,34 @@ class Point(tuple):
 
 class Area(tuple):
     @classmethod
-    def zero(cls) -> "Area":
+    def zero(cls) -> 'Area':
         return cls((0, 0, 0, 0))
 
     @classmethod
-    def one(cls) -> "Area":
+    def one(cls) -> 'Area':
         return cls((1, 1, 1, 1))
 
-    def as_int(self, round_value=True) -> "Area":
+    def as_int(self, round_value=True) -> 'Area':
         """
         Ensure X Y are integer
         """
         x1, y1, x2, y2 = self
         if round_value:
-            return Area((int(round(x1)), int(round(y1)), int(round(x2)), int(round(y2))))
+            return Area(
+                (int(round(x1)), int(round(y1)), int(round(x2)), int(round(y2)))
+            )
         else:
             return Area((int(x1), int(y1), int(x2), int(y2)))
 
     @classmethod
-    def from_xywh(cls, xywh: "tuple[int, int, int, int]") -> "Area":
+    def from_xywh(cls, xywh: 'tuple[int, int, int, int]') -> 'Area':
         """
         Convert a xywh area to xyxy area
         """
         x, y, w, h = xywh
         return cls((x, y, x + w, y + h))
 
-    def to_xywh(self) -> "tuple[int, int, int, int]":
+    def to_xywh(self) -> 'tuple[int, int, int, int]':
         """
         Convert xyxy area to xywh format
         """
@@ -371,7 +373,7 @@ class Area(tuple):
         return x1, y1, x2 - x1, y2 - y1
 
     @classmethod
-    def from_size(cls, size: "tuple[int, int]") -> "Area":
+    def from_size(cls, size: 'tuple[int, int]') -> 'Area':
         """
         Convert size (x, y) to Area((0, 0, x, y))
         """
@@ -394,47 +396,47 @@ class Area(tuple):
     def y2(self) -> int:
         return self[3]
 
-    def with_x1(self, x: int) -> "Area":
+    def with_x1(self, x: int) -> 'Area':
         """
         Set left boundary (x1)
         """
         return Area((x, self[1], self[2], self[3]))
 
-    def with_y1(self, y: int) -> "Area":
+    def with_y1(self, y: int) -> 'Area':
         """
         Set top boundary (y1)
         """
         return Area((self[0], y, self[2], self[3]))
 
-    def with_x2(self, x: int) -> "Area":
+    def with_x2(self, x: int) -> 'Area':
         """
         Set right boundary (x2)
         """
         return Area((self[0], self[1], x, self[3]))
 
-    def with_y2(self, y: int) -> "Area":
+    def with_y2(self, y: int) -> 'Area':
         """
         Set bottom boundary (y2)
         """
         return Area((self[0], self[1], self[2], y))
 
     @property
-    def upperleft(self) -> "Point":
+    def upperleft(self) -> 'Point':
         return Point((self[0], self[1]))
 
     @property
-    def upperright(self) -> "Point":
+    def upperright(self) -> 'Point':
         return Point((self[2], self[1]))
 
     @property
-    def bottomleft(self) -> "Point":
+    def bottomleft(self) -> 'Point':
         return Point((self[0], self[3]))
 
     @property
-    def bottomright(self) -> "Point":
+    def bottomright(self) -> 'Point':
         return Point((self[2], self[3]))
 
-    def with_upperleft(self, point: "Point") -> "Area":
+    def with_upperleft(self, point: 'Point') -> 'Area':
         """
         Set upper-left corner position, maintaining size
         """
@@ -444,7 +446,7 @@ class Area(tuple):
         height = y2 - y1
         return Area((px, py, px + width, py + height))
 
-    def with_upperright(self, point: "Point") -> "Area":
+    def with_upperright(self, point: 'Point') -> 'Area':
         """
         Set upper-right corner position, maintaining size
         """
@@ -454,7 +456,7 @@ class Area(tuple):
         height = y2 - y1
         return Area((px - width, py, px, py + height))
 
-    def with_bottomleft(self, point: "Point") -> "Area":
+    def with_bottomleft(self, point: 'Point') -> 'Area':
         """
         Set bottom-left corner position, maintaining size
         """
@@ -464,7 +466,7 @@ class Area(tuple):
         height = y2 - y1
         return Area((px, py - height, px + width, py))
 
-    def with_bottomright(self, point: "Point") -> "Area":
+    def with_bottomright(self, point: 'Point') -> 'Area':
         """
         Set bottom-right corner position, maintaining size
         """
@@ -474,7 +476,7 @@ class Area(tuple):
         height = y2 - y1
         return Area((px - width, py - height, px, py))
 
-    def with_center(self, point: "Point") -> "Area":
+    def with_center(self, point: 'Point') -> 'Area':
         """
         Set center position, maintaining size
         """
@@ -482,7 +484,9 @@ class Area(tuple):
         cx, cy = point
         half_width = (x2 - x1) // 2
         half_height = (y2 - y1) // 2
-        return Area((cx - half_width, cy - half_height, cx + half_width, cy + half_height))
+        return Area(
+            (cx - half_width, cy - half_height, cx + half_width, cy + half_height)
+        )
 
     @property
     def valid(self) -> bool:
@@ -492,24 +496,41 @@ class Area(tuple):
         x1, y1, x2, y2 = self
         return x2 > x1 and y2 > y1
 
-    def is_in_screen(self, res: "tuple[int, int]") -> bool:
+    def is_in_screen(self, res: 'tuple[int, int]') -> bool:
         """
         Check if area is within (0, 0, resolution_x, resolution_y)
         """
         x1, y1, x2, y2 = self
         rx, ry = res
-        return 0 <= x1 and 0 <= y1 and 0 <= x2 and 0 <= y2 and x1 <= rx and y1 <= ry and x2 <= rx and y2 <= ry
+        return (
+            0 <= x1
+            and 0 <= y1
+            and 0 <= x2
+            and 0 <= y2
+            and x1 <= rx
+            and y1 <= ry
+            and x2 <= rx
+            and y2 <= ry
+        )
 
-    def is_in_area(self, area: "Area") -> bool:
+    def is_in_area(self, area: 'Area') -> bool:
         """
         Check if area is within another area
         """
         x1, y1, x2, y2 = self
         ax1, ay1, ax2, ay2 = area
-        return (ax1 <= x1 and ay1 <= y1 and ax1 <= x2 and ay1 <= y2
-                and x1 <= ax2 and y1 <= ay2 and x2 <= ax2 and y2 <= ay2)
+        return (
+            ax1 <= x1
+            and ay1 <= y1
+            and ax1 <= x2
+            and ay1 <= y2
+            and x1 <= ax2
+            and y1 <= ay2
+            and x2 <= ax2
+            and y2 <= ay2
+        )
 
-    def limit_in_screen(self, res: "tuple[int, int]") -> "Area":
+    def limit_in_screen(self, res: 'tuple[int, int]') -> 'Area':
         """
         Limit area within (0, 0, resolution_x, resolution_y)
         """
@@ -533,7 +554,7 @@ class Area(tuple):
             y2 = ry
         return Area((x1, y1, x2, y2))
 
-    def limit_in_area(self, area: "Area") -> "Area":
+    def limit_in_area(self, area: 'Area') -> 'Area':
         """
         Limit area within another area
         """
@@ -557,7 +578,7 @@ class Area(tuple):
             y2 = ay2
         return Area((x1, y1, x2, y2))
 
-    def is_intersect_area(self, area: "Area") -> bool:
+    def is_intersect_area(self, area: 'Area') -> bool:
         """
         Check if this area intersects with another area
         https://www.yiiven.cn/rect-is-intersection.html
@@ -572,7 +593,7 @@ class Area(tuple):
             diff_y = -diff_y
         return diff_x <= x2 - x1 + ax2 - ax1 and diff_y <= y2 - y1 + ay2 - ay1
 
-    def move(self, vector: "Point") -> "Area":
+    def move(self, vector: 'Point') -> 'Area':
         """
         Moves the area by the given vector
         """
@@ -580,21 +601,21 @@ class Area(tuple):
         vx, vy = vector
         return Area((x1 + vx, y1 + vy, x2 + vx, y2 + vy))
 
-    def move_x(self, value) -> "Area":
+    def move_x(self, value) -> 'Area':
         """
         Move area along X axis
         """
         x1, y1, x2, y2 = self
         return Area((x1 + value, y1, x2 + value, y2))
 
-    def move_y(self, value) -> "Area":
+    def move_y(self, value) -> 'Area':
         """
         Move area along Y axis
         """
         x1, y1, x2, y2 = self
         return Area((x1, y1 + value, x2, y2 + value))
 
-    def move_onto_upperleft(self, area) -> "Area":
+    def move_onto_upperleft(self, area) -> 'Area':
         """
         Move area onto the upperleft of another area
         Equivalent to:
@@ -604,7 +625,7 @@ class Area(tuple):
         ax1, ay1, _, _ = area
         return Area((x1 + ax1, y1 + ay1, x2 + ax1, y2 + ay1))
 
-    def inset(self, value: int) -> "Area":
+    def inset(self, value: int) -> 'Area':
         """
         Shrinks the area by padding amount on all sides
         Note that you may get an invalid area after inset
@@ -612,14 +633,14 @@ class Area(tuple):
         x1, y1, x2, y2 = self
         return Area((x1 + value, y1 + value, x2 - value, y2 - value))
 
-    def outset(self, value: int) -> "Area":
+    def outset(self, value: int) -> 'Area':
         """
         Expands the area by padding amount on all sides
         """
         x1, y1, x2, y2 = self
         return Area((x1 - value, y1 - value, x2 + value, y2 + value))
 
-    def inset_xy(self, point: "Point | tuple[int, int]") -> "Area":
+    def inset_xy(self, point: 'Point | tuple[int, int]') -> 'Area':
         """
         Shrinks the area by padding X Y
         Note that you may get an invalid area after inset
@@ -628,7 +649,7 @@ class Area(tuple):
         px, py = point
         return Area((x1 + px, y1 + py, x2 - px, y2 - py))
 
-    def outset_xy(self, point: "Point | tuple[int, int]") -> "Area":
+    def outset_xy(self, point: 'Point | tuple[int, int]') -> 'Area':
         """
         Expands the area by padding X Y
         """
@@ -636,15 +657,15 @@ class Area(tuple):
         px, py = point
         return Area((x1 - px, y1 - py, x2 + px, y2 + py))
 
-    def size(self) -> "Point":
+    def size(self) -> 'Point':
         x1, y1, x2, y2 = self
         return Point((x2 - x1, y2 - y1))
 
-    def center(self) -> "Point":
+    def center(self) -> 'Point':
         x1, y1, x2, y2 = self
         return Point(((x1 + x2) // 2, (y1 + y2) // 2))
 
-    def distance_to(self, target: "Point | Area") -> float:
+    def distance_to(self, target: 'Point | Area') -> float:
         """
         Euclidean distance to target
         For Point target, calculates distance to the closest point on this area
@@ -708,7 +729,7 @@ class Area(tuple):
 
             return (dx * dx + dy * dy) ** 0.5
 
-    def distance_x_to(self, target: "Point | Area") -> int:
+    def distance_x_to(self, target: 'Point | Area') -> int:
         """
         X-axis distance to target
         For Point target, calculates X distance to the closest edge
@@ -733,7 +754,7 @@ class Area(tuple):
             else:
                 return 0
 
-    def distance_y_to(self, target: "Point | Area") -> int:
+    def distance_y_to(self, target: 'Point | Area') -> int:
         """
         Y-axis distance to target
         For Point target, calculates Y distance to the closest edge
@@ -758,7 +779,7 @@ class Area(tuple):
             else:
                 return 0
 
-    def manhattan_to(self, target: "Point | Area") -> int:
+    def manhattan_to(self, target: 'Point | Area') -> int:
         """
         Manhattan distance to target
         For Point target, calculates Manhattan distance to the closest point on this area
@@ -827,7 +848,7 @@ class Area(tuple):
 
             return dx + dy
 
-    def align_left(self, x: int) -> "Area":
+    def align_left(self, x: int) -> 'Area':
         """
         Align the left edge (x1) to the specified x coordinate, maintaining size
         """
@@ -835,7 +856,7 @@ class Area(tuple):
         width = x2 - x1
         return Area((x, y1, x + width, y2))
 
-    def align_right(self, x: int) -> "Area":
+    def align_right(self, x: int) -> 'Area':
         """
         Align the right edge (x2) to the specified x coordinate, maintaining size
         """
@@ -843,7 +864,7 @@ class Area(tuple):
         width = x2 - x1
         return Area((x - width, y1, x, y2))
 
-    def align_top(self, y: int) -> "Area":
+    def align_top(self, y: int) -> 'Area':
         """
         Align the top edge (y1) to the specified y coordinate, maintaining size
         """
@@ -851,7 +872,7 @@ class Area(tuple):
         height = y2 - y1
         return Area((x1, y, x2, y + height))
 
-    def align_bottom(self, y: int) -> "Area":
+    def align_bottom(self, y: int) -> 'Area':
         """
         Align the bottom edge (y2) to the specified y coordinate, maintaining size
         """
@@ -859,7 +880,7 @@ class Area(tuple):
         height = y2 - y1
         return Area((x1, y - height, x2, y))
 
-    def align_center_x(self, x: int) -> "Area":
+    def align_center_x(self, x: int) -> 'Area':
         """
         Align the horizontal center to the specified x coordinate, maintaining size
         """
@@ -867,7 +888,7 @@ class Area(tuple):
         half_width = (x2 - x1) // 2
         return Area((x - half_width, y1, x - half_width + (x2 - x1), y2))
 
-    def align_center_y(self, y: int) -> "Area":
+    def align_center_y(self, y: int) -> 'Area':
         """
         Align the vertical center to the specified y coordinate, maintaining size
         """
@@ -875,7 +896,7 @@ class Area(tuple):
         half_height = (y2 - y1) // 2
         return Area((x1, y - half_height, x2, y - half_height + (y2 - y1)))
 
-    def align_center(self, x: int, y: int) -> "Area":
+    def align_center(self, x: int, y: int) -> 'Area':
         """
         Align the center to the specified (x, y) coordinate, maintaining size
         Equivalent to with_center(Point((x, y)))
@@ -885,7 +906,7 @@ class Area(tuple):
         half_height = (y2 - y1) // 2
         return Area((x - half_width, y - half_height, x + half_width, y + half_height))
 
-    def to_positive(self, res: "tuple[int, int]") -> "Area":
+    def to_positive(self, res: 'tuple[int, int]') -> 'Area':
         """
         Convert negative indices to positive indices based on resolution
         Similar to Python's negative indexing for arrays

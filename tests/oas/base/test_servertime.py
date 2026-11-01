@@ -4,69 +4,77 @@ from unittest.mock import patch
 
 import pytest
 
-from script.misc import servertime
-from script.misc.servertime import (
-    ServerTime, ServerUpdateCondition, nearest_future, parse_second, parse_server_update, parse_server_update_list,
-    parse_timezone, random_time
+from oas.base import servertime
+from oas.base.servertime import (
+    ServerTime,
+    ServerUpdateCondition,
+    nearest_future,
+    parse_second,
+    parse_server_update,
+    parse_server_update_list,
+    parse_timezone,
+    random_time,
 )
 from oas.testing.patch_time import PatchTime
 
 
 class TestParseTimezone:
-    @pytest.mark.parametrize("input_val, expected_offset_hours, expected_offset_minutes", [
-        # Test cases for timezone objects
-        (timezone.utc, 0, 0),
-        (timezone(timedelta(hours=8)), 8, 0),
-
-        # Test cases for timedelta objects
-        (timedelta(hours=-5), -5, 0),
-        (timedelta(hours=3, minutes=30), 3, 30),
-
-        # Test cases for integers
-        (8, 8, 0),
-        (-7, -7, 0),
-        (0, 0, 0),
-
-        # Test cases for strings (HH:MM format)
-        ("09:30", 9, 30),
-        ("-05:00", -5, 0),
-        ("0:0", 0, 0),
-
-        # Test cases for strings (Single integer format)
-        ("8", 8, 0),
-        ("-7", -7, 0),
-        ("0", 0, 0),
-    ])
-    def test_parse_timezone_success(self, input_val, expected_offset_hours, expected_offset_minutes):
+    @pytest.mark.parametrize(
+        'input_val, expected_offset_hours, expected_offset_minutes',
+        [
+            # Test cases for timezone objects
+            (timezone.utc, 0, 0),
+            (timezone(timedelta(hours=8)), 8, 0),
+            # Test cases for timedelta objects
+            (timedelta(hours=-5), -5, 0),
+            (timedelta(hours=3, minutes=30), 3, 30),
+            # Test cases for integers
+            (8, 8, 0),
+            (-7, -7, 0),
+            (0, 0, 0),
+            # Test cases for strings (HH:MM format)
+            ('09:30', 9, 30),
+            ('-05:00', -5, 0),
+            ('0:0', 0, 0),
+            # Test cases for strings (Single integer format)
+            ('8', 8, 0),
+            ('-7', -7, 0),
+            ('0', 0, 0),
+        ],
+    )
+    def test_parse_timezone_success(
+        self, input_val, expected_offset_hours, expected_offset_minutes
+    ):
         """Test successful conversion for all supported types and formats."""
         result = parse_timezone(input_val)
         assert isinstance(result, timezone)
 
-        expected_delta = timedelta(hours=expected_offset_hours, minutes=expected_offset_minutes)
+        expected_delta = timedelta(
+            hours=expected_offset_hours, minutes=expected_offset_minutes
+        )
         assert result.utcoffset(None) == expected_delta
 
-    @pytest.mark.parametrize("invalid_input, match_msg", [
-        # timedelta out of range
-        (timedelta(hours=30), "offset must be a timedelta strictly between"),
-
-        # Integer out of range
-        (24, "Timezone hour must within -23~23"),
-        (-25, "Timezone hour must within -23~23"),
-
-        # String HH:MM out of range or invalid
-        ("25:00", "Timezone hour must within -23~23"),
-        ("05:61", "Timezone hour must within 0~59"),
-        ("abc:00", "Failed to parse timezone as HH:MM"),
-
-        # String integer out of range or invalid
-        ("24", "Timezone hour must within -23~23"),
-        ("xyz", "Failed to parse timezone as hour"),
-
-        # Invalid types
-        (1.5, "Invalid timezone input"),
-        (None, "Invalid timezone input"),
-        ([], "Invalid timezone input"),
-    ])
+    @pytest.mark.parametrize(
+        'invalid_input, match_msg',
+        [
+            # timedelta out of range
+            (timedelta(hours=30), 'offset must be a timedelta strictly between'),
+            # Integer out of range
+            (24, 'Timezone hour must within -23~23'),
+            (-25, 'Timezone hour must within -23~23'),
+            # String HH:MM out of range or invalid
+            ('25:00', 'Timezone hour must within -23~23'),
+            ('05:61', 'Timezone hour must within 0~59'),
+            ('abc:00', 'Failed to parse timezone as HH:MM'),
+            # String integer out of range or invalid
+            ('24', 'Timezone hour must within -23~23'),
+            ('xyz', 'Failed to parse timezone as hour'),
+            # Invalid types
+            (1.5, 'Invalid timezone input'),
+            (None, 'Invalid timezone input'),
+            ([], 'Invalid timezone input'),
+        ],
+    )
     def test_parse_timezone_exceptions(self, invalid_input, match_msg):
         """Test that invalid inputs raise ValueError with appropriate messages."""
         with pytest.raises(ValueError, match=match_msg):
@@ -79,38 +87,47 @@ class TestParseTimezone:
 
 
 class TestParseServerUpdate:
-    @pytest.mark.parametrize("input_val, expected", [
-        ("12:34", ServerUpdateCondition(hour=12, minute=34)),
-        ("18", ServerUpdateCondition(hour=18, minute=0)),
-        (18, ServerUpdateCondition(hour=18, minute=0)),
-        ("weekday1-04:00", ServerUpdateCondition(weekday=1, hour=4, minute=0)),
-        ("monthday1-04:00", ServerUpdateCondition(monthday=1, hour=4, minute=0)),
-        (" weekday 2 - 05 : 30 ", ServerUpdateCondition(weekday=2, hour=5, minute=30)),
-    ])
+    @pytest.mark.parametrize(
+        'input_val, expected',
+        [
+            ('12:34', ServerUpdateCondition(hour=12, minute=34)),
+            ('18', ServerUpdateCondition(hour=18, minute=0)),
+            (18, ServerUpdateCondition(hour=18, minute=0)),
+            ('weekday1-04:00', ServerUpdateCondition(weekday=1, hour=4, minute=0)),
+            ('monthday1-04:00', ServerUpdateCondition(monthday=1, hour=4, minute=0)),
+            (
+                ' weekday 2 - 05 : 30 ',
+                ServerUpdateCondition(weekday=2, hour=5, minute=30),
+            ),
+        ],
+    )
     def test_parse_server_update_success(self, input_val, expected):
         """Test valid inputs for parse_server_update."""
         assert parse_server_update(input_val) == expected
 
-    @pytest.mark.parametrize("invalid_input, match_msg", [
-        (25, "ServerUpdate hour must within 0~23"),
-        (-1, "ServerUpdate hour must within 0~23"),
-        ("", "Empty server_update"),
-        (" ", "Empty server_update"),
-        ("weekday0-04:00", "Weekday must within 1~7"),
-        ("weekday8-04:00", "Weekday must within 1~7"),
-        ("weekday-04:00", "Failed to parse weekday"),
-        ("monthday0-04:00", "Monthday must within 1~31"),
-        ("monthday32-04:00", "Monthday must within 1~31"),
-        ("monthday-04:00", "Failed to parse monthday"),
-        ("12:60", "Minute must within 0~59"),
-        ("24:00", "Hour must within 0~23"),
-        ("abc:00", "Failed to parse time"),
-        ("weekday1", "Hour and minute must be set"),
-        ("monthday1", "Hour and minute must be set"),
-        ("weekday1-monthday1-04:00", "Cannot have both weekday and monthday"),
-        ("-", "Failed to parse time"),
-        (None, "Invalid server_update input"),
-    ])
+    @pytest.mark.parametrize(
+        'invalid_input, match_msg',
+        [
+            (25, 'ServerUpdate hour must within 0~23'),
+            (-1, 'ServerUpdate hour must within 0~23'),
+            ('', 'Empty server_update'),
+            (' ', 'Empty server_update'),
+            ('weekday0-04:00', 'Weekday must within 1~7'),
+            ('weekday8-04:00', 'Weekday must within 1~7'),
+            ('weekday-04:00', 'Failed to parse weekday'),
+            ('monthday0-04:00', 'Monthday must within 1~31'),
+            ('monthday32-04:00', 'Monthday must within 1~31'),
+            ('monthday-04:00', 'Failed to parse monthday'),
+            ('12:60', 'Minute must within 0~59'),
+            ('24:00', 'Hour must within 0~23'),
+            ('abc:00', 'Failed to parse time'),
+            ('weekday1', 'Hour and minute must be set'),
+            ('monthday1', 'Hour and minute must be set'),
+            ('weekday1-monthday1-04:00', 'Cannot have both weekday and monthday'),
+            ('-', 'Failed to parse time'),
+            (None, 'Invalid server_update input'),
+        ],
+    )
     def test_parse_server_update_exceptions(self, invalid_input, match_msg):
         """Test invalid inputs for parse_server_update."""
         with pytest.raises(ValueError, match=match_msg):
@@ -120,20 +137,24 @@ class TestParseServerUpdate:
 class TestParseServerUpdateList:
     def test_parse_server_update_list_success(self):
         # Single input
-        assert parse_server_update_list("12:00") == [ServerUpdateCondition(hour=12, minute=0)]
-        assert parse_server_update_list(12) == [ServerUpdateCondition(hour=12, minute=0)]
+        assert parse_server_update_list('12:00') == [
+            ServerUpdateCondition(hour=12, minute=0)
+        ]
+        assert parse_server_update_list(12) == [
+            ServerUpdateCondition(hour=12, minute=0)
+        ]
 
         # List input
-        updates = ["18:00", "04:00"]
+        updates = ['18:00', '04:00']
         expected = [
             ServerUpdateCondition(hour=4, minute=0),
-            ServerUpdateCondition(hour=18, minute=0)
+            ServerUpdateCondition(hour=18, minute=0),
         ]
         assert parse_server_update_list(updates) == expected
 
         # Weekday/Monthday sorting
         # Daily < Weekly < Monthly
-        updates = ["monthday2-04:00", "weekday1-04:00", "04:00"]
+        updates = ['monthday2-04:00', 'weekday1-04:00', '04:00']
         expected = [
             ServerUpdateCondition(hour=4, minute=0),
             ServerUpdateCondition(weekday=1, hour=4, minute=0),
@@ -142,16 +163,16 @@ class TestParseServerUpdateList:
         assert parse_server_update_list(updates) == expected
 
     def test_parse_server_update_list_exceptions(self):
-        with pytest.raises(ValueError, match="Empty server_update input"):
+        with pytest.raises(ValueError, match='Empty server_update input'):
             parse_server_update_list([])
         # Note: None input is caught in parse_server_update
-        with pytest.raises(ValueError, match="Invalid server_update input"):
+        with pytest.raises(ValueError, match='Invalid server_update input'):
             parse_server_update_list(None)
 
 
 class TestNearestFuture:
     def test_empty_list_raises_error(self):
-        with pytest.raises(ValueError, match="Empty future list"):
+        with pytest.raises(ValueError, match='Empty future list'):
             nearest_future([])
 
     def test_single_element(self):
@@ -176,38 +197,43 @@ class TestNearestFuture:
 
 
 class TestParseSecond:
-    @pytest.mark.parametrize("input_val, expected", [
-        (3, (3, 3)),
-        (0, (0, 0)),
-        (10.5, (10.5, 10.5)),
-        (0.5, (0.5, 0.5)),
-        ("3", (3, 3)),
-        (" 10 ", (10, 10)),
-        ("0.1~0.2", (0.1, 0.2)),
-        ("1.5, 2.5", (1.5, 2.5)),
-        ((1, 4), (1, 4)),
-        ([5, 10], (5, 10)),
-        ((1.5, 2.5), (1.5, 2.5)),
-        ([0.5, 1.5], (0.5, 1.5)),
-        ("10~30", (10, 30)),
-        ("10, 30", (10, 30)),
-        ("10-30", (10, 30)),
-    ])
+    @pytest.mark.parametrize(
+        'input_val, expected',
+        [
+            (3, (3, 3)),
+            (0, (0, 0)),
+            (10.5, (10.5, 10.5)),
+            (0.5, (0.5, 0.5)),
+            ('3', (3, 3)),
+            (' 10 ', (10, 10)),
+            ('0.1~0.2', (0.1, 0.2)),
+            ('1.5, 2.5', (1.5, 2.5)),
+            ((1, 4), (1, 4)),
+            ([5, 10], (5, 10)),
+            ((1.5, 2.5), (1.5, 2.5)),
+            ([0.5, 1.5], (0.5, 1.5)),
+            ('10~30', (10, 30)),
+            ('10, 30', (10, 30)),
+            ('10-30', (10, 30)),
+        ],
+    )
     def test_parse_second_valid(self, input_val, expected):
         assert parse_second(input_val) == expected
 
     def test_parse_second_exceptions(self):
-        with pytest.raises(ValueError, match="Second must >=0"):
+        with pytest.raises(ValueError, match='Second must >=0'):
             parse_second(-5)
-        with pytest.raises(ValueError, match="Second must >=0"):
-            parse_second("-10")
-        with pytest.raises(ValueError, match="Expect format"):
+        with pytest.raises(ValueError, match='Second must >=0'):
+            parse_second('-10')
+        with pytest.raises(ValueError, match='Expect format'):
             parse_second([1])
-        with pytest.raises(ValueError, match="High bound must >= lower bound"):
-            parse_second("30-10")
-        with pytest.raises(ValueError, match="Low bound and high bound must be numeric"):
-            parse_second("10-abc")
-        with pytest.raises(ValueError, match="Invalid second input"):
+        with pytest.raises(ValueError, match='High bound must >= lower bound'):
+            parse_second('30-10')
+        with pytest.raises(
+            ValueError, match='Low bound and high bound must be numeric'
+        ):
+            parse_second('10-abc')
+        with pytest.raises(ValueError, match='Invalid second input'):
             parse_second(None)
 
 
@@ -249,8 +275,8 @@ class TestNow:
         with PatchTime(server_dt):
             result = server.now()
             assert result.weekday() == 5, (
-                f"Expected weekday=5 (Saturday) in server tz, got {result.weekday()}. "
-                f"If local timezone (UTC) were used, weekday would be {utc_dt.weekday()}"
+                f'Expected weekday=5 (Saturday) in server tz, got {result.weekday()}. '
+                f'If local timezone (UTC) were used, weekday would be {utc_dt.weekday()}'
             )
 
 
@@ -351,7 +377,7 @@ class TestGetOccurrence:
 
     def test_invalid_monthday(self, server):
         cond = ServerUpdateCondition(monthday=100, hour=9, minute=0)
-        with pytest.raises(ValueError, match="Invalid monthday setting"):
+        with pytest.raises(ValueError, match='Invalid monthday setting'):
             server._get_occurrence(cond, server.now())
 
     def test_minutes_only(self, server):
@@ -449,7 +475,9 @@ class TestGetNextUpdate:
         ]
         with patch.object(ServerTime, 'now', return_value=now):
             next_update = server.get_next_update(updates)
-            assert to_utc(next_update) == to_utc(datetime(2023, 1, 1, 12, 0, tzinfo=server.tz))
+            assert to_utc(next_update) == to_utc(
+                datetime(2023, 1, 1, 12, 0, tzinfo=server.tz)
+            )
 
     def test_empty_raises_error(self, server):
         """Raises when all conditions produce no candidates."""
@@ -471,7 +499,9 @@ class TestGetLastUpdate:
         ]
         with patch.object(ServerTime, 'now', return_value=now):
             last_update = server.get_last_update(updates)
-            assert to_utc(last_update) == to_utc(datetime(2022, 12, 31, 12, 0, tzinfo=server.tz))
+            assert to_utc(last_update) == to_utc(
+                datetime(2022, 12, 31, 12, 0, tzinfo=server.tz)
+            )
 
     def test_empty_raises_error(self, server):
         """Raises when all conditions produce no candidates."""
@@ -494,7 +524,7 @@ class TestGetDeltaToUpdate:
         # Nearest is 12:00 → delta = +2h
         now = datetime(2023, 1, 1, 10, 0, tzinfo=server.tz)
         with patch.object(ServerTime, 'now', return_value=now):
-            delta = server.get_delta_to_update("00:00, 12:00")
+            delta = server.get_delta_to_update('00:00, 12:00')
             assert delta is not None
             assert delta.total_seconds() == 2 * 3600  # +2 hours
 
@@ -508,7 +538,7 @@ class TestGetDeltaToUpdate:
         # Nearest is 12:00 → delta = -1h
         now = datetime(2023, 1, 1, 13, 0, tzinfo=server.tz)
         with patch.object(ServerTime, 'now', return_value=now):
-            delta = server.get_delta_to_update("00:00, 12:00")
+            delta = server.get_delta_to_update('00:00, 12:00')
             assert delta is not None
             assert delta.total_seconds() == -1 * 3600  # -1 hour
 
@@ -522,7 +552,7 @@ class TestGetDeltaToUpdate:
         # Both are 6h away; the first in the candidate list wins.
         now = datetime(2023, 1, 1, 6, 0, tzinfo=server.tz)
         with patch.object(ServerTime, 'now', return_value=now):
-            delta = server.get_delta_to_update("00:00, 12:00")
+            delta = server.get_delta_to_update('00:00, 12:00')
             assert delta is not None
             assert abs(delta.total_seconds()) == 6 * 3600  # 6 hours
 
@@ -550,16 +580,33 @@ class TestGetDeltaToUpdate:
 
 
 class TestServerUpdateComplex:
-    @pytest.mark.parametrize("now_time, expected_next, expected_last", [
-        # Server updates at 00:00, 12:00, 18:00
-        # Scenario 1: 02:30
-        (datetime(2026, 5, 10, 2, 30), datetime(2026, 5, 10, 12, 0), datetime(2026, 5, 10, 0, 0)),
-        # Scenario 2: 14:30
-        (datetime(2026, 5, 10, 14, 30), datetime(2026, 5, 10, 18, 0), datetime(2026, 5, 10, 12, 0)),
-        # Scenario 3: 21:30
-        (datetime(2026, 5, 10, 21, 30), datetime(2026, 5, 11, 0, 0), datetime(2026, 5, 10, 18, 0)),
-    ])
-    def test_multiple_daily_updates(self, server, now_time, expected_next, expected_last):
+    @pytest.mark.parametrize(
+        'now_time, expected_next, expected_last',
+        [
+            # Server updates at 00:00, 12:00, 18:00
+            # Scenario 1: 02:30
+            (
+                datetime(2026, 5, 10, 2, 30),
+                datetime(2026, 5, 10, 12, 0),
+                datetime(2026, 5, 10, 0, 0),
+            ),
+            # Scenario 2: 14:30
+            (
+                datetime(2026, 5, 10, 14, 30),
+                datetime(2026, 5, 10, 18, 0),
+                datetime(2026, 5, 10, 12, 0),
+            ),
+            # Scenario 3: 21:30
+            (
+                datetime(2026, 5, 10, 21, 30),
+                datetime(2026, 5, 11, 0, 0),
+                datetime(2026, 5, 10, 18, 0),
+            ),
+        ],
+    )
+    def test_multiple_daily_updates(
+        self, server, now_time, expected_next, expected_last
+    ):
         """
         Test multiple daily updates (00:00, 12:00, 18:00) at different times of the day.
         """
@@ -567,45 +614,65 @@ class TestServerUpdateComplex:
         expected_next = expected_next.replace(tzinfo=server.tz)
         expected_last = expected_last.replace(tzinfo=server.tz)
 
-        updates = "00:00, 12:00, 18:00"
+        updates = '00:00, 12:00, 18:00'
         with patch.object(ServerTime, 'now', return_value=now_time):
             assert to_utc(server.get_next_update(updates)) == to_utc(expected_next)
             assert to_utc(server.get_last_update(updates)) == to_utc(expected_last)
 
-    @pytest.mark.parametrize("now_time, expected_next, expected_last", [
-        # Server updates at 00:00 (Daily) and Mon 04:00 (Weekly)
-        # In May 2026:
-        # 1st is Friday
-        # 4th is Monday
-        # 11th, 18th, 25th are Mondays
-        # 31st is Sunday
-
-        # 1. May 1st 02:30 (Friday)
-        # Next: May 2nd 00:00 (min of 2nd 00:00 and 4th 04:00)
-        # Last: May 1st 00:00 (max of 1st 00:00 and Apr 27th 04:00)
-        (datetime(2026, 5, 1, 2, 30), datetime(2026, 5, 2, 0, 0), datetime(2026, 5, 1, 0, 0)),
-
-        # 2. May 1st 09:30 (Friday)
-        # Next: May 2nd 00:00
-        # Last: May 1st 00:00
-        (datetime(2026, 5, 1, 9, 30), datetime(2026, 5, 2, 0, 0), datetime(2026, 5, 1, 0, 0)),
-
-        # 3. May 25th 23:30 (Monday)
-        # Next: May 26th 00:00 (min of 26th 00:00 and Jun 1st 04:00)
-        # Last: May 25th 04:00 (max of 25th 00:00 and 25th 04:00)
-        (datetime(2026, 5, 25, 23, 30), datetime(2026, 5, 26, 0, 0), datetime(2026, 5, 25, 4, 0)),
-
-        # 4. May 26th 02:30 (Tuesday)
-        # Next: May 27th 00:00 (min of 27th 00:00 and Jun 1st 04:00)
-        # Last: May 26th 00:00 (max of 26th 00:00 and 25th 04:00)
-        (datetime(2026, 5, 26, 2, 30), datetime(2026, 5, 27, 0, 0), datetime(2026, 5, 26, 0, 0)),
-
-        # 5. May 31st 23:30 (Sunday)
-        # Next: Jun 1st 00:00 (min of Jun 1st 00:00 and Jun 1st 04:00)
-        # Last: May 31st 00:00 (max of May 31st 00:00 and May 25th 04:00)
-        (datetime(2026, 5, 31, 23, 30), datetime(2026, 6, 1, 0, 0), datetime(2026, 5, 31, 0, 0)),
-    ])
-    def test_mixed_daily_weekly_updates(self, server, now_time, expected_next, expected_last):
+    @pytest.mark.parametrize(
+        'now_time, expected_next, expected_last',
+        [
+            # Server updates at 00:00 (Daily) and Mon 04:00 (Weekly)
+            # In May 2026:
+            # 1st is Friday
+            # 4th is Monday
+            # 11th, 18th, 25th are Mondays
+            # 31st is Sunday
+            # 1. May 1st 02:30 (Friday)
+            # Next: May 2nd 00:00 (min of 2nd 00:00 and 4th 04:00)
+            # Last: May 1st 00:00 (max of 1st 00:00 and Apr 27th 04:00)
+            (
+                datetime(2026, 5, 1, 2, 30),
+                datetime(2026, 5, 2, 0, 0),
+                datetime(2026, 5, 1, 0, 0),
+            ),
+            # 2. May 1st 09:30 (Friday)
+            # Next: May 2nd 00:00
+            # Last: May 1st 00:00
+            (
+                datetime(2026, 5, 1, 9, 30),
+                datetime(2026, 5, 2, 0, 0),
+                datetime(2026, 5, 1, 0, 0),
+            ),
+            # 3. May 25th 23:30 (Monday)
+            # Next: May 26th 00:00 (min of 26th 00:00 and Jun 1st 04:00)
+            # Last: May 25th 04:00 (max of 25th 00:00 and 25th 04:00)
+            (
+                datetime(2026, 5, 25, 23, 30),
+                datetime(2026, 5, 26, 0, 0),
+                datetime(2026, 5, 25, 4, 0),
+            ),
+            # 4. May 26th 02:30 (Tuesday)
+            # Next: May 27th 00:00 (min of 27th 00:00 and Jun 1st 04:00)
+            # Last: May 26th 00:00 (max of 26th 00:00 and 25th 04:00)
+            (
+                datetime(2026, 5, 26, 2, 30),
+                datetime(2026, 5, 27, 0, 0),
+                datetime(2026, 5, 26, 0, 0),
+            ),
+            # 5. May 31st 23:30 (Sunday)
+            # Next: Jun 1st 00:00 (min of Jun 1st 00:00 and Jun 1st 04:00)
+            # Last: May 31st 00:00 (max of May 31st 00:00 and May 25th 04:00)
+            (
+                datetime(2026, 5, 31, 23, 30),
+                datetime(2026, 6, 1, 0, 0),
+                datetime(2026, 5, 31, 0, 0),
+            ),
+        ],
+    )
+    def test_mixed_daily_weekly_updates(
+        self, server, now_time, expected_next, expected_last
+    ):
         """
         Test mixed daily (00:00) and weekly (Mon 04:00) updates at specific boundary dates.
         """
@@ -614,7 +681,7 @@ class TestServerUpdateComplex:
         expected_last = expected_last.replace(tzinfo=server.tz)
 
         # weekday1 is Monday
-        updates = ["00:00", "weekday1-04:00"]
+        updates = ['00:00', 'weekday1-04:00']
         with patch.object(ServerTime, 'now', return_value=now_time):
             assert to_utc(server.get_next_update(updates)) == to_utc(expected_next)
             assert to_utc(server.get_last_update(updates)) == to_utc(expected_last)
@@ -767,7 +834,7 @@ class TestServerTimeLocalDst:
         st = ServerTime(8)
         now = servertime.datetime(2026, 1, 15, 20, 0, tzinfo=st.tz)
         with patch.object(ServerTime, 'now', return_value=now):
-            result = st.get_next_update("04:00")
+            result = st.get_next_update('04:00')
         # server 2026-01-16 04:00 +08 = 2026-01-15 20:00 UTC -> local 21:00 +1
         assert to_utc(result) == datetime(2026, 1, 15, 20, 0, tzinfo=timezone.utc)
         assert result.utcoffset() == timedelta(hours=1)
@@ -778,7 +845,7 @@ class TestServerTimeLocalDst:
         st = ServerTime(8)
         now = servertime.datetime(2026, 7, 15, 20, 0, tzinfo=st.tz)
         with patch.object(ServerTime, 'now', return_value=now):
-            result = st.get_next_update("04:00")
+            result = st.get_next_update('04:00')
         # server 2026-07-16 04:00 +08 = 2026-07-15 20:00 UTC -> local 22:00 +2
         assert to_utc(result) == datetime(2026, 7, 15, 20, 0, tzinfo=timezone.utc)
         assert result.utcoffset() == timedelta(hours=2)
@@ -790,7 +857,7 @@ class TestServerTimeLocalDst:
         st = ServerTime(8)
         now = servertime.datetime(2026, 8, 15, 20, 0, tzinfo=st.tz)
         with patch.object(ServerTime, 'now', return_value=now):
-            result = st.get_next_update("monthday31-04:00")
+            result = st.get_next_update('monthday31-04:00')
         # server 2026-08-31 04:00 +08 = 2026-08-30 20:00 UTC -> local 22:00 +2
         assert to_utc(result) == datetime(2026, 8, 30, 20, 0, tzinfo=timezone.utc)
         assert result.utcoffset() == timedelta(hours=2)
@@ -804,7 +871,7 @@ class TestServerTimeLocalDst:
         st = ServerTime(8)
         now = servertime.datetime(2026, 3, 29, 8, 0, tzinfo=st.tz)  # 00:00 UTC
         with patch.object(ServerTime, 'now', return_value=now):
-            result = st.get_next_update("09:00")
+            result = st.get_next_update('09:00')
         # server 09:00 +08 = 01:00 UTC -> local jumps to 03:00 +2
         assert to_utc(result) == datetime(2026, 3, 29, 1, 0, tzinfo=timezone.utc)
         assert result.utcoffset() == timedelta(hours=2)
@@ -819,7 +886,7 @@ class TestServerTimeLocalDst:
         st = ServerTime(8)
         now = servertime.datetime(2026, 10, 25, 8, 0, tzinfo=st.tz)  # 00:00 UTC
         with patch.object(ServerTime, 'now', return_value=now):
-            result = st.get_next_update("09:00")
+            result = st.get_next_update('09:00')
         # server 09:00 +08 = 01:00 UTC -> local 02:00 +1 (second occurrence)
         assert to_utc(result) == datetime(2026, 10, 25, 1, 0, tzinfo=timezone.utc)
         assert result.utcoffset() == timedelta(hours=1)
@@ -836,7 +903,7 @@ class TestServerTimeLocalDst:
         # On the fall-back day, the last 04:00 (+08) update is still in DST
         now = servertime.datetime(2026, 10, 25, 20, 0, tzinfo=st.tz)
         with patch.object(ServerTime, 'now', return_value=now):
-            result = st.get_last_update("04:00")
+            result = st.get_last_update('04:00')
         # server 2026-10-25 04:00 +08 = 2026-10-24 20:00 UTC -> local 22:00 +2
         assert to_utc(result) == datetime(2026, 10, 24, 20, 0, tzinfo=timezone.utc)
         assert result.utcoffset() == timedelta(hours=2)
@@ -845,7 +912,7 @@ class TestServerTimeLocalDst:
         # After the fall-back, the last 04:00 (+08) update is in standard time
         now = servertime.datetime(2026, 10, 26, 20, 0, tzinfo=st.tz)
         with patch.object(ServerTime, 'now', return_value=now):
-            result = st.get_last_update("04:00")
+            result = st.get_last_update('04:00')
         # server 2026-10-26 04:00 +08 = 2026-10-25 20:00 UTC -> local 21:00 +1
         assert to_utc(result) == datetime(2026, 10, 25, 20, 0, tzinfo=timezone.utc)
         assert result.utcoffset() == timedelta(hours=1)
@@ -860,9 +927,9 @@ class TestServerTimeLocalDst:
         winter_now = servertime.datetime(2026, 1, 15, 20, 0, tzinfo=st.tz)
         summer_now = servertime.datetime(2026, 7, 15, 20, 0, tzinfo=st.tz)
         with patch.object(ServerTime, 'now', return_value=winter_now):
-            winter_delta = st.get_delta_to_update("04:00")
+            winter_delta = st.get_delta_to_update('04:00')
         with patch.object(ServerTime, 'now', return_value=summer_now):
-            summer_delta = st.get_delta_to_update("04:00")
+            summer_delta = st.get_delta_to_update('04:00')
         assert winter_delta == summer_delta == timedelta(hours=8)
 
     def test_get_next_update_uses_system_local_timezone(self):
@@ -871,7 +938,7 @@ class TestServerTimeLocalDst:
         local timezone (whatever it is on the host).
         """
         st = ServerTime(8)
-        result = st.get_next_update("04:00")
+        result = st.get_next_update('04:00')
         assert result.tzinfo is not None
         assert result.utcoffset() == datetime.now().astimezone().utcoffset()
 
@@ -879,35 +946,43 @@ class TestServerTimeLocalDst:
 class TestRandomTime:
     """Tests for random_time()."""
 
-    @pytest.mark.parametrize("second, expected", [
-        (3, 3.0),
-        (0, 0.0),
-        (5.5, 5.5),
-        (0.5, 0.5),
-        ("3", 3.0),
-        ("0.5", 0.5),
-    ])
+    @pytest.mark.parametrize(
+        'second, expected',
+        [
+            (3, 3.0),
+            (0, 0.0),
+            (5.5, 5.5),
+            (0.5, 0.5),
+            ('3', 3.0),
+            ('0.5', 0.5),
+        ],
+    )
     def test_single_value(self, second, expected):
         """Single value returns that value as float."""
         assert random_time(second) == expected
         assert isinstance(random_time(second), float)
 
-    @pytest.mark.parametrize("second, low, high", [
-        ((1, 4), 1.0, 4.0),
-        ((1.5, 2.5), 1.5, 2.5),
-        ([0, 3], 0.0, 3.0),
-        ([0.5, 1.5], 0.5, 1.5),
-        ("0.1~0.2", 0.1, 0.2),
-        ("1.5, 2.5", 1.5, 2.5),
-        ("10-30", 10.0, 30.0),
-        ("0, 1", 0.0, 1.0),
-    ])
+    @pytest.mark.parametrize(
+        'second, low, high',
+        [
+            ((1, 4), 1.0, 4.0),
+            ((1.5, 2.5), 1.5, 2.5),
+            ([0, 3], 0.0, 3.0),
+            ([0.5, 1.5], 0.5, 1.5),
+            ('0.1~0.2', 0.1, 0.2),
+            ('1.5, 2.5', 1.5, 2.5),
+            ('10-30', 10.0, 30.0),
+            ('0, 1', 0.0, 1.0),
+        ],
+    )
     def test_range_bounds(self, second, low, high):
         """Range value returns float within [low, high]."""
         for _ in range(100):
             result = random_time(second)
             assert isinstance(result, float)
-            assert low <= result <= high, f"Expected [{low}, {high}] for {second!r}, got {result}"
+            assert low <= result <= high, (
+                f'Expected [{low}, {high}] for {second!r}, got {result}'
+            )
 
     def test_float_range_produces_fractional_values(self):
         """
@@ -916,7 +991,7 @@ class TestRandomTime:
         """
         results = {random_time((0.5, 1.5)) for _ in range(200)}
         assert any(v != int(v) for v in results), (
-            f"All values were whole numbers: {sorted(results)}"
+            f'All values were whole numbers: {sorted(results)}'
         )
 
     def test_precision_three_millisecond_resolution(self):
@@ -929,14 +1004,14 @@ class TestRandomTime:
         for v in results:
             thousandths = round(v * 1000)
             assert abs(v - thousandths / 1000) < 1e-10, (
-                f"Value {v} is not a multiple of 0.001"
+                f'Value {v} is not a multiple of 0.001'
             )
         # At least some values should have non-zero thousandths digit,
         # proving actual 0.001-level precision beyond just 0.01 steps
         has_ms = any(round(v * 1000) % 10 != 0 for v in results)
         assert has_ms, (
-            f"All values were multiples of 0.01, expected some 0.001-level: "
-            f"{sorted(results)}"
+            f'All values were multiples of 0.01, expected some 0.001-level: '
+            f'{sorted(results)}'
         )
 
     def test_round_prevents_floating_point_noise(self):
@@ -946,4 +1021,4 @@ class TestRandomTime:
         """
         for _ in range(500):
             v = random_time((0, 1), precision=3)
-            assert v == round(v, 3), f"Floating-point noise detected: {v}"
+            assert v == round(v, 3), f'Floating-point noise detected: {v}'

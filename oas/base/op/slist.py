@@ -5,15 +5,15 @@ T = TypeVar('T')
 
 
 class Slist(Generic[T]):
-    def __init__(self, items: "list[T]"):
+    def __init__(self, items: 'list[T]'):
         """
         A proxy of list of items
         Can act like a simple in-memory database table
         """
-        self.items: "list[T]" = items
-        self.index: "dict[tuple, Slist[T]]" = {}
+        self.items: 'list[T]' = items
+        self.index: 'dict[tuple, Slist[T]]' = {}
 
-    def __iter__(self) -> "Iterator[T]":
+    def __iter__(self) -> 'Iterator[T]':
         return iter(self.items)
 
     def __getitem__(self, item):
@@ -57,7 +57,7 @@ class Slist(Generic[T]):
                 return False
         return True
 
-    def select(self, **kwargs) -> "Slist[T]":
+    def select(self, **kwargs) -> 'Slist[T]':
         """
         Select items that have given attribute
 
@@ -84,7 +84,7 @@ class Slist(Generic[T]):
         index = {k: Slist(v) for k, v in index.items()}
         self.index = index
 
-    def index_select(self, *values) -> "Slist[T]":
+    def index_select(self, *values) -> 'Slist[T]':
         """
         Select items that have given attribute by index
         `index_create()` needs to be called before index_select()
@@ -100,7 +100,7 @@ class Slist(Generic[T]):
         except KeyError:
             return Slist([])
 
-    def filter(self, func) -> "Slist[T]":
+    def filter(self, func) -> 'Slist[T]':
         """
         Filter items by a function.
 
@@ -145,7 +145,7 @@ class Slist(Generic[T]):
         """
         return [getattr(item, func)(**kwargs) for item in self.items]
 
-    def first_or_none(self) -> "T | None":
+    def first_or_none(self) -> 'T | None':
         """
         Get first item or None
         """
@@ -154,7 +154,7 @@ class Slist(Generic[T]):
         except IndexError:
             return None
 
-    def add(self, items: "Slist[T] | list[T] | T") -> "Slist[T]":
+    def add(self, items: 'Slist[T] | list[T] | T') -> 'Slist[T]':
         """
         Add item or a list of items
         """
@@ -168,7 +168,7 @@ class Slist(Generic[T]):
             items = self.items + [items]
             return Slist(items)
 
-    def remove(self, items: "Slist[T] | list[T] | T") -> "Slist[T]":
+    def remove(self, items: 'Slist[T] | list[T] | T') -> 'Slist[T]':
         """
         Remove item or a list of items
         """
@@ -182,7 +182,7 @@ class Slist(Generic[T]):
             items = [item for item in self.items if item != items]
             return Slist(items)
 
-    def sort(self, *attrs) -> "Slist[T]":
+    def sort(self, *attrs) -> 'Slist[T]':
         """
         Args:
             *attrs (str): Attribute name to sort.
@@ -190,6 +190,7 @@ class Slist(Generic[T]):
         if not self.items:
             return self
         if len(attrs):
+
             def item_key(item):
                 return tuple(getattr(item, attr) for attr in attrs)
 

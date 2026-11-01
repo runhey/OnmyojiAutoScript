@@ -1,12 +1,13 @@
 """
-Tests for script.misc.op.area
+Tests for oas.base.op.area
 
 Point and Area are tuple subclasses with a large geometry API. Alasio has no
 reference tests for them; the expectations below were derived from the source.
 """
+
 import pytest
 
-from script.misc.op import Area, Point
+from oas.base.op import Area, Point
 
 
 class TestPointConstruction:
@@ -254,7 +255,12 @@ class TestAreaContainment:
         assert Area((-5, -5, 150, 150)).limit_in_screen((100, 100)) == (0, 0, 100, 100)
 
     def test_limit_in_area(self):
-        assert Area((-5, -5, 50, 50)).limit_in_area(Area((0, 0, 10, 10))) == (0, 0, 10, 10)
+        assert Area((-5, -5, 50, 50)).limit_in_area(Area((0, 0, 10, 10))) == (
+            0,
+            0,
+            10,
+            10,
+        )
 
     def test_is_intersect_area(self):
         assert Area((0, 0, 10, 10)).is_intersect_area(Area((5, 5, 15, 15))) is True
@@ -271,7 +277,12 @@ class TestAreaTransform:
         assert area.move_y(-5) == (10, 15, 30, 35)
 
     def test_move_onto_upperleft(self):
-        assert Area((1, 2, 3, 4)).move_onto_upperleft(Area((10, 20, 99, 99))) == (11, 22, 13, 24)
+        assert Area((1, 2, 3, 4)).move_onto_upperleft(Area((10, 20, 99, 99))) == (
+            11,
+            22,
+            13,
+            24,
+        )
 
     def test_inset_outset(self):
         area = Area((10, 20, 30, 40))
