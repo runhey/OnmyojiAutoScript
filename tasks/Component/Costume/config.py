@@ -28,6 +28,7 @@ class MainType(str, Enum):
 # 结界皮肤
 class RealmType(str, Enum):
     COSTUME_REALM_DEFAULT = 'costume_realm_default'  # 妖扇结界
+    COSTUME_REALM_YUEHAI_YOUXING = 'costume_realm_yuehai_youxing'  # 月海游星
 
 # 鲤鱼旗皮肤
 class CarpBannerType(str, Enum):
@@ -99,6 +100,9 @@ class CostumeConfig(BaseModel):
     @field_validator('costume_realm_type', mode='before')
     @classmethod
     def validate_realm(cls, v):
+        # Preserve selections saved by the earlier local numbered adaptation.
+        if v == 'costume_realm_2':
+            return RealmType.COSTUME_REALM_YUEHAI_YOUXING
         if v and v not in RealmType._value2member_map_:
             return RealmType.COSTUME_REALM_DEFAULT
         return v

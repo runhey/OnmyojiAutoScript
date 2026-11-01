@@ -16,6 +16,7 @@ from tasks.Component.Costume.assets import CostumeAssets
 from tasks.Component.CostumeBattle.assets import CostumeBattleAssets
 from tasks.Component.CostumeShikigami.assets import CostumeShikigamiAssets
 from tasks.Component.CostumeCarpBanner.assets import CostumeCarpBannerAssets
+from tasks.Component.CostumeRealm.realm import apply_realm
 from tasks.Component.CostumeBattleScene.assets import CostumeBattleSceneAssets
 
 # 庭院皮肤
@@ -107,6 +108,7 @@ class CostumeBase:
         current_task = self.get_task_name()
         logger.info(f'Current task: {current_task}')
         self.check_costume_main(config.costume_main_type)
+        self.check_costume_realm(config.costume_realm_type)
         self.check_costume_carpbanner(config.costume_carpbanner_type)
         self.check_costume_battle(config.costume_battle_type)
         self.check_costume_battle_scene(config.costume_battle_scene_type)
@@ -142,6 +144,11 @@ class CostumeBase:
             else:
                 assert_value: RuleImage = getattr(costume_assets, value)
                 self.replace_img(key, assert_value)
+
+    def check_costume_realm(self, realm_type: RealmType):
+        apply_realm(realm_type)
+        if realm_type != RealmType.COSTUME_REALM_DEFAULT:
+            logger.info(f'Switch realm skin {realm_type} ({I18n.trans_zh_cn(realm_type)})')
 
     def check_costume_carpbanner(self, carpbanner_type: CarpBannerType):
         if carpbanner_type == CarpBannerType.COSTUME_CARPBANNER_DEFAULT:
