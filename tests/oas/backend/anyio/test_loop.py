@@ -118,3 +118,46 @@ def test_call_soon_reraises_any_other_runtime_error(monkeypatch):
     monkeypatch.setattr(AnyIO, '_loop', FakeLoop())
     with pytest.raises(RuntimeError, match='loop is on fire'):
         AnyIO.call_soon(lambda: None)
+
+
+def test_a_bare_callback_has_no_async_task_context():
+    """
+    The callback runs as a plain loop callback: the loop thread, but no
+    async task context. What the reactive drain and the ws outbox need does
+    work there (sync work, Event.set(), send_nowait()); start_soon() and
+    cancel scopes do not, and go over as a coroutine instead.
+    """
+    outcome = {}
+    done = threading.Event()
+
+    async def main():
+        AnyIO.bind_loop(asyncio.get_running_loop())
+        event = anyio.Event()
+        send, _receive = anyio.create_memory_object_stream(1)
+
+        def callback():
+            def probe(name, call):
+                try:
+                    call()
+                    outcome[name] = 'ok'
+                except BaseException as exc:
+                    outcome[name] = type(exc).__name__
+
+            probe('event_set', event.set)
+            probe('send_nowait', lambda: send.send_nowait(b'x'))
+            probe('cancel_scope', anyio.CancelScope)
+            probe('cancelled_class', anyio.get_cancelled_exc_class)
+            done.set()
+
+        threading.Thread(target=lambda: AnyIO.call_soon(callback)).start()
+        with anyio.move_on_after(5):
+            while not done.is_set():
+                await anyio.sleep(0.001)
+
+    anyio.run(main)
+    assert outcome == {
+        'event_set': 'ok',
+        'send_nowait': 'ok',
+        'cancel_scope': 'NoEventLoopError',
+        'cancelled_class': 'NoEventLoopError',
+    }

@@ -169,7 +169,7 @@ class async_reactive(Generic[T]):
         async with anyio.create_task_group() as task_group:
             # Broadcast changes to external function
             if isinstance(obj, AsyncReactiveCallback):
-                await task_group.start_soon(obj.reactive_callback, self.name, old, new)
+                task_group.start_soon(obj.reactive_callback, self.name, old, new)
 
             # Notify observers outside the lock to prevent deadlocks
             for observer_obj, names in observer_items:
@@ -182,7 +182,7 @@ class async_reactive(Generic[T]):
                         except AttributeError:
                             # this shouldn't happen
                             continue
-                        await task_group.start_soon(broadcast, observer_obj)
+                        task_group.start_soon(broadcast, observer_obj)
 
     async def broadcast(self, obj, old=_NOT_FOUND, new=_NOT_FOUND):
         """

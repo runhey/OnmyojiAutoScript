@@ -89,6 +89,14 @@ class AnyIO:
         (source.reinit depends on this to keep a queued full event behind
         the increments queued before it).
 
+        The callback runs as a plain loop callback: it has the loop thread
+        but no async task context. Sync work, ``Event.set()`` and a
+        ``send_nowait()`` are fine there, and that is what the reactive
+        drain and the ws outbox need; ``task_group.start_soon()``, a
+        ``CancelScope()`` or ``get_cancelled_exc_class()`` are not, and
+        have to be handed to the loop as a coroutine instead
+        (``asyncio.run_coroutine_threadsafe()``).
+
         This is the single place that deals with a loop that is missing or
         already closed; call sites schedule and forget. Only "the loop is
         closed" is absorbed here: any other RuntimeError is not a shutdown
