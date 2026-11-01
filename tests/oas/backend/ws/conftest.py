@@ -7,11 +7,17 @@ import pytest
 
 from oas.backend.anyio import AnyIO
 from oas.backend.mpipe.token_backend import token_table
+from oas.backend.topic._worker import (
+    BACKEND_WORKER_MANAGER,
+    BackendWorkerManager,
+    WorkerSource,
+)
 from oas.backend.topic.log import Log, LogCache
 from oas.backend.topic.mod import ModHistory, ModHistorySource, ModList, ModListSource
 from oas.backend.topic.restart import Restart, RestartSource
 from oas.backend.topic.scan import ConfigScan, ConfigScanSource
 from oas.backend.topic.state import ConnState
+from oas.backend.topic.worker import Worker
 from oas.backend.ws.context import GLOBAL_CONTEXT
 from oas.backend.ws.ws_server import WebsocketTopicServer
 from oas.config.table.config import ConfigTable
@@ -49,6 +55,12 @@ def reset_backend():
     RestartSource.singleton_clear()
     Log.singleton_clear()
     LogCache.singleton_clear()
+    # the worker manager owns child processes and reports into WorkerSource:
+    # terminate whatever a test started, then drop the singletons
+    BACKEND_WORKER_MANAGER.close()
+    Worker.singleton_clear()
+    WorkerSource.singleton_clear()
+    BackendWorkerManager.singleton_clear()
     # the token table has no public reset: the tests own the whole window
     token_table._tokens.clear()
     token_table.seed_from_supervisor((TEST_TOKEN,))

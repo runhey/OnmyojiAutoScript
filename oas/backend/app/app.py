@@ -16,6 +16,7 @@ from oas.backend.auth import auth
 from oas.backend.auth.errors import HTTPExceptionJson
 from oas.backend.middleware.gate import DeploymentGateMiddleware
 from oas.backend.reactive.source import BaseSource
+from oas.backend.topic._worker import BACKEND_WORKER_MANAGER
 from oas.backend.ws import renew as ws_renew
 from oas.backend.ws.context import GLOBAL_CONTEXT
 from oas.backend.ws.renew import renewal_manager
@@ -145,6 +146,11 @@ async def lifespan(app: 'FastAPI'):
             # not hold the exit
             GLOBAL_CONTEXT.shutdown_event.set()
             task_group.cancel_scope.cancel()
+
+        # cleanup before exit: terminate every worker process of this
+        # backend (upstream app/app.py:231 does it right after the nursery
+        # is cancelled, before the loop bridge is unbound)
+        BACKEND_WORKER_MANAGER.close()
 
         logger.info('Lifespan end')
     finally:

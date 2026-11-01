@@ -7,8 +7,8 @@ the app mounts on /api/ws, and it owns the two registries of that server
 the topics it registers on connect).
 
 Only the ported topics are registered here: ConnState, ModList, ModHistory,
-ConfigScan, Restart and Log. The rest of the upstream registry -- ConfigNav,
-ConfigArg, Worker, Update, TaskQueue, TaskQueueI18n and Dashboard -- lands
+ConfigScan, Worker, Restart and Log. The rest of the upstream registry --
+ConfigNav, ConfigArg, Update, TaskQueue, TaskQueueI18n and Dashboard -- lands
 with its own topic (see oas/backend/README.md, the topic checklist). The
 second server of upstream (PreviewServer on /api/preview) has no topic here
 at all.
@@ -27,6 +27,7 @@ from oas.backend.topic.mod import ModHistory, ModList
 from oas.backend.topic.restart import Restart
 from oas.backend.topic.scan import ConfigScan
 from oas.backend.topic.state import ConnState
+from oas.backend.topic.worker import Worker
 from oas.backend.ws.ws_server import WebsocketTopicServer
 from oas.backend.ws.ws_topic import BaseTopic
 from oas.mod.info import ModEntryInfo
@@ -60,6 +61,7 @@ class WebsocketServer(WebsocketTopicServer):
             ModList,
             ModHistory,
             ConfigScan,
+            Worker,
             Restart,
             Log,
         ]
