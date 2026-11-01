@@ -117,7 +117,12 @@ class CostumeBase:
     def check_costume_theme(self, theme_type: ThemeType):
         apply_theme(theme_type)
         if theme_type != ThemeType.COSTUME_THEME_DEFAULT:
-            logger.info(f'Switch menu theme {theme_type} ({I18n.trans_zh_cn(theme_type)})')
+            # Supplementary labels are available before the UI rebuilds its translations.
+            labels = I18n.load_additions().get('zh-CN', {})
+            theme_name = labels.get(theme_type.value)
+            if not theme_name:
+                theme_name = I18n.trans_zh_cn(theme_type)
+            logger.info(f'Switch menu theme {theme_type} ({theme_name})')
 
     def replace_img(self,
                     asset_before: str,

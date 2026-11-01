@@ -1,5 +1,7 @@
 """Offline regression tests; no device or game interaction."""
 import unittest
+from unittest.mock import patch
+from module.server.i18n import I18n
 import json
 from pathlib import Path
 from copy import deepcopy
@@ -70,12 +72,37 @@ class ThemeTests(unittest.TestCase):
             self.assertEqual(config.model_dump(mode='json')['costume_theme_type'],
                              'costume_theme_xinyu_mingxiao')
 
+    def test_theme_log_uses_supplementary_label_before_ui_translation_update(self):
+        theme = ThemeType.COSTUME_THEME_XINYU_MINGXIAO
+        with patch.object(I18n, 'load_additions', return_value={
+                'zh-CN': {theme.value: '新语明霄'}}), \
+             patch.object(I18n, 'trans_zh_cn', return_value=theme.value) as fallback, \
+             patch('tasks.Component.Costume.costume_base.logger') as log:
+            CostumeBase().check_costume_theme(theme)
+        fallback.assert_not_called()
+        log.info.assert_called_once_with(f'Switch menu theme {theme} (新语明霄)')
+
+    def test_theme_log_falls_back_when_supplementary_label_is_missing(self):
+        theme = ThemeType.COSTUME_THEME_XINYU_MINGXIAO
+        with patch.object(I18n, 'load_additions', return_value={}), \
+             patch.object(I18n, 'trans_zh_cn', return_value='已有运行时翻译') as fallback, \
+             patch('tasks.Component.Costume.costume_base.logger') as log:
+            CostumeBase().check_costume_theme(theme)
+        fallback.assert_called_once_with(theme)
+        log.info.assert_called_once_with(f'Switch menu theme {theme} (已有运行时翻译)')
+
     def test_invalid_theme_does_not_mutate_rules(self):
-        rule = GameUiAssets.I_MAIN_GOTO_TEAM
-        original = deepcopy(rule.__dict__)
-        with self.assertRaises(KeyError):
-            apply_theme('not_a_theme')
-        self.assertEqual(rule.__dict__, original)
+        for selected in (ThemeType.COSTUME_THEME_DEFAULT, ThemeType.COSTUME_THEME_XINYU_MINGXIAO):
+            with self.subTest(selected=selected):
+                apply_theme(selected)
+                refs = {name: getattr(GameUiAssets, name) for name in _THEME_NAMES}
+                states = {name: deepcopy(rule.__dict__) for name, rule in refs.items()}
+                with self.assertRaises(KeyError):
+                    apply_theme('not_a_theme')
+                for name, ref in refs.items():
+                    with self.subTest(rule=name):
+                        self.assertIs(getattr(GameUiAssets, name), ref)
+                        self.assertEqual(ref.__dict__, states[name])
 
 
 if __name__ == '__main__':
