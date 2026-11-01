@@ -19,8 +19,8 @@ class ScriptTask(GameUi, TalismanPassAssets):
     def run(self):
         self.goto_page(page_daily)
         task_tab = RuleImage(
-            roi_front=(1198, 328, 30, 72),
-            roi_back=(1188, 318, 50, 92),
+            roi_front=(1198, 328, 36, 73),
+            roi_back=(1185, 307, 64, 117),
             method="Template matching",
             threshold=0.8,
             file="./tasks/TalismanPass/tp/tp_task_tab.png",
