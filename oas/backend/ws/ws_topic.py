@@ -8,7 +8,7 @@ from oas.backend.mpipe.token_backend import token_table
 from oas.backend.reactive.base_topic import BaseTopic as BaseMixin
 from oas.backend.reactive.event import (
     AccessDenied,
-    ElectronOnlyError,
+    LocalFlutterOnlyError,
     ResponseEvent,
     RpcValueError,
 )
@@ -22,11 +22,11 @@ if TYPE_CHECKING:
 
 
 class BaseTopic(AsyncReactiveCallback, BaseMixin, metaclass=SingletonNamed):
-    # Topic-level electron restriction: when True, subscribing to this
-    # topic and every rpc under it requires a valid electron token on the
+    # Topic-level local restriction: when True, subscribing to this
+    # topic and every rpc under it requires a valid local token on the
     # connection (verified at operation time, never cached). Default
     # topics are public; mark the sensitive ones explicitly.
-    REQUIRE_ELECTRON = False
+    REQUIRE_LOCAL_FLUTTER = False
     # Per-subscription send backlog (encoded payloads) for slow
     # connections. The deque maxlen bounds the backlog; on overflow the
     # oldest payload is silently dropped (client-side slowness is not
@@ -77,15 +77,15 @@ class BaseTopic(AsyncReactiveCallback, BaseMixin, metaclass=SingletonNamed):
     def __str__(self):
         return f'{self.TOPIC_NAME}({self.conn_id})>'
 
-    def _check_electron(self):
+    def _check_local_flutter(self):
         """
-        Verify the connection's electron token in real time.
+        Verify the connection's local token in real time.
 
         Raises:
-            ElectronOnlyError: When the connection has no valid token
+            LocalFlutterOnlyError: When the connection has no valid token
         """
-        if not token_table.verify(self.server.auth_token):
-            raise ElectronOnlyError('Electron token required')
+        if not token_table.verify(self.server.local_token):
+            raise LocalFlutterOnlyError('local token required')
 
     def deliver(self, payload):
         """
@@ -441,14 +441,14 @@ class BaseTopic(AsyncReactiveCallback, BaseMixin, metaclass=SingletonNamed):
             await self.server.send(event)
             return
 
-        # Electron check must happen BEFORE the call executes (never
+        # local check must happen BEFORE the call executes (never
         # inside the method body): a rejected request never ran, so a
         # renewal retry is a first execution, not a re-execution
         # (idempotency). Inside the try so the existing except branch
         # returns the error response carrying the rpc_id.
         try:
-            if method.require_electron or self.REQUIRE_ELECTRON:
-                self._check_electron()
+            if method.require_local_flutter or self.REQUIRE_LOCAL_FLUTTER:
+                self._check_local_flutter()
             await method.call_async(self, value)
         except (
             ValidationError,

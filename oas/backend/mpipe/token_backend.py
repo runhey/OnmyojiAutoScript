@@ -2,15 +2,15 @@ import time
 
 from oas.backend.mpipe.mpipe_backend import mpipe_backend
 
-# Header carrying the electron token on http/ws requests (injected by the
-# Electron main process webRequest). Centralized here so callers never
+# Header carrying the local token on http/ws requests (injected by the
+# local Flutter app's network layer). Centralized here so callers never
 # need to spell out the header name.
-ELECTRON_TOKEN_HEADER = 'X-Alasio-Token'
+LOCAL_TOKEN_HEADER = 'X-OAS-Token'
 
 
 def read_token_header(obj):
     """
-    Extract the electron token header from a starlette Request / WebSocket
+    Extract the local token header from a starlette Request / WebSocket
     (`.headers` mapping, case-insensitive) or a raw ASGI scope dict
     (headers as a lowercase-bytes pair list).
 
@@ -24,13 +24,13 @@ def read_token_header(obj):
     if isinstance(obj, dict):
         # raw ASGI scope: headers are a list of (bytes, bytes), names lowercase
         for name, value in obj.get('headers', []):
-            if name == b'x-alasio-token':
+            if name == b'x-oas-token':
                 return value.decode('latin-1')
         return ''
     headers = getattr(obj, 'headers', None)
     if headers is None:
         return ''
-    return headers.get(ELECTRON_TOKEN_HEADER, '')
+    return headers.get(LOCAL_TOKEN_HEADER, '')
 
 
 class BackendTokenTable:
@@ -97,7 +97,7 @@ class BackendTokenTable:
     def current(self):
         """
         Latest token in the table (by enqueue time), used to update
-        per-connection auth_token after a successful renewal.
+        per-connection local_token after a successful renewal.
 
         Returns:
             str: The most recent token, or '' if the table is empty
@@ -108,7 +108,7 @@ class BackendTokenTable:
 
     def verify(self, token):
         """
-        Membership check used by require_electron (GIL atomic, lock-free).
+        Membership check used by require_local_flutter (GIL atomic, lock-free).
 
         Args:
             token (str):
@@ -120,8 +120,8 @@ class BackendTokenTable:
 
     def verify_header(self, obj):
         """
-        Verify the electron token carried by a request: reads the
-        ELECTRON_TOKEN_HEADER (the caller does not need to know the
+        Verify the local token carried by a request: reads the
+        LOCAL_TOKEN_HEADER (the caller does not need to know the
         header name) and checks membership. Accepts a starlette
         Request / WebSocket or a raw ASGI scope dict.
 

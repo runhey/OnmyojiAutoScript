@@ -17,7 +17,7 @@ from oas.backend.reactive.event import ResponseEvent
 from oas.backend.ws.ws_server import RESPONSE_EVENT_ENCODER, WebsocketTopicServer
 from oas.backend.ws.ws_topic import BaseTopic
 
-TEST_TOKEN = 'test-electron-token'
+TEST_TOKEN = 'test-local-token'
 TEST_TOPIC = 'test'
 
 

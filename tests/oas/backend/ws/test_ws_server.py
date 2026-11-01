@@ -11,7 +11,7 @@ from starlette.testclient import TestClient
 from starlette.websockets import WebSocketDisconnect
 
 from oas.backend.anyio import AnyIO
-from oas.backend.mpipe.token_backend import ELECTRON_TOKEN_HEADER
+from oas.backend.mpipe.token_backend import LOCAL_TOKEN_HEADER
 from oas.backend.ws.ws_server import WebsocketTopicServer
 from ws_helpers import (
     TEST_TOKEN,
@@ -28,7 +28,7 @@ from ws_helpers import (
 
 def connect(client, token=TEST_TOKEN):
     """
-    Handshake a websocket with the electron token, or without any token.
+    Handshake a websocket with the local token, or without any token.
 
     Args:
         client (TestClient): The client whose app serves /ws
@@ -37,7 +37,7 @@ def connect(client, token=TEST_TOKEN):
     Returns:
         The connected websocket context manager
     """
-    headers = {ELECTRON_TOKEN_HEADER: token} if token else {}
+    headers = {LOCAL_TOKEN_HEADER: token} if token else {}
     return client.websocket_connect('/ws', headers=headers)
 
 
@@ -77,15 +77,32 @@ def push_from_loop(source, payload):
     assert AnyIO.call_soon(source.push, payload) is True
 
 
-def test_connection_without_a_token_is_refused():
+def test_connection_without_a_token_is_refused(deploy_config):
     """
     The login layer closes an unauthenticated connection after accept, with
-    the code the frontend reads as "session over".
+    the code the frontend reads as "session over". A password is configured,
+    so the JWT cookie is the only way in.
     """
+    deploy_config(backend={'password': 'test-password'})
+
     with TestClient(create_test_app()) as client, connect(client, token='') as ws:
         with pytest.raises(WebSocketDisconnect) as refused:
             ws.receive_bytes()
         assert refused.value.code == 4001
+
+
+def test_connection_without_a_password_is_admitted(deploy_config, source):
+    """
+    Without a configured password validate_token issues a JWT instead of
+    raising, so the handshake is admitted: the login layer is not a gate on a
+    backend that has no password to protect.
+    """
+    deploy_config()
+
+    with TestClient(create_test_app()) as client:
+        with connect(client, token='') as ws:
+            subscribe(ws)
+            assert wait_until(lambda: source.subscribers)
 
 
 def test_connection_is_registered_while_it_lives(source):

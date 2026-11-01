@@ -109,7 +109,7 @@ class TestBackendTokenTable:
         assert table.verify('t2')
 
     def test_seed_empty(self):
-        """Empty seed leaves the table empty (non-electron lock state)."""
+        """Empty seed leaves the table empty (non-local lock state)."""
         table = BackendTokenTable()
         table.seed_from_supervisor(())
         assert not table.verify('anything')
@@ -204,12 +204,12 @@ class TestVerifyHeader:
         }
 
     def test_request_with_valid_header(self):
-        """A starlette Request with the electron token header verifies."""
+        """A starlette Request with the local token header verifies."""
         from starlette.requests import Request
 
         table = BackendTokenTable()
         table.seed_from_supervisor(('tok1',))
-        request = Request(self.make_scope([(b'x-alasio-token', b'tok1')]))
+        request = Request(self.make_scope([(b'x-oas-token', b'tok1')]))
         assert table.verify_header(request)
 
     def test_request_mixed_case_header(self):
@@ -221,7 +221,7 @@ class TestVerifyHeader:
 
         table = BackendTokenTable()
         table.seed_from_supervisor(('tok1',))
-        request = Request(self.make_scope([(b'X-Alasio-Token', b'tok1')]))
+        request = Request(self.make_scope([(b'X-OAS-Token', b'tok1')]))
         assert not table.verify_header(request)
 
     def test_request_without_header(self):
@@ -237,7 +237,7 @@ class TestVerifyHeader:
         """A raw ASGI scope dict (lowercase bytes headers) verifies."""
         table = BackendTokenTable()
         table.seed_from_supervisor(('tok1',))
-        assert table.verify_header({'headers': [(b'x-alasio-token', b'tok1')]})
+        assert table.verify_header({'headers': [(b'x-oas-token', b'tok1')]})
         assert not table.verify_header({'headers': []})
         assert not table.verify_header({})
 
@@ -245,9 +245,9 @@ class TestVerifyHeader:
         """A token not in the table does not verify."""
         table = BackendTokenTable()
         table.seed_from_supervisor(('tok1',))
-        assert not table.verify_header({'headers': [(b'x-alasio-token', b'other')]})
+        assert not table.verify_header({'headers': [(b'x-oas-token', b'other')]})
 
     def test_empty_table_false(self):
-        """An empty table (non-electron lock state) never verifies."""
+        """An empty table (non-local lock state) never verifies."""
         table = BackendTokenTable()
-        assert not table.verify_header({'headers': [(b'x-alasio-token', b'tok1')]})
+        assert not table.verify_header({'headers': [(b'x-oas-token', b'tok1')]})

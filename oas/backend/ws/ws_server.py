@@ -11,7 +11,7 @@ from starlette.websockets import WebSocket, WebSocketDisconnect, WebSocketState
 from oas.backend.mpipe.token_backend import read_token_header, token_table
 from oas.backend.reactive.event import (
     AccessDenied,
-    ElectronOnlyError,
+    LocalFlutterOnlyError,
     RequestEvent,
     ResponseEvent,
 )
@@ -95,10 +95,10 @@ class WebsocketTopicServer:
     def __init__(self, ws: WebSocket):
         self.ws = ws
         self.id = CONN_ID_GENERATOR.get()
-        # electron token from the handshake header X-Alasio-Token; '' when
+        # local token from the handshake header X-OAS-Token; '' when
         # absent. Kept per-connection, updated by a successful renewal
         # (o='auth'). Verified in real time for restricted operations.
-        self.auth_token = ''
+        self.local_token = ''
 
         self.conn_terminated = Event()
         # timestamp of last activity, used to calculate the next "ping"
@@ -155,7 +155,7 @@ class WebsocketTopicServer:
         # Login layer: validate after accept. A refused handshake would
         # only surface as 1006 to the browser and the frontend could not
         # read the close code; accept-then-close delivers the real 4001.
-        # A valid electron token passes without JWT (Electron exemption,
+        # A valid local token passes without JWT (local Flutter exemption,
         # aligned with the http /api/auth/renew exemption).
         #
         # The reason is a stable, machine-readable token (not prose): the
@@ -169,9 +169,9 @@ class WebsocketTopicServer:
             await self.close(4001, 'alasio:auth-failed')
             return
 
-        # Read the electron token from the handshake headers (ws.headers
+        # Read the local token from the handshake headers (ws.headers
         # keeps the handshake headers after accept).
-        self.auth_token = read_token_header(self.ws)
+        self.local_token = read_token_header(self.ws)
 
         # register into the active connections registry
         WebsocketTopicServer.active[self.id] = self
@@ -212,30 +212,24 @@ class WebsocketTopicServer:
 
     async def _check_login(self):
         """
-        Validate the login layer on the handshake: a valid electron token
-        passes without JWT (only the local Electron network layer can
-        supply a table token), otherwise the alasio_token cookie JWT must
-        be valid.
+        Validate the login layer on the handshake: a valid local token
+        passes without JWT (only the local app's network layer can
+        supply a table token), otherwise the login cookie (LOGIN_COOKIE)
+        JWT must be valid.
 
         Returns:
             bool: True when the connection is logged in
         """
+        import jwt
+
+        from oas.backend.auth.auth import JWT_MANAGER, LOGIN_COOKIE
+
         if token_table.verify_header(self.ws):
             return True
-        try:
-            import jwt as pyjwt
-
-            from oas.backend.auth.auth import JWT_MANAGER
-        except ImportError:
-            # oas.backend.auth is not migrated yet (and PyJWT is not a
-            # dependency of this backend yet either): only the electron
-            # token can be validated, every other handshake is refused --
-            # the same answer Alasio gives for an invalid cookie JWT.
-            return False
-        token = self.ws.cookies.get('alasio_token', '')
+        token = self.ws.cookies.get(LOGIN_COOKIE, '')
         try:
             JWT_MANAGER.validate_token(token)
-        except pyjwt.PyJWTError:
+        except jwt.PyJWTError:
             return False
         return True
 
@@ -629,14 +623,14 @@ class WebsocketTopicServer:
         op = event.o
         t = event.t
         if op == 'auth':
-            # Electron token renewal: redeem the one-time code
+            # local token renewal: redeem the one-time code
             # issued by POST /api/ws/renew and update the connection's
-            # auth_token to the latest token in the table. A failed
+            # local_token to the latest token in the table. A failed
             # redeem raises AccessDenied: the connection stays alive.
             from oas.backend.ws.renew import renewal_manager
 
             if renewal_manager.redeem(event.v):
-                self.auth_token = token_table.current()
+                self.local_token = token_table.current()
                 return
             raise AccessDenied('Invalid or expired renewal code')
         if op == 'sub':
@@ -648,13 +642,15 @@ class WebsocketTopicServer:
                 topic_class = self.ALL_TOPIC_CLASS[t]
             except KeyError:
                 raise AccessDenied(f'No such topic: "{t}"')
-            # electron check before creating the topic: a rejected
+            # local check before creating the topic: a rejected
             # subscribe only sends an error message and the connection
             # stays alive (red line: never close on subscribe
             # refusal, the frontend silently drops the error topic)
-            if topic_class.REQUIRE_ELECTRON:
-                if not token_table.verify(self.auth_token):
-                    raise ElectronOnlyError(f'Topic requires electron: "{t}"')
+            if topic_class.REQUIRE_LOCAL_FLUTTER:
+                if not token_table.verify(self.local_token):
+                    raise LocalFlutterOnlyError(
+                        f'Topic requires the local Flutter client: "{t}"'
+                    )
             # if topic is already subscribed, ignore this event
             if t in self.subscribed:
                 return
