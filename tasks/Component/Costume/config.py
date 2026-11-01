@@ -39,6 +39,7 @@ class CarpBannerType(str, Enum):
 # 主题，就是庭院最右下角的展开按钮
 class ThemeType(str, Enum):
     COSTUME_THEME_DEFAULT = 'costume_theme_default'  # 伊始之卷
+    COSTUME_THEME_XINYU_MINGXIAO = 'costume_theme_xinyu_mingxiao'  # 新语明霄
 
 # 幕间，就是式神录这里
 class ShikigamiType(str, Enum):
@@ -103,9 +104,10 @@ class CostumeConfig(BaseModel):
             return RealmType.COSTUME_REALM_DEFAULT
         return v
 
-
-
-
-
-
-
+    @field_validator('costume_theme_type', mode='before')
+    @classmethod
+    def validate_theme(cls, v):
+        # Preserve selections saved by the earlier local numbered adaptation.
+        if v in ('costume_theme_1', 'costume_theme_2'):
+            return ThemeType.COSTUME_THEME_XINYU_MINGXIAO
+        return v
