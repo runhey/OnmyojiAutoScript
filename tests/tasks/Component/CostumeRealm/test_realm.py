@@ -22,6 +22,21 @@ class RealmTests(unittest.TestCase):
         self.assertIn('costume_realm_yuehai_youxing',
                       CostumeConfig.model_json_schema()['$defs']['RealmType']['enum'])
 
+    def test_manual_tool_uses_existing_realm_members(self):
+        # Parse only: importing the tool could initialize a real device.
+        import ast
+        from pathlib import Path
+        tool = Path(__file__).resolve().parents[4] / 'tasks/Component/Costume/costume_test_realm.py'
+        tree = ast.parse(tool.read_text(encoding='utf-8'))
+        members = [node.attr for node in ast.walk(tree)
+                   if isinstance(node, ast.Attribute)
+                   and isinstance(node.value, ast.Name)
+                   and node.value.id == 'RealmType']
+        self.assertIn('COSTUME_REALM_YUEHAI_YOUXING', members)
+        for member in members:
+            with self.subTest(member=member):
+                self.assertIn(member, RealmType.__members__)
+
     def test_previous_local_selection_is_preserved(self):
         config = CostumeConfig(costume_realm_type='costume_realm_2')
         self.assertEqual(config.model_dump(mode='json')['costume_realm_type'],

@@ -62,7 +62,7 @@ if __name__ == '__main__':
     c = Config('oas1')
     d = Device(c)
     t = ScriptTask(c, d)
-    t.set_costume(RealmType.COSTUME_REALM_2)
+    t.set_costume(RealmType.COSTUME_REALM_YUEHAI_YOUXING)
     t.run()
 
 
