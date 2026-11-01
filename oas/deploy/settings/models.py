@@ -11,6 +11,7 @@ from pydantic import Field
 from oas.config.models.tasks import TaskBase
 from oas.deploy.settings.groups import (
     AdbGroup,
+    BackendGroup,
     GitGroup,
     OcrGroup,
     PythonGroup,
@@ -50,4 +51,8 @@ class Settings(TaskBase):
     webui: WebuiGroup = Field(
         default_factory=WebuiGroup,
         description='webui_group_help',
+    )
+    backend: BackendGroup = Field(
+        default_factory=BackendGroup,
+        description='backend_group_help',
     )

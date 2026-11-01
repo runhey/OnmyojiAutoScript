@@ -6,6 +6,7 @@ from pydantic import ValidationError
 from oas.config.models.args import Time
 from oas.deploy.settings.groups import (
     AdbGroup,
+    BackendGroup,
     GitGroup,
     Language,
     OcrGroup,
@@ -23,7 +24,8 @@ ARG_COUNTS = (
     (OcrGroup, 4),
     (UpdateGroup, 3),
     (RemoteAccessGroup, 4),
-    (WebuiGroup, 8),
+    (WebuiGroup, 5),
+    (BackendGroup, 5),
 )
 GROUPS = tuple(group_class for group_class, _count in ARG_COUNTS)
 COMPONENTS = ('Input', 'Switch', 'Option', 'Time')
@@ -157,28 +159,48 @@ def test_remote_access_group_defaults():
 def test_webui_group_defaults():
     group = WebuiGroup()
 
-    assert group.host == '0.0.0.0'
-    assert group.port == 22288
     assert group.language is Language.ZH_CN
     assert group.theme is Theme.DEFAULT
     assert group.dpi_scaling is True
-    assert group.password is None
     assert group.cdn is False
     assert group.run is None
 
 
+def test_backend_group_defaults():
+    group = BackendGroup()
+
+    assert group.host == '0.0.0.0'
+    assert group.port == 22288
+    assert group.password is None
+    assert group.ssl_key == ''
+    assert group.ssl_cert == ''
+
+
+@pytest.mark.parametrize('port', [1, 22288, 65535])
+def test_backend_port_accepts_the_port_range(port):
+    assert BackendGroup(port=port).port == port
+
+
 @pytest.mark.parametrize('port', [0, 65536])
-def test_webui_port_rejects_a_value_out_of_range(port):
+def test_backend_port_rejects_a_value_out_of_range(port):
     with pytest.raises(ValidationError):
-        WebuiGroup(port=port)
+        BackendGroup(port=port)
 
 
-def test_webui_password_uses_the_secret_component():
-    prop = WebuiGroup.model_json_schema()['properties']['password']
+def test_backend_password_uses_the_secret_component():
+    prop = BackendGroup.model_json_schema()['properties']['password']
 
     assert prop['type'] == 'Input'
     assert prop['input'] == 'secret_str'
     assert prop['writeOnly'] is True
+
+
+@pytest.mark.parametrize('name', ['ssl_key', 'ssl_cert'])
+def test_backend_ssl_arguments_use_the_file_component(name):
+    prop = BackendGroup.model_json_schema()['properties'][name]
+
+    assert prop['type'] == 'Input'
+    assert prop['input'] == 'file'
 
 
 @pytest.mark.parametrize('cdn', ['http://cdn.example.com', True, False])

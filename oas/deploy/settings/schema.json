@@ -36,6 +36,64 @@
       "title": "AdbGroup",
       "type": "object"
     },
+    "BackendGroup": {
+      "description": "Local server address, webui password and SSL wiring.",
+      "properties": {
+        "host": {
+          "default": "0.0.0.0",
+          "description": "host_help",
+          "hide": false,
+          "input": "str",
+          "title": "Host",
+          "type": "Input"
+        },
+        "port": {
+          "default": 22288,
+          "description": "port_help",
+          "hide": false,
+          "input": "int",
+          "maximum": 65535,
+          "minimum": 1,
+          "title": "Port",
+          "type": "Input"
+        },
+        "password": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "password_help",
+          "hide": false,
+          "input": "secret_str",
+          "title": "Password",
+          "type": "Input",
+          "writeOnly": true
+        },
+        "ssl_key": {
+          "default": "",
+          "description": "ssl_key_help",
+          "hide": false,
+          "input": "file",
+          "title": "Ssl Key",
+          "type": "Input"
+        },
+        "ssl_cert": {
+          "default": "",
+          "description": "ssl_cert_help",
+          "hide": false,
+          "input": "file",
+          "title": "Ssl Cert",
+          "type": "Input"
+        }
+      },
+      "title": "BackendGroup",
+      "type": "object"
+    },
     "GitGroup": {
       "description": "Git repository and update policy.",
       "properties": {
@@ -267,26 +325,8 @@
       "type": "object"
     },
     "WebuiGroup": {
-      "description": "Local server, web UI presentation and startup behaviour.",
+      "description": "Web UI presentation and startup behaviour.",
       "properties": {
-        "host": {
-          "default": "0.0.0.0",
-          "description": "host_help",
-          "hide": false,
-          "input": "str",
-          "title": "Host",
-          "type": "Input"
-        },
-        "port": {
-          "default": 22288,
-          "description": "port_help",
-          "hide": false,
-          "input": "int",
-          "maximum": 65535,
-          "minimum": 1,
-          "title": "Port",
-          "type": "Input"
-        },
         "language": {
           "default": "zh-CN",
           "description": "language_help",
@@ -366,23 +406,6 @@
           "title": "Dpi Scaling",
           "type": "Switch"
         },
-        "password": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "description": "password_help",
-          "hide": false,
-          "input": "secret_str",
-          "title": "Password",
-          "type": "Input",
-          "writeOnly": true
-        },
         "cdn": {
           "anyOf": [
             {
@@ -449,6 +472,10 @@
     "webui": {
       "$ref": "#/$defs/WebuiGroup",
       "description": "webui_group_help"
+    },
+    "backend": {
+      "$ref": "#/$defs/BackendGroup",
+      "description": "backend_group_help"
     }
   },
   "title": "Settings",

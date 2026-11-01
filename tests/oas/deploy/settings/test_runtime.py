@@ -66,11 +66,11 @@ def test_missing_file_is_created_from_defaults(settings_file):
 
 
 def test_existing_file_is_validated_and_read(settings_file):
-    write_json(settings_file, {'webui': {'port': 12345}, 'git': {'branch': 'dev'}})
+    write_json(settings_file, {'backend': {'port': 12345}, 'git': {'branch': 'dev'}})
 
     data = SettingsRuntime(file=settings_file).data
 
-    assert data.webui.port == 12345
+    assert data.backend.port == 12345
     assert data.git.branch == 'dev'
     # A Group the file does not mention keeps its defaults.
     assert data.adb == AdbGroup()
@@ -79,11 +79,11 @@ def test_existing_file_is_validated_and_read(settings_file):
 def test_every_access_re_reads_the_file(settings_file):
     settings = SettingsRuntime(file=settings_file)
 
-    assert settings.data.webui.port == 22288
+    assert settings.data.backend.port == 22288
 
-    write_json(settings_file, {'webui': {'port': 12345}}, skip_same=False)
+    write_json(settings_file, {'backend': {'port': 12345}}, skip_same=False)
 
-    assert settings.data.webui.port == 12345
+    assert settings.data.backend.port == 12345
 
 
 def test_corrupt_json_raises_and_keeps_the_file(settings_file):
@@ -95,7 +95,7 @@ def test_corrupt_json_raises_and_keeps_the_file(settings_file):
 
 
 def test_invalid_value_raises_and_keeps_the_file(settings_file):
-    write_json(settings_file, {'webui': {'port': 0}})
+    write_json(settings_file, {'backend': {'port': 0}})
     before = atomic_read_bytes(settings_file)
 
     with pytest.raises(ValidationError):

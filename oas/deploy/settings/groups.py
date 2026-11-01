@@ -157,18 +157,8 @@ class RemoteAccessGroup(GroupBase):
 
 
 class WebuiGroup(GroupBase):
-    """Local server, web UI presentation and startup behaviour."""
+    """Web UI presentation and startup behaviour."""
 
-    host: str = Input.str(
-        default='0.0.0.0',
-        description='host_help',
-    )
-    port: int = Input.int(
-        default=22288,
-        ge=1,
-        le=65535,
-        description='port_help',
-    )
     language: Language = Option.field(
         default=Language.ZH_CN,
         description='language_help',
@@ -181,10 +171,6 @@ class WebuiGroup(GroupBase):
         default=True,
         description='dpi_scaling_help',
     )
-    password: str | None = Input.secret_str(
-        default=None,
-        description='password_help',
-    )
     cdn: str | bool = Input.str(
         default=False,
         description='cdn_help',
@@ -192,4 +178,31 @@ class WebuiGroup(GroupBase):
     run: str | None = Input.str(
         default=None,
         description='run_help',
+    )
+
+
+class BackendGroup(GroupBase):
+    """Local server address, webui password and SSL wiring."""
+
+    host: str = Input.str(
+        default='0.0.0.0',
+        description='host_help',
+    )
+    port: int = Input.int(
+        default=22288,
+        ge=1,
+        le=65535,
+        description='port_help',
+    )
+    password: str | None = Input.secret_str(
+        default=None,
+        description='password_help',
+    )
+    ssl_key: str = Input.file(
+        default='',
+        description='ssl_key_help',
+    )
+    ssl_cert: str = Input.file(
+        default='',
+        description='ssl_cert_help',
     )

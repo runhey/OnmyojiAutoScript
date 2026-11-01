@@ -5,6 +5,7 @@ from pydantic import ValidationError
 
 from oas.deploy.settings.groups import (
     AdbGroup,
+    BackendGroup,
     GitGroup,
     OcrGroup,
     PythonGroup,
@@ -14,7 +15,16 @@ from oas.deploy.settings.groups import (
 )
 from oas.deploy.settings.models import Settings
 
-GROUP_FIELDS = ('git', 'python', 'adb', 'ocr', 'update', 'remote_access', 'webui')
+GROUP_FIELDS = (
+    'git',
+    'python',
+    'adb',
+    'ocr',
+    'update',
+    'remote_access',
+    'webui',
+    'backend',
+)
 GROUP_CLASSES = (
     GitGroup,
     PythonGroup,
@@ -23,10 +33,11 @@ GROUP_CLASSES = (
     UpdateGroup,
     RemoteAccessGroup,
     WebuiGroup,
+    BackendGroup,
 )
 
 
-def test_settings_declares_the_seven_groups_in_order():
+def test_settings_declares_the_eight_groups_in_order():
     assert tuple(Settings.model_fields) == GROUP_FIELDS
 
     settings = Settings()
@@ -35,7 +46,7 @@ def test_settings_declares_the_seven_groups_in_order():
 
 
 def test_settings_covers_every_argument_of_its_groups():
-    assert sum(len(cls.model_fields) for cls in GROUP_CLASSES) == 31
+    assert sum(len(cls.model_fields) for cls in GROUP_CLASSES) == 33
 
 
 def test_settings_to_dict_holds_only_the_groups():
@@ -66,7 +77,9 @@ def test_settings_defaults_are_the_group_defaults():
     assert settings.ocr.ocr_server_port == 22268
     assert settings.update.check_update_interval == 5
     assert settings.remote_access.ssh_executable == 'ssh'
-    assert settings.webui.port == 22288
+    assert settings.backend.port == 22288
+    assert settings.backend.ssl_key == ''
+    assert settings.backend.ssl_cert == ''
 
 
 def test_settings_roundtrips_through_its_persisted_dict():
@@ -77,12 +90,13 @@ def test_settings_from_dict_applies_nested_values():
     settings = Settings.from_dict(
         {
             'git': {'branch': 'dev'},
-            'webui': {'port': 12345, 'language': 'ja-JP'},
+            'backend': {'port': 12345},
+            'webui': {'language': 'ja-JP'},
         }
     )
 
     assert settings.git.branch == 'dev'
-    assert settings.webui.port == 12345
+    assert settings.backend.port == 12345
     assert settings.webui.language.value == 'ja-JP'
     # A Group the payload does not mention keeps its defaults.
     assert settings.adb == AdbGroup()
@@ -92,7 +106,7 @@ def test_settings_from_dict_applies_nested_values():
 @pytest.mark.parametrize(
     'payload',
     [
-        {'webui': {'port': 0}},
+        {'backend': {'port': 0}},
         {'ocr': {'ocr_server_port': 'not-a-port'}},
         {'git': {'ssl_verify': 'maybe'}},
         {'webui': {'language': 'en-GB'}},
