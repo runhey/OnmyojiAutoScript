@@ -2,6 +2,8 @@ import cv2
 import re
 import numpy as np
 from numpy import uint8, fromfile
+from module.base.timer import Timer
+from module.exception import GameStuckError
 from module.logger import logger
 
 from tasks.base_task import BaseTask
@@ -81,24 +83,27 @@ class MoonSeaMap(MoonSeaSkills):
         if isl_type == MoonSeaType.island100:
             logger.warning('The island type was not recognized')
             logger.warning('Pick one at random, starting from the right')
+            timeout = Timer(15).start()
+            click_timer = Timer(1)
+            entrances = (
+                self.C_ISLAND_ENTER_1, self.C_ISLAND_ENTER_2, self.C_ISLAND_ENTER_3,
+                self.C_ISLAND_ENTER_4, self.C_ISLAND_ENTER_5, self.C_ISLAND_ENTER_6,
+            )
+            entrance_index = 0
             while 1:
                 self.screenshot()
                 if not self.in_main() and self.appear(self.I_BACK_EXIT):
                     break
+                if timeout.reached():
+                    raise GameStuckError('Enter unknown island timeout')
+                if not click_timer.reached():
+                    continue
                 if self.appear_then_click(self.I_UI_CANCEL, interval=1):
+                    click_timer.reset()
                     continue
-                if self.click(self.C_ISLAND_ENTER_1, interval=2):
-                    continue
-                if self.click(self.C_ISLAND_ENTER_2, interval=2):
-                    continue
-                if self.click(self.C_ISLAND_ENTER_3, interval=2):
-                    continue
-                if self.click(self.C_ISLAND_ENTER_4, interval=2):
-                    continue
-                if self.click(self.C_ISLAND_ENTER_5, interval=2):
-                    continue
-                if self.click(self.C_ISLAND_ENTER_6, interval=2):
-                    continue
+                self.click(entrances[entrance_index])
+                entrance_index = (entrance_index + 1) % len(entrances)
+                click_timer.reset()
             logger.info('Entering island randomly')
             return
         isl_roi = [isl_roi[0]-40, isl_roi[1] + 70, isl_roi[2] + 40, isl_roi[3]+40]
