@@ -9,13 +9,29 @@ from oas.config.table.menu import MenuGroupTable, MenuSchemeTable, MenuTaskTable
 from oas.db.conn import SQLITE_POOL
 
 
-@pytest.fixture
-def entry():
-    menu = MenuEntry(':memory:')
-    yield menu
+def _make_entry():
+    """
+    One MenuEntry on the shared in-memory config.
+
+    The entry creates the three menu tables on construction, which is what
+    makes a first menu write work on a fresh config database (see
+    oas/config/README.md, 菜单表的建表时机).
+    """
+    return MenuEntry(':memory:')
+
+
+def _drop_entry():
+    """Drop the in-memory menu tables and the MenuEntry cached for them."""
+    MenuEntry.singleton_remove(':memory:')
     for table in (MenuTaskTable, MenuGroupTable, MenuSchemeTable):
         table.singleton_remove(':memory:')
     SQLITE_POOL.delete_file(':memory:')
+
+
+@pytest.fixture
+def entry():
+    yield _make_entry()
+    _drop_entry()
 
 
 def test_scheme_name_validation(entry):
@@ -314,11 +330,8 @@ def test_group_and_task_views_reject_missing(entry):
 
 @pytest.fixture
 def menu_entry():
-    entry = MenuEntry(':memory:')
-    yield entry
-    for table in (MenuTaskTable, MenuGroupTable, MenuSchemeTable):
-        table.singleton_remove(':memory:')
-    SQLITE_POOL.delete_file(':memory:')
+    yield _make_entry()
+    _drop_entry()
 
 
 def test_add_scheme_preserves_group_and_task_order(menu_entry):
@@ -436,4 +449,6 @@ def test_seed_defaults_filters_unregistered_task_classes(menu_entry, monkeypatch
     )
 
     view = menu_entry.menu_scheme_get('DEFAULT_MENU')
-    assert {k: v['tasks'] for k, v in view['groups'].items()} == {'Visible': ['Known@default']}
+    assert {k: v['tasks'] for k, v in view['groups'].items()} == {
+        'Visible': ['Known@default']
+    }

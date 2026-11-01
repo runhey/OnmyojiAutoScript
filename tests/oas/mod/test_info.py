@@ -7,8 +7,8 @@ def test_entry_info_defaults():
     info = ModEntryInfo(name='mod')
 
     assert info.root == ''
-    assert info.path_config == 'module/config'
-    assert info.path_main == 'module/main.py'
+    assert info.path_config == 'script/config'
+    assert info.path_main == 'script/main.py'
     assert info.path_assets == 'assets'
     assert set(info.asset_ext) == {'.png', '.gif'}
     assert set(info.asset_lang) == {'cn', 'en'}
@@ -34,9 +34,9 @@ def test_iter_asset_lang_yields_shared_then_configured_languages():
     assert list(info.iter_asset_lang()) == ['', 'cn', 'en']
 
 
-def test_oas_entry_points_at_the_config_package():
+def test_oas_entry_points_at_the_script_config_folder():
     info = ModEntryInfo.oas()
 
     assert info.name == 'oas'
-    assert info.path_config == 'oas/config'
+    assert info.path_config == 'script/config'
     assert 'zh-CN' in info.gui_language

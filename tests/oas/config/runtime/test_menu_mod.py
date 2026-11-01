@@ -7,29 +7,63 @@ import pytest
 
 from oas.config.entry.mod_menu import MenuEntry, modmenu
 from oas.config.models.registry import config_model_registry
-from oas.config.runtime.menu_mod import MenuMod
+from oas.config.runtime.menu_mod import MenuMod, MenuModMixin
 from oas.config.table.menu import MenuGroupTable, MenuSchemeTable, MenuTaskTable
 from oas.db.conn import SQLITE_POOL
 
 
-@pytest.fixture
-def menu_mod():
-    yield MenuMod(':memory:')
+def _drop_menu_state():
+    """Drop the in-memory menu tables and the MenuEntry cached for them."""
+    MenuEntry.singleton_remove(':memory:')
     for table in (MenuTaskTable, MenuGroupTable, MenuSchemeTable):
         table.singleton_remove(':memory:')
     SQLITE_POOL.delete_file(':memory:')
 
 
-def test_mounts_one_entry_per_instance(menu_mod):
-    menu_mod.menu_scheme_list(':memory:')
-    entry = menu_mod.__menu_entry__
-    menu_mod.menu_scheme_list(':memory:')
-    assert menu_mod.__menu_entry__ is entry
+def test_entry_builds_the_menu_schema_on_construction():
+    """
+    A menu edit is the first thing that touches a fresh config database, and it
+    writes all three menu tables inside one transaction.  The automatic table
+    creation of the table layer only knows the table a cursor was opened on, so
+    MenuEntry itself has to create the schema on construction (see
+    oas/config/README.md, 菜单表的建表时机).
+    """
+    for table in (MenuSchemeTable, MenuGroupTable, MenuTaskTable):
+        table(':memory:').drop_table()
+    MenuEntry.singleton_remove(':memory:')
+
+    entry = MenuEntry(':memory:')
+
+    assert entry.schemes.select() == []
+    assert entry.groups.select() == []
+    assert entry.tasks.select() == []
 
 
-def test_config_name_mismatch_is_rejected(menu_mod):
-    with pytest.raises(ValueError, match='config_name mismatch'):
-        menu_mod.menu_scheme_list('other')
+@pytest.fixture
+def menu_mod():
+    """The stateless facade: it carries no config_name of its own."""
+    yield MenuModMixin()
+    _drop_menu_state()
+
+
+def test_menu_mod_is_the_stateless_mixin():
+    assert MenuMod is MenuModMixin
+
+
+def test_entry_is_cached_per_config_name():
+    """
+    One MenuEntry per config_name: the cache lives in the config_name-keyed
+    singleton, not on a facade instance.
+    """
+    assert MenuEntry(':memory:') is MenuEntry(':memory:')
+
+    other = MenuEntry('other')
+    assert other is not MenuEntry(':memory:')
+    assert MenuEntry('other') is other
+
+    MenuEntry.singleton_remove('other')
+    for table in (MenuTaskTable, MenuGroupTable, MenuSchemeTable):
+        table.singleton_remove('other')
 
 
 def test_scheme_crud(menu_mod):
@@ -229,10 +263,8 @@ MENU_METHODS = [
 
 @pytest.fixture
 def menu_mod_errors():
-    yield MenuMod(':memory:')
-    for table in (MenuTaskTable, MenuGroupTable, MenuSchemeTable):
-        table.singleton_remove(':memory:')
-    SQLITE_POOL.delete_file(':memory:')
+    yield MenuModMixin()
+    _drop_menu_state()
 
 
 @pytest.mark.parametrize('name', MENU_METHODS)
@@ -246,34 +278,21 @@ def test_public_signature_hides_result(name):
     assert 'result' in inspect.signature(method.__wrapped__).parameters
 
 
-def test_entry_is_mounted_once_and_reused(menu_mod_errors):
-    assert '__menu_entry__' not in menu_mod_errors.__dict__
+def test_the_facade_carries_no_state(menu_mod_errors):
+    """
+    The mixin mounts nothing on the target: no entry, no config_name.  The
+    entry of a call comes from that call's config_name argument.
+    """
+    assert menu_mod_errors.__dict__ == {}
 
     menu_mod_errors.menu_scheme_list(':memory:')
-    entry = menu_mod_errors.__dict__['__menu_entry__']
-    menu_mod_errors.menu_scheme_list(':memory:')
 
-    assert menu_mod_errors.__dict__['__menu_entry__'] is entry
-    assert isinstance(entry, MenuEntry)
+    assert menu_mod_errors.__dict__ == {}
 
 
-def test_entry_rejects_config_name_mismatch(menu_mod_errors):
-    with pytest.raises(ValueError, match='config_name mismatch'):
-        menu_mod_errors.menu_scheme_list('other')
-
-
-def test_entry_requires_config_name():
-    class NoConfig:
-        def list(self, result, config_name):
-            return result
-
-    NoConfig.list = modmenu._decorate(
-        NoConfig.list,
-        lambda target, config_name: modmenu._entry(target, config_name),
-    )
-
-    with pytest.raises(AttributeError, match='config_name'):
-        NoConfig().list(':memory:')
+def test_entry_is_resolved_from_the_config_name_argument():
+    assert list(inspect.signature(modmenu._entry).parameters) == ['config_name']
+    assert modmenu._entry(':memory:') is MenuEntry(':memory:')
 
 
 def test_decorate_requires_callable():

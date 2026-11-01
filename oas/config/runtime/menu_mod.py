@@ -13,20 +13,17 @@ from typing import Any
 from oas.config.entry.mod_menu import modmenu
 
 
-class MenuMod:
+class MenuModMixin:
     """Menu CRUD operations exposed by the Mod runtime.
 
     Implementations live in :class:`oas.config.entry.mod_menu.modmenu`.
-    ``modmenu`` mounts one ``MenuEntry`` per instance, so this class only has
-    to carry the configuration name.
+    ``MenuEntry`` is cached by ``config_name`` through ``SingletonNamed``;
+    this mixin does not attach state to the target object.
 
     Full parameter, return-value, and error documentation lives on the
     corresponding ``modmenu.menu_*`` decorator factory; each method below only
     returns the decorator-computed ``result``.
     """
-
-    def __init__(self, config_name: str):
-        self.config_name = config_name
 
     # ------------------------------------------------------------------
     # Scheme operations
@@ -279,3 +276,7 @@ class MenuMod:
     ) -> dict[str, Any]:
         """Move a task within its group, or to another group."""
         return result
+
+
+# Backward-compatible import name; the implementation itself is stateless.
+MenuMod = MenuModMixin

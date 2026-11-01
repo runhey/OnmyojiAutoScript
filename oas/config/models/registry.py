@@ -251,6 +251,11 @@ class TaskNameResolver:
     """Translate ``TaskClass@name`` strings to registered Task classes."""
 
     @classmethod
+    def _default_task_name(cls, task: str) -> str:
+        """Return the default Task instance name for a menu entry."""
+        return task if '@' in task else f'{task}@default'
+
+    @classmethod
     def split(cls, task: str) -> tuple[str, str]:
         """Split ``TaskClass@name``; plain legacy names return ``("", task)``."""
         taskclass, separator, name = task.partition('@')

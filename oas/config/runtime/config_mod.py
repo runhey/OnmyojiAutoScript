@@ -1,8 +1,8 @@
-"""Configuration operations exposed by the Mod runtime.
+"""Configuration API declarations and the stateful worker runtime.
 
-This class only declares the public API.  Every method receives a ``result``
-as its second positional argument; the ``modconfig`` decorator computes that
-result, and the method returns it unchanged.
+The operation methods live in ``ConfigModMixin`` so the GUI facade can reuse
+the same decorated API without inheriting worker cache or lock state.
+``ConfigMod`` combines that API with ``ConfigAccessState`` for Worker usage.
 """
 
 from __future__ import annotations
@@ -15,20 +15,13 @@ from oas.config.runtime.config_state import ConfigAccessState
 from oas.mod.info import ModEntryInfo
 
 
-class ConfigMod(ConfigAccessState):
-    """Configuration operations exposed by the Mod runtime.
+class ConfigModMixin:
+    """Stateless declarations of the configuration operation API.
 
-    - ``config_*``：Alasio 兼容接口，签名和返回值与 Alasio 一致；
-    - ``cfg_*``：OAS 原生接口，统一返回 ``(success, events)``。
-
-    实现全部在 :class:`oas.config.entry.mod_config.modconfig`。本类的每个方法
-    只接收装饰器计算好的 ``result`` 并原样返回。
-
-    所有公开操作的第一个参数都是 ``config_name``。Task 实例名格式为
-    ``TaskClass@name``，例如 ``FindJadeTask@default``。
+    Methods receive ``config_name`` explicitly and return the value computed
+    by ``modconfig``.  This class deliberately owns no configuration cache,
+    database handle, lock, or pending-change state.
     """
-
-    __entry_info__ = ModEntryInfo.oas()
 
     # ------------------------------------------------------------------
     # Runtime storage access
@@ -281,3 +274,14 @@ class ConfigMod(ConfigAccessState):
     ) -> tuple[bool, list[ConfigSetEvent]]:
         """批量把 Arg 恢复为模型默认值。"""
         return result
+
+
+class ConfigMod(ConfigAccessState, ConfigModMixin):
+    """Worker-side configuration runtime.
+
+    ``ConfigAccessState`` owns mutable cache and persistence state; the mixin
+    only supplies the public decorated methods.  Keeping these responsibilities
+    separate allows ``ConfigGui`` to use the mixin without this stateful base.
+    """
+
+    __entry_info__ = ModEntryInfo.oas()

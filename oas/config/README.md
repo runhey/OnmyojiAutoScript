@@ -201,3 +201,19 @@ statistics 数据库：执行记录、统计和审计
 ```
 
 这样可以让配置、状态和统计独立迁移、备份和演进。调度器只通过各数据域的运行时接口访问它们，不直接操作 SQLite。
+
+## 注意事项
+
+### 菜单表的建表时机
+
+`MenuEntry` 构造时就把三张菜单表建好（`ui_menu_scheme` / `ui_menu_group` /
+`ui_menu_task`），`__init__` 里那三行 `create_table()` 不能删。
+
+原因：`Table` 的"执行 SQL 时自动建表"只能覆盖**当前 cursor 上挂着的那张表** ——
+`Table.cursor()` 把该表的 `TABLE_NAME` / `CREATE_TABLE` 复制给 cursor，
+`SqlitePoolCursor.execute()` 遇到 `no such table:` 时用它建表。而菜单操作在
+`self.schemes.exclusive_transaction()` 里跨三张表写（`mod_menu.py` 共 12 处），
+事务 cursor 上挂的是 `ui_menu_scheme` 的 DDL：少了那三行，一张全新的配置库上
+第一个菜单写入会以 `no such table: ui_menu_group` 失败。
+
+要消掉这三行，就得让共享事务能一次登记多张表的 DDL（改动落在 `db` 层）。

@@ -39,7 +39,6 @@ from oas.config.models.registry import (
 from oas.config.models.tasks import TaskBase
 from oas.config.table.config import ConfigTable
 from oas.logger import logger
-from oas.mod.adapter import ModAdapter
 
 F = TypeVar('F', bound=Callable[..., Any])
 
@@ -48,13 +47,11 @@ F = TypeVar('F', bound=Callable[..., Any])
 _EMPTY_GROUP_PAYLOAD: bytes = msgspec.msgpack.encode({})
 
 
-class modconfig(ModAdapter):
+class modconfig:
     """Configuration decorators and their ``config_*`` / ``cfg_*`` implementations.
 
-    The decorated class must define ``__entry_info__``; its instances must
-    define ``config_name``.  The first decorated call creates one shared
-    :class:`~oas.mod.adapter.ModAdapter` and mounts it on the instance as
-    ``__mod_adapter__``.  Each later call runs the matching implementation,
+    The decorated class instances must define ``config_name``.  Each decorated
+    call runs the matching implementation,
     inserts the computed value as ``result`` after ``self``, and calls the
     decorated method.  The method must return ``result`` unchanged.
 
@@ -91,34 +88,6 @@ class modconfig(ModAdapter):
     class name and the instance name separately and build that string.
     """
 
-    _entry_info_attribute = '__entry_info__'
-    _adapter_attribute = '__mod_adapter__'
-
-    @classmethod
-    def _shared_adapter(cls, target: Any) -> ModAdapter:
-        """获取或创建挂在目标实例上的共享 ModAdapter。"""
-        adapter = getattr(target, cls._adapter_attribute, None)
-        if adapter is not None:
-            if not isinstance(adapter, ModAdapter):
-                raise TypeError(f'{cls._adapter_attribute} must contain ModAdapter')
-            if adapter.config_name != target.config_name:
-                raise ValueError(
-                    f'{cls._adapter_attribute} is bound to a different config_name'
-                )
-            return adapter
-
-        entry_info = getattr(type(target), cls._entry_info_attribute, None)
-        if entry_info is None:
-            raise AttributeError(
-                f'{type(target).__name__} must define {cls._entry_info_attribute}'
-            )
-        if not hasattr(target, 'config_name'):
-            raise AttributeError(f'{type(target).__name__} must define config_name')
-
-        adapter = ModAdapter(entry_info, target.config_name)
-        setattr(target, cls._adapter_attribute, adapter)
-        return adapter
-
     @classmethod
     def _decorate(
         cls,
@@ -138,7 +107,6 @@ class modconfig(ModAdapter):
 
         @wraps(function)
         def wrapper(target: Any, *args: Any, **kwargs: Any) -> Any:
-            cls._shared_adapter(target)
             result = implementation(target, *args, **kwargs)
             return function(target, result, *args, **kwargs)
 

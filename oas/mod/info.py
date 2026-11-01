@@ -19,9 +19,9 @@ class ModEntryInfo(Struct):
     root: str = ''
     # relative path from mod root to config folder,
     # where you have config.index.json, nav.index.json, model.index.json, and all config definitions
-    path_config: str = 'module/config'
+    path_config: str = 'script/config'
     # relative path from mod root to mod scheduler
-    path_main: str = 'module/main.py'
+    path_main: str = 'script/main.py'
     # relative path from mod root to assets folder
     path_assets: str = 'assets'
     # valid file extension of assets
@@ -70,20 +70,11 @@ class ModEntryInfo(Struct):
         yield from self.asset_lang
 
     @classmethod
-    def alasio(cls):
-        return cls(
-            name='alasio',
-            root=env.OAS_ROOT,
-            path_config='oas/config',
-            gui_language=dict.fromkeys(['zh-CN', 'en-US', 'ja-JP', 'zh-TW', 'en-ES']),
-        )
-
-    @classmethod
-    def oas(cls):
+    def oas(cls) -> ModEntryInfo:
         """Return the built-in OAS Mod entry description."""
         return cls(
             name='oas',
             root=env.OAS_ROOT,
-            path_config='oas/config',
+            path_config='script/config',
             gui_language=dict.fromkeys(['zh-CN', 'en-US', 'ja-JP', 'zh-TW', 'en-ES']),
         )
