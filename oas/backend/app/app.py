@@ -9,14 +9,17 @@ import contextlib
 import anyio
 from fastapi import FastAPI, Request
 from starlette.responses import Response
+from starlette.routing import WebSocketRoute
 
 from oas.backend.anyio import AnyIO
 from oas.backend.auth import auth
 from oas.backend.auth.errors import HTTPExceptionJson
 from oas.backend.middleware.gate import DeploymentGateMiddleware
+from oas.backend.reactive.source import BaseSource
 from oas.backend.ws import renew as ws_renew
 from oas.backend.ws.context import GLOBAL_CONTEXT
 from oas.backend.ws.renew import renewal_manager
+from oas.backend.ws.topic import WebsocketServer
 from oas.backend.ws.ws_server import WebsocketTopicServer
 from oas.logger import logger
 
@@ -64,6 +67,10 @@ async def task_gc(wait=8):
         await anyio.sleep(wait)
 
         try:
+            # topic sources: instances whose data TTL expired (membership
+            # is static, GC=True classes only; NoCachePush removes itself
+            # on the last unsubscribe and never appears here)
+            BaseSource.gc_idle()
             # renewal codes: expiry scan, the main cleanup hook
             renewal_manager.gc()
         except Exception as e:
@@ -177,5 +184,10 @@ def create_app() -> FastAPI:
     # Renewal code endpoint: POST /api/ws/renew (require_login +
     # require_local_flutter), mounted after the auth router
     app.include_router(ws_renew.router, prefix='/api')
+
+    # Global websocket: the topic server serves /api/ws. Appended as a
+    # route (not a router), as Alasio does; the gate middleware covers the
+    # websocket scope itself (admission rules, then the handshake login).
+    app.routes.append(WebSocketRoute('/api/ws', WebsocketServer.endpoint))
 
     return app
