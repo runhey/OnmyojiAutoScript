@@ -1,0 +1,11 @@
+[
+  {
+    "itemName": "main_scroll_close_2",
+    "imageName": "theme2_main_scroll_close_2.png",
+    "roiFront": "1190,632,48,58",
+    "roiBack": "1160,580,108,130",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "新语明霄：收起状态卷轴"
+  }
+]
