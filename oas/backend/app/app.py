@@ -12,6 +12,7 @@ from starlette.responses import Response
 from starlette.routing import WebSocketRoute
 
 from oas.backend.anyio import AnyIO
+from oas.backend.app.lifespan import start_mpipe_recv_thread, stop_mpipe_recv_thread
 from oas.backend.app.restart.daily import DAILY
 from oas.backend.app.restart.restart_manager import RESTART_MANAGER
 from oas.backend.app.restart.update_check import UPDATE_CHECK
@@ -125,6 +126,9 @@ async def lifespan(app: 'FastAPI'):
     """
     AnyIO.bind_loop(asyncio.get_running_loop())
     logger.info('Lifespan start')
+    # startup may fail before the receive thread exists; the shutdown block
+    # below still runs, so it needs the name to be bound either way
+    mpipe_recv_thread = None
     try:
         async with anyio.create_task_group() as task_group:
             # inject global context
@@ -153,6 +157,13 @@ async def lifespan(app: 'FastAPI'):
             task_group.start_soon(UPDATE_CHECK.run)
             task_group.start_soon(RESTART_MANAGER.run)
 
+            # the supervisor channel: with a supervisor behind this backend its
+            # receive thread is up before the first request can arrive, and it
+            # owns the two supervisor-driven shutdown paths (stop command, pipe
+            # break) through the same event the listener above waits on. None
+            # when no supervisor spawned us, which is the normal dev case.
+            mpipe_recv_thread = start_mpipe_recv_thread()
+
             # actual backend runs here
             yield
 
@@ -170,6 +181,12 @@ async def lifespan(app: 'FastAPI'):
 
         logger.info('Lifespan end')
     finally:
+        # the receive thread only leaves on its own when the supervisor is
+        # already gone (EOF) or asked the backend to stop; a live one leaves it
+        # blocked in the pipe read, so this is a short grace period and the
+        # daemon flag carries the rest. After the worker manager close above:
+        # worker shutdown can still send over the pipe.
+        stop_mpipe_recv_thread(mpipe_recv_thread)
         # the context must not keep a task group of a dead loop alive
         GLOBAL_CONTEXT.global_task_group = None
         GLOBAL_CONTEXT.shutdown_event = None
