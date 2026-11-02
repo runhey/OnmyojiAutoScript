@@ -9,9 +9,13 @@ the topics it registers on connect).
 Only the ported topics are registered here: ConnState, ModList, ModHistory,
 ConfigScan, Worker, Restart and Log. The rest of the upstream registry --
 ConfigNav, ConfigArg, Update, TaskQueue, TaskQueueI18n and Dashboard -- lands
-with its own topic (see oas/backend/README.md, the topic checklist). The
-second server of upstream (PreviewServer on /api/preview) has no topic here
-at all.
+with its own topic (see oas/backend/README.md, the topic checklist).
+
+This module also defines the second server of upstream, ``PreviewServer``:
+it serves Preview alone on /api/preview, with a lossy buffer of one frame
+per connection. Preview stays off the registry above on purpose (the frames
+are raw binary, not events); the topic itself lives in
+``oas/backend/topic/preview.py``.
 
 ``init()`` also negotiates the GUI language of the connection, as upstream
 does: the language is stored in the ConnState default topic of this
@@ -24,6 +28,7 @@ from typing import Type
 from oas.backend.locale.accept_language import negotiate_accept_language
 from oas.backend.topic.log import Log
 from oas.backend.topic.mod import ModHistory, ModList
+from oas.backend.topic.preview import Preview
 from oas.backend.topic.restart import Restart
 from oas.backend.topic.scan import ConfigScan
 from oas.backend.topic.state import ConnState
@@ -122,3 +127,26 @@ class WebsocketServer(WebsocketTopicServer):
             # empty available languages, there's nothing we can do
             # return default anyway
             return default
+
+
+class PreviewServer(WebsocketTopicServer):
+    """
+    The preview server: /api/preview, serving the Preview topic alone
+
+    A second server of its own, as upstream: preview frames are raw binary
+    sent through the lossy channel (they bypass the event protocol and reach
+    the connection directly), so they are kept away from the topics of
+    /api/ws. One frame is buffered per connection -- a slow client drops the
+    frames in between instead of queueing them.
+
+    ``init()`` is the base one: the language negotiation belongs to the
+    ConnState default topic, which this server does not serve.
+    """
+
+    ALL_TOPIC_CLASS = create_topic_dict(
+        [
+            Preview,
+        ]
+    )
+    # buffer 1 preview only
+    LOSSY_BUFFER_LENGTH = 1

@@ -23,7 +23,7 @@ from oas.backend.topic._worker import BACKEND_WORKER_MANAGER
 from oas.backend.ws import renew as ws_renew
 from oas.backend.ws.context import GLOBAL_CONTEXT
 from oas.backend.ws.renew import renewal_manager
-from oas.backend.ws.topic import WebsocketServer
+from oas.backend.ws.topic import PreviewServer, WebsocketServer
 from oas.backend.ws.ws_server import WebsocketTopicServer
 from oas.logger import logger
 
@@ -211,5 +211,11 @@ def create_app() -> FastAPI:
     # route (not a router), as Alasio does; the gate middleware covers the
     # websocket scope itself (admission rules, then the handshake login).
     app.routes.append(WebSocketRoute('/api/ws', WebsocketServer.endpoint))
+
+    # Preview server: upstream's second websocket server, on /api/preview.
+    # It serves the Preview topic alone (one lossy frame per connection) and
+    # stays outside the /api/ws registry; the gate middleware above covers
+    # this scope too, since it guards the /api prefix rather than a route.
+    app.routes.append(WebSocketRoute('/api/preview', PreviewServer.endpoint))
 
     return app
