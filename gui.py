@@ -1,31 +1,25 @@
-from module.gui.utils import check_admin
-from module.gui.context.add import Add
-from module.gui.context.settings import Setting
-from module.gui.context.process_manager import ProcessManager
-from module.gui.context.utils import Utils
-from module.gui.register_type.paint_image import PaintImage
-from module.gui.register_type.rule_file import RuleFile
-from module.gui.fluent_app import FluentApp
-from module.ocr.rpc import ensure_ocr_server_started
+# =============================================================================
+# PROCESS BOUNDARY -- heavy imports must stay inside the `if __name__ ==
+# '__main__':` block.
+#
+# This entry script is re-executed by EVERY spawn child (as __mp_main__):
+# backend and worker children run the module level of this file. Module
+# level must stay minimal (patch_startup only); the BackendWithSupervisor
+# import must stay inside the __main__ block, or the children would import
+# the whole supervisor stack.
+# =============================================================================
 
-if __name__ == "__main__":
-    ensure_ocr_server_started()
-    # 检查是不是以管理员身份运行，脚本启动的其他进程会继承权限
-    # 但是貌似有问题的这个函数
-    # check_admin()
-    # 启动一个UI交互的线程，因为信号槽不可跨进程
-    # 后面选择注入上下文快
-    app = FluentApp()
-    add_config = Add()
-    setting = Setting()
-    process_manager = ProcessManager()
-    utils = Utils()
+from oas.backport.patch import patch_startup
 
-    app.set_context_property(setting, 'setting')
-    app.set_context_property(add_config, 'add_config')
-    app.set_context_property(process_manager, 'process_manager')
-    app.set_context_property(utils, 'utils')
-    app.qml_register_type(PaintImage, 'PaintImage')
-    app.qml_register_type(RuleFile, 'RuleFile')
-    # 启动一个GUI
-    app.run()
+patch_startup()
+
+if __name__ == '__main__':
+    import os
+
+    # run
+    from oas.backend.backend import BackendWithSupervisor
+
+    supervisor = BackendWithSupervisor().multiprocessing_freeze_support()
+    # --root is passed down to the backend (and then the worker) so the
+    # process chain works even when gui.py is started from another cwd
+    supervisor.run_gui(root=os.path.dirname(os.path.abspath(__file__)))

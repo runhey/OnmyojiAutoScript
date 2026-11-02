@@ -56,13 +56,14 @@ shutdown hook. uvicorn takes no such hook, and OAS's shutdown listener
 thread sets, so only the thread half is kept: ``start_mpipe_recv_thread`` /
 ``stop_mpipe_recv_thread``, owned by the lifespan.
 
-Not ported yet: the caller of ``announce_started``. uvicorn 0.38 runs the
-lifespan startup BEFORE it binds the sockets (``uvicorn/server.py``,
-``Server.startup``), so announcing from the lifespan would confirm startup
-before a bind failure can happen -- exactly the window upstream keeps the
-supervisor in (its comment: a bind failure must stay a startup failure instead
-of a restart loop). The call belongs to the server-start hook of the OAS entry
-(``oas/backend/README.md``, leftover 6).
+Porting note: the caller of ``announce_started`` used to be missing, and the
+reason it cannot live here stands: uvicorn 0.38 runs the lifespan startup BEFORE
+it binds the sockets (``uvicorn/server.py``, ``Server.startup``), so announcing
+from the lifespan would confirm startup before a bind failure can happen --
+exactly the window upstream keeps the supervisor in (its comment: a bind failure
+must stay a startup failure instead of a restart loop). It is now called from
+``BackendServer.startup`` in ``oas/backend/app/asgi.py``, right after uvicorn
+created and bound the listeners.
 """
 
 import asyncio
