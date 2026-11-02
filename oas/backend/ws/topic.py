@@ -7,9 +7,9 @@ the app mounts on /api/ws, and it owns the two registries of that server
 the topics it registers on connect).
 
 Only the ported topics are registered here: ConnState, ModList, ModHistory,
-ConfigScan, Worker, Restart and Log. The rest of the upstream registry --
-ConfigNav, ConfigArg, Update, TaskQueue, TaskQueueI18n and Dashboard -- lands
-with its own topic (see oas/backend/README.md, the topic checklist).
+ConfigScan, ConfigNav, ConfigArg, Worker, Restart, Update and Log. The rest of
+the upstream registry -- TaskQueue, TaskQueueI18n and Dashboard -- lands with
+its own topic (see oas/backend/README.md, the topic checklist).
 
 This module also defines the second server of upstream, ``PreviewServer``:
 it serves Preview alone on /api/preview, with a lossy buffer of one frame
@@ -26,6 +26,7 @@ dependency.
 from typing import Type
 
 from oas.backend.locale.accept_language import negotiate_accept_language
+from oas.backend.topic.config import ConfigArg, ConfigNav
 from oas.backend.topic.log import Log
 from oas.backend.topic.mod import ModHistory, ModList
 from oas.backend.topic.preview import Preview
@@ -33,6 +34,7 @@ from oas.backend.topic.restart import Restart
 from oas.backend.topic.scan import ConfigScan
 from oas.backend.topic.state import ConnState
 from oas.backend.topic.worker import Worker
+from oas.backend.topic.update import Update
 from oas.backend.ws.ws_server import WebsocketTopicServer
 from oas.backend.ws.ws_topic import BaseTopic
 from oas.mod.info import ModEntryInfo
@@ -66,8 +68,11 @@ class WebsocketServer(WebsocketTopicServer):
             ModList,
             ModHistory,
             ConfigScan,
+            ConfigNav,
+            ConfigArg,
             Worker,
             Restart,
+            Update,
             Log,
         ]
     )

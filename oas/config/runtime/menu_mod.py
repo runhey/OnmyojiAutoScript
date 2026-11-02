@@ -25,6 +25,16 @@ class MenuModMixin:
     returns the decorator-computed ``result``.
     """
 
+    @modmenu.menu_nav()
+    def menu_nav(
+        self,
+        result: dict[str, Any],
+        config_name: str,
+        scheme: str,
+    ) -> dict[str, Any]:
+        """Read the navigation view of one scheme; a missing scheme raises ``KeyError``."""
+        return result
+
     # ------------------------------------------------------------------
     # Scheme operations
     # ------------------------------------------------------------------

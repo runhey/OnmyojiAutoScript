@@ -82,9 +82,29 @@ def test_scheme_crud(menu_mod):
         menu_mod.menu_scheme_get(':memory:', 'DEFAULT')
 
 
+def test_menu_nav_lists_cards_with_their_labels(menu_mod):
+    """
+    The navigation view is the sidebar shape: one row per group, keyed by the
+    group name in group order, labelled with the free-form menu title when the
+    group declares one and with the group name otherwise.  The label is
+    resolved by the menu layer, and the generated i18n tables upstream reads
+    for it do not exist in OAS.
+    """
+    menu_mod.menu_scheme_add(':memory:', 'S', {'Script': ['T@1'], 'Device': ['T@2']})
+    menu_mod.menu_group_update(':memory:', 'S', 'Script', title='脚本')
+
+    nav = menu_mod.menu_nav(':memory:', 'S')
+
+    assert list(nav) == ['Script', 'Device']
+    assert nav['Script'] == {'i18n': '脚本'}
+    assert nav['Device'] == {'i18n': 'Device'}
+
+
 def test_missing_operations_raise_keyerror(menu_mod):
     with pytest.raises(KeyError):
         menu_mod.menu_scheme_get(':memory:', 'missing')
+    with pytest.raises(KeyError):
+        menu_mod.menu_nav(':memory:', 'missing')
     with pytest.raises(KeyError):
         menu_mod.menu_scheme_delete(':memory:', 'missing')
     with pytest.raises(KeyError):

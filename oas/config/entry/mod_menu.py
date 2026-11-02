@@ -992,6 +992,52 @@ class modmenu:
         return cls._factory(cls._scheme_get)
 
     @classmethod
+    def menu_nav(cls) -> Callable[[F], F]:
+        """Decorate a method that builds the navigation view of one scheme.
+
+        The decorated method signature is::
+
+            def menu_nav(self, result, config_name, scheme):
+                return result
+
+        The navigation view is the sidebar shape of a scheme: one row per
+        group (card), keyed by the group name, in ``group_order``.  It is the
+        card half of the GUI navigation data; the argument rows of a card come
+        from the Mod facade directly (``ConfigModMixin.config_read``), not from
+        a GUI projection layer -- OAS dropped that layer.
+
+        Args:
+            config_name: Configuration database name, for example
+                ``"default"``.
+            scheme: Scheme name.  Empty names raise ``ValueError``.
+
+        Returns:
+            Callable[[F], F]: The decorator.  The decorated method receives
+            ``result`` as a ``dict[str, dict[str, Any]]`` and must return it
+            unchanged.  Each row has the shape::
+
+                {
+                    "i18n": label,
+                }
+
+            ``label`` is the free-form menu title of the group when it declares
+            one, otherwise the group name itself: upstream resolves that label
+            through its generated i18n tables (requested language, then
+            ``"en-US"``, then the key), and OAS has no such table, so the last
+            branch always applies.
+
+        Raises:
+            KeyError: The scheme does not exist.
+
+        Example:
+            .. code-block:: python
+
+                nav = menu.menu_nav("default", "DEFAULT_MENU")
+                labels = {card: row["i18n"] for card, row in nav.items()}
+        """
+        return cls._factory(cls._nav)
+
+    @classmethod
     def menu_scheme_add(cls) -> Callable[[F], F]:
         """Decorate a method that creates a scheme and its groups.
 
@@ -1701,6 +1747,17 @@ class modmenu:
     @staticmethod
     def _scheme_get(target: Any, config_name: str, name: str) -> dict[str, Any]:
         return modmenu._entry(config_name).view(name)
+
+    @staticmethod
+    def _nav(target: Any, config_name: str, scheme: str) -> dict[str, Any]:
+        groups = modmenu._entry(config_name).view(scheme)['groups']
+        rows: dict[str, Any] = {}
+        for group_name, group in groups.items():
+            title = group.get('title')
+            rows[group_name] = {
+                'i18n': title if isinstance(title, str) and title else group_name
+            }
+        return rows
 
     @staticmethod
     def _scheme_add(

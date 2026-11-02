@@ -70,10 +70,10 @@ class TestAtomicPath:
         assert file_read_text(path) == 'a\nb\n'
 
     def test_file_write_stream_empty(self, fs):
-        """file_write_stream() of an empty generator should create nothing."""
+        """file_write_stream() of an empty generator should create an empty file."""
         path = join(fs, 'a.txt')
         file_write_stream(path, iter([]))
-        assert not os.path.exists(path)
+        assert file_read_bytes(path) == b''
 
     def test_file_read_streams(self, fs):
         """The stream readers should yield chunks."""

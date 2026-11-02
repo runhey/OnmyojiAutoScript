@@ -10,11 +10,13 @@ oas/backend/README.md:
   the Preview topic has no producer here yet. Upstream schedules it on the
   trio loop with ``GLOBAL_CONTEXT.trio_token.run_sync_soon``, the equivalent
   wakeup in OAS is ``AnyIO.call_soon``, which lands together with the topic;
-- the config event router keeps the ``Log`` and ``Worker`` branches. The
+- the config event router keeps the ``Log`` / ``Worker`` / ``ConfigArg``
+  branches. ``ConfigArg`` routes into the unified config-save entry
+  (``oas/backend/topic/_config_event.py``), so a config saved from the worker
+  side reaches the GUI view sources like one saved through an RPC. The
   ``Preview`` / ``TaskQueue`` / ``TaskRunning`` branches need the topics that
-  are not ported yet, and the ``ConfigArg`` branch needs the GUI config
-  runtime (``MOD_LOADER.get_gui_config``); each branch is added with its own
-  topic, until then an unknown topic is warned about as upstream does;
+  are not ported yet; each branch is added with its own topic, until then an
+  unknown topic is warned about as upstream does;
 - ``Mod`` (alasio.config.entry.mod) becomes ``ModEntryInfo``: OAS has no Mod
   domain class, and ``BackendWorkerManager`` unpacks exactly the three fields
   it needs (``name`` / ``root`` / ``path_main``).
@@ -22,6 +24,7 @@ oas/backend/README.md:
 
 from oas.backend.reactive.event import ResponseEvent
 from oas.backend.reactive.source import GlobalSource, ResidentCache
+from oas.backend.topic import _config_event
 from oas.backend.topic.log import LogCache
 from oas.backend.worker.event import ConfigEvent
 from oas.backend.worker.manager import WORKER_STATE, WorkerManager
@@ -104,6 +107,10 @@ class BackendWorkerManager(WorkerManager):
             cache.on_event(event)
         elif topic == 'Worker':
             self.on_worker_state(config=event.c, state=event.v)
+        elif topic == 'ConfigArg':
+            # unified entry of config-save events (viewport dispatch +
+            # TaskQueue linkage), replaces the old msgbus broadcast
+            _config_event.on_config_event(event.c, event.v)
         else:
             logger.warning(f'Unknown topic event: {topic}')
 
