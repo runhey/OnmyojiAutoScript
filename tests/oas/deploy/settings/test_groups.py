@@ -170,13 +170,13 @@ def test_backend_group_defaults():
     group = BackendGroup()
 
     assert group.host == '0.0.0.0'
-    assert group.port == 22288
+    assert group.port == 22888
     assert group.password is None
     assert group.ssl_key == ''
     assert group.ssl_cert == ''
 
 
-@pytest.mark.parametrize('port', [1, 22288, 65535])
+@pytest.mark.parametrize('port', [1, 22888, 65535])
 def test_backend_port_accepts_the_port_range(port):
     assert BackendGroup(port=port).port == port
 

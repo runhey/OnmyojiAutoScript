@@ -79,7 +79,7 @@ def test_existing_file_is_validated_and_read(settings_file):
 def test_every_access_re_reads_the_file(settings_file):
     settings = SettingsRuntime(file=settings_file)
 
-    assert settings.data.backend.port == 22288
+    assert settings.data.backend.port == 22888
 
     write_json(settings_file, {'backend': {'port': 12345}}, skip_same=False)
 

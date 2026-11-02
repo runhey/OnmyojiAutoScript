@@ -77,7 +77,7 @@ def test_settings_defaults_are_the_group_defaults():
     assert settings.ocr.ocr_server_port == 22268
     assert settings.update.check_update_interval == 5
     assert settings.remote_access.ssh_executable == 'ssh'
-    assert settings.backend.port == 22288
+    assert settings.backend.port == 22888
     assert settings.backend.ssl_key == ''
     assert settings.backend.ssl_cert == ''
 

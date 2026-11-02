@@ -189,7 +189,7 @@ class BackendGroup(GroupBase):
         description='host_help',
     )
     port: int = Input.int(
-        default=22288,
+        default=22888,
         ge=1,
         le=65535,
         description='port_help',
