@@ -55,12 +55,15 @@ class BaseLoggerTest:
         """
         # Store original env values
         original_root = env.PROJECT_ROOT
+        original_flutter = LogWriter().is_local_flutter
 
         # Create temp directory for test logs
         self.test_dir = PathStr.new(__file__).uppath(1)
         env.PROJECT_ROOT = self.test_dir
-        # OAS has no shell wrapper; LogWriter.is_local_flutter is a plain False
-        # attribute, so there is no env.FLUTTER flag to reset here.
+        # The writer snapshots env.FLUTTER and the logger binds one writer for
+        # its whole lifetime, so pin that instance: rebuilding the singleton
+        # would leave the logger writing through the old one.
+        LogWriter().is_local_flutter = False
 
         # Create mock backend
         self.mock_backend = MockBackendBridge()
@@ -80,6 +83,7 @@ class BaseLoggerTest:
 
         writer = LogWriter()
         writer.close()
+        writer.is_local_flutter = original_flutter
 
         env.PROJECT_ROOT = original_root
 
