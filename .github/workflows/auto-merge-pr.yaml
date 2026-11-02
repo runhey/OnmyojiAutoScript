@@ -2,7 +2,8 @@ name: Auto Merge Sync PR
 
 on:
   schedule:
-    # 每周五北京时间2点07分触发（UTC时间周四18点07分）
+    # 每周二和周五北京时间2点07分触发（UTC时间前一天18点07分），即创建 PR 后5小时
+    - cron: '7 18 * * 1'
     - cron: '7 18 * * 4'
   workflow_dispatch:
 
