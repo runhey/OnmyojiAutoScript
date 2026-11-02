@@ -85,7 +85,7 @@
     "imageName": "page_main_goto_guild.png",
     "roiFront": "495,590,50,22",
     "roiBack": "495,590,120,100",
-    "method": "Template matching",
+    "method": "Masked template matching",
     "threshold": 0.7,
     "description": "庭院前往阴阳寮"
   },
