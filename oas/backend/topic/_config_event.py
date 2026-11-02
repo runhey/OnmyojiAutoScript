@@ -4,10 +4,13 @@ Ported from ``alasio/backend/topic/_config_event.py`` (30 lines).
 
 Deviation: upstream also forwards every event to the TaskQueue linkage
 (``TaskQueueSource(config_name).on_config_event(event)``, which decides whether
-the scheduler settings changed and refreshes or marks the source dirty).
-``alasio/backend/topic/que.py`` (703 lines) is not ported to OAS yet, so that
-half is absent here. When the TaskQueue topic lands, its call belongs directly
-after the GUI dispatch below.
+the scheduler settings changed and refreshes or marks the source dirty). That
+call has no counterpart in OAS: the topic landed
+(``oas/backend/topic/que.py``) but dropped ``on_config_event`` /
+``_need_reinit`` with the time-driven refresh manager they fed -- both exist to
+recompute the schedule-derived table when ``Scheduler.Enable`` / ``NextRun``
+changed, and the OAS task table has no schedule source. The GUI dispatch below
+is therefore the whole entry.
 
 One cosmetic difference: upstream documents the two arguments as
 ``config_name (str):`` / ``event (...):`` with no description, which ruff D417

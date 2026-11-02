@@ -11,16 +11,19 @@ upstream apart from three deviations:
   that projection layer, so the view below is the raw
   ``{task: {group: {arg: value}}}`` mapping ``config_read`` returns. The data
   does not have to match Alasio, only the event routing does;
-- the registry below collects no class today. Upstream registers
+- the registry below collects ``DashboardSource`` only. Upstream registers
   ``ConfigArgSource`` / ``DashboardSource`` here, the two concrete subclasses
-  that built their views through this base; the OAS topics
-  (``topic/config.py``) read the same facade directly from their own
-  ``KeyedSource`` and refresh it after a write instead, so nothing subclasses
-  this base yet. ``DashboardSource`` (upstream ``backend/topic/dashboard.py``,
-  38 lines) is not ported either.
+  that built their views through this base; the OAS ``ConfigArgSource``
+  (``topic/config.py``) reads the same facade directly from its own
+  ``KeyedSource`` and refreshes it after a write instead, so it does not
+  subclass this base. ``DashboardSource`` (upstream
+  ``backend/topic/dashboard.py``, 38 lines) fixes its nav to 'dashboard' and
+  registers itself, so a config save still reaches that view through the
+  registry.
 
-The TaskQueue half of ``backend/topic/_config_event.py`` still has no source
-(``topic/que.py``, 703 lines, is not ported).
+The TaskQueue half of ``backend/topic/_config_event.py`` has no counterpart:
+``topic/que.py`` is ported, but the linkage it feeds (the time-driven refresh
+manager) is not, see that module.
 """
 
 import anyio

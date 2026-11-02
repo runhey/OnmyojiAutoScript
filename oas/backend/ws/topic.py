@@ -6,10 +6,17 @@ the app mounts on /api/ws, and it owns the two registries of that server
 (ALL_TOPIC_CLASS: every topic the server can serve, DEFAULT_TOPIC_CLASS:
 the topics it registers on connect).
 
-Only the ported topics are registered here: ConnState, ModList, ModHistory,
-ConfigScan, ConfigNav, ConfigArg, Worker, Restart, Update and Log. The rest of
-the upstream registry -- TaskQueue, TaskQueueI18n and Dashboard -- lands with
-its own topic (see oas/backend/README.md, the topic checklist).
+Every topic of upstream is registered here: ConnState, ModList, ModHistory,
+ConfigScan, ConfigNav, ConfigArg, Worker, Restart, Update, Log, TaskQueue,
+TaskQueueI18n and Dashboard. Two registrations deviate from upstream, both to
+make a topic reachable that upstream leaves out of its registry:
+
+- ``TaskRunning``: upstream defines it in ``topic/que.py`` but never registers
+  it (its data only arrives through worker pushes, so the topic is silent until
+  a worker publishes a task);
+- ``DevAssetsManager``: upstream has the line commented out (a dev-only tool);
+  the OAS topic is empty and its folder operations refuse, see
+  ``oas/backend/topic/dev_assets.py``.
 
 This module also defines the second server of upstream, ``PreviewServer``:
 it serves Preview alone on /api/preview, with a lossy buffer of one frame
@@ -27,9 +34,12 @@ from typing import Type
 
 from oas.backend.locale.accept_language import negotiate_accept_language
 from oas.backend.topic.config import ConfigArg, ConfigNav
+from oas.backend.topic.dashboard import Dashboard
+from oas.backend.topic.dev_assets import DevAssetsManager
 from oas.backend.topic.log import Log
 from oas.backend.topic.mod import ModHistory, ModList
 from oas.backend.topic.preview import Preview
+from oas.backend.topic.que import TaskQueue, TaskQueueI18n, TaskRunning
 from oas.backend.topic.restart import Restart
 from oas.backend.topic.scan import ConfigScan
 from oas.backend.topic.state import ConnState
@@ -74,6 +84,15 @@ class WebsocketServer(WebsocketTopicServer):
             Restart,
             Update,
             Log,
+            TaskQueue,
+            # upstream does not register TaskRunning (the topic is defined in
+            # topic/que.py but left out of its registry)
+            TaskRunning,
+            TaskQueueI18n,
+            Dashboard,
+            # upstream keeps DevAssetsManager commented out of its registry
+            # (a dev-only tool); the empty OAS topic is served here
+            DevAssetsManager,
         ]
     )
     # List of default subscribed topics.

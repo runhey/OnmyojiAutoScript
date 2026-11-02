@@ -10,13 +10,13 @@ oas/backend/README.md:
   the Preview topic has no producer here yet. Upstream schedules it on the
   trio loop with ``GLOBAL_CONTEXT.trio_token.run_sync_soon``, the equivalent
   wakeup in OAS is ``AnyIO.call_soon``, which lands together with the topic;
-- the config event router keeps the ``Log`` / ``Worker`` / ``ConfigArg``
-  branches. ``ConfigArg`` routes into the unified config-save entry
-  (``oas/backend/topic/_config_event.py``), so a config saved from the worker
-  side reaches the GUI view sources like one saved through an RPC. The
-  ``Preview`` / ``TaskQueue`` / ``TaskRunning`` branches need the topics that
-  are not ported yet; each branch is added with its own topic, until then an
-  unknown topic is warned about as upstream does;
+- the config event router keeps the ``Log`` / ``TaskQueue`` / ``TaskRunning`` /
+  ``Worker`` / ``ConfigArg`` branches. ``ConfigArg`` routes into the unified
+  config-save entry (``oas/backend/topic/_config_event.py``), so a config saved
+  from the worker side reaches the GUI view sources like one saved through an
+  RPC. Only the ``Preview`` branch is missing (that topic has no producer yet);
+  until it lands, its events are warned about as unknown, as upstream warns
+  about a topic it does not know;
 - ``Mod`` (alasio.config.entry.mod) becomes ``ModEntryInfo``: OAS has no Mod
   domain class, and ``BackendWorkerManager`` unpacks exactly the three fields
   it needs (``name`` / ``root`` / ``path_main``).
@@ -26,6 +26,7 @@ from oas.backend.reactive.event import ResponseEvent
 from oas.backend.reactive.source import GlobalSource, ResidentCache
 from oas.backend.topic import _config_event
 from oas.backend.topic.log import LogCache
+from oas.backend.topic.que import TaskQueueSource, TaskRunningSource
 from oas.backend.worker.event import ConfigEvent
 from oas.backend.worker.manager import WORKER_STATE, WorkerManager
 from oas.ext import env
@@ -104,6 +105,12 @@ class BackendWorkerManager(WorkerManager):
         if topic == 'Log':
             # cache and broadcast log
             cache = LogCache(event.c)
+            cache.on_event(event)
+        elif topic == 'TaskQueue':
+            cache = TaskQueueSource(event.c)
+            cache.on_event(event)
+        elif topic == 'TaskRunning':
+            cache = TaskRunningSource(event.c)
             cache.on_event(event)
         elif topic == 'Worker':
             self.on_worker_state(config=event.c, state=event.v)
