@@ -56,6 +56,28 @@ class IslandEntryTests(unittest.TestCase):
         self.enter_unknown(task)
         self.assertEqual(task.events, [])
 
+    def test_known_island_tracks_height_without_switching_columns(self):
+        task = OfflineMoonSea(enter_after=2)
+        right = (1040, 300, 20, 90)
+        frames = [[(288, 280, 20, 90), right],
+                  [(288, 320, 20, 90), (1040, 340, 20, 90)]]
+        with patch.object(task, "_marker_boxes", side_effect=frames), \
+                patch.object(task, "click", wraps=task.click) as click, \
+                patch("module.base.timer.time.time", side_effect=lambda: task.now):
+            task.enter_island(MoonSeaType.island104, right)
+        self.assertEqual([call.args[0].roi_front for call in click.call_args_list],
+                         [(1020, 360, 60, 60), (1020, 400, 60, 60)])
+
+    def test_disappearing_marker_times_out_without_clicking_adjacent_island(self):
+        task = OfflineMoonSea()
+        adjacent = (290, 330, 20, 90)
+        with patch.object(task, "_marker_boxes", return_value=[adjacent]), \
+                patch.object(task, "_read_map_ocr", return_value=(MoonSeaType.island104, 9, adjacent)), \
+                patch("module.base.timer.time.time", side_effect=lambda: task.now):
+            with self.assertRaisesRegex(GameStuckError, "Enter island104 timeout"):
+                task.enter_island(MoonSeaType.island104, (1040, 310, 20, 90))
+        self.assertEqual(task.events, [])
+
     def test_entry_cycles_in_order_with_one_shared_interval(self):
         task = OfflineMoonSea(enter_after=8)
         self.enter_unknown(task)
