@@ -6,7 +6,6 @@ import time
 import cv2
 import numpy as np
 import random
-import re
 from module.atom.click import RuleClick
 from tasks.base_task import BaseTask
 from tasks.Component.GeneralBattle.general_battle import GeneralBattle
@@ -60,11 +59,9 @@ class ScriptTask(Battle, GeneralBattle, GameUi, SwitchSoul, AreaBossAssets):
 
         self.goto_page(page_area_boss)
 
-        # 已挑战鬼王数量
-        boss_fought = 0
-        if con.boss_reward:
-            if self.fight_reward_boss():  # 挑战成功则加一
-                boss_fought += 1
+        reward_name = self.fight_reward_boss() if con.boss_reward else None
+        defeated = {reward_name} if reward_name else set()
+        boss_fought = len(defeated)
 
         self.open_filter()
         # 切换到对应集合(热门/收藏)
@@ -75,19 +72,16 @@ class ScriptTask(Battle, GeneralBattle, GameUi, SwitchSoul, AreaBossAssets):
 
         # 动态获取可挑战次数
         dynamic_count = self._get_dynamic_boss_count()
-        available = dynamic_count - boss_fought
-        if available >= 3:
-            self.boss_fight(self.I_BATTLE_1)
-            self.boss_fight(self.I_BATTLE_2)
-            self.boss_fight(self.I_BATTLE_3)
-        elif available == 2:
-            self.boss_fight(self.I_BATTLE_1)
-            self.boss_fight(self.I_BATTLE_2)
-        elif available == 1:
-            self.boss_fight(self.I_BATTLE_1)
+        for battle in (self.I_BATTLE_1, self.I_BATTLE_2, self.I_BATTLE_3):
+            if boss_fought >= dynamic_count:
+                break
+            if self.boss_fight(battle, defeated=defeated if reward_name else None):
+                boss_fought += 1
+        if boss_fought < dynamic_count:
+            logger.warning(f"Only defeated {boss_fought}/{dynamic_count} area bosses")
         # 退出
         self.go_back()
-        self.set_next_run(task='AreaBoss', success=True, finish=False)
+        self.set_next_run(task='AreaBoss', success=boss_fought == dynamic_count, finish=False)
 
         # 以抛出异常的形式结束
         raise TaskEnd
@@ -143,7 +137,7 @@ class ScriptTask(Battle, GeneralBattle, GameUi, SwitchSoul, AreaBossAssets):
         self.wait_until_appear(self.I_AB_CLOSE_RED)
         self.ui_click(self.I_AB_CLOSE_RED, self.I_FILTER)
 
-    def boss_fight(self, battle: RuleImage, fileter_open: bool = True) -> bool:
+    def boss_fight(self, battle: RuleImage, fileter_open: bool = True, defeated: set[str] | None = None) -> bool:
         """
             完成挑战一个鬼王的全流程
             从打开筛选界面开始 到关闭鬼王详情界面结束
@@ -160,11 +154,12 @@ class ScriptTask(Battle, GeneralBattle, GameUi, SwitchSoul, AreaBossAssets):
         if not self.open_boss_detail(battle, 3):
             return False
 
-        # 如果已经打过该BOSS,直接跳过不打了
-        # if self.is_group_ranked():
-        #     logger.warning("There is no boss could be challenged")
-        #     self.ui_click_until_disappear(self.I_AB_CLOSE_RED, interval=3)
-        #     return True
+        if defeated is not None:
+            name = self.read_boss_name()
+            if not name or name in defeated:
+                logger.info(f"Skip area boss: {name or 'unreadable name'}")
+                self.ui_click_until_disappear(self.I_AB_CLOSE_RED, interval=1)
+                return False
 
         # 根据 reward_floor 决定模式
         if reward_floor in (AreaBossFloor.ONE, AreaBossFloor.TEN):
@@ -184,6 +179,8 @@ class ScriptTask(Battle, GeneralBattle, GameUi, SwitchSoul, AreaBossAssets):
         if not self.start_fight():
             result = False
             logger.warning("Area Boss Fight Failed ")
+        elif defeated is not None:
+            defeated.add(name)
         self.wait_until_appear(self.I_AB_CLOSE_RED)
         self.ui_click_until_disappear(self.I_AB_CLOSE_RED, interval=1)
         return result
@@ -305,15 +302,15 @@ class ScriptTask(Battle, GeneralBattle, GameUi, SwitchSoul, AreaBossAssets):
                 break
             self.wait_until_appear(self.I_AB_JI_FLOOR_TEN, False, 1)
 
-    def fight_reward_boss(self):
+    def fight_reward_boss(self) -> str | None:
         BOSS_REWARD_PHOTO1 = [self.C_AB_BOSS_REWARD_PHOTO_1, self.C_AB_BOSS_REWARD_PHOTO_2, self.C_AB_BOSS_REWARD_PHOTO_3]
         BOSS_REWARD_PHOTO2 = [self.C_AB_BOSS_REWARD_PHOTO_MINUS_2, self.C_AB_BOSS_REWARD_PHOTO_MINUS_1]
         need_open_filter, boss_name, photo = self.get_hot_in_reward()  # 获取挑战人数最多的Boss的名字
         if photo is None or boss_name == '声望不够':
-            return False
+            return None
         # 不需要打开筛选界面说明直接找到了目标boss, 直接挑战
         if not need_open_filter:
-            return self.boss_fight(photo, fileter_open=False)
+            return boss_name if self.boss_fight(photo, fileter_open=False) else None
         # 滑动到最顶层
         logger.info("Swipe to top")
         for i in range(random.randint(1, 3)):
@@ -323,7 +320,7 @@ class ScriptTask(Battle, GeneralBattle, GameUi, SwitchSoul, AreaBossAssets):
             self.open_filter()
             name = self.get_bossName(PHOTO)
             if self.check_common_chars(str(name), boss_name):
-                return self.boss_fight(PHOTO, fileter_open=False)
+                return name if self.boss_fight(PHOTO, fileter_open=False) else None
             self.ui_click_until_disappear(self.I_AB_CLOSE_RED)
         # 倒数一和二
         for i in range(random.randint(1, 3)):
@@ -332,7 +329,7 @@ class ScriptTask(Battle, GeneralBattle, GameUi, SwitchSoul, AreaBossAssets):
             self.open_filter()
             name = self.get_bossName(PHOTO)
             if self.check_common_chars(str(name), boss_name):
-                return self.boss_fight(PHOTO, fileter_open=False)
+                return name if self.boss_fight(PHOTO, fileter_open=False) else None
             self.ui_click_until_disappear(self.I_AB_CLOSE_RED)
         self.ui_click_until_disappear(self.I_AB_CLOSE_RED)
 
@@ -363,7 +360,10 @@ class ScriptTask(Battle, GeneralBattle, GameUi, SwitchSoul, AreaBossAssets):
                 name = '声望不够'
             else:
                 name = self.get_bossName(photo)
-                if num >= 20000 and not self.appear(self.I_AB_NUM_CHALLENGE_RAIL):
+                if not name:
+                    logger.warning("Skip reward boss: unreadable name")
+                    num = 0
+                elif num >= 20000 and not self.appear(self.I_AB_NUM_CHALLENGE_RAIL):
                     logger.info("The number of challenges is enough")
                     return True, num, name
             # 没找到满足的则关闭boss页面
@@ -416,9 +416,17 @@ class ScriptTask(Battle, GeneralBattle, GameUi, SwitchSoul, AreaBossAssets):
         if not self.open_boss_detail(click_area, 3):
             logger.info("%s unavailable", str(click_area))
             return 0
-        ocrName = self.O_AB_BOSS_NAME.detect_and_ocr(self.device.image)
-        bossName = re.sub(r"[\'\[\]]", "", str([result.ocr_text for result in ocrName]))
-        return bossName
+        return self.read_boss_name()
+
+    def read_boss_name(self) -> str:
+        for attempt in range(2):
+            if attempt:
+                self.screenshot()
+            rows = self.O_AB_BOSS_NAME.detect_and_ocr(self.device.image)
+            name = ''.join(''.join(row.ocr_text.split()) for row in rows)
+            if name:
+                return name
+        return ''
 
     def open_boss_detail(self, battle: RuleImage, try_num: int = 3) -> bool:
         """
