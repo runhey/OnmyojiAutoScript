@@ -58,15 +58,30 @@ class IslandEntryTests(unittest.TestCase):
 
     def test_known_island_tracks_height_without_switching_columns(self):
         task = OfflineMoonSea(enter_after=2)
-        right = (1040, 300, 20, 90)
-        frames = [[(288, 280, 20, 90), right],
+        left = (288, 280, 20, 90)
+        frames = [[(1040, 300, 20, 90), left],
                   [(288, 320, 20, 90), (1040, 340, 20, 90)]]
         with patch.object(task, "_marker_boxes", side_effect=frames), \
                 patch.object(task, "click", wraps=task.click) as click, \
                 patch("module.base.timer.time.time", side_effect=lambda: task.now):
-            task.enter_island(MoonSeaType.island104, right)
+            task.enter_island(MoonSeaType.island104, left)
         self.assertEqual([call.args[0].roi_front for call in click.call_args_list],
-                         [(1020, 360, 60, 60), (1020, 400, 60, 60)])
+                         [(268, 340, 60, 60), (268, 380, 60, 60)])
+
+    def test_decide_keeps_ocr_target_without_a_nearby_marker(self):
+        task = OfflineMoonSea()
+        roi = (288, 280, 22, 80)
+        for target, marker, prefer_store in (
+            (MoonSeaType.island104, MoonSeaType.island104, False),
+            (MoonSeaType.island104, MoonSeaType.island103, False),
+            (MoonSeaType.island101, MoonSeaType.island101, True),
+        ):
+            ocr = (target, 9, roi)
+            boxes = {marker: [(1040, 300, 20, 90)]}
+            with self.subTest(target=target, marker=marker, prefer_store=prefer_store), \
+                    patch.object(task, "_read_map_ocr", return_value=ocr), \
+                    patch.object(task, "_marker_boxes", side_effect=lambda kind: boxes.get(kind, [])):
+                self.assertEqual(task.decide(prefer_store=prefer_store), ocr)
 
     def test_disappearing_marker_times_out_without_clicking_adjacent_island(self):
         task = OfflineMoonSea()

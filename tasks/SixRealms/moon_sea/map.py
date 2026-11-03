@@ -55,13 +55,13 @@ class MoonSeaMap(MoonSeaSkills):
             boxes = self._marker_boxes(island)
             if boxes:
                 candidates[island] = boxes
-        if prefer_store and MoonSeaType.island101 in candidates:
+        if prefer_store and kind != MoonSeaType.island101 and MoonSeaType.island101 in candidates:
             kind = MoonSeaType.island101
             roi = max(candidates[kind])
-        elif kind in candidates:
-            roi = self._nearby_marker(candidates[kind], roi) or max(candidates[kind])
+        elif kind != MoonSeaType.island100:
+            roi = self._nearby_marker(candidates.get(kind, []), roi) or roi
         elif candidates:
-            # 没有对应的 OCR 目标时，沿用从右向左的选岛顺序。
+            # OCR 未识别出岛型时，沿用从右向左的选岛顺序。
             kind, roi = max(((island, max(boxes)) for island, boxes in candidates.items()),
                             key=lambda candidate: candidate[1][0])
         logger.info('Island type: {}, Residue: {}, ROI: {}'.format(kind, rounds, roi))
