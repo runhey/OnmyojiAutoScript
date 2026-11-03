@@ -3,8 +3,8 @@
     "itemName": "shi_grown_3",
     "imageName": "cb3_shi_grown_3.png",
     "roiFront": "600,277,19,34",
-    "roiBack": "519,212,220,281",
-    "method": "Template matching",
+    "roiBack": "560,250,130,220",
+    "method": "Multi-scale template matching",
     "threshold": 0.5,
     "description": "育成"
   },
@@ -12,8 +12,8 @@
     "itemName": "shi_card_3",
     "imageName": "cb3_shi_card_3.png",
     "roiFront": "899,281,21,40",
-    "roiBack": "823,210,252,297",
-    "method": "Template matching",
+    "roiBack": "760,250,220,220",
+    "method": "Multi-scale template matching",
     "threshold": 0.5,
     "description": "结界卡"
   },
@@ -21,8 +21,8 @@
     "itemName": "shi_defense_3",
     "imageName": "cb3_shi_defense_3.png",
     "roiFront": "298,279,19,38",
-    "roiBack": "178,209,261,274",
-    "method": "Template matching",
+    "roiBack": "260,250,210,210",
+    "method": "Multi-scale template matching",
     "threshold": 0.5,
     "description": "防守"
   }
