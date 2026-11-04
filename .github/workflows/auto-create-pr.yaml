@@ -2,7 +2,8 @@ name: Auto Create PR from dev to master
 
 on:
   schedule:
-    # 每周四北京时间21点触发（UTC时间13点）
+    # 每周一和周四北京时间21点07分触发（UTC时间13点07分）
+    - cron: '7 13 * * 1'
     - cron: '7 13 * * 4'
   workflow_dispatch:
 
