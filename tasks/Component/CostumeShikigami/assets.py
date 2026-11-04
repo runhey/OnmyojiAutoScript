@@ -25,7 +25,6 @@ class CostumeShikigamiAssets:
 	I_SOU_SWITCH_3_1 = RuleImage(roi_front=(977,448,32,32), roi_back=(962,442,52,48), threshold=0.8, method="Template matching", file="./tasks/Component/CostumeShikigami/sk1/sk1_sou_switch_3_1.png")
 	# description 
 	I_SOU_SWITCH_4_1 = RuleImage(roi_front=(977,603,33,20), roi_back=(962,592,53,34), threshold=0.8, method="Template matching", file="./tasks/Component/CostumeShikigami/sk1/sk1_sou_switch_4_1.png")
-	# description 
 	# 用于判断是否在式神录里面 
 	I_SOU_CHECK_IN_1 = RuleImage(roi_front=(269,69,50,49), roi_back=(269,69,50,49), threshold=0.8, method="Template matching", file="./tasks/Component/CostumeShikigami/sk1/sk1_sou_check_in_1.png")
 	# 检查是否为第一组 
@@ -67,7 +66,6 @@ class CostumeShikigamiAssets:
 	I_SOU_SWITCH_3_10 = RuleImage(roi_front=(980,450,25,27), roi_back=(960,442,60,50), threshold=0.8, method="Template matching", file="./tasks/Component/CostumeShikigami/sk10/sk10_sou_switch_3_10.png")
 	# 第四组切换 
 	I_SOU_SWITCH_4_10 = RuleImage(roi_front=(979,602,25,27), roi_back=(960,592,60,50), threshold=0.8, method="Template matching", file="./tasks/Component/CostumeShikigami/sk10/sk10_sou_switch_4_10.png")
-	# 确认切换 
 	# 用于判断是否在式神录里面 
 	I_SOU_CHECK_IN_10 = RuleImage(roi_front=(277,79,34,36), roi_back=(265,71,60,50), threshold=0.8, method="Template matching", file="./tasks/Component/CostumeShikigami/sk10/sk10_sou_check_in_10.png")
 	# 检查是否为第一组 
@@ -124,7 +122,6 @@ class CostumeShikigamiAssets:
 	# description 
 	I_SOU_TEAM_PRESENT_11 = RuleImage(roi_front=(734,77,100,41), roi_back=(726,71,115,54), threshold=0.8, method="Template matching", file="./tasks/Component/CostumeShikigami/sk11/sk11_sou_team_present_11.png")
 	# description 
-	# description 
 	I_SOUL_PRESET_11 = RuleImage(roi_front=(342,85,74,31), roi_back=(338,77,83,44), threshold=0.8, method="Template matching", file="./tasks/Component/CostumeShikigami/sk11/sk11_soul_preset_11.png")
 	# description 
 	I_ST_REPLACE_11 = RuleImage(roi_front=(884,169,63,67), roi_back=(872,155,86,99), threshold=0.8, method="Template matching", file="./tasks/Component/CostumeShikigami/sk11/sk11_st_replace_11.png")
@@ -166,7 +163,6 @@ class CostumeShikigamiAssets:
 	# description 
 	I_SOU_TEAM_PRESENT_12 = RuleImage(roi_front=(734,77,100,41), roi_back=(726,71,115,54), threshold=0.8, method="Template matching", file="./tasks/Component/CostumeShikigami/sk12/sk12_sou_team_present_12.png")
 	# description 
-	# description 
 	I_SOUL_PRESET_12 = RuleImage(roi_front=(342,85,74,31), roi_back=(338,77,83,44), threshold=0.8, method="Template matching", file="./tasks/Component/CostumeShikigami/sk12/sk12_soul_preset_12.png")
 	# description 
 	I_ST_REPLACE_12 = RuleImage(roi_front=(884,169,63,67), roi_back=(872,155,86,99), threshold=0.8, method="Template matching", file="./tasks/Component/CostumeShikigami/sk12/sk12_st_replace_12.png")
@@ -179,7 +175,7 @@ class CostumeShikigamiAssets:
 
 
 	# Image Rule Assets
-	# 用于判断在式神录
+	# 用于判断在式神录 
 	I_CHECK_RECORDS_13 = RuleImage(roi_front=(279,87,30,35), roi_back=(274,82,40,45), threshold=0.8, method="Template matching", file="./tasks/Component/CostumeShikigami/sk13/sk13_check_records_13.png")
 	# 退出式神录 
 	I_RECORD_SOUL_BACK_13 = RuleImage(roi_front=(21,10,38,36), roi_back=(14,4,52,54), threshold=0.8, method="Template matching", file="./tasks/Component/CostumeShikigami/sk13/sk13_record_soul_back_13.png")
@@ -234,7 +230,6 @@ class CostumeShikigamiAssets:
 	I_SOU_SWITCH_3_2 = RuleImage(roi_front=(977,448,32,30), roi_back=(962,442,52,48), threshold=0.8, method="Template matching", file="./tasks/Component/CostumeShikigami/sk2/sk2_sou_switch_3_2.png")
 	# description 
 	I_SOU_SWITCH_4_2 = RuleImage(roi_front=(977,603,32,21), roi_back=(962,592,56,40), threshold=0.8, method="Template matching", file="./tasks/Component/CostumeShikigami/sk2/sk2_sou_switch_4_2.png")
-	# description 
 	# 用于判断是否在式神录里面 
 	I_SOU_CHECK_IN_2 = RuleImage(roi_front=(268,74,50,49), roi_back=(268,74,50,49), threshold=0.8, method="Template matching", file="./tasks/Component/CostumeShikigami/sk2/sk2_sou_check_in_2.png")
 	# 检查是否为第一组 
@@ -276,7 +271,6 @@ class CostumeShikigamiAssets:
 	I_SOU_SWITCH_3_3 = RuleImage(roi_front=(979,448,29,30), roi_back=(962,442,52,48), threshold=0.8, method="Template matching", file="./tasks/Component/CostumeShikigami/sk3/sk3_sou_switch_3_3.png")
 	# description 
 	I_SOU_SWITCH_4_3 = RuleImage(roi_front=(978,603,31,19), roi_back=(962,592,53,34), threshold=0.8, method="Template matching", file="./tasks/Component/CostumeShikigami/sk3/sk3_sou_switch_4_3.png")
-	# description 
 	# 用于判断是否在式神录里面 
 	I_SOU_CHECK_IN_3 = RuleImage(roi_front=(268,74,50,49), roi_back=(268,74,50,49), threshold=0.8, method="Template matching", file="./tasks/Component/CostumeShikigami/sk3/sk3_sou_check_in_3.png")
 	# 检查是否为第一组 
@@ -318,7 +312,6 @@ class CostumeShikigamiAssets:
 	I_SOU_SWITCH_3_4 = RuleImage(roi_front=(978,449,28,29), roi_back=(962,442,52,48), threshold=0.8, method="Template matching", file="./tasks/Component/CostumeShikigami/sk4/sk4_sou_switch_3_4.png")
 	# description 
 	I_SOU_SWITCH_4_4 = RuleImage(roi_front=(978,602,31,20), roi_back=(962,592,53,34), threshold=0.8, method="Template matching", file="./tasks/Component/CostumeShikigami/sk4/sk4_sou_switch_4_4.png")
-	# description 
 	# 用于判断是否在式神录里面 
 	I_SOU_CHECK_IN_4 = RuleImage(roi_front=(268,74,50,49), roi_back=(268,74,50,49), threshold=0.8, method="Template matching", file="./tasks/Component/CostumeShikigami/sk4/sk4_sou_check_in_4.png")
 	# 检查是否为第一组 
@@ -360,7 +353,6 @@ class CostumeShikigamiAssets:
 	I_SOU_SWITCH_3_5 = RuleImage(roi_front=(980,453,29,29), roi_back=(962,442,52,48), threshold=0.8, method="Template matching", file="./tasks/Component/CostumeShikigami/sk5/sk5_sou_switch_3_5.png")
 	# description 
 	I_SOU_SWITCH_4_5 = RuleImage(roi_front=(978,602,31,20), roi_back=(962,592,53,34), threshold=0.8, method="Template matching", file="./tasks/Component/CostumeShikigami/sk5/sk5_sou_switch_4_5.png")
-	# description 
 	# 用于判断是否在式神录里面 
 	I_SOU_CHECK_IN_5 = RuleImage(roi_front=(268,74,50,49), roi_back=(268,74,50,49), threshold=0.8, method="Template matching", file="./tasks/Component/CostumeShikigami/sk5/sk5_sou_check_in_5.png")
 	# 检查是否为第一组 
@@ -402,7 +394,6 @@ class CostumeShikigamiAssets:
 	I_SOU_SWITCH_3_6 = RuleImage(roi_front=(978,448,31,30), roi_back=(962,442,52,48), threshold=0.8, method="Template matching", file="./tasks/Component/CostumeShikigami/sk6/sk6_sou_switch_3_6.png")
 	# description 
 	I_SOU_SWITCH_4_6 = RuleImage(roi_front=(977,601,32,21), roi_back=(962,592,53,34), threshold=0.8, method="Template matching", file="./tasks/Component/CostumeShikigami/sk6/sk6_sou_switch_4_6.png")
-	# description 
 	# 用于判断是否在式神录里面 
 	I_SOU_CHECK_IN_6 = RuleImage(roi_front=(269,69,50,49), roi_back=(269,69,50,49), threshold=0.8, method="Template matching", file="./tasks/Component/CostumeShikigami/sk6/sk6_sou_check_in_6.png")
 	# 检查是否为第一组 
@@ -444,7 +435,6 @@ class CostumeShikigamiAssets:
 	I_SOU_SWITCH_3_7 = RuleImage(roi_front=(977,448,32,29), roi_back=(959,430,69,63), threshold=0.8, method="Template matching", file="./tasks/Component/CostumeShikigami/sk7/sk7_sou_switch_3_7.png")
 	# description 
 	I_SOU_SWITCH_4_7 = RuleImage(roi_front=(975,604,37,23), roi_back=(963,589,61,48), threshold=0.8, method="Template matching", file="./tasks/Component/CostumeShikigami/sk7/sk7_sou_switch_4_7.png")
-	# description 
 	# 用于判断是否在式神录里面 
 	I_SOU_CHECK_IN_7 = RuleImage(roi_front=(268,74,50,49), roi_back=(268,74,50,49), threshold=0.8, method="Template matching", file="./tasks/Component/CostumeShikigami/sk7/sk7_sou_check_in_7.png")
 	# 检查是否为第一组 
@@ -486,7 +476,6 @@ class CostumeShikigamiAssets:
 	I_SOU_SWITCH_3_8 = RuleImage(roi_front=(980,449,25,27), roi_back=(960,442,60,50), threshold=0.8, method="Template matching", file="./tasks/Component/CostumeShikigami/sk8/sk8_sou_switch_3_8.png")
 	# 第四组切换 
 	I_SOU_SWITCH_4_8 = RuleImage(roi_front=(981,603,25,27), roi_back=(960,592,60,50), threshold=0.8, method="Template matching", file="./tasks/Component/CostumeShikigami/sk8/sk8_sou_switch_4_8.png")
-	# 确认切换 
 	# 用于判断是否在式神录里面 
 	I_SOU_CHECK_IN_8 = RuleImage(roi_front=(265,71,34,36), roi_back=(265,71,60,50), threshold=0.8, method="Template matching", file="./tasks/Component/CostumeShikigami/sk8/sk8_sou_check_in_8.png")
 	# 检查是否为第一组 
@@ -528,7 +517,6 @@ class CostumeShikigamiAssets:
 	I_SOU_SWITCH_3_9 = RuleImage(roi_front=(980,450,25,27), roi_back=(960,442,60,50), threshold=0.8, method="Template matching", file="./tasks/Component/CostumeShikigami/sk9/sk9_sou_switch_3_9.png")
 	# 第四组切换 
 	I_SOU_SWITCH_4_9 = RuleImage(roi_front=(979,602,25,27), roi_back=(960,592,60,50), threshold=0.8, method="Template matching", file="./tasks/Component/CostumeShikigami/sk9/sk9_sou_switch_4_9.png")
-	# 确认切换 
 	# 用于判断是否在式神录里面 
 	I_SOU_CHECK_IN_9 = RuleImage(roi_front=(277,79,34,36), roi_back=(265,71,60,50), threshold=0.8, method="Template matching", file="./tasks/Component/CostumeShikigami/sk9/sk9_sou_check_in_9.png")
 	# 检查是否为第一组 
