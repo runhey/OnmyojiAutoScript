@@ -6,7 +6,10 @@ on:
     types: [opened, reopened]
     branches:
       - dev
-  roles: all
+  roles:
+    - admin
+    - maintainer
+    - write
 
 checkout: false
 permissions:
