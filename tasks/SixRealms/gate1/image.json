@@ -169,5 +169,50 @@
     "method": "Template matching",
     "threshold": 0.8,
     "description": "选择一个式神加入征伐队伍"
+  },
+  {
+    "itemName": "island_marker_101",
+    "imageName": "gate1_island_marker_101.png",
+    "roiFront": "649,384,20,90",
+    "roiBack": "144,227,989,376",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "rest"
+  },
+  {
+    "itemName": "island_marker_102",
+    "imageName": "gate1_island_marker_102.png",
+    "roiFront": "907,449,20,90",
+    "roiBack": "144,227,989,376",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "mystery"
+  },
+  {
+    "itemName": "island_marker_103",
+    "imageName": "gate1_island_marker_103.png",
+    "roiFront": "650,402,20,90",
+    "roiBack": "144,227,989,376",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "chaos"
+  },
+  {
+    "itemName": "island_marker_104",
+    "imageName": "gate1_island_marker_104.png",
+    "roiFront": "649,381,20,90",
+    "roiBack": "144,227,989,376",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "battle"
+  },
+  {
+    "itemName": "island_marker_105",
+    "imageName": "gate1_island_marker_105.png",
+    "roiFront": "649,372,20,90",
+    "roiBack": "144,227,989,376",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "star"
   }
 ]

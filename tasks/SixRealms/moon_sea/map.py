@@ -1,12 +1,9 @@
-import cv2
 import re
-import numpy as np
-from numpy import uint8, fromfile
+from module.atom.click import RuleClick
 from module.base.timer import Timer
 from module.exception import GameStuckError
 from module.logger import logger
 
-from tasks.base_task import BaseTask
 from tasks.SixRealms.moon_sea.skills import MoonSeaSkills
 from tasks.SixRealms.assets import SixRealmsAssets
 from tasks.SixRealms.common import MoonSeaType
@@ -14,6 +11,13 @@ from tasks.SixRealms.oas_ocr import StoneOcr
 
 
 class MoonSeaMap(MoonSeaSkills):
+    island_markers = {
+        MoonSeaType.island101: SixRealmsAssets.I_ISLAND_MARKER_101,
+        MoonSeaType.island102: SixRealmsAssets.I_ISLAND_MARKER_102,
+        MoonSeaType.island103: SixRealmsAssets.I_ISLAND_MARKER_103,
+        MoonSeaType.island104: SixRealmsAssets.I_ISLAND_MARKER_104,
+        MoonSeaType.island105: SixRealmsAssets.I_ISLAND_MARKER_105,
+    }
     map_ocr = StoneOcr(
         roi=(0, 0, 1280, 720),
         area=(0, 0, 1280, 720),
@@ -26,15 +30,44 @@ class MoonSeaMap(MoonSeaSkills):
     def contains_any_char(string, chars):
         return not set(string).isdisjoint(set(chars))
 
-    def decide(self) -> tuple:
-        """
-        这个玩意，检测不是很准
-        @return: 岛屿的类型，剩余多少回合, (x，y, w, h)
-        """
+    def _marker_boxes(self, kind):
+        marker = self.island_markers[kind]
+        return [tuple(match[1:]) for match in marker.match_all_any(self.device.image)]
+
+    @staticmethod
+    def _nearby_marker(boxes, roi):
+        # 岛屿上下浮动。同类岛并排时，只跟踪原来那一列。
+        center_x = roi[0] + roi[2] / 2
+        nearest = min(boxes, key=lambda box: abs(box[0] + box[2] / 2 - center_x), default=None)
+        if nearest and abs(nearest[0] + nearest[2] / 2 - center_x) <= 60:
+            return nearest
+
+    def decide(self, prefer_store=False) -> tuple:
         self.screenshot()
         if self.appear(self.I_BOSS_FIRE):
             # 最后的boss
             return MoonSeaType.island106, 0, (0, 0, 0, 0)
+        kind, rounds, roi = self._read_map_ocr()
+        candidates = {}
+        for island in self.island_markers:
+            if island == MoonSeaType.island101 and self.appear(self.I_M_STORE):
+                continue
+            boxes = self._marker_boxes(island)
+            if boxes:
+                candidates[island] = boxes
+        if prefer_store and kind != MoonSeaType.island101 and MoonSeaType.island101 in candidates:
+            kind = MoonSeaType.island101
+            roi = max(candidates[kind])
+        elif kind != MoonSeaType.island100:
+            roi = self._nearby_marker(candidates.get(kind, []), roi) or roi
+        elif candidates:
+            # OCR 未识别出岛型时，沿用从右向左的选岛顺序。
+            kind, roi = max(((island, max(boxes)) for island, boxes in candidates.items()),
+                            key=lambda candidate: candidate[1][0])
+        logger.info('Island type: {}, Residue: {}, ROI: {}'.format(kind, rounds, roi))
+        return kind, rounds, roi
+
+    def _read_map_ocr(self):
         isl_type = MoonSeaType.island100
         isl_roi = (0, 0, 0, 0)
         isl_num = 0
@@ -76,7 +109,6 @@ class MoonSeaMap(MoonSeaSkills):
             elif isl_type == MoonSeaType.island100 and self.contains_any_char(result.ocr_text, chars='星之'):
                 isl_type = MoonSeaType.island105
                 isl_roi = x1, y1, w, h
-        logger.info('Island type: {}, Residue: {}, ROI: {}'.format(isl_type, isl_num, isl_roi))
         return isl_type, isl_num, isl_roi
 
     def enter_island(self, isl_type, isl_roi):
@@ -106,14 +138,29 @@ class MoonSeaMap(MoonSeaSkills):
                 click_timer.reset()
             logger.info('Entering island randomly')
             return
-        isl_roi = [isl_roi[0]-40, isl_roi[1] + 70, isl_roi[2] + 40, isl_roi[3]+40]
-        self.C_ISLAND_ENTER.roi_front = isl_roi
+        timeout = Timer(15).start()
+        click_timer = Timer(2.5)
         while 1:
             self.screenshot()
-            if not self.in_main() and self.appear(self.I_BACK_EXIT):
+            on_map = self.in_main()
+            if not on_map and self.appear(self.I_BACK_EXIT):
                 break
-            if self.click(self.C_ISLAND_ENTER, interval=2.5):
+            if timeout.reached():
+                raise GameStuckError(f'Enter {isl_type.name} timeout')
+            if not on_map or not click_timer.reached():
                 continue
+            click_timer.reset()
+            roi = self._nearby_marker(self._marker_boxes(isl_type), isl_roi)
+            if not roi:
+                kind, _, box = self._read_map_ocr()
+                if kind != isl_type or not self._nearby_marker([box], isl_roi):
+                    continue
+                roi = box
+            x, y, w, h = roi
+            # 以当帧标牌中心为基准，落点在下方 15～75 像素。
+            cx, cy = int(x + w / 2), int(y + h / 2) + 45
+            click_area = (cx - 30, cy - 30, 60, 60)
+            self.click(RuleClick(click_area, click_area, name='island_enter'))
         logger.info('Entering island')
         return
 
@@ -140,28 +187,6 @@ class MoonSeaMap(MoonSeaSkills):
             if self.appear_then_click(self.I_M_STORE_ACTIVITY, interval=1.5):
                 cnt_act += 1
                 continue
-
-    def entry_island_random(self, area: list = None):
-        """
-
-        :param area: 搁置
-        :return:
-        """
-        # if not isinstance(area, list):
-        #     area = list(area)
-        logger.info('Entry island randomly')
-        while 1:
-            self.screenshot()
-            if not self.in_main() and self.appear(self.I_BACK_EXIT):
-                break
-            if self.click(self.C_ISLAND_ENTER_4, interval=2):
-                continue
-            if self.click(self.C_ISLAND_ENTER_5, interval=2):
-                continue
-            if self.click(self.C_ISLAND_ENTER_6, interval=2):
-                continue
-        return
-
 
 if __name__ == '__main__':
     from module.config.config import Config
