@@ -132,11 +132,16 @@ class CostumeBase:
             return
         # setattr(self, asset_before, asset_after)
         asset_before_object: RuleImage = getattr(self, asset_before)
-        asset_before_object.roi_front = asset_after.roi_front
+        asset_before_object.roi_front = list(asset_after.roi_front)
         if rp_roi_back:
             asset_before_object.roi_back = asset_after.roi_back
         asset_before_object.threshold = asset_after.threshold
         asset_before_object.file = asset_after.file
+        asset_before_object.method = asset_after.method
+        # A cached dispatch flag must not retain the previous skin's method.
+        for name in ('is_template_match', 'is_masked_template_match',
+                     'is_multi_scale_template_match', 'is_sift_flann'):
+            asset_before_object.__dict__.pop(name, None)
         # https://github.com/runhey/OnmyojiAutoScript/issues/1972
         asset_before_object.refresh()
 
