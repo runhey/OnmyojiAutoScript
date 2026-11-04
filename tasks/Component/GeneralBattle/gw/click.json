@@ -76,5 +76,11 @@
     "roiFront": "0,0,100,100",
     "roiBack": "0,0,100,100",
     "description": "description"
+  },
+  {
+    "itemName": "overflow_ghost",
+    "roiFront": "456,381,160,82",
+    "roiBack": "456,381,160,82",
+    "description": "御魂过多的【去清理】按钮"
   }
 ]
