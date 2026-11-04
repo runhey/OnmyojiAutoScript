@@ -45,9 +45,13 @@ class AnimationCropTests(unittest.TestCase):
         with patch("module.atom.image.ROI_MATCH_PAD", 2):
             animation = RuleAnimate(RuleClick(
                 (300, 200, 80, 60), (280, 180, 120, 100), name="wide_search"))
+            # Initial foreground region expanded by the desktop's two-pixel padding.
+            expected_crop = self.image[198:262, 298:382]
             self.assertFalse(animation.stable(self.image))
+            np.testing.assert_array_equal(animation._last_image, expected_crop)
             for _ in range(5):
                 self.assertTrue(animation.stable(self.image))
+                np.testing.assert_array_equal(animation._last_image, expected_crop)
 
 
 if __name__ == "__main__":
