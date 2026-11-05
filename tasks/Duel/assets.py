@@ -15,6 +15,8 @@ class DuelAssets:
 	C_D_BATTLE_DATA = RuleClick(roi_front=(584,279,100,100), roi_back=(584,279,100,100), name="d_battle_data")
 	# 点击第五手上式神位置，获得式神名称 
 	C_DUEL_CLICK_5 = RuleClick(roi_front=(105,23,52,47), roi_back=(105,23,52,47), name="duel_click_5")
+	# 名仕 BP 阵容确认页右下角的「确定」按钮（确认上阵、进入战斗）
+	C_DUEL_CONFIRM = RuleClick(roi_front=(1120,560,120,85), roi_back=(1120,560,120,85), name="duel_confirm")
 
 
 	# Image Rule Assets
@@ -52,6 +54,8 @@ class DuelAssets:
 	I_D_BATTLE2 = RuleImage(roi_front=(1171,592,69,78), roi_back=(1119,566,154,143), threshold=0.8, method="Template matching", file="./tasks/Duel/duel/duel_d_battle2.png")
 	# 禁用 
 	I_BAN = RuleImage(roi_front=(1139,565,77,72), roi_back=(1122,545,114,116), threshold=0.8, method="Template matching", file="./tasks/Duel/duel/duel_ban.png")
+	# 已禁选 (名仕禁选阶段我方禁选已完成, 按钮不可点击; 继续点击会触发同键连点保护)
+	I_BAN_ALREADY = RuleImage(roi_front=(1122,582,35,40), roi_back=(1110,570,59,64), threshold=0.8, method="Template matching", file="./tasks/Duel/duel/duel_ban_already.png")
 	# 左上角的退出 
 	I_DUEL_EXIT = RuleImage(roi_front=(14,12,43,41), roi_back=(14,12,43,41), threshold=0.8, method="Template matching", file="./tasks/Duel/duel/duel_duel_exit.png")
 	# ban选界面 
