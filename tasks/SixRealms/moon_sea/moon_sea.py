@@ -72,12 +72,7 @@ class MoonSea(MoonSeaMap, MoonSeaL101, MoonSeaL102, MoonSeaL103, MoonSeaL104, Mo
                 else:
                     self.activate_store()
                     self.wait_animate_stable(self.C_MAIN_ANIMATE_KEEP, timeout=3)
-                    isl_type, isl_num, isl_roi = self.decide()
-                    # 文字检测不一定发现到宁息
-                    if isl_type != MoonSeaType.island101:
-                        logger.warning('OCR not found island101')
-                        logger.warning('Try to entry the island in the right randomly order')
-                        self.entry_island_random()
+                    isl_type, isl_num, isl_roi = self.decide(prefer_store=True)
 
             # 如果是boss
             if isl_type == MoonSeaType.island106:

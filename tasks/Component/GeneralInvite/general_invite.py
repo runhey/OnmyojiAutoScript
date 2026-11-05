@@ -507,7 +507,7 @@ class GeneralInvite(BaseTask, GeneralInviteAssets):
                 self.screenshot()
                 if self.appear(self.I_UI_CHECK):
                     break
-                if self.appear_then_click(self.I_UI_UNCHECK, interval=1):
+                if self.appear_then_click(self.I_UI_UNCHECK, interval=3):
                     continue
         else:
             logger.info('Click no default invite')

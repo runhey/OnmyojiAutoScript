@@ -55,8 +55,8 @@
   },
   {
     "itemName": "sa_check_select_svr",
-    "roiFront": "252,145,97,32",
-    "roiBack": "248,141,102,38",
+    "roiFront": "231,145,102,32",
+    "roiBack": "231,141,103,38",
     "mode": "Single",
     "method": "Default",
     "keyword": "已有角色",

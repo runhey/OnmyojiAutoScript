@@ -1,6 +1,7 @@
 # This Python file uses the following encoding: utf-8
 # @author runhey
 # github https://github.com/runhey
+from copy import copy
 from datetime import timedelta, time, datetime
 from time import sleep
 from typing import List
@@ -21,6 +22,19 @@ from tasks.Secret.script_task import ScriptTask as SecretScriptTask
 from tasks.WantedQuests.assets import WantedQuestsAssets
 from tasks.WantedQuests.config import CooperationType, CooperationSelectMask
 from tasks.WantedQuests.explore import WQExplore, ExploreWantedBoss
+
+
+def _read_location_info(rule: RuleOcr, image):
+    # https://github.com/runhey/OnmyojiAutoScript/pull/2006
+    pattern = r"^(.*?)[（(]?数量[：:]\s*(\d+)[)）]"
+    match = re.match(pattern, rule.ocr(image))
+    if match and match.group(1):
+        return match
+    # 数量可能被单行 OCR 漏读；只收紧上下留白，保留完整地点名。
+    retry = copy(rule)
+    x, y, w, h = rule.roi
+    retry.roi = [x, y + 7, w, h - 14]
+    return re.match(pattern, retry.ocr(image))
 
 
 class ScriptTask(WQExplore, SecretScriptTask, WantedQuestsAssets):
@@ -269,11 +283,8 @@ class ScriptTask(WQExplore, SecretScriptTask, WantedQuestsAssets):
             # ,荒川之怒·壹，4，前往按钮，function
             result = [-1, '', -1, GOTO_BUTTON[index], self.challenge, '']
             type_wq = OCR_WQ_TYPE[index].ocr(self.device.image)
-            info_wq_1 = OCR_WQ_INFO[index].ocr(self.device.image)
-            info_wq_1 = info_wq_1.replace('：', ':').replace('（', '(').replace('）', ')')
-            info_wq_1 = info_wq_1.replace('：', ':')
-            match = re.match(r"^(.*?)[（(]?数量[：:]\s*(\d+)[)）]", info_wq_1)
-            if not match:
+            match = _read_location_info(OCR_WQ_INFO[index], self.device.image)
+            if not match or not match.group(1):
                 return None
             wq_destination = match.group(1)
             wq_number = int(match.group(2))

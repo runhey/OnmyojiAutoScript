@@ -2,7 +2,7 @@
   {
     "itemName": "g_accept",
     "imageName": "gg_g_accept.png",
-    "roiFront": "846,471,56,46",
+    "roiFront": "852,472,42,50",
     "roiBack": "810,448,120,192",
     "method": "Template matching",
     "threshold": 0.8,
@@ -11,7 +11,7 @@
   {
     "itemName": "g_reject",
     "imageName": "gg_g_reject.png",
-    "roiFront": "846,561,53,51",
+    "roiFront": "848,560,48,50",
     "roiBack": "826,458,99,172",
     "method": "Template matching",
     "threshold": 0.8,
@@ -20,7 +20,7 @@
   {
     "itemName": "g_jade",
     "imageName": "gg_g_jade.png",
-    "roiFront": "677,510,43,46",
+    "roiFront": "682,518,32,38",
     "roiBack": "549,483,202,111",
     "method": "Template matching",
     "threshold": 0.8,
@@ -47,7 +47,7 @@
   {
     "itemName": "g_ignore",
     "imageName": "gg_g_ignore.png",
-    "roiFront": "859,94,21,21",
+    "roiFront": "794,88,14,16",
     "roiBack": "725,40,197,142",
     "method": "Template matching",
     "threshold": 0.8,

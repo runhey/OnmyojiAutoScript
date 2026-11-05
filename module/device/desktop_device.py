@@ -37,7 +37,9 @@ class DesktopDevice:
             if not hwnd:
                 hwnd = find_desktop_window_by_pid(
                     located_pid, desktop_window_titles(self.config))
-            self.desktop_bind_pid(located_pid, hwnd)
+            # 认领的是已存在的窗口，可能是用户手动开的且已登录，
+            # 登录态由 find_desktop_login_popup 实测，不能假设未登录
+            self.desktop_bind_pid(located_pid, hwnd, just_launched=False)
             return True
         return self.launch_desktop_client()
 

@@ -102,6 +102,16 @@ class SixRealmsAssets:
 	I_EXIT_SIXREALMS = RuleImage(roi_front=(507.5,308,100,100), roi_back=(507.5,308,100,100), threshold=0.8, method="Template matching", file="./tasks/SixRealms/gate1/gate1_exit_sixrealms.png")
 	# 选择一个式神加入征伐队伍 
 	I_SELECT_SHIKIGAMI_AND_CONFIRM = RuleImage(roi_front=(499,238,151,57), roi_back=(479,213,199,113), threshold=0.8, method="Template matching", file="./tasks/SixRealms/gate1/gate1_select_shikigami_and_confirm.png")
+	# rest 
+	I_ISLAND_MARKER_101 = RuleImage(roi_front=(649,384,20,90), roi_back=(144,227,989,376), threshold=0.8, method="Template matching", file="./tasks/SixRealms/gate1/gate1_island_marker_101.png")
+	# mystery 
+	I_ISLAND_MARKER_102 = RuleImage(roi_front=(907,449,20,90), roi_back=(144,227,989,376), threshold=0.8, method="Template matching", file="./tasks/SixRealms/gate1/gate1_island_marker_102.png")
+	# chaos 
+	I_ISLAND_MARKER_103 = RuleImage(roi_front=(650,402,20,90), roi_back=(144,227,989,376), threshold=0.8, method="Template matching", file="./tasks/SixRealms/gate1/gate1_island_marker_103.png")
+	# battle 
+	I_ISLAND_MARKER_104 = RuleImage(roi_front=(649,381,20,90), roi_back=(144,227,989,376), threshold=0.8, method="Template matching", file="./tasks/SixRealms/gate1/gate1_island_marker_104.png")
+	# star 
+	I_ISLAND_MARKER_105 = RuleImage(roi_front=(649,372,20,90), roi_back=(144,227,989,376), threshold=0.8, method="Template matching", file="./tasks/SixRealms/gate1/gate1_island_marker_105.png")
 
 
 	# Ocr Rule Assets
