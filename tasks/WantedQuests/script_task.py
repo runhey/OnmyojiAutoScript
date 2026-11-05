@@ -24,7 +24,7 @@ from tasks.WantedQuests.config import CooperationType, CooperationSelectMask
 from tasks.WantedQuests.explore import WQExplore, ExploreWantedBoss
 
 
-def _read_location_info(rule: RuleOcr, image):‘、
+def _read_location_info(rule: RuleOcr, image):
     # https://github.com/runhey/OnmyojiAutoScript/pull/2006
     pattern = r"^(.*?)[（(]?数量[：:]\s*(\d+)[)）]"
     match = re.match(pattern, rule.ocr(image))
