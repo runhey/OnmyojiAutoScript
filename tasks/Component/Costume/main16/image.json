@@ -29,7 +29,7 @@
   {
     "itemName": "main_goto_town_16",
     "imageName": "main16_main_goto_town_16.png",
-    "roiFront": "1014,346,14,34",
+    "roiFront": "1012,340,21,42",
     "roiBack": "960,300,100,120",
     "method": "Template matching",
     "threshold": 0.8,

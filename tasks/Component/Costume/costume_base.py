@@ -13,6 +13,7 @@ from tasks.Component.Costume.config import (
     BattleType, BattleSceneType, CarpBannerType
 )
 from tasks.Component.Costume.assets import CostumeAssets
+from tasks.Component.CostumeTheme.theme import apply_theme
 from tasks.Component.CostumeBattle.assets import CostumeBattleAssets
 from tasks.Component.CostumeShikigami.assets import CostumeShikigamiAssets
 from tasks.Component.CostumeCarpBanner.assets import CostumeCarpBannerAssets
@@ -111,6 +112,17 @@ class CostumeBase:
         self.check_costume_battle(config.costume_battle_type)
         self.check_costume_battle_scene(config.costume_battle_scene_type)
         self.check_costume_shikigami(config.costume_shikigami_type)
+        self.check_costume_theme(config.costume_theme_type)
+
+    def check_costume_theme(self, theme_type: ThemeType):
+        apply_theme(theme_type)
+        if theme_type != ThemeType.COSTUME_THEME_DEFAULT:
+            # Supplementary labels are available before the UI rebuilds its translations.
+            labels = I18n.load_additions().get('zh-CN', {})
+            theme_name = labels.get(theme_type.value)
+            if not theme_name:
+                theme_name = I18n.trans_zh_cn(theme_type)
+            logger.info(f'Switch menu theme {theme_type} ({theme_name})')
 
     def replace_img(self,
                     asset_before: str,
@@ -120,11 +132,16 @@ class CostumeBase:
             return
         # setattr(self, asset_before, asset_after)
         asset_before_object: RuleImage = getattr(self, asset_before)
-        asset_before_object.roi_front = asset_after.roi_front
+        asset_before_object.roi_front = list(asset_after.roi_front)
         if rp_roi_back:
             asset_before_object.roi_back = asset_after.roi_back
         asset_before_object.threshold = asset_after.threshold
         asset_before_object.file = asset_after.file
+        asset_before_object.method = asset_after.method
+        # A cached dispatch flag must not retain the previous skin's method.
+        for name in ('is_template_match', 'is_masked_template_match',
+                     'is_multi_scale_template_match', 'is_sift_flann'):
+            asset_before_object.__dict__.pop(name, None)
         # https://github.com/runhey/OnmyojiAutoScript/issues/1972
         asset_before_object.refresh()
 
