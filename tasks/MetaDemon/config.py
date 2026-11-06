@@ -23,10 +23,10 @@ class DefaultStrategy(ConfigBase):
 
 class Strategy(ConfigBase):
     # 匹配的式神中文名字
-    md_match_names: str = Field(default='御撰津')
+    md_match_names: str = Field(default='御撰津', description='md_match_names_help')
     # 选哪一个预设组
-    md_preset_group_team_1: str = Field(default='1,1')
-    md_preset_group_team_2: str = Field(default='1,1')
+    md_preset_group_team_1: str = Field(default='1,1', description='md_preset_group_team_1_help')
+    md_preset_group_team_2: str = Field(default='1,1', description='md_preset_group_team_2_help')
 
     def is_valid(self):
         return self.md_match_names != "" and self.md_match_names is not None
