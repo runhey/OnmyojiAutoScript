@@ -53,9 +53,9 @@ class Strategy(ConfigBase):
             # group 不能小于1 和大于 7
             if result[0] < 1 or result[0] > 7:
                 raise Exception('group is not valid')
-            # team 不能小于1 和大于 5
-            if result[1] < 1 or result[1] > 5:
-                raise Exception('team is not valid')
+            # 战斗预设的点击资源仅支持队伍 1–4
+            if result[1] < 1 or result[1] > 4:
+                raise ValueError('team must be in [1-4]')
             return result
         except Exception as e:
             logger.error(f'group team string: {team}')
