@@ -2,8 +2,8 @@
   {
     "itemName": "right_enter",
     "imageName": "md_right_enter.png",
-    "roiFront": "1183,314,46,34",
-    "roiBack": "1150,131,100,360",
+    "roiFront": "1181,298,48,49",
+    "roiBack": "1150,131,100,390",
     "method": "Template matching",
     "threshold": 0.75,
     "description": "右侧进去"
@@ -11,8 +11,8 @@
   {
     "itemName": "enter2",
     "imageName": "md_enter2.png",
-    "roiFront": "461,265,44,156",
-    "roiBack": "428,220,100,258",
+    "roiFront": "940,151,77,113",
+    "roiBack": "870,30,170,270",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"
@@ -29,7 +29,7 @@
   {
     "itemName": "battle_demon",
     "imageName": "md_battle_demon.png",
-    "roiFront": "1131,573,100,100",
+    "roiFront": "1140,594,86,51",
     "roiBack": "1085,536,165,161",
     "method": "Template matching",
     "threshold": 0.7,
@@ -74,7 +74,7 @@
   {
     "itemName": "crafting_1",
     "imageName": "md_crafting_1.png",
-    "roiFront": "1202,222,36,45",
+    "roiFront": "1199,234,36,28",
     "roiBack": "1167,199,100,100",
     "method": "Template matching",
     "threshold": 0.8,
@@ -92,7 +92,7 @@
   {
     "itemName": "crafting_card_star_1",
     "imageName": "md_crafting_card_star_1.png",
-    "roiFront": "217,156,87,92",
+    "roiFront": "215,154,88,88",
     "roiBack": "191,127,140,137",
     "method": "Template matching",
     "threshold": 0.8,
