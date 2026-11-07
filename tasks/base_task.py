@@ -191,12 +191,17 @@ class BaseTask(GlobalGameAssets, CostumeBase):
         :return: interval时间到达且匹配成功则返回True, 否则False
         """
         if interval:
-            if target.name in self.interval_timer:
-                if self.interval_timer[target.name].limit != interval:
-                    self.interval_timer[target.name] = Timer(interval)
-            else:
-                self.interval_timer[target.name] = Timer(interval)
-            if not self.interval_timer[target.name].reached():
+            timer = self.interval_timer.get(target.name)
+            if timer is None:
+                timer = Timer(interval)
+                self.interval_timer[target.name] = timer
+            elif timer.limit != interval:
+                # 同一控件被多个调用点用不同 interval 访问时（例如准备按钮同时被
+                # prepare / idle 两个 hook 点击），只更新阈值、保留已启动的计时起点。
+                # 若这里重建一个未 start() 的 Timer，reached() 恒为 True，节流会
+                # 完全失效，导致一帧内重复点击直至触发 GameTooManyClickError。
+                timer.limit = interval
+            if not timer.reached():
                 return False
         if isinstance(target, RuleOcr):
             appear = self.ocr_appear(target, interval)
@@ -256,12 +261,17 @@ class BaseTask(GlobalGameAssets, CostumeBase):
         :return: interval时间到达且匹配成功则返回True, 否则False
         """
         if interval:
-            if target.name in self.interval_timer:
-                if self.interval_timer[target.name].limit != interval:
-                    self.interval_timer[target.name] = Timer(interval)
-            else:
-                self.interval_timer[target.name] = Timer(interval)
-            if not self.interval_timer[target.name].reached():
+            timer = self.interval_timer.get(target.name)
+            if timer is None:
+                timer = Timer(interval)
+                self.interval_timer[target.name] = timer
+            elif timer.limit != interval:
+                # 同一控件被多个调用点用不同 interval 访问时（例如准备按钮同时被
+                # prepare / idle 两个 hook 点击），只更新阈值、保留已启动的计时起点。
+                # 若这里重建一个未 start() 的 Timer，reached() 恒为 True，节流会
+                # 完全失效，导致一帧内重复点击直至触发 GameTooManyClickError。
+                timer.limit = interval
+            if not timer.reached():
                 return False
 
         appear = target.match_multi_scale(self.device.image, threshold=threshold, scales=scales, scale_range=scale_range)
